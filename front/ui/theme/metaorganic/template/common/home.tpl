@@ -78,6 +78,16 @@
       <div id="header-new" class="header">
        
          <div class="header__wrapper">
+         <div class="header__logo-container test">
+                     <a class="header__logo-link " href="<?= BASE_URL?>">
+                        <img src="<?=$logo?>" />
+                       
+                     </a>
+                     <div itemscope="" class="seo-visible">
+                        <a itemprop="url" href="#">Home</a>
+                        <img itemprop="logo" src="<?=$logo?>" width="100" height="100">
+                     </div>
+                  </div>
          <div class="header__search-bar-wrapper">
                   <div id="search-form-wrapper" class="header__search-bar search-form-wrapper">
                      <div class="header__search-title">
@@ -221,17 +231,7 @@
                   </picture>
                </div>
                
-               <div class="header__home-hero-placement-close"></div>
-                <div class="header__logo-container test">
-                     <a class="header__logo-link " href="<?= BASE_URL?>">
-                        <img src="<?=$logo?>" />
-                       
-                     </a>
-                     <div itemscope="" class="seo-visible">
-                        <a itemprop="url" href="#">Home</a>
-                        <img itemprop="logo" src="<?=$logo?>" width="100" height="100">
-                     </div>
-                  </div>
+               
            
             </div>
          </div>

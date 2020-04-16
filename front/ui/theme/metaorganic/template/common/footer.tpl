@@ -7,7 +7,7 @@
                <div id="download-app" class="footer__download-app-container">
                   <div id="download-app-icon" class="footer__download-app-desktop">
                      <span class="footer__app-icon-bg">
-                       <img src="<?= $logo?>" style="width: 50px; margin-top: 0px;">
+                       <img src="<?= $logo?>" style="width: 250px; margin-top: 0px; margin-left: -93px;">
                      </span>
                      <div class="footer__download-app-info">
                         <div class="footer__download-app-heading">Download the Emlima app for iOS or Android</div>
