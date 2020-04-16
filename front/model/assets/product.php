@@ -364,7 +364,7 @@ class ModelAssetsProduct extends Model {
 		}
 
 
-		$this->db->select('product_to_store.*,product.*,product_description.*,product_description.name as pd_name', FALSE);
+		$this->db->select('product_to_store.*,product_to_category.category_id,product.*,product_description.*,product_description.name as pd_name', FALSE);
 		$this->db->join('product', 'product.product_id = product_to_store.product_id', 'left');
 		$this->db->join('product_description', 'product_description.product_id = product_to_store.product_id', 'left');
 		$this->db->join('product_to_category', 'product_to_category.product_id = product_to_store.product_id', 'left');

@@ -106,20 +106,33 @@
                                  
                                  <!-- SuggestionWidget  start -->
                                  <div id="search-area-wrp" class="c-sggstnbx header__search-input-wrapper">
-                                  
+                                    <form  id="product-search-form"  class="navbar-form active" role="search" onsubmit="location='<?= $this->url->link('product/search') ?>&search=' + $('input[name=\'product_name\']').val(); return false;">
+									<div class="input-group">
+									<input type="text" name="product_name"   class="header__search-input zipcode-enter" placeholder="Search for your product" />
+									<span class="input-group-btn">
+									<!--<button type="submit" class="search-btn"> <span class="glyphicon glyphicon-search"> <span class="sr-only">Search</span> </span> </button>-->
+									<div class="resp-searchresult">
+												<div></div>
+											</div>
+									</span> </div>
+									</form>
                                    
-                                      <?php if($this->config->get('config_store_location') == 'autosuggestion') { ?>
+                                      <?php /* if($this->config->get('config_store_location') == 'autosuggestion') { ?>
                                               <input name="zipcode" id="searchTextField"  class="header__search-input zipcode-enter" type="text"  required="" alt=""  maxlength="" size="" tabindex="3" placeholder="Find Stores in your Location" highlight="y" strict="y" autocomplete="off">
                                             <?php } else { ?>
                                                 <input name="zipcode" id="searchTextField"  class="header__search-input zipcode-enter" type="text"  required="" alt=""  maxlength="" size="" tabindex="3" placeholder="<?= $zipcode_mask ?>" highlight="y" strict="y" autocomplete="off">
 
-                                            <?php } ?>
+                                            <?php } */ ?>
 
                                             
 
-                                            <input type="hidden" name="store_list_url" value="<?=BASE_URL ?>">
+                                            <!--<input type="hidden" name="store_list_url" value="<?=BASE_URL ?>">
 
-                                            <input type="hidden" id="store_location" value="<?= $this->config->get('config_store_location'); ?>">
+                                            <input type="hidden" id="store_location" value="<?= $this->config->get('config_store_location'); ?>">-->
+											
+
+											
+											
                                  </div>
                               </div>
                            </li>

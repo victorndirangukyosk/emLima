@@ -845,7 +845,7 @@ $(document).delegate('.agree', 'click', function(e) {
 	
 					for (i = 0; i < json.length; i++) {
 						if (!json[i]['category']) {
-							html += '<li data-value="' + json[i]['value'] + '"><a href="#">' + json[i]['label'] + '</a></li>';
+							html += '<li data-value="' + json[i]['value'] + '"><a href="'+json[i]['href']+'">' + json[i]['label'] + '</a></li>';
 						}
 					}
 	
@@ -893,7 +893,8 @@ $(document).delegate('.agree', 'click', function(e) {
 		$('input[name=\'product_name\']').autocomplete({
 			'source': function(request, response) {                
 					$.ajax({
-							url: 'index.php?path=product/search/product_autocomplete&filter_name=' +  encodeURIComponent(request),
+							//url: 'index.php?path=product/search/product_autocomplete&filter_name=' +  encodeURIComponent(request),
+							url: 'index.php?path=product/search/product_search&filter_name=' +  encodeURIComponent(request),
 							dataType: 'json',			
 							success: function(json) {
 									response($.map(json, function(item) {
@@ -902,13 +903,15 @@ $(document).delegate('.agree', 'click', function(e) {
 												return {
 														label: item['name'],
 														name_label: item['name'],
-														value: item['product_id']
+														value: item['product_id'],
+														href: item['href_cat']
 												}
 											} else {
 												return {
 														label: item['name']+" - "+item['unit'],
 														name_label: item['name'],
-														value: item['product_id']
+														value: item['product_id'],
+														href: item['href_cat']
 												}
 											}
 											
@@ -919,15 +922,16 @@ $(document).delegate('.agree', 'click', function(e) {
 					$('input[name=\'product_name\']').val(request);
 			},
 			'select': function(item) {
-					
+					console.log('item',item);
 
-					if(item['value'] != 'getall') {
+					/*if(item['value'] != 'getall') {
 						$('input[name=\'product_name\']').val(item['name_label']).focus();
 						$('input[name=\'product_id\']').val(item['value']);
 					}
+					*/
 
-
-					$('#product-search-form').submit();
+                 location.href=item.href;
+					//$('#product-search-form').submit();
 					
 			}	
 		});
