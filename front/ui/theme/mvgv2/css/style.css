@@ -1661,3 +1661,10 @@ body { overflow-x: hidden; }
 .product_description p span{
   font-family: roboto !important;
 }
+#searchTextField{
+  border: 1px solid #90b943;
+  border-radius: 20px;
+}
+#selectedCategory{
+  display: none;
+}
