@@ -1,0 +1,269 @@
+div.required .control-label:not(span)::before, td.required::before {
+  color: #f00;
+  content: "* ";
+  font-weight: bold;
+}
+.mob-cat-list .fa{
+    float: right;
+}
+.resp-logo, .resp-logo > img {
+  max-width: 100%;
+  max-height: 100%;
+  margin: 7px 0;
+}
+
+.logo img{
+    max-height: 50px !important;
+}
+
+.btn-recipe{
+  background: #51AB66;
+  color: white;
+  vertical-align: middle;
+  margin: 13px 6px ;
+}
+.filter-option {
+  text-align: center !important;
+}
+.btn.dropdown-toggle{ 
+  outline: medium none !important;
+}
+
+.account-section .secion-row form .form-group label {
+  color: #797979;
+  font-size: 18px;
+  font-weight: normal;
+  padding-top: 13px;
+}
+.form-horizontal .control-label {
+  text-align: right;
+}
+.account-section legend {
+  padding: 10px;
+}
+.list-unstyled a {
+  color: #555;
+  line-height: 30px;
+}
+.account-section .secion-row .title {
+  color: #4a4a4a;
+  font-size: 24px;
+  margin-bottom: 44px;
+  margin-top: 16px;
+}
+.shipping_status_wrapper::after {
+  background: none repeat scroll 0 0 #e6e6e6;
+  content: "";
+  display: block;
+  height: 2px;
+  left: 0;
+  margin: 0 auto;
+  position: absolute;
+  right: 0;
+  top: 18px;
+  width: 65%;
+  z-index: 0;
+}
+.shipping_status_wrapper {
+  display: block;
+  margin: 30px auto;
+  position: relative;
+  text-align: center;
+}
+
+.breadcrumb{
+    display: none;
+}
+#column-right {
+  margin-top: 20px;
+}
+.buttons.clearfix{
+ margin-bottom: 50px;    
+}
+a{
+    text-decoration: none !important;
+}
+#header h6{
+    color: white;
+}
+.alert{
+    position: relative;
+}
+body {
+  background: none repeat scroll 0 0 white !important;
+}
+#infscr-loading {
+  color: #575757;
+  display: block;
+  font-size: 30px;
+  margin: 50px auto 0;
+  position: absolute;
+  text-align: center;
+  width: 95%;
+}
+#infscr-loading img {
+  display: block;
+  margin: 0 auto 25px;
+}
+.price-old {
+  color: #B7B7B7;
+  font-size: medium;
+  text-decoration: line-through;
+}
+.cat-list > li:hover  .drop-menu-2  {
+  display: block;
+}
+.drop-menu-2 li:hover .drop-menu-3{
+    display: block;
+}
+.products-heading-rows b {
+  font-weight: 400;
+}
+.headtabs.affix {
+  z-index: 2;
+}
+.categories-col{
+  padding-left: 0 !important;
+}
+.item-cart-right{
+    padding: 0px !important; 
+}
+.homecartcontainer {
+  min-height: 200px !important;
+}
+a{
+    cursor: pointer;
+}
+.categories-list li {
+  border-bottom: 1px solid white;
+  border-top: 1px solid white;
+}
+.categories-list .nonavbordertb{
+    border: none;
+}
+.price-tax {
+  color: #7a7b7d;
+  font-size: 12px;
+  font-weight: normal;
+}
+
+.information-contact,
+.empty-cart,
+.information-information{
+    background: none repeat scroll 0 0 #f5f3f4 !important;
+}
+.empty-cart,
+.information-contact h2,
+.information-information h2{
+    font-weight: bold;
+}
+.empty-cart,
+.information-contact,
+.information-information{
+  color: #333;
+  font-size: 16px;
+}
+
+/* metro select */ 
+:root .css3-metro-dropdown option,
+:root .css3-metro-dropdown:after,
+:root .css3-metro-dropdown::after
+{
+    color: black;
+}
+ 
+:root .css3-metro-dropdown:after,
+:root .css3-metro-dropdown::after
+{
+    display: block;
+    background: none repeat scroll 0 0 #d9d9d9;
+}
+ 
+:root .css3-metro-dropdown select,
+:root .css3-metro-dropdown option
+{
+    padding: 6px 8px;
+}
+ 
+:root .css3-metro-dropdown
+{
+    position: relative;
+    display: inline-block;
+    border: 0;    
+    top: -2px;
+}
+ 
+:root .css3-metro-dropdown::after
+{
+    content: "\25bc";
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: block;
+    width: 32px;
+    font-size: 12px;
+    line-height: 38px;
+    text-align: center;
+    -webkit-pointer-events: none;
+    -moz-pointer-events: none;
+    pointer-events: none;
+}
+ 
+:root .css3-metro-dropdown select
+{
+   height: 38px;
+   border: 0;
+   vertical-align: middle;
+   font-family: "Segoe UI", Arial, Helvetica, Sans-serif;
+   outline: 0 none;
+}
+ 
+:root .css3-metro-dropdown option
+{
+    background: #fff;
+    color: #333;
+    outline: none;
+}
+
+.deliverytime-ddown{
+    border: none;
+}
+.deliverytime-ddown select,
+#shipping_city_id {
+    background: #ededed;
+    width: 100%;
+    font-size: 16px !important;
+    color: #333;
+    font-family: Open Sans,​sans-serif;
+}    
+
+.has-error .deliverytime-ddown {
+  border: 1px solid red !important;
+}
+.deliverytime-ddown option:disabled {
+    display: none !important;
+}
+
+.alert-info {
+  background: none repeat scroll 0 0 #fd804f;
+  border: medium none;
+  color: white;
+  font-size: 17px;
+  margin-bottom: 0;
+  text-transform: capitalize;
+  border-radius: 0;
+}
+
+#reward-error,
+#reward-success{
+  color: #ff4949;
+  margin-top: 0;
+  text-align: center;
+}
+.store-name-wrapper {
+  float: right;
+  text-align: center !important;
+}
+.shop-info .modal{
+  margin-top: -21px;
+}

@@ -1,0 +1,357 @@
+@media screen AND (min-width: 900px){
+    .modal-dialog {
+      width: 900px !important;
+    }  
+}
+
+@media screen AND (max-width: 900px){
+    .modal-dialog {
+      width: 95% !important;
+    }  
+}
+.instacart-list-products-children-active .instacart-list-product-toggle .fa {
+  transform: scaleY(-1);
+}
+
+.modal-backdrop{
+    z-index: -1;
+}
+.modal {
+    background: rgba(0,0,0,0.5);
+}
+
+.instacart-list-header::before {
+  background-color: rgba(0, 0, 0, 0.5);
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  content: " ";
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+.instacart-list-header {
+  background-position: center center;
+  background-size: cover;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  color: white;
+  height: 240px;
+  position: relative;
+}
+.instacart-list-header-links > div {
+  cursor: pointer;
+  display: inline-block;
+  padding: 0 10px;
+  position: relative;
+}
+.instacart-list-favorite:hover,
+.instacart-list-favorite:focus
+{
+    color: white;
+}
+.instacart-list-favorite {
+  color: white;
+  display: inline-block;
+  font-size: 15px;
+  line-height: 15px;
+  transition: all 0.2s ease-in-out 0s;
+  width: 140px;
+}
+.instacart-list-favorite .fa{
+  float: left;
+  margin-right: 10px;
+  font-size: 15px;
+}
+.instacart-list-header-links > div .text {
+  display: inline-block;
+  line-height: 18px;
+  position: relative;
+  top: -1px;
+}
+.instacart-list-header-links > div {
+  cursor: pointer;
+  display: inline-block;
+  padding: 0 10px;
+  position: relative;
+}
+.instacart-list-header-details {
+  bottom: 0;
+  left: 0;
+  padding: 20px 30px;
+  position: absolute;
+  width: 100%;
+}
+.instacart-list-header {
+  color: white;
+}
+.instacart-list-header-title {
+  font-size: 40px;
+  font-weight: 100;
+  line-height: 40px;
+}
+.instacart-list-header-name {
+  color: white;
+  cursor: pointer;
+  line-height: 30px;
+}
+.modal-content {
+  border-radius: 8px !important;
+}
+.instacart-list-product-content {
+  background-color: white;
+  border-top: 1px dashed #ccc;
+  min-height: 90px;
+  padding: 20px;
+}
+
+.instacart-list-product-image {
+  float: left;
+  height: 50px;
+  margin-right: 20px;
+  position: relative;
+  width: 50px;
+  z-index: 1;
+}
+.instacart-list-product-image img {
+  height: 50px;
+  width: 50px;
+}
+.instacart-list-product .instacart-list-adding-and-removing > *, .instacart-list-add-all {
+  background-color: #60ab59;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 500;
+  /*height: 30px;*/
+  /*line-height: 22px;*/
+  padding: 5px 7px;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+.instacart-list-product-name, .instacart-list-product-size {
+  line-height: 25px;
+}
+.instacart-list-product-size {
+  color: #b1afaf;
+  position: relative;
+  top: 23px;
+}
+.instacart-list-products-children {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: all 0.2s ease-in-out 0s;
+}
+.instacart-list-products-children-active .instacart-list-products-children {
+  height: auto;
+  max-height: 600px;
+  opacity: 1;
+}
+.instacart-list-products-children .instacart-list-product-content {
+  border-left: 10px solid #60ab59;
+  border-top: 1px dashed #eee;
+  min-height: 60px;
+  padding: 10px 20px;
+  float: left;
+  width: 100%;
+}
+.instacart-list-product-remove-from-cart .fa {
+  /*line-height: 22px !important;*/
+}
+.instacart-list-product .instacart-list-product-details {
+  opacity: 1;
+  overflow: visible;
+  position: relative;
+  width: 80%;
+  float: left;
+}
+.instacart-list-product .instacart-list-adding-and-removing {
+  border-radius: 4px;
+  font-weight: 200;
+  line-height: 60px;
+  opacity: 1;
+  text-align: right;
+  white-space: nowrap;
+  width: 20%;
+  float: left;
+}
+.instacart-list-product .instacart-list-product-toggle {
+  color: #ccc;
+  cursor: pointer;
+  display: block;
+  float: right;
+  opacity: 1;
+  padding-right: 3%;
+  text-align: right;
+  width: 20%;
+}
+.instacart-list-product span.incart {
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 3px;
+  color: white;
+  display: inline-block;
+  height: 25px;
+  line-height: 24px;
+  margin-left: 5px;
+  max-width: 100px;
+  overflow: hidden;
+  padding: 0 6px;
+  transition: all 0.2s ease-in-out 0s;
+  visibility: visible;
+}
+.instacart-list-product-image span {
+  bottom: -3px;
+  left: -10px;
+  position: absolute;
+  white-space: nowrap;
+}
+.instacart-list-header-links > div .fa {
+  font-size: 18px;
+  margin-right: 5px;
+}
+.instacart-list-product span.incart::after {
+  content: " in cart";
+}
+.instacart-list-product .instacart-list-product-details {
+  opacity: 1;
+  overflow: visible;
+  position: relative;
+  width: 80%;
+}
+.instacart-list-product-name {
+  overflow: hidden;
+  padding-left: 70px;
+  position: absolute;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+}
+.instacart-list-product .instacart-list-product-details {
+  opacity: 1;
+  overflow: visible;
+  position: relative;
+  width: 80%;
+}
+.instacart-list-header-links {
+  color: white;
+  position: absolute;
+  right: 10px;
+  top: 20px;
+}
+.recipe-list a.recipe::before {
+  color: #fff;
+  content: "recipe";
+  font-variant: small-caps;
+  font-weight: 600;
+  left: 20px;
+  letter-spacing: 1px;
+  position: absolute;
+  top: 10px;
+  z-index: 1;
+}
+
+.recipe-list a::after {
+  background-color: rgba(0, 0, 0, 0.3);
+  content: " ";
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.recipe-list a:hover {
+  border-color: #f58823;
+  text-decoration: none;
+}
+
+.recipe-list a {
+  background-color: #444;
+  background-position: center center;
+  background-size: cover;
+  border: 5px solid #fff;
+  display: block;
+  float: left;
+  height: 215px;
+  margin: 0 25px 25px 0;
+  outline: 1px solid #e2e2e2;
+  position: relative;
+  top: 0;
+  transition: all 0s ease 0s, all 0.15s ease 0s, all 0s ease-in-out 0s;
+  width: 100%;
+}
+
+.recipe-list a .content {
+  bottom: 0;
+  box-sizing: border-box;
+  color: white;
+  left: 0;
+  padding: 20px;
+  position: absolute;
+  text-decoration: none;
+  z-index: 1;
+}
+
+.recipe-list a span.title {
+  font-size: 24px;
+  font-weight: 200;
+  line-height: 30px;
+  font-family: "Open Sans",sans-serif;
+}
+
+.recipe-list a span {
+  display: block;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+.recipe-list a span {
+  display: block;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+.recipe-list a span.user {
+  font-size: 14px;
+}
+
+.recipe-list a .content {
+  color: white;
+}
+
+.instacart-list-tab {
+  color: #8d8d8d;
+  cursor: pointer;
+  float: left;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  padding: 15px 0;
+  text-align: center;
+  text-transform: uppercase;
+  width: 50%;
+}
+
+.list-categories .instacart-list-tab {
+  display: inline-block;
+  float: none;
+  padding: 8px;
+  width: inherit;
+}
+.list-categories .instacart-list-tab .instacart-list-tab-text {
+  color: #5a5a64;
+  text-decoration: none;
+}
+.instacart-list-tab-text {
+  border-bottom: 4px solid transparent;
+  display: inline-block;
+  padding-bottom: 10px;
+  transition: all 0.2s ease-in-out 0s;
+}
+.instacart-list-tab-active .instacart-list-tab-text {
+  border-bottom: 2px solid #f58823;
+  color: #5a5a64;
+  padding-bottom: 2px;
+}

@@ -1,0 +1,11 @@
+system/log/error.log
+image/cache/
+image/
+system/cache/
+system/log/
+front.zip
+access.log
+.idea/
+#config.php
+#define.php
+robots.txt

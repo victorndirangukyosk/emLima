@@ -1,0 +1,156 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>jQuery.fn.cardcheck - Detect Credit Card Type</title>
+  <link rel="stylesheet" href="base.css">
+  <link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+  <style type="text/css">
+  body { background-color:#222; color:#fff;}
+  h1 { margin-top: 150px; text-align:center;}
+  form { margin:30px auto; }
+.card .card_icon,  .card .status_icon {
+  /* For a more robust cross-browser implementation, see http://bit.ly/aqZnl3 */
+  display: inline-block;
+  vertical-align: bottom;
+  height: 23px;
+  width: 27px;
+}
+
+/* --- Card Icon --- */
+
+.card .card_icon { background: transparent url('img/credit_card_sprites.png') no-repeat 30px 0; }
+
+/* Need to support IE6? These four rules won't work, so rewrite 'em. */
+
+.card .card_icon.visa { background-position: 0 0 !important; }
+
+.card .card_icon.mastercard { background-position: -30px 0 !important; }
+
+.card .card_icon.amex { background-position: -60px 0 !important; }
+
+.card .card_icon.discover { background-position: -90px 0 !important; }
+
+/* --- Card Status --- */
+
+.card .status_icon { background: transparent url('img/status_sprites.png') no-repeat 33px 0; }
+
+.card .invalid {
+  color: #AD3333;
+  background: #f8e7e7;
+}
+
+.card .valid {
+  color: #33AD33;
+  background: #e7f8e7;
+}
+
+.card .invalid .status_icon { background-position: 3px 0 !important; }
+
+.card .valid .status_icon { background-position: -27px 0 !important; }
+</style>
+  </head>
+
+  <body>
+  <div id="jquery-script-menu">
+<div class="jquery-script-center">
+<ul>
+<li><a href="http://www.jqueryscript.net/form/jQuery-Plugin-To-Identify-Validate-Credit-Cards-Cardcheck-js.html">Download This Plugin</a></li>
+<li><a href="http://www.jqueryscript.net/">Back To jQueryScript.Net</a></li>
+</ul>
+<div class="jquery-script-ads"><script type="text/javascript"><!--
+google_ad_client = "ca-pub-2783044520727903";
+/* jQuery_demo */
+google_ad_slot = "2780937993";
+google_ad_width = 728;
+google_ad_height = 90;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script></div>
+<div class="jquery-script-clear"></div>
+</div>
+</div>
+  <h1>jQuery Cardcheck.js</h1>
+<form>
+    <div class="field card">
+    <label for="card_number">Enter Card Number:</label>
+    <p>
+        <input name="card_number" type="text" value="">
+        <span class="card_icon"></span> </p><br>
+
+    <p class="status"> <span class="status_icon"></span> <span class="status_message"></span> </p>
+  </div>
+  </form>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script> 
+<script src="../src/jquery.cardcheck.js"></script> 
+<script>
+    jQuery(function($) {
+        
+        // If JavaScript is enabled, hide fallback select field
+        $('.no-js').removeClass('no-js').addClass('js');
+        
+        // When the user focuses on the credit card input field, hide the status
+        $('.card input').bind('focus', function() {
+            $('.card .status').hide();
+        });
+        
+        // When the user tabs or clicks away from the credit card input field, show the status
+        $('.card input').bind('blur', function() {
+            $('.card .status').show();
+        });
+        
+        // Run jQuery.cardcheck on the input
+        $('.card input').cardcheck({
+            callback: function(result) {
+                
+                var status = (result.validLen && result.validLuhn) ? 'valid' : 'invalid',
+                    message = '',
+                    types = '';
+                
+                // Get the names of all accepted card types to use in the status message.
+                for (i in result.opts.types) {
+                    types += result.opts.types[i].name + ", ";
+                }
+                types = types.substring(0, types.length-2);
+                
+                // Set status message
+                if (result.len < 1) {
+                    message = 'Please provide a credit card number.';
+                } else if (!result.cardClass) {
+                    message = 'We accept the following types of cards: ' + types + '.';
+                } else if (!result.validLen) {
+                    message = 'Please check that this number matches your ' + result.cardName + ' (it appears to be the wrong number of digits.)';
+                } else if (!result.validLuhn) {
+                    message = 'Please check that this number matches your ' + result.cardName + ' (did you mistype a digit?)';
+                } else {
+                    message = 'Great, looks like a valid ' + result.cardName + '.';
+                }
+                
+                // Show credit card icon
+                $('.card .card_icon').removeClass().addClass('card_icon ' + result.cardClass);
+                
+                // Show status message
+                $('.card .status').removeClass('invalid valid').addClass(status).children('.status_message').text(message);
+            }
+        });
+    });
+  </script><script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-36251023-1']);
+  _gaq.push(['_setDomainName', 'jqueryscript.net']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</body>
+</html>

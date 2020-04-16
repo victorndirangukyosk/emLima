@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="This is an example of a meta description. This will often show up in search results.">
+    <meta name="keywords" content="HTML,CSS,XML,JavaScript">
+    <title>HyperLocal - A Grocery Market</title>
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Hind:300,400,500,600,700" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="../../https@oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="../../https@oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+    <div class="header-white">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-3 col-md-2 col-sm-4">
+                    <div class="header-left">
+                        <div class="header-logo header-item">
+                            <a href="#"><img src="images/logo.png" alt=""></a>
+                        </div>
+                        <div class="header-item header-address"><a href="#" class="user-address" type="button" data-toggle="modal" data-target="#useraddress-popup"> Ahmedabad</a>
+                            <!-- Button trigger modal -->
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-7 col-md-7 col-sm-12">
+                    <div class="row">
+                        <div class="header-search-form header-item">
+                            <div class="search-form">
+                                <form>
+                                    <div class="col-lg-12">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" placeholder="Search product in store..">
+                                            <span class="input-group-btn">
+                                 <button class="btn btn-default" type="button"><i class="fa fa-search"></i></button>
+                                      </span>
+                                        </div>
+                                        <!-- /input-group -->
+                                    </div>
+                                    <!-- /.col-lg-6 -->
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /input-group -->
+                </div>
+                <div class="col-lg-2 col-md-1 col-sm-6">
+                    <div class="header-right">
+                        <div class="header-item header-dropdown">
+                            <a href="#" class="dropdown-toggle header-item-account" data-toggle="dropdown">My Account <i class="fa fa-angle-down"></i></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#">Login</a></li>
+                                <li><a href="#">Register</a></li>
+                            </ul>
+                        </div>
+                        <div class="store-cart-action header-item">
+                            <button class="btn btn-default" role="button" data-toggle="modal" data-target="#store-cart-side">
+                                <span class="badge">4</span>
+                                <i class="fa fa-shopping-cart"></i> $100.00
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="page-breadcrumb">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="page-section text-center">
+                        <h1 class="page-title">Choose a store in <strong>380016</strong></h1></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="wrapper" id="wrapper">
+        <div class="store-company-page">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <h2>Recommended Stores</h2></div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12">
+                        <div class="store-block">
+                            <div class="store-company">
+                                <a href="#"><img src="images/store-product-logo.png" class="img-circle"></a>
+                            </div>
+                            <div class="store-info">
+                                <h2 class="store-title">Store Name</h2>
+                                <p>Non tellus urna donec dolornulla era consequat</p>
+                            </div>
+                            <a href="#" class="btn btn-default"> Shop Now</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12">
+                        <div class="store-block">
+                            <div class="store-company">
+                                <a href="#"><img src="images/store-product-logo-1.png" class="img-circle"></a>
+                            </div>
+                            <div class="store-info">
+                                <h2 class="store-title">Store Name</h2>
+                                <p>Non tellus urna donec dolornulla era consequat</p>
+                            </div>
+                            <a href="#" class="btn btn-default"> Shop Now</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12">
+                        <div class="store-block">
+                            <div class="store-company">
+                                <a href="#"><img src="images/store-product-logo-2.png" class="img-circle"></a>
+                            </div>
+                            <div class="store-info">
+                                <h2 class="store-title">Store Name</h2>
+                                <p>Non tellus urna donec dolornulla era consequat</p>
+                            </div>
+                            <a href="#" class="btn btn-default"> Shop Now</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12">
+                        <div class="store-block">
+                            <div class="store-company">
+                                <a href="#"><img src="images/store-product-logo-3.png" class="img-circle"></a>
+                            </div>
+                            <div class="store-info">
+                                <h2 class="store-title">Store Name</h2>
+                                <p>Non tellus urna donec dolornulla era consequat</p>
+                            </div>
+                            <a href="#" class="btn btn-default"> Shop Now</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12">
+                        <div class="store-block">
+                            <div class="store-company">
+                                <a href="#"><img src="images/store-product-logo.png" class="img-circle"></a>
+                            </div>
+                            <div class="store-info">
+                                <h2 class="store-title">Store Name</h2>
+                                <p>Non tellus urna donec dolornulla era consequat</p>
+                            </div>
+                            <a href="#" class="btn btn-default"> Shop Now</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12">
+                        <div class="store-block">
+                            <div class="store-company">
+                                <a href="#"><img src="images/store-product-logo-2.png" class="img-circle"></a>
+                            </div>
+                            <div class="store-info">
+                                <h2 class="store-title">Store Name</h2>
+                                <p>Non tellus urna donec dolornulla era consequat</p>
+                            </div>
+                            <a href="#" class="btn btn-default"> Shop Now</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12">
+                        <div class="store-block">
+                            <div class="store-company">
+                                <a href="#"><img src="images/store-product-logo-3.png" class="img-circle"></a>
+                            </div>
+                            <div class="store-info">
+                                <h2 class="store-title">Store Name</h2>
+                                <p>Non tellus urna donec dolornulla era consequat</p>
+                            </div>
+                            <a href="#" class="btn btn-default"> Shop Now</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12">
+                        <div class="store-block">
+                            <div class="store-company">
+                                <a href="#"><img src="images/store-product-logo-2.png" class="img-circle"></a>
+                            </div>
+                            <div class="store-info">
+                                <h2 class="store-title">Store Name</h2>
+                                <p>Non tellus urna donec dolornulla era consequat</p>
+                            </div>
+                            <a href="#" class="btn btn-default"> Shop Now</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12">
+                        <div class="store-block">
+                            <div class="store-company">
+                                <a href="#"><img src="images/store-product-logo-3.png" class="img-circle"></a>
+                            </div>
+                            <div class="store-info">
+                                <h2 class="store-title">Store Name</h2>
+                                <p>Non tellus urna donec dolornulla era consequat</p>
+                            </div>
+                            <a href="#" class="btn btn-default"> Shop Now</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12">
+                        <div class="store-block">
+                            <div class="store-company">
+                                <a href="#"><img src="images/store-product-logo-1.png" class="img-circle"></a>
+                            </div>
+                            <div class="store-info">
+                                <h2 class="store-title">Store Name</h2>
+                                <p>Non tellus urna donec dolornulla era consequat</p>
+                            </div>
+                            <a href="#" class="btn btn-default"> Shop Now</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12">
+                        <div class="store-block">
+                            <div class="store-company">
+                                <a href="#"><img src="images/store-product-logo-2.png" class="img-circle"></a>
+                            </div>
+                            <div class="store-info">
+                                <h2 class="store-title">Store Name</h2>
+                                <p>Non tellus urna donec dolornulla era consequat</p>
+                            </div>
+                            <a href="#" class="btn btn-default"> Shop Now</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12">
+                        <div class="store-block">
+                            <div class="store-company">
+                                <a href="#"><img src="images/store-product-logo-3.png" class="img-circle"></a>
+                            </div>
+                            <div class="store-info">
+                                <h2 class="store-title">Store Name</h2>
+                                <p>Non tellus urna donec dolornulla era consequat</p>
+                            </div>
+                            <a href="#" class="btn btn-default"> Shop Now</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="space-small bg-default bdr-btm">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                    <!-- feature block start -->
+                    <div class="feature-block feature-left">
+                        <div class="feature-icon">
+                            <div class="feature-icon-bg">
+                                <i class="fa fa-tags"></i>
+                            </div>
+                        </div>
+                        <div class="feature-content">
+                            <h3 class="feature-title">Best Prices &amp; Offers</h3>
+                            <p>Cheaper prices than your local supermarket, great cashback offers to top it off.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.feature block start -->
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                    <!-- feature block start -->
+                    <div class="feature-block feature-left">
+                        <div class="feature-icon">
+                            <div class="feature-icon-bg">
+                                <i class="fa fa-calendar-check-o"></i>
+                            </div>
+                        </div>
+                        <div class="feature-content">
+                            <h3 class="feature-title">Wide Assortment</h3>
+                            <p>Choose from 5000+ products across food, personal care, household & other categories.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.feature block start -->
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                    <!-- feature block start -->
+                    <div class="feature-block feature-left">
+                        <div class="feature-icon">
+                            <div class="feature-icon-bg">
+                                <i class="fa fa-refresh"></i>
+                            </div>
+                        </div>
+                        <div class="feature-content">
+                            <h3 class="feature-title">Easy Returns</h3>
+                            <p>Not satisfied with a product? Return it at the doorstep & get a refund within hours.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.feature block start -->
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="footer-block">
+                        <div class="about-info">
+                            <h3 class="footer-title">About Hyperlocal</h3>
+                            <p>'HYPERLOCAL' is owned & managed by <strong>“Hyperlocal India Private Limited”</strong> and is not related, linked or interconnected in whatsoever manner or nature,to “HyperlocaL” which is a real estate services business operated by “Consultancy Services Private Limited”.</p>
+                            <a href="#" class="btn-link">Read More</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="footer-block">
+                        <h3 class="footer-title">Useful Links</h3>
+                        <ul class="listnone">
+                            <li><a href="#">Get Your Store Listed</a></li>
+                            <li><a href="#">Blog</a></li>
+                            <li><a href="#">FAQ</a></li>
+                            <li><a href="#">Terms & Conditions</a></li>
+                            <li><a href="#">Careers</a></li>
+                            <li><a href="#">About Us</a></li>
+                            <li><a href="#">Contact Us</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="footer-block">
+                        <h3 class="footer-title">Download App</h3>
+                        <div class="app-action">
+                            <a href="#"><img src="images/playstore.png" class="app-btn"></a>
+                            <a href="#"><img src="images/app-store-logo.png" class="app-btn"></a>
+                        </div>
+                        <div class="footer-social">
+                            <a href="#" class="fa fa-facebook-square"></a>
+                            <a href="#" class="fa fa-twitter-square"></a>
+                            <a href="#" class="fa fa-instagram"></a>
+                            <a href="#" class="fa fa-youtube-square"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="tinyfooter">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <p class="footer-text">© Hyperlocal India Pvt. Ltd., 2016-2017</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="useraddress-popup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h2>Are you sure you want to change locality?</h2>
+                    <a href="#" class="btn btn-default">Change Locality</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="js/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/side-menu-script.js"></script>
+</body>
+
+</html>

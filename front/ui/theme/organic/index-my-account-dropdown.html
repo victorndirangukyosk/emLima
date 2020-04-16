@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="This is an example of a meta description. This will often show up in search results.">
+    <meta name="keywords" content="HTML,CSS,XML,JavaScript">
+    <title>HyperLocal - A Grocery Market</title>
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Hind:300,400,500,600,700" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+    <div class="header-transparent">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 col-sm-6 col-md-6 col-xs-5"><a href="#" class="btn btn-primary">Become a Shopper</a></div>
+                <div class="col-lg-6 col-sm-6 col-md-6 col-xs-7">
+                    <div class="header-link">
+                        <a href="#" class="btn-link-white" type="button" data-toggle="modal" data-target="#signupModal-popup">How Hyper Local Works</a>
+                        <!--<a href="#" class="btn-link-white" type="button" data-toggle="modal" data-target="#phoneModal">My Account</a>-->
+                        <div class="my-account-dropdown">
+                            <a href="#" class="dropdown-toggle btn-link-white" data-toggle="dropdown">My Account</a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li>
+                                    <div class="user-profile"><span class="user-profile-img"><img src="images/user-profile.png"></span>
+                                        <span class="user-name">Abhishek Chaurasia</span>
+                                    </div>
+                                </li>
+                                <li><a href="#"><i class="fa fa-sign-in"></i> Login</a></li>
+                                <li><a href="#"><i class="fa fa-user-plus"></i> Signup</a></li>
+                                <li><a href="#"><i class="fa fa-reorder"></i> My Orders</a></li>
+                                <li><a href="#"><i class="fa fa-money"></i> My Cash</a></li>
+                                <li><a href="#"><i class="fa fa-address-book"></i> My Addresses</a></li>
+                                <li><a href="#"><i class="fa fa-question-circle"></i> FAQ</a></li>
+                                <li><a href="#"><i class="fa fa-phone-square"></i> Contact us</a></li>
+                                <li><a href="#"><i class="fa fa-power-off"></i> Logout</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="hero-image">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-offset-3 col-md-6">
+                    <div class="store-find-block">
+                        <div class="store-logo"> <img src="images/logo.png"></div>
+                        <div class="store-find">
+                            <div class="store-head">
+                                <h1>Groceries Delivered in 1 hour</h1>
+                                <h4>Enter your zip code to see your local stores.</h4>
+                            </div>
+                            <!-- Text input-->
+                            <div class="store-form">
+                                <form>
+                                    <div class="row">
+                                        <div class="form-group">
+                                            <label class="col-md-12 control-label sr-only" for="zipcode">Enter Zip Code</label>
+                                            <div class="col-md-12">
+                                                <input id="zipcode" name="zipcode" type="text" placeholder="#####-###" class="form-control input-md" required="">
+                                            </div>
+                                        </div>
+                                        <!-- Button -->
+                                        <div class="form-group">
+                                            <label class="col-md-4 control-label sr-only" for="submit">submit</label>
+                                            <div class="col-md-12">
+                                                <button id="submit" name="submit" class="btn btn-default btn-block btn-lg">Find Store</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <p>Already have an account? <a href="#">Log in</a></p>
+                        </div>
+                        <div class="store-footer">
+                            <p>FREE Delivery - only first order </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="space-small bg-default bdr-btm">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                    <!-- feature block start -->
+                    <div class="feature-block feature-left">
+                        <div class="feature-icon">
+                            <div class="feature-icon-bg">
+                                <i class="fa fa-tags"></i>
+                            </div>
+                        </div>
+                        <div class="feature-content">
+                            <h3 class="feature-title">Best Prices &amp; Offers</h3>
+                            <p>Cheaper prices than your local supermarket, great cashback offers to top it off.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.feature block start -->
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                    <!-- feature block start -->
+                    <div class="feature-block feature-left">
+                        <div class="feature-icon">
+                            <div class="feature-icon-bg">
+                                <i class="fa fa-calendar-check-o"></i>
+                            </div>
+                        </div>
+                        <div class="feature-content">
+                            <h3 class="feature-title">Wide Assortment</h3>
+                            <p>Choose from 5000+ products across food, personal care, household & other categories.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.feature block start -->
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                    <!-- feature block start -->
+                    <div class="feature-block feature-left">
+                        <div class="feature-icon">
+                            <div class="feature-icon-bg">
+                                <i class="fa fa-refresh"></i>
+                            </div>
+                        </div>
+                        <div class="feature-content">
+                            <h3 class="feature-title">Easy Returns</h3>
+                            <p>Not satisfied with a product? Return it at the doorstep & get a refund within hours.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.feature block start -->
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-5 col-sm-5 col-md-5 col-xs-12">
+                    <div class="footer-block">
+                        <div class="about-info">
+                            <h3 class="footer-title">About Hyperlocal</h3>
+                            <p>'HYPERLOCAL' is owned & managed by <strong>“Hyperlocal India Private Limited”</strong> and is not related, linked or interconnected in whatsoever manner or nature,to “HyperlocaL” which is a real estate services business operated by “Consultancy Services Private Limited”.</p>
+                            <a href="#" class="btn-link">Read More</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                    <div class="footer-block">
+                        <h3 class="footer-title">Useful Links</h3>
+                        <ul class="listnone">
+                            <li><a href="#">Get Your Store Listed</a></li>
+                            <li><a href="#">Blog</a></li>
+                            <li><a href="#">FAQ</a></li>
+                            <li><a href="#">Terms & Conditions</a></li>
+                            <li><a href="#">Careers</a></li>
+                            <li><a href="#">About Us</a></li>
+                            <li><a href="#">Contact Us</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-3 col-md-3 col-xs-12">
+                    <div class="footer-block">
+                        <h3 class="footer-title">Download App</h3>
+                        <div class="app-action">
+                            <a href="#"><img src="images/playstore.png" class="app-btn"></a>
+                            <a href="#"><img src="images/app-store-logo.png" class="app-btn"></a>
+                        </div>
+                        <div class="footer-social">
+                            <a href="#" class="fa fa-facebook-square"></a>
+                            <a href="#" class="fa fa-twitter-square"></a>
+                            <a href="#" class="fa fa-instagram"></a>
+                            <a href="#" class="fa fa-youtube-square"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="tinyfooter">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <p class="footer-text">© Hyperlocal India Pvt. Ltd., 2016-2017</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Phone Modal -->
+    <div class="phoneModal-popup">
+        <div class="modal fade" id="phoneModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <div class="store-find-block">
+                            <div class="mydivs">
+                                <div class="store-find">
+                                    <div class="store-head">
+                                        <h1>Phone Number Verifcation</h1>
+                                        <h4>Enter Your phone number to login/ sign up</h4>
+                                    </div>
+                                    <!-- Text input-->
+                                    <div class="store-form">
+                                        <form>
+                                            <div class="row">
+                                                <div class="form-group">
+                                                    <label class="col-md-12 control-label sr-only" for="Phone">Phone</label>
+                                                    <div class="col-md-12">
+                                                        <input id="Phone" name="Phone" type="text" placeholder="Phone" class="form-control input-md" required="">
+                                                    </div>
+                                                </div>
+                                                <!-- Button -->
+                                                <div class="form-group">
+                                                    <label class="col-md-4 control-label sr-only" for="next">next</label>
+                                                    <div class="col-md-12">
+                                                        <button id="next" name="next" class="btn btn-default btn-block btn-lg">Next</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <p class="seperator">or</p>
+                                        <div class="social-login-section">
+                                            <a href="#" class="social-login-btn facebook-btn">Continue with Facebook</a>
+                                            <a href="#" class="social-login-btn twitter-btn">Continue with Twitter</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="code-varifications">
+                                    <div class="store-find">
+                                        <div class="store-head">
+                                            <button name="prev" class="btn-link">Back</button>
+                                            <h1>Code Verifcation</h1>
+                                            <h4>Enter your code in below area.</h4>
+                                        </div>
+                                        <!-- Text input-->
+                                        <div class="store-form">
+                                            <form>
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <label class="col-md-12 control-label sr-only" for="number">Phone</label>
+                                                        <div class="col-lg-3 col-sm-3 col-md-3 col-xs-3 nopr">
+                                                            <input id="number" name="number" type="text" placeholder="0" class="form-control input-md" required="">
+                                                        </div>
+                                                        <div class="col-lg-3 col-sm-3 col-md-3 col-xs-3 nopr">
+                                                            <input id="number" name="number" type="text" placeholder="0" class="form-control input-md" required="">
+                                                        </div>
+                                                        <div class="col-lg-3 col-sm-3 col-md-3 col-xs-3 nopr">
+                                                            <input id="number" name="number" type="text" placeholder="0" class="form-control input-md" required="">
+                                                        </div>
+                                                        <div class="col-lg-3 col-sm-3 col-md-3 col-xs-3">
+                                                            <input id="number" name="number" type="text" placeholder="0" class="form-control input-md" required="">
+                                                        </div>
+                                                    </div>
+                                                    <!-- Button -->
+                                                    <div class="form-group">
+                                                        <div class="row">
+                                                            <label class="col-md-4 control-label sr-only" for="next">next</label>
+                                                            <div class="col-md-12">
+                                                                <button id="next" name="next" class="btn btn-default btn-block btn-lg">Next</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="success-message">
+                                    <div class="store-find">
+                                        <div class="store-form">
+                                            <div class="success-sign"><i class="fa fa-check-circle"></i></div>
+                                            <h1>Successful Verification</h1>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="store-footer text-center">
+                                <p>You agree to our <strong>Terms of Service</strong> &amp; <strong>Privacy Policy</strong></p>
+                            </div>
+                            <!-- next div code -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="js/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function() {
+        var divs = $('.mydivs>div');
+        var now = 0; // currently shown div
+        divs.hide().first().show();
+        $("button[name=next]").click(function(e) {
+            divs.eq(now).hide();
+            now = (now + 1 < divs.length) ? now + 1 : 0;
+            divs.eq(now).show(); // show next
+        });
+        $("button[name=prev]").click(function(e) {
+            divs.eq(now).hide();
+            now = (now > 0) ? now - 1 : divs.length - 1;
+            divs.eq(now).show(); // or .css('display','block');
+            //console.log(divs.length, now);
+        });
+    });
+    </script>
+</body>
+
+</html>

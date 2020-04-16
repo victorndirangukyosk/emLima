@@ -1,0 +1,87 @@
+body {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+a:hover{
+    text-decoration: none;
+}
+.navbar {
+    margin-bottom: 20px;
+}
+.table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+    vertical-align: middle !important;
+}
+table a.desc:after {
+    content: " \f106";
+    font-family: FontAwesome;
+    font-size: 14px;
+}
+.table a.asc:after {
+    content: " \f107";
+    font-family: FontAwesome;
+    font-size: 14px;
+}
+.table-heading {
+  background: #E7E7E7;
+}
+.table-heading h3{
+    margin: 0;
+}
+.small-box {
+  border-radius: 2px;
+  background: #E7E7E7;
+  display: block;
+  margin-bottom: 20px;
+  position: relative;
+}
+.bg-custome-d {
+  background-color: #367fa9;
+  color: white;
+}
+.bg-teal-active {
+  background-color: #30bbbb !important;
+}
+.bg-olive {
+  background-color: #3d9970 !important;
+}
+.small-box > .inner {
+  padding: 10px;
+}
+.small-box h3 {
+  font-size: 38px;
+  font-weight: bold;
+  margin: 0 0 10px;
+  padding: 0;
+  white-space: nowrap;
+}
+.small-box p {
+  font-size: 15px;
+}
+.small-box .icon {
+  color: rgba(0, 0, 0, 0.15);
+  font-size: 90px;
+  position: absolute;
+  right: 10px;
+  top: -10px;
+  transition: all 0.3s linear 0s;
+  z-index: 0;
+}
+.small-box:hover .icon {
+  font-size: 95px;
+}
+#tracking{
+    text-align: center;
+    display: none;
+}
+.btn.btn-lg.btn-primary {
+  background-image: linear-gradient(to top, rgba(0, 0, 0, 0) 0px, rgba(255, 255, 255, 0.2) 100%);
+  border: medium none;
+  box-shadow: 0 0 50px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  line-height: 34px;
+  text-transform: uppercase;
+  width: 100%;
+}
+#map{
+    width: 100%;
+    height: 300px;
+}

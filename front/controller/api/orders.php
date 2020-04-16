@@ -1,0 +1,717 @@
+<?php
+
+class ControllerApiOrders extends Controller
+{
+
+    public function getOrder($args = array())
+    {
+        $this->load->language('api/orders');
+
+        $log = new Log('error.log');
+        $log->write('getOrder');
+        $log->write($args);
+
+        //echo "cvrg";die;
+        $json = array();
+
+        if (!isset($this->session->data['api_id'])) {
+            $json['error'] = $this->language->get('error_permission');
+        } else {
+            $this->load->model('checkout/order');
+            $this->load->model('account/order');
+
+            $this->load->model('api/orders');
+            
+
+            $order = $this->model_checkout_order->getOrder($args['id']);
+
+            if(isset($order)) {
+                $order['store_details'] = $this->model_account_order->getStoreById($order['store_id']);
+
+                /* totals */
+                $data['totals'] = array();
+
+                $totals = $this->model_account_order->getOrderTotals($args['id']);
+
+                $data['newTotal'] = $this->currency->format(0);
+
+                $data['total'] = 0;
+                $order['subtotal'] = 0;
+                $order['nice_subtotal'] = 0;
+                //echo "<pre>";print_r($totals);die;
+                foreach ($totals as $total) {
+                    
+
+                    if($total['code'] == 'sub_total') {
+                        $order['subtotal'] = $total['value'];
+                        $order['nice_subtotal'] = $this->currency->format($order['subtotal'], $order['currency_code'], $order['currency_value']);
+                    }
+
+
+                    if($total['code'] == 'total') {
+                        $temptotal = $total['value'];
+                        $data['total'] = $total['value'];
+                    }
+
+                    /*$val = array('title' => $total['title'],'text'  => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']));
+
+                    $data['totals'][] = [
+                            $total['code'] => $val];
+                    
+
+
+                    $data['plain_settlement_amount'] = $order_info['settlement_amount'];
+                    if(isset($data['settlement_amount']) && isset($data['subtotal']) && isset($temptotal)) {
+
+                        $data['newTotal'] = $this->currency->format($temptotal - $data['subtotal'] + $order_info['settlement_amount']);
+                    }*/
+                }
+
+            }
+            
+            
+            //echo "<pre>";print_r();die;
+
+            $order['nice_total'] = $this->currency->format($order['total'], $order['currency_code'], $order['currency_value']);
+
+            $order['products'] = array();
+
+
+            //$products = $this->model_api_orders->getOrderProducts($args['id']);
+
+            $realproducts = $this->model_account_order->hasRealOrderProducts($args['id']);
+
+            if($realproducts) {
+                $products = $this->model_account_order->getRealOrderProducts($args['id']);  
+            } else {
+                $products = $this->model_account_order->getOrderProducts($args['id']);
+            }
+
+
+            //echo "<pre>";print_r($products);die;
+
+            if (!empty($products)) {
+                foreach ($products as $product) {
+                    $product['nice_total'] = $this->currency->format($product['total'], $order['currency_code'], $order['currency_value']);
+
+                    $product['nice_price'] = $this->currency->format($product['price'], $order['currency_code'], $order['currency_value']);
+
+
+                    $order['products'][] = $product;
+                }
+            }
+
+            $order['histories'] = array();
+
+            $this->load->model('sale/order');
+
+            $results = $this->model_sale_order->getFullOrderHistoriesByOrderId($args['id']);
+
+            foreach ($results as $result) {
+                $order['histories'][] = array(
+                    'notify' => $result['notify'] ? $this->language->get('text_yes') : $this->language->get('text_no'),
+                    'status' => $result['status'],
+                    'comment' => nl2br($result['comment']),
+                    'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added']))
+                );
+            }
+
+            //echo "<pre>";print_r($order);die;
+            
+
+            $json = $order;
+            $log->write($json);
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function addOrder($args = array())
+    {
+        $this->load->language('api/orders');
+
+        $json = array();
+
+        if (!isset($this->session->data['api_id'])) {
+            $json['error'] = $this->language->get('error_permission');
+        } else {
+            $this->load->model('checkout/order');
+
+            $json['order_id'] = $this->model_checkout_order->addOrder($args);
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function editOrder($args = array())
+    {
+        $this->load->language('api/orders');
+
+        $json = array();
+
+        if (!isset($this->session->data['api_id'])) {
+            $json['error'] = $this->language->get('error_permission');
+        } else {
+            $this->load->model('checkout/order');
+
+            $this->model_checkout_order->editOrder($args['id'], $args);
+
+            $json['success'] = $this->language->get('text_success');
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+    
+    public function deleteOrder($args = array())
+    {
+        $this->load->language('api/orders');
+
+        $json = array();
+
+        if (!isset($this->session->data['api_id'])) {
+            $json['error'] = $this->language->get('error_permission');
+        } else {
+            $this->load->model('checkout/order');
+
+            $order_info = $this->model_checkout_order->getOrder($args['id']);
+
+            if ($order_info) {
+                $this->model_checkout_order->deleteOrder($args['id']);
+
+                $json['success'] = $this->language->get('text_success');
+            } else {
+                $json['error'] = $this->language->get('error_not_found');
+            }
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function getOrders($args = array())
+    {
+        $this->load->language('api/orders');
+
+        $json = array();
+
+        if (!isset($this->session->data['api_id'])) {
+            $json['error'] = $this->language->get('error_permission');
+        } else {
+            $this->load->model('api/orders');
+            $this->load->model('account/order');
+
+            $order_data = array();
+
+            //$args['sort'] = 'o.delivery_date';
+
+            if(isset($args['page'])) {
+                $args['start'] = ($args['page'] - 1) * $this->config->get('config_limit_admin');
+                $args['limit'] = $this->config->get('config_limit_admin');
+            }
+
+            $orderCount = 0;
+            $orderValue = 0;
+
+            $orderCountData = $this->model_api_orders->getTotalOrdersApi($args);
+
+            $log = new Log('error.log');
+            $log->write('getOrders');
+            
+
+            $orderCount = count($orderCountData);
+
+            foreach ($orderCountData as $da) {
+
+                $totals = $this->model_account_order->getOrderTotals($da['order_id']);
+
+                foreach ($totals as $total) {
+                    
+
+                    if($total['code'] == 'sub_total') {
+                        $orderValue += $total['value'];
+                    }
+                }
+                //$orderValue += $da['total'];
+            }
+
+            $results = $this->model_api_orders->getOrders($args);
+
+            /*$log->write($results);
+
+            //echo "<pre>";print_r($results);die;
+            $temp = $results;
+
+            $amTimeslot = [];
+            $pmTimeslot = [];
+            $inPmfirstTimeslot = [];
+
+            foreach ($temp as $temp1) {
+                
+                $temp2 = explode('-', $temp1['delivery_timeslot']);
+                
+                
+                if (strpos($temp2[0], 'am') !== false) {
+                    array_push($amTimeslot, $temp1);
+                } else {      
+
+                    if(substr($temp2[0], 0,2) == '12') {
+                        
+                        array_push($inPmfirstTimeslot, $temp1);
+                    } else {
+                        array_push($pmTimeslot, $temp1);
+                    }
+                }
+
+            }
+            foreach ($inPmfirstTimeslot as $te) {
+                
+                array_push($amTimeslot, $te);    
+            }
+
+            foreach ($pmTimeslot as $te) {
+                
+                array_push($amTimeslot, $te);    
+            }
+
+            $results = $amTimeslot;
+            
+            $log->write($results);*/
+
+            //echo "<pre>";print_r($results);die;
+            if (!empty($results)) {
+                $this->load->model('checkout/order');
+
+                foreach ($results as $result) {
+                    $order = $this->model_checkout_order->getOrder($result['order_id']);
+
+                    $order['subtotal'] = 0;
+                    $order['nice_subtotal'] = 0;
+
+                    if(isset($order)) {
+                       
+                        /* totals */
+                        $data['totals'] = array();
+
+                        $totals = $this->model_account_order->getOrderTotals($result['order_id']);
+
+                        //echo "<pre>";print_r($totals);die;
+                        foreach ($totals as $total) {
+                            
+
+                            if($total['code'] == 'sub_total') {
+                                $order['subtotal'] = $total['value'];
+                                $order['nice_subtotal'] = $this->currency->format($order['subtotal'], $order['currency_code'], $order['currency_value']);
+                            }
+                        }
+
+                    }
+
+
+                    $order['nice_total'] = $this->currency->format($order['total'], $order['currency_code'], $order['currency_value']);
+
+                    $order['products'] = array();
+
+                    $products = $this->model_account_order->getOrderProducts($result['order_id']);
+
+                    $order['products_quantity'] = 0;
+
+                    if (!empty($products)) {
+                        foreach ($products as $product) {
+                            $product['nice_total'] = $this->currency->format($product['total'], $order['currency_code'], $order['currency_value']);
+
+                            $order['products_quantity'] += $product['quantity'];
+                            
+                            $order['products'][] = $product;
+                        }
+                    }
+
+                    $order_data[] = $order;
+                }
+            }
+
+            
+
+
+            $json['orders'] = $order_data;
+            $json['orders_count'] = $orderCount;
+            $json['orders_value'] = $this->currency->format($orderValue);
+
+            //$log->write($json);
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function getTotals($args = array())
+    {
+        $this->load->language('api/orders');
+
+        $json = array();
+
+        if (!isset($this->session->data['api_id'])) {
+            $json['error'] = $this->language->get('error_permission');
+        } else {
+            $this->load->model('api/orders');
+
+            $total = $this->model_api_orders->getTotals($args);
+             
+            $total['price'] = isset($total['price'])?$total['price']:"0";
+            $total['nice_price'] = $this->currency->format($total['price']);
+            $total['number'] = isset($total['number'])?$total['number']:"0";
+            
+            $json = $total;
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function getStatuses($args = array())
+    {
+        $this->load->language('api/orders');
+
+        $json = array();
+
+        if (!isset($this->session->data['api_id'])) {
+            $json['error'] = $this->language->get('error_permission');
+        } else {
+            $this->load->model('api/orders');
+
+            $statuses = array();
+            $statuses[] = array('order_status_id' => '0', 'name' => $this->language->get('text_missing'));
+
+            $rows = $this->model_api_orders->getStatuses();
+
+            if (!empty($rows)) {
+                foreach($rows as $row) {
+                    $statuses[] = array('order_status_id' => $row['order_status_id'], 'name' => $row['name']);
+                }
+            }
+
+            $json = $statuses;
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function getReadyToPikcupStatuses($args = array())
+    {
+        $this->load->language('api/orders');
+
+        $json = array();
+
+        if (!isset($this->session->data['api_id'])) {
+            $json['error'] = $this->language->get('error_permission');
+        } else {
+            $this->load->model('api/orders');
+
+            $statuses = array();
+
+            $ready_for_pickup_status_ids = $this->config->get('config_ready_for_pickup_status');
+
+            //echo "<pre>";print_r($ready_for_pickup_status_ids);die;
+
+            //$statuses[] = array('order_status_id' => '0', 'name' => $this->language->get('text_missing'));
+
+            $rows = $this->model_api_orders->getOrderStatusesById(implode(",", $ready_for_pickup_status_ids));
+
+
+            if (!empty($rows)) {
+                foreach($rows as $row) {
+                    $statuses[] = array('order_status_id' => $row['order_status_id'], 'name' => $row['name']);
+                }
+            }
+
+            $json = $statuses;
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+
+    public function getProducts($args = array())
+    {
+        $this->load->language('api/orders');
+
+        $json = array();
+
+        //echo "<pre>";print_r($args);die;
+        if (!isset($this->session->data['api_id'])) {
+            $json['error'] = $this->language->get('error_permission');
+        } else {
+            $this->load->model('api/orders');
+            $this->load->model('account/order');
+
+            //$rows = $this->model_api_orders->getOrderProducts($args['id']);
+
+            $realproducts = $this->model_account_order->hasRealOrderProducts($args['id']);
+
+            if($realproducts) {
+                $rows = $this->model_account_order->getRealOrderProducts($args['id']);  
+            } else {
+                $rows = $this->model_account_order->getOrderProducts($args['id']);
+            }
+
+            //echo "<pre>";print_r($rows);die;
+            $order_products = array();
+
+            if ($rows) {
+                $this->load->model('tool/image');
+                $this->load->model('tool/upload');
+                $this->load->model('account/order');
+
+                foreach ($rows as $row) {
+                    $currency_value = false;
+
+                    if (isset($args['currency_code'])) {
+                        $currency_code = $args['currency_code'];
+                    } elseif (isset($row['currency_code'])) {
+                        $currency_code = $row['currency_code'];
+                        $currency_value = $row['currency_value'];
+                    } else {
+                        $currency_code = $this->config->get('config_currency');
+                    }
+
+                    $row['name'] = html_entity_decode($row['name'], ENT_QUOTES, 'UTF-8');
+
+                    $row['nice_price'] = $this->currency->format($row['price'], $currency_code, $currency_value);
+
+                    $row['nice_total'] = $this->currency->format($row['total'], $currency_code, $currency_value);
+
+                    $row['quantity'] = intval($row['quantity']);
+
+                    $order_product_options = $this->model_account_order->getOrderOptions($args['id'], $row['order_product_id']);
+
+                    $option_data = array();
+                    foreach ($order_product_options as $option) {
+                        if ($option['type'] != 'file') {
+                            $value = $option['value'];
+                        } else {
+                            $upload_info = $this->model_tool_upload->getUploadByCode($option['value']);
+                            if ($upload_info) {
+                                $value = $option['value'];
+                            } else {
+                                $value = '';
+                            }
+                        }
+
+                        $option_data[] = array($option['name'] => (utf8_strlen($value) > 20 ? utf8_substr($value, 0, 26) . '..' : $value));
+                    }
+
+                    $row['options'] = $option_data;
+
+                    if (empty($args['skip_images'])) {
+                        $thumb_width = $this->config->get('config_image_thumb_width', 300);
+                        $thumb_height = $this->config->get('config_image_thumb_height', 300);
+
+                        $thumb_zoomwidth = $this->config->get('config_zoomimage_thumb_width', 600);
+                        $thumb_zoomheight = $this->config->get('config_zoomimage_thumb_height', 600);
+
+                        $tmpImg = $row['image'];
+                        if (!empty($row['image'])) {
+                            $row['image'] = $this->model_tool_image->resize($row['image'], $thumb_width, $thumb_height);
+
+                            $row['zoom_image'] = $this->model_tool_image->resize($tmpImg, $thumb_zoomwidth, $thumb_zoomheight);
+
+                        } else {
+                            $row['image'] = $this->model_tool_image->resize('placeholder.png', $thumb_width, $thumb_height);
+
+                            $row['zoom_image'] = $this->model_tool_image->resize('placeholder.png', $thumb_zoomwidth, $thumb_zoomheight);
+                        }
+
+                        
+
+
+                        if ($this->request->server['HTTPS']) {
+                            $row['image'] = str_replace($this->config->get('config_ssl'), '', $row['image']);
+
+                            $row['zoom_image'] = str_replace($this->config->get('config_ssl'), '', $row['zoom_image']);
+                        } else {
+                            $row['image'] = str_replace($this->config->get('config_url'), '', $row['image']);
+                            $row['zoom_image'] = str_replace($this->config->get('config_url'), '', $row['zoom_image']);
+                        }
+                    }
+
+                    $order_products[] = $row;
+                }
+            }
+
+            $json = $order_products;
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function getHistories($args = array())
+    {
+        $this->load->language('api/orders');
+
+        $json = array();
+
+        if (!isset($this->session->data['api_id'])) {
+            $json['error'] = $this->language->get('error_permission');
+        } else {
+            $this->load->model('api/orders');
+
+            $json = $this->model_api_orders->getOrderHistories($args['id']);
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function addHistory($args = array())
+    {
+        $this->load->language('api/orders');
+
+        $json = array();
+
+        if (!isset($this->session->data['api_id'])) {
+            $json['error'] = $this->language->get('error_permission');
+        } else {
+            $this->load->model('checkout/order');
+
+            // Add keys for missing post vars
+            $keys = array(
+                'notify',
+                'comment'
+            );
+
+            foreach ($keys as $key) {
+                if (!isset($args[$key])) {
+                    $args[$key] = '';
+                }
+            }
+
+            $order_info = $this->model_checkout_order->getOrder($args['id']);
+
+            if ($order_info) {
+                $this->model_checkout_order->addOrderHistory($args['id'], $args['status'], $args['comment'], $args['notify']);
+
+                $json['success'] = $this->language->get('text_success');
+            } else {
+                $json['error'] = $this->language->get('error_not_found');
+            }
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    /*** API for third party delivery system to get [Ready to Pickup] Orders **/
+    public function getOrdersForDelivery($args = array())
+    {
+        $this->load->language('api/orders');
+
+        $json = array();
+
+        if (!isset($this->session->data['api_id'])) {
+            $json['error'] = $this->language->get('error_permission');
+        } else {
+            $this->load->model('api/orders');
+            $this->load->model('account/order');
+
+            $order_data = array();
+
+            if(isset($args['page'])) {
+                $args['start'] = ($args['page'] - 1) * $this->config->get('config_limit_admin');
+                $args['limit'] = $this->config->get('config_limit_admin');
+            }
+
+            $orderCount = 0;
+            $orderValue = 0;
+
+            $orderCountData = $this->model_api_orders->getTotalOrdersApi($args);
+
+            $log = new Log('error.log');
+            $log->write('getOrders');
+            
+
+            $orderCount = count($orderCountData);
+
+            foreach ($orderCountData as $da) {
+
+                $totals = $this->model_account_order->getOrderTotals($da['order_id']);
+
+                foreach ($totals as $total) {
+                    
+
+                    if($total['code'] == 'sub_total') {
+                        $orderValue += $total['value'];
+                    }
+                }
+                //$orderValue += $da['total'];
+            }
+            
+            $args['status'] = DELEVERY_GENERATE_STATUS;
+            $args['filter_pickup'] = 1;
+            $results = $this->model_api_orders->getOrders($args);
+           
+            if (!empty($results)) {
+                $this->load->model('checkout/order');
+
+                foreach ($results as $result) {
+                    $order = $this->model_checkout_order->getOrder($result['order_id']);
+
+                    $order['subtotal'] = 0;
+                    $order['nice_subtotal'] = 0;
+
+                    if(isset($order)) {
+                       
+                        /* totals */
+                        $data['totals'] = array();
+
+                        $totals = $this->model_account_order->getOrderTotals($result['order_id']);
+
+                        //echo "<pre>";print_r($totals);die;
+                        foreach ($totals as $total) {
+                            
+
+                            if($total['code'] == 'sub_total') {
+                                $order['subtotal'] = $total['value'];
+                                $order['nice_subtotal'] = $this->currency->format($order['subtotal'], $order['currency_code'], $order['currency_value']);
+                            }
+                        }
+
+                    }
+
+
+                    $order['nice_total'] = $this->currency->format($order['total'], $order['currency_code'], $order['currency_value']);
+
+                    $order['products'] = array();
+
+                    $products = $this->model_account_order->getOrderProducts($result['order_id']);
+
+                    $order['products_quantity'] = 0;
+
+                    if (!empty($products)) {
+                        foreach ($products as $product) {
+                            $product['nice_total'] = $this->currency->format($product['total'], $order['currency_code'], $order['currency_value']);
+
+                            $order['products_quantity'] += $product['quantity'];
+                            
+                            $order['products'][] = $product;
+                        }
+                    }
+
+                    $order_data[] = $order;
+                }
+            }
+
+                $json['orders'] = $order_data;
+                $json['msg'] = 'Orders List fetched!';
+                $json['status'] = 200;
+            
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+}

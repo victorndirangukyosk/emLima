@@ -1,0 +1,154 @@
+variation to product
+
+250g 1 500g 2 1kg 3 unit if variation 
+
+{product_store_id: 33633, store_id: 9}
+
+
+
+
+get products:
+
+Array
+(
+    [0] => Array
+        (
+            [key] => YToyOntzOjE2OiJwcm9kdWN0X3N0b3JlX2lkIjtpOjQ1ODA5O3M6ODoic3RvcmVfaWQiO3M6MjoiMTAiO30=
+            [qty_in_cart] => 1
+            [variations] => Array
+                (
+                )
+
+            [store_product_variation_id] => 0
+            [product_id] => 1
+            [product_store_id] => 45809
+            [default_variation_name] => Red Label Tea 250g
+            [thumb] => image/cache/data/beverages/red-label-tea-250g-228x228.jpg
+            [name] => Red Label Tea 250g
+            [description] => ..
+            [price] => $120.00
+            [special] => $100.00
+            [tax] => 0.00
+            [minimum] => 1
+            [rating] => 0
+            [href] => index.php?path=product/product&product_store_id=45809
+        )
+
+    [1] => Array
+        (
+            [key] => YToyOntzOjE2OiJwcm9kdWN0X3N0b3JlX2lkIjtpOjQ1ODEwO3M6ODoic3RvcmVfaWQiO3M6MjoiMTAiO30=
+            [qty_in_cart] => 4
+            [variations] => Array
+                (
+                )
+
+            [store_product_variation_id] => 0
+            [product_id] => 2
+            [product_store_id] => 45810
+            [default_variation_name] => 
+            [thumb] => image/cache/data/beverages/red-label-500g-228x228.jpg
+            [name] => Red Label Tea 500g
+            [description] => ..
+            [price] => $121.00
+            [special] => $101.00
+            [tax] => 0.00
+            [minimum] => 1
+            [rating] => 0
+            [href] => index.php?path=product/product&product_store_id=45810
+        )
+
+    [2] => Array
+        (
+            [key] => YToyOntzOjE2OiJwcm9kdWN0X3N0b3JlX2lkIjtpOjQ1ODExO3M6ODoic3RvcmVfaWQiO3M6MjoiMTAiO30=
+            [qty_in_cart] => 1
+            [variations] => Array
+                (
+                )
+
+            [store_product_variation_id] => 0
+            [product_id] => 3
+            [product_store_id] => 45811
+            [default_variation_name] => 
+            [thumb] => image/cache/data/beverages/red-label-1kg-228x228.jpg
+            [name] => Red Label Tea 1kg
+            [description] => ..
+            [price] => $122.00
+            [special] => $102.00
+            [tax] => 0.00
+            [minimum] => 1
+            [rating] => 0
+            [href] => index.php?path=product/product&product_store_id=45811
+        )
+);
+
+
+thumb is the image visible. we should have a 
+
+product_detail or product_image table with 
+columns: 
+
+id,product_id,type(ex- image) , path
+
+and when we retrive products thumb index (refer above (thumb index), currently one image only) should be array with multiple image path.
+
+I think we are using different products for each variations. Variation is not impelmented.
+
+May be i am confused, clear my thoughts.
+
+http://mvg.local.sahusoft.info/index.php?path=checkout/cart/add
+
+api call to add in cart
+
+variation_id:0
+product_id:45811
+quantity:2
+
+resp: 
+
+{key: "YToyOntzOjE2OiJwcm9kdWN0X3N0b3JlX2lkIjtpOjQ1ODEzO3M6ODoic3RvcmVfaWQiO3M6MjoiMTAiO30=",…}
+count_products
+:
+18
+key
+:
+"YToyOntzOjE2OiJwcm9kdWN0X3N0b3JlX2lkIjtpOjQ1ODEzO3M6ODoic3RvcmVfaWQiO3M6MjoiMTAiO30="
+product_store_id
+:
+"45813"
+success
+:
+"Success: You have added <a href="index.php?path=product/product&amp;product_store_id=45813">Taj Mahal Tea 245g</a> to your <a href="index.php?path=checkout/cart">shopping cart</a>!"
+total
+:
+"18 item(s) - $1,928.00"
+
+
+
+
+http://mvg.local.sahusoft.info/index.php?path=checkout/cart/hasStock
+
+When we increase quantity above is called
+
+key:
+quantity:2
+
+resp : true/false
+
+
+$this->db->insert('product_to_store',$data);
+
+
+$data = array(
+     		'variation_id'=>$variation['variation_id'],
+     		'product_store_id'=>$variation['product_store_id'],
+     		'price'=>$variation['price'],
+     		'special_price'=>$variation['special_price'],
+       	);
+
+       	$this->db->insert('variation_to_product_store', $data);
+
+
+
+It save only in 
+
+

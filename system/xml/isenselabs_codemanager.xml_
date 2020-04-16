@@ -1,0 +1,16 @@
+<modification>
+	<name>CodeManager by iSenseLabs</name>
+	<version>1.2</version>
+	<link>http://isenselabs.com</link>
+	<author>iSenseLabs</author>
+	<code>isenselabs_codemanager</code>
+
+	<file path="admin/view/template/common/menu.tpl">
+		<operation>
+			<search><![CDATA[<li><a href="<?php echo $backup; ?>"><?php echo $text_backup; ?></a></li>]]></search>
+			<add position="after"><![CDATA[
+				<li><a href="index.php?path=module/codemanager&token=<?php echo $_GET['token']; ?>">Code Manager</a></li>
+			]]></add>
+		</operation>
+	</file> 
+</modification>

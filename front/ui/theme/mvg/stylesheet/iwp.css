@@ -1,0 +1,70 @@
+.iwp {
+    width: 320px;
+    height: auto;
+    border: 1px solid;
+    box-sizing: border-box;
+    border-radius: 4px;
+    font-family: sans-serif;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 999999;
+    padding: 15px 20px 25px;
+    display: block;
+    cursor: pointer;
+    line-height: 15px;
+}
+.iwp .close {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    left: 309px;
+    top: -10px;
+    border-radius: 15px;
+    background-image: url(data:image/png;base64,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);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 20px;
+    cursor: pointer;
+    box-shadow: 0 1px 2px #ccc;
+}
+.iwp .close {
+    opacity: 0.9;
+}
+.iwp .close:hover, .iwp .close:focus {
+    box-shadow: 1px 1px 5px #909090;
+    opacity: 1.0;
+}
+.iwp .iwp-body {
+    margin-top: 10px;
+    font-size: 13px;
+    cursor: pointer;
+}
+.iwp .iwp-headline {
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+@media only screen
+and (min-device-width: 320px)
+and (max-device-width: 736px)
+{
+    .iwp {
+        width: 100%;
+        height: auto;
+        border: 0;
+        border-bottom: 1px solid;
+        border-radius: 0;
+        top: 0;
+        right: 0;
+        padding: 15px 40px 25px 20px;
+    }
+    .iwp .close {
+        left: 85%;
+        top: 0;
+        width: 50px;
+        height: 100%;
+        box-shadow: none;
+    }
+}
