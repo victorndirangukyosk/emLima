@@ -225,18 +225,19 @@
       </div>
        </div>
        <div style="clear:both !important"> </div>
-         <div class="container--full-width featured-categories">
-                <div class="container">
+        
 				    <?php foreach($categories as $category){
 					       $link_array = explode('/',$category['href']);
                            $page_link = end($link_array);
-					 if(count($category['products'])>0){
+					   
 					  ?>
-					   <div class="clearfix featured-categories__header">
-						  <h2 class="featured-categories__header-title"><span><?=$category['name']?></span></h2>				  
-					   </div>
+										   <div class="container--full-width featured-categories">
+											 <div class="container">
 					                        <div class="_47ahp" data-test-selector="search-results">
 											<?php if(count($category['products'])>0){?>
+											 <div class="clearfix featured-categories__header">
+						  <h2 class="featured-categories__header-title"><span><?=$category['name']?></span></h2>				  
+					   </div>
                                                 <ul id="items-ul" class="_2tY3C" data-test-selector="item-cards-layout-grid">
 												
 												 <?php 
@@ -454,18 +455,17 @@
        
                                                </ul>
 											   <span><a href="<?=$this->url->link('product/store', 'store_id='.ACTIVE_STORE_ID).'?cat='.$page_link?>" >View All </a></span>   
-											   <?php }else{ ?>
-             <center> <h2> There are no products to list in this category. </h2></center>
-            <?php }?>
+											   <?php }?>
         
 				</div>
 				</div>
 	          
 																		
 				</div>	
+				</div>
 				
 				
-				   <?php } }?>
+				   <?php } ?>
                    <?php /* ?>
 				   <div class="featured-categories__scroller">
                       <div class="clearfix featured-categories__items owl-carousel owl-theme">
@@ -488,7 +488,7 @@
                       </div>
                    </div>
 				   <?php */?>
-                </div>
+                <!--</div>
              </div>
 		<?php /* ?>
          <div id="homepage-gallery" class="homepage-gallery c-clearfix items-per-page-11 can-fit-4-blocks">
