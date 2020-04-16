@@ -35,6 +35,10 @@
     <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/theme/mvgv2/css/abhishek.css?v=2.2.3">
 
     <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/theme/mvgv2/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="<?= $base ?>front/ui/theme/mvgv2/css/mycart.css">
+    <link rel="stylesheet" type="text/css" href="<?= $base; ?>front/ui/theme/mvgv2/css/custom.css?v=1.1.0">
+    <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/theme/metaorganic/assets/css/list.css">
+
     <!-- <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/theme/mvgv2/css/sweetalert.min.css">
     <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/theme/mvgv2/css/drawer.min.css"> -->
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.20.4/sweetalert2.min.css">
@@ -221,14 +225,249 @@
       </div>
        </div>
        <div style="clear:both !important"> </div>
-         <?php if(!$page || ($page !='stores')){ ?>
          <div class="container--full-width featured-categories">
                 <div class="container">
-                   <div class="clearfix featured-categories__header">
-                      <h2 class="featured-categories__header-title"><span>Shop By Categories</span></h2>
-                      
-                   </div>
-                   <div class="featured-categories__scroller">
+				    <?php foreach($categories as $category){
+					       $link_array = explode('/',$category['href']);
+                           $page_link = end($link_array);
+					 if(count($category['products'])>0){
+					  ?>
+					   <div class="clearfix featured-categories__header">
+						  <h2 class="featured-categories__header-title"><span><?=$category['name']?></span></h2>				  
+					   </div>
+					                        <div class="_47ahp" data-test-selector="search-results">
+											<?php if(count($category['products'])>0){?>
+                                                <ul id="items-ul" class="_2tY3C" data-test-selector="item-cards-layout-grid">
+												
+												 <?php 
+													foreach($category['products'] as $product) {
+													//echo '<pre>';print_r($product);exit;
+												  ?>
+                                                   <li class="_1cn3x ">
+                                                   <span role="group">
+					
+                                                    <div class="_2sT86 _1fLGj">
+                                                    <article class="_3Oe1A">
+
+                                                    <div class="col-md-12 col-sm-12">
+                                                    <div class="col-md-6 col-sm-6">
+                                                    <section class="_25Upe">
+                                                    <section class="inner_sec">
+                                                    <div class="_3XNMI">
+                                                   <a class="product-detail-bnt open-popup" role="button" data-store=<?= ACTIVE_STORE_ID?> data-id="<?= $product['product_store_id'] ?>" target="_blank"  aria-label="<?=$product['name']?>">
+                                                    <div class="_2_3rp">
+                                                    <div style="">
+                                                    <img class="_1xvs1" src="<?=$product['thumb']?>" title="<?=$product['name']?>" alt="<?=$product['name']?>" style="left: 0%;">
+                                                    
+                                                    </div>
+                                                    </div>
+                                                    </a>
+                                                   
+                                                    </div>
+                                                 
+                                               
+                                        <section class="_1SQpT">
+                                            <a href="<?=$product['href']?>" class="KFSGT" role="toolbar" title="<?=$product['name']?>"></a>
+                                            
+                                        </section>
+                                       
+                                       
+                                        
+                                        </section>
+                                        </section>
+                                        </div>
+                                        <div class="col-md-6 col-sm-6">
+                                        <div class="vfsyA col-md-12 col-sm-12 pl0" style="margin-top:30px">
+                                                    <div class="_25ygu">
+                                                     <div class="JHf2a">
+                                                        <a class="R8zaM" href="#"><?= $heading_title;?></a>
+                                                        
+                                                        </div>
+                                                    <a href="#" class="_2Pk9X" tabindex="0"><?=$product['name']?></a>
+
+                                                       
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 col-sm-12 pl0 pr0">
+                                                <div class="_2D2lC">
+                                                            <div class="-DeRq">
+                                                                <?= $product['special'];?></div>
+                                                        </div>
+                                                        <div>
+                                                        <div class="_2xqFO">
+                                                                <div class="_3QV9M"><strike><?= $product['price'];?></strike> <span style="color:red; font-weight:bold"><?= $product['percent_off'];?>% OFF </span></div>
+                                                                    
+                                                            </div>
+                                                        </div>
+                                                </div>
+                                        </div>
+                                        </div>
+                                        <section class="hypZf">
+                                            <div class="inner_sec_div _2DGi-">
+                                               
+                                                <div class="Jhd4X">
+                                                    <div class="XvxbR">
+                                                        
+                                                        <div class="GBZ1M">
+                                                            <div class="_1I1Wt">
+                                                                <div class="_3yoIm" aria-label="Rated 3.83 out of 5">
+                                                                   
+                                                                
+                                                        </div>
+                                                       
+                                                        <div class="_3PpSK"><span role="button" aria-label="Show more" class="nrkj-">Show more</span></div>
+                                                    </div>
+                                                    <div class="_2bSMY">
+                                                        <div class="_31alT"><a class="_3tfm8 _3ePxY  product-detail-bnt product-img product-description open-popup" role="button" data-store="<?= ACTIVE_STORE_ID;?>" data-id="<?= $product['product_store_id'] ?>" target="_blank" rel="noopener noreferrer">Preview</a>
+                                                          <div class="pro-qty-addbtn" data-store-id="<?= ACTIVE_STORE_ID ?>" data-variation-id="<?= $product['product_variation_store_id'] ?>" id="action_<?= $product['product_variation_store_id'] ?>">
+
+													      <?php require 'actions.tpl'; ?>
+									
+													      </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="_1VJk4">
+                                                    <div class="_4zAGT">
+                                                        <div class="_3QV9M">356
+                                                            <!-- -->Sales</div>
+                                                        <div class="GeySM"><span class="_2g_QW">Last updated:</span> <span class="_3TIJT"> <!-- -->15 Oct 15</span></div>
+                                                    </div>
+                                                    <ul class="_3bM8k">
+                                                       <?= $product['description'];?>
+                                                    </ul>
+                                                    <section class="_1jcKT">
+                                                        <div class="_343Ow"><span class="_3Q47d">Tags: <!-- -->agents, apartment, estate, flat, home, house, multi properties, real estate, real estate agent, residence, villa</span></div>
+                                                    </section>
+                                                </div>
+                                            </div>
+                                        </section>
+                                        <section class="_38ivw">
+                                            <section class="_9q1LS">
+                                                <section class="_3dJU8">
+                                                    <div class="oKU4K">
+                                                      
+                                                    </div>
+                                                </section>
+                                                <section class="_7H2LP">
+                                                    <div class="-DeRq">
+                                                        <?= $product['special'];?></div>
+                                                    <div class="_1I1Wt">
+                                                        
+                                                    <div class="GeySM"><span class="_2g_QW">Unit:</span> <span class="_3TIJT"><?= $product['unit']?></span></div>
+                                                </section>
+                                                <section data-id="<?= $product['product_store_id'] ?>" class="VRlLl"><a class="_3tfm8 _3ePxY  product-detail-bnt product-img product-description open-popup" role="button" data-store=<?= $current_store;?> data-id="<?= $product['product_store_id'] ?>" target="_blank" rel="noopener noreferrer">Preview</a>
+                                                    <div class="pro-qty-addbtn" data-store-id="<?= $current_store ?>"data-variation-id="<?= $product['product_variation_store_id'] ?>" id="action_<?= $product['product_variation_store_id'] ?>">
+
+													 <?php require 'action.tpl'; ?>
+									
+												
+                                                </section>
+                                            </section>
+                                        </section>
+                                        </article>
+                                    </div>
+                                    </span>
+                                                    </li>
+					<!--- Product Details Modal Start --->
+				     <div id="product_<?=$product['product_id']?>" class="modal fade" role="dialog">
+						   <div class="modal-dialog">
+
+                      <!-- Modal content-->
+							<div class="modal-content">
+							<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+							</div>
+							<div class="modal-body class="col-lg-2 col-md-4 col-sm-6 col-xs-6 nopadding product-details" style="border-right: 1px solid rgb(215, 220, 214);">
+							<div>
+
+							<?php /*echo "<pre>";print_r($product);die;*/ if(isset($product['percent_off']) && $product['percent_off'] != '0.00') { ?>
+
+							<span class="spacial-offer"> <?php echo $product['percent_off'].'% OFF';?></span>
+							<?php } ?>
+
+
+							<?php if($this->customer->isLogged()) { ?>
+
+
+							<a href="#" class="add-to-list list_button<?= $product['product_store_id'] ?>-<?= $product['store_product_variation_id'] ?>" id="list-btn" data-id="<?= $product['product_id'] ?>"
+							type="button" data-toggle="modal" data-target="#listModal"  ><img class="add-list-png"   src="<?= $base;?>front/ui/theme/mvgv2/images/list-icon.png">
+							</a>
+
+							<?php } else { ?>
+							<a href="#"  class="add-to-list" type="button" data-toggle="modal" data-target="#phoneModal"><img class="add-list-png" src="<?= $base;?>front/ui/theme/mvgv2/images/list-icon.png"></a>
+
+							<?php } ?>
+							</div>
+							<div class="product-block"  data-id="<?= $product['product_store_id'] ?>">
+
+							<div class="product-img product-description open-popup" data-id="<?= $product['product_store_id'] ?>" data-id="<?= $product['product_store_id'] ?>">
+							<img class="lazy" data-src="<?= $product['thumb'] ?>" alt="">
+							</div>
+							<div class="product-description" data-id="<?= $product['product_store_id'] ?>">
+
+
+							<h3 class="open-popup" data-id="<?= $product['product_store_id'] ?>">
+
+							<a class="product-title"><?= $product['name']?></a>
+							</h3>
+
+							<?php if(trim($product['unit'])){ ?>
+							<p class="product-info open-popup" data-id="<?= $product['product_store_id'] ?>"><span class="small-info"><?= $product['unit'] ?></span></p>
+							<?php } else { ?>
+							<p class="product-info open-popup" data-id="<?= $product['product_store_id'] ?>"><span class="small-info">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p>
+							<?php } ?>
+
+							<div class="product-price">
+							<?php if ( $product['special'] == '0.00' || empty(trim($product['special']))) { ?>
+							<span class="price-cancelled open-popup" data-id="<?= $product['product_store_id'] ?>" style="display: none";>
+							</span>
+							<span class="price open-popup" data-id="<?= $product['product_store_id'] ?>">
+							<?php echo $product['price']; ?>
+							</span>
+							<?php } else { ?>
+							<span class="price-cancelled open-popup" data-id="<?= $product['product_store_id'] ?>">
+							<?php echo $product['price']; ?>
+							</span>
+							<span class="price open-popup" data-id="<?= $product['product_store_id'] ?>">
+							<?php echo $product['special']; ?>
+							</span>
+							<?php } ?>
+							<div class="pro-qty-addbtn" data-store-id="<?= $current_store ?>" data-variation-id="<?= $product['store_product_variation_id'] ?>" id="action_<?= $product['product_store_id'] ?>">
+
+							<?php require 'action.tpl'; ?>
+							</div>
+							</div>
+
+							</div>
+							</div>
+							</div>
+							<div class="modal-footer">
+							Footer
+							</div>
+							</div>
+							<!----- Product Detail Modal End --->
+
+                  </div>
+                </div>
+                                                 <?php }?>
+       
+                                               </ul>
+											   <span><a href="<?=$this->url->link('product/store', 'store_id='.ACTIVE_STORE_ID).'?cat='.$page_link?>" >View All </a></span>   
+											   <?php }else{ ?>
+             <center> <h2> There are no products to list in this category. </h2></center>
+            <?php }?>
+        
+				</div>
+				</div>
+	          
+																		
+				</div>	
+				
+				
+				   <?php } }?>
+                   <?php /* ?>
+				   <div class="featured-categories__scroller">
                       <div class="clearfix featured-categories__items owl-carousel owl-theme">
                       <?php foreach($categories as $categoty){
                            $link_array = explode('/',$categoty['href']);
@@ -248,9 +487,10 @@
                          
                       </div>
                    </div>
+				   <?php */?>
                 </div>
              </div>
-        <?php } ?>
+		<?php /* ?>
          <div id="homepage-gallery" class="homepage-gallery c-clearfix items-per-page-11 can-fit-4-blocks">
             <div class="tabbed js-tabbed-module c-clearfix">
                <div class="tabbed__tabs-container" data-tabbed-role="controls">
@@ -321,6 +561,7 @@
             </div>
          </div>
       </div>
+	  <?php */ ?>
       <!-- /.page-container -->
       <div class="below-the-fold">
          <!-- /.page-container -->
@@ -356,7 +597,7 @@
          </div>
         
  </div>
-  
+  <div class="modal-wrapper"></div> 
     <?php echo $footer ?>
     <!-- Phone Modal -->
     <?= $login_modal ?>
@@ -367,6 +608,7 @@
     <script src="<?= $base;?>front/ui/theme/mvgv2/js/jquery.min.js"></script>
     <script src="<?= $base;?>front/ui/theme/mvgv2/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.js"></script>
+	<script src="<?= $base;?>front/ui/javascript/easyzoom.js"></script>
     
     <script type="text/javascript" src="https://maps.google.com/maps/api/js?key=<?= $this->config->get('config_google_api_key') ?>&libraries=places"></script>
 
@@ -382,6 +624,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/iScroll/5.1.3/iscroll.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.1/js/drawer.min.js" type="text/javascript"></script>
 
+  <script src="<?= $base;?>front/ui/javascript/common.js?v=2.0.5" type="text/javascript"></script>
     <script src="<?= $base; ?>front/ui/theme/metaorganic/javascript/common.js?v=2.0.7" charset="UTF-8" type="text/javascript"></script>
 
     <link rel="stylesheet" href="https://formden.com/static/cdn/bootstrap-iso.css" />
@@ -640,4 +883,59 @@ __kdt.push({"post_on_load": false});
               })
             })
  </script>
+   <script type="text/javascript">
+    $(document).delegate('.close-model', 'click', function(){
+        console.log("close product block");
+            $('#bannermodal').modal('hide');
+            $('.modal-backdrop').remove();
+    });
+        $(document).ready(function() {
+            console.log("ready in top_category");
+            $(document).delegate('.open-popup', 'click', function(){
+                //alert("wfe");
+                //$('#popupmodal').modal('hide');
+                console.log("product blocks"+$(this).attr('data-id'));
+                $.get('index.php?path=product/product/view&product_store_id='+$(this).attr('data-id')+'&store_id='+$(this).attr('data-store'), function(data){
+                    $('.modal-wrapper').html(data);
+                    $('#popupmodal').modal('show');
+                });
+            });
+        });
+
+    </script>
+    <script type="text/javascript">
+   
+    $("#sidebarss").stick_in_parent();
+
+
+    if(window.screen.availWidth < 450 || window.screen.availHeight < 732) {
+        $("#sidebarss").trigger("sticky_kit:detach");
+    } else {
+        $("#sidebarss").stick_in_parent();
+    }
+
+    $('.add-to-list').on('click', function (e) {
+        
+        console.log("erg");
+        data = {
+            product_id : $(this).data("id")
+        }
+
+        $.ajax({
+            url: 'index.php?path=account/wishlist/getProductWislists',
+            type: 'post',
+            data:data,
+            dataType: 'json',
+            success: function(json) {
+                if (json['status']) {
+
+                    console.log(json);
+                    $('#users-list').html(json['html']);
+                }
+            }
+        });
+    });
+
+        
+</script>
 </html>

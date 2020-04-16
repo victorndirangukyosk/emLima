@@ -1,7 +1,7 @@
 <?php
 
 defined('MVG') or die;
-//define('ACTIVE_STORE_ID', '2');
+define('ACTIVE_STORE_ID', '2');
 // Version
 define('VERSION', '2.0.0');
 define('BASE_URL','https://www.emlima.com');
