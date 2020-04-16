@@ -244,10 +244,11 @@
                            $page_link = end($link_array);
 					   
 					  ?>
-										   <div class="container--full-width featured-categories">
+										  
+											<?php if(count($category['products'])>0){?>
+											 <div class="container--full-width featured-categories">
 											 <div class="container">
 					                        <div class="_47ahp" data-test-selector="search-results">
-											<?php if(count($category['products'])>0){?>
 											 <div class="clearfix featured-categories__header">
 						  <h2 class="featured-categories__header-title"><span><?=$category['name']?></span></h2>				  
 					   </div>
