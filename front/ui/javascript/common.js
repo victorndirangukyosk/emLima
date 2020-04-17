@@ -40,7 +40,7 @@ $(document).ready(function(){
             if($(this).attr('id') == 'display-me') {
                 $('#show-me').show();           
             } else {
-                $('#show-me').hide();   
+                //$('#show-me').hide();   
             }
        });
     });

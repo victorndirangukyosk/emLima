@@ -167,6 +167,16 @@
                                                 <i class="fa fa-edit"></i><?= $text_profile ?></a>
                                             </li>
 
+                                            <li role="presentation">
+                                                <?php if(strpos($profile_info,$_SERVER["REQUEST_URI"]) !== false) { ?>
+                                                    <a href="<?= $profile_info ?>" class="active">
+                                                <?php } else { ?>
+                                                    <a href="<?= $profile_info ?>">
+                                                <?php } ?>
+                                                
+                                                <i class="fa fa-edit"></i><?= $text_profile_info ?></a>
+                                            </li>
+
                                             <li role="presentation" >
                                                 <?php if(strpos($wishlist,$_SERVER["REQUEST_URI"]) !== false) { ?>
                                                     <a href="<?= $wishlist ?>" class="active">

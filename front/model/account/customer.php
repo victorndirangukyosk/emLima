@@ -237,6 +237,11 @@ class ModelAccountCustomer extends Model {
 
         return $query->row;
     }
+    public function getCustomerOtherInfo($customer_id) {
+        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer_other_info WHERE customer_id = '" . (int) $customer_id . "'");
+
+        return $query->row;
+    }
 
     public function getTotalOrders($customer_id) {
         $query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "order` o WHERE customer_id = '" . (int) $customer_id . "' AND o.order_status_id > '0' ");
@@ -444,5 +449,21 @@ class ModelAccountCustomer extends Model {
         $query = $this->db->query( "Select `key`,`value` from  `" . DB_PREFIX . "setting` WHERE store_id = '" . (int)$store_id . "' AND `code` = '" . $this->db->escape( $code ) . "'" );
 
         return $query->rows;
+    }
+
+    public function addEditCustomerInfo($customer_id,$data){
+        try{
+            $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer_other_info WHERE customer_id = '" . (int) $customer_id . "'");
+            if($query->num_rows > 0 ){
+            $sql = "UPDATE  " . DB_PREFIX . "customer_other_info SET  location = '" . $data['location'] . "', requirement_per_week = '" . $this->db->escape($data['requirement']) . "', mandatory_veg_fruits = '" . $this->db->escape($data['mandatory_products']) . "' WHERE customer_id = '" . (int) $customer_id . "'";
+            }else{
+                $sql = "INSERT INTO " . DB_PREFIX . "customer_other_info SET customer_id = '" . (int) $customer_id . "', location = '" . $data['location'] . "', requirement_per_week = '" . $this->db->escape($data['requirement']) . "', mandatory_veg_fruits = '" . $this->db->escape($data['mandatory_products']) . "', date_added = NOW()"; 
+            }
+            $this->db->query($sql);
+            return true;
+        }catch(Exception $e){
+            return false;
+        }
+  
     }
 }

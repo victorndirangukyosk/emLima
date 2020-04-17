@@ -1096,9 +1096,11 @@ $(document).delegate('#signup', 'click', function() {
                     if($('#register_verify_otp').val() == 'yes') {
 
                         $('.signup-modal-text').html(text);
-
-                        window.location.reload(false);
-                        
+                      
+                        ///window.location.reload(false);
+                        // Redirect To Profile Page
+                        var baseurl = window.location.origin+window.location.pathname;
+                        location.href = baseurl+'index.php?path=account/profileinfo';
                     } else {
                         $('.signup_otp_div').show();
                         $('#other_signup_div').hide();

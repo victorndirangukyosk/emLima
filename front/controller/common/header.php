@@ -381,6 +381,7 @@ class ControllerCommonHeader extends Controller {
         $data['text_order'] = $this->language->get('text_order');
         $data['text_return'] = $this->language->get('text_return');
         $data['text_profile'] = $this->language->get('text_profile');
+        $data['text_profile_info'] = 'Other Information';
         $data['text_credit'] = $this->language->get('text_credit');
         $data['text_download'] = $this->language->get('text_download');
         $data['text_logout'] = $this->language->get('text_logout');
@@ -395,6 +396,7 @@ class ControllerCommonHeader extends Controller {
         $data['wishlist'] = $this->url->link('account/wishlist', '', 'SSL');
         $data['logged'] = $this->customer->isLogged();
         $data['account'] = $this->url->link('account/account', '', 'SSL');
+        $data['profile_info'] = $this->url->link('account/profileinfo', '', 'SSL');
         $data['account_edit'] = $this->url->link('account/edit', '', 'SSL');
         $data['register'] = $this->url->link('account/register', '', 'SSL');
         $data['login'] = $this->url->link('account/login', '', 'SSL');
@@ -453,7 +455,7 @@ class ControllerCommonHeader extends Controller {
         } else {
             $data['class'] = 'common-home';
         }
-
+       // echo '<pre>';print_r($data);exit;
         $data['language'] = $this->load->controller('common/language/dropdown');
         $data['contactus_modal'] = $this->load->controller('information/contact');
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/header_information.tpl')) {
