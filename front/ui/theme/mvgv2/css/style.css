@@ -858,7 +858,7 @@ button { }
 /*.signupModal-popup { z-index: 10000!important}*/
 .signupModal-popup .close { float: right; font-size: 21px; font-weight: 700; line-height: 1; color: #000; text-shadow: 0 0px 0 #fff; opacity: 1; position: absolute; right: 0px; background: #f3f5f2; padding: 10px 14px; top: 0px; }
 .productModal_popup {z-index: 9999 }
-.productModal_popup .close, .changelocationModal .close { float: right; font-size: 21px; font-weight: 700; line-height: 1; color: #000; text-shadow: 0 0px 0 #fff; opacity: 1; position: absolute; right: 1px; background: #f3f5f2; padding: 10px 14px; top: -9px; }
+.productModal_popup .close, .changelocationModal .close { float: right; font-size: 21px; font-weight: 700; line-height: 1; color: #000; text-shadow: 0 0px 0 #fff; opacity: 1; position: absolute; right: 1px; background: #f3f5f2; padding: 10px 14px; top: 0px; }
 .product-variants-list { }
 .product-variant { margin-bottom: 0px; }
 .product-variant-label { color: #333; }
@@ -980,7 +980,7 @@ button { }
     left: 60px;
 }
 .store-cart-panel .modal-footer { background-color: #f3f5f2; text-align: center; }
-.product-details { }
+#popupmodal { background-color: rgba(0, 0, 0, 0.1); }
 .product-details .modal-body { padding: 10px; margin-top: 10px; }
 .offer-ratio { margin-bottom: 0px;    display: inline-block;    color: #ee4054;    font-size: 14px;    font-weight: 700;     border-radius: 2px;    text-align: center; padding: 2px 0px; }
 .product-details .price { color: #333; font-size: 18px; }

@@ -468,7 +468,7 @@
                                                  <?php }?>
        
                                                </ul>
-											   <span><a href="<?=$this->url->link('product/store', 'store_id='.ACTIVE_STORE_ID).'?cat='.$page_link?>" >View All </a></span>   
+											   <span class="butsetview"><a href="<?=$this->url->link('product/store', 'store_id='.ACTIVE_STORE_ID).'?cat='.$page_link?>" >View All </a></span>   
 											   <?php }?>
         
 				</div>

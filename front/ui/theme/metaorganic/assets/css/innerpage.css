@@ -7689,3 +7689,5 @@ body {
 .breadcrumbs__summary{
     font-size: .875em !important;
 }
+.productModal_popup .close, .changelocationModal .close {top:-9px !important; }
+#popupmodal { background-color: rgba(0, 0, 0, 0.5) !important; }

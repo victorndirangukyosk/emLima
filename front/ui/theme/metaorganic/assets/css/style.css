@@ -856,7 +856,12 @@ h6 {
 	background-color: transparent;
 	color: #fff
 }
-
+#search-area-wrp .input-group {
+    display: block;
+}
+input:focus, textarea:focus, select:focus{
+	outline: none !important;
+}
 .button--tertiary-white-outline:focus,
 .button--tertiary-white-outline:hover {
 	background: #fff;
@@ -5077,7 +5082,7 @@ body#vip .header__banner-container {
 
 .featured-categories {
 	background-color: #fff;
-	padding-top: 30px;
+	padding-top: 10px;
 	padding-bottom: 15px;
 	text-align: center
 }
@@ -7777,7 +7782,7 @@ body#vip .header__banner-container {
 		margin-left: 1rem
 	}
 	.featured-categories {
-		padding-bottom: 65px
+		padding-bottom: 30px
 	}
 	.featured-categories__header-title {
 		font-size: 36px
@@ -8451,4 +8456,39 @@ padding-left: 0px !important
     width: 280px !important;
     margin: 55px 32px 55px 33px !important;
 }
+}
+.easyzoom {
+	margin-left:20px;
+}
+.butsetview{
+	float: right;
+	border-radius: 2px;
+    color: #fff;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+    align-items: center;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    font-size: 12px !important;
+    font-weight: 600;
+    text-transform: uppercase;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: pointer;
+	width: 90px;
+	background-color: #522e5b;
+	margin-top: 10px;
+}
+.butsetview a{
+    width: 100%;
+	text-align: center;
+	color: #fff;
+    padding: 10px;
+}
+.butsetview a:hover{
+	background-color: #45264c;
+	color: #fff;
 }
