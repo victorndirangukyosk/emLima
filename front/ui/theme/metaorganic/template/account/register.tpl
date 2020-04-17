@@ -61,7 +61,7 @@
                 </div>
             </div>
 
-            <div id='show-me' style='display:none' >
+            <div id='show-me' style='display:block' >
                 <div class="form-group">
                     <label class="col-md-12 control-label sr-only" for="company_name"><?= $entry_company ?></label>
                     <div class="col-md-12">
