@@ -48,18 +48,15 @@
                 </div>
             </div>
 
-            <div style="display:none;"class="form-group required">
+            <div style="display:block;"class="form-group required">
                 <label class="col-md-12 control-label sr-only" for="company_name">Type</label>
                 <div class="col-md-12">
+				    <?php foreach($customer_groups as $customer_group){?>
                     <label class="control control--radio" style="display: inline"> 
-                        <input type="radio" name="customer_group_id" value="1" checked="checked"> Individual 
+                        <input type="radio" name="customer_group_id" value="<?=$customer_group['customer_group_id']?>" checked="checked"> <?=$customer_group['name']?> 
                         <div class="control__indicator"></div>
                     </label>
-
-                    <label class="control control--radio" style="display: inline">
-                        <input type="radio" id='display-me' name="customer_group_id" value="2" > Company
-                        <div class="control__indicator"></div>
-                    </label>
+					<?php } ?>
 
                 </div>
             </div>
