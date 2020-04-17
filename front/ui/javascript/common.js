@@ -894,7 +894,7 @@ $(document).delegate('.agree', 'click', function(e) {
 			'source': function(request, response) {                
 					$.ajax({
 							//url: 'index.php?path=product/search/product_autocomplete&filter_name=' +  encodeURIComponent(request),
-							url: 'index.php?path=product/search/product_search&filter_name=' +  encodeURIComponent(request),
+							url: 'index.php?path=product/search/product_search&filter_name=' +  encodeURIComponent(request)+'&filter_category='+$('#selectedCategory').val(),
 							dataType: 'json',			
 							success: function(json) {
 									response($.map(json, function(item) {

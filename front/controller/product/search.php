@@ -618,7 +618,14 @@ class ControllerProductSearch extends Controller {
             $filter_name = $this->request->get['filter_name'];
         }else{
             $filter_name = '';
-        }
+		}
+		
+		if(isset($this->request->get['filter_category'])){
+            $filter_category = $this->request->get['filter_category'];
+        }else{
+            $filter_category = '';
+		}
+
 		$this->load->model('assets/product');
 		$this->load->model('assets/category');
 		$categories = $this->model_assets_category->getCategoryByStoreId(ACTIVE_STORE_ID,0);
@@ -628,7 +635,8 @@ class ControllerProductSearch extends Controller {
 			'start' => 0,
 			'limit' => 20,
 			'store_id'=>ACTIVE_STORE_ID,
-			'filter_name'=>$filter_name
+			'filter_name'=>$filter_name,
+			'filter_category_id'=>$filter_category
 		);
 
 		$json =  $this->model_assets_product->getProducts($filter_data_product);

@@ -101,7 +101,7 @@
                            <li class="header__search-bar-item header__search-bar-item--category search-category-container">
                            <div class="form-group">
                               <select class="form-control" id="selectedCategory">
-                                 <option>- Select categories-</option>
+                                 <option value="">- Select categories-</option>
                                   <?php foreach($categories as $categoty){
                                      //print_r($categoty);exit;?>
                                  <option value="<?=$categoty['id']?>"><?=$categoty['name']?></option>
