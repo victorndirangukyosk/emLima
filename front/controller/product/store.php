@@ -229,7 +229,7 @@ class ControllerProductStore extends Controller {
                 'filter_category_id' => $result['category_id'],
                 'filter_sub_category' => true,
                 'start' => 0,
-                'limit' => 15,
+                'limit' => 500,
                 'store_id'=>$store_id
             );
 
