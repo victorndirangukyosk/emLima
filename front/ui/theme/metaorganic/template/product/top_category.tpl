@@ -325,7 +325,8 @@
                                                  
                                                
                                         <section class="_1SQpT">
-                                            <a href="<?=$product['href']?>" class="KFSGT" role="toolbar" title="<?=$product['name']?>"></a>
+                                             <a role="button" data-store="<?= ACTIVE_STORE_ID;?>" data-id="<?= $product['product_store_id'] ?>" target="_blank" rel="noopener noreferrer"
+										 class="KFSGT product-detail-bnt product-img product-description open-popup" role="toolbar" title="<?=$product['name']?>"></a>
                                             
                                         </section>
                                        
