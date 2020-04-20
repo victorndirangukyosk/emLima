@@ -179,11 +179,11 @@
                            <a data-toggle="modal" data-target="#phoneModal" class="header__upper-deck-item-link sign-in" data-spinner-btn="{showOnSubmit: false}" >
                            Sign In</a>
                         </li>
-                        <li class="header__upper-deck-item header__upper-deck-item setcartbtn"><div class="butn setui"> <a href="<?= BASE_URL?>/checkout"><button class="btn btn-default mini-cart-button" role="button" data-toggle="modal" data-target="#store-cart-side" id="mini-cart-button">
+                        <li class="header__upper-deck-item header__upper-deck-item setcartbtn"><div class="butn setui"> <button class="btn btn-default mini-cart-button" role="button" data-toggle="modal" data-target="#store-cart-side" id="mini-cart-button">
 										<span class="badge cart-count"><?= $this->cart->countProducts(); ?></span>
 										<i class="fa fa-shopping-cart"></i> 
 										<span class="hidden-xs hidden-sm cart-total-amount"><?= $this->currency->format($this->cart->getTotal()); ?></span>
-						</button></a></div></li>
+						</button></div></li>
                         <?php }else{?>
                          <div>
                          <div class="menuset">
@@ -205,11 +205,11 @@
                                     <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $logout ?>"><i class="fa fa-power-off"></i><?= $text_logout ?></a></div>
                                     </div>
                                     </div> 
-                                     <div class="butn setui"> <a href="<?= BASE_URL?>/checkout"><button class="btn btn-default mini-cart-button" role="button" data-toggle="modal" data-target="#store-cart-side" id="mini-cart-button" style="margin-right:10px; margin-top:0px">
+                                     <div class="butn setui"><button class="btn btn-default mini-cart-button" role="button" data-toggle="modal" data-target="#store-cart-side" id="mini-cart-button" style="margin-right:10px; margin-top:0px">
 										<span class="badge cart-count"><?= $this->cart->countProducts(); ?></span>
 										<i class="fa fa-shopping-cart"></i> 
 										<span class="hidden-xs hidden-sm cart-total-amount"><?= $this->currency->format($this->cart->getTotal()); ?></span>
-						</button></a></div>
+						</button></div>
                                     </div>
                                     </div>
                        <?php } ?>
@@ -612,6 +612,30 @@
          </div>
         
  </div>
+ <!--Cart HTML Start-->
+ <div class="store-cart-panel">
+        <div class="modal right fade" id="store-cart-side" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="cart-panel-content">
+                    </div>
+                    <div class="modal-footer">
+                        <!-- <p><?= $text_verify_number ?></p> -->
+                        <a href="<?php echo $checkout; ?>" id="proceed_to_checkout">
+                        
+                            <button type="button" class="btn btn-primary btn-block btn-lg" id="proceed_to_checkout_button">
+                                <span class="checkout-modal-text"><?= $text_proceed_to_checkout?> </span>
+                                <div class="checkout-loader" style="display: none;"></div>
+                                
+                            </button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+</div>
+<!--Cart HTML End-->
   <div class="modal-wrapper"></div> 
     <?php echo $footer ?>
     <!-- Phone Modal -->
@@ -951,6 +975,10 @@ __kdt.push({"post_on_load": false});
         });
     });
 
-        
+  /* Cart Open jquery Code */
+   $("#mini-cart-button").click(function(){
+      $("#toTop").show();
+     $("#toTop").css('opacity','1.0');
+    }); 
 </script>
 </html>
