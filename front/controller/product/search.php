@@ -633,7 +633,7 @@ class ControllerProductSearch extends Controller {
 		
 		$filter_data_product = array(
 			'start' => 0,
-			'limit' => 20,
+			'limit' => 10,
 			'store_id'=>ACTIVE_STORE_ID,
 			'filter_name'=>$filter_name,
 			'filter_category_id'=>$filter_category
