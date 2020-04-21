@@ -924,6 +924,25 @@ __kdt.push({"post_on_load": false});
             })
  </script>
    <script type="text/javascript">
+      $(document).delegate('#clearcart', 'click', function(){
+        var choice = confirm($(this).attr('data-confirm'));
+
+        if(choice) {
+
+            $.ajax({
+                url: 'index.php?path=checkout/cart/clear_cart',
+                type: 'post',
+                data:'',
+                dataType: 'json',
+                success: function(json) {
+                if (json['location']) {
+                    location = json.redirect;
+                    location = location;
+                }}
+            });
+        }
+    });
+	
     $(document).delegate('.close-model', 'click', function(){
         console.log("close product block");
             $('#bannermodal').modal('hide');
