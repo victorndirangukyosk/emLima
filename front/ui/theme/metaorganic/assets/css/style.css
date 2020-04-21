@@ -8494,8 +8494,9 @@ padding-left: 0px !important
 	color: #fff;
 }
 .input-cart-qty{
-    width: 50px;
-    padding: 6px;
+    width: 70px;
+    padding:6px 6px 7px 6px;
     text-align: center;
-    margin-bottom: 5px;
+	margin-bottom: 5px;
+	float: left;
 }

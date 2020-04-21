@@ -1046,7 +1046,7 @@ Product block
 .addcart-block { 
     right: 0px;
     bottom: 4px;
-  width: 95px; }
+  width: 110px; }
 .price-cancelled { font-size: 14px; text-decoration: line-through; float: right;}
 .spacial-offer { color: #fff; font-size: 14px; font-weight: 700; position: absolute; background-color: #ee4054; border-radius: 2px;  text-align: center; padding: 2px 6px; z-index:2;}
 
@@ -1337,7 +1337,7 @@ Step Wizard
 }
 
 .AtcButton__container___1RZ9c {
-    border-radius: 2px;
+    border-radius: 0px 2px 2px 0px;
     color: #fff;
     display: -ms-flexbox;
     display: flex;
@@ -1353,7 +1353,6 @@ Step Wizard
     -ms-user-select: none;
     user-select: none;  
     cursor: pointer;  
-    width: 90px;
 }
 
 .AtcButton__button_text___VoXuy {
