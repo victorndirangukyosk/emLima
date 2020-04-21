@@ -51,13 +51,16 @@
             <div style="display:block;"class="form-group required">
                 <label class="col-md-12 control-label sr-only" for="company_name">Type</label>
                 <div class="col-md-12">
+                <select class="form-control" name="customer_group_id">
+                    <option value="">-Select Customer Type-</option>
 				    <?php foreach($customer_groups as $customer_group){?>
-                    <label class="control control--radio" style="display: inline"> 
-                        <input type="radio" name="customer_group_id" value="<?=$customer_group['customer_group_id']?>" checked="checked"> <?=$customer_group['name']?> 
+                    <option value="<?=$customer_group['customer_group_id']?>"> <?=$customer_group['name']?></option>
+                    <!--<label class="control control--radio" style="display: inline"> 
+                        <input type="radio" name="customer_group_id" value="<?=$customer_group['customer_group_id']?>" checked="checked"> <?=$customer_group['name']?>
                         <div class="control__indicator"></div>
-                    </label>
+                    </label>-->
 					<?php } ?>
-
+                 </select>
                 </div>
             </div>
 
