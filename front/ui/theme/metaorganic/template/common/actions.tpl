@@ -4,8 +4,11 @@
     <p class="info"><?php if(isset($text_incart)) $text_incart ?></p>       
     <!--<p class="error-msg" ></p>-->
 </div>
-
 <div class="qtybtns-addbtnd addcart-block" id="add-btn-container">
+ <input type="text" class="input-cart-qty" id="cart-qty-<?= $product['product_store_id'] ?>-<?= $product['store_product_variation_id'] ?>" value="<?= $product['qty_in_cart'] ?>" placeholder="Add Poduct Qunatity">
+ <a class="AtcButton__container___1RZ9c AtcButton__with_counter___3YxLq atc_<?= $product['product_store_id'] ?> AtcButton__small___1a1kH" ><span data-action="<?= $product['qty_in_cart'] ? 'update' : 'add'; ?>" data-key='<?= $product["key"] ?>'  class="AtcButton__button_text___VoXuy unique_add_button<?= $product['product_store_id'] ?>-<?= $product['store_product_variation_id'] ?>" id="add-cart-btn" data-store-id="<?= ACTIVE_STORE_ID ?>"  data-variation-id="<?= $product['store_product_variation_id'] ?>" data-id="<?= $product['product_store_id'] ?>" style="display: <?= $product['qty_in_cart'] ? 'block' : 'block'; ?>">Add to Cart</span></a>
+<div>
+<!--<div class="qtybtns-addbtnd addcart-block" id="add-btn-container">
 
 
     <?php if ($product['qty_in_cart']) { ?> 
@@ -48,7 +51,7 @@
      <?php } ?> 
 
 
-</div>
+</div>-->
 
 <!-- <div class="sp-quantity" id="controller-container">
 
