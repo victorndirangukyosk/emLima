@@ -5097,13 +5097,14 @@ body#vip .header__banner-container {
 }
 
 .featured-categories__header-title {
-    width: 100%;
+    width: 92%;
     text-align: center;
     border-bottom: 1px solid #a2a0a0;
     line-height: 0.1em;
-    margin: 10px 0 20px;
+    margin: 23px 0 20px;
 	font-family: roboto, Arial, Helvetica, sans-serif;
 	font-size: 30px !important;
+	float: left;
 }
 
 .featured-categories__item-description,
