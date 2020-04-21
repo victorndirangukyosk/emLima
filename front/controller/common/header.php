@@ -765,8 +765,8 @@ class ControllerCommonHeader extends Controller {
 
         $data['categories'] = array();
         
-        $categories = $this->model_assets_category->getCategoryByStore(0);
-
+        //$categories = $this->model_assets_category->getCategoryByStore(0);
+        $categories = $this->model_assets_category->getCategoryByStoreId(ACTIVE_STORE_ID,0);
         //echo "<pre>";print_r($categories);die;
         foreach ($categories as $category) {
                 // Level 2

@@ -909,7 +909,8 @@ $(document).delegate('.agree', 'click', function(e) {
 												}
 											} else {
 												return {
-														label: item['name']+" - "+item['unit'],
+														//label: item['name']+" - "+item['unit'],
+														label: item['name'],
 														name_label: item['name'],
 														value: item['product_id'],
 														href: item['href_cat']
