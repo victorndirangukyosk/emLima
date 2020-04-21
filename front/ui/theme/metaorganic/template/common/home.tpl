@@ -296,10 +296,10 @@
                                         <div class="vfsyA col-md-12 col-sm-12 pl0" style="margin-top:30px">
                                                     <div class="_25ygu">
                                                      <div class="JHf2a">
-                                                        <a class="R8zaM" href="#"><?= $heading_title;?></a>
+                                                        <a class="R8zaM"><?= $heading_title;?></a>
                                                         
                                                         </div>
-                                                    <a href="#" class="_2Pk9X" tabindex="0"><?=$product['name']?></a>
+                                                    <a class="_2Pk9X" tabindex="0"><?=$product['name']?></a>
 
                                                        
                                                     </div>

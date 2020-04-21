@@ -1220,7 +1220,7 @@ NOTE: Variables currently do not work with @custom-media. Hardcoding values for 
     left: 0;
     opacity: 0;
     pointer-events: none;
-    position: absolute;
+    /*position: absolute;*/
     top: 100%;
     transform: translateY(1px);
     transition: 0.15s all cubic-bezier(0.39, 0.575, 0.565, 1);
@@ -1239,7 +1239,7 @@ NOTE: Variables currently do not work with @custom-media. Hardcoding values for 
     left: 0;
     opacity: 0;
     pointer-events: none;
-    position: absolute;
+    /*position: absolute;*/
     top: 100%;
     transform: translateY(1px);
     transition: 0.15s all cubic-bezier(0.39, 0.575, 0.565, 1);
