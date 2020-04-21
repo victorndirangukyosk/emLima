@@ -138,6 +138,51 @@
                            <img itemprop="logo" src="<?=$logo?>" width="100" height="100">
                         </div>
                      </div>
+					 <div class="header__search-bar-wrapper">
+                  <div id="search-form-wrapper" class="header__search-bar search-form-wrapper">
+                     <div class="header__search-title">
+                        Search
+                        <div class="header__mobile-search-close j-mobile-close-search-trigger"></div>
+                     </div>
+                     
+                     <form id="search-form-form" class="search-form c-position-relative search-form--switch-category-position" action="#" method="get">
+                        <ul class="header__search-bar-list header__search-bar-item--before-keyword-field">
+                           
+                           <li class="header__search-bar-item header__search-bar-item--category search-category-container">
+                           <div class="form-group">
+                              <select class="form-control" id="selectedCategory">
+                                 <option value="">- Select categories-</option>
+                                  <?php foreach($categories as $categoty){
+                                     //print_r($categoty);exit;?>
+                                 <option value="<?=$categoty['id']?>"><?=$categoty['name']?></option>
+                                  <?php } ?>
+                                
+                              </select>
+                           </div>
+                           </li>
+                           <li class="header__search-bar-item header__search-bar-item--location search-location-all">
+                              <div class="header__search-location search-location">
+                                    <i class="fa fa-map-marker header__search-location-icon" aria-hidden="true"></i>
+                                 
+                                 <!-- SuggestionWidget  start -->
+                                 <div id="search-area-wrp" style="margin-top: 11px;" class="c-sggstnbx header__search-input-wrapper">
+                                    <form  id="product-search-form"  class="navbar-form active" role="search" onsubmit="location='<?= $this->url->link('product/search') ?>&search=' + $('input[name=\'product_name\']').val(); return false;">
+									<div class="input-group">
+									<input type="text" name="product_name"  style="height: 44px;width: 283px;" class="header__search-input zipcode-enter" placeholder="Search for your product" />
+									<span class="input-group-btn">
+									<div class="resp-searchresult">
+												<div></div>
+											</div>
+									</span> </div>
+									</form>		
+                                 </div>
+                              </div>
+                           </li>
+                        </ul>
+                     </form>
+                  </div>
+               </div>
+
                      <div class="header__primary-navigation-wrapper">
                       
                         <div class="header__primary-navigation-list"> 
