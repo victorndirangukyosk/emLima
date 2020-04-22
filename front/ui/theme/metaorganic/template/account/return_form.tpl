@@ -133,13 +133,13 @@
                     <?php if ($return_reason['return_reason_id'] == $return_reason_id) { ?>
                     <div class="radio">
                       <label>
-                        <input type="radio" name="return_reason_id" value="<?php echo $return_reason['return_reason_id']; ?>" checked="checked" />
+                        <input type="radio" name="return_reason_id" required value="<?php echo $return_reason['return_reason_id']; ?>" checked="checked" />
                         <?php echo $return_reason['name']; ?></label>
                     </div>
                     <?php } else { ?>
                     <div class="radio">
                       <label>
-                        <input type="radio" name="return_reason_id" value="<?php echo $return_reason['return_reason_id']; ?>" />
+                        <input type="radio" name="return_reason_id"  required value="<?php echo $return_reason['return_reason_id']; ?>" />
                         <?php echo $return_reason['name']; ?></label>
                     </div>
                     <?php  } ?>
@@ -156,13 +156,13 @@
                     <?php if ($return_action['return_action_id'] == $return_action_id) { ?>
                     <div class="radio">
                       <label>
-                        <input type="radio" name="return_action_id" value="<?php echo $return_action['return_action_id']; ?>" checked="checked" />
+                        <input type="radio" name="return_action_id" required value="<?php echo $return_action['return_action_id']; ?>" checked="checked" />
                         <?php echo $return_action['name']; ?></label>
                     </div>
                     <?php } else { ?>
                     <div class="radio">
                       <label>
-                        <input type="radio" name="return_action_id" value="<?php echo $return_action_id['return_action_id']; ?>" />
+                        <input type="radio" name="return_action_id" required  value="<?php echo $return_action['return_action_id']; ?>" />
                         <?php echo $return_action['name']; ?></label>
                     </div>
                     <?php  } ?>
