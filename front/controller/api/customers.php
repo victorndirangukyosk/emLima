@@ -232,4 +232,14 @@ class ControllerApiCustomers extends Controller
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
+
+    public function getCustomerGroups(){
+  
+        $this->load->model( 'account/customer_group' );
+        $json['status'] = 200;
+        $json['data'] = $this->model_account_customer_group->getCustomerGroups();
+        $json['msg'] = 'Customer Groups fetched successfully';
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
 }
