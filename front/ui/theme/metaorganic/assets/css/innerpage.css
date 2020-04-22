@@ -7692,5 +7692,5 @@ body {
 .productModal_popup .close, .changelocationModal .close {top:-9px !important; }
 #popupmodal { background-color: rgba(0, 0, 0, 0.5) !important; }
 .input-cart-qty {
-    padding: 4px 6px 3px 6px !important;
+    padding: 2px 6px 0px 6px !important;
 }
