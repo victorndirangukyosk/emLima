@@ -109,10 +109,13 @@ Text Domain:  Organtic
 /*----------- 1. Body --------------*/
 
 body {
-	font-family: 'Open Sans', sans-serif;
-	font-size: 13px;
+	font-family: -apple-system, BlinkMacSystemFont, segoe ui,
+	avenir next, avenir, helvetica neue, helvetica, ubuntu, roboto, noto, arial,
+	sans-serif;
+	font-size: 16px;
 	background:#fff;
-	line-height:1.6em
+	line-height:1.6em;
+	color: hsl(0, 0%, 30%);
 	
 	
 }
@@ -9908,9 +9911,6 @@ a.edit-bnt:hover {
 	color: #ff0000;
 }
 .required em {
-	color: #ff0000;
-}
-.required {
 	color: #ff0000;
 }
 .form-group {
