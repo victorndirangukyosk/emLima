@@ -149,6 +149,29 @@
                     <?php } ?>
                   </div>
                 </div>
+				<div class="form-group required">
+                  <label class="col-sm-4 control-label"><?php echo $entry_return_action; ?></label>
+                  <div class="col-sm-6">
+                    <?php foreach ($return_actions as $return_action) { ?>
+                    <?php if ($return_action['return_action_id'] == $return_action_id) { ?>
+                    <div class="radio">
+                      <label>
+                        <input type="radio" name="return_action_id" value="<?php echo $return_action['return_action_id']; ?>" checked="checked" />
+                        <?php echo $return_action['name']; ?></label>
+                    </div>
+                    <?php } else { ?>
+                    <div class="radio">
+                      <label>
+                        <input type="radio" name="return_action_id" value="<?php echo $return_action_id['return_action_id']; ?>" />
+                        <?php echo $return_action['name']; ?></label>
+                    </div>
+                    <?php  } ?>
+                    <?php  } ?>
+                    <?php if ($error_return_action) { ?>
+                    <div class="text-danger"><?php echo $error_return_action; ?></div>
+                    <?php } ?>
+                  </div>
+                </div>
                 <div class="form-group required">
                   <label class="col-sm-4 control-label"><?php echo $entry_opened; ?></label>
                   <div class="col-sm-6">

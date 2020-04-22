@@ -429,6 +429,7 @@ class ControllerAccountReturn extends Controller {
 
 		$data['entry_quantity'] = $this->language->get('entry_quantity');
 		$data['entry_reason'] = $this->language->get('entry_reason');
+	    $data['entry_return_action'] = $this->language->get('entry_return_action');
 		$data['entry_opened'] = $this->language->get('entry_opened');
 		$data['entry_fault_detail'] = $this->language->get('entry_fault_detail');
 
@@ -496,6 +497,13 @@ class ControllerAccountReturn extends Controller {
 		} else {
 			$data['error_reason'] = '';
 		}
+		
+		if (isset($this->error['return_action'])) {
+			$data['error_return_action'] = $this->error['return_action'];
+		} else {
+			$data['error_return_action'] = '';
+		}
+		
 
 		if (isset($this->error['captcha'])) {
 			$data['error_captcha'] = $this->error['captcha'];
@@ -620,10 +628,16 @@ class ControllerAccountReturn extends Controller {
 		} else {
 			$data['return_reason_id'] = '';
 		}
+		if (isset($this->request->post['return_action_id'])) {
+			$data['return_action_id'] = $this->request->post['return_action_id'];
+		} else {
+			$data['return_action_id'] = '';
+		}
 
 		$this->load->model('localisation/return_reason');
 
 		$data['return_reasons'] = $this->model_localisation_return_reason->getReturnReasons();
+		$data['return_actions'] = $this->model_localisation_return_reason->getReturnActions();
 
 		if (isset($this->request->post['comment'])) {
 			$data['comment'] = $this->request->post['comment'];
@@ -768,6 +782,10 @@ class ControllerAccountReturn extends Controller {
 
 		if (empty($this->request->post['return_reason_id'])) {
 			$this->error['reason'] = $this->language->get('error_reason');
+		}
+		
+		if (empty($this->request->post['return_action_id'])) {
+			$this->error['return_action'] = $this->language->get('error_return_action');
 		}
 
 		if ($this->config->get('config_google_captcha_status')) {
