@@ -5782,7 +5782,7 @@ body#vip .header__banner-container {
 	.header__upper-deck-list {
 		padding-right: 0px;
 		float: right;
-		min-width: 350px;
+		min-width: 365px;
 		box-sizing: border-box;
 		height: 40px;
 		margin-top: 6px;
@@ -6473,7 +6473,6 @@ body#vip .header__banner-container {
 	.search-form--switch-category-position .header__search-bar-item--category:before {
 		content: '';
 		position: absolute;
-		width: 1px;
 		top: 50%;
 		height: 16px;
 		z-index: 1;
@@ -6943,7 +6942,7 @@ body#vip .header__banner-container {
 		left: 300px
 	}
 	.header__upper-deck-list {
-		min-width: 400px;
+		min-width: 365px;
 		z-index: 30;
 	}
 	.header__post-ad-button:hover {
