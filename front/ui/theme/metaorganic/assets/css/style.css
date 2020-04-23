@@ -8499,3 +8499,26 @@ padding-left: 0px !important
 	margin-bottom: 5px;
 	float: left;
 }
+.phonesetbut{
+	padding: 9px 14px 13px 14px;
+    border-radius: 2px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    background-color: #522e5b;
+    border-color: #522e5b;
+    display: inline-block;
+    margin-bottom: 0;
+    font-size: 14px;
+    line-height: 1px;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+    margin-right: -1px;
+    height: 37px;
+}

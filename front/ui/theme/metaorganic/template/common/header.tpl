@@ -168,7 +168,7 @@
                                  <div id="search-area-wrp" style="margin-top: 11px;" class="c-sggstnbx header__search-input-wrapper">
                                     <form  id="product-search-form"  class="navbar-form active" role="search" onsubmit="location='<?= $this->url->link('product/search') ?>&search=' + $('input[name=\'product_name\']').val(); return false;">
 									<div class="input-group">
-									<input type="text" name="product_name"  style="height: 44px;width: 283px;" class="header__search-input zipcode-enter" placeholder="Search for your product" />
+									<input type="text" name="product_name"  style="height: 44px;width: 100%;" class="header__search-input zipcode-enter" placeholder="Search for your product" />
 									<span class="input-group-btn">
 									<div class="resp-searchresult">
 												<div></div>
