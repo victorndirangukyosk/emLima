@@ -2007,9 +2007,11 @@ body#vip .header__banner-container {
 #cars .header__banner-container~.header,
 #homenew .header__banner-container~.header,
 #jobs .header__banner-container~.header {
-	margin-top: 0!important
+	margin-top: 58px !important
 }
-
+.pl{
+	float:left !important;
+}
 .header__primary-navigation-outer-wrapper,
 .header__primary-navigation-wrapper {
 	max-width: 1280px;
@@ -3134,7 +3136,9 @@ body#vip .header__banner-container {
 }
 
 .header__search-location input.header__search-input {
-	padding-left: 49px
+	padding-left: 49px;
+	height: 45px;
+	width: 350px;
 }
 
 .header__search-keyword-icon,
