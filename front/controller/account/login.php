@@ -595,52 +595,51 @@ class ControllerAccountLogin extends Controller {
         $headers = $_REQUEST['token'];
         if (!empty($headers)) {
             if (preg_match('/Bearer\s(\S+)/', $headers, $matches)) {
-                /*echo "<pre>";print_r($matches);die;
-                return $matches[1];*/
             }
         } 
-        //echo "<pre>";print_r($matches);die;
+     
         if(count($matches) > 1 && isset($matches[1])) {
-        //echo "<pre>";print_r($headers);die;
-
          try {
             $secretKey = base64_decode(SECRET_KEY); 
             $DecodedDataArray = JWT::decode($matches[1], $secretKey, array(ALGORITHM));
+            //echo time();exit;
+            //echo '<pre>';print_r($DecodedDataArray);exit;
 
-            //$log->write($DecodedDataArray);
-            
             if(isset($DecodedDataArray) && isset($DecodedDataArray->data)) {
-                $this->session->data['customer_id'] = $DecodedDataArray->data->id;  
-                
-
                 $customer_query = $this->db->query( "SELECT * FROM " . DB_PREFIX . "customer WHERE customer_id = '" . (int)$DecodedDataArray->data->id . "' AND status = '1'" );
-
-                //echo "<pre>";print_r($customer_query->row);die;
+             
                 if ( $customer_query->num_rows ) {
-                    //$log->write("in customer st");
                     $this->customer->setVariables($customer_query->row);
-                    $this->session->data['customer_id'] = $this->customer->getId();
-                    header("Location:".BASE_URL);
+                    $this->load->model('account/customer');
+                    $this->load->model('setting/store');
+                    $redirect = BASE_URL;
+                    $resChannel = $this->model_account_customer->addUpdateChannelMapping($this->customer->getId(),$_REQUEST);
+                    if($resChannel){
+                        $this->session->data['customer_id'] = $this->customer->getId();
+                        if(!empty($_REQUEST['store_id'])){
+                            $storeSEO = $this->model_setting_store->getSeoUrl('store_id=' .$_REQUEST['store_id']);
+                            if(!empty($storeSEO)){
+                               $redirect .='/';
+                               $redirect .='store/'.$storeSEO;
+                            }
+                        }
+                        header("Location:".$redirect);
+                    }else{
+                        $this->response->addHeader('Content-Type: application/json');
+                        $this->response->setOutput(json_encode($res));
+                    }
                 } else {
-                    return $res;
+                    $this->response->addHeader('Content-Type: application/json');
+                    $this->response->setOutput(json_encode($res));
+                  
                 }
-
-
-                //$log->write($this->customer->isLogged()."cerfxx");
-                //$log->write($this->customer->getId()."cerfxx22");
-                
-
             } else {
-                return $res;
+                $this->response->addHeader('Content-Type: application/json');
+                $this->response->setOutput(json_encode($res));
             }
-            //echo "<pre>";print_r($DecodedDataArray->data->id);die;
-            
-            $res['status'] = 1;
-            $res['data'] = json_encode($DecodedDataArray);
-
         } catch (Exception $e) {
-
-            //echo "<pre>";print_r($e);die;
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($res));
         }
        
      }

@@ -466,4 +466,21 @@ class ModelAccountCustomer extends Model {
         }
   
     }
+
+    public function addUpdateChannelMapping($customer_id,$data){
+        try{
+            $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer_channel_mapping WHERE guid = '" .$data['guid'] . "'");
+            if($query->num_rows > 0 ){
+            $sql = "UPDATE  " . DB_PREFIX . "customer_channel_mapping SET  channel_id = '" . $data['channel_id'] . "', channel_token_id = '" . $this->db->escape($data['channel_token_id']) . "', conversation_id = '" . $this->db->escape($data['conversation_id']) . "' , customer_id = '" . (int) $customer_id . "' WHERE guid = '" . $data['guid'] . "'";
+            }else{
+                $sql = "INSERT INTO " . DB_PREFIX . "customer_channel_mapping SET channel_id = '" . $data['channel_id'] . "', channel_token_id = '" . $this->db->escape($data['channel_token_id']) . "', conversation_id = '" . $this->db->escape($data['conversation_id']) . "' , customer_id = '" . (int) $customer_id . "', guid ='" . $data['guid'] . "', date_added = NOW()"; 
+            }
+            $this->db->query($sql);
+            return true;
+        }catch(Exception $e){
+            return false;
+        }
+  
+    }
+    
 }
