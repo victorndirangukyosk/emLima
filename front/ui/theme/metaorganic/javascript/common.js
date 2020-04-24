@@ -988,7 +988,7 @@ function ValidateEmail(mail)
     return (false)
 }
 
-$(document).delegate('#login_send_otp', 'click', function() {
+/*$(document).delegate('#login_send_otp', 'click', function() {
     console.log("login_send_otp click");
     
 
@@ -1033,6 +1033,58 @@ $(document).delegate('#login_send_otp', 'click', function() {
         });    
     } else {
         $('#login-form #phone_number').focus();
+    }
+    
+});
+*/
+
+$(document).delegate('#login_send_otp', 'click', function() {
+    console.log("login_send_otp click");
+    
+
+    
+    if( ($('#login-form #email').val().length > 0) &&  ($('#login-form #password').val().length > 0)){
+
+        var text = $('.login-modal-text').html();
+        $('.login-modal-text').html('');
+        $('.login-loader').show();
+
+        $.ajax({
+            url: 'index.php?path=account/login/login',
+            type: 'post',
+            data: $('#login-form').serialize(),
+            dataType: 'json',
+            success: function(json) {
+                console.log(json);
+                if (json['status']) {
+                    
+                    //$('.login-modal-text').html(text);
+                    $('.login-loader').hide();
+                    //$('#login-message').html(json['error_warning']);
+                    $('#login-message').html("<p style='color:green'>"+json['success_message']+"</p>");
+                    window.setTimeout(function(){location.reload()},2000)
+                    
+                    //$('#customer_id').val(json['customer_id']);
+                    
+                    /*var divs = $('.mydivsss>div');
+                    var now = 0; // currently shown div
+                    
+                    divs.eq(now).hide();
+                    now = (now + 1 < divs.length) ? now + 1 : 0;
+                    divs.eq(now).show(); // show otp next
+                    */
+                
+                   
+                } else {
+                    $('.login-modal-text').html(text);
+                    $('.login-loader').hide();
+                    //$('#login-message').html(json['error_warning']);
+                    $('#login-message').html("<p style='color:red'>"+json['error_warning']+"</p>");
+                }
+            }
+        });    
+    } else {
+        $('#login-form #email').focus();
     }
     
 });
@@ -1107,7 +1159,7 @@ $(document).delegate('#login_verify_otp', 'click', function() {
     });
 });
 
-$(document).delegate('#signup', 'click', function() {
+/*$(document).delegate('#signup', 'click', function() {
 
     console.log($('#register_verify_otp').val());
     console.log($('input[name="agree_checkbox"]:checked').length);
@@ -1176,7 +1228,7 @@ $(document).delegate('#signup', 'click', function() {
                     }*/
                     
 
-                    $error = '';
+                    /*$error = '';
 
                     if(json['error_email']){
                         $error += json['error_email']+'<br/>';
@@ -1222,6 +1274,139 @@ $(document).delegate('#signup', 'click', function() {
                     $('.signup-loader').hide();
                     $('#signup-message').html("<p style='color:red'>"+$error+"</p>");
                 }
+            }
+        });
+    } else{
+      // unchecked
+      console.log("nucheck error");
+      $('#error_agree').show();
+      //$('#error_agree').html($('#error_agree_text').val());
+    }
+});
+*/
+$(document).delegate('#signup', 'click', function() {
+
+    console.log($('#register_verify_otp').val());
+    console.log($('input[name="agree_checkbox"]:checked').length);
+
+    if($('input[name="agree_checkbox"]:checked').length)
+    {
+        $('#error_agree').hide();
+    
+        var text = $('.signup-modal-text').html();
+        $('.signup-modal-text').html('');
+        $('.signup-loader').show();
+
+        $('#signup-message').html('please wait...');
+
+        console.log($('#register_verify_otp').val());
+
+        var url = 'index.php?path=account/register/register';
+
+
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: $('#sign-up-form').serialize(),
+            dataType: 'json',
+            success: function(json) {
+                console.log(json);
+                console.log('signup return');
+
+
+                if (json['status']) {
+
+                    
+                   $('#signup-message').html('<p style="color:green"> '+ json['message']+'</p>');
+                    
+                   
+
+                    /*if($('#register_verify_otp').val() == 'yes') {
+
+                        $('.signup-modal-text').html(text);
+                      
+                        ///window.location.reload(false);
+                        // Redirect To Profile Page
+                        var baseurl = window.location.origin+window.location.pathname;
+                        location.href = baseurl+'index.php?path=account/profileinfo';
+                    } else {
+                        $('.signup_otp_div').show();
+                        $('#other_signup_div').hide();
+                        // button text to read verify otp
+                        $('.signup-modal-text').html(json['text_verify_otp']);
+
+                    }*/
+                    alert('redirect');
+                    var baseurl = window.location.origin+window.location.pathname;
+                    location.href = baseurl+'index.php?path=account/profileinfo';
+
+                    $('.signup-loader').hide();
+
+                    //$('#register_verify_otp').val('yes');
+                    
+               
+                    //return false;
+                    
+                } else {   
+
+                    /*if($('#register_verify_otp').val() == 'yes') {
+                        $('#register_verify_otp').val('no');     
+                    }*/
+                    
+
+                    $error = '';
+
+                    if(json['error_email']){
+                        $error += json['error_email']+'<br/>';
+                    }
+                    if(json['error_firstname']){
+                        $error += json['error_firstname']+'<br/>';
+                    }
+                    if(json['error_telephone_exists']){
+                        $error += json['error_telephone_exists']+'<br/>';
+                    }
+
+                    if(json['error_lastname']){
+                        $error += json['error_lastname']+'<br/>';
+                    }
+                    if(json['error_telephone']){
+                        $error += json['error_telephone']+'<br/>';
+                    }
+                    if(json['error_dob']){
+                        $error += json['error_dob']+'<br/>';
+                    }
+                    if(json['error_gender']){
+                        $error += json['error_gender']+'<br/>';
+                    }
+                    if(json['error_tax']){
+                        $error += json['error_tax']+'<br/>';
+                    }
+                    if(json['error_password']){
+                        $error += json['error_password']+'<br/>';
+                    }
+                    if(json['error_confirm']){
+                        $error += json['error_confirm']+'<br/>';
+                    }
+                    if(json['error_match_password']){
+                        $error += json['error_match_password']+'<br/>';
+                    }
+                    if(json['error_company_name_address']){
+                        $error += json['error_company_name_address']+'<br/>';
+                    }
+
+                    if(json['error_warning']){
+                        $error += json['error_warning']+'<br/>';
+                    }
+
+                    
+
+                    
+
+                    $('.signup-modal-text').html(text);
+                    $('.signup-loader').hide();
+                    $('#signup-message').html("<p style='color:red'>"+$error+"</p>");
+                }
+                
             }
         });
     } else{
