@@ -43,7 +43,7 @@
 
                     <span class="input-group-btn" style="    padding-bottom: 10px;">
 
-                        <p id="button-reward" class="phonesetbut">
+                        <p id="button-reward" class="phonesetbut" style="padding-top: 27px; height: 50px; margin-top: 0px;">
 
                             <font style="vertical-align: inherit;">
                               <font style="vertical-align: inherit;"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
