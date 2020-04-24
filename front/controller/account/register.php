@@ -508,10 +508,23 @@ class ControllerAccountRegister extends Controller {
 			$this->error['lastname'] = $this->language->get( 'error_lastname' );
 		}*/
 
+
 		if ( ( utf8_strlen( $this->request->post['email'] ) > 96 ) || !filter_var( $this->request->post['email'], FILTER_VALIDATE_EMAIL ) ) {
 			$this->error['email'] = $this->language->get( 'error_email' );
 		}
 
+        if ( ( utf8_strlen( trim( $this->request->post['password'] ) ) < 1 ) || ( utf8_strlen( trim( $this->request->post['password'] ) ) > 32 ) ) {
+			$this->error['password'] = $this->language->get( 'error_password' );
+		}
+		
+		if ( ( utf8_strlen( trim( $this->request->post['confirm'] ) ) < 1 ) || ( utf8_strlen( trim( $this->request->post['confirm'] ) ) > 32 ) ) {
+			$this->error['confirm'] = $this->language->get( 'error_confirm' );
+		}
+		 
+		if((trim( $this->request->post['password'])) != (trim( $this->request->post['confirm'] ))){
+			$this->error['match'] = $this->language->get( 'error_match_password' );
+		}
+		
 		if ( $this->model_account_customer->getTotalCustomersByEmail( $this->request->post['email'] ) ) {
 			//$this->error['warning'] = $this->language->get( 'error_exists' );
 
@@ -1021,6 +1034,277 @@ class ControllerAccountRegister extends Controller {
 				$data['error_confirm'] = $this->error['confirm'];
 			} else {
 				$data['error_confirm'] = '';
+			}
+		}
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($data));
+    }
+	
+	public function register() {
+
+    	$data['status'] = false;
+
+    	$this->load->language( 'account/login' );
+
+    	$this->load->language( 'account/register' );
+
+		//$this->document->setTitle( $this->language->get( 'heading_title' ) );
+
+		$data['referral_description'] = 'Referral';//$this->language->get( 'referral_description' );
+
+
+		$this->document->addScript( 'front/ui/javascript/jquery/datetimepicker/moment.js' );
+		$this->document->addScript( 'front/ui/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.js' );
+		$this->document->addStyle( 'front/ui/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.css' );
+		$this->document->addStyle( 'front/ui/theme/'.$this->config->get( 'config_template' ).'/stylesheet/layout_login.css' );
+
+		$this->load->model( 'account/customer' );
+
+		$log = new Log('error.log');
+		
+		$this->request->post['telephone'] = preg_replace("/[^0-9]/", "", $this->request->post['telephone']);
+
+		$this->request->post['phone'] = $this->request->post['telephone'];
+		if ( ( $this->request->server['REQUEST_METHOD'] == 'POST' ) && $this->validate() ) {  
+	        $this->load->model('account/customer');
+	                
+	                // add activity and all                    
+	                $log = new Log('error.log');
+		            $log->write('register');
+
+		            $referee_user_id = null;
+
+		            if(count($_COOKIE) > 0 && isset($_COOKIE['referral']) && ($_COOKIE['referral'] != 'expired') ) {
+			            //echo "Cookies are enabled.";
+			           $this->request->post['referee_user_id'] = $_COOKIE['referral'];
+			           $referee_user_id = $_COOKIE['referral'];
+
+			           setcookie('referral', null, time() - 3600, "/");
+			           //unset($_COOKIE['referral']);
+			        }
+			       	
+			       	
+		            if(isset($date)) {
+
+		                $date = DateTime::createFromFormat('d/m/Y', $date);
+		                
+		                $this->request->post['dob'] = $date->format('Y-m-d');
+		            } else {
+		                $this->request->post['dob'] = null;
+		            }
+
+		            //$this->request->post['password'] = mt_rand(1000,9999);
+
+					$customer_id = $this->model_account_customer->addCustomer( $this->request->post );
+
+					
+					// Clear any previous login attempts for unregistered accounts.
+					$this->model_account_customer->deleteLoginAttempts( $this->request->post['email'] );
+
+					$logged_in = $this->customer->loginByPhone( $customer_id );
+
+					unset( $this->session->data['guest'] );
+
+					// Add to activity log
+					$this->load->model( 'account/activity' );
+
+					$activity_data = array(
+						'customer_id' => $customer_id,
+						'name'        => $this->request->post['firstname'] . ' ' . $this->request->post['lastname']
+					);
+
+					$log->write("in post signup 1");
+					$this->model_account_activity->addActivity( 'register', $activity_data );
+
+					/* If not able to login*/
+					$data['status'] = true;
+
+					if(!$logged_in) {
+						$data['status'] = false;
+					}
+
+					$data['text_new_signup_reward'] = $this->language->get( 'text_new_signup_reward' );
+					$data['text_new_signup_credit'] = $this->language->get( 'text_new_signup_credit' );
+
+					//$data['message'] = $this->language->get('verify_mail_sent');
+					$data['message'] = $this->language->get('register_mail_sent');
+
+					if(isset($referee_user_id)) {
+
+						$config_reward_enabled = $this->config->get('config_reward_enabled');
+
+						$config_credit_enabled = $this->config->get('config_credit_enabled');
+						
+						$config_refer_type = $this->config->get('config_refer_type');
+
+						$config_refered_points = $this->config->get('config_refered_points');
+						$config_referee_points = $this->config->get('config_referee_points');
+						
+						
+						$log->write($customer_id);	
+						$log->write($config_refer_type);
+						$log->write($referee_user_id. " referee_user_id");	
+
+						$log->write($config_referee_points);
+						$log->write($config_refered_points);
+
+						if($config_refer_type == 'reward') {
+
+							$log->write($config_reward_enabled);
+							
+							if ($config_reward_enabled && $config_refered_points && $config_referee_points) {
+								$log->write("if");
+
+								//referred points below
+								$this->model_account_activity->addCustomerReward( $customer_id,$config_refered_points ,$data['referral_description']);
+
+								//referee points below
+								//$this->model_account_activity->addCustomerReward( $referee_user_id,$config_referee_points,$data['referral_description'] );
+
+							}
+
+						} elseif($config_refer_type == 'credit') {
+
+							$log->write('credit if');
+
+							if ($config_credit_enabled && $config_refered_points && $config_referee_points) {
+
+								//referred points below
+								$this->model_account_activity->addCredit($customer_id, $data['referral_description'], $config_refered_points);
+
+								//referee points below
+								//$this->model_account_activity->addCredit($referee_user_id, $data['referral_description'] , $config_referee_points);
+							}
+						}
+						
+					} else {
+						// add signup wallet for new registration. if is enabled
+
+						//below was used for signup reward
+
+						$config_reward_enabled = $this->config->get('config_reward_enabled');
+
+						if ($config_reward_enabled ) {
+							$log->write("if");
+
+
+							$points = $this->config->get('config_reward_onsignup');
+
+							if($points) {
+								$this->model_account_activity->addCustomerReward( $customer_id,$points,$data['text_new_signup_reward']);
+							}
+							
+						}
+
+						//below was used for signup credit
+
+						$config_credit_enabled = $this->config->get('config_credit_enabled');
+
+						if ($config_credit_enabled ) {
+							$log->write("credit enabled if");
+							$points = $this->config->get('config_credit_onsignup');
+
+							if($points) {
+								$this->model_account_activity->addCredit($customer_id,$data['text_new_signup_credit'],$points);
+							}
+						}
+					}
+
+	                // delete otp
+	                // $this->model_account_customer->deleteOTP($this->request->post['phone'],$this->request->post['signup_otp'],'register');
+
+	                $data['success_message'] = $this->language->get('text_valid_otp');
+	            } else {
+			$log->write("outside form 3nr dime");
+			$data['entry_submit'] = $this->language->get( 'entry_submit' );
+			$data['entry_email_address'] = $this->language->get( 'entry_email_address' );
+			$data['entry_signup_otp'] = $this->language->get( 'entry_signup_otp' );
+			$data['entry_phone'] = $this->language->get( 'entry_phone' );
+
+			//$data['heading_title'] = $this->language->get( 'heading_title' );
+			$data['heading_text']  = $this->language->get('heading_text');
+			$data['text_account_already'] = sprintf( $this->language->get( 'text_account_already' ), $this->url->link( 'account/login', '', 'SSL' ) );
+
+			if ( isset( $this->error['warning'] ) ) {
+				$data['error_warning'] = $this->error['warning'];
+			} else {
+				$data['error_warning'] = '';
+			}
+
+			if ( isset( $this->error['firstname'] ) ) {
+				$data['error_firstname'] = $this->error['firstname'];
+			} else {
+				$data['error_firstname'] = false;
+			}
+
+			if ( isset( $this->error['lastname'] ) ) {
+				$data['error_lastname'] = $this->error['lastname'];
+			} else {
+				$data['error_lastname'] = false;
+			}
+
+			if ( isset( $this->error['email'] ) ) {
+				$data['error_email'] = $this->error['email'];
+			} else {
+				$data['error_email'] = false;
+			}
+
+			if ( isset( $this->error['company_name_address'] ) ) {
+				$data['error_company_name_address'] = $this->error['company_name_address'];
+			} else {
+				$data['error_company_name_address'] = false;
+			}
+
+			if ( isset( $this->error['telephone'] ) ) {
+				$data['error_telephone'] = $this->error['telephone'];
+			} else {
+				$data['error_telephone'] = false;
+			}
+
+			if ( isset( $this->error['telephone_exists'] ) ) {
+				$data['error_telephone_exists'] = $this->error['telephone_exists'];
+			} else {
+				$data['error_telephone_exists'] = false;
+			}
+
+
+			if ( isset( $this->error['error_tax'] ) ) {
+				$data['error_tax'] = $this->error['error_tax'];
+			} else {
+				$data['error_tax'] = false;
+			}
+
+
+			if ( isset( $this->error['gender'] ) ) {
+				$data['error_gender'] = $this->error['gender'];
+			} else {
+				$data['error_gender'] = false;
+			}
+
+			if ( isset( $this->error['dob'] ) ) {
+				$data['error_dob'] = $this->error['dob'];
+			} else {
+				$data['error_dob'] = false;
+			}
+
+
+			if ( isset( $this->error['password'] ) ) {
+				$data['error_password'] = $this->error['password'];
+			} else {
+				$data['error_password'] = false;
+			}
+
+			if ( isset( $this->error['confirm'] ) ) {
+				$data['error_confirm'] = $this->error['confirm'];
+			} else {
+				$data['error_confirm'] = '';
+			}
+			
+			if ( isset( $this->error['match'] ) ) {
+				$data['error_match_password'] = $this->error['match'];
+			} else {
+				$data['error_match_password'] = '';
 			}
 		}
 

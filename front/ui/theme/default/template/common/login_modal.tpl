@@ -20,7 +20,7 @@
                                             
                                             <div class="row">
                                                 <div class="form-group">
-                                                    <label class="col-md-12 control-label sr-only" for="Phone"><?= $text_enter_phone?></label>
+                                                    <!--<label class="col-md-12 control-label sr-only" for="Phone"><?= $text_enter_phone?></label>
                                                     <div class="col-md-12 input-group" style="padding-right: 15px;padding-left: 15px;">
 
                                                         <span class="input-group-btn" style="    padding-bottom: 10px;">
@@ -39,13 +39,18 @@
 
                                                         
 
-                                                    </div>
+                                                    </div>-->
 
                                                     <div class="col-md-12" style="padding-right: 15px;padding-left: 15px;">
 
-                                                        <p class="seperator" style="margin-top:  13px;"><?= $text_or ?></p>
+                                                        <!--<p class="seperator" style="margin-top:  13px;"><?= $text_or ?></p>-->
                                                             
                                                         <input id="email" autocomplete="off" name="email" type="email" class="form-control input-md"  placeholder="<?= $text_enter_email_address?>" onclick="emailClicked()">
+
+                                                    </div>
+													<div class="col-md-12" style="padding-right: 15px;padding-left: 15px;">
+
+                                                        <input id="password" autocomplete="off" name="password" type="password" class="form-control input-md"  placeholder="password" onclick="emailClicked()">
 
                                                     </div>
 

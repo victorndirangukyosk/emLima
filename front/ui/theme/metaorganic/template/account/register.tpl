@@ -23,6 +23,19 @@
                     <input id="email" name="email"  autocomplete="off"  type="text" placeholder="<?= $entry_email_address ?>" class="form-control input-md" required="">
                 </div>
             </div>
+			<div class="form-group">
+                <label class="col-md-12 control-label sr-only" for="password"><?= $entry_password ?></label>
+                <div class="col-md-12">
+                    <input id="password" name="password"  autocomplete="off"  type="password" placeholder="<?= $entry_password ?>" class="form-control input-md" required="">
+                </div>
+            </div>
+			
+			<div class="form-group">
+                <label class="col-md-12 control-label sr-only" for="password"><?= $entry_confirm ?></label>
+                <div class="col-md-12">
+                    <input id="confirm" name="confirm"  autocomplete="off"  type="password" placeholder="<?= $entry_confirm ?>" class="form-control input-md" required="">
+                </div>
+            </div>
 
             <div class="form-group">
                 <label class="col-md-12 control-label sr-only" for="Phone"><?= $entry_phone ?></label>
