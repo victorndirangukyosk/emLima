@@ -682,7 +682,7 @@
                         <h1>Return Initiation</h1>
                         <h4>Please Fill details to initate return:</h4>
 						<br>
-						<form id="refund-form" action="<?= $action ?>" autocomplete="off" method="post" enctype="multipart/form-data">
+						<form id="refund-form" onsubmit="return checkProductSelected()" action="<?= $action ?>" autocomplete="off" method="post" enctype="multipart/form-data">
 						<div class="row">
                           <div class="form-group">
 						  <div class="col-md-12" style="padding-right: 15px;padding-left: 15px;">
@@ -799,13 +799,13 @@
                 <div class="col-md-12">
                     <?php echo $text_agree; ?>
                   <input type="checkbox" required name="agree" value="1"/>
-                  <input type="submit" value="<?php echo $button_submit; ?>" class="btn-orange btn btn-primary" />
+                  <input type="submit"  value="<?php echo $button_submit; ?>" class="btn-orange btn btn-primary" />
                 </div>
               </div>
               <?php } else { ?>
               <div class="buttons clearfix" style="margin-bottom: 20px;">
                   <div class="col-md-6">
-                  <input type="submit" value="<?php echo $button_submit; ?>" class="btn-orange btn btn-primary" />
+                  <input type="submit"  value="<?php echo $button_submit; ?>" class="btn-orange btn btn-primary" />
                 </div>
               </div>
               <?php } ?>
@@ -1043,6 +1043,17 @@ __kdt.push({"post_on_load": false});
 
     </script>
 	<script>
+	
+	function checkProductSelected(){
+			 var len = $("input.select-item:checked:checked").length;
+			 if(len > 0){
+				 return true;
+			 }else{
+				 alert('Please select at least one product');
+				 return false;
+			 }
+	}
+	
     $(function(){
 
         //button select all or cancel
@@ -1105,6 +1116,7 @@ __kdt.push({"post_on_load": false});
             console.log("len:"+len);
             all.checked = len===total;
         }
+		
     });
 </script>
 </html>
