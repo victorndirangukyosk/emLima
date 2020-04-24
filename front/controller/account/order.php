@@ -220,6 +220,7 @@ class ControllerAccountOrder extends Controller {
 
 	public function info() {
 		$this->load->language('account/order');
+		$this->load->language('account/return');
 
 		$this->document->addStyle('front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_login.css');
 				
@@ -361,6 +362,7 @@ class ControllerAccountOrder extends Controller {
 				//echo "<pre>";print_r($differenceInSeconds);die;
 
 			}
+			
 
 			foreach ($this->config->get('config_complete_status') as $key => $value) {
 				if($value == $order_info['order_status_id']) {
@@ -507,6 +509,7 @@ class ControllerAccountOrder extends Controller {
 			$products = $this->model_account_order->getOrderProducts($this->request->get['order_id']);
 
 			//echo "<pre>";print_r($products);die;
+			$returnProductCount = 0;
 			foreach ($products as $product) {
 				$option_data = array();
 
@@ -559,9 +562,13 @@ class ControllerAccountOrder extends Controller {
 		        	if(count($returnDetails) > 0) {
 		        		$return_status = $returnDetails['status'];	
 		        	}
-		        }
+					
+		        }else{
+					$returnProductCount = $returnProductCount +1;
+				}
 		        
 				$data['products'][] = array(
+				    'product_id' => $product['product_id'],
 					'store_id'     => $product['store_id'],
 					'vendor_id'     => $product['vendor_id'],
 					'name'     => $product['name'],
@@ -578,6 +585,7 @@ class ControllerAccountOrder extends Controller {
 					'reorder'  => $reorder,
 					'return'   => $this->url->link('account/return/add', 'order_id=' . $order_info['order_id'] . '&product_id=' . $product['product_id'], 'SSL')
 				);
+				
 			}
 
 			$log->write($data['products']);
@@ -672,7 +680,33 @@ class ControllerAccountOrder extends Controller {
 			}
 			
 
-			//echo "<pre>";print_r($data['delivery_data']);die;
+			$this->load->model('localisation/return_reason');
+			$data['entry_reason'] = $this->language->get('entry_reason');
+	        $data['entry_return_action'] = $this->language->get('entry_return_action');
+            $data['entry_opened'] = $this->language->get('entry_opened');
+		    $data['entry_fault_detail'] = $this->language->get('entry_fault_detail');
+			$data['text_yes'] = $this->language->get('text_yes');
+		    $data['text_no'] = $this->language->get('text_no');
+			$data['return_reasons'] = $this->model_localisation_return_reason->getReturnReasons();
+			$data['return_actions'] = $this->model_localisation_return_reason->getReturnActions();
+			$data['button_submit'] = $this->language->get('button_submit');
+		    $data['button_back'] = $this->language->get('button_back');
+			$data['action'] = $this->url->link('account/return/multipleproducts', '', 'SSL');
+			$data['returnProductCount'] = $returnProductCount;
+			if ($this->config->get('config_return_id')) {
+			$this->load->model('assets/information');
+
+			$information_info = $this->model_assets_information->getInformation($this->config->get('config_return_id'));
+
+			if ($information_info) {
+				$data['text_agree'] = sprintf($this->language->get('text_agree'), $this->url->link('information/information/agree', 'information_id=' . $this->config->get('config_return_id'), 'SSL'), $information_info['title'], $information_info['title']);
+			} else {
+				$data['text_agree'] = '';
+			}
+			} else {
+				$data['text_agree'] = '';
+			}
+			//echo "<pre>";print_r($data);die;
 			
 			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/order_info.tpl')) {
 				$this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/order_info.tpl', $data));

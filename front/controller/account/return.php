@@ -692,6 +692,58 @@ class ControllerAccountReturn extends Controller {
 		}
 	}
 
+    public function multipleproducts(){
+		       $this->load->model('account/order');
+			   $this->load->model('account/return');
+			   if (isset($this->request->post['order_id'])) {
+					$order_info = $this->model_account_order->getOrder($this->request->post['order_id']);
+			   }
+		       $returnProducts = $this->request->post['select-products'];
+			   $returnQty = $this->request->post['return_qty'];
+		       foreach($returnProducts as $productKey => $product_id){
+				 $data = array();
+				 $order_product = $this->model_account_order->getOrderProductByProductId($this->request->post['order_id'],$product_id);
+            	 $data['product_id'] =$order_product['product_id'];
+				 $data['firstname'] = $order_info['firstname'];
+				 $data['lastname'] = $order_info['lastname'];
+				 $data['email'] = $order_info['order_email'];
+				 $data['telephone'] = $order_info['order_telephone'];
+				 $data['order_id'] = $order_info['order_id'];
+				 $data['date_ordered'] = date($this->language->get('date_format_short'), strtotime($order_info['order_date']));
+				 $data['product'] = $order_product['name'];
+				 $data['unit'] = $order_product['unit'];
+				 $data['price'] = $order_product['price'];
+				 $data['model'] = $order_product['model'];
+				 $data['quantity'] = $returnQty[$productKey];
+				 $data['return_reason_id'] = $this->request->post['return_reason_id'];
+				 $data['return_action_id'] = $this->request->post['return_action_id'];
+				 $data['opened'] = $this->request->post['opened'];
+				 $data['comment'] = $this->request->post['comment'];
+			     $return_id = $this->model_account_return->addReturn($data);
+				 //echo $return_id;exit;
+				 $this->load->model('account/activity');
+
+					if ($this->customer->isLogged()) {
+						$activity_data = array(
+							'customer_id' => $this->customer->getId(),
+							'name'        => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
+							'return_id'   => $return_id
+						);
+
+						$this->model_account_activity->addActivity('return_account', $activity_data);
+					} else {
+						$activity_data = array(
+							'name'      => $this->request->post['firstname'] . ' ' . $this->request->post['lastname'],
+							'return_id' => $return_id
+						);
+
+						$this->model_account_activity->addActivity('return_guest', $activity_data);
+					}
+			   }
+			   
+			   $this->session->data['redirect_order_id'] = $this->request->post['order_id'];
+			   $this->response->redirect($this->url->link('account/return/success', '', 'SSL'));
+	}
 	public function success() {
 		$this->load->language('account/return');
                 
@@ -752,6 +804,7 @@ class ControllerAccountReturn extends Controller {
 	}
 
 	protected function validate() {
+		
 		if (!$this->request->post['order_id']) {
 			$this->error['order_id'] = $this->language->get('error_order_id');
 		}

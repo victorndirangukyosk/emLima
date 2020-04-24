@@ -5,9 +5,18 @@
                 <div class="col-md-12">
                     <div class="my-order-view-dashboard">
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-11">
                                 <div class="back-link-block"><a href="<?php echo $continue; ?>"> <span class="back-arrow"><i class="fa fa-long-arrow-left"></i> </span> <?= $text_go_back ?></a></div>
                             </div>
+							<?php if($this->config->get('config_account_return_product_status') == 'yes' && $delivered && $can_return && ($returnProductCount>0)) { ?>
+                                <div class="col-md-1">
+                                                            
+                                   <?php $url = $product['return']; ?>
+                                   <a data-toggle="modal" data-target="#refundOrderModal" title="<?php echo $button_return; ?>" class="btn btn-danger"><i class="fa fa-reply"></i></a>
+                                                  
+
+                                 </div>
+                            <?php } ?>
                         </div>
                         <div class="row">
                             <div class="col-md-8">
@@ -211,9 +220,10 @@
                                                         </div>
                                                     </div>
 
-                                                    <?php if($this->config->get('config_account_return_product_status') == 'yes' && $delivered && is_null($product['return_id']) && $can_return) { ?>
+                                                    <?php /* if($this->config->get('config_account_return_product_status') == 'yes' && $delivered && is_null($product['return_id']) && $can_return) { ?>
                                                         <div class="col-md-2">
-                                                            <div class="my-order-price">
+                                                            <?php /* ?>
+															<div class="my-order-price">
                                                                 <!-- <a href="<?php echo $product['return']; ?>" id="return_button" data-toggle="tooltip" title="<?php echo $button_return; ?>" class="btn btn-danger"><i class="fa fa-reply"></i></a> -->
 
                                                                 <?php $url = $product['return']; ?>
@@ -222,8 +232,9 @@
                                                                 <!-- <button type="button" class="btn btn-default" onclick="sendReview()"><?= $text_send ?></button> -->
 
                                                             </div>
+															 <?php  ?>
                                                         </div>
-                                                    <?php } ?>
+                                                    <?php } */ ?>
 
                                                     <?php if($this->config->get('config_account_return_product_status') == 'yes' && $delivered && !is_null($product['return_id'])) { ?>
                                                         <div class="col-md-2">
@@ -660,6 +671,142 @@
             </div>
         </div>
     </div>
+	
+	<div class="refundOrderModal-popup">
+        <div class="modal fade" id="refundOrderModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                     <div class="store-head">
+                        <h1>Return Initiation</h1>
+                        <h4>Please Fill details to initate return:</h4>
+						<br>
+						<form id="refund-form" action="<?= $action ?>" autocomplete="off" method="post" enctype="multipart/form-data">
+						<div class="row">
+                          <div class="form-group">
+						  <div class="col-md-12" style="padding-right: 15px;padding-left: 15px;">
+						   <input type="hidden" name="order_id" value="<?php echo $this->request->get['order_id'];?>">
+							  <table class="table table-bordered">
+								<thead>
+								  <tr>
+									<th>Product Name</th>
+									<th>Return Qunatity</th>
+									<th>Select All <input type="checkbox" class="select-all checkbox" name="select-all" /></th>
+								  </tr>
+								</thead>
+								<tbody>
+								<?php foreach ($products as $product) {
+									if(is_null($product['return_id'])){
+									?>
+								  <tr>
+									<td><?php echo $product['name'];?></td>
+									<td><input type="text" name="return_qty[]" value="<?php echo $product['quantity']?>"></td>
+									<td><input type="checkbox" class="select-item checkbox" name="select-products[]" value="<?php echo $product['product_id']?>" /></td>
+								  </tr>
+								<?php } ?>
+								<?php } ?>
+								</tbody>
+							  </table>
+                          </div>
+						  </div>
+						  <div class="form-group required">
+                  <label class="col-sm-4 control-label"><?php echo $entry_reason; ?></label>
+                  <div class="col-sm-6">
+                    <?php foreach ($return_reasons as $return_reason) { ?>
+                    <?php if ($return_reason['return_reason_id'] == $return_reason_id) { ?>
+                    <div class="radio">
+                      <label>
+                        <input type="radio" name="return_reason_id" required value="<?php echo $return_reason['return_reason_id']; ?>" checked="checked" />
+                        <?php echo $return_reason['name']; ?></label>
+                    </div>
+                    <?php } else { ?>
+                    <div class="radio">
+                      <label>
+                        <input type="radio" name="return_reason_id"  required value="<?php echo $return_reason['return_reason_id']; ?>" />
+                        <?php echo $return_reason['name']; ?></label>
+                    </div>
+                    <?php  } ?>
+                    <?php  } ?>
+                    <?php if ($error_reason) { ?>
+                    <div class="text-danger"><?php echo $error_reason; ?></div>
+                    <?php } ?>
+                  </div>
+                </div>
+				<div class="form-group required">
+                  <label class="col-sm-4 control-label"><?php echo $entry_return_action; ?></label>
+                  <div class="col-sm-6">
+                    <?php foreach ($return_actions as $return_action) { ?>
+                    <?php if ($return_action['return_action_id'] == $return_action_id) { ?>
+                    <div class="radio">
+                      <label>
+                        <input type="radio" name="return_action_id" required value="<?php echo $return_action['return_action_id']; ?>" checked="checked" />
+                        <?php echo $return_action['name']; ?></label>
+                    </div>
+                    <?php } else { ?>
+                    <div class="radio">
+                      <label>
+                        <input type="radio" name="return_action_id" required  value="<?php echo $return_action['return_action_id']; ?>" />
+                        <?php echo $return_action['name']; ?></label>
+                    </div>
+                    <?php  } ?>
+                    <?php  } ?>
+                    <?php if ($error_return_action) { ?>
+                    <div class="text-danger"><?php echo $error_return_action; ?></div>
+                    <?php } ?>
+                  </div>
+                </div>
+				
+				<div class="form-group required">
+                  <label class="col-sm-4 control-label"><?php echo $entry_opened; ?></label>
+                  <div class="col-sm-6">
+                    <label class="radio-inline">
+                      <?php if ($opened) { ?>
+                      <input type="radio" name="opened" value="1" checked="checked" />
+                      <?php } else { ?>
+                      <input type="radio" name="opened" value="1" />
+                      <?php } ?>
+                      <?php echo $text_yes; ?></label>
+                    <label class="radio-inline">
+                      <?php if (!$opened) { ?>
+                      <input type="radio" name="opened" value="0" checked="checked" />
+                      <?php } else { ?>
+                      <input type="radio" name="opened" value="0" />
+                      <?php } ?>
+                      <?php echo $text_no; ?></label>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-12 control-label" for="input-comment"><?php echo $entry_fault_detail; ?></label>
+				   <div class="col-sm-4">
+				   </div>
+                  <div class="col-sm-8">
+                    <textarea name="comment" rows="10" placeholder="<?php echo $entry_fault_detail; ?>" id="input-comment" class="form-control input-lg"><?php echo $comment; ?></textarea>
+                  </div>
+                </div>
+				<?php if ($text_agree) { ?>
+              <div class="buttons clearfix" style="margin-bottom: 20px;">
+                <div class="col-md-12">
+                    <?php echo $text_agree; ?>
+                  <input type="checkbox" required name="agree" value="1"/>
+                  <input type="submit" value="<?php echo $button_submit; ?>" class="btn-orange btn btn-primary" />
+                </div>
+              </div>
+              <?php } else { ?>
+              <div class="buttons clearfix" style="margin-bottom: 20px;">
+                  <div class="col-md-6">
+                  <input type="submit" value="<?php echo $button_submit; ?>" class="btn-orange btn btn-primary" />
+                </div>
+              </div>
+              <?php } ?>
+						 </div>
+						 </form>
+                      </div> 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <?php echo $footer; ?>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="<?= $base?>front/ui/theme/mvgv2/js/jquery.min.js"></script>
@@ -885,4 +1032,69 @@ __kdt.push({"post_on_load": false});
         
 
     </script>
+	<script>
+    $(function(){
+
+        //button select all or cancel
+        /*$("#select-all").click(function () {
+            var all = $("input.select-all")[0];
+            all.checked = !all.checked
+            var checked = all.checked;
+            $("input.select-item").each(function (index,item) {
+                item.checked = checked;
+            });
+        });
+
+        //button select invert
+        $("#select-invert").click(function () {
+            $("input.select-item").each(function (index,item) {
+                item.checked = !item.checked;
+            });
+            checkSelected();
+        });
+
+        //button get selected info
+        $("#selected").click(function () {
+            var items=[];
+            $("input.select-item:checked:checked").each(function (index,item) {
+                items[index] = item.value;
+            });
+            if (items.length < 1) {
+                alert("no selected items!!!");
+            }else {
+                var values = items.join(',');
+                console.log(values);
+                var html = $("<div></div>");
+                html.html("selected:"+values);
+                html.appendTo("body");
+            }
+        });
+		*/
+
+        //column checkbox select all or cancel
+        $("input.select-all").click(function () {
+            var checked = this.checked;
+            $("input.select-item").each(function (index,item) {
+                item.checked = checked;
+            });
+        });
+
+        //check selected items
+        $("input.select-item").click(function () {
+            var checked = this.checked;
+            console.log(checked);
+            checkSelected();
+        });
+
+        //check is all selected
+        function checkSelected() {
+            var all = $("input.select-all")[0];
+            var total = $("input.select-item").length;
+            var len = $("input.select-item:checked:checked").length;
+            console.log("total:"+total);
+            console.log("len:"+len);
+            all.checked = len===total;
+        }
+    });
+</script>
 </html>
