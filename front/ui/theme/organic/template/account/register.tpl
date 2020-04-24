@@ -30,7 +30,7 @@
 
                     <span class="input-group-btn" style="    padding-bottom: 10px;">
 
-                        <p id="button-reward" class="" style="padding: 13px 14px;border-radius: 2px;font-size: 15px;font-weight: 600;color: #fff;background-color: #522e5b;border-color: #522e5b;display: inline-block;margin-bottom: 0;font-size: 14px;line-height: 1.42857143;vertical-align: middle;-ms-touch-action: manipulation;touch-action: manipulation;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;background-image: none;margin-right: -1px;">
+                        <p id="button-reward" class="phonesetbut">
 
                             <font style="vertical-align: inherit;">
                               <font style="vertical-align: inherit;"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">

@@ -7694,3 +7694,9 @@ body {
 .input-cart-qty {
     padding: 2px 6px 0px 6px !important;
 }
+#selectedCategory{
+	margin: 0px 0px 0px 15px;
+}
+ .header__search-bar-item--category{
+	margin-left: -45px !important;
+}

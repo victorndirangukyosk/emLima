@@ -41,7 +41,7 @@
         </fieldset>
       
       </div>
-      <div class="secion-row text-center" style="margin-bottom: 20px; float: right; margin-right: 30px;">
+      <div class="secion-row text-center" style="margin-bottom: 20px; float: right; margin-right: 14.7%;">
               <button type="submit" data-style="zoom-out" id="save-button" class="btn btn-default"><span class="ladda-label"><?= $button_save ?></span><span class="ladda-spinner"></span></button>
             </div>
       </div>

@@ -75,10 +75,11 @@
        <div data-sticky-banner="{enable: false, enableOnDesktop:false, enableOnTablet:false, enableOnMobile:false, staticStartDistance:130}" id="leaderboard-header-banner" class="header__banner-container header__banner-container--hidden">
          <div class="header__banner-container-close"></div>
       </div>
-      <div id="header-new" class="header">
-       
-         <div class="header__wrapper">
-         <div class="header__logo-container">
+      <div class="col-md-12" style="position: relative; z-index: 1040;">
+      
+      <div class="row">
+      <div class="col-md-2">
+                <div class="header__logo-container">
                      <a class="header__logo-link " href="<?= BASE_URL?>">
                         <img src="<?=$logo?>" />
                        
@@ -87,8 +88,10 @@
                         <a itemprop="url" href="#">Home</a>
                         <img itemprop="logo" src="<?=$logo?>" width="100" height="100">
                      </div>
-                  </div>
-         <div class="header__search-bar-wrapper">
+                </div>
+      </div>
+      <div class="col-md-5">
+                <div class="header__search-bar-wrapper">
                   <div id="search-form-wrapper" class="header__search-bar search-form-wrapper">
                      <div class="header__search-title">
                         Search
@@ -158,15 +161,13 @@
                      </form>
                   </div>
                </div>
-
-
-
-            <div class="header__top-layer">
-               <div class="header__navigation-container" role="navigation">
+      </div>
+      <div class="col-md-5">
+            <div class="header__navigation-container" role="navigation">
                
                   <div class="header__primary-navigation-outer-wrapper">
                      
-                     <div class="header__primary-navigation-item header__primary-navigation-item--more-categories" style="margin-left: 0px; margin-right:-13px">
+                     <div class="header__primary-navigation-item header__primary-navigation-item--more-categories" style="margin-top: 17px;">
                         
                      <div class="header__secondary-navigation-tablet-container"></div>
                      <ul class="header__upper-deck-list" >
@@ -221,6 +222,20 @@
                
                
             </div>
+      </div>
+      </div>
+     
+      </div>
+      <div id="header-new" class="header">
+       
+         <div class="header__wrapper">
+         
+        
+
+
+
+            <div class="header__top-layer">
+               
             <div id="homepage-billboard-new" class="header__home-hero header__home-hero--homenew">
                <div class="header__home-hero-image-wrapper">
                   <picture id="random-hero-image" class="header__home-hero-image" alt="">
