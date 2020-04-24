@@ -149,7 +149,7 @@
           <?php if ($site_key) { ?>
           <div class="form-group required">
             <label class="col-sm-4 control-label" for="input-date-added"></label>
-            <div class="col-sm-6">
+            <div class="col-sm-6 pl0 pr0">
               
                   <div class="g-recaptcha" data-sitekey="<?php echo $site_key; ?>"></div>
                   <?php if ($error_captcha) { ?>
