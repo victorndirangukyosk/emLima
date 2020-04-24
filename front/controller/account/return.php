@@ -699,6 +699,9 @@ class ControllerAccountReturn extends Controller {
 					$order_info = $this->model_account_order->getOrder($this->request->post['order_id']);
 			   }
 		       $returnProducts = $this->request->post['select-products'];
+			   /*if(count($returnProducts) == 0){
+				   $this->response->redirect($this->url->link('account/order/info', 'order_id=' . $this->request->post['order_id'], 'SSL'));
+			   }*/
 			   $returnQty = $this->request->post['return_qty'];
 		       foreach($returnProducts as $productKey => $product_id){
 				 $data = array();
@@ -716,9 +719,10 @@ class ControllerAccountReturn extends Controller {
 				 $data['model'] = $order_product['model'];
 				 $data['quantity'] = $returnQty[$productKey];
 				 $data['return_reason_id'] = $this->request->post['return_reason_id'];
-				 $data['return_action_id'] = $this->request->post['return_action_id'];
+				 $data['customer_desired_action'] = $this->request->post['customer_desired_action'];
 				 $data['opened'] = $this->request->post['opened'];
 				 $data['comment'] = $this->request->post['comment'];
+				 //echo '<pre>';print_r($data);exit;
 			     $return_id = $this->model_account_return->addReturn($data);
 				 //echo $return_id;exit;
 				 $this->load->model('account/activity');

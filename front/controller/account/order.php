@@ -682,7 +682,7 @@ class ControllerAccountOrder extends Controller {
 
 			$this->load->model('localisation/return_reason');
 			$data['entry_reason'] = $this->language->get('entry_reason');
-	        $data['entry_return_action'] = $this->language->get('entry_return_action');
+	        $data['entry_return_action'] = 'Desired Action';
             $data['entry_opened'] = $this->language->get('entry_opened');
 		    $data['entry_fault_detail'] = $this->language->get('entry_fault_detail');
 			$data['text_yes'] = $this->language->get('text_yes');

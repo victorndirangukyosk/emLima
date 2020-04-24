@@ -1,4 +1,4 @@
-<?php echo $header; ?>
+<?php echo $header;?>
     <div class="dashboard-wrapper">
         <div class="container">
             <div class="row">
@@ -736,7 +736,7 @@
 				<div class="form-group required">
                   <label class="col-sm-4 control-label"><?php echo $entry_return_action; ?></label>
                   <div class="col-sm-6">
-                    <?php foreach ($return_actions as $return_action) { ?>
+                    <?php /*foreach ($return_actions as $return_action) { ?>
                     <?php if ($return_action['return_action_id'] == $return_action_id) { ?>
                     <div class="radio">
                       <label>
@@ -753,7 +753,17 @@
                     <?php  } ?>
                     <?php if ($error_return_action) { ?>
                     <div class="text-danger"><?php echo $error_return_action; ?></div>
-                    <?php } ?>
+                    <?php } */ ?>
+					<div class="radio">
+                      <label>
+                        <input type="radio" name="customer_desired_action" required value="refund" />
+                        Refund Money</label>
+                    </div>
+					<div class="radio">
+                      <label>
+                        <input type="radio" name="customer_desired_action" required value="replace" />
+                        Replace Product</label>
+                    </div>
                   </div>
                 </div>
 				
