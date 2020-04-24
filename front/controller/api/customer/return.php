@@ -337,7 +337,7 @@ class ControllerApiCustomerReturn extends Controller {
             $this->error['reason'] = $this->language->get('error_reason');
         }
 
-        if ($this->config->get('config_google_captcha_status')) {
+        /*if ($this->config->get('config_google_captcha_status')) {
             $json = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret=' . urlencode($this->config->get('config_google_captcha_secret')) . '&response=' . $this->request->post['g-recaptcha-response'] . '&remoteip=' . $this->request->server['REMOTE_ADDR']);
             
             $json = json_decode($json, true);
@@ -346,6 +346,7 @@ class ControllerApiCustomerReturn extends Controller {
                 $this->error['captcha'] = $this->language->get('error_captcha');
             }       
         }
+		*/
 
         if($this->error) {
             $this->error['warning'] = 'Plase check the form carefully!';
