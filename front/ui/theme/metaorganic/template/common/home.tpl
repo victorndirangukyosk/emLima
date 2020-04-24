@@ -75,7 +75,7 @@
        <div data-sticky-banner="{enable: false, enableOnDesktop:false, enableOnTablet:false, enableOnMobile:false, staticStartDistance:130}" id="leaderboard-header-banner" class="header__banner-container header__banner-container--hidden">
          <div class="header__banner-container-close"></div>
       </div>
-      <div class="col-md-12" style="position: relative; z-index: 9999;">
+      <div class="col-md-12" style="position: relative; z-index: 1040;">
       
       <div class="row">
       <div class="col-md-2">

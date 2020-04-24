@@ -6946,7 +6946,7 @@ body#vip .header__banner-container {
 		left: 300px
 	}
 	.header__upper-deck-list {
-		min-width: 365px;
+		min-width: 500px;
 		z-index: 30;
 	}
 	.header__post-ad-button:hover {
