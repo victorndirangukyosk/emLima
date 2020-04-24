@@ -259,8 +259,24 @@
                                             <textarea name="comment" rows="5" placeholder="<?php echo $entry_comment; ?>" id="input-comment" class="form-control"><?php echo $comment; ?></textarea>
                                         </div>
                                     </div>
+									<div class="form-group">
+									  <label class="col-sm-2 control-label">Customer Desired Action</label>
+									  <div class="col-sm-6">
+										<div class="radio">
+										  <label>
+											<input type="radio" name="customer_desired_action" <?php echo ($customer_desired_action=='refund' ) ?  'checked': ''?> value="refund"  />
+											Refund Money</label>
+										</div>
+										<div class="radio">
+										  <label>
+											<input type="radio" name="customer_desired_action" <?php echo ($customer_desired_action=='replace' ) ?  'checked': ''?> value="replace" />
+											Replace Product</label>
+										</div>
+									  </div>
+									</div>
                                 <?php } else { ?>
 
+									
                                     <div class="form-group">
                                         <label class="col-sm-2 control-label" for="input-return-reason"><?php echo $entry_return_reason; ?></label>
                                         <div class="col-sm-10">

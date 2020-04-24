@@ -1895,11 +1895,11 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label" for="input-login-attempts">
-                                        <?= $entry_return_timeout ?>
+                                    <label class="col-sm-2 control-label" for="input-login-attempts"><span data-toggle="tooltip" title="Set timeout in seconds"><?php echo $entry_return_timeout; ?></span>
+                                       
                                     </label>
                                     <div class="col-sm-10">
-                                        <input type="text" name="config_return_timeout" value="<?php echo $config_return_timeout;?>" class="form-control" />
+                                        <input type="text" name="config_return_timeout" value="<?php echo $config_return_timeout;?>" class="form-control" /><span data-toggle="tooltip" title="Set timeout in seconds">(Set expiry timeout in seconds)</span>
                                     </div>
                                 </div>  
 
