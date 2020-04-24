@@ -1336,7 +1336,7 @@ $(document).delegate('#signup', 'click', function() {
                         $('.signup-modal-text').html(json['text_verify_otp']);
 
                     }*/
-                    alert('redirect');
+                    //alert('redirect');
                     var baseurl = window.location.origin+window.location.pathname;
                     location.href = baseurl+'index.php?path=account/profileinfo';
 
