@@ -642,7 +642,7 @@ div.required .control-label:not(span)::before, td.required::before {
 }
 .category-header {min-height: 16px;}
 
-body { font-family: 'Hind', sans-serif; color: #848684; font-size: 14px; line-height: 1.6; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-weight: 500; }
+body { color: #848684; font-size: 14px; line-height: 1.6; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-weight: 500; }
 h1, h2, h3, h4, h5, h6 { color: #30322f; margin: 0px 0px 10px 0px; }
 h1 { font-size: 30px; }
 h2 { font-size: 20px; }
@@ -859,7 +859,7 @@ button { }
 /*.signupModal-popup { z-index: 10000!important}*/
 .signupModal-popup .close { float: right; font-size: 21px; font-weight: 700; line-height: 1; color: #000; text-shadow: 0 0px 0 #fff; opacity: 1; position: absolute; right: 0px; background: #f3f5f2; padding: 10px 14px; top: 0px; }
 .productModal_popup {z-index: 9999 }
-.productModal_popup .close, .changelocationModal .close { float: right; font-size: 21px; font-weight: 700; line-height: 1; color: #000; text-shadow: 0 0px 0 #fff; opacity: 1; position: absolute; right: 1px; background: #f3f5f2; padding: 10px 14px; top: 0px; z-index: 2;}
+.productModal_popup .close, .changelocationModal .close { float: right; font-size: 21px; font-weight: 700; line-height: 1; color: rgb(255, 0, 0); text-shadow: 0 0px 0 #fff; opacity: 1; position: absolute; right: 1px; background: #ffffff; padding: 10px 14px; top: 0px; z-index: 2;}
 .product-variants-list {    width: 82%;  margin-bottom: 10px; }
 .product-variant { margin-bottom: 0px; }
 .product-variant-label { color: #333; }
@@ -982,7 +982,7 @@ button { }
 }
 .store-cart-panel .modal-footer { background-color: #f3f5f2; text-align: center; }
 #popupmodal { background-color: rgba(0, 0, 0, 0.1); }
-.product-details .modal-body { padding: 10px; margin-top: 10px; }
+.product-details .modal-body { padding: 0px; margin-top: 0px; }
 .offer-ratio { margin-bottom: 0px;    display: inline-block;    color: #ee4054;    font-size: 14px;    font-weight: 700;     border-radius: 2px;    text-align: center; padding: 2px 0px; }
 .product-details .price { color: #333; font-size: 18px; }
 .old-price { color: #afb2af; padding-right: 5px; font-size: 16px; text-decoration: line-through; }

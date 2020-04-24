@@ -1271,6 +1271,7 @@ NOTE: Variables currently do not work with @custom-media. Hardcoding values for 
 ._25ygu {
   line-height: 1.3;
   text-align: left;
+  padding: 0px 10px 30px;
 }
 ._25ygu._1OE9d {
   display: -ms-flexbox;
@@ -1576,6 +1577,7 @@ NOTE: Variables currently do not work with @custom-media. Hardcoding values for 
   color: hsl(0, 0%, 30%);
   font-size: 18px;
   font-weight: 700;
+  padding-left: 10px;
 }
 ._1TuAD {
   -ms-flex-align: baseline;
@@ -1968,6 +1970,7 @@ NOTE: Variables currently do not work with @custom-media. Hardcoding values for 
 ._2xqFO {
   display: block;
   text-align: left;
+  padding-left: 10px;
 }
 .WuoXV {
   padding: 8px 8px 0 0;
@@ -2001,6 +2004,7 @@ NOTE: Variables currently do not work with @custom-media. Hardcoding values for 
 ._31alT {
   display: -ms-flexbox;
   display: flex;
+  margin: 15px 5px;
 }
 .Jhd4X,
 .XvxbR {
@@ -2123,13 +2127,14 @@ NOTE: Variables currently do not work with @custom-media. Hardcoding values for 
 }
 ._1xvs1 {
   left: 0%;
-  width: 110px;
   padding-left: 0%;
   height: auto;
   top: 0%;
   transition-duration: 0.5s;
   transition-property: left;
   z-index: 1;
+  width:150px;
+  margin: 10px 0px ;
 }
 ._1xvs1new {
   left: 0%;
@@ -2449,6 +2454,7 @@ NOTE: Variables currently do not work with @custom-media. Hardcoding values for 
   display: -ms-flexbox;
   display: flex;
   width: 100%;
+  border: 1px solid #f2f2f2;
 }
 ._25Upe {
   position: relative;
@@ -2489,6 +2495,7 @@ NOTE: Variables currently do not work with @custom-media. Hardcoding values for 
     width: calc(   100% - 220px - 39% -     16px );
     max-width: calc(   100% - 220px - 39% -     16px );
     padding: 16px 16px 16px 0;
+    
   }
 
   .EurVi ._38ivw {
@@ -3317,9 +3324,10 @@ NOTE: Variables currently do not work with @custom-media. Hardcoding values for 
 }
 
 ._1cn3x {
-  -ms-flex: 1 0 320px;
-      flex: 1 0 320px;
+  -ms-flex: 1 0 300px;
+      flex: 1 0 300px;
   min-width: 0;
+  width: 300px;
 }
 /*--------------------------------------------------------------------
 *
@@ -3352,8 +3360,8 @@ NOTE: Variables currently do not work with @custom-media. Hardcoding values for 
   ._2tY3C {
     display: -ms-grid;
     display: grid;
-    -ms-grid-columns: (minmax(320px, 1fr))[auto-fill];
-        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    -ms-grid-columns: auto auto auto auto;
+        grid-template-columns: auto auto auto auto;
   }
 
   @media (min-width: 960px) {
@@ -19113,4 +19121,8 @@ address {
 .header__logo-container img {
   width: 10rem;
   margin: 18px 0px 0px 10px !important;
+}
+.setproductimg{
+  background-color: #f4f3f2;
+    padding: 15px 10px;
 }
