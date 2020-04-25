@@ -2095,7 +2095,9 @@ NOTE: Variables currently do not work with @custom-media. Hardcoding values for 
   background: #fff;
   background-size: 900%;
   overflow: hidden;
-  transform: translate3d(0, 0, 0)
+  transform: translate3d(0, 0, 0);
+  margin: 0px auto;
+  text-align: center;
 }
 ._2_3rp::before {
     content: '';
@@ -2461,7 +2463,7 @@ NOTE: Variables currently do not work with @custom-media. Hardcoding values for 
 }
 @media (min-width: 640px) {
   ._1fLGj._2sT86 {
-    min-width: 320px;
+    min-width: 300px;
   }
 
   ._1fLGj ._3Oe1A {
@@ -4934,8 +4936,8 @@ NOTE: Variables currently do not work with @custom-media. Hardcoding values for 
 @media (min-width: 832px) {
 
     ._3Gfh4 {
-    width: 280px;
-    margin-right: 24px
+    width: 190px;
+    margin-right: 10px
     }
   }
 
@@ -7979,7 +7981,8 @@ NOTE: Variables currently do not work with @custom-media. Hardcoding values for 
   display: -ms-flexbox;
   display: flex;
   -ms-flex-align: baseline;
-      align-items: baseline
+      align-items: baseline;
+      margin-left: 20px;
 }
 
 @media (max-width: 831px) {

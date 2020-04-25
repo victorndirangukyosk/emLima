@@ -307,10 +307,11 @@
                                                     <div class="_2sT86 EurVi">
                                                     <article class="_3Oe1A">
 
-                                                    <div class="col-md-12 col-sm-12">
-                                                    <div class="col-md-6 col-sm-6">
+                                                    <div class="col-md-12 col-sm-12 pl0 pr0">
+                                                    <div class="col-md-12 col-sm-12 pl0 pr0">
                                                     <section class="_25Upe">
                                                     <section class="inner_sec _2imXI">
+                                                    <span class="discountuihome" style="color:red; font-weight:bold">Get <?= $product['percent_off'];?>% OFF <i class="fas fa-shopping-basket"></i></span>
                                                     <div class="_3XNMI">
                                                    <a class="product-detail-bnt open-popup" role="button" data-store=<?= $current_store;?> data-id="<?= $product['product_store_id'] ?>" target="_blank"  aria-label="<?=$product['name']?>">
                                                     <div class="_2_3rp">
@@ -335,7 +336,7 @@
                                         </section>
                                         </section>
                                         </div>
-                                        <div class="col-md-6 col-sm-6">
+                                        <div class="col-md-12 col-sm-12" style="margin-bottom:15px;">
                                         <div class="vfsyA col-md-12 col-sm-12 pl0" style="margin-top:30px">
                                                     <div class="_25ygu">
                                                      <div class="JHf2a">
@@ -347,37 +348,20 @@
                                                        
                                                     </div>
                                                 </div>
-                                                <div class="col-md-12 col-sm-12 pl0 pr0">
+                                                <div class="col-md-12 col-sm-12 pl0 pr0 setproductimg">
                                                 <div class="_2D2lC">
                                                             <div class="-DeRq">
                                                                 <?= $product['special'];?></div>
                                                         </div>
                                                         <div>
                                                         <div class="_2xqFO">
-                                                                <div class="_3QV9M"><strike><?= $product['price'];?></strike> <span style="color:red; font-weight:bold"><?= $product['percent_off'];?>% OFF </span></div>
+                                                                <div class="_3QV9M"><strike><?= $product['price'];?></strike> </div>
                                                                     
                                                             </div>
                                                         </div>
-                                                </div>
-                                        </div>
-                                        </div>
-                                        <section class="hypZf">
-                                            <div class="inner_sec_div U157g">
-                                               
-                                                <div class="Jhd4X">
-                                                    <div class="XvxbR">
-                                                        
-                                                        <div class="GBZ1M">
-                                                            <div class="_1I1Wt">
-                                                                <div class="_3yoIm" aria-label="Rated 3.83 out of 5">
-                                                                   
-                                                                
-                                                        </div>
-                                                       
-                                                        <div class="_3PpSK"><span role="button" aria-label="Show more" class="nrkj-">Show more</span></div>
-                                                    </div>
-                                                    <div class="_2bSMY">
-                                                        <div class="_31alT"><a class="_3tfm8 _3ePxY  product-detail-bnt product-img product-description open-popup" role="button" data-store=<?= $current_store;?> data-id="<?= $product['product_store_id'] ?>" target="_blank" rel="noopener noreferrer">Preview</a>
+                                                                          <div class="_2bSMY">
+                                                        <div class="_31alT">
+                                                            <a class="_3tfm8 _3ePxY  product-detail-bnt product-img product-description open-popup" role="button" data-store=<?= $current_store;?> data-id="<?= $product['product_store_id'] ?>" target="_blank" rel="noopener noreferrer">Preview</a>
                                                           <div class="pro-qty-addbtn" data-store-id="<?= $current_store ?>"data-variation-id="<?= $product['product_variation_store_id'] ?>" id="action_<?= $product['product_variation_store_id'] ?>">
 
 													      <?php require 'action.tpl'; ?>
@@ -394,21 +378,9 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="_1VJk4">
-                                                    <div class="_4zAGT">
-                                                        <div class="_3QV9M">356
-                                                            <!-- -->Sales</div>
-                                                        <div class="GeySM"><span class="_2g_QW">Last updated:</span> <span class="_3TIJT"> <!-- -->15 Oct 15</span></div>
-                                                    </div>
-                                                    <ul class="_3bM8k">
-                                                       <?= $product['description'];?>
-                                                    </ul>
-                                                    <section class="_1jcKT">
-                                                        <div class="_343Ow"><span class="_3Q47d">Tags: <!-- -->agents, apartment, estate, flat, home, house, multi properties, real estate, real estate agent, residence, villa</span></div>
-                                                    </section>
-                                                </div>
-                                            </div>
-                                        </section>
+                                        </div>
+                                        </div>
+                                        
                                         <section class="_38ivw">
                                             <section class="_9q1LS">
                                                 <section class="_3dJU8">

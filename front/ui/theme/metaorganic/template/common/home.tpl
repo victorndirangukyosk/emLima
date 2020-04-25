@@ -265,8 +265,9 @@
 											 <div class="container">
 					                        <div class="_47ahp" data-test-selector="search-results">
 											 <div class="clearfix featured-categories__header">
+                                              <span class="butsetview"><a href="<?=$this->url->link('product/store', 'store_id='.ACTIVE_STORE_ID).'?cat='.$page_link?>" >View All </a></span>   				  
 						  <h2 class="featured-categories__header-title"><span><?=$category['name']?></span></h2>
-                           <span class="butsetview"><a href="<?=$this->url->link('product/store', 'store_id='.ACTIVE_STORE_ID).'?cat='.$page_link?>" >View All <i class="far fa-eye"></i></a></span>   				  
+                          
 					   </div>
                                                 <ul id="items-ul" class="_2tY3C" data-test-selector="item-cards-layout-grid">
 												

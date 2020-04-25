@@ -10,8 +10,8 @@
                        <img src="<?= $logo?>" style="width: 250px; margin-top: 0px; margin-left: -93px;">
                      </span>
                      <div class="footer__download-app-info">
-                        <div class="footer__download-app-heading">Download the Emlima app for iOS or Android</div>
-                        <div class="footer__download-app-heading-short">Download the Emlima app</div>
+                        <div class="footer__download-app-heading">Download the Kwik Basket app for  Android</div>
+                        <div class="footer__download-app-heading-short">Download the Kwik Basket</div>
                         <div class="footer__download-app-subheading">Buy and sell faster on the go</div>
                         <div class="footer__download-app-rating">
                                 <i class="fa fa-star" aria-hidden="true"></i>
@@ -64,7 +64,7 @@
                   </i>PO Box 57666-00200, Heritan House Woodlands Road, Nairobi<br>
                   </address>
                   <div class="phone-footer">+254 738770186</div>
-                  <div class="email-footer"><a class="footer__footer-link h-url" href="mailto:info@emlima.com">info@emlima.com</a></div>
+                  <div class="email-footer"><a class="footer__footer-link h-url" href="mailto:info@kwikbasket.com">info@kwikbasket.com</a></div>
                 </div>
                </div>
                <div class="footer__footer-link-col contactmobhide">
@@ -100,7 +100,7 @@
                
                <div id="copyright" class="footer__copyright">
                   <span class="footer__copyright-text">
-                  Copyright ©  <?php echo date("Y"); ?> Emlima All Rights Reserved by Techno Brain.</span>
+                  Copyright ©  <?php echo date("Y"); ?> Kwik Basket </span>
                </div>
             </div>
          </div>
