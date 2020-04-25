@@ -19129,3 +19129,6 @@ address {
   background-color: #f4f3f2;
     padding: 15px 10px;
 }
+.search-dropdown{
+  width:350px !important
+}
