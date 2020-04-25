@@ -7689,7 +7689,6 @@ body {
 .breadcrumbs__summary{
     font-size: .875em !important;
 }
-.productModal_popup .close, .changelocationModal .close {top:-9px !important; }
 #popupmodal { background-color: rgba(0, 0, 0, 0.5) !important; }
 .input-cart-qty {
     padding: 2px 6px 0px 6px !important;
@@ -7702,4 +7701,25 @@ body {
 }
 ._1cn3x {
     width: 277px !important;
+}
+.header__upper-deck-item{
+	padding: 0px 50px 0px 0px !important;
+}
+.setcartbtn {
+    margin-top: 0px !important;
+    float: right;
+}
+.search-location-all{
+	margin-top: 10px;
+}
+ .rating{
+	margin-top: 0px !important;
+}
+.product-disclaimer{
+	width: 96%;
+}
+.dropdown-menu>li>a {
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+    border-bottom: 1px solid #d7dcd6 !important;
 }

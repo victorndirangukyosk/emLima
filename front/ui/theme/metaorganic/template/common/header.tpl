@@ -73,72 +73,23 @@
     </div>
   
   <header>
-<div class="header__primary-navigation-item header__primary-navigation-item--more-categories" style="margin-left: 0px;">
-                        
-                     <div class="header__secondary-navigation-tablet-container"></div>
-					
-                     <ul class="header__upper-deck-list" >
-						
-                        <?php if(!$is_login){?>
-                        <li class="header__upper-deck-item header__upper-deck-item--register">
-                           <a data-toggle="modal" data-dismiss="modal" data-target="#signupModal-popup" class="header__upper-deck-item-link register" data-spinner-btn="{showOnSubmit: false}">
-                           Register</a>
-                        </li>
-                        <li class="header__upper-deck-item header__upper-deck-item--signin">
-                           <a data-toggle="modal" data-target="#phoneModal" class="header__upper-deck-item-link sign-in" data-spinner-btn="{showOnSubmit: false}" >
-                           Sign In</a>
-                        </li>
-                        <li class="header__upper-deck-item header__upper-deck-item">
-                        <div class="butn setui"> <button class="btn btn-default mini-cart-button" role="button" data-toggle="modal" data-target="#store-cart-side" id="mini-cart-button">
-										<span class="badge cart-count"><?= $this->cart->countProducts(); ?></span>
-										<i class="fa fa-shopping-cart"></i> 
-										<span class="hidden-xs hidden-sm cart-total-amount"><?= $this->currency->format($this->cart->getTotal()); ?></span>
-						</button></div>
-                        </li>
-                       <?php }else{?>
-                         <div>
-                         <div class="menuset">
-                             <!-- <a class="header__upper-deck-item-link" href="<?= $account ?>" > <span class="user-profile-img">Profile</span></a>-->
-                            
-                             <div class="newset"><a class="btn" href="<?= $account ?>" > <span ><?= $full_name ?></span> </a>     
-                           
-                           <div class="dropdownset" style="display:none;">
-                                  <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $order ?>" ><i class="fa fa-reorder"></i><?= $text_orders ?></a></div>
-                                  <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $wishlist ?>" ><i class="fa fa-list-ul"></i><?= $text_my_wishlist?></a></div>
-                                    <?php if($this->config->get('config_credit_enabled')) { ?>
-
-                                        <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $credit ?>" ><i class="fa fa-money"></i><?= $text_my_cash ?></a></div>
-                                    <?php } ?>
-
-                                    <div class="dropdownsetnew"><a  class="header__upper-deck-item-link" href="<?= $address ?>" ><i class="fa fa-address-book"></i><?= $label_my_address ?></a></div>
-                                   <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="#" class="header__upper-deck-item-link btn-link-white" type="button" data-toggle="modal" data-target="#contactusModal"><i class="fa fa-phone-square"></i><?= $contactus ?></a></div>
-                                    <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $help ?>"><i class="fa fa-question-circle"></i><?= $faq ?></a></div>
-                                    <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $logout ?>"><i class="fa fa-power-off"></i><?= $text_logout ?></a></div>
-                                    </div>
-                                    </div> 
-                                     <div class="butn setui"> <button class="btn btn-default mini-cart-button" role="button" data-toggle="modal" data-target="#store-cart-side" id="mini-cart-button">
-										<span class="badge cart-count"><?= $this->cart->countProducts(); ?></span>
-										<i class="fa fa-shopping-cart"></i> 
-										<span class="hidden-xs hidden-sm cart-total-amount"><?= $this->currency->format($this->cart->getTotal()); ?></span>
-						</button></div>
-                                    </div>
-                                    </div>
-                       <?php } ?>
-                     </ul>
-                  </div>
-
-         <div class="header__navigation-container" role="navigation">
-                  <div class="header__primary-navigation-outer-wrapper">
-                      <div class="header__logo-container">
-                         <a href="<?= BASE_URL;?>">
-                        <img src="<?=$logo?>">
-                        </a>
-                        <div itemscope="" class="seo-visible">
-                           <a itemprop="url" href="#">Home</a>
-                           <img itemprop="logo" src="<?=$logo?>" width="100" height="100">
-                        </div>
+<div class="col-md-12" style="position: relative; z-index: 1040;">
+      
+      <div class="row">
+      <div class="col-md-2">
+                <div class="header__logo-container">
+                     <a class="header__logo-link " href="<?= BASE_URL?>">
+                        <img src="<?=$logo?>" />
+                       
+                     </a>
+                     <div itemscope="" class="seo-visible">
+                        <a itemprop="url" href="#">Home</a>
+                        <img itemprop="logo" src="<?=$logo?>" width="100" height="100">
                      </div>
-					 <div class="header__search-bar-wrapper">
+                </div>
+      </div>
+      <div class="col-md-5">
+                <div class="header__search-bar-wrapper">
                   <div id="search-form-wrapper" class="header__search-bar search-form-wrapper">
                      <div class="header__search-title">
                         Search
@@ -165,33 +116,116 @@
                                     <i class="fa fa-map-marker header__search-location-icon" aria-hidden="true"></i>
                                  
                                  <!-- SuggestionWidget  start -->
-                                 <div id="search-area-wrp" style="margin-top: 11px;" class="c-sggstnbx header__search-input-wrapper">
+                                 <div id="search-area-wrp" class="c-sggstnbx header__search-input-wrapper">
                                     <form  id="product-search-form"  class="navbar-form active" role="search" onsubmit="location='<?= $this->url->link('product/search') ?>&search=' + $('input[name=\'product_name\']').val(); return false;">
 									<div class="input-group">
-									<input type="text" name="product_name"  style="height: 44px;width: 100%;" class="header__search-input zipcode-enter" placeholder="Search for your product" />
+									<input type="text" name="product_name"   class="header__search-input zipcode-enter" placeholder="Search for your product" />
 									<span class="input-group-btn">
+									<!--<button type="submit" class="search-btn"> <span class="glyphicon glyphicon-search"> <span class="sr-only">Search</span> </span> </button>-->
 									<div class="resp-searchresult">
 												<div></div>
 											</div>
 									</span> </div>
-									</form>		
+									</form>
+                                   
+                                      <?php /* if($this->config->get('config_store_location') == 'autosuggestion') { ?>
+                                              <input name="zipcode" id="searchTextField"  class="header__search-input zipcode-enter" type="text"  required="" alt=""  maxlength="" size="" tabindex="3" placeholder="Find Stores in your Location" highlight="y" strict="y" autocomplete="off">
+                                            <?php } else { ?>
+                                                <input name="zipcode" id="searchTextField"  class="header__search-input zipcode-enter" type="text"  required="" alt=""  maxlength="" size="" tabindex="3" placeholder="<?= $zipcode_mask ?>" highlight="y" strict="y" autocomplete="off">
+
+                                            <?php } */ ?>
+
+                                            
+
+                                            <!--<input type="hidden" name="store_list_url" value="<?=BASE_URL ?>">
+
+                                            <input type="hidden" id="store_location" value="<?= $this->config->get('config_store_location'); ?>">-->
+											
+
+											
+											
                                  </div>
                               </div>
                            </li>
+                           <!--<li class="header__search-bar-item header__search-bar-item--submit search-submit">
+                              <button type="submit" tabindex="5" data-spinner-btn="" class="header__search-button">
+                                    <i class="fa fa-search header__search-button-icon header__search-button-icon--search" aria-hidden="true"></i>
+                                
+                                 <span class="header__search-button-text">Search</span>
+                              </button>
+                           </li>-->
+                          
                         </ul>
                      </form>
                   </div>
                </div>
-
-                     <div class="header__primary-navigation-wrapper">
-                      
-                        <div class="header__primary-navigation-list"> 
-                       <!--<span class ="organic_logo"><img src="<?=$logo?>"></span>--> 
-                        </div>
-                     </div>
+      </div>
+      <div class="col-md-5">
+            <div class="header__navigation-container" role="navigation">
+               
+                  <div class="header__primary-navigation-outer-wrapper">
                      
+                     <div class="header__primary-navigation-item header__primary-navigation-item--more-categories" style="margin-top: 17px;">
+                        
+                     <div class="header__secondary-navigation-tablet-container"></div>
+                     <ul class="header__upper-deck-list" >
+                        <?php if(!$is_login){?>
+                        <li class="header__upper-deck-item header__upper-deck-item--register">
+                           <a data-toggle="modal" data-dismiss="modal" data-target="#signupModal-popup" class="header__upper-deck-item-link register" data-spinner-btn="{showOnSubmit: false}">
+                           Register</a>
+                        </li>
+                        <li class="header__upper-deck-item header__upper-deck-item--signin">
+                           <a data-toggle="modal" data-target="#phoneModal" class="header__upper-deck-item-link sign-in" data-spinner-btn="{showOnSubmit: false}" >
+                           Sign In</a>
+                        </li>
+                        <li class="header__upper-deck-item header__upper-deck-item setcartbtn"><div class="butn setui"> <button class="btn btn-default mini-cart-button" role="button" data-toggle="modal" data-target="#store-cart-side" id="mini-cart-button">
+										<span class="badge cart-count"><?= $this->cart->countProducts(); ?></span>
+										<i class="fa fa-shopping-cart"></i> 
+										<span class="hidden-xs hidden-sm cart-total-amount"><?= $this->currency->format($this->cart->getTotal()); ?></span>
+						</button></div></li>
+                        <?php }else{?>
+                         <div>
+                         <div class="menuset">
+                             <!-- <a class="header__upper-deck-item-link" href="<?= $account ?>" > <span class="user-profile-img">Profile</span></a>-->
+                            
+                             <div class="newset"><a class="btn" href="<?= $account ?>" > <span ><?= $full_name ?></span> </a>     
+                           
+                           <div class="dropdownset" style="display:none; margin-top:3px;">
+                                  <div class="dropdownsetnew" style="margin-top: 10px;"><a class="header__upper-deck-item-link" href="<?= $order ?>" ><i class="fa fa-reorder"></i><?= $text_orders ?></a></div>
+                                  <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $wishlist ?>" ><i class="fa fa-list-ul"></i><?= $text_my_wishlist?></a></div>
+                                    <?php if($this->config->get('config_credit_enabled')) { ?>
+
+                                        <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $credit ?>" ><i class="fa fa-money"></i><?= $text_my_cash ?></a></div>
+                                    <?php } ?>
+
+                                    <div class="dropdownsetnew"><a  class="header__upper-deck-item-link" href="<?= $address ?>" ><i class="fa fa-address-book"></i><?= $label_my_address ?></a></div>
+                                   <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="#" class="header__upper-deck-item-link btn-link-white" type="button" data-toggle="modal" data-target="#contactusModal"><i class="fa fa-phone-square"></i><?= $contactus ?></a></div>
+                                    <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $help ?>"><i class="fa fa-question-circle"></i><?= $faq ?></a></div>
+                                    <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $logout ?>"><i class="fa fa-power-off"></i><?= $text_logout ?></a></div>
+                                    </div>
+                                    </div> 
+                                     <div class="butn setui"><button class="btn btn-default mini-cart-button" role="button" data-toggle="modal" data-target="#store-cart-side" id="mini-cart-button" style="margin-right:10px; margin-top:0px">
+										<span class="badge cart-count"><?= $this->cart->countProducts(); ?></span>
+										<i class="fa fa-shopping-cart"></i> 
+										<span class="hidden-xs hidden-sm cart-total-amount"><?= $this->currency->format($this->cart->getTotal()); ?></span>
+						</button></div>
+                                    </div>
+                                    </div>
+                       <?php } ?>
+                     </ul>
+                  </div>
                   
                </div>
+              
+               
+               
+            </div>
+      </div>
+      </div>
+     
+      </div>
+
+      
 
    
   </header>

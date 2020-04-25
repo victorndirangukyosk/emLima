@@ -321,7 +321,7 @@ ul.marshall-social-links li {
 .rating { 
   border: none;
   float: left;
-  width: 11%;
+  width: auto;
 }
 
 .rating > input { display: none; } 
@@ -859,7 +859,7 @@ button { }
 /*.signupModal-popup { z-index: 10000!important}*/
 .signupModal-popup .close { float: right; font-size: 21px; font-weight: 700; line-height: 1; color: #000; text-shadow: 0 0px 0 #fff; opacity: 1; position: absolute; right: 0px; background: #f3f5f2; padding: 10px 14px; top: 0px; }
 .productModal_popup {z-index: 9999 }
-.productModal_popup .close, .changelocationModal .close { float: right; font-size: 21px; font-weight: 700; line-height: 1; color: rgb(255, 0, 0); text-shadow: 0 0px 0 #fff; opacity: 1; position: absolute; right: 1px; background: #ffffff; padding: 10px 14px; top: 0px; z-index: 2;}
+.productModal_popup .close, .changelocationModal .close { float: right; font-size: 21px; font-weight: 700; line-height: 1; color: rgb(255, 0, 0) !important; text-shadow: 0 0px 0 #fff; opacity: 1; position: absolute; right: 1px; background: #ffffff; padding: 10px 14px; top: 0px; z-index: 2;}
 .product-variants-list {    width: 82%;  margin-bottom: 10px; }
 .product-variant { margin-bottom: 0px; }
 .product-variant-label { color: #333; }
@@ -1325,15 +1325,15 @@ Step Wizard
     font-size: 16px;   
 }
 .AtcButton__with_text___4C5OY {
-  background-color: #522e5b;
+  background-color: #84c226;
 }
 
 .AtcButton__with_text___4C5OY:hover {
-  background-color: #45264c;
+  background-color: rgb(99, 160, 5);
 }
 
 .AtcButton__with_counter___3YxLq {
-  background-color: #522e5b;
+  background-color: #84c226;
 }
 
 .AtcButton__container___1RZ9c {
