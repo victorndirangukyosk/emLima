@@ -495,7 +495,7 @@ class ControllerCommonHome extends Controller {
                 'filter_category_id' => $category['category_id'],
                 'filter_sub_category' => true,
                 'start' => 0,
-                'limit' => 6,
+                'limit' => 4,
                 'store_id'=>ACTIVE_STORE_ID
               );
 
