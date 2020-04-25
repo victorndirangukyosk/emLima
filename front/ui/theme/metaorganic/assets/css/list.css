@@ -17541,7 +17541,7 @@ This one is default from react-modal and can not be modified */
 }
 .magnifier .info,
 .footer {
-  color: #fff;
+  color: #000;
   font-size: 11px;
   line-height: 18px;
   overflow: hidden;
