@@ -623,7 +623,7 @@ class ControllerAccountRegister extends Controller {
                     $this->model_account_customer->saveOTP($this->request->post['phone'],$data['otp'],'register');
                     $data['text_verify_otp'] = $this->language->get('text_verify_otp');
                     
-                    $data['success_message'] = $this->language->get('text_otp_sent') .' '. $this->request->post['phone'];
+                    $data['success_message'] = $this->language->get('text_otp_sent') .' '. $this->request->post['email'];
                 }
 
                 if ($this->emailtemplate->getEmailEnabled('registerOTP','registerotp_2')) {
@@ -730,11 +730,18 @@ class ControllerAccountRegister extends Controller {
 			} else {
 				$data['error_password'] = false;
 			}
-
+          
 			if ( isset( $this->error['confirm'] ) ) {
 				$data['error_confirm'] = $this->error['confirm'];
 			} else {
 				$data['error_confirm'] = '';
+			}
+		
+			
+			if ( isset( $this->error['match'] ) ) {
+				$data['error_match_password'] = $this->error['match'];
+			} else {
+				$data['error_match_password'] = '';
 			}
 		}
 
@@ -827,8 +834,8 @@ class ControllerAccountRegister extends Controller {
 					
 					// Clear any previous login attempts for unregistered accounts.
 					$this->model_account_customer->deleteLoginAttempts( $this->request->post['email'] );
-
-					$logged_in = $this->customer->loginByPhone( $customer_id );
+                    /* Commented Login for change flow */
+					// $logged_in = $this->customer->loginByPhone( $customer_id );
 
 					unset( $this->session->data['guest'] );
 
@@ -846,9 +853,9 @@ class ControllerAccountRegister extends Controller {
 					/* If not able to login*/
 					$data['status'] = true;
 
-					if(!$logged_in) {
+					/*if(!$logged_in) {
 						$data['status'] = false;
-					}
+					}*/
 
 					$data['text_new_signup_reward'] = $this->language->get( 'text_new_signup_reward' );
 					$data['text_new_signup_credit'] = $this->language->get( 'text_new_signup_credit' );
@@ -939,7 +946,9 @@ class ControllerAccountRegister extends Controller {
 	                // delete otp
 	                $this->model_account_customer->deleteOTP($this->request->post['phone'],$this->request->post['signup_otp'],'register');
 
-	                $data['success_message'] = $this->language->get('text_valid_otp');
+	                //$data['success_message'] = $this->language->get('text_valid_otp');
+					$data['success_message'] = $this->language->get('register_disabled_msg');
+					
 	            }
 	        } else {
 	            // enter valid number throw error

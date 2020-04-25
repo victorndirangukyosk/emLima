@@ -1159,7 +1159,7 @@ $(document).delegate('#login_verify_otp', 'click', function() {
     });
 });
 
-/*$(document).delegate('#signup', 'click', function() {
+$(document).delegate('#signup', 'click', function() {
 
     console.log($('#register_verify_otp').val());
     console.log($('input[name="agree_checkbox"]:checked').length);
@@ -1228,7 +1228,7 @@ $(document).delegate('#login_verify_otp', 'click', function() {
                     }*/
                     
 
-                    /*$error = '';
+                    $error = '';
 
                     if(json['error_email']){
                         $error += json['error_email']+'<br/>';
@@ -1258,6 +1258,14 @@ $(document).delegate('#login_verify_otp', 'click', function() {
                     if(json['error_password']){
                         $error += json['error_password']+'<br/>';
                     }
+
+                    if(json['error_confirm']){
+                        $error += json['error_confirm']+'<br/>';
+                    }
+                    if(json['error_match_password']){
+                        $error += json['error_match_password']+'<br/>';
+                    }
+
                     if(json['error_company_name_address']){
                         $error += json['error_company_name_address']+'<br/>';
                     }
@@ -1283,8 +1291,7 @@ $(document).delegate('#login_verify_otp', 'click', function() {
       //$('#error_agree').html($('#error_agree_text').val());
     }
 });
-*/
-$(document).delegate('#signup', 'click', function() {
+/*$(document).delegate('#signup', 'click', function() {
 
     console.log($('#register_verify_otp').val());
     console.log($('input[name="agree_checkbox"]:checked').length);
@@ -1337,7 +1344,7 @@ $(document).delegate('#signup', 'click', function() {
 
                     }*/
                     //alert('redirect');
-                    var baseurl = window.location.origin+window.location.pathname;
+                   /* var baseurl = window.location.origin+window.location.pathname;
                     location.href = baseurl+'index.php?path=account/profileinfo';
 
                     $('.signup-loader').hide();
@@ -1354,7 +1361,7 @@ $(document).delegate('#signup', 'click', function() {
                     }*/
                     
 
-                    $error = '';
+                   /* $error = '';
 
                     if(json['error_email']){
                         $error += json['error_email']+'<br/>';
@@ -1416,6 +1423,7 @@ $(document).delegate('#signup', 'click', function() {
       //$('#error_agree').html($('#error_agree_text').val());
     }
 });
+*/
 
 $(document).delegate('#signup-resend-otp', 'click', function() {
 
