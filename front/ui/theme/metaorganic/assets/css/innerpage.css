@@ -7689,7 +7689,6 @@ body {
 .breadcrumbs__summary{
     font-size: .875em !important;
 }
-.productModal_popup .close, .changelocationModal .close {top:-9px !important; }
 #popupmodal { background-color: rgba(0, 0, 0, 0.5) !important; }
 .input-cart-qty {
     padding: 2px 6px 0px 6px !important;
@@ -7712,4 +7711,10 @@ body {
 }
 .search-location-all{
 	margin-top: 10px;
+}
+ .rating{
+	margin-top: 0px !important;
+}
+.product-disclaimer{
+	width: 96%;
 }
