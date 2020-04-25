@@ -4443,6 +4443,7 @@ body#vip .header__banner-container {
 	color: #000;
 	font-size: 16px;
 	text-align: left;
+	font-weight: 600;
 }
 .footer__footer-item {
 	list-style: none;
