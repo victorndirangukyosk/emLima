@@ -287,7 +287,7 @@ $.fn.liveSearch = function(option) {
 			$(this).siblings('ul.dropdown-menu').html(html);
 		}
 		
-		$(this).after('<ul class="dropdown-menu" style="padding:2px 2px 2px 2px;"></ul>');
+		$(this).after('<ul class="dropdown-menu search-dropdown" style="padding:2px 2px 2px 2px;"></ul>');
 		$(this).siblings('ul.dropdown-menu').delegate('a', 'click', $.proxy(this.click, this)); 
 		
 	});
@@ -883,7 +883,7 @@ $(document).delegate('.agree', 'click', function(e) {
 				$(this).siblings('ul.dropdown-menu').html(html);
 			}
 			
-			$(this).after('<ul class="dropdown-menu"></ul>');
+			$(this).after('<ul class="dropdown-menu search-dropdown"></ul>');
 			$(this).siblings('ul.dropdown-menu').delegate('a', 'click', $.proxy(this.click, this));	
 			
 		});
