@@ -10891,13 +10891,13 @@ footer .coppyright {
 .email-footer a {
 	font-size: 14px;
 	line-height: 22px;
-	color: #fff
+	color: #000
 }
 .phone-footer {
 	overflow: hidden;
 	font-size: 14px;
 	line-height: normal;
-	color: #fff;
+	color: #000;
 	margin-bottom: 0px;
 	margin-top: 0px;
 }
@@ -10906,7 +10906,7 @@ footer address {
 	margin: auto;
 	font-style: normal;
 	line-height: 1.5em;
-	color: #fff;
+	color: #000;
 	margin-top: 20px;
 	text-align: left;
 	margin-bottom: 3px;
@@ -10914,7 +10914,7 @@ footer address {
 	padding:0px
 }
 .btn-link{
-	color: #fff;
+	color: #000;
 }
 .icon-location-arrow:before {color:#b7bcc8}
 .icon-mobile-phone:before{color:#b7bcc8}

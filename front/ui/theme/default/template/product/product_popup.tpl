@@ -1,11 +1,11 @@
 <div class="productModal_popup">
     <div class="modal fade product-details" id="popupmodal" id="store-cart-side" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
         <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
+            <div class="modal-content  col-md-6 col-md-push-3 pl0 pr0">
                 <div class="modal-body" id="popup_product_<?= $product['product_store_id'] ?>">
-                    <button type="button" class="close close-model" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <span class="discountui">You Save: <?php if($product['percent_off']) echo '<span class="offer-ratio">' . $product['percent_off']. '% OFF  </span>'; ?></span><button type="button" class="close close-model" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <div class="row">
-                        <div class="col-md-5">
+                        <div class="col-md-12">
                             <div class="product-slider xyz">
                                 <div class="easyzoom easyzoom--overlay">
                                     <a href="<?php echo $product['zoom_thumb']; ?>">
@@ -23,7 +23,7 @@
                                <?php } ?>
                             </div>
                         </div>
-                        <div class="col-md-7">
+                        <div class="col-md-12" style="margin-left:15px; margin-right:15px;">
                             
                             
                             <?php $units = []; ?>
@@ -71,7 +71,7 @@
                                             
                                         </span>
                                         <span class="price-popup">
-                                           Our Price: <?php echo $product['product_info']['special_price']; ?> You Save: <?php if($product['percent_off']) echo '<span class="offer-ratio">' . $product['percent_off']. '% OFF  </span>'; ?>
+                                           Our Price: <?php echo $product['product_info']['special_price']; ?> 
                                         </span>
                                     <?php } ?>
                                 </div>
@@ -85,7 +85,7 @@
                             <?php if($this->config->get( 'config_product_description_display' )) { ?>
                         <div class="row">
                             <div class="col-md-12">
-                                <div class="product-features">
+                                <div class="product-features" style="margin-right:30px;">
                                     <table class="table table-bordered">
                                         <h2 class="table-title"><?= $text_product_highlights ?> </h2>
                                         <tbody>
