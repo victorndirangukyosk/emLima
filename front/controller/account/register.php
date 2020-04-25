@@ -829,7 +829,7 @@ class ControllerAccountRegister extends Controller {
 
 		            //$this->request->post['password'] = mt_rand(1000,9999);
 
-					$customer_id = $this->model_account_customer->addCustomer( $this->request->post,true);
+					$customer_id = $this->model_account_customer->addCustomer($this->request->post,true);
 
 					
 					// Clear any previous login attempts for unregistered accounts.

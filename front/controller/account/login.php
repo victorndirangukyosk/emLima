@@ -451,8 +451,11 @@ class ControllerAccountLogin extends Controller {
 
                     $data['success_message'] = $this->language->get('text_login_success');
 					}
+				}else{
+					 $data['status'] = false;
+
+                     $data['error_warning'] = $this->language->get('error_approved');
 				} 
-					
 				}else{
 					 $data['status'] = false;
 
