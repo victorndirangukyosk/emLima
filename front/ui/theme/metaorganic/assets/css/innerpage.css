@@ -7703,3 +7703,13 @@ body {
 ._1cn3x {
     width: 277px !important;
 }
+.header__upper-deck-item{
+	padding: 0px 50px 0px 0px !important;
+}
+.setcartbtn {
+    margin-top: 0px !important;
+    float: right;
+}
+.search-location-all{
+	margin-top: 10px;
+}
