@@ -13041,7 +13041,7 @@ button#signup:hover, button#login_send_otp:hover {
 }
 
 .store-cart-panel .modal.left .modal-body, .modal.right .modal-body {
-    padding: 64px 0px 160px 0px;
+    padding: 65px 0px 20px 0px;
 }
 
 .product-quantity {

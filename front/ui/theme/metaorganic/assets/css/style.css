@@ -6935,6 +6935,16 @@ body#vip .header__banner-container {
 	#header-new{
 		min-height: 150px !important;
 	}
+	._2tY3C {
+		display: -ms-flex !important;
+		display: flex !important;
+		-ms-grid-columns: auto auto auto auto;
+			grid-template-columns: auto auto auto auto;
+	  }
+	  .featured-categories__header-title span {
+		background: #fff;
+		padding: 0 20px !important;
+	}
 .header__search-bar-list{
 	top:80px !important;
 }
@@ -8078,7 +8088,7 @@ body#vip .header__banner-container {
 
 .AtcButton__container___1RZ9c{
 	padding:0px !important;
-	height:30px !important;
+	height:31px !important;
 }
 
 #homepage-billboard-heading{
@@ -8503,7 +8513,8 @@ padding-left: 0px !important
 }
 }
 .easyzoom {
-	margin-left:0px;
+	margin:0px auto;
+	text-align: center;
 }
 .butsetview{
 	float: right;

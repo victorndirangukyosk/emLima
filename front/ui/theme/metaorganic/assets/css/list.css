@@ -1913,7 +1913,7 @@ NOTE: Variables currently do not work with @custom-media. Hardcoding values for 
   color: hsl(0, 0%, 40%);
   width: 90px;
   margin-right: 10px;
-  margin-top: -1px;
+  margin-top: 0px;
 }
 ._3ePxY:hover, ._3ePxY:focus {
     color: hsl(0, 0%, 100%);
