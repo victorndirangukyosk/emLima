@@ -1624,7 +1624,7 @@ body { overflow-x: hidden; }
 }
 
 /* Custom, iPhone Retina */
-@media only screen and (max-width:320px) {
+@media only screen and (max-width:420px) {
     .header { height: 120px; }
     .header-link { text-align: right; padding-top: 0px; }
     .header-search-form { position: relative; z-index: 99; width: 79%; float: right; }
