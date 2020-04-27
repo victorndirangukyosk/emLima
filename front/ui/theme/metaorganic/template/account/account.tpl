@@ -12,7 +12,7 @@
       
         <fieldset>
             <div class="form-group required has-feedback">
-                <label for="name" class="col-sm-4 control-label"><?= $entry_firstname ?></label>
+                <label for="name" class="col-sm-3 control-label"><?= $entry_firstname ?></label>
                 <div class="col-sm-6">
                     <input type="text" value="<?php echo $firstname; ?>" size="30" placeholder="First Name" name="firstname" maxlength="100" id="name" class="form-control input-lg" />
                      <?php if($error_firstname) { ?>
@@ -21,7 +21,7 @@
                 </div>
             </div>
           <div class="form-group">
-            <label class="col-sm-4 control-label" for="input-lastname"><?php echo $entry_lastname; ?></label>
+            <label class="col-sm-3 control-label" for="input-lastname"><?php echo $entry_lastname; ?></label>
             <div class="col-sm-6">
               <input type="text" name="lastname" value="<?php echo $lastname; ?>" placeholder="<?php echo $entry_lastname; ?>" id="input-lastname" class="form-control input-lg" />
               <?php if($error_lastname) { ?>
@@ -30,7 +30,7 @@
             </div>
           </div>
           <div class="form-group required">
-            <label class="col-sm-4 control-label" for="input-email"><?php echo $entry_email; ?></label>
+            <label class="col-sm-3 control-label" for="input-email"><?php echo $entry_email; ?></label>
             <div class="col-sm-6">
               <input type="email" name="email" id="email" value="<?php echo $email; ?>" placeholder="<?php echo $entry_email; ?>" id="input-email" class="form-control input-lg" />
               <?php if($error_email) { ?>
@@ -40,7 +40,7 @@
           </div>
 
           <div class="form-group required">
-            <label class="col-sm-4 control-label" for="input-telephone"><?php echo $entry_phone; ?></label>
+            <label class="col-sm-3 control-label" for="input-telephone"><?php echo $entry_phone; ?></label>
 
             <div class="col-sm-6 input-group" style="padding-right: 15px;padding-left: 15px;">
 
@@ -66,7 +66,7 @@
           </div>
 
           <div class="form-group required">
-            <label class="col-sm-4 control-label" for="input-date-added"><?php echo $entry_dob; ?></label>
+            <label class="col-sm-3 control-label" for="input-date-added"><?php echo $entry_dob; ?></label>
             <div class="col-sm-6">
                 <input type="text" name="dob" value="<?php echo $dob; ?>" placeholder="<?php echo $entry_dob; ?>" data-date-format="dd/mm/YYYY" id="input-date-added" class="form-control date" />
                 <?php if ($error_dob) { ?>
@@ -77,7 +77,7 @@
           
 
           <!-- <div class="form-group">
-            <label class="col-sm-4 control-label" for="input-date-added"><?php echo $entry_fax; ?></label>
+            <label class="col-sm-3 control-label" for="input-date-added"><?php echo $entry_fax; ?></label>
             <div class="col-sm-6">
                 <input type="text" name="fax" id="tax_number" value="<?php echo $fax; ?>" placeholder="<?php echo $taxnumber_mask; ?>" class="form-control" />
 
@@ -90,7 +90,7 @@
           <input type="hidden" name="fax" id="tax_number" value="" placeholder="<?php echo $taxnumber_mask; ?>" class="form-control" />
 
           <div class="form-group required">
-            <label class="col-sm-4 control-label" for="input-telephone"><?php echo $entry_gender; ?></label>
+            <label class="col-sm-3 control-label" for="input-telephone"><?php echo $entry_gender; ?></label>
             <div class="col-sm-6 ">
                 <label class="control control--radio" style="display: initial !important;"> 
                     <?php if($gender == 'male') {?> 
@@ -127,7 +127,7 @@
           </div>
 
           <div class="form-group required">
-            <label class="col-sm-4 control-label" for="input-telephone"><?php echo $entry_password; ?></label>
+            <label class="col-sm-3 control-label" for="input-telephone"><?php echo $entry_password; ?></label>
             <div class="col-sm-6">
                 <input type="password" name="password" id="password" placeholder="<?php echo $entry_password; ?>" id="input-password" class="form-control input-lg" />
               <?php if ($error_password) { ?>
@@ -137,7 +137,7 @@
           </div>
 
           <div class="form-group required">
-            <label class="col-sm-4 control-label" for="input-password"><?php echo $entry_confirmpassword; ?></label>
+            <label class="col-sm-3 control-label" for="input-password"><?php echo $entry_confirmpassword; ?></label>
             <div class="col-sm-6">
                 <input type="password" name="confirmpassword" id="confirmpassword" placeholder="<?php echo $entry_confirmpassword; ?>" id="input-confirmpassword" class="form-control input-lg" />
               <?php if ($error_confirmpassword) { ?>
@@ -148,7 +148,7 @@
 
           <?php if ($site_key) { ?>
           <div class="form-group required">
-            <label class="col-sm-4 control-label" for="input-date-added"></label>
+            <label class="col-sm-3 control-label" for="input-date-added"></label>
             <div class="col-sm-6 pl0 pr0">
               
                   <div class="g-recaptcha" data-sitekey="<?php echo $site_key; ?>" style="padding-left:16px"></div>
@@ -163,7 +163,7 @@
         </fieldset>
       
       </div>
-      <div class="secion-row text-center" style="margin-bottom: 20px; float: right; margin-right: 10.7rem;">
+      <div class="col-sm-1 col-sm-pull-2 secion-row text-center" style="margin-bottom: 20px; float: right; margin-right: 23px">
               <button type="submit" data-style="zoom-out" id="save-button" class="btn btn-default"><span class="ladda-label"><?= $button_save ?></span><span class="ladda-spinner"></span></button>
             </div>
       </div>

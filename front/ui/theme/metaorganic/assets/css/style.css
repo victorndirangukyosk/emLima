@@ -31,7 +31,7 @@ input {
 }
 
 html {
-	font-family: sans-serif;
+	font-family:roboto, Arial, Helvetica, sans-serif;
 	-ms-text-size-adjust: 100%;
 	-webkit-text-size-adjust: 100%
 }
@@ -134,7 +134,7 @@ code,
 kbd,
 pre,
 samp {
-	font-family: monospace, monospace;
+	font-family:roboto, Arial, Helvetica, sans-serif;
 	font-size: 1em
 }
 
@@ -3465,7 +3465,7 @@ body#vip .header__banner-container {
 }
 
 .header__home-hero-link-container .header__home-hero-disclaimer {
-	font-family: FilsonProBold, roboto, Arial, Helvetica, sans-serif;;
+	font-family: roboto, Arial, Helvetica, sans-serif;;
 	font-size: 15px;
 	color: #22D92B;
 	margin-top: 15px
@@ -3494,7 +3494,7 @@ body#vip .header__banner-container {
 }
 
 .header__home-hero-title__text {
-	font-family: FilsonProBold, roboto, Arial, Helvetica, sans-serif;;
+	font-family: roboto, Arial, Helvetica, sans-serif;;
 	font-size: 20px;
 	line-height: 20px;
 	letter-spacing: 0
@@ -3546,7 +3546,7 @@ body#vip .header__banner-container {
 
 .header .header__home-hero-title-cars {
 	color: #f15927;
-	font-family: FilsonProBold, roboto, Arial, Helvetica, sans-serif;;
+	font-family: roboto, Arial, Helvetica, sans-serif;;
 	margin-left: 10px
 }
 
@@ -5396,7 +5396,7 @@ body#vip .header__banner-container {
 .bx-wrapper .bx-pager {
 	text-align: center;
 	font-size: .85em;
-	font-family: Arial;
+	font-family: roboto, Arial, Helvetica, sans-serif;;
 	font-weight: 700;
 	color: #666;
 	padding-top: 20px
@@ -5491,7 +5491,7 @@ body#vip .header__banner-container {
 
 .bx-wrapper .bx-caption span {
 	color: #fff;
-	font-family: Arial;
+	font-family: roboto, Arial, Helvetica, sans-serif;;
 	display: block;
 	font-size: .85em;
 	padding: 10px
@@ -7857,7 +7857,7 @@ body#vip .header__banner-container {
 		display: block;
 		position: absolute;
 		text-transform: uppercase;
-		font-family: roboto, Arial, Helvetica, sans-serif;;
+		font-family: roboto, Arial, Helvetica, sans-serif;
 		background-color: #8fbb3f;
 		border-radius: 3px;
 		color: #fff;
@@ -8193,7 +8193,7 @@ body#vip .header__banner-container {
 	 color: #522e5b !important
  }
  .button, .btn, .button-inverse, .button-vote, .sidebar .button, .sidebar .btn, .dropdown .dropdown-menu .button, .buttons-set .back-link a, .scrolltop, .button-tabs li a {
-    font-family: 'Open Sans', sans-serif;
+    font-family: roboto, Arial, Helvetica, sans-serif;
     border: 1px #522e5b solid;
     background: #522e5b;
     padding: 5px 12px;
