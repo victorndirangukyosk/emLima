@@ -7033,6 +7033,7 @@ body#vip .header__banner-container {
 	.header__upper-deck-list {
 		min-width: 500px;
 		z-index: 30;
+		padding-right: 10px;
 	}
 	.header__post-ad-button:hover {
 		background-color: #e6e5e5
@@ -8549,6 +8550,9 @@ padding-left: 0px !important
 		position: absolute;
 		top: 65px;
 	}
+	.account-section{
+		padding-left: 10px;
+	}
 	._2tY3C{
 		display: flex !important;
 	}
@@ -8575,6 +8579,9 @@ padding-left: 0px !important
 .homepage-gallery__block {
     width: 280px !important;
     margin: 55px 32px 55px 33px !important;
+}
+.account-section{
+	padding-left: 10px;
 }
 ._2tY3C{
 	display: flex !important;
