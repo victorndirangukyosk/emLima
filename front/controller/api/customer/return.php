@@ -318,6 +318,121 @@ class ControllerApiCustomerReturn extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+    public function addReturnProductMultiple() {
+        
+        $json = array();
+        
+        $this->load->language('information/locations');
+
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
+
+        $this->load->language('api/general');
+        $this->load->model('account/customer');
+
+        $log = new Log('error.log');
+        $log->write('addReturnProduct');
+        $log->write($this->request->post);
+
+        //if( $this->customer->isLogged()) {
+        if( true && $this->validate()) {
+
+            $this->load->language('account/return');
+            $this->load->model('account/return');
+
+            $this->load->model('account/customer');
+
+            $order_id = $this->request->post['order_id'];
+            $products = $this->request->post['product_id'];
+            //$product_id = $this->request->post['product_id'];
+            //$quantity = $this->request->post['quantity'];
+            $quantities = $this->request->post['quantity'];
+
+            $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+
+            //fnam,lname,email,telephone,o_id,order date,product name,unit,model,qty,reason for ret,opened,fault comment
+           
+
+            $this->load->model('account/order');
+
+            $order_info = $this->model_account_order->getOrder($order_id);
+
+            $realproducts = $this->model_account_order->hasRealOrderProducts($order_id);
+            if(count($products)> 0){
+                foreach($products as $keyproduct => $productvalue) {
+                    if($realproducts) {
+                        $product_details = $this->model_account_return->getRealProduct($data['order_id'],$productvalue);
+                    } else {
+                        $product_details = $this->model_account_return->getProduct($data['order_id'],$productvalue);
+                    }
+
+                    $data =  $customer_info;
+                    $data['date_ordered'] =  $order_info['order_date'];
+                    $data['order_id'] =  $order_id;
+                    $data['product_id'] =  $productvalue;
+                    $data['price'] =  $product_details['price'];
+                    $data['product'] =  $product_details['name'];
+                    $data['unit'] =  $product_details['unit'];
+                    $data['model'] =  $product_details['model'];
+                    $data['quantity'] =  $quantities[$keyproduct];
+                    $data['return_reason_id'] =  $this->request->post['return_reason_id'];
+                    $data['comment'] =  $this->request->post['comment'];
+                    $data['opened'] =  $this->request->post['opened'];
+                    $data['customer_desired_action'] =  $this->request->post['customer_desired_action'];
+
+                    //echo "<pre>";print_r($data);//die;
+                    $return_id = $this->model_account_return->addReturn($data);
+
+
+                    // Add to activity log
+                   $this->load->model('account/activity');
+
+                    if ($this->customer->isLogged()) {
+                        $activity_data = array(
+                            'customer_id' => $this->customer->getId(),
+                            'name'        => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
+                            'return_id'   => $return_id
+                        );
+
+                        $this->model_account_activity->addActivity('return_account', $activity_data);
+                    } else {
+                        $activity_data = array(
+                            'name'      => $this->request->post['firstname'] . ' ' . $this->request->post['lastname'],
+                            'return_id' => $return_id
+                        );
+
+                        $this->model_account_activity->addActivity('return_guest', $activity_data);
+                    }
+                    
+                }
+                }
+                
+
+            //echo "<pre>";print_r($data);die;
+            // $return_id = $this->model_account_return->addReturn($data);
+
+           
+
+            
+            $json['message'][] = ['type' =>  '' , 'body' =>  $this->language->get('text_return_submited') ];
+
+            //$json['data'] = $data;
+
+        }  else {
+
+            $json['status'] = 10014;
+
+            foreach ($this->error as $key => $value) {
+                $json['message'][] = ['type' =>  $key , 'body' =>  $value ];
+            }
+
+            http_response_code(400);
+        }
+        
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
     protected function validate() {
 
         if (!isset($this->request->post['order_id'])) {
