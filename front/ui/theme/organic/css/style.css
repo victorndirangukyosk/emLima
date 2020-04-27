@@ -863,7 +863,7 @@ button { }
 .mydivs { }
 .mydivs>div { height: 100%; }
 /*.signupModal-popup { z-index: 10000!important}*/
-.signupModal-popup .close { float: right; font-size: 21px; font-weight: 700; line-height: 1; color: #000; text-shadow: 0 0px 0 #fff; opacity: 1; position: absolute; right: 0px; background: #f3f5f2; padding: 10px 14px; top: 0px; }
+.signupModal-popup .close { float: right; font-size: 21px; font-weight: 700; line-height: 1; color: #000; text-shadow: 0 0px 0 #fff; opacity: 1; position: absolute; right: 0px;padding: 10px 14px; top: 0px; }
 .productModal_popup {z-index: 9999 }
 .productModal_popup .close, .changelocationModal .close { float: right; font-size: 21px; font-weight: 700; line-height: 1; color: #000; text-shadow: 0 0px 0 #fff; opacity: 1; position: absolute; right: 0px; background: #f3f5f2; padding: 10px 14px; top: 0px; }
 .product-variants-list { }

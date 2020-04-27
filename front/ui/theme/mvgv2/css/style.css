@@ -839,25 +839,25 @@ button { }
 .seperator { margin-top: 16px;text-transform: uppercase;font-size: 16px; }
 
 .phoneModal-popup { }
-.phoneModal-popup .close { float: right; font-size: 21px; font-weight: 700; line-height: 1; color: #000; text-shadow: 0 0px 0 #fff; opacity: 1; position: absolute; right: 0px; background: #f3f5f2; padding: 10px 14px; top: 0px; }
+.phoneModal-popup .close { float: right; font-size: 21px; font-weight: 700; line-height: 1; color: #000; text-shadow: 0 0px 0 #fff; opacity: 1; position: absolute; right: 0px;  padding: 10px 14px; top: 0px; }
 .phoneModal-popup .modal-body, .signupModal-popup .modal-body { padding: 0px; }
 .phoneModal-popup .modal-dialog { width: 540px; margin: 120px auto; }
 
 .timeslotModal-popup { }
-.timeslotModal-popup .close { float: right; font-size: 21px; font-weight: 700; line-height: 1; color: #000; text-shadow: 0 0px 0 #fff; opacity: 1; position: absolute; right: 0px; background: #f3f5f2; padding: 10px 14px; top: 0px; }
+.timeslotModal-popup .close { float: right; font-size: 21px; font-weight: 700; line-height: 1; color: #000; text-shadow: 0 0px 0 #fff; opacity: 1; position: absolute; right: 0px;  padding: 10px 14px; top: 0px; }
 /*.timeslotModal-popup .modal-body, .signupModal-popup .modal-body { padding: 0px; }
 .timeslotModal-popup .modal-dialog { width: 540px; margin: 120px auto; }*/
 
 
 .listModal-popup { z-index: 10000!important }
-.listModal-popup .close { float: right; font-size: 21px; font-weight: 700; line-height: 1; color: #000; text-shadow: 0 0px 0 #fff; opacity: 1; position: absolute; right: 0px; background: #f3f5f2; padding: 10px 14px; top: 0px; }
+.listModal-popup .close { float: right; font-size: 21px; font-weight: 700; line-height: 1; color: #000; text-shadow: 0 0px 0 #fff; opacity: 1; position: absolute; right: 0px;  padding: 10px 14px; top: 0px; }
 .listModal-popup .modal-body { padding: 0px; }
 .listModal-popup .modal-dialog { width: 540px; margin: 120px auto; }
 
 .mydivs { }
 .mydivs>div { height: 100%; }
 /*.signupModal-popup { z-index: 10000!important}*/
-.signupModal-popup .close { float: right; font-size: 21px; font-weight: 700; line-height: 1; color: #000; text-shadow: 0 0px 0 #fff; opacity: 1; position: absolute; right: 0px; background: #f3f5f2; padding: 10px 14px; top: 0px; }
+.signupModal-popup .close { float: right; font-size: 21px; font-weight: 700; line-height: 1; color: #000; text-shadow: 0 0px 0 #fff; opacity: 1; position: absolute; right: 0px; padding: 10px 14px; top: 0px; }
 .productModal_popup {z-index: 9999 }
 .productModal_popup .close, .changelocationModal .close { float: right; font-size: 21px; font-weight: 700; line-height: 1; color: rgb(255, 0, 0) !important; text-shadow: 0 0px 0 #fff; opacity: 1; position: absolute; right: 1px; background: #ffffff; padding: 10px 14px; top: 0px; z-index: 2;}
 .product-variants-list {    width: 82%;  margin-bottom: 10px; }

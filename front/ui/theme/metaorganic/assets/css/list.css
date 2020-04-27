@@ -19021,6 +19021,6 @@ address {
 #headingTwo, #headingThree{
 	margin-bottom: 20px;
 }
-#login_send_otp{
+#login_send_otp, #signup{
   height: 50px;
 }
