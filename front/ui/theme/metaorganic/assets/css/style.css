@@ -7566,7 +7566,7 @@ body#vip .header__banner-container {
     margin-left: 1rem;
 	}
 	.header__upper-deck-item{
-		padding: 0px 10px 0px 0px;
+		padding: 0px 10px 0px 0px !important;
 	}
 	.setui{
 		margin-right: 0px !important;

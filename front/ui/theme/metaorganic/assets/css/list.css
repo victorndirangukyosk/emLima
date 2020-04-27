@@ -2012,9 +2012,6 @@ NOTE: Variables currently do not work with @custom-media. Hardcoding values for 
     display: block;
   }
 
-  ._2xqFO {
-    display: none;
-  }
 
   ._3PpSK {
     display: block;
@@ -17441,7 +17438,7 @@ This one is default from react-modal and can not be modified */
 .magnifier .info,
 .footer {
   color: #000;
-  font-size: 11px;
+  font-size: 12px;
   line-height: 18px;
   overflow: hidden;
   width: 100%;
@@ -19024,3 +19021,4 @@ address {
 #login_send_otp, #signup{
   height: 50px;
 }
+.half{display:none}
