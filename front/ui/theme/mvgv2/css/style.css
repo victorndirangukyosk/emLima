@@ -820,8 +820,8 @@ button { }
 .store-find-block { background-color: #fff; }
 .store-logo { padding: 20px; border-bottom: 2px solid #d7dcd6; text-align: center; }
 .store-find { padding: 40px; text-align: center; }
-.store-head { margin-bottom: 30px; }
-.store-head h4 { color: #999f98; }
+.store-head { margin-bottom: 10px; }
+.store-head h4 { color: #999f98; margin-top: 20px; font-size: 18px; }
 .store-form { margin-top: 20px; padding: 10px 30px; }
 .store-form .form-control { margin-bottom: 10px; }
 .store-footer { background-color: #f3f5f2; padding: 20px; text-align: center; }
@@ -1573,7 +1573,7 @@ body { overflow-x: hidden; }
 /* Small Devices, Tablets */
 @media only screen and (max-width:768px) {
     .product-category-block { padding: 10px 0px 10px 0px; }
-    .header { background-color: #fff; box-shadow: 0 0 10px 0 rgba(0, 0, 0, .07); color: #fff; font-size: 14px; height: 160px; position: relative; width: 100%; z-index: 1000; }
+    .header { background-color: #fff; color: #fff; font-size: 14px; height: 160px; position: relative; width: 100%; z-index: 1000; }
     .search { left: 0; margin: 0 10px; top: 58px; width: calc(100% - 20px); border-top: 1px solid #eee; }
     .header .header-item-address { box-sizing: border-box; font-size: 13px; padding: 14px 25px 11px 5px;  }
 

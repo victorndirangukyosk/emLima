@@ -1565,7 +1565,7 @@ body { overflow-x: hidden;    /* Prevent scroll on narrow devices */ }
 /* Small Devices, Tablets */
 @media only screen and (max-width:768px) {
     .product-category-block { padding: 10px 0px 10px 0px; }
-    .header { background-color: #fff; box-shadow: 0 0 10px 0 rgba(0, 0, 0, .07); color: #fff; font-size: 14px; height: 160px; position: relative; width: 100%; z-index: 1000; }
+    .header { background-color: #fff;  color: #fff; font-size: 14px; height: 160px; position: relative; width: 100%; z-index: 1000; }
     .search { left: 0; margin: 0 10px; top: 58px; width: calc(100% - 20px); border-top: 1px solid #eee; }
     .header .header-item-address { box-sizing: border-box; font-size: 13px; padding: 14px 25px 11px 5px;  }
 

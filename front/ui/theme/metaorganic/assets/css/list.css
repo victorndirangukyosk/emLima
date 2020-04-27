@@ -19133,3 +19133,6 @@ address {
 .search-dropdown{
   width:350px !important
 }
+#headingTwo, #headingThree{
+	margin-bottom: 20px;
+}

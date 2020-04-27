@@ -72,7 +72,7 @@
 
                                           
                                         </form>
-                                        <p class="seperator" style="margin-top:  13px;"><?= $text_or ?></p>
+                                        <p class="seperator" style="margin-top:  13px; margin-bottom:10px"><?= $text_or ?></p>
                                         <div class="social-login-section">
 
                                             <a href="#" data-toggle="modal" data-dismiss="modal" data-target="#signupModal-popup" class="social-login-btn facebook-btn" style="border-radius: 0px;">

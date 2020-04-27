@@ -252,10 +252,6 @@ header {
 	border-radius:3px ;
 
 }
-.header-container .fl-header-right {
-
-
-}
 .search-bar {
 	position: relative;
 	width: 0%;
@@ -11611,22 +11607,7 @@ button.button span span {
 	margin-top: 20px;
 	padding: 10px;
 }
-/*.header-container .logout {
-	float: right;
-	margin-top: 20px;
-	font-family: DIN, Helvetica, Arial, sans-serif
-}
-.header-container .logout a {
-	color: #333;
-	background: #fff;
-	border: 1px #ddd solid;
-	padding: 0px 8px;
-	display: block;
-	border-radius: 0px;
-	font-weight: 500;
-	text-transform: uppercase;
-	line-height: 32px;
-}*/
+
 .toolbar .pager .pages {
 	float: left;
 }
