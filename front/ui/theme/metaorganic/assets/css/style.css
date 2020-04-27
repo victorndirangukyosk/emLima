@@ -384,10 +384,6 @@ h6 {
 	content: ""
 }
 
-.page-container {
-	min-height: 600px
-}
-
 #prview .page-container,
 #srchrslt .page-container,
 #vip .page-container {
@@ -2007,7 +2003,7 @@ body#vip .header__banner-container {
 #cars .header__banner-container~.header,
 #homenew .header__banner-container~.header,
 #jobs .header__banner-container~.header {
-	margin-top: 60px !important
+	margin-top: 80px !important
 }
 .pl{
 	float:left !important;
@@ -4443,6 +4439,7 @@ body#vip .header__banner-container {
 	color: #000;
 	font-size: 16px;
 	text-align: left;
+	font-weight: 600;
 }
 .footer__footer-item {
 	list-style: none;
@@ -6934,6 +6931,16 @@ body#vip .header__banner-container {
 	#header-new{
 		min-height: 150px !important;
 	}
+	._2tY3C {
+		display: -ms-flex !important;
+		display: flex !important;
+		-ms-grid-columns: auto auto auto auto;
+			grid-template-columns: auto auto auto auto;
+	  }
+	  .featured-categories__header-title span {
+		background: #fff;
+		padding: 0 20px !important;
+	}
 .header__search-bar-list{
 	top:80px !important;
 }
@@ -7541,8 +7548,10 @@ body#vip .header__banner-container {
 		background-color: #44254c;
 		color:#fff !important;
 	}
-	.header__search-location input.header__search-input{
-		width: 333px;
+	
+	.header__search-location i {
+		color: #e8582b;
+		padding-left: 10px;
 	}
 	.rc-anchor-normal{
 		width:250px;
@@ -7650,7 +7659,6 @@ body#vip .header__banner-container {
 		float: left;
 	}
 	.mainheadingname{
-		margin-top: 0px !important;
 		font-size: 16px !important;
 	}
 	.detailsheader{
@@ -7695,9 +7703,9 @@ body#vip .header__banner-container {
 	}
 	
 	.header__search-bar-item{
-	    width: 96% !important;
+	    width: 100% !important;
     padding: 0px !important;
-    margin: 0px 2%;
+    margin: 0px;
 	}
 	#search-form-form{
 		padding: 0px 10px;
@@ -8072,12 +8080,12 @@ body#vip .header__banner-container {
 	height: 45px !important;
 }
 .footer__footer-link-col{
-	width: 24.33%
+	width: 24%
 }
 
 .AtcButton__container___1RZ9c{
 	padding:0px !important;
-	height:30px !important;
+	height:31px !important;
 }
 
 #homepage-billboard-heading{
@@ -8476,6 +8484,9 @@ padding-left: 0px !important
 		position: absolute;
 		top: 65px;
 	}
+	._2tY3C{
+		display: flex !important;
+	}
 	.header__logo-container {
 		position: absolute;
 		z-index: 20;
@@ -8500,9 +8511,13 @@ padding-left: 0px !important
     width: 280px !important;
     margin: 55px 32px 55px 33px !important;
 }
+._2tY3C{
+	display: flex !important;
+}
 }
 .easyzoom {
-	margin-left:0px;
+	margin:0px auto;
+	text-align: center;
 }
 .butsetview{
 	float: right;
@@ -8592,4 +8607,14 @@ padding-left: 0px !important
     text-align: right;
 	padding-right: 5px;
 	margin:2%;
+}
+.containerliquid{
+	background-image:url(../images/susees.png);
+	background-size: contain;
+    background-repeat: no-repeat;
+    background-position: right;
+}
+.aligntocenter {
+	background-color: #f5f5f5;
+    padding: 10px;
 }

@@ -9914,7 +9914,7 @@ a.edit-bnt:hover {
 	color: #ff0000;
 }
 .form-group {
-	margin: 10px 15px !important;
+	margin: 10px 0px !important;
 }
 .form-list .input-box {
 	display: block;
@@ -13037,7 +13037,7 @@ button#signup:hover, button#login_send_otp:hover {
 }
 
 .store-cart-panel .modal.left .modal-body, .modal.right .modal-body {
-    padding: 64px 0px 160px 0px;
+    padding: 65px 0px 20px 0px;
 }
 
 .product-quantity {

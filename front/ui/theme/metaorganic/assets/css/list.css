@@ -1913,7 +1913,7 @@ NOTE: Variables currently do not work with @custom-media. Hardcoding values for 
   color: hsl(0, 0%, 40%);
   width: 90px;
   margin-right: 10px;
-  margin-top: -1px;
+  margin-top: 0px;
 }
 ._3ePxY:hover, ._3ePxY:focus {
     color: hsl(0, 0%, 100%);
@@ -14932,6 +14932,7 @@ button, input, optgroup, select, textarea {
   font-size: 100%; /* 1 */
   line-height: 1.15; /* 1 */
   margin: 0; /* 2 */
+  height: 31px;
 }
 /**
  * Show the overflow in IE.
@@ -17541,7 +17542,7 @@ This one is default from react-modal and can not be modified */
 }
 .magnifier .info,
 .footer {
-  color: #fff;
+  color: #000;
   font-size: 11px;
   line-height: 18px;
   overflow: hidden;
@@ -19090,6 +19091,7 @@ address {
   margin-bottom: 20px;
   font-style: normal;
   line-height: 1.42857143;
+  margin-top: 20px;
 }
 .menuset{
   margin-top: 0px !important;
@@ -19131,4 +19133,7 @@ address {
 }
 .search-dropdown{
   width:350px !important
+}
+#headingTwo, #headingThree{
+	margin-bottom: 20px;
 }
