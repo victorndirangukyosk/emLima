@@ -7002,6 +7002,10 @@ body#vip .header__banner-container {
 .setproductimg{
 	text-align: left !important;
 }
+.account-section{
+	padding-left: 10px;
+	padding-right: 10px;
+}
 }
 
 @media (max-width:1024px) and (min-width:768px) {

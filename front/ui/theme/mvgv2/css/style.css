@@ -1643,9 +1643,14 @@ body { overflow-x: hidden; }
       right: 15px;
     }
     .product-price{
-       margin-left:30px;
        margin-top : 10px;
     }
+}
+.checkout-step-body{
+  padding-left: 0px !important;
+}
+.account-section{
+  padding-left: 10px !important;
 }
 #open-address{width: 200px;}
 .table-title{
