@@ -3,11 +3,11 @@
      . explode('?', $_SERVER['REQUEST_URI'], 2)[0];?>
 <div class="header-lower-deck">
     <div class="header-lower-deck__wrapper">
-        <div class="col-md-12 col-sm-12">
+        <div class="col-md-12 col-sm-12 col-xs-12">
             <div class="col-md-3 col-sm-3 imgset">
                 <img src="<?= $thumb?>" />
             </div>
-            <div class="col-md-9 col-sm-9">
+            <div class="col-md-9 col-sm-9 col-xs-12">
                 <div class="col-md-12 col-sm-12 mainheadingname color-white margin25">
                 <?= $store_info['name']?>
                 </div>
@@ -22,11 +22,11 @@
                 <div class="col-md-12 col-sm-12 addressdetail"><?= $store_info['address']?>
                 </div>
                  <div class="col-md-12 col-sm-12 mt20">
-                    <div class="col-md-2 col-sm-2 border-right pl0">
+                    <div class="col-md-2 col-sm-2 col-xs-5 border-right pl0">
                     <div class="fontset"><i class="fa fa-star" aria-hidden="true"></i> <?= (rand(3,5));?></div>
                     <div class="smalltext"><?= (rand(100,500));?>+ Ratings</div>
                     </div>
-                    <div class="col-md-4 col-sm-4 pl30">
+                    <div class="col-md-4 col-sm-4 col-xs-7 pl30">
                     <div class="fontset">Same Day Time</div>
 					<?php foreach($store_info['store_open_hours'] as $storeValue){?>
                     <div class="smalltext">Open Hours : <?= $storeValue['timeslot'];?></div>
@@ -337,14 +337,14 @@
                                         </section>
                                         </div>
                                         <div class="col-md-12 col-sm-12" style="margin-bottom:15px;">
-                                        <div class="vfsyA col-md-12 col-sm-12 pl0" style="margin-top:30px">
+                                        <div class="vfsyA col-md-12 col-sm-12 pl0">
                                                     <div class="_25ygu">
                                                      <div class="JHf2a">
                                                         <a class="R8zaM" href="#"><?= $heading_title;?></a>
                                                         
                                                         </div>
                                                     <a href="#" class="_2Pk9X" tabindex="0"><?=$product['name']?></a>
-													<br/>
+													
                                                     <a class="R8zaM">( per <?=$product['unit']?> )</a>
                                                        
                                                     </div>

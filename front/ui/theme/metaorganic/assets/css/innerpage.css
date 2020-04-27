@@ -7708,12 +7708,16 @@ body {
 }
 
 @media (min-width:321px) and (max-width:479px) {
-	
+	.vfsyA{margin-top:45px}
 	.header__search-location input.header__search-input{
 		width: 98% !important;
 		margin-left: 13px;
 	}
 	#search-area-wrp .input-group{
 		margin-left: -15px;
+	}
+	.vfsyA{margin-top:45px}
+	.border-right {
+		border-right:none !important;
 	}
 }
