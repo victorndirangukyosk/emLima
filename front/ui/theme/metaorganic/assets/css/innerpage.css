@@ -13,7 +13,7 @@
 	align-content: center;
 	align-items: center;
 	justify-content: center;
-	font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+	font-family:roboto, Arial, Helvetica, sans-serif;
 	transition: background-color .2s ease-in
 }
 
@@ -5980,33 +5980,6 @@ input[type=text]::-ms-clear {
 	font-style: normal
 }
 
-@font-face {
-	font-family: ProximaNova;
-	src: url(/latest/webfonts/proxima-nova-regular-italic.woff2) format("woff2"), url(/latest/webfonts/proxima-nova-regular-italic.woff) format("woff");
-	font-weight: 400;
-	font-style: italic
-}
-
-@font-face {
-	font-family: ProximaNova;
-	src: url(/latest/webfonts/proxima-nova-bold.woff2) format("woff2"), url(/latest/webfonts/proxima-nova-bold.woff) format("woff");
-	font-weight: 700;
-	font-style: normal
-}
-
-@font-face {
-	font-family: ProximaNova;
-	src: url(/latest/webfonts/proxima-nova-light.woff2) format("woff2"), url(/latest/webfonts/proxima-nova-light.woff) format("woff");
-	font-weight: 300;
-	font-style: normal
-}
-
-@font-face {
-	font-family: icomoon;
-	src: url(/latest/webfonts/icomoon.322224.woff) format("woff");
-	font-weight: 400;
-	font-style: normal
-}
 
 html {
 	box-sizing: border-box
@@ -6697,7 +6670,7 @@ body {
 .use-base-fonts input,
 .use-base-fonts select,
 .use-base-fonts textarea {
-	font-family: ProximaNova, Arial, Helvetica, sans-serif
+	font-family: roboto, Arial, Helvetica, sans-serif;
 }
 
 .use-system-fonts,
@@ -6705,7 +6678,7 @@ body {
 .use-system-fonts input,
 .use-system-fonts select,
 .use-system-fonts textarea {
-	font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif
+	font-family: roboto, Arial, Helvetica, sans-serif;
 }
 
 .modal-open {
@@ -7538,7 +7511,7 @@ body {
 }
 
 #react-root>.c2c-car-finance-container__wrapper {
-	font-family: ProximaNova, Arial, Helvetica, sans-serif;
+	font-family: roboto, Arial, Helvetica, sans-serif;;
 	margin: 0
 }
 

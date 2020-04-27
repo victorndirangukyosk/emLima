@@ -648,7 +648,7 @@ div.required .control-label:not(span)::after, td.required::after {
 }
 .category-header {min-height: 16px;}
 
-body { font-family: 'Hind', sans-serif; color: #848684; font-size: 14px; line-height: 1.6; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-weight: 500; }
+body {  color: #848684; font-size: 14px; line-height: 1.6; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-weight: 500; }
 h1, h2, h3, h4, h5, h6 { color: #30322f; margin: 0px 0px 10px 0px; }
 h1 { font-size: 30px; }
 h2 { font-size: 20px; }
@@ -787,7 +787,7 @@ strong { color: #30322f; }
 /*-------------------------------
     Website Input & Buttons
 ---------------------------------*/
-.form-control { background-color: #fafbfa; border: 1px solid #d7dcd6; -webkit-box-shadow: inset 0 0px 0px rgba(0, 0, 0, .075); box-shadow: inset 0 0px 0px rgba(0, 0, 0, .075); height: 38px; border-radius: 2px; }
+.form-control { background-color: #fafbfa; border: 1px solid #d7dcd6; -webkit-box-shadow: inset 0 0px 0px rgba(0, 0, 0, .075); box-shadow: inset 0 0px 0px rgba(0, 0, 0, .075); height: 38px; border-radius: 4px; }
 .control-label { }
 button { }
 .input-group-addon { background-color: #fafbfa; border: 1px solid #d7dcd6; }
