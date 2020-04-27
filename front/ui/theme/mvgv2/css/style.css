@@ -613,7 +613,7 @@ background-position: 50% 50%;
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
-div.required .control-label:not(span)::before, td.required::before {
+div.required .control-label:not(span)::after, td.required::after {
   color: #f00;
   content: "* ";
   font-weight: bold;

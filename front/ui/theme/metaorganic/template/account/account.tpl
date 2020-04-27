@@ -151,7 +151,7 @@
             <label class="col-sm-4 control-label" for="input-date-added"></label>
             <div class="col-sm-6 pl0 pr0">
               
-                  <div class="g-recaptcha" data-sitekey="<?php echo $site_key; ?>"></div>
+                  <div class="g-recaptcha" data-sitekey="<?php echo $site_key; ?>" style="padding-left:16px"></div>
                   <?php if ($error_captcha) { ?>
                   <div class="text-danger"><?php echo $error_captcha; ?></div>
                   <?php } ?>
