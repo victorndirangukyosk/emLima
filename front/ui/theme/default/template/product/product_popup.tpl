@@ -33,7 +33,7 @@
                                     <!-- <button class="product-variant-btn  product-variant-btn-active product_unit" ><?php echo $product['product_info']['unit'] ?></button> -->
                                     <?php if(trim($product['product_info']['unit'])) { ?>                                        
                                         <div class="box-menu">
-                                            <a data-product-id="<?= $product['product_store_id'] ?>" data-popup-product-id="<?= $product['product_store_id'] ?>"     class="product-variant-btn  product-variant-btn-active product-unit" tabindex="0">
+                                            <a style="pointer-events: none; cursor: default;" data-product-id="<?= $product['product_store_id'] ?>" data-popup-product-id="<?= $product['product_store_id'] ?>"     class="product-variant-btn  product-variant-btn-active product-unit" tabindex="0">
                                                             <?= $product['product_info']['unit'] ?>
                                             </a>
                                             <?php if($product['variations']) { ?>

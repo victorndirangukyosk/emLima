@@ -344,7 +344,8 @@
                                                         
                                                         </div>
                                                     <a href="#" class="_2Pk9X" tabindex="0"><?=$product['name']?></a>
-
+													<br/>
+                                                    <a class="R8zaM">( per <?=$product['unit']?> )</a>
                                                        
                                                     </div>
                                                 </div>
