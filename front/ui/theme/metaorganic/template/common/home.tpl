@@ -318,8 +318,8 @@
                                                         
                                                         </div>
                                                     <a class="_2Pk9X" tabindex="0"><?=$product['name']?></a>
-
-                                                       
+                                                        <br>
+                                                       <a class="R8zaM">( per <?=$product['unit']?> )</a>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-12 col-sm-12 pl0 pr0 setproductimg">
@@ -329,8 +329,7 @@
                                                         </div>
                                                         <div>
                                                         <div class="_2xqFO">
-                                                                <div class="_3QV9M"><strike><?= $product['price'];?></strike> </div>
-                                                                    
+                                                                <div class="_3QV9M"><strike><?= $product['price'];?></strike> </div>       
                                                             </div>
                                                         </div>
                                                         <div class="_31alT"><a class="_3tfm8 _3ePxY  product-detail-bnt product-img product-description open-popup" role="button" data-store="<?= ACTIVE_STORE_ID;?>" data-id="<?= $product['product_store_id'] ?>" target="_blank" rel="noopener noreferrer">Preview</a>
