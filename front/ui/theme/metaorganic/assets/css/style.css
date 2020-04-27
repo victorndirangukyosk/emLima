@@ -7742,7 +7742,8 @@ body#vip .header__banner-container {
 		height: 195px;
 	}
 	.footer__app-icon-bg img{
-		width: 39px !important;
+		width: 181px !important;
+    margin-left: -68px !important;
 	}
 	.footer__download-app-badge{
 		margin: 4px 0 4px 0px;
@@ -8618,3 +8619,6 @@ padding-left: 0px !important
 	background-color: #f5f5f5;
     padding: 10px;
 }
+.footer__app-icon-bg img{
+	width: 250px; margin-top: 0px; margin-left: -93px;
+  }

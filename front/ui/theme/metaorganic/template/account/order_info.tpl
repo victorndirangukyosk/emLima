@@ -3,7 +3,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <div class="my-order-view-dashboard teat">
+                    <div class="my-order-view-dashboard">
                         <div class="row">
                             <div class="col-md-11">
                                 <div class="back-link-block"><a href="<?php echo $continue; ?>"> <span class="back-arrow"><i class="fa fa-long-arrow-left"></i> </span> <?= $text_go_back ?></a></div>
