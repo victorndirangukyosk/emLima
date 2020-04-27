@@ -4363,7 +4363,7 @@ body#vip .header__banner-container {
 }
 
 .footer__download-app-subheading {
-	font-size: 13px;
+	font-size: 12px;
 	line-height: 1
 }
 
@@ -8446,8 +8446,9 @@ padding-left: 0px !important
 	.butsetview{
 		margin-right: 10px;
 	}
-	.header__search-location input.header__search-input{
-		width: 100%;
+	.header__search-location input.header__search-input {
+		width: 98% !important;
+		margin-left: 13px;
 	}
 	.header__search-bar-list {
 		margin: 0;

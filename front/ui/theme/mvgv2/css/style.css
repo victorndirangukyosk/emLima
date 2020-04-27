@@ -1631,7 +1631,7 @@ body { overflow-x: hidden; }
     .search { padding-top: 10px; }
     .search-form { margin-top: 0px; }
     .header__search-location input.header__search-input {
-      width: 100% !important;
+      width: 100% ;
   }
   .search-dropdown {
     width: 100% !important;
