@@ -1624,14 +1624,14 @@ body { overflow-x: hidden; }
 }
 
 /* Custom, iPhone Retina */
-@media only screen and (max-width:320px) {
+@media only screen and (max-width:420px) {
     .header { height: 120px; }
     .header-link { text-align: right; padding-top: 0px; }
     .header-search-form { position: relative; z-index: 99; width: 79%; float: right; }
     .search { padding-top: 10px; }
     .search-form { margin-top: 0px; }
     .header__search-location input.header__search-input {
-      width: 100% !important;
+      width: 100% ;
   }
   .search-dropdown {
     width: 100% !important;
@@ -1643,9 +1643,14 @@ body { overflow-x: hidden; }
       right: 15px;
     }
     .product-price{
-       margin-left:30px;
        margin-top : 10px;
     }
+}
+.checkout-step-body{
+  padding-left: 0px !important;
+}
+.account-section{
+  padding-left: 10px !important;
 }
 #open-address{width: 200px;}
 .table-title{

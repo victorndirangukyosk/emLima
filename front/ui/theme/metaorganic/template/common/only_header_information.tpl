@@ -104,7 +104,7 @@
                 </div>
       </div>
       <div class="col-md-5">
-                <div class="header__search-bar-wrapper">
+                <div class="header__search-bar-wrapper" style="display:none;">
                   <div id="search-form-wrapper" class="header__search-bar search-form-wrapper">
                      <div class="header__search-title">
                         Search

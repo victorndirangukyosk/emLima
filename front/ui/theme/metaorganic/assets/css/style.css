@@ -2003,7 +2003,7 @@ body#vip .header__banner-container {
 #cars .header__banner-container~.header,
 #homenew .header__banner-container~.header,
 #jobs .header__banner-container~.header {
-	margin-top: 80px !important
+	margin-top: 80px;
 }
 .pl{
 	float:left !important;
@@ -4363,7 +4363,7 @@ body#vip .header__banner-container {
 }
 
 .footer__download-app-subheading {
-	font-size: 13px;
+	font-size: 12px;
 	line-height: 1
 }
 
@@ -6922,14 +6922,41 @@ body#vip .header__banner-container {
 		font-size: 18px
 	}
 }
-@media (max-width:1023px) and (min-width:768px) {
-#header-new{
-	min-height: 150px !important;
+@media (max-width:820px) and (min-width:769px) {
+	#cars .header__banner-container~.header, #homenew .header__banner-container~.header, #jobs .header__banner-container~.header{
+		margin-top: 20px;
+	}
+	#header-new{
+		min-height: 160px !important;
+	}
+}
+@media (max-width: 1010px) and (min-width: 810px){
+._2tY3C {
+	display: flex !important;
+}
+#cars .header__banner-container~.header, #homenew .header__banner-container~.header, #jobs .header__banner-container~.header {
+    margin-top: 85px;
 }
 }
+@media (max-width:1024px) and (min-width:900px) {
+	#cars .header__banner-container~.header, #homenew .header__banner-container~.header, #jobs .header__banner-container~.header {
+		margin-top: 40px !important;
+	}
+	.featured-categories{
+		padding-top: 160px;
+	}
+}
+@media (max-width:1040px) and (min-width:1024px) {
+	#header-new{
+		min-height: 150px !important;
+	}
+	}
 @media only screen and (max-width: 480px){
 	#header-new{
 		min-height: 150px !important;
+	}
+	#cars .header__banner-container~.header, #homenew .header__banner-container~.header, #jobs .header__banner-container~.header {
+		margin-top: 50px;
 	}
 	._2tY3C {
 		display: -ms-flex !important;
@@ -6950,6 +6977,35 @@ body#vip .header__banner-container {
 .mini-cart-button{
 	margin-top: 5px !important;
 }
+._1xvs1 {
+	margin-top: 87px !important;
+}
+._3XNMI{
+	float: left !important;
+}
+._3XNMI {
+    width: 50% !important;
+}
+.-DeRq, ._3QV9M{
+	width:100%;
+	float: left;
+}
+.setproductimg{
+	margin-top: 30px;
+}
+.JHf2a {
+    margin-bottom: 0px !important;
+}
+.Jhd4X, .XvxbR, ._2bSMY, ._31alT{
+	display: inline-flex !important;
+}
+.setproductimg{
+	text-align: left !important;
+}
+.account-section{
+	padding-left: 10px;
+	padding-right: 10px;
+}
 }
 
 @media (max-width:1024px) and (min-width:768px) {
@@ -6958,6 +7014,9 @@ body#vip .header__banner-container {
 	}
 	#homenew .search-form--switch-category-position .header__search-bar-item--category {
 		border-radius: 0
+	}
+	#header-new{
+		min-height: 160px !important;
 	}
 }
 
@@ -6974,6 +7033,7 @@ body#vip .header__banner-container {
 	.header__upper-deck-list {
 		min-width: 500px;
 		z-index: 30;
+		padding-right: 10px;
 	}
 	.header__post-ad-button:hover {
 		background-color: #e6e5e5
@@ -7566,7 +7626,7 @@ body#vip .header__banner-container {
     margin-left: 1rem;
 	}
 	.header__upper-deck-item{
-		padding: 0px 10px 0px 0px;
+		padding: 0px 10px 0px 0px !important;
 	}
 	.setui{
 		margin-right: 0px !important;
@@ -7742,7 +7802,8 @@ body#vip .header__banner-container {
 		height: 195px;
 	}
 	.footer__app-icon-bg img{
-		width: 39px !important;
+		width: 181px !important;
+    margin-left: -68px !important;
 	}
 	.footer__download-app-badge{
 		margin: 4px 0 4px 0px;
@@ -7783,6 +7844,7 @@ body#vip .header__banner-container {
 		width: 32px;
 		height: 32px
 	}
+	
 	.footer__download-app-info {
 		padding: 0 2em;
 		width: auto
@@ -8353,6 +8415,9 @@ padding-left: 0px !important
 	.header__upper-deck-list {
 		width: 50%;
 	}
+	._2tY3C{
+		display: flex !important;
+	}
 	.header__logo-link img {
 		width: 12rem;
 		margin-top: 0.5rem;
@@ -8386,8 +8451,9 @@ padding-left: 0px !important
 	.butsetview{
 		margin-right: 10px;
 	}
-	.header__search-location input.header__search-input{
-		width: 100%;
+	.header__search-location input.header__search-input {
+		width: 98% !important;
+		margin-left: 13px;
 	}
 	.header__search-bar-list {
 		margin: 0;
@@ -8484,6 +8550,9 @@ padding-left: 0px !important
 		position: absolute;
 		top: 65px;
 	}
+	.account-section{
+		padding-left: 10px;
+	}
 	._2tY3C{
 		display: flex !important;
 	}
@@ -8510,6 +8579,9 @@ padding-left: 0px !important
 .homepage-gallery__block {
     width: 280px !important;
     margin: 55px 32px 55px 33px !important;
+}
+.account-section{
+	padding-left: 10px;
 }
 ._2tY3C{
 	display: flex !important;
@@ -8630,3 +8702,6 @@ button#detect_location {
   width: 168px !important;
   line-height: 0 !important;
 }
+.footer__app-icon-bg img{
+	width: 250px; margin-top: 0px; margin-left: -93px;
+  }

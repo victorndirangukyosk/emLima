@@ -22,7 +22,7 @@
             </div>
           <div class="form-group">
             <label class="col-sm-3 control-label" for="input-lastname"><?php echo $entry_lastname; ?></label>
-            <div class="col-sm-6">
+            <div class="col-sm-6 col-xs-12">
               <input type="text" name="lastname" value="<?php echo $lastname; ?>" placeholder="<?php echo $entry_lastname; ?>" id="input-lastname" class="form-control input-lg" />
               <?php if($error_lastname) { ?>
               <div class="text-danger"><?php echo $error_lastname; ?></div>
@@ -31,7 +31,7 @@
           </div>
           <div class="form-group required">
             <label class="col-sm-3 control-label" for="input-email"><?php echo $entry_email; ?></label>
-            <div class="col-sm-6">
+            <div class="col-sm-6 col-xs-12">
               <input type="email" name="email" id="email" value="<?php echo $email; ?>" placeholder="<?php echo $entry_email; ?>" id="input-email" class="form-control input-lg" />
               <?php if($error_email) { ?>
                <div class="text-danger"><?php echo $error_email; ?></div>
@@ -42,7 +42,7 @@
           <div class="form-group required">
             <label class="col-sm-3 control-label" for="input-telephone"><?php echo $entry_phone; ?></label>
 
-            <div class="col-sm-6 input-group" style="padding-right: 15px;padding-left: 15px;">
+            <div class="col-sm-6 col-xs-12 input-group" style="padding-right: 15px;padding-left: 15px;">
 
                 <span class="input-group-btn">
 
@@ -67,7 +67,7 @@
 
           <div class="form-group required">
             <label class="col-sm-3 control-label" for="input-date-added"><?php echo $entry_dob; ?></label>
-            <div class="col-sm-6">
+            <div class="col-sm-6 col-xs-12">
                 <input type="text" name="dob" value="<?php echo $dob; ?>" placeholder="<?php echo $entry_dob; ?>" data-date-format="dd/mm/YYYY" id="input-date-added" class="form-control date" />
                 <?php if ($error_dob) { ?>
               <div class="text-danger"><?php echo $error_dob; ?></div>
@@ -78,7 +78,7 @@
 
           <!-- <div class="form-group">
             <label class="col-sm-3 control-label" for="input-date-added"><?php echo $entry_fax; ?></label>
-            <div class="col-sm-6">
+            <div class="col-sm-6 col-xs-12">
                 <input type="text" name="fax" id="tax_number" value="<?php echo $fax; ?>" placeholder="<?php echo $taxnumber_mask; ?>" class="form-control" />
 
               <?php if ($error_tax) { ?>
@@ -91,7 +91,7 @@
 
           <div class="form-group required">
             <label class="col-sm-3 control-label" for="input-telephone"><?php echo $entry_gender; ?></label>
-            <div class="col-sm-6 ">
+            <div class="col-sm-6 col-xs-12">
                 <label class="control control--radio" style="display: initial !important;"> 
                     <?php if($gender == 'male') {?> 
                         <input type="radio" name="gender" data-id="8" value="male" checked="checked"> <?= $text_male ?> 
@@ -128,7 +128,7 @@
 
           <div class="form-group required">
             <label class="col-sm-3 control-label" for="input-telephone"><?php echo $entry_password; ?></label>
-            <div class="col-sm-6">
+            <div class="col-sm-6 col-xs-12">
                 <input type="password" name="password" id="password" placeholder="<?php echo $entry_password; ?>" id="input-password" class="form-control input-lg" />
               <?php if ($error_password) { ?>
               <div class="text-danger"><?php echo $error_password; ?></div>
@@ -138,7 +138,7 @@
 
           <div class="form-group required">
             <label class="col-sm-3 control-label" for="input-password"><?php echo $entry_confirmpassword; ?></label>
-            <div class="col-sm-6">
+            <div class="col-sm-6 col-xs-12">
                 <input type="password" name="confirmpassword" id="confirmpassword" placeholder="<?php echo $entry_confirmpassword; ?>" id="input-confirmpassword" class="form-control input-lg" />
               <?php if ($error_confirmpassword) { ?>
               <div class="text-danger"><?php echo $error_confirmpassword; ?></div>
@@ -149,7 +149,7 @@
           <?php if ($site_key) { ?>
           <div class="form-group required">
             <label class="col-sm-3 control-label" for="input-date-added"></label>
-            <div class="col-sm-6 pl0 pr0">
+            <div class="col-sm-6 col-xs-12 pl0 pr0">
               
                   <div class="g-recaptcha" data-sitekey="<?php echo $site_key; ?>" style="padding-left:16px"></div>
                   <?php if ($error_captcha) { ?>
