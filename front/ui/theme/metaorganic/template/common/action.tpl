@@ -8,10 +8,18 @@
         </span>
 
         
-        <?php if ($product['quantity'] >= $product['minimum']) { ?> 
-            <span data-tooltip="Maximum quantity per order for this product reached">
+        <?php if ($product['minimum'] == 1   ) { ?>
+ 
+            <input type="button" class="sp-plus fff mini-plus-quantity ddd" data-minimum='<?=  1000 ?>' data-key='<?= $product["key"] ?>' data-id='<?= $product["product_store_id"] ?>' id="plus"  value="+"/>
+           
+ 
+             <?php }
+             
+              elseif ($product['quantity'] >= $product['minimum']) { ?>
+             <span data-tooltip="Maximum quantity per order for this product reached">
                 <input type="button" class="sp-plus fff mini-plus-quantity ddd" data-minimum='<?= $product["minimum"] ?>' data-key='<?= $product["key"] ?>' data-id='<?= $product["product_store_id"] ?>' id="plus"  value="+"/>
             </span>
+
         <?php } else { ?>
             
                 <input type="button" class="sp-plus fff mini-plus-quantity ddd" data-minimum='<?= $product["minimum"] ?>' data-key='<?= $product["key"] ?>' data-id='<?= $product["product_store_id"] ?>' id="plus"  value="+"/>
