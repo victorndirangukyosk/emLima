@@ -560,9 +560,9 @@
                                                     
                                                 <?php } else { ?>
                                                     <?php if(!empty($address_locality)) { ?>
-                                                    <input  name="modal_address_locality" id="Locality" type="text" style="background-color:#DEDEDE;" readonly value="<?= $address_locality ?>" class="form-control input-md" required="">
+                                                    <input  name="modal_address_locality" id="Locality" type="text" style="background-color:#DEDEDE;" readonly value="<?= $address_locality ?>" class="form-control input-md LocalityId pac-target-input" required="">
                                                    <?php }else{ ?>
-                                                    <input  name="modal_address_locality" id="Locality" type="text"  value="<?= $address_locality ?>" class="form-control input-md" required="">
+                                                    <input  name="modal_address_locality" id="Locality" type="text"  value="<?= $address_locality ?>" class="form-control input-md LocalityId pac-target-input" required="">
                                                    <?php } ?>
                                                 <?php } ?>
                                             </div>

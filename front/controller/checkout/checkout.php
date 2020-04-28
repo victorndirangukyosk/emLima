@@ -527,7 +527,7 @@ class ControllerCheckoutCheckout extends Controller {
             }
 
             $data['addresses'] = $allAddresses;
-
+            $data['address_locality'] ='';
 
         }
 
