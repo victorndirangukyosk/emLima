@@ -631,6 +631,7 @@
     function openGMap() {
 
         $("#GMapPopup").on('shown.bs.modal', function () {
+            $('div#GMapPopup').show();
             $('#us1').locationpicker('autosize');
 
             console.log("efre");

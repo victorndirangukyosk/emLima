@@ -8618,3 +8618,15 @@ padding-left: 0px !important
 	background-color: #f5f5f5;
     padding: 10px;
 }
+
+button#locateme {
+    color: #fff !important;
+    background-color: #36263b !important;
+    line-height: 0 !important;
+}
+
+button#detect_location {
+  color: #333 !important;
+  width: 168px !important;
+  line-height: 0 !important;
+}
