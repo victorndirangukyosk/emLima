@@ -6942,7 +6942,7 @@ body#vip .header__banner-container {
 	#cars .header__banner-container~.header, #homenew .header__banner-container~.header, #jobs .header__banner-container~.header {
 		margin-top: 40px !important;
 	}
-	.featured-categories{
+	.first-feature-cat{
 		padding-top: 160px;
 	}
 }
@@ -7880,7 +7880,7 @@ body#vip .header__banner-container {
 	.homepage-gallery__saved-search-title-link {
 		margin-left: 1rem
 	}
-	.featured-categories {
+	.first-feature-cat {
 		padding-bottom: 30px
 	}
 	.featured-categories__header-title {
