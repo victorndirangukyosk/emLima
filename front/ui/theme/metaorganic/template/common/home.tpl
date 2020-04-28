@@ -254,14 +254,17 @@
        </div>
        <div style="clear:both !important"> </div>
         
-				    <?php foreach($categories as $category){
+				    <?php 
+					$i=0;
+					foreach($categories as $category){
+					$i++;
 					       $link_array = explode('/',$category['href']);
                            $page_link = end($link_array);
 					   
 					  ?>
 										  
 											<?php if(count($category['products'])>0){?>
-											 <div class="container--full-width featured-categories">
+											 <div class="container--full-width featured-categories <?php echo ($i==1) ? "first-feature-cat": "" ?>">
 											 <div class="container">
 					                        <div class="_47ahp" data-test-selector="search-results">
 											 <div class="clearfix featured-categories__header">
