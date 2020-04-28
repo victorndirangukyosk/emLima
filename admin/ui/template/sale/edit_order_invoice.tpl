@@ -73,7 +73,9 @@
               <address>
               <b><?= $text_name ?></b> <?php echo $order['shipping_name']; ?>, <br />
               <b><?= $text_contact_no ?></b> <?php echo $order['shipping_contact_no']; ?><br/>
+			  <?php if($order['cpf_number']){?>
               <b><?php echo $text_cpf_number; ?></b> <?php echo $order['cpf_number']; ?>
+			  <?php }?>
               </address>
             </td>
             <td>
