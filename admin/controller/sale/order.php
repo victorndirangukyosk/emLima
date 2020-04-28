@@ -276,6 +276,7 @@ class ControllerSaleOrder extends Controller {
                 }
 
             }
+			//echo "<pre>";print_r($order_info);die;
 
             //$data['settlement_done'] = false;
             if ($order_info) {
@@ -396,11 +397,11 @@ class ControllerSaleOrder extends Controller {
                     'store_telephone' => $store_telephone,
                     'store_fax' => $store_fax,
                     'email' => $order_info['email'],
-                    'cpf_number' => $this->getUser($order_info['customer_id']),
+                    'cpf_number' =>($this->getUser($order_info['customer_id'])) ? $this->getUser($order_info['customer_id']) : $order_info['fax'],
                     'telephone' => $order_info['telephone'],
                     'shipping_address' => $order_info['shipping_address'],
                     'shipping_city' => $order_info['shipping_city'],
-                    'shipping_contact_no' => $order_info['shipping_contact_no'],
+                    'shipping_contact_no' => ($order_info['shipping_contact_no']) ? $order_info['shipping_contact_no'] : $order_info['telephone'],
                     'shipping_name' => $order_info['shipping_name'],
                     'shipping_method' => $order_info['shipping_method'],
                     'payment_method' => $order_info['payment_method'],
