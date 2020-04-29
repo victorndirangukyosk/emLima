@@ -21,8 +21,18 @@
     <table class="table table-bordered">
       <thead>
         <tr>
-          <td colspan="2"><?php echo $text_order_detail; ?></td>
+        <td style="width: 50%;"><?php echo $text_from; ?></td>
+          <td style="width: 50%;"><?php echo $text_order_detail; ?></td>
+          <!--td colspan="2"><?php echo $text_order_detail; ?></td-->
         </tr>
+<tr>
+<td>
+
+        <div class="logo-image">
+            <img height="20" src="ui/image/gplogo.png" alt="Shop" title="Shop" />
+	</div>
+  </td>
+  <tr>
       </thead>
       <tbody>
         <tr>
@@ -30,34 +40,35 @@
             <strong><?php echo $order['store_name']; ?></strong><br />
             <?php echo $order['store_address']; ?>
             </address>
-            <!-- <b><?php echo $text_telephone; ?></b> <?php echo $order['store_telephone']; ?><br />
+           <b><?php echo $text_telephone; ?></b> <?php echo $order['store_telephone']; ?><br />
             <?php if ($order['store_fax']) { ?>
             <b><?php echo $text_fax; ?></b> <?php echo $order['store_fax']; ?><br />
             <?php } ?>
             <b><?php echo $text_email; ?></b> <?php echo $order['store_email']; ?><br />
             <b><?php echo $text_website; ?></b> <a href="<?php echo $order['store_url']; ?>"><?php echo $order['store_url']; ?></a><br />
-            <b><?php echo $text_tax; ?></b> <?php echo $order['store_tax']; ?> -->
+            <b><?php echo $text_tax; ?></b> <?php echo $order['store_tax']; ?> 
           </td>
           <td style="width: 50%;"><b><?php echo $text_date_added; ?></b> <?php echo $order['date_added']; ?><br />
             <b><?php echo $text_date_delivered; ?></b> <?php echo $order['delivery_date']; ?> <?php echo $order['delivery_timeslot']; ?> <br />
-            <!--<?php if ($order['invoice_no']) { ?>
+           <?php if ($order['invoice_no']) { ?>
             <b><?php echo $text_invoice_no; ?></b> <?php echo $order['invoice_no']; ?><br />
             <?php } ?>
              <b><?php echo $text_order_id; ?></b> <?php echo $order['order_id']; ?><br />
             <b><?php echo $text_payment_method; ?></b> <?php echo $order['payment_method']; ?><br />
             <?php if ($order['shipping_method']) { ?>
             <b><?php echo $text_shipping_method; ?></b> <?php echo $order['shipping_method']; ?><br />
-            <?php } ?> -->
+            <?php } ?> 
             
             </td>
         </tr>
       </tbody>
     </table>
-    <!-- <table class="table table-bordered">
+    <table class="table table-bordered">
       <thead>
         <tr>
           <td style="width: 50%;"><b><?php echo $text_to; ?></b></td>
-          <td style="width: 50%;"><b><?php echo $text_ship_to; ?></b></td>
+          <!--<td style="width: 50%;"><b><?php echo $text_ship_to; ?></b></td>-->
+          <td style="width: 50%;"><b><?php echo $text_contact; ?></b></td>
         </tr>
       </thead>
       <tbody>
@@ -65,19 +76,25 @@
           <td>
             <address>
             <b><?= $text_name ?></b> <?php echo $order['shipping_name']; ?>, <br />
-            <b><?= $text_contact_no ?></b> <?php echo $order['shipping_contact_no']; ?><br/>
-            <b><?php echo $text_cpf_number; ?></b> <?php echo $order['cpf_number']; ?>
+            <b><?= $text_contact_no ?></b> <?php echo $order['shipping_contact_no']; ?>,<br />
+              
+              <?php echo $order['shipping_address'] ?><br />
+              <?php echo $order['shipping_city']; ?>            
+            
+            <!--<b><?php echo $text_cpf_number; ?></b> <?php echo $order['cpf_number']; ?>-->
             </address>
           </td>
           <td>
-            <address>
+           <!-- <address>
             <?php echo $order['shipping_address'] ?><br />
             <?php echo $order['shipping_city']; ?>            
-            </address>
+            </address>-->
+              <?php echo $order['email']; ?><br/>
+            <?php echo $order['telephone']; ?> 
           </td>
         </tr>
       </tbody>
-    </table> -->
+    </table> 
     <table class="table table-bordered">
       <thead>
         <tr>

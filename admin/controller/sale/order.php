@@ -3781,6 +3781,8 @@ class ControllerSaleOrder extends Controller {
         $data['text_contact_no'] = $this->language->get('text_contact_no');
         $data['text_email'] = $this->language->get('text_email');
         $data['text_website'] = $this->language->get('text_website');
+        $data['text_contact'] = $this->language->get('text_contact');
+        $data['text_from'] = $this->language->get('text_from');
         $data['text_to'] = $this->language->get('text_to');
         $data['text_ship_to'] = $this->language->get('text_ship_to');
         $data['text_payment_method'] = $this->language->get('text_payment_method');
