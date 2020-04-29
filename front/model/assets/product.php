@@ -270,6 +270,8 @@ class ModelAssetsProduct extends Model {
 	public function getProduct( $product_store_id, $is_admin = false,$store_id=null) {
         if(isset($this->session->data['config_store_id'])){
 		   $store_id = $this->session->data['config_store_id'];
+		}else{
+			$store_id = ACTIVE_STORE_ID;
 		}
 		$this->db->select('product_to_store.*,product_description.*,product.unit,product.image', FALSE);
 		$this->db->join('product', 'product.product_id = product_to_store.product_id', 'left');
