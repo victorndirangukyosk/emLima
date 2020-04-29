@@ -20,19 +20,20 @@
     </h1>
     <table class="table table-bordered">
       <thead>
-        <tr>
+        <!--tr>
         <td style="width: 50%;"><?php echo $text_from; ?></td>
           <td style="width: 50%;"><?php echo $text_order_detail; ?></td>
           <!--td colspan="2"><?php echo $text_order_detail; ?></td-->
-        </tr>
+        </tr-->
 <tr>
-<td>
+<td colspan="2">
       <?php if($store_logo){?>
         <div class="logo-image">
             <img height="50" src="<?php echo $store_logo;?>" alt="Shop" title="Shop" />
 	       </div>
          <?php } ?>
   </td>
+   
   <tr>
       </thead>
       <tbody>
