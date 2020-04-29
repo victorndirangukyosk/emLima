@@ -148,13 +148,13 @@
                                             <?php $i=0;  foreach ($products as $product) { ?>
                                                 <li class="list-group-item">
                                                 <div class="row">
-                                                    <div class="col-md-2">
+                                                    <div class="col-md-2 col-xs-4">
                                                         <div class="mycart-product-img"><img src="<?= $product['image'] ?>" alt="" class="img-responsive"></div>
                                                     </div>
                                                     <?php if($this->config->get('config_account_return_product_status') == 'yes' && $delivered && $can_return) { ?>
-                                                        <div class="col-md-4">
+                                                        <div class="col-md-4 col-xs-8">
                                                     <?php } else { ?>
-                                                        <div class="col-md-5">
+                                                        <div class="col-md-5 col-xs-8">
                                                     <?php } ?>
                                                         <div class="mycart-product-info">
                                                             <h3> <?php echo $product['name']; ?> </h3>
@@ -206,15 +206,15 @@
                                                         </div>
                                                     </div>
                                                     <?php if($this->config->get('config_account_return_product_status') == 'yes' && $delivered && $can_return) { ?>
-                                                        <div class="col-md-2">
+                                                        <div class="col-md-2 col-xs-8">
                                                     <?php } else { ?>
-                                                        <div class="col-md-3">
+                                                        <div class="col-md-3 col-xs-8">
                                                     <?php } ?>
                                                         <div class="my-order-price">
                                                             <?php echo $product['quantity']; ?> x <?php echo $product['price']; ?>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-2">
+                                                    <div class="col-md-2 col-xs-8">
                                                         <div class="my-order-price">
                                                             <?php echo $product['total']; ?>
                                                         </div>
@@ -237,7 +237,7 @@
                                                     <?php } */ ?>
 
                                                     <?php if($this->config->get('config_account_return_product_status') == 'yes' && $delivered && !is_null($product['return_id'])) { ?>
-                                                        <div class="col-md-2">
+                                                        <div class="col-md-2 col-xs-8">
                                                             <div class="my-order-price">
                                                                 Return Status: <?= $product['return_status'] ?>
                                                             </div>

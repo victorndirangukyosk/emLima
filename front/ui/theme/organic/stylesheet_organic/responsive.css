@@ -1842,7 +1842,7 @@ ul.slideshow {
 	display: inline-block;
 }
 .form-add-tags input.input-text, select, textarea {
-	width: 70% !important;
+	/* width: 70% !important; */
 }
 
 .product-view .product-shop {
