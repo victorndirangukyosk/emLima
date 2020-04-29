@@ -1745,7 +1745,7 @@ $('#button-history').on('click', function() {
 			$('#button-history').button('reset');	
 		},
 		success: function(json) {
-			$('.alert').remove();
+			 $('.alert').remove();
 			
 			if (json['error']) {
 				$('#history').before('<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> ' + json['error'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
@@ -1764,7 +1764,8 @@ $('#button-history').on('click', function() {
 			}			
 		},			
 		error: function(xhr, ajaxOptions, thrownError) {
-			alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+			//alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+			location = location;
 		}
 	});
 });
