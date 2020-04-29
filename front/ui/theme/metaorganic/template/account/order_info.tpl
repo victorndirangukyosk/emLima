@@ -1035,10 +1035,10 @@ __kdt.push({"post_on_load": false});
 
         }
 
-        setInterval(function() {
+        /*setInterval(function() {
          location = location;
         }, 30 * 1000); // 60 * 1000 milsec
-
+        */
         
 
     </script>
