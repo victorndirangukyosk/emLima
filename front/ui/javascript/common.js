@@ -846,7 +846,7 @@ $(document).delegate('.agree', 'click', function(e) {
 	
 					for (i = 0; i < json.length; i++) {
 						if (!json[i]['category']) {
-							html += '<li data-img="' + json[i]['img'] + '" data-value="' + json[i]['value'] + '"><a href="'+json[i]['href']+'"><img src="' + json[i]['img'] + '"/> ' + json[i]['label'] + '</a></li>';
+							html += '<li data-img="' + json[i]['img'] + '" data-value="' + json[i]['value'] + '"><a href="'+json[i]['href']+'"><img height="50px" src="' + json[i]['img'] + '"/> ' + json[i]['label'] + '</a></li>';
 						}
 					}
 	
