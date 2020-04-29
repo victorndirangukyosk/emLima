@@ -26,14 +26,14 @@
           <!--td colspan="2"><?php echo $text_order_detail; ?></td-->
         </tr-->
 <tr>
-<td colspan="2">
+<td>
       <?php if($store_logo){?>
         <div class="logo-image">
             <img height="50" src="<?php echo $store_logo;?>" alt="Shop" title="Shop" />
 	       </div>
          <?php } ?>
   </td>
-   
+  <td></td>
   <tr>
       </thead>
       <tbody>
