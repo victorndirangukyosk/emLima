@@ -648,7 +648,7 @@ class ControllerProductSearch extends Controller {
 				$link = $this->url->link('product/category', 'category=' . $value['category_id']);
 				$link_array = explode('/',$link);
 				$page_link = end($link_array);
-				$value['href_cat'] = $this->url->link('product/store', 'store_id='.ACTIVE_STORE_ID).'?cat='.$page_link;
+				$value['href_cat'] = $this->url->link('product/store', 'store_id='.ACTIVE_STORE_ID).'?cat='.$page_link.'&product='.$value['pd_name'];
 				$products[] = $value;
 			}
 		}
