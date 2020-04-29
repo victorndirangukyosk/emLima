@@ -29,7 +29,7 @@
 <td>
       <?php if($store_logo){?>
         <div class="logo-image">
-            <img height="20" src="<?php echo $store_logo;?>" alt="Shop" title="Shop" />
+            <img height="50" src="<?php echo $store_logo;?>" alt="Shop" title="Shop" />
 	       </div>
          <?php } ?>
   </td>

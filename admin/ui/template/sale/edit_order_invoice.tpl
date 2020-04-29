@@ -112,8 +112,8 @@
           <td class="text-right"><input type="text" class="form-control" name="products[<?php echo $product['product_id']?>][unit]" value="<?php echo $product['unit']; ?>"/></td>
           <td class="text-right">
 
-          <input type="number" min="1" step="1" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57" class="form-control changeTotal text-right" name="products[<?php echo $product['product_id'] ?>][quantity]" value="<?php echo $product['quantity']; ?>"/>
-
+          <!--<input type="number" min="1" step="1" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57" class="form-control changeTotal text-right" name="products[<?php echo $product['product_id'] ?>][quantity]" value="<?php echo $product['quantity']; ?>"/>-->
+          <input type="number" min="1" step="1" class="form-control changeTotal text-right" name="products[<?php echo $product['product_id'] ?>][quantity]" value="<?php echo $product['quantity']; ?>"/>
           </td>
           <td class="text-right"><input type="text"  class="form-control changeTotal text-right" name="products[<?php echo $product['product_id'] ?>][price]" value="<?php echo $product['price']; ?>"/></td>
           <td class="text-right"><input type="text" class="form-control totalPrice text-right" name="products[<?php echo $product['product_id']?>][total]" value="<?php echo $product['total']; ?>" disabled /></td>
