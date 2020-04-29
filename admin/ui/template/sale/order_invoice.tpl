@@ -27,10 +27,11 @@
         </tr>
 <tr>
 <td>
-
+      <?php if($store_logo){?>
         <div class="logo-image">
-            <img height="20" src="ui/image/gplogo.png" alt="Shop" title="Shop" />
-	</div>
+            <img height="20" src="<?php echo $store_logo;?>" alt="Shop" title="Shop" />
+	       </div>
+         <?php } ?>
   </td>
   <tr>
       </thead>
