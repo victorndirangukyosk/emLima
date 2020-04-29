@@ -846,7 +846,7 @@ $(document).delegate('.agree', 'click', function(e) {
 	
 					for (i = 0; i < json.length; i++) {
 						if (!json[i]['category']) {
-							html += '<li data-value="' + json[i]['value'] + '"><a href="'+json[i]['href']+'">' + json[i]['label'] + '</a></li>';
+							html += '<li data-img="' + json[i]['img'] + '" data-value="' + json[i]['value'] + '"><a href="'+json[i]['href']+'"><img height="50px" src="' + json[i]['img'] + '"/> ' + json[i]['label'] + '</a></li>';
 						}
 					}
 	
@@ -905,7 +905,8 @@ $(document).delegate('.agree', 'click', function(e) {
 														label: item['name'],
 														name_label: item['name'],
 														value: item['product_id'],
-														href: item['href_cat']
+														href: item['href_cat'],
+														img: item['image']
 												}
 											} else {
 												return {
@@ -913,7 +914,8 @@ $(document).delegate('.agree', 'click', function(e) {
 														label: item['name'],
 														name_label: item['name'],
 														value: item['product_id'],
-														href: item['href_cat']
+														href: item['href_cat'],
+														img: item['image']
 												}
 											}
 											

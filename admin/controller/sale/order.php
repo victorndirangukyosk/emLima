@@ -3799,6 +3799,7 @@ class ControllerSaleOrder extends Controller {
         $data['text_cpf_number'] = $this->language->get('text_cpf_number');
         
         $this->load->model('sale/order');
+        $this->load->model('tool/image');
 
         $this->load->model('setting/setting');
 
@@ -3834,7 +3835,6 @@ class ControllerSaleOrder extends Controller {
 
 
                 $store_info = $this->model_setting_setting->getSetting('config', $order_info['store_id']);
-
                 // if ($store_info) {
                 //     $store_address = $store_info['config_address'];
                 //     $store_email = $store_info['config_email'];
@@ -3848,7 +3848,6 @@ class ControllerSaleOrder extends Controller {
                 // }
 
                 $store_data = $this->model_sale_order->getStoreData($order_info['store_id']);
-
                 if ($store_data) {
                     $store_address = $store_data['address'];
                     $store_email = $store_data['email'];
@@ -3862,7 +3861,9 @@ class ControllerSaleOrder extends Controller {
                     $store_fax = $this->config->get('config_fax');
                     $store_tax = '';
                 }
-
+                 
+                
+                $data['store_logo'] = $this->model_tool_image->resize($store_data['logo'],300, 300);
                 $data['store_name'] = $store_data['name'];
 
                 if ($order_info['invoice_no']) {

@@ -628,12 +628,13 @@ class ControllerProductSearch extends Controller {
 
 		$this->load->model('assets/product');
 		$this->load->model('assets/category');
+		$this->load->model('tool/image');
 		$categories = $this->model_assets_category->getCategoryByStoreId(ACTIVE_STORE_ID,0);
 		$categories = array_column($categories, 'category_id');
 		
 		$filter_data_product = array(
 			'start' => 0,
-			'limit' => 10,
+			'limit' => 5,
 			'store_id'=>ACTIVE_STORE_ID,
 			'filter_name'=>$filter_name,
 			'filter_category_id'=>$filter_category
@@ -648,7 +649,12 @@ class ControllerProductSearch extends Controller {
 				$link = $this->url->link('product/category', 'category=' . $value['category_id']);
 				$link_array = explode('/',$link);
 				$page_link = end($link_array);
-				$value['href_cat'] = $this->url->link('product/store', 'store_id='.ACTIVE_STORE_ID).'?cat='.$page_link;
+				$value['href_cat'] = $this->url->link('product/store', 'store_id='.ACTIVE_STORE_ID).'?cat='.$page_link.'&product='.$value['pd_name'];
+				if ( file_exists( DIR_IMAGE .$value['image'] ) ) {
+					$value['image'] = $this->model_tool_image->resize( $value['image'],100,100);
+				} else {
+					$value['image'] = $this->model_tool_image->resize( 'placeholder.png',100,100 );
+				}
 				$products[] = $value;
 			}
 		}
