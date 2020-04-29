@@ -498,7 +498,9 @@ $('#button-settle-invoice-charge-notify').on('click', function() {
       }
     },      
     error: function(xhr, ajaxOptions, thrownError) {
-      alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+	 alert('Notified!!');
+	 window.location.href = 'index.php?path=sale/order&token=<?php echo $token; ?>';
+     //alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
     }
   });
 });
