@@ -846,7 +846,7 @@ $(document).delegate('.agree', 'click', function(e) {
 	
 					for (i = 0; i < json.length; i++) {
 						if (!json[i]['category']) {
-							html += '<li data-img="' + json[i]['img'] + '" data-value="' + json[i]['value'] + '"><a href="'+json[i]['href']+'"><img height="50px" src="' + json[i]['img'] + '"/> ' + json[i]['label'] + '</a></li>';
+							html += '<li data-img="' + json[i]['img'] + '" data-value="' + json[i]['value'] + '"><a href="'+json[i]['href']+'"><img height="50px" src="' + json[i]['img'] + '"/> ' + json[i]['label'] + '<br> ' + json[i]['special_price'] + ' Ksh ( per ' + json[i]['unit'] + ')</li>';
 						}
 					}
 	
@@ -906,7 +906,9 @@ $(document).delegate('.agree', 'click', function(e) {
 														name_label: item['name'],
 														value: item['product_id'],
 														href: item['href_cat'],
-														img: item['image']
+														img: item['image'],
+														special_price : item['special_price'],
+														unit : item['unit']
 												}
 											} else {
 												return {
@@ -915,7 +917,9 @@ $(document).delegate('.agree', 'click', function(e) {
 														name_label: item['name'],
 														value: item['product_id'],
 														href: item['href_cat'],
-														img: item['image']
+														img: item['image'],
+														special_price : item['special_price'],
+														unit : item['unit']
 												}
 											}
 											
