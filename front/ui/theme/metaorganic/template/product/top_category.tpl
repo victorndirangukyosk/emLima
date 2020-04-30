@@ -216,6 +216,9 @@
                                                         </nav>
                                                     </div>
                                                 </div>
+												<div class="_1loc3" data-test-selector="filter-price">
+                                                  Price: KSh <span id="show-min">0</span>-<span id="show-max">4000</span> <input id="ex2" type="text"  class="span2" value="" data-slider-min="0" data-slider-max="4000" data-slider-step="10" data-slider-value="[0,4000]"/>
+                                                </div>											
                                                 <!--<div class="_1loc3" data-test-selector="filter-tags">
                                                     
                                                  </div>
@@ -299,14 +302,14 @@
 												
 												 <?php 
 												   if(isset($_REQUEST['product'])){
-													 $products = array_filter($products, function ($var) {
+													  $products = array_filter($products, function ($var) {
 															return ($var['name'] == $_REQUEST['product']);
 												      });
 												   }
 													foreach($products as $product) {
 													//echo '<pre>';print_r($product);
 												  ?>
-                                                   <li class="_1cn3x ">
+                                                   <li class="_1cn3x" data-price="<?=str_replace('KSh ','',$product['special'])?>">
                                                    <span role="group">
 					
                                                     <div class="_2sT86 EurVi">
@@ -860,6 +863,10 @@
     
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.6.2/bootstrap-slider.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.6.2/css/bootstrap-slider.min.css"/>
+	
+	
 
 
     <script type="text/javascript">
@@ -1000,9 +1007,36 @@
 		}
 		
 	}
-        
+	
+	    var originalVal;
+
+		$('#ex2').slider().on('slideStart', function(ev){
+			originalVal = $('#ex2').data('slider').getValue();
+		});
+		
+		$('#ex2').slider().on('slideStop', function(ev){
+			var newVal = $('#ex2').data('slider').getValue();
+			if(originalVal != newVal) {
+				
+				var min = newVal[0];
+				var max = newVal[1];
+				$('#show-min').text(min);
+				$('#show-max').text(max);
+				$('#items-ul li').each(function(i)
+				{
+				   if((parseInt($(this).attr('data-price')) >= parseInt(newVal[0])) && ( parseInt($(this).attr('data-price')) <= parseInt(newVal[1])))
+				   {
+					    $(this).show();
+				   }else{
+					   $(this).hide();
+				   }
+				});
+				
+			}
+		});
 
         $(document).ready(function() {
+			$("#ex2").slider({tooltip: 'always'});
 			$("#switch-grid").click();
             console.log("ready in top_category");
             $(document).delegate('.open-popup', 'click', function(){
@@ -1049,10 +1083,18 @@
             }
         });
     });
+	
+	
 
         
 </script>
     <style>
+		.slider-handle.min-slider-handle.round {
+			margin-left: 1px;
+		}
+		.slider-handle.max-slider-handle.round {
+			margin-left: -20px;
+		}
         .cat-list > li:hover  .drop-menu-2  {
           display: block;
         }
