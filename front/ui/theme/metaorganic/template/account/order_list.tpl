@@ -101,8 +101,8 @@
                                                     </div>
                                                 </li> 
                                                 <li class="list-group-item">
-                                                    <div class="my-order-showaddress">
-                                                        <a class="btn-link text_green" role="button" data-toggle="collapse" href="#<?= $order['order_id'] ?>" aria-expanded="false" aria-controls="<?= $order['order_id'] ?>"><?= $text_view_billing?></a>&nbsp;|&nbsp;<a class="btn-link text_green" role="button" href="<?php echo ($order['realproducts'] ? $order['real_href'] : $order['href']) ;?>" aria-expanded="false" aria-controls="<?= $order['order_id'] ?>"><?= $text_view_order?></a>
+                                                    <div class="my-order-showaddress">  
+                                                        <a class="btn-link text_green" role="button" data-toggle="collapse" href="#<?= $order['order_id'] ?>" aria-expanded="false" aria-controls="<?= $order['order_id'] ?>"><?= $text_view_billing?></a>&nbsp;|&nbsp;<a class="btn-link text_green" role="button" href="<?php echo ($order['realproducts'] ? $order['real_href'] : $order['href'].'&order_status='.urlencode($order['status'])) ;?>" aria-expanded="false" aria-controls="<?= $order['order_status'] ?>"><?= $text_view_order?></a>
                                                     </div>
                                                 </li>
                                             </div>

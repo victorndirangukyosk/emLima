@@ -131,15 +131,15 @@
 
                       <!-- end -->
 
-                      <div class="form-group">
+                      <!-- <div class="form-group">
                         <label class="col-sm-2 control-label" for="input-date-added"><?php echo $entry_dob; ?></label>
                         <div class="col-sm-10">
                             <input type="text" name="dob" value="<?php echo $dob; ?>" placeholder="<?php echo $entry_dob; ?>" id="input-date-added" class="form-control date_dob" />
-                            <!-- <span class="input-group-btn">
-                                <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
-                            </span> -->
+                           // <span class="input-group-btn">
+                              //  <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                           // </span>
                         </div>
-                      </div>
+                      </div>  -->
 
                     <div class="form-group">
                         <label class="col-sm-2 control-label" for="input-telephone"><?php echo $entry_gender; ?></label>

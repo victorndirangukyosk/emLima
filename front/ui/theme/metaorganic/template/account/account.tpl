@@ -65,7 +65,7 @@
             </div>
           </div>
 
-          <div class="form-group required">
+         <!-- <div class="form-group required">
             <label class="col-sm-3 control-label" for="input-date-added"><?php echo $entry_dob; ?></label>
             <div class="col-sm-6 col-xs-12">
                 <input type="text" name="dob" value="<?php echo $dob; ?>" placeholder="<?php echo $entry_dob; ?>" data-date-format="dd/mm/YYYY" id="input-date-added" class="form-control date" />
@@ -73,7 +73,7 @@
               <div class="text-danger"><?php echo $error_dob; ?></div>
               <?php } ?>
             </div>
-          </div>
+          </div>--!>
           
 
           <!-- <div class="form-group">
