@@ -262,14 +262,14 @@
                                                     </ul><a class="GlMar" href="#">Clear all</a></div>
                                             </div>-->
 											            <div class="btn-group">
-                                                            <!--<a onclick="changelayout('list')" id="switch-list" class="btn-search-switch is-active" rel="nofollow" aria-label="list view" href="#">
+                                                            <a onclick="changelayout('list')" id="switch-list" class="btn-search-switch is-active" rel="nofollow" aria-label="list view" href="#">
                                                                 <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 16 16" title="List" style="vertical-align:middle">
                                                                     <title>List</title>
                                                                     <g>
                                                                         <path d="M0,3 L0,1 L2,1 L2,3 L0,3 Z M0,7 L0,5 L2,5 L2,7 L0,7 Z M0,11 L0,9 L2,9 L2,11 L0,11 Z M0,15 L0,13 L2,13 L2,15 L0,15 Z M4,3 L4,1 L16,1 L16,3 L4,3 Z M4,7 L4,5 L16,5 L16,7 L4,7 Z M4,11 L4,9 L16,9 L16,11 L4,11 Z M4,15 L4,13 L16,13 L16,15 L4,15 Z"></path>
                                                                     </g>
                                                                 </svg>
-                                                            </a>-->
+                                                            </a>
                                                             <a onclick="changelayout('grid')" id="switch-grid" class="btn-search-switch" rel="nofollow" aria-label="grid view" href="#">
                                                                 <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 16 16" title="Grid" style="vertical-align:middle">
                                                                     <title>Grid</title>
@@ -316,7 +316,7 @@
                                                     <article class="_3Oe1A">
 
                                                     <div class="col-md-12 col-sm-12 pl0 pr0">
-                                                    <div class="col-md-12 col-sm-12 pl0 pr0">
+                                                    <div class="col-md-12 col-sm-12 pl0 pr0 newcss">
                                                     <section class="_25Upe">
                                                     <section class="inner_sec _2imXI">
                                                     <span class="discountuihome" style="color:red; font-weight:bold">Get <?= $product['percent_off'];?>% OFF <i class="fas fa-shopping-basket"></i></span>
@@ -344,7 +344,7 @@
                                         </section>
                                         </section>
                                         </div>
-                                        <div class="col-md-12 col-sm-12" style="margin-bottom:15px;">
+                                        <div class="col-md-12 col-sm-12 test" style="margin-bottom:15px;">
                                         <div class="vfsyA col-md-12 col-sm-12 pl0">
                                                     <div class="_25ygu">
                                                      <div class="JHf2a">
