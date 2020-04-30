@@ -316,7 +316,7 @@
                                                     <article class="_3Oe1A">
 
                                                     <div class="col-md-12 col-sm-12 pl0 pr0">
-                                                    <div class="col-md-12 col-sm-12 pl0 pr0 newcss">
+                                                    <div class="col-md-12 col-sm-12 pl0 pr0 listwidth">
                                                     <section class="_25Upe">
                                                     <section class="inner_sec _2imXI">
                                                     <span class="discountuihome" style="color:red; font-weight:bold">Get <?= $product['percent_off'];?>% OFF <i class="fas fa-shopping-basket"></i></span>
@@ -344,7 +344,7 @@
                                         </section>
                                         </section>
                                         </div>
-                                        <div class="col-md-12 col-sm-12 test" style="margin-bottom:15px;">
+                                        <div class="col-md-12 col-sm-12 listset" style="margin-bottom:15px;">
                                         <div class="vfsyA col-md-12 col-sm-12 pl0">
                                                     <div class="_25ygu">
                                                      <div class="JHf2a">
