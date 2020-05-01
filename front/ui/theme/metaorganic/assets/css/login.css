@@ -238,7 +238,6 @@ background: linear-gradient(90deg, rgba(139,191,60,1) 0%, rgba(132,194,38,1) 48%
   top: 0px;
   transform-origin: 100% 40%;
   transform: scale(0);
-  max-height: 700px;
 }
 .formBox .regTag {
       line-height: 97px;
