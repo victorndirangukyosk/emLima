@@ -469,19 +469,67 @@ class ControllerAccountLogin extends Controller {
 
         $data['account_terms_link'] = $this->url->link('information/information', 'information_id=' . $this->config->get('config_account_id'), 'SSL');
         
-        /*$log = new Log('error.log');
-        
-        $log->write('fb en');
-        if (isset($this->request->post['redirect']) && (strpos($this->request->post['redirect'], $this->config->get('config_url')) !== false || strpos($this->request->post['redirect'], $this->config->get('config_ssl')) !== false)) {
-            $data['redirect'] = $this->request->post['redirect'];
-        } elseif (isset($this->session->data['redirect'])) {
-            $data['redirect'] = $this->session->data['redirect'];
+           /*Register Variables */
+            $this->load->language( 'account/register' );
+            $data['referral_description'] = 'Referral';
+            $data['telephone_mask'] = $this->config->get('config_telephone_mask');
+            $data['taxnumber_mask'] = $this->config->get('config_taxnumber_mask');
+            $data['entry_submit'] = $this->language->get( 'entry_submit' );
+			$data['entry_email_address'] = $this->language->get( 'entry_email_address' );
+			$data['entry_signup_otp'] = $this->language->get( 'entry_signup_otp' );
+			$data['entry_phone'] = $this->language->get( 'entry_phone' );
 
-            unset($this->session->data['redirect']);
-        } else {
-            $data['redirect'] = '';
-        }*/
-        //echo '<pre>';print_r($data);exit;
+			//$data['heading_title'] = $this->language->get( 'heading_title' );
+			$data['heading_text']  = $this->language->get('heading_text');
+			$data['text_account_already'] = sprintf( $this->language->get( 'text_account_already' ), $this->url->link( 'account/login', '', 'SSL' ) );
+			$data['text_your_details'] = $this->language->get( 'text_your_details' );
+			$data['text_your_address'] = $this->language->get( 'text_your_address' );
+			$data['text_your_password'] = $this->language->get( 'text_your_password' );
+			$data['text_newsletter'] = $this->language->get( 'text_newsletter' );
+			$data['text_yes'] = $this->language->get( 'text_yes' );
+			$data['text_no'] = $this->language->get( 'text_no' );
+			$data['text_select'] = $this->language->get( 'text_select' );
+			$data['text_none'] = $this->language->get( 'text_none' );
+			$data['text_resend_otp'] = $this->language->get( 'text_resend_otp' );
+			$data['text_loading'] = $this->language->get( 'text_loading' );
+			$data['text_already'] = $this->language->get('text_already');
+
+			$data['entry_customer_group'] = $this->language->get( 'entry_customer_group' );
+			$data['entry_firstname'] = $this->language->get( 'entry_firstname' );
+			$data['entry_lastname'] = $this->language->get( 'entry_lastname' );
+
+
+			$data['entry_email'] = $this->language->get( 'entry_email' );
+			$data['entry_telephone'] = $this->language->get( 'entry_telephone' );
+			$data['entry_fax'] = $this->language->get( 'entry_fax' );
+			$data['entry_company'] = $this->language->get( 'entry_company' );
+			$data['entry_address_1'] = $this->language->get( 'entry_address_1' );
+			$data['entry_address_2'] = $this->language->get( 'entry_address_2' );
+			$data['entry_postcode'] = $this->language->get( 'entry_postcode' );
+			$data['entry_city'] = $this->language->get( 'entry_city' );
+			$data['entry_country'] = $this->language->get( 'entry_country' );
+			$data['entry_zone'] = $this->language->get( 'entry_zone' );
+			$data['entry_newsletter'] = $this->language->get( 'entry_newsletter' );
+			$data['entry_password'] = $this->language->get( 'entry_password' );
+			$data['entry_confirm'] = $this->language->get( 'entry_confirm' );
+
+			$data['button_continue'] = $this->language->get( 'button_continue' );
+			$data['button_upload'] = $this->language->get( 'button_upload' );
+			$data['button_facebook'] = $this->language->get('button_facebook');
+	        $data['button_google'] = $this->language->get('button_google');
+	        $data['button_create'] = $this->language->get('button_create');
+	        $data['button_signin'] = $this->language->get('button_signin');
+
+	        $data['text_male'] = $this->language->get('text_male');
+	        $data['text_female'] = $this->language->get('text_female');
+	        $data['text_other'] = $this->language->get('text_other');
+	        $data['entry_dob'] = $this->language->get('entry_dob');
+            $data['entry_gender'] = $this->language->get('entry_gender');
+            
+            $this->load->model( 'assets/information' );
+            $data['customer_groups'] = $this->model_assets_information->getCustomerGroups();
+    
+          //echo '<pre>';print_r($data);exit;
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/customer_login.tpl')) {
             $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/customer_login.tpl', $data));
         } else {

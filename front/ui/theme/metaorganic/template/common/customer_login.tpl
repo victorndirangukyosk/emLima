@@ -71,65 +71,99 @@
     <div class="box registerBox "  >
       <span class="reg_bg"></span>
       <h2><?= $text_number_verification ?></h2>
-	  
-      <form class="form">
+	  <div id="signup-message">
+      </div>
+	  <form class="form" action="<?php echo $action; ?>" method="post"  autocomplete="off"  enctype="multipart/form-data" id="sign-up-form">
         <div class="f_row formui">
-          <label>Username</label>
-          <input type="text" class="input-field" required>
+          <label><?= $entry_firstname ?></label>
+		  <input id="First Name" name="firstname" type="text" autocomplete="off"  class="input-field input-md" required="">
           <u></u>
         </div>
 		<div class="f_row formui">
-          <label>Lastname</label>
-          <input type="text" class="input-field" required>
-          <u></u>
+          <label><?= $entry_lastname ?></label>
+		  <input id="Last Name" name="lastname"  autocomplete="off"  type="text" class="input-field input-md" required="">
+         <u></u>
         </div>
          <div class="clearfix"></div>
 		<div class="f_row formui">
-          <label>E-Mail Address</label>
-          <input type="text" class="input-field" required>
+          <label><?= $entry_email_address ?></label>
+		  <input id="email" name="email"  autocomplete="off"  type="text" class="input-field input-md" required="">
+          <u></u>
+        </div>
+		<div class="f_row formui">
+          <label><?= $entry_phone ?>  ( +<?= $this->config->get('config_telephone_code') ?> ) </label>
+          <input id="register_phone_number" autocomplete="off"  name="telephone" type="text" class="input-field input-md" required="" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 &amp;&amp; event.charCode <= 57" minlength="9" maxlength="9">
           <u></u>
         </div>
         <div class="clearfix"></div>
         <div class="f_row formui">
-          <label>Password</label>
-          <input type="password" class="input-field" required>
+          <label><?= $entry_password ?></label>
+		  <input id="password" name="password"  autocomplete="off"  type="password" class="input-field input-md" required="">
           <u></u>
         </div>
         <div class="f_row formui">
-          <label>Password Confirm</label>
-          <input type="password" class="input-field" required>
+          <label><?= $entry_confirm ?></label>
+		  <input id="confirm" name="confirm"  autocomplete="off"  type="password" class="input-field input-md" required="">
           <u></u>
         </div>
         <div class="clearfix"></div>
-          <div class="mdl-selectfield f_row ">
-        <label>Standard Select</label>
-        <select class="browser-default">
-          <option value="" disabled selected>Choose your option</option>
-          <option value="1">Option 1</option>
-          <option value="2">Option 2</option>
-          <option value="3">Option 3</option>
+        <div class="mdl-selectfield f_row">
+        <label>Type</label>
+		<select class="browser-default"" name="customer_group_id">
+                    <option value="">-Select Customer Type-</option>
+				    <?php foreach($customer_groups as $customer_group){?>
+                    <option value="<?=$customer_group['customer_group_id']?>"> <?=$customer_group['name']?></option>
+                   
+					<?php } ?>
         </select>
-      </div>
-      <div class="clearfix"></div>
+        </div>
+       <div class="clearfix"></div>
 		<div class="f_row formui">
-          <label>Companyname</label>
-          <input type="text" class="input-field" required>
+          <label><?= $entry_company ?></label>
+		   <input id="company_name" name="company_name" type="text"  class="input-field input-md" required="">
           <u></u>
         </div>
-        
 		<div class="f_row formui">
-          <label>Address</label>
-          <input type="text" class="input-field" required>
+          <label><?= $entry_address_1 ?></label>
+		  <input id="company_address" name="company_address" type="text" class="input-field input-md" required="">
           <u></u>
         </div>
 		
-          <div class="clearfix"></div>
+         <div class="clearfix"></div>
             <div class="md-checkbox last ">
-    <input id="i2" type="checkbox" checked>
-    <label for="i2">You agree to our <b>Terms of Service</b> & <b>Privacy Policy</b></label>
-  </div>
-        
-        <button class="btn-large">Sign Up</button>
+			 <input id="i2" type="checkbox" name="agree_checkbox" />   
+			<label for="i2"><?= $text_enter_you_agree ?>                                      
+             <a target="_blank" alt="<?= $text_terms_of_service ?>" href="<?= $account_terms_link ?>">
+            <strong>  <?= $text_terms_of_service ?></strong> 
+			</a>
+
+                                        &amp; 
+             
+			 <a target="_blank" alt="<?= $text_privacy_policy?>" href="<?= $privacy_link ?>">
+              <strong><?= $text_privacy_policy?></strong>
+             </a>
+			</label> 
+           <div class="text-danger" id="error_agree" style="display: none">Please agree to terms and conditions</div>			
+		</div>
+         <input type="hidden" name="fax" value="" id="fax-number" />
+         <input type="hidden" name="register_verify_otp" value="" id="register_verify_otp" value="no"/>
+		
+		<div class="f_row formui signup_otp_div" style="display: none">
+          <label><?= $entry_signup_otp ?></label>
+		   <input id="signup_otp" name="signup_otp" type="text"  class="form-control input-md" required="" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 &amp;&amp; event.charCode <= 57" minlength="4" maxlength="4">
+          <u></u>
+        </div>
+		
+        <!--<button class="btn-large">Sign Up</button>-->
+		<!-- Button -->
+        <div class="f_row formui">
+            <div class="col-md-12">
+                <button id="signup" type="button" class="btn-large">
+                    <span class="signup-modal-text"><?= $heading_text ?></span>
+                    <div class="signup-loader" style="display: none;"></div>
+                </button>
+            </div>
+        </div>
       </form>
     </div>
     <a href="#" class="regTag icon-add">

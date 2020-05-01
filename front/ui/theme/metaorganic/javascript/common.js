@@ -1222,7 +1222,8 @@ $(document).delegate('#signup', 'click', function() {
                
                     return false;
                 } else {   
-
+                    //console.log(json,'json_response');
+                    //alert('dddd');
                     /*if($('#register_verify_otp').val() == 'yes') {
                         $('#register_verify_otp').val('no');     
                     }*/
@@ -1241,6 +1242,7 @@ $(document).delegate('#signup', 'click', function() {
                     }
 
                     if(json['error_lastname']){
+                        //$error += json['error_lastname']+'<br/>';
                         $error += json['error_lastname']+'<br/>';
                     }
                     if(json['error_telephone']){
@@ -1270,13 +1272,9 @@ $(document).delegate('#signup', 'click', function() {
                         $error += json['error_company_name_address']+'<br/>';
                     }
 
-                    if(json['error_warning']){
+                    /*if(json['error_warning']){
                         $error += json['error_warning']+'<br/>';
-                    }
-
-                    
-
-                    
+                    }*/
 
                     $('.signup-modal-text').html(text);
                     $('.signup-loader').hide();
