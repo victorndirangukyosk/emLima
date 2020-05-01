@@ -7,9 +7,9 @@ class ControllerProductStore extends Controller {
         //echo "cer";die;
         //echo "<pre>";
         //print_r($_COOKIE);die;
-        /*if(!isset($this->session->data['customer_id'])){
+        if(!isset($this->session->data['customer_id'])){
 			$this->response->redirect($this->url->link('account/login/customer'));	
-        }*/
+        }
         
         if ( isset( $this->request->get['store_id'] ) ) {
             $this->session->data['config_store_id'] = $this->request->get['store_id'];
