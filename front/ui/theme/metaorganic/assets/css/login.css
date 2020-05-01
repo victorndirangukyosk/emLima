@@ -228,7 +228,8 @@ select option{
   background: #b30000; 
 }
 .formBox .reg_bg {
-  background-color: #84c226;
+  background: rgb(139,191,60);
+background: linear-gradient(90deg, rgba(139,191,60,1) 0%, rgba(132,194,38,1) 48%, rgba(169,240,63,1) 100%);
   position: absolute;
   width: 900px;
   height: 500px;
@@ -411,7 +412,7 @@ select option{
 	font-size:25px;
 	transform-origin: 0 0;
   transform: rotate(45deg);
-  
+  line-height: 0px;
 }
 .md-checkbox {
   position: relative;
