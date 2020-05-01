@@ -9,7 +9,7 @@ class ControllerAccountLogin extends Controller {
     private $error = array();
 
     public function index() {
-
+        
         if (!$this->request->isAjax()) {
             $this->response->redirect( $this->url->link( 'common/home/toHome' ) );
         }
@@ -402,7 +402,87 @@ class ControllerAccountLogin extends Controller {
         $this->response->setOutput(json_encode($data));
     }
 	
-	
+	public function customer(){
+        $this->load->language('common/login_modal');
+        $this->load->model('tool/image');
+        if ($this->request->server['HTTPS']) {
+			$server = $this->config->get('config_ssl');
+		} else {
+			$server = $this->config->get('config_url');
+		}
+
+		if (is_file(DIR_IMAGE . $this->config->get('config_icon'))) {
+            //$data['icon'] = $server . 'image/' . $this->config->get('config_icon');
+            $data['icon'] = $this->model_tool_image->resize($this->config->get('config_icon'),30,30);
+        } else {
+            $data['icon'] = '';
+        }
+
+
+		if (is_file(DIR_IMAGE . $this->config->get('config_fav_icon'))) {
+			$data['fav_icon'] = $server . 'image/' . $this->config->get('config_fav_icon');
+		} else {
+			$data['fav_icon'] = '';
+		}
+
+		if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
+			$data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'),130,72);
+			//$data['logo'] = $server . 'image/' . $this->config->get('config_logo');
+		} else {
+			$data['logo'] = '';
+		}
+        /* Login Variables */
+        $data['text_number_verification'] = $this->language->get('text_number_verification') . ' ' .$this->config->get('config_name');
+        $data['text_enter_number_to_login'] = $this->language->get('text_enter_number_to_login');
+        $data['text_enter_email_address'] = $this->language->get('text_enter_email_address');
+        $data['text_enter_password'] = $this->language->get('text_enter_password');
+        $data['text_move_next'] = $this->language->get('text_move_next');
+        $data['text_login'] = $this->language->get('text_login');
+        $data['text_or'] = $this->language->get('text_or');
+        $data['text_signup'] = $this->language->get('text_signup');
+        $data['text_continue_with_facebook'] = $this->language->get('text_continue_with_facebook');
+        $data['text_continue_with_twitter'] = $this->language->get('text_continue_with_twitter');
+        $data['text_continue_with_google'] = $this->language->get('text_continue_with_google');
+        $data['text_back'] = $this->language->get('text_back');
+        $data['text_code_verification'] = $this->language->get('text_code_verification');
+        $data['text_enter_code_in_area'] = $this->language->get('text_enter_code_in_area');
+        $data['text_enter_phone'] = $this->language->get('text_enter_phone');
+        $data['text_move_Next'] = $this->language->get('text_move_Next');
+        
+        $data['text_verify'] = $this->language->get('text_verify');
+        $data['text_resend_otp'] = $this->language->get('text_resend_otp');
+        
+        $data['text_success_verification'] = $this->language->get('text_success_verification');
+        $data['text_enter_you_agree'] = $this->language->get('text_enter_you_agree');
+        $data['text_terms_of_service'] = $this->language->get('text_terms_of_service');
+        $data['text_privacy_policy'] = $this->language->get('text_privacy_policy');
+        $data['text_welcome_message'] = $this->language->get('text_welcome_message');
+        $data['text_have_account'] = $this->language->get('text_have_account');
+        $data['text_forget_password'] = $this->language->get('text_forget_password');
+        
+        $data['privacy_link'] = $this->url->link('information/information', 'information_id=' . $this->config->get('config_privacy_policy_id'), 'SSL');
+
+        $data['account_terms_link'] = $this->url->link('information/information', 'information_id=' . $this->config->get('config_account_id'), 'SSL');
+        
+        /*$log = new Log('error.log');
+        
+        $log->write('fb en');
+        if (isset($this->request->post['redirect']) && (strpos($this->request->post['redirect'], $this->config->get('config_url')) !== false || strpos($this->request->post['redirect'], $this->config->get('config_ssl')) !== false)) {
+            $data['redirect'] = $this->request->post['redirect'];
+        } elseif (isset($this->session->data['redirect'])) {
+            $data['redirect'] = $this->session->data['redirect'];
+
+            unset($this->session->data['redirect']);
+        } else {
+            $data['redirect'] = '';
+        }*/
+        //echo '<pre>';print_r($data);exit;
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/customer_login.tpl')) {
+            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/customer_login.tpl', $data));
+        } else {
+            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/customer_login.tpl', $data));
+        }
+    }
 	
 	public function login() {
 

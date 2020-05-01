@@ -1,0 +1,763 @@
+* {
+  margin: 0px;
+  padding: 0px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+html,
+body {
+  background-color:#f8fef7;
+  font-family: sans-serif, Arial;
+  height: 100%;
+  width: 100%;
+}
+input,
+button {
+  font-family: sans-serif, Arial;
+}
+input:focus,
+button:focus,
+input:active,
+button:active {
+  outline: none;
+}
+a {
+  text-decoration: none;
+}
+a:focus,
+a:active {
+  outline: none;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+.container {
+  height: 100%;
+  width: 100%;
+  position: relative;
+  text-align: center;
+}
+.container:before {
+  content: '';
+  height: 100%;
+  width: 0px;
+  display: inline-block;
+  vertical-align: middle;
+}
+.formBox {
+  width: 90%;
+  max-width: 100%;
+  height: 480px;
+  margin-left: -4px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  position: relative;
+  vertical-align: middle;
+  display: inline-block;
+}
+.formBox .box {
+  text-align: left;
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 60px 0px 35px 0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  /* box-shadow: 0px 2px 11px -2px rgb(228, 228, 228); */
+  transition: all 0.2s cubic-bezier(0.35, 0.33, 0.75, 0.9);
+}
+.formBox h2 {
+  border-left: 6px solid #84c226;
+  color: #ed2553;
+  padding: 0px 45px;
+  font-size: 24px;
+  line-height: 40px;
+  height: 40px;
+  text-transform: uppercase;
+  position: relative;
+}
+.formBox h4 {
+  color:#999f98;
+  padding: 0px 51px;
+  font-size: 20px;
+  line-height: 40px;
+  height: 40px;
+  margin-bottom: 15px;
+  position: relative;
+}
+.formBox p {
+  font-size: 18px;
+  line-height: 27px;
+  margin-bottom: 30px;
+  color: #696969;
+}
+.formBox form {
+  display: block;
+  padding: 0px 50px;
+  position: relative;
+}
+.formBox .f_row {
+  position: relative;
+  margin-bottom: 15px;
+  height: 44px;
+}
+.formBox .f_row.shake {
+  animation: shake 0.4s linear;
+}
+.formBox .f_row.last {
+  margin-bottom: 53px;
+}
+.formBox .f_row label {
+  color: #3f3f3f;
+  font-size: 20px;
+  font-weight: normal;
+  position: absolute;
+  left: 0;
+  top: 10px;
+  opacity: 1;
+  transition: all 0.3s cubic-bezier(1, -0.33, 0, 1.15);
+  transform: translate(0px, 0px) scale(1);
+  transform-origin: left top;
+}
+.formBox .f_row input {
+  background-color: transparent;
+  border: none;
+  color: #3f3f3f;
+  font-size: 20px;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+.formBox .f_row u {
+  background-color: #e1e1e1;
+  width: 100%;
+  height: 2px;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+}
+.formBox .f_row u:before {
+  content: '';
+  display: block;
+  height: 100%;
+  width: 0;
+  background-color: #ed2553;
+  transition: all 0.35s cubic-bezier(0.35, 0.33, 0.84, 0.85);
+}
+.formBox .f_row.focus label {
+  opacity: 0.5;
+  transform: translate(0px, -30px) scale(0.8);
+}
+.formBox .f_row.focus u:before {
+  width: 100%;
+}
+a:hover{
+	text-decoration:none;
+}
+::-webkit-scrollbar {
+  width: 5px;
+}
+select {
+  font-family: inherit;
+  background-color: transparent;
+  width: 100%;
+  padding: 4px 0;
+  font-size: 20px;
+  color: #fff;
+  border: none;
+  border-bottom: 2px solid #fff;
+}
+
+/* Remove focus */
+select:focus {
+  outline: none;
+}
+
+/* Hide label */
+.mdl-selectfield label {
+  display: none;
+}
+
+/* Use custom arrow */
+.mdl-selectfield select {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+}
+select option{
+	color:#000;
+}
+.mdl-selectfield:after {
+  position: absolute;
+  top: 0.75em;
+  right: 0.5em;
+  /* Styling the down arrow */
+  width: 0;
+  height: 0;
+  padding: 0;
+  content: '';
+  border-left: .25em solid transparent;
+  border-right: .25em solid transparent;
+  border-top: 0.375em solid #fff;
+  pointer-events: none;
+}
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey; 
+  border-radius: 0px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: grey; 
+  border-radius: 0px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #b30000; 
+}
+.formBox .reg_bg {
+  background-color: #84c226;
+  position: absolute;
+  width: 900px;
+  height: 940px;
+  right: -115px;
+  top: -190px;
+  transform-origin: 100% 40%;
+  transform: scale(0);
+}
+.formBox .regTag {
+      line-height: 140px;
+    box-shadow: 0px 2px 5px -1px rgba(0, 0, 0, 0.45);
+    border-radius: 50%;
+    background-color: #84c226;
+    color: #fff;
+    font-size: 30px;
+    text-align: center;
+    width: 140px;
+    height: 140px;
+    position: absolute;
+    right: -87px;
+    top: 14px;
+    z-index: 2;
+    font-weight: bold;
+    overflow: hidden;
+}
+.formBox .regTag svg {
+  fill: #fff;
+  width: 38px;
+  height: 38px;
+}
+.formBox .registerBox {
+      border-radius: 8px;
+    background-color: #fff;
+    right: 0;
+    overflow-y: auto;
+    width: 100%;
+    opacity: 0;
+    z-index: 1;
+    overflow-x: hidden;
+}
+.formBox .registerBox .f_row label,
+.formBox .registerBox .f_row input {
+  color: #fff;
+}
+.formBox .registerBox .f_row u {
+  background-color: #fff;
+}
+.formBox .registerBox .f_row u:before {
+  background-color: #cecece;
+}
+.formBox .registerBox .f_row.last {
+  margin-bottom: 40px;
+}
+.formBox .registerBox h2 {
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.48, 0.55, 0.69, 0.9);
+  transform: translateX(-20px);
+}
+.formBox .registerBox .form > div {
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.48, 0.55, 0.69, 0.9);
+  transform: translateX(20px);
+}
+.formBox .registerBox .form > div:nth-child(1) {
+  transition-delay: 0.15s;
+}
+.formBox .registerBox .form > div:nth-child(2) {
+  transition-delay: 0.2s;
+}
+.formBox .registerBox .form > div:nth-child(3) {
+  transition-delay: 0.25s;
+}
+.formBox .registerBox .btn-large {
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.48, 0.55, 0.69, 0.9);
+  transform: translateX(20px);
+  transition-delay: 0.3s;
+}
+.formBox .forgetbox {
+  background-color: #56ADC7;
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(0px, 9px) scale(1.03);
+}
+.formBox .forgetbox .back {
+  position: absolute;
+  top: 13px;
+  left: 26px;
+  color: #fff;
+  font-size: 32px;
+  font-weight: bold;
+  animation: back 0.8s linear;
+  animation-iteration-count: infinite;
+}
+.formBox .forgetbox .back svg {
+  fill: #fff;
+  width: 20px;
+  height: 20px;
+}
+.formBox .forgetbox .f_row label,
+.formBox .forgetbox .f_row input {
+  color: #fff;
+}
+.formBox .forgetbox .f_row u {
+  background-color: #7DC6DC;
+}
+.formBox .forgetbox .f_row u:before {
+  background-color: #fff;
+}
+.formBox .forgetbox .f_row.last {
+  margin-bottom: 40px;
+}
+.formBox .forgetbox .btn {
+  border-color: #7DC6DC;
+  color: #7DC6DC;
+}
+.formBox .forgetbox .btn u {
+  background-color: #7DC6DC;
+}
+.formBox .forgetbox h2 {
+  color: #fff;
+  border-left-color: #fff;
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.48, 0.55, 0.69, 0.9);
+  transform: translate(-20px, 0px);
+}
+.formBox .forgetbox .form > div {
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.48, 0.55, 0.69, 0.9);
+  transform: translate(0px, 20px);
+  transition-delay: 0.15s;
+}
+.formBox .forgetbox p {
+  color: #fff;
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.48, 0.55, 0.69, 0.9);
+  transform: translate(0px, 20px);
+  transition-delay: 0.2s;
+}
+.formBox .forgetbox .btn {
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.48, 0.55, 0.69, 0.9);
+  transform: translate(0px, 20px);
+  transition-delay: 0.25s;
+}
+.formBox.level-login .boxShaddow {
+  opacity: 0.7;
+  transform-origin: center top;
+  transform: translate(0px, -9px) scale(0.97);
+}
+.formBox.level-reg h2 {
+  border-left-color: #fff;
+  color: #fff;
+}
+.formBox.level-reg .boxShaddow {
+  opacity: 0.7;
+  transform-origin: center top;
+  transform: translate(0px, -18px) scale(0.94);
+}
+.formBox.level-reg .loginBox {
+  opacity: 0.7;
+  transform-origin: center top;
+  transform: translate(0px, -9px) scale(0.97);
+}
+.formBox.level-reg .registerBox {
+  opacity: 1;
+  visibility: visible;
+}
+.formBox.level-reg .regTag {
+  animation: regTag 0.3s cubic-bezier(0.48, 0.55, 0.73, 0.78), regTag2 0.3s cubic-bezier(0.48, 0.55, 0.73, 0.78);
+  animation-fill-mode: forwards;
+  font-size:0px;
+}
+.fontset{
+	font-size:25px;
+	transform-origin: 0 0;
+  transform: rotate(45deg);
+  
+}
+.md-checkbox {
+  position: relative;
+  margin: 1em 0;
+  text-align: left;
+}
+.md-checkbox.md-checkbox-inline {
+  display: inline-block;
+}
+.md-checkbox label {
+  cursor: pointer;
+  display: inline;
+  line-height: 1.25em;
+  vertical-align: top;
+  clear: both;
+  padding-left: 1px;
+  color:#fff
+}
+.md-checkbox label:not(:empty) {
+  padding-left: 0.75em;
+}
+.md-checkbox label:before, .md-checkbox label:after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.md-checkbox label:before {
+  width: 1.25em;
+  height: 1.25em;
+  background: #fff;
+  border: 2px solid rgba(0, 0, 0, 0.54);
+  border-radius: 0.125em;
+  cursor: pointer;
+  transition: background .3s;
+}
+.md-checkbox input[type="checkbox"] {
+  outline: 0;
+  visibility: hidden;
+  width: 1.25em;
+  margin: 0;
+  display: block;
+  float: left;
+  font-size: inherit;
+}
+.md-checkbox input[type="checkbox"]:checked + label:before {
+  background: #337ab7;
+  border: none;
+}
+.md-checkbox input[type="checkbox"]:checked + label:after {
+  transform: translate(0.25em, 0.3365384615em) rotate(-45deg);
+  width: 0.75em;
+  height: 0.375em;
+  border: 0.125em solid #fff;
+  border-top-style: none;
+  border-right-style: none;
+}
+.md-checkbox input[type="checkbox"]:disabled + label:before {
+  border-color: rgba(0, 0, 0, 0.26);
+}
+.md-checkbox input[type="checkbox"]:disabled:checked + label:before {
+  background: rgba(0, 0, 0, 0.26);
+}
+.formBox.level-reg .reg_bg {
+  animation: regMask 0.3s cubic-bezier(0.48, 0.55, 0.73, 0.78);
+  animation-fill-mode: forwards;
+}
+.formBox.level-reg .form > div,
+.formBox.level-reg .btn-large,
+.formBox.level-reg h2 {
+  visibility: visible;
+  opacity: 1;
+  transform: translateX(0px);
+}
+.formBox.level-reg-revers .regTag {
+  animation: regTagR 0.3s cubic-bezier(0.48, 0.55, 0.73, 0.78), regTag2R 0.3s cubic-bezier(0.48, 0.55, 0.73, 0.78);
+  animation-fill-mode: forwards;
+}
+.formBox.level-reg-revers .reg_bg {
+  animation: regMaskR 0.3s cubic-bezier(0.48, 0.55, 0.73, 0.78);
+  animation-fill-mode: forwards;
+}
+.formBox.level-forget .boxShaddow {
+  opacity: 0.7;
+  transform-origin: center top;
+  transform: translate(0px, -18px) scale(0.94);
+}
+.formBox.level-forget .loginBox {
+  opacity: 0.7;
+  transform-origin: center top;
+  transform: translate(0px, -9px) scale(0.97);
+}
+.formBox.level-forget .forgetbox {
+  transform: translate(0px, 0px) scale(1);
+  opacity: 1;
+  visibility: visible;
+}
+.formBox.level-forget .forgetbox p,
+.formBox.level-forget .forgetbox form > div,
+.formBox.level-forget .forgetbox .btn,
+.formBox.level-forget .forgetbox h2 {
+  visibility: visible;
+  opacity: 1;
+  transform: translate(0px, 0px);
+}
+@keyframes back {
+  0% {
+    transform: translateX(0px);
+  }
+  70% {
+    transform: translateX(-13px);
+  }
+  100% {
+    transform: translateX(0px);
+  }
+}
+@keyframes regMask {
+  0% {
+    transform: translate(0px, 0px) scale(0);
+  }
+  50% {
+    transform: translate(100px, 100px) scale(0.5);
+  }
+  100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+}
+@keyframes regMaskR {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  50% {
+    transform: translate(150px, -150px) scale(0.5);
+  }
+  100% {
+    transform: translate(0px, 0px) scale(0);
+  }
+}
+@keyframes regTag {
+  0% {
+    transform: translate(0px, 0px) rotate(0deg);
+  }
+  25% {
+    transform: translate(4px, 25px) rotate(11.25deg);
+  }
+  50% {
+    transform: translate(-88px, 40px) rotate(22.5deg);
+  }
+  100% {
+    transform: translate(-96px, 8px) rotate(45deg);
+  }
+}
+@keyframes regTag2 {
+  0% {
+    width: 140px;
+    height: 140px;
+    line-height: 140px;
+    box-shadow: 0px 2px 5px -1px rgba(0, 0, 0, 0.45);
+  }
+  100% {
+    width: 70px;
+    height: 70px;
+    box-shadow: 0px 2px 5px -1px rgba(0, 0, 0, 0);
+    line-height: 68px;
+  }
+}
+@keyframes regTagR {
+  0% {
+    transform: translate(-96px, 8px) rotate(45deg);
+  }
+  25% {
+    transform: translate(-88px, 40px) rotate(22.5deg);
+  }
+  50% {
+    transform: translate(4px, 25px) rotate(11.25deg);
+  }
+  100% {
+    transform: translate(0px, 0px) rotate(0deg);
+  }
+}
+@keyframes regTag2R {
+  0% {
+    width: 70px;
+    height: 70px;
+    box-shadow: 0px 2px 5px -1px rgba(0, 0, 0, 0);
+    line-height: 68px;
+  }
+  100% {
+    width: 140px;
+    height: 140px;
+    line-height: 140px;
+    box-shadow: 0px 2px 5px -1px rgba(0, 0, 0, 0.45);
+  }
+}
+@keyframes shake {
+  from,
+  to {
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    -webkit-transform: translate3d(-10px, 0, 0);
+    transform: translate3d(-10px, 0, 0);
+  }
+  20%,
+  40%,
+  60%,
+  80% {
+    -webkit-transform: translate3d(10px, 0, 0);
+    transform: translate3d(10px, 0, 0);
+  }
+}
+.btn {
+  transition: all 0.6s ease;
+  background-color: #fff;
+  border: 3px solid #dfdfdf;
+  cursor: pointer;
+  color: #dfdfdf;
+  display: block;
+  text-align: center;
+  width: 243px;
+  height: 73px;
+  line-height: 73px;
+  font-size: 23px;
+  font-weight: bold;
+  text-transform: uppercase;
+  overflow: hidden;
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+}
+.btn span {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+.btn u {
+  border-radius: 50%;
+  background-color: #ed2553;
+  position: absolute;
+  left: -23px;
+  top: -103px;
+  width: 280px;
+  height: 280px;
+  transition: all 0.25s cubic-bezier(0.48, 0.55, 0.69, 1.11);
+  transform-origin: center center;
+  transform: scale(0);
+}
+.btn svg {
+  fill: #fff;
+  width: 35px;
+  height: 35px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  opacity: 0;
+  transition: all 0.35s cubic-bezier(0.48, 0.55, 0.69, 1.11);
+  transform: translate(-50%, -50%) rotate(-90deg) skew(18deg, 12deg);
+}
+.btn.active,
+.btn:hover {
+  border-color: #ed2553;
+  color: #ed2553;
+}
+.btn.active u {
+  transform: scale(1);
+}
+.btn.active svg {
+  opacity: 1;
+  transform: translate(-50%, -50%) rotate(0deg) skew(0deg, 0deg);
+}
+.btn-large {
+  transition: all 0.6s ease;
+  background-color: #fff;
+  border: 3px solid #fff;
+  cursor: pointer;
+  color: #ed2553;
+  display: block;
+  text-align: center;
+  width: 100%;
+  height: 70px;
+  line-height: 67px;
+  font-size: 23px;
+  font-weight: bold;
+  text-transform: uppercase;
+  position: relative;
+}
+.btn-large.active,
+.btn-large:hover {
+  background-color: #ed2553;
+  border-color: #fff;
+  color: #fff;
+}
+.f_link {
+  text-align: center;
+  padding-top: 50px;
+}
+.f_link a {
+  color: #bdbdbd;
+  font-size: 23px;
+  transition: all 0.6s ease;
+}
+.f_link a:hover {
+  color: #56ADC7;
+}
+.login100-more img{
+	width: 500px;
+    position: absolute;
+    bottom: 90px;
+    right: -16px;
+	z-index:99
+}
+.fullwidth{
+	display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+}
+.fullwidth-inner{
+	    box-shadow: 0px 2px 11px -2px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+	background-color:#fff;
+}
+.mb30{
+	margin-bottom:30px;
+	margin-top:20px;
+}
+.mb30 i{
+	margin-right:10px
+}
+.setfont{
+	position: absolute;
+left: 50px;}
+@media (max-width:1024px) and (min-width:300px) {
+	.login100-morenew{
+		display:none;
+	}
+}
