@@ -43,7 +43,7 @@
 	  <h4><?= $text_enter_number_to_login ?></h4>
 	  <div id="login-message">
       </div>
-      <form class="form" id="login-form" autocomplete="off" method="post" enctype="multipart/form-data" novalidate>
+      <form class="form" id="login-form" autocomplete="off" method="post" enctype="multipart/form-data" novalidate >
         <div class="f_row">
           <label><?= $text_enter_email_address?></label>
 		  <input id="email" autocomplete="off" name="email" type="email" class="input-field input-md" required onclick="emailClicked()">
@@ -68,37 +68,40 @@
       </form>
     </div>
     
-    <div class="box registerBox ">
+    <div class="box registerBox "  >
       <span class="reg_bg"></span>
       <h2><?= $text_number_verification ?></h2>
 	  
       <form class="form">
-        <div class="f_row">
+        <div class="f_row formui">
           <label>Username</label>
           <input type="text" class="input-field" required>
           <u></u>
         </div>
-		<div class="f_row">
+		<div class="f_row formui">
           <label>Lastname</label>
           <input type="text" class="input-field" required>
           <u></u>
         </div>
-		<div class="f_row">
+         <div class="clearfix"></div>
+		<div class="f_row formui">
           <label>E-Mail Address</label>
           <input type="text" class="input-field" required>
           <u></u>
         </div>
-        <div class="f_row">
+        <div class="clearfix"></div>
+        <div class="f_row formui">
           <label>Password</label>
           <input type="password" class="input-field" required>
           <u></u>
         </div>
-        <div class="f_row">
+        <div class="f_row formui">
           <label>Password Confirm</label>
           <input type="password" class="input-field" required>
           <u></u>
         </div>
-          <div class="mdl-selectfield f_row">
+        <div class="clearfix"></div>
+          <div class="mdl-selectfield f_row ">
         <label>Standard Select</label>
         <select class="browser-default">
           <option value="" disabled selected>Choose your option</option>
@@ -107,19 +110,21 @@
           <option value="3">Option 3</option>
         </select>
       </div>
-		<div class="f_row">
+      <div class="clearfix"></div>
+		<div class="f_row formui">
           <label>Companyname</label>
           <input type="text" class="input-field" required>
           <u></u>
         </div>
-		<div class="f_row ">
+        
+		<div class="f_row formui">
           <label>Address</label>
           <input type="text" class="input-field" required>
           <u></u>
         </div>
 		
-          
-            <div class="md-checkbox last">
+          <div class="clearfix"></div>
+            <div class="md-checkbox last ">
     <input id="i2" type="checkbox" checked>
     <label for="i2">You agree to our <b>Terms of Service</b> & <b>Privacy Policy</b></label>
   </div>
