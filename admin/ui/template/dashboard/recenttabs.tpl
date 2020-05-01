@@ -31,11 +31,11 @@
           <table class="table table-bordered">
             <thead>
             <tr>
-              <td class="text-right"><?php echo $column_order_id; ?></td>
+              <td><?php echo $column_order_id; ?></td>
               <td><?php echo $column_customer; ?></td>
               <td><?php echo $column_status; ?></td>
               <td><?php echo $column_date_added; ?></td>
-              <td class="text-right"><?php echo $column_total; ?></td>
+              <td><?php echo $column_total; ?></td>
               <td class="text-center"><?php echo $column_action; ?></td>
             </tr>
             </thead>
@@ -43,11 +43,11 @@
             <?php if ($orders) { ?>
             <?php foreach ($orders as $order) { ?>
             <tr>
-              <td class="text-right"><?php echo $order['order_id']; ?></td>
+              <td><?php echo $order['order_id']; ?></td>
               <td><?php echo $order['customer']; ?></td>
               <td><?php echo $order['status']; ?></td>
               <td><?php echo $order['date_added']; ?></td>
-              <td class="text-right"><?php echo $order['total']; ?></td>
+              <td><?php echo $order['total']; ?></td>
               <td class="text-center">
                 <a href="<?php echo $order['view']; ?>" data-toggle="tooltip" title="<?php echo $button_view; ?>" class="btn btn-success">
                   <i class="fa fa-eye"></i>
@@ -68,7 +68,7 @@
           <table class="table table-bordered">
             <thead>
             <tr>
-              <td class="text-right"><?php echo $column_product_id; ?></td>
+              <td><?php echo $column_product_id; ?></td>
               <td><?php echo $column_product_name; ?></td>
               <td><?php echo $column_total; ?></td>
               <td class="text-center"><?php echo $column_action; ?></td>
@@ -78,7 +78,7 @@
             <?php if ($bestseller) { ?>
             <?php foreach ($bestseller as $_bestseller) { ?>
             <tr>
-              <td class="text-right"><?php echo $_bestseller['product_id']; ?></td>
+              <td><?php echo $_bestseller['product_id']; ?></td>
               <td><?php echo $_bestseller['name']; ?></td>
               <td><?php echo $_bestseller['total']; ?></td>
               <td class="text-center">
@@ -102,7 +102,7 @@
           <table class="table table-bordered">
             <thead>
             <tr>
-              <td class="text-right"><?php echo $column_product_id; ?></td>
+              <td><?php echo $column_product_id; ?></td>
               <td><?php echo $column_product_name; ?></td>
               <td><?php echo $column_total; ?></td>
               <td class="text-center"><?php echo $column_action; ?></td>
@@ -112,7 +112,7 @@
             <?php if ($lessseller) { ?>
             <?php foreach ($lessseller as $_lessseller) { ?>
             <tr>
-              <td class="text-right"><?php echo $_lessseller['product_id']; ?></td>
+              <td><?php echo $_lessseller['product_id']; ?></td>
               <td><?php echo $_lessseller['name']; ?></td>
               <td><?php echo $_lessseller['total']; ?></td>
               <td class="text-center">
