@@ -780,7 +780,7 @@ class ControllerProductStore extends Controller {
                 // TODO: Check for product variation duplicates
                 $data['products'][$productIndex][variations][] =  array(
                     'unit' => $result['unit'],
-                    'weight' => $result['weight']
+                    'weight' => floatval($result['weight'])
                 );
             } else {
                 // Add as new product
@@ -797,7 +797,7 @@ class ControllerProductStore extends Controller {
                     'variations' => array(
                         array(
                         'unit' => $result['unit'],
-                        'weight' => $result['weight']
+                        'weight' => floatval($result['weight'])
                         )
                     ),
                     'description' => utf8_substr( strip_tags( html_entity_decode( $result['description'], ENT_QUOTES, 'UTF-8' ) ), 0, $this->config->get( 'config_product_description_length' ) ) . '..',
