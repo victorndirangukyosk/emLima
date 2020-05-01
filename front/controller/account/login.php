@@ -409,9 +409,9 @@ class ControllerAccountLogin extends Controller {
 			$server = $this->config->get('config_url');
         }
         
-        if(isset($this->session->data['customer_id'])){
+        /*if(isset($this->session->data['customer_id'])){
             $this->response->redirect($server);
-        }
+        }*/
         
         $this->load->language('common/login_modal');
         $this->load->model('tool/image');
