@@ -19044,15 +19044,18 @@ address {
   padding: 60px 10px 30px;
 }
 
+.variations-title {
+    line-height: 20px;
+    color: hsl(0, 0%, 60%);
+    font-size: 12px;
+}
+
 .variation-selector-container {
-    margin-bottom: 10px;
-    margin-left: 14px;
-    margin-right: 14px;
+    margin: 0 10px 10px 10px;
 }
 
 .product-variation {
-    padding-top: 0;
-    padding-bottom: 0;
+    padding: 0;
     border-radius: 0;
     width: 100%;
 }

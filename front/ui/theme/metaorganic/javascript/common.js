@@ -174,6 +174,28 @@ $(document).delegate('.tomorrow', 'click', function(){
   $('select[name="delivery_timeslot['+$(this).attr('data-store-id')+']"] option').removeAttr('disabled'); 
 });
 
+// Products variation
+
+$(document).delegate('.product-variation', 'change', function() {
+    const newProductId = $(this).children("option:selected").val();
+    const newPrice = $(this).children("option:selected").attr('data-price');
+    const newSpecial = $(this).children("option:selected").attr('data-special');
+
+    // TODO: Change trailing -0 to variations_id?
+    const newQuantityInputId = 'cart-qty-' + newProductId + '-0';
+
+    let parentDiv = $(this).closest('.setproductimg');
+    let dataHolder = parentDiv.find('#add-cart-btn');
+    let productQuantityInput = parentDiv.find('.input-cart-qty');
+    let specialLabel = parentDiv.find('.-DeRq');
+    let priceLabel = parentDiv.find('._3QV9M');
+
+    specialLabel.html(newSpecial);
+    priceLabel.html('<strike>' + newPrice + '</strike>');
+    productQuantityInput.attr('id', newQuantityInputId);
+    dataHolder.attr('data-id', newProductId);
+});
+
 
 
 //checkout cart 
@@ -275,6 +297,8 @@ $(document).delegate('#add-cart-btn', 'click', function() {
     //$quantity = parseInt($(this).parent().parent().find('.middle-quantity').html());
     $quantity = $('#cart-qty-'+$product_id+'-'+$variation_id).val();
     $quantity = parseInt($quantity);
+
+    // TODO: Adding multiple variants of same product to cart?
     if ($quantity > 0) {
        if($action == 'add'){
         cart.add($product_id, $quantity, $variation_id,$store_id);

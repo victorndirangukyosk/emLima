@@ -45,6 +45,7 @@ class ControllerCommonCart extends Controller {
 		$countProducts = 0;
 		$products = [];
 		$result = $this->cart->getCartProducts();
+//		echo '<pre>';print_r($result);die;
 		if($result) {
 			$countProducts = isset($result['quantity'])?$result['quantity']:0;
 			$products = isset($result['products'])?$result['products']: null;

@@ -688,6 +688,8 @@ class ControllerProductStore extends Controller {
 
         $results = $this->model_assets_product->getProducts( $filter_data );
 
+//        echo '<pre>';print_r($results); die;
+
         $data['products'] = array();
 
         foreach ( $results as $result ) {
@@ -779,8 +781,11 @@ class ControllerProductStore extends Controller {
                 $productIndex = array_search($result['name'], $productNames);
                 // TODO: Check for product variation duplicates
                 $data['products'][$productIndex][variations][] =  array(
+                    'variation_id' => $result['product_store_id'],
                     'unit' => $result['unit'],
-                    'weight' => floatval($result['weight'])
+                    'weight' => floatval($result['weight']),
+                    'price' => $price,
+                    'special' => $special_price
                 );
             } else {
                 // Add as new product
@@ -796,13 +801,14 @@ class ControllerProductStore extends Controller {
                     'name' => $name,
                     'variations' => array(
                         array(
-                        'unit' => $result['unit'],
-                        'weight' => floatval($result['weight'])
+                            'variation_id' => $result['product_store_id'],
+                            'unit' => $result['unit'],
+                            'weight' => floatval($result['weight']),
+                            'price' => $price,
+                            'special' => $special_price
                         )
                     ),
                     'description' => utf8_substr( strip_tags( html_entity_decode( $result['description'], ENT_QUOTES, 'UTF-8' ) ), 0, $this->config->get( 'config_product_description_length' ) ) . '..',
-                    'price' => $price,
-                    'special' => $special_price,
                     'percent_off' => number_format($percent_off,0),
                     'tax' => $result['tax_percentage'],
                     'minimum' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity'],

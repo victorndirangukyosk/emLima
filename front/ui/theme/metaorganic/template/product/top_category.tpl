@@ -359,20 +359,24 @@
                                                 </div>
                                                 <div class="col-md-12 col-sm-12 pl0 pr0 setproductimg">
                                                     <div class="variation-selector-container">
-                                                        <p class="_3QV9M">Variation</p>
+                                                        <p class="variations-title">Variation</p>
                                                         <select class="product-variation">
                                                             <?php foreach($product['variations'] as $variation) { ?>
-                                                            <option value="0"><?php  echo 'per ' . $variation[weight] . ' ' . $variation['unit']; ?></option>
+                                                            <option value="<?php echo $variation[variation_id]; ?>"
+                                                                    data-price="<?php echo $variation[price]; ?>"
+                                                                    data-special="<?php echo $variation[special]; ?>">
+                                                                <?php  echo 'per ' . $variation[weight] . ' ' . $variation['unit']; ?>
+                                                            </option>
                                                             <?php } ?>
                                                         </select>
                                                     </div>
                                                 <div class="_2D2lC">
                                                             <div class="-DeRq">
-                                                                <?= $product['special'];?></div>
+                                                                <?= $product['variations'][0]['special']; ?></div>
                                                         </div>
                                                         <div>
                                                         <div class="_2xqFO">
-                                                                <div class="_3QV9M"><strike><?= $product['price'];?></strike> </div>
+                                                                <div class="_3QV9M"><strike><?= $product['variations'][0]['price'];?></strike> </div>
                                                                     
                                                             </div>
                                                         </div>
@@ -428,7 +432,7 @@
                                                 </section>
                                                 <section class="_7H2LP">
                                                     <div class="-DeRq">
-                                                        <?= $product['special'];?></div>
+                                                        <?= $product['variations'][0]['special']; ?></div>
                                                     <div class="_1I1Wt">
                                                         <!--<div class="_3yoIm" aria-label="Rated 3.83 out of 5">
                                                             <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 16 16" style="vertical-align:middle;color:#fec42d">
@@ -476,8 +480,12 @@
                                                         Sales</div>-->
                                                     <div class="GeySM"><span class="_2g_QW">Unit:</span> <span class="_3TIJT"><?= $product['unit']?></span></div>
                                                 </section>
-                                                <section data-id="<?= $product['product_store_id'] ?>" class="VRlLl"><a class="_3tfm8 _3ePxY  product-detail-bnt product-img product-description open-popup" role="button" data-store=<?= $current_store;?> data-id="<?= $product['product_store_id'] ?>" target="_blank" rel="noopener noreferrer">Preview</a>
-                                                    <div class="pro-qty-addbtn" data-store-id="<?= $current_store ?>"data-variation-id="<?= $product['product_variation_store_id'] ?>" id="action_<?= $product['product_variation_store_id'] ?>">
+                                                <section data-id="<?= $product['product_store_id'] ?>" class="VRlLl">
+                                                    <a class="_3tfm8 _3ePxY  product-detail-bnt product-img product-description open-popup" role="button" data-store=<?= $current_store;?> data-id="<?= $product['product_store_id'] ?>" target="_blank" rel="noopener noreferrer">Preview</a>
+
+                                                    <div class="pro-qty-addbtn" data-store-id="<?= $current_store ?>"
+                                                         data-variation-id="<?= $product['product_variation_store_id'] ?>"
+                                                         id="action_<?= $product['product_variation_store_id'] ?>">
 
 													   <?php require 'action.tpl'; ?>
 									
