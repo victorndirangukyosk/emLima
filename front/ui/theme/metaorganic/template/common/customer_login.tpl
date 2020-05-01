@@ -33,7 +33,7 @@
                         <img src="<?=$logo?>" />
                        
           </a></div>
-			<div class="col-lg-7 col-md-12 col-sm-12 col-xs-12">
+			<div id="main-container" class="col-lg-7 col-md-12 col-sm-12 col-xs-12">
 			<div class="container">
   <div class="formBox level-login">
     <div class="box boxShaddow"></div>
@@ -179,9 +179,11 @@ $('.back').click(function(e){
 $('.regTag').click(function(e){
     e.preventDefault();
     $('.formBox').removeClass('level-reg-revers');
+	$('#main-container').removeClass('col-lg-7').addClass('col-lg-12');
     $('.formBox').toggleClass('level-login').toggleClass('level-reg');
     if(!$('.formBox').hasClass('level-reg')) {
         $('.formBox').addClass('level-reg-revers');
+		$('#main-container').removeClass('col-lg-12').addClass('col-lg-7');
     }
 });
 $('.btn').each(function() {
