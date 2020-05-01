@@ -1205,8 +1205,8 @@ $(document).delegate('#signup', 'click', function() {
                       
                         ///window.location.reload(false);
                         // Redirect To Profile Page
-                        var baseurl = window.location.origin+window.location.pathname;
-                        location.href = baseurl+'?path=account/profileinfo';
+                       // var baseurl = window.location.origin+window.location.pathname;
+                       // location.href = baseurl+'?path=account/profileinfo';
                     } else {
                         $('.signup_otp_div').show();
                         $('#other_signup_div').hide();
