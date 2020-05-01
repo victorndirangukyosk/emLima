@@ -239,7 +239,7 @@ class ControllerProductCategory extends Controller {
 
 			$results = $this->model_assets_category->getCategories($category_id);
 
-			//echo "<pre>";print_r($results);die;
+//			echo "<pre>";print_r($results);die;
 			//top category 
 			if($results){
 				foreach ($results as $result) {

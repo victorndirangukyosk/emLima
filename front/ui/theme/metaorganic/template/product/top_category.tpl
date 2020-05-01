@@ -361,8 +361,9 @@
                                                     <div class="variation-selector-container">
                                                         <p class="_3QV9M">Variation</p>
                                                         <select class="product-variation">
-                                                            <option value="1">Option 1</option>
-                                                            <option value="2">Option 2</option>
+                                                            <?php foreach($product['variations'] as $variation) { ?>
+                                                            <option value="0"><?php  echo 'per ' . $variation[weight] . ' ' . $variation['unit']; ?></option>
+                                                            <?php } ?>
                                                         </select>
                                                     </div>
                                                 <div class="_2D2lC">
