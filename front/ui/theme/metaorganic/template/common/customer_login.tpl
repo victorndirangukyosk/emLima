@@ -22,6 +22,7 @@
 
     <!-- Slider Revolution CSS File -->
 	<link href="<?= $base;?>front/ui/theme/metaorganic/assets/css/login.css" rel="stylesheet">
+	
 	</head>
 	<body>
 	  <div class="container-fluid">
@@ -148,7 +149,13 @@
 	</body>
 	<script src="<?= $base;?>front/ui/theme/mvgv2/js/jquery.min.js"></script>
 	<script src="<?= $base;?>front/ui/theme/mvgv2/js/bootstrap.min.js"></script>
+	 <script src="<?= $base;?>front/ui/theme/metaorganic/javascript/common.js?v=2.0.7" type="text/javascript"></script>
 	<script>
+	
+	function emailClicked() {
+            $('#phone_number').val('');   
+            //$('#email').removeAttr('disabled');     
+        }
 	var inP     =   $('.input-field');
 
 inP.on('blur', function () {
@@ -198,7 +205,7 @@ $('.btn').each(function() {
             $(this).addClass('active');
         }
         
-        setTimeout(function () {
+        /*setTimeout(function () {
             
             inP.val('');
             
@@ -206,7 +213,7 @@ $('.btn').each(function() {
             $('.btn').removeClass('active');
             
         }, 2000);
-         
+        */
         if(inP.val() == 0) {
             inP.parent('.f_row').addClass('shake');
         }

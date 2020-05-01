@@ -120,7 +120,10 @@ class ControllerCommonHome extends Controller {
 	}
 
 	public function index() {
-		
+	
+		/*if(!isset($this->session->data['customer_id'])){
+			$this->response->redirect($this->url->link('account/login/customer'));	
+		}*/
 		$log = new Log('error.log');
 
 		$data['kondutoStatus'] = $this->config->get('config_konduto_status');

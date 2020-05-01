@@ -403,14 +403,19 @@ class ControllerAccountLogin extends Controller {
     }
 	
 	public function customer(){
-        $this->load->language('common/login_modal');
-        $this->load->model('tool/image');
         if ($this->request->server['HTTPS']) {
 			$server = $this->config->get('config_ssl');
 		} else {
 			$server = $this->config->get('config_url');
-		}
-
+        }
+        
+        /*if(isset($this->session->data['customer_id'])){
+            $this->response->redirect($server);
+        }*/
+        
+        $this->load->language('common/login_modal');
+        $this->load->model('tool/image');
+    
 		if (is_file(DIR_IMAGE . $this->config->get('config_icon'))) {
             //$data['icon'] = $server . 'image/' . $this->config->get('config_icon');
             $data['icon'] = $this->model_tool_image->resize($this->config->get('config_icon'),30,30);
