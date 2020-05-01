@@ -74,7 +74,8 @@
 	  <div id="signup-message">
       </div>
 	  <form class="form" action="<?php echo $action; ?>" method="post"  autocomplete="off"  enctype="multipart/form-data" id="sign-up-form">
-        <div class="f_row formui">
+        <div id="other_signup_div">
+		<div class="f_row formui">
           <label><?= $entry_firstname ?></label>
 		  <input id="First Name" name="firstname" type="text" autocomplete="off"  class="input-field input-md" required="">
           <u></u>
@@ -145,17 +146,21 @@
 			</label> 
            <div class="text-danger" id="error_agree" style="display: none">Please agree to terms and conditions</div>			
 		</div>
-         <input type="hidden" name="fax" value="" id="fax-number" />
-         <input type="hidden" name="register_verify_otp" value="" id="register_verify_otp" value="no"/>
-		
-		<div class="f_row formui signup_otp_div" style="display: none">
-          <label><?= $entry_signup_otp ?></label>
-		   <input id="signup_otp" name="signup_otp" type="text"  class="form-control input-md" required="" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 &amp;&amp; event.charCode <= 57" minlength="4" maxlength="4">
-          <u></u>
-        </div>
+       </div>
 		
         <!--<button class="btn-large">Sign Up</button>-->
 		<!-- Button -->
+		<input type="hidden" name="fax" value="" id="fax-number" />
+        <input type="hidden" name="register_verify_otp" value="" id="register_verify_otp" value="no"/>
+		<div class="f_row formui signup_otp_div" style="display: none">
+           <!--<label><?= $entry_signup_otp ?></label>-->
+		   <input id="signup_otp" name="signup_otp" type="text"  placeholder="<?= $entry_signup_otp ?>" class="form-control input-md" required="" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 &amp;&amp; event.charCode <= 57" minlength="4" maxlength="4">
+          <u></u>
+        </div>
+		<p class="forget-password signup_otp_div" style="display: none">
+        <a href="#" id="signup-resend-otp" ><?= $text_resend_otp ?></a>
+        </p>
+		
         <div class="f_row formui">
             <div class="col-md-12">
                 <button id="signup" type="button" class="btn-large">
@@ -164,6 +169,7 @@
                 </button>
             </div>
         </div>
+
       </form>
     </div>
     <a href="#" class="regTag icon-add">

@@ -1190,7 +1190,7 @@ $(document).delegate('#signup', 'click', function() {
             success: function(json) {
                 console.log(json);
                 console.log('signup return');
-
+                $('.reg_bg').css('height','');
 
                 if (json['status']) {
 
@@ -1210,6 +1210,7 @@ $(document).delegate('#signup', 'click', function() {
                     } else {
                         $('.signup_otp_div').show();
                         $('#other_signup_div').hide();
+                        $('.reg_bg').css('height','');
                         // button text to read verify otp
                         $('.signup-modal-text').html(json['text_verify_otp']);
 
@@ -1278,6 +1279,7 @@ $(document).delegate('#signup', 'click', function() {
 
                     $('.signup-modal-text').html(text);
                     $('.signup-loader').hide();
+                    $('.reg_bg').css('height','700px');
                     $('#signup-message').html("<p style='color:red'>"+$error+"</p>");
                 }
             }
