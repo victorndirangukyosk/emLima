@@ -358,6 +358,13 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-md-12 col-sm-12 pl0 pr0 setproductimg">
+                                                    <div class="variation-selector-container">
+                                                        <p class="_3QV9M">Variation</p>
+                                                        <select class="product-variation">
+                                                            <option value="1">Option 1</option>
+                                                            <option value="2">Option 2</option>
+                                                        </select>
+                                                    </div>
                                                 <div class="_2D2lC">
                                                             <div class="-DeRq">
                                                                 <?= $product['special'];?></div>
