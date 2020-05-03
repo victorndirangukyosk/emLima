@@ -762,12 +762,91 @@ background: linear-gradient(90deg, rgba(139,191,60,1) 0%, rgba(132,194,38,1) 48%
 .setfont{
 	position: absolute;
 left: 50px;}
+.formui {
+  width: 48%;
+ display: inline-block;
+}
+.heightset{
+  height:700px
+}
+/* responsive set */
 @media (max-width:1024px) and (min-width:300px) {
 	.login100-morenew{
 		display:none;
 	}
 }
-.formui {
-  width: 48%;
- display: inline-block;
+@media (max-width:740px) and (min-width:660px) {
+  .formui{
+    width: 47% ;
+    display: inline-block;
+    margin-right: 2%;
+  }
+  .formBox .regTag{
+    right: -70px;
+  }
+}
+/* ipad set*/
+@media (max-width:1100px) and (min-width:768px) {
+  .formBox .regTag{
+    right: -68px;
+  }
+  
+}
+/* iphonex set */
+@media (max-width:570px) and (min-width:300px) {
+  #main-container, #main-container .container, .fullwidth-inner, .mb30{
+    padding: 0px !important;
+  }
+  .formBox form{
+    padding: 0px 10px;
+  }
+  .formBox h2{
+    padding: 0px 0px 0px 10px;
+  }
+  .formBox h4{
+    padding: 0px 0px 0px 17px;
+  }
+  .formBox{
+    width: 100%;
+  }
+  .formBox .regTag{
+    right: 3px;
+    top: -70px;
+    line-height: 60px;
+    width: 60px;
+    height: 60px;
+    font-size: 13px;
+  }
+  .formui{
+    width:100%;
+  }
+  .formBox .reg_bg{
+    min-height: 765px;
+  }
+  .formBox p {
+    font-size: 14px;
+    line-height: 27px;
+    margin-bottom: 10px;
+    color: #696969;
+    position: relative;
+    padding-left: 10px;
+}
+  .formBox.level-reg .regTag{
+    animation-fill-mode: backwards;
+    animation:inherit;
+  }
+  .formBox.level-reg-revers .regTag{
+    animation-fill-mode:backwards;
+    animation: none;
+  }
+  .fontset{
+    transform: rotate(0deg); 
+    margin-top: 30px;
+  }
+  .heightset{
+    height:935px;
+  }
+  .setfont{
+    left: 44px;
+  }
 }

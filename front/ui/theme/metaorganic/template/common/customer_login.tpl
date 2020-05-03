@@ -184,9 +184,9 @@
 				</div>
 			</div>
 			<div class="col-lg-10 mb30">
-			<div class="col-lg-4 pull-left"><i class="fa fa-share-square-o" aria-hidden="true"></i> <span>info@kwikbasket.com</span></div>
-			<div class="col-lg-3 pull-left"><i class="fa fa-phone" aria-hidden="true"></i> <span>+254 738770186</span></div>
-			<div class="col-lg-5 pull-left"><i class="fa fa-address-card" aria-hidden="true"></i> <span class="setfont">PO Box 57666-00200, Heritan House Woodlands Road, Nairobi</span></div>
+			<div class="col-lg-4 col-xs-12 pull-left"><i class="fa fa-share-square-o" aria-hidden="true"></i> <span>info@kwikbasket.com</span></div>
+			<div class="col-lg-3 col-xs-12 pull-left"><i class="fa fa-phone" aria-hidden="true"></i> <span>+254 738770186</span></div>
+			<div class="col-lg-5 col-xs-12 pull-left"><i class="fa fa-address-card" aria-hidden="true"></i> <span class="setfont">PO Box 57666-00200, Heritan House Woodlands Road, Nairobi</span></div>
 			</div>
 		</div>
 		</div>
