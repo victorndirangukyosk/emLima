@@ -1166,6 +1166,7 @@ $(document).delegate('#signup', 'click', function() {
     if($('input[name="agree_checkbox"]:checked').length)
     {
         $('span.text-danger').remove();
+        $( ".formui").removeClass('error-animation');
         $('#error_agree').hide();
     
         var text = $('.signup-modal-text').html();
@@ -1235,25 +1236,30 @@ $(document).delegate('#signup', 'click', function() {
                     if(json['error_email']){
                         //$error += json['error_email']+'<br/>';
                         $( "input[name='email']" ).after('<span class="text-danger">'+json['error_email']+'</span>');
+                        $( "input[name='email']" ).parent().addClass('error-animation');
                     }
                     if(json['error_firstname']){
                         //$error += json['error_firstname']+'<br/>';
                        $( "input[name='firstname']" ).after('<span class="text-danger">'+json['error_firstname']+'</span>');
+                       $( "input[name='firstname']" ).parent().addClass('error-animation');
                     }
                     if(json['error_telephone_exists']){
                         //$error += json['error_telephone_exists']+'<br/>';
                         $( "input[name='telephone']" ).after('<span class="text-danger">'+json['error_telephone_exists']+'</span>');
+                        $( "input[name='telephone']" ).parent().addClass('error-animation');
                     }
 
                     if(json['error_lastname']){
                         //$error += json['error_lastname']+'<br/>';
                         //$error += json['error_lastname']+'<br/>';
                         $( "input[name='lastname']" ).after('<span class="text-danger">'+json['error_lastname']+'</span>');
+                        $( "input[name='lastname']" ).parent().addClass('error-animation');
                     }
 
                     if(json['error_telephone']){
                         //$error += json['error_telephone']+'<br/>';
                         $( "input[name='telephone']" ).after('<span class="text-danger">'+json['error_telephone']+'</span>');
+                        $( "input[name='telephone']" ).parent().addClass('error-animation');
                     }
                     if(json['error_dob']){
                         $error += json['error_dob']+'<br/>';
@@ -1268,30 +1274,36 @@ $(document).delegate('#signup', 'click', function() {
                     if(json['error_password']){
                         //$error += json['error_password']+'<br/>';
                         $( "input[name='password']" ).after('<span class="text-danger">'+json['error_password']+'</span>');
+                        $( "input[name='password']" ).parent().addClass('error-animation');
                     }
 
                     if(json['error_confirm']){
                         //$error += json['error_confirm']+'<br/>';
                         $( "input[name='confirm']" ).after('<span class="text-danger">'+json['error_confirm']+'</span>');
+                        $( "input[name='confirm']" ).parent().addClass('error-animation');
                     }
                     if(json['error_match_password']){
                         //$error += json['error_match_password']+'<br/>';
                         $( "input[name='confirm']" ).after('<span class="text-danger">'+json['error_match_password']+'</span>');
+                        $( "input[name='confirm']" ).parent().addClass('error-animation');
                     }
 
                     if(json['error_company_name']){
                         //$error += json['error_company_name_address']+'<br/>';
                         $( "input[name='company_name']" ).after('<span class="text-danger">'+json['error_company_name']+'</span>');
+                        $( "input[name='company_name']" ).parent().addClass('error-animation');
                     }
 
                     if(json['error_company_address']){
                         //$error += json['error_company_name_address']+'<br/>';
                         $( "input[name='company_address']" ).after('<span class="text-danger">'+json['error_company_address']+'</span>');
+                        $( "input[name='company_address']" ).parent().addClass('error-animation');
                     }
 
                     if(json['error_company_name_address']){
                         //$error += json['error_company_name_address']+'<br/>';
                         $( "input[name='company_name']" ).after('<span class="text-danger">'+json['error_company_name_address']+'</span>');
+                        $( "input[name='company_name']" ).parent().addClass('error-animation');
                     }
 
                     /*if(json['error_warning']){
