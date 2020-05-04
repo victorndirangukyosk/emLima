@@ -230,12 +230,14 @@ $('.back').click(function(e){
 
 $('.regTag').click(function(e){
     e.preventDefault();
+	 $('.login100-more').hide();
 	$('span.text-danger').remove();
 	$( ".formui").removeClass('error-animation');
     $('.formBox').removeClass('level-reg-revers');
 	$('#main-container').removeClass('col-lg-7').addClass('col-lg-12');
     $('.formBox').toggleClass('level-login').toggleClass('level-reg');
     if(!$('.formBox').hasClass('level-reg')) {
+	    $('.login100-more').show();
         $('.formBox').addClass('level-reg-revers');
 		$('#main-container').removeClass('col-lg-12').addClass('col-lg-7');
     }
