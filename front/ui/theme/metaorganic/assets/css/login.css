@@ -167,15 +167,19 @@ h6 {
   margin-top: 0px;
   position: relative;
 }
+.error-animation{
+  margin-bottom: 20px !important
+}
 .formBox .error-animation u:before {
-  content: '';
+  content: "";
   display: block;
   height: 100%;
   width: 0;
   background-color: #ed2553;
-  transition: all 0.35s cubic-bezier(0.35, 0.33, 0.84, 0.85);
+  transition: all 0.75s cubic-bezier(0.35, 0.33, 0.84, 0.85);
   border: 2px solid #ed2553;
   width: 100%;
+ 
 }
 a:hover{
 	text-decoration:none;
@@ -431,9 +435,13 @@ background: linear-gradient(90deg, rgba(139,191,60,1) 0%, rgba(132,194,38,1) 48%
   transform: rotate(45deg);
   line-height: 0px;
 }
+.h1, .h2, .h3, h1, h2, h3 {
+  margin-top: 10px;
+  margin-bottom: 0px;
+}
 .md-checkbox {
   position: relative;
-  margin: 1em 0;
+  margin: 1.5em 0 1em;
   text-align: left;
 }
 .md-checkbox.md-checkbox-inline {
@@ -782,13 +790,17 @@ left: 50px;}
  display: inline-flex;
 }
 .heightset{
-  height:500px
+  height:540px
 }
 .text-danger {
-  color: #ff0000;
+  color: #fff;
   float: none;
   position: absolute;
-  margin-top: 46px;
+  margin-top: 50px;
+}
+.fa-star:before {
+  margin-right: 10px;
+  color: #ff0000;
 }
 /* responsive set */
 @media (max-width:1024px) and (min-width:300px) {
@@ -797,6 +809,9 @@ left: 50px;}
   }
   .text-danger{
     font-size: 12px;
+  }
+  .setfont{
+    left:43px;
   }
 }
 @media (max-width:740px) and (min-width:660px) {
@@ -808,17 +823,25 @@ left: 50px;}
   .formBox .regTag{
     right: -70px;
   }
+  .mb20{
+    margin-bottom: 10px;
+  }
 }
 /* ipad set*/
 @media (max-width:1100px) and (min-width:768px) {
   .formBox .regTag{
     right: -68px;
   }
-  
+  .mb20{
+    margin-bottom: 10px;
+  }
 }
 @media (max-width:650px) and (min-width:580px) {
   .formBox .regTag{
     right: -64px
+  }
+  .mb20{
+    margin-bottom: 10px;
   }
 }
 /* iphonex set */
@@ -880,5 +903,11 @@ left: 50px;}
   }
   .text-danger{
     font-size: 12px;
+  }
+  .mb20{
+    margin-bottom: 10px;
+  }
+  .setfont{
+    left:43px;
   }
 }
