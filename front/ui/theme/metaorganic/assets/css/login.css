@@ -108,8 +108,8 @@ h6 {
 }
 .formBox .f_row {
   position: relative;
-  margin-bottom: 15px;
-  height: 44px;
+  margin-bottom: 10px;
+  height:44px;
 }
 .formBox .f_row.shake {
   animation: shake 0.4s linear;
@@ -160,6 +160,21 @@ h6 {
   transform: translate(0px, -30px) scale(0.8);
 }
 .formBox .f_row.focus u:before {
+  width: 100%;
+}
+
+#error_agree{
+  margin-top: 0px;
+  position: relative;
+}
+.formBox .error-animation u:before {
+  content: '';
+  display: block;
+  height: 100%;
+  width: 0;
+  background-color: #ed2553;
+  transition: all 0.35s cubic-bezier(0.35, 0.33, 0.84, 0.85);
+  border: 2px solid #ed2553;
   width: 100%;
 }
 a:hover{
@@ -234,7 +249,7 @@ select option{
 background: linear-gradient(90deg, rgba(139,191,60,1) 0%, rgba(132,194,38,1) 48%, rgba(169,240,63,1) 100%);
   position: absolute;
   width: 900px;
-  min-height: 500px;
+  min-height: 480px;
   top: 0px;
   transform-origin: 100% 40%;
   transform: scale(0);
@@ -764,16 +779,25 @@ background: linear-gradient(90deg, rgba(139,191,60,1) 0%, rgba(132,194,38,1) 48%
 left: 50px;}
 .formui {
   width: 48%;
- display: inline-block;
+ display: inline-flex;
 }
 .heightset{
-  height:700px
+  height:500px
+}
+.text-danger {
+  color: #ff0000;
+  float: none;
+  position: absolute;
+  margin-top: 46px;
 }
 /* responsive set */
 @media (max-width:1024px) and (min-width:300px) {
 	.login100-morenew{
 		display:none;
-	}
+  }
+  .text-danger{
+    font-size: 12px;
+  }
 }
 @media (max-width:740px) and (min-width:660px) {
   .formui{
@@ -791,6 +815,11 @@ left: 50px;}
     right: -68px;
   }
   
+}
+@media (max-width:650px) and (min-width:580px) {
+  .formBox .regTag{
+    right: -64px
+  }
 }
 /* iphonex set */
 @media (max-width:570px) and (min-width:300px) {
@@ -844,9 +873,12 @@ left: 50px;}
     margin-top: 30px;
   }
   .heightset{
-    height:935px;
+    height:780px;
   }
   .setfont{
     left: 44px;
+  }
+  .text-danger{
+    font-size: 12px;
   }
 }
