@@ -230,6 +230,7 @@ $('.back').click(function(e){
 
 $('.regTag').click(function(e){
     e.preventDefault();
+	$('span.text-danger').remove();
     $('.formBox').removeClass('level-reg-revers');
 	$('#main-container').removeClass('col-lg-7').addClass('col-lg-12');
     $('.formBox').toggleClass('level-login').toggleClass('level-reg');

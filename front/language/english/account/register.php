@@ -50,9 +50,9 @@ $_['entry_confirm']        = 'Password Confirm';
 // Error
 $_['error_exists']         = 'This E-Mail is already registered!';
 $_['error_exists_email']         = 'Email already exists with Phone no. %s';
-
 $_['error_company_name_address']      = 'Company Name and Address is required!';
-
+$_['error_company_name']      = 'Company Name is required!';
+$_['error_company_address']      = 'Address is required!';
 $_['error_telephone_exists']         = 'This number is already registered!';
 $_['error_firstname']      = 'First Name must be between 1 and 32 characters!';
 $_['error_lastname']       = 'Last Name must be between 1 and 32 characters!';

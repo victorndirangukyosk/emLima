@@ -304,6 +304,19 @@ class ControllerAccountRegister extends Controller {
 				$data['error_company_name_address'] = false;
 			}
 
+			/*if ( isset( $this->error['company_name'] ) ) {
+				$data['error_company_name'] = $this->error['company_name'];
+			} else {
+				$data['error_company_name'] = false;
+			}
+
+			if ( isset( $this->error['company_address'] ) ) {
+				$data['error_company_address'] = $this->error['company_address'];
+			} else {
+				$data['error_company_address'] = false;
+			}*/
+			
+
 			if ( isset( $this->error['telephone'] ) ) {
 				$data['error_telephone'] = $this->error['telephone'];
 			} else {
@@ -554,9 +567,18 @@ class ControllerAccountRegister extends Controller {
             $this->error['telephone_exists'] = $this->language->get( 'error_telephone_exists' );
         }
 
-        if (  $this->request->post['customer_group_id']  > 1 && ( ( utf8_strlen( trim( $this->request->post['company_name'] ) ) < 1 ) || ( utf8_strlen( trim( $this->request->post['company_address'] ) ) < 1 ) ) ) {
+		/*if (  $this->request->post['customer_group_id']  > 1 && ( ( utf8_strlen( trim( $this->request->post['company_name'] ) ) < 1 ) || ( utf8_strlen( trim( $this->request->post['company_address'] ) ) < 1 ) ) ) {
 			$this->error['company_name_address'] = $this->language->get( 'error_company_name_address' );
+		}*/
+
+        if (( utf8_strlen( trim( $this->request->post['company_name'] ) ) < 1 )) {
+			$this->error['company_name'] = $this->language->get( 'error_company_name' );
 		}
+
+		if (( utf8_strlen( trim( $this->request->post['company_address'] ) ) < 1 )) {
+			$this->error['company_address'] = $this->language->get( 'error_company_address' );
+		}
+
 
 
 
@@ -691,6 +713,17 @@ class ControllerAccountRegister extends Controller {
 				$data['error_company_name_address'] = false;
 			}
 
+			if ( isset( $this->error['company_name'] ) ) {
+				$data['error_company_name'] = $this->error['company_name'];
+			} else {
+				$data['error_company_name'] = false;
+			}
+
+			if ( isset( $this->error['company_address'] ) ) {
+				$data['error_company_address'] = $this->error['company_address'];
+			} else {
+				$data['error_company_address'] = false;
+			}
 
 			if ( isset( $this->error['telephone'] ) ) {
 				$data['error_telephone'] = $this->error['telephone'];

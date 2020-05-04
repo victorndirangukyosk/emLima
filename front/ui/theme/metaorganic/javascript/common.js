@@ -1163,9 +1163,9 @@ $(document).delegate('#signup', 'click', function() {
 
     console.log($('#register_verify_otp').val());
     console.log($('input[name="agree_checkbox"]:checked').length);
-
     if($('input[name="agree_checkbox"]:checked').length)
     {
+        $('span.text-danger').remove();
         $('#error_agree').hide();
     
         var text = $('.signup-modal-text').html();
@@ -1233,21 +1233,27 @@ $(document).delegate('#signup', 'click', function() {
                     $error = '';
 
                     if(json['error_email']){
-                        $error += json['error_email']+'<br/>';
+                        //$error += json['error_email']+'<br/>';
+                        $( "input[name='email']" ).after('<span class="text-danger">'+json['error_email']+'</span>');
                     }
                     if(json['error_firstname']){
-                        $error += json['error_firstname']+'<br/>';
+                        //$error += json['error_firstname']+'<br/>';
+                       $( "input[name='firstname']" ).after('<span class="text-danger">'+json['error_firstname']+'</span>');
                     }
                     if(json['error_telephone_exists']){
-                        $error += json['error_telephone_exists']+'<br/>';
+                        //$error += json['error_telephone_exists']+'<br/>';
+                        $( "input[name='telephone']" ).after('<span class="text-danger">'+json['error_telephone_exists']+'</span>');
                     }
 
                     if(json['error_lastname']){
                         //$error += json['error_lastname']+'<br/>';
-                        $error += json['error_lastname']+'<br/>';
+                        //$error += json['error_lastname']+'<br/>';
+                        $( "input[name='lastname']" ).after('<span class="text-danger">'+json['error_lastname']+'</span>');
                     }
+
                     if(json['error_telephone']){
-                        $error += json['error_telephone']+'<br/>';
+                        //$error += json['error_telephone']+'<br/>';
+                        $( "input[name='telephone']" ).after('<span class="text-danger">'+json['error_telephone']+'</span>');
                     }
                     if(json['error_dob']){
                         $error += json['error_dob']+'<br/>';
@@ -1258,19 +1264,34 @@ $(document).delegate('#signup', 'click', function() {
                     if(json['error_tax']){
                         $error += json['error_tax']+'<br/>';
                     }
+
                     if(json['error_password']){
-                        $error += json['error_password']+'<br/>';
+                        //$error += json['error_password']+'<br/>';
+                        $( "input[name='password']" ).after('<span class="text-danger">'+json['error_password']+'</span>');
                     }
 
                     if(json['error_confirm']){
-                        $error += json['error_confirm']+'<br/>';
+                        //$error += json['error_confirm']+'<br/>';
+                        $( "input[name='confirm']" ).after('<span class="text-danger">'+json['error_confirm']+'</span>');
                     }
                     if(json['error_match_password']){
-                        $error += json['error_match_password']+'<br/>';
+                        //$error += json['error_match_password']+'<br/>';
+                        $( "input[name='confirm']" ).after('<span class="text-danger">'+json['error_match_password']+'</span>');
+                    }
+
+                    if(json['error_company_name']){
+                        //$error += json['error_company_name_address']+'<br/>';
+                        $( "input[name='company_name']" ).after('<span class="text-danger">'+json['error_company_name']+'</span>');
+                    }
+
+                    if(json['error_company_address']){
+                        //$error += json['error_company_name_address']+'<br/>';
+                        $( "input[name='company_address']" ).after('<span class="text-danger">'+json['error_company_address']+'</span>');
                     }
 
                     if(json['error_company_name_address']){
-                        $error += json['error_company_name_address']+'<br/>';
+                        //$error += json['error_company_name_address']+'<br/>';
+                        $( "input[name='company_name']" ).after('<span class="text-danger">'+json['error_company_name_address']+'</span>');
                     }
 
                     /*if(json['error_warning']){
@@ -1280,7 +1301,7 @@ $(document).delegate('#signup', 'click', function() {
                     $('.signup-modal-text').html(text);
                     $('.signup-loader').hide();
                     $('.reg_bg').addClass('heightset');
-                    $('#signup-message').html("<p style='color:red'>"+$error+"</p>");
+                    //$('#signup-message').html("<p style='color:red'>"+$error+"</p>");
                 }
             }
         });
