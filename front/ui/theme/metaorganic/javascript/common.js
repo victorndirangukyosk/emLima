@@ -1229,37 +1229,37 @@ $(document).delegate('#signup', 'click', function() {
                     /*if($('#register_verify_otp').val() == 'yes') {
                         $('#register_verify_otp').val('no');     
                     }*/
-                    
+                    var $form = $("form[id='sign-up-form']")
 
                     $error = '';
 
                     if(json['error_email']){
                         //$error += json['error_email']+'<br/>';
-                        $( "input[name='email']" ).after('<span class="text-danger">'+json['error_email']+'</span>');
-                        $( "input[name='email']" ).parent().addClass('error-animation');
+                        $form.find( "input[name='email']" ).after('<span class="text-danger">'+json['error_email']+'</span>');
+                        $form.find( "input[name='email']" ).parent().addClass('error-animation');
                     }
                     if(json['error_firstname']){
                         //$error += json['error_firstname']+'<br/>';
-                       $( "input[name='firstname']" ).after('<span class="text-danger">'+json['error_firstname']+'</span>');
-                       $( "input[name='firstname']" ).parent().addClass('error-animation');
+                        $form.find( "input[name='firstname']" ).after('<span class="text-danger">'+json['error_firstname']+'</span>');
+                        $form.find( "input[name='firstname']" ).parent().addClass('error-animation');
                     }
                     if(json['error_telephone_exists']){
                         //$error += json['error_telephone_exists']+'<br/>';
-                        $( "input[name='telephone']" ).after('<span class="text-danger">'+json['error_telephone_exists']+'</span>');
-                        $( "input[name='telephone']" ).parent().addClass('error-animation');
+                        $form.find( "input[name='telephone']" ).after('<span class="text-danger">'+json['error_telephone_exists']+'</span>');
+                        $form.find( "input[name='telephone']" ).parent().addClass('error-animation');
                     }
 
                     if(json['error_lastname']){
                         //$error += json['error_lastname']+'<br/>';
                         //$error += json['error_lastname']+'<br/>';
-                        $( "input[name='lastname']" ).after('<span class="text-danger">'+json['error_lastname']+'</span>');
-                        $( "input[name='lastname']" ).parent().addClass('error-animation');
+                        $form.find( "input[name='lastname']" ).after('<span class="text-danger">'+json['error_lastname']+'</span>');
+                        $form.find( "input[name='lastname']" ).parent().addClass('error-animation');
                     }
 
                     if(json['error_telephone']){
                         //$error += json['error_telephone']+'<br/>';
-                        $( "input[name='telephone']" ).after('<span class="text-danger">'+json['error_telephone']+'</span>');
-                        $( "input[name='telephone']" ).parent().addClass('error-animation');
+                        $form.find( "input[name='telephone']" ).after('<span class="text-danger">'+json['error_telephone']+'</span>');
+                        $form.find( "input[name='telephone']" ).parent().addClass('error-animation');
                     }
                     if(json['error_dob']){
                         $error += json['error_dob']+'<br/>';
@@ -1273,37 +1273,37 @@ $(document).delegate('#signup', 'click', function() {
 
                     if(json['error_password']){
                         //$error += json['error_password']+'<br/>';
-                        $( "input[name='password']" ).after('<span class="text-danger">'+json['error_password']+'</span>');
-                        $( "input[name='password']" ).parent().addClass('error-animation');
+                        $form.find( "input[name='password']" ).after('<span class="text-danger">'+json['error_password']+'</span>');
+                        $form.find( "input[name='password']" ).parent().addClass('error-animation');
                     }
 
                     if(json['error_confirm']){
                         //$error += json['error_confirm']+'<br/>';
-                        $( "input[name='confirm']" ).after('<span class="text-danger">'+json['error_confirm']+'</span>');
-                        $( "input[name='confirm']" ).parent().addClass('error-animation');
+                        $form.find( "input[name='confirm']" ).after('<span class="text-danger">'+json['error_confirm']+'</span>');
+                        $form.find( "input[name='confirm']" ).parent().addClass('error-animation');
                     }
                     if(json['error_match_password']){
                         //$error += json['error_match_password']+'<br/>';
-                        $( "input[name='confirm']" ).after('<span class="text-danger">'+json['error_match_password']+'</span>');
-                        $( "input[name='confirm']" ).parent().addClass('error-animation');
+                        $form.find( "input[name='confirm']" ).after('<span class="text-danger">'+json['error_match_password']+'</span>');
+                        $form.find( "input[name='confirm']" ).parent().addClass('error-animation');
                     }
 
                     if(json['error_company_name']){
                         //$error += json['error_company_name_address']+'<br/>';
-                        $( "input[name='company_name']" ).after('<span class="text-danger">'+json['error_company_name']+'</span>');
-                        $( "input[name='company_name']" ).parent().addClass('error-animation');
+                        $form.find( "input[name='company_name']" ).after('<span class="text-danger">'+json['error_company_name']+'</span>');
+                        $form.find( "input[name='company_name']" ).parent().addClass('error-animation');
                     }
 
                     if(json['error_company_address']){
                         //$error += json['error_company_name_address']+'<br/>';
-                        $( "input[name='company_address']" ).after('<span class="text-danger">'+json['error_company_address']+'</span>');
-                        $( "input[name='company_address']" ).parent().addClass('error-animation');
+                        $form.find( "input[name='company_address']" ).after('<span class="text-danger">'+json['error_company_address']+'</span>');
+                        $form.find( "input[name='company_address']" ).parent().addClass('error-animation');
                     }
 
                     if(json['error_company_name_address']){
                         //$error += json['error_company_name_address']+'<br/>';
-                        $( "input[name='company_name']" ).after('<span class="text-danger">'+json['error_company_name_address']+'</span>');
-                        $( "input[name='company_name']" ).parent().addClass('error-animation');
+                        $form.find( "input[name='company_name']" ).after('<span class="text-danger">'+json['error_company_name_address']+'</span>');
+                        $form.find( "input[name='company_name']" ).parent().addClass('error-animation');
                     }
 
                     /*if(json['error_warning']){
