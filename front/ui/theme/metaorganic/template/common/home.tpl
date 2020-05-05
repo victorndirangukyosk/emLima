@@ -321,18 +321,28 @@
                                                         
                                                         </div>
                                                     <a class="_2Pk9X" tabindex="0"><?=$product['name']?></a>
-                                                        <br>
-                                                       <a class="R8zaM">( per <?=$product['unit']?> )</a>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-12 col-sm-12 pl0 pr0 setproductimg">
+                                                  <div class="variation-selector-container">
+                                                      <p class="variations-title">Variation</p>
+                                                      <select class="product-variation">
+                                                      <?php foreach($product['variations'] as $variation) { ?>
+                                                      <option value="<?php echo $variation[variation_id]; ?>"
+                                                      data-price="<?php echo $variation[price]; ?>"
+                                                      data-special="<?php echo $variation[special]; ?>">
+                                                      <?php  echo 'per ' . $variation[weight] . ' ' . $variation['unit']; ?>
+                                                      </option>
+                                                      <?php } ?>
+                                                      </select>
+                                                  </div>
                                                 <div class="_2D2lC">
                                                             <div class="-DeRq">
-                                                                <?= $product['special'];?></div>
+                                                                <?= $product['variations'][0]['special'];?></div>
                                                         </div>
                                                         <div>
                                                         <div class="_2xqFO">
-                                                                <div class="_3QV9M"><strike><?= $product['price'];?></strike> </div>       
+                                                                <div class="_3QV9M"><strike><?= $product['variations'][0]['price'];?></strike> </div>
                                                             </div>
                                                         </div>
                                                         <div class="_31alT"><a class="_3tfm8 _3ePxY  product-detail-bnt product-img product-description open-popup" role="button" data-store="<?= ACTIVE_STORE_ID;?>" data-id="<?= $product['product_store_id'] ?>" target="_blank" rel="noopener noreferrer">Preview</a>
@@ -356,7 +366,7 @@
                                                 </section>
                                                 <section class="_7H2LP">
                                                     <div class="-DeRq">
-                                                        <?= $product['special'];?></div>
+                                                        <?= $product['variations'][0]['special'];?></div>
                                                     <div class="_1I1Wt">
                                                         
                                                     <div class="GeySM"><span class="_2g_QW">Unit:</span> <span class="_3TIJT"><?= $product['unit']?></span></div>
@@ -424,18 +434,18 @@
 							<?php } ?>
 
 							<div class="product-price">
-							<?php if ( $product['special'] == '0.00' || empty(trim($product['special']))) { ?>
+							<?php if ( $product['variations'][0]['special'] == '0.00' || empty(trim($product['variations'][0]['special']))) { ?>
 							<span class="price-cancelled open-popup" data-id="<?= $product['product_store_id'] ?>" style="display: none";>
 							</span>
 							<span class="price open-popup" data-id="<?= $product['product_store_id'] ?>">
-							<?php echo $product['price']; ?>
+							<?php echo $product['variations'][0]['price']; ?>
 							</span>
 							<?php } else { ?>
 							<span class="price-cancelled open-popup" data-id="<?= $product['product_store_id'] ?>">
-							<?php echo $product['price']; ?>
+							<?php echo $product['variations'][0]['price']; ?>
 							</span>
 							<span class="price open-popup" data-id="<?= $product['product_store_id'] ?>">
-							<?php echo $product['special']; ?>
+							<?php echo $product['variations'][0]['special']; ?>
 							</span>
 							<?php } ?>
 							<div class="pro-qty-addbtn" data-store-id="<?= $current_store ?>" data-variation-id="<?= $product['store_product_variation_id'] ?>" id="action_<?= $product['product_store_id'] ?>">
