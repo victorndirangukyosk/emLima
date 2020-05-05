@@ -555,18 +555,18 @@
 							<?php } ?>
 
 							<div class="product-price">
-							<?php if ( $product['special'] == '0.00' || empty(trim($product['special']))) { ?>
+							<?php if ( $product['variations'][0]['special'] == '0.00' || empty(trim($product['variations'][0]['special']))) { ?>
 							<span class="price-cancelled open-popup" data-id="<?= $product['product_store_id'] ?>" style="display: none";>
 							</span>
 							<span class="price open-popup" data-id="<?= $product['product_store_id'] ?>">
-							<?php echo $product['price']; ?>
+							<?php echo $product['variations'][0]['price']; ?>
 							</span>
 							<?php } else { ?>
 							<span class="price-cancelled open-popup" data-id="<?= $product['product_store_id'] ?>">
-							<?php echo $product['price']; ?>
+							<?php echo $product['variations'][0]['price']; ?>
 							</span>
 							<span class="price open-popup" data-id="<?= $product['product_store_id'] ?>">
-							<?php echo $product['special']; ?>
+							<?php echo $product['variations'][0]['special']; ?>
 							</span>
 							<?php } ?>
 							<div class="pro-qty-addbtn" data-store-id="<?= $current_store ?>" data-variation-id="<?= $product['store_product_variation_id'] ?>" id="action_<?= $product['product_store_id'] ?>">
