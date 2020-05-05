@@ -144,7 +144,7 @@
               <strong><?= $text_privacy_policy?></strong>
              </a>
 			</label> 
-           <div class="text-danger" id="error_agree" style="display: none">Please agree to terms and conditions</div>			
+           <div class="text-danger" id="error_agree" style="display: none"><i class="fa fa-star" aria-hidden="true"></i>Please agree to terms and conditions</div>			
 		</div>
        </div>
 		
@@ -183,10 +183,10 @@
 				<img src="<?= $base;?>front/ui/theme/metaorganic/assets/images/bg-01.png">
 				</div>
 			</div>
-			<div class="col-lg-10 mb30">
-			<div class="col-lg-4 col-xs-12 pull-left"><i class="fa fa-share-square-o" aria-hidden="true"></i> <span>info@kwikbasket.com</span></div>
-			<div class="col-lg-3 col-xs-12 pull-left"><i class="fa fa-phone" aria-hidden="true"></i> <span>+254 738770186</span></div>
-			<div class="col-lg-5 col-xs-12 pull-left"><i class="fa fa-address-card" aria-hidden="true"></i> <span class="setfont">PO Box 57666-00200, Heritan House Woodlands Road, Nairobi</span></div>
+			<div class="col-lg-10 mb30 col-xs-12">
+			<div class="col-lg-4 col-xs-12 pull-left mb20"><i class="fa fa-share-square-o" aria-hidden="true"></i> <span>info@kwikbasket.com</span></div>
+			<div class="col-lg-3 col-xs-12 pull-left mb20"><i class="fa fa-phone" aria-hidden="true"></i> <span>+254 738770186</span></div>
+			<div class="col-lg-5 col-xs-12 pull-left mb20"><i class="fa fa-address-card" aria-hidden="true"></i> <span class="setfont">PO Box 57666-00200, Heritan House Woodlands Road, Nairobi</span></div>
 			</div>
 		</div>
 		</div>
