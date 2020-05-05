@@ -19043,3 +19043,19 @@ address {
   text-align: left;
   padding: 60px 10px 30px;
 }
+
+.variations-title {
+    line-height: 20px;
+    color: hsl(0, 0%, 60%);
+    font-size: 12px;
+}
+
+.variation-selector-container {
+    margin: 0 10px 10px 10px;
+}
+
+.product-variation {
+    padding: 0;
+    border-radius: 0;
+    width: 100%;
+}

@@ -246,7 +246,7 @@ class ControllerProductStore extends Controller {
                 'thumb' => $image
             );
 
-            //echo "<pre>";print_r($data['categories']);die;
+//            echo "<pre>";print_r($data['categories']);die;
         }
     
 
@@ -688,14 +688,14 @@ class ControllerProductStore extends Controller {
 
         $results = $this->model_assets_product->getProducts( $filter_data );
 
+//        echo '<pre>';print_r($results); die;
+
         $data['products'] = array();
 
-        //echo "<pre>";print_r($results);die;
         foreach ( $results as $result ) {
 
             // if qty less then 1 dont show product 
-            if($result['quantity'] <= 0)
-                continue;
+            if($result['quantity'] <= 0) continue;
 
             if ( file_exists( DIR_IMAGE .$result['image'] ) ) {
                 $image = $this->model_tool_image->resize( $result['image'], $this->config->get( 'config_image_product_width' ), $this->config->get( 'config_image_product_height' ) );
@@ -704,9 +704,6 @@ class ControllerProductStore extends Controller {
             }
 
             //if category discount define override special price
-
-            
-
             $discount = '';
 
             $s_price = 0;
@@ -776,28 +773,50 @@ class ControllerProductStore extends Controller {
                 $percent_off = (($o_price - $s_price) / $o_price) * 100;
             }
 
-            $data['products'][] = array(
-                'key' => $key,
-                'qty_in_cart' => $qty_in_cart,
-                'variations' => $this->model_assets_product->getVariations( $result['product_store_id'] ),
-                'store_product_variation_id' => 0,
-                'product_id' => $result['product_id'],
-                'product_store_id'=> $result['product_store_id'],
-                'default_variation_name' => $result['default_variation_name'],
-                'thumb' => $image,
-                'name' => $name,
-                'unit' => $result['unit'],
-                'description' => utf8_substr( strip_tags( html_entity_decode( $result['description'], ENT_QUOTES, 'UTF-8' ) ), 0, $this->config->get( 'config_product_description_length' ) ) . '..',
-                'price' => $price,
-                'special' => $special_price,
-                'percent_off' => number_format($percent_off,0),
-                'tax' => $result['tax_percentage'],
-                'minimum' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity'],
-                'rating' => 0,
-                'href' => $this->url->link( 'product/product',  '&product_store_id=' . $result['product_store_id'] )
-            );
-        }
+            // Avoid adding duplicates for similar products with different variations
 
+            $productNames = array_column($data['products'], 'name');
+            if(array_search($result['name'], $productNames) !== false) {
+                // Add variation to existing product
+                $productIndex = array_search($result['name'], $productNames);
+                // TODO: Check for product variation duplicates
+                $data['products'][$productIndex][variations][] =  array(
+                    'variation_id' => $result['product_store_id'],
+                    'unit' => $result['unit'],
+                    'weight' => floatval($result['weight']),
+                    'price' => $price,
+                    'special' => $special_price
+                );
+            } else {
+                // Add as new product
+                $data['products'][] = array(
+                    'key' => $key,
+                    'qty_in_cart' => $qty_in_cart,
+                    'variations' => $this->model_assets_product->getVariations( $result['product_store_id'] ),
+                    'store_product_variation_id' => 0,
+                    'product_id' => $result['product_id'],
+                    'product_store_id'=> $result['product_store_id'],
+                    'default_variation_name' => $result['default_variation_name'],
+                    'thumb' => $image,
+                    'name' => $name,
+                    'variations' => array(
+                        array(
+                            'variation_id' => $result['product_store_id'],
+                            'unit' => $result['unit'],
+                            'weight' => floatval($result['weight']),
+                            'price' => $price,
+                            'special' => $special_price
+                        )
+                    ),
+                    'description' => utf8_substr( strip_tags( html_entity_decode( $result['description'], ENT_QUOTES, 'UTF-8' ) ), 0, $this->config->get( 'config_product_description_length' ) ) . '..',
+                    'percent_off' => number_format($percent_off,0),
+                    'tax' => $result['tax_percentage'],
+                    'minimum' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity'],
+                    'rating' => 0,
+                    'href' => $this->url->link( 'product/product',  '&product_store_id=' . $result['product_store_id'] )
+                );
+            }
+        }
         return $data['products'];
     }
 

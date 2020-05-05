@@ -298,7 +298,7 @@ var cart = {
 	'add': function(product_id, quantity, variation_id, store_id=null) {
 
 		
-		console.log("add");
+		console.log("add variation id", variation_id);
 		$.ajax({
 			url: 'index.php?path=checkout/cart/add',
 			type: 'post',

@@ -470,9 +470,9 @@ class ModelAssetsProduct extends Model {
 	    $this->db->where('product.status',1);
 		$ret = $this->db->get('product_to_store', $limit, $offset)->rows;
 		//die;
-		//echo $this->db->last_query();die;
+//		echo $this->db->last_query();die;
 
-		//echo "<pre>";print_r($ret);die;
+//		echo "<pre>";print_r($ret);die;
 		return $ret;
 	}
 
