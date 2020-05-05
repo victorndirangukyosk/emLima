@@ -984,6 +984,20 @@
     
 
     <script type="text/javascript">
+	function getUrlParameter(sParam) {
+		var sPageURL = window.location.search.substring(1),
+			sURLVariables = sPageURL.split('&'),
+			sParameterName,
+			i;
+
+		for (i = 0; i < sURLVariables.length; i++) {
+			sParameterName = sURLVariables[i].split('=');
+
+			if (sParameterName[0] === sParam) {
+				return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+			}
+		}
+   };
     function changelayout(view){
 		$("#switch-list").removeClass("is-active");
 		$("#switch-grid").removeClass("is-active");
@@ -1037,7 +1051,12 @@
 
         $(document).ready(function() {
 			$("#ex2").slider({tooltip: 'always'});
-			$("#switch-grid").click();
+		    var product = getUrlParameter('product');
+			if(product == undefined){
+			    $("#switch-grid").click();
+			}else{
+				$("#switch-grid").hide();
+			}
             console.log("ready in top_category");
             $(document).delegate('.open-popup', 'click', function(){
                 //alert("wfe");
