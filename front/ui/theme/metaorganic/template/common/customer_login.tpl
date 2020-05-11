@@ -30,10 +30,15 @@
 		<div class="row fullwidth">
 		<div class="col-lg-9 fullwidth-inner" >
 		<div class="col-lg-12">
+        <div class="col-lg-6 col-xs-6">
 	     <a class="header__logo-link " href="<?= BASE_URL?>">
                         <img src="<?=$logo?>" />
                        
           </a></div>
+          <div class="col-lg-6 col-xs-6">
+          <img src="<?= $base;?>front/ui/theme/metaorganic/images/logo-kwikbasket-2.png" style="width:160px !important; float: right; margin: 30px 10px;">
+          </div>
+          </div>
 			<div id="main-container" class="col-lg-7 col-md-12 col-sm-12 col-xs-12">
 			<div class="container">
   <div class="formBox level-login">
