@@ -7729,3 +7729,7 @@ body {
 		border-right:none !important;
 	}
 }
+.header__logo-container img {
+	width: 10rem;
+	margin: 28px 0px 0px 0px !important;
+  }

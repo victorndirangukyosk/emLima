@@ -7,7 +7,7 @@
                <div id="download-app" class="footer__download-app-container">
                   <div id="download-app-icon" class="footer__download-app-desktop">
                      <div class="footer__app-icon-bg">
-                       <img src="<?= $logo?>" class="footer-app-img" >
+                       <img src="front/ui/theme/metaorganic/images/app-logo.png" class="footer-app-img" >
                      </div>
                      <div class="footer__download-app-info">
                         <div class="footer__download-app-heading">Download the Kwik Basket app for  Android</div>

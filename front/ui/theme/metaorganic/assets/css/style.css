@@ -929,9 +929,9 @@ body#vip .header__banner-container {
 	position: absolute;
 	z-index: 20;
 }
-.header__logo-container img {
-	width: 10rem;
-	margin: -60px 0px 0px 10px;
+.slider.slider-horizontal {
+    width: 180px !important;
+    height: 20px;
 }
 .header__logo-link {
 	display: block;
@@ -8850,7 +8850,7 @@ button#detect_location {
   line-height: 0 !important;
 }
 .footer__app-icon-bg img{
-	width: 250px; margin-top: 0px; margin-left: -93px;
+	width: 70px; margin-top: 0px; margin-left: -10px;
   }
 #header-new{
 	background-color: #fff;
