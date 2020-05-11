@@ -78,8 +78,14 @@
       <div class="row">
       <div class="col-md-2">
                 <div class="header__logo-container">
+                    <?php $url = 'https://www.' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
+                    ?>
                      <a class="header__logo-link " href="<?= BASE_URL?>">
-                        <img src="<?=$logo?>" />
+                      <?php if (strpos($url,'store') !== false) {?>
+                       <img src="<?= $base;?>front/ui/theme/metaorganic/images/logo-kwikbasket-2.png">
+                      <?php }else{?>
+                       <img src="<?=$logo?>" />
+                      <?php } ?>
                        
                      </a>
                      <div itemscope="" class="seo-visible">
