@@ -796,6 +796,9 @@ NOTE: Variables currently do not work with @custom-media. Hardcoding values for 
     .xOsom {
     display: none;
     }
+    .page__canvas {
+      margin-top: 130px;
+  }
   }
 
 ._3Dupa {
@@ -1080,6 +1083,9 @@ NOTE: Variables currently do not work with @custom-media. Hardcoding values for 
     display: inline-block;
     margin: 8px 0 0 48px;
   }
+  .page__canvas {
+    margin-top: 130px;
+}
   .header__primary-navigation-wrapper{
     display: none;
   }

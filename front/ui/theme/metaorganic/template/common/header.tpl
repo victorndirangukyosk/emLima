@@ -82,7 +82,7 @@
                     ?>
                      <a class="header__logo-link " href="<?= BASE_URL?>">
                       <?php if (strpos($url,'store') !== false) {?>
-                       <img src="<?= $base;?>front/ui/theme/metaorganic/images/logo-kwikbasket-2.png">
+                       <img src="<?= $base;?>front/ui/theme/metaorganic/images/logo-kwikbasket-2.png" style="width:160px !important">
                       <?php }else{?>
                        <img src="<?=$logo?>" />
                       <?php } ?>
