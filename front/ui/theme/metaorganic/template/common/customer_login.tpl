@@ -12,8 +12,8 @@
 
     <meta name="author" content="">
 
-    <title>Login</title>
-
+    <title>Login - Kwik Basket</title>
+    <link href="<?= $base;?>front/ui/theme/metaorganic/assets/images/favicon.ico" rel="icon">
     <!-- Bootstrap CSS File -->
      <link href="<?= $base;?>front/ui/theme/mvgv2/css/bootstrap.min.css" rel="stylesheet">
 
