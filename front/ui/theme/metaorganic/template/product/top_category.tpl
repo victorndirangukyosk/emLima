@@ -311,7 +311,7 @@
 													foreach($products as $product) {
 													//echo '<pre>';print_r($product);
 												  ?>
-                                                   <li class="_1cn3x" data-price="<?=str_replace('KSh ','',$product['special'])?>">
+                                                   <li class="_1cn3x" data-price="<?=str_replace('KSh ','',$product['variations'][0]['special'])?>">
                                                    <span role="group">
 					
                                                     <div class="_2sT86 EurVi">
@@ -1056,9 +1056,14 @@
 				$('#show-max').text(max);
 				$('#items-ul li').each(function(i)
 				{
-				   if((parseInt($(this).attr('data-price')) >= parseInt(newVal[0])) && ( parseInt($(this).attr('data-price')) <= parseInt(newVal[1])))
+					var price = $(this).attr('data-price');
+					var data_price = price.replace(/\,/g,'')
+					//console.log('min',min);
+					//console.log('max',max);
+					//console.log('data-price',parseInt(data_price));
+				   if((parseInt(data_price) >= parseInt(min)) && ( parseInt(data_price) <= parseInt(max)))
 				   {
-					    $(this).show();
+					     $(this).show();
 				   }else{
 					   $(this).hide();
 				   }
