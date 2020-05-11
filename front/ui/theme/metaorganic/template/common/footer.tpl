@@ -64,7 +64,7 @@
                   </i>PO Box 57666-00200, Heritan House Woodlands Road, Nairobi<br>
                   </address>
                   <div class="phone-footer">+254 738770186</div>
-                  <div class="email-footer"><a class="footer__footer-link h-url" href="mailto:info@kwikbasket.com">info@kwikbasket.com</a></div>
+                  <div class="email-footer"><a class="footer__footer-link h-url" href="mailto:hello@kwikbasket.com">hello@kwikbasket.com</a></div>
                 </div>
                </div>
                <div class="footer__footer-link-col contactmobhide">
