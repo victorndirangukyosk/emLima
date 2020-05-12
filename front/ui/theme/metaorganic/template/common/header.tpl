@@ -73,7 +73,7 @@
     </div>
   
   <header>
-<div class="col-md-12" style="position: relative; z-index: 1040;">
+<div class="col-md-12" style="position: relative; z-index: 1040;  padding-bottom: 20px; border-bottom: 1px solid #ea6f28; margin-bottom: 14px;">
       
       <div class="row">
       <div class="col-md-2">
@@ -82,7 +82,7 @@
                     ?>
                      <a class="header__logo-link " href="<?= BASE_URL?>">
                       <?php if (strpos($url,'store') !== false) {?>
-                       <img src="<?= $base;?>front/ui/theme/metaorganic/images/logo-kwikbasket-2.png" style="width:160px !important">
+                       <img src="<?= $base;?>front/ui/theme/metaorganic/images/logo-kwikbasket-2.png">
                       <?php }else{?>
                        <img src="<?=$logo?>" />
                       <?php } ?>
@@ -196,7 +196,7 @@
                             
                              <div class="newset"><a class="btn" href="<?= $account ?>" > <span ><?= $full_name ?></span> </a>     
                            
-                           <div class="dropdownset" style="display:none; margin-top:3px;">
+                           <div class="dropdownset" style="display:none; margin-top:-2px;">
                                   <div class="dropdownsetnew" style="margin-top: 10px;"><a class="header__upper-deck-item-link" href="<?= $order ?>" ><i class="fa fa-reorder"></i><?= $text_orders ?></a></div>
                                   <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $wishlist ?>" ><i class="fa fa-list-ul"></i><?= $text_my_wishlist?></a></div>
                                     <?php if($this->config->get('config_credit_enabled')) { ?>

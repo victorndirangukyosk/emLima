@@ -35,16 +35,14 @@
                         <img src="<?=$logo?>" />
                        
           </a></div>
-          <div class="col-lg-6 col-xs-6">
-          <img src="<?= $base;?>front/ui/theme/metaorganic/images/logo-kwikbasket-2.png" style="width:160px !important; float: right; margin: 30px 10px;">
-          </div>
+    
           </div>
 			<div id="main-container" class="col-lg-7 col-md-12 col-sm-12 col-xs-12">
 			<div class="container">
   <div class="formBox level-login">
     <div class="box boxShaddow"></div>
     <div class="box loginBox">
-      <h2><?= $text_number_verification ?></h2>
+     <!-- <h2><?= $text_number_verification ?></h2> -->
 	  <h4><?= $text_enter_number_to_login ?></h4>
 	  <div id="login-message">
       </div>
@@ -75,7 +73,7 @@
     
     <div class="box registerBox "  >
       <span class="reg_bg"></span>
-      <h2><?= $text_number_verification ?></h2>
+       <!--<h2><?= $text_number_verification ?></h2> -->
 	  <div id="signup-message">
       </div>
 	  <form class="form" action="<?php echo $action; ?>" method="post"  autocomplete="off"  enctype="multipart/form-data" id="sign-up-form">

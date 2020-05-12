@@ -75,7 +75,7 @@
        <div data-sticky-banner="{enable: false, enableOnDesktop:false, enableOnTablet:false, enableOnMobile:false, staticStartDistance:130}" id="leaderboard-header-banner" class="header__banner-container header__banner-container--hidden">
          <div class="header__banner-container-close"></div>
       </div>
-      <div class="col-md-12" style="position: relative; z-index: 1040;">
+      <div class="col-md-12" style="position: relative; z-index: 1040; padding-bottom: 20px; border-bottom: 1px solid #ea6f28; margin-bottom: 14px;">
       
       <div class="row">
       <div class="col-md-2">
@@ -90,7 +90,7 @@
                      </div>
                 </div>
       </div>
-      <div class="col-md-5">
+      <div class="col-md-7">
                 <div class="header__search-bar-wrapper">
                   <div id="search-form-wrapper" class="header__search-bar search-form-wrapper">
                      <div class="header__search-title">
@@ -162,7 +162,7 @@
                   </div>
                </div>
       </div>
-      <div class="col-md-5">
+      <div class="col-md-3">
             <div class="header__navigation-container" role="navigation">
                
                   <div class="header__primary-navigation-outer-wrapper">
@@ -192,7 +192,7 @@
                             
                              <div class="newset"><a class="btn" href="<?= $account ?>" > <span ><?= $full_name ?></span> </a>     
                            
-                           <div class="dropdownset" style="display:none; margin-top:3px;">
+                           <div class="dropdownset" style="display:none;">
                                   <div class="dropdownsetnew" style="margin-top: 10px;"><a class="header__upper-deck-item-link" href="<?= $order ?>" ><i class="fa fa-reorder"></i><?= $text_orders ?></a></div>
                                   <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $wishlist ?>" ><i class="fa fa-list-ul"></i><?= $text_my_wishlist?></a></div>
                                     <?php if($this->config->get('config_credit_enabled')) { ?>
@@ -226,7 +226,7 @@
       </div>
      
       </div>
-      <div id="header-new" class="header">
+     <!-- <div id="header-new" class="header">
        
          <div class="header__wrapper">
          
@@ -252,6 +252,7 @@
          </div>
       </div>
        </div>
+       
        <div style="clear:both !important"> </div>
         
 				    <?php 
