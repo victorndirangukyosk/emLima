@@ -5864,14 +5864,19 @@ position: absolute;
 /* Sidebar */
 .btn-primary:hover, .btn-primary:focus, .btn-primary.focus, .btn-primary:active, .btn-primary.active, .open>.dropdown-toggle.btn-primary{
 	background-color: #36263b;
-    border-color: #512e5b;
+    border-color: #ea7128;
 }
 .button, .btn, .button-inverse, .button-vote, .sidebar .button, .sidebar .btn, .dropdown .dropdown-menu .button, .buttons-set .back-link a, .scrolltop, .button-tabs li a {
 	
-	background: #512e5b;
-	border-color:#36263b;
+	background: #ea7128;
+	border-color:#ea7128;
 	padding: 5px 12px;
 	transition: color 300ms ease-in-out 0s, background-color 300ms ease-in-out 0s, background-position 300ms ease-in-out 0s;
+	font-size: 15px;
+	font-weight: 600
+}
+.cart-total-amount, .fa-shopping-cart{
+	color: #ea7128
 }
 /*.btn:hover, .button-inverse, .button-vote:hover, .sidebar .button:hover, .sidebar .button:focus, .sidebar .btn:hover, .sidebar .btn:focus, .form-list .bootstrap-select.btn-group .btn:hover .caret, .form-list .bootstrap-select.btn-group .btn:focus .caret, .buttons-set .back-link a:hover, .buttons-set .back-link a:focus, .scrolltop, .button-tabs li a:hover, .button-tabs li a:focus {
 	background: #131e2c;
@@ -10499,14 +10504,14 @@ button.button.login:before {
 	text-decoration: none;
 	width: 45px;
 	background: url(../images/to-top-arrow.png) no-repeat center;
-	background-color: #f65f73;
+	background-color: #ea7128;
 	text-transform: uppercase;
 	z-index: 100;
 	border-radius: 0px;
 }
 #toTop:hover {
 	color: #fff;
-	background-color: #2ecc71;
+	background-color: #4da34a;
 }
 /* Footer */
 

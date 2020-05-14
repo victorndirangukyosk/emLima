@@ -72,12 +72,12 @@
         <?php } ?>            
     </div>
 
-     <header>
+     <header style="position: relative; z-index: 1040;  padding-bottom: 20px; border-bottom: 1px solid #ea6f28; height: 100px;">
         <div class="header__primary-navigation-item header__primary-navigation-item--more-categories" style="margin-left: 0px;">
                         
                      <div class="header__secondary-navigation-tablet-container"></div>
 					
-                     <ul class="header__upper-deck-list" >
+                     <ul class="header__upper-deck-list" style="margin-top:17px;">
 						
                         <?php if(!$is_login){?>
                         <li class="header__upper-deck-item header__upper-deck-item--register">
@@ -95,7 +95,7 @@
                             
                              <div class="newset"><a class="btn" href="<?= $account ?>" > <span ><?= $full_name ?></span> </a>     
                            
-                           <div class="dropdownset" style="display:none;">
+                           <div class="dropdownset" style="display:none; margin-top:-1px;">
                                   <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $order ?>" ><i class="fa fa-reorder"></i><?= $text_orders ?></a></div>
                                   <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $wishlist ?>" ><i class="fa fa-list-ul"></i><?= $text_my_wishlist?></a></div>
                                     <?php if($this->config->get('config_credit_enabled')) { ?>
@@ -124,7 +124,7 @@
                   <div class="header__primary-navigation-outer-wrapper">
                       <div class="header__logo-container">
                         <a href="<?= BASE_URL;?>">
-                        <img src="<?=$logo?>" >
+                        <img src="<?=$logo?>" style="margin-top:7px;">
                         </a>
                         <div itemscope="" class="seo-visible">
                            <a itemprop="url" href="#">Home</a>
