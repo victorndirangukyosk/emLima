@@ -6,7 +6,7 @@
   <div class="row">
     <div id="content" class="account-section">
       <?php echo $content_top; ?>
-      <form action="<?php echo $action; ?>" id="account-edit-form" method="post" enctype="multipart/form-data" class="form-horizontal">
+      <form  autocomplete="off" action="<?php echo $action; ?>" id="account-edit-form" method="post" enctype="multipart/form-data" class="form-horizontal">
       <div class="secion-row">
       <br />
       
@@ -38,6 +38,29 @@
               <?php } ?>
             </div>
           </div>
+
+
+<div class="form-group required has-feedback">
+                <label for="name" class="col-sm-3 control-label"><?= $entry_companyname ?></label>
+                <div class="col-sm-6">
+                    <input type="text" value="<?php echo $companyname; ?>" size="30" placeholder="Company Name" name="companyname" maxlength="100" id="name" class="form-control input-lg" />
+                     <?php if($error_companyname) { ?>
+                      <div class="text-danger"><?php echo $error_companyname; ?></div>
+                      <?php } ?>
+                </div>
+            </div>
+
+
+            <div class="form-group required has-feedback">
+                <label for="name" class="col-sm-3 control-label"><?= $entry_companyaddress ?></label>
+                <div class="col-sm-6">
+                    <input type="text" value="<?php echo $companyaddress; ?>" size="30" placeholder="Company Address" name="companyaddress" maxlength="100" id="name" class="form-control input-lg" />
+                     <?php if($error_companyaddress) { ?>
+                      <div class="text-danger"><?php echo $error_companyaddress; ?></div>
+                      <?php } ?>
+                </div>
+            </div>
+
 
           <div class="form-group required">
             <label class="col-sm-3 control-label" for="input-telephone"><?php echo $entry_phone; ?></label>
@@ -75,6 +98,18 @@
             </div>
           </div>--!>
           
+  
+
+ <div class="form-group  has-feedback">
+                <label for="name" class="col-sm-3 control-label"><?= $entry_fax ?></label>
+                <div class="col-sm-6">
+                    <input type="text" value="<?php echo $fax; ?>" size="30" placeholder="Tax No" name="fax" maxlength="100" id="name" class="form-control input-lg" />
+                     <?php if($error_fax) { ?>
+                      <div class="text-danger"><?php echo $error_fax; ?></div>
+                      <?php } ?>
+                </div>
+            </div>
+          
 
           <!-- <div class="form-group">
             <label class="col-sm-3 control-label" for="input-date-added"><?php echo $entry_fax; ?></label>
@@ -87,7 +122,7 @@
 
             </div>
           </div> -->
-          <input type="hidden" name="fax" id="tax_number" value="" placeholder="<?php echo $taxnumber_mask; ?>" class="form-control" />
+          <input type="hidden" name="tax" id="tax_number" value="" placeholder="<?php echo $taxnumber_mask; ?>" class="form-control" />
 
           <div class="form-group required">
             <label class="col-sm-3 control-label" for="input-telephone"><?php echo $entry_gender; ?></label>
@@ -129,7 +164,7 @@
           <div class="form-group required">
             <label class="col-sm-3 control-label" for="input-telephone"><?php echo $entry_password; ?></label>
             <div class="col-sm-6 col-xs-12">
-                <input type="password" name="password" id="password" placeholder="<?php echo $entry_password; ?>" id="input-password" class="form-control input-lg" />
+                <input type="password" name="password" id="password" autocomplete="new-password" placeholder="<?php echo $entry_password; ?>" id="input-password" class="form-control input-lg" />
               <?php if ($error_password) { ?>
               <div class="text-danger"><?php echo $error_password; ?></div>
               <?php } ?>
@@ -340,12 +375,12 @@ $('button[id^=\'button-custom-field\']').on('click', function() {
 
     
 
-    $('.date').datepicker({
+   <!-- $('.date').datepicker({
         pickTime: false,
         format: 'dd/mm/yyyy',
         todayHighlight: true,
         autoclose: true,
-    });    
+    }); --!>   
 </script> 
                  
 
