@@ -1447,6 +1447,21 @@ class ControllerApiCustomerStores extends Controller
                 $special_price = $price;
             }
 
+            $productNames = array_column($data['products'], 'name');
+            if (array_search($result['name'], $productNames) !== false) {
+                // Add variation to existing product
+                $productIndex = array_search($result['name'], $productNames);
+                // TODO: Check for product variation duplicates
+                $data['products'][$productIndex]['variations'][] = array(
+                    'variation_id' => $result['product_store_id'],
+                    'unit' => $result['unit'],
+                    'weight' => floatval($result['weight']),
+                    'price' => $price,
+                    'special' => $special_price,
+                    'percent_off' => number_format($percent_off,0),
+                    'max_qty' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity']
+                );
+            } else {
             $data['products'][] = array(
                 'key' => $key,
                 /*'qty_in_cart' => $qty_in_cart,
@@ -1454,6 +1469,7 @@ class ControllerApiCustomerStores extends Controller
                 'store_product_variation_id' => 0,
                 */'product_id' => $result['product_id'],
                 'product_store_id'=> $result['product_store_id'],
+                'variations' => $this->model_assets_product->getVariations($result['product_store_id']),
                 //'default_variation_name' => $result['default_variation_name'],
                 'thumb' => $image,
                 'name' => html_entity_decode($name),
@@ -1464,13 +1480,24 @@ class ControllerApiCustomerStores extends Controller
                 'percent_off' => number_format($percent_off,0),
                 'left_symbol_currency'      => $this->currency->getSymbolLeft(),
                 'right_symbol_currency'      => $this->currency->getSymbolRight(),
-                
+                'variations' => array(
+                    array(
+                        'variation_id' => $result['product_store_id'],
+                        'unit' => $result['unit'],
+                        'weight' => floatval($result['weight']),
+                        'price' => $price,
+                        'special' => $special_price,
+                        'percent_off' => number_format($percent_off,0),
+                        'max_qty' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity']
+                    )
+                ),
                 'tax' => $result['tax_percentage'],
                 //'minimum' => $result['min_quantity'] > 0 ? $result['min_quantity'] : 1,
                 'max_qty' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity'],
                 'rating' => 0,
                 'href' => $this->url->link( 'product/product',  '&product_store_id=' . $result['product_store_id'] )
             );
+          }
         }
 
         return $data['products'];
