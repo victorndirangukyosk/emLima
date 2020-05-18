@@ -21,6 +21,10 @@ $_['entry_firstname']    = 'First Name';
 $_['entry_lastname']     = 'Last Name';
 $_['entry_email']        = 'E-Mail';
 $_['entry_telephone']    = 'Telephone';
+$_['entry_companyname']    = 'Company Name';
+
+$_['entry_companyaddress']    = 'Company Address';
+
 $_['entry_phone']    = 'Phone';
 $_['entry_gender']       = 'Gender';
 $_['entry_fax']          = 'Tax No.';
@@ -39,7 +43,11 @@ $_['error_lastname']     = 'Last Name must be between 1 and 32 characters!';
 $_['error_email']        = 'E-Mail Address does not appear to be valid!';
 $_['error_telephone']    = 'Phone must be of 11 digits!';
 $_['error_tax']      = 'Tax number is required and should only have alpha numeric values!';
+$_['error_fax']      = 'Tax number is required and should only have alpha numeric values!';
 $_['error_custom_field'] = '%s required!';
+$_['error_companyname']    = 'Company Name must be between 1 and 255 characters!';
+$_['error_companyaddress']    = 'Company Address must be between 1 and 255 characters!';
+
 
 $_['error_gender']      = 'Please select gender';
 $_['error_dob']      = 'Please select date of birth';

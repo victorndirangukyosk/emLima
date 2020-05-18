@@ -157,6 +157,8 @@ class ModelAccountCustomer extends Model {
 
     public function editCustomer($data) {
               
+
+        // echo "<pre>";print_r($data);die;
         $this->trigger->fire('pre.customer.edit', $data);
 
         $customer_id = $this->customer->getId();
@@ -174,7 +176,7 @@ class ModelAccountCustomer extends Model {
             $data['gender'] = null;
         }
         //if(isset($data['dob'])) {
-            $this->db->query("UPDATE " . DB_PREFIX . "customer SET firstname = '" . $this->db->escape($data['firstname']) .  "', dob = '" . $data['dob'] .  "', gender = '" . $this->db->escape($data['gender']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']) ? serialize($data['custom_field']) : '') . "' WHERE customer_id = '" . (int) $customer_id . "'");
+            $this->db->query("UPDATE " . DB_PREFIX . "customer SET firstname = '" . $this->db->escape($data['firstname']) .  "', dob = '" . $data['dob'] .  "', gender = '" . $this->db->escape($data['gender']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', company_name = '" . $this->db->escape($data['companyname']) . "', company_address = '" . $this->db->escape($data['companyaddress']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']) ? serialize($data['custom_field']) : '') . "' WHERE customer_id = '" . (int) $customer_id . "'");
         //}
 
         $this->trigger->fire('post.customer.edit', $customer_id);
@@ -208,11 +210,20 @@ class ModelAccountCustomer extends Model {
 
 
     public function editPassword($email, $password) {
-        $this->trigger->fire('pre.customer.edit.password');
 
-        $this->db->query("UPDATE " . DB_PREFIX . "customer SET salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "' WHERE LOWER(email) = '" . $this->db->escape(utf8_strtolower($email)) . "'");
+        // echo "<pre>";print_r($password);die;
 
-        $this->trigger->fire('post.customer.edit.password');
+        if ($password  && $password <>'default') {
+
+            // echo "<pre>";print_r($password);die;
+           
+            $this->trigger->fire('pre.customer.edit.password');
+
+            $this->db->query("UPDATE " . DB_PREFIX . "customer SET salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "' WHERE LOWER(email) = '" . $this->db->escape(utf8_strtolower($email)) . "'");
+    
+            $this->trigger->fire('post.customer.edit.password');
+        }
+       
     }
 
     public function editPhoneNumber($customer_id, $telephone) {

@@ -223,20 +223,20 @@ class ControllerAccountAccount extends Controller {
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
 
             
-            $date = $this->request->post['dob'];
-
+            // $date = $this->request->post['dob'];
+  
 
             $log = new Log('error.log');
             $log->write('account edit');
 
-            if(isset($date)) {
+            // if(isset($date)) {
 
-                $date = DateTime::createFromFormat('d/m/Y', $date);
+            //     $date = DateTime::createFromFormat('d/m/Y', $date);
                 
-                $this->request->post['dob'] = $date->format('Y-m-d');
-            } else {
+            //     $this->request->post['dob'] = $date->format('Y-m-d');
+            // } else {
                 $this->request->post['dob'] = null;
-            }
+            // }
             
 
             $this->model_account_customer->editCustomer($this->request->post);
@@ -321,6 +321,9 @@ class ControllerAccountAccount extends Controller {
         $data['entry_telephone'] = $this->language->get('entry_telephone');
         $data['entry_phone'] = $this->language->get('entry_phone');
         $data['entry_fax'] = $this->language->get('entry_fax');
+        $data['entry_companyname'] = $this->language->get('entry_companyname');
+        $data['entry_companyaddress'] = $this->language->get('entry_companyaddress');
+
 
         $data['button_continue'] = $this->language->get('button_continue');
         $data['button_back'] = $this->language->get('button_back');
@@ -381,6 +384,19 @@ class ControllerAccountAccount extends Controller {
             $data['error_firstname'] = $this->error['firstname'];
         } else {
             $data['error_firstname'] = '';
+        }
+
+
+        if (isset($this->error['companyname'])) {
+            $data['error_companyname'] = $this->error['companyname'];
+        } else {
+            $data['error_companyname'] = '';
+        }
+
+        if (isset($this->error['companyaddress'])) {
+            $data['error_companyaddress'] = $this->error['companyaddress'];
+        } else {
+            $data['error_companyaddress'] = '';
         }
 
         if (isset($this->error['lastname'])) {
@@ -469,6 +485,26 @@ class ControllerAccountAccount extends Controller {
         } else {
             $data['firstname'] = '';
         }
+
+
+        if (isset($this->request->post['companyname'])) {
+            $data['companyname'] = $this->request->post['companyname'];
+        } elseif (!empty($customer_info)) {
+            $data['companyname'] = $customer_info['company_name'];
+        } else {
+            $data['companyname'] = '';
+        }
+
+
+
+        if (isset($this->request->post['companyaddress'])) {
+            $data['companyaddress'] = $this->request->post['companyaddress'];
+        } elseif (!empty($customer_info)) {
+            $data['companyaddress'] = $customer_info['company_address'];
+        } else {
+            $data['companyaddress'] = '';
+        }
+
 
         if (isset($this->request->post['fax'])) {
             $data['fax'] = $this->request->post['fax'];
@@ -764,6 +800,16 @@ class ControllerAccountAccount extends Controller {
         if ((utf8_strlen(trim($this->request->post['firstname'])) < 1) || (utf8_strlen(trim($this->request->post['firstname'])) > 32)) {
             $this->error['firstname'] = $this->language->get('error_firstname');
         }
+
+        if ((utf8_strlen(trim($this->request->post['companyname'])) < 1) || (utf8_strlen(trim($this->request->post['companyname'])) > 255)) {
+            $this->error['companyname'] = $this->language->get('error_companyname');
+        }
+        if ((utf8_strlen(trim($this->request->post['companyaddress'])) < 1) || (utf8_strlen(trim($this->request->post['companyaddress'])) > 255)) {
+            $this->error['companyaddress'] = $this->language->get('error_companyaddress');
+        }
+
+       
+
         //print_r($this->request->post);die;
         if ((utf8_strlen($this->request->post['email']) > 96) || !filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL)) {
             $this->error['email'] = $this->language->get('error_email');
@@ -807,9 +853,9 @@ class ControllerAccountAccount extends Controller {
 
         
 
-        if ( DateTime::createFromFormat('d/m/Y', $this->request->post['dob'] ) == FALSE ) {
-            $this->error['dob'] = $this->language->get( 'error_dob' );
-        }
+        // if ( DateTime::createFromFormat('d/m/Y', $this->request->post['dob'] ) == FALSE ) {
+        //     $this->error['dob'] = $this->language->get( 'error_dob' );
+        // }
 
         //print_r("expression1");
         // Custom field validation
@@ -907,6 +953,8 @@ class ControllerAccountAccount extends Controller {
                 'store_url' => $order_query->row['store_url'],
                 'customer_id' => $order_query->row['customer_id'],
                 'firstname' => $order_query->row['firstname'],
+                'companyname' => $order_query->row['companyname'],
+                'companyaddress' => $order_query->row['companyaddress'],
                 'lastname' => $order_query->row['lastname'],
                 'email' => $order_query->row['email'],
                 'telephone' => $order_query->row['telephone'],
