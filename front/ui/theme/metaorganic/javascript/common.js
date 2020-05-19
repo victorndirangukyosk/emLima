@@ -1220,7 +1220,7 @@ $(document).delegate('#signup', 'click', function() {
                 if (json['status']) {
 
                     
-                    $('#signup-message').html('<p style="color:green"> '+ json['success_message']+'</p>');
+                    $('#signup-message').html('<p style="color:white,margin-top:60px"> '+ json['success_message']+'</p>');
                     
                    
 
