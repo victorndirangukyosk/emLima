@@ -156,8 +156,8 @@
 		<input type="hidden" name="fax" value="" id="fax-number" />
         <input type="hidden" name="register_verify_otp" value="" id="register_verify_otp" value="no"/>
 		<div class="f_row formui signup_otp_div" style="display: none">
-           <!--<label><?= $entry_signup_otp ?></label>-->
-		   <input id="signup_otp" name="signup_otp" type="text"  placeholder="<?= $entry_signup_otp ?>" class="form-control input-md" required="" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 &amp;&amp; event.charCode <= 57" minlength="4" maxlength="4">
+           <label><?= $entry_signup_otp ?></label>
+		   <input id="signup_otp" name="signup_otp" type="text"  class="input-field input-md" required="" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 &amp;&amp; event.charCode <= 57" minlength="4" maxlength="4">
           <u></u>
         </div>
 		<p class="forget-password signup_otp_div" style="display: none">
