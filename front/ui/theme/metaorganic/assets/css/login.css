@@ -718,11 +718,11 @@ background: linear-gradient(90deg, rgba(139,191,60,1) 0%, rgba(132,194,38,1) 48%
 }
 .btn-large {
   transition: all 0.6s ease;
-    background-color: #fff;
-    border: 3px solid #b7b4b4;
+  background-color: #dedede;
+  border: 3px solid #ea7128;
     border-radius: 6px;
     cursor: pointer;
-    color: #ed2553;
+    color: #000;
     display: block;
     text-align: center;
     width: 100%;
@@ -735,9 +735,8 @@ background: linear-gradient(90deg, rgba(139,191,60,1) 0%, rgba(132,194,38,1) 48%
 }
 .btn-large.active,
 .btn-large:hover {
-  background-color: #ed2553;
-  border-color: #b7b4b4;
-  color: #fff;
+  border-color: #ed2553;
+    color: #ed2553;
 }
 .f_link {
   text-align: center;
