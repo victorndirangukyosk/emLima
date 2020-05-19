@@ -911,6 +911,7 @@ left: 50px;}
     left:43px;
   }
 }
-
+signup_otp_div{padding-left: 0px}
+#signup-resend-otp{color: red}
 #signup-message p {color: #fff !important;
 }
