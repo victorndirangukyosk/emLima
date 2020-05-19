@@ -1227,10 +1227,11 @@ $(document).delegate('#signup', 'click', function() {
                     if($('#register_verify_otp').val() == 'yes') {
 
                         $('.signup-modal-text').html(text);
+                        $('.signup_otp_div').show();
                         $('#signup').hide();
                         setTimeout(function() {
                             location.reload();
-                        }, 3000);
+                        }, 5000);
                         ///window.location.reload(false);
                         // Redirect To Profile Page
                        // var baseurl = window.location.origin+window.location.pathname;
