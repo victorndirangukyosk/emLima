@@ -1227,7 +1227,7 @@ $(document).delegate('#signup', 'click', function() {
                     if($('#register_verify_otp').val() == 'yes') {
 
                         $('.signup-modal-text').html(text);
-                        $('.signup_otp_div').show();
+                        $('.signup_otp_div').hide();
                         $('#signup').hide();
                         setTimeout(function() {
                             location.reload();
