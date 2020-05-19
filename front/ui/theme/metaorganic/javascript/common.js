@@ -1220,14 +1220,18 @@ $(document).delegate('#signup', 'click', function() {
                 if (json['status']) {
 
                     
-                    $('#signup-message').html('<p style="color:green"> '+ json['success_message']+'</p>');
+                    $('#signup-message').html('<p style="color:white;margin-top:60px"> '+ json['success_message']+'</p>');
                     
                    
 
                     if($('#register_verify_otp').val() == 'yes') {
 
                         $('.signup-modal-text').html(text);
-                      
+                        $('.signup_otp_div').hide();
+                        $('#signup').hide();
+                        setTimeout(function() {
+                            location.reload();
+                        }, 5000);
                         ///window.location.reload(false);
                         // Redirect To Profile Page
                        // var baseurl = window.location.origin+window.location.pathname;
@@ -1330,14 +1334,15 @@ $(document).delegate('#signup', 'click', function() {
                         $form.find( "input[name='company_name']" ).parent().addClass('error-animation');
                     }
 
-                    /*if(json['error_warning']){
+                    if(json['error_warning']){
                         $error += json['error_warning']+'<br/>';
-                    }*/
+                        $('#signup-message').html("<p style='color:red;margin-top:60px;'>"+$error+"</p>");
+                    }
 
                     $('.signup-modal-text').html(text);
                     $('.signup-loader').hide();
                     $('.reg_bg').addClass('heightset');
-                    //$('#signup-message').html("<p style='color:red'>"+$error+"</p>");
+                   
                 }
             }
         });
@@ -1507,7 +1512,7 @@ $(document).delegate('#signup-resend-otp', 'click', function() {
             if (json['status']) {
 
                 
-                $('#signup-message').html('<p style="color:green"> '+ json['success_message']+'</p>');
+                $('#signup-message').html('<p style="color:white;margin-top:60px"> '+ json['success_message']+'</p>');
                 
                
                 $('.signup_otp_div').show();
