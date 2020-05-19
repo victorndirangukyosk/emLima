@@ -3,11 +3,7 @@
 class ControllerAccountLogout extends Controller {
 
 	public function index() {
-		/* For Default Page new login*/
-		if(isset($this->session->data['customer_id'])){
-            $this->response->redirect(BASE_URL);
-		}
-		
+
         $this->document->addStyle('front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_login.css');
             
 		if ($this->customer->isLogged()) {
@@ -42,9 +38,18 @@ class ControllerAccountLogout extends Controller {
 	        } else {
 	            $server = $this->config->get('config_url');
 	        }
+			 
+			
+			/* For Default Page new login*/
+			unset($this->session->data['customer_id']);
+			if(isset($this->session->data['customer_id'])){
+				$this->response->redirect(BASE_URL);
+			}
 
-			$this->response->redirect($server);				
+			$this->response->redirect($server);	
+						
 		}
+
 
 		$this->load->language('account/logout');
 
