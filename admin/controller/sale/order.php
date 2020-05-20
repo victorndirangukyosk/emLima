@@ -2045,7 +2045,8 @@ class ControllerSaleOrder extends Controller {
 
             $data['column_product'] = $this->language->get('column_product');
             $data['column_model'] = $this->language->get('column_model');
-            $data['column_quantity'] = $this->language->get('column_quantity');
+            $data['column_quantity'] = $this->language->get('column_quantity') .'( Ordered )';
+            $data['column_quantity_update'] = $this->language->get('column_quantity').'( Updated )';
             $data['column_price'] = $this->language->get('column_price');
             $data['column_total'] = $this->language->get('column_total');
             $data['column_name'] = $this->language->get('column_name');
@@ -3016,7 +3017,7 @@ class ControllerSaleOrder extends Controller {
 
                     foreach ($EditedProducts as $EditedProduct) {
                         if(!empty($original_product['name']) && $original_product['name'] == $EditedProduct['name'] && $original_product['unit'] == $EditedProduct['unit'] && $original_product['quantity'] == $EditedProduct['quantity'] ) {
-
+                            $original_product['qunatity_updated'] = $EditedProduct['quantity'];
                             $present = true;
                         }
                     }
