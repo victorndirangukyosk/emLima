@@ -490,7 +490,8 @@
                             } else {
                                 console.log("address add success else");
                                 $('#address-panel').html(json.html);
-                                $('#editAddressModal').modal('hide');                                
+                                $('#editAddressModal').modal('hide'); 
+                                location = location;                               
                                 return false;
                             }
 
