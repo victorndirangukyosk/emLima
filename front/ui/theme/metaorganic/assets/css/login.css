@@ -911,13 +911,7 @@ left: 50px;}
     left:43px;
   }
 }
-<<<<<<< HEAD
-signup_otp_div{padding-left: 0px}
-#signup-resend-otp{color: red}
+.signup_otp_div{padding-left: 0px; padding-top: 15px;}
+#signup-resend-otp{color: red;}
 #signup-message p {color: #fff !important;
 }
-=======
-
-/*#signup-message p {color: #fff !important;
-}*/
->>>>>>> d206608ed88282581126e88c6c8ee7c6464181e9
