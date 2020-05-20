@@ -801,7 +801,7 @@ button { }
 .btn-primary:hover { color: #fff; background-color: #ff811e; border-color: #ff811e; }
 .btn-primary.focus, .btn-primary:focus { color: #fff; background-color: #ff811e; border-color: #ff811e; }
 .btn-grey { background-color: #cccccc; border: 1px solid #cccccc; }
-.btn-lg { font-size: 18px; padding: 12px 20px; }
+.btn-lg { font-size: 18px; padding: 9px 20px; }
 .btn-sm { font-size: 13px; padding: 5px 12px; }
 .btn-xs { font-size: 11px; padding: 6px; line-height: 1; }
 .btn-link-white { color: #fff; }
@@ -949,7 +949,7 @@ button { }
 
 /* ----- MODAL STYLE ----- */
 .modal-content { border-radius: 0; border: none; background-color: #fff; position: relative; }
-.modal-footer { padding: 15px;    /* text-align: right; */ border-top: 1px solid #e5e5e5; position: fixed; bottom: 0px; z-index: 9; background: #f3f5f2; width: 100%; }
+.modal-footer { padding: 10px 15px;    /* text-align: right; */ border-top: 1px solid #e5e5e5; position: fixed; bottom: 0px; z-index: 9; background: #f3f5f2; width: 100%; }
 .store-cart-panel .modal.left .modal-body, .modal.right .modal-body { padding: 65px 0px 20px 0px; }
 
 .product-items { font-size: 12px; display: inline-block; width: 100%; }
@@ -1290,10 +1290,9 @@ Step Wizard
     padding-top: 3px;
     border:none;}
 .product-quantity {
-    bottom: 3px;
-    right: 0px;
-    position: absolute;
-    left: 80px;
+  position: absolute;
+  left: 160px;
+  top: 25px;
 }
 
 #plus:hover, #minus:hover{border:1px solid #301635;color: #301635;}
