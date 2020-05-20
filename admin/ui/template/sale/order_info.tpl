@@ -33,7 +33,7 @@
 		<ul class="nav nav-tabs">
 
 		<?php if(!$this->user->isVendor()){ ?>
-			<li ><a href="#tab-order" data-toggle="tab"><?php echo $tab_order; ?></a></li>
+			<li class="active" ><a href="#tab-order" data-toggle="tab"><?php echo $tab_order; ?></a></li>
 		<?php } else { ?>
 			<li class="active" ><a href="#tab-order" data-toggle="tab"><?php echo $tab_order; ?></a></li>
 		<?php } ?>
@@ -78,7 +78,7 @@
 		  <?php } ?>
 
 		  <?php if(!$this->user->isVendor()){ ?>
-		  	<li class="active"><a href="#tab-location" data-toggle="tab"><?php echo $tab_location; ?></a></li>
+		  	<li><a href="#tab-location" data-toggle="tab"><?php echo $tab_location; ?></a></li>
 		  <?php } ?>
 		  
 		  
@@ -91,7 +91,7 @@
 		  	<?php if(!$this->user->isVendor()){ ?>
 			  
 			  
-				<div class="tab-pane active" id="tab-location">
+				<div class="tab-pane " id="tab-location">
 
 					<input type="button" class="btn btn-primary" onclick="initMapLoad()" value="View Map" /> 
 
@@ -106,7 +106,7 @@
 			
 
 		<?php if(!$this->user->isVendor()) { ?>
-			<div class="tab-pane" id="tab-order">
+			<div class="tab-pane active" id="tab-order">
 		<?php } else { ?>
 			<div class="tab-pane active" id="tab-order">
 		<?php } ?>
@@ -502,14 +502,14 @@
 						</span>
 					</td> --> 
 
-					<?php if(!$this->user->isVendor()){ ?>
+				<!--<?php if(!$this->user->isVendor()){ ?>
 						<td class="left">
 							<b><?= $text_commision ?></b>:
 							<span class="commision">
 								<?= $commission.'%' ?>
 							</span>
 						</td>
-					<?php } ?>
+					<?php } ?>-->
 					
 				</tr>            
 				<!-- <tr style="line-height: 40px;">
@@ -753,14 +753,14 @@
 						</td>
 
 
-					<?php if(!$this->user->isVendor()){ ?>
+					<!--<?php  if(!$this->user->isVendor()){ ?>
 						<td class="left">
 							<b><?= $text_commision ?></b>:
 							<span class="commision">
 								<?= $commission.'%' ?>
 							</span>
 						</td>
-					<?php } ?>
+					<?php } ?>-->
 					
 				</tr>            
 				<tr style="line-height: 40px;">
@@ -1765,7 +1765,10 @@ $('#button-history').on('click', function() {
 		},			
 		error: function(xhr, ajaxOptions, thrownError) {
 			//alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
-			location = location;
+			$('#history').load('index.php?path=sale/order/history&token=<?php echo $token; ?>&order_id=<?php echo $order_id; ?>');
+				 $('#button-history').button('reset');			
+
+			 
 		}
 	});
 });
