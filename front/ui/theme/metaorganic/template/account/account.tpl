@@ -182,7 +182,7 @@
           </div>
 
           <?php if ($site_key) { ?>
-          <div class="form-group required">
+          <div class="form-group  ">
             <label class="col-sm-3 control-label" for="input-date-added"></label>
             <div class="col-sm-6 col-xs-12 pl0 pr0">
               
