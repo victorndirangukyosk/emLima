@@ -3035,6 +3035,7 @@ class ControllerSaleOrder extends Controller {
                             'model' => $original_product['model'],
                             'option' => $option_data,
                             'quantity' => $original_product['quantity'],
+                            'qunatity_updated' => $original_product['qunatity_updated'],
                             'price' => $this->currency->format($original_product['price'] + ($this->config->get('config_tax') ? $original_product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
                             'total' => $this->currency->format($original_product['total'] + ($this->config->get('config_tax') ? ($original_product['tax'] * $original_product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
                             'href' => $this->url->link('catalog/product/edit', 'token=' . $this->session->data['token'] . '&product_id=' . $original_product['product_id'], 'SSL')
