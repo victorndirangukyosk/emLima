@@ -1229,9 +1229,9 @@ $(document).delegate('#signup', 'click', function() {
                         $('.signup-modal-text').html(text);
                         $('.signup_otp_div').hide();
                         $('#signup').hide();
-                        setTimeout(function() {
+                        /*setTimeout(function() {
                             location.reload();
-                        }, 5000);
+                        }, 5000);*/
                         ///window.location.reload(false);
                         // Redirect To Profile Page
                        // var baseurl = window.location.origin+window.location.pathname;
