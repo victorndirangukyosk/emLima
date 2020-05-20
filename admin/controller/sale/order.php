@@ -3017,8 +3017,11 @@ class ControllerSaleOrder extends Controller {
 
                     foreach ($EditedProducts as $EditedProduct) {
                         if(!empty($original_product['name']) && $original_product['name'] == $EditedProduct['name'] && $original_product['unit'] == $EditedProduct['unit'] && $original_product['quantity'] == $EditedProduct['quantity'] ) {
-                            $original_product['qunatity_updated'] = $EditedProduct['quantity'];
+                            $original_product['qunatity_updated'] = $original_product['quantity'];
                             $present = true;
+                        }else{
+                            $present = false;
+                            $original_product['qunatity_updated'] = $EditedProduct['quantity'];
                         }
                     }
 
