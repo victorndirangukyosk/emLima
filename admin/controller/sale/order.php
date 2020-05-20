@@ -212,12 +212,15 @@ class ControllerSaleOrder extends Controller {
 
         $data['column_product'] = $this->language->get('column_product');
 
-        $data['column_unit'] = $this->language->get('column_unit');
+        $data['column_unit'] = $this->language->get('column_unit') .' ( Ordered ) ' ;
         $data['column_model'] = $this->language->get('column_model');
-        $data['column_quantity'] = $this->language->get('column_quantity');
+        $data['column_quantity'] = $this->language->get('column_quantity') .' ( Ordered ) ' ;
         $data['column_price'] = $this->language->get('column_price');
         $data['column_total'] = $this->language->get('column_total');
         $data['column_comment'] = $this->language->get('column_comment');
+
+        $data['column_unit_update'] = $this->language->get('column_unit') .' ( Variance ) ' ;
+        $data['column_quantity_update'] = $this->language->get('column_quantity') .' ( Variance ) ' ;
 
         $data['text_tax'] = $this->language->get('text_tax');
         $data['text_cpf_number'] = $this->language->get('text_cpf_number');

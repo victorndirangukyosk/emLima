@@ -97,9 +97,11 @@
 
       <thead>
         <tr>
-          <td style="width: 25%;" ><b><?php echo $column_product; ?></b></td>
-          <td style="width: 20%;"><b><?php echo $column_unit; ?></b></td>
+          <td style="width: 15%;" ><b><?php echo $column_product; ?></b></td>
+          <td style="width: 15%;"><b><?php echo $column_unit; ?></b></td>
           <td class="text-right"><b><?php echo $column_quantity; ?></b></td>
+		   <td style="width: 15%;"><b><?php echo $column_unit_update; ?></b></td>
+          <td class="text-right"><b><?php echo $column_quantity_update; ?></b></td>
           <td class="text-right"><b><?php echo $column_price; ?> (<?php echo $this->currency->getSymbolLeft() ?>)</b></td>
           <td class="text-right"><b><?php echo $column_total; ?></b></td>
           <td></td>
@@ -109,12 +111,19 @@
         <?php foreach ($order['product'] as $product) { ?>
         <tr>
           <td class="text-right" ><input type="text" class="form-control" name="products[<?php echo $product['product_id']?>][name]" value="<?php echo $product['name']; ?>"/></td>
-          <td class="text-right"><input type="text" class="form-control" name="products[<?php echo $product['product_id']?>][unit]" value="<?php echo $product['unit']; ?>"/></td>
+          <td class="text-right"><input type="text" class="form-control"  disabled name="products[<?php echo $product['product_id']?>][unit]" value="<?php echo $product['unit']; ?>"/></td>
+          <td class="text-right">
+
+          <!--<input type="number" min="1" step="1" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57" class="form-control changeTotal text-right" name="products[<?php echo $product['product_id'] ?>][quantity]" value="<?php echo $product['quantity']; ?>"/>-->
+          <input type="number" disabled min="1" step="1" class="form-control  text-right" name="products[<?php echo $product['product_id'] ?>][quantity]" value="<?php echo $product['quantity']; ?>"/>
+          </td>
+		  <td class="text-right"><input type="text" class="form-control" name="products[<?php echo $product['product_id']?>][unit]" value="<?php echo $product['unit']; ?>"/></td>
           <td class="text-right">
 
           <!--<input type="number" min="1" step="1" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57" class="form-control changeTotal text-right" name="products[<?php echo $product['product_id'] ?>][quantity]" value="<?php echo $product['quantity']; ?>"/>-->
           <input type="number" min="1" step="1" class="form-control changeTotal text-right" name="products[<?php echo $product['product_id'] ?>][quantity]" value="<?php echo $product['quantity']; ?>"/>
           </td>
+		  
           <td class="text-right"><input type="text"  class="form-control changeTotal text-right" name="products[<?php echo $product['product_id'] ?>][price]" value="<?php echo $product['price']; ?>"/></td>
           <td class="text-right"><input type="text" class="form-control totalPrice text-right" name="products[<?php echo $product['product_id']?>][total]" value="<?php echo $product['total']; ?>" disabled /></td>
 
@@ -133,7 +142,7 @@
         <?php } ?>
         
         <tr class="productsAdd">
-          <td colspan="5">
+          <td colspan="7">
           </td>
           <td>
               <button type="button" onclick="add();" data-toggle="tooltip" title="" class="btn btn-primary" data-original-title="Add Product"><i class="fa fa-plus-circle"></i></button>
@@ -297,10 +306,10 @@ $(document).delegate('.changeTotal','change', function() {
   console.log("change");
   console.log($(this).val());
 
-  var q = $(this).parent().parent().children().eq(2).children().val();
-  var p = $(this).parent().parent().children().eq(3).children().val();
+  var q = $(this).parent().parent().children().eq(4).children().val();
+  var p = $(this).parent().parent().children().eq(5).children().val();
 
-  $(this).parent().parent().children().eq(4).children().val(p*q);
+  $(this).parent().parent().children().eq(6).children().val(p*q);
 
   var sum =0;
   var inbetweensum =0;
@@ -567,11 +576,19 @@ function add() {
   $html += '</td>';
 
   $html += '<td class="text-right">';
+  $html += '<input type="text" class="form-control" disabled name="products['+noProduct+'][unit]" value=""/>';
+  $html += '</td>';
+
+  $html += '<td class="text-right">';
+  $html += '<input type="number" min="1" step="1" disabled class="form-control changeTotal text-right" name="products['+noProduct+'][quantity]" value="1"/>';
+  $html += '</td>';
+  
+  $html += '<td class="text-right">';
   $html += '<input type="text" class="form-control" name="products['+noProduct+'][unit]" value=""/>';
   $html += '</td>';
 
   $html += '<td class="text-right">';
-  $html += '<input type="number" min="1" step="1" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57" class="form-control changeTotal text-right" name="products['+noProduct+'][quantity]" value="1"/>';
+  $html += '<input type="number" min="1" step="1"  class="form-control changeTotal text-right" name="products['+noProduct+'][quantity]" value="1"/>';
   $html += '</td>';
 
   $html += '<td class="text-right">';
