@@ -3015,7 +3015,7 @@ class ControllerSaleOrder extends Controller {
                     $present = false;
 
                     foreach ($EditedProducts as $EditedProduct) {
-                        if(!empty($original_product['name']) && $original_product['name'] == $EditedProduct['name'] && $original_product['unit'] == $EditedProduct['unit'] ) {
+                        if(!empty($original_product['name']) && $original_product['name'] == $EditedProduct['name'] && $original_product['unit'] == $EditedProduct['unit'] && $original_product['quantity'] == $EditedProduct['quantity'] ) {
 
                             $present = true;
                         }
