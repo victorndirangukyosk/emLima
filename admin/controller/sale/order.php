@@ -2045,7 +2045,8 @@ class ControllerSaleOrder extends Controller {
 
             $data['column_product'] = $this->language->get('column_product');
             $data['column_model'] = $this->language->get('column_model');
-            $data['column_quantity'] = $this->language->get('column_quantity');
+            $data['column_quantity'] = $this->language->get('column_quantity') .'( Ordered )';
+            $data['column_quantity_update'] = $this->language->get('column_quantity').'( Updated )';
             $data['column_price'] = $this->language->get('column_price');
             $data['column_total'] = $this->language->get('column_total');
             $data['column_name'] = $this->language->get('column_name');
@@ -2960,7 +2961,7 @@ class ControllerSaleOrder extends Controller {
 
 
             $EditedProducts = $this->model_sale_order->getRealOrderProducts($this->request->get['order_id']);
-
+            //echo '<pre>';print_r($EditedProducts);exit;
 
             if($this->model_sale_order->hasRealOrderProducts($this->request->get['order_id'])) {
 
@@ -3015,12 +3016,15 @@ class ControllerSaleOrder extends Controller {
                     $present = false;
 
                     foreach ($EditedProducts as $EditedProduct) {
-                        if(!empty($original_product['name']) && $original_product['name'] == $EditedProduct['name'] && $original_product['unit'] == $EditedProduct['unit'] && $original_product['quantity'] == $EditedProduct['quantity'] ) {
+                        if($original_product['product_id'] == $EditedProduct['product_id'] ){
+                            $original_product['quantity_updated'] = $EditedProduct['quantity'];
+                        }
 
+                        if(!empty($original_product['name']) && $original_product['name'] == $EditedProduct['name'] && $original_product['unit'] == $EditedProduct['unit'] && $original_product['quantity'] == $EditedProduct['quantity'] ) {
                             $present = true;
                         }
                     }
-
+                    //echo '<pre>';print_r($original_product);exit;
                     if(!$present && !empty($original_product['name'])) {
 
                         $data['difference_products'][] = array(
@@ -3033,6 +3037,7 @@ class ControllerSaleOrder extends Controller {
                             'product_type' => $original_product['product_type'],
                             'model' => $original_product['model'],
                             'option' => $option_data,
+                            'quantity_updated' => $original_product['quantity_updated'],
                             'quantity' => $original_product['quantity'],
                             'price' => $this->currency->format($original_product['price'] + ($this->config->get('config_tax') ? $original_product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
                             'total' => $this->currency->format($original_product['total'] + ($this->config->get('config_tax') ? ($original_product['tax'] * $original_product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
@@ -3042,7 +3047,7 @@ class ControllerSaleOrder extends Controller {
                     }
 
                 }
-
+                //echo '<pre>';print_r($data['difference_products']);exit;
                 //echo "<pre>";print_r($data['original_products']);die;
 
                 $products = $this->model_sale_order->getRealOrderProducts($this->request->get['order_id']);
@@ -3052,7 +3057,7 @@ class ControllerSaleOrder extends Controller {
                 $products = $this->model_sale_order->getOrderProducts($this->request->get['order_id']);
             }
 
-
+           
             foreach ($products as $product) {
                 $option_data = array();
 

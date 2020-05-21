@@ -806,6 +806,7 @@
 						  <td class="text-left"><?php echo $column_unit; ?></td>
 						  
 						  <td class="text-right"><?php echo $column_quantity; ?></td>
+						  <td class="text-right"><?php echo $column_quantity_update; ?></td>
 						  <td class="text-right"><?php echo $column_price; ?></td>
 						  <td class="text-right"><?php echo $column_total; ?></td>
 						  
@@ -835,6 +836,7 @@
 							<td class="text-left"><?php echo $difference_product['unit']; ?></td>
 						  
 						  <td class="text-right"><?php echo $difference_product['quantity']; ?></td>
+						  <td class="text-right"><?php echo $difference_product['quantity_updated']; ?></td>
 						  <td class="text-right"><?php echo $difference_product['price']; ?></td>
 						  <td class="text-right"><?php echo $difference_product['total']; ?></td>
 						  

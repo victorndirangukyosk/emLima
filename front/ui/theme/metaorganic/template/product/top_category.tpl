@@ -218,9 +218,25 @@
                                                         </nav>
                                                     </div>
                                                 </div>
-												<div class="_1loc3" data-test-selector="filter-price">
+												<!--<div class="_1loc3" data-test-selector="filter-price">
                                                   Price: KSh <span id="show-min">0</span>-<span id="show-max">4000</span> <input id="ex2" type="text"  class="span2" value="" data-slider-min="0" data-slider-max="4000" data-slider-step="10" data-slider-value="[0,4000]"/>
-                                                </div>											
+                                                </div>-->	
+												<div class="_1loc3">
+												   <h4>Filter By Price</h4>
+													<div class="checkbox">
+													  <label><input name="price_slabs" data-start="1" data-end="500" type="checkbox" class="price_filter" value="1-500">1 - 500 KSh</label>
+													</div>
+													<div class="checkbox price_filter">
+													  <label><input type="checkbox" name="price_slabs" data-start="500" data-end="1000" class="price_filter" value="500-1000">500 - 1000 KSh</label>
+													</div>
+													<div class="checkbox price_filter">
+													  <label><input type="checkbox" name="price_slabs" data-start="1000" data-end="2000" class="price_filter" value="1000-2000">1000 - 2000 KSh</label>
+													</div>
+													<div class="checkbox price_filter">
+													  <label><input type="checkbox" name="price_slabs" class="price_filter" data-start="2000" data-end="5000" value="2000-5000">2000 - 5000 KSh</label>
+													</div>
+                                                </div>
+
                                                 <!--<div class="_1loc3" data-test-selector="filter-tags">
                                                     
                                                  </div>
@@ -1091,6 +1107,52 @@
                 });
             });
         });
+		
+		$('input[name="price_slabs"]').click(function () {
+		     var minMax = getMinMax();
+			 console.log('minMax',minMax);
+			 var min = minMax[0];
+			 var max = minMax[1];
+			 
+			 $('#items-ul li').each(function(i)
+				{
+					$(this).show();
+					
+					if((min > 0) && ( max > 0)){
+						var price = $(this).attr('data-price');
+						var data_price = price.replace(/\,/g,'')
+						console.log('min',parseInt(min));
+						console.log('max',parseInt(max));
+						console.log('data-price',parseInt(data_price));
+					   if((parseInt(data_price) >= parseInt(min)) && ( parseInt(data_price) <= parseInt(max)))
+					   {
+							$(this).show();
+					   }else{
+						   $(this).hide();
+					   }
+					}
+				});
+			 
+
+        });
+		
+		function getMinMax(){
+			var minArray =[];
+			var maxArray =[];
+			
+			$('input[name="price_slabs"]:checked').each(function() {
+				minArray.push($(this).attr("data-start"));
+				maxArray.push($(this).attr("data-end"));
+				//console.log('this',this);
+	        });
+			if(maxArray.length > 0 && minArray.length > 0){
+				var max = Math.max.apply(Math, maxArray);
+				var min = Math.min.apply(Math, minArray);
+				return [min,max];
+		    }else{
+			   return [0,0];
+		   }
+		}
 
     </script>
     <script type="text/javascript">
@@ -1143,6 +1205,9 @@
         .drop-menu-2 li:hover .drop-menu-3{
             display: block;
         }
+		input.price_filter {
+         margin-top: 0px;
+       }
     </style>
 </body>
 

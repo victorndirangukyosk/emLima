@@ -13048,10 +13048,9 @@ button#signup:hover, button#login_send_otp:hover {
 }
 
 .product-quantity {
-    bottom: 12px;
-    right: 0px;
-    position: absolute;
-    left: 80px;
+	position: absolute;
+    left: 160px;
+    top: 55px;
 }
 
 a#payment_panel_link,a#delivery_time_panel_link,a#delivery_option__panel_link,a#address_panel_link {
