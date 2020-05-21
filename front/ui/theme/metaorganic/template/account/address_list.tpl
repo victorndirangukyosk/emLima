@@ -405,10 +405,12 @@
                             if (json.status == 0) {
                                 $('#address-message').html(json['message']);
                                 $('#address-success-message').html('');
+                               
                             } else {
                                 console.log("address add success else");
                                 $('#address-panel').html(json.html);
                                 $('#addressModal').modal('hide');
+                                 location=location;
                                 return false;
                             }
                         },
@@ -487,6 +489,7 @@
                             if (json.status == 0) {
                                 $('#edit-address-message').html(json['message']);
                                 $('#edit-address-success-message').html('');
+                                
                             } else {
                                 console.log("address add success else");
                                 $('#address-panel').html(json.html);
