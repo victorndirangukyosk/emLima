@@ -2955,21 +2955,19 @@ class ControllerSaleOrder extends Controller {
             $data['products'] = array();
 
             $data['is_edited'] = $this->model_sale_order->hasRealOrderProducts($this->request->get['order_id']);
+
             $data['original_products'] = [];
 
             $data['difference_products'] = [];
 
 
             $EditedProducts = $this->model_sale_order->getRealOrderProducts($this->request->get['order_id']);
-            //echo '<pre>';print_r($EditedProducts);exit;
+             //echo '<pre>';print_r($EditedProducts);exit;
+             $original_products = $products = $this->model_sale_order->getOrderProducts($this->request->get['order_id']);
 
-            if($this->model_sale_order->hasRealOrderProducts($this->request->get['order_id'])) {
-
-                
-
-                $original_products = $products = $this->model_sale_order->getOrderProducts($this->request->get['order_id']);
-
-                
+              
+             
+            if($this->model_sale_order->hasRealOrderProducts($this->request->get['order_id'])) {    
 
                 foreach ($original_products as $original_product) {
                     $option_data = array();
@@ -2997,6 +2995,22 @@ class ControllerSaleOrder extends Controller {
                         }
                     }
 
+                    $present = false;
+            
+
+                    foreach ($EditedProducts as $EditedProduct) {
+                        if($original_product['product_id'] == $EditedProduct['product_id'] ){
+                            $original_product['quantity_updated'] = $EditedProduct['quantity'];
+                            $original_product['unit_updated'] = $EditedProduct['unit'];
+                        }
+                         
+
+                        if(!empty($original_product['name']) && $original_product['name'] == $EditedProduct['name'] && $original_product['unit'] == $EditedProduct['unit'] && $original_product['quantity'] == $EditedProduct['quantity'] ) {
+                            $present = true;
+                        }
+                    }
+              
+                     
                     $data['original_products'][] = array(
                         'order_product_id' => $original_product['order_product_id'],
                         'product_id' => $original_product['product_id'],
@@ -3008,22 +3022,14 @@ class ControllerSaleOrder extends Controller {
                         'model' => $original_product['model'],
                         'option' => $option_data,
                         'quantity' => $original_product['quantity'],
+                        'quantity_updated' => $original_product['quantity_updated'],
+                            'unit_updated' => $original_product['unit_updated'],//as of now unit change is not there 
                         'price' => $this->currency->format($original_product['price'] + ($this->config->get('config_tax') ? $original_product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
                         'total' => $this->currency->format($original_product['total'] + ($this->config->get('config_tax') ? ($original_product['tax'] * $original_product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
                         'href' => $this->url->link('catalog/product/edit', 'token=' . $this->session->data['token'] . '&product_id=' . $original_product['product_id'], 'SSL')
                     );
 
-                    $present = false;
-
-                    foreach ($EditedProducts as $EditedProduct) {
-                        if($original_product['product_id'] == $EditedProduct['product_id'] ){
-                            $original_product['quantity_updated'] = $EditedProduct['quantity'];
-                        }
-
-                        if(!empty($original_product['name']) && $original_product['name'] == $EditedProduct['name'] && $original_product['unit'] == $EditedProduct['unit'] && $original_product['quantity'] == $EditedProduct['quantity'] ) {
-                            $present = true;
-                        }
-                    }
+                  
                     //echo '<pre>';print_r($original_product);exit;
                     if(!$present && !empty($original_product['name'])) {
 
@@ -3038,6 +3044,7 @@ class ControllerSaleOrder extends Controller {
                             'model' => $original_product['model'],
                             'option' => $option_data,
                             'quantity_updated' => $original_product['quantity_updated'],
+                            'unit_updated' => $original_product['unit_updated'],//as of now unit change is not there 
                             'quantity' => $original_product['quantity'],
                             'price' => $this->currency->format($original_product['price'] + ($this->config->get('config_tax') ? $original_product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
                             'total' => $this->currency->format($original_product['total'] + ($this->config->get('config_tax') ? ($original_product['tax'] * $original_product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
@@ -3055,6 +3062,26 @@ class ControllerSaleOrder extends Controller {
             } else {
 
                 $products = $this->model_sale_order->getOrderProducts($this->request->get['order_id']);
+                foreach ($original_products as $original_product) {
+                $data['original_products'][] = array(
+                    'order_product_id' => $original_product['order_product_id'],
+                    'product_id' => $original_product['product_id'],
+                    'vendor_id' => $original_product['vendor_id'],
+                    'store_id' => $original_product['store_id'],
+                    'name' => $original_product['name'],
+                    'unit' => $original_product['unit'],
+                    'product_type' => $original_product['product_type'],
+                    'model' => $original_product['model'],
+                    'option' => $option_data,
+                    'quantity' => $original_product['quantity'],
+                    'quantity_updated' => '-',
+                        'unit_updated' => '-',  
+                    'price' => $this->currency->format($original_product['price'] + ($this->config->get('config_tax') ? $original_product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
+                    'total' => $this->currency->format($original_product['total'] + ($this->config->get('config_tax') ? ($original_product['tax'] * $original_product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
+                    'href' => $this->url->link('catalog/product/edit', 'token=' . $this->session->data['token'] . '&product_id=' . $original_product['product_id'], 'SSL')
+                );
+            }
+               
             }
 
            
@@ -3083,7 +3110,7 @@ class ControllerSaleOrder extends Controller {
                         }
                     }
                 }
-
+               
                 $data['products'][] = array(
                     'order_product_id' => $product['order_product_id'],
                     'product_id' => $product['product_id'],
@@ -3095,10 +3122,15 @@ class ControllerSaleOrder extends Controller {
                     'model' => $product['model'],
                     'option' => $option_data,
                     'quantity' => $product['quantity'],
+                    'quantity_updated' => $product['quantity'],
+                    'unit_updated' =>$product['unit'],//as of now unit change is not there 
+                
                     'price' => $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
                     'total' => $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
                     'href' => $this->url->link('catalog/product/edit', 'token=' . $this->session->data['token'] . '&product_id=' . $product['product_id'], 'SSL')
                 );
+
+                //   echo '<pre>';print_r($data['products']);exit;
             }
 
             $data['country_code'] = '+' . $this->config->get('config_telephone_code');

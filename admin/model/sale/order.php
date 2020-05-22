@@ -598,7 +598,7 @@ class ModelSaleOrder extends Model {
 
     public function getOrderProducts($order_id, $store_id = 0) {
        
-        $sql = "SELECT * FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int) $order_id . "'";
+        $sql = "SELECT * ,'0' as quantity_updated,'0' as unit_updated FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int) $order_id . "'";
         
         if($store_id) {
             $sql .= " AND store_id='".$store_id."'";

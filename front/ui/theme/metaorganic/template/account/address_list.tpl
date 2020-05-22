@@ -121,7 +121,7 @@
                                                         <input  name="modal_address_locality" type="text"  class="form-control input-md LocalityId" required="">                                                    
                                                         <span class="input-group-btn">
 
-                                                            <button id="locateme" class="btn btn-default disabled" style="color: #333;background-color: #fff;border-color: #ccc;line-height: 2.438571; " type="button" data-toggle="modal" onclick="openGMap()" data-target="#GMapPopup"  ><i class="fa-crosshairs fa"></i> <?= $locate_me ?> </button>
+                                                            <button id="locateme" class="btn btn-default disabled" style=" color: #333;background-color: #fff;border-color: #ccc;line-height: 2.438571; " type="button" data-toggle="modal" onclick="openGMap()" data-target="#GMapPopup"  ><i class="fa-crosshairs fa"></i> <?= $locate_me ?> </button>
 
                                                         </span>
                                                     </div>
@@ -146,7 +146,7 @@
                                                         <input  name="modal_address_locality" type="text"  class="form-control input-md LocalityId" required="">                                                    
                                                         <span class="input-group-btn">
 
-                                                            <button id="locateme" class="btn btn-default disabled" style="color: #333;background-color: #fff;border-color: #ccc;line-height: 2.438571; " type="button" data-toggle="modal" onclick="openGMap()" data-target="#GMapPopup"  ><i class="fa-crosshairs fa"></i> <?= $locate_me ?> </button>
+                                                            <button id="locateme" class="btn btn-default disabled" style="height:38px;color: #333;background-color: #fff;border-color: #ccc;line-height: 2.438571; " type="button" data-toggle="modal" onclick="openGMap()" data-target="#GMapPopup"  ><i class="fa-crosshairs fa"></i> <?= $locate_me ?> </button>
 
                                                         </span>
                                                     </div>

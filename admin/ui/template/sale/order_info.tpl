@@ -51,14 +51,15 @@
 		  <?php } ?>
 		  
 		  <li><a href="#tab-product" data-toggle="tab"><?php echo $tab_product; ?></a></li>
-		  <?php if($is_edited) {?>
 		  <li><a href="#tab-original-product" data-toggle="tab">Ordered Products</a></li>
 
-		  <?php } ?>
+		 <!-- <?php if($is_edited) {?>-->
 
-		  <?php if(!$this->user->isVendor() && $is_edited) {?>
+		  <!--<?php } ?>-->
+<!--Difference  products tab is not required , so commented -->
+		  <?php if(!$this->user->isVendor() && $is_edited && 1==2  ) {?>
 
-		  	<li><a href="#tab-difference-product" data-toggle="tab">Difference Products</a></li>
+		  	<li style="visibility:hidden" ><a href="#tab-difference-product"  data-toggle="tab">Difference Products</a></li>
 
 		  <?php } ?>
 
@@ -546,8 +547,9 @@
 
 					  <td class="text-left"><?php echo $column_model; ?></td>
 					  <td class="text-left"><?php echo $column_name; ?></td>
-					  <td class="text-left"><?php echo $column_unit; ?></td>
-					  <td class="text-right"><?php echo $column_quantity; ?></td>
+					  <td class="text-right"><?php echo trim($column_quantity,"( Ordered )!") ; ?></td>
+					  <td class="text-right"><?php echo $column_unit; ?></td>
+
 					  <td class="text-right"><?php echo $column_price; ?></td>
 					  <td class="text-right"><?php echo $column_total; ?></td>
 					  
@@ -610,9 +612,10 @@
                         <?php } } ?>
 							
 						</td>
-						<td class="text-left"><?php echo $product['unit']; ?></td>
 					  
 					  <td class="text-right"><?php echo $product['quantity']; ?></td>
+						<td class="text-right"><?php echo $product['unit']; ?></td>
+
 					  <td class="text-right"><?php echo $product['price']; ?></td>
 					  <td class="text-right"><?php echo $product['total']; ?></td>
 					  
@@ -668,7 +671,7 @@
 		  </div>
 
 		  <!-- orignal ordered products start-->
-		  <?php if($is_edited) {?>
+		   <?php if($is_edited  || 1==1) {?> 
 
 
 		<div class="tab-pane" id="tab-original-product">     
@@ -678,15 +681,21 @@
 					<tr>
 						<td class="text-left"><?php echo $column_model; ?></td>
 					  <td class="text-left"><?php echo $column_name; ?></td>
-					  <td class="text-left"><?php echo $column_unit; ?></td>
 					  
 					  <td class="text-right"><?php echo $column_quantity; ?></td>
+					  <td class="text-right"><?php echo $column_unit.'( Ordered )'; ?></td>
+
+					    <td class="text-right"><?php echo $column_quantity_update; ?></td>
+						  <td class="text-right"><?php echo $column_unit.'( Updated )'; ?></td>
+
 					  <td class="text-right"><?php echo $column_price; ?></td>
 					  <td class="text-right"><?php echo $column_total; ?></td>
 					  
 					</tr>
 				  </thead>
 				  <tbody>
+ 	 
+				  
 					<?php $i=0;  foreach ($original_products as $original_product) { ?>
 					<tr>
 						<td class="text-left"><?php echo $original_product['model']; ?></td>
@@ -707,9 +716,13 @@
 
 							
 						</td>
-						<td class="text-left"><?php echo $original_product['unit']; ?></td>
 					  
 					  <td class="text-right"><?php echo $original_product['quantity']; ?></td>
+						<td class="text-right"><?php echo $original_product['unit']; ?></td>
+
+						  <td class="text-right"><?php echo $original_product['quantity_updated']; ?></td>
+						  <td class="text-right"><?php echo $original_product['unit_updated']; ?></td>
+
 					  <td class="text-right"><?php echo $original_product['price']; ?></td>
 					  <td class="text-right"><?php echo $original_product['total']; ?></td>
 					  
@@ -729,7 +742,7 @@
 				</tbody>
 		  </div>
 
-		  <?php } ?>
+		  <?php } ?> 
 
 		   <?php if(!$this->user->isVendor() && $is_edited) {?>
 
@@ -802,11 +815,13 @@
 					  <thead>
 						<tr>
 							<td class="text-left"><?php echo $column_model; ?></td>
-						  <td class="text-left"><?php echo $column_name; ?></td>
-						  <td class="text-left"><?php echo $column_unit; ?></td>
-						  
+						  <td class="text-left"><?php echo $column_name; ?></td>						  
 						  <td class="text-right"><?php echo $column_quantity; ?></td>
+						  <td class="text-right"><?php echo $column_unit.'( Ordered )'; ?></td>
+
 						  <td class="text-right"><?php echo $column_quantity_update; ?></td>
+						  <td class="text-right"><?php echo $column_unit.'( Updated )'; ?></td>
+
 						  <td class="text-right"><?php echo $column_price; ?></td>
 						  <td class="text-right"><?php echo $column_total; ?></td>
 						  
@@ -833,10 +848,12 @@
 
 								
 							</td>
-							<td class="text-left"><?php echo $difference_product['unit']; ?></td>
 						  
 						  <td class="text-right"><?php echo $difference_product['quantity']; ?></td>
+							<td class="text-right"><?php echo $difference_product['unit']; ?></td>
+
 						  <td class="text-right"><?php echo $difference_product['quantity_updated']; ?></td>
+						  <td class="text-right"><?php echo $difference_product['unit_updated']; ?></td>
 						  <td class="text-right"><?php echo $difference_product['price']; ?></td>
 						  <td class="text-right"><?php echo $difference_product['total']; ?></td>
 						  
