@@ -143,7 +143,8 @@
                                                     <?= $text_order_id_with_colon ?>
                                                     <span class="my-order-id-number">#<?php echo $order_id; ?></span>
                                                 </span>
-                                                <span class="my-order-id-item"><strong><?php echo $total_quantity; ?></strong> <?= $text_items ?></span>
+                                                <span class="my-order-id-item"><strong><?php echo $total_products; ?></strong> <?= $text_products ?></span>
+                                                <!--<span class="my-order-id-item"><strong><?php echo $total_quantity; ?></strong> <?= $text_products ?></span>-->
                                             </li>
                                             <?php $i=0;  foreach ($products as $product) { ?>
                                                 <li class="list-group-item">

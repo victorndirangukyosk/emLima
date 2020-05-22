@@ -292,7 +292,7 @@ class ControllerAccountOrder extends Controller {
 			$data['text_go_back'] = $this->language->get('text_go_back');
 			$data['text_order_id_with_colon'] = $this->language->get('text_order_id_with_colon');
 			$data['text_items'] = $this->language->get('text_items');
-			
+			$data['text_products'] = $this->language->get('text_products');
 			
 			$data['text_coupon_willbe_credited'] = $this->language->get('text_coupon_willbe_credited');
 			$data['text_coupon_credited'] = $this->language->get('text_coupon_credited');
@@ -663,6 +663,7 @@ class ControllerAccountOrder extends Controller {
 			$data['footer'] = $this->load->controller('common/footer');
 			$data['header'] = $this->load->controller('common/header/onlyHeader');
 
+			$data['total_products'] = count($data['products']);
 			$data['total_quantity'] = 0;
 			foreach ($data['products'] as $product) {
 				$data['total_quantity'] += $product['quantity'];
@@ -1156,7 +1157,8 @@ class ControllerAccountOrder extends Controller {
 			$data['content_bottom'] = $this->load->controller('common/content_bottom');
 			$data['footer'] = $this->load->controller('common/footer');
 			$data['header'] = $this->load->controller('common/header/onlyHeader');
-
+			$data['text_products'] = $this->language->get('text_products');
+			$data['total_products'] = count($data['products']);
 			$data['total_quantity'] = 0;
 			foreach ($data['products'] as $product) {
 				$data['total_quantity'] += $product['quantity'];
