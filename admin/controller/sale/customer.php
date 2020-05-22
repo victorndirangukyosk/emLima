@@ -13,6 +13,13 @@ class ControllerSaleCustomer extends Controller {
         $this->load->model('sale/customer');
 
         $this->getList();
+
+        $data['kondutoStatus'] = $this->config->get('config_konduto_status');
+        $this->load->language('account/address');
+        $data['konduto_public_key'] = $this->config->get('config_konduto_public_key');
+
+        // $this->load->model('account/address');
+
     }
 
     public function export_excel() {
@@ -1236,17 +1243,17 @@ class ControllerSaleCustomer extends Controller {
                     $this->error['address'][$key]['zipcode'] = $this->language->get('error_zipcode');
                 }*/
 
-                if (empty($value['flat_number'])) {
-                    $this->error['address'][$key]['flat_number'] = $this->language->get('error_flat_number');
-                }
+                // if (empty($value['flat_number'])) {
+                //     $this->error['address'][$key]['flat_number'] = $this->language->get('error_flat_number');
+                // }
                 
-                if (empty($value['building_name'])) {
-                    $this->error['address'][$key]['building_name'] = $this->language->get('error_building_name');
-                }
+                // if (empty($value['building_name'])) {
+                //     $this->error['address'][$key]['building_name'] = $this->language->get('error_building_name');
+                // }
 
-                if (empty($value['landmark'])) {
-                    $this->error['address'][$key]['landmark'] = $this->language->get('error_landmark');
-                }
+                // if (empty($value['landmark'])) {
+                //     $this->error['address'][$key]['landmark'] = $this->language->get('error_landmark');
+                // }
             }
         }
 

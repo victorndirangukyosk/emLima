@@ -293,8 +293,37 @@
                     <?php foreach ($addresses as $address) { ?>
                     <div class="tab-pane" id="tab-address<?php echo $address_row; ?>">
                       <input type="hidden" name="address[<?php echo $address_row; ?>][address_id]" value="<?php echo $address['address_id']; ?>" />
+                       
+     <div class="select-locations">
+                <label class="control control--radio">Home
+                    
+                    <?php if($address['address_type'] == 'home') {?> 
+                        <input type="radio" group="type" name="edit_modal_address_type" value="home" checked="checked" />
+                    <?php } else {?>
+                    <input type="radio" group="type" name="edit_modal_address_type" value="home"/>
+                    <?php } ?>
+                    <div class="control__indicator"></div>
+                </label>
+                <label class="control control--radio">Office
+                    <?php if($address['address_type'] == 'office'){ ?> 
+                        <input type="radio" group="type" name="edit_modal_address_type" value="office" checked="checked" />
+                    <?php } else {?>
+                    <input type="radio" group="type" name="edit_modal_address_type" value="office"/>
+                    <?php } ?>
+                    <div class="control__indicator"></div>
+                </label>
+                <label class="control control--radio">Other
+                    <?php if($address['address_type'] == 'other'){ ?> 
+                        <input type="radio" group="type" name="edit_modal_address_type" value="other" checked="checked" />
+                    <?php } else { ?>
+                    <input type="radio" group="type" name="edit_modal_address_type" value="other"/>
+                    <?php } ?>
+                    <div class="control__indicator"></div>
+                </label>
+            </div>
+
                       <div class="form-group required">
-                        <label class="col-sm-2 control-label" for="input-name<?php echo $address_row; ?>"><?= $entry_name ?></label>
+                        <label class="col-sm-2 control-label" for="input-name<?php echo $address_row; ?>">Name</label>
                         <div class="col-sm-10">
                           <input type="text" name="address[<?php echo $address_row; ?>][name]" value="<?php echo $address['name']; ?>" placeholder="Name" id="input-name<?php echo $address_row; ?>" class="form-control" />
                           <?php if (isset($error_address[$address_row]['name'])) { ?>
@@ -312,7 +341,7 @@
                             </div>
                         </div>
                         <!-- Text input-->
-                        <div class="form-group">
+                      <!--   <div class="form-group">
                             <label class="col-sm-2 control-label" for="street"><?= $text_stree_society_office?></label>
                             <div class="col-md-10">
                                 <input type="text" name="address[<?php echo $address_row; ?>][building_name]" value="<?php echo $address['building_name']; ?>" placeholder="building_name" id="input-building_name<?php echo $address_row; ?>" class="form-control" />
@@ -320,28 +349,28 @@
                           <div class="text-danger"><?php echo $error_address[$address_row]['building_name']; ?></div>
                           <?php } ?>
                             </div>
-                        </div>
+                        </div>-->
                         <!-- Text input-->
                         <div class="form-group">
                             <label class="col-sm-2 control-label" for="Locality"><?= $text_locality?></label>
                             <div class="col-md-10">
-                                <input type="text" name="address[<?php echo $address_row; ?>][landmark]" value="<?php echo $address['landmark']; ?>" placeholder="landmark" id="input-landmark<?php echo $address_row; ?>" class="form-control" />
+                                <input type="text" name="address[<?php echo $address_row; ?>][landmark]" value="<?php echo $address['landmark']; ?>" placeholder="" id="input-landmark<?php echo $address_row; ?>" class="form-control" />
                           <?php if (isset($error_address[$address_row]['landmark'])) { ?>
                           <div class="text-danger"><?php echo $error_address[$address_row]['landmark']; ?></div>
                           <?php } ?>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <label class="col-sm-2 control-label" for="zipcode"><?= $label_zipcode ?></label>
-                            <div class="col-md-10">
+                            <div class="col-md-10">-->
                                 <!-- <input type="hidden" name="address[<?php echo $address_row; ?>][zipcode]" value="<?php echo $address['zipcode']; ?>" id="input-zipcode<?php echo $address_row; ?>" class="form-control" disabled/> -->
-                                <input type="text" name="address[<?php echo $address_row; ?>][zipcode]" value="<?php echo $address['zipcode']; ?>" placeholder="zipcode" id="input-zipcode<?php echo $address_row; ?>" class="form-control"/>
+                               <!--  <input type="text" name="address[<?php echo $address_row; ?>][zipcode]" value="<?php echo $address['zipcode']; ?>" placeholder="zipcode" id="input-zipcode<?php echo $address_row; ?>" class="form-control"/>
                           <?php if (isset($error_address[$address_row]['zipcode'])) { ?>
                           <div class="text-danger"><?php echo $error_address[$address_row]['zipcode']; ?></div>
                           <?php } ?>
                             </div>
-                        </div>
-                      <div class="form-group required">
+                        </div>-->
+                      <!-- <div class="form-group required">
                         <label class="col-sm-2 control-label" for="input-address-1<?php echo $address_row; ?>"><?= $entry_contact_no ?></label>
                         <div class="col-sm-10">
                           <input type="text" name="address[<?php echo $address_row; ?>][contact_no]" value="<?php echo $address['contact_no']; ?>" placeholder="Contact no" id="input-address-1<?php echo $address_row; ?>" class="form-control"/>
@@ -350,7 +379,7 @@
                           <?php } ?>
                         </div>
                       </div>
-                      <!-- <div class="form-group required">
+                      <div class="form-group required">
                         <label class="col-sm-2 control-label" for="input-address-2<?php echo $address_row; ?>"><?= $entry_address ?></label>
                         <div class="col-sm-10">
                             <textarea name="address[<?php echo $address_row; ?>][address]" placeholder="Address" id="input-address-2<?php echo $address_row; ?>" class="form-control"><?php echo $address['address']; ?></textarea>
@@ -358,7 +387,7 @@
                               <div class="text-danger"><?php echo $error_address[$address_row]['address']; ?></div>
                             <?php } ?>
                         </div>
-                      </div> -->
+                      </div>
                       <div class="form-group required disabled">
                         <label class="col-sm-2 control-label" for="input-city<?php echo $address_row; ?>"><?php echo $entry_city; ?></label>
                         <div class="col-sm-10">
@@ -372,15 +401,15 @@
                                 <?php } ?>
                             </select> 
                         </div>
-                      </div>
+                      </div> -->
                       <div class="form-group">
                         <label class="col-sm-2 control-label"><?php echo $entry_default; ?></label>
                         <div class="col-sm-10">
                           <label class="radio">
                             <?php if (($address['address_id'] == $address_id) || !$addresses) { ?>
-                            <input type="radio" name="address[<?php echo $address_row; ?>][default]" value="<?php echo $address_row; ?>" checked="checked" />
+                            <input type="radio" group="default" name="address[<?php echo $address_row; ?>][default]" value="<?php echo $address_row; ?>" checked="checked" />
                             <?php } else { ?>
-                            <input type="radio" name="address[<?php echo $address_row; ?>][default]" value="<?php echo $address_row; ?>" />
+                            <input type="radio" group="default" name="address[<?php echo $address_row; ?>][default]" value="<?php echo $address_row; ?>" />
                             <?php } ?>
                           </label>
                         </div>
@@ -459,6 +488,8 @@
       </div>
     </div>
   </div>
+
+
   <script type="text/javascript"><!--
       
 $('#tab-general input[type="radio"]').click(function(){
@@ -496,20 +527,108 @@ $('select[name=\'customer_group_id\']').trigger('change');
 var address_row = <?php echo $address_row; ?>;
 
 function addAddress() {
+  
   html  = '<div class="tab-pane" id="tab-address' + address_row + '">';
   html += '  <input type="hidden" name="address[' + address_row + '][address_id]" value="" />';
+
+  html += '  <div class="form-group">';
+  html += '  <label class="col-sm-1 control control--radio"><?='     Home      '?>';
+  html += '  <input type="radio" name="modal_address_type" value="home" checked="checked" />';
+  html += '  <div class="control__indicator"></div>';
+  html += '  </label>';
+  html += ' <label class="col-sm-1 control control--radio"><?='      Office      '  ?>';
+  html += ' <input type="radio" value="office" name="modal_address_type" />';
+  html += '  <div class="control__indicator"></div>';
+  html += '    </label>';
+  html += ' <label class="col-sm-1 control control--radio"><?= '     Other     '?>';
+  html += ' <input type="radio" value="other" name="modal_address_type" />';
+  html += '  <div class="control__indicator"></div>';
+  html += ' </label>';
+  html += '  </div>';
+
+
+
 
   html += '  <div class="form-group required">';
   html += '    <label class="col-sm-2 control-label" for="input-name' + address_row + '">Name</label>';
   html += '    <div class="col-sm-10"><input type="text" name="address[' + address_row + '][name]" value="" placeholder="Name" id="input-name' + address_row + '" class="form-control" /></div>';
   html += '  </div>';
 
-    html += '  <div class="form-group required">';
-    html += '    <label class="col-sm-2 control-label" for="input-flat_number' + address_row + '">Flat number</label>';
-    html += '    <div class="col-sm-10"><input type="text" name="address[' + address_row + '][flat_number]" value="" placeholder="flat number" id="input-flat_number' + address_row + '" class="form-control" /></div>';
-    html += '  </div>';
+
+  html += '  <input id="street' + address_row + '" name="address[' + address_row + '][street]" type="hidden"  class="form-control input-md" required="">';
+  html += '   <input id="picker_city_name' + address_row + '" name="address[' + address_row + '][picker_city_name]" type="hidden" value="">';
 
     html += '  <div class="form-group required">';
+    html += '    <label class="col-sm-2 control-label" for="input-flat_number' + address_row + '">House No. and Building Name</label>';
+    html += '    <div class="col-sm-10"><input type="text" name="address[' + address_row + '][flat_number]" value="" placeholder="45,Sunshine Apartments" id="input-flat_number' + address_row + '" class="form-control" /></div>';
+    html += '  </div>';
+
+
+
+     <!-- Text input--> 
+
+  html += '  <?php if($this->config->get('config_store_location') == 'zipcode') { ?>';
+  html += ' <div class="form-group required">';
+  html += '   <label class="col-sm-2 control-label" for="input-Locality' + address_row + '"> Your Location</label>';
+
+  html += '  <?php if($check_address) { ?>'; 
+  html += '  <div class="col-sm-10">';
+
+  html += ' <input name="modal_address_locality" type="text" value=""  class="form-control input-md LocalityId" id="address[' + address_row + '][address_locality]" required=""   >     ';                                               
+  html += ' <span class="form-group-btn">';
+
+  html += ' <button id="locateme" class="btn btn-default disabled" style=" color: #333;background-color: #fff;border-color: #ccc;line-height: 2.438571; " type="button" data-toggle="modal" onclick="openGMap()" data-target="#GMapPopup"  ><i class="fa-crosshairs fa"></i> Locate Me </button>';
+
+  html += ' </span>';
+  html += '  </div>';
+
+  html += ' <?php } else { ?>';
+  html += ' <div class="col-sm-10">';
+  html += ' <input  name="address[' + address_row + '][address_locality]" type="text"  class="form-control input-md LocalityId" id="address[' + address_row + '][address_locality]"  required=""  >';
+  html += ' </div>';
+  html += ' <?php } ?>';
+  html += ' </div>';
+
+  html += ' <?php } else { ?>';
+                                        
+  html += ' <div class="form-group required">';
+  html += ' <label class="col-sm-2 control-label" for="input-Locality' + address_row + '">Your Location</label>';
+
+  html += ' <?php if(1==1) { ?>';
+  <!-->$check_address-->
+
+  html += ' <div class="col-sm-10">';
+  html += ' <input  name="address[' + address_row + '][locality]" type="text"  class="form-control input-md LocalityId" id="input-address_locality' + address_row + '" required=""  class="form-control">';                                                    
+  html += ' <span class="input-group-btn">';
+
+  html += ' <button id="locateme" class="btn btn-default disabled" style="height:38px;color: #333;background-color: #fff;border-color: #ccc;line-height: 2.438571; " type="button" data-toggle="modal" onclick="openGMap()" data-target="#GMapPopup"  ><i class="fa-crosshairs fa"></i> Locate Me </button>';
+
+  html += ' </span>';
+  
+  html += '  </div>';
+  html += ' <?php } else { ?>';
+  html += ' <div class="col-sm-10">';
+  html += ' <input  name="address[' + address_row + '][locality]" type="text"  class="form-control input-md LocalityId" id="input-address_locality' + address_row + '" required="" class="form-control">';
+  html += ' </div>';
+  html += ' <?php } ?>';
+  html += ' </div>';
+  html += '  <?php } ?>';
+
+  html += ' <?php if($this->config->get('config_store_location') == 'zipcode') { ?>';
+  html += '  <div class="form-group">';
+  html += ' <label class="col-md-12 control-label" for="zipcode"><?= $label_zipcode ?></label>';
+  html += ' <div class="col-md-12">';
+  html += ' <input  id="shipping_zipcode_input" type="text" value="<?php echo $zipcode; ?>" name="shipping_zipcode" class="form-control input-md"  required="">';
+  html += ' </div>';
+  html += ' </div>';
+  html += ' <?php } else { ?>';
+  html += ' <input id="shipping_zipcode" type="hidden" value="<?php echo $zipcode; ?>" name="shipping_zipcode">';
+  html += ' <?php } ?>';
+                                    
+                                    
+                                    <!-- Button -->
+
+    /* html += '  <div class="form-group required">';
     html += '    <label class="col-sm-2 control-label" for="input-building_name' + address_row + '">Building name</label>';
     html += '    <div class="col-sm-10"><input type="text" name="address[' + address_row + '][building_name]" value="" placeholder="Building name" id="input-building_name' + address_row + '" class="form-control" /></div>';
     html += '  </div>';
@@ -531,7 +650,7 @@ function addAddress() {
         html += '  </div>';
         html += '  </div>';
       
-        /*html += '  <div class="form-group required">';
+       html += '  <div class="form-group required">';
         html += '  <label class="col-sm-2 control-label" for="input-address-2' + address_row + '">Address</label>';
         html += '  <div class="col-sm-10">';
         html += '      <textarea name="address[' + address_row + '][address]" placeholder="Address" id="input-address-2' + address_row + '" class="form-control"></textarea>';
@@ -656,23 +775,23 @@ $('#credit').load('index.php?path=sale/customer/credit&token=<?php echo $token; 
 $('#button-credit').on('click', function(e) {
   e.preventDefault();
 
-  $.ajax({
+        $.ajax({
     url: 'index.php?path=sale/customer/credit&token=<?php echo $token; ?>&customer_id=<?php echo $customer_id; ?>',
     type: 'post',
     dataType: 'html',
     data: 'description=' + encodeURIComponent($('#tab-credit input[name=\'description\']').val()) + '&amount=' + encodeURIComponent($('#tab-credit input[name=\'amount\']').val()),
     beforeSend: function() {
       $('#button-credit').button('loading');
-    },
+         },
     complete: function() {
       $('#button-credit').button('reset');
     },
     success: function(html) {
-      $('.alert').remove();
+        $('.alert').remove();
 
       $('#credit').html(html);
 
-      $('#tab-credit input[name=\'amount\']').val('');
+       $('#tab-credit input[name=\'amount\']').val('');
       $('#tab-credit input[name=\'description\']').val('');
     }
   });
@@ -682,7 +801,7 @@ $('#button-credit').on('click', function(e) {
   <script type="text/javascript"><!--
 $('#reward').delegate('.pagination a', 'click', function(e) {
   e.preventDefault();
-
+  
   $('#reward').load(this.href);
 });
 
@@ -691,7 +810,7 @@ $('#reward').load('index.php?path=sale/customer/reward&token=<?php echo $token; 
 $('#referral').delegate('.pagination a', 'click', function(e) {
   e.preventDefault();
 
-  $('#referral').load(this.href);
+ $('#referral').load(this.href);
 });
 
 $('#referral').load('index.php?path=sale/customer/referral&token=<?php echo $token; ?>&customer_id=<?php echo $customer_id; ?>');
@@ -715,17 +834,18 @@ $('#button-reward').on('click', function(e) {
 
       $('#reward').html(html);
 
-      $('#tab-reward input[name=\'points\']').val('');
+       $('#tab-reward input[name=\'points\']').val('');
       $('#tab-reward input[name=\'description\']').val('');
-    }
+       }
   });
 });
 
 $('#ip').delegate('.pagination a', 'click', function(e) {
   e.preventDefault();
 
-  $('#ip').load(this.href);
+ $('#ip').load(this.href);
 });
+
 
 $('#ip').load('index.php?path=sale/customer/ip&token=<?php echo $token; ?>&customer_id=<?php echo $customer_id; ?>');
 
@@ -771,17 +891,18 @@ $('body').delegate('.button-ban-remove', 'click', function() {
     data: 'ip=' + encodeURIComponent(this.value),
     beforeSend: function() {
       $(element).button('loading');
-    },
+       },
     complete: function() {
       $(element).button('reset');
-    },
+        },
     success: function(json) {
-      $('.alert').remove();
+ $('.alert').remove();
 
       if (json['error']) {
          $('#content > .container-fluid').prepend('<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> ' + json['error'] + '</div>');
       }
 
+      
       if (json['success']) {
          $('#content > .container-fluid').prepend('<div class="alert alert-success"><i class="fa fa-check-circle"></i> ' + json['success'] + '</div>');
 
@@ -888,3 +1009,584 @@ $('.time').datetimepicker({
 </style>
 
 <?php echo $footer; ?>
+
+<style>
+  #tab-general select, #tab-general textarea {
+    max-width: 220px !important;
+  }
+  #tab-general input[type="radio"]{
+      margin-left: 0 !important;
+  }
+</style>
+ 
+
+    <style type="text/css">
+        .pac-container {
+          z-index: 99999999;
+        }
+        #map * {
+            overflow:visible;
+        }
+    </style>
+    
+    
+
+    <div class="GMapPopup">
+        <div class="modal fade" id="GMapPopup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <div class="row">
+
+                            <div class="col-md-12">
+                                <center> 
+                                    <h2><?= $text_your_location ?> </h2>
+                                </center>
+                            </div>
+                        </div>
+
+                        <div id="wrapper">
+                           
+                            <div id="us1" style="width: 100%; height: 400px;"></div> 
+                            <div id="us2" style="width: 100%; height: 400px;display: none"></div>
+                           
+                           <div id="over_map">
+
+                                <div class="input-group">
+
+                                    <input  name="modal_address_locality" type="text" id="gmap-input" class="form-control input-md LocalityId LocalityId2" required="" >                                                    
+                                    <span class="input-group-btn">
+
+                                        <button class="btn btn-default" id="detect_location" style="color: #333;background-color: #fff;border-color: #ccc;width: 150px;line-height: 2.438571; " type="button"  onclick="getLocation()"><i class="fa fa-location-arrow"></i> <?= $detect_location ?></button>
+
+                                    </span>
+                                </div>
+                                
+                           </div>
+                        </div>
+                        
+                        <style>
+                           #wrapper { position: relative; }
+                           #over_map { position: absolute; top: 10px; padding-right: 12px;
+                                        padding-left: 12px;  z-index: 99; width: 100%}
+                        </style>
+
+                        <script type="text/javascript">
+                            
+
+                            
+                        </script>
+                        <div class="row" style="margin-top: 10px;">
+                            
+                            <center>
+                                <button id="saveLatLng" type="button" class="btn btn btn-primary" onclick="saveLatLng()"><?= $text_ok?></button>
+                            </center>    
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="<?= $base?>front/ui/theme/mvgv2/js/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="<?= $base?>front/ui/theme/mvgv2/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="<?= $base?>front/ui/theme/mvgv2/js/side-menu-script.js"></script>
+    <script src="<?= $base?>front/ui/theme/mvgv2/js/jquery.maskedinput.js" type="text/javascript"></script>
+    <script type="text/javascript" src="<?= $base?>front/ui/theme/mvgv2/js/html5lightbox.js"></script>
+    <script type="text/javascript" src="<?= $base?>front/ui/theme/mvgv2/js/jquery.sticky.js"></script>
+    <script type="text/javascript" src="<?= $base?>front/ui/theme/mvgv2/js/header-sticky.js"></script>
+
+    <script type="text/javascript" src="https://maps.google.com/maps/api/js?key=<?= $this->config->get('config_google_api_key') ?>&libraries=places"></script>
+
+    <script type="text/javascript" src="<?= $base?>admin/ui/javascript/map-picker/js/locationpicker.jquery.js?v=2.2"></script>
+    
+
+    <script type="text/javascript">
+
+            console.log("error_email");
+            
+
+            
+            $('#us1').locationpicker({
+                location: {
+                    latitude: <?= $latitude?$latitude:0 ?>,
+                    longitude: <?= $longitude?$longitude:0 ?>
+                },  
+                radius: 0,
+                inputBinding: {
+                    latitudeInput: $('input[name="latitude"]'),
+                    longitudeInput: $('input[name="longitude"]'),
+                    locationNameInput: $('.LocalityId')
+                },
+                enableAutocomplete: true,
+                zoom:13
+
+            }); 
+
+
+            function saveLatLng() {
+                $('#GMapPopup').modal('hide');
+
+                $('.LocalityId').val($('.LocalityId').val());
+            }
+
+            console.log("ehjdhj");
+            jQuery(function($){
+                console.log("mask");
+               $("#shipping_zipcode_input").mask("<?= $zipcode_mask_number ?>",{autoclear:false,placeholder:"<?= $zipcode_mask ?>"});
+            });
+
+            function saveInAddressBook() {
+
+                console.log($('#new-address-form').serialize());
+                console.log("saveInAddressBook");
+                $('.alert').remove();
+                $('#save-address').button('saving');
+
+                $('.help-block').hide();
+                $('.has-error').removeClass('has-error');
+
+                $error = false;
+                var shipping_address = $('input[name="modal_address_street"]').val();
+                var shipping_zipcode = $('input[name="shipping_zipcode"]').val();
+                var shipping_city_id = $('input[name="shipping_city_id"]').val();
+                var landmark = $('input[name="modal_address_locality"]').val();
+                var building_name = $('input[name="modal_address_name"]').val();
+                var flat_number = $('input[name="modal_address_flat"]').val();
+                var address_type = $('input[name="modal_address_type"]:checked').val();
+                //validate all fields
+
+                if (landmark.length <= 0) {
+                    $error = true;
+                    $('input[name="modal_address_locality"]').parents('.form-group').addClass('has-error').find('.help-block').show();
+                }
+
+                if (building_name.length <= 0) {
+                    $error = true;
+                    $('input[name="modal_address_name"]').parents('.form-group').addClass('has-error').find('.help-block').show();
+                }
+
+                if (flat_number.length <= 0 ) {
+                    $error = true;
+                    $('input[name="modal_address_flat"]').parents('.form-group').addClass('has-error').find('.help-block').show();
+                }
+
+                <?php if($this->config->get('config_store_location') == 'zipcode') { ?>
+
+                    if (shipping_zipcode.length <= 0) {
+                        $error = true;
+                        $('input[name="shipping_zipcode"]').parents('.form-group').addClass('has-error').find('.help-block').show();
+                    }
+                    
+                <?php } ?>
+
+                
+                
+                console.log(shipping_address+"**"+landmark+"**"+building_name+"**"+flat_number+"**"+address_type+"**");
+                
+                if (!$error) {
+                //if (false) {
+
+                    $valid_address = 0;
+                    $.ajax({
+                        url: 'index.php?path=account/address/addInAddressBookFromAccount',
+                        type: 'post',
+                        async: false,
+                        data: $('#new-address-form').serialize(),
+                        dataType: 'json',
+                        cache: false,
+                        success: function(json) {
+
+                            console.log(json);
+                            console.log("address add success");
+                            if (json.status == 0) {
+                                $('#address-message').html(json['message']);
+                                $('#address-success-message').html('');
+                               
+                            } else {
+                                console.log("address add success else");
+                                $('#address-panel').html(json.html);
+                                $('#addressModal').modal('hide');
+                                 location=location;
+                                return false;
+                            }
+                        },
+                        error: function(xhr, ajaxOptions, thrownError) {
+                            //alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                            $('#button-confirm').button('reset');
+                            return false;
+                        }
+                    });
+                    return true;
+                } else {
+                    /*$('html, body').animate({
+                        scrollTop: 0
+                    }, 'slow');
+                    $('#button-confirm').button('reset');*/
+                    return false;
+                }
+            }
+
+            function editAddressBook() {
+                console.log("editAddressBook");
+                $('.alert').remove();
+                $('#save-address').button('saving');
+
+                $('.help-block').hide();
+                $('.has-error').removeClass('has-error');
+
+                $error = false;
+                var shipping_address = $('input[name="edit_modal_address_street"]').val();
+                var shipping_zipcode = $('input[name="shipping_zipcode"]').val();
+                var shipping_city_id = $('input[name="shipping_city_id"]').val();
+                var landmark = $('input[name="edit_modal_address_locality"]').val();
+                var building_name = $('input[name="edit_modal_address_name"]').val();
+                var flat_number = $('input[name="edit_modal_address_flat"]').val();
+                var address_type = $('input[name="edit_modal_address_type"]:checked').val();
+                //validate all fields
+
+                
+
+                if (landmark.length <= 0) {
+                    $error = true;
+                    $('input[name="edit_modal_address_locality"]').parents('.form-group').addClass('has-error').find('.help-block').show();
+                }
+                
+                if (building_name.length <= 0) {
+                    $error = true;
+                    $('input[name="edit_modal_address_name"]').parents('.form-group').addClass('has-error').find('.help-block').show();
+                }
+
+                /*if (flat_number.length <= 0 ) {
+                    $error = true;
+                    $('input[name="edit_modal_address_flat"]').parents('.form-group').addClass('has-error').find('.help-block').show();
+                }*/
+
+                /*if (shipping_zipcode.length <= 0) {
+                    $error = true;
+                    $('input[name="shipping_zipcode"]').parents('.form-group').addClass('has-error').find('.help-block').show();
+                }*/
+
+                console.log(shipping_address+"**"+landmark+"**"+building_name+"**"+flat_number+"**"+address_type);
+                
+                if (!$error) {
+
+                    $valid_address = 0;
+                    $.ajax({
+                        url: 'index.php?path=account/address/editAddress',
+                        type: 'post',
+                        async: false,
+                        data: $('#edit-address-form').serialize(),
+                        dataType: 'json',
+                        cache: false,
+                        success: function(json) {
+
+                            console.log(json);
+                            console.log("address add success");
+                            if (json.status == 0) {
+                                $('#edit-address-message').html(json['message']);
+                                $('#edit-address-success-message').html('');
+                                
+                            } else {
+                                console.log("address add success else");
+                                $('#address-panel').html(json.html);
+                                $('#editAddressModal').modal('hide'); 
+                                location = location;                               
+                                return false;
+                            }
+
+                            location = location;
+                        },
+                        error: function(xhr, ajaxOptions, thrownError) {
+                            $('#button-confirm').button('reset');
+                            return false;
+                        }
+                    });
+                    return true;
+                } else {
+                    /*$('html, body').animate({
+                        scrollTop: 0
+                    }, 'slow');
+                    $('#button-confirm').button('reset');*/
+                    return false;
+                }
+            }
+
+
+            function editAddressModal($address_id) {
+
+                $('#edit-address-message').html('');
+                $('#edit-address-success-message').html('');
+                console.log($address_id);
+                console.log("address_id");
+                $.ajax({
+                    url: 'index.php?path=account/address/getAddress',
+                    type: 'post',
+                    async: false,
+                    data: {address_id: $address_id},
+                    dataType: 'json',
+                    cache: false,
+                    success: function(json) {
+
+                        console.log(json);
+                        $('.edit-address-form-panel').html(json['html']);
+
+                        $('#us2').locationpicker({
+                            location: {
+                                latitude: json['latitude'],
+                                longitude: json['longitude']
+                            },  
+                            radius: 0,
+                            inputBinding: {
+                                latitudeInput: $('input[name="latitude"]'),
+                                longitudeInput: $('input[name="longitude"]'),
+                                locationNameInput: $('.edit_LocalityId')
+                            },
+                            enableAutocomplete: true,
+                            zoom:13,
+
+                        });
+                        
+                        console.log($('#us1').locationpicker('location'));
+
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                        $('#button-confirm').button('reset');
+                        return false;
+                    }
+                });
+            }
+    </script>
+
+<?php if ($kondutoStatus) { ?>
+
+<script src="https://i.k-analytix.com/konduto.min.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+
+      var __kdt = __kdt || [];
+
+      var public_key = '<?php echo $konduto_public_key ?>';
+
+      console.log("public_key");
+      console.log(public_key);
+    __kdt.push({"public_key": public_key}); // The public key identifies your store
+    __kdt.push({"post_on_load": false});   
+      (function() {
+               var kdt = document.createElement('script');
+               kdt.id = 'kdtjs'; kdt.type = 'text/javascript';
+               kdt.async = true;    kdt.src = 'https://i.k-analytix.com/k.js';
+               var s = document.getElementsByTagName('body')[0];
+
+               console.log(s);
+               s.parentNode.insertBefore(kdt, s);
+                })();
+
+                var visitorID;
+        (function() {
+          var period = 300;
+          var limit = 20 * 1e3;
+          var nTry = 0;
+          var intervalID = setInterval(function() {
+          var clear = limit/period <= ++nTry;
+
+          console.log("visitorID trssy");
+          if (typeof(Konduto.getVisitorID) !== "undefined") {
+                   visitorID = window.Konduto.getVisitorID();
+                   clear = true;
+          }
+          console.log("visitorID clear");
+          if (clear) {
+         clearInterval(intervalID);
+        }
+        }, period);
+        })(visitorID);
+
+
+        var page_category = 'my-address-page';
+        (function() {
+          var period = 300;
+          var limit = 20 * 1e3;
+          var nTry = 0;
+          var intervalID = setInterval(function() {
+                   var clear = limit/period <= ++nTry;
+                   if (typeof(Konduto.sendEvent) !== "undefined") {
+
+                    Konduto.sendEvent (' page ', page_category); //Programmatic trigger event
+                        clear = true;
+                   }
+                 if (clear) {
+                clearInterval(intervalID);
+             }
+            },
+            period);
+            })(page_category);
+
+
+</script>
+
+<?php } ?>
+<script type="text/javascript">
+
+    function openGMap() {
+
+        $("#GMapPopup").on('shown.bs.modal', function () {
+            $('div#GMapPopup').show();
+            $('#us1').locationpicker('autosize');
+
+            console.log("efre");
+            
+        });
+    }
+
+    function GMapPopupInput() {
+
+        var acInputs = document.getElementsByClassName("LocalityId2");
+
+        
+
+        var autocomplete = new google.maps.places.Autocomplete(acInputs);
+        
+        google.maps.event.addListener(autocomplete, 'place_changed', function () {
+                
+            console.log("latitude");
+            console.log(autocomplete);
+            $('#us1').locationpicker({
+                location: {
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude
+                },  
+                radius: 0,
+                inputBinding: {
+                    latitudeInput: $('input[name="latitude"]'),
+                    longitudeInput: $('input[name="longitude"]'),
+                    locationNameInput: $('.LocalityId2')
+                },
+                enableAutocomplete: true,
+                zoom:13
+                
+            });
+        });       
+    }
+
+    
+
+    function initialize() {
+
+        var acInputs = document.getElementsByClassName("LocalityId");
+
+        for (var i = 0; i < acInputs.length; i++) {
+
+            var autocomplete = new google.maps.places.Autocomplete(acInputs[i]);
+            
+            google.maps.event.addListener(autocomplete, 'place_changed', function () {
+                    
+
+
+                
+            });
+        }
+    }
+
+    function getLocation() {
+
+        $('#detect_location').html('<i class="fa fa-location-arrow"></i> <?= $text_locating ?>');
+        console.log("getLocation");
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+        } else {
+            alert("Geolocation is not supported by this browser.");
+        }
+    }
+
+    function showPosition(position) {
+        //var latlon = position.coords.latitude + "," + position.coords.longitude;
+        console.log("showPosition");
+        console.log(position);
+
+        
+
+        $('#us1').locationpicker({
+            location: {
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude
+            },  
+            radius: 0,
+            inputBinding: {
+                latitudeInput: $('input[name="latitude"]'),
+                longitudeInput: $('input[name="longitude"]'),
+                locationNameInput: $('.LocalityId')
+            },
+            enableAutocomplete: true,
+            zoom:13
+        });
+
+        console.log($('#us1').locationpicker('location'));
+
+        $('#detect_location').html('<i class="fa fa-location-arrow"></i> <?= $detect_location ?>');
+    }
+
+    //initialize();
+
+    $(document.body).on('mousedown', '.pac-container .pac-item', function(e) {
+        console.log('click fired');
+        $('#locateme').removeClass('disabled');
+    });
+
+    $(document.body).on('change', '.LocalityId', function(e) {
+        console.log('change LocalityId');
+
+        var address= $('#us1').locationpicker('location');
+        console.log(address);
+
+        /*if(address.addressComponents.streetName && address.addressComponents.streetNumber ) {
+            $('#street').val(address.addressComponents.streetNumber+' '+address.addressComponents.streetName);
+            $('#edit-street').val(address.addressComponents.streetNumber+' '+address.addressComponents.streetName);
+        } else {
+            $('#street').val(address.addressComponents.streetName);
+            $('#edit-street').val(address.addressComponents.streetName);
+        }*/
+
+        
+
+        if(!$('.LocalityId').val().length) {
+            $('#locateme').addClass('disabled');
+        }
+    });
+
+    $(document.body).on('change', '.edit_LocalityId', function(e) {
+        console.log('change edit_LocalityId');
+
+        var address= $('#us2').locationpicker('location');
+        console.log(address);
+
+        //$('.LocalityId').val();
+        if(address.addressComponents.streetName && address.addressComponents.streetNumber ) {
+            $('#street').val(address.addressComponents.streetNumber+' '+address.addressComponents.streetName);
+            $('#edit-street').val(address.addressComponents.streetNumber+' '+address.addressComponents.streetName);
+        } else {
+            $('#street').val(address.addressComponents.streetName);
+            $('#edit-street').val(address.addressComponents.streetName);
+        }
+
+        
+
+        if(!$('.LocalityId').val().length) {
+            $('#locateme').addClass('disabled');
+        }
+    });
+
+
+    
+
+    
+    
+</script>
+</body>
+
+</html>
