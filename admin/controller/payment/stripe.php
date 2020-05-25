@@ -78,7 +78,7 @@ class ControllerPaymentStripe extends Controller {
 
 		$data['button_save']           = $this->language->get('button_save');
 		$data['button_cancel']         = $this->language->get('button_cancel');
-		$data['currencies']			   = ['usd', 'eur'];
+		$data['currencies']			   = ['usd', 'eur', 'kes'];
 
 		
 
