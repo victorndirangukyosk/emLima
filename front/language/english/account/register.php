@@ -4,7 +4,7 @@
 //$_['heading_title']        = 'Register Account';
 $_['verify_mail_sent']         = 'Thank You for signing Up. We have sent a verification email. Please verify your email';
 $_['register_mail_sent']        = 'Thank You for signing Up with us, You can login using email/phone and password.';
-$_['register_disabled_msg']       = 'Thank You for signing up and verifying with us, Our team will contact within 48 Hours for activation of account.';
+$_['register_disabled_msg']       = 'Thank You for signing up and verifying with us, Our team will contact within 6 Hours for activation of account.';
 $_['heading_text']         = 'Sign Up';
 
 // Text

@@ -1065,12 +1065,11 @@ function ValidateEmail(mail)
 $(document).delegate('#login_send_otp', 'click', function() {
     console.log("login_send_otp click");
     
-
     
     if( ($('#login-form #email').val().length > 0) &&  ($('#login-form #password').val().length > 0)){
 
         var text = $('.login-modal-text').html();
-        $('.login-modal-text').html('');
+        //$('.login-modal-text').html('');
         $('.login-loader').show();
 
         $.ajax({
@@ -1100,7 +1099,7 @@ $(document).delegate('#login_send_otp', 'click', function() {
                 
                    
                 } else {
-                    $('.login-modal-text').html(text);
+                    //$('.login-modal-text').html(text);
                     $('.login-loader').hide();
                     //$('#login-message').html(json['error_warning']);
                     $('#login-message').html("<p style='color:red'>"+json['error_warning']+"</p>");
@@ -1184,7 +1183,6 @@ $(document).delegate('#login_verify_otp', 'click', function() {
 });
 
 $(document).delegate('#signup', 'click', function() {
-
     console.log($('#register_verify_otp').val());
     console.log($('input[name="agree_checkbox"]:checked').length);
     if($('input[name="agree_checkbox"]:checked').length)
@@ -1194,7 +1192,7 @@ $(document).delegate('#signup', 'click', function() {
         $('#error_agree').hide();
     
         var text = $('.signup-modal-text').html();
-        $('.signup-modal-text').html('');
+        //$('.signup-modal-text').html('');
         $('.signup-loader').show();
 
         $('#signup-message').html('please wait...');
@@ -1492,7 +1490,7 @@ $(document).delegate('#signup', 'click', function() {
 $(document).delegate('#signup-resend-otp', 'click', function() {
 
     var text = $('.signup-modal-text').html();
-    $('.signup-modal-text').html('');
+    //$('.signup-modal-text').html('');
     $('.signup-loader').show();
 
     $('#signup-message').html('please wait...');

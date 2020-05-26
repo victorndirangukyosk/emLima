@@ -14,7 +14,7 @@ $_['text_fax']       = 'Fax';
 $_['text_open']      = 'Opening Times';
 $_['text_comment']   = 'Comments';
 $_['text_success']   = '<p>We have received your enquiry. We will respond soon!</p>';
-
+$_['text_success_contact']   = '<p style="color:white;font-size:16px;">Thank you for writing to us. Our team will contact you and resolve your query.</p>';
 // Entry
 $_['entry_name']     = 'Your Name';
 $_['entry_email']    = 'E-Mail Address';

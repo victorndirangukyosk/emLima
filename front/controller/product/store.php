@@ -8,8 +8,14 @@ class ControllerProductStore extends Controller {
         //echo "<pre>";
         //print_r($_COOKIE);die;
         if(!isset($this->session->data['customer_id'])){
-			$this->response->redirect($this->url->link('account/login/customer'));	
+			if(isset($_REQUEST['action']) && ($_REQUEST['action'] == 'shop')){
+				$this->response->redirect($this->url->link('account/login/customer'));	
+			}else{
+			    $this->response->redirect($this->url->link('common/home/homepage'));
+			}	
         }
+
+        
         
         if ( isset( $this->request->get['store_id'] ) ) {
             $this->session->data['config_store_id'] = $this->request->get['store_id'];

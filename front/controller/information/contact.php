@@ -16,6 +16,7 @@ class ControllerInformationContact extends Controller {
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->request->isAjax() && $this->validate()) {
 
             $log->write("12");
+            $this->request->post['mobile'] = $this->request->post['telephone'];
             $subject = $this->emailtemplate->getSubject('Contact', 'contact_1', $this->request->post);
             $message = $this->emailtemplate->getMessage('Contact', 'contact_1', $this->request->post);
 
@@ -29,7 +30,7 @@ class ControllerInformationContact extends Controller {
 
             $data['status'] = true;
             $data['redirect'] = $this->url->link('account/account', '', 'SSL');
-            $data['text_message'] = $this->language->get('text_success');
+            $data['text_message'] = $this->language->get('text_success_contact');
 
             if ($this->request->isAjax()) {
                 $this->response->addHeader('Content-Type: application/json');
@@ -87,6 +88,12 @@ class ControllerInformationContact extends Controller {
             $data['error_enquiry'] = $this->error['enquiry'];
         } else {
             $data['error_enquiry'] = '';
+        }
+
+        if (isset($this->error['company-name'])) {
+            $data['error_company'] = $this->error['company-name'];
+        } else {
+            $data['error_company'] = '';
         }
 
         $data['button_submit'] = $this->language->get('button_submit');
@@ -217,7 +224,7 @@ class ControllerInformationContact extends Controller {
 
         $data['heading_title'] = $this->language->get('heading_title');
 
-        $data['text_message'] = $this->language->get('text_success');
+        $data['text_message'] = $this->language->get('text_success_contact');
 
         $data['button_continue'] = $this->language->get('button_continue');
 
@@ -250,11 +257,14 @@ class ControllerInformationContact extends Controller {
             $this->error['enquiry'] = $this->language->get('error_enquiry');
         }
 
+        if ((utf8_strlen($this->request->post['company-name']) < 1)) {
+            $this->error['company-name'] = 'Company name is required!';
+        }
+
+
         /*if ($this->config->get('config_google_captcha_status')) {
             $json = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret=' . urlencode($this->config->get('config_google_captcha_secret')) . '&response=g-recaptcha&remoteip=' . $this->request->server['REMOTE_ADDR']);
-
             $json = json_decode($json, true);
-
             if (!$json['success']) {
                 $this->error['captcha'] = $this->language->get('error_captcha');
             }
