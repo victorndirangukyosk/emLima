@@ -119,11 +119,379 @@ class ControllerCommonHome extends Controller {
 		echo json_encode($html);
 	}
 
-	public function index() {
-	
-		if(!isset($this->session->data['customer_id'])){
-			$this->response->redirect($this->url->link('account/login/customer'));	
+	public function homepage(){
+		$log = new Log('error.log');
+
+		$data['kondutoStatus'] = $this->config->get('config_konduto_status');
+
+		$data['konduto_public_key'] = $this->config->get('config_konduto_public_key');
+
+		//echo $this->config->get('config_store_location');die;
+
+		if(isset($this->session->data['language'])) {
+			$data['config_language'] = $this->session->data['language'];
+		} else {
+			$data['config_language'] = 'pt-BR';
 		}
+
+		if(isset($this->request->get['refer'])) {
+
+
+			$x = strpos($this->request->get['refer'],"%21%40");
+
+	        $p = substr($this->request->get['refer'], $x+6);
+
+			$cookie_name = "referral";
+			$cookie_value = $p;
+
+			//echo "<pre>";print_r($p);die;
+			setcookie($cookie_name, $cookie_value, time() + (86400 * 30), "/");// 1 day expiry
+		}
+		
+		$data['seo_url_test'] = $this->url->link('store/collection', 'collection_id=3');
+		
+		$log->write($data['konduto_public_key']);
+		unset($this->session->data['visitor_id']);
+
+		//$log->write($this->session->data['language']);
+
+		$data['justlogged_in'] = false;
+
+		if(isset($this->session->data['just_loggedin']) && $this->session->data['just_loggedin']) {
+			$data['justlogged_in'] = true;
+			$this->session->data['just_loggedin'] = false;
+		}
+		
+		if(defined('const_latitude') && defined('const_longitude') && !empty(const_latitude) && !empty(const_longitude) ) {
+
+			$_COOKIE['location'] = const_latitude.','.const_longitude;
+			
+            setcookie('location', const_latitude.','.const_longitude, time() + (86400 * 30 * 30 * 30 * 3), "/");// 3 month expiry
+
+			$_COOKIE['location_name'] = const_location_name;
+        	setcookie('location_name', const_location_name, time() + (86400 * 30 * 30 * 30 * 3), "/");
+        	
+			$this->response->redirect($this->url->link('information/locations/stores', 'location=' . const_latitude.",".const_longitude));	
+		}
+		
+		
+		if(count($_COOKIE) > 0 && isset($_COOKIE['zipcode'])) {
+
+			$this->response->redirect($this->url->link('information/locations/stores', 'zipcode=' . $_COOKIE['zipcode']));	
+			
+		}
+		if(count($_COOKIE) > 0 && isset($_COOKIE['location'])) {
+			$this->response->redirect($this->url->link('information/locations/stores', 'location=' . $_COOKIE['location']));	
+		}
+
+		
+		if(isset($this->session->data['config_store_id'])){
+			//$this->response->redirect($this->url->link('product/store'));
+
+			$this->response->redirect($this->url->link('product/store','store_id='.$this->session->data['config_store_id'].''));
+		}
+
+		
+
+		$this->load->model('tool/image');
+		$this->load->language('common/home');
+		
+		$data['blocks'] = [];
+
+		$blocks = $this->model_tool_image->getBlocks();
+
+		//echo "<pre>";print_r($blocks);die;
+		foreach ($blocks as $block) {
+			
+        	if (is_file(DIR_IMAGE . $block['image'])) {
+	            $image = $this->model_tool_image->resize($block['image'], 290, 163);
+	        } else {
+	            $image = $this->model_tool_image->resize('no_image.png', 290, 163);
+	   		}
+
+	        $temp['image'] = $image;
+	        $temp['description'] = trim($block['description']);
+	        $temp['title'] = $block['title'];
+	        $temp['sort_order'] = $block['sort_order'];
+	       
+	        array_push($data['blocks'], $temp);
+		}
+
+		
+		//echo "<pre>";print_r($data['blocks']);die;
+		$this->document->setTitle($this->config->get('config_meta_title'));
+		$this->document->setDescription($this->config->get('config_meta_description'));
+		$this->document->setKeywords($this->config->get('config_meta_keyword'));
+
+		$data['description'] = $this->document->getDescription();
+        $data['keywords'] = $this->document->getKeywords();
+        $data['metas'] = $this->document->getMetas();
+
+        $data['zipcode_mask'] = $this->config->get('config_zipcode_mask');
+
+        $data['zipcode_mask_number'] = '';
+        
+        if(isset($data['zipcode_mask'])) {
+        	$data['zipcode_mask_number'] = str_replace('#', '9', $this->config->get('config_zipcode_mask'));	
+        }
+
+
+        $data['telephone_mask'] = $this->config->get('config_telephone_mask');
+
+        if(isset($data['telephone_mask'])) {
+        	$data['telephone_mask_number'] = str_replace('#', '9', $this->config->get('config_telephone_mask'));	
+        }
+
+        $data['taxnumber_mask'] = $this->config->get('config_taxnumber_mask');
+
+        if(isset($data['taxnumber_mask'])) {
+        	$data['taxnumber_mask_number'] = str_replace('#', '*', $this->config->get('config_taxnumber_mask'));	
+        }
+
+        //echo "<pre>";print_r($data);die;
+        
+        if ($this->request->server['HTTPS']) {
+            $server = $this->config->get('config_ssl');
+        } else {
+            $server = $this->config->get('config_url');
+        }
+
+		if (!$this->config->get('config_seo_url') and isset($this->request->get['path'])) {
+			$this->document->addLink($server, 'canonical');
+		}
+
+		if ($this->config->get('config_google_analytics_status')) {
+            $data['google_analytics'] = html_entity_decode($this->config->get('config_google_analytics'), ENT_QUOTES, 'UTF-8');
+        } else {
+            $data['google_analytics'] = '';
+        }
+        
+
+		$data['text_get_groceries'] = $this->language->get('text_get_groceries');
+		$data['base'] = $server;
+		$data['text_deliver_in'] = $this->language->get('text_deliver_in');
+		$data['text_order_fresh'] = $this->language->get('text_order_fresh');
+		$data['text_shop_at'] = $this->language->get('text_shop_at');
+
+		$data['text_from_device'] = $this->language->get('text_from_device');
+		$data['text_schedule_delivery'] = $this->language->get('text_schedule_delivery');
+		$data['text_get_grocery_at'] = $this->language->get('text_get_grocery_at');
+		$data['text_an_hour'] = $this->language->get('text_an_hour');
+
+		$data['text_or_want_them'] = $this->language->get('text_or_want_them');
+		$data['text_get_delivered'] = $this->language->get('text_get_delivered');
+		$data['text_fresh_handpicked'] = $this->language->get('text_fresh_handpicked');
+		$data['text_local_stores'] = $this->language->get('text_local_stores');
+
+		$data['text_my_wishlist'] = $this->language->get('text_my_wishlist');
+		
+		$data['text_welcome_user'] = $this->language->get('text_welcome_user');
+		$data['text_open_store'] = $this->language->get('text_open_store');
+		$data['text_store_working'] = $this->language->get('text_store_working');
+		$data['text_enter_zipcode_title'] = $this->language->get('text_enter_zipcode_title');
+		$data['text_delivery_detail'] = $this->language->get('text_delivery_detail');
+		$data['text_enter_zipcode'] = $this->language->get('text_enter_zipcode');
+		$data['text_find_store'] = $this->language->get('text_find_store');
+		$data['text_have_account'] = $this->language->get('text_have_account');
+		$data['text_log_in'] = $this->language->get('text_log_in');
+		$data['text_get_delivered'] = $this->language->get('text_get_delivered');
+		$data['heading_title'] = $this->language->get('heading_title');
+		
+		if (isset($this->session->data['error'])) {
+            $data['error_warning'] = $this->session->data['error'];
+
+            unset($this->session->data['error']);
+        } else {
+            $data['error_warning'] = '';
+        }
+
+
+		$data['text_move_next'] = $this->language->get('text_move_next');
+		$data['text_login'] = $this->language->get('text_login');
+		$data['text_back'] = $this->language->get('text_back');
+		$data['text_enter_code_in_area'] = $this->language->get('text_enter_code_in_area');
+		$data['text_move_Next'] = $this->language->get('text_move_Next');
+		$data['text_enter_you_agree'] = $this->language->get('text_enter_you_agree');
+		$data['text_terms_of_service'] = $this->language->get('text_terms_of_service');
+		$data['text_privacy_policy'] = $this->language->get('text_privacy_policy');
+		$data['text_get_delivered_download_apps'] = $this->language->get('text_get_delivered_download_apps');
+		
+		
+		$data['support'] = $this->language->get('support');
+		$data['faq'] = $this->language->get('faq');
+		$data['call'] = $this->language->get('call');
+		$data['text'] = $this->language->get('text');
+		$data['text_account'] = $this->language->get('text_account');
+		$data['text_rewards'] = $this->language->get('text_rewards');
+		$data['text_orders'] = $this->language->get('text_orders');
+		$data['text_refer'] = $this->language->get('text_refer');
+		$data['text_sign_out'] = $this->language->get('text_sign_out');
+		$data['text_sign_in'] = $this->language->get('text_sign_in');
+		$data['text_heading'] = $this->language->get('text_heading');
+		$data['text_heading2'] = $this->language->get('text_heading2');
+		$data['text_heading3'] = $this->language->get('text_heading3');
+		$data['text_heading4'] = $this->language->get('text_heading4');
+		$data['text_heading5'] = $this->language->get('text_heading5');
+		$data['text_heading6'] = $this->language->get('text_heading6');
+
+		$data['text_my_cash'] = $this->language->get('text_my_cash');
+        $data['label_my_address'] = $this->language->get('label_my_address');
+        $data['text_my_profile'] = $this->language->get('text_my_profile');
+        $data['contactus'] = $this->language->get('contactus');
+        $data['text_logout'] = $this->language->get('text_logout');
+        $data['text_register'] = $this->language->get('text_register');
+        
+		$data['step1'] = $this->language->get('step1');
+		$data['step2'] = $this->language->get('step2');
+		$data['step3'] = $this->language->get('step3');
+		$data['step4'] = $this->language->get('step4');
+
+		$data['label_start'] = $this->language->get('label_start');
+		$data['label_name'] = $this->language->get('label_name');
+		$data['label_email/phone'] = $this->language->get('label_email/phone');
+		$data['label_msg'] = $this->language->get('label_msg');
+
+		$data['button_send'] = $this->language->get('button_send');
+	
+		$data['is_login'] = $this->customer->isLogged();
+		$data['f_name'] =  $this->customer->getFirstName();
+		$data['name'] =  $this->customer->getFirstName();
+		$data['l_name'] =  $this->customer->getLastName();
+		$data['full_name'] = $data['f_name'];//.' '.$data['l_name'];
+		$data['home'] = $this->url->link('common/home');
+		$data['wishlist'] = $this->url->link('account/wishlist', '', 'SSL');
+		$data['logged'] = $this->customer->isLogged();
+		$data['account'] = $this->url->link('account/account', '', 'SSL');
+		$data['register'] = $this->url->link('account/register', '', 'SSL');
+		$data['login'] = $this->url->link('account/login', '', 'SSL');
+		$data['order'] = $this->url->link('account/order', '', 'SSL');
+		$data['credit'] = $this->url->link('account/credit', '', 'SSL');
+		$data['download'] = $this->url->link('account/download', '', 'SSL');
+		$data['logout'] = $this->url->link('account/logout', '', 'SSL');
+		$data['shopping_cart'] = $this->url->link('checkout/cart');
+		$data['checkout'] = $this->url->link('checkout/checkout', '', 'SSL');
+		$data['contact'] = $this->url->link('information/contact');
+		$data['telephone'] = $this->config->get('config_telephone');
+		$data['refer'] = $this->url->link('account/refer','','SSL');
+		$data['reward'] = $this->url->link('account/reward','','SSL');
+		$data['footer'] = $this->load->controller('common/footer');
+		$data['action'] = $this->url->link('common/home/find_store');
+		$data['address'] = $this->url->link('account/address', '', 'SSL');
+		$data['help'] = $this->url->link('information/help');
+		
+		$data['language'] = $this->load->controller('common/language/dropDown');
+		
+		$log->write("home tpl 3");
+		$data['login_modal'] = $this->load->controller('common/login_modal');
+
+		$log->write("home tpl 3.1");
+		$data['signup_modal'] = $this->load->controller('common/signup_modal');	
+
+		$log->write("home tpl 3.2");
+		$data['forget_modal'] = $this->load->controller('common/forget_modal');		
+
+		$log->write("home tpl 4");
+
+		$data['heading_title'] = $this->config->get('config_meta_title', '');
+
+		if ($this->request->server['HTTPS']) {
+			$server = $this->config->get('config_ssl');
+		} else {
+			$server = $this->config->get('config_url');
+		}
+
+		if (is_file(DIR_IMAGE . $this->config->get('config_icon'))) {
+            //$data['icon'] = $server . 'image/' . $this->config->get('config_icon');
+            $data['icon'] = $this->model_tool_image->resize($this->config->get('config_icon'),30,30);
+        } else {
+            $data['icon'] = '';
+        }
+
+
+		if (is_file(DIR_IMAGE . $this->config->get('config_fav_icon'))) {
+			$data['fav_icon'] = $server . 'image/' . $this->config->get('config_fav_icon');
+		} else {
+			$data['fav_icon'] = '';
+		}
+
+		if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
+			$data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'),200,110);
+			//$data['logo'] = $server . 'image/' . $this->config->get('config_logo');
+		} else {
+			$data['logo'] = '';
+		}
+		
+
+        $data['playStorelogo'] = $this->model_tool_image->resize('play-store-logo.png',200,60);
+        
+        $data['appStorelogo'] = $this->model_tool_image->resize('app-store-logo.png',200,60);
+
+		if(isset($this->session->data['warning'])){
+			$data['warning'] = $this->session->data['warning'];
+			unset($this->session->data['warning']);
+		}else{
+		   $data['warning'] = ''; 
+		}
+		
+		$data['banners'] = $data['testimonials'] = array();
+		
+		$rows = $this->model_tool_image->getTestimonial();
+		
+		foreach($rows as $row){
+			$row['thumb'] = $this->model_tool_image->resize($row['image'],80,80);
+			$data['testimonials'][] = $row;
+		}
+		
+		//banners 
+		$rows = $this->model_tool_image->getAllOffers();
+		
+		foreach($rows as $row){
+			if (false === strpos($row['link'], '://')) {
+				$row['link'] = 'http://' . $row['link'];
+			}
+			$row['image'] = $this->model_tool_image->resize($row['image'],300,300);            
+			$data['banners'][] = $row;    
+		}
+		
+		$data['play_store'] = $this->config->get('config_android_app_link');
+        $data['app_store'] = $this->config->get('config_apple_app_link');
+
+        //echo "<pre>";print_r($this->config->get('config_android_app_link'));die;
+		$this->load->model('setting/setting');
+        $te = $this->model_setting_setting->getSetting('config');
+
+        if($te) {
+            $data['play_store'] = $te['config_android_app_link'];
+            $data['app_store'] = $te['config_apple_app_link'];
+        }
+
+			
+		$data['login'] = $this->url->link('account/login', '', 'SSL');
+        $data['register'] = $this->url->link('account/register', '', 'SSL');
+		$data['forgotten'] = $this->url->link('account/forgotten', '', 'SSL');
+		// $this->load->model('assets/category');
+		// $data['categories'] = array();
+        // $this->load->controller('product/store' );
+	
+	    /* add Contact modal */
+		// $data['contactus_modal'] = $this->load->controller('information/contact');
+		
+		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/homepage.tpl')) {
+			$this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/homepage.tpl', $data));
+		} else {
+			$this->response->setOutput($this->load->view('default/template/common/homepage.tpl', $data));
+		}
+	}
+
+	public function index() {
+		if(!isset($this->session->data['customer_id'])){
+			if(isset($_REQUEST['action']) && ($_REQUEST['action'] == 'shop')){
+				$this->response->redirect($this->url->link('account/login/customer'));	
+			}else{
+			    $this->response->redirect($this->url->link('common/home/homepage'));
+			}
+		}
+
 		$log = new Log('error.log');
 
 		$data['kondutoStatus'] = $this->config->get('config_konduto_status');
@@ -587,6 +955,24 @@ class ControllerCommonHome extends Controller {
 			}*/
 	    }
 //	    echo'<pre>';print_r($data['stores']);exit;
+
+		// 5 best seller product
+		$complete_status_ids = '('.implode(',', $this->config->get('config_complete_status')).')';
+		$query_best = $this->db->query("SELECT SUM( op.quantity )AS total, op.product_id,op.general_product_id, pd.name FROM " . DB_PREFIX . "order_product AS op LEFT JOIN " . DB_PREFIX . "order AS o ON ( op.order_id = o.order_id ) LEFT JOIN  " . DB_PREFIX . "product_description AS pd ON (op.general_product_id = pd.product_id)  WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') ."' AND o.order_status_id IN " . $complete_status_ids . " GROUP BY pd.name ORDER BY total DESC LIMIT 5");
+		$best_products = $query_best->rows;
+		foreach ($best_products as $products){
+			$product_detail = $this->model_assets_product->getDetailproduct($products['product_id']);
+			$product_detail['thumb'] = $this->model_tool_image->resize($product_detail['image'], 100, 100);
+			$data['bestseller'][] = $product_detail;
+		}
+		
+		/** Products To Percentage off **/
+		$prductsOffer = $this->getProducts(array(
+			'store_id'=>ACTIVE_STORE_ID
+		));
+		$this->array_sort_by_column($prductsOffer,'percent_off');
+		$data['offer_products'] =  array_slice($prductsOffer, 0, 5, true);
+		//echo '<pre>';print_r($data['offer_products']);exit;
 	    /* add Contact modal */
 		$data['contactus_modal'] = $this->load->controller('information/contact');
 		
@@ -646,7 +1032,14 @@ class ControllerCommonHome extends Controller {
         $this->response->redirect($this->url->link('common/home/index'));
     }
 
-    
+    public function array_sort_by_column(&$arr, $col, $dir = SORT_DESC) {
+		 $sort_col = array();
+		  foreach ($arr as $key=> $row) {
+			   $sort_col[$key] = $row[$col];
+			 } 
+		array_multisort($sort_col, $dir, $arr);
+			 
+	}
 
     public function cartDetails() {
     	
