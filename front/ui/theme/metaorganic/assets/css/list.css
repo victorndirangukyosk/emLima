@@ -14848,6 +14848,7 @@ button, input, optgroup, select, textarea {
 .variations-title{
   text-align: left;
   padding-left: 10px;
+  padding-bottom: 10px
 }
 /**
  * Show the overflow in IE.
