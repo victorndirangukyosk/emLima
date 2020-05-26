@@ -14850,6 +14850,9 @@ button, input, optgroup, select, textarea {
   padding-left: 10px;
   padding-bottom: 10px
 }
+input[type=checkbox], input[type=radio]{
+  width: 18px;
+}
 /**
  * Show the overflow in IE.
  * 1. Show the overflow in Edge.
