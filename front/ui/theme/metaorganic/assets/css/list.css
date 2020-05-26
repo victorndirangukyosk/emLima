@@ -5496,11 +5496,15 @@ NOTE: Variables currently do not work with @custom-media. Hardcoding values for 
   padding-right: 24px;
 }
 ._1OYwR {
-  font-size: 14px;
-  color: hsl(0, 0%, 20%);
+  font-size: 16px;
+  color: hsl(0, 0%, 30%);
   text-decoration: none;
   -ms-flex: 3 0 auto;
       flex: 3 0 auto;
+      font-family: -apple-system, BlinkMacSystemFont, segoe ui,
+      avenir next, avenir, helvetica neue, helvetica, ubuntu, roboto, noto, arial,
+      sans-serif;
+      font-weight: 400;
 }
 .fXC7e,
 ._2tIrr,

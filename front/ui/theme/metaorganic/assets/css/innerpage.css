@@ -7731,5 +7731,8 @@ body {
 }
 .header__logo-container img {
 	width: 10rem;
-	margin: 10px 0px 0px 0px !important;
+	margin: 30px 0px 0px 0px !important;
+  }
+  .m0T0C {
+	margin-right: 30px;
   }
