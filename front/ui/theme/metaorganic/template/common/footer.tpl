@@ -30,7 +30,7 @@
                </div>
             </div>
          </div>
-         <div class="container">
+         <div style="display:none;" class="container">
             <div id="footer-links" class="footer__footer-links">
                <div class="footer__footer-link-col contactmobhide">
                  
