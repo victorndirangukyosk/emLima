@@ -370,7 +370,7 @@
           </div>
         </li>
         <li class="last">
-          <div class="feature-box android-app">  <a href="#"><i class="fa fa-android"></i> download</a> </div>
+          <div class="feature-box android-app">  <a href="https://play.google.com/store/apps/details?id=com.kwikbasket.customer"><i class="fa fa-android"></i> download</a> </div>
         </li>
       </ul>
     </div>
