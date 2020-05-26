@@ -219,13 +219,13 @@
                   <div class="item-inner">
                       <div class="item-img">
                         <div class="item-img-info">
-                          <img src="<?= $base;?>front/ui/theme/metaorganic/assets_newhome/images/Hospital.png" alt="Hospital ">
+                          <img src="<?= $base;?>front/ui/theme/metaorganic/assets_newhome/images/Hospital.png" alt="Hospitals ">
                         </div>
                       </div>
                       <div class="item-info">
                         <div class="info-inner">
                           <div class="item-title">
-                              Hospital</div>
+                              Hospitals</div>
                           <div class="item-content">
                           </div>
                         </div>
