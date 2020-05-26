@@ -124,7 +124,7 @@
                   <div class="header__primary-navigation-outer-wrapper">
                       <div class="header__logo-container">
                         <a href="<?= BASE_URL;?>">
-                        <img src="<?=$logo?>" style="margin-top:7px;">
+                        <img src="<?=$logo?>" >
                         </a>
                         <div itemscope="" class="seo-visible">
                            <a itemprop="url" href="#">Home</a>
