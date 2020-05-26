@@ -1115,7 +1115,7 @@ Step Wizard
 .goto-next { margin-top: 20px; }
 .addressModal { }
 .addressModal .modal-body { padding: 30px; }
-.addressModal .close { float: right; font-size: 21px; font-weight: 700; line-height: 1; color: #000; text-shadow: 0 0px 0 #fff; opacity: 1; position: absolute; right: 0px; background: #f3f5f2; padding: 10px 14px; top: 0px; }
+.addressModal .close { float: right; font-size: 21px; font-weight: 700; line-height: 1; color: #000; text-shadow: 0 0px 0 #fff; opacity: 1; position: absolute; right: 0px; padding: 10px 14px; top: 0px; width:10%}
 .addnews-address-form { }
 .addnews-address-form .form-group { display: inline-block; width: 100%; }
 .addnews-address-form label { color: #333; display: inline-block; padding-right: 20px; }
@@ -1154,7 +1154,7 @@ Step Wizard
 
 .editAddressModal { }
 .editAddressModal .modal-body { padding: 30px; }
-.editAddressModal .close { float: right; font-size: 21px; font-weight: 700; line-height: 1; color: #000; text-shadow: 0 0px 0 #fff; opacity: 1; position: absolute; right: 0px; background: #f3f5f2; padding: 10px 14px; top: 0px; }
+.editAddressModal .close { float: right; font-size: 21px; font-weight: 700; line-height: 1; color: #000; text-shadow: 0 0px 0 #fff; opacity: 1; position: absolute; right: 0px;  padding: 10px 14px; top: 0px; width: 10%}
 
 .nav-tabs>li>a { margin-right: 2px; line-height: 1.42857143; border: 1px solid transparent; border-radius: 4px 4px 0 0; background: #fafbfa; border-radius: 0px; border: 1px solid #d7dcd6; }
 .nav>li>a:focus, .nav>li>a:hover { text-decoration: none; background-color: #d7dcd6; }

@@ -5868,8 +5868,6 @@ position: absolute;
 }
 .button, .btn, .button-inverse, .button-vote, .sidebar .button, .sidebar .btn, .dropdown .dropdown-menu .button, .buttons-set .back-link a, .scrolltop, .button-tabs li a {
 	
-	background: #ea7128;
-	border-color:#ea7128;
 	padding: 5px 12px;
 	transition: color 300ms ease-in-out 0s, background-color 300ms ease-in-out 0s, background-position 300ms ease-in-out 0s;
 	font-size: 15px;

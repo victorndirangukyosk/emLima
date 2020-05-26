@@ -8308,7 +8308,8 @@ body#vip .header__banner-container {
 .setui{
 	width: auto;
     float: right;
-    text-align: right;
+	text-align: right;
+	padding-right:20px; 
 }
 .color-white{
 	color:#fff
@@ -8859,4 +8860,14 @@ button#detect_location {
   }
 #header-new{
 	background-color: #fff;
+}
+#singlebutton{
+	width: 49%;
+	float: left;
+	margin-top: 10px;
+}
+.cancelbut{
+	width: 49%;
+	float: right;
+	margin-top: 10px;
 }

@@ -110,7 +110,7 @@
     <div class="form-group">
         <div class="col-md-12">
             <button id="singlebutton" name="singlebutton" type="button" class="btn btn-primary" onclick="editAddressBook()"><?= $text_save?></button>
-            <button type="button" class="btn btn-grey" data-dismiss="modal"><?= $text_close?></button>
+            <button type="button" class="btn btn-grey cancelbut" data-dismiss="modal"><?= $text_close?></button>
         </div>
     </div>
 

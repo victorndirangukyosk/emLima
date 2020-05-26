@@ -931,7 +931,7 @@ button { }
 .store-cart-panel { }
 .store-cart-panel .modal-header { background-color: #333; color: #fff; padding: 0px; position: fixed; top: 0px; width: 100%; background: #333; z-index: 9; }
 .store-cart-panel .modal-header .modal-title { color: #fff; font-size: 17px; font-weight: 700 }
-.store-cart-panel .modal-header .close { float: right; font-size: 21px; font-weight: 700; line-height: 1; color: #fff; text-shadow: 0 1px 0 #fff; filter: alpha(opacity=20); opacity: .9; margin-top: 20px; margin-right: 20px; }
+.store-cart-panel .modal-header .close { float: right; font-size: 21px; font-weight: 700; line-height: 1; color: #fff; text-shadow: 0 1px 0 #fff; filter: alpha(opacity=20); opacity: .9; margin-top: 20px; margin-right: 20px; width:10%;}
 .store-shop-panel { background-color: #fff; color: #333; }
 .store-logo-img { margin-left: 10px;}
 .store-mycart-info { padding: 50px 20px 0px 0px; text-align: right; }
