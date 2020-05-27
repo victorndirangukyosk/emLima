@@ -12790,3 +12790,9 @@ select#shipping-address-select {
 .works img{
 	width: 100%;
 }
+.tbl-img {
+	width: 230px !important;
+ }
+ .pl40{
+	 padding-left: 40px;
+ }

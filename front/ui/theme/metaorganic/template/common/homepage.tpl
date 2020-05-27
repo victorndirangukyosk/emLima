@@ -278,18 +278,26 @@
                 <div class="col-md-12 col-xs-12"> 
                   <!-- Item -->
                   <div class="item col-md-3 col-xs-12">
-                    <div class="logo-item"><a href="#"><img src="<?= $base;?>front/ui/theme/metaorganic/assets_newhome/images/ETG-Logo.png" alt="Image"></a></div>
+                    <div class="logo-item">
+                    <img src="<?= $base;?>front/ui/theme/metaorganic/assets_newhome/images/ETG-Logo.png" alt="Image">
+                    </div>
                   </div>
                   <div class="item col-md-3 col-xs-12">
-                    <div class="logo-item"><a href="#"><img src="<?= $base;?>front/ui/theme/metaorganic/assets_newhome/images/veg-pro1.png" alt="Image"></a></div>
+                    <div class="logo-item">
+                    <img src="<?= $base;?>front/ui/theme/metaorganic/assets_newhome/images/veg-pro1.png" alt="Image">
+                    </div>
                   </div>
                   <!-- End Item --> 
                   <!-- Item -->
                   <div class="item col-md-3 col-xs-12">
-                    <div class="logo-item"><a href="#"><img src="<?= $base;?>front/ui/theme/metaorganic/assets_newhome/images/TBL-EL.png" alt="Image"></a></div>
+                    <div class="logo-item">
+                    <img src="<?= $base;?>front/ui/theme/metaorganic/assets_newhome/images/TBL-EL.png" alt="Image" class="tbl-img">
+                    </div>
                   </div>
                   <div class="item col-md-3 col-xs-12">
-                    <div class="logo-item"><a href="#"><img src="<?= $base;?>front/ui/theme/metaorganic/assets_newhome/images/Quatrix-logo.png" alt="Image"></a></div>
+                    <div class="logo-item pl40">
+                    <img src="<?= $base;?>front/ui/theme/metaorganic/assets_newhome/images/Quatrix-logo.png" alt="Image">
+                    </div>
                   </div>
                   <!-- End Item --> 
                  
