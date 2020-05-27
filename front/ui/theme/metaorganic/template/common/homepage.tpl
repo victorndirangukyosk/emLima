@@ -47,7 +47,7 @@
     <div id="header">
       <div class="container">
         <div class="header-container row">
-          <div class="logo"> <a href="index.html" title="index">
+          <div class="logo"> <a href="<?php echo BASE_URL;?>" title="index">
             <div><img src="<?=$logo?>" alt="logo"></div>
             </a> </div>
           <div class="fl-nav-menu">
