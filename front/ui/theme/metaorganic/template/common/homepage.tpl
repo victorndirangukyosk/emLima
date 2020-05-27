@@ -39,7 +39,7 @@
 </head>
 
 <body>
-<div id="preloader"></div>
+<div style="display:none;" id="preloader"></div>
 <div id="page">
 
   <header>
