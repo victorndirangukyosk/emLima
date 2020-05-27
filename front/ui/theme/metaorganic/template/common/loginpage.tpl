@@ -117,7 +117,7 @@
                 
                  <p>By creating an account with our store, you will be able to move through the checkout process faster, store multiple shipping addresses, view and track your orders in your account and more.</p>
                   <div class="buttons-set">
-                 <button type="button" title="Create an Account" class="button create-account" onClick=""><span><span>Create an Account</span></span></button>
+                 <button type="button" title="Registration" class="button create-account" onClick=""><span><span>Sign Up</span></span></button>
              </div>
              </div>
          </div>

@@ -10321,7 +10321,7 @@ button.button.new-address:before {
 }
 
 
-button.button.create-account { background:#66cc33; color:#fff}
+button.button.create-account { background:#66cc33; color:#fff; padding: 25px;}
 button.button.create-account:hover {background: #131e2c;}
 
 button.button.create-account:before {
