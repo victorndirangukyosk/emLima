@@ -115,8 +115,8 @@
                <strong>New Customers</strong>    
              <div class="content">
                 
-                 <p>By creating an account with our store, you will be able to move through the checkout process faster, store multiple shipping addresses, view and track your orders in your account and more.</p>
-                  <div class="buttons-set">
+                 <p style="margin-bottom: 46px;">By creating an account with our store, you will be able to move through the checkout process faster, store multiple shipping addresses, view and track your orders in your account and more.</p>
+                  <div class="buttons-set" style="text-align: center;">
                  <button type="button" title="Registration" class="button create-account" onClick=""><span><span>Sign Up</span></span></button>
              </div>
              </div>
