@@ -58,7 +58,7 @@
               <div class="nav-inner"> 
                 <!-- BEGIN NAV -->
                 <ul id="nav" class="hidden-xs">
-                  <li  data-link ="home"> <a class="level-top" ><span>Home</span></a></li>
+                  <!-- <li  data-link ="home"> <a class="level-top" ><span>Home</span></a></li>-->
                   <li  data-link ="about"> <a class="level-top"  ><span>About Us</span></a> </li>
                   <li data-link ="whom"> <a class="level-top" ><span>Who We Serve</span></a> </li>
                   <li data-link ="works"> <a class="level-top"><span>How It Works</span></a> </li>
@@ -502,7 +502,7 @@
        <img src="<?= $base;?>front/ui/theme/metaorganic/assets_newhome/images/logo.png" alt="logo"/>
       </div>
     </li>
-    <li data-link ="home"><div class="home">Home </div> </li>
+    <!--<li data-link ="home"><div class="home">Home </div> </li>-->
     <li data-link ="about"><a href="#about">About Us</a></li>
     <li data-link ="whom"><a href="#whom">Whom We Serve</a></li>
     <li data-link ="works"><a href="#works">How It Works</a></li>

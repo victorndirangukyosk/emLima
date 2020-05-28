@@ -981,7 +981,8 @@ background-color: #fff;
 	-webkit-transform: translateZ(0);
 	padding: 0;
 	margin: auto;
-	text-align: center
+	text-align: center;
+	left:8%;
 }
 /* All levels */
 #nav li {
