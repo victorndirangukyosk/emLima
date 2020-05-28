@@ -530,10 +530,17 @@ class ControllerAccountLogin extends Controller {
             $data['customer_groups'] = $this->model_assets_information->getCustomerGroups();
     
           //echo '<pre>';print_r($data);exit;
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/customer_login.tpl')) {
+       /* if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/customer_login.tpl')) {
             $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/customer_login.tpl', $data));
         } else {
             $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/customer_login.tpl', $data));
+        }
+        */
+
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/loginpage.tpl')) {
+            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/loginpage.tpl', $data));
+        } else {
+            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/loginpage.tpl', $data));
         }
     }
 	
