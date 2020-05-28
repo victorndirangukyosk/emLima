@@ -12799,3 +12799,32 @@ select#shipping-address-select {
  .pl40{
 	 padding-left: 40px;
  }
+ .about{
+	width: 100%;
+    min-height: 70px;
+    margin: 0 0 20px 0;
+ }
+  .about ul{
+	margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.about ul li{
+	margin: 0;
+    padding: 5px 0 5px 52px;
+    font-size: 16px;
+    line-height: 24px;
+    color: #263238;
+    position: relative;
+    transition: all ease 0.5s;
+    -webkit-transition: all ease 0.5s;
+    -moz-transition: all ease 0.5s;	
+}
+ .about ul li:before {
+    position: absolute;
+    top: 9px;
+    left: 31px;
+    content: "";
+    width: 14px;
+    height: 14px;
+    background: url(../images/list.png) 0 0 no-repeat;}

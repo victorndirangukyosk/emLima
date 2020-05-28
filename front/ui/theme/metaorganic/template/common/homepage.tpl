@@ -165,29 +165,28 @@
                       <p class="about-p">
                           Kwikbasket’s promise to our customers (small and medium businesses).
                       </p>
-                      </br>
-                  <p class="about-p">
-                    <ul>
+                  <div class="about-p about">
+                    <ul class="">
                       <li>On time delivery</li>
                       <li>Quality you will love</li>
                       <li>Good value for your money</li>
                     </ul>
-                  </p>
+                  </div>
                   <p class="about-p">
                     Kwikbasket’s promise to our farmers
                   </p>
-                  </br>
-                  <p class="about-p">
+                  
+                  <div class="about-p about">
                      <ul>
                       <li>Fair price for your produce</li>
                       <li>Timely insights throughout the crop cycle</li>
                       <li>Operational support</li>
                     </ul>
-                  </p>
+                  </div>
                   <p class="about-p">
                     We are a team of passionate agriculture enthusiasts committed to making a change to our farmer’s lives by improving the access to fair market and strive to provide better quality food to all consumers.
                   </p>
-                  </br>
+                  
                   <p class="about-p"> Come visit us to learn more about us. </p>
                   <p class="about-p"> Join us to make a difference. </p>
                   <p class="about-p"> Partner with us to serve the world. </p>
