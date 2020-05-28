@@ -45,8 +45,8 @@
   <header>
     
     <div id="header">
-      <div class="header-container container">
-        <div class="row">
+      <div class=" container">
+        <div class="header-container row">
           <div class="logo"> <a href="index.html" title="index">
             <div><img src="<?=$logo?>" alt="logo"></div>
             </a> </div>
