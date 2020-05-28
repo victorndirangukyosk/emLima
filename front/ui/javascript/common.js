@@ -684,7 +684,7 @@ $(document).delegate('.mini-cart-button', 'click', function(e) {
 	console.log("mini cart click");
 
     $.ajax({
-        url: 'index.php?path=common/home/cartDetails',
+        url: 'index.php?path=common/home/cartItemDetails',
         type: 'post',
         dataType: 'json',
         success: function(json) {
@@ -700,7 +700,8 @@ $(document).delegate('.mini-cart-button', 'click', function(e) {
             }
 
             if (json['status']) {
-            	console.log("yesx");
+				console.log("yesx");
+				console.log(json['href']);
                 $("#proceed_to_checkout").removeAttr("disabled");
                 $("#proceed_to_checkout").attr("href", json['href']);
                 //$("#proceed_to_checkout_button").html(json['text_proceed_to_checkout']);
@@ -729,6 +730,75 @@ $(document).delegate('.mini-cart-button', 'click', function(e) {
     
 
 });
+
+
+
+
+
+/* Agree to Terms */
+$(document).delegate('.btn btn-primary btnsetall', 'click', function(e) {
+	//e.preventDefault();
+	console.log("mini check out click");
+
+	var text = $('.checkout-modal-text').html();
+    $('.checkout-modal-text').html('');
+    $('.checkout-loader').show();
+
+
+	$('.cart-panel-content').load('index.php?path=common/cart/newInfo');
+	//$('#cart').load('index.php?path=common/cart/info');
+
+	console.log("mini cart click");
+
+    $.ajax({
+        url: 'index.php?path=common/home/cartItem',
+        type: 'post',
+        dataType: 'json',
+        success: function(json) {
+
+        	console.log("cartdet ui js comm");
+            console.log(json);
+
+            for (var key in json['store_note']) {
+                //alert("User " + data[key] + " is #" + key); // "User john is #234"
+                $('.store_note'+key).html(json['store_note'][key]);
+
+                console.log(json['store_note'][key]);
+            }
+
+            if (json['status']) {
+				console.log("yesx");
+				console.log(json['href']);
+                $("#proceed_to_checkout").removeAttr("disabled");
+                $("#proceed_to_checkout").attr("href", json['href']);
+                //$("#proceed_to_checkout_button").html(json['text_proceed_to_checkout']);
+                //$('.checkout-modal-text').html(json['text_proceed_to_checkout']);
+                $("#proceed_to_checkout_button").css({ 'background-color' : '', 'border-color' : '' });
+                $('.checkout-modal-text').html(json['text_proceed_to_checkout']);
+				$('.checkout-loader').hide();
+                
+            } else {    
+                $("#proceed_to_checkout").attr("disabled", "disabled");
+                $("#proceed_to_checkout").removeAttr("href");
+                //$("#proceed_to_checkout_button").html(json['amount']);
+                //$('.checkout-modal-text').html(json['amount']);
+
+                $("#proceed_to_checkout_button").css('background-color', '#ccc');
+			    $("#proceed_to_checkout_button").css('border-color', '#ccc');
+
+                
+			    $('.checkout-modal-text').html(json['text_proceed_to_checkout']);
+                $('.checkout-loader').hide();
+            }
+            
+        }
+    });
+
+    
+
+});
+
+
 
 /* Agree to Terms */
 $(document).delegate('.agree', 'click', function(e) {

@@ -1041,6 +1041,183 @@ class ControllerCommonHome extends Controller {
 			 
 	}
 
+
+	public function cartItemDetails() {
+    	
+    	$this->load->language('common/home');
+
+        //check login
+        $this->load->model( 'account/address' );
+        
+        $json['status'] = true;
+        $json['amount'] = 0;
+        $currentprice = 'initial';
+        $log = new Log('error.log');
+   		$log->write("1");
+        $this->document->addStyle( 'front/ui/theme/'.$this->config->get( 'config_template' ).'/stylesheet/layout_checkout.css' );
+
+        $json['href'] = $this->url->link('checkout/checkoutitems', '', 'SSL');
+
+        
+        // Validate cart has products and has stock.
+        if ( ( !$this->cart->hasProducts() && empty( $this->session->data['vouchers'] ) ) /*|| ( !$this->cart->hasStock() && !$this->config->get( 'config_stock_checkout' ) )*/ ) {
+        	$log->write("2");
+        	$json['status'] = false;
+        	$currentprice = 0;
+            $this->response->addHeader('Content-Type: application/json');
+        	$this->response->setOutput(json_encode($json));
+        }
+
+        $data['total_quantity'] = 0;
+        $data['product_total_amount'] = 0;
+
+        // Validate minimum quantity requirements.
+        $products = $this->cart->getProducts();
+        $product_total_count = 0;
+        $product_total_amount = 0;
+        
+        $data['products_details'] = [];
+
+        $this->load->model('tool/image');
+        foreach ( $products as $product ) {
+            $product_total = 0;
+
+            foreach ( $products as $product_2 ) {
+                if ( $product_2['product_store_id'] == $product['product_store_id'] ) {
+                    $product_total += $product_2['quantity'];
+                }
+            }
+
+            if ($product['image']) {
+                $image = $this->model_tool_image->resize($product['image'], $this->config->get('config_image_cart_width'), $this->config->get('config_image_cart_height'));
+            } else {
+                $image = '';
+            }
+
+            if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+                $price = $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')));
+            } else {
+                $price = false;
+            }
+            $log->write("2.x");
+            // Display prices
+            if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+                $total = $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')) * $product['quantity']);
+            } else {
+                $total = false;
+            }
+            
+            $product_total_count += $product['quantity'];
+            $product_total_amount += $product['total'];
+
+            $data['products_details'][] = array(
+                'key' => $product['key'],
+                'product_store_id' => $product['product_store_id'],
+                'thumb' => $image,
+                'name' => $product['name'],
+                'unit' => $product['unit'],                    
+                'model' => $product['model'],
+                'quantity' => $product['quantity'],
+                'stock' => $product['stock'] ? true : !(!$this->config->get('config_stock_checkout') || $this->config->get('config_stock_warning')),
+                'reward' => ($product['reward'] ? sprintf($this->language->get('text_points'), $product['reward']) : ''),
+                'price' => $price,
+                'total' => $total,
+                'href' => $this->url->link('product/product', 'product_store_id=' . $product['product_store_id'])
+            );
+
+            /*if ( $product['minimum'] > $product_total ) {
+                $json['status'] = false;
+                $message = 'product has minimum requirement';
+
+	            $this->response->addHeader('Content-Type: application/json');
+	        	$this->response->setOutput(json_encode($json));
+            }*/
+        }
+        $log->write("2.3");
+        // echo "<pre>";print_r($data['products_details']);die;
+        $data['total_quantity'] = $product_total_count;
+
+        $data['product_total_amount'] = $this->currency->format($product_total_amount);
+
+        $order_stores = $this->cart->getStores();
+        $min_order_or_not = array();
+        $store_data= array();
+        
+        /*
+        	sort array to make this current store as lst element
+        */
+
+        foreach ($order_stores as $key => $value) {
+        	if($value == $this->session->data['config_store_id'])
+        		unset($order_stores[$key]);
+        }
+
+        if(isset($this->session->data['config_store_id'])) {
+        	array_push($order_stores, $this->session->data['config_store_id']);	
+        }
+        
+        /*$json['store_note'] = "<center style='background-color:#ee4054'> $2.3 away from minimum order value</center>'";
+        $json['store_note'] = "<center style='background-color:#ff811e'> $2.3 away from minimum order value</center>'";*/
+
+
+        
+
+        foreach ($order_stores as $os) {
+
+        	$json['store_note'][$os] = "<center style='background-color:#43b02a;color:#fff'> Yay! Free Delivery </center>";
+
+            $store_info = $this->model_account_address->getStoreData($os);
+
+
+           // echo "<pre>";print_r($store_info);die;
+            $store_total  = $this->cart->getSubTotal($os);
+            $store_data[] = $store_info;
+            
+            if((0  <= $store_info['min_order_cod']) && ($store_info['min_order_cod'] <= 10000) ) {
+            	if($store_info['min_order_cod'] > $store_total) {
+
+	            	$freedeliveryprice = $store_info['min_order_cod'] - $store_total;
+
+	            	$json['store_note'][$os] = "<center style='background-color:#ff811e;color:#fff'> You are only ".$this->currency->format($freedeliveryprice)." away for FREE DELIVERY! </center>";
+	            }
+	        } else {
+	            $json['store_note'][$os] = "";
+	        }
+
+            
+
+            if ($this->cart->getTotalProductsByStore($os) && $store_info['min_order_amount'] > $store_total ) {
+            	$log->write("3");
+            	$currentprice = $store_info['min_order_amount'] - $store_total;
+            	$store_name = $store_info['name'];
+                $json['status'] = false;
+	            $this->response->addHeader('Content-Type: application/json');
+	        	$this->response->setOutput(json_encode($json));
+
+	        	$json['store_note'][$os] = "<center style='background-color:#ee4054;color:#fff'>".$this->currency->format($currentprice)." away from minimum order value </center>";
+
+            }
+
+            
+        }
+        $log->write("4");
+        
+        if($json['status'])
+        	$json['status'] = true;
+
+        if($currentprice == 0) {
+        	$json['amount'] = $this->language->get('text_no_product');
+        } else {
+        	$json['amount'] = $this->currency->format($currentprice).' '. $this->language->get('text_away_from') .' ( '. $store_name .' )';//. $this->language->get('text_store') .' )';
+        }
+
+        $json['text_proceed_to_checkout'] = $this->language->get('text_proceed_to_checkout');
+
+        
+        $this->response->addHeader('Content-Type: application/json');
+    	$this->response->setOutput(json_encode($json));
+	}
+
     public function cartDetails() {
     	
     	$this->load->language('common/home');
