@@ -158,27 +158,42 @@
               <div class="col-md-5"><img src="<?= $base;?>front/ui/theme/metaorganic/assets_newhome/images/About-Us-Banner.png" alt="offer banner1"></div>
               <div class="col-md-7">
                <div class="col-md-12 col-xs-12">
-                  <p class="about-p">Kwik Basket is focused in servicing commercial Kitchens within Nairobi. 
-                      We supply farm fresh produce directly from the farmers. We are specialized 
-                      in supplying fresh produce through our well-equipped distribution and packing 
-                      facilities.</p><br/>
+                  <p class="about-p">Kwikbasket supplies freshly produced vegetables & fruits directly sourced 
+                  from farmers.  Our core focus is to serve small and medium businesses involved in food business
+                  such as catering, restaurant, hostel kitchen (colleges, schools and residences), hospital 
+                  kitchen and industrial factory canteens.</p><br/>
                       <p class="about-p">
-                          
-                          We provide helpful information to farmers on the demand requirements to sell 
-                          their fresh produce through Kwik Basket – and help Businesses/ Retailers/ 
-                          Commercial Kitchens to buy farm fresh produce at competitive pricing.
+                          Kwikbasket’s promise to our customers (small and medium businesses).
                       </p>
+                      </br>
+                  <p class="about-p">
+                    <ul>
+                      <li>On time delivery</li>
+                      <li>Quality you will love</li>
+                      <li>Good value for your money</li>
+                    </ul>
+                  </p>
+                  <p class="about-p">
+                    Kwikbasket’s promise to our farmers
+                  </p>
+                  </br>
+                  <p class="about-p">
+                     <ul>
+                      <li>Fair price for your produce</li>
+                      <li>Timely insights throughout the crop cycle</li>
+                      <li>Operational support</li>
+                    </ul>
+                  </p>
+                  <p class="about-p">
+                    We are a team of passionate agriculture enthusiasts committed to making a change to our farmer’s lives by improving the access to fair market and strive to provide better quality food to all consumers.
+                  </p>
+                  </br>
+                  <p class="about-p"> Come visit us to learn more about us. </p>
+                  <p class="about-p"> Join us to make a difference. </p>
+                  <p class="about-p"> Partner with us to serve the world. </p>
 
                </div>
-               <div class="col-md-12 mt20 about-p col-xs-12">
-                  Kwik Basket has a number of exciting benefits for farmers and customers. 
-                  We source all our products from local farmers and are available in their 
-                  freshest possible condition. We avoid processing and packaging in order to 
-                  maximize quality and freshness. Secondly, we understand the challenges farmers 
-                  face to gain access to markets. Kwik Basket platform makes selling products easier 
-                  for farmers and also benefits customers by allowing them to enjoy the highest quality 
-                  produce and enjoy fresh fruit and veg delivery.
-               </div>
+              
               </div>
               
             </div>
