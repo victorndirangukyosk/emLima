@@ -1,8 +1,36 @@
 <?php echo $header; ?>
+
+ 
+
+
     <div class="checkout-wrapper">
         <div class="container">
+
+
+        <div class="row">
+        <div class="col-md-8">
+        </div>
+
+        <div class="col-md-4">
+
+        
+                            <!-- Continue shopping --> 
+                                <div class="checkout-promocode-form">
+                                
+                                    <div class="form-group">
+                                        <span class="input-group-btn">
+                                            <a id="button-reward" href="<?php echo $continue; ?>" class="btn btn-primary btnsetall" style="width: 100%;height: 100%;" type="button"><?php echo $button_continue; ?>
+                                            </a>
+                                        </span>
+                                    </div>
+                                
+                                </div>
+                            <!-- END Continue shopping --> 
+        </div>
+
+        </div>
             <div class="row">
-                <div class="col-md-8">
+                <div class="col-md-16">
                 <form role="form" id="place-order-form" novalidate="novalidate" class="bv-form" method="post">
                     <div id="accordion" class="checkout">
                         <div class="panel checkout-step">
@@ -308,7 +336,7 @@
                     </div>
                 </form>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-4"  style="display:none">
                     <div class="row">
                         <div class="col-md-12">
                             <div class="checkout-sidebar" id="checkout-total-wrapper">
@@ -436,18 +464,6 @@
 
 
 
-                            <!-- Continue shopping --> 
-                                <div class="checkout-promocode-form">
-                                
-                                    <div class="form-group">
-                                        <span class="input-group-btn">
-                                            <a id="button-reward" href="<?php echo $continue; ?>" class="btn btn-primary btnsetall" style="width: 100%;height: 100%;" type="button"><?php echo $button_continue; ?>
-                                            </a>
-                                        </span>
-                                    </div>
-                                
-                                </div>
-                            <!-- END Continue shopping --> 
 
                         </div>
                     </div>
@@ -1077,6 +1093,7 @@ function getTimeSlot(store_id,date) {
 // Methods related with shipping
 $(document).ready(function() {
     console.log("logged in as ");
+ 
     <?php
 
         if($loggedin && $profile_complete) { ?>
@@ -1333,6 +1350,31 @@ function saveNewTimeSlot(store_id,timeslot,date) {
 function saveOrder() {
 
     console.log("saveOrder");
+    console.log("sri ");
+
+var name="dropoff_notes";
+
+     var cookieArr = document.cookie.split(";");
+    
+    // Loop through the array elements
+    for(var i = 0; i < cookieArr.length; i++) {
+        var cookiePair = cookieArr[i].split("=");
+        
+        /* Removing whitespace at the beginning of the cookie name
+        and compare it with the given string */
+        if(name == cookiePair[0].trim()) {
+            // Decode the cookie value and return
+            // alert( decodeURIComponent(cookiePair[1]));
+             var notes=decodeURIComponent(cookiePair[1]);
+
+          // $('textarea[name="dropoff_notes"]').val(decodeURIComponent(cookiePair[1]));
+
+        }
+    }
+
+
+
+
 
     /*$.ajax({
         url: 'index.php?path=checkout/confirm/confirmPayment',
@@ -1372,10 +1414,14 @@ function saveOrder() {
     var flat_number = $('input[name="flat_number"]').val();
     var address_type = $('input[name="address_type"]').val();
 
+ 
 
-    var dropoff_notes = $('textarea[name="dropoff_notes"]').val();
+    //var dropoff_notes = $('textarea[name="dropoff_notes"]').val();
+    var dropoff_notes = notes;
+
     
-
+    
+ 
     //$('input[name="shipping_address_id"]').val($(this).attr('data-address-id'));
     if ($('input[name="shipping_address_id"]').val().length <= 0) {
         $error = true;
@@ -1384,7 +1430,7 @@ function saveOrder() {
     }
 
     appendDataToSend = '';
-    <?php foreach ($store_data as $os):  ?>
+   <!-- <?php foreach ($store_data as $os):  ?>
         var shipping_method = $('input[name=\'shipping_method-'+<?php echo $os['store_id'] ?>+'\']:checked').attr('value')
         if (shipping_method.length <= 0) {
             console.log("shipping_method selected");
@@ -1399,7 +1445,7 @@ function saveOrder() {
         var note =  encodeURIComponent($('textarea[name=dropoff_notes-<?php echo $os["store_id"] ?>]').val());
         appendDataToSend += '&dropoff_notes['+<?php echo $os['store_id'] ?>+']='+note;
 
-    <?php endforeach; ?>
+    <?php endforeach; ?>-->
 
 
     var sendData = $('#place-order-form').serialize() + '&dropoff_notes=' + dropoff_notes+appendDataToSend;
