@@ -124,7 +124,7 @@
           </div> -->
           <input type="hidden" name="tax" id="tax_number" value="" placeholder="<?php echo $taxnumber_mask; ?>" class="form-control" />
 
-          <div class="form-group required">
+          <div class="form-group required" style="display:none">
             <label class="col-sm-3 control-label" for="input-telephone"><?php echo $entry_gender; ?></label>
             <div class="col-sm-6 col-xs-12">
                 <label class="control control--radio" style="display: initial !important;"> 
