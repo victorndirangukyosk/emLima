@@ -6371,12 +6371,15 @@ button.button.continue:before {
 }
 .group-select li .input-box input.input-text, .group-select li .input-box textarea {
 	/*width: 275px;*/
-	margin-top: 5px;
+	margin-top: 0px;
 	background: #fff;
 	border: 1px solid #d1d1d1;
 	padding: 10px 15px;
 	width: 95%;
 	color:#333;
+}
+#register_phone_number{
+	padding-left: 70px !important;
 }
 .group-select li .input-box input.input-text:focus, .group-select li .input-box textarea:focus {
 	background: #fff;
