@@ -218,7 +218,7 @@ $(document).ready(function() {
 	            return false;
           	}
 
-          	$('#searchTextField').attr('disabled','disabled');
+          	// $('#searchTextField').attr('disabled','disabled');
 
 			var lat = data.geometry.location.lat();
     		var lng = data.geometry.location.lng();

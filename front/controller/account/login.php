@@ -529,19 +529,41 @@ class ControllerAccountLogin extends Controller {
             $this->load->model( 'assets/information' );
             $data['customer_groups'] = $this->model_assets_information->getCustomerGroups();
     
+
+            if (isset($this->error['captcha'])) {
+                $data['error_captcha'] = $this->error['captcha'];
+            } else {
+                $data['error_captcha'] = '';
+            }
+            
+            if (isset($this->request->post['captcha'])) {
+                $data['captcha'] = $this->request->post['captcha'];
+            } else {
+                $data['captcha'] = '';
+            }
+    
+            if ($this->config->get('config_google_captcha_status')) {
+                $this->document->addScript('https://www.google.com/recaptcha/api.js');
+                
+                $data['site_key'] = $this->config->get('config_google_captcha_public');
+            } else {
+                $data['site_key'] = '';
+            }
+
           //echo '<pre>';print_r($data);exit;
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/customer_login.tpl')) {
+       /* if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/customer_login.tpl')) {
             $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/customer_login.tpl', $data));
         } else {
             $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/customer_login.tpl', $data));
         }
+        */
         
 
-        /*if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/loginpage.tpl')) {
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/loginpage.tpl')) {
             $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/loginpage.tpl', $data));
         } else {
             $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/loginpage.tpl', $data));
-        }*/
+        }
     }
 	
 	public function login() {

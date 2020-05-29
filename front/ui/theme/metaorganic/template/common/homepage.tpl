@@ -659,7 +659,13 @@ jQuery('input[name="telephone"]').keyup(function(e)
     
 <script>    
     jQuery(document).ready(function($) {  
-
+   if(jQuery(location). attr('hash') !=""){
+    var id = jQuery(location). attr('hash').replace("#","");
+	var minus = 190;
+    jQuery('html, body').animate({
+			scrollTop: jQuery("#"+id).offset().top-minus
+		},2000);
+   }
 // site preloader -- also uncomment the div in the header and the css style for #preloader
 $(window).load(function(){
 	$('#preloader').fadeOut('fast',function(){$(this).remove();});
