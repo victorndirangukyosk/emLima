@@ -157,7 +157,7 @@
             <div class="left">
               <div class="col-md-5"><img src="<?= $base;?>front/ui/theme/metaorganic/assets_newhome/images/About-Us-Banner.png" alt="offer banner1"></div>
               <div class="col-md-7">
-               <div class="col-md-12 col-xs-12">
+               <div class="col-md-12 col-xs-12" style="padding:0px">
                   <p class="about-p">Kwikbasket supplies freshly produced vegetables & fruits directly sourced 
                   from farmers.  Our core focus is to serve small and medium businesses involved in food business
                   such as catering, restaurant, hostel kitchen (colleges, schools and residences), hospital 
@@ -186,10 +186,17 @@
                   <p class="about-p">
                     We are a team of passionate agriculture enthusiasts committed to making a change to our farmer’s lives by improving the access to fair market and strive to provide better quality food to all consumers.
                   </p>
-                  
+                  <br/>
+                 
                   <p class="about-p"> Come visit us to learn more about us. </p>
-                  <p class="about-p"> Join us to make a difference. </p>
-                  <p class="about-p"> Partner with us to serve the world. </p>
+                   <hr></hr>
+                   <button type="button" title="Continue Shopping" class="button btn-continue" style="background-color: #ec9f4e; padding: 15px; float: left; font-size: 14px; color:#fff;">
+                   <span><span>Join us to make a difference</span></span>
+                   </button>
+                    <button type="button" title="Continue Shopping" class="button btn-continue" style="background-color: #ec9f4e; padding: 15px; float: right; color:#fff">
+                   <span><span>Partner with us to serve the world</span></span>
+                   </button>
+                  
 
                </div>
               

@@ -1769,7 +1769,7 @@ ul.level1 {
 	margin: 60px auto 0px;
 }
 
-.offer-inner { background:#fff; border-radius:60px 90px 40px 90px; padding:40px 20px; margin-bottom:20px;}
+.offer-inner { background:#fff; border-radius:60px 90px 40px 90px; padding:40px 20px 0px; margin-bottom:20px;}
 .offer-inner img {border-radius:30px 60px 20px 60px; max-width:100%}
 
 .offer-inner .left .col {
@@ -11226,7 +11226,7 @@ button.button {
 
 }
 button.button:hover {
-    background-color: #66cc33;
+    background-color: #66cc33 !important;
 	color: #fff;
 }
 button.button span span {
