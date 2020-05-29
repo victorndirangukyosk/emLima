@@ -10324,20 +10324,22 @@ button.button.new-address:before {
 }
 
 
-button.button.create-account { background:#66cc33; color:#fff; padding: 15px; width:200px}
+button.button.create-account { background:#66cc33; color:#fff;  }
 button.button.create-account:hover {background: #131e2c;}
-
+.create-account span, .login span{
+	font-size: 35px !important;
+}
 button.button.create-account:before {
 	content: "\f007";
 	font-family: FontAwesome;
-	font-size: 12px;
-	padding-right: 8px;
+	font-size: 30px;
+	padding-right: 15px;
 }
 button.button.login:before {
 	content: '\f13e';
 	font-family: FontAwesome;
-	font-size: 12px;
-	padding-right: 8px;
+	font-size: 35px;
+	padding-right: 15px;
 }
 .account-login .form-list input.input-text {
 	background: #fff;
@@ -11223,7 +11225,7 @@ button.button {
 	border:none;
 	border-radius: 999px;
 	letter-spacing: 0.5px;
-	padding: 12px 20px 10px 20px;
+	padding: 20px 30px 10px 30px;
 	font-family: 'Rubik', sans-serif;
 
 }

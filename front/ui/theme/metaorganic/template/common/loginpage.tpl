@@ -119,7 +119,7 @@
                 
                  <p style="margin-bottom: 46px;">By creating an account with our store, you will be able to move through the checkout process faster, store multiple shipping addresses, view and track your orders in your account and more.</p>
                   <div class="buttons-set" style="text-align: center;">
-                 <button type="button" title="Registration" class="button create-account" onClick="showHide('register-form-div')"><span><span>Sign Up</span></span></button>
+                 <button type="button" title="Registration" class="button create-account" onClick="showHide('register-form-div')"><span><span>Register Now</span></span></button>
              </div>
              </div>
          </div>
