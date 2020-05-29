@@ -164,7 +164,7 @@
                
                  <button id="login_send_otp" type="button" class="button login" title="Login" name="send" id="send2"><span><?= $text_login ?></span></button>
 
-                   <a href="#" class="forgot-word">Forgot Your Password?</a>
+                   <!--<a href="#" class="forgot-word">Forgot Your Password?</a>-->
               </div> <!--buttons-set-->
                </div> <!--content-->                               
          </div> <!--col-2 registered-users-->
