@@ -69,7 +69,15 @@
 
                 <span class="input-group-btn">
 
-                    <p id="button-reward" class="phonesetbut" >
+                   <!-- <p id="button-reward" class="phonesetbut" >
+
+                        <font style="vertical-align: inherit;">
+                          <font style="vertical-align: inherit;"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+                            +<?= $this->config->get('config_telephone_code') ?>                                                
+                          </font></font></font>
+                        </font>
+                    </p>-->
+                    <p  class="phonesetbut" >
 
                         <font style="vertical-align: inherit;">
                           <font style="vertical-align: inherit;"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">

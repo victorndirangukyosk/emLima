@@ -1769,8 +1769,10 @@ ul.level1 {
 	margin: 60px auto 0px;
 }
 
-.offer-inner { background:#fff; border-radius:60px 90px 40px 90px; padding:40px 20px; margin-bottom:20px;}
+.offer-inner { background:#fff; border-radius:60px 90px 40px 90px; padding:40px 20px 0px; margin-bottom:20px;}
 .offer-inner img {border-radius:30px 60px 20px 60px; max-width:100%}
+.offer-innernew { padding-bottom: 40px !important;}
+
 
 .offer-inner .left .col {
 	width:33.3%;
@@ -11226,7 +11228,7 @@ button.button {
 
 }
 button.button:hover {
-    background-color: #66cc33;
+    background-color: #66cc33 !important;
 	color: #fff;
 }
 button.button span span {
@@ -12814,7 +12816,7 @@ select#shipping-address-select {
     padding: 5px 0 5px 52px;
     font-size: 16px;
     line-height: 24px;
-    color: #263238;
+    color: #828287;
     position: relative;
     transition: all ease 0.5s;
     -webkit-transition: all ease 0.5s;
@@ -12863,4 +12865,14 @@ select#shipping-address-select {
 		font-family: FontAwesome;
 		font-size: 20px;
 		padding-right: 5px;
+	}
+	.partner:hover{
+		background-color: #ec9f4e !important;
+	}
+	.partner{
+		border-radius: 999px;
+		font-weight: 500;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 	}
