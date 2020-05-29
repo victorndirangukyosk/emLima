@@ -331,7 +331,27 @@
                                                     <div class="checkout-invoice">
                                                         <div class="checkout-payable-price"><small>*<?= $cashback_condition; ?></small></div>
                                                     </div>
-                                            </div>
+                                            </div>      
+
+
+                                           
+
+                                <div class="checkout-sidebar-merchant-box-old">
+                                    <div class="my-order-list-title"> <span class="checkout-cart-merchant-name">Order Notes</span></div>
+                                    </br>
+                                    </br>
+                                   
+                                    
+                                    <div class="checkout-promocode-form">
+                                        
+                                        <textbox style="disabled; "  name="dropoff_notes-<?= $key?>" class="form-control" maxlength="200" value="<?= $comment?>" id="dropoff_notes" style="height: 100px;"><?= $comment?></textbox>
+                                        
+                                 
+                                 
+                                 <div style="display:none; " class="checkout-sidebar-merchant-box-old"><?= $comment?></div>   </div>
+
+                                </div>
+                         
 
                                         </div>
                                         

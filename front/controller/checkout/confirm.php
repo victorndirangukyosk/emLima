@@ -997,6 +997,7 @@ class ControllerCheckoutConfirm extends Controller {
 				}
 				$log->write('Log 3.4');
 				//for future user
+				// echo "<pre>";print_r($this->request->post);die;
 
 				if(isset($this->request->post['dropoff_notes']) && count($this->request->post['dropoff_notes']) > 0 && isset($this->request->post['dropoff_notes'][$store_id])) {
 		            $order_data[$store_id]['comment'] = $this->request->post['dropoff_notes'][$store_id];	

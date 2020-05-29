@@ -382,7 +382,7 @@
                                     
                                     <div class="checkout-promocode-form">
                                         
-                                        <textarea name="dropoff_notes-<?= $key?>" class="form-control" maxlength="200" placeholder="<?= $text_dropoff_notes?>" id="dropoff_notes" style="height: 100px;"></textarea>
+                                        <textarea name="dropoff_notes-<?= $key?>" class="form-control" maxlength="200" placeholder="<?= $text_dropoff_notes?>" value="order notes received" id="dropoff_notes" style="height: 100px;"></textarea>
                                         
                                     </div>
 
@@ -1430,7 +1430,7 @@ var name="dropoff_notes";
     }
 
     appendDataToSend = '';
-   <!-- <?php foreach ($store_data as $os):  ?>
+     <?php foreach ($store_data as $os):  ?>
         var shipping_method = $('input[name=\'shipping_method-'+<?php echo $os['store_id'] ?>+'\']:checked').attr('value')
         if (shipping_method.length <= 0) {
             console.log("shipping_method selected");
@@ -1443,12 +1443,14 @@ var name="dropoff_notes";
             console.log("shipping-method-wrappercer not selected");
         }*/
         var note =  encodeURIComponent($('textarea[name=dropoff_notes-<?php echo $os["store_id"] ?>]').val());
-        appendDataToSend += '&dropoff_notes['+<?php echo $os['store_id'] ?>+']='+note;
+        appendDataToSend += '&dropoff_notes['+<?php echo $os['store_id'] ?>+']='+notes;
 
-    <?php endforeach; ?>-->
+    <?php endforeach; ?>  
 
 
-    var sendData = $('#place-order-form').serialize() + '&dropoff_notes=' + dropoff_notes+appendDataToSend;
+   // var sendData = $('#place-order-form').serialize() + '&dropoff_notes=' + dropoff_notes+appendDataToSend;
+    var sendData =  '&dropoff_notes=' + dropoff_notes+appendDataToSend;
+    console.log("qwerty");
     console.log('sendData');
     console.log(sendData);
     if (!$error) {

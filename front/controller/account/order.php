@@ -97,7 +97,7 @@ class ControllerAccountOrder extends Controller {
 		
 		$results = $this->model_account_order->getOrders(($page - 1) * 10, 10);
 
-		//echo "<pre>";print_r($results);die;
+	//	echo "<pre>";print_r($results);die;
 		foreach ($results as $result) {
 
 			$city_name = $this->model_account_order->getCityName($result['shipping_city_id']);
@@ -142,8 +142,7 @@ class ControllerAccountOrder extends Controller {
 			$total = $result['total'];
 
 			$ordertotals = $this->model_account_order->getOrderTotals($result['order_id']);
-
-			//echo "<pre>";print_r($totals);die;
+//  echo "<pre>";print_r($ordertotals);die;
 			foreach ($ordertotals as $ordertotal) {
 				
 				if($ordertotal['code'] == 'total') {
@@ -244,6 +243,7 @@ class ControllerAccountOrder extends Controller {
 		$this->load->model('account/order');
 
 		$order_info = $this->model_account_order->getOrder($order_id);
+		//echo "<pre>";print_r($order_info);die;
 
 		$data['cashback_condition'] = $this->language->get('cashback_condition');
 

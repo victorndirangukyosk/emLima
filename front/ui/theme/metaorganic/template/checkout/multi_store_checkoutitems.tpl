@@ -165,11 +165,14 @@
                  
                                         <li>
                    <label for="order_note">Please add order note, if you have any.</label>
+
+                     <?php foreach ($arrs as $key=> $products) { ?>
                       <div class="checkout-promocode-form">
                                         
                                         <textarea name="dropoff_notes" class="form-control" maxlength="200" placeholder="<?= $text_dropoff_notes?>" id="dropoff_notes" style="height: 100px;"></textarea>
                                         
                                     </div>
+                                     <?php } ?>
                 </li>
             </ul>
            
@@ -1649,7 +1652,8 @@ function saveOrder() {
     <?php endforeach; ?>
 
 
-    var sendData = $('#place-order-form').serialize() + '&dropoff_notes=' + dropoff_notes+appendDataToSend;
+   // var sendData = $('#place-order-form').serialize() + '&dropoff_notes=' + dropoff_notes+appendDataToSend;
+    var sendData =   '&dropoff_notes=' + dropoff_notes+appendDataToSend;
     console.log('sendData');
     console.log(sendData);
     if (!$error) {
