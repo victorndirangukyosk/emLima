@@ -1183,10 +1183,16 @@ $(document).delegate('#login_verify_otp', 'click', function() {
 });
 
 $(document).delegate('#signup', 'click', function() {
+
+   // console.log("response",grecaptcha.getResponse());
     console.log($('#register_verify_otp').val());
     console.log($('input[name="agree_checkbox"]:checked').length);
-    if($('input[name="agree_checkbox"]:checked').length)
-    {
+    var checkCaptha = false;
+   /* if($('input[name="agree_checkbox"]:checked').length)
+    {*/
+     
+       // $('#error_agree').show();
+        $('#error_captha').hide();
         $('span.text-danger').remove();
         $( ".formui").removeClass('error-animation');
         $('#error_agree').hide();
@@ -1200,11 +1206,18 @@ $(document).delegate('#signup', 'click', function() {
         console.log($('#register_verify_otp').val());
 
         if($('#register_verify_otp').val() == 'yes') {
+            
             var url = 'index.php?path=account/register/register_verify_otp';
         } else {
             var url = 'index.php?path=account/register/register_send_otp';
+            checkCaptha = true;
         }
-
+        
+        if(checkCaptha == true && (grecaptcha.getResponse()=="")){
+            $('#error_captha').show();  
+            return;  
+        }
+        
         $.ajax({
             url: url,
             type: 'post',
@@ -1218,15 +1231,15 @@ $(document).delegate('#signup', 'click', function() {
                 if (json['status']) {
 
                     
-                    $('#signup-message').html('<p style="color:white;margin-top:60px"> '+ json['success_message']+'</p>');
+                    $('#signup-message').html('<p style="color:green;margin-top:60px"> '+ json['success_message']+'</p>');
                     
                    
 
                     if($('#register_verify_otp').val() == 'yes') {
 
                         $('.signup-modal-text').html(text);
-                        $('.signup_otp_div').hide();
-                        $('#signup').hide();
+                        //$('.signup_otp_div').hide();
+                        //$('#signup').hide();
                         $('#signup-message>p').css({"margin-top": "150px", "font-size": "24px"});
                        
                         setTimeout(function() {
@@ -1328,6 +1341,25 @@ $(document).delegate('#signup', 'click', function() {
                         $form.find( "input[name='company_address']" ).parent().addClass('error-animation');
                     }
 
+                    if(json['error_address']){
+                        //$error += json['error_company_name_address']+'<br/>';
+                        $form.find( "input[name='address']" ).after('<span class="text-danger fa fa-star">'+json['error_address']+'</span>');
+                        $form.find( "input[name='address']" ).parent().addClass('error-animation');
+                    }
+
+                    if(json['error_house_building']){
+                        //$error += json['error_company_name_address']+'<br/>';
+                        $form.find( "input[name='house_building']" ).after('<span class="text-danger fa fa-star">'+json['error_house_building']+'</span>');
+                        $form.find( "input[name='house_building']" ).parent().addClass('error-animation');
+                    }
+
+                    if(json['error_location']){
+                        //$error += json['error_company_name_address']+'<br/>';
+                        $form.find( "input[name='location']" ).after('<span class="text-danger fa fa-star">'+json['error_location']+'</span>');
+                        $form.find( "input[name='location']" ).parent().addClass('error-animation');
+                    }
+
+
                     if(json['error_company_name_address']){
                         //$error += json['error_company_name_address']+'<br/>';
                         $form.find( "input[name='company_name']" ).after('<span class="text-danger fa fa-star">'+json['error_company_name_address']+'</span>');
@@ -1346,12 +1378,12 @@ $(document).delegate('#signup', 'click', function() {
                 }
             }
         });
-    } else{
+    /*} else{
       // unchecked
       console.log("nucheck error");
-      $('#error_agree').show();
+      $('#error_captha').show();
       //$('#error_agree').html($('#error_agree_text').val());
-    }
+    }*/
 });
 /*$(document).delegate('#signup', 'click', function() {
 
@@ -1512,7 +1544,7 @@ $(document).delegate('#signup-resend-otp', 'click', function() {
             if (json['status']) {
 
                 
-                $('#signup-message').html('<p style="color:white;margin-top:60px"> '+ json['success_message']+'</p>');
+                $('#signup-message').html('<p style="color:green;margin-top:60px"> '+ json['success_message']+'</p>');
                 
                
                 $('.signup_otp_div').show();

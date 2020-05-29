@@ -579,8 +579,17 @@ class ControllerAccountRegister extends Controller {
 			$this->error['company_address'] = $this->language->get( 'error_company_address' );
 		}
 
+		if (( utf8_strlen( trim( $this->request->post['address'] ) ) < 1 )) {
+			$this->error['address'] = $this->language->get( 'error_address' );
+		}
 
+		if (( utf8_strlen( trim( $this->request->post['house_building'] ) ) < 1 )) {
+			$this->error['house_building'] = $this->language->get( 'error_house_building' );
+		}
 
+		if (( utf8_strlen( trim( $this->request->post['location'] ) ) < 1 )) {
+			$this->error['location'] = $this->language->get( 'error_location' );
+		}
 
 		//echo "<pre>";print_r($this->error);die;
 		return !$this->error;
@@ -723,6 +732,24 @@ class ControllerAccountRegister extends Controller {
 				$data['error_company_address'] = $this->error['company_address'];
 			} else {
 				$data['error_company_address'] = false;
+			}
+
+			if ( isset( $this->error['company_address'] ) ) {
+				$data['error_address'] = $this->error['address'];
+			} else {
+				$data['error_address'] = false;
+			}
+
+			if ( isset( $this->error['house_building'] ) ) {
+				$data['error_house_building'] = $this->error['house_building'];
+			} else {
+				$data['error_house_building'] = false;
+			}
+						
+			if ( isset( $this->error['location'] ) ) {
+				$data['error_location'] = $this->error['location'];
+			} else {
+				$data['error_location'] = false;
 			}
 
 			if ( isset( $this->error['telephone'] ) ) {
