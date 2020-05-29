@@ -131,7 +131,7 @@
     <div class="offer-banner-section">
   <div class="container">
     <div class="row">
-      <div class="offer-inner col-lg-12"> 
+      <div class="offer-inner offer-innernew col-lg-12"> 
         <!--newsletter-wrap-->
         <div class="left">
           <div class="col"><a href="#"><img src="<?= $base;?>front/ui/theme/metaorganic/assets_newhome/images/offer-banner1.jpg" alt="offer banner1"></a></div>
@@ -190,11 +190,11 @@
                  
                   <p class="about-p"> Come visit us to learn more about us. </p>
                    <hr></hr>
-                   <button type="button" title="Continue Shopping" class="button btn-continue" style="background-color: #ec9f4e; padding: 15px; float: left; font-size: 14px; color:#fff;">
-                   <span><span>Join us to make a difference</span></span>
+                   <button type="button"  class="button btn" style="background-color: #ec9f4e; padding: 15px; float: left; font-size: 14px; color:#fff;">
+                  <span>Join us to make a difference</span>
                    </button>
-                    <button type="button" title="Continue Shopping" class="button btn-continue" style="background-color: #ec9f4e; padding: 15px; float: right; color:#fff">
-                   <span><span>Partner with us to serve the world</span></span>
+                    <button type="button"  class="btn partner" style="background-color: #66cc33; padding: 15px; float: right; color:#fff">
+                  <span>Partner with us to serve the world</span>
                    </button>
                   
 

@@ -19029,14 +19029,13 @@ address {
 }
 .header__logo-container img {
   width: 10rem;
-  margin: 30px 0px 0px 0px ;
 }
 .setproductimg{
   background-color: #f4f3f2;
     padding: 15px 10px;
 }
 .search-dropdown{
-  width: 520px !important;
+  width: 364px !important;
   left: 17px !important;
   top: 43px !important;
 }
