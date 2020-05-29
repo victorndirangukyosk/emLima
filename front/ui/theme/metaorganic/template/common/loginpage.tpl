@@ -323,7 +323,7 @@
                     </button>
                     
                   </div>
-				  <p style="margin-left: 41%;">If Already have account ? Please <a href="javascript:void(0)" onclick="showHide('login-form-div')"><strong>Login</strong></a></p>
+				  <p id="already_register" style="margin-left: 41%;">If Already have account ? Please <a href="javascript:void(0)" onclick="showHide('login-form-div')"><strong>Login</strong></a></p>
                 </ul>
               </fieldset>
             </div>

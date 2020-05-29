@@ -1238,7 +1238,7 @@ $(document).delegate('#signup', 'click', function() {
                    
 
                     if($('#register_verify_otp').val() == 'yes') {
-
+            
                         $('.signup-modal-text').html(text);
                         //$('.signup_otp_div').hide();
                         //$('#signup').hide();
@@ -1254,6 +1254,7 @@ $(document).delegate('#signup', 'click', function() {
                     } else {
                         $('.signup_otp_div').show();
                         $('#other_signup_div').hide();
+                        $('p#already_register').hide();
                         $('.reg_bg').removeClass('.heightset');
                         // button text to read verify otp
                         $('.signup-modal-text').html(json['text_verify_otp']);
