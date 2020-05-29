@@ -240,7 +240,7 @@
                                 <div class="checkout-promocode-form"  >
                                  <div class="form-group">
                                         <span class="input-group-btn">
-                                            <a id="button-reward" href="<?php echo $continue.'/index.php?path=checkout/checkout'; ?>" class="btn btn-primary btnsetall" style="width: 100%;height: 100%;" type="button">Proceed to Check out
+                                            <a id="button-reward" href="<?php echo $continue.'/index.php?path=checkout/checkout'; ?>" class="btn btn-primary btnsetall button-reward" style="width: 100%;height: 100%;" type="button">Proceed to Check out
                                             </a>
                                         </span>
                                     </div>

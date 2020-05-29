@@ -10684,6 +10684,7 @@ footer .footer-inner h3 {
 	margin: 0 0 15px;
 	padding: 0 0 10px;
 	font-family: 'Rubik', sans-serif;
+	border-radius:4px; 
 }
 .footer-column-1 {
 	margin-right: 30px;
@@ -12857,7 +12858,7 @@ select#shipping-address-select {
 		font-size: 18px;
 		font-weight: normal;
 	}
-	#button-reward{
+	.button-reward{
 		border-radius: 999px !important;
 		border: 1px solid #ec9f4e !important;
 		padding: 12px 0px 12px 0px !important;
