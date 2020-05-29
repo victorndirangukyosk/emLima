@@ -396,17 +396,18 @@
                             <?php foreach ($arrs as $key=> $products) { ?>
 
                                 <div class="checkout-sidebar-merchant-box">
-                                    <div class="checkout-cart-merchant-box"> <span class="checkout-cart-merchant-name"><?php echo $this->model_account_address->getStoreNameById($key); ?></span> <span class="checkout-cart-merchant-item"><?php echo $this->cart->getTotalProductsByStore($key); ?></span> </div>
+                                    <div class="checkout-cart-merchant-box"> <span class="checkout-cart-merchant-name" style="margin-left:100px"> Order Summary</span>   </div>
                                     <div class="checkout-cart-products">
                                         <div class="collapse" id="collapseExample<?= $key ?>">
                                             <div class="checkout-item-list">
                                                 <?php $i = 1; foreach ($products as $product) { ?>
 
                                                     <div class="checkout-cart-item">
-                                                        <div class="checkout-item-count"><?= $product['quantity']?></div>
-                                                        <div class="checkout-item-img"><img src="<?= $product['thumb'] ?>" alt="" class="img-responsive"></div>
+                                                        <div class="checkout-item-img"  style="align:left"><img src="<?= $product['thumb'] ?>" alt="" class="img-responsive"></div>
                                                         <div class="checkout-item-name-box">
                                                             <div class="checkout-item-title"><?= $product['name'] ?></div>
+                                                        
+
                                                             <div class="checkout-item-unit"><?= $product['unit'] ?>
                                                                 <!-- &nbsp;
                                                                 <?php if($product['product_type'] == 'replacable') { ?>
@@ -421,6 +422,7 @@
                                                             </div>
                                                             
                                                         </div>
+                                                        <div class="checkout-item-count" ><?= $product['quantity']?></div>
                                                         <div class="checkout-item-price"><?php echo $product['total']; ?></div>
                                                     </div>
 
