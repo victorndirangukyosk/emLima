@@ -1064,7 +1064,7 @@ Step Wizard
 .checout-address-step { margin-bottom: 30px; }
 .checout-address-step .form-group { margin-bottom: 18px; display: inline-block; width: 100%; }
 .checkout-step-body { padding-left: 60px; padding-top: 35px; }
-.checkout-step-body button.btn { height: 50px; line-height: 36px; }
+.checkout-step-body button.btn { height: 50px; line-height: 36px; width: 175px}
 .checkout-step-body .form-control { margin-bottom: 10px; }
 .checkout-step-active { display: block; }
 .checkout-step-disabled { display: none; }

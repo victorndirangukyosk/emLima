@@ -16,7 +16,7 @@
         </font>
     </p>
 
-<input id="mpesa_phone_number" name="telephone" type="text" value="<?= $customer_number?>" class="form-control input-md" required="" placeholder="Mobile number" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 &amp;&amp; event.charCode <= 57" minlength="9" maxlength="9" style="display: inline-block;    width: 90%;" >
+<input id="mpesa_phone_number" name="telephone" type="text" value="<?= $customer_number?>" class="form-control input-md" required="" placeholder="Mobile number" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 &amp;&amp; event.charCode <= 57" minlength="9" maxlength="9" style="display: inline-block;    width: 22%;" >
 
 </span>
 
