@@ -433,6 +433,131 @@ class ControllerApiCustomerReturn extends Controller {
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
+
+    public function addAcceptDelivery() {
+        
+        $json = array();
+        
+        $this->load->language('information/locations');
+
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
+
+        $this->load->language('api/general');
+        $this->load->model('account/customer');
+
+        $log = new Log('error.log');
+        $log->write('addReturnProduct');
+        $log->write($this->request->post);
+
+        //if( $this->customer->isLogged()) {
+        if( true && $this->validateAcceptKeys()) {
+
+            $this->load->language('account/return');
+            $this->load->model('account/return');
+
+            $this->load->model('account/customer');
+
+            $order_id = $this->request->post['order_id'];
+            $products = $this->request->post['product_id'];
+            //$product_id = $this->request->post['product_id'];
+            //$quantity = $this->request->post['quantity'];
+            $action = $this->request->post['action'];
+
+            $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+
+            //fnam,lname,email,telephone,o_id,order date,product name,unit,model,qty,reason for ret,opened,fault comment
+           
+
+            $this->load->model('account/order');
+
+            $order_info = $this->model_account_order->getOrder($order_id);
+
+            $realproducts = $this->model_account_order->hasRealOrderProducts($order_id);
+            if(count($products)> 0){
+                $return_replace_count = 0;
+                foreach($products as $keyproduct => $productvalue) {
+                    $product_id  =  $productvalue;
+                    $action      =  $action[$keyproduct];
+                    if($action == 'return' || $action == 'replace'){
+                        $return_replace_count++;
+                    }
+                    $action_note =  $action_note[$keyproduct];
+                    $this->db->query( "UPDATE `" . DB_PREFIX . "order_product` SET 	on_delivery_action = '" . $action . "', delivery_action_note = '" . $action_note . "' WHERE order_id = '" . (int) $order_id . "' AND product_id = '" . (int) $product_id . "'" );
+                   
+                 }
+               
+                if($return_replace_count > 0){
+                    $orderStatus = 'Partially Delivered';
+                }else{
+                    $orderStatus = 'Delivered';
+                }
+
+                $sql = "SELECT order_status_id FROM " . DB_PREFIX . "order_status WHERE language_id = '" . (int)$this->config->get('config_language_id') . "' AND name='".$orderStatus."'";
+                $query = $this->db->query($sql);
+                $order_status_id = $query->row['order_status_id'];
+                //echo "Order_status_id "+$order_status_id;
+                $comment = "Automatic status change on Accept Delivery";
+                $this->db->query( "UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'" );
+                $this->db->query( "INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', comment = '" . $this->db->escape( $comment ) . "', date_added = NOW()" );
+
+            }
+                
+            $json['message'][] = ['type' =>  '' , 'body' =>  'Delivery submission completed!' ];
+
+        }  else {
+
+            $json['status'] = 10014;
+
+            foreach ($this->error as $key => $value) {
+                $json['message'][] = ['type' =>  $key , 'body' =>  $value ];
+            }
+
+            http_response_code(400);
+        }
+        
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    protected function validateAcceptKeys() {
+
+        if (!isset($this->request->post['order_id'])) {
+            $this->error['order_id'] = $this->language->get('error_order_id');
+        }
+
+        if (!isset($this->request->post['product_id'])) {
+            $this->error['product_id'] = $this->language->get('error_product');
+        }
+
+        if (!isset($this->request->post['action'])) {
+            $this->error['action'] = $this->language->get('error_action');
+        }
+
+        
+        if (empty($this->request->post['action_note'])) {
+            $this->error['action_note'] = $this->language->get('error_action_note');
+        }
+
+        /*if ($this->config->get('config_google_captcha_status')) {
+            $json = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret=' . urlencode($this->config->get('config_google_captcha_secret')) . '&response=' . $this->request->post['g-recaptcha-response'] . '&remoteip=' . $this->request->server['REMOTE_ADDR']);
+            
+            $json = json_decode($json, true);
+                
+            if (!$json['success']) {
+                $this->error['captcha'] = $this->language->get('error_captcha');
+            }       
+        }
+		*/
+
+        if($this->error) {
+            $this->error['warning'] = 'Plase check the form carefully!';
+        }
+              
+        return !$this->error;
+    }
+
     protected function validate() {
 
         if (!isset($this->request->post['order_id'])) {
