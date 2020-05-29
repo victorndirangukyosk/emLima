@@ -95,11 +95,14 @@
                                                 <span class="price font-bold"><?php echo $product['total']; ?></span>                            
         </span>
             </td>
-              <td   class="a-center hidden-table" colspan="2">
+              <td   class="a-center hidden-table"  >
                <stop> <a       class="edit-bnt" title="Edit item parameters"><span><?= $i?></span></a><stop>
             
 
-   <a title="Remove item" class="button remove-item" style=" background-color: #ec9f4e ;"><span><span><?= $product['key']?></span></span></a></p></td>
+  </td>
+  <td class="a-center hidden-table">
+  <p> <a title="Remove item" class="button remove-item" style=" background-color: #ec9f4e ;"><span><span><?= $product['key']?></span></span></a></p>
+  </td>
 
 
 
@@ -553,6 +556,7 @@
       
    
 var key=$(this).text().trim();
+//alert($(this).text().trim());
 console.log("cart["+key+"][qty]");
 $("cart["+key+"][qty]").removeAttr('disabled');
  document.getElementById("cart["+key+"][qty]").disabled = false;
