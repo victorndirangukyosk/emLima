@@ -95,11 +95,14 @@
                                                 <span class="price font-bold"><?php echo $product['total']; ?></span>                            
         </span>
             </td>
-              <td   class="a-center hidden-table" colspan="2">
+              <td   class="a-center hidden-table"  >
                <stop> <a       class="edit-bnt" title="Edit item parameters"><span><?= $i?></span></a><stop>
             
 
-   <a title="Remove item" class="button remove-item" style=" background-color: #ec9f4e ;"><span><span><?= $product['key']?></span></span></a></p></td>
+  </td>
+  <td class="a-center hidden-table">
+  <p> <a title="Remove item" class="button remove-item" style=" background-color: #ec9f4e ;"><span><span><?= $product['key']?></span></span></a></p>
+  </td>
 
 
 
@@ -154,7 +157,7 @@
 
         <h3>Order Notes</h3>
         <div class="sEstimate Shipping and Taxhipping-form">
-       <form action="" method="post" id="shipping-zip-form">
+       <form  id="comment-order-form" >
             
             <ul class="form-list">
             <li>
@@ -164,7 +167,7 @@
                    <label for="order_note">Please add order note, if you have any.</label>
                       <div class="checkout-promocode-form">
                                         
-                                        <textarea name="dropoff_notes-<?= $key?>" class="form-control" maxlength="200" placeholder="<?= $text_dropoff_notes?>" id="dropoff_notes" style="height: 100px;"></textarea>
+                                        <textarea name="dropoff_notes" class="form-control" maxlength="200" placeholder="<?= $text_dropoff_notes?>" id="dropoff_notes" style="height: 100px;"></textarea>
                                         
                                     </div>
                 </li>
@@ -239,8 +242,8 @@
      <!-- Continue shopping --> 
                                 <div class="checkout-promocode-form"  >
                                  <div class="form-group">
-                                        <span class="input-group-btn">
-                                            <a id="button-reward" href="<?php echo $continue.'/index.php?path=checkout/checkout'; ?>" class="btn btn-primary btnsetall button-reward" style="width: 100%;height: 100%;" type="button">Proceed to Check out
+                                        <span class="input-group-btn"  onclick="setOrderNotes()">
+                                            <a id="button-reward" href="<?php echo $continue.'/index.php?path=checkout/checkout'; ?>" class="btn btn-primary btnsetall" style="width: 100%;height: 100%;" type="button">Proceed to Check out
                                             </a>
                                         </span>
                                     </div>
@@ -553,6 +556,7 @@
       
    
 var key=$(this).text().trim();
+//alert($(this).text().trim());
 console.log("cart["+key+"][qty]");
 $("cart["+key+"][qty]").removeAttr('disabled');
  document.getElementById("cart["+key+"][qty]").disabled = false;
@@ -584,6 +588,16 @@ console.log(key);
 			}
 		});
 });
+
+
+  function setOrderNotes()
+{
+    
+     var dropoff_notes = $('textarea[name="dropoff_notes"]').val();
+     
+  
+ document.cookie = "dropoff_notes="+dropoff_notes;
+}
 
   $(document).delegate('#updatecart', 'click', function(){    
 

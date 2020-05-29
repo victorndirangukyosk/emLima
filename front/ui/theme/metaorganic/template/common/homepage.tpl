@@ -190,12 +190,16 @@
                  
                   <p class="about-p"> Come visit us to learn more about us. </p>
                    <hr></hr>
-                   <button type="button"  class="button btn" style="background-color: #ec9f4e; padding: 15px; float: left; font-size: 14px; color:#fff;">
-                  <span>Join us to make a difference</span>
+                   <a href="<?= $base;?>?action=shop">
+				   <button type="button"  class="button btn" style="background-color: #ec9f4e; padding: 15px; float: left; font-size: 14px; color:#fff;">
+                   <span>Join us to make a difference</span>
                    </button>
+				   </a>
+				   <a href="<?= $base;?>#contact">
                     <button type="button"  class="btn partner" style="background-color: #66cc33; padding: 15px; float: right; color:#fff">
-                  <span>Partner with us to serve the world</span>
-                   </button>
+                    <span>Partner with us to serve the world</span>
+                    </button>
+				   </a>
                   
 
                </div>
