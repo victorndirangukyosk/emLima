@@ -23,12 +23,14 @@
                         <th rowspan="1">SNo.</th>
                         <th rowspan="1">&nbsp;</th>
                         <th rowspan="1"><span class="nobr">Product Name</span></th>
+                        
+                                                <th class="text-center" ><span class="nobr">Unit Price</span></th>
+                                                <th class="text-center"><span class="nobr">Unit </span></th>
+                        <th rowspan="1" class="text-center">Qty</th>
+                        <th class="text-center">Sub Total</th>
                         <th rowspan="1"></th>
-                                                <th class="a-center" colspan="1"><span class="nobr">Unit Price</span></th>
-                                                <th class="a-center" colspan="1"><span class="nobr">Unit </span></th>
-                        <th rowspan="1" class="a-center">Qty</th>
-                        <th class="a-center" colspan="4">Sub Total</th>
-                        <th rowspan="1" class="a-center">&nbsp;</th>
+                        <th class="text-center">&nbsp;</th>
+                        
                     </tr>
                                     </thead>
                
@@ -40,7 +42,7 @@
                             <?php foreach ($arrs as $key=> $products) { ?>
 
                                 <div >
-                                    <div  class="checkout-cart-merchant-box"> <span  ><h2>Order Summary</h2></span> <span class="checkout-cart-merchant-item"></span> </div>
+                                    <div  class="checkout-cart-merchant-box text-center"> <span  ><h1>Order Summary</h1></span> <span class="checkout-cart-merchant-item"></span> </div>
                                     <div >
                                         <div class="collapse in" id="collapseExample<?= $key ?>">
                                             <div class="checkout-item-list">
@@ -63,12 +65,10 @@
 
                     </td>
     <td class="image hidden-table"><img src="<?= $product['thumb'] ?>" width="75" alt=""></td>
-    <td class="a-left hidden-table"  >
+    <td class="a-left hidden-table"  style="width:400px">
      <span ><?= $product['name']?></span> 
        </td>
-    <td   class="a-center hidden-table">
-               <stop> <a       class="edit-bnt" title="Edit item parameters"><span><?= $i?></span></a><stop>
-            </td>
+  
     
     
                 <td class="a-right hidden-table">
@@ -81,7 +81,7 @@
 
                      <td class="a-right hidden-table">
                             <span class="cart-price">
-                                                <span class="price"><?= $product['unit'] ?></span>                
+                                                <span class="price font-bold"><?= $product['unit'] ?></span>                
             </span>
 
 
@@ -92,12 +92,14 @@
         <td class="a-right hidden-table" >
                     <span class="cart-price">
         
-                                                <span class="price"><?php echo $product['total']; ?></span>                            
+                                                <span class="price font-bold"><?php echo $product['total']; ?></span>                            
         </span>
             </td>
-            <td class="a-left hidden-table"><p>
+              <td   class="a-center hidden-table" colspan="2">
+               <stop> <a       class="edit-bnt" title="Edit item parameters"><span><?= $i?></span></a><stop>
+            
 
-   <a title="Remove item" class="button remove-item" style=" background-color: #ec9f4e !important;"><span><span><?= $product['key']?></span></span></a></p></td>
+   <a title="Remove item" class="button remove-item" style=" background-color: #ec9f4e ;"><span><span><?= $product['key']?></span></span></a></p></td>
 
 
 
@@ -112,17 +114,23 @@
                                 </div>
                             <?php $i++; } ?>
 
-
+<tfoot>
+<tr class="first last">
+<td colspan="9" class="a-right last">
+<a  href="<?php echo $continue; ?>"> <button type="button" title="Continue Shopping" class="button btn-continue" style="width:210px;background-color: #ec9f4e ; padding: 15px 20px 27px 20px;" ><span><span>Continue Shopping</span></span></button></a>
+                                                       
+                                                       
+                          
+                           <button type="submit" style="width:170px;background-color: #ec9f4e ; padding: 15px 20px 27px 20px;" name="update_cart_action" value="update_qty" title="Update Cart" class="button btn-update"><span id="updatecart">Update Cart</span></button>
+                          
+                            <button type="submit"  style="width:180px;background-color: #ec9f4e ; padding: 15px 20px 27px 20px;" name="update_cart_action" value="empty_cart" title="Clear Cart" class="button btn-empty" id="empty_cart_button"><span id="clearcart" class="cart-header_items-count clear-cart" style="border-bottom:none;" data-confirm="This will empty your cart!!" >Clear Cart</span></button>
+</td>
+</tr>
+</tfoot>
  </table>
   </fieldset>
 
-   <a  href="<?php echo $continue; ?>"> <button type="button" title="Continue Shopping" class="button btn-continue" style="width:280px;background-color: #ec9f4e !important;" ><span><span>Continue Shopping</span></span></button></a>
-                                                       
-                                                       
-                          
-                           <button type="submit" style="width:280px;background-color: #ec9f4e !important;" name="update_cart_action" value="update_qty" title="Update Cart" class="button btn-update"><span id="updatecart">Update Cart</span></button>
-                          
-                            <button type="submit"  style="width:280px;background-color: #ec9f4e !important;" name="update_cart_action" value="empty_cart" title="Clear Cart" class="button btn-empty" id="empty_cart_button"><span id="clearcart" class="cart-header_items-count clear-cart" data-confirm="This will empty your cart!!" >Clear Cart</span></button>
+   
                   
                            
 
@@ -184,7 +192,7 @@
             <label for="coupon_code">Enter your coupon code if you have one.</label>
             <input type="hidden" name="remove" id="remove-coupone" value="0">                          
                 <input class="form-control" type="text" id="coupon" name="coupon" value="">                                                      
-                  <button type="button" title="Apply Coupon" class="button coupon "style="width:280px;background-color: #ec9f4e !important;align:center;margin-top:20px"  id="promo-form-button" value="Apply Coupon"><span>Apply Coupon</span></button>                
+                  <button type="button" title="Apply Coupon" class="button coupon "style="width:180px;background-color: #ec9f4e;align:center;margin-top:20px; padding:20px 0px 27px 0px"  id="promo-form-button" value="Apply Coupon"><span>Apply Coupon</span></button>                
                                
 </form>
 
@@ -201,7 +209,7 @@
         <col width="1">
         </colgroup><tfoot>
             <tr>
-  <!--  <td style="" class="a-left" colspan="1">
+  <!--  <td style="" class="a-left" >
         <strong>Grand Total</strong>
     </td>
     <td style="" class="a-right">
@@ -211,7 +219,7 @@
         </tfoot>
         <tbody>
           <tr >
-    <!--<td style="" class="a-left" colspan="1">
+    <!--<td style="" class="a-left" >
         Subtotal    </td>
     <td style="" class="a-right">
         <span class="price"><?= $product_total_amount?></span>    </td>-->
@@ -226,22 +234,20 @@
         </tbody>
     </table>
   
-<ul class="checkout">           
+<ul class="checkoutnew">           
 <li>
      <!-- Continue shopping --> 
-                                <div class="checkout-promocode-form"  style="width:280px;margin-top:50px">
+                                <div class="checkout-promocode-form"  >
                                  <div class="form-group">
                                         <span class="input-group-btn">
-                                            <a id="button-reward" href="<?php echo $continue.'/index.php?path=checkout/checkout'; ?>" class="btn btn-primary btnsetall" style="width: 100%;height: 100%;" type="button">Check Out
+                                            <a id="button-reward" href="<?php echo $continue.'/index.php?path=checkout/checkout'; ?>" class="btn btn-primary btnsetall" style="width: 100%;height: 100%;" type="button">Proceed to Check out
                                             </a>
                                         </span>
                                     </div>
                                 
                                 </div>
                             <!-- END Continue shopping --> 
-</li><br>
- 
-</li><br>
+</li>
 </ul>                
 </div><!--inner-->
  </div><!--totals-->
@@ -905,7 +911,7 @@ var cart = {
 #shopping-cart-table a.remove-item:before {
 	content: "\f014";
 	font-family: FontAwesome;
-	font-size: 16px;
+	font-size: 25px;
     background-color: #ec9f4e !important;
 }
 #shopping-cart-table a.remove-item span {

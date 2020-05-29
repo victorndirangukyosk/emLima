@@ -87,7 +87,7 @@ $_['text_local_stores']	  		   = 'Local shops to your front door!';
 
 $_['text_no_product']	  		   = 'No product in cart.';
 $_['text_away_from']	  		   = 'Away From Minimum';
-$_['text_proceed_to_checkout']	  		   = 'Proceed to Checkout';
+$_['text_proceed_to_checkout']	  		   = 'Proceed to order summary';
 $_['text_we_located_at']	  		   = 'We are located in';
 
 

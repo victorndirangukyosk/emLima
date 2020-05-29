@@ -12828,3 +12828,39 @@ select#shipping-address-select {
     width: 14px;
     height: 14px;
     background: url(../images/list.png) 0 0 no-repeat;}
+	.checkoutnew {
+		color: #666666;
+		padding-top: 5px;
+		text-align: center;
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+	.btn-proceed-checkout {
+		background: #ec9f4e;
+		padding: 15px 0px;
+		color: #fff;
+		width: 100%;
+		border: none;
+	}
+	.btn-proceed-checkout:before {
+		content: "\f00c";
+		font-family: FontAwesome;
+		font-size: 20px;
+		padding-right: 5px;
+	}
+	.btn-proceed-checkout span {
+		font-size: 18px;
+		font-weight: normal;
+	}
+	#button-reward{
+		border-radius: 999px !important;
+		border: 1px solid #ec9f4e !important;
+		padding: 12px 0px 12px 0px !important;
+	}
+	.btnsetall:before {
+		content: "\f00c";
+		font-family: FontAwesome;
+		font-size: 20px;
+		padding-right: 5px;
+	}

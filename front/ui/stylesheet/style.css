@@ -203,10 +203,8 @@ header {
 	width: 100%;
 	position: relative;
 	z-index:1000;
-	margin-top:45px;
-
-
-
+	background-color: #fff;
+	height: 88px;
 }
 
 #header {}
@@ -5741,8 +5739,6 @@ position: absolute;
 
 .button, .btn, .button-inverse, .button-vote, .sidebar .button, .sidebar .btn, .dropdown .dropdown-menu .button, .buttons-set .back-link a, .scrolltop, .button-tabs li a {
 	font-family: 'Open Sans', sans-serif;
-	border: 1px #ddd solid;
-	background: #fff;
 	padding: 5px 12px;
 	transition: color 300ms ease-in-out 0s, background-color 300ms ease-in-out 0s, background-position 300ms ease-in-out 0s;
 }
@@ -6285,7 +6281,7 @@ button.button.continue:before {
 	border-spacing: 0;
 	text-align: left;
 	width: 100%;
-	font-size: 13px;
+	font-size: 16px;
 }
 #my-orders-table {
 	border: none;
@@ -6330,7 +6326,7 @@ button.button.continue:before {
 	font-family: 'Open Sans', sans-serif;
 }
 .data-table .price {
-	font-size: 14px;
+	font-size: 16px;
 	font-weight: 500;
 	color: #000;
 }
@@ -9677,8 +9673,9 @@ button.button#empty_cart_button:before {
 	text-transform: none;
 }
 #shopping-cart-table.data-table .price {
-	font-weight: 600;
+	font-weight: 400;
 }
+.font-bold{font-weight:600 !important}
 #shopping-cart-table input.qty {
     background: none repeat scroll 0 0 #FFFFFF;
     border: 1px solid #ddd;
@@ -9690,15 +9687,17 @@ button.button#empty_cart_button:before {
     width: 40px;
     text-align: center;
 	border-radius: 999px;
+	margin: 0px auto !important;
+    padding-left: 22px;
 }
 #shopping-cart-table .edit-bnt {
 	float: left;
-	margin-top: 0px;
+	margin-top: 10px;
 }
 .edit-bnt:before {
 	content: "\f040";
 	font-family: FontAwesome;
-	font-size: 12px;
+	font-size: 20px;
 	padding: 9px 10px;
 }
 a.edit-bnt:hover {
@@ -9843,7 +9842,7 @@ a.edit-bnt:hover {
     padding-bottom: 30px;
     background-color: #fff;
     border-radius: 30px 50px 70px 30px;
-
+	margin-bottom: 20px;
 }
 .shipping .form-list select {
 	width: 100%;
@@ -11186,7 +11185,7 @@ button.button {
 
 }
 button.button:hover {
-    background-color: #66cc33;
+    background-color: #66cc33 !important;
 	color: #fff;
 }
 button.button span span {
