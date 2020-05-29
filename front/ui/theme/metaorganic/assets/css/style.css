@@ -3134,7 +3134,7 @@ body#vip .header__banner-container {
 .header__search-location input.header__search-input {
 	padding-left: 49px;
 	height: 45px;
-	width: 550px;
+	width: 400px;
     border-radius: 30px;
 }
 
@@ -8867,7 +8867,10 @@ button#detect_location {
 	margin-top: 10px;
 }
 .cancelbut{
-	width: 49%;
+	width: 49%;	
 	float: right;
 	margin-top: 10px;
+}
+.header__primary-navigation-outer-wrapper .header__logo-container{
+	margin-top: 30px
 }

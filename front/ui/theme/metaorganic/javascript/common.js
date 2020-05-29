@@ -1084,8 +1084,10 @@ $(document).delegate('#login_send_otp', 'click', function() {
                     //$('.login-modal-text').html(text);
                     $('.login-loader').hide();
                     //$('#login-message').html(json['error_warning']);
-                    $('#login-message').html("<p style='color:green'>"+json['success_message']+"</p>");
-                    window.setTimeout(function(){location.reload()},2000)
+                    //$('#login-message').html("<p style='color:green'>"+json['success_message']+"</p>");
+                    //window.setTimeout(function(){location.reload()},2000)
+           
+                    location = $('.base_url').attr('href');
                     
                     //$('#customer_id').val(json['customer_id']);
                     
@@ -1243,7 +1245,7 @@ $(document).delegate('#signup', 'click', function() {
                         $('#signup-message>p').css({"margin-top": "150px", "font-size": "24px"});
                        
                         setTimeout(function() {
-                            location.reload();
+                            location = $('.base_url').attr('href');
                         }, 5000);
                         ///window.location.reload(false);
                         // Redirect To Profile Page
@@ -1265,6 +1267,7 @@ $(document).delegate('#signup', 'click', function() {
                
                     return false;
                 } else {   
+                    $('#signup-message').remove();
                     //console.log(json,'json_response');
                     //alert('dddd');
                     /*if($('#register_verify_otp').val() == 'yes') {
@@ -1341,11 +1344,11 @@ $(document).delegate('#signup', 'click', function() {
                         $form.find( "input[name='company_address']" ).parent().addClass('error-animation');
                     }
 
-                    if(json['error_address']){
+                   /*if(json['error_address']){
                         //$error += json['error_company_name_address']+'<br/>';
                         $form.find( "input[name='address']" ).after('<span class="text-danger fa fa-star">'+json['error_address']+'</span>');
                         $form.find( "input[name='address']" ).parent().addClass('error-animation');
-                    }
+                    }*/
 
                     if(json['error_house_building']){
                         //$error += json['error_company_name_address']+'<br/>';

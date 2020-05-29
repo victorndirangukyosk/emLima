@@ -1771,6 +1771,8 @@ ul.level1 {
 
 .offer-inner { background:#fff; border-radius:60px 90px 40px 90px; padding:40px 20px 0px; margin-bottom:20px;}
 .offer-inner img {border-radius:30px 60px 20px 60px; max-width:100%}
+.offer-innernew { padding-bottom: 40px !important;}
+
 
 .offer-inner .left .col {
 	width:33.3%;
@@ -9316,7 +9318,7 @@ label {
 	white-space: nowrap;
 }
 button.button.submit:before {
-	content: "\f04b";
+	/*content: "\f04b";*/
 	font-family: FontAwesome;
 	font-size: 11px;
 	padding-right: 8px;
@@ -10322,20 +10324,22 @@ button.button.new-address:before {
 }
 
 
-button.button.create-account { background:#66cc33; color:#fff; padding: 15px; width:200px}
+button.button.create-account { background:#66cc33; color:#fff;  }
 button.button.create-account:hover {background: #131e2c;}
-
+.create-account span, .login span{
+	font-size: 35px !important;
+}
 button.button.create-account:before {
 	content: "\f007";
 	font-family: FontAwesome;
-	font-size: 12px;
-	padding-right: 8px;
+	font-size: 30px;
+	padding-right: 15px;
 }
 button.button.login:before {
 	content: '\f13e';
 	font-family: FontAwesome;
-	font-size: 12px;
-	padding-right: 8px;
+	font-size: 35px;
+	padding-right: 15px;
 }
 .account-login .form-list input.input-text {
 	background: #fff;
@@ -10680,6 +10684,7 @@ footer .footer-inner h3 {
 	margin: 0 0 15px;
 	padding: 0 0 10px;
 	font-family: 'Rubik', sans-serif;
+	border-radius:4px; 
 }
 .footer-column-1 {
 	margin-right: 30px;
@@ -11221,7 +11226,7 @@ button.button {
 	border:none;
 	border-radius: 999px;
 	letter-spacing: 0.5px;
-	padding: 12px 20px 10px 20px;
+	padding: 20px 30px 10px 30px;
 	font-family: 'Rubik', sans-serif;
 
 }
@@ -12814,7 +12819,7 @@ select#shipping-address-select {
     padding: 5px 0 5px 52px;
     font-size: 16px;
     line-height: 24px;
-    color: #263238;
+    color: #828287;
     position: relative;
     transition: all ease 0.5s;
     -webkit-transition: all ease 0.5s;
@@ -12853,7 +12858,7 @@ select#shipping-address-select {
 		font-size: 18px;
 		font-weight: normal;
 	}
-	#button-reward{
+	.button-reward{
 		border-radius: 999px !important;
 		border: 1px solid #ec9f4e !important;
 		padding: 12px 0px 12px 0px !important;
@@ -12863,4 +12868,14 @@ select#shipping-address-select {
 		font-family: FontAwesome;
 		font-size: 20px;
 		padding-right: 5px;
+	}
+	.partner:hover{
+		background-color: #ec9f4e !important;
+	}
+	.partner{
+		border-radius: 999px;
+		font-weight: 500;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 	}

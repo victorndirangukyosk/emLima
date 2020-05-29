@@ -579,9 +579,9 @@ class ControllerAccountRegister extends Controller {
 			$this->error['company_address'] = $this->language->get( 'error_company_address' );
 		}
 
-		if (( utf8_strlen( trim( $this->request->post['address'] ) ) < 1 )) {
+		/*if (( utf8_strlen( trim( $this->request->post['address'] ) ) < 1 )) {
 			$this->error['address'] = $this->language->get( 'error_address' );
-		}
+		}*/
 
 		if (( utf8_strlen( trim( $this->request->post['house_building'] ) ) < 1 )) {
 			$this->error['house_building'] = $this->language->get( 'error_house_building' );

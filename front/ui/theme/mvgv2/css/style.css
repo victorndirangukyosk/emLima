@@ -790,22 +790,22 @@ button { }
     Website all buttons
 ---------------------------------*/
 .btn { padding: 6px 14px; border-radius: 2px; font-size: 15px; font-weight: 600; }
-.btn-default { color: #fff; background-color: #522e5b; border-color: #522e5b; }
-.btn-default.disabled:hover { color: #000; background-color: #522e5b; border-color: #522e5b; }
-.btn-default:hover { color: #fff; background-color: #45264c; border-color: #45264c; }
+.btn-default { color: #fff; background-color: #ff811e; border-color: #ff811e; }
+.btn-default.disabled:hover { color: #000; background-color: #88be4c; border-color: #88be4c; }
+.btn-default:hover { color: #fff; background-color: #88be4c; border-color: #88be4c; }
 .btn-grey { color: #fff; background-color: grey; border-color: grey; }
 .btn-grey[disabled]:hover { color: #fff; background-color: grey; border-color: grey; }
 
-.btn-default.focus, .btn-default:focus { color: #fff; background-color: #45264c; border-color: #45264c; }
-.btn-primary { color: #fff; background-color: #301635; border-color: #301635; }
-.btn-primary:hover { color: #fff; background-color: #ff811e; border-color: #ff811e; }
-.btn-primary.focus, .btn-primary:focus { color: #fff; background-color: #ff811e; border-color: #ff811e; }
+.btn-default.focus, .btn-default:focus { color: #fff; background-color: #88be4c; border-color: #88be4c; }
+.btn-primary { color: #fff; background-color: #ff811e; border-color: #ff811e; }
+.btn-primary:hover { color: #fff; background-color: #88be4c; border-color: #88be4c; }
+.btn-primary.focus, .btn-primary:focus { color: #fff; background-color: #88be4c; border-color: #88be4c; }
 .btn-grey { background-color: #cccccc; border: 1px solid #cccccc; }
 .btn-lg { font-size: 18px; padding: 9px 20px; }
 .btn-sm { font-size: 13px; padding: 5px 12px; }
 .btn-xs { font-size: 11px; padding: 6px; line-height: 1; }
 .btn-link-white { color: #fff; }
-.btn-link-white:hover { color: #522e5b; }
+.btn-link-white:hover { color: #88be4c; }
 .btn-link { color: #522e5b; }
 .btn-link:focus, .btn-link:hover { color: #301635; text-decoration: underline; background-color: transparent; }
 .btn-default:active:focus, .btn-default:active:hover { color: #fff; background-color: #301635; border-color: #301635; }
@@ -950,7 +950,7 @@ button { }
 /* ----- MODAL STYLE ----- */
 .modal-content { border-radius: 0; border: none; background-color: #fff; position: relative; }
 .modal-footer { padding: 10px 15px;    /* text-align: right; */ border-top: 1px solid #e5e5e5; position: fixed; bottom: 0px; z-index: 9; background: #f3f5f2; width: 100%; }
-.store-cart-panel .modal.left .modal-body, .modal.right .modal-body { padding: 65px 0px 20px 0px; }
+.store-cart-panel .modal.left .modal-body, .modal.right .modal-body { padding: 65px 0px 30px 0px; }
 
 .product-items { font-size: 12px; display: inline-block; width: 100%; }
 .product-items .product-quantity { float: left; }
@@ -1079,7 +1079,7 @@ Step Wizard
 .login-phone .form-control { padding-left: 68px; font-size: 14px; }
 .checkout-login .btn { height: 42px; line-height: 1.8; }
 .otp-verifaction { }
-.checkout-sidebar { background-color: #fff; border: 1px solid #d7dcd6; padding: 30px; margin-bottom: 30px; }
+.checkout-sidebar { background-color: #fff; border: 1px solid #d7dcd6; padding: 30px; margin-bottom: 30px; margin-top: 23px;}
 .checkout-sidebar-merchant-box { background-color: #fff; border: 1px solid #d7dcd6; margin-bottom: 30px; }
 .checkout-total { border-bottom: 1px solid #d7dcd6; padding-bottom: 10px; margin-bottom: 10px; }
 .checkout-invoice { display: inline-block; width: 100%; }
