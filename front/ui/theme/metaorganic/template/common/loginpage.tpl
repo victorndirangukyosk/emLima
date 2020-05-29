@@ -47,7 +47,7 @@
     <div id="header">
       <div class="container">
         <div class="header-container row">
-          <div class="logo"> <a href="<?php echo BASE_URL;?>" title="index">
+          <div class="logo"> <a class="base_url" href="<?php echo BASE_URL;?>" title="index">
             <div><img src="<?=$logo?>" alt="logo"></div>
             </a> </div>
           <div class="fl-nav-menu">
@@ -267,7 +267,7 @@
                             </div>
 							
 							<div class="input-box name-address_2">
-                              <label for="email"><em class="required">*</em><?= $entry_address_1 ?></label>
+                              <label for="email"><?= $entry_address_1 ?> Line 1 (Optional)</label>
                               <br>
 							 <input id="address" name="address" type="text" class="input-text input-md" required="">
                             </div>
@@ -276,14 +276,14 @@
                               <label for="email"><em class="required">*</em>Location</label>
                               <br>
 							   <!--<input name="modal_address_locality" type="text" class="input-text LocalityId pac-target-input" required="" placeholder="Enter a location" autocomplete="off">-->
-								<input name="location" id="searchTextField" class="zipcode-enter pac-target-input input-text" type="text" required="" alt="" maxlength="" size="" tabindex="3" placeholder="Find Stores in your Location" highlight="y" strict="y" autocomplete="off">
+								<input name="location" id="searchTextField" class="zipcode-enter pac-target-input input-text" type="text" required="" alt="" maxlength="" size="" tabindex="3" placeholder="Your Location" highlight="y" strict="y" autocomplete="off">
 								<input type="hidden" id="store_location" value="autosuggestion">
 							</div>
 							<input type="hidden" name="latitude" value="<?= $latitude ?>" />
                             <input type="hidden" name="longitude" value="<?= $longitude ?>" />
 							
 							 <?php if ($site_key) { ?>
-						    <div class="input-box">
+						    <div class="input-box" style="margin-left: 35%;">
 							<label for="input-date-added"></label>
 							
 							  
@@ -313,16 +313,17 @@
 				  <li>
 				  
 				  </li>
-                  <p class="require"><em class="required">* </em>Required Fields</p>
+                  <p class="require" style="margin-left: 45%"><em class="required">* </em>Required Fields</p>
                   <input type="text" name="hideit" id="hideit" value="" style="display:none !important;">
-                  <div class="buttons-set">
+                  <div class="buttons-set" style="margin-left: 39%;">
                     <!--<button type="submit" title="Submit" class="button submit"><span><span>Submit</span></span></button>-->
-					<button id="signup" type="button" class="button submit">
-                    <span class="signup-modal-text"><?= $heading_text ?></span>
+					<button id="signup" type="button" class="button submit" style="padding: 20px 60px 20px 60px;">
+                    <span class="signup-modal-text" style="font-size:20px;"><? // $heading_text ?> Register Now</span>
                     <div class="signup-loader" style="display: none;"></div>
                     </button>
-                    If Already have account ? Please <a onclick="showHide('login-form-div')"><strong>Login</strong></a>
+                    
                   </div>
+				  <p style="margin-left: 41%;">If Already have account ? Please <a href="javascript:void(0)" onclick="showHide('login-form-div')"><strong>Login</strong></a></p>
                 </ul>
               </fieldset>
             </div>
