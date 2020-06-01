@@ -682,6 +682,7 @@ $(document).delegate('.mini-minus-quantity', 'click', function() {
             $('#action_remove_'+$product_store_id).remove();
 
             /* Code added For Remove product from cart */
+            $('.unique_add_button'+$product_store_id+'-'+$variation_id).attr('data-action','add');
             $('#cart-qty-'+$product_id+'-'+$variation_id).val($qty);
             $('#AtcButton-id-'+$product_id+'-'+$variation_id).css("background-color","#3baa33");
             $('#flag-qty-id-'+$product_id+'-'+$variation_id).html($qty+' items in cart <i class="fas fa-flag"></i>');
