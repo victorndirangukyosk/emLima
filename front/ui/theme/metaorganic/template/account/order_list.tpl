@@ -10,6 +10,9 @@
                                             <div class="list-group my-order-group">
                                                 <li class="list-group-item my-order-list-head">
                                                     <i class="fa fa-clock-o"></i> <?= $text_placed_on?> <span><strong><?php echo $order['date_added']; ?></strong></span>, <?php echo $order['time_added']; ?> <span>
+                                                    <?php if($order['status'] == 'Arrived for Delivery'){?>
+                                                     <a href="<?php echo $order['accept_reject_href']?>"  class="btn btn-default btn-xs btn-accept-reject" >Accept Delivery</a>
+                                                    <?php } ?>
                                                     <?php if($order['shipped']) { ?>
 
                                                         <a href="#" id="cancelOrder" data-id='<?=$order["order_id"] ?>' class="btn btn-danger btn-xs btn-custom-remove"><?= $text_cancel ?></a>

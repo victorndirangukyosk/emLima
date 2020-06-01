@@ -1651,3 +1651,9 @@ body { overflow-x: hidden;    /* Prevent scroll on narrow devices */ }
 .address-block p{
   text-align: left;
 }
+
+.btn-accept-reject {
+  margin-left:5px;
+  border:1px solid green !important;
+  background:green !important;
+}
