@@ -1,4 +1,3 @@
-
 <div class="sp-quantity" class="qtybtns-addbtnd" id="controller-container">
 
     <p class="info"><?php if(isset($text_incart)) $text_incart ?></p>       
@@ -6,14 +5,21 @@
 </div>
 <div class="qtybtns-addbtnd addcart-block" id="add-btn-container">
  <input type="text" class="input-cart-qty" id="cart-qty-<?= $product['product_store_id'] ?>-<?= $product['store_product_variation_id'] ?>" value="<?= $product['qty_in_cart'] ?>" placeholder="Add Poduct Qunatity">
- <a class="AtcButton__container___1RZ9c AtcButton__with_counter___3YxLq atc_<?= $product['product_store_id'] ?> AtcButton__small___1a1kH" >
+ <a id="AtcButton-id-<?= $product['product_store_id'] ?>-<?= $product['store_product_variation_id'] ?>" style="<?php if($product['qty_in_cart']>0){echo "background-color:#ea7128";}?>" class="AtcButton__container___1RZ9c AtcButton__with_counter___3YxLq atc_<?= $product['product_store_id'] ?> AtcButton__small___1a1kH" >
  <span data-action="<?= $product['qty_in_cart'] ? 'update' : 'add'; ?>"
        data-key='<?= $product["key"] ?>'
-       class="AtcButton__button_text___VoXuy unique_add_button<?= $product['product_store_id'] ?>-<?= $product['store_product_variation_id'] ?>" id="add-cart-btn" data-store-id="<?= ACTIVE_STORE_ID ?>"  data-variation-id="<?= $product['store_product_variation_id'] ?>" data-id="<?= $product['product_store_id'] ?>" style="display: <?= $product['qty_in_cart'] ? 'block' : 'block'; ?>">
+       class="AtcButton__button_text___VoXuy unique_add_button<?= $product['product_store_id'] ?>-<?= $product['store_product_variation_id'] ?>"
+       id="add-cart-btn"
+       data-store-id="<?= ACTIVE_STORE_ID ?>"
+       data-variation-id="<?= $product['store_product_variation_id'] ?>"
+       data-id="<?= $product['product_store_id'] ?>"
+       style="display: <?= $product['qty_in_cart'] ? 'block' : 'block'; ?>">
  <i class="fas fa-cart-plus"></i>
  </span>
  </a>
+ <span id="flag-qty-id-<?= $product['product_store_id'] ?>-<?= $product['store_product_variation_id'] ?>" style="padding:5px;display: <?= $product['qty_in_cart'] ? 'block' : 'none'; ?>"><?php echo $product['qty_in_cart']?> items in cart <i class="fas fa-flag"></i></span>
 </div>
+
 <!--<div class="qtybtns-addbtnd addcart-block" id="add-btn-container">
 
 

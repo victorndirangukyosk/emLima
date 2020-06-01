@@ -303,14 +303,23 @@ $(document).delegate('#add-cart-btn', 'click', function() {
        if($action == 'add'){
         cart.add($product_id, $quantity, $variation_id,$store_id);
         $(this).attr('data-action','update');
+        $('#AtcButton-id-'+$product_id+'-'+$variation_id).css("background-color","#ea7128");
+        $('#flag-qty-id-'+$product_id+'-'+$variation_id).html($quantity+' items in cart <i class="fas fa-flag"></i>');
+        $('#flag-qty-id-'+$product_id+'-'+$variation_id).css("display","block");
        }else{
         cart.update($key,$quantity); 
         $('#cart-qty-'+$product_id+'-'+$variation_id).val($quantity);
+        $('#AtcButton-id-'+$product_id+'-'+$variation_id).css("background-color","#ea7128");
+        $('#flag-qty-id-'+$product_id+'-'+$variation_id).html($quantity+' items in cart <i class="fas fa-flag"></i>');
+        $('#flag-qty-id-'+$product_id+'-'+$variation_id).css("display","block");
        }
     }else{
         if($action == 'update'){
         cart.update($key,$quantity); 
         $('#cart-qty-'+$product_id+'-'+$variation_id).val($quantity);
+        $('#AtcButton-id-'+$product_id+'-'+$variation_id).css("background-color","#3baa33");
+        $('#flag-qty-id-'+$product_id+'-'+$variation_id).html($quantity+' items in cart <i class="fas fa-flag"></i>');
+        $('#flag-qty-id-'+$product_id+'-'+$variation_id).css("display","none");
         }
     }
 });
