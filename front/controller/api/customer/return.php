@@ -465,16 +465,16 @@ class ControllerApiCustomerReturn extends Controller {
             //$quantity = $this->request->post['quantity'];
             $action = $this->request->post['action'];
 
-            $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+            //$customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
 
             //fnam,lname,email,telephone,o_id,order date,product name,unit,model,qty,reason for ret,opened,fault comment
            
 
             $this->load->model('account/order');
 
-            $order_info = $this->model_account_order->getOrder($order_id);
+            //$order_info = $this->model_account_order->getOrder($order_id);
 
-            $realproducts = $this->model_account_order->hasRealOrderProducts($order_id);
+            //$realproducts = $this->model_account_order->hasRealOrderProducts($order_id);
             if(count($products)> 0){
                 $return_replace_count = 0;
                 foreach($products as $keyproduct => $productvalue) {
@@ -500,7 +500,7 @@ class ControllerApiCustomerReturn extends Controller {
                 //echo "Order_status_id "+$order_status_id;
                 $comment = "Automatic status change on Accept Delivery";
                 $this->db->query( "UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'" );
-                $this->db->query( "INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', comment = '" . $this->db->escape( $comment ) . "', date_added = NOW()" );
+                $this->db->query( "INSERT INTO `" . DB_PREFIX . "order_history` SET order_id = '" . (int) $order_id . "', comment = '" . $this->db->escape( $comment ) . "', date_added = NOW()" );
 
             }
                 
