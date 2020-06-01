@@ -463,7 +463,8 @@ class ControllerApiCustomerReturn extends Controller {
             $products = $this->request->post['product_id'];
             //$product_id = $this->request->post['product_id'];
             //$quantity = $this->request->post['quantity'];
-            $action = $this->request->post['action'];
+            $actions = $this->request->post['action'];
+            $actions_note = $this->request->post['action_note'];
 
             //$customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
 
@@ -479,11 +480,11 @@ class ControllerApiCustomerReturn extends Controller {
                 $return_replace_count = 0;
                 foreach($products as $keyproduct => $productvalue) {
                     $product_id  =  $productvalue;
-                    $action      =  $action[$keyproduct];
+                    $action      =  $actions[$keyproduct];
                     if($action == 'return' || $action == 'replace'){
                         $return_replace_count++;
                     }
-                    $action_note =  $action_note[$keyproduct];
+                    $action_note =  $actions_note[$keyproduct];
                     $this->db->query( "UPDATE `" . DB_PREFIX . "order_product` SET 	on_delivery_action = '" . $action . "', delivery_action_note = '" . $action_note . "' WHERE order_id = '" . (int) $order_id . "' AND product_id = '" . (int) $product_id . "'" );
                    
                  }
