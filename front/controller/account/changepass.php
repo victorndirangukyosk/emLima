@@ -1,7 +1,7 @@
 <?php
 
 class ControllerAccountChangepass extends Controller{
-
+ 
     private $error = array();
     
     public function index() {
@@ -45,19 +45,26 @@ class ControllerAccountChangepass extends Controller{
             $data['error_warning'] = '';
         }
 
+
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-             
+           
+           // echo "<pre>";print_r($this->request->post['newpassword']);die;
             $this->load->model('account/changepass');
-             
-            $result = $this->model_account_changepass->change($this->request->post);
+           
+            $result=  $this->model_account_changepass->change($this->request->post);
          
-            if ($result == 0) {
+              
+             if ($result == 0) {
                 $this->$data['error_warning'] = $this->language->get('error_warning_message');
             } else {
-                $this->response->redirect($this->url->link('account/changepass/success'));
+                $this->session->data['success'] = 'Password changed successfully';
+                $this->response->redirect($this->url->link('account/account', '', 'SSL'));
+                
+               
+               // $this->response->redirect($this->url->link('account/changepass/success'));
             }         
         }
-        
+      
         if (isset($this->error['current'])) {
             $data['error_current'] = $this->error['current'];
         } else {
@@ -85,9 +92,9 @@ class ControllerAccountChangepass extends Controller{
 
     public function validate() {
         
-        if ((utf8_strlen(trim($this->request->post['currentpassword'])) < 1) || (utf8_strlen(trim($this->request->post['currentpassword'])) > 32)) {
-            $this->error['current'] = $this->language->get('error_current');
-        }
+        // if ((utf8_strlen(trim($this->request->post['currentpassword'])) < 1) || (utf8_strlen(trim($this->request->post['currentpassword'])) > 32)) {
+        //     $this->error['current'] = $this->language->get('error_current');
+        // }
          
         if ((utf8_strlen(trim($this->request->post['newpassword'])) < 1) || (utf8_strlen(trim($this->request->post['newpassword'])) > 32)) {
             $this->error['new'] = $this->language->get('error_new');
@@ -97,16 +104,17 @@ class ControllerAccountChangepass extends Controller{
             $this->error['retype'] = $this->language->get('error_retype');
         }
         
-        if (empty($this->request->post['currentpassword'])) {
-            $this->error['current'] = $this->language->get('error_check');
-        }
+        // if (empty($this->request->post['currentpassword'])) {
+        //     $this->error['current'] = $this->language->get('error_check');
+        // }
         
-        if (empty($this->request->post['newpassword'])) {
-            $this->error['new'] = $this->language->get('error_new');
-        }
+        // if (empty($this->request->post['newpassword'])) {
+        //     $this->error['new'] = $this->language->get('error_new');
+        // }
 
-        if (empty($this->request->post['retypepassword'])) {
-            $this->error['retype'] = $this->language->get('error_retype');
-        }
+        // if (empty($this->request->post['retypepassword'])) {
+        //     $this->error['retype'] = $this->language->get('error_retype');
+        // }
+        return !$this->error;
     }
 }

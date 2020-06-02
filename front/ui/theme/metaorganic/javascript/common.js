@@ -1118,8 +1118,8 @@ $(document).delegate('#login_send_otp', 'click', function() {
                     //window.setTimeout(function(){location.reload()},2000)
            if(json['temppassword']=="1")
            {
-            location = $('.base_url')+"/index.php?path=account/changepass";
-          
+            location = $('.base_url').attr('href')+"/changepass";
+          console.log($('.base_url'));
            }
            else{
             location = $('.base_url').attr('href');
