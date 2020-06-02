@@ -606,12 +606,13 @@ class ControllerAccountLogin extends Controller {
                 //$otp_data = $this->model_account_customer->getOTP($this->request->post['customer_id'],$this->request->post['verify_otp'],'login');
 
                 $user_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer WHERE email = '" . $this->db->escape($this->request->post['email']) . "' AND (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape($this->request->post['password']) . "'))))) OR password = '" . $this->db->escape(md5($this->request->post['password'])) . "')");
-
-				//print_r($user_query);
+                    console.log('sriiiii');
+				   console.log($user_query);
 				if ($user_query->num_rows) {
 					if($user_query->row['approved']) {
 						$data['customer_id'] = $user_query->row['customer_id'];
 						$data['customer_email'] = $user_query->row['email'];
+						$data['temppassword'] = $user_query->row['tempPassword'];
 					    $logged_in = $this->customer->loginByPhone( $data['customer_id'] );
 					if($logged_in){
 					   $this->model_account_customer->addLoginAttempt($this->customer->getEmail());
@@ -663,10 +664,12 @@ class ControllerAccountLogin extends Controller {
             $data['error_warning'] = $this->language->get('error_login');
         }
 
-        
+         
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($data));
+
+
     }
 
 

@@ -214,11 +214,26 @@ class ModelAccountCustomer extends Model {
 
         $this->trigger->fire('post.customer.edit', $customer_id);
     }
+    public function resetPassword($email, $password) {
 
+        //echo "<pre>";print_r($password);die;
+
+       if ($password  && $password <>'default') {
+
+           // echo "<pre>";print_r($password);die;
+          
+           $this->trigger->fire('pre.customer.edit.password');
+
+           $this->db->query("UPDATE " . DB_PREFIX . "customer SET  temppassword = '" . $this->db->escape(1) . "',   salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "' WHERE LOWER(email) = '" . $this->db->escape(utf8_strtolower($email)) . "'");
+   
+           $this->trigger->fire('post.customer.edit.password');
+       }
+      
+   }
 
     public function editPassword($email, $password) {
 
-        // echo "<pre>";print_r($password);die;
+       //  echo "<pre>";print_r($password);die;
 
         if ($password  && $password <>'default') {
 
@@ -226,7 +241,7 @@ class ModelAccountCustomer extends Model {
            
             $this->trigger->fire('pre.customer.edit.password');
 
-            $this->db->query("UPDATE " . DB_PREFIX . "customer SET salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "' WHERE LOWER(email) = '" . $this->db->escape(utf8_strtolower($email)) . "'");
+            $this->db->query("UPDATE " . DB_PREFIX . "customer SET   temppassword = '" . $this->db->escape(0) . "', salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "' WHERE LOWER(email) = '" . $this->db->escape(utf8_strtolower($email)) . "'");
     
             $this->trigger->fire('post.customer.edit.password');
         }

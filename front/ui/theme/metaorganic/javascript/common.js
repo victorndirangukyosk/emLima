@@ -1090,13 +1090,22 @@ $(document).delegate('#login_send_otp', 'click', function() {
                 console.log(json);
                 if (json['status']) {
                     
+                   
                     //$('.login-modal-text').html(text);
                     $('.login-loader').hide();
                     //$('#login-message').html(json['error_warning']);
                     //$('#login-message').html("<p style='color:green'>"+json['success_message']+"</p>");
                     //window.setTimeout(function(){location.reload()},2000)
-           
-                    location = $('.base_url').attr('href');
+           if(json['temppassword']=="1")
+           {
+            location = $('.base_url')+"/index.php?path=account/changepass";
+          
+           }
+           else{
+            location = $('.base_url').attr('href');
+
+           }
+                    
                     
                     //$('#customer_id').val(json['customer_id']);
                     

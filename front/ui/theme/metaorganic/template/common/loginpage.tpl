@@ -428,7 +428,7 @@
 
                                         <h4></h4>
                                     </div>
-                                    <div id="forget-message">
+                                    <div id="forget-message" style="margin-left:28px" >
                                     </div>
                                     <div id="forget-success-message" style="color: green">
                                     </div>
@@ -455,7 +455,7 @@
                                                 <div class="form-group">
                                                     <div class="col-md-12">
                                                         <button id="forget-button" type="button" name="next" class="btn btn-default btn-block btn-lg"  style="background-color:#ec7023;">
-                                                            <span class="forget-modal-text"><?= $text_forget ?></span>
+                                                            <span >Send</span>
                                                             <div class="forget-loader" style="display: none;"></div>
                                                         </button>
                                                     </div>
