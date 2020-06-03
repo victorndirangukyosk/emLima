@@ -178,7 +178,7 @@
                <div class="px-3 text-center">                               
                   <h2 class="display-3 text-white text-shadow font-secondary">Partner with us</h2>
                   
-                  <div class="view-button"><a routerlink="/shop" class="btn btn-primary" href="<?= $base;?>#contact">Contact Us <i class="fa fa-arrow-right"></i></a></div>
+                  <div class="view-button" style="margin-top: 134%;"><a  class="btn btn-primary" href="<?= $base;?>#contact">Contact Us <i class="fa fa-arrow-right"></i></a></div>
                </div>
             </div>
          </div>

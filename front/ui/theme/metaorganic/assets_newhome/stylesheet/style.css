@@ -13011,12 +13011,11 @@ select#shipping-address-select {
 	}
 	.pr-3, .px-3 {
 		padding-right: 1rem !important;
-		margin-top: 16%;
 	}
 	.display-3 {
 		font-size: 30px;
 		font-weight: 900;
-		text-transform: uppercase;
+		text-transform: initial;
 		letter-spacing: -2px;
 	}
 	.display-1, .display-2, .display-3, .display-4 {
@@ -13065,7 +13064,8 @@ select#shipping-address-select {
 }
 .category-card:hover .view-button {
     transform: translateY(0);
-    opacity: 1;
+	opacity: 1;
+	margin-top: 60%;
 }
 .text-center .btn, .text-center .btn-group {
     margin-right: 6px;
@@ -13074,9 +13074,7 @@ select#shipping-address-select {
 .padding-bottom-2x {
     padding-bottom: 48px !important;
 }
-.padding-top-3x {
-    padding-top: 72px !important;
-}
+
 .height350{
 	height: 350px;
 }
