@@ -40,6 +40,14 @@
 
 <body>
 <div style="display:none;" id="preloader"></div>
+<div class="login-background">
+        <div class="container">
+            <div class="login-nav-bar">
+                        <a class="btn btn-default btn-nav-signup" href="/compare" role="button">SIGN UP</a>
+                        <a class="btn btn-default btn-nav-login" href="/login" role="button">LOG IN</a>
+            </div>
+        </div>
+    </div>
 <div id="page">
 
   <header>
@@ -130,17 +138,55 @@
     
     <div class="offer-banner-section">
   <div class="container">
-    <div class="row">
-      <div class="offer-inner offer-innernew col-lg-12"> 
-        <!--newsletter-wrap-->
-        <div class="left">
-          <div class="col"><a href="#"><img src="<?= $base;?>front/ui/theme/metaorganic/assets_newhome/images/offer-banner1.jpg" alt="offer banner1"></a></div>
-          <div class="col"><a href="#"><img src="<?= $base;?>front/ui/theme/metaorganic/assets_newhome/images/offer-banner2.jpg" alt="offer banner2"></a></div>
-          <div class="col"><a href="#"><img src="<?= $base;?>front/ui/theme/metaorganic/assets_newhome/images/offer-banner3.jpg" alt="offer banner2"></a></div>
-        </div>
+   <div class="row">
+      <div class="col-md-4 col-sm-6 height350">
+         <div class="category-card fw-section padding-top-3x padding-bottom-2x fw-section-mobile" style="background-image: url(front/ui/theme/metaorganic/assets_newhome/images/offer-banner1.jpg);">
+            <span class="overlay" style="background-color: #000; opacity: .5;"></span>
+            <div class="d-flex justify-content-center">
+               <div class="px-3 text-center">
+                  <h2 class="display-3 text-white text-shadow font-secondary">Fresh produce at your door steps at affordable price</h2>
+                  
+                  <div class="view-button">
+					<a  class="btn btn-primary" href="#">Shop 
+						<i class="fa fa-arrow-right"></i>
+					</a>
+				</div>
+               </div>
+            </div>
+         </div>
       </div>
-    </div>
-  </div>
+      <div class="col-md-4 col-sm-6 height350">
+         <div class="category-card fw-section padding-top-3x padding-bottom-2x fw-section-mobile" style="background-image: url(front/ui/theme/metaorganic/assets_newhome/images/offer-banner2.jpg);">
+            <span class="overlay" style="background-color: #000; opacity: .5;"></span>
+            <div class="d-flex justify-content-center">
+               <div class="px-3 text-center">
+                  <h2 class="display-3 text-white text-shadow font-secondary">Sell your produce at a better price</h2>
+                 
+                 <div class="view-button">
+						<a class="btn btn-primary" href="#">Shop 
+							<i class="fa fa-arrow-right"></i>
+						</a>
+				</div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="col-md-4 col-sm-6 height350">
+         <div class="category-card fw-section padding-top-3x padding-bottom-2x fw-section-mobile" style="background-image: url(front/ui/theme/metaorganic/assets_newhome/images/offer-banner3.jpg);">
+            <span class="overlay" style="background-color: #000; opacity: .5;"></span>
+            <div class="d-flex justify-content-center">
+               <div class="px-3 text-center">
+                  <h2 class="display-3 text-white text-shadow font-secondary">Partner with us</h2>
+                  
+                  <div class="view-button"><a routerlink="/shop" class="btn btn-primary" href="/shop?category=meats-k-ct-3">Shop <i class="fa fa-arrow-right"></i></a></div>
+               </div>
+            </div>
+         </div>
+      </div>
+     
+   </div>
+  
+</div>
 </div>
     
     <!-- best Pro Slider -->
@@ -223,73 +269,90 @@
           <div class="hot-deal">
            
             <ul class="products-grid">
-              <li class="item col-lg-3 col-md-3 col-sm-6 col-xs-12">
+              <li class="item col-lg-2 col-md-2 col-sm-6 col-xs-12 col-half-offset">
                 <div class="item-inner">
                   <div class="item-img">
                     <div class="item-img-info">
-                      <img src="<?= $base;?>front/ui/theme/metaorganic/assets_newhome/images/commercial-kitchen.jpg" alt="Commercial Kitchen & Hostels">
+                      <img src="<?= $base;?>front/ui/theme/metaorganic/assets_newhome/images/Caterers.png" alt="Commercial Kitchen & Hostels">
                     </div>
                   </div>
                   <div class="item-info">
                     <div class="info-inner">
                       <div class="item-title">
-                          Commercial Kitchen & Hostels </div>
+                          Caterers </div>
                       <div class="item-content">  
                       </div>
                     </div>
                   </div>
                 </div>
               </li>
-              <li class="item col-lg-3 col-md-3 col-sm-6 col-xs-12">
+              <li class="item col-lg-2 col-md-2 col-sm-6 col-xs-12 col-half-offset">
                   <div class="item-inner">
                       <div class="item-img">
                         <div class="item-img-info">
-                          <img src="<?= $base;?>front/ui/theme/metaorganic/assets_newhome/images/Hospital.png" alt="Hospitals ">
+                          <img src="<?= $base;?>front/ui/theme/metaorganic/assets_newhome/images/Hostel.png" alt="Hospitals ">
                         </div>
                       </div>
                       <div class="item-info">
                         <div class="info-inner">
                           <div class="item-title">
-                              Hospitals</div>
+                              Hostels</div>
                           <div class="item-content">
                           </div>
                         </div>
                       </div>
                     </div>
               </li>
-              <li class="item col-lg-3 col-md-3 col-sm-6 col-xs-12">
+              <li class="item col-lg-2 col-md-2 col-sm-6 col-xs-12 col-half-offset">
                   <div class="item-inner">
                       <div class="item-img">
                         <div class="item-img-info">
-                          <img src="<?= $base;?>front/ui/theme/metaorganic/assets_newhome/images/University-College.png" alt="Universities & Colleges">
+                          <img src="<?= $base;?>front/ui/theme/metaorganic/assets_newhome/images/Hospital.png" alt="Universities & Colleges">
                         </div>
                       </div>
                       <div class="item-info">
                         <div class="info-inner">
                           <div class="item-title">
-                              Universities & Colleges</div>
+                               Hospitals</div>
                           <div class="item-content"> 
                           </div>
                         </div>
                       </div>
                     </div>
               </li>
-              <li class="item col-lg-3 col-md-3 col-sm-6 col-xs-12">
+              <li class="item col-lg-2 col-md-2 col-sm-6 col-xs-12 col-half-offset">
                   <div class="item-inner">
                       <div class="item-img">
                         <div class="item-img-info">
-                          <img src="<?= $base;?>front/ui/theme/metaorganic/assets_newhome/images/Restaurant-hotels.png" alt="Restaurants & Hotels ">
+                          <img src="<?= $base;?>front/ui/theme/metaorganic/assets_newhome/images/canteen.png" alt="Restaurants & Hotels ">
                         </div>
                       </div>
                       <div class="item-info">
                         <div class="info-inner">
                           <div class="item-title">
-                              Restaurants & Hotels</div>
+                              Industrial Canteens</div>
                           <div class="item-content">
                           </div>
                         </div>
                       </div>
                     </div>
+              </li>
+              <li class="item col-lg-2 col-md-2 col-sm-6 col-xs-12 col-half-offset">
+                <div class="item-inner">
+                  <div class="item-img">
+                    <div class="item-img-info">
+                      <img src="<?= $base;?>front/ui/theme/metaorganic/assets_newhome/images/restaurant.png" alt="Commercial Kitchen & Hostels">
+                    </div>
+                  </div>
+                  <div class="item-info">
+                    <div class="info-inner">
+                      <div class="item-title">
+                          Restaurants </div>
+                      <div class="item-content">  
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </li>
             </ul>
           </div>

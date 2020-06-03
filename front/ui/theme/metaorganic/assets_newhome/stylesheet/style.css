@@ -232,6 +232,8 @@ header {
 	position:relative;
 	background: #2ba349;
 	border-radius:210px 390px 240px 400px;
+	margin-right: 50px;
+    margin-left: 50px;
 }
 
 .logo {
@@ -982,8 +984,8 @@ background-color: #fff;
 	padding: 0;
 	margin: auto;
 	text-align: center;
-	left:8%;
 }
+
 /* All levels */
 #nav li {
 	text-align: left;
@@ -2091,7 +2093,10 @@ ul.level1 {
 	width: 100%;
 }
 .item-img-info img{
-	height:250px;
+	height:150px;
+}
+.col-half-offset{
+    margin-left:3.166666667%
 }
 .products-grid-home .item .item-inner .item-img:hover img {
 	-webkit-transform: scale(1.2);
@@ -11231,6 +11236,7 @@ button.button {
 	letter-spacing: 0.5px;
 	padding: 20px 30px 10px 30px;
 	font-family: 'Rubik', sans-serif;
+	margin-bottom: 20px;
 
 }
 button.button:hover {
@@ -12610,6 +12616,11 @@ select#shipping-address-select {
 	line-height: 100px;
 	height: 100px;
 	display: block;
+	background-image: url(../images/app-logo.png);    
+	background-size: 90px;
+    background-repeat: no-repeat;
+    background-position: 8px 8px;
+    width: 125px;
 }
 .fl-links > .no-js:hover > .clicker {
 	padding: 0px 25px;
@@ -12618,7 +12629,7 @@ select#shipping-address-select {
 	color: #fff;
 }
 .fl-links .clicker:before {
-	content: '\f217';
+	background-image: url(../images/app-logo.png)
 	font-family: FontAwesome;
 	font-size: 45px;
 	padding-left: 4px;
@@ -12780,7 +12791,7 @@ select#shipping-address-select {
 	font-size: 16px;
 	font-family: 'Rubik', sans-serif;
 	text-align: justify;
-	line-height: 25px;
+	line-height: 22px;
 	color: #828287;
 }
 .mt20{
@@ -12881,4 +12892,189 @@ select#shipping-address-select {
     font-size: 14px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+	}
+	.container, .login-nav-bar {
+		width: 1170px;
+	}
+	.btn-nav-signup {
+		color: #fff;
+		margin: 0 -12px 0 10px;
+		font-size: 12px;
+		font-family: 'Avenir LT W01_65 Medium',Helvetica,Arial,sans-serif;
+		line-height: 1.42857143;
+		background-image: url(../images/signup-top-btn.png);
+		background-size: 90.8% 98.5%;
+		background-repeat: no-repeat;
+		border-radius: 0;
+		background-color: transparent;
+		background-position: center;
+		border-color: transparent;
+		min-width: 125px;
+		vertical-align: top;
+		margin-top: -1px;
+		border-width: 0;
+		letter-spacing: .1em;
+	}
+	.btn-nav-login {
+		color: #fff;
+		display: inline-block;
+		font-size: 12px;
+		font-family: 'Avenir LT W01_65 Medium',Helvetica,Arial,sans-serif;
+		line-height: 1.42857143;
+		background-image: url(../images/login-top-btn.png);
+		background-size: 90% 99.9%;
+		background-repeat: no-repeat;
+		border-radius: 0;
+		background-color: transparent;
+		background-position: center;
+		border-color: transparent;
+		min-width: 133px;
+		vertical-align: top;
+		margin-top: -1px;
+		border-width: 0;
+		letter-spacing: .1em;
+	}
+	.btn-nav-login:hover{
+		background-image: url(../images/signup-top-btn.png);
+		background-size: 90% 99.9%;
+		background-color: transparent;
+		background-position: center;
+		border-color: transparent;
+		background-repeat: no-repeat;
+	}
+	.btn-nav-signup:hover{
+		background-image: url(../images/login-top-btn.png);
+		background-size: 90% 99.9%;
+		background-color: transparent;
+		background-position: center;
+		border-color: transparent;
+		background-repeat: no-repeat;
+	}
+	.login-nav-bar {
+		background-repeat: repeat-x;
+		min-height: 40px;
+		margin-right: auto;
+		margin-left: auto;
+		text-align: right;
+	}
+	.login-background{
+		position: absolute;
+    z-index: 9999;
+    top: 0px;
+	}
+	
+	/*--- product --*/
+	.fw-section {
+		width: 100%;
+		margin-bottom: 20px;
+	}
+	.fw-section, .fh-section {
+		position: relative;
+		background-position: 50% 100%;
+		background-repeat: no-repeat;
+		background-size: cover;
+	}
+	.fw-section > .overlay, .fh-section > .overlay {
+		display: block;
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-color: #000000;
+		content: '';
+		opacity: 0.6;
+		z-index: 1;
+	}
+	.fw-section > .container, .fw-section > .container-fluid, .fw-section > div, .fh-section > .container, .fh-section > .container-fluid, .fh-section > div {
+		position: relative;
+		z-index: 5;
+	}
+	.justify-content-center {
+		justify-content: center !important;
+	}
+	.d-flex {
+		display: flex !important;
+	}
+	.text-center {
+		text-align: center !important;
+	}
+	.pl-3, .px-3 {
+		padding-left: 1rem !important;
+	}
+	.pr-3, .px-3 {
+		padding-right: 1rem !important;
+		margin-top: 16%;
+	}
+	.display-3 {
+		font-size: 30px;
+		font-weight: 900;
+		text-transform: uppercase;
+		letter-spacing: -2px;
+	}
+	.display-1, .display-2, .display-3, .display-4 {
+		font-weight: normal;
+		line-height: 1.15;
+	}
+	.text-shadow {
+		text-shadow: 0 1px rgba(0, 0, 0, 0.5) !important;
+	}
+	.text-light, .text-white {
+		color: #ffffff !important;
+	}
+	.text-white {
+		color: #fff !important;
+	}
+	.text-normal {
+		font-weight: normal !important;
+	}
+	.opacity-60 {
+		opacity: .6 !important;
+	}
+	.category-card .view-button {
+		transform: translateY(10px);
+		transition: all .4s;
+		opacity: 0;
+	}
+	.text-center .btn, .text-center .btn-group {
+		margin-right: 6px;
+		margin-left: 6px;
+	}
+	.btn-primary {
+		background-color: #DA401E;
+	}
+	.btn > i {
+		display: inline-block;
+		margin-top: -1px;
+		vertical-align: middle;
+	}
+.icon-arrow-right:before {
+    content: "\e095";
+}
+.category-card .view-button {
+    transform: translateY(10px);
+    transition: all .4s;
+    opacity: 0;
+}
+.category-card:hover .view-button {
+    transform: translateY(0);
+    opacity: 1;
+}
+.text-center .btn, .text-center .btn-group {
+    margin-right: 6px;
+    margin-left: 6px;
+}
+.padding-bottom-2x {
+    padding-bottom: 48px !important;
+}
+.padding-top-3x {
+    padding-top: 72px !important;
+}
+.height350{
+	height: 350px;
+}
+	@media (min-width: 768px){
+.fw-section-mobile {
+    height: 100%;
+}
 	}
