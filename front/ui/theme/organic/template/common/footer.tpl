@@ -85,7 +85,7 @@
           <div class="col-xs-12 col-sm-4">
             <!--<div class="social">
               <ul>
-                <li class="fb"><a href="#"></a></li>
+                <li class="fb"><a href="https://www.facebook.com/kwikbasket" target="_blank"></a></li>
                 <li class="tw"><a href="#"></a></li>
                 <li class="googleplus"><a href="#"></a></li>
                 <li class="rss"><a href="#"></a></li>
