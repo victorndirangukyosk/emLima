@@ -43,8 +43,8 @@
 <div class="login-background">
         <div class="container">
             <div class="login-nav-bar">
-                        <a class="btn btn-default btn-nav-signup" href="/compare" role="button">SIGN UP</a>
-                        <a class="btn btn-default btn-nav-login" href="/login" role="button">LOG IN</a>
+                        <a class="btn btn-default btn-nav-signup" href="<?php echo BASE_URL."/index.php?path=account/login/newcustomer";?>" role="button">Register</a>
+                        <a class="btn btn-default btn-nav-login"  href="<?php echo BASE_URL."/index.php?path=account/login/customer";?>" role="button">LOG IN</a>
             </div>
         </div>
     </div>
@@ -144,10 +144,10 @@
             <span class="overlay" style="background-color: #000; opacity: .5;"></span>
             <div class="d-flex justify-content-center">
                <div class="px-3 text-center">
-                  <h2 class="display-3 text-white text-shadow font-secondary">Fresh produce at your door steps at affordable price</h2>
+                  <h2 class="display-3 text-white text-shadow font-secondary">Fresh produce to your door steps at affordable price</h2>
                   
                   <div class="view-button">
-					<a  class="btn btn-primary" href="#">Shop 
+					<a  class="btn btn-primary" href="<?php echo BASE_URL."/index.php?path=account/login/newcustomer";?>">Register Now 
 						<i class="fa fa-arrow-right"></i>
 					</a>
 				</div>
@@ -163,7 +163,7 @@
                   <h2 class="display-3 text-white text-shadow font-secondary">Sell your produce at a better price</h2>
                  
                  <div class="view-button">
-						<a class="btn btn-primary" href="#">Shop 
+						<a class="btn btn-primary" href="<?= $base;?>#contact">Sell Now 
 							<i class="fa fa-arrow-right"></i>
 						</a>
 				</div>
@@ -175,10 +175,10 @@
          <div class="category-card fw-section padding-top-3x padding-bottom-2x fw-section-mobile" style="background-image: url(front/ui/theme/metaorganic/assets_newhome/images/offer-banner3.jpg);">
             <span class="overlay" style="background-color: #000; opacity: .5;"></span>
             <div class="d-flex justify-content-center">
-               <div class="px-3 text-center">
+               <div class="px-3 text-center">                               
                   <h2 class="display-3 text-white text-shadow font-secondary">Partner with us</h2>
                   
-                  <div class="view-button"><a routerlink="/shop" class="btn btn-primary" href="/shop?category=meats-k-ct-3">Shop <i class="fa fa-arrow-right"></i></a></div>
+                  <div class="view-button"><a routerlink="/shop" class="btn btn-primary" href="<?= $base;?>#contact">Contact Us <i class="fa fa-arrow-right"></i></a></div>
                </div>
             </div>
          </div>
