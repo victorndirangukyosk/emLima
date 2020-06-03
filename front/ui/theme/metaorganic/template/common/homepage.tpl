@@ -82,7 +82,7 @@
           
           <div class="fl-header-right">
             <div class="fl-links">
-              <div class="no-js"> <a href="<?= $base;?>?action=shop" title="Shop Now" class="clicker"></a>
+              <div class="no-js clicker"> 
                
               </div>
             </div>

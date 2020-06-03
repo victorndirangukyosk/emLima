@@ -428,9 +428,9 @@
 
                                         <h4></h4>
                                     </div>
-                                    <div id="forget-message" style="margin-left:28px" >
+                                    <div id="forget-message" style="text-align:center; font-size: 15px;" >
                                     </div>
-                                    <div id="forget-success-message" style="color: green">
+                                    <div id="forget-success-message" style="color: green; ; text-align:center; font-size: 15px;">
                                     </div>
                                       </br>
                                     <!-- Text input-->

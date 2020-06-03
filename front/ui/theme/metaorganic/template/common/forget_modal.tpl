@@ -13,7 +13,7 @@
                                     </div>
                                     <div id="forget-message">
                                     </div>
-                                    <div id="forget-success-message" style="color: green">
+                                    <div id="forget-success-message" style="color: green; text-align:center; font-size: 15px;">
                                     </div>
                                     <!-- Text input-->
                                     <div class="store-form">

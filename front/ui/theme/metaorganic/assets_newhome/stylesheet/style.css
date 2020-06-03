@@ -5540,7 +5540,8 @@ border-radius: 30px 50px 70px 40px;
     letter-spacing: 0.5px;
     border-radius: 3px;
     padding: 25px 30px;
-    border-right: 1px #f2f2f2 solid;
+	border-right: 1px #f2f2f2 solid;
+	height: 205px;
 	
 }
 
@@ -12803,8 +12804,8 @@ select#shipping-address-select {
     color: #000 !important;
 }
 .android-app{
-	height: 149px;
-    margin-top: 35px !important;
+	height: 156px !important;
+    margin-top: 50px !important;
 }
 .logo-item img{
 	width:172px
@@ -13078,3 +13079,6 @@ select#shipping-address-select {
     height: 100%;
 }
 	}
+.store-head{
+	padding-left: 25px;
+}
