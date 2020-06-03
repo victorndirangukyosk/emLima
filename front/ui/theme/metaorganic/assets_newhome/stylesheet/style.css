@@ -7215,9 +7215,10 @@ ol#compare-items li:last-child {
     padding: 25px;
     position: relative;
     margin-top: 0px;
-    padding-bottom: 45px;
+    padding-bottom: 25px;
     background-color: #fff;
 border-radius: 30px 50px 70px 30px;
+margin-bottom: 20px;
 
 }
 .static-contain .required {
@@ -10718,8 +10719,11 @@ footer .newsletter-row {
 	overflow: hidden;
 	width: 100%;
 	padding: 5px 0px;
-	background:#1b1e24
-
+	background:url(../images/slider-07.jpg) no-repeat 0 0px;
+	background-color: #c7c7c7;
+}
+#contactForm .static-contain{
+	border-radius:50px !important;
 }
 .newsletter-wrap h1{
     padding: 20px 0px 30px;
@@ -12799,7 +12803,7 @@ select#shipping-address-select {
 	margin-top: 20px;
 }
 .partners{
-	margin-top: 50px !important;
+	margin-top: 80px !important;
     margin-bottom: 30px !important;
     color: #000 !important;
 }
