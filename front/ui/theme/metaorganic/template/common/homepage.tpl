@@ -324,7 +324,7 @@
                   <div class="item-inner">
                       <div class="item-img">
                         <div class="item-img-info">
-                          <img src="<?= $base;?>front/ui/theme/metaorganic/assets_newhome/images/Hospital.png" alt="Hospital">
+                          <img src="<?= $base;?>front/ui/theme/metaorganic/assets_newhome/images/hospital.png" alt="Hospital">
                         </div>
                       </div>
                       <div class="item-info">
