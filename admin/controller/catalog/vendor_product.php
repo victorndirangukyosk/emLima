@@ -1409,4 +1409,122 @@ class ControllerCatalogVendorProduct extends Controller {
 
 		$this->response->setOutput($this->load->view('catalog/variation_form.tpl', $data));
 	}
+
+
+	public function export_excel() {	 
+
+
+
+		if ( isset( $this->request->get['filter_name'] ) ) {
+			$filter_name = $this->request->get['filter_name'];
+		} else {
+			$filter_name = null;
+		}
+
+		if ( isset( $this->request->get['filter_vendor_name'] ) ) {
+			$filter_vendor_name = $this->request->get['filter_vendor_name'];
+		} else {
+			$filter_vendor_name = null;
+		}
+
+		if ( isset( $this->request->get['filter_price'] ) ) {
+			$filter_price = $this->request->get['filter_price'];
+		} else {
+			$filter_price = null;
+		}
+
+		if ( isset( $this->request->get['filter_product_id_from'] ) ) {
+			$filter_product_id_from = $this->request->get['filter_product_id_from'];
+		} else {
+			$filter_product_id_from = null;
+		}
+
+		if ( isset( $this->request->get['filter_model'] ) ) {
+			$filter_model = $this->request->get['filter_model'];
+		} else {
+			$filter_model = null;
+		}
+
+		if ( isset( $this->request->get['filter_product_id_to'] ) ) {
+			$filter_product_id_to = $this->request->get['filter_product_id_to'];
+		} else {
+			$filter_product_id_to = null;
+		}
+
+
+		if ( isset( $this->request->get['filter_category'] ) ) {
+			$filter_category = $this->request->get['filter_category'];
+		} else {
+			$filter_category = null;
+		}
+
+		if ( isset( $this->request->get['filter_store_id'] ) ) {
+			$filter_store_id = $this->request->get['filter_store_id'];
+		} else {
+			$filter_store_id = null;
+		}
+
+		if ( isset( $this->request->get['filter_status'] ) ) {
+			$filter_status = $this->request->get['filter_status'];
+		} else {
+			$filter_status = null;
+		}
+
+		if ( isset( $this->request->get['filter_quantity'] ) ) {
+			$filter_quantity = $this->request->get['filter_quantity'];
+		} else {
+			$filter_quantity = null;
+		}
+
+		if ( isset( $this->request->get['sort'] ) ) {
+			$sort = $this->request->get['sort'];
+		} else {
+			$sort = 'pd.name';
+		}
+
+		if ( isset( $this->request->get['order'] ) ) {
+			$order = $this->request->get['order'];
+		} else {
+			$order = 'ASC';
+		}
+
+		// if ( isset( $this->request->get['page'] ) ) {
+		// 	$page = $this->request->get['page'];
+		// } else {
+		// 	$page = 1;
+		// }
+
+		 
+
+		 
+
+		$filter_data = array(
+			'filter_name' => $filter_name,
+			'filter_vendor_name' => $filter_vendor_name,
+			'filter_price' => $filter_price,
+			'filter_product_id_from' => $filter_product_id_from,
+			'filter_model' => $filter_model,
+			'filter_product_id_to' => $filter_product_id_to,
+			'filter_category' => $filter_category,
+			'filter_store_id' => $filter_store_id,
+			'filter_status' => $filter_status,
+			'filter_quantity'=>$filter_quantity,
+			'sort' => $sort,
+			'order' => $order,
+			'start' => ( $page - 1 ) * $this->config->get( 'config_limit_admin' ),
+			'limit' => $this->config->get( 'config_limit_admin' )
+		);
+
+
+// echo "<pre>";print_r($filter_data);die;
+
+
+        $data = array();
+		$this->load->model('report/excel');	
+		
+
+		$this->model_report_excel->download_vendorproduct_excel($data,$filter_data);
+		
+    }
+
 }
