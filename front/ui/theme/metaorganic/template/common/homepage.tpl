@@ -269,11 +269,28 @@
           <div class="hot-deal">
            
             <ul class="products-grid">
+             <li class="item col-lg-2 col-md-2 col-sm-6 col-xs-12 col-half-offset">
+                <div class="item-inner">
+                  <div class="item-img">
+                    <div class="item-img-info">
+                      <img src="<?= $base;?>front/ui/theme/metaorganic/assets_newhome/images/restaurant.png" alt="Restaurants">
+                    </div>
+                  </div>
+                  <div class="item-info">
+                    <div class="info-inner">
+                      <div class="item-title">
+                          Restaurants </div>
+                      <div class="item-content">  
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </li>
               <li class="item col-lg-2 col-md-2 col-sm-6 col-xs-12 col-half-offset">
                 <div class="item-inner">
                   <div class="item-img">
                     <div class="item-img-info">
-                      <img src="<?= $base;?>front/ui/theme/metaorganic/assets_newhome/images/Caterers.png" alt="Commercial Kitchen & Hostels">
+                      <img src="<?= $base;?>front/ui/theme/metaorganic/assets_newhome/images/caterers.png" alt="Caterers">
                     </div>
                   </div>
                   <div class="item-info">
@@ -290,7 +307,7 @@
                   <div class="item-inner">
                       <div class="item-img">
                         <div class="item-img-info">
-                          <img src="<?= $base;?>front/ui/theme/metaorganic/assets_newhome/images/Hostel.png" alt="Hospitals ">
+                          <img src="<?= $base;?>front/ui/theme/metaorganic/assets_newhome/images/hostel.png" alt="Hostel">
                         </div>
                       </div>
                       <div class="item-info">
@@ -307,7 +324,7 @@
                   <div class="item-inner">
                       <div class="item-img">
                         <div class="item-img-info">
-                          <img src="<?= $base;?>front/ui/theme/metaorganic/assets_newhome/images/Hospital.png" alt="Universities & Colleges">
+                          <img src="<?= $base;?>front/ui/theme/metaorganic/assets_newhome/images/Hospital.png" alt="Hospital">
                         </div>
                       </div>
                       <div class="item-info">
@@ -324,7 +341,7 @@
                   <div class="item-inner">
                       <div class="item-img">
                         <div class="item-img-info">
-                          <img src="<?= $base;?>front/ui/theme/metaorganic/assets_newhome/images/canteen.png" alt="Restaurants & Hotels ">
+                          <img src="<?= $base;?>front/ui/theme/metaorganic/assets_newhome/images/canteen.png" alt="Industrial Canteen">
                         </div>
                       </div>
                       <div class="item-info">
@@ -337,23 +354,7 @@
                       </div>
                     </div>
               </li>
-              <li class="item col-lg-2 col-md-2 col-sm-6 col-xs-12 col-half-offset">
-                <div class="item-inner">
-                  <div class="item-img">
-                    <div class="item-img-info">
-                      <img src="<?= $base;?>front/ui/theme/metaorganic/assets_newhome/images/restaurant.png" alt="Commercial Kitchen & Hostels">
-                    </div>
-                  </div>
-                  <div class="item-info">
-                    <div class="info-inner">
-                      <div class="item-title">
-                          Restaurants </div>
-                      <div class="item-content">  
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </li>
+             
             </ul>
           </div>
         </div>
@@ -456,13 +457,13 @@
         <li>
           <div class="feature-box">
             <div class="icon-money"></div>
-            <div class="content">Customized Discounts & Pricing</div>
+            <div class="content">Customized Pricing & Offers</div>
           </div>
         </li>
         <li>
           <div class="feature-box">
             <div class="icon-return"></div>
-            <div class="content">Easy Return Policy</div>
+            <div class="content">Easy Payment Processing</div>
           </div>
         </li>
         <li class="last">
@@ -566,7 +567,7 @@
               </ul>
             </div>
           </div>
-          <div class="col-sm-4 col-xs-12 coppyright"> © 2020 Kwik Baskets. All Rights Reserved. </div>
+          <div class="col-sm-4 col-xs-12 coppyright"> © 2020 KwikBasket. All Rights Reserved. </div>
           <div class="col-xs-12 col-sm-4">
             <div class="payment-accept"> <img src="<?= $base;?>front/ui/theme/metaorganic/assets_newhome/images/payment-1.png" alt=""> <img src="<?= $base;?>front/ui/theme/metaorganic/assets_newhome/images/payment-2.png" alt=""> <img src="<?= $base;?>front/ui/theme/metaorganic/assets_newhome/images/payment-3.png" alt=""> </div>
           </div>
