@@ -7223,6 +7223,7 @@ margin-bottom: 20px;
 }
 .static-contain .required {
 	color: #F00;
+	padding-right: 10px;
 }
 
 #contactForm textarea {border-radius:999px}
@@ -13085,4 +13086,16 @@ select#shipping-address-select {
 	}
 .store-head{
 	padding-left: 25px;
+}
+.page-headingnew {
+    padding: 105px 0 50px 0;
+    background-size: cover;
+    border-bottom: none;
+    text-align: center;
+    background-repeat: no-repeat;
+    background-image: url(../images/bannernew.jpg);
+    height: 270px;
+}
+.font-white{
+	color: #fff;
 }

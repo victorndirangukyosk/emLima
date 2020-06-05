@@ -100,7 +100,7 @@
                
                <div id="copyright" class="footer__copyright">
                   <span class="footer__copyright-text">
-                  Copyright ©  <?php echo date("Y"); ?> Kwik Basket </span>
+                  Copyright ©  <?php echo date("Y"); ?> Kwik Basket. All Rights Reserved. </span>
                </div>
             </div>
          </div>
