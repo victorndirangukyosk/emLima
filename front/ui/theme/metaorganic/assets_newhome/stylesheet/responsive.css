@@ -9,6 +9,16 @@ Text Domain:  Altima
 */
 
 @media only screen and (min-width: 320px) and (max-width: 479px) {
+	.container, .login-nav-bar{
+		width: 100%;
+	}
+	.header-container {
+		position: relative;
+		background: #2ba349;
+		border-radius: 210px 390px 240px 400px;
+		margin-right: 15px;
+		margin-left: 15px;
+	}
 .fl-links {
 
 }
@@ -29,14 +39,34 @@ header {
 }
 .header-container .fl-nav-menu {
     border-radius: 30px 60px 30px 60px;
-    clear: both;
     background: #66cc33;
     overflow: hidden;
-    height:60px; 	
+	height:60px; 	
+	margin-top: 20px;
+	width: 70px;
+    float: right;
+}
+.height350 {
+    height: 250px;
+}
+.view-button{
+	margin-top: 0px !important;
+}
+.fw-section, .fh-section{
+	height: 220px;
+}
+.partner{
+	font-size: 12px;
+	margin-bottom: 30px;
+	float: none !important;
+    padding-right: 9px !important;
 }
 .header-container {
      background: transparent; 
     border-radius: 0;
+}
+.buttons-set, .require, .input-box{
+	margin-left: 0% !important;
 }
 #thmg-slider-slideshow {
 	margin: 0px
@@ -478,20 +508,20 @@ width:300px;
 }
 .logo {
 	text-align: center;
-	padding-bottom: 0px;
-	margin-top: 0px;
-	border-radius: 30px 60px 30px 60px;
-	/* width: 100%; */
+    padding-bottom: 0px;
+    margin-top: 15px;
+    border-radius: 30px 60px 30px 60px;
+    /* width: 100%; */
     /* border-bottom: 1px solid #e5e5e5; */
-	height: auto;
-	line-height: normal;
-	padding-top: 15px;
-	padding-bottom: 15px;
-	padding-left: 0px;
-	padding-right: 0px;
-	float: none;
-	margin-right: 0;
-	    margin-bottom: 10px;
+    height: auto;
+    line-height: normal;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    padding-left: 10px;
+    padding-right: 10px;
+    float: left;
+    margin-right: 0;
+    margin-bottom: 10px;
 }
 .logo img {/* width: 100%; */
 }
@@ -690,6 +720,7 @@ display: none;
 	right: 15px;
 	margin-top: -60px;
 	margin-bottom: 70px;
+	display:none;
 }
 ul#cart-sidebar {
 	padding: 10px 0 0;
@@ -2197,6 +2228,12 @@ display: none;
 @media (min-width: 768px) and (max-width: 991px) {
 	.nav-inner #nav li.mega-menu:hover .level0-wrapper {
 display: none;
+}
+.container {
+    width: 750px !important;
+}
+.container, .login-nav-bar {
+    width: 750px;
 }
 	.sticky-header-bar {position: relative;}
 #nav li.drop-menu:hover ul {

@@ -12899,9 +12899,7 @@ select#shipping-address-select {
     text-transform: uppercase;
     letter-spacing: 0.5px;
 	}
-	.container, .login-nav-bar {
-		width: 1170px;
-	}
+	
 	.btn-nav-signup {
 		color: #fff;
 		margin: 0 -12px 0 10px;
