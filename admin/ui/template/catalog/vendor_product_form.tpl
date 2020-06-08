@@ -159,11 +159,11 @@
 							<div class="form-group ">
 								<label class="col-sm-2 control-label"><?php echo $entry_quantity; ?></label>
 								<div class="col-sm-10">
-									<input type="number" name="quantity" value="<?php echo $quantity ?>" id="quantity" class="form-control input-full-width" />
+									<input disabled type="number" name="quantity" value="<?php echo $quantity ?>" id="quantity" class="form-control input-full-width" />
 								</div>
 							</div>
 
-							<div class="form-group ">
+							<div class="form-group " style="display:none;">
 								<label class="col-sm-2 control-label"><?php echo $entry_minimum; ?></label>
 								<div class="col-sm-10">
 									<input type="number" name="min_quantity" value="<?php echo $min_quantity; ?>" id="min_quantity" class="form-control input-full-width" />
