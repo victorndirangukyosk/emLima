@@ -54,13 +54,13 @@
             <li><a href="<?php echo $information; ?>"><?php echo $text_information; ?></a></li>
             <?php } ?>  
 
-            <?php if($preturn_vendor_product) { ?>    
-            <li><a href="<?php echo $inventory_management; ?>">Inventory management</a></li>
-            <?php } ?>
         </ul>
     </li>
     <?php } ?>
 
+    <?php if($preturn_vendor_product) { ?>    
+            <li><a href="<?php echo $inventory_management; ?>"><i class="fa fa-university fa-fw"></i> <span>Inventory</span></a></li>
+    <?php } ?>
     <?php
     if($preturn_simple_blog_author != false || $preturn_simple_blog_category != false || $preturn_simple_blog_article != false || 
     $preturn_simple_blog_comment != false || $preturn_simple_blog_general_setting || $preturn_simple_blog_category_setting != false || $preturn_simple_blog_view_report != false){ 

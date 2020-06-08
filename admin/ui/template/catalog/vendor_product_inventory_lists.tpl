@@ -182,10 +182,10 @@
                                         <a href="<?php echo $sort_model; ?>" class="<?php echo strtolower($order); ?>"><?php echo $entry_model; ?></a>
                                         <?php } else { ?>
                                         <a href="<?php echo $sort_model; ?>"><?php echo $entry_model; ?></a>
-                                        <?php } ?></td>
+                                        <?php } ?></td>-->
 
 
-                                    <td><?= $column_unit ?></td>-->
+                                    <td><?= $column_unit ?> (Unit Of measure)</td>
 
                                     <!--<td class="text-left"><?php if ($sort == 'st.name') { ?>
                                         <a href="<?php echo $sort_store; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_store_name; ?></a>
@@ -212,6 +212,7 @@
                                      <td class="text-right"><?php echo 'Current '.$column_quantity; ?></td>
                                      <td class="text-right"><?php echo 'Total Procured Qty'; ?></td>
                                      <td class="text-right"><?php echo 'Rejected Qty'; ?></td>
+									 <td class="text-right"><?php echo 'Total Qty'; ?></td>
                                      <td class="text-right"><?php echo $column_action; ?></td>
                                      
                                     
@@ -235,10 +236,10 @@
                                     <td class="text-left"><?php echo $product['product_store_id']; ?></td>
                                     <td class="text-left"><?php echo $product['name']; ?></td>
 
-                                    <!--<td class="text-left"><?php echo $product['model']; ?></td>
+                                    <!--<td class="text-left"><?php echo $product['model']; ?></td>-->
 
                                     <td class="text-left"><?php echo $product['unit']; ?></td>
-                                    <td class="text-left"><?php echo $product['store_name']; ?></td>
+                                    <!--<td class="text-left"><?php echo $product['store_name']; ?></td>->
 
                                     
                                     
@@ -270,6 +271,9 @@
                                     </td>
                                     <td class="text-left">
                                         <input name="rejected_qty" type="number" class="rejected_qty"  id="rejected_qty_<?php echo $product['product_store_id'];?>" value="">
+                                    </td>
+									<td class="text-left">
+                                        <input name="total_qty" disabled type="number"  id="total_qty_<?php echo $product['product_store_id'];?>" value="">
                                     </td>
                                     <td class="text-right"><button type="button" onclick="ChangeInventory();" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="Save"><i class="fa fa-check-circle text-success"></i></button>
 									<button type="button" onclick="getProductInventoryHistory('<?php echo $product['product_store_id']; ?>');" 
@@ -587,6 +591,16 @@ function ChangeInventory(){
     }
 
 }
+
+
+
+$('input.procured_qty').change(function(){
+    var current_qty = $(this).attr('data-current-qty');
+	var procured_qty = $(this).val();
+	var vendor_product_id = $(this).attr('id');
+	var total = parseFloat(current_qty) + parseFloat(procured_qty);
+	$('#total_qty_'+vendor_product_id).val(total);
+});
 //--></script>
 
 <?php echo $footer; ?>
