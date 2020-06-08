@@ -1223,6 +1223,8 @@ $(document).delegate('#login_verify_otp', 'click', function() {
 });
 
 $(document).delegate('#signup', 'click', function() {
+    console.log('22222222222222222222222222222222');
+
 
    // console.log("response",grecaptcha.getResponse());
     console.log($('#register_verify_otp').val());
@@ -1563,6 +1565,8 @@ $(document).delegate('#signup', 'click', function() {
 
 $(document).delegate('#signup-resend-otp', 'click', function() {
 
+    console.log('111111111111111111111');
+
     var text = $('.signup-modal-text').html();
     //$('.signup-modal-text').html('');
     $('.signup-loader').show();
@@ -1648,3 +1652,111 @@ $(document).delegate('#signup-resend-otp', 'click', function() {
         }
     });
 });
+
+
+
+
+
+$(document).delegate('#registerfarmer', 'click', function() {
+
+     
+    console.log("aasdfasf"); 
+         $('span.text-danger').remove();
+         $( ".formui").removeClass('error-animation');
+         $('#error_agree').hide();
+     
+        //  var text = $('.signup-modal-text').html();         
+        //  $('.signup-loader').show(); 
+        //  $('#signup-message').html('please wait...');
+
+        var url = 'index.php?path=account/farmerregister/register';    
+        console.log(url);    
+        console.log( $('#registerForm').serialize() );        
+         
+         $.ajax({
+             url: url,
+             type: 'post',
+             data: $('#registerForm').serialize(),
+             dataType: 'json',
+             success: function(json) {
+                 console.log(json);
+                 console.log('farmerregister return');
+                //  $('.reg_bg').removeClass('.heightset');
+ 
+                 if (json['status']) { 
+                     
+                     $('#signup-message').html('<p style="color:green;margin-top:60px"> '+ json['success_message']+'</p>');
+                      
+  
+                        //  $('.signup-modal-text').html(text); 
+                        //  $('#signup-message>p').css({"margin-top": "150px", "font-size": "24px"});
+                        
+                         setTimeout(function() {
+                             location = $('.base_url').attr('href');
+                         }, 5000);
+                         window.location.reload(false);
+                        //  // Redirect To some Page
+                        var baseurl = window.location.origin+window.location.pathname;
+                        location.href = baseurl+'?path=account/login/farmer';
+                     
+ 
+                    //  $('.signup-loader').hide(); 
+                
+                     return false;
+                 } else {   
+                    //  $('#signup-message').remove();
+                     
+                     var $form = $("form[id='registerform']")
+ 
+                     $error = '';
+ 
+                     if(json['error_email']){
+                         $error += json['error_email']+'<br/>';
+                         $form.find( "input[name='email']" ).after('<span class="text-danger fa fa-star">'+json['error_email']+'</span>');
+                         $form.find( "input[name='email']" ).parent().addClass('error-animation');
+                     }
+                     if(json['error_name']){ 
+                        $error += json['error_name']+'<br/>';
+
+                         $form.find( "input[name='name']" ).after('<span class="text-danger fa fa-star">'+json['error_name']+'</span>');
+                         $form.find( "input[name='name']" ).parent().addClass('error-animation');
+                     }
+                     if(json['error_telephone_exists']){
+                         $error += json['error_telephone_exists']+'<br/>';
+                         $form.find( "input[name='telephone']" ).after('<span class="text-danger fa fa-star">'+json['error_telephone_exists']+'</span>');
+                         $form.find( "input[name='telephone']" ).parent().addClass('error-animation');
+                     }
+ 
+                      
+ 
+                     if(json['error_telephone']){
+                         $error += json['error_telephone']+'<br/>';
+                         $form.find( "input[name='telephone']" ).after('<span class="text-danger fa fa-star">'+json['error_telephone']+'</span>');
+                         $form.find( "input[name='telephone']" ).parent().addClass('error-animation');
+                     }
+                     
+ 
+                     if(json['error_address']){
+                         
+                         $form.find( "input[name='address']" ).after('<span class="text-danger fa fa-star">'+json['error_address']+'</span>');
+                         $form.find( "input[name='address']" ).parent().addClass('error-animation');
+                     } 
+ 
+                     
+ 
+                     if(json['error_warning']){
+                         $error += json['error_warning']+ 'test'+'<br/>';
+                         $('#signup-message').html("<p style='color:red;margin-top:60px;'>"+$error+"</p>");
+                     }
+ 
+                    //  $('.signup-modal-text').html(text);
+                    //  $('.signup-loader').hide();
+                    //  $('.reg_bg').addClass('heightset');
+                    $('#signup-message').html("<p style='color:red;margin-top:60px;'>"+$error+"</p>");
+
+                    
+                 }
+             }
+         });
+     
+ });
