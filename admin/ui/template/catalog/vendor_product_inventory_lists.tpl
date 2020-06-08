@@ -594,7 +594,7 @@ function ChangeInventory(){
 
 
 
-$('input.procured_qty').change(function(){
+$('input.procured_qty').keyup(function(){
     var current_qty = $(this).attr('data-current-qty');
 	var procured_qty = $(this).val();
 	var vendor_product_id = $(this).attr('id');
