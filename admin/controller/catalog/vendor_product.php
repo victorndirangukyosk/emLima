@@ -5,6 +5,7 @@ class ControllerCatalogVendorProduct extends Controller {
     private $error = array();
 
     public function index() {
+
 		$this->load->language( 'catalog/product' );
 
 		$this->document->setTitle( $this->language->get( 'heading_title' ) );
@@ -237,7 +238,7 @@ class ControllerCatalogVendorProduct extends Controller {
 
 	
 
-	protected function getList() {
+	protected function getList($inventory=false) {
 		if ( isset( $this->request->get['filter_name'] ) ) {
 			$filter_name = $this->request->get['filter_name'];
 		} else {
@@ -374,7 +375,7 @@ class ControllerCatalogVendorProduct extends Controller {
 		);
 
 		$data['breadcrumbs'][] = array(
-			'text' => $this->language->get( 'heading_title' ),
+			'text' => ($inventory == false) ? $this->language->get( 'heading_title' ): 'Inventory Management',
 			'href' => $this->url->link( 'catalog/vendor_product', 'token=' . $this->session->data['token'] . $url, 'SSL' )
 		);
 
@@ -448,7 +449,7 @@ class ControllerCatalogVendorProduct extends Controller {
 			$data['is_vendor'] = 0;
 		}
 
-		$data['heading_title'] = $this->language->get( 'heading_title' );
+		$data['heading_title'] = ($inventory == false) ? $this->language->get( 'heading_title' ): 'Inventory Management';
 
 		$data['text_list'] = $this->language->get( 'text_list' );
 		$data['text_enabled'] = $this->language->get( 'text_enabled' );
@@ -656,8 +657,12 @@ class ControllerCatalogVendorProduct extends Controller {
 		$data['header'] = $this->load->controller( 'common/header' );
 		$data['column_left'] = $this->load->controller( 'common/column_left' );
 		$data['footer'] = $this->load->controller( 'common/footer' );
-
-		$this->response->setOutput( $this->load->view( 'catalog/vendor_product_lists.tpl', $data ) );
+		
+		if($inventory == false){
+		  $this->response->setOutput( $this->load->view( 'catalog/vendor_product_lists.tpl', $data ) );
+		}else{
+		  $this->response->setOutput( $this->load->view( 'catalog/vendor_product_inventory_lists.tpl', $data ) );
+		}
 	}
 
 
@@ -1412,9 +1417,6 @@ class ControllerCatalogVendorProduct extends Controller {
 
 
 	public function export_excel() {	 
-
-
-
 		if ( isset( $this->request->get['filter_name'] ) ) {
 			$filter_name = $this->request->get['filter_name'];
 		} else {
@@ -1527,4 +1529,13 @@ class ControllerCatalogVendorProduct extends Controller {
 		
     }
 
+	public function inventory() {
+		$this->load->language( 'catalog/product' );
+
+		$this->document->setTitle( $this->language->get( 'heading_title' ) );
+
+		$this->load->model( 'catalog/general' );
+
+		$this->getList(true);
+	}
 }

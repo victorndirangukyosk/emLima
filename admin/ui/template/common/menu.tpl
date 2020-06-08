@@ -53,6 +53,10 @@
             <?php if($preturn_information) { ?>     
             <li><a href="<?php echo $information; ?>"><?php echo $text_information; ?></a></li>
             <?php } ?>  
+
+            <?php if($preturn_vendor_product) { ?>    
+            <li><a href="<?php echo $inventory_management; ?>">Inventory management</a></li>
+            <?php } ?>
         </ul>
     </li>
     <?php } ?>
