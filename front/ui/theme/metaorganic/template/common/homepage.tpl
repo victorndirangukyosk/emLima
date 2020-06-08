@@ -163,7 +163,8 @@
                   <h2 class="display-3 text-white text-shadow font-secondary">Sell your produce at a better price</h2>
                  
                  <div class="view-button">
-						<a class="btn btn-primary" href="<?= $base;?>#contact">Sell Now 
+                 	<a  class="btn btn-primary" href="<?php echo BASE_URL."/index.php?path=account/login/farmer";?>">Sell Now
+					 
 							<i class="fa fa-arrow-right"></i>
 						</a>
 				</div>
@@ -236,7 +237,7 @@
                  
                   <p class="about-p"> Come visit us to learn more about us. </p>
                    <hr></hr>
-                   <a href="<?= $base;?>?action=shop">
+                   <a href="<?= $base;?>?path=account/login/farmer">
 				   <button type="button"  class="button btn" style="background-color: #ec9f4e; padding: 15px; float: left; font-size: 14px; color:#fff;">
                    <span>Join us to make a difference</span>
                    </button>

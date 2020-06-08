@@ -104,85 +104,12 @@
       </div>
       <div id="signup-message" style="text-align:center;font-size:20px;margin-top:20px;">
       </div>
-    <div id="login-form-div"  style="display:none;" >     
-              
-      <div class="main">                     
-                         <div class="account-login container">
-<!--page-title-->
-
-     <form action="" method="post" id="login-form">
-     <form class="form" id="login-form" autocomplete="off" method="post" enctype="multipart/form-data" novalidate >
-     <fieldset class="col2-set">
-         <div class="col-1 new-users"> 
-               <strong>New Customers</strong>    
-             <div class="content">
-                
-                 <p style="margin-bottom: 46px;">By creating an account with our store, you will be able to move through the checkout process faster, store multiple shipping addresses, view and track your orders in your account and more.</p>
-                  <div class="buttons-set" style="text-align: center;">
-                 <button type="button" title="Registration" class="button create-account" onClick="showHide('register-form-div')"><span><span>Register Now</span></span></button>
-             </div>
-             </div>
-         </div>
-         <div class="col-2 registered-users">
-          <strong>Registered Customers</strong>             
-             <div class="content">
-                 
-                 <p>If you have an account with us, please log in.</p>
-                 <ul class="form-list">
-                     <li>
-                          <label for="email"><?= $text_enter_email_address?><em class="required">*</em></label>
-                         <div class="input-box">
-							 <input id="email" autocomplete="off" name="email" type="email" class="input-text input-md required-entry" required onclick="emailClicked()">
-                         </div>
-                     </li>
-                     <li>
-                         <label for="pass">Password<em class="required">*</em></label>
-                         <div class="input-box">
-							 <input id="password" autocomplete="off" name="password"  required type="password" class="input-text required-entry input-md">
-                         </div>
-                     </li>
-                                                                 </ul>
-                 <div class="remember-me-popup">
- <div class="remember-me-popup-head" style="display:none">
-     <h3 id="text2">What's this?</h3>
-     <a href="#" class="remember-me-popup-close" onClick="showDiv()" title="Close">Close</a>
- </div>
- <div class="remember-me-popup-body" style="display:none">
-     <p id="text1">Checking "Remember Me" will let you access your shopping cart on this computer when you are logged out</p>
-     <div class="remember-me-popup-close-button a-right">
-         <a href="#" class="remember-me-popup-close button" title="Close" onClick="
-         showDiv()"><span>Close</span></a>
-     </div>
- </div>
-</div>
-
-<p class="required">* Required Fields</p>
-
-
-
-                  <div class="buttons-set">
-               
-                 <button id="login_send_otp" type="button" class="button login" title="Login" name="send" id="send2"><span><?= $text_login ?></span></button>
-                    
-                     <a href="#" data-toggle="modal" data-dismiss="modal" data-target="#forgetModal" class="forgot-wor" style="border-radius: 0px;"  data-spinner-btn="{showOnSubmit: false}">Forgot Your Password?</a>
    
-                       
-              </div> <!--buttons-set-->
-               </div> <!--content-->                               
-         </div> <!--col-2 registered-users-->
-                </fieldset> <!--col2-set-->
- </form>
-
-</div> <!--account-login-->
-      
-      </div><!--main-container-->
-       
-       </div> 
     
     <!-- best Pro Slider  class="main-container col2-right-layout" -->
     
     <div id="register-form-div" style="visibility: visible;" main-container col1-layout wow bounceInUp animated animated  >
-    <div class="main container">
+    <div class="main">
       <div class="row">
         <div class="col-main col-sm-12 wow bounceInUp animated animated" style="visibility: visible;">
           <div id="messages_product_view"></div>
@@ -340,6 +267,84 @@
     </div>
     <!--main-container-inner--> 
   </div>
+
+
+
+   <div id="login-form-div"  style="display:none;" >     
+              
+      <div class="main">                     
+                         <div class="account-login container">
+<!--page-title-->
+
+     <form action="" method="post" id="login-form">
+     <form class="form" id="login-form" autocomplete="off" method="post" enctype="multipart/form-data" novalidate >
+     <fieldset class="col2-set">
+         <div class="col-1 new-users"> 
+               <strong>New Customers</strong>    
+             <div class="content">
+                
+                 <p style="margin-bottom: 46px;">By creating an account with our store, you will be able to move through the checkout process faster, store multiple shipping addresses, view and track your orders in your account and more.</p>
+                  <div class="buttons-set" style="text-align: center;">
+                 <button type="button" title="Registration" class="button create-account" onClick="showHide('register-form-div')"><span><span>Register Now</span></span></button>
+             </div>
+             </div>
+         </div>
+         <div class="col-2 registered-users">
+          <strong>Registered Customers</strong>             
+             <div class="content">
+                 
+                 <p>If you have an account with us, please log in.</p>
+                 <ul class="form-list">
+                     <li>
+                          <label for="email"><?= $text_enter_email_address?><em class="required">*</em></label>
+                         <div class="input-box">
+							 <input id="email" autocomplete="off" name="email" type="email" class="input-text input-md required-entry" required onclick="emailClicked()">
+                         </div>
+                     </li>
+                     <li>
+                         <label for="pass">Password<em class="required">*</em></label>
+                         <div class="input-box">
+							 <input id="password" autocomplete="off" name="password"  required type="password" class="input-text required-entry input-md">
+                         </div>
+                     </li>
+                                                                 </ul>
+                 <div class="remember-me-popup">
+ <div class="remember-me-popup-head" style="display:none">
+     <h3 id="text2">What's this?</h3>
+     <a href="#" class="remember-me-popup-close" onClick="showDiv()" title="Close">Close</a>
+ </div>
+ <div class="remember-me-popup-body" style="display:none">
+     <p id="text1">Checking "Remember Me" will let you access your shopping cart on this computer when you are logged out</p>
+     <div class="remember-me-popup-close-button a-right">
+         <a href="#" class="remember-me-popup-close button" title="Close" onClick="
+         showDiv()"><span>Close</span></a>
+     </div>
+ </div>
+</div>
+
+<p class="required">* Required Fields</p>
+
+
+
+                  <div class="buttons-set">
+               
+                 <button id="login_send_otp" type="button" class="button login" title="Login" name="send" id="send2"><span><?= $text_login ?></span></button>
+                    
+                     <a href="#" data-toggle="modal" data-dismiss="modal" data-target="#forgetModal" class="forgot-wor" style="border-radius: 0px;"  data-spinner-btn="{showOnSubmit: false}">Forgot Your Password?</a>
+   
+                       
+              </div> <!--buttons-set-->
+               </div> <!--content-->                               
+         </div> <!--col-2 registered-users-->
+                </fieldset> <!--col2-set-->
+ </form>
+
+</div> <!--account-login-->
+      
+      </div><!--main-container-->
+       
+       </div> 
+       
  
   <div class="container">
     <div class="row our-features-box">
@@ -571,9 +576,9 @@ jQuery('input[name="telephone"]').keyup(function(e)
         minus = 100;
       }
 	  if(id != 'home'){
-		  jQuery('html, body').animate({
-			scrollTop: jQuery("#"+id).offset().top-minus
-		},2000);
+		 // jQuery('html, body').animate({scrollTop: jQuery("#"+id).offset().top-minus},2000);
+	     jQuery("html, body").animate({ scrollTop: 0 }, 2000);
+
 	  }else{
 	     jQuery("html, body").animate({ scrollTop: 0 }, 2000);
 	  }

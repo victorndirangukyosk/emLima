@@ -82,15 +82,45 @@
                           </li>
                           <li>
                             <div class="customer-name">
-                              <div class="input-box name-firstname">
+                             <!-- <div class="input-box name-firstname">
                                 <label for="telephone"><em class="required">* </em>Contact Number</label>
                                 <br>
                                 <input name="telephone" id="telephone" placeholder="Telephone" value="" class="input-text" type="number">
-                              </div>
+                              </div>-->
+
+
+                               <div class="input-box name-phone">
+                              <label for="email"><em class="required">*</em><?= $entry_phone ?></label>
+                             <br>
+								<span class="input-group-btn" style="
+								display: table;
+								position: relative;
+								margin-bottom: -46px;">
+
+								<p id="button-reward" class="" style="padding: 12px 13px;border-radius: 20px 1px 1px 20px;font-size: 15px;font-weight: 600;color: #fff;background-color: #522e5b;border-color: #522e5b;display: inline-block;margin-bottom: 0;font-size: 14px;line-height: 1.42857143;vertical-align: middle;-ms-touch-action: manipulation;touch-action: manipulation;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;background-image: none;margin-right: -1px;">
+
+								<font style="vertical-align: inherit;">
+								<font style="vertical-align: inherit;"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+								+<?= $this->config->get('config_telephone_code') ?>                                               
+								</font></font></font>
+								</font>
+								</p>
+
+								</span>
+							 
+							 <input id="register_phone_number" autocomplete="off"  name="telephone" type="text" class="input-text input-md" required="" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 &amp;&amp; event.charCode <= 57" minlength="9" maxlength="9">
+                            </div>
+
+
+
                               <div class="input-box name-firstname">
                                 <label for="farm"><em class="required"> </em> Work on farm</label>
                                 <br>
-                                <input name="farm"  title="farm" placeholder="Work on farm" class="input-text required-entry validate-email" type="text">
+                                
+                                  <select name="farm" id="farm" class="validate-select" title="farm">
+                                             <option value="Full Time">Full Time</option>
+                                              <option value="Part Time">Part Time</option>
+                                              </select>
                               </div>
                             </div>
                           </li>
@@ -351,7 +381,7 @@
                                         <div class="input-box name-firstname">
                                                 <label for="town"><em class="required">*</em>Town/ Village</label>
                                                 <br>
-                                          <input name="town" id="Total" title="town" placeholder="Town" class="input-text required-entry" type="text">
+                                          <input name="town" id="town" title="town" placeholder="Town" class="input-text required-entry" type="text">
                                               
                                               </div>
                                       </div>
@@ -363,7 +393,19 @@
                               <div class="input-box name-firstname">
                                 <label for="businessentity">Business Entity</label>
                                 <br>
-                                <input name="businessentity" id="businessentity" placeholder="Business Entity" value="" class="input-text" type="text">
+                                
+
+                                 <select name="businessentity" id="businessentity" class="validate-select" title="businessentity">
+                                              <option value="Sole Proprietor">Sole Proprietor </option>
+                                              <option value="Partnerships">Partnerships</option>
+                                              <option value="Close Corporation">Close Corporation</option>
+                                              <option value="Private Company">Private Company</option>
+                                                <option value="Public Company">Public Company</option>  
+                                                <option value="Co-operatives">Co-operatives</option>
+                                                  <option value="Trusts">Trusts</option>
+                                                    <option value="Not Registered">Not Registered</option>
+
+                                              </select>
                               </div>
                               <div class="input-box name-firstname">
                                 <label for="nameoffarm"><em class="required"> </em> Name of farm</label>
@@ -375,9 +417,9 @@
                         <li>
                                 <div class="customer-name">
                                         <div class="input-box name-firstname">
-                                         <label for="Total" ><em class="required"></em>Total</label>
+                                         <label for="Total" ><em class="required"></em>Total Arable Area</label>
                                           <br>
-                                          <input name="Total" id="Total" title="Total" placeholder="Total" class="input-text required-entry" type="text">
+                                          <input name="Total" id="Total" title="Total" placeholder="Total Arable Area" class="input-text required-entry" type="text">
                                         </div>
                                         <div class="input-box name-firstname">
                                                 <label for="Crop"><em class="required"></em>Crop Type</label>
@@ -409,11 +451,24 @@
                                   <select name="sellproduce" id="sellproduce" class="validate-select" title="sellproduce">
                                                     
                                                     <option value="online">online</option> 
+                                                    <option value="Local Market">Local Market</option> 
+                                                    <option value="Traders">Traders</option> 
+                                                    <option value="Export">Export</option> 
+                                                    <option value="Others">Others</option> 
+
+
                                                     
                                                   </select> 
                               </div>
                             </div>
                           </li>
+
+                           <li>
+                            <label for="cropsgrown">Crops Grown</label>
+                            <br>
+                            <textarea name="cropsgrown" id="cropsgrown" title="cropsgrown" placeholder="crops grown" class="required-entry input-text" cols="5" rows="3"></textarea>
+                          </li>
+
 
    <li   >
                             <div class="customer-name">
@@ -422,21 +477,34 @@
                                 <br>   
                                   <select name="farmertype" id="farmertype" class="validate-select" title="farmertype">
                                                     
-                                                    <option value="Dry">Dry farming</option> 
+                                                    <option value="Commercial">Commercial</option> 
+                                                    <option value="Smallholder">Smallholder</option> 
+                                                    <option value="Subsistence">Subsistence</option> 
                                                     
                                                   </select> 
                               </div>
 
                                <div class="input-box name-firstname">
-                                <label for="cropsgrown">Crops Grown</label>
-                                <br>   
-                                   <input name="cropsgrown"    placeholder="crops grown" class="input-text required-entry validate-email" type="text">
-                              </div>
+                                  </div>
                                
                             </div>
                           </li>
                         
                       </ul>
+
+
+
+                      	 <?php if ($site_key) { ?>
+						    <div class="input-box" style="margin-left: 35%;">
+							<label for="input-date-added"></label>
+							
+							  
+								  <div class="g-recaptcha" data-sitekey="<?php echo $site_key; ?>" style="padding-left:16px"></div>
+								  <div style="display:none;"class="text-danger"id="error_captha" >Please Validate Captha</div>
+							</div>
+							 <?php } ?>
+                          </div>
+
                     </fieldset>
                   </li>
                   <p class="require"><em class="required">* </em>Required Fields</p>
@@ -497,6 +565,19 @@
 <script src="<?= $base;?>front/ui/theme/metaorganic/assets_newhome/js/jquery.mobile-menu.min.js"></script> 
 
 <script src="<?= $base;?>front/ui/theme/metaorganic/javascript/common.js?v=2.0.7" type="text/javascript"></script>
+ <script src="https://www.google.com/recaptcha/api.js" type="text/javascript"></script>
 
 </body>
 </html>
+
+<script>
+
+jQuery('input[name="telephone"]').keyup(function(e)
+                                {
+  if (/\D/g.test(this.value))
+  {
+    // Filter non-digits from input value.
+    this.value = this.value.replace(/\D/g, '');
+  }
+});
+</script>

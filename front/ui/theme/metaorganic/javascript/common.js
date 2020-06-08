@@ -1672,6 +1672,14 @@ $(document).delegate('#registerfarmer', 'click', function() {
         var url = 'index.php?path=account/farmerregister/register';    
         console.log(url);    
         console.log( $('#registerForm').serialize() );        
+
+
+        $('#error_captha').hide();
+        
+  if((grecaptcha.getResponse()=="")){
+    $('#error_captha').show();  
+    return;  
+}
          
          $.ajax({
              url: url,
