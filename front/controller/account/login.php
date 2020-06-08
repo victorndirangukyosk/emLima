@@ -1196,7 +1196,25 @@ class ControllerAccountLogin extends Controller {
 	        $data['button_create'] = $this->language->get('button_create');
 	        $data['button_signin'] = $this->language->get('button_signin');            
 
+            if (isset($this->error['captcha'])) {
+                $data['error_captcha'] = $this->error['captcha'];
+            } else {
+                $data['error_captcha'] = '';
+            }
             
+            if (isset($this->request->post['captcha'])) {
+                $data['captcha'] = $this->request->post['captcha'];
+            } else {
+                $data['captcha'] = '';
+            }
+    
+            if ($this->config->get('config_google_captcha_status')) {
+                $this->document->addScript('https://www.google.com/recaptcha/api.js');
+                
+                $data['site_key'] = $this->config->get('config_google_captcha_public');
+            } else {
+                $data['site_key'] = '';
+            }
 
           //echo '<pre>';print_r($data);exit;
        /* if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/customer_login.tpl')) {

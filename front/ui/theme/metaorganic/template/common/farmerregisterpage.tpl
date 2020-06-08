@@ -495,7 +495,7 @@
 
 
                       	 <?php if ($site_key) { ?>
-						    <div class="input-box" style="margin-left: 35%;">
+						    <div class="input-box">
 							<label for="input-date-added"></label>
 							
 							  
