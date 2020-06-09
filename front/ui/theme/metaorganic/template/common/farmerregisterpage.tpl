@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Farmer Registration Page</title>
 <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=no">
 <meta name="description" content="Default Description">
@@ -9,7 +9,29 @@
 <meta name="robots" content="*">
 <meta name="viewport" content="initial-scale=1.0, width=device-width">
 <link rel="shortcut icon" href="images/favicon.png" type="image/x-icon">
-<link rel="icon" href="images/favicon.png" type="image/x-icon">
+<link rel="icon" href="images/favicon.png" type="image/x-icon">-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="kdt:page" content="home-page"> 
+
+<meta http-equiv="content-language" content="<?= $config_language?>">
+    
+<?php if ($description) { ?>
+<meta name="description" content="<?php echo $description; ?>" />
+<?php } ?>
+<?php if ($keywords) { ?>
+<meta name="keywords" content= "<?php echo $keywords; ?>" />
+<?php } ?>
+<title><?= $heading_title ?></title>
+<?php if ($icon) { ?>
+        <link href="<?php echo $icon; ?>" rel="icon" />
+<?php } ?>
+	
+<link rel="shortcut icon" href="<?= $base;?>front/ui/theme/metaorganic/assets_newhome/images/favicon.png" type="image/x-icon">
+<link rel="icon" href="<?= $base;?>front/ui/theme/metaorganic/assets_newhome/images/favicon.png" type="image/x-icon">
+
 
 <!-- CSS Style -->
 
@@ -32,11 +54,56 @@
 </head>
 
 <body>
+
 <div id="page">
 
+  <header>
+    
+    <div id="header">
+      <div class="container">
+        <div class="header-container row">
+          <div class="logo"> <a class="base_url" href="<?php echo BASE_URL;?>" title="index">
+            <div><img src="<?=$logo?>" alt="logo"></div>
+            </a> </div>
+          <div class="fl-nav-menu">
+            <nav>
+              <div class="mm-toggle-wrap">
+                <div class="mm-toggle"><i class="icon-align-justify"></i><span class="mm-label">Menu</span> </div>
+              </div>
+              <div class="nav-inner"> 
+                <!-- BEGIN NAV -->
+                <ul id="nav" class="hidden-xs">
+                  <!--<li  data-link ="home"> <a class="level-top" ><span>Home</span></a></li> -->
+                  <li  data-link ="about"> <a href="<?= BASE_URL;?>#about"class="level-top"  ><span>About Us</span></a> </li>
+                  <li data-link ="whom"> <a href="<?= BASE_URL;?>#whom" class="level-top" ><span>Who We Serve</span></a> </li>
+                  <li data-link ="works"> <a href="<?= BASE_URL;?>#works" class="level-top"><span>How It Works</span></a> </li>
+                  
+                  <li data-link ="contact"> <a href="<?= BASE_URL;?>#contact" class="level-top"><span>Contact Us</span></a> </li>
+                </ul>
+                <!--nav--> 
+              </div>
+            </nav>
+          </div>
+          
+          <!--row-->
+          
+          <div class="fl-header-right">
+            <div class="fl-links">
+               <div class="no-js clicker"> 
+               
+              </div>
+            </div>
+            <!--mini-cart-->
+            
+            <!--links--> 
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
 
 
-    <div class="page-headingnew">
+    <div class="page-heading">
     <div class="container">
       <div class="row">
         <div class="col-xs-12">
