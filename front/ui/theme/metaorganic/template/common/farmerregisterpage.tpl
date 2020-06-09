@@ -34,6 +34,8 @@
 <body>
 <div id="page">
 
+
+
     <div class="page-headingnew">
     <div class="container">
       <div class="row">
@@ -530,16 +532,68 @@
   <!--main-container col2-left-layout--> 
   
  
+  <div class="container">
+    <div class="row our-features-box">
+      <ul>
+        <li>
+          <div class="feature-box">
+            <div class="icon-truck"></div>
+            <div class="content">FREE SHIPPING </div>
+          </div>
+        </li>
+        <li>
+          <div class="feature-box">
+            <div class="icon-support"></div>
+            <div class="content">Have a question?<br>
+              +254 780 703 586</div>
+          </div>
+        </li>
+        <li>
+          <div class="feature-box">
+            <div class="icon-money"></div>
+            <div class="content">Customized Discounts & Pricing</div>
+          </div>
+        </li>
+        <li>
+          <div class="feature-box">
+            <div class="icon-return"></div>
+            <div class="content">Easy Return Policy</div>
+          </div>
+        </li>
+        <li class="last">
+          <div class="feature-box android-app">  <a href="https://play.google.com/store/apps/details?id=com.kwikbasket.customer"><i class="fa fa-android"></i> download</a> </div>
+        </li>
+      </ul>
+    </div>
+  </div>
  
   <!-- For version 1,2,3,4,6 -->
   
    
-  <footer> 
-    <!-- BEGIN INFORMATIVE FOOTER -->
-    
-    <!--footer-inner--> 
+   <footer> 
+
     
     <!--footer-middle-->
+    <div class="footer-top">
+      <div class="container">
+        <div class="row">
+          <div class="col-xs-12 col-sm-4">
+            <div class="social">
+              <ul>
+                <li class="fb"><a href="https://www.facebook.com/kwikbasket" target="_blank"></a></li>
+                <li class="tw"><a href="#"></a></li>
+                <li class="linkedin"><a href="#"></a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-sm-4 col-xs-12 coppyright"> © 2020 Kwik Baskets. All Rights Reserved. </div>
+          <div class="col-xs-12 col-sm-4">
+            <div class="payment-accept"> <img src="<?= $base;?>front/ui/theme/metaorganic/assets_newhome/images/payment-1.png" alt=""> <img src="<?= $base;?>front/ui/theme/metaorganic/assets_newhome/images/payment-2.png" alt=""> <img src="<?= $base;?>front/ui/theme/metaorganic/assets_newhome/images/payment-3.png" alt=""> </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
     
     <!--footer-bottom--> 
     <!-- BEGIN SIMPLE FOOTER --> 
