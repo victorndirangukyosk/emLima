@@ -399,7 +399,7 @@ function submit_copy() {
 
   $('#button-filter').on('click', function() {
 
-            var url = 'index.php?path=catalog/vendor_product&token=<?php echo $token; ?>';
+            var url = 'index.php?path=catalog/vendor_product/inventory&token=<?php echo $token; ?>';
 
             var filter_name = $('input[name=\'filter_name\']').val();
 

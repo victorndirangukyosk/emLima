@@ -635,7 +635,18 @@ class ControllerCatalogVendorProduct extends Controller {
 		$pagination->total = $product_total;
 		$pagination->page = $page;
 		$pagination->limit = $this->config->get( 'config_limit_admin' );
-		$pagination->url = $this->url->link( 'catalog/vendor_product', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL' );
+
+		if($inventory == false){
+			$pagination->url = $this->url->link( 'catalog/vendor_product', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL' );
+
+		  }else{
+		 
+		$pagination->url = $this->url->link( 'catalog/vendor_product/inventory', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL' );
+
+		  }
+
+
+	 
 
 		$data['pagination'] = $pagination->render();
 
