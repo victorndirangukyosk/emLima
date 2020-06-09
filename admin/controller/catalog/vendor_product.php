@@ -563,6 +563,8 @@ class ControllerCatalogVendorProduct extends Controller {
 			$url .= '&page=' . $this->request->get['page'];
 		}
 
+		if($inventory == false){
+
 		$data['sort_name'] = $this->url->link( 'catalog/vendor_product', 'token=' . $this->session->data['token'] . '&sort=pd.name' . $url, 'SSL' );
 		$data['sort_model'] = $this->url->link( 'catalog/vendor_product', 'token=' . $this->session->data['token'] . '&sort=p.model' . $url, 'SSL' );
 
@@ -578,6 +580,24 @@ class ControllerCatalogVendorProduct extends Controller {
 		$data['sort_quantity'] = $this->url->link( 'catalog/vendor_product', 'token=' . $this->session->data['token'] . '&sort=ps.quantity' . $url, 'SSL' );
 		$data['sort_status'] = $this->url->link( 'catalog/vendor_product', 'token=' . $this->session->data['token'] . '&sort=p.status' . $url, 'SSL' );
 		$data['sort_order'] = $this->url->link( 'catalog/vendor_product', 'token=' . $this->session->data['token'] . '&sort=p.sort_order' . $url, 'SSL' );
+		}
+		else{
+			$data['sort_name'] = $this->url->link( 'catalog/vendor_product/inventory', 'token=' . $this->session->data['token'] . '&sort=pd.name' . $url, 'SSL' );
+		$data['sort_model'] = $this->url->link( 'catalog/vendor_product/inventory', 'token=' . $this->session->data['token'] . '&sort=p.model' . $url, 'SSL' );
+
+		$data['sort_store'] = $this->url->link( 'catalog/vendor_product/inventory', 'token=' . $this->session->data['token'] . '&sort=st.name' . $url, 'SSL' );
+
+
+		$data['sort_product_id'] = $this->url->link( 'catalog/vendor_product/inventory', 'token=' . $this->session->data['token'] . '&sort=p.product_id' . $url, 'SSL' );
+
+		$data['sort_vproduct_id'] = $this->url->link( 'catalog/vendor_product/inventory', 'token=' . $this->session->data['token'] . '&sort=ps.product_store_id' . $url, 'SSL' );
+
+		$data['sort_category'] = $this->url->link( 'catalog/vendor_product/inventory', 'token=' . $this->session->data['token'] . '&sort=p2c.category' . $url, 'SSL' );
+		$data['sort_price'] = $this->url->link( 'catalog/vendor_product/inventory', 'token=' . $this->session->data['token'] . '&sort=p.price' . $url, 'SSL' );
+		$data['sort_quantity'] = $this->url->link( 'catalog/vendor_product/inventory', 'token=' . $this->session->data['token'] . '&sort=ps.quantity' . $url, 'SSL' );
+		$data['sort_status'] = $this->url->link( 'catalog/vendor_product/inventory', 'token=' . $this->session->data['token'] . '&sort=p.status' . $url, 'SSL' );
+		$data['sort_order'] = $this->url->link( 'catalog/vendor_product/inventory', 'token=' . $this->session->data['token'] . '&sort=p.sort_order' . $url, 'SSL' );
+		}
 
 		$url = '';
 
@@ -666,6 +686,9 @@ class ControllerCatalogVendorProduct extends Controller {
 		$data['order'] = $order;
 
 		$data['header'] = $this->load->controller( 'common/header' );
+
+		//echo "<pre>";print_r($data['heading_title'] );die;
+
 		$data['column_left'] = $this->load->controller( 'common/column_left' );
 		$data['footer'] = $this->load->controller( 'common/footer' );
 		
@@ -673,6 +696,7 @@ class ControllerCatalogVendorProduct extends Controller {
 		  $this->response->setOutput( $this->load->view( 'catalog/vendor_product_lists.tpl', $data ) );
 		}else{
 		  $this->response->setOutput( $this->load->view( 'catalog/vendor_product_inventory_lists.tpl', $data ) );
+		  
 		}
 	}
 
