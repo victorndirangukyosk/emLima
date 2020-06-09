@@ -1694,18 +1694,18 @@ $(document).delegate('#registerfarmer', 'click', function() {
                  if (json['status']) { 
                      
                      $('#signup-message').html('<p style="color:green;margin-top:60px"> '+ json['success_message']+'</p>');
-                      
+                     $("#registerForm")[0].reset();
   
                         //  $('.signup-modal-text').html(text); 
                         //  $('#signup-message>p').css({"margin-top": "150px", "font-size": "24px"});
                         
-                         setTimeout(function() {
-                             location = $('.base_url').attr('href');
-                         }, 5000);
-                         window.location.reload(false);
+                        //  setTimeout(function() {
+                        //      location = $('.base_url').attr('href');
+                        //  }, 5000);
+                        //  window.location.reload(false);
                         //  // Redirect To some Page
-                        var baseurl = window.location.origin+window.location.pathname;
-                        location.href = baseurl+'?path=account/login/farmer';
+                        // var baseurl = window.location.origin+window.location.pathname;
+                        // location.href = baseurl+'?path=account/login/farmer';
                      
  
                     //  $('.signup-loader').hide(); 

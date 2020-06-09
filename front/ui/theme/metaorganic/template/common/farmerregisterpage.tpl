@@ -690,4 +690,12 @@ jQuery('input[name="telephone"]').keyup(function(e)
     this.value = this.value.replace(/\D/g, '');
   }
 });
+
+$("#name").keyup(function(){
+    
+  $('#signup-message').html('<p>  </p>');
+
+});
+
+
 </script>

@@ -21,7 +21,7 @@ $_['text_cart']    = 'My Cart';
 $_['text_signin']    = 'Sign In';
 $_['text_place_order']      = 'Place Order';
 $_['referral_description']      = 'Referral bonus added';
-$_['text_success']        = 'Success';
+$_['text_success']        = 'Thank You for registering.';
 
 
 $_['entry_signup_otp']    = 'OTP';
