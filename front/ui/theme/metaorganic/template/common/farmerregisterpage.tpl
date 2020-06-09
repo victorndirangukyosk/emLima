@@ -156,7 +156,7 @@
                                 <br>
                                 <input name="telephone" id="telephone" placeholder="Telephone" value="" class="input-text" type="number">
                               </div>-->
-
+                            
 
                                <div class="input-box name-phone">
                               <label for="email"><em class="required">*</em><?= $entry_phone ?></label>
@@ -180,17 +180,17 @@
 							 <input id="register_phone_number" autocomplete="off"  name="telephone" type="text" class="input-text input-md" required="" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 &amp;&amp; event.charCode <= 57" minlength="9" maxlength="9">
                             </div>
 
+                            <div class="input-box name-firstname">
+      <label for="farmertype">Farmer Type</label>
+      <br>
+          <select name="farmertype" id="farmertype" class="validate-select" title="farmertype">
+           <option value="Commercial">Commercial</option> 
+           <option value="Smallholder">Smallholder</option> 
+           <option value="Subsistence">Subsistence</option> 
+           </select> 
+ </div>
 
-
-                              <div class="input-box name-firstname">
-                                <label for="farm"><em class="required"> </em> Work on farm</label>
-                                <br>
-                                
-                                  <select name="farm" id="farm" class="validate-select" title="farm">
-                                             <option value="Full Time">Full Time</option>
-                                              <option value="Part Time">Part Time</option>
-                                              </select>
-                              </div>
+                              
                             </div>
                           </li>
                           <li>
@@ -514,30 +514,20 @@
                                 <br>
                                 <input name="cropproduce" id="cropproduce" placeholder="Crop Produce" value="" class="input-text" type="text">
                               </div>
-                              <div class="input-box name-firstname">
-                                <label for="sellproduce"><em class="required"> </em> Currently How do you sell your produce? </label>
+                             <div class="input-box name-firstname">
+                                <label for="farm"><em class="required"> </em> Work on farm</label>
                                 <br>
-                                  <select name="sellproduce" id="sellproduce" class="validate-select" title="sellproduce">
-                                                    
-                                                    <option value="online">online</option> 
-                                                    <option value="Local Market">Local Market</option> 
-                                                    <option value="Traders">Traders</option> 
-                                                    <option value="Export">Export</option> 
-                                                    <option value="Others">Others</option> 
-
-
-                                                    
-                                                  </select> 
+                                
+                                  <select name="farm" id="farm" class="validate-select" title="farm">
+                                             <option value="Full Time">Full Time</option>
+                                              <option value="Part Time">Part Time</option>
+                                              </select>
                               </div>
                             </div>
                           </li>
                           <li>
                             <div class="customer-name">
-                              <div class="input-box name-firstname">
-                                <label for="cropproduce">Approx Crop Produce (in tons)</label>
-                                <br>
-                                <input name="cropproduce" id="cropproduce" placeholder="Crop Produce" value="" class="input-text" type="text">
-                              </div>
+                              
                               <div class="input-box name-firstname">
                                 <label for="sellproduce"><em class="required"> </em> Currently How do you sell your produce? </label>
                                 <br>
@@ -563,22 +553,12 @@
 
                         <li>
                             <div class="customer-name">
-                              <div class="input-box name-firstname">
-                                 <label for="farmertype">Farmer Type</label>
-                                <br>
-                                <select name="farmertype" id="farmertype" class="validate-select" title="farmertype">
-                                                    
-                                                    <option value="Commercial">Commercial</option> 
-                                                    <option value="Smallholder">Smallholder</option> 
-                                                    <option value="Subsistence">Subsistence</option> 
-                                                    
-                                                  </select> 
-                              </div>
-                              <div class="input-box name-firstname">
+                             
+                              <div >
                               <?php if ($site_key) { ?>
                                 <label for="input-date-added"></label>
                                 <br>
-                                  <div class="g-recaptcha" data-sitekey="<?php echo $site_key; ?>" style="padding-left:16px"></div>
+                                  <div class="g-recaptcha" data-sitekey="<?php echo $site_key; ?>" style="padding-left:16px; margin-left: 35%;"></div>
 								                  <div style="display:none;"class="text-danger"id="error_captha" >Please Validate Captha</div>
                                <?php } ?>
                               </div>
@@ -588,7 +568,7 @@
                   <p class="require"><em class="required">* </em>Required Fields</p>
                    
                   <div class="buttons-set">
-                    <button  id="registerfarmer" type="button" title="Submit" class="button submit"><span><span>Submit</span></span></button>
+                    <button  id="registerfarmer" type="button" title="Submit" class="button submit"><span><span style="font-size:20px;">Submit</span></span></button>
                   </div>
                  </div>
                   

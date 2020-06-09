@@ -6254,8 +6254,9 @@ fieldset {
 	font-size: 13px;
 	font-weight: normal;
 	color: #333;
-	margin:0px;
-	margin-right:10px
+	margin-right:10px;
+	display: initial;
+    margin-left: 2px;
 }
 .group-select li select {
 	/*width: 256px;*/
@@ -7223,7 +7224,7 @@ margin-bottom: 20px;
 }
 .static-contain .required {
 	color: #F00;
-	padding-right: 10px;
+	padding-right: 3px;
 }
 
 #contactForm textarea {border-radius:999px}
@@ -13100,4 +13101,7 @@ select#shipping-address-select {
 }
 .mt20{
 	margin-top: 20px !important;
+}
+#registerfarmer{
+	padding: 15px 30px;
 }
