@@ -59,7 +59,7 @@
     <?php } ?>
 
     <?php if($preturn_vendor_product) { ?>    
-            <li><a href="<?php echo $inventory_management; ?>"><i class="fa fa-university fa-fw"></i> <span>Inventory</span></a></li>
+            <li><a href="<?php echo $inventory_management; ?>"><i class="fa inventory"></i> <span>Inventory</span></a></li>
     <?php } ?>
     <?php
     if($preturn_simple_blog_author != false || $preturn_simple_blog_category != false || $preturn_simple_blog_article != false || 

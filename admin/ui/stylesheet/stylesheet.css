@@ -400,7 +400,12 @@ a, div {
 	left: 235px;
 }
 }
-
+.inventory {
+    background-image: url(../image/pallet-solid.svg);
+    width: 20px;
+    height: 14px;
+    background-repeat: no-repeat;
+}
 #column-left.active #menu li i {
 	font-size: 14px;
 }
