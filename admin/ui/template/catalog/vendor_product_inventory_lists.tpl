@@ -270,7 +270,7 @@
                                         <input name="total_procured_qty" type="number" class="procured_qty" data-general_product_id="<?php echo $product['product_id']; ?>" data-name="<?php echo $product['name']; ?>" data-current-qty="<?php echo $product['quantity']; ?>"  id="<?php echo $product['product_store_id'];?>" value="">
                                     </td>
                                     <td class="text-left">
-                                        <input name="rejected_qty" type="number" class="rejected_qty"  id="rejected_qty_<?php echo $product['product_store_id'];?>" value="">
+                                        <input name="rejected_qty" type="number" class="rejected_qty"  id="rejected_qty_<?php echo $product['product_store_id'];?>" data-current-qty="<?php echo $product['quantity']; ?>" value="">
                                     </td>
 									<td class="text-left">
                                         <input name="total_qty" disabled type="number"  id="total_qty_<?php echo $product['product_store_id'];?>" value="">
@@ -399,7 +399,7 @@ function submit_copy() {
 
   $('#button-filter').on('click', function() {
 
-            var url = 'index.php?path=catalog/vendor_product&token=<?php echo $token; ?>';
+            var url = 'index.php?path=catalog/vendor_product/inventory&token=<?php echo $token; ?>';
 
             var filter_name = $('input[name=\'filter_name\']').val();
 
@@ -595,12 +595,39 @@ function ChangeInventory(){
 
 
 $('input.procured_qty').keyup(function(){
-    var current_qty = $(this).attr('data-current-qty');
+
+    var current_qty = $(this).attr('data-current-qty');  
+
 	var procured_qty = $(this).val();
 	var vendor_product_id = $(this).attr('id');
-	var total = parseFloat(current_qty) + parseFloat(procured_qty);
+     var rejected_qty=0;
+    if ($('#rejected_qty_'+vendor_product_id).val().length != 0){
+      rejected_qty =$('#rejected_qty_'+vendor_product_id).val();
+    }
+     
+	var total = parseFloat(current_qty) + parseFloat(procured_qty)+parseFloat(rejected_qty);
 	$('#total_qty_'+vendor_product_id).val(total);
 });
+
+
+
+$('input.rejected_qty').keyup(function(){
+    var current_qty = $(this).attr('data-current-qty');
+	var rejected_qty = $(this).val();
+    
+	var vendor_product_id = $(this).attr('id');
+vendor_product_id=vendor_product_id.replace('rejected_qty_','');
+
+	var procured_qty =0;
+     if ($('#'+vendor_product_id).val().length != 0){
+      procured_qty =$('#'+vendor_product_id).val();
+    }
+
+     
+	var total = parseFloat(current_qty) + parseFloat(procured_qty) + parseFloat(rejected_qty);
+	$('#total_qty_'+vendor_product_id).val(total);
+});
+
 //--></script>
 
 <?php echo $footer; ?>
