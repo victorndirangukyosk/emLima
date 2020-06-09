@@ -13092,8 +13092,12 @@ select#shipping-address-select {
     text-align: center;
     background-repeat: no-repeat;
     background-image: url(../images/bannernew.jpg);
-    height: 270px;
+	height: 270px;
+	margin-top: -145px;
 }
 .font-white{
 	color: #fff;
+}
+.mt20{
+	margin-top: 20px !important;
 }

@@ -103,12 +103,12 @@
   </header>
 
 
-    <div class="page-heading">
+    <div class="page-headingnew">
     <div class="container">
       <div class="row">
         <div class="col-xs-12">
         <div class="page-title">
-<h2 class="font-white">Farmer Registration</h2>
+<h2 class="font-white mt20">Farmer Registration</h2>
 </div>
         </div>
       </div>
@@ -531,20 +531,42 @@
                               </div>
                             </div>
                           </li>
+                          <li>
+                            <div class="customer-name">
+                              <div class="input-box name-firstname">
+                                <label for="cropproduce">Approx Crop Produce (in tons)</label>
+                                <br>
+                                <input name="cropproduce" id="cropproduce" placeholder="Crop Produce" value="" class="input-text" type="text">
+                              </div>
+                              <div class="input-box name-firstname">
+                                <label for="sellproduce"><em class="required"> </em> Currently How do you sell your produce? </label>
+                                <br>
+                                  <select name="sellproduce" id="sellproduce" class="validate-select" title="sellproduce">
+                                                    
+                                                    <option value="online">online</option> 
+                                                    <option value="Local Market">Local Market</option> 
+                                                    <option value="Traders">Traders</option> 
+                                                    <option value="Export">Export</option> 
+                                                    <option value="Others">Others</option> 
 
+
+                                                    
+                                                  </select> 
+                              </div>
+                            </div>
+                          </li>
                            <li>
                             <label for="cropsgrown">Crops Grown</label>
                             <br>
                             <textarea name="cropsgrown" id="cropsgrown" title="cropsgrown" placeholder="crops grown" class="required-entry input-text" cols="5" rows="3"></textarea>
                           </li>
 
-
-   <li   >
+                        <li>
                             <div class="customer-name">
                               <div class="input-box name-firstname">
-                                <label for="farmertype">Farmer Type</label>
-                                <br>   
-                                  <select name="farmertype" id="farmertype" class="validate-select" title="farmertype">
+                                 <label for="farmertype">Farmer Type</label>
+                                <br>
+                                <select name="farmertype" id="farmertype" class="validate-select" title="farmertype">
                                                     
                                                     <option value="Commercial">Commercial</option> 
                                                     <option value="Smallholder">Smallholder</option> 
@@ -552,36 +574,23 @@
                                                     
                                                   </select> 
                               </div>
-
-                               <div class="input-box name-firstname">
-                                  </div>
-                               
+                              <div class="input-box name-firstname">
+                              <?php if ($site_key) { ?>
+                                <label for="input-date-added"></label>
+                                <br>
+                                  <div class="g-recaptcha" data-sitekey="<?php echo $site_key; ?>" style="padding-left:16px"></div>
+								                  <div style="display:none;"class="text-danger"id="error_captha" >Please Validate Captha</div>
+                               <?php } ?>
+                              </div>
                             </div>
                           </li>
-                        
-                      </ul>
-
-
-
-                      	 <?php if ($site_key) { ?>
-						    <div class="input-box">
-							<label for="input-date-added"></label>
-							
-							  
-								  <div class="g-recaptcha" data-sitekey="<?php echo $site_key; ?>" style="padding-left:16px"></div>
-								  <div style="display:none;"class="text-danger"id="error_captha" >Please Validate Captha</div>
-							</div>
-							 <?php } ?>
-                          </div>
-
-                    </fieldset>
-                  </li>
+                         <div style="text-align:center; margin:0px auto;">
                   <p class="require"><em class="required">* </em>Required Fields</p>
                    
                   <div class="buttons-set">
                     <button  id="registerfarmer" type="button" title="Submit" class="button submit"><span><span>Submit</span></span></button>
                   </div>
-
+                 </div>
                   
                 </ul>
               </fieldset>
