@@ -605,7 +605,7 @@ $('input.procured_qty').keyup(function(){
       rejected_qty =$('#rejected_qty_'+vendor_product_id).val();
     }
      
-	var total = parseFloat(current_qty) + parseFloat(procured_qty)- parseFloat(rejected_qty);
+	var total = parseFloat(current_qty) + parseFloat(procured_qty)+parseFloat(rejected_qty);
 	$('#total_qty_'+vendor_product_id).val(total);
 });
 
@@ -624,7 +624,7 @@ vendor_product_id=vendor_product_id.replace('rejected_qty_','');
     }
 
      
-	var total = parseFloat(current_qty) + parseFloat(procured_qty) - parseFloat(rejected_qty);
+	var total = parseFloat(current_qty) + parseFloat(procured_qty) + parseFloat(rejected_qty);
 	$('#total_qty_'+vendor_product_id).val(total);
 });
 
