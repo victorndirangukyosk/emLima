@@ -7732,6 +7732,9 @@ body#vip .header__banner-container {
 		z-index: 31;
 		margin-right: 0px !important;
 	}
+	.first-feature-cat {
+		margin-top: 160px !important;
+	}
 	.footer__copyright {
 		
 		padding-top: 10px;
@@ -7905,7 +7908,8 @@ body#vip .header__banner-container {
 		margin-left: 1rem
 	}
 	.first-feature-cat {
-		padding-bottom: 30px
+		padding-bottom: 30px;
+		margin-top: 160px;
 	}
 	.featured-categories__header-title {
 		font-size: 36px
@@ -7967,7 +7971,9 @@ body#vip .header__banner-container {
 	}
 	
 }
-
+.first-feature-cat {
+	margin-top: 0px;
+}
 @media (min-width:480px) and (max-width:1324px) {
 	#myvip .page-container,
 	#prview .page-container,
@@ -8456,7 +8462,7 @@ padding-left: 0px !important
 		display: flex !important;
 	}
 	.header__logo-link img {
-		width: 12rem;
+		width: 5.1rem !important;
 		margin-top: 0.5rem;
 		margin-bottom: 0.5rem;
 	}
