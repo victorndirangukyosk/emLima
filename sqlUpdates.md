@@ -33,3 +33,16 @@ CREATE TABLE `hf7_product_inventory_history` (
  `date_added` datetime NOT NULL,
  PRIMARY KEY (`product_history_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1
+
+
+CREATE TABLE `hf7_product_category_prices` (
+  `product_category_price_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `product_store_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `product_name` varchar(250) NOT NULL,
+  `store_id` int(11) NOT NULL DEFAULT '0',
+  `price_category` varchar(250) DEFAULT NULL,
+  `price` decimal(10,2) DEFAULT NULL,
+  `status` int(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`product_category_price_id`),
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

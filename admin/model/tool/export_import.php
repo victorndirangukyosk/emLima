@@ -1230,6 +1230,75 @@ class ModelToolExportImport extends Model {
 		}
 	}
 
+	public function uploadCategoryPrices( $filename, $incremental = false ) {
+     
+		ini_set( 'max_execution_time', 0 );
+		ini_set( 'memory_limit', '512M' );
+		$log = new Log('error.log');
+        $log->write('upload 2');
+		
+		//$this->db->query( 'update '.DB_PREFIX.'product SET product_sr_no=0' );
+
+		// we use our own error handler
+		global $registry;
+		$registry = $this->registry;
+		set_error_handler( 'error_handler_for_export_import', E_ALL );
+		register_shutdown_function( 'fatal_error_shutdown_handler_for_export_import' );
+		$log->write('upload 3');
+		/*try {*/
+			$this->session->data['export_import_nochange'] = 1;
+
+			// we use the PHPExcel package from http://phpexcel.codeplex.com/
+			$cwd = getcwd();
+			chdir( DIR_SYSTEM . 'PHPExcel' );
+			require_once 'Classes/PHPExcel.php';
+			chdir( $cwd );
+
+			// Memory Optimization
+			if ( $this->config->get( 'export_import_settings_use_import_cache' ) ) {
+				$cacheMethod = PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp;
+				$cacheSettings = array( ' memoryCacheSize ' => '16MB' );
+				PHPExcel_Settings::setCacheStorageMethod( $cacheMethod, $cacheSettings );
+			}
+
+			// parse uploaded spreadsheet file
+			$inputFileType = PHPExcel_IOFactory::identify( $filename );
+			$objReader = PHPExcel_IOFactory::createReader( $inputFileType );
+			$objReader->setReadDataOnly( true );
+			$reader = $objReader->load( $filename );
+            
+			// read the various worksheets and load them to the database
+			if ( !$this->validateUpload( $reader ) ) {
+				return false;
+			}
+			$this->clearCache();
+			$this->session->data['export_import_nochange'] = 0;
+			$available_product_ids = array();
+			$log->write('upload 3.4');
+			/*if ( !$this->user->isVendor() ) {
+				$log->write('upload 4');
+				$this->uploadCategories( $reader, $incremental );
+			}*/
+			$this->uploadCategoryPricesData( $reader, $incremental );
+			//$this->uploadProducts( $reader, $incremental, $available_product_ids );
+			//$log->write('upload 10');
+			//$this->uploadAdditionalImages($reader, $incremental, $available_product_ids);
+			//$log->write('upload 11');
+			//$this->uploadProductVariations( $reader, $incremental, $available_product_ids );
+			return true;
+		/*} catch ( Exception $e ) {
+			$errstr = $e->getMessage();
+			$errline = $e->getLine();
+			$errfile = $e->getFile();
+			$errno = $e->getCode();
+			$this->session->data['export_import_error'] = array( 'errstr' => $errstr, 'errno' => $errno, 'errfile' => $errfile, 'errline' => $errline );
+			if ( $this->config->get( 'config_error_log' ) ) {
+				$this->log->write( 'PHP ' . get_class( $e ) . ':  ' . $errstr . ' in ' . $errfile . ' on line ' . $errline );
+			}
+			return false;
+		}*/
+	}
+
 	
 	protected function validateCategories( &$reader ) {
 		$data = $reader->getSheetByName( 'Categories' );
@@ -2888,6 +2957,82 @@ class ModelToolExportImport extends Model {
 
             $this->db->query("INSERT INTO " . DB_PREFIX . "city_zipcodes SET city_id = '" . (int) $city_id . "', zipcode = '" . $zipcode . "'");
         }
-    }
+	}
+	
+
+	protected function uploadCategoryPricesData( $reader, $incremental ){
+		$log = new Log('error.log');
+		$log->write('upload 3.4');
+
+		// get worksheet, if not there return immediately
+		$data = $reader->getSheetByName( 'Product_Prices' );
+		//echo '<pre>';print_r($data);exit;
+
+		// load the worksheet cells and store them to the database
+		$first_row = array();
+		$i = 0;
+		$k = $data->getHighestRow();
+		for ( $i = 0; $i < $k; $i+=1 ) {
+			if ( $i == 0 ) {
+				/*$max_col = PHPExcel_Cell::columnIndexFromString( $data->getHighestColumn() );
+				for ( $j = 1; $j <= $max_col; $j+=1 ) {
+					$first_row[] = $this->getCell( $data, $i, $j );
+				}*/
+				continue;
+			}
+			$j = 1;
+			$product_store_id = trim( $this->getCell( $data, $i, $j++ ) );
+			$product_id= trim( $this->getCell( $data, $i, $j++ ) );
+			$name = trim( $this->getCell( $data, $i, $j++ ) );
+			$store_id = trim( $this->getCell( $data, $i, $j++ ) );
+			$price_category = trim( $this->getCell( $data, $i, $j++ ) );
+			$price =trim( $this->getCell( $data, $i, $j++ ) );
+			$status = trim( $this->getCell( $data, $i, $j++ ) );
+			$dataProduct =array();
+			$dataProduct['product_store_id'] = $product_store_id;
+			$dataProduct['product_id'] = $product_id;
+			$dataProduct['product_name'] = $name;
+			$dataProduct['store_id'] = $store_id;
+			$dataProduct['price_category'] = $price_category;
+			$dataProduct['price'] = $price;
+			$dataProduct['status'] = $status;
+			//echo $product_store_id.'==='.$product_id.'==='.$name.'==='.$store_id.'==='.$price_category.'==='.$price;
+			//exit;
+			
+			if (! $incremental ) {
+				$log->write('upload in incremental');
+				$this->deleteCategoryPriceRow( $product_store_id, $store_id, $price_category);
+			}
+			$this->addUpdateCategoryProductPrice( $product_store_id, $store_id,$price_category, $dataProduct );
+			//$this->storeProductIntoDatabase( $product, $languages, $product_fields, $exist_table_product_tag, $exist_meta_title, $layout_ids, $available_store_ids, $manufacturers, $weight_class_ids, $length_class_ids, $url_alias_ids,$incremental );
+       
+	   }
+	   return true;
+	}
+	 
+	protected function deleteCategoryPriceRow($product_store_id,$store_id,$price_category){
+		$sql = "DELETE FROM `" . DB_PREFIX . "product_category_prices` WHERE `product_store_id` = $product_store_id AND `price_category` = $price_category AND `store_id` = $store_id;\n";
+		$this->db->query($sql);
+	}
+
+	protected function addUpdateCategoryProductPrice($product_store_id,$store_id,$price_category,$data){
+
+		$sql = "SELECT *  FROM `" . DB_PREFIX . "product_category_prices` WHERE `product_store_id` = $product_store_id AND `price_category` = '$price_category' AND `store_id` = $store_id";
+		$result = $this->db->query( $sql );
+		//echo "<pre>";print_r($result);
+		if(count($result->rows)){
+			/* Update */
+			$sql = "update ".DB_PREFIX."product_category_prices SET price='" . $data['price'] . "',product_name='" . $data['product_name'] . "' WHERE product_store_id = '" . $product_store_id . "' AND price_category = '" . $price_category . "' AND  store_id = '" . $store_id . "' ";
+			$this->db->query($sql);
+			//echo "<pre>";print_r($sql);
+		}else{
+			/* Add */ 
+			$matstring=implode("','",$data);
+			$sql = "INSERT INTO `" . DB_PREFIX . "product_category_prices` (`product_store_id`, `product_id`, `product_name`, `store_id`, `price_category`, `price`, `status`) VALUES ('$matstring')";
+			$this->db->query($sql);
+			//echo "<pre>";print_r($sql);
+			//$this->db->query($sql);
+		}
+	}
 
 }

@@ -126,6 +126,7 @@ $_['error_unlisted_product_id']                         = 'Export/Import: Worksh
 $_['tab_import']                            = 'Import';
 $_['tab_export']                            = 'Export';
 $_['tab_settings']                          = 'Settings';
+$_['tab_import_prices']                     = 'Import Category prices';
 $_['tab_sample_data']                       = 'Sample Data';
 
 // Button labels

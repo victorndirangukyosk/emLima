@@ -42,6 +42,8 @@
 					<li><a href="#tab-sample" data-toggle="tab"><?= $tab_sample_data ?></a></li>
 					
 					<?php } ?>
+
+					<li><a href="#tab_import_prices" data-toggle="tab"><?php echo $tab_import_prices; ?></a></li>
 				</ul>
 				<div class="tab-content">
 					<div class="tab-pane active" id="tab-export">
@@ -218,6 +220,59 @@
 						</form>
 					</div>
 
+					<div class="tab-pane" id="tab_import_prices">
+						<form action="<?php echo $import_prices; ?>" method="post" enctype="multipart/form-data" id="import-prices" class="form-horizontal">
+							<table class="form">
+								<tr>
+									<td>
+										<?php echo $entry_import; ?>
+										<!--<span class="help"><?php echo $help_import; ?></span>
+										<span class="help"><?php echo $help_format; ?></span>-->
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<?php echo $entry_incremental; ?><br />
+
+										<?php if($this->user->isVendor()) { ?>
+
+											
+												<input type="radio" name="incremental" value="1" checked="checked" />
+												<?php echo $text_yes; ?> <?php echo $help_incremental_yes; ?>
+												<br />
+											
+
+										<?php } else { ?>
+
+											<?php if ($incremental) { ?>
+												<input type="radio" name="incremental" value="1" checked="checked" />
+												<?php echo $text_yes; ?> <?php echo $help_incremental_yes; ?>
+												<br />
+												<input type="radio" name="incremental" value="0" />
+												<?php echo $text_no; ?> <?php echo $help_incremental_no; ?>
+												<?php } else { ?>
+												<input type="radio" name="incremental" value="1" />
+												<?php echo $text_yes; ?> <?php echo $help_incremental_yes; ?>
+												<br />
+												<input type="radio" name="incremental" value="0" checked="checked" />
+												<?php echo $text_no; ?> <?php echo $help_incremental_no; ?>
+											<?php } ?>
+
+										<?php } ?>
+
+										
+									</td>
+								</tr>
+								<tr>
+									<td><?php echo $entry_upload; ?><br /><br /><input type="file" name="upload" id="upload-prices" /></td>
+								</tr>
+								<tr>
+									<td class="buttons"><a onclick="uploadPricesData();" class="btn btn-primary"><span><?php echo $button_import; ?></span></a></td>
+								</tr>
+							</table>
+						</form>
+					</div>
+
 					<div class="tab-pane" id="tab-settings">
 						<form action="<?php echo $settings; ?>" method="post" enctype="multipart/form-data" id="settings" class="form-horizontal">
 							<table class="form">
@@ -378,6 +433,12 @@ function checkFileSize(id) {
 function uploadData() {
 	if (checkFileSize('upload')) {
 		$('#import').submit();
+	}
+}
+
+function uploadPricesData() {
+	if (checkFileSize('upload-prices')) {
+		$('#import-prices').submit();
 	}
 }
 

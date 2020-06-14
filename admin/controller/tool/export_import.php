@@ -86,6 +86,55 @@ class ControllerToolExportImport extends Controller {
 		$this->getForm();
 	}
 
+	public function prices_import() {
+		$this->load->language('tool/export_import');
+
+		$this->document->setTitle($this->language->get('heading_title'));
+
+		$this->load->model('tool/export_import');
+		$log = new Log('error.log');
+        $log->write('upload 1');
+
+		if (($this->request->server['REQUEST_METHOD'] == 'POST') && ($this->validateUploadForm())) {
+
+			$log->write('upload if');
+
+			if ((isset( $this->request->files['upload'] )) && (is_uploaded_file($this->request->files['upload']['tmp_name']))) {
+				$file = $this->request->files['upload']['tmp_name'];
+				$incremental = ($this->request->post['incremental']) ? true : false;
+
+				$log->write('upload if e;s');
+
+				$res = $this->model_tool_export_import->uploadCategoryPrices($file,$this->request->post['incremental']);
+
+					//echo "<pre>dd";print_r($res);die;
+				if ($res===true) {
+						$this->session->data['success'] = $this->language->get('text_success');
+						$this->response->redirect($this->url->link('tool/export_import', 'token=' . $this->session->data['token'], 'SSL'));
+				} elseif (is_array($res)) {
+
+						//echo "<pre>";print_r("dwe");die;
+						$this->session->data['success'] = $this->language->get('text_success');
+
+						$downLink = $this->url->link('tool/export_import/downloadModelsNotPresent', 'token=' . $this->session->data['token'], 'SSL');
+
+						//$this->error['warning'] = $this->language->get('error_upload');
+						$this->error['warning'] = "Some products are not available in the system so couldn't be uploaded. <a href=".$downLink.">Download Excel</a> for such products";
+				}
+				else {
+						$this->error['warning'] = $this->language->get('error_upload');
+						$this->error['warning'] .= "<br />\n".$this->language->get( 'text_log_details' );
+				}
+
+			}
+		}
+
+		$this->getForm();
+	}
+
+
+	
+
 
 	protected function return_bytes($val)
 	{
@@ -354,6 +403,7 @@ class ControllerToolExportImport extends Controller {
 		$data['tab_export'] = $this->language->get( 'tab_export' );
 		$data['tab_import'] = $this->language->get( 'tab_import' );
 		$data['tab_settings'] = $this->language->get( 'tab_settings' );
+		$data['tab_import_prices'] = $this->language->get( 'tab_import_prices' );
 		$data['tab_sample_data'] = $this->language->get( 'tab_sample_data' );
 
 		$data['button_export'] = $this->language->get( 'button_export' );
@@ -418,6 +468,7 @@ class ControllerToolExportImport extends Controller {
 		$data['import'] = $this->url->link('tool/export_import/upload', 'token=' . $this->session->data['token'], 'SSL');
 		$data['export'] = $this->url->link('tool/export_import/download', 'token=' . $this->session->data['token'], 'SSL');
 		$data['settings'] = $this->url->link('tool/export_import/settings', 'token=' . $this->session->data['token'], 'SSL');
+		$data['import_prices'] = $this->url->link('tool/export_import/prices_import', 'token=' . $this->session->data['token'], 'SSL');
 		$data['post_max_size'] = $this->return_bytes( ini_get('post_max_size') );
 		$data['upload_max_filesize'] = $this->return_bytes( ini_get('upload_max_filesize') );
 
