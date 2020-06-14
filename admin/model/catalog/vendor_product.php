@@ -623,8 +623,10 @@ class ModelCatalogVendorProduct extends Model {
 	
 	public function updateProductInventory($store_product_id, $data) {
 		$this->trigger->fire('pre.admin.product.edit', $data);
-
-        $qty = $data['current_qty'] + $data['procured_qty'];
+		if(!isset($data['rejected_qty'])){
+			$data['rejected_qty'] =0;
+		}
+        $qty = $data['current_qty'] + ( $data['procured_qty'] - $data['rejected_qty']);
 		
 		$query =  "UPDATE " . DB_PREFIX . "product_to_store SET quantity = '" . $qty . "' WHERE product_store_id = '" . (int) $store_product_id . "'";
 		//echo $query;

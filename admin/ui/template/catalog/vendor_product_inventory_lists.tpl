@@ -616,15 +616,20 @@ $('input.rejected_qty').keyup(function(){
 	var rejected_qty = $(this).val();
     
 	var vendor_product_id = $(this).attr('id');
-vendor_product_id=vendor_product_id.replace('rejected_qty_','');
+   vendor_product_id=vendor_product_id.replace('rejected_qty_','');
 
-	var procured_qty =0;
+	 var procured_qty =0;
      if ($('#'+vendor_product_id).val().length != 0){
       procured_qty =$('#'+vendor_product_id).val();
     }
 
-     
-	var total = parseFloat(current_qty) + parseFloat(procured_qty) + parseFloat(rejected_qty);
+     if(parseFloat(procured_qty) < parseFloat(rejected_qty)){
+		alert("Rejected quantity should less than Procured quantity!");
+		$('#rejected_qty_'+vendor_product_id).val(0);
+		rejected_qty = 0;
+		
+	 }
+	var total = parseFloat(current_qty) + ( parseFloat(procured_qty) - parseFloat(rejected_qty) );
 	$('#total_qty_'+vendor_product_id).val(total);
 });
 
