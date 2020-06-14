@@ -1550,7 +1550,7 @@ class ControllerCatalogVendorProduct extends Controller {
 			'order' => $order,
 			// 'start' => ( $page - 1 ) * $this->config->get( 'config_limit_admin' ),
 			// 'limit' => $this->config->get( 'config_limit_admin' )
-		);
+		); 
 
 
 // echo "<pre>";print_r($filter_data);die;
