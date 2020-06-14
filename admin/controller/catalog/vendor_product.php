@@ -1548,8 +1548,8 @@ class ControllerCatalogVendorProduct extends Controller {
 			'filter_quantity'=>$filter_quantity,
 			'sort' => $sort,
 			'order' => $order,
-			'start' => ( $page - 1 ) * $this->config->get( 'config_limit_admin' ),
-			'limit' => $this->config->get( 'config_limit_admin' )
+			// 'start' => ( $page - 1 ) * $this->config->get( 'config_limit_admin' ),
+			// 'limit' => $this->config->get( 'config_limit_admin' )
 		);
 
 
