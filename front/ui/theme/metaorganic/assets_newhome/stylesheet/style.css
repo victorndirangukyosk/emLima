@@ -10339,7 +10339,7 @@ button.button.new-address:before {
 button.button.create-account { background:#66cc33; color:#fff;  }
 button.button.create-account:hover {background: #131e2c;}
 .create-account span, .login span{
-	font-size: 35px !important;
+	font-size: 2.8rem !important;
 }
 button.button.create-account:before {
 	content: "\f007";

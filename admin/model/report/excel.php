@@ -2699,7 +2699,7 @@ class ModelReportExcel extends Model {
 					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row,$result['quantity']);
 					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, $row,$result['price']);
 					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(8, $row,$result['special_price']);
-					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(9, $row, $result['status'] ? 'Enabled' :'Disabled');  
+					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(9, $row, $result['sts'] ? 'Enabled' :'Disabled');  
 				$row++;
 			}
 			

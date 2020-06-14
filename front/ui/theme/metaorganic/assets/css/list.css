@@ -2399,9 +2399,7 @@ NOTE: Variables currently do not work with @custom-media. Hardcoding values for 
   -ms-flex-pack: end;
       justify-content: flex-end;
 }
-.header__logo-container img{
-  width: 200px !important;
-}
+
 /*--------------------------------------------------------------------
 *
 * Custom-tokens.css
@@ -19027,9 +19025,7 @@ address {
 .header-lower-deck{
   clear:both;
 }
-.header__logo-container img {
-  width: 10rem;
-}
+
 .setproductimg{
   background-color: #f4f3f2;
     padding: 15px 10px;
