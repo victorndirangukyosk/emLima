@@ -295,14 +295,14 @@ $.fn.liveSearch = function(option) {
   
 // Cart add remove functions
 var cart = {
-	'add': function(product_id, quantity, variation_id, store_id=null) {
+	'add': function(product_id, quantity, variation_id, store_id=null,ripe='Ripe') {
 
 		
 		console.log("add variation id", variation_id);
 		$.ajax({
 			url: 'index.php?path=checkout/cart/add',
 			type: 'post',
-			data: 'variation_id='+variation_id+'&product_id=' + product_id + '&quantity=' + (typeof(quantity) != 'undefined' ? quantity : 1)+'&store_id=' + store_id,
+			data: 'variation_id='+variation_id+'&product_id=' + product_id + '&quantity=' + (typeof(quantity) != 'undefined' ? quantity : 1)+'&store_id=' + store_id ,//+ '&ripe=' +ripe
 			dataType: 'json',
 			beforeSend: function() {
 				//$('#cart > button').button('loading');
@@ -352,7 +352,7 @@ var cart = {
 			}
 		});
 	},
-	'update': function(key, quantity) {
+	'update': function(key, quantity,ripe='Ripe') {
 
 		var text = $('.checkout-modal-text').html();
 	    $('.checkout-modal-text').html('');
@@ -362,7 +362,7 @@ var cart = {
 		$.ajax({
 			url: 'index.php?path=checkout/cart/update',
 			type: 'post',
-			data: 'key=' + key + '&quantity=' + (typeof(quantity) != 'undefined' ? quantity : 1),
+			data: 'key=' + key + '&quantity=' + (typeof(quantity) != 'undefined' ? quantity : 1  ),//+ '&ripe=' +ripe
 			dataType: 'json',
 			async: false, 
 			beforeSend: function() {

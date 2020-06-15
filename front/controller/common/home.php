@@ -572,7 +572,7 @@ class ControllerCommonHome extends Controller {
 
 		$blocks = $this->model_tool_image->getBlocks();
 
-		//echo "<pre>";print_r($blocks);die;
+		// echo "<pre>";print_r($blocks);die;
 		foreach ($blocks as $block) {
 			
         	if (is_file(DIR_IMAGE . $block['image'])) {
@@ -908,7 +908,7 @@ class ControllerCommonHome extends Controller {
 		foreach($store_types as $value){
 			$tempStoreTypeArray[$value['store_type_id']] = $value['name'];
 		}
-	    //echo'<pre>';print_r($store_types);exit;
+	    // echo'<pre>';print_r($stores);exit;
 	    foreach($stores as $store){
 		   $tempStore = $store;
 		   $tempStore['href'] = $this->model_setting_store->getSeoUrl('store_id=' . $store['store_id']);
@@ -960,11 +960,17 @@ class ControllerCommonHome extends Controller {
 		$complete_status_ids = '('.implode(',', $this->config->get('config_complete_status')).')';
 		$query_best = $this->db->query("SELECT SUM( op.quantity )AS total, op.product_id,op.general_product_id, pd.name FROM " . DB_PREFIX . "order_product AS op LEFT JOIN " . DB_PREFIX . "order AS o ON ( op.order_id = o.order_id ) LEFT JOIN  " . DB_PREFIX . "product_description AS pd ON (op.general_product_id = pd.product_id)  WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') ."' AND o.order_status_id IN " . $complete_status_ids . " GROUP BY pd.name ORDER BY total DESC LIMIT 5");
 		$best_products = $query_best->rows;
+
+
+
+
 		foreach ($best_products as $products){
 			$product_detail = $this->model_assets_product->getDetailproduct($products['product_id']);
 			$product_detail['thumb'] = $this->model_tool_image->resize($product_detail['image'], 100, 100);
 			$data['bestseller'][] = $product_detail;
 		}
+
+
 		
 		/** Products To Percentage off **/
 		$prductsOffer = $this->getProducts(array(
@@ -977,7 +983,8 @@ class ControllerCommonHome extends Controller {
 		$data['contactus_modal'] = $this->load->controller('information/contact');
 		
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/home.tpl')) {
-			$this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/home.tpl', $data));
+			// $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/home.tpl', $data));
+			$this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/homenew.tpl', $data));
 		} else {
 			$this->response->setOutput($this->load->view('default/template/common/home.tpl', $data));
 		}
@@ -1404,7 +1411,7 @@ class ControllerCommonHome extends Controller {
 
         $data['products'] = array();
 
-        //echo "<pre>";print_r($results);die;
+        // echo "<pre>";print_r($results);die;
         foreach ( $results as $result ) {
 
             // if qty less then 1 dont show product 
@@ -1415,9 +1422,10 @@ class ControllerCommonHome extends Controller {
                 $image = $this->model_tool_image->resize($result['image'], $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
             } else {
                 $image = $this->model_tool_image->resize('placeholder.png', $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
-            }
+			}
+			
 
-            //if category discount define override special price
+	            //if category discount define override special price
 
 
             $discount = '';
@@ -1532,6 +1540,7 @@ class ControllerCommonHome extends Controller {
                 );
             }
         }
+		// echo "<pre>";print_r($data['products']);die;
 
         return $data['products'];
     }

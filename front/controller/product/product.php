@@ -809,7 +809,11 @@ class ControllerProductProduct extends Controller {
             $server = $this->config->get('config_url');
         }
 
-        $data['base'] = $server;
+		$data['base'] = $server;
+		
+
+		//echo "<pre>";print_r($product_info);die;
+
         
 		if ( $product_info ) {
 
@@ -908,9 +912,18 @@ class ControllerProductProduct extends Controller {
                 'actualCart' => 0,
                 'default_variation_name' => $product_info['default_variation_name'],
                 'variations' => $this->model_assets_product->getVariations( $product_info['product_store_id'] ),
-                'minimum' => $product_info['min_quantity'] > 0 ? $product_info['min_quantity'] : $product_info['quantity'],
-            );
-
+				'minimum' => $product_info['min_quantity'] > 0 ? $product_info['min_quantity'] : $product_info['quantity'],
+				'variations' => array(
+					array(
+						'variation_id' => $product_info['product_store_id'],
+						'unit' => $product_info['unit'],
+						'weight' => floatval($product_info['weight']),
+						'price' => $price,
+						'special' => $special_price
+					)
+				),
+			);
+			
             if ( isset( $this->session->data['cart'][$key] ) ) {
 		        $data['product']['qty_in_cart'] = $this->session->data['cart'][$key]['quantity'];
 		        $data['product']['actualCart'] = 1;
