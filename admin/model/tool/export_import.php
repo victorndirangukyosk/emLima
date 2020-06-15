@@ -2967,7 +2967,7 @@ class ModelToolExportImport extends Model {
 		// get worksheet, if not there return immediately
 		$data = $reader->getSheetByName( 'Product_Prices' );
 		//echo '<pre>';print_r($data);exit;
-
+        $cache_price_data = array();
 		// load the worksheet cells and store them to the database
 		$first_row = array();
 		$i = 0;
@@ -2998,20 +2998,23 @@ class ModelToolExportImport extends Model {
 			$dataProduct['status'] = $status;
 			//echo $product_store_id.'==='.$product_id.'==='.$name.'==='.$store_id.'==='.$price_category.'==='.$price;
 			//exit;
+			$cache_price_data[$product_store_id.'_'.$price_category.'_'.$store_id] = $price;
 			
-			if (! $incremental ) {
+			/*if (! $incremental ) {
 				$log->write('upload in incremental');
 				$this->deleteCategoryPriceRow( $product_store_id, $store_id, $price_category);
-			}
+			}*/
 			$this->addUpdateCategoryProductPrice( $product_store_id, $store_id,$price_category, $dataProduct );
 			//$this->storeProductIntoDatabase( $product, $languages, $product_fields, $exist_table_product_tag, $exist_meta_title, $layout_ids, $available_store_ids, $manufacturers, $weight_class_ids, $length_class_ids, $url_alias_ids,$incremental );
        
 	   }
+	   $this->cache->delete('category_price_data');
+	   $this->cache->set('category_price_data',$cache_price_data);
 	   return true;
 	}
 	 
 	protected function deleteCategoryPriceRow($product_store_id,$store_id,$price_category){
-		$sql = "DELETE FROM `" . DB_PREFIX . "product_category_prices` WHERE `product_store_id` = $product_store_id AND `price_category` = $price_category AND `store_id` = $store_id;\n";
+		$sql = "DELETE FROM `" . DB_PREFIX . "product_category_prices` WHERE `product_store_id` = $product_store_id AND `price_category` = $price_category AND `store_id` = $store_id";
 		$this->db->query($sql);
 	}
 

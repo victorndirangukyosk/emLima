@@ -393,7 +393,7 @@
                                                                 <?= $product['variations'][0]['special']; ?></div>
                                                         </div>
                                                         <div>
-                                                        <div class="_2xqFO">
+                                                        <div class="_2xqFO" style="display: <?php echo ($product['variations'][0]['price'] != $product['variations'][0]['special']) ? 'block': 'none';?>">
                                                                 <div class="_3QV9M"><strike><?= $product['variations'][0]['price'];?></strike> </div>
                                                                     
                                                             </div>

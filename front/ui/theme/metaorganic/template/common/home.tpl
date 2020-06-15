@@ -289,7 +289,7 @@
                                                     <div class="col-md-12 col-sm-12 pl0 pr0">
                                                     <section class="_25Upe">
                                                     <section class="inner_sec">
-                                                    <span class="discountuihome" style="color:red; font-weight:bold">Get <?= $product['percent_off'];?>% OFF <i class="fas fa-shopping-basket"></i></span>
+                                                    <span class="discountuihome" style="display: <?php echo ($product['variations'][0]['price'] != $product['variations'][0]['special']) ? 'block': 'none';?>;color:red; font-weight:bold">Get <?= $product['percent_off'];?>% OFF <i class="fas fa-shopping-basket"></i></span>
                                                     <div class="_3XNMI">
                                                    <a class="product-detail-bnt open-popup" role="button" data-store=<?= ACTIVE_STORE_ID?> data-id="<?= $product['product_store_id'] ?>" target="_blank"  aria-label="<?=$product['name']?>">
                                                     <div class="_2_3rp">
@@ -342,7 +342,8 @@
                                                                 <?= $product['variations'][0]['special'];?></div>
                                                         </div>
                                                         <div>
-                                                        <div class="_2xqFO">
+                                                        
+                                                        <div class="_2xqFO" style="display: <?php echo ($product['variations'][0]['price'] != $product['variations'][0]['special']) ? 'block': 'none';?>">
                                                                 <div class="_3QV9M"><strike><?= $product['variations'][0]['price'];?></strike> </div>
                                                             </div>
                                                         </div>
