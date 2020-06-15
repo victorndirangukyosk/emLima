@@ -8880,3 +8880,6 @@ button#detect_location {
 .header__primary-navigation-outer-wrapper .header__logo-container{
 	margin-top: 30px
 }
+.header__logo-container img{
+	width: 10rem;
+}
