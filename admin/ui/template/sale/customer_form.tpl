@@ -106,7 +106,7 @@
 
                       <!-- start -->
                       
-                      <?php if($customer_group_id != $this->config->get('config_customer_group_id')) { ?>
+                      <?php /* if($customer_group_id != $this->config->get('config_customer_group_id')) { */?>
                           <div class="form-group required">
                             <label class="col-sm-2 control-label" for="input-company_name"><?php echo $entry_company_name; ?></label>
                             <div class="col-sm-10">
@@ -126,7 +126,7 @@
                               <?php  } ?> -->
                             </div>
                           </div>
-                      <?php } ?>
+                      <?php /* } */ ?>
                       
 
                       <!-- end -->
