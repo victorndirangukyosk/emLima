@@ -328,7 +328,7 @@
 													//echo '<pre>';print_r($product);
 												  ?>
                                                    <li class="_1cn3x" data-price="<?=str_replace('KSh ','',$product['variations'][0]['special'])?>">
-                                                   <span role="group">
+                                                   
 					
                                                     <div class="_2sT86 EurVi">
                                                     <article class="_3Oe1A">
@@ -337,7 +337,7 @@
                                                     <div class="col-md-12 col-sm-12 pl0 pr0 listwidth">
                                                     <section class="_25Upe">
                                                     <section class="inner_sec _2imXI">
-                                                    <span class="discountuihome" style="color:red; font-weight:bold">Get <?= $product['percent_off'];?>% OFF <i class="fas fa-shopping-basket"></i></span>
+                                                   <!-- <span class="discountuihome" style="color:red; font-weight:bold">Get <?= $product['percent_off'];?>% OFF <i class="fas fa-shopping-basket"></i></span>-->
                                                     <div class="_3XNMI">
                                                    <a class="product-detail-bnt open-popup" role="button" data-store=<?= $current_store;?> data-id="<?= $product['product_store_id'] ?>" target="_blank"  aria-label="<?=$product['name']?>">
                                                     <div class="_2_3rp">
@@ -351,11 +351,11 @@
                                                     </div>
                                                  
                                                
-                                        <section class="_1SQpT">
+                                      <!--  <section class="_1SQpT">
                                              <a role="button" data-store="<?= ACTIVE_STORE_ID;?>" data-id="<?= $product['product_store_id'] ?>" target="_blank" rel="noopener noreferrer"
 										 class="KFSGT product-detail-bnt product-img product-description open-popup" role="toolbar" title="<?=$product['name']?>"></a>
                                             
-                                        </section>
+                                        </section>-->
                                        
                                        
                                         
@@ -369,14 +369,23 @@
                                                         <!--<a class="R8zaM" href="#"><?= $heading_title;?></a>-->
                                                         
                                                         </div>
-                                                    <a href="#" class="_2Pk9X" tabindex="0"><?=$product['name']?></a>
+
+                                                          <!-- <a class="_2Pk9X" tabindex="0">-->
+                                                    <?=$product['name']?>
+                                                    <br/>
+                                                    <div style="color:#6dbd46">
+                                                     <?= $product['variations'][0]['special'];?>    <?php  echo '/ ' . $product['variations'][0]['weight'] . ' ' . $product['variations'][0]['unit']; ?>
+                                                     </div>
+
+
+                                                   <!-- <a href="#" class="_2Pk9X" tabindex="0"><?=$product['name']?></a>
 													
-                                                    <a class="R8zaM">( per <?=$product['unit']?> )</a>
+                                                    <a class="R8zaM">( per <?=$product['unit']?> )</a>-->
                                                        
                                                     </div>
                                                 </div>
-                                                <div class="col-md-12 col-sm-12 pl0 pr0 setproductimg">
-                                                    <div class="variation-selector-container">
+                                                 <div class=""><!--col-md-12 col-sm-12 pl0 pr0 setproductimg-->
+                                                   <!-- <div class="variation-selector-container">
                                                         <p class="variations-title">Variation</p>
                                                         <select class="product-variation">
                                                             <?php foreach($product['variations'] as $variation) { ?>
@@ -387,23 +396,23 @@
                                                             </option>
                                                             <?php } ?>
                                                         </select>
-                                                    </div>
+                                                    </div>-->
                                                 <div class="_2D2lC">
                                                             <div class="-DeRq">
-                                                                <?= $product['variations'][0]['special']; ?></div>
+                                                               <!-- <?= $product['variations'][0]['special']; ?></div>-->
                                                         </div>
                                                         <div>
-                                                        <div class="_2xqFO" style="display: <?php echo ($product['variations'][0]['price'] != $product['variations'][0]['special']) ? 'block': 'none';?>">
-                                                                <div class="_3QV9M"><strike><?= $product['variations'][0]['price'];?></strike> </div>
+                                                        <div class="_2xqFO">
+                                                               <!-- <div class="_3QV9M"><strike><?= $product['variations'][0]['price'];?></strike> </div>-->
                                                                     
                                                             </div>
                                                         </div>
                                                                           <div class="_2bSMY">
                                                         <div class="_31alT">
-                                                            <a class="_3tfm8 _3ePxY  product-detail-bnt product-img product-description open-popup" role="button" data-store=<?= $current_store;?> data-id="<?= $product['product_store_id'] ?>" target="_blank" rel="noopener noreferrer">Preview</a>
+                                                           <!-- <a class="_3tfm8 _3ePxY  product-detail-bnt product-img product-description open-popup" role="button" data-store=<?= $current_store;?> data-id="<?= $product['product_store_id'] ?>" target="_blank" rel="noopener noreferrer">Preview</a>-->
                                                           <div class="pro-qty-addbtn" data-store-id="<?= $current_store ?>"data-variation-id="<?= $product['product_variation_store_id'] ?>" id="action_<?= $product['product_variation_store_id'] ?>">
 
-													      <?php require 'action.tpl'; ?>
+													      
 									
 													      </div>
 															<!--<a class="_3tfm8 wrc8W lpgPF" role="button" href="#" target="_blank" rel="noopener noreferrer">
@@ -505,7 +514,7 @@
                                                          data-variation-id="<?= $product['product_variation_store_id'] ?>"
                                                          id="action_<?= $product['product_variation_store_id'] ?>">
 
-													   <?php require 'action.tpl'; ?>
+													  
 									
 													 </div>
 													<!--<a class="_3tfm8 wrc8W lpgPF" role="button" href="#" target="_blank" rel="noopener noreferrer">
@@ -589,7 +598,7 @@
 							<?php } ?>
 							<div class="pro-qty-addbtn" data-store-id="<?= $current_store ?>" data-variation-id="<?= $product['store_product_variation_id'] ?>" id="action_<?= $product['product_store_id'] ?>">
 
-							<?php require 'action.tpl'; ?>
+						 
 							</div>
 							</div>
 
