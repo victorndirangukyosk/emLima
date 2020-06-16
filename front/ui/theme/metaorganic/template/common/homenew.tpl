@@ -318,7 +318,7 @@
                                         </section>
                                         </div>
                                         <div class="col-md-12 col-sm-12" style="margin-bottom:15px;">
-                                        <div class="vfsyA col-md-12 col-sm-12 pl0 pr0" style="margin-top:10px;margin-left:80px">
+                                        <div class="vfsyA col-md-12 col-sm-12 pl0 pr0" style="margin-top:10px;">
                                                     <div class="_25ygu">
                                                      <div class="JHf2a">
                                                         <!--<a class="R8zaM"><?= $heading_title;?></a>-->
