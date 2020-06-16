@@ -3299,10 +3299,10 @@ NOTE: Variables currently do not work with @custom-media. Hardcoding values for 
 }
 
 ._1cn3x {
-  -ms-flex: 1 0 300px;
-      flex: 1 0 300px;
+  -ms-flex: 1 0 230px;
+      flex: 1 0 230px;
   min-width: 0;
-  width: 300px;
+  width: 230px;
 }
 /*--------------------------------------------------------------------
 *
@@ -3333,8 +3333,7 @@ NOTE: Variables currently do not work with @custom-media. Hardcoding values for 
 }
 @supports (display: grid) {
   ._2tY3C {
-    display: -ms-grid;
-    display: grid;
+    display: flex;
     -ms-grid-columns: auto auto auto auto;
         grid-template-columns: auto auto auto auto;
   }
