@@ -6,7 +6,7 @@
         <div class="modal-dialog modal-lg" role="document" style="margin-top: 10rem;">
             <div class="modal-content  col-md-8 col-md-push-2 pl0 pr0">
                 <div class="modal-body" id="popup_product_<?= $product['product_store_id'] ?>">
-                    <span class="discountui">You Save: <?php if($product['percent_off']) echo '<span class="offer-ratio">' . $product['percent_off']. '% OFF  </span>'; ?></span><button type="button" class="close close-model" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <button type="button" class="close close-model" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <div class="row">
                         <div class="col-md-5" >
                             <div class="product-slider xyz" >
@@ -60,17 +60,17 @@
 
                             <div class="product-price">
                                 <div class="homeprice-rate">
-                                   <?php if ($product['product_info']['special_price']  == '0.00' || !isset($product['product_info']['special_price']) || empty($product['product_info']['special_price'])) { ?>
-                                       <span class="price-popup"><?php echo $product['product_info']['price']; ?></span>
-                                    <?php } else { ?>
+                                   <!--<?php if ($product['product_info']['special_price']  == '0.00' || !isset($product['product_info']['special_price']) || empty($product['product_info']['special_price'])) { ?>
+                                       <span class="price-popup"><?php echo $product['product_info']['price']; ?></span>-->
+                                  <!--  <?php } else { ?>
                                         <span class="old-price-popup">
                                             MRP: <?php echo $product['product_info']['price']; ?>
                                             
-                                        </span>
+                                        </span>-->
                                         <span class="price-popup">
-                                           Our Price: <?php echo $product['product_info']['special_price']; ?> 
+                                          <?php echo $product['product_info']['special_price']; ?> 
                                         </span>
-                                    <?php } ?>
+                                     <!-- <?php } ?>-->
                                 </div>
                                 
                                <div class="pro-qty-addbtn inc-dec-cart" data-variation-id="<?= $product['store_product_variation_id'] ?>" id="action_<?= $product['product_store_id'] ?>">
