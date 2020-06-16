@@ -136,16 +136,16 @@
 
 <div class="productModal_popup" id="testID"  style="width: 350px;">
     <div class="modal fade product-details" id="popupmodal" id="store-cart-side" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content  col-md-6 col-md-push-3 pl0 pr0">
+        <div class="modal-dialog modal-lg" role="document" style="margin-top: 10rem;">
+            <div class="modal-content  col-md-8 col-md-push-2 pl0 pr0">
                 <div class="modal-body" id="popup_product_<?= $product['product_store_id'] ?>">
                     <span class="discountui">You Save: <?php if($product['percent_off']) echo '<span class="offer-ratio">' . $product['percent_off']. '% OFF  </span>'; ?></span><button type="button" class="close close-model" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <div class="row">
-                        <div class="col-md-12" >
+                        <div class="col-md-5" >
                             <div class="product-slider xyz" >
                                 <div class="easyzoom easyzoom--overlay" >
                                    <!-- <a href="<?php echo $product['zoom_thumb']; ?>">-->
-                                        <img src="<?php echo $product['thumb']; ?>" alt="" style="width: 250px;height:200px" />
+                                        <img src="<?php echo $product['thumb']; ?>" alt="" style="width: 250px;" />
                                    <!-- </a>-->
                                 </div>
 
@@ -159,7 +159,7 @@
                                <?php } ?>-->
                             </div>
                         </div>
-                        <div class="col-md-12" style="margin-left:15px; margin-right:15px;">
+                        <div class="col-md-7"  style="margin-top:25px" >
                             
                             
                             <?php $units = []; ?>

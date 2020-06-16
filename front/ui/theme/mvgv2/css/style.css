@@ -859,7 +859,7 @@ button { }
 /*.signupModal-popup { z-index: 10000!important}*/
 .signupModal-popup .close { float: right; font-size: 21px; font-weight: 700; line-height: 1; color: #000; text-shadow: 0 0px 0 #fff; opacity: 1; position: absolute; right: 0px; padding: 10px 14px; top: 0px; }
 .productModal_popup {z-index: 9999 }
-.productModal_popup .close, .changelocationModal .close { float: right; font-size: 21px; font-weight: 700; line-height: 1; color: rgb(255, 0, 0) !important; text-shadow: 0 0px 0 #fff; opacity: 1; position: absolute; right: 1px; background: #ffffff; padding: 10px 14px; top: 0px; z-index: 2;}
+.productModal_popup .close, .changelocationModal .close { float: right; font-size: 21px; font-weight: 700; line-height: 1; color: rgb(255, 0, 0) !important; text-shadow: 0 0px 0 #fff; opacity: 1; position: absolute; right: 1px; background: #ffffff; padding: 10px 14px; top: 0px; z-index: 2; width:20px}
 .product-variants-list {    width: 82%;  margin-bottom: 10px; }
 .product-variant { margin-bottom: 0px; }
 .product-variant-label { color: #333; }

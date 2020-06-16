@@ -8812,14 +8812,13 @@ padding-left: 0px !important
     height: 37px;
 }
 .discountui{
-	width: 98% !important;
+	width: 100% !important;
     padding: 10px;
     background-color: #ffffff;
     position: relative;
     top: 0px;
     z-index: 1;
     float: right;
-    right: 1%;
     -webkit-box-shadow: 3px 17px 22px -6px rgba(0,0,0,0.75);
     -moz-box-shadow: 3px 17px 22px -6px rgba(0,0,0,0.75);
     box-shadow: 3px 4px 7px 0px rgba(0,0,0,0.25);
