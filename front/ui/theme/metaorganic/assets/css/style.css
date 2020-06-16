@@ -3135,7 +3135,7 @@ body#vip .header__banner-container {
 	padding-left: 49px;
 	height: 45px;
 	width: 400px;
-    border-radius: 30px;
+    border-radius: 8px;
 }
 
 .header__search-keyword-icon,
@@ -8242,6 +8242,7 @@ body#vip .header__banner-container {
 	  position: relative;
 	  text-decoration: none;
 	transition-duration: 0.5s;
+	margin-top: 10px;
   }
   .dropdownset{
 	background: #de5d0f;

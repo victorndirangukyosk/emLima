@@ -16,6 +16,9 @@
 	font-family:roboto, Arial, Helvetica, sans-serif;
 	transition: background-color .2s ease-in
 }
+.header__logo-container img {
+    width: 16rem;
+}
 
 .Button__buttonFacebook--2QVOL,
 .Button__buttonGhost--1iMEM,
@@ -7730,9 +7733,20 @@ body {
 	}
 }
 .header__logo-container img {
-	width: 10rem;
-	margin: 30px 0px 0px 0px !important;
+	width: 16rem !important;
+	margin: 35px 0px 0px 0px !important;
   }
   .m0T0C {
 	margin-right: 30px;
   }
+  .fa-shopping-cart:before {
+    content: "" !important;
+	background-image: url("../images/cart_img.png");
+	padding: 0px 13px;
+    height: 23px;
+    display: block;
+    background-size: 21px;
+    background-repeat: no-repeat;
+    background-position: 1px 5px;
+    width: 20px;
+}
