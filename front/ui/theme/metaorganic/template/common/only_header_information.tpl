@@ -88,19 +88,16 @@
     </div>
     <header>
       
-                 <div class="col-md-12" style="position: relative; z-index: 1040;  padding-bottom: 20px; border-bottom: 1px solid #ea6f28; margin-bottom: 14px;">
+                 <div class="col-md-12" style="position: relative; z-index: 1040;  padding-bottom: 26px; border-bottom: 1px solid #ea6f28; margin-bottom: 14px; ">
       
-      <div class="row" >
+      <div class="row" style="margin-top:25px; margin-bottom:25px;">
       <div class="col-md-2">
                 <div class="header__logo-container">
                      <a class="header__logo-link " href="<?= BASE_URL?>">
-                        <img src="<?=$logo?>" />
+                        <img src="<?=$logo?>"  style="width: 15rem;"/>
                        
                      </a>
-                     <div itemscope="" class="seo-visible">
-                        <a itemprop="url" href="#">Home</a>
-                        <img itemprop="logo" src="<?=$logo?>" width="100" height="100">
-                     </div>
+                     
                 </div>
       </div>
       <div class="col-md-5">

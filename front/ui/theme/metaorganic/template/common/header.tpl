@@ -82,10 +82,7 @@
                         <img src="<?=$logo?>" />
                        
                      </a>
-                     <div itemscope="" class="seo-visible">
-                        <a itemprop="url" href="#">Home</a>
-                        <img itemprop="logo" src="<?=$logo?>" width="100" height="100">
-                     </div>
+                    
                 </div>
       </div>
       <div class="col-md-5">

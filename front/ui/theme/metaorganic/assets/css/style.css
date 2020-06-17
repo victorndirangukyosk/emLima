@@ -207,7 +207,7 @@ textarea {
 	overflow: auto
 }
 header {
-    min-height: 80px;
+    min-height: 65px;
 }
 [type=checkbox],
 [type=radio] {
@@ -8873,10 +8873,19 @@ button#detect_location {
 	float: right;
 	margin-top: 10px;
 }
-.header__primary-navigation-outer-wrapper .header__logo-container{
-	margin-top: 30px
-}
+
 .header__logo-container img{
 	width: 10rem;
     margin-top: 5px;
+}
+.fa-shopping-cart:before {
+    content: "" !important;
+    background-image: url(../images/cart_img.png);
+    padding: 0px 11px;
+    height: 16px;
+    display: block;
+    background-size: 19px;
+    background-repeat: no-repeat;
+    background-position: 0px 0px;
+    width: 9px;
 }

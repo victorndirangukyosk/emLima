@@ -213,9 +213,6 @@ header {
 	position: relative;
 	z-index:1000;
 	margin-top: 25px;
-
-
-
 }
 
 #header {background: #43b02a; min-height:63px;}
@@ -9917,7 +9914,7 @@ a.edit-bnt:hover {
 	color: #ff0000;
 }
 .form-group {
-	margin: 0px 0px !important;
+	margin: 10px 0px !important;
 }
 .form-list .input-box {
 	display: block;

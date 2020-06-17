@@ -72,12 +72,12 @@
         <?php } ?>            
     </div>
 
-     <header style="position: relative; z-index: 1040;  padding-bottom: 20px; border-bottom: 1px solid #ea6f28; height: 100px;">
+     <header style="position: relative; z-index: 1040;  padding-bottom: 20px; border-bottom: 1px solid #ea6f28; ">
         <div class="header__primary-navigation-item header__primary-navigation-item--more-categories" style="margin-left: 0px;">
                         
                      <div class="header__secondary-navigation-tablet-container"></div>
 					
-                     <ul class="header__upper-deck-list" style="margin-top:17px;">
+                     <ul class="header__upper-deck-list" >
 						
                         <?php if(!$is_login){?>
                         <li class="header__upper-deck-item header__upper-deck-item--register">
@@ -126,10 +126,7 @@
                         <a href="<?= BASE_URL;?>">
                         <img src="<?=$logo?>" >
                         </a>
-                        <div itemscope="" class="seo-visible">
-                           <a itemprop="url" href="#">Home</a>
-                           <img itemprop="logo" src="<?=$logo?>" width="100" height="100">
-                        </div>
+                       
                      </div>
                      <div class="header__primary-navigation-wrapper">
                       

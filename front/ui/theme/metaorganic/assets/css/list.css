@@ -2424,6 +2424,7 @@ NOTE: Variables currently do not work with @custom-media. Hardcoding values for 
   height: 100%;
   display: -ms-flexbox;
   display: flex;
+  min-height: 250px;
 }
 ._3Oe1A {
   padding: 0;
@@ -16522,7 +16523,7 @@ ol, ul {
   }
 }
 .page {
-  margin-top: 30px;
+  margin-top: 0px;
 }
 @media (max-width: 1151px) {
   .page--is-off-canvas {
@@ -18994,7 +18995,7 @@ address {
     background-color: transparent !important;
     box-shadow: none;
     border: none !important;
-    margin-top: 9px;
+    margin-top: 0px;
 }
 @media (min-width:768px) and (max-width:1023px) {
   .header__primary-navigation-item--more-categories {
