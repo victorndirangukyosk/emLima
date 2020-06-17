@@ -787,8 +787,8 @@ class ControllerCommonHome extends Controller {
 		}
 
 		if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
-			$data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'),200,110);
-			//$data['logo'] = $server . 'image/' . $this->config->get('config_logo');
+			//$data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'),200,110);
+			$data['logo'] = $server . 'image/' . $this->config->get('config_logo');
 		} else {
 			$data['logo'] = '';
 		}
