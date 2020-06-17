@@ -3333,7 +3333,7 @@ NOTE: Variables currently do not work with @custom-media. Hardcoding values for 
 }
 @supports (display: grid) {
   ._2tY3C {
-    display: flex;
+    display: table;
     -ms-grid-columns: auto auto auto auto;
         grid-template-columns: auto auto auto auto;
   }

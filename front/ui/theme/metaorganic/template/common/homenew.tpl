@@ -279,7 +279,7 @@
 													foreach($category['products'] as $product) {
 											//	 echo '<pre>';print_r($product);exit;
 												  ?>
-                                                   <li class="_1cn3x ">
+                                                   <li class="col-md-2 ">
                                                    
                                                     <div class="_2sT86 _1fLGj">
                                                     <a class="product-detail-bnt open-popup" role="button" data-store=<?= ACTIVE_STORE_ID?> data-id="<?= $product['product_store_id'] ?>" target="_blank"  aria-label="<?=$product['name']?>">
