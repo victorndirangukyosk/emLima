@@ -691,7 +691,7 @@ strong { color: #30322f; }
 .header-white .user-address { position: relative; line-height: 60px; padding: 0 20px; }
 /*.header-white .user-address:before { content: "\f041"; font-family: FontAwesome; font-style: normal; font-weight: normal; text-decoration: inherit;position: absolute;    color: #000;  left: 0; }
 .header-white .user-address:after { content: "\f107"; font-family: FontAwesome; font-style: normal; font-weight: normal; text-decoration: inherit;position: absolute;    color: #000;  right: 0px; }*/
-.search-form { margin-top: 10px; position: relative;z-index: 1; }
+.search-form { margin-top: 0px; position: relative;z-index: 1; }
 .search-form .form-control { height: 40px; }
 .header-search-form .btn-default { height: 40px; background-color: #fafbfa; border: 1px solid #d7dcd6; color: #999f98; }
 .header-search-form .btn-default:hover { height: 40px; background-color: #fafbfa; border: 1px solid #d7dcd6; color: #999f98; }

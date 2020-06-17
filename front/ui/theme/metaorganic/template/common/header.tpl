@@ -75,7 +75,7 @@
   <header>
 <div class="col-md-12" style="position: relative; z-index: 1040;  padding-bottom: 20px; border-bottom: 1px solid #ea6f28; margin-bottom: 14px;">
       
-      <div class="row">
+      <div class="row" >
        <div class="col-md-2">
                 <div class="header__logo-container">
                      <a class="header__logo-link " href="<?= BASE_URL?>">
@@ -165,7 +165,7 @@
                
                   <div class="header__primary-navigation-outer-wrapper">
                      
-                     <div class="header__primary-navigation-item header__primary-navigation-item--more-categories" style="margin-top: 17px;">
+                     <div class="header__primary-navigation-item header__primary-navigation-item--more-categories" >
                         
                      <div class="header__secondary-navigation-tablet-container"></div>
                      <ul class="header__upper-deck-list" >
