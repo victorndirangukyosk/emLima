@@ -5,18 +5,6 @@
                                                         </div>
 
 
- <div class="variation-selector-container" style="width: 250px;">
-                                                      <p class="variations-title" style="margin-left: -10px;"> variants</p>
-                                                      <select class="product-variation">
-                                                      <?php foreach($product['variations'] as $variation) { ?>
-                                                      <option value="<?php echo $variation[variation_id]; ?>"
-                                                      data-price="<?php echo $variation[price]; ?>"
-                                                      data-special="<?php echo $variation[special_price]; ?>">
-                                                      <?php  echo 'per ' . $variation[weight] . ' ' . $variation['unit']; ?>
-                                                      </option>
-                                                      <?php } ?>
-                                                      </select>
-                                                  </div>
 
                                                  
  
@@ -45,13 +33,7 @@
 
 
 
-<div class="variation-selector-container" style="visibility:hidden">
-                                                      <p class="variations-title">Ripe/ unripe</p>
-                                                      <select name="ripe" id="ripe"  class="product-variation">
-                                                     <option value="Ripe">Ripe</option>
-                                                     <option value="Unripe">Unripe</option>
-                                                      </select>
-                                                  </div>
+
 <!--
 
 <div class="sp-quantity" class="qtybtns-addbtnd" id="controller-container">
