@@ -321,6 +321,33 @@ class ModelAssetsProduct extends Model {
 
 	}
 
+	public function getProductVariations( $product_name ) {
+		
+		$returnData = [];
+		
+			$all_variations = "SELECT * ,product_store_id as variation_id FROM " . DB_PREFIX . "product_to_store ps LEFT JOIN " . DB_PREFIX . "product p ON (ps.product_id = p.product_id) WHERE name = '$product_name'";
+
+			//echo $all_variations;die;
+			$result = $this->db->query( $all_variations );
+
+			foreach ($result->rows as $r) {
+				if($r['quantity'] > 0 && $r['status']) {
+					// $r['variation_id'] => $result['product_store_id'],
+                    //         'unit' => $result['unit'],
+                    //         'weight' => floatval($result['weight']),
+                    //         'price' => $price,
+                    //         'special' => $special_price
+					array_push($returnData, $r);	
+				}
+				
+			}
+
+			 
+			return $returnData;
+		
+	}
+
+
 	public function getProductForPopupByApi( $store_id,$product_store_id, $is_admin = false ) {
 		
 		$this->db->select('product_to_store.*,product_description.*,product.*,product_description.name as pd_name', FALSE);

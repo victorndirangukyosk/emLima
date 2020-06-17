@@ -913,15 +913,17 @@ class ControllerProductProduct extends Controller {
                 'default_variation_name' => $product_info['default_variation_name'],
                 'variations' => $this->model_assets_product->getVariations( $product_info['product_store_id'] ),
 				'minimum' => $product_info['min_quantity'] > 0 ? $product_info['min_quantity'] : $product_info['quantity'],
-				'variations' => array(
-					array(
-						'variation_id' => $product_info['product_store_id'],
-						'unit' => $product_info['unit'],
-						'weight' => floatval($product_info['weight']),
-						'price' => $price,
-						'special' => $special_price
-					)
-				),
+				// 'variations' => array(
+				// 	array(
+				// 		'variation_id' => $product_info['product_store_id'],
+				// 		'unit' => $product_info['unit'],
+				// 		'weight' => floatval($product_info['weight']),
+				// 		'price' => $price,
+				// 		'special' => $special_price
+				// 	)
+				// ),
+                'variations' => $this->model_assets_product->getProductVariations($product_info['name']),
+
 			);
 			
             if ( isset( $this->session->data['cart'][$key] ) ) {
