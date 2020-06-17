@@ -117,15 +117,16 @@ $(document).delegate('.product-variation', 'change', function() {
 
     // TODO: Change trailing -0 to variations_id?
     const newQuantityInputId = 'cart-qty-' + newProductId + '-0';
+     $('#content-container').html(newSpecial);
  
-    //let dataHolder = parentDiv.find('#add-cart-btn');
-    //let productQuantityInput = parentDiv.find('.input-cart-qty');
+    let dataHolder = $('#add-cart-btnnew');
+     let productQuantityInput = $('.input-cart-qty');
 
     
-     $('#content-container').html(newSpecial);
+    
      
-   // productQuantityInput.attr('id', newQuantityInputId);
-   // dataHolder.attr('data-id', newProductId);
+    productQuantityInput.attr('id', newQuantityInputId);
+    dataHolder.attr('data-id', newProductId);
 });
 </script>
 
