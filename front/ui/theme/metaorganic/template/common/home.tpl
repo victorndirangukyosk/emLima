@@ -322,18 +322,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-md-12 col-sm-12 pl0 pr0 setproductimg">
-                                                  <div class="variation-selector-container">
-                                                      <p class="variations-title">Variation</p>
-                                                      <select class="product-variation">
-                                                      <?php foreach($product['variations'] as $variation) { ?>
-                                                      <option value="<?php echo $variation[variation_id]; ?>"
-                                                      data-price="<?php echo $variation[price]; ?>"
-                                                      data-special="<?php echo $variation[special]; ?>">
-                                                      <?php  echo 'per ' . $variation[weight] . ' ' . $variation['unit']; ?>
-                                                      </option>
-                                                      <?php } ?>
-                                                      </select>
-                                                  </div>
+                                                 
                                                 <div class="_2D2lC">
                                                             <div class="-DeRq">
                                                                 <?= $product['variations'][0]['special'];?></div>
