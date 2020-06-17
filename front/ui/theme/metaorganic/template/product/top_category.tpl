@@ -258,8 +258,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="_1o7LM">
-                                        <div class="_1bTly">
+                                    <div class="_1o7LM" style="margin-top: -50px;">
+                                        <div class="_1bTly" style="visibility:hidden">
                                             <!--<div id="selected-filters" class="_3rUJ8">
                                                 <p class="_1X0WU"><span class="_3HYTF">232 </span>items
                                                     
@@ -333,20 +333,21 @@
                                                     <div class="_2sT86 EurVi">
                                                     <article class="_3Oe1A">
 
+ <a class="product-detail-bnt open-popup" role="button" data-store=<?= $current_store;?> data-id="<?= $product['product_store_id'] ?>" target="_blank"  aria-label="<?=$product['name']?>">
+                                                  
                                                     <div class="col-md-12 col-sm-12 pl0 pr0">
                                                     <div class="col-md-12 col-sm-12 pl0 pr0 listwidth">
                                                     <section class="_25Upe">
                                                     <section class="inner_sec _2imXI">
                                                    <!-- <span class="discountuihome" style="color:red; font-weight:bold">Get <?= $product['percent_off'];?>% OFF <i class="fas fa-shopping-basket"></i></span>-->
                                                     <div class="_3XNMI">
-                                                   <a class="product-detail-bnt open-popup" role="button" data-store=<?= $current_store;?> data-id="<?= $product['product_store_id'] ?>" target="_blank"  aria-label="<?=$product['name']?>">
                                                     <div class="_2_3rp">
                                                     <div style="">
                                                     <img class="_1xvs1" src="<?=$product['thumb']?>" title="<?=$product['name']?>" alt="<?=$product['name']?>" style="left: 0%;">
                                                     
                                                     </div>
                                                     </div>
-                                                    </a>
+                                                   
                                                    
                                                     </div>
                                                  
@@ -528,6 +529,7 @@
                                                 </section>
                                             </section>
                                         </section>
+                                         </a>
                                         </article>
                                     </div>
                                     </span>

@@ -2420,7 +2420,7 @@ breakpoint--xxl 1408px
 NOTE: Variables currently do not work with @custom-media. Hardcoding values for now;
 */
 ._2sT86 {
-  width: 100%;
+  width: 90%;
   height: 100%;
   display: -ms-flexbox;
   display: flex;
@@ -2441,7 +2441,7 @@ NOTE: Variables currently do not work with @custom-media. Hardcoding values for 
 }
 @media (min-width: 640px) {
   ._1fLGj._2sT86 {
-    min-width: 300px;
+    min-width: 200px;
   }
 
   ._1fLGj ._3Oe1A {

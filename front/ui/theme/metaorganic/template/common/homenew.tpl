@@ -282,6 +282,8 @@
                                                    <li class="_1cn3x ">
                                                    
                                                     <div class="_2sT86 _1fLGj">
+                                                    <a class="product-detail-bnt open-popup" role="button" data-store=<?= ACTIVE_STORE_ID?> data-id="<?= $product['product_store_id'] ?>" target="_blank"  aria-label="<?=$product['name']?>">
+
                                                     <!--<article class="_3Oe1A">-->
 
                                                     <div class="col-md-12 col-sm-12 pl0 pr0">
@@ -289,17 +291,16 @@
                                                     <section class="_25Upe">
                                                     <section class="inner_sec">
                                                     <!--<span class="discountuihome" style="color:red; font-weight:bold">Get <?= $product['percent_off'];?>% OFF <i class="fas fa-shopping-basket"></i></span>-->
-                                                   
+                                                  
                                                    
                                                     <div class="_3XNMI">
-                                                   <a class="product-detail-bnt open-popup" role="button" data-store=<?= ACTIVE_STORE_ID?> data-id="<?= $product['product_store_id'] ?>" target="_blank"  aria-label="<?=$product['name']?>">
                                                     <div class="_2_3rp">
                                                     <div style="">
                                                     <img class="_1xvs1" src="<?=$product['thumb']?>" title="<?=$product['name']?>" alt="<?=$product['name']?>" style="left: 0%;">
                                                     
                                                     </div>
                                                     </div>
-                                                    </a>
+                                                  
                                                    
                                                     </div>
                                                  
@@ -378,7 +379,9 @@
                                             </section>
                                         </section>
                                        </article>-->
+                                       </a>
                                     </div>
+                                  
                                    
                                                     </li>
 				
