@@ -1,9 +1,8 @@
 <?php echo $header; ?>
 <?php $categoryPath = $_SERVER['REQUEST_SCHEME'] .'://'. $_SERVER['HTTP_HOST'] 
      . explode('?', $_SERVER['REQUEST_URI'], 2)[0];?>
-<!--
 <div class="header-lower-deck">
-    <div class="header-lower-deck__wrapper">
+    <!--<div class="header-lower-deck__wrapper">
         <div class="col-md-12 col-sm-12 col-xs-12">
             <div class="col-md-3 col-sm-3 imgset">
                 <img src="<?= $thumb?>" />
@@ -36,9 +35,8 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>-->
 </div>
--->
 <div class="store-cart-panel">
         <div class="modal right fade" id="store-cart-side" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
