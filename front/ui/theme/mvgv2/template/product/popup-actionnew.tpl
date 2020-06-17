@@ -1,5 +1,9 @@
-
  
+  <div class="_2D2lC">
+                                                            <div class="price-popup" id="content-container">
+                                                                <?= $product['variations'][0]['special_price'];?></div>
+                                                        </div>
+
 
  <div class="variation-selector-container" style="width: 250px;">
                                                       <p class="variations-title" style="margin-left: -10px;"> variants</p>
@@ -7,18 +11,15 @@
                                                       <?php foreach($product['variations'] as $variation) { ?>
                                                       <option value="<?php echo $variation[variation_id]; ?>"
                                                       data-price="<?php echo $variation[price]; ?>"
-                                                      data-special="<?php echo $variation[special]; ?>">
+                                                      data-special="<?php echo $variation[special_price]; ?>">
                                                       <?php  echo 'per ' . $variation[weight] . ' ' . $variation['unit']; ?>
                                                       </option>
                                                       <?php } ?>
                                                       </select>
                                                   </div>
 
-                                                  
-
+                                                 
  
-
-
 <div class="sp-quantity" class="qtybtns-addbtnd" id="controller-container">
 
     <p class="info"><?php if(isset($text_incart)) $text_incart ?></p>       
@@ -95,4 +96,31 @@
      <?php } ?>  
 </div>
 -->
+
+
+
+<script>
+
+
+
+$(document).delegate('.product-variation', 'change', function() {
+
+    
+    const newProductId = $(this).children("option:selected").val();
+    const newPrice = $(this).children("option:selected").attr('data-price');
+    const newSpecial = $(this).children("option:selected").attr('data-special');
+
+    // TODO: Change trailing -0 to variations_id?
+    const newQuantityInputId = 'cart-qty-' + newProductId + '-0';
+ 
+    //let dataHolder = parentDiv.find('#add-cart-btn');
+    //let productQuantityInput = parentDiv.find('.input-cart-qty');
+
+    
+     $('#content-container').html(newSpecial);
+     
+   // productQuantityInput.attr('id', newQuantityInputId);
+   // dataHolder.attr('data-id', newProductId);
+});
+</script>
 

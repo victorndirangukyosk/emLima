@@ -332,6 +332,18 @@ class ModelAssetsProduct extends Model {
 
 			foreach ($result->rows as $r) {
 				if($r['quantity'] > 0 && $r['status']) {
+
+
+
+					if ((float)$r['special_price']) {
+						$r['special_price'] = $this->currency->format($this->tax->calculate($r['special_price'], $r['tax_class_id'], $this->config->get('config_tax')));
+	 
+	
+					} else {
+						$r['special_price'] = false;
+					}
+					
+					
 					// $r['variation_id'] => $result['product_store_id'],
                     //         'unit' => $result['unit'],
                     //         'weight' => floatval($result['weight']),

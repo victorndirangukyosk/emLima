@@ -66,10 +66,10 @@
                                         <span class="old-price-popup">
                                             MRP: <?php echo $product['product_info']['price']; ?>
                                             
-                                        </span>-->
+                                        </span>
                                         <span class="price-popup">
                                           <?php echo $product['product_info']['special_price']; ?> 
-                                        </span>
+                                        </span>-->
                                      <!-- <?php } ?>-->
                                 </div>
                                 
