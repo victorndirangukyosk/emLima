@@ -101,6 +101,11 @@
 
 <script>
 
+$(function() {
+    $("select.product-variation").prop('disabled', function() {
+        return $('option', this).length < 2;
+    });
+});
 
 
 $(document).delegate('.product-variation', 'change', function() {
