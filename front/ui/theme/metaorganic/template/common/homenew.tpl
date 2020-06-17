@@ -266,7 +266,7 @@
 										  
 											<?php if(count($category['products'])>0){?>
 											 <div class="container--full-width featured-categories <?php echo ($i==1) ? "first-feature-cat": "" ?>">
-											 <div class="container">
+											 <div class="container" style="width:100%;">
 					                        <div class="_47ahp" data-test-selector="search-results">
 											 <div class="clearfix featured-categories__header">
                                               <span class="butsetview"><a href="<?=$this->url->link('product/store', 'store_id='.ACTIVE_STORE_ID).'?cat='.$page_link?>" >View All </a></span>   				  

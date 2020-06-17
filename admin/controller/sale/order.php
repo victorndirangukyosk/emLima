@@ -3861,7 +3861,6 @@ class ControllerSaleOrder extends Controller {
 
         foreach ($orders as $order_id) {
             $order_info = $this->model_sale_order->getOrder($order_id);
-
             //check vendor order 
            
             if ($this->user->isVendor()) {
@@ -3998,8 +3997,8 @@ class ControllerSaleOrder extends Controller {
                     'telephone' => $order_info['telephone'],
                     'shipping_address' => $order_info['shipping_address'],
                     'shipping_city' => $order_info['shipping_city'],
-                    'shipping_contact_no' => $order_info['shipping_contact_no'],
-                    'shipping_name' => $order_info['shipping_name'],
+                    'shipping_contact_no' => ($order_info['shipping_contact_no']) ? $order_info['shipping_contact_no'] : $order_info['telephone'],
+                    'shipping_name' => ($order_info['shipping_name']) ? $order_info['shipping_name'] : $order_info['firstname'].' '.$order_info['lastname'],
                     'shipping_method' => $order_info['shipping_method'],
                     'payment_method' => $order_info['payment_method'],
                     'product' => $product_data,
