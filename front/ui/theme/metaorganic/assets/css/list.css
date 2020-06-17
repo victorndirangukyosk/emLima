@@ -2424,7 +2424,7 @@ NOTE: Variables currently do not work with @custom-media. Hardcoding values for 
   height: 100%;
   display: -ms-flexbox;
   display: flex;
-  min-height: 250px;
+  min-height: 265px;
 }
 ._3Oe1A {
   padding: 0;
