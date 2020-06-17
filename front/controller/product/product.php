@@ -453,7 +453,7 @@ class ControllerProductProduct extends Controller {
 				}
 
 				//get qty in cart
-				$key = base64_encode( serialize( array( 'product_id' => (int) $result['product_id'], 'store_id'=>$this->session->data['config_store_id'] ) ) );
+				$key = base64_encode( serialize( array( 'product_id' => (int) $result['product_id'], 'store_id'=>($this->session->data['config_store_id']) ? $this->session->data['config_store_id'] : ACTIVE_STORE_ID ) ) );
 
 				if ( isset( $this->session->data['cart'][$key] ) ) {
 					$qty_in_cart = $this->session->data['cart'][$key]['quantity'];
@@ -842,8 +842,8 @@ class ControllerProductProduct extends Controller {
 				);
 			}
      		//get qty in cart
-            $key = base64_encode( serialize( array( 'product_store_id' => (int) $product_info['product_store_id'], 'store_id'=>$this->session->data['config_store_id'] ) ) );
-
+            //$key = base64_encode( serialize( array( 'product_store_id' => (int) $product_info['product_store_id'], 'store_id'=>$this->session->data['config_store_id'] ) ) );
+            $key = base64_encode( serialize( array( 'product_store_id' => (int) $product_info['product_store_id'], 'store_id'=>($this->session->data['config_store_id']) ? $this->session->data['config_store_id'] : $store_id ) ) );
             $s_price = 0;
             $o_price = 0;
             
@@ -933,7 +933,7 @@ class ControllerProductProduct extends Controller {
 			        $data['product']['qty_in_cart'] = $this->session->data['temp_cart'][$key]['quantity'];
 			    }
 		    }
-		    //echo "<pre>";print_r($data);die;
+		    
 	        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/product/product_popup.tpl')) {
 		        $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/product/product_popup.tpl', $data));
 		    } else {
