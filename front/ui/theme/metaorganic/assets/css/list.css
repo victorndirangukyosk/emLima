@@ -19078,3 +19078,6 @@ border:1px solid #66cc33 !important;
 box-shadow: 0 0 12px rgba(53, 53, 53, .2);
     outline: 0;
 }
+#button-reward{
+  border-radius: 20px;
+}

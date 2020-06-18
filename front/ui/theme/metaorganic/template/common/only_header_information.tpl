@@ -112,7 +112,7 @@
                         <ul class="header__search-bar-list header__search-bar-item--before-keyword-field">
                            
                            <li class="header__search-bar-item header__search-bar-item--category search-category-container">
-                           <div class="form-group">
+                           <div >
                               <select class="form-control" id="selectedCategory">
                                  <option value="">- Select categories-</option>
                                   <?php foreach($categories as $categoty){
