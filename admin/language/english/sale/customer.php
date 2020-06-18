@@ -94,6 +94,8 @@ $_['error_country']         = 'Please select a country!';
 $_['error_zone']            = 'Please select a region / state!';
 $_['error_custom_field']    = '%s required!';
 $_['error_comment']         = 'You must enter a comment!';
+$_['error_company_name']         = 'Company Name field required!';
+$_['error_company_address']         = 'Company Address field required!';
 
 $_['text_locality']     = 'Your Location';
 $_['label_zipcode']      =  'Zipcode';

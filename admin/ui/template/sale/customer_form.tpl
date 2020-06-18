@@ -111,9 +111,9 @@
                             <label class="col-sm-2 control-label" for="input-company_name"><?php echo $entry_company_name; ?></label>
                             <div class="col-sm-10">
                               <input type="text" name="company_name" value="<?php echo $company_name; ?>" placeholder="<?php echo $entry_company_name; ?>" id="input-company_name" class="form-control" />
-                             <!--  <?php if ($error_company_name) { ?>
+                               <?php if ($error_company_name) { ?>
                               <div class="text-danger"><?php echo $error_company_name; ?></div>
-                              <?php  } ?> -->
+                              <?php  } ?> 
                             </div>
                           </div>
 
@@ -121,9 +121,9 @@
                             <label class="col-sm-2 control-label" for="input-company_address"><?php echo $entry_company_address; ?></label>
                             <div class="col-sm-10">
                               <input type="text" name="company_address" value="<?php echo $company_address; ?>" placeholder="<?php echo $entry_company_address; ?>" id="input-company_address" class="form-control" />
-                             <!--  <?php if ($error_company_address) { ?>
+                               <?php if ($error_company_address) { ?>
                               <div class="text-danger"><?php echo $error_company_address; ?></div>
-                              <?php  } ?> -->
+                              <?php  } ?>  
                             </div>
                           </div>
                       <?php /* } */ ?>
@@ -162,9 +162,9 @@
 
                            <!-- <label class="radio-inline"> -->
                             <?php if($gender == 'other') {?> 
-                                <input type="radio" name="sex" data-id="8" value="other" checked="checked"/> <?= $text_other ?>
+                                <input type="radio" name="sex" data-id="10" value="other" checked="checked"/> <?= $text_other ?>
                             <?php } else {?>
-                            <input type="radio" name="sex" data-id="8" value="other"/> <?= $text_other ?> 
+                            <input type="radio" name="sex" data-id="10" value="other"/> <?= $text_other ?> 
                             <?php } ?>
                            <!-- </label> -->
                         </div>

@@ -896,6 +896,19 @@ class ControllerSaleCustomer extends Controller {
             $data['error_email'] = '';
         }
 
+        if (isset($this->error['company_name'])) {
+            $data['error_company_name'] = $this->error['company_name'];
+        } else {
+            $data['error_company_name'] = '';
+        }
+
+
+        if (isset($this->error['company_address'])) {
+            $data['error_company_address'] = $this->error['company_address'];
+        } else {
+            $data['error_company_address'] = '';
+        }
+
         if (isset($this->error['telephone'])) {
             $data['error_telephone'] = $this->error['telephone'];
         } else {
@@ -1057,8 +1070,8 @@ class ControllerSaleCustomer extends Controller {
             $data['fax'] = '';
         }
 
-        if (isset($this->request->post['gender'])) {
-            $data['gender'] = $this->request->post['gender'];
+        if (isset($this->request->post['sex'])) {
+            $data['gender'] = $this->request->post['sex'];
         } elseif (!empty($customer_info)) {
             $data['gender'] = $customer_info['gender'];
         } else {
@@ -1198,6 +1211,7 @@ class ControllerSaleCustomer extends Controller {
         if ((utf8_strlen($this->request->post['firstname']) < 1) || (utf8_strlen(trim($this->request->post['firstname'])) > 32)) {
             $this->error['firstname'] = $this->language->get('error_firstname');
         }
+       
 
         if ((utf8_strlen($this->request->post['lastname']) < 1) || (utf8_strlen(trim($this->request->post['lastname'])) > 32)) {
             $this->error['lastname'] = $this->language->get('error_lastname');
@@ -1206,6 +1220,15 @@ class ControllerSaleCustomer extends Controller {
         if ((utf8_strlen($this->request->post['email']) > 96) || !filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL)) {
             $this->error['email'] = $this->language->get('error_email');
         }
+       
+        if ((utf8_strlen($this->request->post['company_name']) < 1) ) {
+            
+            $this->error['company_name'] = $this->language->get('error_company_name');
+        }
+        if ((utf8_strlen($this->request->post['company_address']) < 1) ) {
+            $this->error['company_address'] = $this->language->get('error_company_address');
+        }
+
 
         $customer_info = $this->model_sale_customer->getCustomerByEmail($this->request->post['email']);
 
