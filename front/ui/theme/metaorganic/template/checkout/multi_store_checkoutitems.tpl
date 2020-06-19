@@ -496,7 +496,7 @@
 
 
     <!-- CSS Style -->
-<link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/bootstrap.min.css">
+<!--<link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/bootstrap.min.css">-->
 <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/font-awesome.css" media="all">
 <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/revslider.css" >
 <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/owl.carousel.css">
