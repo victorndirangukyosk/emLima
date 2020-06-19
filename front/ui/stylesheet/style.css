@@ -9602,9 +9602,8 @@ button.button.submit:before {
 .shopping-cart-tbl {
 	padding: 0px 0px;
     position: relative;
-    margin-top: 0px;
+    margin-top: 0px;	
     padding-bottom: 5px;
-    background-color: #fff;
     border-radius: 30px 50px 70px 30px;
     margin-bottom: 50px;}
 
@@ -9940,6 +9939,8 @@ button.button.btn-proceed-checkout span {
 .checkout a {
 	text-decoration: underline;
 	color: #ed6663;
+	text-decoration: none;
+	max-height: 50px !IMPORTANT;
 }
 #shopping-cart-totals-table .price {
 	font-size: 18px;

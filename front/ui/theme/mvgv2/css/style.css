@@ -1055,9 +1055,9 @@ Product block
 Step Wizard
 ------------------------------*/
 .checkout-wrapper { padding-top: 40px; padding-bottom: 40px; background-color: #fafbfa; }
-.checkout { background-color: #fff; border: 1px solid #d7dcd6; font-size: 14px; margin-bottom: 20px; }
+.checkout { background-color: #fff; border: 0px solid #d7dcd6; font-size: 14px; margin-bottom: 20px; }
 .panel { margin-bottom: 0px; }
-.checkout-step { border-bottom: 1px solid #f2f2f2; color: #666; font-size: 14px; padding: 30px; position: relative; }
+.checkout-step { /*border-bottom: 1px solid #f2f2f2;*/ color: #666; font-size: 14px; padding: 30px; position: relative; }
 .checkout-step:last-child { border-bottom: 1px solid transparent; }
 .checkout-step-number { border-radius: 50%;display: inline-block;font-size: 14px;height: 34px;margin-right: 26px;padding: 8px;text-align: center;width: 34px;color: #fff;background: #d8dcd6; float: left; margin-top: -9px; }
 .checkout-step-color {background: #45264c; float: left;}
@@ -1071,7 +1071,7 @@ Step Wizard
 .checkout-step-disabled { display: none; }
 #checkoutLogout {    position: absolute;
   right: 30px;
-  top: 27px; }
+  top: 27px; text-decoration: none;}
 .checkout_login_msg { margin-bottom: 30px; }
 .login-phone { }
 .login-phone:after { content: '+91 - '; font-size: 14px; left: 36px; }
@@ -1254,13 +1254,16 @@ Step Wizard
 .address-name {
   text-align: left;
   font-weight: bold;
+  margin: 10px 0px;
 }
 .address-locations {
   text-align: left;
   font-weight: bold;
+  margin: 10px 0px;
 }
 .address-block p{
   text-align: left;
+  margin: 10px 0px;
 }
 .dashboard-cash-content { padding: 30px; border-left: 1px solid #d7dcd6; margin-left: -1px; }
 .cash-info { padding-top: 120px; text-align: center; padding-bottom: 120px; }
@@ -1652,7 +1655,7 @@ body { overflow-x: hidden; }
 .account-section{
   padding-left: 10px !important;
 }
-#open-address{width: 200px;}
+#open-address{width: 200px; text-decoration: none;}
 .table-title{
   margin-top: 0px !important;
   margin-bottom:10px !important;
