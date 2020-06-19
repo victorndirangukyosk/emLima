@@ -266,7 +266,14 @@ class Emailtemplate {
 
         //$email_template_data = [];
         $item = explode("_", $email_template);
-        //echo "<pre>";print_r($email_template);die;
+        //  echo "<pre>";print_r($item);die;
+        if($item[0]=="order")
+        {
+if($item[1]==0)
+{$item[1]=1;
+
+}
+        }
         $log = new Log('error.log');
         $log = new Log($email_template);
 
@@ -278,7 +285,7 @@ class Emailtemplate {
         }
 /*
         $log->write($query->rows);*/
-        //echo "<pre>";print_r("SELECT * FROM " . DB_PREFIX . "email AS e LEFT JOIN " . DB_PREFIX . "email_description AS ed ON ed.email_id = e.id WHERE e.type = '{$item[0]}' AND e.text_id = '{$item[1]}' AND ed.language_id = '{$this->config->get('config_language_id')}'");die;
+       // echo "<pre>";print_r("SELECT * FROM " . DB_PREFIX . "email AS e LEFT JOIN " . DB_PREFIX . "email_description AS ed ON ed.email_id = e.id WHERE e.type = '{$item[0]}' AND e.text_id = '{$item[1]}' AND ed.language_id = '{$this->config->get('config_language_id')}'");die;
 
         foreach ($query->rows as $result) {
             $email_template_data = array(
