@@ -1,5 +1,4 @@
-<?php echo $header; ?>
-
+<?php echo $header; ?> 
  
 
 
@@ -30,7 +29,11 @@
 
         </div>
             <div class="row">
-                <div class="col-md-16">
+                <div class="col-md-16"> 
+ <div class="main-container col1-layout wow bounceInUp animated">   
+                 <div class="main">  
+                           <div class="cart wow bounceInUp animated">
+                         <div class="table-responsive shopping-cart-tbl  container"> 
                 <form role="form" id="place-order-form" novalidate="novalidate" class="bv-form" method="post">
                     <div id="accordion" class="checkout">
                         <div class="panel checkout-step">
@@ -47,7 +50,7 @@
 
                                     </h4>
 
-                                    <a id='checkoutLogout' type='button' class='checkoutLogoutButton btn btn-primary btnsetall checkoutChange'> Logout </a>
+                                    <a id='checkoutLogout' type='button' class='checkoutLogoutButton btn btn-primary btnsetall checkoutChange'  style="border-radius:20px;"> Logout </a>
                                 </div>  
                                 <a type="hidden" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" id="address-next"></a>
                             <?php } else { ?>
@@ -81,7 +84,7 @@
                                 </h4>
 
                                 <?php if($loggedin) { ?>
-                                    <a type="button" class="btn btn-primary btnsetall collapsed checkoutChangeButton checkoutChange"  data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" style="display: none;max-height: 32px;"> Change </a> 
+                                    <a type="button" class="btn btn-primary btnsetall collapsed checkoutChangeButton checkoutChange" style="border-radius:20px;"  data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" style="display: none;max-height: 32px;"> Change </a> 
                                 <?php } ?>
 
 
@@ -145,7 +148,7 @@
                                                             <?php } else { ?>
 
                                                                 <?php if( $address['show_enabled'] ) { ?>
-                                                                    <a  data-address-id="<?= $address['address_id'] ?>" id="open-address" class="btn btn-primary btnsetall btnsetall btn-block"><?= $text_deliver_here ?></a>
+                                                                    <a  data-address-id="<?= $address['address_id'] ?>" id="open-address" class="btn btn-primary btnsetall btnsetall btn-block" ><?= $text_deliver_here ?></a>
                                                                 <?php } else { ?>
                                                                     <a data-address-id="<?= $address['address_id'] ?>" id="open-address" class="btn btn-primary btnsetall btn-block"><?= $text_deliver_here ?></a>
                                                                     <!--Restriction Removed --->
@@ -174,7 +177,7 @@
                                 <?php if($loggedin) { ?>
                                     <a type="button" class="btn btn-primary btnsetall collapsed checkoutDeliveryOptionsChangeButton checkoutChange"  data-toggle="collapse" data-parent="#accordion" href="#collapseDeliveryOptions" style="display: none;max-height: 32px;"> Change </a> 
 
-                                    <!-- <a type="button" class="btn btn-primary btnsetall collapsed checkoutChangeTimeButton checkoutChange"  data-toggle="collapse" data-parent="#accordion" href="#collapseThree" style="display: none;max-height: 32px;"> Change </a>  -->   
+                                    <!-- <a type="button" class="btn btn-primary btnsetall collapsed checkoutChangeTimeButton checkoutChange"   data-toggle="collapse" data-parent="#accordion" href="#collapseThree" style="display: none;max-height: 32px;"> Change </a>  -->   
 
                                 <?php } ?>     
 
@@ -198,7 +201,7 @@
                                         <div class="row">
                                             <div class="col-md-12 pull-left">
 
-                                                <a class="collapsed btn btn-default  pull-left" role="button" data-toggle="collapse" data-parent="#accordion" href="#" id="timeslot-next" > <?= $text_next?> </a>
+                                                <a class="collapsed btn btn-default  pull-left"  role="button" data-toggle="collapse" data-parent="#accordion" href="#" id="timeslot-next" > <?= $text_next?> </a>
 
                                                 <a type="hidden" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" id="timeslot-next-hidden"></a>
 
@@ -232,7 +235,7 @@
 
                                         </div>              
                                     <?php endforeach ?> 
-                                    <a class="collapsed btn btn-grey" disabled="disabled" role="button" data-toggle="collapse" data-parent="#accordion" href="#" id="payment-next">  <?= $text_next?>  
+                                    <a class="collapsed btn btn-grey"  style="border-radius:20px" disabled="disabled" role="button" data-toggle="collapse" data-parent="#accordion" href="#" id="payment-next">  <?= $text_next?>  
 
                                     </a>
 
@@ -335,6 +338,12 @@
                         </div>
                     </div>
                 </form>
+               </div>
+                </div>
+                </div>
+  </div>     
+
+
                 </div>
                 <div class="col-md-4"  style="display:none">
                     <div class="row">
@@ -686,9 +695,53 @@
         #map * {
             overflow:visible;
         }
+
+        
+
+.btn-block
+ {
+	display: block;
+	width: 100%;
+	border-radius:20px
+}
+
+.pull-left
+{
+    border-radius:20px
+}
+.checkoutChange  
+{
+     border-radius:20px
+} 
+ 
+
     </style>
 
     <?= $footer ?>
+<!--<link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/bootstrap.min.css">-->
+<link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/font-awesome.css" media="all">
+<link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/revslider.css" >
+<link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/owl.carousel.css">
+<link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/owl.theme.css">
+<link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/jquery.bxslider.css"> 
+
+
+<link href="https://fonts.googleapis.com/css?family=Merriweather:300,300i,400,400i,700" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Oswald:300,400,500,600,700" rel="stylesheet">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:700,600,800,400' rel='stylesheet' type='text/css'>
+<link href="https://fonts.googleapis.com/css?family=Rubik:400,400i,500,500i,700,700i,900" rel="stylesheet">
+    
+    <!-- CSS Style -->
+<!--
+ 
+<link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/style.css" media="all"> 
+<link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/responsive.css" media="all">
+<link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/jquery.mobile-menu.css">
+
+
+-->
+
+
    
     <script type="text/javascript" src="<?= $base;?>front/ui/theme/mvgv2/js/side-menu-script.js"></script>
 
