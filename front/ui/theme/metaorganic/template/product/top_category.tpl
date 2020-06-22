@@ -1100,7 +1100,7 @@
 
         $(document).ready(function() {
 			$("#ex2").slider({tooltip: 'always'});
-		    var product = getUrlParameter('product');
+		    var product = undefined;//getUrlParameter('product');
 			if(product == undefined){
 			    $("#switch-grid").click();
 			}else{

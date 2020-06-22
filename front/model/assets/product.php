@@ -1409,7 +1409,8 @@ class ModelAssetsProduct extends Model {
 				$this->db->order_by($data['sort'], 'asc');
 	        }
 		} else {
-		    $this->db->order_by('product.sort_order', 'asc');      
+			//$this->db->order_by('product.sort_order', 'asc');
+			$this->db->order_by('product.name', 'asc');            
 		}	
 		$this->db->group_by('product_to_store.product_store_id');
 	    $this->db->where('product_to_store.store_id', $store_id);
@@ -1417,7 +1418,7 @@ class ModelAssetsProduct extends Model {
 	    $this->db->where('product_to_store.quantity >=', 1);
 	    $this->db->where('product.status',1);
 		$ret = $this->db->get('product_to_store', $limit, $offset)->rows;
-		// echo $this->db->last_query();die;
+		//echo $this->db->last_query();die;
 		return $ret;
 	}
 
