@@ -813,7 +813,8 @@ class ModelCheckoutOrder extends Model {
 
 					
 					$log->write("vendorData");
-					//$log->write($data);
+					$log->write($store_details['email']);
+					$log->write($order_status_id);
 
 					//$text = $this->emailtemplate->getText( 'Order', 'order', $textData );
 
@@ -829,7 +830,7 @@ class ModelCheckoutOrder extends Model {
 
 		                $log->write('1');
 		                //$subject = $this->emailtemplate->getSubject('VendorOrder', 'vendororder_'. (int) $order_status_id, $vendorData);
-		                $subject = $this->emailtemplate->getSubject('VendorOrder', 'vendororder_'. (int) $order_status_id, $data);
+						$subject = $this->emailtemplate->getSubject('VendorOrder', 'vendororder_'. (int) $order_status_id, $data);
 
 		                $log->write('2');
 		                //$message = $this->emailtemplate->getMessage('VendorOrder', 'vendororder_'. (int) $order_status_id, $vendorData);
@@ -849,7 +850,7 @@ class ModelCheckoutOrder extends Model {
 		                $log->write("end");
 		            }
 
-		            if(isset($store_details['email']) && $this->emailtemplate->getEmailEnabled('VendorOrder','vendororder_'. (int) $order_status_id) ) {
+					if(isset($store_details['email']) && $this->emailtemplate->getEmailEnabled('VendorOrder','vendororder_'. (int) $order_status_id) ) {
 		                // 7 merchant mail
 		                $log->write('vendot if');
 		                $vendorData['order_id'] = $order_id;
@@ -875,17 +876,16 @@ class ModelCheckoutOrder extends Model {
 
 		                
 		                $mail->setSubject(html_entity_decode($subject, ENT_QUOTES, 'UTF-8'));
+ 
+						
+						$mail->setHtml(html_entity_decode(strip_tags($message), ENT_QUOTES, 'UTF-8'));*/
 
-		                
-		                $mail->setHtml(html_entity_decode(strip_tags($message), ENT_QUOTES, 'UTF-8'));*/
 		                $mail->setTo( $store_details['email'] );
 						$mail->setFrom( $this->config->get('config_from_email') );
 						$mail->setSender( $this->config->get('config_name') );
 						$mail->setSubject( $subject );
 						$mail->setHtml( $message );
 						//$mail->setText( $text );
-
-		                
 		                $mail->send();
 
 		                $log->write("end");
