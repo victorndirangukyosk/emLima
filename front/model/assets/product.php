@@ -332,7 +332,11 @@ class ModelAssetsProduct extends Model {
 
 			foreach ($result->rows as $r) {
 				if($r['quantity'] > 0 && $r['status']) {
-
+				   
+					$percent_off = null;
+					if(isset($r['special_price'])  && isset($r['price']) && $r['price'] !=0 && $r['special_price'] !=0) {
+						$percent_off = (($r['price'] - $r['special_price']) / $r['price']) * 100;
+					}
 
 					if ( ( $this->config->get( 'config_customer_price' ) && $this->customer->isLogged() ) || !$this->config->get( 'config_customer_price' ) ) {
 						//$price = $result['price'];
@@ -340,17 +344,14 @@ class ModelAssetsProduct extends Model {
 					} 
 
 					if ((float)$r['special_price']) {
-						$r['special_price'] = $this->currency->formatWithoutCurrency($r['special_price']);
+						$r['special_price'] = $this->currency->formatWithoutCurrency((float)$r['special_price']);
 	 
 	
 					} else {
 						$r['special_price'] = false;
 					}
 					
-					$percent_off = null;
-					if(isset($r['special_price'])  && isset($r['price']) && $r['price'] !=0 && $r['special_price'] !=0) {
-						$percent_off = (($r['price'] - $r['special_price']) / $r['price']) * 100;
-					}
+					
 
 					$res = array(
                         'variation_id' => $r['product_store_id'],
