@@ -321,7 +321,7 @@ class ModelAssetsProduct extends Model {
 
 	}
 
-	public function getProductVariations( $product_name ) {
+	public function getProductVariations( $product_name, $formated=false ) {
 		
 		$returnData = [];
 		
@@ -334,6 +334,10 @@ class ModelAssetsProduct extends Model {
 				if($r['quantity'] > 0 && $r['status']) {
 
 
+					if ( ( $this->config->get( 'config_customer_price' ) && $this->customer->isLogged() ) || !$this->config->get( 'config_customer_price' ) ) {
+						//$price = $result['price'];
+						$r['price'] = $this->currency->formatWithoutCurrency($r['price']);
+					} 
 
 					if ((float)$r['special_price']) {
 						$r['special_price'] = $this->currency->format($this->tax->calculate($r['special_price'], $r['tax_class_id'], $this->config->get('config_tax')));
@@ -343,13 +347,31 @@ class ModelAssetsProduct extends Model {
 						$r['special_price'] = false;
 					}
 					
+					$percent_off = null;
+					if(isset($r['special_price'])  && isset($r['price']) && $r['price'] !=0 && $r['special_price'] !=0) {
+						$percent_off = (($r['price'] - $r['special_price']) / $r['price']) * 100;
+					}
+
+					$res = array(
+                        'variation_id' => $r['product_store_id'],
+                        'unit' => $r['unit'],
+                        'weight' => floatval($r['weight']),
+                        'price' => $r['price'],
+						'special' => $r['special_price'],
+						'percent_off' => number_format($percent_off,0),
+						'max_qty' => $r['min_quantity'] > 0 ? $r['min_quantity'] : $r['quantity']
+                    );
 					
 					// $r['variation_id'] => $result['product_store_id'],
                     //         'unit' => $result['unit'],
                     //         'weight' => floatval($result['weight']),
                     //         'price' => $price,
-                    //         'special' => $special_price
-					array_push($returnData, $r);	
+					//         'special' => $special_price
+					if($formated == true){
+						array_push($returnData, $res);	
+					}else{
+					 array_push($returnData, $r);	
+					}
 				}
 				
 			}
@@ -961,7 +983,12 @@ class ModelAssetsProduct extends Model {
                 $this->db->like('product_description.name', $this->db->escape_str( $data['filter_name'] ) , 'both');
 	        }
 		}	
-		$this->db->group_by('product_to_store.product_store_id');
+		if(isset($data['group_by']) && ($data['group_by'] == 'name')){
+			$this->db->group_by('product.name');
+		}else{
+			$this->db->group_by('product_to_store.product_store_id');
+		}
+		//$this->db->group_by('product_to_store.product_store_id');
 	    $this->db->where('product_to_store.store_id', $store_id);
 	    $this->db->where('product_to_store.status', 1);
 	    $this->db->where('product_to_store.quantity >=', 1);
@@ -1346,7 +1373,6 @@ class ModelAssetsProduct extends Model {
     }
 
     public function getProductsByApi( $data = array() ) {
-
 		$store_id = $data['store_id'];
 
 		$this->db->select('product_to_store.*,product.*,product_description.*', FALSE);
@@ -1409,16 +1435,23 @@ class ModelAssetsProduct extends Model {
 				$this->db->order_by($data['sort'], 'asc');
 	        }
 		} else {
-			//$this->db->order_by('product.sort_order', 'asc');
-			$this->db->order_by('product.name', 'asc');            
+			$this->db->order_by('product.sort_order', 'asc');
+			// $this->db->order_by('product.name', 'asc');            
 		}	
-		$this->db->group_by('product_to_store.product_store_id');
+
+		if(isset($data['group_by']) && ($data['group_by']=='name')){
+			$this->db->group_by('product.name');
+		}else{
+			$this->db->group_by('product_to_store.product_store_id');
+		}
+
 	    $this->db->where('product_to_store.store_id', $store_id);
 	    $this->db->where('product_to_store.status', 1);
 	    $this->db->where('product_to_store.quantity >=', 1);
 	    $this->db->where('product.status',1);
 		$ret = $this->db->get('product_to_store', $limit, $offset)->rows;
-		//echo $this->db->last_query();die;
+		//echo '<pre>';print_r($ret);exit;
+		//echo $ret;die;
 		return $ret;
 	}
 

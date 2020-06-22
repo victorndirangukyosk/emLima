@@ -176,14 +176,15 @@ class ControllerApiCustomerProducts extends Controller {
 							'sort' => $sort,
 							'order' => $order,
 							'start' => ($page - 1) * $limit,
-							'limit' => $limit
+							'limit' => $limit,
+							'group_by'=> true
 						);
 
 						$filter_data['store_id'] = $store_id;
 
 						$product_total = $this->model_assets_product->getTotalProductsByApi($filter_data);
 
-						$data['products'] = $this->getProductsFn($filter_data,$store_id);
+						$data['products'] = $this->getProductsFn($filter_data,$store_id,$groupByName=true);
 						
 						$url = '';
 
@@ -1551,6 +1552,9 @@ class ControllerApiCustomerProducts extends Controller {
 		$this->load->model('tool/image');
 		
 		$filter_data['store_id'] = $store_id;
+		if(isset($filter_data['group_by']) && ($filter_data['group_by'] == 'name')){
+			$filter_data['group_by'] = 'name';
+		}
 
 		// $results = $this->model_assets_product->getProductsByApi($filter_data);
 		if(isset($filter_data['filter_category_id'])){
@@ -1645,7 +1649,7 @@ class ControllerApiCustomerProducts extends Controller {
             	$special_price = $price;
 			}
 			
-			$productNames = array_column($data['products'], 'name');
+			/*$productNames = array_column($data['products'], 'name');
             if (array_search($result['name'], $productNames) !== false) {
                 // Add variation to existing product
                 $productIndex = array_search($result['name'], $productNames);
@@ -1659,7 +1663,11 @@ class ControllerApiCustomerProducts extends Controller {
 					'percent_off' => number_format($percent_off,0),
 					'max_qty' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity']
                 );
-            } else {
+			} else { */
+			$formatted = false;
+			if(isset($filter_data['group_by']) && ($filter_data['group_by'] == 'name')){
+					$formatted = true;
+		    }
 			$data['products'][] = array(
 				'key' => $key,
 				'qty_in_cart' => $qty_in_cart,
@@ -1683,7 +1691,8 @@ class ControllerApiCustomerProducts extends Controller {
 				'max_qty' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity'],
 				'rating' => 0,
 				'href' => $this->url->link( 'product/product',  '&product_store_id=' . $result['product_store_id'] ),
-			    'variations' => array(
+				'variations' => $this->model_assets_product->getProductVariations($name,$formatted),
+				/*'variations' => array(
                     array(
                         'variation_id' => $result['product_store_id'],
                         'unit' => $result['unit'],
@@ -1693,9 +1702,9 @@ class ControllerApiCustomerProducts extends Controller {
 						'percent_off' => number_format($percent_off,0),
 						'max_qty' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity']
                     )
-                )
+                )*/
 			);
-		  }
+		  /*}*/
 		}
 		
 		return $data['products'];
