@@ -84,7 +84,7 @@
                                 </h4>
 
                                 <?php if($loggedin) { ?>
-                                    <a type="button" class="btn btn-primary btnsetall collapsed checkoutChangeButton checkoutChange" style="border-radius:20px;"  data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" style="display: none;max-height: 32px;"> Change </a> 
+                                    <a type="button" class="btn btn-primary btnsetall collapsed checkoutChangeButton checkoutChange" style="border-radius:20px;"  data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" style="display: none;"> Change </a> 
                                 <?php } ?>
 
 
@@ -175,9 +175,9 @@
                                 <h4 class="checkout-step-title"> <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseDeliveryOptions" id="delivery_option__panel_link" > <?= $text_delivery_option?> </a> </h4>
 
                                 <?php if($loggedin) { ?>
-                                    <a type="button" class="btn btn-primary btnsetall collapsed checkoutDeliveryOptionsChangeButton checkoutChange"  data-toggle="collapse" data-parent="#accordion" href="#collapseDeliveryOptions" style="display: none;max-height: 32px;"> Change </a> 
+                                    <a type="button" class="btn btn-primary btnsetall collapsed checkoutDeliveryOptionsChangeButton checkoutChange"  data-toggle="collapse" data-parent="#accordion" href="#collapseDeliveryOptions" style="display: none;"> Change </a> 
 
-                                    <!-- <a type="button" class="btn btn-primary btnsetall collapsed checkoutChangeTimeButton checkoutChange"   data-toggle="collapse" data-parent="#accordion" href="#collapseThree" style="display: none;max-height: 32px;"> Change </a>  -->   
+                                    <!-- <a type="button" class="btn btn-primary btnsetall collapsed checkoutChangeTimeButton checkoutChange"   data-toggle="collapse" data-parent="#accordion" href="#collapseThree" style="display: none;"> Change </a>  -->   
 
                                 <?php } ?>     
 
@@ -216,7 +216,7 @@
                             <div role="tab" id="headingThree"> <span id="step-4" class="checkout-step-number hidden-xs"><i class="fa fa-check" aria-hidden="true"></i></span>
                                 <h4 class="checkout-step-title"> <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" id="delivery_time_panel_link" > <?= $text_delivery_timedate?> </a> </h4>
 
-                                <a type="button" class="btn btn-primary btnsetall collapsed checkoutChangeTimeButton checkoutChange"  data-toggle="collapse" data-parent="#accordion" href="#collapseThree" style="display: none;max-height: 32px;"> Change </a>                                  
+                                <a type="button" class="btn btn-primary btnsetall collapsed checkoutChangeTimeButton checkoutChange"  data-toggle="collapse" data-parent="#accordion" href="#collapseThree" style="display: none;"> Change </a>                                  
     
                                     <h5 id="select-timeslot" style="float:left;color:#555; margin-top:5px;">
                                         Please select a timeslot
@@ -614,8 +614,8 @@
                                     <!-- Button -->
                                     <div class="form-group">
                                         <div class="col-md-12">
-                                            <button id="singlebutton" name="singlebutton" type="button" class="btn btn-primary btnsetall" onclick="saveInAddressBook()"><?= $text_save?></button>
-                                            <button type="button" class="btn btn-grey" data-dismiss="modal"><?= $text_close?></button>
+                                            <button id="singlebutton" name="singlebutton" type="button" class="btn btn-primary btnsetall" onclick="saveInAddressBook()" style="height: 45px;"><?= $text_save?></button>
+                                            <button type="button" class="btn btn-grey" data-dismiss="modal" style="width:49%; float: right; margin-top: 10px; height: 45px;"><?= $text_close?></button>
                                         </div>
                                     </div>
 
@@ -732,23 +732,17 @@
 <link href="https://fonts.googleapis.com/css?family=Rubik:400,400i,500,500i,700,700i,900" rel="stylesheet">
     
     <!-- CSS Style -->
-<<<<<<< HEAD
  
-=======
 <!--
->>>>>>> ccae452da76140681e48bf1a7436fdcef64f2e9f
  
 <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/style.css" media="all"> 
 <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/responsive.css" media="all">
 <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/jquery.mobile-menu.css">
 
 
-<<<<<<< HEAD
  
-=======
 -->
 
->>>>>>> ccae452da76140681e48bf1a7436fdcef64f2e9f
 
    
     <script type="text/javascript" src="<?= $base;?>front/ui/theme/mvgv2/js/side-menu-script.js"></script>

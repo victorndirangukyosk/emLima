@@ -88,13 +88,13 @@
     </div>
     <header>
       
-                 <div class="col-md-12" style="position: relative; z-index: 1040;  padding-bottom: 26px; border-bottom: 1px solid #ea6f28; margin-bottom: 14px; ">
+                 <div class="col-md-12" style="position: relative; z-index: 1040;  padding-bottom: 26px; border-bottom: 1px solid #ea6f28; margin-bottom: 14px; background-color:#fff">
       
       <div class="row" style="margin-top:25px; margin-bottom:25px;">
       <div class="col-md-2">
                 <div class="header__logo-container">
                      <a class="header__logo-link " href="<?= BASE_URL?>">
-                        <img src="<?=$logo?>"  style="width: 15rem;"/>
+                        <img src="<?=$logo?>"  />
                        
                      </a>
                      

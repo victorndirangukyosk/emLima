@@ -8889,3 +8889,14 @@ button#detect_location {
     background-position: 0px 0px;
     width: 9px;
 }
+.shopping-cart-tbl {
+	padding: 0px 0px !important;
+    position: relative;
+    margin-top: 0px;	
+    padding-bottom: 5px;
+    border-radius: 30px 50px 70px 30px;
+	margin-bottom: 0px !important;
+}
+.checkout {
+     margin-bottom:0px !important; 
+}
