@@ -1113,7 +1113,7 @@ Step Wizard
 .goto-next { margin-top: 20px; }
 .addressModal { }
 .addressModal .modal-body { padding: 30px; }
-.addressModal .close { float: right; font-size: 21px; font-weight: 700; line-height: 1; color: #000; text-shadow: 0 0px 0 #fff; opacity: 1; position: absolute; right: 0px; background: #f3f5f2; padding: 10px 14px; top: 0px; }
+.addressModal .close { float: right; font-size: 40px; font-weight: 700; line-height: 1; color: #000; text-shadow: 0 0px 0 #fff; opacity: 1; position: absolute; right: 10px;  padding: 10px 14px; top: -12px; width:30px;}
 .addnews-address-form { }
 .addnews-address-form .form-group { display: inline-block; width: 100%; }
 .addnews-address-form label { color: #333; display: inline-block; padding-right: 20px; }
