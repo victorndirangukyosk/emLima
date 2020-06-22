@@ -340,7 +340,7 @@ class ModelAssetsProduct extends Model {
 					} 
 
 					if ((float)$r['special_price']) {
-						$r['special_price'] = $this->currency->format($this->tax->calculate($r['special_price'], $r['tax_class_id'], $this->config->get('config_tax')));
+						$r['special_price'] = $this->currency->formatWithoutCurrency($r['special_price']);
 	 
 	
 					} else {
@@ -1435,8 +1435,8 @@ class ModelAssetsProduct extends Model {
 				$this->db->order_by($data['sort'], 'asc');
 	        }
 		} else {
-			$this->db->order_by('product.sort_order', 'asc');
-			// $this->db->order_by('product.name', 'asc');            
+			//$this->db->order_by('product.sort_order', 'asc');
+			$this->db->order_by('product.name', 'asc');            
 		}	
 
 		if(isset($data['group_by']) && ($data['group_by']=='name')){
