@@ -732,14 +732,23 @@
 <link href="https://fonts.googleapis.com/css?family=Rubik:400,400i,500,500i,700,700i,900" rel="stylesheet">
     
     <!-- CSS Style -->
+<<<<<<< HEAD
  
+=======
+<!--
+>>>>>>> ccae452da76140681e48bf1a7436fdcef64f2e9f
  
 <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/style.css" media="all"> 
 <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/responsive.css" media="all">
 <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/jquery.mobile-menu.css">
 
 
+<<<<<<< HEAD
  
+=======
+-->
+
+>>>>>>> ccae452da76140681e48bf1a7436fdcef64f2e9f
 
    
     <script type="text/javascript" src="<?= $base;?>front/ui/theme/mvgv2/js/side-menu-script.js"></script>
