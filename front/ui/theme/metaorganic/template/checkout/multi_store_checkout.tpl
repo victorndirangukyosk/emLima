@@ -614,8 +614,8 @@
                                     <!-- Button -->
                                     <div class="form-group">
                                         <div class="col-md-12">
-                                            <button id="singlebutton" name="singlebutton" type="button" class="btn btn-primary btnsetall" onclick="saveInAddressBook()" style="height: 45px;"><?= $text_save?></button>
-                                            <button type="button" class="btn btn-grey" data-dismiss="modal" style="width:49%; float: right; margin-top: 10px; height: 45px;"><?= $text_close?></button>
+                                            <button id="singlebutton" name="singlebutton" type="button" class="btn btn-primary btnsetall" onclick="saveInAddressBook()" style="height: 45px;border-radius:20px;"><?= $text_save?></button>
+                                            <button type="button" class="btn btn-grey" data-dismiss="modal" style="width:49%; float: right; margin-top: 10px; height: 45px;border-radius:20px"><?= $text_close?></button>
                                         </div>
                                     </div>
 
