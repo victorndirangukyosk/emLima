@@ -6,13 +6,13 @@
 
 
 <div class="variation-selector-container" style="width: 250px;">
-                                                      <p class="variations-title" style="margin-left: -10px;"> variants</p>
+                                                      <p class="variations-title" style="margin-left: -10px; display: none;"> variants</p>
                                                       <select class="product-variation">
                                                       <?php foreach($product['variations'] as $variation) { ?>
                                                       <option value="<?php echo $variation[variation_id]; ?>"
                                                       data-price="<?php echo $variation[price]; ?>"
                                                       data-special="<?php echo $variation[special_price]; ?>">
-                                                      <?php  echo 'per ' . $variation[weight] . ' ' . $variation['unit']; ?>
+                                                      <?php  echo 'per ' . $variation['unit']; ?>
                                                       </option>
                                                       <?php } ?>
                                                       </select>

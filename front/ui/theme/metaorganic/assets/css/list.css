@@ -14837,7 +14837,7 @@ button, input, optgroup, select, textarea {
   font-size: 100%; /* 1 */
   line-height: 1.15; /* 1 */
   margin: 0; /* 2 */
-  height: 31px;
+  height: 35px;
   width: 92%;
 }
 .variations-title{
