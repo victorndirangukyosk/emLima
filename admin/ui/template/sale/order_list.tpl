@@ -1,4 +1,6 @@
 <?php echo $header; ?><?php echo $column_left; ?>
+
+ 
 <div id="content">
     <div class="page-header">
         <div class="container-fluid">
@@ -202,9 +204,9 @@
                                         <a href="<?php echo $sort_total; ?>"><?php echo $column_total; ?></a>
                                         <?php } ?></td> -->
                                     <td class="text-right"><?php if ($sort == 'o.total') { ?>
-                                        <a href="<?php echo $sort_total; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_sub_total; ?></a>
+                                        <a href="<?php echo $sort_total; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_total; ?></a>
                                         <?php } else { ?>
-                                        <a href="<?php echo $sort_total; ?>"><?php echo $column_sub_total; ?></a>
+                                        <a href="<?php echo $sort_total; ?>"><?php echo $column_total; ?></a>
                                         <?php } ?></td>
                                     <td class="text-left">
                                         <?php if ($sort == 'o.date_added') { ?>
@@ -248,7 +250,7 @@
 
                                     <?php if (!$this->user->isVendor()): ?>
 
-                                        <td class="text-left"><?php echo $order['customer']; ?></td>
+                                        <td class="text-left"><?php echo $order['customer']; ?>  <br/> <?php echo $order['company_name']  ; ?>  </td>
 
                                     <?php endif ?> 
                                     <!-- <td class="text-left"><?php echo $order['city']; ?></td> -->

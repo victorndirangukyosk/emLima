@@ -484,7 +484,7 @@ class ModelSaleOrder extends Model {
     }
 
     public function getOrders($data = array()) {
-        $sql = "SELECT c.name as city, o.firstname,o.lastname,o.order_id, o.delivery_date, o.delivery_timeslot, o.shipping_method, o.payment_method, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS status,(SELECT os.color FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS color, o.shipping_code, o.order_status_id,o.store_name,  o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified FROM `" . DB_PREFIX . "order` o ";
+        $sql = "SELECT c.name as city, o.firstname,o.lastname, (SELECT cust.company_name FROM hf7_customer cust WHERE o.customer_id = cust.customer_id ) AS company_name,o.order_id, o.delivery_date, o.delivery_timeslot, o.shipping_method, o.payment_method, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS status,(SELECT os.color FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS color, o.shipping_code, o.order_status_id,o.store_name,  o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified FROM `" . DB_PREFIX . "order` o ";
 
         $sql .= 'left join `'.DB_PREFIX.'city` c on c.city_id = o.shipping_city_id';
         $sql .= " LEFT JOIN ".DB_PREFIX."store on(".DB_PREFIX."store.store_id = o.store_id) ";
@@ -529,7 +529,7 @@ class ModelSaleOrder extends Model {
         if (!empty($data['filter_vendor'])) {
             $sql .= ' AND vendor_id="' . $data['filter_vendor'] . '"';
         }
-        //echo "<pre>";print_r($sql);die;
+        // echo "<pre>";print_r($sql);die;
         if (!empty($data['filter_store_name'])) {
             $sql .= " AND o.store_name = '" . $data['filter_store_name'] . "'";
         }
@@ -592,6 +592,9 @@ class ModelSaleOrder extends Model {
         }
 
         $query = $this->db->query($sql);
+
+
+
 
         return $query->rows;
     }
