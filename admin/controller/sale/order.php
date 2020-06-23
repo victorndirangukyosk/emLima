@@ -3822,6 +3822,7 @@ class ControllerSaleOrder extends Controller {
         $data['text_email'] = $this->language->get('text_email');
         $data['text_website'] = $this->language->get('text_website');
         $data['text_to'] = $this->language->get('text_to');
+        $data['text_po_no'] = $this->language->get('text_po_no');
         $data['text_ship_to'] = $this->language->get('text_ship_to');
         $data['text_payment_method'] = $this->language->get('text_payment_method');
         $data['text_shipping_method'] = $this->language->get('text_shipping_method');
@@ -3997,6 +3998,7 @@ class ControllerSaleOrder extends Controller {
                     'telephone' => $order_info['telephone'],
                     'shipping_address' => $order_info['shipping_address'],
                     'shipping_city' => $order_info['shipping_city'],
+                    'shipping_flat_number' => $order_info['shipping_flat_number'],
                     'shipping_contact_no' => ($order_info['shipping_contact_no']) ? $order_info['shipping_contact_no'] : $order_info['telephone'],
                     'shipping_name' => ($order_info['shipping_name']) ? $order_info['shipping_name'] : $order_info['firstname'].' '.$order_info['lastname'],
                     'shipping_method' => $order_info['shipping_method'],

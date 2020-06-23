@@ -81,6 +81,7 @@ $_['text_country']                            = 'Country:';
 $_['text_invoice']                            = 'Order';
 $_['text_from']                               = 'Shipping From';
 $_['text_to']                                 = 'To';
+$_['text_po_no']                              = 'P.O. Number';
 $_['text_ship_to']                            = 'Ship To';
 $_['text_missing']                            = 'Missing Orders';
 $_['text_default']                            = 'Default';

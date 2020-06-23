@@ -4,7 +4,7 @@ defined('MVG') or die;
 define('ACTIVE_STORE_ID', '75');
 // Version
 define('VERSION', '2.0.0');
-define('BASE_URL','https://www.emlima.com');
+define('BASE_URL','http://localhost/kwikbasket');
 define('DELEVERY_GENERATE_STATUS',3);
 // HTTP
 define('HTTP_SERVER', 'http://' . $_SERVER['HTTP_HOST'] . rtrim(dirname($_SERVER['SCRIPT_NAME']), '/.\\') . '/');
