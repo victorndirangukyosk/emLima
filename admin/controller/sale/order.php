@@ -1179,9 +1179,20 @@ class ControllerSaleOrder extends Controller {
                 $result['customer'] = strtok($result['firstname'], " ");
             }
 
+            if($result['company_name']) {
+
+                $result['company_name'] = " (" .  $result['company_name'] .")";
+            }
+            else{
+                // $result['company_name'] = "(NA)";
+
+
+            }
+
             $data['orders'][] = array(
                 'order_id' => $result['order_id'],
                 'customer' => $result['customer'],
+                'company_name'=> $result['company_name'],
                 'status' => $result['status'],
 
                 'payment_method' => $result['payment_method'],
