@@ -1,7 +1,7 @@
  
   <div class="_2D2lC">
                                                             <div class="price-popup" id="content-container">
-                                                                <?= $product['variations'][0]['special_price'];?></div>
+                                                                 <?= "KES " . $product['variations'][0]['special_price'];?></div>
                                                         </div>
 
 
@@ -12,7 +12,7 @@
                                                       <option value="<?php echo $variation[variation_id]; ?>"
                                                       data-price="<?php echo $variation[price]; ?>"
                                                       data-special="<?php echo $variation[special_price]; ?>">
-                                                      <?php  echo 'per ' . $variation['unit']; ?>
+                                                      <?php  echo 'Per ' . $variation['unit']; ?>
                                                       </option>
                                                       <?php } ?>
                                                       </select>
