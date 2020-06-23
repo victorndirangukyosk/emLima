@@ -12,7 +12,7 @@
                             <div class="product-slider xyz" >
                                 <div class="easyzoom easyzoom--overlay" >
                                    <!-- <a href="<?php echo $product['zoom_thumb']; ?>">-->
-                                        <img src="<?php echo $product['thumb']; ?>" alt="" style="width: 240px;" />
+                                        <img src="<?php echo $product['thumb']; ?>" alt="" style="width: 215px;" />
                                    <!-- </a>-->
                                 </div>
 
