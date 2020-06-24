@@ -5,8 +5,8 @@
     <div class="page-header">
         <div class="container-fluid">
             <div class="pull-right">
-
                 <?php if (!$this->user->isVendor()): ?>
+                <a href="<?php echo $delivery_sheet; ?>" target="_blank" data-toggle="tooltip" title="Download Delivery Sheet" class="btn btn-info"><i class="fa fa-file-excel-o"></i></a>
                         <button type="submit" id="button-shipping" form="form-order" formaction="<?php echo $shipping; ?>" data-toggle="tooltip" title="<?php echo $button_shipping_print; ?>" class="btn btn-default"><i class="fa fa-truck"></i></button>
                 <?php endif ?>  
 
