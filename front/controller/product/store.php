@@ -687,7 +687,7 @@ class ControllerProductStore extends Controller {
     }
 
     public function getProducts( $filter_data ) {
-        
+        $cachePrice_data =  $this->cache->get('category_price_data');
         $this->load->model( 'assets/product' );
         $this->load->model( 'tool/image' );
 
@@ -748,6 +748,14 @@ class ControllerProductStore extends Controller {
 
                 $s_price = $result['special_price'];
                 $o_price = $result['price'];
+
+                if( CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$result['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$filter_data['store_id']])){
+					$s_price = $cachePrice_data[$result['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$filter_data['store_id']];
+					$o_price =$cachePrice_data[$result['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$filter_data['store_id']];
+					$special_price = $this->currency->format($s_price);
+					$price = $this->currency->format($o_price);
+				}
+
             }
 
 

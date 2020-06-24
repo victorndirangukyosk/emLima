@@ -613,7 +613,9 @@ class ControllerProductSearch extends Controller {
 
 
 	public function product_search() {
-        
+		
+		$cachePrice_data =  $this->cache->get('category_price_data');
+
         if(isset($this->request->get['filter_name'])){
             $filter_name = $this->request->get['filter_name'];
         }else{
@@ -655,8 +657,17 @@ class ControllerProductSearch extends Controller {
 				} else {
 					$value['image'] = $this->model_tool_image->resize( 'placeholder.png',100,100 );
 				}
-				$products[] = $value;
-			}
+
+			
+					if( CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$value['product_store_id'].'_'.$_SESSION['customer_category'].'_'.ACTIVE_STORE_ID])){
+						//echo $cachePrice_data[$product_info['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$store_id];//exit;
+						$s_price = $cachePrice_data[$value['product_store_id'].'_'.$_SESSION['customer_category'].'_'.ACTIVE_STORE_ID];
+						$o_price =$cachePrice_data[$value['product_store_id'].'_'.$_SESSION['customer_category'].'_'.ACTIVE_STORE_ID];
+						$value['special_price'] = $this->currency->format($s_price);
+						$value['price'] = $this->currency->format($o_price);
+					}
+					$products[] = $value;
+				}
 		}
 
         //echo "<pre>";print_r($products);die;

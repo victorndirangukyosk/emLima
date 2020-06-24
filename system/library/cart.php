@@ -41,12 +41,14 @@ class Cart {
     
    
     public function getCartProducts() {
-
         $totalQuantity = 0;
         $log = new Log('error.log');
         $log->write("cwen");
         //$log->write($product_query);
        
+        if(CATEGORY_PRICE_ENABLED == true){
+            $this->data = null;
+        }
 
         if (!$this->data) {
             $log->write("pro 1");
@@ -92,7 +94,6 @@ class Cart {
 
                 
                 $product_query = $this->db->get('product_to_store');
-
                 $log->write("pro 2");
                 $log->write($product_query);
 
@@ -154,6 +155,13 @@ class Cart {
                         $store_product_variation_id = 0;
                         $variation = $product_query->row['unit']?' - '.$product_query->row['unit']:'';
                         $image = $product_query->row['image'];
+                    }
+                  
+                
+                    if(CATEGORY_PRICE_ENABLED == true){
+                        $cat_price = $this->getCategoryPriceProduct($product_query->row['product_store_id'],$product['store_id'],$_SESSION['customer_category']);
+                        $special_price =  isset($cat_price) ? $this->getCategoryPriceProduct($product_query->row['product_store_id'],$product['store_id'],$_SESSION['customer_category']) : $price;
+                        $price = $special_price;
                     }
 
                     $this->data[$keys] = array(
@@ -319,6 +327,12 @@ class Cart {
                         $image = $product_query->row['image'];
                     }
                 
+                    if(CATEGORY_PRICE_ENABLED == true){
+                        $cat_price = $this->getCategoryPriceProduct($product_query->row['product_store_id'],$product['store_id'],$_SESSION['customer_category']);
+                        $orignal_price =  isset($cat_price) ? $this->getCategoryPriceProduct($product_query->row['product_store_id'],$product['store_id'],$_SESSION['customer_category']) : $price;
+                        $price = $orignal_price;
+                    }
+
                     $this->data[$keys] = array(
                         'key' => $keys,
                         'product_store_id' => $product_query->row['product_store_id'],
@@ -591,11 +605,11 @@ class Cart {
 
     public function getTotal() {
         $total = 0;
-
+        //echo '<pre>';print_r($this->getProducts());exit;
         foreach ($this->getProducts() as $product) {
             $total += $this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')) * $product['quantity'];
         }
-
+        //echo '<pre>';echo $total;exit;
         return $total;
     }
 
@@ -683,6 +697,12 @@ class Cart {
         }
 
         return $download;
+    }
+
+    public function getCategoryPriceProduct($product_store_id,$store_id,$category){
+        //echo $category;exit;
+        $product_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_category_prices WHERE product_store_id = '" . (int) $product_store_id . "' AND store_id = '" . (int) $store_id . "' AND price_category = '" . $category . "' AND status = '1'");
+        return $product_query->row['price'];
     }
 
 }

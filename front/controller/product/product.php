@@ -885,7 +885,20 @@ class ControllerProductProduct extends Controller {
 				
 
 			}
-            
+
+			$cachePrice_data =  $this->cache->get('category_price_data');
+			//echo $product_info['product_store_id'].'====>'.$_SESSION['customer_category'].'===>'.$store_id;
+			//echo '<pre>';print_r($cachePrice_data);
+			//exit;
+			if( CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$product_info['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$store_id])){
+				//echo $cachePrice_data[$product_info['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$store_id];//exit;
+				$s_price = $cachePrice_data[$product_info['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$store_id];
+				$o_price =$cachePrice_data[$product_info['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$store_id];
+				$product_info['special_price'] = $this->currency->format($s_price);
+				$product_info['price'] = $this->currency->format($o_price);
+			}
+			//echo '<pre>';print_r($product_info);exit;
+
             if (isset($product_info['pd_name'] ) ) {
 				$product_info['name'] = $product_info['pd_name'];
 			}
@@ -935,7 +948,6 @@ class ControllerProductProduct extends Controller {
 			        $data['product']['qty_in_cart'] = $this->session->data['temp_cart'][$key]['quantity'];
 			    }
 		    }
-		    
 	        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/product/product_popup.tpl')) {
 		        $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/product/product_popup.tpl', $data));
 		    } else {

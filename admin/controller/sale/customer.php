@@ -1005,6 +1005,7 @@ class ControllerSaleCustomer extends Controller {
         $this->load->model('sale/customer_group');
 
         $data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups();
+        $data['price_categories'] = $this->model_sale_customer_group->getPriceCategories();
 
         if (isset($this->request->post['company_name'])) {
             $data['company_name'] = $this->request->post['company_name'];
@@ -1028,6 +1029,12 @@ class ControllerSaleCustomer extends Controller {
             $data['customer_group_id'] = $customer_info['customer_group_id'];
         } else {
             $data['customer_group_id'] = $this->config->get('config_customer_group_id');
+        }
+
+        if (isset($this->request->post['customer_category'])) {
+            $data['customer_category'] = $this->request->post['customer_category'];
+        } elseif (!empty($customer_info)) {
+            $data['customer_category'] = $customer_info['customer_category'];
         }
 
         if (isset($this->request->post['firstname'])) {
