@@ -28,7 +28,7 @@
 
                     <?php foreach ($orders as $order) { ?>
                         <h1><?php echo $text_invoice; ?> #<?php echo $order['order_id']; ?>
-                            <button type="submit" class="btn btn-lg btn-success" onclick="window.print()" id="printPageButton" ><i class="fa fa-print"></i> Print PDF </button>
+                            <button type="submit" class="btn btn-lg btn-success" onclick="window.print()" id="printPageButton" ><i class="fa fa-print"></i> Print Invoice </button>
                         </h1>
                         <table class="table table-bordered">
                             <thead>

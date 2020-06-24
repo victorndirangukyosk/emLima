@@ -173,9 +173,6 @@ class ControllerSaleOrder extends Controller {
     }
 
     public function EditInvoice() {
-
-
-
         $this->load->language('sale/order');
 
         $data['title'] = $this->language->get('text_invoice');
@@ -3832,9 +3829,11 @@ class ControllerSaleOrder extends Controller {
 
         $data['column_product'] = $this->language->get('column_product');
 
-        $data['column_unit'] = $this->language->get('column_unit');
         $data['column_model'] = $this->language->get('column_model');
-        $data['column_quantity'] = $this->language->get('column_quantity');
+        $data['column_unit'] = $this->language->get('column_unit') . ' Ordered';
+        $data['column_quantity'] = $this->language->get('column_quantity'). ' Ordered';
+        $data['column_unit_change'] = $this->language->get('column_unit') .' Change' ;
+        $data['column_quantity_change'] = $this->language->get('column_quantity') .' Change' ;
         $data['column_price'] = $this->language->get('column_price');
         $data['column_total'] = $this->language->get('column_total');
         $data['column_comment'] = $this->language->get('column_comment');
