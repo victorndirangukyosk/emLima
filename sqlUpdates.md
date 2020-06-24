@@ -46,3 +46,7 @@ CREATE TABLE `hf7_product_category_prices` (
   `status` int(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`product_category_price_id`),
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8
+
+
+/** 23 June **/
+  ALTER TABLE `hf7_customer` ADD COLUMN `customer_category` VARCHAR(50) DEFAULT NULL AFTER `company_address`;

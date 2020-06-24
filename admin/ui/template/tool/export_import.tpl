@@ -230,7 +230,7 @@
 										<span class="help"><?php echo $help_format; ?></span>-->
 									</td>
 								</tr>
-								<!--<tr>
+								<tr style="display:none;">
 									<td>
 										<?php echo $entry_incremental; ?><br />
 
@@ -262,7 +262,7 @@
 
 										
 									</td>
-								</tr>-->
+								</tr>
 								<tr>
 									<td><?php echo $entry_upload; ?><br /><br /><input type="file" name="upload" id="upload-prices" /></td>
 								</tr>

@@ -349,6 +349,7 @@ class ControllerCheckoutCart extends Controller {
 	}
 
 	public function add() {
+		$cachePrice_data =  $this->cache->get('category_price_data');
 		$this->load->language('checkout/cart');
 		//echo $this->request->post['quantity'];
 		$json = array();
@@ -452,6 +453,7 @@ class ControllerCheckoutCart extends Controller {
 
 				$total_data = array();
 				$total = 0;
+				//echo $total;exit;
 				$taxes = $this->cart->getTaxes();
 
 				// Display prices
@@ -465,7 +467,6 @@ class ControllerCheckoutCart extends Controller {
 					}
 
 					array_multisort($sort_order, SORT_ASC, $results);
-
 					//print_r($results);
 					foreach ($results as $result) {
 						if ($this->config->get($result['code'] . '_status')) {
@@ -487,10 +488,12 @@ class ControllerCheckoutCart extends Controller {
 
 					array_multisort($sort_order, SORT_ASC, $total_data);
 				}
-
-				$json['count_products'] = $this->cart->countProducts();
 				
+				$json['count_products'] = $this->cart->countProducts();
 				$json['total_amount'] = $this->currency->format($this->cart->getTotal());
+				/*if( CATEGORY_PRICE_ENABLED == true){
+					$json['total_amount'] = $this->currency->format($this->cart->getTotal());
+				}*/
 				//$json['total_amount'] = $this->currency->format($total);
 				$json['total'] = sprintf($this->language->get('text_items'), $json['count_products'] + (isset($this->session->data['vouchers']) ? count($this->session->data['vouchers']) : 0), $this->currency->format($total));
 			} else {
@@ -756,6 +759,7 @@ class ControllerCheckoutCart extends Controller {
 				}
 
 				$json['count_products'] = $this->cart->countProducts();
+				
 				
 				$json['total_amount'] = $this->currency->format($this->cart->getTotal());
 				//$json['total_amount'] = $this->currency->format($total);
