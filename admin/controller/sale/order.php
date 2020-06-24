@@ -797,11 +797,6 @@ class ControllerSaleOrder extends Controller {
         //$this->response->setOutput($this->load->view('sale/edit_transaction_invoice.tpl', $data));
     }
 
-
-
-
-
-
     public function delete() {
 
         //check vendor order 
@@ -965,8 +960,6 @@ class ControllerSaleOrder extends Controller {
 
         $this->getList();
     }
-
-   
 
     protected function getList() {
         
@@ -1213,7 +1206,7 @@ class ControllerSaleOrder extends Controller {
                 'view' => $this->url->link('sale/order/info', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL'),
 
                 'invoice' => $this->url->link('sale/order/invoice', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL'),
-
+                'order_spreadsheet' => $this->url->link('sale/order/spreadsheet', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL'),
                 'shipping' => $this->url->link('sale/order/shipping', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL'),
 
                 'edit' => $this->url->link('sale/order/EditInvoice', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL'),
@@ -3633,7 +3626,6 @@ class ControllerSaleOrder extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-
     public function removeReward() {
         $this->load->language('sale/order');
 
@@ -3912,8 +3904,8 @@ class ControllerSaleOrder extends Controller {
                     $store_fax = $this->config->get('config_fax');
                     $store_tax = '';
                 }
-                 
-                
+
+
                 $data['store_logo'] = $this->model_tool_image->resize($store_data['logo'],300, 300);
                 $data['store_name'] = $store_data['name'];
 
@@ -4023,6 +4015,131 @@ class ControllerSaleOrder extends Controller {
             }
         }
         $this->response->setOutput($this->load->view('sale/order_invoice.tpl', $data));
+    }
+
+    public function spreadsheet() {
+        $this->load->model('sale/order');
+
+        if (isset($this->request->post['selected'])) {
+            $orders = $this->request->post['selected'];
+        } elseif (isset($this->request->get['order_id'])) {
+            $orders[] = $this->request->get['order_id'];
+        }
+
+        if (isset($this->request->get['store_id'])) {
+            $store_id = $this->request->get['store_id'];
+        } else {
+            $store_id = 0;
+        }
+
+        foreach ($orders as $order_id) {
+            $order_info = $this->model_sale_order->getOrder($order_id);
+
+            if ($this->user->isVendor()) {
+                if (!$this->isVendorOrder($order_id)) {
+                    $this->response->redirect($this->url->link('error/not_found'));
+                }
+            }
+
+            if ($order_info) {
+                $store_data = $this->model_sale_order->getStoreData($order_info['store_id']);
+                if ($store_data) {
+                    $store_address = $store_data['address'];
+                    $store_email = $store_data['email'];
+                    $store_telephone = $store_data['telephone'];
+                    $store_fax = $store_data['fax'];
+                    $store_tax = $store_data['tax'];
+                } else {
+                    $store_address = $this->config->get('config_address');
+                    $store_email = $this->config->get('config_email');
+                    $store_telephone = $this->config->get('config_telephone');
+                    $store_fax = $this->config->get('config_fax');
+                    $store_tax = '';
+                }
+
+                if ($order_info['invoice_no']) {
+                    $invoice_no = $order_info['invoice_prefix'] . $order_info['invoice_no'];
+                } else {
+                    $invoice_no = '';
+                }
+
+
+                $product_data = array();
+
+                if($this->model_sale_order->hasRealOrderProducts($order_id)) {
+                    $products = $this->model_sale_order->getRealOrderProducts($order_id);
+                } else {
+                    $products = $this->model_sale_order->getOrderProducts($order_id);
+                }
+
+                foreach ($products as $product) {
+                    if ($store_id && $product['store_id'] != $store_id) {
+                        continue;
+                    }
+
+                    $option_data = array();
+                    $options = $this->model_sale_order->getOrderOptions($order_id, $product['order_product_id']);
+
+                    foreach ($options as $option) {
+                        if ($option['type'] != 'file') {
+                            $value = $option['value'];
+                        } else {
+                            $upload_info = $this->model_tool_upload->getUploadByCode($option['value']);
+
+                            if ($upload_info) {
+                                $value = $upload_info['name'];
+                            } else {
+                                $value = '';
+                            }
+                        }
+
+                        $option_data[] = array(
+                            'name' => $option['name'],
+                            'value' => $value
+                        );
+                    }
+
+                    $product_data[] = array(
+                        'name' => $product['name'],
+                        'model' => $product['model'],
+                        'unit' => $product['unit'],
+                        'option' => $option_data,
+                        'quantity' => $product['quantity'],
+                        'price' => $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
+                        'total' => $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value'])
+                    );
+                }
+
+                $data['orders'][] = array(
+                    'order_id' => $order_id,
+                    'invoice_no' => $invoice_no,
+                    'date_added' => date($this->language->get('datetime_format'), strtotime($order_info['date_added'])),
+                    'delivery_date' => date($this->language->get('date_format_short'), strtotime($order_info['delivery_date'])),
+                    'delivery_timeslot' => $order_info['delivery_timeslot'],
+                    'store_name' => $order_info['store_name'],
+                    'store_url' => rtrim($order_info['store_url'], '/'),
+                    'store_address' => nl2br($store_address),
+                    'store_email' => $store_email,
+                    'store_tax' => $store_tax,
+                    'store_telephone' => $store_telephone,
+                    'store_fax' => $store_fax,
+                    'email' => $order_info['email'],
+                    'cpf_number' => $this->getUser($order_info['customer_id']),
+                    'telephone' => $order_info['telephone'],
+                    'shipping_address' => $order_info['shipping_address'],
+                    'shipping_city' => $order_info['shipping_city'],
+                    'shipping_flat_number' => $order_info['shipping_flat_number'],
+                    'shipping_contact_no' => ($order_info['shipping_contact_no']) ? $order_info['shipping_contact_no'] : $order_info['telephone'],
+                    'shipping_name' => ($order_info['shipping_name']) ? $order_info['shipping_name'] : $order_info['firstname'].' '.$order_info['lastname'],
+                    'shipping_method' => $order_info['shipping_method'],
+                    'payment_method' => $order_info['payment_method'],
+                    'product' => $product_data,
+                );
+            }
+        }
+
+        $this->load->model('report/excel');
+        $this->model_report_excel->download_calculation_sheet_excel($data);
     }
 
     public function newinvoice() {
@@ -4407,7 +4524,6 @@ class ControllerSaleOrder extends Controller {
         $this->response->setOutput($this->load->view('sale/order_shipping.tpl', $data));
     }
 
-    
     public function updateInvoice() {
 
         $json = array();
@@ -5131,7 +5247,6 @@ class ControllerSaleOrder extends Controller {
         }
     }
 
-
     public function isOnlinePayment($payment_code)
     {
         $refundToCustomerWallet = false;
@@ -5216,8 +5331,6 @@ class ControllerSaleOrder extends Controller {
         }
     }
 
-    
-    
     public function city_autocomplete(){
         
         $this->load->model('sale/order');
@@ -5520,7 +5633,6 @@ class ControllerSaleOrder extends Controller {
             }
         }
     }
-
 
     public function createDeliveryRequest($order_id,$order_status_id = 1)
     {
@@ -6128,7 +6240,6 @@ class ControllerSaleOrder extends Controller {
 
         return false;
     }
-
 
     public function iuguCharge($data) {
         
