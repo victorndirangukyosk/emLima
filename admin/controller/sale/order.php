@@ -3984,6 +3984,8 @@ class ControllerSaleOrder extends Controller {
                     $totals = $this->model_sale_order->getOrderTotals($order_id);
                 }
 
+//                echo "<pre>";print_r($totals);
+
                 foreach ($totals as $total) {
                     $total_data[] = array(
                         'title' => $total['title'],
