@@ -278,8 +278,8 @@
                                     <td class="text-right">
 
                                     <?php if (!$this->user->isVendor()): ?>
-                                             <a href="<?php echo $order['shipping']; ?>" target="_blank" data-toggle="tooltip" title="Print" class="btn btn-info"><i class="fa fa-truck"></i></a>
-
+                                        <a href="<?php echo $order['order_spreadsheet']; ?>" target="_blank" data-toggle="tooltip" title="Download Calculation Sheet" class="btn btn-info"><i class="fa fa-file-excel-o"></i></a>
+                                        <a href="<?php echo $order['shipping']; ?>" target="_blank" data-toggle="tooltip" title="Print" class="btn btn-info"><i class="fa fa-truck"></i></a>
                                     <?php endif ?>  
                 
                                        
@@ -317,7 +317,6 @@
         </div>
     </div>
     <script type="text/javascript"><!--
-
     $('input[name=\'filter_store_name\']').autocomplete({
     'source': function(request, response) {
         $.ajax({
@@ -463,7 +462,7 @@
 
             location = url;
         });
-        //--></script> 
+        //--></script>
     <script type="text/javascript"><!--
         
         $('input[name=\'filter_city\']').autocomplete({
