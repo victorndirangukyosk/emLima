@@ -12,7 +12,7 @@
 </head>
 <body>
 
-<table>
+<table class="invoice-table">
     <thead>
     <tr>
         <td>
@@ -113,8 +113,8 @@
                             <tr>
                                 <td><b><?php echo $column_model; ?></b></td>
                                 <td><b><?php echo $column_product; ?></b></td>
+                                <td><b><?php echo $column_quantity; ?></b></td>
                                 <td><b><?php echo $column_unit; ?></b></td>
-                                <td class="text-right"><b><?php echo $column_quantity; ?></b></td>
                                 <td class="text-right"><b><?php echo $column_price; ?></b></td>
                                 <td class="text-right"><b><?php echo $column_total; ?></b></td>
                             </tr>
@@ -129,8 +129,8 @@
                                     &nbsp;<small> - <?php echo $option['name']; ?>
                                         : <?php echo $option['value']; ?></small>
                                     <?php } ?></td>
+                                <td><?php echo $product['quantity']; ?></td>
                                 <td><?php echo $product['unit']; ?></td>
-                                <td class="text-right"><?php echo $product['quantity']; ?></td>
                                 <td class="text-right"><?php echo $product['price']; ?></td>
                                 <td class="text-right"><?php echo $product['total']; ?></td>
                             </tr>
@@ -138,7 +138,8 @@
 
                             <?php foreach ($order['total'] as $total) { ?>
                             <tr>
-                                <td class="text-right" colspan="5"><b><?php echo $total['title']; ?></b></td>
+                                <!-- TODO: Review total title change -->
+                                <td class="text-right" colspan="5"><b>Total</b></td>
                                 <td class="text-right"><?php echo $total['text']; ?></td>
                             </tr>
                             <?php break; } ?>
@@ -244,6 +245,10 @@
         width: 100%;
         position: fixed;
         top: 0;
+    }
+
+    .invoice-table {
+        width: 100%;
     }
 
 
