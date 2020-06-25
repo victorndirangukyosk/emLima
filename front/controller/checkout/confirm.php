@@ -1039,7 +1039,7 @@ class ControllerCheckoutConfirm extends Controller {
 					$order_data[$store_id]['shipping_code'] = '';
 				}
 
-				//print_r($order_data);die;
+			 
 				if(isset($this->request->post['shipping_city_id'])){
 			        $shipping_city_id = $this->request->post['shipping_city_id'];
 			        $order_data[$store_id]['shipping_city_id'] = $shipping_city_id;
@@ -1047,9 +1047,12 @@ class ControllerCheckoutConfirm extends Controller {
 			        $order_data[$store_id]['shipping_city_id'] = '';
 			    }
 				
-
-			    if(isset($this->request->post['shipping_address_id'])){
-			        $shipping_address_id = $this->request->post['shipping_address_id'];
+				//echo "<pre>";print_r(	$this->session->data['shipping_address_id']);die;
+			    //if(isset($this->request->post['shipping_address_id'])){
+				if(isset($this->session->data['shipping_address_id'])){
+					// print_r($order_data);die;
+			        // $shipping_address_id = $this->request->post['shipping_address_id'];
+			        $shipping_address_id = $this->session->data['shipping_address_id'];
 			        $this->load->model( 'account/address' );
 			        $shipping_address_data = $this->model_account_address->getAddress($shipping_address_id);
 
@@ -1294,7 +1297,7 @@ class ControllerCheckoutConfirm extends Controller {
 		$shipping_address_data = $this->model_account_address->getAddress($this->request->post['shipping_address_id']);
 
 		$data['address'] = strlen($shipping_address_data['address']) > 27 ? substr($shipping_address_data['address'],0,27)."..." : $shipping_address_data['address'];
-		
+		$this->session->data['shipping_address'] = strlen($shipping_address_data['address']) > 100 ? substr($shipping_address_data['address'],0,100)."..." : $shipping_address_data['address'];;
 		$this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($data));
 
