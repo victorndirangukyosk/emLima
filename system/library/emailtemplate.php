@@ -1030,7 +1030,7 @@ if($item[1]==0)
             '{firstname}', '{lastname}', '{delivery_address}', '{shipping_address}', '{payment_address}', '{order_date}', '{product:start}', '{product:stop}',
             '{total:start}', '{total:stop}', '{voucher:start}', '{voucher:stop}', '{special}', '{date}', '{payment}', '{shipment}', '{order_id}', '{total}', '{invoice_number}',
             '{order_href}', '{store_url}', '{status_name}', '{store_name}', '{ip}', '{comment:start}', '{comment:stop}','{sub_total}', '{shipping_cost}',
-            '{client_comment}', '{tax:start}', '{tax:stop}', '{tax_amount}', '{email}', '{telephone}','{order_pdf_href}','{delivery_date}','{delivery_time}','{customer_notes}','{customer_cpf}','{store_address}','{store_telephone}','{store_tax_number}','{shipping_contact_number}','{shipping_flat_number}','{shipping_street_address}','{shipping_landmark}','{shipping_zipcode}','{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}','{privacy_policy}','{system_email}', '{system_phone}'
+            '{client_comment}', '{tax:start}', '{tax:stop}', '{tax_amount}', '{email}', '{telephone}','{order_pdf_href}','{delivery_date}','{delivery_time}','{customer_notes}','{customer_cpf}','{store_address}','{store_telephone}','{store_tax_number}','{shipping_contact_number}','{shipping_flat_number}','{shipping_street_address}','{shipping_landmark}','{shipping_zipcode}','{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}','{privacy_policy}','{system_email}', '{system_phone}','{customer_company_name}'
         );
 
         return $result;
@@ -1138,7 +1138,7 @@ if($item[1]==0)
         $tax_amount = $data['tax_amount'];
 
         $store_info = $this->getStore($order_info['store_id']);
-        //$customer_info = $this->getCustomer($order_info['customer_id']);
+        $customer_info = $this->getCustomer($order_info['customer_id']);
 
         $result = array(
             'firstname' => $order_info['firstname'],
@@ -1180,6 +1180,7 @@ if($item[1]==0)
             'delivery_time' => $order_info['delivery_timeslot'],
             'customer_notes' => $order_info['comment'],
             'customer_cpf'=>$order_info['fax'],
+            'customer_company_name'=>$customer_info['company_name'],
             'store_address'=>$store_info['address'],
             'store_telephone'=>'+'.$this->config->get('config_telephone_code').' '.$store_info['telephone'],
             'store_tax_number'=>$store_info['tax'],
