@@ -1297,7 +1297,7 @@ class ControllerCheckoutConfirm extends Controller {
 		$shipping_address_data = $this->model_account_address->getAddress($this->request->post['shipping_address_id']);
 
 		$data['address'] = strlen($shipping_address_data['address']) > 27 ? substr($shipping_address_data['address'],0,27)."..." : $shipping_address_data['address'];
-		$this->session->data['shipping_address'] = strlen($shipping_address_data['address']) > 100 ? substr($shipping_address_data['address'],0,100)."..." : $shipping_address_data['address'];;
+		//$this->session->data['shipping_address'] = strlen($shipping_address_data['address']) > 100 ? substr($shipping_address_data['address'],0,100)."..." : $shipping_address_data['address'];;
 		$this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($data));
 
