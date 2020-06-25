@@ -26,7 +26,7 @@
     <!--<p class="error-msg" ></p>-->
 </div>
 <div class="qtybtns-addbtnd addcart-block" id="add-btn-container">
- <input type="text" class="input-cart-qty" id="cart-qty-<?= $product['product_store_id'] ?>-<?= $product['store_product_variation_id'] ?>" value="<?= $product['qty_in_cart'] ?>" placeholder="Add Poduct Qunatity">
+ <input type="text" class="input-cart-qty" id="cart-qty-<?= $product['product_store_id'] ?>-<?= $product['store_product_variation_id'] ?>" value="<?php if($product['qty_in_cart']>0){echo $product['qty_in_cart'];}?>  " placeholder="Add Poduct Qunatity">
  <a id="AtcButton-id-<?= $product['product_store_id'] ?>-<?= $product['store_product_variation_id'] ?>" style="<?php if($product['qty_in_cart']>0){echo "background-color:#ea7128";}?>" class="AtcButton__container___1RZ9c AtcButton__with_counter___3YxLq atc_<?= $product['product_store_id'] ?> AtcButton__small___1a1kH" >
  <span data-action="<?= $product['qty_in_cart'] ? 'update' : 'add'; ?>"
        data-key='<?= $product["key"] ?>'
