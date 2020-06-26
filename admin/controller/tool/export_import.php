@@ -345,6 +345,14 @@ class ControllerToolExportImport extends Controller {
 		$this->getForm();
 	}
 
+	public function downloadCategoryPricesSheet(){
+		$this->load->language('tool/export_import');
+		$this->document->setTitle($this->language->get('heading_title'));
+
+		$this->load->model('tool/export_import');
+		$this->load->model('tool/export_import_vendor');
+		$this->model_tool_export_import_vendor->downloadCategoryPricesSample();
+	}
 
 	public function settings() {
 		$this->load->language('tool/export_import');
@@ -471,9 +479,9 @@ class ControllerToolExportImport extends Controller {
 		$data['import_prices'] = $this->url->link('tool/export_import/prices_import', 'token=' . $this->session->data['token'], 'SSL');
 		$data['post_max_size'] = $this->return_bytes( ini_get('post_max_size') );
 		$data['upload_max_filesize'] = $this->return_bytes( ini_get('upload_max_filesize') );
-
+        
 		$data['exportgeneral'] = $this->url->link('tool/export_import/downloadGeneralProducts', 'token=' . $this->session->data['token'], 'SSL');
-
+		$data['exportcatprices'] = $this->url->link('tool/export_import/downloadCategoryPricesSheet', 'token=' . $this->session->data['token'], 'SSL');
 		if (isset($this->request->post['export_type'])) {
 			$data['export_type'] = $this->request->post['export_type'];
 		} else {

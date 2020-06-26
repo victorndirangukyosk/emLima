@@ -2533,4 +2533,13 @@ class ModelToolExportImportVendor extends Model {
 		return $results->rows;
 	}
 
+
+	public function downloadCategoryPricesSample(){
+		$this->load->model('catalog/vendor_product');
+		$this->load->model('report/excel');	
+		$results = $this->model_catalog_vendor_product->getProducts();
+		$this->model_report_excel->download_vendorproduct_category_prices($results);
+		//echo '<pre>';print_r($results);exit;
+	}
+
 }

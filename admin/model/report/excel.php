@@ -2847,8 +2847,6 @@ class ModelReportExcel extends Model {
 
 		// $rows = $this->model_catalog_vendor_product->getProducts(""); 
 		$rows = $this->model_catalog_vendor_product->getProducts($filter_data );
-
-		//   echo "<pre>";print_r($rows);die;
 				 
 		try {
 			// set appropriate timeout limit
@@ -2958,6 +2956,110 @@ class ModelReportExcel extends Model {
 			header( 'Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' );
 
 			header('Content-Disposition: attachment;filename="vendor_products.xlsx"');
+			header('Cache-Control: max-age=0');
+			$objWriter->save('php://output');
+			exit;
+		} catch (Exception $e) {
+			$errstr = $e->getMessage();
+			$errline = $e->getLine();
+			$errfile = $e->getFile();
+			$errno = $e->getCode();
+			$this->session->data['export_import_error'] = array('errstr' => $errstr, 'errno' => $errno, 'errfile' => $errfile, 'errline' => $errline);
+			if ($this->config->get('config_error_log')) {
+				$this->log->write('PHP ' . get_class($e) . ':  ' . $errstr . ' in ' . $errfile . ' on line ' . $errline);
+			}
+			return;
+		}
+	}
+
+	public function download_vendorproduct_category_prices($data){
+
+                
+
+		$this->load->library('excel');
+		$this->load->library('iofactory');
+				
+		$this->load->language('report/income');
+		$this->load->model('catalog/vendor_product');
+
+		// $rows = $this->model_catalog_vendor_product->getProducts(""); 
+		$rows = $data;
+
+		//   echo "<pre>";print_r($rows);die;
+				 
+		try {
+			// set appropriate timeout limit
+			set_time_limit(1800);
+			
+			$objPHPExcel = new PHPExcel();
+			$objPHPExcel->getProperties();
+			$objPHPExcel->setActiveSheetIndex(0);
+			$objPHPExcel->getActiveSheet()->setTitle("Product_Prices");
+
+			// Field names in the first row
+			// ID, Photo, Name, Contact no., Reason, Valid from, Valid upto, Intime, Outtime
+			$title = array(
+				'font' => array(
+					'bold' => true,
+					'color' => array(
+						'rgb' => 'FFFFFF'
+					),
+				),
+				'fill' => array(
+					'type' => PHPExcel_Style_Fill::FILL_SOLID,
+					'startcolor' => array(
+						'rgb' => '4390df',
+					),
+				),
+			);
+        
+			foreach(range('A','L') as $columnID) {
+			    $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+			        ->setAutoSize(true);
+			}
+
+			 
+			$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 1, 'product_store_id');
+			$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 1, 'product_id');
+			$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 1, 'name');
+			$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 1, 'store_id');
+		 	$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 1, 'price_category');
+		 	$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 1, 'price');
+			 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, 1, 'status'); 
+			 
+			$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 1)->applyFromArray($title);
+			$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 1)->applyFromArray($title);
+			$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(2, 1)->applyFromArray($title);
+			$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(3, 1)->applyFromArray($title);
+			$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(4, 1)->applyFromArray($title);
+			$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(5, 1)->applyFromArray($title);
+			$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(6, 1)->applyFromArray($title);
+
+			
+			// Fetching the table data
+			$row = 2;
+			$store_id = 75;
+			foreach ($rows as $result) {    
+					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row,$result['product_store_id']);
+					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row,$result['product_id']);
+					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row,$result['name']);
+					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row,$store_id);
+					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row,'');
+					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row,'');
+					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row,1);
+				$row++;
+			}
+			
+			$objPHPExcel->setActiveSheetIndex(0);
+			/*$objWriter = IOFactory::createWriter($objPHPExcel, 'Excel5');
+
+			// Sending headers to force the user to download the file
+			header('Content-Type: application/vnd.ms-excel');*/
+
+			$objWriter = PHPExcel_IOFactory::createWriter( $objPHPExcel, 'Excel2007' );  
+			header( 'Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' );
+
+			header('Content-Disposition: attachment;filename="products_category_prices.xlsx"');
 			header('Cache-Control: max-age=0');
 			$objWriter->save('php://output');
 			exit;

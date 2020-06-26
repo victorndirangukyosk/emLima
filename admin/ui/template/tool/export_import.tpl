@@ -225,7 +225,7 @@
 							<table class="form">
 								<tr>
 									<td>
-										<?php echo $entry_import; ?>
+										<?php echo $entry_import; ?> <a href="<?php echo $exportcatprices; ?>"> Download Sample Category Prices </a>
 										<!--<span class="help"><?php echo $help_import; ?></span>
 										<span class="help"><?php echo $help_format; ?></span>-->
 									</td>
