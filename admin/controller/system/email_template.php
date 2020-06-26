@@ -172,10 +172,11 @@ class ControllerSystemEmailtemplate extends Controller {
             $data['emailTemplates'][] = array(
                 'id' => $result['id'],
                 'text' => $result['text'],
+                'textOriginal' => $result['textOriginal'],
                 'type' => $result['type'],
                 'context' => $result['context'],
                 'status' => $result['status'],
-                'edit' => $this->url->link('system/email_template/edit', 'token=' . $this->session->data['token'] . '&email_template=' . $result['type'] . '_' . $result['text_id'] . '_' . $result['text']. $url, 'SSL')
+                'edit' => $this->url->link('system/email_template/edit', 'token=' . $this->session->data['token'] . '&email_template=' . $result['type'] . '_' . $result['text_id'] . '_' . $result['textOriginal']. $url, 'SSL')
             );
         }
 

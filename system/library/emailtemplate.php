@@ -452,7 +452,7 @@ if($item[1]==0)
 
     // Customer
     public function getCustomerFind() {
-        $result = array('{firstname}', '{lastname}', '{date}', '{store_name}', '{email}', '{password}', '{account_href}', '{activate_href}', '{site_url}' , '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}','{privacy_policy}','{system_email}', '{system_phone}', '{amount}', '{transfer_type}');
+        $result = array('{firstname}', '{lastname}', '{date}', '{store_name}', '{email}', '{password}', '{account_href}', '{activate_href}', '{site_url}' , '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}','{privacy_policy}','{system_email}', '{system_phone}', '{amount}', '{transfer_type}',  '{ip_address}',);
         return $result;
     }
 
@@ -485,6 +485,7 @@ if($item[1]==0)
             'system_phone'=>'+'.$this->config->get('config_telephone_code').' '.$this->config->get('config_telephone'),
             'amount'=>isset($data['amount'])?$data['amount']:'',
             'transfer_type'=>isset($data['transfer_type'])?$data['transfer_type']:'',
+            'ip_address' => $data['ip_address'],
 
         );
 

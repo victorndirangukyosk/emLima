@@ -160,18 +160,17 @@ class ModelSystemEmailtemplate extends Model {
 
 		$query = $this->db->query($sql);
 
-		//commented below if condition ,as it is impacting edit operation
-
-        // if(!empty($query->num_rows)){
-        //     foreach($query->rows as $key => $email_temp){
-        //         if($email_temp['type'] == 'order') {
-        //             $_result = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order_status` WHERE order_status_id ='". $email_temp['text_id'] ."' AND language_id ='" . $this->config->get('config_language_id') ."'") ;
-        //             if(!empty($_result->num_rows) && !empty($_result->row['name'])) {
-        //                 $query->rows[$key]['text'] = $_result->row['name'];
-        //             }
-        //         }
-        //     }
-        // }
+        if(!empty($query->num_rows)){
+            foreach($query->rows as $key => $email_temp){
+				$query->rows[$key]['textOriginal'] = $query->rows[$key]['text'];
+                if($email_temp['type'] == 'order') {
+                    $_result = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order_status` WHERE order_status_id ='". $email_temp['text_id'] ."' AND language_id ='" . $this->config->get('config_language_id') ."'") ;
+                    if(!empty($_result->num_rows) && !empty($_result->row['name'])) {
+                        $query->rows[$key]['text'] = $_result->row['name'];
+                    }
+                }
+            }
+        }
 
 		$result = $query->rows;
 
