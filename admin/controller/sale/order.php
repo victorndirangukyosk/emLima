@@ -4016,19 +4016,15 @@ class ControllerSaleOrder extends Controller {
     }
 
     public function deliverySheet() {
-        $tomorrowDate = date("Y-m-d", strtotime('tomorrow'));
 
-//       $filter_data = array(
-//          'filter_delivery_date' => "2020-04-21"
-//       );
+        $deliveryDate =$this->request->get['filter_delivery_date'];
 
         $filter_data = array(
-            'filter_delivery_date' => $tomorrowDate
+            'filter_delivery_date' => $deliveryDate
         );
 
         $this->load->model('sale/order');
         $results = $this->model_sale_order->getOrders($filter_data);
-
         $data = array();
         $unconsolidatedProducts = array();
 

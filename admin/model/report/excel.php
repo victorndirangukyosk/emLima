@@ -996,7 +996,7 @@ class ModelReportExcel extends Model {
             $objWriter->save('php://output');
             exit;
         } catch (Exception $e) {
-//            echo "<pre>";print_r($e);
+//            echo "<pre>";print_r($e);die;
             $errstr = $e->getMessage();
             $errline = $e->getLine();
             $errfile = $e->getFile();

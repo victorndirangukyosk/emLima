@@ -1,12 +1,10 @@
 <?php echo $header; ?><?php echo $column_left; ?>
 
- 
 <div id="content">
     <div class="page-header">
         <div class="container-fluid">
             <div class="pull-right">
                 <?php if (!$this->user->isVendor()): ?>
-                <a href="<?php echo $delivery_sheet; ?>" target="_blank" data-toggle="tooltip" title="Download Delivery Sheet" class="btn btn-info"><i class="fa fa-file-excel-o"></i></a>
                         <button type="submit" id="button-shipping" form="form-order" formaction="<?php echo $shipping; ?>" data-toggle="tooltip" title="<?php echo $button_shipping_print; ?>" class="btn btn-default"><i class="fa fa-truck"></i></button>
                 <?php endif ?>  
 
@@ -236,6 +234,10 @@
                                 </tr>
                             </thead>
                             <tbody>
+                            <div class="form-group">
+                                <input class="form-control" style="display: inline; cursor: pointer;" type="text" id="delivery-datepicker" size="30" placeholder="Delivery Sheet Date" readonly="readonly">
+                                <button id="download-delivery-sheet" data-toggle="tooltip" title="Download Delivery Sheet" class="btn btn-info"><i class="fa fa-file-excel-o"></i></button>
+                            </div>
                                 <?php if ($orders) { ?>
                                 <?php foreach ($orders as $order) { ?>
                                 <tr>
@@ -316,6 +318,27 @@
             </div>
         </div>
     </div>
+    <script type="text/javascript">
+        $(function() {
+            $( "#delivery-datepicker" ).datetimepicker({
+                pickTime: false,
+                format:'YYYY-MM-DD',
+            });
+
+            $("#download-delivery-sheet").click(function(e) {
+
+                e.preventDefault();
+                const deliveryDate = $("#delivery-datepicker").val();
+
+                if (!deliveryDate.length > 0) {
+                    alert("Please select delivery date");
+                } else {
+                    const url = 'index.php?path=sale/order/deliverySheet&token=<?php echo $token; ?>&filter_delivery_date=' + encodeURIComponent(deliveryDate);
+                    location = url;
+                }
+            });
+        });
+    </script>
     <script type="text/javascript"><!--
     $('input[name=\'filter_store_name\']').autocomplete({
     'source': function(request, response) {
