@@ -62,7 +62,7 @@
             <li><a href="<?php echo $inventory_management; ?>"><i class="fa inventory"></i> <span>Inventory</span></a></li>
     <?php } ?>
      <?php if($preturn_vendor_product) { ?>    
-            <li><a href="<?php echo $category_prices; ?>"><i class="fa inventory"></i> <span>Category Prices</span></a></li>
+            <li><a href="<?php echo $category_prices; ?>"><i class="fa fa-tags fa-fw"></i> <span>Category Prices</span></a></li>
     <?php } ?>
     <?php
     if($preturn_simple_blog_author != false || $preturn_simple_blog_category != false || $preturn_simple_blog_article != false || 
