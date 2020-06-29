@@ -4514,8 +4514,14 @@ class ControllerSaleOrder extends Controller {
                     $invoice_no = '';
                 }
 
+                // Order products with weight change
                 $editedProducts = $this->model_sale_order->getRealOrderProducts($order_id);
-                $original_products = $products = $this->model_sale_order->getOrderProducts($order_id);
+
+                // Products as the user ordered them on the platform
+                $originalProducts = $products = $this->model_sale_order->getOrderProducts($order_id);
+
+//                echo "<pre>";print_r($editedProducts);echo "<br>";
+//                echo "<pre>";print_r($original_products); die;
 
                 $totalData = array();
 
@@ -4534,72 +4540,48 @@ class ControllerSaleOrder extends Controller {
 
                 $orderProducts = array();
                 if($this->model_sale_order->hasRealOrderProducts($order_id)) {
-                    foreach ($original_products as $original_product) {
-                        $present = false;
+                    // Order has at least one product that has a weight change
+                    foreach ($originalProducts as $originalProduct) {
 
                         foreach ($editedProducts as $editedProduct) {
-                            if($original_product['product_id'] == $editedProduct['product_id'] ){
-                                $original_product['quantity_updated'] = $editedProduct['quantity'];
-                                $original_product['unit_updated'] = $editedProduct['unit'];
-                            }
-
-                            if(!empty($original_product['name']) && $original_product['name'] == $editedProduct['name'] && $original_product['unit'] == $editedProduct['unit'] && $original_product['quantity'] == $editedProduct['quantity'] ) {
-                                $present = true;
+                            if($originalProduct['product_id'] == $editedProduct['product_id'] ){
+                                $originalProduct['quantity_updated'] = floatval($editedProduct['quantity']);
+                                $originalProduct['unit_updated'] = $editedProduct['unit'];
                             }
                         }
 
                         $orderProducts[] = array(
-                            'order_product_id' => $original_product['order_product_id'],
-                            'product_id' => $original_product['product_id'],
-                            'vendor_id' => $original_product['vendor_id'],
-                            'store_id' => $original_product['store_id'],
-                            'name' => $original_product['name'],
-                            'unit' => $original_product['unit'],
-                            'product_type' => $original_product['product_type'],
-                            'model' => $original_product['model'],
-                            'quantity' => $original_product['quantity'],
-                            'quantity_updated' => $original_product['quantity_updated'],
-                            'unit_updated' => $original_product['unit_updated'],
-                            'price' => $this->currency->format($original_product['price'] + ($this->config->get('config_tax') ? $original_product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
-                            'total' => $this->currency->format($original_product['total'] + ($this->config->get('config_tax') ? ($original_product['tax'] * $original_product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
+                            'order_product_id' => $originalProduct['order_product_id'],
+                            'product_id' => $originalProduct['product_id'],
+                            'vendor_id' => $originalProduct['vendor_id'],
+                            'store_id' => $originalProduct['store_id'],
+                            'name' => $originalProduct['name'],
+                            'unit' => $originalProduct['unit'],
+                            'product_type' => $originalProduct['product_type'],
+                            'model' => $originalProduct['model'],
+                            'quantity' => floatval($originalProduct['quantity']),
+                            'quantity_updated' => $originalProduct['quantity_updated'],
+                            'unit_updated' => $originalProduct['unit_updated'],
+                            'price' => $this->currency->format($originalProduct['price'] + ($this->config->get('config_tax') ? $originalProduct['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
+                            'total' => $this->currency->format($originalProduct['total'] + ($this->config->get('config_tax') ? ($originalProduct['tax'] * $originalProduct['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
                         );
-
-                        if(!$present && !empty($original_product['name'])) {
-
-                            $data['difference_products'][] = array(
-                                'order_product_id' => $original_product['order_product_id'],
-                                'product_id' => $original_product['product_id'],
-                                'vendor_id' => $original_product['vendor_id'],
-                                'store_id' => $original_product['store_id'],
-                                'name' => $original_product['name'],
-                                'unit' => $original_product['unit'],
-                                'product_type' => $original_product['product_type'],
-                                'model' => $original_product['model'],
-                                'quantity_updated' => $original_product['quantity_updated'],
-                                'unit_updated' => $original_product['unit_updated'],//as of now unit change is not there
-                                'quantity' => $original_product['quantity'],
-                                'price' => $this->currency->format($original_product['price'] + ($this->config->get('config_tax') ? $original_product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
-                                'total' => $this->currency->format($original_product['total'] + ($this->config->get('config_tax') ? ($original_product['tax'] * $original_product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
-                            );
-                        }
-
                     }
                 } else {
-                    foreach ($original_products as $original_product) {
+                    foreach ($originalProducts as $originalProduct) {
                         $orderProducts[] = array(
-                            'order_product_id' => $original_product['order_product_id'],
-                            'product_id' => $original_product['product_id'],
-                            'vendor_id' => $original_product['vendor_id'],
-                            'store_id' => $original_product['store_id'],
-                            'name' => $original_product['name'],
-                            'unit' => $original_product['unit'],
-                            'product_type' => $original_product['product_type'],
-                            'model' => $original_product['model'],
-                            'quantity' => $original_product['quantity'],
-                            'quantity_updated' => '-',
-                            'unit_updated' => '-',
-                            'price' => $this->currency->format($original_product['price'] + ($this->config->get('config_tax') ? $original_product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
-                            'total' => $this->currency->format($original_product['total'] + ($this->config->get('config_tax') ? ($original_product['tax'] * $original_product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
+                            'order_product_id' => $originalProduct['order_product_id'],
+                            'product_id' => $originalProduct['product_id'],
+                            'vendor_id' => $originalProduct['vendor_id'],
+                            'store_id' => $originalProduct['store_id'],
+                            'name' => $originalProduct['name'],
+                            'unit' => $originalProduct['unit'],
+                            'product_type' => $originalProduct['product_type'],
+                            'model' => $originalProduct['model'],
+                            'quantity' => $originalProduct['quantity'],
+                            'quantity_updated' => $originalProduct['quantity'],
+                            'unit_updated' => $originalProduct['unit'],
+                            'price' => $this->currency->format($originalProduct['price'] + ($this->config->get('config_tax') ? $originalProduct['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
+                            'total' => $this->currency->format($originalProduct['total'] + ($this->config->get('config_tax') ? ($originalProduct['tax'] * $originalProduct['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
                         );
                     }
                 }
