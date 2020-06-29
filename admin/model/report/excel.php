@@ -932,6 +932,12 @@ class ModelReportExcel extends Model {
                 $objPHPExcel->setActiveSheetIndex($sheetIndex);
 
                 $worksheetName = $order['company_name'] ?: $order['firstname'] . ' ' . $order['lastname'];
+
+                // A fatal error is thrown for worksheet titles with more than 30 character
+                if(strlen($worksheetName) > 30) {
+                    $worksheetName = substr($worksheetName, 0, 27) . '...';
+                }
+
                 $objPHPExcel->getActiveSheet()->setTitle($worksheetName);
 
                 $sheet_title = $worksheetName . ' Order';
@@ -990,7 +996,7 @@ class ModelReportExcel extends Model {
             $objWriter->save('php://output');
             exit;
         } catch (Exception $e) {
-//            echo "<pre>";print_r($e);
+//            echo "<pre>";print_r($e);die;
             $errstr = $e->getMessage();
             $errline = $e->getLine();
             $errfile = $e->getFile();
