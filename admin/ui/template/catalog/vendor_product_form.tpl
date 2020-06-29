@@ -159,7 +159,7 @@
 							<div class="form-group ">
 								<label class="col-sm-2 control-label"><?php echo $entry_quantity; ?></label>
 								<div class="col-sm-10">
-									<input disabled type="number" name="quantity" value="<?php echo $quantity ?>" id="quantity" class="form-control input-full-width" />
+									<input readonly type="number" name="quantity" value="<?php echo $quantity ?>" id="quantity" class="form-control input-full-width" />
 								</div>
 							</div>
 
