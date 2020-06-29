@@ -1,10 +1,12 @@
 <?php
 
-class ControllerSaleOrder extends Controller {
+class ControllerSaleOrder extends Controller
+{
 
     private $error = array();
 
-    public function index(){
+    public function index()
+    {
 
         //$this->sendNewInvoice(812);die;
         /*echo "<pre>";print_r(date('d M Y h:i A', strtotime(date("Y-m-d H:i:s"))));die;
@@ -28,11 +30,12 @@ class ControllerSaleOrder extends Controller {
 
     }
 
-    public function product_autocomplete() {
+    public function product_autocomplete()
+    {
 
-        if(isset($this->request->get['filter_name'])){
+        if (isset($this->request->get['filter_name'])) {
             $filter_name = $this->request->get['filter_name'];
-        }else{
+        } else {
             $filter_name = '';
         }
 
@@ -44,13 +47,13 @@ class ControllerSaleOrder extends Controller {
 
         if (!empty($order_info)) {
             $data['store_id'] = $order_info['store_id'];
-            $json =  $this->model_sale_order->getProductDataByStoreFilter($filter_name,$data['store_id']);
+            $json = $this->model_sale_order->getProductDataByStoreFilter($filter_name, $data['store_id']);
 
             //$send = $json;
 
             foreach ($json as $j) {
 
-                if(isset($j['special_price']) && !is_null($j['special_price']) && $j['special_price'] && (float)$j['special_price']) {
+                if (isset($j['special_price']) && !is_null($j['special_price']) && $j['special_price'] && (float)$j['special_price']) {
                     $j['price'] = $j['special_price'];
                 }
 
@@ -65,7 +68,8 @@ class ControllerSaleOrder extends Controller {
         }
     }
 
-    public function add() {
+    public function add()
+    {
         $this->load->language('sale/order');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -118,7 +122,8 @@ class ControllerSaleOrder extends Controller {
         $this->getForm();
     }
 
-    public function edit() {
+    public function edit()
+    {
         $this->load->language('sale/order');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -171,7 +176,8 @@ class ControllerSaleOrder extends Controller {
         $this->getForm();
     }
 
-    public function EditInvoice() {
+    public function EditInvoice()
+    {
         $this->load->language('sale/order');
 
         $data['title'] = $this->language->get('text_invoice');
@@ -208,15 +214,15 @@ class ControllerSaleOrder extends Controller {
 
         $data['column_product'] = $this->language->get('column_product');
 
-        $data['column_unit'] = $this->language->get('column_unit') .' ( Ordered ) ' ;
+        $data['column_unit'] = $this->language->get('column_unit') . ' ( Ordered ) ';
         $data['column_model'] = $this->language->get('column_model');
-        $data['column_quantity'] = $this->language->get('column_quantity') .' ( Ordered ) ' ;
+        $data['column_quantity'] = $this->language->get('column_quantity') . ' ( Ordered ) ';
         $data['column_price'] = $this->language->get('column_price');
         $data['column_total'] = $this->language->get('column_total');
         $data['column_comment'] = $this->language->get('column_comment');
 
-        $data['column_unit_update'] = $this->language->get('column_unit') .' ( Variance ) ' ;
-        $data['column_quantity_update'] = $this->language->get('column_quantity') .' ( Variance ) ' ;
+        $data['column_unit_update'] = $this->language->get('column_unit') . ' ( Variance ) ';
+        $data['column_quantity_update'] = $this->language->get('column_quantity') . ' ( Variance ) ';
 
         $data['text_tax'] = $this->language->get('text_tax');
         $data['text_cpf_number'] = $this->language->get('text_cpf_number');
@@ -225,19 +231,18 @@ class ControllerSaleOrder extends Controller {
 
         $this->load->model('setting/setting');
 
-        $this->load->model( 'extension/extension' );
+        $this->load->model('extension/extension');
 
         $sort_order = array();
 
 
+        $data['allCodes'] = $this->model_extension_extension->getExtensions('total');
 
-        $data['allCodes'] = $this->model_extension_extension->getExtensions( 'total' );
 
-
-        foreach ( $data['allCodes'] as $key => $value ) {
-            $sort_order[$key] = $this->config->get( $value['code'] . '_sort_order' );
+        foreach ($data['allCodes'] as $key => $value) {
+            $sort_order[$key] = $this->config->get($value['code'] . '_sort_order');
         }
-        array_multisort( $sort_order, SORT_ASC, $data['allCodes'] );
+        array_multisort($sort_order, SORT_ASC, $data['allCodes']);
 
         $data['orders'] = array();
 
@@ -270,12 +275,12 @@ class ControllerSaleOrder extends Controller {
             //check vendor order 
 
             if ($this->user->isVendor()) {
-              if (!$this->isVendorOrder($order_id)) {
+                if (!$this->isVendorOrder($order_id)) {
                     $this->response->redirect($this->url->link('error/not_found'));
                 }
 
             }
-			//echo "<pre>";print_r($order_info);die;
+            //echo "<pre>";print_r($order_info);die;
 
             //$data['settlement_done'] = false;
             if ($order_info) {
@@ -315,7 +320,7 @@ class ControllerSaleOrder extends Controller {
 
                 $product_data = array();
 
-                if($this->model_sale_order->hasRealOrderProducts($order_id)) {
+                if ($this->model_sale_order->hasRealOrderProducts($order_id)) {
 
                     $products = $this->model_sale_order->getRealOrderProducts($order_id);
 
@@ -361,7 +366,7 @@ class ControllerSaleOrder extends Controller {
                         'quantity' => $product['quantity'],
                         'price' => $product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0),
                         //'total' => $product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0)
-                        'total' => ($product['price'] * $product['quantity'] )  + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0)
+                        'total' => ($product['price'] * $product['quantity']) + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0)
                     );
                 }
 
@@ -396,7 +401,7 @@ class ControllerSaleOrder extends Controller {
                     'store_telephone' => $store_telephone,
                     'store_fax' => $store_fax,
                     'email' => $order_info['email'],
-                    'cpf_number' =>($this->getUser($order_info['customer_id'])) ? $this->getUser($order_info['customer_id']) : $order_info['fax'],
+                    'cpf_number' => ($this->getUser($order_info['customer_id'])) ? $this->getUser($order_info['customer_id']) : $order_info['fax'],
                     'telephone' => $order_info['telephone'],
                     'shipping_address' => $order_info['shipping_address'],
                     'shipping_city' => $order_info['shipping_city'],
@@ -416,8 +421,8 @@ class ControllerSaleOrder extends Controller {
         $this->response->setOutput($this->load->view('sale/edit_order_invoice.tpl', $data));
     }
 
-    public function EditTransactionInvoice() {
-
+    public function EditTransactionInvoice()
+    {
 
 
         $this->load->language('sale/order');
@@ -431,8 +436,6 @@ class ControllerSaleOrder extends Controller {
         }
 
         $data['token'] = $this->session->data['token'];
-
-
 
 
         $data['direction'] = $this->language->get('direction');
@@ -479,19 +482,18 @@ class ControllerSaleOrder extends Controller {
 
         $this->load->model('setting/setting');
 
-        $this->load->model( 'extension/extension' );
+        $this->load->model('extension/extension');
 
         $sort_order = array();
 
 
+        $data['allCodes'] = $this->model_extension_extension->getExtensions('total');
 
-        $data['allCodes'] = $this->model_extension_extension->getExtensions( 'total' );
 
-
-        foreach ( $data['allCodes'] as $key => $value ) {
-            $sort_order[$key] = $this->config->get( $value['code'] . '_sort_order' );
+        foreach ($data['allCodes'] as $key => $value) {
+            $sort_order[$key] = $this->config->get($value['code'] . '_sort_order');
         }
-        array_multisort( $sort_order, SORT_ASC, $data['allCodes'] );
+        array_multisort($sort_order, SORT_ASC, $data['allCodes']);
 
         if (isset($this->request->post['selected'])) {
             $orders = $this->request->post['selected'];
@@ -504,7 +506,7 @@ class ControllerSaleOrder extends Controller {
 
         $data['transaction_details'] = $this->model_sale_order->getCreditDetail($data['transaction_id']);
 
-        if(isset($data['transaction_details']['amount']) && $data['transaction_details']['amount'] <= 0) {
+        if (isset($data['transaction_details']['amount']) && $data['transaction_details']['amount'] <= 0) {
             $data['transaction_details']['amount'] = -1 * $data['transaction_details']['amount'];
         }
 
@@ -545,7 +547,7 @@ class ControllerSaleOrder extends Controller {
 
         $data['sale_order_link'] = $this->url->link('vendor/vendor/edit', 'token=' . $this->session->data['token'] . '&user_id=' . $data['vendor_details']['user_id'], 'SSL');
 
-        $data['invoicepdf'] = $this->url->link('sale/order/PrintTransactionInvoice', 'token=' . $this->session->data['token']. '&transaction_id=' . $data['transaction_id'], 'SSL');
+        $data['invoicepdf'] = $this->url->link('sale/order/PrintTransactionInvoice', 'token=' . $this->session->data['token'] . '&transaction_id=' . $data['transaction_id'], 'SSL');
 
         $data['orders'][] = array(
             'order_id' => $data['transaction_id'],
@@ -572,8 +574,8 @@ class ControllerSaleOrder extends Controller {
         $this->response->setOutput($this->load->view('sale/edit_transaction_invoice.tpl', $data));
     }
 
-    public function PrintTransactionInvoice() {
-
+    public function PrintTransactionInvoice()
+    {
 
 
         //echo "<pre>";print_r($this->request->post);die;
@@ -588,8 +590,6 @@ class ControllerSaleOrder extends Controller {
         }
 
         $data['token'] = $this->session->data['token'];
-
-
 
 
         $data['direction'] = $this->language->get('direction');
@@ -636,19 +636,18 @@ class ControllerSaleOrder extends Controller {
 
         $this->load->model('setting/setting');
 
-        $this->load->model( 'extension/extension' );
+        $this->load->model('extension/extension');
 
         $sort_order = array();
 
 
+        $data['allCodes'] = $this->model_extension_extension->getExtensions('total');
 
-        $data['allCodes'] = $this->model_extension_extension->getExtensions( 'total' );
 
-
-        foreach ( $data['allCodes'] as $key => $value ) {
-            $sort_order[$key] = $this->config->get( $value['code'] . '_sort_order' );
+        foreach ($data['allCodes'] as $key => $value) {
+            $sort_order[$key] = $this->config->get($value['code'] . '_sort_order');
         }
-        array_multisort( $sort_order, SORT_ASC, $data['allCodes'] );
+        array_multisort($sort_order, SORT_ASC, $data['allCodes']);
 
         $data['transaction_id'] = $this->request->post['transaction_id'];
         if (isset($this->request->post['selected'])) {
@@ -664,7 +663,7 @@ class ControllerSaleOrder extends Controller {
 
         $data['transaction_details'] = $this->model_sale_order->getCreditDetail($data['transaction_id']);
 
-        if(isset($data['transaction_details']['amount']) && $data['transaction_details']['amount'] <= 0) {
+        if (isset($data['transaction_details']['amount']) && $data['transaction_details']['amount'] <= 0) {
             $data['transaction_details']['amount'] = -1 * $data['transaction_details']['amount'];
         }
 
@@ -705,7 +704,7 @@ class ControllerSaleOrder extends Controller {
 
         $data['sale_order_link'] = $this->url->link('vendor/vendor/edit', 'token=' . $this->session->data['token'] . '&user_id=' . $data['vendor_details']['user_id'], 'SSL');
 
-        $data['invoicepdf'] = $this->url->link('sale/order/PrintTransactionInvoice', 'token=' . $this->session->data['token']. '&transaction_id=' . $data['transaction_id'], 'SSL');
+        $data['invoicepdf'] = $this->url->link('sale/order/PrintTransactionInvoice', 'token=' . $this->session->data['token'] . '&transaction_id=' . $data['transaction_id'], 'SSL');
 
         $data['orders'][] = array(
             'order_id' => $data['transaction_id'],
@@ -731,7 +730,7 @@ class ControllerSaleOrder extends Controller {
         //echo "<pre>";print_r($data);die;
         $html = $this->load->view('sale/print_transaction_invoice.tpl', $data);
 
-        require_once  DIR_ROOT.'/vendor/autoload.php';
+        require_once DIR_ROOT . '/vendor/autoload.php';
         /*$mpdf = new \Mpdf\Mpdf();
         $mpdf->WriteHTML('<h1>Hello world!</h1>');
         $mpdf->Output();
@@ -740,13 +739,14 @@ class ControllerSaleOrder extends Controller {
 
         $mpdf = new \Mpdf\Mpdf();
         $mpdf->WriteHTML($html);
-        $invoice_no = 'Invoice_'.$data['transaction_id'];
+        $invoice_no = 'Invoice_' . $data['transaction_id'];
         $file_name = $invoice_no . '.pdf';
 
         //return $mpdf->Output(DIR_SYSTEM . "test.html","D");die;
 
         //return $mpdf->Output($file_name,"I");die;
-        return $mpdf->Output($file_name,"D");die;
+        return $mpdf->Output($file_name, "D");
+        die;
 
         $mpdf->Output();
 
@@ -786,14 +786,15 @@ class ControllerSaleOrder extends Controller {
             case 'S':
                 return $mpdf->Output('', $dest);
 
-            break;
+                break;
         }
 
 
         //$this->response->setOutput($this->load->view('sale/edit_transaction_invoice.tpl', $data));
     }
 
-    public function delete() {
+    public function delete()
+    {
 
         //check vendor order 
         if ($this->user->isVendor()) {
@@ -922,7 +923,6 @@ class ControllerSaleOrder extends Controller {
             }
 
 
-
             if (isset($this->request->get['filter_order_status'])) {
                 $url .= '&filter_order_status=' . $this->request->get['filter_order_status'];
             }
@@ -957,8 +957,8 @@ class ControllerSaleOrder extends Controller {
         $this->getList();
     }
 
-    protected function getList() {
-
+    protected function getList()
+    {
 
 
         if (isset($this->request->get['filter_city'])) {
@@ -1002,7 +1002,6 @@ class ControllerSaleOrder extends Controller {
         } else {
             $filter_payment = null;
         }
-
 
 
         if (isset($this->request->get['filter_order_status'])) {
@@ -1077,7 +1076,6 @@ class ControllerSaleOrder extends Controller {
         if (isset($this->request->get['filter_payment'])) {
             $url .= '&filter_payment=' . urlencode(html_entity_decode($this->request->get['filter_payment'], ENT_QUOTES, 'UTF-8'));
         }
-
 
 
         if (isset($this->request->get['filter_order_status'])) {
@@ -1157,22 +1155,21 @@ class ControllerSaleOrder extends Controller {
 
             //echo "<pre>";print_r($totals);die;
             foreach ($totals as $total) {
-                if($total['code'] == 'sub_total') {
+                if ($total['code'] == 'sub_total') {
                     $sub_total = $total['value'];
                     break;
                 }
             }
 
-            if($this->user->isVendor()) {
+            if ($this->user->isVendor()) {
 
                 $result['customer'] = strtok($result['firstname'], " ");
             }
 
-            if($result['company_name']) {
+            if ($result['company_name']) {
 
-                $result['company_name'] = " (" .  $result['company_name'] .")";
-            }
-            else{
+                $result['company_name'] = " (" . $result['company_name'] . ")";
+            } else {
                 // $result['company_name'] = "(NA)";
 
 
@@ -1181,7 +1178,7 @@ class ControllerSaleOrder extends Controller {
             $data['orders'][] = array(
                 'order_id' => $result['order_id'],
                 'customer' => $result['customer'],
-                'company_name'=> $result['company_name'],
+                'company_name' => $result['company_name'],
                 'status' => $result['status'],
 
                 'payment_method' => $result['payment_method'],
@@ -1266,7 +1263,7 @@ class ControllerSaleOrder extends Controller {
         }
 
         if (isset($this->request->post['selected'])) {
-            $data['selected'] = (array) $this->request->post['selected'];
+            $data['selected'] = (array)$this->request->post['selected'];
         } else {
             $data['selected'] = array();
         }
@@ -1300,7 +1297,6 @@ class ControllerSaleOrder extends Controller {
         if (isset($this->request->get['filter_payment'])) {
             $url .= '&filter_payment=' . urlencode(html_entity_decode($this->request->get['filter_payment'], ENT_QUOTES, 'UTF-8'));
         }
-
 
 
         if (isset($this->request->get['filter_order_status'])) {
@@ -1368,7 +1364,6 @@ class ControllerSaleOrder extends Controller {
         }
 
 
-
         if (isset($this->request->get['filter_order_status'])) {
             $url .= '&filter_order_status=' . $this->request->get['filter_order_status'];
         }
@@ -1430,9 +1425,10 @@ class ControllerSaleOrder extends Controller {
         $this->response->setOutput($this->load->view('sale/order_list.tpl', $data));
     }
 
-    public function getUserByName($name) {
+    public function getUserByName($name)
+    {
 
-        if($name) {
+        if ($name) {
             $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "user` u WHERE CONCAT(u.firstname,' ',u.lastname) LIKE '" . $this->db->escape($name) . "%'");
 
             return $query->row['user_id'];
@@ -1440,9 +1436,10 @@ class ControllerSaleOrder extends Controller {
 
     }
 
-    public function getUser($id) {
+    public function getUser($id)
+    {
 
-        if($id) {
+        if ($id) {
             $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "customer`  WHERE customer_id ='" . $id . "'");
 
             return $query->row['fax'];
@@ -1450,7 +1447,8 @@ class ControllerSaleOrder extends Controller {
 
     }
 
-    public function getForm() {
+    public function getForm()
+    {
 
         $this->load->model('sale/customer');
 
@@ -1584,7 +1582,6 @@ class ControllerSaleOrder extends Controller {
         }
 
 
-
         if (isset($this->request->get['filter_order_status'])) {
             $url .= '&filter_order_status=' . $this->request->get['filter_order_status'];
         }
@@ -1689,7 +1686,7 @@ class ControllerSaleOrder extends Controller {
             }
 
             // Add vouchers to the API
-             // $this->model_sale_order->getOrderVouchers($this->request->get['order_id']);
+            // $this->model_sale_order->getOrderVouchers($this->request->get['order_id']);
             $data['order_vouchers'] = array();
 
             $data['coupon'] = '';
@@ -1822,7 +1819,8 @@ class ControllerSaleOrder extends Controller {
         $this->response->setOutput($this->load->view('sale/order_form.tpl', $data));
     }
 
-    public function info() {
+    public function info()
+    {
         $this->load->model('sale/order');
 
         if (isset($this->request->get['order_id'])) {
@@ -1839,7 +1837,7 @@ class ControllerSaleOrder extends Controller {
 
         //check vendor order 
         if ($this->user->isVendor()) {
-          if (!$this->isVendorOrder($order_id)) {
+            if (!$this->isVendorOrder($order_id)) {
                 $this->response->redirect($this->url->link('error/not_found'));
             }
 
@@ -1870,7 +1868,6 @@ class ControllerSaleOrder extends Controller {
             $data['text_pickup_notes'] = $this->language->get('text_pickup_notes');
             $data['text_final_amount'] = $this->language->get('text_final_amount');
             $data['text_driver_notes'] = $this->language->get('text_driver_notes');
-
 
 
             $data['text_flat_house_office'] = $this->language->get('text_flat_house_office');
@@ -2045,8 +2042,8 @@ class ControllerSaleOrder extends Controller {
 
             $data['column_product'] = $this->language->get('column_product');
             $data['column_model'] = $this->language->get('column_model');
-            $data['column_quantity'] = $this->language->get('column_quantity') .'( Ordered )';
-            $data['column_quantity_update'] = $this->language->get('column_quantity').'( Updated )';
+            $data['column_quantity'] = $this->language->get('column_quantity') . '( Ordered )';
+            $data['column_quantity_update'] = $this->language->get('column_quantity') . '( Updated )';
             $data['column_price'] = $this->language->get('column_price');
             $data['column_total'] = $this->language->get('column_total');
             $data['column_name'] = $this->language->get('column_name');
@@ -2094,21 +2091,21 @@ class ControllerSaleOrder extends Controller {
             require_once DIR_SYSTEM . 'library/Iugu.php';
 
             //$this->load->model('sale/order');
-            $iuguData =  $this->model_sale_order->getOrderIugu($order_id);
+            $iuguData = $this->model_sale_order->getOrderIugu($order_id);
 
             $data['settlement_tab'] = false;
 
-            if($iuguData) {
+            if ($iuguData) {
 
                 $invoiceId = $iuguData['invoice_id'];
 
                 Iugu::setApiKey($this->config->get('iugu_token'));
 
-                $invoice =Iugu_Invoice::fetch($invoiceId);
+                $invoice = Iugu_Invoice::fetch($invoiceId);
 
                 //if($invoice['status'] == 'paid') {
-                    //disable settlement tab
-                    $data['settlement_tab'] = true;
+                //disable settlement tab
+                $data['settlement_tab'] = true;
                 //}
             }
 
@@ -2139,7 +2136,6 @@ class ControllerSaleOrder extends Controller {
             if (isset($this->request->get['filter_payment'])) {
                 $url .= '&filter_payment=' . urlencode(html_entity_decode($this->request->get['filter_payment'], ENT_QUOTES, 'UTF-8'));
             }
-
 
 
             if (isset($this->request->get['filter_order_status'])) {
@@ -2183,29 +2179,28 @@ class ControllerSaleOrder extends Controller {
             );
 
 
-
             if (isset($this->request->get['store_id'])) {
                 $store_id = $this->request->get['store_id'];
-                $data['shipping'] = $this->url->link('sale/order/shipping', 'store_id=' . $store_id . '&token=' . $this->session->data['token'] . '&order_id=' . (int) $this->request->get['order_id'], 'SSL');
+                $data['shipping'] = $this->url->link('sale/order/shipping', 'store_id=' . $store_id . '&token=' . $this->session->data['token'] . '&order_id=' . (int)$this->request->get['order_id'], 'SSL');
 
-                if($this->model_sale_order->hasRealOrderProducts($order_id)) {
+                if ($this->model_sale_order->hasRealOrderProducts($order_id)) {
 
-                    $data['invoice'] = $this->url->link('sale/order/newinvoice', 'store_id=' . $store_id . '&token=' . $this->session->data['token'] . '&order_id=' . (int) $this->request->get['order_id'], 'SSL');
+                    $data['invoice'] = $this->url->link('sale/order/newinvoice', 'store_id=' . $store_id . '&token=' . $this->session->data['token'] . '&order_id=' . (int)$this->request->get['order_id'], 'SSL');
 
                 } else {
-                    $data['invoice'] = $this->url->link('sale/order/invoice', 'store_id=' . $store_id . '&token=' . $this->session->data['token'] . '&order_id=' . (int) $this->request->get['order_id'], 'SSL');
+                    $data['invoice'] = $this->url->link('sale/order/invoice', 'store_id=' . $store_id . '&token=' . $this->session->data['token'] . '&order_id=' . (int)$this->request->get['order_id'], 'SSL');
                 }
 
 
             } else {
-                $data['shipping'] = $this->url->link('sale/order/shipping', 'token=' . $this->session->data['token'] . '&order_id=' . (int) $this->request->get['order_id'], 'SSL');
+                $data['shipping'] = $this->url->link('sale/order/shipping', 'token=' . $this->session->data['token'] . '&order_id=' . (int)$this->request->get['order_id'], 'SSL');
 
-                if($this->model_sale_order->hasRealOrderProducts($order_id)) {
+                if ($this->model_sale_order->hasRealOrderProducts($order_id)) {
 
-                    $data['invoice'] = $this->url->link('sale/order/newinvoice', 'token=' . $this->session->data['token'] . '&order_id=' . (int) $this->request->get['order_id'], 'SSL');
+                    $data['invoice'] = $this->url->link('sale/order/newinvoice', 'token=' . $this->session->data['token'] . '&order_id=' . (int)$this->request->get['order_id'], 'SSL');
 
                 } else {
-                    $data['invoice'] = $this->url->link('sale/order/invoice', 'token=' . $this->session->data['token'] . '&order_id=' . (int) $this->request->get['order_id'], 'SSL');
+                    $data['invoice'] = $this->url->link('sale/order/invoice', 'token=' . $this->session->data['token'] . '&order_id=' . (int)$this->request->get['order_id'], 'SSL');
                 }
 
 
@@ -2213,12 +2208,11 @@ class ControllerSaleOrder extends Controller {
 
             //$data['edit'] = $this->url->link('sale/order/edit', 'token=' . $this->session->data['token'] . '&order_id=' . (int) $this->request->get['order_id'], 'SSL');
             $data['edit'] = '';
-            if (!$this->user->isVendor()){
-                if ( !in_array( $order_info['order_status_id'], $this->config->get( 'config_complete_status' ) ) ) {
+            if (!$this->user->isVendor()) {
+                if (!in_array($order_info['order_status_id'], $this->config->get('config_complete_status'))) {
                     $data['edit'] = $this->url->link('sale/order/EditInvoice', 'token=' . $this->session->data['token'] . '&order_id=' . $this->request->get['order_id'], 'SSL');
                 }
             }
-
 
 
             $data['cancel'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . $url, 'SSL');
@@ -2247,38 +2241,35 @@ class ControllerSaleOrder extends Controller {
 
             //dropoff latitude  and pikcup latitide
 
-            if($order_info['latitude']) {
+            if ($order_info['latitude']) {
                 $data['dropoff_latitude'] = $order_info['latitude'];
             } else {
                 $data['dropoff_latitude'] = '';
             }
 
-            if($order_info['longitude']) {
+            if ($order_info['longitude']) {
                 $data['dropoff_longitude'] = $order_info['longitude'];
             } else {
                 $data['dropoff_longitude'] = '';
             }
 
 
-
-
-
             $store_data = $this->model_sale_order->getStoreData($order_info['store_id']);
 
-            if($store_data['latitude']) {
+            if ($store_data['latitude']) {
                 $data['pickup_latitude'] = $store_data['latitude'];
             } else {
                 $data['pickup_latitude'] = '';
             }
 
-            if($store_data['longitude']) {
+            if ($store_data['longitude']) {
                 $data['pickup_longitude'] = $store_data['longitude'];
             } else {
                 $data['pickup_longitude'] = '';
             }
 
-            $data['pointA'] = "'".$data['dropoff_latitude'].",".$data['dropoff_longitude']."'";
-            $data['pointB'] = "'".$data['pickup_latitude'].",".$data['pickup_longitude']."'";
+            $data['pointA'] = "'" . $data['dropoff_latitude'] . "," . $data['dropoff_longitude'] . "'";
+            $data['pointB'] = "'" . $data['pickup_latitude'] . "," . $data['pickup_longitude'] . "'";
 
             /*$data['pointA'] = "'50.8505851,4.3680522'";
             $data['pointB'] = "'50.91257,4.346170453967261'";*/
@@ -2629,35 +2620,35 @@ class ControllerSaleOrder extends Controller {
             $data['password'] = $this->config->get('config_delivery_secret');
 
 
-            $data['delivery_id'] =  $order_info['delivery_id'];//"del_XPeEGFX3Hc4ZeWg5";//
-            $data['shopper_link'] = $this->config->get('config_shopper_link').'/storage/';
+            $data['delivery_id'] = $order_info['delivery_id'];//"del_XPeEGFX3Hc4ZeWg5";//
+            $data['shopper_link'] = $this->config->get('config_shopper_link') . '/storage/';
 
             $data['products_status'] = [];
             $data['delivery_data'] = [];
 
             $log = new Log('error.log');
 
-            if(isset($data['delivery_id'])) {
-                $response = $this->load->controller('deliversystem/deliversystem/getToken',$data);
+            if (isset($data['delivery_id'])) {
+                $response = $this->load->controller('deliversystem/deliversystem/getToken', $data);
 
 
-                if($response['status']) {
+                if ($response['status']) {
                     $data['tokens'] = $response['token'];
-                    $productStatus = $this->load->controller('deliversystem/deliversystem/getProductStatus',$data);
+                    $productStatus = $this->load->controller('deliversystem/deliversystem/getProductStatus', $data);
 
 
-                    $resp = $this->load->controller('deliversystem/deliversystem/getDeliveryStatus',$data);
+                    $resp = $this->load->controller('deliversystem/deliversystem/getDeliveryStatus', $data);
 
-                    if(!$resp['status'] || isset($resp['error']) ) {
+                    if (!$resp['status'] || isset($resp['error'])) {
                         $data['delivery_data'] = [];
                     } else {
                         $data['delivery_data'] = $resp['data'][0];
-                        if(isset($data['delivery_data']->assigned_to)) {
+                        if (isset($data['delivery_data']->assigned_to)) {
                             $data['delivery_details'] = true;
                         }
                     }
 
-                    if(!$productStatus['status'] || !(count($productStatus['data']) > 0) ) {
+                    if (!$productStatus['status'] || !(count($productStatus['data']) > 0)) {
                         $data['products_status'] = [];
                     } else {
                         $data['products_status'] = $productStatus['data'];
@@ -2783,10 +2774,10 @@ class ControllerSaleOrder extends Controller {
 
             $allowedShippingMethods = $this->config->get('config_delivery_shipping_methods_status');
             //echo "<pre>";print_r($allowedShippingMethods);die;
-            if(is_array($allowedShippingMethods) && count($allowedShippingMethods) > 0) {
+            if (is_array($allowedShippingMethods) && count($allowedShippingMethods) > 0) {
                 foreach ($allowedShippingMethods as $method) {
 
-                    if($order_info['shipping_code'] == $method.".".$method) {
+                    if ($order_info['shipping_code'] == $method . "." . $method) {
                         $data['allowedShippingMethods'] = true;
                     }
                 }
@@ -2800,11 +2791,11 @@ class ControllerSaleOrder extends Controller {
 
             $data['original_total'] = 0;
 
-            $sql  =  'SELECT    * FROM `'.DB_PREFIX.'order_total`  WHERE code = "sub_total" and  order_id = "'.$order_info['order_id'].'"';
+            $sql = 'SELECT    * FROM `' . DB_PREFIX . 'order_total`  WHERE code = "sub_total" and  order_id = "' . $order_info['order_id'] . '"';
 
             $iuguData = $this->db->query($sql)->row;
 
-            if($iuguData) {
+            if ($iuguData) {
                 $data['original_total'] = $iuguData['value'];
             }
 
@@ -2814,7 +2805,7 @@ class ControllerSaleOrder extends Controller {
 
             $data['reward_total'] = $this->model_sale_customer->getTotalCustomerRewardsByOrderId($this->request->get['order_id']);
 
-            $data['affiliate_firstname'] ='';
+            $data['affiliate_firstname'] = '';
             $data['affiliate_lastname'] = '';
 
             if ($order_info['affiliate_id']) {
@@ -2823,12 +2814,12 @@ class ControllerSaleOrder extends Controller {
                 $data['affiliate'] = '';
             }
 
-            $data['commission'] = number_format($order_info['commission'],2);
+            $data['commission'] = number_format($order_info['commission'], 2);
 
 
             $this->load->model('marketing/affiliate');
 
-            $data['commission_total'] ='';
+            $data['commission_total'] = '';
 
             $this->load->model('localisation/order_status');
 
@@ -2963,11 +2954,10 @@ class ControllerSaleOrder extends Controller {
 
             $EditedProducts = $this->model_sale_order->getRealOrderProducts($this->request->get['order_id']);
 //             echo '<pre>';print_r($EditedProducts);exit;
-             $original_products = $products = $this->model_sale_order->getOrderProducts($this->request->get['order_id']);
+            $original_products = $products = $this->model_sale_order->getOrderProducts($this->request->get['order_id']);
 
 
-
-            if($this->model_sale_order->hasRealOrderProducts($this->request->get['order_id'])) {
+            if ($this->model_sale_order->hasRealOrderProducts($this->request->get['order_id'])) {
 
                 foreach ($original_products as $original_product) {
                     $option_data = array();
@@ -2999,13 +2989,13 @@ class ControllerSaleOrder extends Controller {
 
 
                     foreach ($EditedProducts as $EditedProduct) {
-                        if($original_product['product_id'] == $EditedProduct['product_id'] ){
+                        if ($original_product['product_id'] == $EditedProduct['product_id']) {
                             $original_product['quantity_updated'] = $EditedProduct['quantity'];
                             $original_product['unit_updated'] = $EditedProduct['unit'];
                         }
 
 
-                        if(!empty($original_product['name']) && $original_product['name'] == $EditedProduct['name'] && $original_product['unit'] == $EditedProduct['unit'] && $original_product['quantity'] == $EditedProduct['quantity'] ) {
+                        if (!empty($original_product['name']) && $original_product['name'] == $EditedProduct['name'] && $original_product['unit'] == $EditedProduct['unit'] && $original_product['quantity'] == $EditedProduct['quantity']) {
                             $present = true;
                         }
                     }
@@ -3023,7 +3013,7 @@ class ControllerSaleOrder extends Controller {
                         'option' => $option_data,
                         'quantity' => $original_product['quantity'],
                         'quantity_updated' => $original_product['quantity_updated'],
-                            'unit_updated' => $original_product['unit_updated'],//as of now unit change is not there
+                        'unit_updated' => $original_product['unit_updated'],//as of now unit change is not there
                         'price' => $this->currency->format($original_product['price'] + ($this->config->get('config_tax') ? $original_product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
                         'total' => $this->currency->format($original_product['total'] + ($this->config->get('config_tax') ? ($original_product['tax'] * $original_product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
                         'href' => $this->url->link('catalog/product/edit', 'token=' . $this->session->data['token'] . '&product_id=' . $original_product['product_id'], 'SSL')
@@ -3031,7 +3021,7 @@ class ControllerSaleOrder extends Controller {
 
 
                     //echo '<pre>';print_r($original_product);exit;
-                    if(!$present && !empty($original_product['name'])) {
+                    if (!$present && !empty($original_product['name'])) {
 
                         $data['difference_products'][] = array(
                             'order_product_id' => $original_product['order_product_id'],
@@ -3063,24 +3053,24 @@ class ControllerSaleOrder extends Controller {
 
                 $products = $this->model_sale_order->getOrderProducts($this->request->get['order_id']);
                 foreach ($original_products as $original_product) {
-                $data['original_products'][] = array(
-                    'order_product_id' => $original_product['order_product_id'],
-                    'product_id' => $original_product['product_id'],
-                    'vendor_id' => $original_product['vendor_id'],
-                    'store_id' => $original_product['store_id'],
-                    'name' => $original_product['name'],
-                    'unit' => $original_product['unit'],
-                    'product_type' => $original_product['product_type'],
-                    'model' => $original_product['model'],
-                    'option' => $option_data,
-                    'quantity' => $original_product['quantity'],
-                    'quantity_updated' => '-',
+                    $data['original_products'][] = array(
+                        'order_product_id' => $original_product['order_product_id'],
+                        'product_id' => $original_product['product_id'],
+                        'vendor_id' => $original_product['vendor_id'],
+                        'store_id' => $original_product['store_id'],
+                        'name' => $original_product['name'],
+                        'unit' => $original_product['unit'],
+                        'product_type' => $original_product['product_type'],
+                        'model' => $original_product['model'],
+                        'option' => $option_data,
+                        'quantity' => $original_product['quantity'],
+                        'quantity_updated' => '-',
                         'unit_updated' => '-',
-                    'price' => $this->currency->format($original_product['price'] + ($this->config->get('config_tax') ? $original_product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
-                    'total' => $this->currency->format($original_product['total'] + ($this->config->get('config_tax') ? ($original_product['tax'] * $original_product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
-                    'href' => $this->url->link('catalog/product/edit', 'token=' . $this->session->data['token'] . '&product_id=' . $original_product['product_id'], 'SSL')
-                );
-            }
+                        'price' => $this->currency->format($original_product['price'] + ($this->config->get('config_tax') ? $original_product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
+                        'total' => $this->currency->format($original_product['total'] + ($this->config->get('config_tax') ? ($original_product['tax'] * $original_product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
+                        'href' => $this->url->link('catalog/product/edit', 'token=' . $this->session->data['token'] . '&product_id=' . $original_product['product_id'], 'SSL')
+                    );
+                }
 
             }
 
@@ -3123,7 +3113,7 @@ class ControllerSaleOrder extends Controller {
                     'option' => $option_data,
                     'quantity' => $product['quantity'],
                     'quantity_updated' => $product['quantity'],
-                    'unit_updated' =>$product['unit'],//as of now unit change is not there
+                    'unit_updated' => $product['unit'],//as of now unit change is not there
 
                     'price' => $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
                     'total' => $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
@@ -3149,7 +3139,7 @@ class ControllerSaleOrder extends Controller {
                     'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
                 );
 
-                if($total['code'] == 'total') {
+                if ($total['code'] == 'total') {
                     $data['total'] = $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']);
                 }
             }
@@ -3163,7 +3153,7 @@ class ControllerSaleOrder extends Controller {
 
             $orderStatusDetail = $this->model_localisation_order_status->getOrderStatus($order_info['order_status_id']);
 
-            if(is_array($orderStatusDetail) && isset($orderStatusDetail['name'])) {
+            if (is_array($orderStatusDetail) && isset($orderStatusDetail['name'])) {
                 $data['order_status_name'] = $orderStatusDetail['name'];
             }
 
@@ -3422,24 +3412,24 @@ class ControllerSaleOrder extends Controller {
                 $data['maxmind_id'] = '';
             }
 
-            $data['text_edit_timeslot'] = $this->language->get ('text_edit_timeslot');
+            $data['text_edit_timeslot'] = $this->language->get('text_edit_timeslot');
 
-            $data['get_timeslot_url'] = HTTPS_CATALOG.'index.php?path=checkout/delivery_time/getOrderEditRawTimeslotFromAdmin&order_id='.$data['order_id'];
+            $data['get_timeslot_url'] = HTTPS_CATALOG . 'index.php?path=checkout/delivery_time/getOrderEditRawTimeslotFromAdmin&order_id=' . $data['order_id'];
 
-            $data['save_timeslot_url'] = HTTPS_CATALOG.'index.php?path=checkout/delivery_time/saveOrderEditRawTimeslotFromAdmin';
+            $data['save_timeslot_url'] = HTTPS_CATALOG . 'index.php?path=checkout/delivery_time/saveOrderEditRawTimeslotFromAdmin';
 
-            $data['save_timeslot_url_override'] = HTTPS_CATALOG.'index.php?path=checkout/delivery_time/saveOrderEditRawTimeslotOverrideFromAdmin';
+            $data['save_timeslot_url_override'] = HTTPS_CATALOG . 'index.php?path=checkout/delivery_time/saveOrderEditRawTimeslotOverrideFromAdmin';
 
 
-            $data['save_flat_addressonly'] = HTTPS_CATALOG.'index.php?path=checkout/edit_order/updateOnlyFlatNumberShippingAddressFromAdmin';
+            $data['save_flat_addressonly'] = HTTPS_CATALOG . 'index.php?path=checkout/edit_order/updateOnlyFlatNumberShippingAddressFromAdmin';
 
-            $data['save_shipping_url_override'] = HTTPS_CATALOG.'index.php?path=checkout/edit_order/updateNewShippingAddressFromAdmin';
+            $data['save_shipping_url_override'] = HTTPS_CATALOG . 'index.php?path=checkout/edit_order/updateNewShippingAddressFromAdmin';
 
 
             $data['shipped'] = false;
 
 
-            if(in_array( $order_info['order_status_id'], $this->config->get( 'config_complete_status')) || in_array( $order_info['order_status_id'], $this->config->get( 'config_shipped_status'))) {
+            if (in_array($order_info['order_status_id'], $this->config->get('config_complete_status')) || in_array($order_info['order_status_id'], $this->config->get('config_shipped_status'))) {
                 $data['shipped'] = true;
             }
 
@@ -3482,7 +3472,8 @@ class ControllerSaleOrder extends Controller {
         }
     }
 
-    protected function validateDelete() {
+    protected function validateDelete()
+    {
 
         $this->load->model('sale/order');
 
@@ -3491,21 +3482,22 @@ class ControllerSaleOrder extends Controller {
         }
 
         //check if any return 
-        if(isset($this->request->get['order_id'])){
+        if (isset($this->request->get['order_id'])) {
             $order_id = $this->request->get['order_id'];
-        }else{
+        } else {
             $order_id = 0;
         }
 
         $query = $this->model_sale_order->getReturn($order_id);
-        if($query->row['total'] > 0){
+        if ($query->row['total'] > 0) {
             $this->error['warning'] = sprintf($this->language->get('error_return'), $query->row['total']);
         }
 
         return !$this->error;
     }
 
-    protected function validate() {
+    protected function validate()
+    {
 
         if (!$this->user->hasPermission('modify', 'sale/order')) {
             $this->error['warning'] = $this->language->get('error_permission');
@@ -3516,7 +3508,8 @@ class ControllerSaleOrder extends Controller {
 //        return true;
     }
 
-    public function createInvoiceNo() {
+    public function createInvoiceNo()
+    {
         $this->load->language('sale/order');
 
         $json = array();
@@ -3545,7 +3538,8 @@ class ControllerSaleOrder extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-    public function addReward() {
+    public function addReward()
+    {
         $this->load->language('sale/order');
 
         $json = array();
@@ -3580,7 +3574,8 @@ class ControllerSaleOrder extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-    public function save_order_transaction_id() {
+    public function save_order_transaction_id()
+    {
         $this->load->language('sale/order');
 
         $log = new Log('error.log');
@@ -3612,7 +3607,7 @@ class ControllerSaleOrder extends Controller {
             if ($order_info && $order_id && $transaction_id) {
                 $this->load->model('sale/customer');
 
-                $this->model_sale_order->insertOrderTransactionId($order_id,$transaction_id);
+                $this->model_sale_order->insertOrderTransactionId($order_id, $transaction_id);
             }
 
             $json['success'] = $this->language->get('text_reward_added');
@@ -3622,7 +3617,8 @@ class ControllerSaleOrder extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-    public function removeReward() {
+    public function removeReward()
+    {
         $this->load->language('sale/order');
 
         $json = array();
@@ -3653,7 +3649,8 @@ class ControllerSaleOrder extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-    public function addCommission() {
+    public function addCommission()
+    {
         $this->load->language('sale/order');
 
         $json = array();
@@ -3688,7 +3685,8 @@ class ControllerSaleOrder extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-    public function removeCommission() {
+    public function removeCommission()
+    {
         $this->load->language('sale/order');
 
         $json = array();
@@ -3719,7 +3717,8 @@ class ControllerSaleOrder extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-    public function country() {
+    public function country()
+    {
         $json = array();
 
         $this->load->model('localisation/country');
@@ -3745,7 +3744,8 @@ class ControllerSaleOrder extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-    public function history() {
+    public function history()
+    {
         $this->load->language('sale/order');
 
         $data['text_no_results'] = $this->language->get('text_no_results');
@@ -3792,7 +3792,8 @@ class ControllerSaleOrder extends Controller {
         $this->response->setOutput($this->load->view('sale/order_history.tpl', $data));
     }
 
-    public function invoice() {
+    public function invoice()
+    {
         $this->load->language('sale/order');
 
         $data['title'] = $this->language->get('text_invoice');
@@ -3830,9 +3831,9 @@ class ControllerSaleOrder extends Controller {
 
         $data['column_model'] = $this->language->get('column_model');
         $data['column_unit'] = $this->language->get('column_unit') . ' Ordered';
-        $data['column_quantity'] = $this->language->get('column_quantity'). ' Ordered';
-        $data['column_unit_change'] = $this->language->get('column_unit') .' Change' ;
-        $data['column_quantity_change'] = $this->language->get('column_quantity') .' Change' ;
+        $data['column_quantity'] = $this->language->get('column_quantity') . ' Ordered';
+        $data['column_unit_change'] = $this->language->get('column_unit') . ' Change';
+        $data['column_quantity_change'] = $this->language->get('column_quantity') . ' Change';
         $data['column_price'] = $this->language->get('column_price');
         $data['column_total'] = $this->language->get('column_total');
         $data['column_comment'] = $this->language->get('column_comment');
@@ -3866,7 +3867,7 @@ class ControllerSaleOrder extends Controller {
             //check vendor order 
 
             if ($this->user->isVendor()) {
-              if (!$this->isVendorOrder($order_id)) {
+                if (!$this->isVendorOrder($order_id)) {
                     $this->response->redirect($this->url->link('error/not_found'));
                 }
 
@@ -3904,7 +3905,7 @@ class ControllerSaleOrder extends Controller {
                 }
 
 
-                $data['store_logo'] = $this->model_tool_image->resize($store_data['logo'],300, 300);
+                $data['store_logo'] = $this->model_tool_image->resize($store_data['logo'], 300, 300);
                 $data['store_name'] = $store_data['name'];
 
                 if ($order_info['invoice_no']) {
@@ -3917,7 +3918,7 @@ class ControllerSaleOrder extends Controller {
 
                 $product_data = array();
 
-                if($this->model_sale_order->hasRealOrderProducts($order_id)) {
+                if ($this->model_sale_order->hasRealOrderProducts($order_id)) {
 
                     $products = $this->model_sale_order->getRealOrderProducts($order_id);
 
@@ -4003,7 +4004,7 @@ class ControllerSaleOrder extends Controller {
                     'shipping_city' => $order_info['shipping_city'],
                     'shipping_flat_number' => $order_info['shipping_flat_number'],
                     'shipping_contact_no' => ($order_info['shipping_contact_no']) ? $order_info['shipping_contact_no'] : $order_info['telephone'],
-                    'shipping_name' => ($order_info['shipping_name']) ? $order_info['shipping_name'] : $order_info['firstname'].' '.$order_info['lastname'],
+                    'shipping_name' => ($order_info['shipping_name']) ? $order_info['shipping_name'] : $order_info['firstname'] . ' ' . $order_info['lastname'],
                     'shipping_method' => $order_info['shipping_method'],
                     'payment_method' => $order_info['payment_method'],
                     'product' => $product_data,
@@ -4015,9 +4016,10 @@ class ControllerSaleOrder extends Controller {
         $this->response->setOutput($this->load->view('sale/order_invoice.tpl', $data));
     }
 
-    public function deliverySheet() {
+    public function deliverySheet()
+    {
 
-        $deliveryDate =$this->request->get['filter_delivery_date'];
+        $deliveryDate = $this->request->get['filter_delivery_date'];
 
         $filter_data = array(
             'filter_delivery_date' => $deliveryDate
@@ -4029,7 +4031,7 @@ class ControllerSaleOrder extends Controller {
         $unconsolidatedProducts = array();
 
 
-        foreach($results as $index=>$order) {
+        foreach ($results as $index => $order) {
             $data['orders'][$index] = $order;
             $orderProducts = $this->model_sale_order->getOrderProducts($data['orders'][$index]['order_id']);
             $data['orders'][$index]['products'] = $orderProducts;
@@ -4050,12 +4052,19 @@ class ControllerSaleOrder extends Controller {
             $productQuantity = $product['quantity'];
 
             $consolidatedProductNames = array_column($consolidatedProducts, "name");
-            if(array_search($productName, $consolidatedProductNames) !== false) {
-                $index = array_search($productName, $consolidatedProductNames);
+            if (array_search($productName, $consolidatedProductNames) !== false) {
+                $indexes = array_keys($consolidatedProductNames, $productName);
 
-                if($productUnit == $consolidatedProducts[$index]['unit']) {
-                    $consolidatedProducts[$index]['quantity'] += $productQuantity;
-                } else {
+                $foundExistingProductWithSimilarUnit = false;
+                foreach ($indexes as $index) {
+                    if ($productUnit == $consolidatedProducts[$index]['unit']) {
+                        $consolidatedProducts[$index]['quantity'] += $productQuantity;
+                        $foundExistingProductWithSimilarUnit = true;
+                        break;
+                    }
+                }
+
+                if(!$foundExistingProductWithSimilarUnit) {
                     $consolidatedProducts[] = [
                         'name' => $productName,
                         'unit' => $productUnit,
@@ -4073,13 +4082,14 @@ class ControllerSaleOrder extends Controller {
 
         $data['products'] = $consolidatedProducts;
 
-//        echo "<pre>";print_r($data);die;
+//        echo "<pre>";print_r($data['products']);die;
 
         $this->load->model('report/excel');
         $this->model_report_excel->download_delivery_sheet_excel($data);
     }
 
-    public function orderCalculationSheet() {
+    public function orderCalculationSheet()
+    {
         $this->load->model('sale/order');
 
         if (isset($this->request->post['selected'])) {
@@ -4128,7 +4138,7 @@ class ControllerSaleOrder extends Controller {
 
                 $product_data = array();
 
-                if($this->model_sale_order->hasRealOrderProducts($order_id)) {
+                if ($this->model_sale_order->hasRealOrderProducts($order_id)) {
                     $products = $this->model_sale_order->getRealOrderProducts($order_id);
                 } else {
                     $products = $this->model_sale_order->getOrderProducts($order_id);
@@ -4192,7 +4202,7 @@ class ControllerSaleOrder extends Controller {
                     'shipping_city' => $order_info['shipping_city'],
                     'shipping_flat_number' => $order_info['shipping_flat_number'],
                     'shipping_contact_no' => ($order_info['shipping_contact_no']) ? $order_info['shipping_contact_no'] : $order_info['telephone'],
-                    'shipping_name' => ($order_info['shipping_name']) ? $order_info['shipping_name'] : $order_info['firstname'].' '.$order_info['lastname'],
+                    'shipping_name' => ($order_info['shipping_name']) ? $order_info['shipping_name'] : $order_info['firstname'] . ' ' . $order_info['lastname'],
                     'shipping_method' => $order_info['shipping_method'],
                     'payment_method' => $order_info['payment_method'],
                     'product' => $product_data,
@@ -4204,7 +4214,8 @@ class ControllerSaleOrder extends Controller {
         $this->model_report_excel->download_calculation_sheet_excel($data);
     }
 
-    public function newinvoice() {
+    public function newinvoice()
+    {
         $this->load->language('sale/order');
 
         $data['title'] = $this->language->get('text_invoice');
@@ -4273,7 +4284,7 @@ class ControllerSaleOrder extends Controller {
             //check vendor order
 
             if ($this->user->isVendor()) {
-              if (!$this->isVendorOrder($order_id)) {
+                if (!$this->isVendorOrder($order_id)) {
                     $this->response->redirect($this->url->link('error/not_found'));
                 }
 
@@ -4410,7 +4421,8 @@ class ControllerSaleOrder extends Controller {
         $this->response->setOutput($this->load->view('sale/order_invoice.tpl', $data));
     }
 
-    public function shipping() {
+    public function shipping()
+    {
         $this->load->language('sale/order');
 
         $data['title'] = $this->language->get('text_shipping');
@@ -4539,12 +4551,12 @@ class ControllerSaleOrder extends Controller {
                 }
 
                 $orderProducts = array();
-                if($this->model_sale_order->hasRealOrderProducts($order_id)) {
+                if ($this->model_sale_order->hasRealOrderProducts($order_id)) {
                     // Order has at least one product that has a weight change
                     foreach ($originalProducts as $originalProduct) {
 
                         foreach ($editedProducts as $editedProduct) {
-                            if($originalProduct['product_id'] == $editedProduct['product_id'] ){
+                            if ($originalProduct['product_id'] == $editedProduct['product_id']) {
                                 $originalProduct['quantity_updated'] = floatval($editedProduct['quantity']);
                                 $originalProduct['unit_updated'] = $editedProduct['unit'];
                             }
@@ -4616,7 +4628,8 @@ class ControllerSaleOrder extends Controller {
         $this->response->setOutput($this->load->view('sale/order_shipping.tpl', $data['orders'][0]));
     }
 
-    public function updateInvoice() {
+    public function updateInvoice()
+    {
 
         $json = array();
 
@@ -4625,7 +4638,6 @@ class ControllerSaleOrder extends Controller {
         $json['status'] = true;
         $log = new Log('error.log');
         $log->write('api/updateInvoice');
-
 
 
         $this->load->model('sale/order');
@@ -4639,7 +4651,7 @@ class ControllerSaleOrder extends Controller {
         //echo "<pre>";print_r($datas['products']);die;
         foreach ($datas['products'] as $p_id_key => $updateProduct) {
 
-            if(!is_numeric($updateProduct['product_id'])) {
+            if (!is_numeric($updateProduct['product_id'])) {
                 $json['status'] = false;
                 $allp_id = false;
                 $json['message'] = 'One of the newly added products was not selected from auto suggestion';
@@ -4654,21 +4666,17 @@ class ControllerSaleOrder extends Controller {
         $order_info = $this->model_sale_order->getOrder($order_id);
 
 
-
-
-
         $store_id = 0;
 
         if (!empty($order_info)) {
-            $store_id =  $order_info['store_id'];
+            $store_id = $order_info['store_id'];
         }
 
         $shipping_city_id = 0;
 
         if (!empty($order_info)) {
-            $shipping_city_id =  $order_info['shipping_city_id'];
+            $shipping_city_id = $order_info['shipping_city_id'];
         }
-
 
 
         //echo "<pre>";print_r($datas);die;
@@ -4677,7 +4685,7 @@ class ControllerSaleOrder extends Controller {
 
 
             if (isset($order_info['total'])) {
-                $old_total =  $order_info['total'];
+                $old_total = $order_info['total'];
             }
 
             $old_sub_total = 0;
@@ -4694,11 +4702,11 @@ class ControllerSaleOrder extends Controller {
 
             //echo "<pre>";print_r($totals);die;
             foreach ($totals as $total) {
-                if($total['code'] == 'sub_total') {
+                if ($total['code'] == 'sub_total') {
                     $old_sub_total = $total['value'];
                 }
 
-                if($total['code'] == 'total') {
+                if ($total['code'] == 'total') {
                     $old_total = $total['value'];
                 }
 
@@ -4708,13 +4716,12 @@ class ControllerSaleOrder extends Controller {
             //echo "<pre>";print_r($old_sub_total);die;
 
 
-
             $allProductIds = $this->model_sale_order->getOrderProductsIds($order_id);
             foreach ($allProductIds as $deletePro) {
 
-                if(! isset($datas['products'][$deletePro['product_id']])) {
+                if (!isset($datas['products'][$deletePro['product_id']])) {
 
-                    $products = $this->model_sale_order->deleteOrderProduct($order_id,$deletePro['product_id']);
+                    $products = $this->model_sale_order->deleteOrderProduct($order_id, $deletePro['product_id']);
                 } else {
                     //$log->write("set");
                 }
@@ -4736,12 +4743,12 @@ class ControllerSaleOrder extends Controller {
                 $updateProduct['vendor_id'] = $vendor_id;
 
 
-                if(is_numeric($p_id_key)) {
+                if (is_numeric($p_id_key)) {
                     //echo "<pre>";print_r($datas['products']);die;
-                    $products = $this->model_sale_order->updateOrderProduct($order_id,$p_id_key,$updateProduct);
+                    $products = $this->model_sale_order->updateOrderProduct($order_id, $p_id_key, $updateProduct);
                 } else {
                     //echo "<pre>";print_r($updateProduct);die;
-                    $products = $this->model_sale_order->updateOrderNewProduct($order_id,$updateProduct['product_id'],$updateProduct);
+                    $products = $this->model_sale_order->updateOrderNewProduct($order_id, $updateProduct['product_id'], $updateProduct);
                 }
 
                 $sumTotal += ($updateProduct['price'] * $updateProduct['quantity']);
@@ -4750,33 +4757,31 @@ class ControllerSaleOrder extends Controller {
             }
 
 
-
-
             $subTotal = $sumTotal;
 
 
             //$log->write("tax_total start ");
-            $tax_total= $this->model_tool_image->getTaxTotal($tempProds,$store_id);
+            $tax_total = $this->model_tool_image->getTaxTotal($tempProds, $store_id);
 
             //echo "<pre>";print_r($tax_total);die;
 
             /*$log->write("tax_total");
             $log->write($tax_total);*/
 
-            if(count($tax_total) > 0 ) {
+            if (count($tax_total) > 0) {
 
                 foreach ($tax_total as $x => $tmpV) {
-                    array_push($datas['totals'],$tmpV);
+                    array_push($datas['totals'], $tmpV);
                 }
 
             }
 
             //unset totals coming from web
-            if(isset($datas['totals']['tax'])) {
+            if (isset($datas['totals']['tax'])) {
                 unset($datas['totals']['tax']);
             }
 
-            if(!isset($datas['totals'])) {
+            if (!isset($datas['totals'])) {
                 $datas['totals'] = [];
             }
 
@@ -4804,23 +4809,22 @@ class ControllerSaleOrder extends Controller {
             //get shipping method and get price
 
             //echo "<pre>";print_r($order_info);die;
-            $tmp = explode(".",$order_info['shipping_code']);
+            $tmp = explode(".", $order_info['shipping_code']);
 
-            $shipping_price =[];
+            $shipping_price = [];
 
-            if($tmp[0] == 'normal' || $tmp[0] == 'store_delivery') {
+            if ($tmp[0] == 'normal' || $tmp[0] == 'store_delivery') {
 
-                $p = $tmp[0].'_free_delivery_amount';
+                $p = $tmp[0] . '_free_delivery_amount';
                 $free_delivery_amount = $this->config->get($p);
 
 
+                if (isset($store_id) && $store_id) {
 
-                if(isset($store_id) && $store_id) {
+                    $store_info = $this->model_tool_image->getStore($store_id);
 
-                    $store_info =  $this->model_tool_image->getStore($store_id);
-
-                    if($store_info) {
-                        $free_delivery_amount =$store_info['min_order_cod'];
+                    if ($store_info) {
+                        $free_delivery_amount = $store_info['min_order_cod'];
                     }
 
                 }
@@ -4830,21 +4834,19 @@ class ControllerSaleOrder extends Controller {
                 $log->write($free_delivery_amount);
                 $log->write($subTotal);
 
-                if($subTotal < $free_delivery_amount ) {
+                if ($subTotal < $free_delivery_amount) {
 
                     $log->write("shipping_price if");
 
 
-
-
                     $this->load->model('shipping/' . $tmp[0]);
-                    $shipping_price = $this->{'model_shipping_' . $tmp[0]}->getPrice($store_id,$subTotal,$subTotal,$order_info['latitude'],$order_info['longitude'],$shipping_city_id);
+                    $shipping_price = $this->{'model_shipping_' . $tmp[0]}->getPrice($store_id, $subTotal, $subTotal, $order_info['latitude'], $order_info['longitude'], $shipping_city_id);
 
                     $log->write($shipping_price);
 
                     $value_coming_tmp = 0;
 
-                    if( (isset($datas['totals']) && array_key_exists("shipping",$datas['totals'])) ) {
+                    if ((isset($datas['totals']) && array_key_exists("shipping", $datas['totals']))) {
                         $value_coming_tmp = $datas['totals']['shipping']['value'];
 
                         $datas['totals']['shipping']['value_coming'] = $value_coming_tmp;
@@ -4852,21 +4854,16 @@ class ControllerSaleOrder extends Controller {
                     }
 
 
-
-
                 } else {
 
                     $value_coming_tmp = 0;
 
-                    if( (isset($datas['totals']) && array_key_exists("shipping",$datas['totals'])) ) {
+                    if ((isset($datas['totals']) && array_key_exists("shipping", $datas['totals']))) {
                         $value_coming_tmp = $datas['totals']['shipping']['value'];
                     }
 
 
-
-
-
-                    $datas['totals']['shipping'] =[];
+                    $datas['totals']['shipping'] = [];
                     $datas['totals']['shipping']['code'] = 'shipping';
                     $datas['totals']['shipping']['title'] = 'Shipping charge';
                     $datas['totals']['shipping']['value'] = 0;
@@ -4907,13 +4904,13 @@ class ControllerSaleOrder extends Controller {
                 /*$log->write("updatetotals");
                 $log->write($tot);*/
                 $tot['sort'] = $p;
-                $this->model_sale_order->insertOrderTotal($order_id,$tot,$shipping_price);
+                $this->model_sale_order->insertOrderTotal($order_id, $tot, $shipping_price);
 
-                if($tot['code'] == 'shipping' ) {
+                if ($tot['code'] == 'shipping') {
 
-                    if(count($shipping_price) > 0 && isset($shipping_price['cost']) && isset($shipping_price['actual_cost'])) {
+                    if (count($shipping_price) > 0 && isset($shipping_price['cost']) && isset($shipping_price['actual_cost'])) {
 
-                        if( (array_key_exists("value_coming",$tot)) ) {
+                        if ((array_key_exists("value_coming", $tot))) {
                             $orderTotal -= $tot['value_coming'];
                         }
 
@@ -4921,7 +4918,7 @@ class ControllerSaleOrder extends Controller {
                     } else {
                         //$orderTotal -= $tot['value'];
 
-                        if( (array_key_exists("value_coming",$tot)) ) {
+                        if ((array_key_exists("value_coming", $tot))) {
                             $orderTotal -= $tot['value_coming'];
                         }
 
@@ -4932,19 +4929,18 @@ class ControllerSaleOrder extends Controller {
             }
 
 
+            $orderTotal = round($orderTotal, 2);
+            $subTotal = round($subTotal, 2);
 
-            $orderTotal = round($orderTotal,2);
-            $subTotal = round($subTotal,2);
-
-            $this->model_sale_order->insertOrderSubTotalAndTotal($order_id,$subTotal,$orderTotal,$p);
-             $log->write($orderTotal);
+            $this->model_sale_order->insertOrderSubTotalAndTotal($order_id, $subTotal, $orderTotal, $p);
+            $log->write($orderTotal);
             //die;
             // editDeliveryRequest
             $this->editDeliveryRequest($order_id);
 
             //$this->sendNewInvoice($order_id);
 
-            if($this->request->get['settle']) {
+            if ($this->request->get['settle']) {
                 //settle and  update
                 $log->write("if settle");
                 $customer_id = $this->request->get['customer_id'];
@@ -4953,7 +4949,7 @@ class ControllerSaleOrder extends Controller {
                 $log->write($final_amount);
                 $log->write($old_total);
 
-                if($final_amount !=  $old_total) {
+                if ($final_amount != $old_total) {
                     //$iuguData = $this->refundAndChargeNewTotalStripe($order_id,$customer_id,$final_amount);
                 } else {
                     $log->write("same amount settle");
@@ -5008,7 +5004,8 @@ class ControllerSaleOrder extends Controller {
         $this->response->setOutput($json);
     }
 
-    public function notifyInvoice() {
+    public function notifyInvoice()
+    {
 
         $json = array();
 
@@ -5036,7 +5033,8 @@ class ControllerSaleOrder extends Controller {
         $this->response->setOutput($json);
     }
 
-    public function api() {
+    public function api()
+    {
 
         $json = array();
 
@@ -5055,7 +5053,7 @@ class ControllerSaleOrder extends Controller {
             } else {
                 $store_id = 0;
             }
-             $log->write($store_id);
+            $log->write($store_id);
 
             $this->load->model('setting/store');
             $this->load->model('sale/order');
@@ -5065,7 +5063,7 @@ class ControllerSaleOrder extends Controller {
             // if ($store_info) {
             //     $url = $store_info['ssl'];
             // } else {
-                $url = HTTPS_CATALOG;
+            $url = HTTPS_CATALOG;
             // }
             //$log->write($this->session->data['cookie']);
             $log->write($this->request->get);
@@ -5079,7 +5077,7 @@ class ControllerSaleOrder extends Controller {
             //$log->write($order_info);
 
             //die;
-            if (isset($this->request->get['api']) && $order_info && $order_info['order_status_id'] != $this->request->post['order_status_id'] &&  !in_array( $order_info['order_status_id'], $this->config->get( 'config_complete_status') )) {
+            if (isset($this->request->get['api']) && $order_info && $order_info['order_status_id'] != $this->request->post['order_status_id'] && !in_array($order_info['order_status_id'], $this->config->get('config_complete_status'))) {
                 // Include any URL perameters
 
                 $url_data = array();
@@ -5125,8 +5123,7 @@ class ControllerSaleOrder extends Controller {
                 }*/
 
 
-
-                if ( in_array( $this->request->post['order_status_id'], $this->config->get( 'config_complete_status' ) ) ) {
+                if (in_array($this->request->post['order_status_id'], $this->config->get('config_complete_status'))) {
 
                     //completed order
 
@@ -5143,7 +5140,7 @@ class ControllerSaleOrder extends Controller {
 
                     $response['already_deliversystem_distributed'] = false;
                     if ($order_info && !$order_info['commsion_received']) {
-                    //get order detail store id
+                        //get order detail store id
 
                         $order_id = $manifest_id;
                         $status = 1;
@@ -5188,7 +5185,8 @@ class ControllerSaleOrder extends Controller {
         $this->response->setOutput($json);
     }
 
-    public function isMyOrder($order_id, $store_id) {
+    public function isMyOrder($order_id, $store_id)
+    {
 
         $this->load->model('sale/order');
 
@@ -5202,12 +5200,13 @@ class ControllerSaleOrder extends Controller {
         }
     }
 
-    public function isVendorOrder($order_id) {
+    public function isVendorOrder($order_id)
+    {
 
 
         $this->load->model('sale/order');
 
-        $row = $this->model_sale_order->isVendorOrder($order_id,$this->user->getId());
+        $row = $this->model_sale_order->isVendorOrder($order_id, $this->user->getId());
         if ($row) {
             return true;
         } else {
@@ -5221,12 +5220,12 @@ class ControllerSaleOrder extends Controller {
         $log = new Log('error.log');
 
         $log->write("inside editDeliveryRequest");
-        $order_info = $this->getOrder( $order_id );
+        $order_info = $this->getOrder($order_id);
 
         $this->load->model('sale/order');
-        $this->load->model( 'account/order' );
+        $this->load->model('account/order');
 
-        if($this->model_sale_order->hasRealOrderProducts($order_id)) {
+        if ($this->model_sale_order->hasRealOrderProducts($order_id)) {
 
             $products = $this->model_account_order->getRealOrderProducts($order_id);
 
@@ -5235,14 +5234,14 @@ class ControllerSaleOrder extends Controller {
             $products = $this->model_account_order->getOrderProducts($order_id);
         }
 
-        $this->load->model( 'sale/order' );
+        $this->load->model('sale/order');
 
         $new_total = 0;
 
         $totals = $this->model_sale_order->getOrderTotals($order_id);
 
         foreach ($totals as $total) {
-            if($total['code'] == 'total') {
+            if ($total['code'] == 'total') {
                 $new_total = $total['value'];
                 break;
             }
@@ -5252,13 +5251,13 @@ class ControllerSaleOrder extends Controller {
 
         $total_type = 'green';
 
-        if(!$this->isOnlinePayment($order_info['payment_code']) || $pay_diff > 0) {
+        if (!$this->isOnlinePayment($order_info['payment_code']) || $pay_diff > 0) {
             $total_type = 'red';
         }
 
-        if($this->isOnlinePayment($order_info['payment_code'])) {
+        if ($this->isOnlinePayment($order_info['payment_code'])) {
 
-            if($pay_diff < 0) {
+            if ($pay_diff < 0) {
                 $getPayment = 0;
             } else {
                 $getPayment = $pay_diff;
@@ -5276,35 +5275,35 @@ class ControllerSaleOrder extends Controller {
 
         //$deliveryAlreadyCreated = true;
 
-        if($order_info && $products && $deliveryAlreadyCreated) {
+        if ($order_info && $products && $deliveryAlreadyCreated) {
 
             $log->write("if");
 
 
             $data['products']['products'] = [];
 
-            foreach ( $products as $product ) {
+            foreach ($products as $product) {
 
                 $replacable = 'no';
 
-                if($product['product_type'] == 'replacable')
+                if ($product['product_type'] == 'replacable')
                     $replacable = 'yes';
 
                 $this->load->model('tool/image');
 
-                if ( file_exists( DIR_IMAGE .$product['image'] ) ) {
-                    $image = HTTP_IMAGE.$product['image'];
+                if (file_exists(DIR_IMAGE . $product['image'])) {
+                    $image = HTTP_IMAGE . $product['image'];
                 } else {
-                    $image = HTTP_IMAGE.'placeholder.png';
+                    $image = HTTP_IMAGE . 'placeholder.png';
                 }
 
-                $var= [
-                    "product_name" => htmlspecialchars_decode( $product['name']),
-                    "product_unit"=>$product['unit'],
-                    "product_quantity"=>$product['quantity'],
-                    "product_image"=>$image,//"http:\/\/\/product-images\/camera.jpg",
-                    "product_price"=>$product['price'],//"1500.00",//product price unit price?? or total
-                    "product_replaceable"=>$replacable//"no"
+                $var = [
+                    "product_name" => htmlspecialchars_decode($product['name']),
+                    "product_unit" => $product['unit'],
+                    "product_quantity" => $product['quantity'],
+                    "product_image" => $image,//"http:\/\/\/product-images\/camera.jpg",
+                    "product_price" => $product['price'],//"1500.00",//product price unit price?? or total
+                    "product_replaceable" => $replacable//"no"
 
                 ];
 
@@ -5316,8 +5315,8 @@ class ControllerSaleOrder extends Controller {
 
             $data['body'] = [
                 'manifest_id' => $deliveryAlreadyCreated,//order_id,
-                'total_price' => (int) round($new_total),
-                'get_amount' => (int) round($getPayment),
+                'total_price' => (int)round($new_total),
+                'get_amount' => (int)round($getPayment),
                 'total_type' => $total_type,
                 'manifest_data' => json_encode($data['products'])
             ];
@@ -5326,13 +5325,13 @@ class ControllerSaleOrder extends Controller {
 
             $data['email'] = $this->config->get('config_delivery_username');
             $data['password'] = $this->config->get('config_delivery_secret');
-            $response = $this->load->controller('deliversystem/deliversystem/getToken',$data);
+            $response = $this->load->controller('deliversystem/deliversystem/getToken', $data);
 
             $log->write("token");
             $log->write($response);
-            if($response['status']) {
+            if ($response['status']) {
                 $data['tokens'] = $response['token'];
-                $res = $this->load->controller('deliversystem/deliversystem/editDelivery',$data);
+                $res = $this->load->controller('deliversystem/deliversystem/editDelivery', $data);
                 $log->write("reeponse");
                 $log->write($res);
             }
@@ -5346,10 +5345,10 @@ class ControllerSaleOrder extends Controller {
         $allowedPaymentMethods = $this->config->get('config_payment_methods_status');
 
 
-        if(is_array($allowedPaymentMethods) && count($allowedPaymentMethods) > 0) {
+        if (is_array($allowedPaymentMethods) && count($allowedPaymentMethods) > 0) {
             foreach ($allowedPaymentMethods as $method) {
 
-                if($payment_code == $method) {
+                if ($payment_code == $method) {
                     $refundToCustomerWallet = true;
                 }
             }
@@ -5358,7 +5357,8 @@ class ControllerSaleOrder extends Controller {
         return $refundToCustomerWallet;
     }
 
-    private function timeIsBetween($from, $to, $time, $time_diff = false) {
+    private function timeIsBetween($from, $to, $time, $time_diff = false)
+    {
 
         //calculate from_time in minuts
         $i = explode(':', $to);
@@ -5398,7 +5398,8 @@ class ControllerSaleOrder extends Controller {
     }
 
     //save timeslot in data
-    public function save_timeslots() {
+    public function save_timeslots()
+    {
 
         $order_id = $this->request->get['order_id'];
 
@@ -5409,7 +5410,8 @@ class ControllerSaleOrder extends Controller {
 
     }
 
-    public function payment_status() {
+    public function payment_status()
+    {
 
         if (!$this->user->isVendor()) {
 
@@ -5423,17 +5425,19 @@ class ControllerSaleOrder extends Controller {
         }
     }
 
-    public function city_autocomplete(){
+    public function city_autocomplete()
+    {
 
         $this->load->model('sale/order');
 
-        $json =  $this->model_sale_order->getCities();
+        $json = $this->model_sale_order->getCities();
 
         header('Content-type: text/json');
         echo json_encode($json);
     }
 
-    public function checkStoreDelivery(){
+    public function checkStoreDelivery()
+    {
 
         $json = array();
 
@@ -5444,7 +5448,8 @@ class ControllerSaleOrder extends Controller {
         echo json_encode($json);
     }
 
-    public function notFraudApi() {
+    public function notFraudApi()
+    {
 
         $json = array();
 
@@ -5464,7 +5469,7 @@ class ControllerSaleOrder extends Controller {
             } else {
                 $store_id = 0;
             }
-             $log->write($store_id);
+            $log->write($store_id);
 
             $this->load->model('setting/store');
 
@@ -5514,14 +5519,14 @@ class ControllerSaleOrder extends Controller {
                     $order_status_id = "no";
                     foreach ($order_status as $order_state) {
                         # code...
-                        if(strtolower($order_state['name']) == 'pending' ) {
+                        if (strtolower($order_state['name']) == 'pending') {
                             $order_status_id = $order_state['order_status_id'];
                             break;
                         }
                     }
 
                     $log->write($order_status_id);
-                    if($order_status_id != 'no') {
+                    if ($order_status_id != 'no') {
 
                         $this->request->post['comment'] = 'Marked not fraud from admin';
                         $this->request->post['order_status_id'] = $order_status_id;
@@ -5557,7 +5562,8 @@ class ControllerSaleOrder extends Controller {
         $this->response->setOutput($json);
     }
 
-    public function reversePaymentApi() {
+    public function reversePaymentApi()
+    {
 
         //set order status to Pending and raise delivery request
 
@@ -5612,7 +5618,7 @@ class ControllerSaleOrder extends Controller {
 
                 $count = 0;
 
-                foreach($products as $product) {
+                foreach ($products as $product) {
                     $data['items'][$count] = array(
                         'description' => $product['name'],
                         'quantity' => $product['quantity'],
@@ -5623,7 +5629,7 @@ class ControllerSaleOrder extends Controller {
 
                 $totals = $this->model_payment_iugu->getOrderTotals($order_id);
 
-                foreach($totals as $total) {
+                foreach ($totals as $total) {
                     if ($total['code'] != 'sub_total' && $total['code'] != 'total') {
                         $data['items'][$count] = array(
                             'description' => $total['title'],
@@ -5642,7 +5648,7 @@ class ControllerSaleOrder extends Controller {
                 /* Captura valor do desconto */
                 $sub_total = 0;
 
-                foreach($totals as $total){
+                foreach ($totals as $total) {
                     if ($total['code'] == 'sub_total') {
                         $sub_total = $total['value'];
                         break;
@@ -5688,13 +5694,13 @@ class ControllerSaleOrder extends Controller {
 
                 $result = array();
 
-                foreach(reset($token) as $key => $value) {
+                foreach (reset($token) as $key => $value) {
                     $result[$key] = $value;
                 }
 
                 if (isset($result['errors']) && !empty($result['errors'])) {
-                    foreach($result['errors'] as $key => $error_base) {
-                        foreach($error_base as $error) {
+                    foreach ($result['errors'] as $key => $error_base) {
+                        foreach ($error_base as $error) {
                             $this->log->write('Iugu: ' . ucfirst($key) . ' ' . $error);
                         }
                     }
@@ -5726,16 +5732,16 @@ class ControllerSaleOrder extends Controller {
         }
     }
 
-    public function createDeliveryRequest($order_id,$order_status_id = 1)
+    public function createDeliveryRequest($order_id, $order_status_id = 1)
     {
         $log = new Log('error.log');
-        $order_info = $this->getOrder( $order_id );
+        $order_info = $this->getOrder($order_id);
 
-        $this->load->model( 'account/order' );
+        $this->load->model('account/order');
 
         $deliveryAlreadyCreated = $this->model_account_order->getOrderDeliveryId($this->request->get['order_id']);
 
-        if($order_status_id == 1 && $order_info && !$deliveryAlreadyCreated) {
+        if ($order_status_id == 1 && $order_info && !$deliveryAlreadyCreated) {
 
             $log->write("inside createDeliveryRequest");
 
@@ -5746,31 +5752,31 @@ class ControllerSaleOrder extends Controller {
 
             $log = new Log('error.log');
 
-            $log->write('tester log' );
+            $log->write('tester log');
             $log->write($order_info);
 
-            foreach ( $products as $product ) {
+            foreach ($products as $product) {
 
                 $replacable = 'no';
 
-                if($product['product_type'] == 'replacable')
+                if ($product['product_type'] == 'replacable')
                     $replacable = 'yes';
 
                 $this->load->model('tool/image');
 
-                if ( file_exists( DIR_IMAGE .$product['image'] ) ) {
-                    $image = HTTP_IMAGE.$product['image'];
+                if (file_exists(DIR_IMAGE . $product['image'])) {
+                    $image = HTTP_IMAGE . $product['image'];
                 } else {
-                    $image = HTTP_IMAGE.'placeholder.png';
+                    $image = HTTP_IMAGE . 'placeholder.png';
                 }
 
-                $var= [
+                $var = [
                     "product_name" => $product['name'],
-                    "product_unit"=>$product['unit'],
-                    "product_quantity"=>$product['quantity'],
-                    "product_image"=>$image,//"http:\/\/\/product-images\/camera.jpg",
-                    "product_price"=>$product['price'],//"1500.00",//product price unit price?? or total
-                    "product_replaceable"=>$replacable//"no"
+                    "product_unit" => $product['unit'],
+                    "product_quantity" => $product['quantity'],
+                    "product_image" => $image,//"http:\/\/\/product-images\/camera.jpg",
+                    "product_price" => $product['price'],//"1500.00",//product price unit price?? or total
+                    "product_replaceable" => $replacable//"no"
 
                 ];
 
@@ -5784,8 +5790,8 @@ class ControllerSaleOrder extends Controller {
 
             $delivery_priority = 'normal';
 
-            $temp = explode('.',$order_info['shipping_code']);
-            if(isset($temp[0])) {
+            $temp = explode('.', $order_info['shipping_code']);
+            if (isset($temp[0])) {
                 $delivery_priority = $temp[0];
             }
 
@@ -5793,12 +5799,12 @@ class ControllerSaleOrder extends Controller {
 
             $timeSlotAverage = $this->getTimeslotAverage($order_info['delivery_timeslot']);
 
-            $deliverAddress = $order_info['shipping_flat_number'].", ". $order_info['shipping_building_name'].", ".$order_info['shipping_landmark'];
+            $deliverAddress = $order_info['shipping_flat_number'] . ", " . $order_info['shipping_building_name'] . ", " . $order_info['shipping_landmark'];
 
 
             $total_type = 'green';
 
-            if(!$this->isOnlinePayment($order_info['payment_code'])) {
+            if (!$this->isOnlinePayment($order_info['payment_code'])) {
                 $total_type = 'red';
             }
 
@@ -5839,21 +5845,21 @@ class ControllerSaleOrder extends Controller {
 
             $data['email'] = $this->config->get('config_delivery_username');
             $data['password'] = $this->config->get('config_delivery_secret');
-            $response = $this->load->controller('deliversystem/deliversystem/getToken',$data);
+            $response = $this->load->controller('deliversystem/deliversystem/getToken', $data);
 
-            if($response['status']) {
+            if ($response['status']) {
                 $data['token'] = $response['token'];
-                $res = $this->load->controller('deliversystem/deliversystem/createDelivery',$data);
+                $res = $this->load->controller('deliversystem/deliversystem/createDelivery', $data);
                 $log->write("reeponse");
                 $log->write($res);
 
-                if($res['status']) {
+                if ($res['status']) {
                     $log->write("stsus");
-                    if(isset($res['data']->delivery_id)) {
+                    if (isset($res['data']->delivery_id)) {
 
                         $delivery_id = $res['data']->delivery_id;
                         $log->write($delivery_id);
-                        $this->db->query( "UPDATE `" . DB_PREFIX . "order` SET delivery_id = '" .$delivery_id ."', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'" );
+                        $this->db->query("UPDATE `" . DB_PREFIX . "order` SET delivery_id = '" . $delivery_id . "', date_modified = NOW() WHERE order_id = '" . (int)$order_id . "'");
                     }
                     //save in order table delivery id
                 }
@@ -5861,16 +5867,16 @@ class ControllerSaleOrder extends Controller {
         }
     }
 
-    public function createDeliveryRequestold($order_id,$order_status_id = 1)
+    public function createDeliveryRequestold($order_id, $order_status_id = 1)
     {
 
         $log = new Log('error.log');
-        $order_info = $this->getOrder( $order_id );
+        $order_info = $this->getOrder($order_id);
         $log->write("inside createDeliveryRequest");
-        if($order_status_id == 1 && $order_info) {
+        if ($order_status_id == 1 && $order_info) {
 
             $log->write("inside createDeliveryRequest");
-            $this->load->model( 'account/order' );
+            $this->load->model('account/order');
 
             $data['products']['products'] = [];
 
@@ -5878,31 +5884,31 @@ class ControllerSaleOrder extends Controller {
 
             $log = new Log('error.log');
 
-            $log->write('tester log' );
+            $log->write('tester log');
             $log->write($order_info);
 
-            foreach ( $products as $product ) {
+            foreach ($products as $product) {
 
                 $replacable = 'no';
 
-                if($product['product_type'] == 'replacable')
+                if ($product['product_type'] == 'replacable')
                     $replacable = 'yes';
 
                 $this->load->model('tool/image');
 
-                if ( file_exists( DIR_IMAGE .$product['image'] ) ) {
-                    $image = HTTP_IMAGE.$product['image'];
+                if (file_exists(DIR_IMAGE . $product['image'])) {
+                    $image = HTTP_IMAGE . $product['image'];
                 } else {
-                    $image = HTTP_IMAGE.'placeholder.png';
+                    $image = HTTP_IMAGE . 'placeholder.png';
                 }
 
-                $var= [
+                $var = [
                     "product_name" => $product['name'],
-                    "product_unit"=>$product['unit'],
-                    "product_quantity"=>$product['quantity'],
-                    "product_image"=>$image,//"http:\/\/\/product-images\/camera.jpg",
-                    "product_price"=>$product['price'],//"1500.00",//product price unit price?? or total
-                    "product_replaceable"=>$replacable//"no"
+                    "product_unit" => $product['unit'],
+                    "product_quantity" => $product['quantity'],
+                    "product_image" => $image,//"http:\/\/\/product-images\/camera.jpg",
+                    "product_price" => $product['price'],//"1500.00",//product price unit price?? or total
+                    "product_replaceable" => $replacable//"no"
 
                 ];
 
@@ -5916,8 +5922,8 @@ class ControllerSaleOrder extends Controller {
 
             $delivery_priority = 'normal';
 
-            $temp = explode('.',$order_info['shipping_code']);
-            if(isset($temp[0])) {
+            $temp = explode('.', $order_info['shipping_code']);
+            if (isset($temp[0])) {
                 $delivery_priority = $temp[0];
             }
 
@@ -5954,21 +5960,21 @@ class ControllerSaleOrder extends Controller {
 
             $data['email'] = $this->config->get('config_delivery_username');
             $data['password'] = $this->config->get('config_delivery_secret');
-            $response = $this->load->controller('deliversystem/deliversystem/getToken',$data);
+            $response = $this->load->controller('deliversystem/deliversystem/getToken', $data);
 
-            if($response['status']) {
+            if ($response['status']) {
                 $data['tokens'] = $response['token'];
-                $res = $this->load->controller('deliversystem/deliversystem/createDelivery',$data);
+                $res = $this->load->controller('deliversystem/deliversystem/createDelivery', $data);
                 $log->write("reeponse");
                 $log->write($res);
 
-                if($res['status']) {
+                if ($res['status']) {
                     $log->write("stsus");
-                    if(isset($res['data']->delivery_id)) {
+                    if (isset($res['data']->delivery_id)) {
 
                         $delivery_id = $res['data']->delivery_id;
                         $log->write($delivery_id);
-                        $this->db->query( "UPDATE `" . DB_PREFIX . "order` SET delivery_id = '" .$delivery_id ."', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'" );
+                        $this->db->query("UPDATE `" . DB_PREFIX . "order` SET delivery_id = '" . $delivery_id . "', date_modified = NOW() WHERE order_id = '" . (int)$order_id . "'");
 
                         return true;
                     }
@@ -5979,19 +5985,20 @@ class ControllerSaleOrder extends Controller {
         return false;
     }
 
-    public function getOrder( $order_id ) {
-        $order_query = $this->db->query( "SELECT *, (SELECT os.name FROM `" . DB_PREFIX . "order_status` os WHERE os.order_status_id = o.order_status_id AND os.language_id = o.language_id) AS order_status FROM `" . DB_PREFIX . "order` o WHERE o.order_id = '" . (int) $order_id . "'" );
+    public function getOrder($order_id)
+    {
+        $order_query = $this->db->query("SELECT *, (SELECT os.name FROM `" . DB_PREFIX . "order_status` os WHERE os.order_status_id = o.order_status_id AND os.language_id = o.language_id) AS order_status FROM `" . DB_PREFIX . "order` o WHERE o.order_id = '" . (int)$order_id . "'");
 
-        if ( $order_query->num_rows ) {
+        if ($order_query->num_rows) {
 
-            $this->load->model( 'localisation/language' );
-            $this->load->model( 'account/order' );
+            $this->load->model('localisation/language');
+            $this->load->model('account/order');
 
-            $language_info = $this->model_localisation_language->getLanguage( $order_query->row['language_id'] );
+            $language_info = $this->model_localisation_language->getLanguage($order_query->row['language_id']);
 
             $city_name = $this->model_account_order->getCityName($order_query->row['shipping_city_id']);
 
-            if ( $language_info ) {
+            if ($language_info) {
                 $language_code = $language_info['code'];
                 $language_directory = $language_info['directory'];
             } else {
@@ -6012,7 +6019,7 @@ class ControllerSaleOrder extends Controller {
                 'email' => $order_query->row['email'],
                 'telephone' => $order_query->row['telephone'],
                 'fax' => $order_query->row['fax'],
-                'custom_field' => unserialize( $order_query->row['custom_field'] ),
+                'custom_field' => unserialize($order_query->row['custom_field']),
                 'shipping_name' => $order_query->row['shipping_name'],
                 'shipping_address' => $order_query->row['shipping_address'],
                 'shipping_city' => $city_name,
@@ -6058,41 +6065,43 @@ class ControllerSaleOrder extends Controller {
         }
     }
 
-    public function getTimeslotAverage($timeslot) {
+    public function getTimeslotAverage($timeslot)
+    {
 
         $str = $timeslot;//"06:26pm - 08:32pm";
         $arr = explode('-', $str);
         //print_r($arr);
-        if(count($arr) == 2 ) {
+        if (count($arr) == 2) {
             $one = date("H:i", strtotime($arr[0]));
             $two = date("H:i", strtotime($arr[1]));
 
             $time1 = explode(':', $one);
             $time2 = explode(':', $two);
-            if(count($time1) ==  2 && count($time2) ==  2) {
-                $mid1 = ($time1[0]+$time2[0])/2;
-                $mid2 = ($time1[1]+$time2[1])/2;
+            if (count($time1) == 2 && count($time2) == 2) {
+                $mid1 = ($time1[0] + $time2[0]) / 2;
+                $mid2 = ($time1[1] + $time2[1]) / 2;
 
                 $mid1 = round($mid1);
                 $mid2 = round($mid2);
 
-                if($mid2 <=9 ) {
-                    $mid2 = '0'.$mid2;
+                if ($mid2 <= 9) {
+                    $mid2 = '0' . $mid2;
                 }
-                if($mid1 <=9 ) {
-                    $mid1 = '0'.$mid1;
+                if ($mid1 <= 9) {
+                    $mid1 = '0' . $mid1;
                 }
 
                 //if 19.5 is mid1 then i send 19 integer part cant send decimals
 
-                return $mid1.":".$mid2;
+                return $mid1 . ":" . $mid2;
             }
         }
 
         return false;
     }
 
-    public function settle_payment() {
+    public function settle_payment()
+    {
 
         $this->load->language('sale/order');
 
@@ -6111,7 +6120,7 @@ class ControllerSaleOrder extends Controller {
 
             $iuguData = $this->model_sale_order->getOrderIuguAndTotal($order_id);
 
-            if($iuguData) {
+            if ($iuguData) {
 
                 $invoiceId = $iuguData['invoice_id'];
                 $original_subtotal = $iuguData['value'];
@@ -6121,18 +6130,18 @@ class ControllerSaleOrder extends Controller {
 
                 $log->write('admin settle ');
 
-                if($original_subtotal != $final_amount) {
+                if ($original_subtotal != $final_amount) {
                     //cancel invoice API and create new invoice and save this new api where??
                     // wallet entry do
                     $amountWallet = $original_subtotal - $final_amount;
-                    $description = 'On Order #'.$order_id;
+                    $description = 'On Order #' . $order_id;
                     $log->write('admin settle not =');
                     //$this->actionOnCustomerWallet($customer_id,$description,$amountWallet);
 
-                    $this->chargeCustomer($customer_id,$description,$final_amount,$order_id);
+                    $this->chargeCustomer($customer_id, $description, $final_amount, $order_id);
                 }
 
-                if(isset($order_id) && isset($final_amount)) {
+                if (isset($order_id) && isset($final_amount)) {
                     $this->model_sale_order->settle_payment($order_id, $final_amount);
                 }
 
@@ -6143,24 +6152,24 @@ class ControllerSaleOrder extends Controller {
         }
 
 
-
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
 
-    public function captureInvoice($order_id,$invoiceId) {
+    public function captureInvoice($order_id, $invoiceId)
+    {
 
         $log = new Log('error.log');
         $log->write('captureInvoice');
 
-        if($order_id && $invoiceId) {
+        if ($order_id && $invoiceId) {
 
             $invoiceId = $invoiceId;
 
             $log->write($invoiceId);
             $ch = curl_init();
             //https://api.iugu.com/v1/invoices/5A4CBC68F7A647ECADD59D4E1B4B0DDF/capture
-            curl_setopt($ch, CURLOPT_URL, "https://api.iugu.com/v1/invoices/".$invoiceId."/capture");
+            curl_setopt($ch, CURLOPT_URL, "https://api.iugu.com/v1/invoices/" . $invoiceId . "/capture");
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             //curl_setopt($ch, CURLOPT_POSTFIELDS, array('name'=>"Todd",'commission_percent'=>10));
             curl_setopt($ch, CURLOPT_POST, 1);
@@ -6171,7 +6180,6 @@ class ControllerSaleOrder extends Controller {
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
 
-
             $result = curl_exec($ch);
             $result = json_decode($result);
 
@@ -6179,7 +6187,7 @@ class ControllerSaleOrder extends Controller {
             if (curl_errno($ch) || isset($result->errors)) {
                 return false;
             }
-            curl_close ($ch);
+            curl_close($ch);
             //print_r($result);die;
             return true;
         }
@@ -6187,7 +6195,8 @@ class ControllerSaleOrder extends Controller {
         return false;
     }
 
-    public function actionOnCustomerWallet($customer_id,$description,$amount) {
+    public function actionOnCustomerWallet($customer_id, $description, $amount)
+    {
 
         $this->load->model('sale/customer');
 
@@ -6195,7 +6204,8 @@ class ControllerSaleOrder extends Controller {
         return true;
     }
 
-    public function chargeCustomerOld($customer_id,$description,$final_amount,$order_id) {
+    public function chargeCustomerOld($customer_id, $description, $final_amount, $order_id)
+    {
 
         require_once DIR_SYSTEM . 'library/Iugu.php';
 
@@ -6204,11 +6214,11 @@ class ControllerSaleOrder extends Controller {
         $data['settlement_tab'] = false;
 
         $this->load->model('sale/order');
-        $iuguData =  $this->model_sale_order->getOrderIugu($order_id);
+        $iuguData = $this->model_sale_order->getOrderIugu($order_id);
 
         $log->write('chargeCustomer');
         $log->write($iuguData);
-        if($iuguData) {
+        if ($iuguData) {
 
             $invoiceId = $iuguData['invoice_id'];
 
@@ -6223,9 +6233,9 @@ class ControllerSaleOrder extends Controller {
             $log->write('refundAPI');
             $log->write($resp);
 
-            if($resp) {
+            if ($resp) {
                 //new invoice create and charge
-                $customerIuguData =  $this->model_sale_order->getOrderIuguCustomer($customer_id);
+                $customerIuguData = $this->model_sale_order->getOrderIuguCustomer($customer_id);
 
                 /* Here i have to code */
                 $log->write('refinuded if');
@@ -6235,11 +6245,11 @@ class ControllerSaleOrder extends Controller {
                 //$data['payment_method_id'] = $customerIuguData['payment_method_id'];
                 $data['payment_method_id'] = $use_payment_method_id;
 
-                if(!empty($use_payment_method_id)) {
+                if (!empty($use_payment_method_id)) {
 
                     $iuguChargeed = $this->iuguCharge($data);
 
-                    if($iuguChargeed) {
+                    if ($iuguChargeed) {
                         return true;
                     } else {
                         return false;
@@ -6252,7 +6262,8 @@ class ControllerSaleOrder extends Controller {
         return false;
     }
 
-    public function chargeCustomer($customer_id,$description,$final_amount,$order_id) {
+    public function chargeCustomer($customer_id, $description, $final_amount, $order_id)
+    {
 
         require_once DIR_SYSTEM . 'library/Iugu.php';
 
@@ -6261,11 +6272,11 @@ class ControllerSaleOrder extends Controller {
         $data['settlement_tab'] = false;
 
         $this->load->model('sale/order');
-        $iuguData =  $this->model_sale_order->getOrderIugu($order_id);
+        $iuguData = $this->model_sale_order->getOrderIugu($order_id);
 
         $log->write('chargeCustomer');
         $log->write($iuguData);
-        if($iuguData) {
+        if ($iuguData) {
 
             $invoiceId = $iuguData['invoice_id'];
 
@@ -6274,18 +6285,18 @@ class ControllerSaleOrder extends Controller {
             Iugu::setApiKey($this->config->get('iugu_token'));
 
 
-                //new invoice create and charge
-            $customerIuguData =  $this->model_sale_order->getOrderIuguCustomer($customer_id);
+            //new invoice create and charge
+            $customerIuguData = $this->model_sale_order->getOrderIuguCustomer($customer_id);
 
             $data['amount'] = $final_amount;
             $data['order_id'] = $order_id;
             $data['payment_method_id'] = $use_payment_method_id;
 
-            if(!empty($use_payment_method_id)) {
+            if (!empty($use_payment_method_id)) {
 
                 $iuguChargeed = $this->iuguCharge($data);
 
-                if($iuguChargeed) {
+                if ($iuguChargeed) {
                     return true;
                 } else {
                     return false;
@@ -6297,7 +6308,8 @@ class ControllerSaleOrder extends Controller {
         return false;
     }
 
-    public function refundCustomer($customer_id,$description,$final_amount,$order_id) {
+    public function refundCustomer($customer_id, $description, $final_amount, $order_id)
+    {
 
         require_once DIR_SYSTEM . 'library/Iugu.php';
 
@@ -6306,11 +6318,11 @@ class ControllerSaleOrder extends Controller {
         $data['settlement_tab'] = false;
 
         $this->load->model('sale/order');
-        $iuguData =  $this->model_sale_order->getOrderIugu($order_id);
+        $iuguData = $this->model_sale_order->getOrderIugu($order_id);
 
         $log->write('refundCustomer');
         $log->write($iuguData);
-        if($iuguData) {
+        if ($iuguData) {
 
             $invoiceId = $iuguData['invoice_id'];
 
@@ -6325,7 +6337,7 @@ class ControllerSaleOrder extends Controller {
             $log->write('refundAPI');
             $log->write($resp);
 
-            if($resp) {
+            if ($resp) {
                 return true;
             }
         }
@@ -6333,14 +6345,15 @@ class ControllerSaleOrder extends Controller {
         return false;
     }
 
-    public function iuguCharge($data) {
+    public function iuguCharge($data)
+    {
 
 
         $order_id = $data['order_id'];
 
         $amount = $data['amount'];
 
-        $description = 'ORDERID #'.$order_id.' Changed';
+        $description = 'ORDERID #' . $order_id . ' Changed';
 
 
         $payment_method_id = $data['payment_method_id'];
@@ -6416,18 +6429,16 @@ class ControllerSaleOrder extends Controller {
 
         $log = new Log('error.log');
 
-        $log->write('admin recharge '.$payment_method_id);
+        $log->write('admin recharge ' . $payment_method_id);
 
         $data['customer_payment_method_id'] = $payment_method_id;
-
-
 
 
         $result = Iugu_Charge::create($data);
 
         $response = array();
 
-        foreach(reset($result) as $key => $value) {
+        foreach (reset($result) as $key => $value) {
             $response[$key] = $value;
         }
 
@@ -6435,7 +6446,7 @@ class ControllerSaleOrder extends Controller {
 
         $log->write($response);
 
-        if(isset($response['success']) && $response['success']) {
+        if (isset($response['success']) && $response['success']) {
             $this->model_checkout_order->addOrder($order_id, $response, true);
             return true;
         } else {
@@ -6443,73 +6454,74 @@ class ControllerSaleOrder extends Controller {
         }
     }
 
-    public function sendNewInvoice( $order_id, $comment = '', $notify = true ) {
-        $this->trigger->fire( 'pre.order.history.add', $order_id );
+    public function sendNewInvoice($order_id, $comment = '', $notify = true)
+    {
+        $this->trigger->fire('pre.order.history.add', $order_id);
 
         //print_r($this->config->get('config_ssl'));die;
 
-        $order_info = $this->getOrder( $order_id );
+        $order_info = $this->getOrder($order_id);
 
         $pdf_link = '';
 
         $log = new Log('error.log');
         $log->write('sendNewInvoice');
 
-        if ( $order_info ) {
+        if ($order_info) {
             // Fraud Detection
-            $this->load->model( 'account/customer' );
-            $this->load->model( 'sale/order' );
+            $this->load->model('account/customer');
+            $this->load->model('sale/order');
 
-            $order_status_id =  $order_info['order_status_id'];
+            $order_status_id = $order_info['order_status_id'];
 
-            $customer_info = $this->model_account_customer->getCustomer( $order_info['customer_id'] );
+            $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
 
-            if ( $customer_info && $customer_info['safe'] ) {
+            if ($customer_info && $customer_info['safe']) {
                 $safe = true;
             } else {
                 $safe = false;
             }
 
-            if ( $this->config->get( 'config_fraud_detection' ) ) {
-                $this->load->model( 'checkout/fraud' );
+            if ($this->config->get('config_fraud_detection')) {
+                $this->load->model('checkout/fraud');
 
-                $risk_score = $this->model_checkout_fraud->getFraudScore( $order_info );
+                $risk_score = $this->model_checkout_fraud->getFraudScore($order_info);
 
-                if ( !$safe && $risk_score > $this->config->get( 'config_fraud_score' ) ) {
-                    $order_status_id = $this->config->get( 'config_fraud_status_id' );
+                if (!$safe && $risk_score > $this->config->get('config_fraud_score')) {
+                    $order_status_id = $this->config->get('config_fraud_status_id');
                 }
             }
 
             // Ban IP
-            if ( !$safe ) {
+            if (!$safe) {
                 $log->write('addOrderHistory not safe');
                 $status = false;
 
 
-                if ( $order_info['customer_id'] ) {
+                if ($order_info['customer_id']) {
 
-                    $results = $this->model_account_customer->getIps( $order_info['customer_id'] );
+                    $results = $this->model_account_customer->getIps($order_info['customer_id']);
 
-                    foreach ( $results as $result ) {
-                        if ( $this->model_account_customer->isBanIp( $result['ip'] ) ) {
+                    foreach ($results as $result) {
+                        if ($this->model_account_customer->isBanIp($result['ip'])) {
                             $status = true;
 
                             break;
                         }
                     }
                 } else {
-                    $status = $this->model_account_customer->isBanIp( $order_info['ip'] );
+                    $status = $this->model_account_customer->isBanIp($order_info['ip']);
                 }
 
-                $log->write('status'.$status);
-                if ( $status ) {
-                    $order_status_id = $this->config->get( 'config_order_status_id' );
+                $log->write('status' . $status);
+                if ($status) {
+                    $order_status_id = $this->config->get('config_order_status_id');
                 }
             }
 
-            $order_status = $this->db->query( "SELECT name FROM " . DB_PREFIX . "order_status WHERE order_status_id = '" . (int) $order_status_id . "' AND language_id = '" . (int) $order_info['language_id'] . "'" );
+            $order_status = $this->db->query("SELECT name FROM " . DB_PREFIX . "order_status WHERE order_status_id = '" . (int)$order_status_id . "' AND language_id = '" . (int)$order_info['language_id'] . "'");
 
-            if ( $order_status->num_rows ) {
+            if ($order_status->num_rows) {
                 $order_status = $order_status->row['name'];
             } else {
                 $order_status = '';
@@ -6519,7 +6531,7 @@ class ControllerSaleOrder extends Controller {
             $order_href = '';
             $order_pdf_href = '';
 
-            if ( $order_info['customer_id'] ) {
+            if ($order_info['customer_id']) {
                 $order_href = $order_info['store_url'] . 'index.php?path=account/order/info&order_id=' . $order_info['order_id'];
             }
 
@@ -6527,7 +6539,7 @@ class ControllerSaleOrder extends Controller {
             $totals = array();
             $tax_amount = 0;
 
-            if ( strlen( $order_info['shipping_name'] ) <> 0 ) {
+            if (strlen($order_info['shipping_name']) <> 0) {
                 $address = $order_info['shipping_name'] . '<br />' . $order_info['shipping_address'] . '<br /><b>Contact No.:</b> ' . $order_info['shipping_contact_no'];
             } else {
                 $address = '';
@@ -6535,31 +6547,30 @@ class ControllerSaleOrder extends Controller {
 
             $payment_address = '';
 
-            $order_total = $this->db->query( "SELECT * FROM `" . DB_PREFIX . "order_total` WHERE order_id = '" . (int) $order_info['order_id'] . "' order by sort_order" );
+            $order_total = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order_total` WHERE order_id = '" . (int)$order_info['order_id'] . "' order by sort_order");
 
-            foreach ( $order_total->rows as $total ) {
+            foreach ($order_total->rows as $total) {
                 $totals[$total['code']][] = array(
                     'title' => $total['title'],
-                    'text' => $this->currency->format( $total['value'], $order_info['currency_code'], $order_info['currency_value'] ),
+                    'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
                     'value' => $total['value']
                 );
 
-                if ( $total['code'] == 'tax' ) {
+                if ($total['code'] == 'tax') {
                     $tax_amount += $total['value'];
                 }
             }
 
 
-            $this->load->model( 'account/order' );
+            $this->load->model('account/order');
 
 
-
-            $iugu_detail = $this->getOrderDetailIugu( $order_info['order_id']);
+            $iugu_detail = $this->getOrderDetailIugu($order_info['order_id']);
 
             $log->write($iugu_detail);
 
-            if(count($iugu_detail) > 0) {
-                $order_pdf_href = '<a href="'.$iugu_detail['pdf'].'"> Payment Gateway Receipt </a>';
+            if (count($iugu_detail) > 0) {
+                $order_pdf_href = '<a href="' . $iugu_detail['pdf'] . '"> Payment Gateway Receipt </a>';
             }
 
             $special = NULL;
@@ -6575,7 +6586,7 @@ class ControllerSaleOrder extends Controller {
                 'order_status' => $order_status,
                 'totals' => $totals,
                 'tax_amount' => $tax_amount,
-                'invoice_no' => !empty( $invoice_no ) ? $invoice_no : '',
+                'invoice_no' => !empty($invoice_no) ? $invoice_no : '',
                 'new_invoice' => 1
             );
 
@@ -6591,7 +6602,7 @@ class ControllerSaleOrder extends Controller {
                 'order_status' => $order_status,
                 'totals' => $totals,
                 'tax_amount' => $tax_amount,
-                'invoice_no' => !empty( $invoice_no ) ? $invoice_no : '',
+                'invoice_no' => !empty($invoice_no) ? $invoice_no : '',
                 'new_invoice' => 1
             );
 
@@ -6611,41 +6622,41 @@ class ControllerSaleOrder extends Controller {
 
             //echo "<pre>";print_r($data);die;
 
-            $subject = $this->emailtemplate->getSubject( 'OrderAll', 'invoice_1', $data);
-            $message = $this->emailtemplate->getMessage( 'OrderAll', 'invoice_1', $data);
+            $subject = $this->emailtemplate->getSubject('OrderAll', 'invoice_1', $data);
+            $message = $this->emailtemplate->getMessage('OrderAll', 'invoice_1', $data);
 
 
-            $sms_message = $this->emailtemplate->getSmsMessage( 'OrderAll', 'invoice_1', $data);
+            $sms_message = $this->emailtemplate->getSmsMessage('OrderAll', 'invoice_1', $data);
 
 
-            if($this->emailtemplate->getEmailEnabled('OrderAll','invoice_1') ) {
+            if ($this->emailtemplate->getEmailEnabled('OrderAll', 'invoice_1')) {
 
-                $mail = new mail( $this->config->get( 'config_mail' ) );
+                $mail = new mail($this->config->get('config_mail'));
                 //$mail->setTo( 'chaurasia.abhi09@gmail.com');
-                $mail->setTo( $order_info['email']);
+                $mail->setTo($order_info['email']);
 
-                $mail->setFrom( $this->config->get('config_from_email') );
-                $mail->setSender( $order_info['store_name'] );
-                $mail->setSubject( $subject );
-                $mail->setHtml( $message );
+                $mail->setFrom($this->config->get('config_from_email'));
+                $mail->setSender($order_info['store_name']);
+                $mail->setSubject($subject);
+                $mail->setHtml($message);
                 $mail->send();
             }
 
 
-            if ( $this->emailtemplate->getSmsEnabled('OrderAll','invoice_1')) {
-                $ret =  $this->emailtemplate->sendmessage($order_info['telephone'],$sms_message);
+            if ($this->emailtemplate->getSmsEnabled('OrderAll', 'invoice_1')) {
+                $ret = $this->emailtemplate->sendmessage($order_info['telephone'], $sms_message);
             }
 
-            if ( $this->emailtemplate->getNotificationEnabled('OrderAll','invoice_1')) {
+            if ($this->emailtemplate->getNotificationEnabled('OrderAll', 'invoice_1')) {
 
-                $mobile_notification_template = $this->emailtemplate->getNotificationMessage( 'OrderAll', 'invoice_1', $data );
-                $mobile_notification_title = $this->emailtemplate->getNotificationTitle( 'OrderAll', 'invoice_1', $data );
+                $mobile_notification_template = $this->emailtemplate->getNotificationMessage('OrderAll', 'invoice_1', $data);
+                $mobile_notification_title = $this->emailtemplate->getNotificationTitle('OrderAll', 'invoice_1', $data);
                 // customer push notitification start
 
-                if(isset($customer_info) && isset($customer_info['device_id']) && strlen($customer_info['device_id']) > 0 ) {
+                if (isset($customer_info) && isset($customer_info['device_id']) && strlen($customer_info['device_id']) > 0) {
 
                     $log->write('customer device id set');
-                    $ret =  $this->emailtemplate->sendPushNotification($order_info['customer_id'],$customer_info['device_id'],$order_id,$order_info['store_id'],$mobile_notification_template,$mobile_notification_title,'com.instagolocal.showorder');
+                    $ret = $this->emailtemplate->sendPushNotification($order_info['customer_id'], $customer_info['device_id'], $order_id, $order_info['store_id'], $mobile_notification_template, $mobile_notification_title, 'com.instagolocal.showorder');
 
                     /*$this->saveVendorNotification($order_info['customer_id'],$customer_info['device_id'],$order_id,$mobile_notification_template,$mobile_notification_title);*/
                 } else {
@@ -6656,68 +6667,70 @@ class ControllerSaleOrder extends Controller {
 
             /* vendor order modified mail*/
 
-                $temporaryVendorInfo = $this->db->query('select * from '.DB_PREFIX.'order LEFT JOIN '.DB_PREFIX.'store on('.DB_PREFIX.'store.store_id = '.DB_PREFIX.'order.store_id) WHERE '.DB_PREFIX.'order.store_id="'.$order_info['store_id'].'" AND order_id="'.$order_id.'"')->row;
+            $temporaryVendorInfo = $this->db->query('select * from ' . DB_PREFIX . 'order LEFT JOIN ' . DB_PREFIX . 'store on(' . DB_PREFIX . 'store.store_id = ' . DB_PREFIX . 'order.store_id) WHERE ' . DB_PREFIX . 'order.store_id="' . $order_info['store_id'] . '" AND order_id="' . $order_id . '"')->row;
 
-                $vendorDetail = $this->model_sale_order->getVendorDetails($temporaryVendorInfo['vendor_id']);
+            $vendorDetail = $this->model_sale_order->getVendorDetails($temporaryVendorInfo['vendor_id']);
 
-                $store_details = $this->model_account_order->getStoreById($order_info['store_id']);
+            $store_details = $this->model_account_order->getStoreById($order_info['store_id']);
 
-                $subject = $this->emailtemplate->getSubject( 'OrderAll', 'invoice_2', $vendorData);
-                $message = $this->emailtemplate->getMessage( 'OrderAll', 'invoice_2', $vendorData);
+            $subject = $this->emailtemplate->getSubject('OrderAll', 'invoice_2', $vendorData);
+            $message = $this->emailtemplate->getMessage('OrderAll', 'invoice_2', $vendorData);
 
-                $sms_message = $this->emailtemplate->getSmsMessage( 'OrderAll', 'invoice_2', $vendorData);
+            $sms_message = $this->emailtemplate->getSmsMessage('OrderAll', 'invoice_2', $vendorData);
 
 
-                if($this->emailtemplate->getEmailEnabled('OrderAll','invoice_2') ) {
+            if ($this->emailtemplate->getEmailEnabled('OrderAll', 'invoice_2')) {
 
-                    $mail = new mail( $this->config->get( 'config_mail' ) );
-                    //$mail->setTo( 'chaurasia.abhi09@gmail.com');
-                    $mail->setTo( $store_details['email']);
+                $mail = new mail($this->config->get('config_mail'));
+                //$mail->setTo( 'chaurasia.abhi09@gmail.com');
+                $mail->setTo($store_details['email']);
 
-                    $mail->setFrom( $this->config->get('config_from_email') );
-                    $mail->setSender( $order_info['store_name'] );
-                    $mail->setSubject( $subject );
-                    $mail->setHtml( $message );
-                    $mail->send();
+                $mail->setFrom($this->config->get('config_from_email'));
+                $mail->setSender($order_info['store_name']);
+                $mail->setSubject($subject);
+                $mail->setHtml($message);
+                $mail->send();
+            }
+
+
+            /*if ( $this->emailtemplate->getSmsEnabled('OrderAll','invoice_2')) {
+                $ret =  $this->emailtemplate->sendmessage($order_info['telephone'],$sms_message);
+            }*/
+
+            if ($this->emailtemplate->getNotificationEnabled('OrderAll', 'invoice_2')) {
+
+                $mobile_notification_template = $this->emailtemplate->getNotificationMessage('OrderAll', 'invoice_2', $vendorData);
+                $mobile_notification_title = $this->emailtemplate->getNotificationTitle('OrderAll', 'invoice_2', $vendorData);
+                // customer push notitification start
+
+                if (isset($vendorDetail) && isset($vendorDetail['device_id']) && strlen($vendorDetail['device_id']) > 0) {
+
+                    $log->write('customer device id set');
+
+                    $notification_id = $this->saveVendorNotification($temporaryVendorInfo['vendor_id'], $vendorDetail['device_id'], $order_id, $mobile_notification_template, $mobile_notification_title);
+
+                    $sen['notification_id'] = $notification_id;
+
+                    $ret = $this->emailtemplate->sendOrderVendorPushNotification($temporaryVendorInfo['vendor_id'], $vendorDetail['device_id'], $order_id, $order_info['store_id'], $mobile_notification_template, $mobile_notification_title, $sen);
                 }
-
-
-                /*if ( $this->emailtemplate->getSmsEnabled('OrderAll','invoice_2')) {
-                    $ret =  $this->emailtemplate->sendmessage($order_info['telephone'],$sms_message);
-                }*/
-
-                if ( $this->emailtemplate->getNotificationEnabled('OrderAll','invoice_2')) {
-
-                    $mobile_notification_template = $this->emailtemplate->getNotificationMessage( 'OrderAll', 'invoice_2', $vendorData );
-                    $mobile_notification_title = $this->emailtemplate->getNotificationTitle( 'OrderAll', 'invoice_2', $vendorData );
-                    // customer push notitification start
-
-                    if(isset($vendorDetail) && isset($vendorDetail['device_id']) && strlen($vendorDetail['device_id']) > 0 ) {
-
-                        $log->write('customer device id set');
-
-                        $notification_id = $this->saveVendorNotification($temporaryVendorInfo['vendor_id'],$vendorDetail['device_id'],$order_id,$mobile_notification_template,$mobile_notification_title);
-
-                        $sen['notification_id'] = $notification_id;
-
-                        $ret =  $this->emailtemplate->sendOrderVendorPushNotification($temporaryVendorInfo['vendor_id'],$vendorDetail['device_id'],$order_id,$order_info['store_id'],$mobile_notification_template,$mobile_notification_title,$sen);
-                    }
-                }
-                /* vendor order modified mail end */
+            }
+            /* vendor order modified mail end */
         }
 
         return true;
     }
 
-    public function saveVendorNotification($user_id,$deviceId,$order_id,$message,$title) {
-        $this->db->query("INSERT INTO " . DB_PREFIX . "vendor_notifications SET user_id = '" .$user_id. "', type = 'order', purpose_id = '" . $order_id ."', title = '" . $title ."', message = '" . $message ."', status = 'unread', created_at = NOW() , updated_at = NOW()");
+    public function saveVendorNotification($user_id, $deviceId, $order_id, $message, $title)
+    {
+        $this->db->query("INSERT INTO " . DB_PREFIX . "vendor_notifications SET user_id = '" . $user_id . "', type = 'order', purpose_id = '" . $order_id . "', title = '" . $title . "', message = '" . $message . "', status = 'unread', created_at = NOW() , updated_at = NOW()");
 
         $notificaiton_id = $this->db->getLastId();
 
         return $notificaiton_id;
     }
 
-    public function getOrderDetailIugu($order_id) {
+    public function getOrderDetailIugu($order_id)
+    {
         return $this->db->query("SELECT * FROM `" . DB_PREFIX . "order_iugu` WHERE `order_id` = " . (int)$order_id)->row;
     }
 
