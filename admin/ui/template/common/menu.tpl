@@ -61,6 +61,9 @@
     <?php if($preturn_vendor_product) { ?>    
             <li><a href="<?php echo $inventory_management; ?>"><i class="fa inventory"></i> <span>Inventory</span></a></li>
     <?php } ?>
+     <?php if($preturn_vendor_product) { ?>    
+            <li><a href="<?php echo $category_prices; ?>"><i class="fa inventory"></i> <span>Category Prices</span></a></li>
+    <?php } ?>
     <?php
     if($preturn_simple_blog_author != false || $preturn_simple_blog_category != false || $preturn_simple_blog_article != false || 
     $preturn_simple_blog_comment != false || $preturn_simple_blog_general_setting || $preturn_simple_blog_category_setting != false || $preturn_simple_blog_view_report != false){ 
