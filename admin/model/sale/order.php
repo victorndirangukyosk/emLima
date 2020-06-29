@@ -370,16 +370,17 @@ class ModelSaleOrder extends Model {
     }
     
     public function getOrder($order_id) {
-
         $order_query = $this->db->query("SELECT o.*, (SELECT CONCAT(c.firstname, ' ', c.lastname) FROM " . DB_PREFIX . "customer c WHERE c.customer_id = o.customer_id) AS customer FROM `" . DB_PREFIX . "order` o WHERE o.order_id = '" . (int) $order_id . "'");
 
-
-        // echo $this->db->last_query();die;
+//      echo $this->db->last_query();die;
 
         if ($order_query->num_rows) {
             $reward = 0;
 
             $order_product_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int) $order_id . "'");
+            $customer_company_name_query = $this->db->query("SELECT company_name FROM ". DB_PREFIX . "customer WHERE customer_id = '" . (int) $order_query->row['customer_id'] . "'");
+
+//            echo "<pre>";print_r($customer_company_name_query->row['company_name']);die;
 
             foreach ($order_product_query->rows as $product) {
                 $reward += $product['reward'];
@@ -414,7 +415,7 @@ class ModelSaleOrder extends Model {
                 $language_directory = '';
             }
 
-            
+//            echo "<pre>";print_r($order_query->row);die;
 
             return array(
                 'order_id' => $order_query->row['order_id'],
@@ -426,6 +427,7 @@ class ModelSaleOrder extends Model {
                 'customer_id' => $order_query->row['customer_id'],
                 'customer' => $order_query->row['customer'],
                 'customer_group_id' => $order_query->row['customer_group_id'],
+                'customer_company_name' => $customer_company_name_query->row['company_name'],
                 'firstname' => $order_query->row['firstname'],
                 'lastname' => $order_query->row['lastname'],
                 'email' => $order_query->row['email'],
@@ -631,8 +633,6 @@ class ModelSaleOrder extends Model {
         return $qty;
     }
 
-
-    
     public function getRealOrderProducts($order_id, $store_id = 0) {
        
         $sql = "SELECT * FROM " . DB_PREFIX . "real_order_product WHERE order_id = '" . (int) $order_id . "'";
@@ -664,7 +664,6 @@ class ModelSaleOrder extends Model {
         return $qty;
     }
 
-
     public function deleteOrderProduct($order_id,$product_id) {
        
         $sql = "DELETE FROM " . DB_PREFIX . "real_order_product WHERE order_id = '" . (int) $order_id . "' and product_id = '". (int) $product_id ."'";
@@ -672,7 +671,6 @@ class ModelSaleOrder extends Model {
         $query = $this->db->query($sql);
     }
 
-    
     public function getOrderProductsIds($order_id) {
        
         $sql = "SELECT product_id FROM " . DB_PREFIX . "real_order_product WHERE order_id = '" . (int) $order_id . "'";
@@ -711,8 +709,6 @@ class ModelSaleOrder extends Model {
         $query = $this->db->query($sql);
     }
 
-
-    
     public function insertOrderTotal($order_id,$total,$shipping_price) {
 
         if($total['code'] == 'shipping') {
@@ -753,7 +749,6 @@ class ModelSaleOrder extends Model {
 
     }
 
-    
     public function hasRealOrderProducts($order_id) {
 
         $sql = "SELECT * FROM " . DB_PREFIX . "real_order_product WHERE order_id = '" . (int) $order_id ."'";
@@ -765,7 +760,6 @@ class ModelSaleOrder extends Model {
         }
 
         return false;
-
     }
     
     public function updateOrderNewProduct($order_id,$product_id,$data) {
@@ -853,7 +847,6 @@ class ModelSaleOrder extends Model {
         return $query->rows;
     }
 
-    
     public function getOrderTotals($order_id) {
         $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_total WHERE order_id = '" . (int) $order_id . "' ORDER BY sort_order");
 
@@ -865,7 +858,6 @@ class ModelSaleOrder extends Model {
 
         return $query->row['total'];
     }
-
 
     public function getTotalOrders($data = array()) {
         $sql = "SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "order` o ";
@@ -1356,7 +1348,6 @@ class ModelSaleOrder extends Model {
         return $query->row;
     }
 
-    
     public function isVendorOrder($order_id, $vendor_id) {
 
        return  $this->db->query('select * from ' . DB_PREFIX . 'order  LEFT JOIN '.DB_PREFIX.'store on('.DB_PREFIX.'store.store_id = '.DB_PREFIX.'order.store_id) WHERE order_id="' . $order_id . '" AND vendor_id = "'.$vendor_id.'"')->row;
@@ -1421,7 +1412,6 @@ class ModelSaleOrder extends Model {
         
         return $this->db->query($sql)->rows;
     }
-
 
     public function getVendorDetails($vendor_id) {
 
@@ -1515,7 +1505,6 @@ class ModelSaleOrder extends Model {
         
         $this->db->query('update `' . DB_PREFIX . 'order` SET settlement_amount="' . $final_amount . '" WHERE order_id="' . $order_id . '"');
     }
-
 
     public function getOrderIugu($order_id) {
         
