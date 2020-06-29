@@ -1,130 +1,172 @@
 <!DOCTYPE html>
-<html dir="<?php echo $direction; ?>" lang="<?php echo $lang; ?>">
+<html lang="en">
+
 <head>
-<meta charset="UTF-8" />
-<title><?php echo $title; ?></title>
-<base href="<?php echo $base; ?>" />
-<link href="ui/javascript/bootstrap/css/bootstrap.css" rel="stylesheet" media="all" />
-<script type="text/javascript" src="ui/javascript/jquery/jquery-2.1.1.min.js"></script>
-<script type="text/javascript" src="ui/javascript/bootstrap/js/bootstrap.min.js"></script>
-<link href="ui/javascript/font-awesome/css/font-awesome.min.css" type="text/css" rel="stylesheet" />
-<link type="text/css" href="ui/stylesheet/stylesheet.css" rel="stylesheet" media="all" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KwikBasket Delivery Note</title>
+  <link rel="stylesheet" href="ui/stylesheet/bootstrap.min.css">
+  <link rel="stylesheet" href="ui/javascript/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="ui/stylesheet/print.css">
 </head>
+
 <body>
-<div class="container">
-  <?php foreach ($orders as $order) { ?>
-  <div style="page-break-after: always;">
-    <h1><?php echo $text_picklist; ?> #<?php echo $order['order_id']; ?></h1>
-    <table class="table table-bordered">
-      <thead>
-        <tr>
-          <td style="width: 50%;"><?php echo $text_from; ?></td>
-          <td style="width: 50%;"><?php echo $text_order_detail; ?></td>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><address>
-            <strong><?php echo $order['store_name']; ?></strong><br />
-            <?php echo $order['store_address']; ?>
-            </address>
-            <b><?php echo $text_telephone; ?></b> <?php echo $order['store_telephone']; ?><br />
-            <?php if ($order['store_fax']) { ?>
-            <b><?php echo $text_fax; ?></b> <?php echo $order['store_fax']; ?><br />
-            <?php } ?>
-            <b><?php echo $text_email; ?></b> <?php echo $order['store_email']; ?><br />
-            <b><?php echo $text_website; ?></b> <a href="<?php echo $order['store_url']; ?>"><?php echo $order['store_url']; ?></a></td>
-          <td style="width: 50%;"><b><?php echo $text_date_added; ?></b> <?php echo $order['date_added']; ?><br />
-            <?php if ($order['invoice_no']) { ?>
-            <b><?php echo $text_invoice_no; ?></b> <?php echo $order['invoice_no']; ?><br />
-            <?php } ?>
-            <b><?php echo $text_order_id; ?></b> <?php echo $order['order_id']; ?><br />
-            <?php if ($order['shipping_method']) { ?>
-            <b><?php echo $text_shipping_method; ?></b> <?php echo $order['shipping_method']; ?><br />
-            <?php } ?></td>
-        </tr>
-      </tbody>
-    </table>
-    <table class="table table-bordered">
-      <thead>
-        <tr>
-          <td style="width: 50%;"><b><?php echo $text_to; ?></b></td>
-          <td style="width: 50%;"><b><?php echo $text_contact; ?></b></td>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>
-              <b><?= $text_name ?></b> <?php echo $order['shipping_name']; ?>,<br />
-              <b><?= $text_contact_no ?></b> <?php echo $order['shipping_contact_no']; ?>,<br />
-              
-              <?php echo $order['shipping_address'] ?><br />
-              <?php echo $order['shipping_city']; ?>            
-            
-          </td>
-          <td><?php echo $order['email']; ?><br/>
-            <?php echo $order['telephone']; ?></td>
-        </tr>
-      </tbody>
-    </table>
-    <table class="table table-bordered">
-      <thead>
-        <tr>
-         
-          
-          <td><b><?php echo $column_product; ?></b></td>
-         
-          
-          <td><b><?php echo $column_unit; ?></b></td>
-          <td><b><?php echo $column_model; ?></b></td>
-          <td class="text-right"><b><?php echo $column_quantity; ?></b></td>
-        </tr>
-      </thead>
-      <tbody>
-        <?php $t = 0; foreach ($order['product'] as $product) {  $t += $product['quantity']; ?>
-        <tr>
-         
-          <td><?php echo $product['name']; ?>
-            <?php foreach ($product['option'] as $option) { ?>
-            <br />
-            &nbsp;<small> - <?php echo $option['name']; ?>: <?php echo $option['value']; ?></small>
-            <?php } ?></td>
-          <td><?php echo $product['unit']; ?></td>
-          <td><?php echo $product['model']; ?></td>
+<div class="page">
+  <table class="document-container">
+    <tbody>
+    <tr>
+      <td>
+        <div class="content">
+          <div class="container">
+            <div class="row mb-4">
+              <div class="col-md-4 company-details">
+                <img width="210" src="ui/images/logo.png" alt="KwikBasket Logo" class="mb-2">
+                <div class="text-left address-block">
+                  <ul class="list-block">
+                    <li>12 Githuri Rd, Parklands, Nairobi</li>
+                    <li>+254780703586</li>
+                    <li>info@kwikbasket.com</li>
+                    <li>www.kwikbasket.com</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="col-md-4 offset-md-4 text-right">
+                <h4 class="bold">DELIVERY NOTE</h4>
+              </div>
+            </div>
 
-          <td class="text-right"><?php echo $product['quantity']; ?></td>
-        </tr>
-        <?php } ?>
+            <div class="row mb-2">
+              <div class="col-md-4">
+                <h5 class="bold text-uppercase mb-3">TO <?= $customer_company_name ?></h5>
+                <ul class="list-block">
+                  <li><?= $shipping_name ?></li>
+                  <li><?= $telephone ?></li>
+                  <li class="mb-2"><?= $email ?></li>
+                  <li>
+                    <p class="bold"><?= $shipping_address ?></p>
+                  </li>
+                </ul>
 
-        <tr>
-         
-          
-          <td></td>
-         
-          
-          <td></td>
-          <td>Total</td>
-          <td class="text-right"><b><?php echo $t; ?></b></td>
-        </tr>
+              </div>
 
-      </tbody>
-    </table>
-    <?php if ($order['comment']) { ?>
-    <table class="table table-bordered">
-      <thead>
-        <tr>
-          <td><b><?php echo $column_comment; ?></b></td>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><?php echo $order['comment']; ?></td>
-        </tr>
-      </tbody>
-    </table>
-    <?php } ?>
+              <div class="col-md-4 offset-md-4 text-right">
+                <h6 class="bold mb-3">ORDER INFO</h6>
+                <ul class="list-block">
+                  <li>Order # <?= $order_id ?></li>
+                  <li>Placed On <?= $date_added ?></li>
+                  <li>Delivered On <?= $delivery_date ?></li>
+                  <li><?= $shipping_method ?></li>
+                  <li><?= $payment_method ?></li>
+                </ul>
+              </div>
+            </div>
+
+            <table class="datatable">
+              <thead class="datatable-header">
+              <tr>
+                <td>SKU</td>
+                <td>Product</td>
+                <td class="text-center">Quantity Ordered</td>
+                <td class="text-center">Quantity Delivered</td>
+                <td>Unit Price</td>
+                <td>Total</td>
+              </tr>
+              </thead>
+              <tbody class="datatable-content">
+              <?php foreach($products as $product) { ?>
+              <tr>
+                <td><?= $product['product_id'] ?></td>
+                <td><?= $product['name'] ?></td>
+                <td class="text-center"><?= $product['quantity'] ?> <?= $product['unit'] ?></td>
+                <td class="text-center"><?= $product['quantity_updated'] ?> <?= $product['unit_updated'] ?></td>
+                <td><?= $product['price'] ?></td>
+                <td><?= $product['total'] ?></td>
+              </tr>
+              <?php } ?>
+
+              <?php foreach($totals as $total) { ?>
+              <tr>
+                <td colspan="5" class="bold text-right"><span class="pr-4"><?= $total['title'] ?></span></td>
+                <td class="bold"><?= $total['text'] ?></td>
+              </tr>
+              <?php } ?>
+              </tbody>
+            </table>
+
+            <table class="payment-details-table mt-4">
+              <thead>
+              <tr>
+                <td colspan="2" class="text-left">
+                  PAYMENT DETAILS
+                </td>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                <td>
+                  <h6 class="bold">BANK TRANSFER</h6>
+                  <ul class="list-block">
+                    <li>Beneficiary Account: KWIKBASKET SOLUTIONS LIMITED</li>
+                    <li>Account Type: KES</li>
+                    <li>Account Number: 0100006985957</li>
+                    <li>Bank Name: STANBIC BANK KENYA LTD</li>
+                    <li>SWIFT Code: SBICKENX</li>
+                  </ul>
+                </td>
+                <td class="text-right">
+                  <br>
+                  <h6 class="bold">LIPA NA MPESA</h6>
+                  <ul class="list-block">
+                    <li>Go to the M-PESA Menu</li>
+                    <li>Select Lipa Na M-PESA</li>
+                    <li>Select Pay Bill</li>
+                    <li>Enter <strong>4029127</strong></li>
+                    <li>Enter <strong>KB<?= $order_id ?></strong> as the account number</li>
+                    <li>Enter total amount</li>
+                    <li>Enter M-PESA Pin</li>
+                  </ul>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+    <tfoot class="page-footer">
+    <tr>
+      <td>
+        <div class="footer-space">&nbsp;</div>
+      </td>
+    </tr>
+    </tfoot>
+  </table>
+
+  <div class="footer">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12 text-left">
+          <ul class="list-block">
+            <li>KWIKBASKET SOLUTIONS LIMITED</li>
+            <li>3rd Floor, Heritan House, Woodlands Road</li>
+            <li>Nairobi, Kenya</li>
+          </ul>
+        </div>
+      </div>
+    </div>
   </div>
-  <?php } ?>
 </div>
+
+<div class="document-actions">
+  <button class="btn btn-primary mb-2" onclick="printDocument()"><i class="fa fa-print"></i> Print Document</button>
+</div>
+
+<script>
+  function printDocument()
+  {
+    window.print();
+  }
+</script>
 </body>
 </html>

@@ -109,7 +109,7 @@
                                     <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $logout ?>"><i class="fa fa-power-off"></i><?= $text_logout ?></a></div>
                                     </div>
                                     </div> 
-                                      <div class="butn setui"> <a href="<?= BASE_URL?>/checkout"><button class="btn btn-default mini-cart-button" role="button" data-toggle="modal" data-target="#store-cart-side" id="mini-cart-button">
+                                      <div class="butn setui"> <a href="<?= BASE_URL?>/index.php?path=checkout/checkoutitems"><button class="btn btn-default mini-cart-button" role="button" data-toggle="modal" data-target="#store-cart-side" id="mini-cart-button">
 										<span class="badge cart-count"><?= $this->cart->countProducts(); ?></span>
 										<i class="fa fa-shopping-cart"></i> 
 										<span class="hidden-xs hidden-sm cart-total-amount"><?= $this->currency->format($this->cart->getTotal()); ?></span>

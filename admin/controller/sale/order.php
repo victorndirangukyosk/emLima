@@ -2962,7 +2962,7 @@ class ControllerSaleOrder extends Controller {
 
 
             $EditedProducts = $this->model_sale_order->getRealOrderProducts($this->request->get['order_id']);
-             //echo '<pre>';print_r($EditedProducts);exit;
+//             echo '<pre>';print_r($EditedProducts);exit;
              $original_products = $products = $this->model_sale_order->getOrderProducts($this->request->get['order_id']);
 
 
@@ -4411,10 +4411,7 @@ class ControllerSaleOrder extends Controller {
     }
 
     public function shipping() {
-
-
         $this->load->language('sale/order');
-
 
         $data['title'] = $this->language->get('text_shipping');
 
@@ -4426,7 +4423,6 @@ class ControllerSaleOrder extends Controller {
 
         $data['direction'] = $this->language->get('direction');
         $data['lang'] = $this->language->get('code');
-
         $data['text_shipping'] = $this->language->get('text_shipping');
         $data['text_picklist'] = $this->language->get('text_picklist');
         $data['text_order_detail'] = $this->language->get('text_order_detail');
@@ -4450,7 +4446,6 @@ class ControllerSaleOrder extends Controller {
         $data['text_jan'] = $this->language->get('text_jan');
         $data['text_isbn'] = $this->language->get('text_isbn');
         $data['text_mpn'] = $this->language->get('text_mpn');
-
         $data['column_location'] = $this->language->get('column_location');
         $data['column_reference'] = $this->language->get('column_reference');
         $data['column_product'] = $this->language->get('column_product');
@@ -4476,19 +4471,16 @@ class ControllerSaleOrder extends Controller {
             $orders[] = $this->request->get['order_id'];
         }
 
-
-
         if (isset($this->request->get['store_id'])) {
             $store_id = $this->request->get['store_id'];
         } else {
             $store_id = 0;
         }
 
-        //echo "<pre>";print_r($store_id);die;
         foreach ($orders as $order_id) {
             $order_info = $this->model_sale_order->getOrder($order_id);
+//            echo "<pre>";print_r($order_info);die;
 
-            //check vendor order
             if ($this->user->isVendor() && !$this->isVendorOrder($order_info['order_id'])) {
                 continue;
             }
@@ -4516,74 +4508,130 @@ class ControllerSaleOrder extends Controller {
                 }
 
 
-
                 if ($order_info['invoice_no']) {
                     $invoice_no = $order_info['invoice_prefix'] . $order_info['invoice_no'];
                 } else {
                     $invoice_no = '';
                 }
 
-                $this->load->model('tool/upload');
+                $editedProducts = $this->model_sale_order->getRealOrderProducts($order_id);
+                $original_products = $products = $this->model_sale_order->getOrderProducts($order_id);
 
-                $product_data = array();
+                $totalData = array();
 
-                //$products = $this->model_sale_order->getOrderProducts($order_id);
-                if($this->model_sale_order->hasRealOrderProducts($order_id)) {
-
-                    $products = $this->model_sale_order->getRealOrderProducts($order_id);
-
+                if ($store_id) {
+                    $totals = $this->model_sale_order->getVendorOrderTotals($order_id, $store_id);
                 } else {
-
-                    $products = $this->model_sale_order->getOrderProducts($order_id);
+                    $totals = $this->model_sale_order->getOrderTotals($order_id);
                 }
 
-
-                //echo "<pre>";print_r($products);die;
-                foreach ($products as $product) {
-
-                    if ($store_id && $product['store_id'] != $store_id) {
-                        continue;
-                    }
-
-                    $product_info = $this->model_catalog_product->getProduct($product['product_id']);
-
-                    $option_data = array();
-
-
-
-                    $product_data[] = array(
-                        'name' => $product['name'],
-                        'unit' => $product['unit'],
-                        'model' => $product['model'],
-                        'option' => $option_data,
-                        'quantity' => $product['quantity'],
+                foreach ($totals as $total) {
+                    $totalData[] = array(
+                        'title' => $total['title'],
+                        'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
                     );
+                }
+
+                $orderProducts = array();
+                if($this->model_sale_order->hasRealOrderProducts($order_id)) {
+                    foreach ($original_products as $original_product) {
+                        $present = false;
+
+                        foreach ($editedProducts as $editedProduct) {
+                            if($original_product['product_id'] == $editedProduct['product_id'] ){
+                                $original_product['quantity_updated'] = $editedProduct['quantity'];
+                                $original_product['unit_updated'] = $editedProduct['unit'];
+                            }
+
+                            if(!empty($original_product['name']) && $original_product['name'] == $editedProduct['name'] && $original_product['unit'] == $editedProduct['unit'] && $original_product['quantity'] == $editedProduct['quantity'] ) {
+                                $present = true;
+                            }
+                        }
+
+                        $orderProducts[] = array(
+                            'order_product_id' => $original_product['order_product_id'],
+                            'product_id' => $original_product['product_id'],
+                            'vendor_id' => $original_product['vendor_id'],
+                            'store_id' => $original_product['store_id'],
+                            'name' => $original_product['name'],
+                            'unit' => $original_product['unit'],
+                            'product_type' => $original_product['product_type'],
+                            'model' => $original_product['model'],
+                            'quantity' => $original_product['quantity'],
+                            'quantity_updated' => $original_product['quantity_updated'],
+                            'unit_updated' => $original_product['unit_updated'],
+                            'price' => $this->currency->format($original_product['price'] + ($this->config->get('config_tax') ? $original_product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
+                            'total' => $this->currency->format($original_product['total'] + ($this->config->get('config_tax') ? ($original_product['tax'] * $original_product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
+                        );
+
+                        if(!$present && !empty($original_product['name'])) {
+
+                            $data['difference_products'][] = array(
+                                'order_product_id' => $original_product['order_product_id'],
+                                'product_id' => $original_product['product_id'],
+                                'vendor_id' => $original_product['vendor_id'],
+                                'store_id' => $original_product['store_id'],
+                                'name' => $original_product['name'],
+                                'unit' => $original_product['unit'],
+                                'product_type' => $original_product['product_type'],
+                                'model' => $original_product['model'],
+                                'quantity_updated' => $original_product['quantity_updated'],
+                                'unit_updated' => $original_product['unit_updated'],//as of now unit change is not there
+                                'quantity' => $original_product['quantity'],
+                                'price' => $this->currency->format($original_product['price'] + ($this->config->get('config_tax') ? $original_product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
+                                'total' => $this->currency->format($original_product['total'] + ($this->config->get('config_tax') ? ($original_product['tax'] * $original_product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
+                            );
+                        }
+
+                    }
+                } else {
+                    foreach ($original_products as $original_product) {
+                        $orderProducts[] = array(
+                            'order_product_id' => $original_product['order_product_id'],
+                            'product_id' => $original_product['product_id'],
+                            'vendor_id' => $original_product['vendor_id'],
+                            'store_id' => $original_product['store_id'],
+                            'name' => $original_product['name'],
+                            'unit' => $original_product['unit'],
+                            'product_type' => $original_product['product_type'],
+                            'model' => $original_product['model'],
+                            'quantity' => $original_product['quantity'],
+                            'quantity_updated' => '-',
+                            'unit_updated' => '-',
+                            'price' => $this->currency->format($original_product['price'] + ($this->config->get('config_tax') ? $original_product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
+                            'total' => $this->currency->format($original_product['total'] + ($this->config->get('config_tax') ? ($original_product['tax'] * $original_product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
+                        );
+                    }
                 }
 
                 $data['orders'][] = array(
                     'order_id' => $order_id,
-                    'invoice_no' => $invoice_no,
                     'date_added' => date($this->language->get('date_format_short'), strtotime($order_info['date_added'])),
+                    'delivery_date' => date($this->language->get('date_format_short'), strtotime($order_info['delivery_date'])),
+                    'payment_method' => $order_info['payment_method'],
                     'store_name' => $store_name,
                     'store_url' => rtrim($order_info['store_url'], '/'),
                     'store_address' => nl2br($store_address),
                     'store_email' => $store_email,
                     'store_telephone' => $store_telephone,
-                    'store_fax' => $store_fax,
                     'email' => $order_info['email'],
                     'telephone' => $order_info['telephone'],
                     'shipping_method' => $order_info['shipping_method'],
                     'shipping_contact_no' => $order_info['shipping_contact_no'],
                     'shipping_address' => $order_info['shipping_address'],
                     'shipping_name' => $order_info['shipping_name'],
+                    'customer_company_name' => $order_info['customer_company_name'],
                     'shipping_city' => $order_info['shipping_city'],
-                    'product' => $product_data,
+                    'totals' => $totalData,
+                    'products' => $orderProducts,
                     'comment' => nl2br($order_info['comment'])
                 );
             }
         }
 
-        $this->response->setOutput($this->load->view('sale/order_shipping.tpl', $data));
+//        echo "<pre>";print_r($data['orders'][0]);die;
+
+        $this->response->setOutput($this->load->view('sale/order_shipping.tpl', $data['orders'][0]));
     }
 
     public function updateInvoice() {

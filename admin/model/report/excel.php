@@ -935,7 +935,7 @@ class ModelReportExcel extends Model {
 
                 // A fatal error is thrown for worksheet titles with more than 30 character
                 if(strlen($worksheetName) > 30) {
-                    $worksheetName = substr($worksheetName, 0, 27) . '...';
+                    $worksheetName = substr($worksheetName, 0, 24) . '...';
                 }
 
                 $objPHPExcel->getActiveSheet()->setTitle($worksheetName);
