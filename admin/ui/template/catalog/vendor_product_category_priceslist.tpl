@@ -14,7 +14,7 @@
                 <button type="button" data-toggle="tooltip" title="<?php echo $button_disable; ?>" class="btn btn-default" onclick="changeStatus(0)"><i class="fa fa-times-circle text-danger"></i></button>
                 <!--<button type="button" data-toggle="tooltip" title="<?php echo $button_delete; ?>" class="btn btn-danger" onclick="confirm('<?php echo $text_confirm; ?>') ? $('#form-product').submit() : false;"><i class="fa fa-trash-o"></i></button>-->
             <?php } ?>
-				<!--<span style="margin-left: 10px;" onclick="ChangeInventory()" form="form-product" data-toggle="tooltip" title="" class="btn btn-success"><i class="fa fa-check"></i></span>-->
+				<!--<span style="margin-left: 10px;" onclick="ChangeCategoryPrices()" form="form-product" data-toggle="tooltip" title="" class="btn btn-success"><i class="fa fa-check"></i></span>-->
             </div>
             <h1><?php echo $heading_title; ?></h1>
             <ul class="breadcrumb">
@@ -52,11 +52,24 @@
                                 <label class="control-label" for="input-name"><?php echo $entry_name; ?></label>
                                 <input type="text" name="filter_name" value="<?php echo $filter_name; ?>" placeholder="<?php echo $entry_name; ?>" id="input-name" class="form-control" />
                             </div>
-                            
+							
                             <div class="form-group">
+                                <label class="control-label" for="input-category">Price Category</label>
+                                <select name="filter_category_price" id="input-category-price" class="form-control">
+                                    <option value="*"></option>
+                                    <?php foreach ($price_categories as $price_category) { ?>
+                                    <?php if ($price_category['price_category'] == $filter_category_price) { ?>
+                                    <option value="<?php echo $price_category['price_category']; ?>" selected="selected"><?php echo $price_category['price_category']; ?></option>
+                                    <?php } else { ?>
+                                    <option value="<?php echo $price_category['price_category']; ?>"><?php echo $price_category['price_category']; ?></option>
+                                    <?php } ?>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                            <!--<div class="form-group">
                                 <label class="control-label" for="input-model"><?php echo $entry_model; ?></label>
                                 <input type="text" name="filter_model" value="<?php echo $filter_model; ?>" placeholder="<?php echo $entry_model; ?>" id="input-model" class="form-control" />
-                            </div>
+                            </div>-->
 
                             <div class="form-group">
                                 <label class="control-label" for="input-model"><?php echo $entry_product_id_from; ?></label>
@@ -134,6 +147,7 @@
                                 </select>
                             </div>
 
+                             
                             <div class="form-group">
                                 <label class="control-label" for="input-model"><?php echo $entry_product_id_to; ?></label>
                                 <input type="text" name="filter_product_id_to" value="<?php echo $filter_product_id_to; ?>" placeholder="<?php echo $entry_product_id_to; ?>" id="input-model" class="form-control" />
@@ -218,8 +232,8 @@
                                      <!--<td class="text-right"><?php echo 'Current '.$column_quantity; ?></td>
                                      <td class="text-right"><?php echo 'Total Procured Qty'; ?></td>
                                      <td class="text-right"><?php echo 'Rejected Qty'; ?></td>
-									 <td class="text-right"><?php echo 'Total Qty'; ?></td>
-                                     <td class="text-right"><?php echo $column_action; ?></td>-->
+									 <td class="text-right"><?php echo 'Total Qty'; ?></td>-->
+                                     <td class="text-right"><?php echo $column_action; ?></td>
                                      
                                     
                                 </tr>
@@ -245,53 +259,18 @@
                                     <?php if(count($price_categories)>0){
 										foreach($price_categories as $price_cat){
 										?>
-										<td> <?= ($category_prices[$product['product_store_id'].'_'.$price_cat['price_category'].'_75']) ? $category_prices[$product['product_store_id'].'_'.$price_cat['price_category'].'_75'] : '-'  ?></td>
+										<td>
+                                         <input data-price-category="<?php echo $price_cat['price_category'];?>" type="number" class="category_price_<?php echo $product['product_store_id'];?>"  id="category_price_<?php echo $product['product_store_id'];?>_<?php echo $price_cat['price_category'];?>"  value="<?= ($category_prices[$product['product_store_id'].'_'.$price_cat['price_category'].'_75']) ? $category_prices[$product['product_store_id'].'_'.$price_cat['price_category'].'_75'] : ''  ?>">
+										<? //= ($category_prices[$product['product_store_id'].'_'.$price_cat['price_category'].'_75']) ? $category_prices[$product['product_store_id'].'_'.$price_cat['price_category'].'_75'] : '-'  ?>
+										</td>
 									<?php }?>
 									<?php }?>
-                                    <!--<td class="text-left"><?php echo $product['model']; ?></td>-->
-
-                                    <!--<td class="text-left"><?php echo $product['unit']; ?></td>
-                                    <!--<td class="text-left"><?php echo $product['store_name']; ?></td>->
-
-                                    
-                                    
-                                    <td class="text-left"><?php foreach ($categories as $category) { ?>
-                                        <?php if (in_array($category['category_id'], $product['category'])) { ?>
-                                        <?php echo $category['name'];?><br>
-                                        <?php } ?> <?php } ?></td>
-                                    
-                                    <td><?php echo $product['quantity'] ?></td>
-                                    <td>
-
-                                        <?php if (!(int)$product['special_price']){ ?>
-                                            <?php echo $product['price']; ?>
-                                        <?php } else { ?>
-                                            <del>
-                                            <?php echo $product['price'];?>
-                                            </del>
-                                            <?php echo "  " ,$product['special_price'] ?>
-                                                <?php } ?>
-                                    </td>
-                                    <td class="text-left">
-                                        <?php echo $product['status']; ?>
-                                    </td>-->
-                                    <!--<td class="text-left">
-                                        <?php echo $product['quantity'] ?>
-                                    </td>
-                                    <td class="text-left">
-                                        <input name="total_procured_qty" type="number" class="procured_qty" data-general_product_id="<?php echo $product['product_id']; ?>" data-name="<?php echo $product['name']; ?>" data-current-qty="<?php echo $product['quantity']; ?>"  id="<?php echo $product['product_store_id'];?>" value="">
-                                    </td>
-                                    <td class="text-left">
-                                        <input name="rejected_qty" type="number" class="rejected_qty"  id="rejected_qty_<?php echo $product['product_store_id'];?>" data-current-qty="<?php echo $product['quantity']; ?>" value="">
-                                    </td>
-									<td class="text-left">
-                                        <input name="total_qty" disabled type="number"  id="total_qty_<?php echo $product['product_store_id'];?>" value="">
-                                    </td>
-                                    <td class="text-right"><button type="button" onclick="ChangeInventory();" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="Save"><i class="fa fa-check-circle text-success"></i></button>
+                                 
+                                <td class="text-right"><button type="button" onclick="ChangeCategoryPrices('<?php echo $product['product_store_id'];?>','<?php echo $product['product_id'];?>','<?php echo $product['name']; ?>')" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="Save"><i class="fa fa-check-circle text-success"></i></button>
 									<button type="button" onclick="getProductInventoryHistory('<?php echo $product['product_store_id']; ?>');" 
 									data-toggle="modal" data-target="#<?php echo $product['product_store_id']; ?>historyModal"
 								    title="" class="btn btn-default" data-original-title="History"><i class="fa fa-history text-success"></i></button>
-									</td>-->
+							    </td>
                                     
                                 </tr>
 									<div id="<?php echo $product['product_store_id']; ?>historyModal" class="modal fade" role="dialog">
@@ -301,7 +280,7 @@
 										<div class="modal-content">
 										  <div style="color: white;background-color: #008db9;" class="modal-header">
 											<button type="button" class="close" data-dismiss="modal">&times;</button>
-											<h4 class="modal-title"><strong>Inventory History : <?php echo $product['name']; ?></strong></h4>
+											<h4 class="modal-title"><strong>Category Prices History : <?php echo $product['name']; ?></strong></h4>
 										  </div>
 										  <div class="modal-body">
 											
@@ -430,6 +409,12 @@ function submit_copy() {
             if (filter_category != '*') {
                 url += '&filter_category=' + encodeURIComponent(filter_category);
             }
+			
+			var filter_category_price = $('select[name=\'filter_category_price\']').val();
+
+            if (filter_category_price != '*') {
+                url += '&filter_category_price=' + encodeURIComponent(filter_category_price);
+            }
 
             var filter_price = $('input[name=\'filter_price\']').val();
 
@@ -550,7 +535,7 @@ function changeStatus(status) {
 function getProductInventoryHistory(product_store_id){
 	  $('.modal-body').html('');
 	   $.ajax({
-                    url: 'index.php?path=catalog/product/getProductInventoryHistory&token=<?= $token ?>',
+                    url: 'index.php?path=catalog/product/getProductCategoryPricesHistory&token=<?= $token ?>',
                     dataType: 'html',
                     data: {product_store_id :product_store_id},
                     success: function(json) {
@@ -563,34 +548,25 @@ function getProductInventoryHistory(product_store_id){
          });
 }
 
-function ChangeInventory(){
-    var data_array = [];
-    $(".procured_qty").each(function() {
-        var tempObj ={};
-        var procured_qty = $(this).val();
-        if(procured_qty != undefined && procured_qty>0){
-            
-            var vendor_product_id = $(this).attr('id');
-            var general_product_id = $(this).attr('data-general_product_id');
-            var product_name = $(this).attr('data-name');
-			var current_qty = $(this).attr('data-current-qty');
-            var rejected_qty = $('#rejected_qty_'+vendor_product_id).val();
-            tempObj.product_store_id = vendor_product_id;
-            tempObj.product_id = general_product_id;
-            tempObj.product_name = product_name;
-            tempObj.procured_qty = procured_qty;
-            tempObj.rejected_qty = rejected_qty;
-			tempObj.current_qty = current_qty;
-            data_array.push(tempObj);
-        }
-    });
-    console.log('data_array',data_array);
-    console.log('data_array_length',data_array.length);
-    if(data_array.length  > 0){
-           $.ajax({
-                    url: 'index.php?path=catalog/product/updateInventory&token=<?= $token ?>',
+function ChangeCategoryPrices(product_store_id,product_id,product_name){
+
+        var tempObj = {};
+		tempObj.product_store_id = product_store_id;
+		tempObj.product_id = product_id;
+		tempObj.product_name = product_name;
+		var category_prices = [];
+        $("select#input-category-price option").each(function()
+		{
+			var category = $(this).val();
+			if(category !="*")
+			tempObj[category] = $("#category_price_"+product_store_id+'_'+category).val();
+			
+		});
+		
+        $.ajax({
+                    url: 'index.php?path=catalog/product/updateCategoryPrices&token=<?= $token ?>',
                     dataType: 'json',
-                    data: {updated_products :data_array},
+                    data: {updatedata :tempObj},
                     success: function(json) {
                         if (json) {
                             $('.panel.panel-default').before('<div class="alert alert-warning"><i class="fa fa-warning"></i> ' + json.warning + '<button type="button" class="close" data-dismiss="alert">×</button></div>');
@@ -598,9 +574,9 @@ function ChangeInventory(){
                         else {
                             location.reload();
                         }
-                  }
-         });
-    }
+                    }
+        });
+
 
 }
 

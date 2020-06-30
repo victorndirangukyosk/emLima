@@ -239,6 +239,7 @@ class ControllerCatalogVendorProduct extends Controller {
 	
 
 	protected function getList($inventory=false,$prices=false) {
+		$category_prices =  $this->getCategoriesProductPrices();
 		if ( isset( $this->request->get['filter_name'] ) ) {
 			$filter_name = $this->request->get['filter_name'];
 		} else {
@@ -280,6 +281,12 @@ class ControllerCatalogVendorProduct extends Controller {
 			$filter_category = $this->request->get['filter_category'];
 		} else {
 			$filter_category = null;
+		}
+
+		if ( isset( $this->request->get['filter_category_price'] ) ) {
+			$filter_category_price = $this->request->get['filter_category_price'];
+		} else {
+			$filter_category_price = null;
 		}
 
 		if ( isset( $this->request->get['filter_store_id'] ) ) {
@@ -355,6 +362,11 @@ class ControllerCatalogVendorProduct extends Controller {
 		if ( isset( $this->request->get['filter_quantity'] ) ) {
 			$url .= '&filter_quantity=' . $this->request->get['filter_quantity'];
 		}
+
+		if ( isset( $this->request->get['filter_category_price'] ) ) {
+			$url .= '&filter_category_price=' . $this->request->get['filter_category_price'];
+		}
+
 		if ( isset( $this->request->get['sort'] ) ) {
 			$url .= '&sort=' . $this->request->get['sort'];
 		}
@@ -397,6 +409,7 @@ class ControllerCatalogVendorProduct extends Controller {
 			'filter_store_id' => $filter_store_id,
 			'filter_status' => $filter_status,
 			'filter_quantity'=>$filter_quantity,
+			'filter_category_price'=>$filter_category_price,
 			'sort' => $sort,
 			'order' => $order,
 			'start' => ( $page - 1 ) * $this->config->get( 'config_limit_admin' ),
@@ -407,9 +420,23 @@ class ControllerCatalogVendorProduct extends Controller {
 		$this->load->model( 'tool/image' );
 
 		$product_total = $this->model_catalog_vendor_product->getTotalProducts( $filter_data );
-
+       
 		$results = $this->model_catalog_vendor_product->getProducts( $filter_data );
-
+		//echo '<pre>';print_r($results);
+		if ( isset( $this->request->get['filter_category_price'] ) ) {
+			$modified_res = array();
+            if(count($results)>0){
+				foreach($results as $res){
+					if(isset($category_prices[$res['product_store_id'].'_'.$this->request->get['filter_category_price'].'_75'])){
+						$modified_res[] = $res;
+					}
+				}
+			}
+			
+		   $results = $modified_res;
+		   $product_total = count($results);
+		}
+		
 		$this->load->model( 'catalog/category' );
 		$data['categories'] = $this->model_catalog_category->getCategories( 0 );
 
@@ -554,6 +581,10 @@ class ControllerCatalogVendorProduct extends Controller {
 			$url .= '&filter_status=' . $this->request->get['filter_status'];
 		}
 
+		if ( isset( $this->request->get['filter_category_price'] ) ) {
+			$url .= '&filter_category_price=' . $this->request->get['filter_category_price'];
+		}
+
 		if ( $order == 'ASC' ) {
 			$url .= '&order=DESC';
 		} else {
@@ -655,6 +686,8 @@ class ControllerCatalogVendorProduct extends Controller {
 			$url .= '&filter_category=' . $this->request->get['filter_category'];
 		}
 
+
+
 		if ( isset( $this->request->get['filter_quantity'] ) ) {
 			$url .= '&filter_quantity=' . $this->request->get['filter_quantity'];
 		}
@@ -702,6 +735,7 @@ class ControllerCatalogVendorProduct extends Controller {
 		$data['filter_category'] = $filter_category;
 		$data['filter_store_id'] = $filter_store_id;
 		$data['filter_status'] = $filter_status;
+		$data['filter_category_price'] = $filter_category_price;
 
 		$data['sort'] = $sort;
 		$data['order'] = $order;
@@ -714,7 +748,7 @@ class ControllerCatalogVendorProduct extends Controller {
 		$data['footer'] = $this->load->controller( 'common/footer' );
 		$this->load->model('sale/customer_group');
 		$data['price_categories'] =  $this->model_sale_customer_group->getPriceCategories();
-		$data['category_prices'] =  $this->getCategoriesProductPrices();
+		$data['category_prices'] =  $category_prices;
 		//echo '<pre>';print_r($cachePrice_data);exit;
 		if($inventory == false && $prices == false){
 		  $this->response->setOutput( $this->load->view( 'catalog/vendor_product_lists.tpl', $data ) );

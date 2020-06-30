@@ -50,3 +50,16 @@ CREATE TABLE `hf7_product_category_prices` (
 
 /** 23 June **/
   ALTER TABLE `hf7_customer` ADD COLUMN `customer_category` VARCHAR(50) DEFAULT NULL AFTER `company_address`;
+
+  /* 30 June */
+
+  CREATE TABLE `hf7_product_category_prices_history` (
+ `product_price_history_id` int(11) NOT NULL AUTO_INCREMENT,
+ `product_store_id` int(11) NOT NULL,
+ `product_id` int(11) NOT NULL,
+ `price_category` varchar(200) CHARACTER SET utf8 NOT NULL,
+ `product_name` varchar(200) CHARACTER SET utf8 NOT NULL,
+ `price` decimal(10,2) DEFAULT NULL,
+ `date_added` datetime NOT NULL,
+ PRIMARY KEY (`product_price_history_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1

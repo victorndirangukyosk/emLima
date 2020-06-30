@@ -307,6 +307,67 @@ class ControllerCatalogProduct extends Controller {
 	  echo $html;
 	  exit();
     }
+
+
+    public function getProductCategoryPricesHistory(){
+        $this->load->model( 'catalog/vendor_product');
+        $product_store_id = $this->request->get['product_store_id'];
+        $res = $this->model_catalog_vendor_product->productCategoryPriceHistory($product_store_id);
+        $html ='';
+        if(count($res)>0){
+        $html .='<div class="container"><table style="width:48%;" class="table table-bordered table-striped table-responsive">
+        <thead>
+        <tr class="info">
+         <th>Product Name</th>
+         <th>Product Id</th>
+         <th>Price Category</th>
+         <th>Price</th>
+         <th>Updation Date</th>
+       </tr>
+       </thead>';
+        }else{
+            $html .='<span>No History Found</span>';  
+        }
+        
+        if(count($res)>0){
+            $html .='<tbody>';
+            foreach($res as $product_history){
+               $html .='<tr>
+                     <th>'.$product_history['product_name'].'</th>
+                     <th>'.$product_history['product_id'].'</th>
+                     <th>'.$product_history['price_category'].'</th>
+                     <th>'.$product_history['price'].'</th>
+                     <th>'.$product_history['date_added'].'</th>
+                </tr>';
+            }
+      
+           $html .='</tbody></table><div>';
+        }
+       echo $html;
+       exit();
+     }
+
+    public function updateCategoryPrices(){
+        $this->load->language('catalog/product');
+        $this->load->model('sale/customer_group');
+		$price_categories =  $this->model_sale_customer_group->getPriceCategories();
+        $update_data = $this->request->get['updatedata'];
+		//echo'<pre>';print_r($price_categories);exit;
+        //$this->document->setTitle($this->language->get('heading_title'));
+
+        $this->load->model('catalog/product');
+		$this->load->model( 'catalog/vendor_product');
+		
+        
+			foreach($price_categories as $price_cat){
+              if($update_data[$price_cat['price_category']])
+			   $data[] =$this->model_catalog_vendor_product->updateCategoryPrices($price_cat['price_category'], $update_data );
+			}	
+		
+		$this->session->data['success'] = 'Product Category Prices modified successfully!';
+        echo 0;
+        exit();
+    }
     protected function getList() {
         if (isset($this->request->get['filter_name'])) {
             $filter_name = $this->request->get['filter_name'];

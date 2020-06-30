@@ -644,4 +644,30 @@ class ModelCatalogVendorProduct extends Model {
 		$query = $this->db->query( $query );
 		return $query->rows;
 	}
+
+	public function updateCategoryPrices($category, $data){
+		
+		$query_exist = "SELECT * FROM " . DB_PREFIX . "product_category_prices WHERE product_store_id ='" . (int) $data['product_store_id'] . "' AND price_category='$category'";
+		$res = $this->db->query($query_exist );
+		//echo '<pre>';print_r($res);exit;
+	    if(count($res->rows)>0){
+			$query =  "UPDATE " . DB_PREFIX . "product_category_prices SET price = '" . $data[$category] . "' WHERE product_store_id ='" . (int) $data['product_store_id'] . "' AND price_category='$category'";
+		}else{
+			$query ="INSERT INTO " . DB_PREFIX . "product_category_prices SET  product_id = '".$data['product_id']."', product_store_id = '" .$data['product_store_id'] . "', product_name = '" .$data['product_name'] . "', store_id = 75, price_category = '" .$category . "',price = '" . $data[$category] . "', status = 1";
+		}
+		//echo $query;
+		$this->db->query($query);
+		$price= number_format((float)$data[$category], 2, '.', '');
+		//echo $res->row['price'].'===>'. $price;exit;
+		if($res->row['price'] != $price){
+		  $this->db->query( "INSERT INTO " . DB_PREFIX . "product_category_prices_history SET  product_id = '".$data['product_id']."', product_store_id = '" .$data['product_store_id'] . "', product_name = '" .$data['product_name'] . "',price_category = '" .$category . "',price = '" . $data[$category] . "', date_added = '" . $this->db->escape(date('Y-m-d H:i:s')) . "'" );
+		}
+		return $product_id;
+	}
+
+	public function productCategoryPriceHistory($store_product_id){
+		$query = "SELECT * FROM " . DB_PREFIX . "product_category_prices_history WHERE product_store_id ='" . (int) $store_product_id . "'";
+		$query = $this->db->query( $query );
+		return $query->rows;
+	}
 }
