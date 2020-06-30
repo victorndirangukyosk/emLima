@@ -900,7 +900,7 @@
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery.lazy/1.7.4/jquery.lazy.plugins.min.js"></script>
 
     <script type="text/javascript" src="<?= $base ?>front/ui/theme/mvgv2/js/html5lightbox.js"></script>
-    <script src="<?= $base ?>front/ui/theme/mvgv2/js/jquery.maskedinput.js" type="text/javascript"></script>
+    <script src="<?= $base ?>front/ui/theme/mvgv2/js/jquery.maskedinput.min.js" type="text/javascript"></script>
 
     <link rel="stylesheet" href="https://formden.com/static/cdn/bootstrap-iso.css" />
     

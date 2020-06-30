@@ -285,7 +285,7 @@
                                     <?php endif ?>  
                 
                                        
-                                        <a href="<?php echo $order['invoice']; ?>" target="_blank" data-toggle="tooltip" title="Print" class="btn btn-info"><i class="fa fa-print"></i></a>
+                                        <a href="<?php echo $order['invoice']; ?>" target="_blank" data-toggle="tooltip" title="Print Invoice" class="btn btn-info"><i class="fa fa-print"></i></a>
 
                                         
 

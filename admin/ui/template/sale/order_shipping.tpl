@@ -68,8 +68,8 @@
                 <td>Product</td>
                 <td class="text-center">Quantity Ordered</td>
                 <td class="text-center">Quantity Delivered</td>
-                <td>Unit Price</td>
-                <td>Total</td>
+                <td class="text-right">Unit Price</td>
+                <td class="text-right">Total</td>
               </tr>
               </thead>
               <tbody class="datatable-content">
@@ -79,15 +79,15 @@
                 <td><?= $product['name'] ?></td>
                 <td class="text-center"><?= $product['quantity'] ?> <?= $product['unit'] ?></td>
                 <td class="text-center"><?= $product['quantity_updated'] ?> <?= $product['unit_updated'] ?></td>
-                <td><?= $product['price'] ?></td>
-                <td><?= $product['total'] ?></td>
+                <td class="text-right"><?= $product['price'] ?></td>
+                <td class="text-right"><?= $product['total'] ?></td>
               </tr>
               <?php } ?>
 
               <?php foreach($totals as $total) { ?>
               <tr>
-                <td colspan="5" class="bold text-right"><span class="pr-4"><?= $total['title'] ?></span></td>
-                <td class="bold"><?= $total['text'] ?></td>
+                <td colspan="5" class="bold text-right"><?= $total['title'] ?></td>
+                <td class="bold text-right"><?= $total['text'] ?></td>
               </tr>
               <?php } ?>
               </tbody>
