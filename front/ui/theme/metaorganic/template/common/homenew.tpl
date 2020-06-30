@@ -22,22 +22,22 @@
     
      <link href="<?= $base;?>front/ui/theme/metaorganic/assets/images/favicon.ico" rel="icon">
     <!-- BEGIN CSS -->
-    <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/theme/metaorganic/assets/css/style.css">
-    <link href="<?= $base;?>front/ui/theme/metaorganic/assets/css/all.css" rel="stylesheet">
-    <link href="<?= $base;?>front/ui/theme/metaorganic/assets/css/fontawesome.css" rel="stylesheet">
-    <link href="<?= $base;?>front/ui/theme/metaorganic/assets/css/brands.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/theme/metaorganic/assets/css/style.min.css">
+    <link href="<?= $base;?>front/ui/theme/metaorganic/assets/css/all.min.css" rel="stylesheet">
+    <link href="<?= $base;?>front/ui/theme/metaorganic/assets/css/fontawesome.min.css" rel="stylesheet">
+    <link href="<?= $base;?>front/ui/theme/metaorganic/assets/css/brands.min.css" rel="stylesheet">
       <!-- END CSS -->   
     
     <!-- Bootstrap -->
     <link href="<?= $base;?>front/ui/theme/mvgv2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Hind:300,400,500,600,700" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/theme/mvgv2/css/style.css?v=5.2.7">
-    <!--<link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/theme/mvgv2/css/abhishek.css?v=2.2.3">-->
+    <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/theme/mvgv2/css/style.min.css?v=5.2.7">
+   
 
     <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/theme/mvgv2/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="<?= $base ?>front/ui/theme/mvgv2/css/mycart.css">
-    <link rel="stylesheet" type="text/css" href="<?= $base; ?>front/ui/theme/mvgv2/css/custom.css?v=1.1.0">
-    <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/theme/metaorganic/assets/css/list.css">
+    <link rel="stylesheet" type="text/css" href="<?= $base ?>front/ui/theme/mvgv2/css/mycart.min.css">
+    <link rel="stylesheet" type="text/css" href="<?= $base; ?>front/ui/theme/mvgv2/css/custom.min.css?v=1.1.0">
+    <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/theme/metaorganic/assets/css/list.min.css">
 
     <!-- <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/theme/mvgv2/css/sweetalert.min.css">
     <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/theme/mvgv2/css/drawer.min.css"> -->
@@ -45,9 +45,9 @@
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.1/css/drawer.min.css">
 
 
-    <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/theme/mvgv2/css/drawer.css">
-    <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/theme/metaorganic/css/owl.carousel.css">
-    <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/theme/metaorganic/css/owl.theme.css">
+    <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/theme/mvgv2/css/drawer.min.css">
+    <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/theme/metaorganic/css/owl.carousel.min.css">
+    <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/theme/metaorganic/css/owl.theme.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.transitions.min.css">
     <style>
     @media (min-width:768px) and (max-width:1023px) {
@@ -658,7 +658,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.20.4/sweetalert2.min.js"></script>
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script> -->
-   <script src="<?= $base;?>front/ui/theme/mvgv2/js/jquery.maskedinput.js" type="text/javascript"></script>
+   <script src="<?= $base;?>front/ui/theme/mvgv2/js/jquery.maskedinput.min.js" type="text/javascript"></script>
     <!-- <script src="<?= $base;?>front/ui/theme/mvgv2/js/iscroll.min.js"></script>
     <script src="<?= $base;?>front/ui/theme/mvgv2/js/drawer.min.js" type="text/javascript"></script> -->
 
