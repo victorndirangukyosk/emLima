@@ -65,6 +65,8 @@
 						</li>
 						<li><a href="#tab-variation" data-toggle="tab">
 								<?= $tab_variations ?></a></li>
+								<li><a href="#tab-product-type" data-toggle="tab">
+								<?= $tab_product_types ?></a></li>
 						<li><a href="#tab-images" data-toggle="tab">
 								<?= $tab_images ?></a></li>
 					</ul>
@@ -374,6 +376,72 @@
 								</table>
 							</div>
 						</div>
+						
+						
+						<div class="tab-pane" id="tab-product-type">
+
+								<div class="table-responsive">
+								<table id="productTypes" class="table table-striped table-bordered table-hover">
+									<thead>
+										<tr>
+				
+											<td class="text-left">
+												Type
+											</td>
+											<!--<td class="text-left"><?= $entry_product_price ?></td>
+											<td class="text-left"><?php echo $product_unit; ?></td>-->
+											
+											<!--<td> Actions</td>-->
+
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+										 
+											<td class="text-left"> <input name="product_types[]" type="text" placeholder="product type" id="dupli-input-weight" class="form-control input-full-width text-left"  /> </td>
+										
+										  	<!--<td class="text-left"></td>-->
+										</tr>
+										<?php $variation_row=0; 
+										//echo '<pre>';print_r($product_types);exit;
+										?>
+										<?php foreach ($product_types as $product_type) { ?>
+										<tr id="variation-row<?php echo $variation_row; ?>">
+											
+
+											<td class="text-left">
+											 <input readonly name="product_types[]" type="text" placeholder="produce type" id="dupli-input-weight" value="<?php echo $product_type; ?>" class="form-control input-full-width text-left"  />
+												
+											</td>
+
+
+											<td class="text-left">
+
+												<!--<a href="<?php echo $this->url->link( 'catalog/general/edit', 'token=' . $this->session->data['token'] . '&product_id=' . $product_variation['product_id'], 'SSL' ) ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a>-->
+
+
+												<button type="button" data-id="<?php echo $product_variation['product_id'] ?>" class="btn btn-danger deleteProduceType">
+													<i class="fa fa-minus-circle"></i>
+												</button>
+										   </td>
+
+										</tr>
+										<?php $variation_row++; ?>
+										<?php } ?>
+									</tbody>
+									<tfoot>
+										<tr>
+											<td colspan="3"></td>
+											<td class="text-left">
+												<button type="button" onclick="addProductType();" data-toggle="tooltip" title="Add Product type" class="btn btn-primary">
+													 <i class="fa fa-plus-circle"></i>
+												</button>
+											</td>
+										</tr>
+									</tfoot>
+								</table>
+							</div>
+						</div>
 
 						<!-- <div class="tab-pane" id="tab-variation">
 							<div class="form-group">
@@ -515,6 +583,34 @@ $('#variation_product').delegate('.fa-minus-circle', 'click', function() {
 
 		variation_row++;
 	}
+	
+	var producttype_row = 1;
+
+	function addProductType() {
+
+		html = '<tr id="variation-row' + producttype_row + '">';
+		/*html += '  <td class="text-left"><a href="" id="variation-image' + variation_row + '"data-toggle="image" class="img-thumbnail"><img src="<?php echo $placeholder; ?>" alt="" title="" data-placeholder="<?php echo $placeholder; ?>" /><input type="hidden" name="product_variation[' + variation_row + '][image]" value="" id="input-variation' + variation_row + '" /></td>';
+		html += '  <td class="text-left"><input type="text" name="product_variation[' + variation_row + '][name]" value="" placeholder="<?php echo $entry_name; ?>" class="form-control" /></td>';
+		html += '  <td class="text-left"><input type="text" name="product_variation[' + variation_row + '][model]" value="" placeholder="<?php echo $entry_model; ?>" class="form-control" /></td>';*/
+
+		html += '  <td class="text-left"><input type="text" name="product_types[]" value="" placeholder="produce type" class="pull-left form-control input-full-width text-left" /></td>';
+
+
+		//html += '  <td class="text-left"><input type="text" name="product_types[' + producttype_row + '][product_price]" value="" placeholder="<?php echo $entry_product_price; ?>" class="pull-left form-control input-full-width text-left" /></td>';
+
+
+		//html += '  <td class="text-left"><input type="text" name="product_types[' + producttype_row + '][unit]" value="" placeholder="<?php echo $product_unit; ?>" class="pull-left form-control input-full-width text-left" /></td>';
+
+
+		html += '  <td class="text-left"><button type="button" onclick="$(\'#variation-row' + producttype_row + '\').remove();" data-toggle="tooltip" title="<?php echo $button_remove; ?>" class="btn btn-danger"><i class="fa fa-minus-circle"></i></button></td>';
+		html += '</tr>';
+
+		$('#productTypes tbody').append(html);
+
+		producttype_row++;
+	}
+	
+	
 	//-->
 </script>
 
@@ -812,6 +908,25 @@ $('#variations').delegate('.deleteVariation', 'click', function() {
 		}
 	});
 });
+
+$('#productTypes').delegate('.deleteProduceType', 'click', function() {
+	console.log('deleteVariation remove');
+	$(this).closest('tr').remove();
+	/*var data = {
+		variation_id :$(this).data('id'),
+		token:'<?php echo $token; ?>'
+	};
+
+	$.ajax({
+		url:'index.php?path=catalog/general/deleteVariation',
+		data:data,
+		success:function(data){
+			
+		}
+	});
+	*/
+});
+
 
 $(document).ready(function () {
 

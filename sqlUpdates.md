@@ -63,3 +63,7 @@ CREATE TABLE `hf7_product_category_prices` (
  `date_added` datetime NOT NULL,
  PRIMARY KEY (`product_price_history_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1
+
+
+/** 1 July **/
+  ALTER TABLE `hf7_product` ADD COLUMN `produce_type` VARCHAR(500) DEFAULT NULL AFTER `weight`;

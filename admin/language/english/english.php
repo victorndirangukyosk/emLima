@@ -165,6 +165,7 @@ $_['tab_action']                    = 'Action';
 $_['tab_cache']                     = 'Cache';
 $_['tab_commission']                = 'Commission';
 $_['tab_variations']                = 'Variations';
+$_['tab_product_types']                = 'Produce Types';
 $_['tab_images']                = 'Images';
 
 // Error
