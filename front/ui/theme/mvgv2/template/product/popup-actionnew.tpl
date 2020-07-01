@@ -111,7 +111,7 @@ $(document).delegate('.product-variation', 'change', function() {
 
     // TODO: Change trailing -0 to variations_id?
     const newQuantityInputId = 'cart-qty-' + newProductId + '-0';
-     $('#content-container').html(newSpecial);
+     $('#content-container').html('KES ' +newSpecial);
  
     let dataHolder = $('#add-cart-btnnew');
      let productQuantityInput = $('.input-cart-qty');
