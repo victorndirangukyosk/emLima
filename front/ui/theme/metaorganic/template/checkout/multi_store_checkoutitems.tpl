@@ -101,9 +101,9 @@
                                                     </td>
                                                     <td class="a-center hidden-table">
                                                         <stop>
-                                                            <!-- <a class="edit-bnt"
+                                                            <a class="edit-bnt"
                                                                  title="Edit item parameters"><span><?= $i?></span></a>
-                                                             -->
+                                                             
                                                             <stop>
 
                                                     </td>
