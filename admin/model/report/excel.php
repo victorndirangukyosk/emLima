@@ -940,8 +940,8 @@ class ModelReportExcel extends Model {
 
                 $objPHPExcel->getActiveSheet()->setTitle($worksheetName);
 
-                $sheet_title = $worksheetName . ' Order';
-                $sheet_subtitle = 'To be delivered on: ' . $order['delivery_date'];
+                $sheet_title = $worksheetName . ' Order #' . $order['order_id'];
+                $sheet_subtitle = 'To be delivered to ' . $order['customer'] . ' on ' . $order['delivery_date'];
 
                 $objPHPExcel->getActiveSheet()->mergeCells("A1:D1");
                 $objPHPExcel->getActiveSheet()->mergeCells("A2:D2");

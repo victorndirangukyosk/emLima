@@ -916,7 +916,7 @@ $(document).delegate('.agree', 'click', function(e) {
 	
 					for (i = 0; i < json.length; i++) {
 						if (!json[i]['category']) {
-							html += '<li data-img="' + json[i]['img'] + '" data-value="' + json[i]['value'] + '"><a href="'+json[i]['href']+'"><img height="50px" src="' + json[i]['img'] + '"/> ' + json[i]['label'] + '<br> ' + json[i]['special_price'] + ' Ksh ( per ' + json[i]['unit'] + ' )</li>';
+							html += '<li data-img="' + json[i]['img'] + '" data-value="' + json[i]['value'] + '"><a href="'+json[i]['href']+'"><img height="50px" src="' + json[i]['img'] + '"/> ' + json[i]['label'] + '<br> ' +' KES   ' + json[i]['special_price'] + '  ( per ' + json[i]['unit'] + ' )</li>';
 						}
 					}
 	

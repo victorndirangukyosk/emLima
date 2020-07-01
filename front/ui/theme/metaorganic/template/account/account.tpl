@@ -224,7 +224,7 @@
 <?php echo $footer; ?>
     <script src="<?= $base ?>front/ui/theme/mvgv2/js/bootstrap.min.js"></script>
     
-    <script type="text/javascript" src="<?= $base ?>front/ui/theme/mvgv2/js/jquery.sticky.js"></script>
+    <script type="text/javascript" src="<?= $base ?>front/ui/theme/mvgv2/js/jquery.sticky.min.js"></script>
     <script type="text/javascript" src="<?= $base ?>front/ui/theme/mvgv2/js/header-sticky.js"></script>
 
 <?php if ($kondutoStatus) { ?>
@@ -357,13 +357,13 @@ $('button[id^=\'button-custom-field\']').on('click', function() {
 <link rel="stylesheet" href="https://formden.com/static/cdn/bootstrap-iso.css" />
 
 <!-- <script type="text/javascript" src="<?= $base ?>front/ui/theme/mvgv2/js/bootstrap-datepicker.min.js"></script>
-<link rel="stylesheet" href="<?= $base ?>front/ui/theme/mvgv2/css/bootstrap-datepicker3.css"/> -->
+<link rel="stylesheet" href="<?= $base ?>front/ui/theme/mvgv2/css/bootstrap-datepicker3.min.css"/> -->
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
 <script type="text/javascript" src="<?= $base ?>front/ui/theme/mvgv2/js/html5lightbox.js"></script>
 
-<script src="<?= $base ?>front/ui/theme/mvgv2/js/jquery.maskedinput.js" type="text/javascript"></script>
+<script src="<?= $base ?>front/ui/theme/mvgv2/js/jquery.maskedinput.min.js" type="text/javascript"></script>
     
 <script type="text/javascript">
 

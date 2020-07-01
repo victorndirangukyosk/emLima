@@ -294,9 +294,9 @@
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="<?= $base?>front/ui/theme/mvgv2/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="<?= $base?>front/ui/theme/mvgv2/js/side-menu-script.js"></script>
-    <script src="<?= $base?>front/ui/theme/mvgv2/js/jquery.maskedinput.js" type="text/javascript"></script>
+    <script src="<?= $base?>front/ui/theme/mvgv2/js/jquery.maskedinput.min.js" type="text/javascript"></script>
     <script type="text/javascript" src="<?= $base?>front/ui/theme/mvgv2/js/html5lightbox.js"></script>
-    <script type="text/javascript" src="<?= $base?>front/ui/theme/mvgv2/js/jquery.sticky.js"></script>
+    <script type="text/javascript" src="<?= $base?>front/ui/theme/mvgv2/js/jquery.sticky.min.js"></script>
     <script type="text/javascript" src="<?= $base?>front/ui/theme/mvgv2/js/header-sticky.js"></script>
 
     <script type="text/javascript" src="https://maps.google.com/maps/api/js?key=<?= $this->config->get('config_google_api_key') ?>&libraries=places"></script>

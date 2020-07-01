@@ -533,12 +533,14 @@ class ModelAssetsProduct extends Model {
 		    $this->db->order_by('product.sort_order', 'asc');      
 		}*/	
 
-		$this->db->group_by('product_to_store.product_store_id');
+		// $this->db->group_by('product_to_store.product_store_id');
+		$this->db->group_by('product_description.name');
 	    $this->db->where('product_to_store.store_id', $store_id);
 	    $this->db->where('product_to_store.status', 1);
 	    $this->db->where('product_to_store.quantity >=', 1);
 	    $this->db->where('product_description.language_id', $this->config->get('config_language_id'));
-	    $this->db->where('product.status',1);
+		$this->db->where('product.status',1);
+		// $this->db->order_by('product_description.name','asc');
 		$ret = $this->db->get('product_to_store', $limit, $offset)->rows;
 		//die;
 //		echo $this->db->last_query();die;
