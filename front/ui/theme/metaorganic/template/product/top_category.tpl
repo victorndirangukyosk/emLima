@@ -219,7 +219,7 @@
 												<!--<div class="_1loc3" data-test-selector="filter-price">
                                                   Price: KSh <span id="show-min">0</span>-<span id="show-max">4000</span> <input id="ex2" type="text"  class="span2" value="" data-slider-min="0" data-slider-max="4000" data-slider-step="10" data-slider-value="[0,4000]"/>
                                                 </div>-->	
-												<div class="_1loc3">
+												<!--<div class="_1loc3">
 												   <h4>Filter By Price</h4>
 													<div class="checkbox">
 													  <label><input name="price_slabs" data-start="1" data-end="500" type="checkbox" class="price_filter" value="1-500">1 - 500 KSh</label>
@@ -233,7 +233,7 @@
 													<div class="checkbox price_filter">
 													  <label><input type="checkbox" name="price_slabs" class="price_filter" data-start="2000" data-end="5000" value="2000-5000">2000 - 5000 KSh</label>
 													</div>
-                                                </div>
+                                                </div>-->
 
                                                 <!--<div class="_1loc3" data-test-selector="filter-tags">
                                                     
