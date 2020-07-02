@@ -935,7 +935,7 @@ class ControllerProductProduct extends Controller {
 				// 		'special' => $special_price
 				// 	)
 				// ),
-                'variations' => $this->model_assets_product->getProductVariations($product_info['name']),
+                'variations' => $this->model_assets_product->getProductVariationsNew($product_info['name'],$store_id),
 
 			);
 			
