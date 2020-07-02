@@ -2986,6 +2986,7 @@ class ModelToolExportImport extends Model {
 			$name = trim( $this->getCell( $data, $i, $j++ ) );
 			$store_id = trim( $this->getCell( $data, $i, $j++ ) );
 			$price_category = trim( $this->getCell( $data, $i, $j++ ) );
+			$unit = trim( $this->getCell( $data, $i, $j++ ) );
 			$price =trim( $this->getCell( $data, $i, $j++ ) );
 			$status = trim( $this->getCell( $data, $i, $j++ ) );
 			$dataProduct =array();

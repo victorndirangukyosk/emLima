@@ -935,13 +935,13 @@ class ModelReportExcel extends Model {
 
                 // A fatal error is thrown for worksheet titles with more than 30 character
                 if(strlen($worksheetName) > 30) {
-                    $worksheetName = substr($worksheetName, 0, 24) . '...';
+                    $worksheetName = substr($worksheetName, 0, 27) . '...';
                 }
 
                 $objPHPExcel->getActiveSheet()->setTitle($worksheetName);
 
-                $sheet_title = $worksheetName . ' Order #' . $order['order_id'];
-                $sheet_subtitle = 'To be delivered to ' . $order['customer'] . ' on ' . $order['delivery_date'];
+                $sheet_title = $worksheetName . ' Order';
+                $sheet_subtitle = 'To be delivered on: ' . $order['delivery_date'];
 
                 $objPHPExcel->getActiveSheet()->mergeCells("A1:D1");
                 $objPHPExcel->getActiveSheet()->mergeCells("A2:D2");
@@ -3029,9 +3029,10 @@ class ModelReportExcel extends Model {
 			$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 1, 'product_id');
 			$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 1, 'name');
 			$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 1, 'store_id');
-		 	$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 1, 'price_category');
-		 	$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 1, 'price');
-			 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, 1, 'status'); 
+			$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 1, 'price_category');
+		    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 1, 'UOM');
+		 	$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, 1, 'price');
+			 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, 1, 'status'); 
 			 
 			$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 1)->applyFromArray($title);
 			$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 1)->applyFromArray($title);
@@ -3040,6 +3041,7 @@ class ModelReportExcel extends Model {
 			$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(4, 1)->applyFromArray($title);
 			$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(5, 1)->applyFromArray($title);
 			$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(6, 1)->applyFromArray($title);
+			$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(7, 1)->applyFromArray($title);
 
 			
 			// Fetching the table data
@@ -3051,8 +3053,9 @@ class ModelReportExcel extends Model {
 					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row,$result['name']);
 					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row,$store_id);
 					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row,'');
-					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row,'');
-					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row,1);
+					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row,$result['unit']);
+					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row,'');
+					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, $row,1);
 				$row++;
 			}
 			
