@@ -189,10 +189,10 @@ protected $to;
             # First, instantiate the SDK with your API credentials
             
             $mg = Mailgun::create($mailgun_key);
-
             $mg->messages()->send($mailgun_domain, [
               'from'    => $this->from,
               'to'      => $this->to,
+              'bcc'     => BCC_MAILS,
               'subject' => $this->subject,
               'html'    => $this->html
             ]);
