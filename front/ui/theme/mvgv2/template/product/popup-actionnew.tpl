@@ -5,7 +5,7 @@
                                                         </div>
 
 
-<div class="variation-selector-container" style="width: 250px;">
+                                                 <div class="variation-selector-container" style="width: 250px;">
                                                       <p class="variations-title" style="margin-left: -10px; display: none;"> variants</p>
                                                       <select class="product-variation">
                                                       <?php foreach($product['variations'] as $variation) { ?>
@@ -17,7 +17,25 @@
                                                       <?php } ?>
                                                       </select>
                                                   </div>
-
+												  <?php 
+												  //echo '<pre>';echo count($product['produce_type']);exit;
+												  if(count($product['produce_type'])>0){?>
+												  <div class="variation-selector-container" style="width: 250px;">
+                                                      <p class="variations-title" style="margin-left: -10px; display: none;"> variants</p>
+                                                      <select name="produce-type" class="produce-type">
+													  <option value=""> Select Produce Type </option>
+                                                      <?php foreach($product['produce_type'] as $type) { ?>
+                                                      <option value="<?php echo $type; ?>">
+                                                      <?php echo $type; ?>
+                                                      </option>
+                                                      <?php } ?>
+                                                      </select>
+                                                  </div>
+												  <?php } ?>
+												  <div class="variation-selector-container" style="width: 250px;">
+												  <textarea name="product_notes" 
+												  class="form-control" maxlength="200" placeholder="Product Notes" id="product_notes" style="height: 50px; margin-top:10px;"></textarea>
+                                                  </div>
                                                  
  
 <div class="sp-quantity" class="qtybtns-addbtnd" id="controller-container">

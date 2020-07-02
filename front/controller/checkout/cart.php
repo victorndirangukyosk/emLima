@@ -382,6 +382,18 @@ class ControllerCheckoutCart extends Controller {
 			$ripe = $this->request->post['ripe'];
 		}
 
+		if (isset($this->session->data['product_note'])) {
+			$product_note = $this->session->data['product_note'];
+		} else {
+			$product_note = $this->request->post['product_note'];
+		}
+
+		if (isset($this->session->data['produce_type'])) {
+			$produce_type = $this->session->data['produce_type'];
+		} else {
+			$produce_type = $this->request->post['produce_type'];
+		}
+
 		console.log("ripasdsfdsfe");
 		console.log($ripe);
 
@@ -435,12 +447,16 @@ class ControllerCheckoutCart extends Controller {
 
 			if (!$json) {
 
-				$json['key'] = $this->cart->add($this->request->post['product_id'], $quantity, $option, $recurring_id, $store_id, $variation_id,$product_type);
+				$json['key'] = $this->cart->add($this->request->post['product_id'], $quantity, $option, $recurring_id, $store_id, $variation_id,$product_type,$product_note,$produce_type);
 
 				$json['product_store_id'] = $this->request->post['product_id'];
 
 				$json['product_type'] = $product_type;
 				
+				$json['product_note'] = $product_note; 
+
+				$json['produce_type'] = $produce_type; 
+
 				$json['success'] = sprintf($this->language->get('text_success'), $this->url->link('product/product', 'product_store_id=' . $this->request->post['product_id']), $product_info['name'], $this->url->link('checkout/cart'));
 
 				unset($this->session->data['shipping_method']);
@@ -595,8 +611,8 @@ class ControllerCheckoutCart extends Controller {
 		console.log($ripe);
 
 
-		echo $this->request->post['ripe'];
-		$this->cart->update($this->request->post['key'], $this->request->post['quantity'],$ripe );
+		//echo $this->request->post['ripe'];
+		$this->cart->update($this->request->post['key'], $this->request->post['quantity'], $this->request->post['product_note'],$this->request->post['produce_type'] );
 		unset($this->session->data['shipping_method']);
 		unset($this->session->data['shipping_methods']);
 		unset($this->session->data['payment_method']);
@@ -605,6 +621,9 @@ class ControllerCheckoutCart extends Controller {
 
 		$json['count_products'] = $this->cart->countProducts();
 		$json['total_amount'] =  $this->currency->format($this->cart->getTotal());
+
+		$json['product_note'] = $this->request->post['product_note'];
+	    $json['produce_type'] = $this->request->post['produce_type'];
 		//get product id
 		$product = unserialize(base64_decode($this->request->post['key']));
 

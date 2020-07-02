@@ -54,7 +54,7 @@ class ControllerCheckoutCheckoutItems extends Controller {
         $products = $this->cart->getProducts();
 
         
-         // echo "<pre>";print_r($products);die;
+         //echo "<pre>";print_r($products);die;
 
 
 
@@ -100,6 +100,8 @@ class ControllerCheckoutCheckoutItems extends Controller {
                 'thumb' => $image,
                 'name' => $product['name'],
                 'product_type' => $product['product_type'],
+                'produce_type' => $product['produce_type'],
+                'product_note' => $product['product_note'],
                 'unit' => $product['unit'],                    
                 'model' => $product['model'],
                 'quantity' => $product['quantity'],

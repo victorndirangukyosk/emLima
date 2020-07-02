@@ -219,6 +219,7 @@ class Cart {
             
             
             foreach($this->session->data['cart'] as $keys => $data) {
+                
                 $product = unserialize(base64_decode($keys));
 
                 
@@ -245,6 +246,19 @@ class Cart {
                     $product_type = $data['product_type'];
                 } else {
                     $product_type = 'replacable';
+                }
+
+
+                if (!empty($data['product_note'])) {
+                    $product_note = $data['product_note'];
+                } else {
+                    $product_note = '';
+                }
+
+                if (!empty($data['produce_type'])) {
+                    $produce_type = $data['produce_type'];
+                } else {
+                    $produce_type = '';
                 }
 
                 //product_type replacable/not replacable
@@ -341,6 +355,8 @@ class Cart {
                         'product_id' => $product_query->row['product_id'],
                         'name' => $product_query->row['name'],
                         'product_type' => $product_type,
+                        'produce_type' => $produce_type,
+                        'product_note' => $product_note,
                         'unit' => $product_query->row['unit'],
                         'model' => $product_query->row['model'],
                         'shipping' => 0,
@@ -452,7 +468,7 @@ class Cart {
         return $tax_data;
     }
     
-    public function add($product_store_id, $qty = 1, $option = array(), $recurring_id = 0, $store_id= false, $store_product_variation_id= false,$product_type = 'replacable',$ripe='Ripe') {
+    public function add($product_store_id, $qty = 1, $option = array(), $recurring_id = 0, $store_id= false, $store_product_variation_id= false,$product_type = 'replacable',$product_note=null,$produce_type=null) {
         $this->data = array();
 
         $product['product_store_id'] = (int) $product_store_id;
@@ -492,7 +508,10 @@ class Cart {
                 $this->session->data['cart'][$key]['quantity'] += (int) $qty;
             }
 
-            $this->session->data['cart'][$key]['ripe'] =  $ripe;
+            //$this->session->data['cart'][$key]['ripe'] =  $ripe;
+            $this->session->data['cart'][$key]['product_note'] =  $product_note;
+            $this->session->data['cart'][$key]['produce_type'] =  $produce_type;
+
 
         }
 
@@ -518,7 +537,7 @@ class Cart {
         return true;
     }
 
-    public function update($key, $qty,$ripe='Ripe') {
+    public function update($key, $qty,$product_note=null,$produce_type=null) {
         $this->data = array();
 
         $log = new Log('error.log');
@@ -532,7 +551,9 @@ class Cart {
         
         if ((int) $qty && ((int) $qty > 0) ) {
             $this->session->data['temp_cart'][$key]['quantity'] = (int) $qty;
-            $this->session->data['temp_cart'][$key]['ripe'] =   $ripe;
+            //$this->session->data['temp_cart'][$key]['ripe'] =   $ripe;
+            $this->session->data['temp_cart'][$key]['product_note'] =  $product_note;
+            $this->session->data['temp_cart'][$key]['produce_type'] =  $produce_type;
         } else {
             //$this->session->data['temp_cart'][$key] = (int) $qty;
         }   

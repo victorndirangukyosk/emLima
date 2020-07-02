@@ -925,6 +925,7 @@ class ControllerProductProduct extends Controller {
                 'actualCart' => 0,
                 'default_variation_name' => $product_info['default_variation_name'],
                 'variations' => $this->model_assets_product->getVariations( $product_info['product_store_id'] ),
+				'produce_type'=> isset($product_info['produce_type']) ? explode(',',$product_info['produce_type']) : null,
 				'minimum' => $product_info['min_quantity'] > 0 ? $product_info['min_quantity'] : $product_info['quantity'],
 				// 'variations' => array(
 				// 	array(
@@ -939,6 +940,8 @@ class ControllerProductProduct extends Controller {
 
 			);
 			
+
+		    //echo '<pre>';print_r( $data['product']);exit;
             if ( isset( $this->session->data['cart'][$key] ) ) {
 		        $data['product']['qty_in_cart'] = $this->session->data['cart'][$key]['quantity'];
 		        $data['product']['actualCart'] = 1;

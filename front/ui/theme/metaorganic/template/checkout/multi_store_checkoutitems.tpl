@@ -40,18 +40,33 @@
             
                             
                             <?php foreach ($arrs as $key=> $products) { ?>
-
+                             
                                 <div >
                                     <div  class="checkout-cart-merchant-box text-center"> <span  ><h1>Order Summary</h1></span> <span class="checkout-cart-merchant-item"></span> </div>
                                     <div >
                                         <div class="collapse in" id="collapseExample<?= $key ?>">
                                             <div class="checkout-item-list">
 
-
-
-
-                                             <?php echo $product ;?>
-                                                <?php $i = 1; foreach ($products as $product) { ?>
+                                                  <?php echo $product ;?>
+                                                    <?php 
+                                                      $orderNotes ='';
+                                                      $i = 1; 
+													  foreach ($products as $key=>$product) {
+                                                     //echo '<pre>';print_r($product);exit;
+                                                        if(isset($product['product_note']) || isset($product['produce_type'])){ 
+                                                         $orderNotes .= $product['name'];
+														 
+                                                         if(isset($product['produce_type']) && ($product['produce_type'] != null) && ($product['produce_type'] != 'null'))
+                                                         $orderNotes .='( '.$product['produce_type'].') ';
+													 
+                                                         if(isset($product['product_note']) && ($product['product_note'] != null) && ($product['product_note'] != 'null'))
+                                                         $orderNotes .='( Note: '.$product['product_note'].') ';
+													 
+                                                         if($key != (count($products)-1))
+                                                         $orderNotes .=" / ";
+                                                          
+                                                     }    
+                                                     ?>
 
                                                 
                                     
@@ -169,7 +184,7 @@
                      <?php foreach ($arrs as $key=> $products) { ?>
                       <div class="checkout-promocode-form">
                                         
-                                        <textarea name="dropoff_notes" class="form-control" maxlength="200" placeholder="<?= $text_dropoff_notes?>" id="dropoff_notes" style="height: 100px;"></textarea>
+                                        <textarea name="dropoff_notes" class="form-control" maxlength="200" placeholder="<?= $text_dropoff_notes?>" id="dropoff_notes" style="height: 100px;"><?php echo $orderNotes;?></textarea>
                                         
                                     </div>
                                      <?php } ?>
