@@ -391,7 +391,96 @@ class ModelAssetsProduct extends Model {
 		
 	}
 
+	public function getProductVariationsNew( $product_name,$store_id, $formated=false ) {
+		
+		$returnData = [];
+		
+			$all_variations = "SELECT * ,product_store_id as variation_id FROM " . DB_PREFIX . "product_to_store ps LEFT JOIN " . DB_PREFIX . "product p ON (ps.product_id = p.product_id) WHERE name = '$product_name'";
 
+			//echo $all_variations;die;
+			$result = $this->db->query( $all_variations );
+
+			foreach ($result->rows as $r) {
+				if($r['quantity'] > 0 && $r['status']) {
+				   
+
+					
+			//$key = base64_encode( serialize( array( 'product_store_id' => (int) $r['product_store_id'], 'store_id'=>($this->session->data['config_store_id'])  ) ) );
+			  $key = base64_encode(serialize(array('product_store_id' => (int)$r['product_store_id'], 'store_id' => $this->session->data['config_store_id'])));
+            //$key = base64_encode( serialize( array( 'product_store_id' => (int) $product_info['product_store_id'], 'store_id'=>($this->session->data['config_store_id']) ? $this->session->data['config_store_id'] : $store_id ) ) );
+			
+			$r['key']=$key ;
+			if ( isset( $this->session->data['cart'][$key] ) ) {
+		        $r['qty_in_cart'] = $this->session->data['cart'][$key]['quantity'];
+				$r['actualCart'] = 1;
+		    } else {
+				$r['qty_in_cart'] = 0;
+		    	// if ( isset( $this->session->data['temp_cart'][$key] ) ) {
+				// 	$r['qty_in_cart'] = $this->session->data['temp_cart'][$key]['quantity'];
+			    // }
+			}
+			
+
+					$percent_off = null;
+					if(isset($r['special_price'])  && isset($r['price']) && $r['price'] !=0 && $r['special_price'] !=0) {
+						$percent_off = (($r['price'] - $r['special_price']) / $r['price']) * 100;
+					}
+
+					if ( ( $this->config->get( 'config_customer_price' ) && $this->customer->isLogged() ) || !$this->config->get( 'config_customer_price' ) ) {
+						//$price = $result['price'];
+						$r['price'] = $this->currency->formatWithoutCurrency($r['price']);
+					} 
+
+					if ((float)$r['special_price']) {
+						$r['special_price'] = $this->currency->formatWithoutCurrency((float)$r['special_price']);
+	 
+	
+					} else {
+						$r['special_price'] = false;
+					}
+					
+					
+					$cachePrice_data =  $this->cache->get('category_price_data');
+					
+					if( CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$r['product_store_id'].'_'.$_SESSION['customer_category'].'_'.ACTIVE_STORE_ID])){
+						//echo $cachePrice_data[$product_info['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$store_id];//exit;
+						$s_price = $cachePrice_data[$r['product_store_id'].'_'.$_SESSION['customer_category'].'_'.ACTIVE_STORE_ID];
+						$o_price = $cachePrice_data[$r['product_store_id'].'_'.$_SESSION['customer_category'].'_'.ACTIVE_STORE_ID];
+						$r['special_price'] = $s_price;
+						$r['price'] = $o_price;
+					}
+
+					$res = array(
+                        'variation_id' => $r['product_store_id'],
+                        'unit' => $r['unit'],
+                        'weight' => floatval($r['weight']),
+                        'price' => $r['price'],
+						'special' => $r['special_price'],
+						'percent_off' => number_format($percent_off,0),
+						'max_qty' => $r['min_quantity'] > 0 ? $r['min_quantity'] : $r['quantity'],
+						'qty_in_cart' => $r['qty_in_cart'],
+						'key' => $key,
+
+                    );
+					
+					// $r['variation_id'] => $result['product_store_id'],
+                    //         'unit' => $result['unit'],
+                    //         'weight' => floatval($result['weight']),
+                    //         'price' => $price,
+					//         'special' => $special_price
+					if($formated == true){
+						array_push($returnData, $res);	
+					}else{
+					 array_push($returnData, $r);	
+					}
+				}
+				
+			}
+
+			 
+			return $returnData;
+		
+	}
 	public function getProductForPopupByApi( $store_id,$product_store_id, $is_admin = false ) {
 		
 		$this->db->select('product_to_store.*,product_description.*,product.*,product_description.name as pd_name', FALSE);

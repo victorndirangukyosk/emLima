@@ -3956,6 +3956,7 @@ class ControllerSaleOrder extends Controller
                     }
 
                     $product_data[] = array(
+                        'product_id' => $product['product_id'],
                         'name' => $product['name'],
                         'model' => $product['model'],
                         'unit' => $product['unit'],
@@ -4005,15 +4006,17 @@ class ControllerSaleOrder extends Controller
                     'shipping_flat_number' => $order_info['shipping_flat_number'],
                     'shipping_contact_no' => ($order_info['shipping_contact_no']) ? $order_info['shipping_contact_no'] : $order_info['telephone'],
                     'shipping_name' => ($order_info['shipping_name']) ? $order_info['shipping_name'] : $order_info['firstname'] . ' ' . $order_info['lastname'],
+                    'customer_company_name' => $order_info['customer_company_name'],
                     'shipping_method' => $order_info['shipping_method'],
                     'payment_method' => $order_info['payment_method'],
-                    'product' => $product_data,
-                    'total' => $total_data,
+                    'products' => $product_data,
+                    'totals' => $total_data,
                     'comment' => nl2br($order_info['comment'])
                 );
             }
         }
-        $this->response->setOutput($this->load->view('sale/order_invoice.tpl', $data));
+//                echo "<pre>";print_r($data['orders'][0]);die;
+        $this->response->setOutput($this->load->view('sale/order_invoice.tpl', $data['orders'][0]));
     }
 
     public function deliverySheet()

@@ -11,6 +11,8 @@
                                                       <?php foreach($product['variations'] as $variation) { ?>
                                                       <option value="<?php echo $variation[variation_id]; ?>"
                                                       data-price="<?php echo $variation[price]; ?>"
+                                                      data-quantity="<?php echo $variation[qty_in_cart]; ?>"
+                                                      data-key="<?php echo $variation[key]; ?>"
                                                       data-special="<?php echo $variation[special_price]; ?>">
                                                       <?php  echo 'Per ' . $variation['unit']; ?>
                                                       </option>
@@ -122,23 +124,39 @@ $(function() {
 
 $(document).delegate('.product-variation', 'change', function() {
 
-    
+     
     const newProductId = $(this).children("option:selected").val();
     const newPrice = $(this).children("option:selected").attr('data-price');
     const newSpecial = $(this).children("option:selected").attr('data-special');
+    const dataKey = $(this).children("option:selected").attr('data-key');
+    const qty_in_cart1 = $(this).children("option:selected").attr('data-quantity');
 
     // TODO: Change trailing -0 to variations_id?
     const newQuantityInputId = 'cart-qty-' + newProductId + '-0';
      $('#content-container').html('KES ' +newSpecial);
+     //$('#content-container').html('KES '  +qty_in_cart1);
  
     let dataHolder = $('#add-cart-btnnew');
-     let productQuantityInput = $('.input-cart-qty');
+     let productQuantityInput = $('.input-cart-qty');    
+    if(qty_in_cart1>0)
+    {
+    productQuantityInput.val(qty_in_cart1); 
+    dataHolder.attr('data-action', 'update');
 
+    }
+    else{
     
-    
-     
-    productQuantityInput.attr('id', newQuantityInputId);
+    productQuantityInput.val(''); 
+    dataHolder.attr('data-action', 'add');
+
+    }    
+     productQuantityInput.attr('id', newQuantityInputId);
+  
     dataHolder.attr('data-id', newProductId);
+    dataHolder.attr('data-key', dataKey);
+    
+
+
 });
 </script>
 
