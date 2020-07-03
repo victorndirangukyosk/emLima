@@ -37,14 +37,16 @@
 
             <div class="row mb-2">
               <div class="col-md-4">
-                <h5 class="bold text-uppercase mb-3">TO <?= $customer_company_name ?></h5>
+                <h5 class="bold text-uppercase mb-1">TO <?= $customer_company_name ?></h5>
+                <ul class="list-block mb-2">
+                  <li>
+                    <p class="bold"><?= $shipping_address ?></p>
+                  </li>
+                </ul>
                 <ul class="list-block">
                   <li><?= $shipping_name ?></li>
                   <li><?= $telephone ?></li>
                   <li class="mb-2"><?= $email ?></li>
-                  <li>
-                    <p class="bold"><?= $shipping_address ?></p>
-                  </li>
                 </ul>
 
               </div>
