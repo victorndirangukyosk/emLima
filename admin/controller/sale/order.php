@@ -4538,24 +4538,11 @@ class ControllerSaleOrder extends Controller
 //                echo "<pre>";print_r($editedProducts);echo "<br>";
 //                echo "<pre>";print_r($original_products); die;
 
-                $totalData = array();
-
-                if ($store_id) {
-                    $totals = $this->model_sale_order->getVendorOrderTotals($order_id, $store_id);
-                } else {
-                    $totals = $this->model_sale_order->getOrderTotals($order_id);
-                }
-
-                foreach ($totals as $total) {
-                    $totalData[] = array(
-                        'title' => $total['title'],
-                        'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
-                    );
-                }
-
                 $orderProducts = array();
+
                 if ($this->model_sale_order->hasRealOrderProducts($order_id)) {
                     // Order has at least one product that has a weight change
+
                     foreach ($originalProducts as $originalProduct) {
 
                         foreach ($editedProducts as $editedProduct) {
@@ -4564,6 +4551,9 @@ class ControllerSaleOrder extends Controller
                                 $originalProduct['unit_updated'] = $editedProduct['unit'];
                             }
                         }
+
+                        $totalUpdated = $originalProduct['price'] * $originalProduct['quantity_updated']
+                            + ($this->config->get('config_tax') ? $originalProduct['tax'] : 0);
 
                         $orderProducts[] = array(
                             'order_product_id' => $originalProduct['order_product_id'],
@@ -4579,10 +4569,14 @@ class ControllerSaleOrder extends Controller
                             'unit_updated' => $originalProduct['unit_updated'],
                             'price' => $this->currency->format($originalProduct['price'] + ($this->config->get('config_tax') ? $originalProduct['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
                             'total' => $this->currency->format($originalProduct['total'] + ($this->config->get('config_tax') ? ($originalProduct['tax'] * $originalProduct['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
+                            'total_updated' => $this->currency->format($totalUpdated, $order_info['currency_code'], $order_info['currency_value'])
                         );
                     }
                 } else {
                     foreach ($originalProducts as $originalProduct) {
+                        $totalUpdated = $originalProduct['price'] * $originalProduct['quantity']
+                            + ($this->config->get('config_tax') ? $originalProduct['tax'] : 0);
+
                         $orderProducts[] = array(
                             'order_product_id' => $originalProduct['order_product_id'],
                             'product_id' => $originalProduct['product_id'],
@@ -4597,8 +4591,24 @@ class ControllerSaleOrder extends Controller
                             'unit_updated' => $originalProduct['unit'],
                             'price' => $this->currency->format($originalProduct['price'] + ($this->config->get('config_tax') ? $originalProduct['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
                             'total' => $this->currency->format($originalProduct['total'] + ($this->config->get('config_tax') ? ($originalProduct['tax'] * $originalProduct['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
+                            'total_updated' => $this->currency->format($totalUpdated, $order_info['currency_code'], $order_info['currency_value'])
                         );
                     }
+                }
+
+                $totalData = array();
+
+                if ($store_id) {
+                    $totals = $this->model_sale_order->getVendorOrderTotals($order_id, $store_id);
+                } else {
+                    $totals = $this->model_sale_order->getOrderTotals($order_id);
+                }
+
+                foreach ($totals as $total) {
+                    $totalData[] = array(
+                        'title' => $total['title'],
+                        'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
+                    );
                 }
 
                 $data['orders'][] = array(

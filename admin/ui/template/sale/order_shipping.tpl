@@ -82,7 +82,7 @@
                 <td class="text-center"><?= $product['quantity'] ?> <?= $product['unit'] ?></td>
                 <td class="text-center"><?= $product['quantity_updated'] ?> <?= $product['unit_updated'] ?></td>
                 <td class="text-right"><?= $product['price'] ?></td>
-                <td class="text-right"><?= $product['total'] ?></td>
+                <td class="text-right"><?= $product['total_updated'] ?></td>
               </tr>
               <?php } ?>
 
