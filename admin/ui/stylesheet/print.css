@@ -1,23 +1,20 @@
 @font-face {
     font-family: 'Sofia Pro';
-    src: local('Sofia Pro Regular'), local('SofiaProRegular'),
-    url('../fonts/SofiaProRegular.woff2') format('woff2');
+    src: url('../fonts/SofiaProRegular.woff2') format('woff2');
     font-weight: normal;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'Sofia Pro';
-    src: local('Sofia Pro Medium'), local('SofiaProMedium'),
-    url('../fonts/SofiaProMedium.woff2') format('woff2');
+    src: url('../fonts/SofiaProMedium.woff2') format('woff2');
     font-weight: 500;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'Sofia Pro';
-    src: local('Sofia Pro Bold'), local('SofiaProBold'),
-    url('../fonts/SofiaProBold.woff2') format('woff2');
+    src: url('../fonts/SofiaProBold.woff2') format('woff2');
     font-weight: bold;
     font-style: normal;
 }
@@ -32,7 +29,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .bold {
-    font-family: 'Sofia Pro Bold';
+    font-weight: bold;
 }
 
 body {
@@ -120,8 +117,18 @@ ul.list-block {
     opacity: 0;
 }
 
-@page {
-    margin: 2mm
+.price-container {
+    display: flex;
+    flex-flow: row nowrap;
+}
+
+.price-container .currency {
+    flex: 1;
+    margin-right: calc(100% - 150px);
+}
+
+.price-container .value {
+    flex: 1;
 }
 
 @media print {
@@ -131,5 +138,9 @@ ul.list-block {
 
     .document-actions {
         display: none;
+    }
+
+    @page {
+        margin: 2mm 4mm
     }
 }

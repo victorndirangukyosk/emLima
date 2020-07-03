@@ -52,9 +52,8 @@
               </div>
 
               <div class="col-md-4 offset-md-4 text-right">
-                <h6 class="bold mb-3">ORDER INFO</h6>
+                <h4 class="bold mb-3">ORDER #<?= $order_id ?></h4>
                 <ul class="list-block">
-                  <li>Order # <?= $order_id ?></li>
                   <li>Placed On <?= $date_added ?></li>
                   <li>Delivered On <?= $delivery_date ?></li>
                   <li><?= $shipping_method ?></li>
@@ -81,8 +80,12 @@
                 <td><?= $product['name'] ?></td>
                 <td class="text-center"><?= $product['quantity'] ?> <?= $product['unit'] ?></td>
                 <td class="text-center"><?= $product['quantity_updated'] ?> <?= $product['unit_updated'] ?></td>
-                <td class="text-right"><?= $product['price'] ?></td>
-                <td class="text-right"><?= $product['total_updated'] ?></td>
+                <td class="text-right">
+                  <?= $product['price'] ?>
+                </td>
+                <td class="text-right">
+                    <?= $product['total_updated'] ?>
+                </td>
               </tr>
               <?php } ?>
 
@@ -123,7 +126,7 @@
                     <li>Select Lipa Na M-PESA</li>
                     <li>Select Pay Bill</li>
                     <li>Enter <strong>4029127</strong></li>
-                    <li>Enter <strong>KB<?= $order_id ?></strong> as the account number</li>
+                    <li>Enter <strong><?= $customer_company_name ?></strong> as the account number</li>
                     <li>Enter total amount</li>
                     <li>Enter M-PESA Pin</li>
                   </ul>
