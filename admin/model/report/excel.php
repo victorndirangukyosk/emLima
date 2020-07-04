@@ -1141,6 +1141,7 @@ class ModelReportExcel extends Model {
 
 
                 $row = 5;
+                $totalOrderAmount = 0;
                 foreach($order['products'] as $product) {
                     $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $product['name']);
                     $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $product['quantity']);
@@ -1149,13 +1150,16 @@ class ModelReportExcel extends Model {
                     $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $product['unit_updated']);
                     $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $product['price']);
                     $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $product['total_updated']);
+
+                    $totalOrderAmount += $product['total_updated'];
+
                     $row++;
                 }
 
                 $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(5, $row)->applyFromArray($title);
                 $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(6, $row)->applyFromArray($title);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, "Total");
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $order['total']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $totalOrderAmount);
 
                 $sheetIndex++;
             }

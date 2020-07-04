@@ -4126,6 +4126,16 @@ class ControllerSaleOrder extends Controller
         $this->model_report_excel->download_consolidated_calculation_sheet_excel($data);
     }
 
+    public function getOrderTotals($order_id, $store_id) {
+        if ($store_id) {
+            $totals = $this->model_sale_order->getVendorOrderTotals($order_id, $store_id);
+        } else {
+            $totals = $this->model_sale_order->getOrderTotals($order_id);
+        }
+
+        return $totals;
+    }
+
     public function getOrderProductsWithVariances($order_id) {
         $this->load->model('sale/order');
 
