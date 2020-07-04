@@ -25,7 +25,7 @@
                   <ul class="list-block">
                     <li>12 Githuri Rd, Parklands, Nairobi</li>
                     <li>+254780703586</li>
-                    <li>info@kwikbasket.com</li>
+                    <li>operations@kwikbasket.com</li>
                     <li>www.kwikbasket.com</li>
                   </ul>
                 </div>
