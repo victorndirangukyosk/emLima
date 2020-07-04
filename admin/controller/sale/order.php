@@ -4091,6 +4091,123 @@ class ControllerSaleOrder extends Controller
         $this->model_report_excel->download_delivery_sheet_excel($data);
     }
 
+    public function consolidatedCalculationSheet() {
+        $deliveryDate = $this->request->get['filter_delivery_date'];
+
+        $filter_data = array(
+            'filter_delivery_date' => $deliveryDate
+        );
+
+        $this->load->model('sale/order');
+        $results = $this->model_sale_order->getOrders($filter_data);
+
+        $data = array();
+
+        $totalOrdersAmount = 0;
+        foreach($results as $order) {
+            $data['consolidation'][] = [
+              'delivery_date' => $order['delivery_date'],
+              'customer' => $order['customer'] . ' Order#' . $order['order_id'],
+              'amount' => $order['total']
+            ];
+            $totalOrdersAmount += $order['total'];
+        }
+        $data['consolidation']['total'] = $totalOrdersAmount;
+
+        foreach ($results as $index => $order) {
+            $data['orders'][$index] = $order;
+            $orderProducts = $this->getOrderProductsWithVariances($data['orders'][$index]['order_id']);
+            $data['orders'][$index]['products'] = $orderProducts;
+        }
+
+//        echo "<pre>";print_r($data);die;
+
+        $this->load->model('report/excel');
+        $this->model_report_excel->download_consolidated_calculation_sheet_excel($data);
+    }
+
+    public function getOrderProductsWithVariances($order_id) {
+        $this->load->model('sale/order');
+
+        // Order products with weight change
+        $editedProducts = $this->model_sale_order->getRealOrderProducts($order_id);
+
+        // Products as the user ordered them on the platform
+        $originalProducts = $products = $this->model_sale_order->getOrderProducts($order_id);
+
+        $orderProducts = array();
+
+        if ($this->model_sale_order->hasRealOrderProducts($order_id)) {
+            // Order has at least one product that has a weight change
+
+            foreach ($originalProducts as $originalProduct) {
+
+                foreach ($editedProducts as $editedProduct) {
+                    if ($originalProduct['product_id'] == $editedProduct['product_id']) {
+                        $originalProduct['quantity_updated'] = floatval($editedProduct['quantity']);
+                        $originalProduct['unit_updated'] = $editedProduct['unit'];
+                        $originalProduct['price'] = $editedProduct['price'];
+                    }
+                }
+
+                $totalUpdated = $originalProduct['price'] * $originalProduct['quantity_updated']
+                    + ($this->config->get('config_tax') ? $originalProduct['tax'] : 0);
+
+                $uomOrderedWithoutApproximations = trim(explode('(', $originalProduct['unit'])[0]);
+                $uomDeliveredWithoutApproximations = trim(explode('(', $originalProduct['unit_updated'])[0]);
+
+                $productPrice = $originalProduct['price'] + ($this->config->get('config_tax') ? $originalProduct['tax'] : 0);
+                $orderProducts[] = array(
+                    'order_product_id' => $originalProduct['order_product_id'],
+                    'product_id' => $originalProduct['product_id'],
+                    'vendor_id' => $originalProduct['vendor_id'],
+                    'store_id' => $originalProduct['store_id'],
+                    'name' => $originalProduct['name'],
+                    'unit' => $uomOrderedWithoutApproximations,
+                    'product_type' => $originalProduct['product_type'],
+                    'model' => $originalProduct['model'],
+                    'quantity' => floatval($originalProduct['quantity']),
+                    'quantity_updated' => $originalProduct['quantity_updated'],
+                    'unit_updated' => $uomDeliveredWithoutApproximations,
+                    'price' => $productPrice,
+                    'price_currency' => trim(explode(' ', $productPrice)[0]),
+                    'price_value' => trim(explode(' ', $productPrice)[1]),
+                    'total' => $this->currency->format($originalProduct['total'] + ($this->config->get('config_tax') ? ($originalProduct['tax'] * $originalProduct['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
+                    'total_updated' => $totalUpdated,
+                    'total_updated_currency' => trim(explode(' ', $this->currency->format($totalUpdated, $order_info['currency_code'], $order_info['currency_value']))[0]),
+                    'total_updated_value' => trim(explode(' ', $this->currency->format($totalUpdated, $order_info['currency_code'], $order_info['currency_value']))[1])
+                );
+            }
+        } else {
+            foreach ($originalProducts as $originalProduct) {
+                $totalUpdated = $originalProduct['price'] * $originalProduct['quantity']
+                    + ($this->config->get('config_tax') ? $originalProduct['tax'] : 0);
+
+                $uomOrderedWithoutApproximations = trim(explode('(', $originalProduct['unit'])[0]);
+
+                $orderProducts[] = array(
+                    'order_product_id' => $originalProduct['order_product_id'],
+                    'product_id' => $originalProduct['product_id'],
+                    'vendor_id' => $originalProduct['vendor_id'],
+                    'store_id' => $originalProduct['store_id'],
+                    'name' => $originalProduct['name'],
+                    'unit' => $uomOrderedWithoutApproximations,
+                    'product_type' => $originalProduct['product_type'],
+                    'model' => $originalProduct['model'],
+                    'quantity' => $originalProduct['quantity'],
+                    'quantity_updated' => $originalProduct['quantity'],
+                    'unit_updated' => $uomOrderedWithoutApproximations,
+                    'price' => $this->currency->format($originalProduct['price'] + ($this->config->get('config_tax') ? $originalProduct['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
+                    'total' => $this->currency->format($originalProduct['total'] + ($this->config->get('config_tax') ? ($originalProduct['tax'] * $originalProduct['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
+                    'total_updated' => $this->currency->format($totalUpdated, $order_info['currency_code'], $order_info['currency_value']),
+                    'total_updated_currency' => trim(explode(' ', $this->currency->format($totalUpdated, $order_info['currency_code'], $order_info['currency_value']))[0]),
+                    'total_updated_value' => trim(explode(' ', $this->currency->format($totalUpdated, $order_info['currency_code'], $order_info['currency_value']))[1])
+                );
+            }
+        }
+        return $orderProducts;
+    }
+
     public function orderCalculationSheet()
     {
         $this->load->model('sale/order');
