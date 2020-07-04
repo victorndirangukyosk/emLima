@@ -4549,6 +4549,7 @@ class ControllerSaleOrder extends Controller
                             if ($originalProduct['product_id'] == $editedProduct['product_id']) {
                                 $originalProduct['quantity_updated'] = floatval($editedProduct['quantity']);
                                 $originalProduct['unit_updated'] = $editedProduct['unit'];
+                                $originalProduct['price'] = $editedProduct['price'];
                             }
                         }
 

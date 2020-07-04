@@ -33,7 +33,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 body {
-    font-family: 'Sofia Pro';
+    font-family: 'Sofia Pro', sans-serif;
 }
 
 .page {
@@ -78,7 +78,7 @@ ul.list-block {
 }
 
 .datatable > thead {
-    font-family: 'Sofia Pro Bold';
+    font-weight: bold;
 }
 
 .payment-details-table {
@@ -86,7 +86,7 @@ ul.list-block {
 }
 
 .payment-details-table > thead {
-    font-family: 'Sofia Pro Bold';
+    font-weight: bold;
 }
 
 .payment-details-table > thead tr {
@@ -124,7 +124,6 @@ ul.list-block {
 
 .price-container .currency {
     flex: 1;
-    margin-right: calc(100% - 150px);
 }
 
 .price-container .value {
