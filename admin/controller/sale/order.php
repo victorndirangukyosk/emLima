@@ -1204,7 +1204,8 @@ class ControllerSaleOrder extends Controller
                 'shipping' => $this->url->link('sale/order/shipping', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL'),
 
                 'edit' => $this->url->link('sale/order/EditInvoice', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL'),
-                'delete' => $this->url->link('sale/order/delete', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL')
+                'delete' => $this->url->link('sale/order/delete', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL'),
+                'po_number' => $result['po_number'],
             );
         }
 
@@ -6815,5 +6816,44 @@ class ControllerSaleOrder extends Controller
     {
         return $this->db->query("SELECT * FROM `" . DB_PREFIX . "order_iugu` WHERE `order_id` = " . (int)$order_id)->row;
     }
+
+    public function updatePO()
+    {
+
+        $this->load->model('sale/order');
+        //echo 'date.timezone ' ;;
+         $data = $this->request->post;        
+        
+
+          // echo '<pre>';print_r($this->request->post);exit;
+       
+            if  ($this->request->server['REQUEST_METHOD'] == 'POST') 
+            {
+               
+                     $this->model_sale_order->updatePO($this->request->post['order_id'], $this->request->post['po_number']);
+
+                    
+
+                     $data['status'] = true; 
+         
+                     if ($this->request->isAjax()) {
+                         $this->response->addHeader('Content-Type: application/json');
+                         $this->response->setOutput(json_encode($data));
+                     }
+                } 
+                else
+                {
+
+                    $data['status'] = false; 
+        
+                    if ($this->request->isAjax()) {
+                        $this->response->addHeader('Content-Type: application/json');
+                        $this->response->setOutput(json_encode($data));
+                    }
+                }
+
+       return true;
+    }
+
 
 }
