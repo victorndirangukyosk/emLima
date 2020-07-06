@@ -59,7 +59,7 @@
  
 </div>
 
- <div class="variation-selector-container" style="width: 250px;">
+ <div class="variation-selector-container" style="width: 230px;">
 	<textarea name="product_notes" class="form-control" maxlength="200" placeholder="Product Notes" id="product_notes" style="height: 50px; margin-top:10px;"></textarea>
  </div>
 
