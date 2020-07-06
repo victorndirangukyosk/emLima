@@ -1121,7 +1121,7 @@ class ControllerSaleOrder extends Controller
         $data['invoice'] = $this->url->link('sale/order/invoice', 'token=' . $this->session->data['token'], 'SSL');
         $data['shipping'] = $this->url->link('sale/order/shipping', 'token=' . $this->session->data['token'], 'SSL');
         $data['add'] = $this->url->link('sale/order/add', 'token=' . $this->session->data['token'], 'SSL');
-        $data['delivery_sheet'] = $this->url->link('sale/order/deliverySheet', 'token=' . $this->session->data['token'], 'SSL');
+        $data['delivery_sheet'] = $this->url->link('sale/order/consolidatedOrderSheet', 'token=' . $this->session->data['token'], 'SSL');
         $data['orders'] = array();
 
         $filter_data = array(
@@ -1204,7 +1204,8 @@ class ControllerSaleOrder extends Controller
                 'shipping' => $this->url->link('sale/order/shipping', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL'),
 
                 'edit' => $this->url->link('sale/order/EditInvoice', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL'),
-                'delete' => $this->url->link('sale/order/delete', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL')
+                'delete' => $this->url->link('sale/order/delete', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL'),
+                'po_number' => $result['po_number'],
             );
         }
 
@@ -4020,78 +4021,6 @@ class ControllerSaleOrder extends Controller
         $this->response->setOutput($this->load->view('sale/order_invoice.tpl', $data['orders'][0]));
     }
 
-    public function deliverySheet()
-    {
-
-        $deliveryDate = $this->request->get['filter_delivery_date'];
-
-        $filter_data = array(
-            'filter_delivery_date' => $deliveryDate
-        );
-
-        $this->load->model('sale/order');
-        $results = $this->model_sale_order->getOrders($filter_data);
-        $data = array();
-        $unconsolidatedProducts = array();
-
-
-        foreach ($results as $index => $order) {
-            $data['orders'][$index] = $order;
-            $orderProducts = $this->model_sale_order->getOrderProducts($data['orders'][$index]['order_id']);
-            $data['orders'][$index]['products'] = $orderProducts;
-
-            foreach ($orderProducts as $product) {
-                $unconsolidatedProducts[] = [
-                    'name' => $product['name'],
-                    'unit' => $product['unit'],
-                    'quantity' => $product['quantity']
-                ];
-            }
-        }
-
-        $consolidatedProducts = array();
-        foreach ($unconsolidatedProducts as $product) {
-            $productName = $product['name'];
-            $productUnit = $product['unit'];
-            $productQuantity = $product['quantity'];
-
-            $consolidatedProductNames = array_column($consolidatedProducts, "name");
-            if (array_search($productName, $consolidatedProductNames) !== false) {
-                $indexes = array_keys($consolidatedProductNames, $productName);
-
-                $foundExistingProductWithSimilarUnit = false;
-                foreach ($indexes as $index) {
-                    if ($productUnit == $consolidatedProducts[$index]['unit']) {
-                        $consolidatedProducts[$index]['quantity'] += $productQuantity;
-                        $foundExistingProductWithSimilarUnit = true;
-                        break;
-                    }
-                }
-
-                if(!$foundExistingProductWithSimilarUnit) {
-                    $consolidatedProducts[] = [
-                        'name' => $productName,
-                        'unit' => $productUnit,
-                        'quantity' => $productQuantity
-                    ];
-                }
-            } else {
-                $consolidatedProducts[] = [
-                    'name' => $productName,
-                    'unit' => $productUnit,
-                    'quantity' => $productQuantity
-                ];
-            }
-        }
-
-        $data['products'] = $consolidatedProducts;
-
-//        echo "<pre>";print_r($data['products']);die;
-
-        $this->load->model('report/excel');
-        $this->model_report_excel->download_delivery_sheet_excel($data);
-    }
-
     public function consolidatedCalculationSheet() {
         $deliveryDate = $this->request->get['filter_delivery_date'];
 
@@ -6887,5 +6816,44 @@ class ControllerSaleOrder extends Controller
     {
         return $this->db->query("SELECT * FROM `" . DB_PREFIX . "order_iugu` WHERE `order_id` = " . (int)$order_id)->row;
     }
+
+    public function updatePO()
+    {
+
+        $this->load->model('sale/order');
+        //echo 'date.timezone ' ;;
+         $data = $this->request->post;        
+        
+
+          // echo '<pre>';print_r($this->request->post);exit;
+       
+            if  ($this->request->server['REQUEST_METHOD'] == 'POST') 
+            {
+               
+                     $this->model_sale_order->updatePO($this->request->post['order_id'], $this->request->post['po_number']);
+
+                    
+
+                     $data['status'] = true; 
+         
+                     if ($this->request->isAjax()) {
+                         $this->response->addHeader('Content-Type: application/json');
+                         $this->response->setOutput(json_encode($data));
+                     }
+                } 
+                else
+                {
+
+                    $data['status'] = false; 
+        
+                    if ($this->request->isAjax()) {
+                        $this->response->addHeader('Content-Type: application/json');
+                        $this->response->setOutput(json_encode($data));
+                    }
+                }
+
+       return true;
+    }
+
 
 }

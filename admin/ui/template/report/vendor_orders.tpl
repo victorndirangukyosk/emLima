@@ -25,7 +25,7 @@
                 <div class="well" style="display:none;">
                     <div class="row">
 
-                       
+
 
                         <div class="col-sm-6">
                             <div class="form-group">
@@ -98,6 +98,40 @@
                             </tr>
                         </thead>
                         <tbody>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <input class="form-control" style="display: inline; cursor: pointer;" type="text"
+                                               id="consolidated-order-sheet-datepicker" size="30"
+                                               placeholder="Choose Delivery Date" readonly="readonly">
+                                        <span class="input-group-btn">
+                                        <button id="download-consolidated-order-sheet" data-toggle="tooltip"
+                                                title="Download Consolidated Order Sheet" class="btn btn-info">
+                                            <i class="fa fa-file-excel-o"></i>
+                                        </button>
+                                    </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <input class="form-control" style="display: inline; cursor: pointer;"
+                                               type="text" id="consolidated-calculation-datepicker"
+                                               size="30" placeholder="Accounts(Choose Delivery Date)"
+                                               readonly="readonly">
+                                        <span class="input-group-btn">
+                                        <button id="download-consolidated-calculation-sheet" data-toggle="tooltip"
+                                                title="Download Consolidated Calculation Sheet" class="btn btn-info">
+                                            <i class="fa fa-file-excel-o"></i>
+                                        </button>
+                                    </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                             <?php if ($vendor_orders) { ?>
                             <?php foreach ($vendor_orders as $order) { ?>
                             <tr>
@@ -293,11 +327,47 @@
 
         //--></script> 
     
-    <script type="text/javascript"><!--
+    <script type="text/javascript">
         $('.date').datetimepicker({
             pickTime: false
         });
-        //-->
+
+        $( "#consolidated-order-sheet-datepicker" ).datetimepicker({
+            pickTime: false,
+            format:'YYYY-MM-DD',
+        });
+
+        $("#download-consolidated-order-sheet").click(function(e) {
+            e.preventDefault();
+            const deliveryDate = $("#consolidated-order-sheet-datepicker").val();
+
+            if (!deliveryDate.length > 0) {
+                alert("Please select delivery date");
+            } else {
+                const url = 'index.php?path=report/vendor_orders/consolidatedOrderSheet&token=<?php echo $token; ?>&filter_delivery_date=' + encodeURIComponent(deliveryDate);
+                location = url;
+            }
+        });
+
+        $( "#consolidated-calculation-datepicker" ).datetimepicker({
+            pickTime: false,
+            format:'YYYY-MM-DD',
+        });
+
+
+        $("#download-consolidated-calculation-sheet").click(function(e) {
+
+            e.preventDefault();
+            const deliveryDate = $("#consolidated-calculation-datepicker").val();
+
+            if (!deliveryDate.length > 0) {
+                alert("Please select delivery date");
+            } else {
+                const url = 'index.php?path=sale/order/consolidatedCalculationSheet&token=<?php echo $token; ?>&filter_delivery_date=' + encodeURIComponent(deliveryDate);
+                location = url;
+            }
+        });
+
     </script>
 </div>
 

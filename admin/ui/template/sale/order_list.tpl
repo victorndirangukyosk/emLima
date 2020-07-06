@@ -234,20 +234,6 @@
                                 </tr>
                             </thead>
                             <tbody>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <input class="form-control" style="display: inline; cursor: pointer;" type="text" id="delivery-datepicker" size="30" placeholder="Choose Delivery Date" readonly="readonly">
-                                        <button id="download-delivery-sheet" data-toggle="tooltip" title="Download Consolidated Order Sheet" class="btn btn-info"><i class="fa fa-file-excel-o"></i></button>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <input class="form-control" style="display: inline; cursor: pointer;" type="text" id="consolidated-calculation-datepicker" size="30" placeholder="Accounts(Choose Delivery Date)" readonly="readonly">
-                                        <button id="download-consolidated-calculation-sheet" data-toggle="tooltip" title="Download Consolidated Calculation Sheet" class="btn btn-info"><i class="fa fa-file-excel-o"></i></button>
-                                    </div>
-                                </div>
-                            </div>
                                 <?php if ($orders) { ?>
                                 <?php foreach ($orders as $order) { ?>
                                 <tr>
@@ -310,6 +296,8 @@
                                             <?php } ?>
                                         
                                         <!-- <a href="<?php echo $order['delete']; ?>" id="button-delete<?php echo $order['order_id']; ?>" data-toggle="tooltip" title="<?php echo $button_delete; ?>" class="btn btn-danger"><i class="fa fa-trash-o"></i></a> -->
+                                       
+                                       <a href="#" onclick="getPO(<?= $order['order_id'] ?> ,  '<?= $order['po_number'] ?>')"   data-toggle="modal" data-dismiss="modal" data-target="#poModal"    class="btn btn-info" style="border-radius: 0px;"  >PO</a>
                                         </td>
                                         
                                 </tr>
@@ -332,45 +320,6 @@
             </div>
         </div>
     </div>
-    <script type="text/javascript">
-        $(function() {
-            $( "#delivery-datepicker" ).datetimepicker({
-                pickTime: false,
-                format:'YYYY-MM-DD',
-            });
-
-            $( "#consolidated-calculation-datepicker" ).datetimepicker({
-                pickTime: false,
-                format:'YYYY-MM-DD',
-            });
-
-            $("#download-delivery-sheet").click(function(e) {
-
-                e.preventDefault();
-                const deliveryDate = $("#delivery-datepicker").val();
-
-                if (!deliveryDate.length > 0) {
-                    alert("Please select delivery date");
-                } else {
-                    const url = 'index.php?path=sale/order/deliverySheet&token=<?php echo $token; ?>&filter_delivery_date=' + encodeURIComponent(deliveryDate);
-                    location = url;
-                }
-            });
-
-            $("#download-consolidated-calculation-sheet").click(function(e) {
-
-                e.preventDefault();
-                const deliveryDate = $("#consolidated-calculation-datepicker").val();
-
-                if (!deliveryDate.length > 0) {
-                    alert("Please select delivery date");
-                } else {
-                    const url = 'index.php?path=sale/order/consolidatedCalculationSheet&token=<?php echo $token; ?>&filter_delivery_date=' + encodeURIComponent(deliveryDate);
-                    location = url;
-                }
-            });
-        });
-    </script>
     <script type="text/javascript"><!--
     $('input[name=\'filter_store_name\']').autocomplete({
     'source': function(request, response) {
@@ -591,6 +540,134 @@
             }
         });
         //--></script> 
+
+
+
+
+    
+<div class="phoneModal-popup">
+        <div class="modal fade" id="poModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content"  width:700px;height:350px>
+                    <div class="modal-body">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <div class="store-find-block">
+                            <div class="mydivsss">
+                                <div class="store-find">
+                                    <div class="store-head">
+                                        <h2>  Save PO Number     </h2>
+                                          </br> 
+                                    </div>
+                                    <div id="poModal-message" style="color: red;text-align:center; font-size: 15px;" >
+                                    </div>
+                                    <div id="poModal-success-message" style="color: green; ; text-align:center; font-size: 15px;">
+                                    </div>
+                                      </br>
+                                    <!-- Text input-->
+                                    <div class="store-form">
+                                        <form id="poModal-form" action="" method="post" enctype="multipart/form-data">
+
+                                            <div class="row">
+                                                <div class="form-group">
+                                                    <label class="col-md-12 control-label sr-only"  > P.O. Number </label>
+                                                        <input id="order_id"   name="order_id" type="hidden"  class="form-control input-md" required>
+
+                                                    <div class="col-md-12">
+                                                        <input id="po_number" maxlength="30" required style="max-width:100% ;" name="po_number" type="text" placeholder="P.O. Number" class="form-control input-md" required>
+                                                    </div>
+                                                </div>
+
+                                                 <div class="form-group">
+                                                    <div class="col-md-12">
+                                                       </br>
+                                                     
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <div class="col-md-12"> 
+                                                        <button type="button" class="btn btn-grey" data-dismiss="modal" style="width:30%; float: right; margin-top: 10px; height: 45px;border-radius:20px">Close</button>
+
+
+                                                        <button id="po-button" name="po-button" onclick="savePO()" type="button" class="btn btn-lg btn-success"  style="width:30%; float: right; margin-top: 10px; height: 45px;border-radius:20px">Save</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>  
+                                </div>
+                            </div>
+                           
+                            <!-- next div code -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+<script  type="text/javascript">
+
+
+  function getPO($order_id, $po) {
+               
+                $('#poModal-message').html('');
+               $('#poModal-success-message').html('');
+                console.log($order_id);
+                console.log($po);
+               $('input[name="po_number"]').val($po) ;
+               $('input[name="order_id"]').val($order_id) ;
+                  
+            }
+
+
+ function savePO() { 
+ 
+
+   var po = $('input[name="po_number"]').val();
+              console.log($('#poModal-form').serialize());
+ 
+                if (po.length  <= 4) {
+                   
+                      $('#poModal-message').html("Please enter valid PO number");
+                       return false;
+                } 
+                else{  
+                  
+                    $.ajax({
+                    url: 'index.php?path=sale/order/updatePO',
+                    type: 'post',
+                    dataType: 'json',
+                    data:$('#poModal-form').serialize(),
+                    async: true,
+                    success: function(json) {
+                        console.log(json); 
+                        if (json['status']) {
+                            $('#poModal-success-message').html('PO Saved Successfully');
+                        }
+                        else {
+                            $('#poModal-success-message').html('Please try again');
+                        }
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {    
+
+                                 // alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);                       
+                                $('#poModal-message').html("Please try again");
+                                    return false;
+                                }
+                });
+                }
+               
+            }
+
+            
+            </script>
+
+
+
+
     <script src="ui/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
     <link href="ui/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" media="screen" />
     <script type="text/javascript"><!--
