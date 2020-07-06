@@ -637,7 +637,7 @@
                 else{  
                   
                     $.ajax({
-                    url: 'index.php?path=sale/order/updatePO',
+                    url: 'index.php?path=sale/order/updatePO&token=<?php echo $token; ?>',
                     type: 'post',
                     dataType: 'json',
                     data:$('#poModal-form').serialize(),
