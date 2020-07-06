@@ -234,20 +234,6 @@
                                 </tr>
                             </thead>
                             <tbody>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <input class="form-control" style="display: inline; cursor: pointer;" type="text" id="delivery-datepicker" size="30" placeholder="Choose Delivery Date" readonly="readonly">
-                                        <button id="download-delivery-sheet" data-toggle="tooltip" title="Download Consolidated Order Sheet" class="btn btn-info"><i class="fa fa-file-excel-o"></i></button>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <input class="form-control" style="display: inline; cursor: pointer;" type="text" id="consolidated-calculation-datepicker" size="30" placeholder="Accounts(Choose Delivery Date)" readonly="readonly">
-                                        <button id="download-consolidated-calculation-sheet" data-toggle="tooltip" title="Download Consolidated Calculation Sheet" class="btn btn-info"><i class="fa fa-file-excel-o"></i></button>
-                                    </div>
-                                </div>
-                            </div>
                                 <?php if ($orders) { ?>
                                 <?php foreach ($orders as $order) { ?>
                                 <tr>
@@ -332,45 +318,6 @@
             </div>
         </div>
     </div>
-    <script type="text/javascript">
-        $(function() {
-            $( "#delivery-datepicker" ).datetimepicker({
-                pickTime: false,
-                format:'YYYY-MM-DD',
-            });
-
-            $( "#consolidated-calculation-datepicker" ).datetimepicker({
-                pickTime: false,
-                format:'YYYY-MM-DD',
-            });
-
-            $("#download-delivery-sheet").click(function(e) {
-
-                e.preventDefault();
-                const deliveryDate = $("#delivery-datepicker").val();
-
-                if (!deliveryDate.length > 0) {
-                    alert("Please select delivery date");
-                } else {
-                    const url = 'index.php?path=sale/order/deliverySheet&token=<?php echo $token; ?>&filter_delivery_date=' + encodeURIComponent(deliveryDate);
-                    location = url;
-                }
-            });
-
-            $("#download-consolidated-calculation-sheet").click(function(e) {
-
-                e.preventDefault();
-                const deliveryDate = $("#consolidated-calculation-datepicker").val();
-
-                if (!deliveryDate.length > 0) {
-                    alert("Please select delivery date");
-                } else {
-                    const url = 'index.php?path=sale/order/consolidatedCalculationSheet&token=<?php echo $token; ?>&filter_delivery_date=' + encodeURIComponent(deliveryDate);
-                    location = url;
-                }
-            });
-        });
-    </script>
     <script type="text/javascript"><!--
     $('input[name=\'filter_store_name\']').autocomplete({
     'source': function(request, response) {

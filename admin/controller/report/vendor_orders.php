@@ -21,8 +21,6 @@ class ControllerReportVendorOrders extends Controller {
         
     }
 
-    
-	//download excel
 	public function excel(){
 
 		if (isset($this->request->get['filter_date_start'])) {
@@ -407,4 +405,76 @@ class ControllerReportVendorOrders extends Controller {
 
 		$this->response->setOutput($this->load->view('report/vendor_orders.tpl', $data));
 	}
+
+    public function consolidatedOrderSheet()
+    {
+
+        $deliveryDate = $this->request->get['filter_delivery_date'];
+
+        $filter_data = array(
+            'filter_delivery_date' => $deliveryDate
+        );
+
+        $this->load->model('sale/order');
+        $results = $this->model_sale_order->getOrders($filter_data);
+        $data = array();
+        $unconsolidatedProducts = array();
+
+
+        foreach ($results as $index => $order) {
+            $data['orders'][$index] = $order;
+            $orderProducts = $this->model_sale_order->getOrderProducts($data['orders'][$index]['order_id']);
+            $data['orders'][$index]['products'] = $orderProducts;
+
+            foreach ($orderProducts as $product) {
+                $unconsolidatedProducts[] = [
+                    'name' => $product['name'],
+                    'unit' => $product['unit'],
+                    'quantity' => $product['quantity']
+                ];
+            }
+        }
+
+        $consolidatedProducts = array();
+        foreach ($unconsolidatedProducts as $product) {
+            $productName = $product['name'];
+            $productUnit = $product['unit'];
+            $productQuantity = $product['quantity'];
+
+            $consolidatedProductNames = array_column($consolidatedProducts, "name");
+            if (array_search($productName, $consolidatedProductNames) !== false) {
+                $indexes = array_keys($consolidatedProductNames, $productName);
+
+                $foundExistingProductWithSimilarUnit = false;
+                foreach ($indexes as $index) {
+                    if ($productUnit == $consolidatedProducts[$index]['unit']) {
+                        $consolidatedProducts[$index]['quantity'] += $productQuantity;
+                        $foundExistingProductWithSimilarUnit = true;
+                        break;
+                    }
+                }
+
+                if(!$foundExistingProductWithSimilarUnit) {
+                    $consolidatedProducts[] = [
+                        'name' => $productName,
+                        'unit' => $productUnit,
+                        'quantity' => $productQuantity
+                    ];
+                }
+            } else {
+                $consolidatedProducts[] = [
+                    'name' => $productName,
+                    'unit' => $productUnit,
+                    'quantity' => $productQuantity
+                ];
+            }
+        }
+
+        $data['products'] = $consolidatedProducts;
+
+//        echo "<pre>";print_r($data['products']);die;
+
+        $this->load->model('report/excel');
+        $this->model_report_excel->download_delivery_sheet_excel($data);
+    }
 }
