@@ -56,8 +56,11 @@
                 <ul class="list-block">
                   <li>Placed On <?= $date_added ?></li>
                   <li>Delivered On <?= $delivery_date ?></li>
-                  <li><?= $shipping_method ?></li>
+                  <li><?= $shipping_method ?></li>                 
                   <li><?= $payment_method ?></li>
+                   <?php if($po_number)  {?>                                     
+                  <li>P.O Number:<?= $po_number ?></li>
+                  <?php }?>
                 </ul>
               </div>
             </div>

@@ -4010,6 +4010,7 @@ class ControllerSaleOrder extends Controller
                     'shipping_name' => ($order_info['shipping_name']) ? $order_info['shipping_name'] : $order_info['firstname'] . ' ' . $order_info['lastname'],
                     'customer_company_name' => $order_info['customer_company_name'],
                     'shipping_method' => $order_info['shipping_method'],
+                    'po_number' => $order_info['po_number'],
                     'payment_method' => $order_info['payment_method'],
                     'products' => $product_data,
                     'totals' => $total_data,
@@ -4551,7 +4552,7 @@ class ControllerSaleOrder extends Controller
 
         foreach ($orders as $order_id) {
             $order_info = $this->model_sale_order->getOrder($order_id);
-//            echo "<pre>";print_r($order_info);die;
+      //  echo "<pre>";print_r($order_info);die;
 
             if ($this->user->isVendor() && !$this->isVendorOrder($order_info['order_id'])) {
                 continue;
@@ -4686,6 +4687,7 @@ class ControllerSaleOrder extends Controller
                     'date_added' => date($this->language->get('date_format_short'), strtotime($order_info['date_added'])),
                     'delivery_date' => date($this->language->get('date_format_short'), strtotime($order_info['delivery_date'])),
                     'payment_method' => $order_info['payment_method'],
+                    'po_number' => $order_info['po_number'],
                     'store_name' => $store_name,
                     'store_url' => rtrim($order_info['store_url'], '/'),
                     'store_address' => nl2br($store_address),

@@ -84,7 +84,7 @@ class ModelSaleOrder extends Model {
     }
     
     public function getOrdersFilter($data = array()) {
-        $sql = "SELECT c.name as city, o.order_id, o.shipping_method, o.payment_method, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS status, (SELECT os.color FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS color, o.shipping_code, o.total, o.currency_code, o.store_name , o.delivery_date ,o.delivery_timeslot,  o.currency_value, o.date_added, o.date_modified FROM `" . DB_PREFIX . "order` o ";
+        $sql = "SELECT c.name as city, o.order_id, o.shipping_method, o.payment_method, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS status, (SELECT os.color FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS color, o.shipping_code, o.total, o.currency_code, o.store_name , o.delivery_date ,o.delivery_timeslot,  o.currency_value, o.date_added, o.date_modified,o.po_number FROM `" . DB_PREFIX . "order` o ";
 
         $sql .= 'left join `'.DB_PREFIX.'city` c on c.city_id = o.shipping_city_id';
         $sql .= " LEFT JOIN ".DB_PREFIX."store on(".DB_PREFIX."store.store_id = o.store_id) ";
@@ -204,7 +204,7 @@ class ModelSaleOrder extends Model {
             $sql .= " LIMIT " . (int) $data['start'] . "," . (int) $data['limit'];
         }
 
-        //echo "<pre>";print_r($sql);die;
+        //echo "<pre>";print_r($query->rows);die;
         $query = $this->db->query($sql);
 
         return $query->rows;
@@ -476,7 +476,9 @@ class ModelSaleOrder extends Model {
                 'settlement_amount'=>$order_query->row['settlement_amount'],
 
                 'latitude'=>$order_query->row['latitude'],
-                'longitude'=>$order_query->row['longitude']
+                'longitude'=>$order_query->row['longitude'],
+                'po_number' => $order_query->row['po_number'],
+
                   
             );
         
