@@ -1183,6 +1183,7 @@ class ControllerSaleOrder extends Controller
 
                 'payment_method' => $result['payment_method'],
                 'shipping_method' => $result['shipping_method'],
+                'shipping_address' => $result['shipping_address'],
                 'delivery_date' => date($this->language->get('date_format_short'), strtotime($result['delivery_date'])),
                 'delivery_timeslot' => $result['delivery_timeslot'],
 

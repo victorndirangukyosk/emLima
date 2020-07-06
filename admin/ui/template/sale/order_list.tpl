@@ -262,7 +262,11 @@
 
                                     <?php if (!$this->user->isVendor()): ?>
 
-                                        <td class="text-left"><?php echo $order['customer']; ?>  <br/> <?php echo $order['company_name']  ; ?>  </td>
+                                        <td class="text-left">
+                                            <?php echo $order['customer']; ?>  <br/>
+                                            <?php echo $order['company_name']  ; ?> <br/>
+                                            <?php echo $order['shipping_address']  ; ?>
+                                        </td>
 
                                     <?php endif ?> 
                                     <!-- <td class="text-left"><?php echo $order['city']; ?></td> -->
