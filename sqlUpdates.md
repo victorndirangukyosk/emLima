@@ -67,3 +67,8 @@ CREATE TABLE `hf7_product_category_prices` (
 
 /** 1 July **/
   ALTER TABLE `hf7_product` ADD COLUMN `produce_type` VARCHAR(500) DEFAULT NULL AFTER `weight`;
+
+
+
+  /** 6 July **/
+  ALTER TABLE `hf7_order_product` ADD COLUMN `product_note` VARCHAR(500) DEFAULT NULL AFTER `product_type`;

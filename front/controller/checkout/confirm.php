@@ -1086,7 +1086,8 @@ class ControllerCheckoutConfirm extends Controller {
 			        $order_data[$store_id]['shipping_building_name'] = '';
 			    }
 
-	            $order_data[$store_id]['products'] = array();
+				$order_data[$store_id]['products'] = array();
+				//echo '<pre>';print_r($this->cart->getProducts());exit;
 	            $log->write('Log 3.4');
 	            foreach ( $this->cart->getProducts() as $product ) {
 	                $option_data = array();
@@ -1102,7 +1103,8 @@ class ControllerCheckoutConfirm extends Controller {
 		                    'vendor_id' => $vendor_id,
 		                    'name' => $product['name'],
 		                    'unit' => $product['unit'],
-		                    'product_type' => $product['product_type'],
+							'product_type' => $product['product_type'],
+							'product_note' => $product['product_note'],
 		                    'model' => $product['model'],
 		                    'option' => $option_data,
 		                    'download' => $product['download'],
