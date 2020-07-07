@@ -18,7 +18,7 @@ class ModelShippingExpress extends Model {
 
             $timeDiff = $settings['express_how_much_time'];
 
-            $store_open_hours =  $this->model_tool_image->getStoreOpenHours($store_id,date('w'));
+            $store_open_hours =  $this->model_tool_image->getStoreOpenHours($store_id,date('w'))[0];
 
             if($store_open_hours && isset($store_open_hours['timeslot'])) {
                 

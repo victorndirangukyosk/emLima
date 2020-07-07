@@ -16,6 +16,9 @@
             <input type="radio" name="shipping_method-<?php echo $store_id ?>"   data-id="<?php echo $store_id ?>"    value="<?php echo $quote['code']; ?>" />
             <?php } ?>        
             <?php echo $quote['title']; ?> - <?php echo $quote['text']; ?>
+            <?php if($quote['code']=='express.express'){?>
+             <span style="font-size:15px;font-weight:bold">( Delivery possible with 5 hours turn around time and subject to products availability )</span>
+            <?php }?>
             <div class="control__indicator"></div>
         </label>
     <?php } ?><!-- END foreach -->
