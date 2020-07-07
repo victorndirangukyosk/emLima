@@ -4646,6 +4646,8 @@ class ControllerSaleOrder extends Controller
 
                         $uomOrderedWithoutApproximations = trim(explode('(', $originalProduct['unit'])[0]);
 
+                        $productPrice = $this->currency->format($originalProduct['price'] + ($this->config->get('config_tax') ? $originalProduct['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']);
+
                         $orderProducts[] = array(
                             'order_product_id' => $originalProduct['order_product_id'],
                             'product_id' => $originalProduct['product_id'],
@@ -4658,7 +4660,9 @@ class ControllerSaleOrder extends Controller
                             'quantity' => $originalProduct['quantity'],
                             'quantity_updated' => $originalProduct['quantity'],
                             'unit_updated' => $uomOrderedWithoutApproximations,
-                            'price' => $this->currency->format($originalProduct['price'] + ($this->config->get('config_tax') ? $originalProduct['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
+                            'price' =>  $productPrice,
+                            'price_currency' => trim(explode(' ', $productPrice)[0]),
+                            'price_value' => trim(explode(' ', $productPrice)[1]),
                             'total' => $this->currency->format($originalProduct['total'] + ($this->config->get('config_tax') ? ($originalProduct['tax'] * $originalProduct['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
                             'total_updated' => $this->currency->format($totalUpdated, $order_info['currency_code'], $order_info['currency_value']),
                             'total_updated_currency' => trim(explode(' ', $this->currency->format($totalUpdated, $order_info['currency_code'], $order_info['currency_value']))[0]),
