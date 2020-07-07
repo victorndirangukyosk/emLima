@@ -1080,7 +1080,7 @@ Step Wizard
 .login-phone .form-control { padding-left: 68px; font-size: 14px; }
 .checkout-login .btn { height: 42px; line-height: 1.8; }
 .otp-verifaction { }
-.checkout-sidebar { background-color: #fff; border: 1px solid #d7dcd6; padding: 30px; margin-bottom: 30px; margin-top: 23px;}
+.checkout-sidebar { background-color: #fff; border: 1px solid #d7dcd6; padding: 30px; margin-bottom: 30px; margin-top: 0px;}
 .checkout-sidebar-merchant-box { background-color: #fff; border: 1px solid #d7dcd6; margin-bottom: 30px; }
 .checkout-total { border-bottom: 1px solid #d7dcd6; padding-bottom: 10px; margin-bottom: 10px; }
 .checkout-invoice { display: inline-block; width: 100%; }

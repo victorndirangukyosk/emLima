@@ -4,7 +4,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="my-order-view-dashboard">
-                        <div class="row">
+                        <!-- <div class="row">
                             <div class="col-md-11">
                                 <div class="back-link-block"><a href="<?php echo $continue; ?>"> <span class="back-arrow"><i class="fa fa-long-arrow-left"></i> </span> <?= $text_go_back ?></a></div>
                             </div>
@@ -17,7 +17,7 @@
 
                                  </div>
                             <?php } ?>
-                        </div>
+                        </div> -->
                         <div class="row">
                             <div class="col-md-8">
                                 <div class="my-order-view-content">
@@ -336,7 +336,7 @@
 
                                            
 
-                                <div class="checkout-sidebar-merchant-box-old">
+                                <!-- <div class="checkout-sidebar-merchant-box-old">
                                     <div class="my-order-list-title"> <span class="checkout-cart-merchant-name">Order Notes</span></div>
                                     </br>
                                     </br>
@@ -350,7 +350,7 @@
                                  
                                  <div style="display:none; " class="checkout-sidebar-merchant-box-old"><?= $comment?></div>   </div>
 
-                                </div>
+                                </div> -->
                          
 
                                         </div>

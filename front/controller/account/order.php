@@ -662,7 +662,7 @@ class ControllerAccountOrder extends Controller {
 			$data['content_top'] = $this->load->controller('common/content_top');
 			$data['content_bottom'] = $this->load->controller('common/content_bottom');
 			$data['footer'] = $this->load->controller('common/footer');
-			$data['header'] = $this->load->controller('common/header/onlyHeader');
+			$data['header'] = $this->load->controller('common/header/orderSummaryHeader');
 
 			$data['total_products'] = count($data['products']);
 			$data['total_quantity'] = 0;
@@ -754,7 +754,7 @@ class ControllerAccountOrder extends Controller {
 			$data['content_top'] = $this->load->controller('common/content_top');
 			$data['content_bottom'] = $this->load->controller('common/content_bottom');
 			$data['footer'] = $this->load->controller('common/footer');
-			$data['header'] = $this->load->controller('common/header/onlyHeader');
+			$data['header'] = $this->load->controller('common/header/orderSummaryHeader');
 
 			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/error/not_found.tpl')) {
 				$this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/error/not_found.tpl', $data));
