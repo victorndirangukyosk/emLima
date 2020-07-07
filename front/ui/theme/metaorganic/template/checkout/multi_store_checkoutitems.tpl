@@ -23,7 +23,7 @@
                         <th rowspan="1">SNo.</th>
                         <th rowspan="1">&nbsp;</th>
                         <th rowspan="1"><span class="nobr">Product Name</span></th>
-                        <th rowspan="1"><span class="nobr">Product Note</span></th>
+                        <!--<th rowspan="1"><span class="nobr">Product Note</span></th>-->
                                                 <th class="text-center" ><span class="nobr">Unit Price</span></th>
                                                 <th class="text-center"><span class="nobr">Unit </span></th>
                         <th rowspan="1" class="text-center">Qty</th>
@@ -82,10 +82,13 @@
     <td class="image hidden-table"><img src="<?= $product['thumb'] ?>" width="75" alt=""></td>
     <td class="a-left hidden-table"  style="width:400px">
      <span ><?= $product['name']?></span> 
-       </td>
-    <td class="a-left hidden-table"  style="width:400px">
+     <?php if(isset($product['product_note']) && ($product['product_note'] != null) && ($product['product_note'] != 'null')){?>
+     <div style="font-size:13px;">( <?= $product['product_note']?> )</div> 
+     <?php } ?>
+    </td>
+    <!--<td class="a-left hidden-table"  style="width:400px">
      <span style="font-size:13px;"><?= $product['product_note']?></span> 
-       </td>
+    </td>-->
   
     
     
@@ -187,7 +190,7 @@
                      <?php foreach ($arrs as $key=> $products) { ?>
                       <div class="checkout-promocode-form">
                                         
-                                        <textarea name="dropoff_notes" class="form-control" maxlength="200" placeholder="<?= $text_dropoff_notes?>" id="dropoff_notes" style="height: 100px;"><?php echo $orderNotes;?></textarea>
+                                        <textarea name="dropoff_notes" class="form-control" maxlength="200" placeholder="<?= $text_dropoff_notes?>" id="dropoff_notes" style="height: 100px;"><?php // echo $orderNotes;?></textarea>
                                         
                                     </div>
                                      <?php } ?>
