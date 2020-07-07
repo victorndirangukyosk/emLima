@@ -853,7 +853,7 @@ class ModelReportExcel extends Model {
 		}
 	}
 
-	public function download_delivery_sheet_excel($data) {
+	public function download_consolidated_order_sheet_excel($data) {
 //	    echo "<pre>";print_r($data);die;
 
         $this->load->library('excel');
@@ -965,19 +965,22 @@ class ModelReportExcel extends Model {
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 4, 'Product Name');
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'Quantity');
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 4, 'UOM');
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 4, 'Source');
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 4, 'Note');
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 4, 'Source');
 
                 $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 4)->applyFromArray($title);
                 $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 4)->applyFromArray($title);
                 $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(2, 4)->applyFromArray($title);
                 $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(3, 4)->applyFromArray($title);
+                $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(4, 4)->applyFromArray($title);
 
                 $row = 5;
                 foreach($order['products'] as $product) {
                     $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $product['name']);
                     $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $product['quantity']);
                     $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $product['unit']);
-                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, '');
+                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $product['product_note']);
+                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, '');
                     $row++;
                 }
 
