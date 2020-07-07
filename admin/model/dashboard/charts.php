@@ -14,6 +14,20 @@ class ModelDashboardCharts extends Model {
         return $query;
     }
 
+
+    public function getVendorBookedSales($date_start, $date_end, $group){
+        $complete_status_ids = '('.implode(',', $this->config->get('config_complete_status')).')';
+        
+        if(isset($this->request->get['vendor_id'])){
+            $vendor_id = $this->request->get['vendor_id'];
+        }else{
+            $vendor_id = $this->user->getId();
+        }
+        
+        $query = $this->db->query("SELECT SUM(total) AS total, HOUR(".DB_PREFIX."order.date_added) AS hour, CONCAT(MONTHNAME(".DB_PREFIX."order.date_added), ' ', YEAR(".DB_PREFIX."order.date_added)) AS month, YEAR(".DB_PREFIX."order.date_added) AS year, DATE(".DB_PREFIX."order.date_added) AS date,".DB_PREFIX."store.vendor_id  FROM `".DB_PREFIX."order` LEFT JOIN ".DB_PREFIX."store on(".DB_PREFIX."store.store_id = ".DB_PREFIX."order.store_id) WHERE vendor_id='".$vendor_id."' AND order_status_id IN " . $complete_status_ids . " AND DATE(".DB_PREFIX."order.date_added) BETWEEN '" . $this->db->escape($date_start) . "' AND '" . $this->db->escape($date_end) . "' GROUP BY ". $group ."(".DB_PREFIX."order.date_added) ORDER BY ".DB_PREFIX."order.date_added ASC");
+        return $query;
+    }
+
     
 
 
@@ -33,14 +47,39 @@ class ModelDashboardCharts extends Model {
     public function getSales($date_start, $date_end, $group){
         $complete_status_ids = '('.implode(',', $this->config->get('config_complete_status')).')';
 
-        $query = $this->db->query("SELECT SUM(total) AS total, HOUR(".DB_PREFIX."order.date_added) AS hour, CONCAT(MONTHNAME(".DB_PREFIX."order.date_added), ' ', YEAR(".DB_PREFIX."order.date_added)) AS month, YEAR(".DB_PREFIX."order.date_added) AS year, DATE(".DB_PREFIX."order.date_added) AS date,".DB_PREFIX."store.vendor_id  FROM `" . DB_PREFIX . "order` LEFT JOIN ".DB_PREFIX."store on(".DB_PREFIX."store.store_id = ".DB_PREFIX."order.store_id) WHERE order_status_id IN " . $complete_status_ids . " AND DATE(".DB_PREFIX."order.date_added) BETWEEN '" . $this->db->escape($date_start) . "' AND '" . $this->db->escape($date_end) . "' GROUP BY ". $group ."(".DB_PREFIX."order.date_added) ORDER BY ".DB_PREFIX."order.date_added ASC");
+        $query = $this->db->query("SELECT SUM(value) AS total, HOUR(".DB_PREFIX."order.date_added) AS hour, CONCAT(MONTHNAME(".DB_PREFIX."order.date_added), ' ', YEAR(".DB_PREFIX."order.date_added)) AS month, YEAR(".DB_PREFIX."order.date_added) AS year, DATE(".DB_PREFIX."order.date_added) AS date,".DB_PREFIX."store.vendor_id  FROM `" . DB_PREFIX . "order` LEFT JOIN ".DB_PREFIX."order_total on(".DB_PREFIX."order.order_id = ".DB_PREFIX."order_total.order_id)   JOIN ".DB_PREFIX."store on(".DB_PREFIX."store.store_id = ".DB_PREFIX."order.store_id) WHERE order_status_id IN " . $complete_status_ids . " AND DATE(".DB_PREFIX."order.date_added) BETWEEN '" . $this->db->escape($date_start) . "' AND '" . $this->db->escape($date_end) . "'AND ".DB_PREFIX."order_total.code='sub_total' GROUP BY ". $group ."(".DB_PREFIX."order.date_added) ORDER BY ".DB_PREFIX."order.date_added ASC");
+       // $query = $this->db->query("SELECT SUM(value) AS total FROM `" . DB_PREFIX . "order`  WHERE order_status_id IN " . $complete_status_ids . " AND DATE(".DB_PREFIX."order.date_added) BETWEEN '" . $this->db->escape($date_start) . "' AND '" . $this->db->escape($date_end) . "'AND ".DB_PREFIX."order_total.code='sub_total'");
+       
         return $query;
     }
+
+    public function getBookedSales($date_start, $date_end, $group){
+        $complete_status_ids = '('.implode(',', $this->config->get('config_complete_status')).')';
+
+        $query = $this->db->query("SELECT SUM(value) AS total, HOUR(".DB_PREFIX."order.date_added) AS hour, CONCAT(MONTHNAME(".DB_PREFIX."order.date_added), ' ', YEAR(".DB_PREFIX."order.date_added)) AS month, YEAR(".DB_PREFIX."order.date_added) AS year, DATE(".DB_PREFIX."order.date_added) AS date,".DB_PREFIX."store.vendor_id  FROM `" . DB_PREFIX . "order` LEFT JOIN ".DB_PREFIX."order_total on(".DB_PREFIX."order.order_id = ".DB_PREFIX."order_total.order_id)   JOIN ".DB_PREFIX."store on(".DB_PREFIX."store.store_id = ".DB_PREFIX."order.store_id) WHERE   DATE(".DB_PREFIX."order.date_added) BETWEEN '" . $this->db->escape($date_start) . "' AND '" . $this->db->escape($date_end) . "'AND ".DB_PREFIX."order_total.code='sub_total' GROUP BY ". $group ."(".DB_PREFIX."order.date_added) ORDER BY ".DB_PREFIX."order.date_added ASC");
+       // $query = $this->db->query("SELECT SUM(value) AS total FROM `" . DB_PREFIX . "order`  WHERE order_status_id IN " . $complete_status_ids . " AND DATE(".DB_PREFIX."order.date_added) BETWEEN '" . $this->db->escape($date_start) . "' AND '" . $this->db->escape($date_end) . "'AND ".DB_PREFIX."order_total.code='sub_total'");
+       
+        return $query;
+    }
+
+    public function getTotalBookedSales($date_start, $date_end){
+        $complete_status_ids = '('.implode(',', $this->config->get('config_complete_status')).')';
+
+        $query = $this->db->query("SELECT SUM(value) AS total FROM `" . DB_PREFIX . "order` LEFT JOIN ".DB_PREFIX."order_total on(".DB_PREFIX."order.order_id = ".DB_PREFIX."order_total.order_id) WHERE  DATE(".DB_PREFIX."order.date_added) BETWEEN '" . $this->db->escape($date_start) . "' AND '" . $this->db->escape($date_end) . "'AND ".DB_PREFIX."order_total.code='sub_total'");
+      //  "SELECT COUNT(*) AS total,SUM(value) as value  FROM `" . DB_PREFIX . "order` LEFT JOIN ".DB_PREFIX."order_total on(".DB_PREFIX."order.order_id = ".DB_PREFIX."order_total.order_id) WHERE order_status_id IN " . $complete_status_ids . " AND DATE(".DB_PREFIX."order.date_modified) BETWEEN '" . $this->db->escape($date_start) ."' AND '" . $this->db->escape($date_end) . "' AND ".DB_PREFIX."order_total.code='sub_total'")
+       
+       
+        return $query->row;
+    }
+
 
     public function getTotalSales($date_start, $date_end){
         $complete_status_ids = '('.implode(',', $this->config->get('config_complete_status')).')';
 
-        $query = $this->db->query("SELECT SUM(total) AS total FROM `" . DB_PREFIX . "order` LEFT JOIN ".DB_PREFIX."store on(".DB_PREFIX."store.store_id = ".DB_PREFIX."order.store_id) WHERE order_status_id IN " . $complete_status_ids . " AND DATE(".DB_PREFIX."order.date_added) BETWEEN '" . $this->db->escape($date_start) . "' AND '" . $this->db->escape($date_end) . "'");
+        $query = $this->db->query("SELECT SUM(value) AS total FROM `" . DB_PREFIX . "order` LEFT JOIN ".DB_PREFIX."order_total on(".DB_PREFIX."order.order_id = ".DB_PREFIX."order_total.order_id) WHERE order_status_id IN " . $complete_status_ids . " AND DATE(".DB_PREFIX."order.date_added) BETWEEN '" . $this->db->escape($date_start) . "' AND '" . $this->db->escape($date_end) . "'AND ".DB_PREFIX."order_total.code='sub_total'");
+      //  "SELECT COUNT(*) AS total,SUM(value) as value  FROM `" . DB_PREFIX . "order` LEFT JOIN ".DB_PREFIX."order_total on(".DB_PREFIX."order.order_id = ".DB_PREFIX."order_total.order_id) WHERE order_status_id IN " . $complete_status_ids . " AND DATE(".DB_PREFIX."order.date_modified) BETWEEN '" . $this->db->escape($date_start) ."' AND '" . $this->db->escape($date_end) . "' AND ".DB_PREFIX."order_total.code='sub_total'")
+       
+       
         return $query->row;
     }
 
@@ -56,6 +95,36 @@ class ModelDashboardCharts extends Model {
         $query = $this->db->query("SELECT COUNT(*) AS total, HOUR(".DB_PREFIX."order.date_added) AS hour, CONCAT(MONTHNAME(".DB_PREFIX."order.date_added), ' ', YEAR(".DB_PREFIX."order.date_added)) AS month, YEAR(".DB_PREFIX."order.date_added) AS year, DATE(".DB_PREFIX."order.date_added) AS date  FROM `" . DB_PREFIX . "order` LEFT JOIN ".DB_PREFIX."store on(".DB_PREFIX."store.store_id = ".DB_PREFIX."order.store_id) WHERE order_status_id IN " . $complete_status_ids . " AND DATE(".DB_PREFIX."order.date_added) BETWEEN '" . $this->db->escape($date_start) . "' AND '" . $this->db->escape($date_end) . "' AND vendor_id='".$vendor_id."' GROUP BY ". $group ."(".DB_PREFIX."order.date_added) ORDER BY ".DB_PREFIX."order.date_added ASC");
         return $query;
     }
+
+
+
+    public function getVendorCreatedOrders($date_start, $date_end, $group){
+        
+        if(isset($this->request->get['vendor_id'])){
+            $vendor_id = $this->request->get['vendor_id'];
+        }else{
+            $vendor_id = $this->user->getId();
+        }
+        
+        $query = $this->db->query("SELECT COUNT(*) AS total, HOUR(".DB_PREFIX."order.date_added) AS hour, CONCAT(MONTHNAME(".DB_PREFIX."order.date_added), ' ', YEAR(".DB_PREFIX."order.date_added)) AS month, YEAR(".DB_PREFIX."order.date_added) AS year, DATE(".DB_PREFIX."order.date_added) AS date  FROM `" . DB_PREFIX . "order` LEFT JOIN ".DB_PREFIX."store on(".DB_PREFIX."store.store_id = ".DB_PREFIX."order.store_id) WHERE   DATE(".DB_PREFIX."order.date_added) BETWEEN '" . $this->db->escape($date_start) . "' AND '" . $this->db->escape($date_end) . "' AND vendor_id='".$vendor_id."' GROUP BY ". $group ."(".DB_PREFIX."order.date_added) ORDER BY ".DB_PREFIX."order.date_added ASC");
+        return $query;
+    }
+
+
+    public function getVendorCancelledOrders($date_start, $date_end, $group){
+        
+        if(isset($this->request->get['vendor_id'])){
+            $vendor_id = $this->request->get['vendor_id'];
+        }else{
+            $vendor_id = $this->user->getId();
+        }
+
+        $complete_status_ids = '('.implode(',', $this->config->get('config_refund_status')).')';
+        
+        $query = $this->db->query("SELECT COUNT(*) AS total, HOUR(".DB_PREFIX."order.date_added) AS hour, CONCAT(MONTHNAME(".DB_PREFIX."order.date_added), ' ', YEAR(".DB_PREFIX."order.date_added)) AS month, YEAR(".DB_PREFIX."order.date_added) AS year, DATE(".DB_PREFIX."order.date_added) AS date  FROM `" . DB_PREFIX . "order` LEFT JOIN ".DB_PREFIX."store on(".DB_PREFIX."store.store_id = ".DB_PREFIX."order.store_id) WHERE order_status_id IN " . $complete_status_ids . " AND  DATE(".DB_PREFIX."order.date_added) BETWEEN '" . $this->db->escape($date_start) . "' AND '" . $this->db->escape($date_end) . "' AND vendor_id='".$vendor_id."' GROUP BY ". $group ."(".DB_PREFIX."order.date_added) ORDER BY ".DB_PREFIX."order.date_added ASC");
+        return $query;
+    }
+
 
     public function getTotalVendorOrders($date_start, $date_end){
         $complete_status_ids = '('.implode(',', $this->config->get('config_complete_status')).')';
@@ -75,6 +144,19 @@ class ModelDashboardCharts extends Model {
         $complete_status_ids = '('.implode(',', $this->config->get('config_complete_status')).')';
 
         $query = $this->db->query("SELECT COUNT(*) AS total, HOUR(".DB_PREFIX."order.date_added) AS hour, CONCAT(MONTHNAME(".DB_PREFIX."order.date_added), ' ', YEAR(".DB_PREFIX."order.date_added)) AS month, YEAR(".DB_PREFIX."order.date_added) AS year, DATE(".DB_PREFIX."order.date_added) AS date  FROM `" . DB_PREFIX . "order` LEFT JOIN ".DB_PREFIX."store on(".DB_PREFIX."store.store_id = ".DB_PREFIX."order.store_id) WHERE order_status_id IN " . $complete_status_ids . " AND DATE(".DB_PREFIX."order.date_added) BETWEEN '" . $this->db->escape($date_start) . "' AND '" . $this->db->escape($date_end) . "' GROUP BY ". $group ."(".DB_PREFIX."order.date_added) ORDER BY ".DB_PREFIX."order.date_added ASC");
+        return $query;
+    }
+
+
+    public function getCreatedOrders($date_start, $date_end, $group){
+        
+        $query = $this->db->query("SELECT COUNT(*) AS total, HOUR(".DB_PREFIX."order.date_added) AS hour, CONCAT(MONTHNAME(".DB_PREFIX."order.date_added), ' ', YEAR(".DB_PREFIX."order.date_added)) AS month, YEAR(".DB_PREFIX."order.date_added) AS year, DATE(".DB_PREFIX."order.date_added) AS date  FROM `" . DB_PREFIX . "order` LEFT JOIN ".DB_PREFIX."store on(".DB_PREFIX."store.store_id = ".DB_PREFIX."order.store_id) WHERE   DATE(".DB_PREFIX."order.date_added) BETWEEN '" . $this->db->escape($date_start) . "' AND '" . $this->db->escape($date_end) . "' GROUP BY ". $group ."(".DB_PREFIX."order.date_added) ORDER BY ".DB_PREFIX."order.date_added ASC");
+        return $query;
+    }
+
+    public function getCancelledOrders($date_start, $date_end, $group){
+        $complete_status_ids = '('.implode(',', $this->config->get('config_refund_status')).')';
+        $query = $this->db->query("SELECT COUNT(*) AS total, HOUR(".DB_PREFIX."order.date_added) AS hour, CONCAT(MONTHNAME(".DB_PREFIX."order.date_added), ' ', YEAR(".DB_PREFIX."order.date_added)) AS month, YEAR(".DB_PREFIX."order.date_added) AS year, DATE(".DB_PREFIX."order.date_added) AS date  FROM `" . DB_PREFIX . "order` LEFT JOIN ".DB_PREFIX."store on(".DB_PREFIX."store.store_id = ".DB_PREFIX."order.store_id) WHERE order_status_id IN " . $complete_status_ids . " AND  DATE(".DB_PREFIX."order.date_added) BETWEEN '" . $this->db->escape($date_start) . "' AND '" . $this->db->escape($date_end) . "' GROUP BY ". $group ."(".DB_PREFIX."order.date_added) ORDER BY ".DB_PREFIX."order.date_added ASC");
         return $query;
     }
 
@@ -103,6 +185,18 @@ class ModelDashboardCharts extends Model {
         return $query->row;
     }
 
+    public function getTotalCreatedOrders($date_start, $date_end){
+        
+        $query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "order` LEFT JOIN ".DB_PREFIX."store on(".DB_PREFIX."store.store_id = ".DB_PREFIX."order.store_id) WHERE   DATE(".DB_PREFIX."order.date_added) BETWEEN '" . $this->db->escape($date_start) . "' AND '" . $this->db->escape($date_end) . "'");
+        return $query->row;
+    }
+
+
+    public function getTotalCancelledOrders($date_start, $date_end){
+        $complete_status_ids = '('.implode(',', $this->config->get('config_refund_status')).')';
+        $query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "order` LEFT JOIN ".DB_PREFIX."store on(".DB_PREFIX."store.store_id = ".DB_PREFIX."order.store_id) WHERE order_status_id IN " . $complete_status_ids . " AND  DATE(".DB_PREFIX."order.date_added) BETWEEN '" . $this->db->escape($date_start) . "' AND '" . $this->db->escape($date_end) . "'");
+        return $query->row;
+    }
 
 
     public function getTotalOrders($date_start, $date_end){
