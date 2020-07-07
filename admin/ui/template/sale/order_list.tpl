@@ -248,7 +248,7 @@
 
                                     <?php if (!$this->user->isVendor()): ?>
 
-                                        <td class="text-left">
+                                        <td class="text-left" style="width:200px">
                                             <?php echo $order['customer']; ?>  <br/>
                                             <?php echo $order['company_name']  ; ?> <br/>
                                             <?php echo $order['shipping_address']  ; ?>
