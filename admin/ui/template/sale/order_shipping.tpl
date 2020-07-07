@@ -54,13 +54,13 @@
               <div class="col-md-4 offset-md-4 text-right">
                 <h4 class="bold mb-3">ORDER #<?= $order_id ?></h4>
                 <ul class="list-block">
+                  <?php if($po_number)  { ?>
+                  <li>P.O Number <?= $po_number ?></li>
+                  <?php }?>
                   <li>Placed On <?= $date_added ?></li>
                   <li>Delivered On <?= $delivery_date ?></li>
                   <li><?= $shipping_method ?></li>                 
                   <li><?= $payment_method ?></li>
-                   <?php if($po_number)  {?>                                     
-                  <li>P.O Number:<?= $po_number ?></li>
-                  <?php }?>
                 </ul>
               </div>
             </div>

@@ -430,7 +430,8 @@ class ControllerReportVendorOrders extends Controller {
                 $unconsolidatedProducts[] = [
                     'name' => $product['name'],
                     'unit' => $product['unit'],
-                    'quantity' => $product['quantity']
+                    'quantity' => $product['quantity'],
+                    'note' => $product['product_note']
                 ];
             }
         }
@@ -440,6 +441,7 @@ class ControllerReportVendorOrders extends Controller {
             $productName = $product['name'];
             $productUnit = $product['unit'];
             $productQuantity = $product['quantity'];
+            $productNote = $product['product_note'];
 
             $consolidatedProductNames = array_column($consolidatedProducts, "name");
             if (array_search($productName, $consolidatedProductNames) !== false) {
@@ -458,14 +460,16 @@ class ControllerReportVendorOrders extends Controller {
                     $consolidatedProducts[] = [
                         'name' => $productName,
                         'unit' => $productUnit,
-                        'quantity' => $productQuantity
+                        'quantity' => $productQuantity,
+                        'note' => $productNote
                     ];
                 }
             } else {
                 $consolidatedProducts[] = [
                     'name' => $productName,
                     'unit' => $productUnit,
-                    'quantity' => $productQuantity
+                    'quantity' => $productQuantity,
+                    'note' => $productNote
                 ];
             }
         }
@@ -475,6 +479,6 @@ class ControllerReportVendorOrders extends Controller {
 //        echo "<pre>";print_r($data['products']);die;
 
         $this->load->model('report/excel');
-        $this->model_report_excel->download_delivery_sheet_excel($data);
+        $this->model_report_excel->download_consolidated_order_sheet_excel($data);
     }
 }
