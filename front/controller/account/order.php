@@ -229,6 +229,13 @@ class ControllerAccountOrder extends Controller {
 		} else {
 			$order_id = 0;
 		}
+		if(is_numeric($order_id) == false){
+			$order_id = base64_decode(trim($order_id));
+			$order_id = preg_replace('/[^A-Za-z0-9\-]/', '', $order_id);
+			$this->request->get['order_id'] = $order_id;
+			//$this->response->redirect($this->url->link('account/order/info', 'order_id=' . $order_id, 'SSL'));
+		}
+
 		$data['kondutoStatus'] = $this->config->get('config_konduto_status');
 		
 		$data['konduto_public_key'] = $this->config->get('config_konduto_public_key');

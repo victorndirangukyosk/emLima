@@ -694,7 +694,7 @@ if($item[1]==0)
 
     public function getVendorOrderReplace($data) {
         $emailTemplate = $this->getEmailTemplate($data['template_id']);
-
+        $data['order_href'] = $this->maskingOrderDetailUrl($data['order_href']);
         $log = new Log('error.log');
 
         $log->write('in getVendorOrderReplace');
@@ -1038,12 +1038,14 @@ if($item[1]==0)
     }
 
     public function getOrderAllReplace($data) {
+        
         $emailTemplate = $this->getEmailTemplate($data['template_id']);
-
+        $data['order_href'] = $this->maskingOrderDetailUrl($data['order_href']);
         $log = new Log('error.log');
 
         $log->write('in getOrderAllReplace');
-        
+        //$log->write('in $dathref'.$data['order_href']);
+        //die;
         
 
         foreach ($data as $dataKey => $dataValue) {
@@ -2699,4 +2701,13 @@ if($item[1]==0)
         }
     }
 
+
+    public function maskingOrderDetailUrl($link){
+        $parts = parse_url($link);
+        parse_str($parts['query'], $query);
+        $orderId =  $query['order_id'];
+        $decodedOrderId = base64_encode('     '.$query['order_id'].'     ');
+        $maskedhref = $this->url->link('account/order/info','order_id=' . $decodedOrderId);
+        return $maskedhref;
+    }
 }
