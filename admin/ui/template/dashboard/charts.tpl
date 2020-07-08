@@ -11,10 +11,15 @@
             <li class="btn btn-default" id="month"><?php echo $text_month; ?></li>
             <li class="btn btn-default " id="year"><?php echo $text_year; ?></li>
           </div>
-          <div id="reportrange" class="pull-right" style="background: #fff; cursor: pointer; padding: 0px 10px; border: 1px solid #ccc; font-weight: normal;">
+           <div class="pull-right" >
+                    <button style="height:26px" type="button" onclick="excel();" data-toggle="tooltip" title="" class="btn btn-success pull-right" data-original-title="Download Excel"><i class="fa fa-download"></i></button>
+
+            </div>
+          <div id="reportrange" class="pull-right" style="background: #fff; cursor: pointer; padding: 0px 10px; border: 1px solid #ccc; font-weight: normal;margin-right:20px;">
             <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
             <span></span> <b class="caret"></b>
           </div>
+           
       </div>
   </div>
   <div class="panel-body">
@@ -925,3 +930,72 @@ function rewards() {
     });
 }
 </script>
+
+
+<script type="text/javascript"> 
+ 
+
+function excel() {
+ //alert( $('#sales_score').html()); 
+
+
+    url = 'index.php?path=dashboard/charts/export_excel&token=<?php echo $token; ?> '; 
+    url=url.trim();
+
+                url += '&start_date=' + encodeURIComponent(start_date); 
+                url += '&end_date=' + encodeURIComponent(end_date);
+            
+
+            var ss = $('#sales_score').html();
+
+            if ( ss!= '') {
+                url += '&ss=' + encodeURIComponent(ss);
+            }
+
+ var os = $('#orders_score').html();
+
+            if ( os!= '') {
+                url += '&os=' + encodeURIComponent(os);
+            }
+
+
+             var cs = $('#customers_score').html();
+
+            if ( cs!= '') {
+                url += '&cs=' + encodeURIComponent(cs);
+            }
+
+
+             var bs = $('#bookedsales_score').html();
+
+            if ( bs!= '') {
+                url += '&bs=' + encodeURIComponent(bs);
+            }
+
+
+             var cos = $('#createdorders_score').html();
+
+            if ( cos!= '') {
+                url += '&cos=' + encodeURIComponent(cos);
+            }
+
+
+             var cns = $('#cancelledorders_score').html();
+
+            if ( cns!= '') {
+                url += '&cns=' + encodeURIComponent(cns);
+            }
+            
+  if(url.indexOf("gif")>-1)
+  {
+            //alert("Please wait ,until the data is loaded and then again click download");
+             alert("Please try again");
+  }
+  else{
+        location = url;
+  }
+    
+   
+}
+
+ </script>
