@@ -406,8 +406,9 @@ class ModelAssetsProduct extends Model {
 
 					
 			//$key = base64_encode( serialize( array( 'product_store_id' => (int) $r['product_store_id'], 'store_id'=>($this->session->data['config_store_id'])  ) ) );
-			  $key = base64_encode(serialize(array('product_store_id' => (int)$r['product_store_id'], 'store_id' => $this->session->data['config_store_id'])));
+			//  $key = base64_encode(serialize(array('product_store_id' => (int)$r['product_store_id'], 'store_id' => $this->session->data['config_store_id'])));
             //$key = base64_encode( serialize( array( 'product_store_id' => (int) $product_info['product_store_id'], 'store_id'=>($this->session->data['config_store_id']) ? $this->session->data['config_store_id'] : $store_id ) ) );
+            $key = base64_encode( serialize( array( 'product_store_id' => (int) $r['product_store_id'], 'store_id'=> $store_id ) ) );
 			
 			$r['key']=$key ;
 			if ( isset( $this->session->data['cart'][$key] ) ) {

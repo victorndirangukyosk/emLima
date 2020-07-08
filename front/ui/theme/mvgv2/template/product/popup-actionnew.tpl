@@ -44,7 +44,7 @@
 </div>
 <div class="qtybtns-addbtnd addcart-block" id="add-btn-container">
  <input type="text" class="input-cart-qty" id="cart-qty-<?= $product['product_store_id'] ?>-<?= $product['store_product_variation_id'] ?>" value="<?php if($product['qty_in_cart']>0){echo $product['qty_in_cart'];}?>" placeholder="Add Qty">
- <a id="AtcButton-id-<?= $product['product_store_id'] ?>-<?= $product['store_product_variation_id'] ?>" style="<?php if($product['qty_in_cart']>0){echo "background-color:#ea7128";}?>" class="AtcButton__container___1RZ9c AtcButton__with_counter___3YxLq atc_<?= $product['product_store_id'] ?> AtcButton__small___1a1kH" >
+ <a id="AtcButton-id-<?= $product['store_product_variation_id'] ?>" style="<?php if($product['qty_in_cart']>0){echo "background-color:#ea7128";}?>" class="AtcButton__container___1RZ9c AtcButton__with_counter___3YxLq atc_ AtcButton__small___1a1kH" >
  <span data-action="<?= $product['qty_in_cart'] ? 'update' : 'add'; ?>"
        data-key='<?= $product["key"] ?>'
        class="AtcButton__button_text___VoXuy unique_add_button<?= $product['product_store_id'] ?>-<?= $product['store_product_variation_id'] ?>"
@@ -132,21 +132,27 @@ $(document).delegate('.product-variation', 'change', function() {
 
     // TODO: Change trailing -0 to variations_id?
     const newQuantityInputId = 'cart-qty-' + newProductId + '-0';
+   //const newcartId = 'AtcButton-id-' + newProductId + '-0';
      $('#content-container').html('KES ' +newSpecial);
      //$('#content-container').html('KES '  +qty_in_cart1);
  
     let dataHolder = $('#add-cart-btnnew');
      let productQuantityInput = $('.input-cart-qty');    
+     //let newcartcontrol = $('.AtcButton__container___1RZ9c AtcButton__with_counter___3YxLq atc_ AtcButton__small___1a1kH');    
+    // newcartcontrol.attr('id', newcartId);
+ let newcartId = $('#AtcButton-id-0');  
     if(qty_in_cart1>0)
     {
     productQuantityInput.val(qty_in_cart1); 
     dataHolder.attr('data-action', 'update');
+     newcartId.attr('style','background-color:#ea7128');
 
     }
     else{
     
     productQuantityInput.val(''); 
     dataHolder.attr('data-action', 'add');
+      newcartId.attr('style','');
 
     }    
      productQuantityInput.attr('id', newQuantityInputId);

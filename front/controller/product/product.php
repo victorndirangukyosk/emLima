@@ -843,8 +843,10 @@ class ControllerProductProduct extends Controller {
 			}
      		//get qty in cart
             //$key = base64_encode( serialize( array( 'product_store_id' => (int) $product_info['product_store_id'], 'store_id'=>$this->session->data['config_store_id'] ) ) );
-            $key = base64_encode( serialize( array( 'product_store_id' => (int) $product_info['product_store_id'], 'store_id'=>($this->session->data['config_store_id']) ? $this->session->data['config_store_id'] : $store_id ) ) );
-            $s_price = 0;
+           // $key = base64_encode( serialize( array( 'product_store_id' => (int) $product_info['product_store_id'], 'store_id'=>($this->session->data['config_store_id']) ? $this->session->data['config_store_id'] : $store_id ) ) );
+		   
+            $key = base64_encode( serialize( array( 'product_store_id' => (int) $product_info['product_store_id'], 'store_id'=> $store_id ) ) );
+			$s_price = 0;
             $o_price = 0;
             
             if ( !$this->config->get( 'config_inclusiv_tax' ) ) {
