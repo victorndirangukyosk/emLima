@@ -11,14 +11,15 @@
             <li class="btn btn-default" id="month"><?php echo $text_month; ?></li>
             <li class="btn btn-default " id="year"><?php echo $text_year; ?></li>
           </div>
-          <div id="reportrange" class="pull-right" style="background: #fff; cursor: pointer; padding: 0px 10px; border: 1px solid #ccc; font-weight: normal;">
+           <div class="pull-right" >
+                    <button style="height:26px" type="button" onclick="excel();" data-toggle="tooltip" title="" class="btn btn-success pull-right" data-original-title="Download Excel"><i class="fa fa-download"></i></button>
+
+            </div>
+          <div id="reportrange" class="pull-right" style="background: #fff; cursor: pointer; padding: 0px 10px; border: 1px solid #ccc; font-weight: normal;margin-right:20px;">
             <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
             <span></span> <b class="caret"></b>
           </div>
-            <div class="pull-right">
-                    <button type="button" onclick="excel();" data-toggle="tooltip" title="" class="btn btn-success pull-right" data-original-title="Download Excel"><i class="fa fa-download"></i></button>
-
-            </div>
+           
       </div>
   </div>
   <div class="panel-body">
