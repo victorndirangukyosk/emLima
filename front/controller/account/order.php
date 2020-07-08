@@ -219,6 +219,7 @@ class ControllerAccountOrder extends Controller {
 
 
 	public function info() {
+		$redirectNotLogin = true;
 		$this->load->language('account/order');
 		$this->load->language('account/return');
 
@@ -233,6 +234,7 @@ class ControllerAccountOrder extends Controller {
 			$order_id = base64_decode(trim($order_id));
 			$order_id = preg_replace('/[^A-Za-z0-9\-]/', '', $order_id);
 			$this->request->get['order_id'] = $order_id;
+			$redirectNotLogin = false;
 			//$this->response->redirect($this->url->link('account/order/info', 'order_id=' . $order_id, 'SSL'));
 		}
 
@@ -242,15 +244,17 @@ class ControllerAccountOrder extends Controller {
 		
 		$this->document->setTitle($this->language->get('heading_title'));
 		
-		if (!$this->customer->isLogged()) {
+		if (!$this->customer->isLogged() && ($redirectNotLogin == true)) {
 			$this->session->data['redirect'] = $this->url->link('account/order/info', 'order_id=' . $order_id, 'SSL');
-
 			$this->response->redirect($this->url->link('account/login', '', 'SSL'));
 		}
 
 		$this->load->model('account/order');
-
-		$order_info = $this->model_account_order->getOrder($order_id);
+        if($redirectNotLogin == false){
+		   $order_info = $this->model_account_order->getOrder($order_id,true);
+		}else{
+			$order_info = $this->model_account_order->getOrder($order_id,true);
+		}
 		//echo "<pre>";print_r($order_info);die;
 
 		$data['cashback_condition'] = $this->language->get('cashback_condition');
