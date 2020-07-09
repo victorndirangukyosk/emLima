@@ -1,3 +1,7 @@
+
+
+
+
 <?php echo $header; ?><?php echo $column_left; ?>
 <div id="content">
   <div class="page-header">
@@ -176,7 +180,8 @@
                     <?php } else { ?>
                     <input type="checkbox" name="selected[]" value="<?php echo $customer['customer_id']; ?>" />
                     <?php } ?></td>
-                  <td class="text-left"><?php echo $customer['name']; ?></td>
+                  <td class="text-left"><?php echo $customer['name']; ?>
+                   <br/> <?php echo $customer['company_name']  ; ?></td>
                   <td class="text-left"><?php echo $customer['email']; ?></td>
                   <td class="text-left"><?php echo $customer['telephone']; ?></td>
                   <td class="text-left"><?php echo $customer['customer_group']; ?></td>

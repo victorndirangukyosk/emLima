@@ -540,11 +540,16 @@ class ControllerSaleCustomer extends Controller {
             }
 
             $country_code = '+' . $this->config->get('config_telephone_code');
-
+            if ($result['company_name']) {
+                $result['company_name'] = " (" . $result['company_name'] . ")";
+            } else {
+                // $result['company_name'] = "(NA)";
+            }
 
             $data['customers'][] = array(
                 'customer_id' => $result['customer_id'],
                 'name' => $result['name'],
+                'company_name' =>  $result['company_name']  ,
                 'email' => $result['email'],
                 'telephone' =>$country_code . $result['telephone'],
                 'customer_group' => $result['customer_group'],
