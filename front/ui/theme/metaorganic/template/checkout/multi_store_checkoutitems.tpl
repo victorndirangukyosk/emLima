@@ -86,7 +86,7 @@
      <div style="font-size:13px;">( <?= $product['product_note']?> )</div> 
      <?php } ?>
     </td>
-    <!--<td class="a-left hidden-table"  style="width:400px">
+    <!--<td class="a-left hidden-table"  style="width:300px">
      <span style="font-size:13px;"><?= $product['product_note']?></span> 
     </td>-->
   
@@ -100,9 +100,9 @@
 
                     </td>
 
-                     <td class="a-right hidden-table">
+                     <td class="a-right hidden-table"  style="width:150px">
                             <span class="cart-price">
-                                                <span class="price font-bold"><?= $product['unit'] ?></span>                
+                                                <span style="font-size:13px;" class="font-bold"><?= $product['unit'] ?></span>                
             </span>
 
 
