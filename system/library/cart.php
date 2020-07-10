@@ -500,21 +500,122 @@ class Cart {
         $log = new Log('error.log');
         $log->write("cart add");
         $log->write($product);
+        if( $produce_type==null)
+        {
+
+            if ((int) $qty && ((int) $qty > 0)) {
+                if (!isset($this->session->data['cart'][$key])) {
+                    $this->session->data['cart'][$key]['quantity'] = (int) $qty;
+                } else {
+                    $this->session->data['cart'][$key]['quantity'] += (int) $qty;
+                }
+    
+                //$this->session->data['cart'][$key]['ripe'] =  $ripe;
+                $this->session->data['cart'][$key]['product_note'] =  $product_note;  
+     
+                //$this->session->data['cart'][$key]['produce_type'] =  $produce_type;
+            }
+    
+    
+        }   
+       
+        else    {
 
         if ((int) $qty && ((int) $qty > 0)) {
             if (!isset($this->session->data['cart'][$key])) {
+
+                $this->session->data['cart'][$key]['produce_type'][0]['type'] = $produce_type;
+                $this->session->data['cart'][$key]['produce_type'][0]['value'] = $qty;
+               
                 $this->session->data['cart'][$key]['quantity'] = (int) $qty;
+
+               
             } else {
+                if (!isset($this->session->data['cart'][$key]['produce_type'] )) {
+                    $this->session->data['cart'][$key]['produce_type'][0]['type'] = $produce_type;
+                    $this->session->data['cart'][$key]['produce_type'][0]['value'] = $qty;
                 $this->session->data['cart'][$key]['quantity'] += (int) $qty;
+
+
+                }
+                else{
+
+                    $preProduceTypes=  $this->session->data['cart'][$key]['produce_type'];
+
+
+                               $exists=false;   
+                               $oldquantity= $this->session->data['cart'][$key]['quantity'];  
+                               $i=0;       
+                        foreach ( $preProduceTypes as $pt ) {                           
+                            if($pt['type'] == $produce_type)
+                            {
+
+                                
+                                $exists=true;                                   
+                               $oldtypequantity= $pt['value'];                              
+                               $pt['value']=$qty;
+                               $preProduceTypes[$i]['value']=$qty;
+                               $newquantity=$oldquantity- $oldtypequantity +$qty;
+                               
+                            }
+                            $i++;
+                        }
+                        if( $exists==false)
+                        {
+                            $this->session->data['cart'][$key]['produce_type'][1]['type'] = $produce_type; 
+                            $this->session->data['cart'][$key]['produce_type'][1]['value'] = $qty; 
+                            $newquantity=$oldquantity +$qty;
+
+                            $this->session->data['cart'][$key]['quantity'] = (int) $newquantity;
+                        }
+                        else{
+                            $this->session->data['cart'][$key]['produce_type']  = $preProduceTypes; 
+                            $this->session->data['cart'][$key]['quantity'] = (int) $newquantity;
+                        }
+
+
+                     
+                            
+              //$data['results'][] = $row;
+                        
+
+
+                
+
+
+
+                }
+
+
             }
-
-            //$this->session->data['cart'][$key]['ripe'] =  $ripe;
-            $this->session->data['cart'][$key]['product_note'] =  $product_note;
-            $this->session->data['cart'][$key]['produce_type'] =  $produce_type;
-
-
         }
 
+
+            // if ((int) $qty && ((int) $qty > 0)) {
+            //     if (!isset($this->session->data['cart'][$key])) {
+            //         $this->session->data['cart'][$key]['quantity'] = (int) $qty;
+            //     } else {
+            //         $this->session->data['cart'][$key]['quantity'] += (int) $qty;
+            //     }
+    
+            //     //$this->session->data['cart'][$key]['ripe'] =  $ripe;
+            //     $this->session->data['cart'][$key]['product_note'] =  $product_note;
+    
+    
+            
+    
+    
+            // //   if()
+            // //   {
+            //      $this->session->data['cart'][$key]['produce_type'] =  $produce_type.'--'.$qty;
+            // //   }
+    
+    
+            // }
+    
+        }
+
+       
         return $key;
     }
 

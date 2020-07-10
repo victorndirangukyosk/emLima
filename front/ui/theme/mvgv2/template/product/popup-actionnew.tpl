@@ -1,4 +1,8 @@
+
  
+
+  
+  
   <div class="_2D2lC">
                                                             <div class="price-popup" id="content-container">
                                                                  <?= "KES " . $product['variations'][0]['special_price'];?></div>
@@ -24,12 +28,18 @@
 												  if(count($product['produce_type'])>0){?>
 												  <div class="variation-selector-container" style="width: 250px;">
                                                       <p class="variations-title" style="margin-left: -10px; display: none;"> variants</p>
-                                                      <select name="produce-type" class="produce-type">
-													  <option value=""> Select Produce Type </option>
-                                                      <?php foreach($product['produce_type'] as $type) { ?>
-                                                      <option value="<?php echo $type; ?>">
-                                                      <?php echo $type; ?>
+                                                      <select name="produce-type" class="produce-type" data-defaultquantity="<?php echo $product['qty_in_cart']?>">
+													  <!--<option value="" data-defaultquantity="<?php echo $product['qty_in_cart']?>"> Select Produce Type </option>-->
+                                                      <?php foreach($product['produce_type'] as $type) { if($type['value']>0) { ?>
+                                                      <option value="<?php echo $type['type']; ?>" selected   datavalue="<?php echo $type['value']; ?>">
+                                                      <?php echo $type['type']; ?>  
                                                       </option>
+                                                        <?php } else { ?>
+                                                          
+                                                    <option value="<?php echo $type['type']; ?>"    datavalue="<?php echo $type['value']; ?>">
+                                                      <?php echo $type['type']; ?> 
+                                                      </option>
+                                                            <?php } ?>
                                                       <?php } ?>
                                                       </select>
                                                   </div>
@@ -52,6 +62,7 @@
        data-store-id="<?= ACTIVE_STORE_ID ?>"
        data-variation-id="<?= $product['store_product_variation_id'] ?>"
        data-id="<?= $product['product_store_id'] ?>"
+       data-producetype-id=""       
        style="display: <?= $product['qty_in_cart'] ? 'block' : 'block'; ?>"  data-dismiss="modal">
  <i class="fas fa-cart-plus"></i>
  </span>
@@ -114,10 +125,24 @@
 
 <script>
 
+ 
+
 $(function() {
     $("select.product-variation").prop('disabled', function() {
         return $('option', this).length < 2;
     });
+    if($(".produce-type"). length)
+    {
+   $optionvalue=$('.produce-type option:selected').attr("datavalue");
+ // alert(optionvalue);
+   // $quantity= $('.produce-type option[value=optionvalue]').attr("datavalue");
+     //alert($quantity); 
+    let productQuantityInput = $('.input-cart-qty'); 
+     productQuantityInput.val($optionvalue); 
+      let dataHolder = $('#add-cart-btnnew');
+     dataHolder.attr('data-action', 'add'); 
+
+    }
 });
 
 
@@ -160,8 +185,62 @@ $(document).delegate('.product-variation', 'change', function() {
     dataHolder.attr('data-id', newProductId);
     dataHolder.attr('data-key', dataKey);
     
+     if($(".produce-type"). length)
+    {
+         dataHolder.attr('data-action', 'add');
+    }
 
 
 });
+
+
+
+$(document).delegate('.produce-type', 'change', function() {
+
+     
+    const newProduceTypeId = $(this).children("option:selected").val(); 
+    //alert(newProduceTypeId);
+    const oldquantity = $(this).children("option:selected").attr('datavalue');
+   // const mainquantity = $(this).children("option:selected").attr('data-defaultquantity');
+    const mainquantity = $('.produce-type').attr('data-defaultquantity');
+    //alert(mainquantity);
+
+    let dataHolder = $('#add-cart-btnnew');  
+    
+    let productQuantityInput = $('.input-cart-qty');   
+    
+    let newcartId = $('#AtcButton-id-0'); 
+    if(newProduceTypeId!="" && newProduceTypeId !=null)
+    {
+
+    if(oldquantity>0)   
+    {
+    productQuantityInput.val(oldquantity); 
+    // dataHolder.attr('data-action', 'update');
+    newcartId.attr('style','background-color:#ea7128');
+     }
+     else{
+    
+     productQuantityInput.val(''); 
+     //dataHolder.attr('data-action', 'add');
+     newcartId.attr('style','');
+
+     }    
+     dataHolder.attr('data-action', 'add'); 
+    }
+    else{
+         alert('asd');
+        productQuantityInput.val(mainquantity); 
+        if(mainquantity>0)
+        dataHolder.attr('data-action', 'update');
+        else
+        dataHolder.attr('data-action', 'add');
+
+    }
+    
+
+
+});
+
 </script>
 
