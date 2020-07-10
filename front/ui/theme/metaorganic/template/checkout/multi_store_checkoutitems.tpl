@@ -82,6 +82,17 @@
     <td class="image hidden-table"><img src="<?= $product['thumb'] ?>" width="75" alt=""></td>
     <td class="a-left hidden-table"  style="width:400px">
      <span ><?= $product['name']?></span> 
+<div style="font-size:13px;">
+      <?php  $fpt ='';
+       foreach ($product['produce_type'] as $pt) {
+           if($pt['type']!= null)
+       $fpt.=' '.  $pt['type'].'-'.$pt['value'] ;
+        }    
+         ?><?= $fpt?></div> 
+     <?php if(isset($product['product_note']) && ($product['product_note'] != null) && ($product['product_note'] != 'null')){?>
+     <div style="font-size:13px;">( <?= $product['product_note']?> )</div> 
+     <?php } ?>
+
      <?php if(isset($product['product_note']) && ($product['product_note'] != null) && ($product['product_note'] != 'null')){?>
      <div style="font-size:13px;">( <?= $product['product_note']?> )</div> 
      <?php } ?>

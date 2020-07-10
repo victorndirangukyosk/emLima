@@ -45,6 +45,13 @@
     		                    <div class="col-md-8 col-sm-8 nopl col-xs-8">
     		                        <div class="mycart-product-info">
     		                            <h3> <?php echo $product['name']; ?> </h3>
+                                        <div style="font-size:13px;">
+                                                <?php  $fpt ='';
+                                                foreach ($product['produce_type'] as $pt) {
+                                                    if($pt['type']!= null)
+                                                $fpt.=' '.  $pt['type'].'-'.$pt['value'] ;
+                                                    }    
+                                                    ?><?= $fpt?></div> 
     		                            <p class="product-info">
 
                                             <span class="small-info"><?php echo ( isset($product['unit']) ? $product['unit'] : ''); ?></span>

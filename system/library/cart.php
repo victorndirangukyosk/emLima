@@ -59,6 +59,7 @@ class Cart {
                 //echo "<pre>";print_r($product);die;
 
                 $product_store_id = $product['product_store_id'];
+                $produce_type = $this->session->data['cart'][$keys]['produce_type'];
 
                 $stock = true;
                 
@@ -192,7 +193,8 @@ class Cart {
                         'width' => 0,
                         'height' => 0,
                         'length_class_id' => 0,
-                        'recurring' => false
+                        'recurring' => false,
+                        'produce_type' => $produce_type
                     );
 
 
@@ -499,9 +501,11 @@ class Cart {
 
         $log = new Log('error.log');
         $log->write("cart add");
-        $log->write($product);
-        if( $produce_type==null)
-        {
+        $log->write($produce_type);
+
+        if(is_null($produce_type))
+        { 
+            $log->write("cart add123");
 
             if ((int) $qty && ((int) $qty > 0)) {
                 if (!isset($this->session->data['cart'][$key])) {
@@ -510,16 +514,16 @@ class Cart {
                     $this->session->data['cart'][$key]['quantity'] += (int) $qty;
                 }
     
-                //$this->session->data['cart'][$key]['ripe'] =  $ripe;
-                $this->session->data['cart'][$key]['product_note'] =  $product_note;  
-     
-                //$this->session->data['cart'][$key]['produce_type'] =  $produce_type;
+                $this->session->data['cart'][$key]['product_note'] =  $product_note;       
+                $this->session->data['cart'][$key]['produce_type'] =  null;
             }
     
     
         }   
        
-        else    {
+        else    
+        {
+             $log->write("cart add456");
 
         if ((int) $qty && ((int) $qty > 0)) {
             if (!isset($this->session->data['cart'][$key])) {
@@ -562,8 +566,10 @@ class Cart {
                         }
                         if( $exists==false)
                         {
-                            $this->session->data['cart'][$key]['produce_type'][1]['type'] = $produce_type; 
-                            $this->session->data['cart'][$key]['produce_type'][1]['value'] = $qty; 
+                            $count= count($this->session->data['cart'][$key]['produce_type']);
+                            //$count= $count+1;
+                            $this->session->data['cart'][$key]['produce_type'][$count]['type'] = $produce_type; 
+                            $this->session->data['cart'][$key]['produce_type'][$count]['value'] = $qty; 
                             $newquantity=$oldquantity +$qty;
 
                             $this->session->data['cart'][$key]['quantity'] = (int) $newquantity;
@@ -590,29 +596,6 @@ class Cart {
             }
         }
 
-
-            // if ((int) $qty && ((int) $qty > 0)) {
-            //     if (!isset($this->session->data['cart'][$key])) {
-            //         $this->session->data['cart'][$key]['quantity'] = (int) $qty;
-            //     } else {
-            //         $this->session->data['cart'][$key]['quantity'] += (int) $qty;
-            //     }
-    
-            //     //$this->session->data['cart'][$key]['ripe'] =  $ripe;
-            //     $this->session->data['cart'][$key]['product_note'] =  $product_note;
-    
-    
-            
-    
-    
-            // //   if()
-            // //   {
-            //      $this->session->data['cart'][$key]['produce_type'] =  $produce_type.'--'.$qty;
-            // //   }
-    
-    
-            // }
-    
         }
 
        
