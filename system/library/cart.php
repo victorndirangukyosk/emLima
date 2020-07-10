@@ -503,7 +503,7 @@ class Cart {
         $log->write("cart add");
         $log->write($produce_type);
 
-        if(is_null($produce_type))
+        if($produce_type==null || $produce_type=='null')
         { 
             $log->write("cart add123");
 
@@ -579,7 +579,7 @@ class Cart {
                             $this->session->data['cart'][$key]['quantity'] = (int) $newquantity;
                         }
 
-
+                       
                      
                             
               //$data['results'][] = $row;
@@ -595,9 +595,9 @@ class Cart {
 
             }
         }
-
+        $this->session->data['cart'][$key]['product_note'] =  $product_note;
         }
-
+         
        
         return $key;
     }
