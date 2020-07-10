@@ -417,8 +417,8 @@ $(document).delegate('#add-cart-btnnew', 'click', function() {
         }
 
         else if($action == 'add'){
-//alert($produce_type);
-            cart.updateProduceType($key,$quantity,$produce_type); 
+ //alert($produce_type);
+            cart.update($key,$quantity,'',$produce_type); 
             $('#cart-qty-'+$product_id+'-'+$variation_id).val($quantity);
             if($newquantityvalue>0)
             {
