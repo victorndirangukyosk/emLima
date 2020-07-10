@@ -48,7 +48,7 @@
                                         <div style="font-size:13px;">
                                                 <?php  $fpt ='';
                                                 foreach ($product['produce_type'] as $pt) {
-                                                    if($pt['type']!= null)
+                                                    if($pt['type']!= null && $pt['type']!= 'null' )
                                                 $fpt.=' '.  $pt['type'].'-'.$pt['value'] ;
                                                     }    
                                                     ?><?= $fpt?></div> 
