@@ -630,8 +630,10 @@ class Cart {
         if ((int) $qty && ((int) $qty > 0) && isset($this->session->data['cart'][$key])) {
             $this->session->data['cart'][$key]['quantity'] = (int) $qty;
         } else {
+           
             $this->remove($key);
         }
+           
         
         if ((int) $qty && ((int) $qty > 0) ) {
             $this->session->data['temp_cart'][$key]['quantity'] = (int) $qty;
@@ -641,6 +643,39 @@ class Cart {
         } else {
             //$this->session->data['temp_cart'][$key] = (int) $qty;
         }   
+    }
+
+
+
+    
+
+    public function updateProduceType($key, $qty,$produce_type) {
+        
+        
+        $log->write("test123");
+        $log->write($produce_type);
+                $preProduceTypes=  $this->session->data['cart'][$key]['produce_type'];                
+                $oldquantity= $this->session->data['cart'][$key]['quantity'];  
+                $i=0;       
+         foreach ( $preProduceTypes as $pt ) {                           
+             if($pt['type'] == $produce_type)
+             {                 
+
+                $oldtypequantity= $pt['value'];                              
+                $pt['value']=$qty;
+                $preProduceTypes[$i]['value']=$qty;
+                $newquantity=$oldquantity- $oldtypequantity +$qty;
+             }
+             $i++;
+         }
+        
+             $this->session->data['cart'][$key]['produce_type']  = $preProduceTypes; 
+             $this->session->data['cart'][$key]['quantity'] = (int) $newquantity;
+        
+           
+         
+        
+         
     }
 
     public function remove($key) {        

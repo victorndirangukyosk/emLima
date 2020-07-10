@@ -921,6 +921,7 @@ class ControllerProductProduct extends Controller {
 			foreach ( $producetypes as $pt ) {  
 			                         
 				$producetypesupdated[$i]['type']=$pt;
+				$producetypesupdated[$i]['value']=0;
 
 				foreach ( $this->session->data['cart'][$key]['produce_type'] as $type )
 				{

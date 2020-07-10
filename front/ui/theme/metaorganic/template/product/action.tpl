@@ -17,7 +17,7 @@
  <i class="fas fa-cart-plus"></i>
  </span>
  </a>
- <span id="flag-qty-id-<?= $product['product_store_id'] ?>-<?= $product['store_product_variation_id'] ?>" style="padding:5px;display: <?= $product['qty_in_cart'] ? 'block' : 'none'; ?>">  items added in cart <i class="fas fa-flag"></i></span>
+ <span id="flag-qty-id-<?= $product['product_store_id'] ?>-<?= $product['store_product_variation_id'] ?>" style="padding:5px;display: <?= $product['qty_in_cart'] ? 'block' : 'none'; ?>"><?php echo $product['qty_in_cart']?> items in cart <i class="fas fa-flag"></i></span>
 </div>
 
 <!--<div class="qtybtns-addbtnd addcart-block" id="add-btn-container">

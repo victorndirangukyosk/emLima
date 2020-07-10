@@ -341,6 +341,17 @@ $(document).delegate('#add-cart-btnnew', 'click', function() {
     $key = $(this).attr('data-key');
     $product_notes =  $('#product_notes').val();
     $produce_type = $('select[name="produce-type"] option:selected').val();
+    if($(".produce-type"). length)
+    {
+    $mainquantity= $('.produce-type').attr('data-defaultquantity');
+    $oldquantity = $('select[name="produce-type"] option:selected').attr('datavalue');
+    }
+    else{
+        $mainquantity=0; 
+        $oldquantity=0;
+    }
+ 
+
     //below hides 2 buttons one in popup and other in product list page
 
     //$('#add-btn[data-id="'+$product_id+'"]').removeAttr('display');
@@ -363,9 +374,8 @@ $(document).delegate('#add-cart-btnnew', 'click', function() {
     //$quantity = parseInt($(this).parent().parent().find('.middle-quantity').html());
     $quantity = $('#cart-qty-'+$product_id+'-'+$variation_id).val();
     $quantity = parseInt($quantity);
-
-    
-     
+    $newquantityvalue=0;    
+    $newquantityvalue=parseInt($mainquantity) + $quantity-parseInt($oldquantity);
      //alert($action);
     // TODO: Adding multiple variants of same product to cart? 
     if ($quantity > 0) {
@@ -374,14 +384,14 @@ $(document).delegate('#add-cart-btnnew', 'click', function() {
         cart.add($product_id, $quantity, $variation_id,$store_id,$product_notes,$produce_type);
         $(this).attr('data-action','update');
         $('#AtcButton-id-'+$product_id+'-'+$variation_id).css("background-color","#ea7128");
-        $('#flag-qty-id-'+$product_id+'-'+$variation_id).html(' items added in cart <i class="fas fa-flag"></i>');
+        $('#flag-qty-id-'+$product_id+'-'+$variation_id).html($newquantityvalue+' items in cart <i class="fas fa-flag"></i>');        
         $('#flag-qty-id-'+$product_id+'-'+$variation_id).css("display","block");
        }else{
         //cart.update($key,$quantity,$ripe); 
          cart.update($key,$quantity,$product_notes,$produce_type); 
         $('#cart-qty-'+$product_id+'-'+$variation_id).val($quantity);
         $('#AtcButton-id-'+$product_id+'-'+$variation_id).css("background-color","#ea7128");
-        $('#flag-qty-id-'+$product_id+'-'+$variation_id).html(' items added in cart <i class="fas fa-flag"></i>');
+        $('#flag-qty-id-'+$product_id+'-'+$variation_id).html($quantity+' items in cart <i class="fas fa-flag"></i>');
         $('#flag-qty-id-'+$product_id+'-'+$variation_id).css("display","block");
        }
        console.log('#popup_product_'+$product_id);
@@ -391,6 +401,7 @@ $(document).delegate('#add-cart-btnnew', 'click', function() {
     //    $('#testID').dialog('close');
        $('#testID').modal('hide');
     }else{
+
         if($action == 'update'){
             if($quantity == 0){
                 $(this).attr('data-action','add');
@@ -398,9 +409,29 @@ $(document).delegate('#add-cart-btnnew', 'click', function() {
         cart.update($key,$quantity); 
         $('#cart-qty-'+$product_id+'-'+$variation_id).val($quantity);
         $('#AtcButton-id-'+$product_id+'-'+$variation_id).css("background-color","#3baa33");
-        $('#flag-qty-id-'+$product_id+'-'+$variation_id).html(' items added in cart <i class="fas fa-flag"></i>');
+
+        $('#flag-qty-id-'+$product_id+'-'+$variation_id).html($newquantityvalue+' items in cart <i class="fas fa-flag"></i>');
+
         $('#flag-qty-id-'+$product_id+'-'+$variation_id).css("display","none");
       
+        }
+
+        else if($action == 'add'){
+//alert($produce_type);
+            cart.updateProduceType($key,$quantity,$produce_type); 
+            $('#cart-qty-'+$product_id+'-'+$variation_id).val($quantity);
+            if($newquantityvalue>0)
+            {
+            $('#AtcButton-id-'+$product_id+'-'+$variation_id).css("background-color","#ea7128");
+        $('#flag-qty-id-'+$product_id+'-'+$variation_id).html($newquantityvalue+' items in cart <i class="fas fa-flag"></i>');        
+        $('#flag-qty-id-'+$product_id+'-'+$variation_id).css("display","block");
+            }
+            else{
+                $('#AtcButton-id-'+$product_id+'-'+$variation_id).css("background-color","#3baa33");
+                $('#flag-qty-id-'+$product_id+'-'+$variation_id).html($newquantityvalue+' items in cart <i class="fas fa-flag"></i>');        
+                $('#flag-qty-id-'+$product_id+'-'+$variation_id).css("display","none");
+            }
+
         }
     }
 });
