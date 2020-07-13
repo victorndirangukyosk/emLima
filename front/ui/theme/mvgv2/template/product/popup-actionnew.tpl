@@ -138,7 +138,8 @@ $(function() {
    // $quantity= $('.produce-type option[value=optionvalue]').attr("datavalue");
      //alert($quantity); 
     let productQuantityInput = $('.input-cart-qty'); 
-     productQuantityInput.val($optionvalue); 
+    if($optionvalue>0)
+         productQuantityInput.val($optionvalue); 
       let dataHolder = $('#add-cart-btnnew');
      dataHolder.attr('data-action', 'add'); 
 

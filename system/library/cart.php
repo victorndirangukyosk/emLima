@@ -503,7 +503,7 @@ class Cart {
         $log->write("cart add");
         $log->write($produce_type);
 
-        if(is_null($produce_type))
+        if($produce_type==null || $produce_type=='null')
         { 
             $log->write("cart add123");
 
@@ -579,7 +579,7 @@ class Cart {
                             $this->session->data['cart'][$key]['quantity'] = (int) $newquantity;
                         }
 
-
+                       
                      
                             
               //$data['results'][] = $row;
@@ -595,9 +595,9 @@ class Cart {
 
             }
         }
-
+        $this->session->data['cart'][$key]['product_note'] =  $product_note;
         }
-
+         
        
         return $key;
     }
@@ -622,6 +622,8 @@ class Cart {
     }
 
     public function update($key, $qty,$product_note=null,$produce_type=null) {
+        if($produce_type==null || $produce_type=='null' )
+        {
         $this->data = array();
 
         $log = new Log('error.log');
@@ -643,6 +645,32 @@ class Cart {
         } else {
             //$this->session->data['temp_cart'][$key] = (int) $qty;
         }   
+    }
+    else{ //else will called when items are removed of type having produce type
+ 
+
+        $log = new Log('error.log');
+        $log->write("test123");
+        $log->write($produce_type);
+                $preProduceTypes=  $this->session->data['cart'][$key]['produce_type'];                
+                $oldquantity= $this->session->data['cart'][$key]['quantity'];  
+                $i=0;       
+         foreach ( $preProduceTypes as $pt ) {                           
+             if($pt['type'] == $produce_type)
+             {                 
+
+                $oldtypequantity= $pt['value'];                              
+                $pt['value']=$qty;
+                $preProduceTypes[$i]['value']=$qty;
+                $newquantity=$oldquantity- $oldtypequantity +$qty;
+             }
+             $i++;
+         }
+        
+             $this->session->data['cart'][$key]['produce_type']  = $preProduceTypes; 
+             $this->session->data['cart'][$key]['quantity'] = (int) $newquantity;
+        
+    }
     }
 
 
