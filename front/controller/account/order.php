@@ -253,7 +253,7 @@ class ControllerAccountOrder extends Controller {
         if($redirectNotLogin == false){
 		   $order_info = $this->model_account_order->getOrder($order_id,true);
 		}else{
-			$order_info = $this->model_account_order->getOrder($order_id,true);
+			$order_info = $this->model_account_order->getOrder($order_id);
 		}
 		//echo "<pre>";print_r($order_info);die;
 

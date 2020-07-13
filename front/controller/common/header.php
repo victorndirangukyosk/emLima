@@ -382,6 +382,7 @@ class ControllerCommonHeader extends Controller {
         $data['text_return'] = $this->language->get('text_return');
         $data['text_profile'] = $this->language->get('text_profile');
         $data['text_profile_info'] = 'Other Information';
+        $data['text_transactions'] = 'My Transactions';
         $data['text_credit'] = $this->language->get('text_credit');
         $data['text_download'] = $this->language->get('text_download');
         $data['text_logout'] = $this->language->get('text_logout');
@@ -397,6 +398,7 @@ class ControllerCommonHeader extends Controller {
         $data['logged'] = $this->customer->isLogged();
         $data['account'] = $this->url->link('account/account', '', 'SSL');
         $data['profile_info'] = $this->url->link('account/profileinfo', '', 'SSL');
+        $data['account_transactions'] = $this->url->link('account/transactions', '', 'SSL');
         $data['account_edit'] = $this->url->link('account/edit', '', 'SSL');
         $data['register'] = $this->url->link('account/register', '', 'SSL');
         $data['login'] = $this->url->link('account/login', '', 'SSL');
