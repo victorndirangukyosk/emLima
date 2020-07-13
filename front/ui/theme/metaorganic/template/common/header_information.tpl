@@ -174,6 +174,16 @@
                                                 <i class="fa fa-edit"></i><?= $text_profile_info ?></a>
                                             </li>
 
+                                            <!--<li role="presentation">
+                                                <?php if(strpos($account_transactions,$_SERVER["REQUEST_URI"]) !== false) { ?>
+                                                    <a href="<?= $account_transactions ?>" class="active">
+                                                <?php } else { ?>
+                                                    <a href="<?= $account_transactions ?>">
+                                                <?php } ?>
+                                                
+                                                <i class="fa fa-credit-card"></i><?= $text_transactions ?></a>
+                                            </li>-->
+
                                             <li role="presentation" >
                                                 <?php if(strpos($wishlist,$_SERVER["REQUEST_URI"]) !== false) { ?>
                                                     <a href="<?= $wishlist ?>" class="active">

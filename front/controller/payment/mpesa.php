@@ -71,7 +71,7 @@ class ControllerPaymentMpesa extends Controller {
                 
                 $BusinessShortCode = $this->config->get('mpesa_business_short_code');
                 $LipaNaMpesaPasskey = $this->config->get('mpesa_lipanampesapasskey');
-                $TransactionType = 'CustomerBuyGoodsOnline';
+                $TransactionType = 'CustomerPayBillOnline'; //'CustomerBuyGoodsOnline';
                 $CallBackURL = $this->url->link('deliversystem/deliversystem/mpesaOrderStatus', '', 'SSL');
                 //$CallBackURL = 'ces';
 
