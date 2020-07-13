@@ -44,6 +44,8 @@
     		                    </div>
     		                    <div class="col-md-8 col-sm-8 nopl col-xs-8">
     		                        <div class="mycart-product-info">
+
+                                       <a title="Remove item" class="delete-item" data-value='<?= $product["key"] ?>'  style=" background-color: #ec9f4e ;">  </a>
     		                            <h3> <?php echo $product['name']; ?> </h3>
                                         <div style="font-size:13px;">
                                                 <?php  $fpt ='';
@@ -67,6 +69,14 @@
                                             <?php } ?>  -->
                                             
                                         </p>
+
+<!--  <button type="button" class="delete_item" id="delete_item"  value='<?= $product["key"] ?>' >
+                                <span class="checkout-modal-text">Delete</span>
+                                
+                            </button>-->
+
+                          
+
                                         <div class="product-items product-price">
                                                 <div class="pro-qty-addbtn " data-variation-id="<?= $product['store_product_variation_id'] ?>" id="action_<?= $product['product_store_id'] ?>">
 
@@ -133,4 +143,146 @@
         });
         return false;
     });
+
+
+    
+
+  $('.delete-item').on('click', function(){     
+    
+var key=$(this).attr('data-value');
+ //alert(key); 
+
+ 	$.ajax({
+			url: 'index.php?path=checkout/cart/remove',
+			type: 'post',
+			data: 'key=' + key,
+			dataType: 'json',
+			beforeSend: function() {
+				//$('#cart > button').button('loading');
+			},
+			complete: function() {
+				//$('#cart > button').button('reset');
+			},			
+			success: function(json) {	
+                           // Hide for qnty Box
+				/*$qty_wrapper = $(document).find('#'+$product_store_id+'-'+$variation_id+' .middle-quantity').html($qty);
+    			 $qty_wrapper = $(document).find('.unique'+$product_store_id+'-'+$variation_id+' .middle-quantity').html($qty);
+    			 $qty_wrapper = $(document).find('.unique_middle_button'+$product_store_id+'-'+$variation_id).html($qty);
+				*/
+				 //reflact changes in list 
+                $('#action_'+json['product_id']+'[data-variation-id="'+json['variation_id']+'"] .middle-quantity').html(json['quantity']);
+                
+				if (json['location'] == 'cart-checkout') {
+					location = 'index.php?path=checkout/cart';
+				} else {
+                
+                    //update total count for mobile 
+                    $('.shoppingitem-fig').html(json['count_products']);
+                        
+					$('#cart').load('index.php?path=common/cart/info');
+
+					$('.cart-panel-content').load('index.php?path=common/cart/newInfo');
+
+					$('.cart-count').html(json['count_products']);
+                    $('.cart-total-amount').html(json['total_amount']);
+				}
+
+				$.ajax({
+			        url: 'index.php?path=common/home/cartDetails',
+			        type: 'post',
+			        dataType: 'json',
+
+			        success: function(json) {
+			            console.log(json);
+
+			            for (var key in json['store_note']) {
+	                        //alert("User " + data[key] + " is #" + key); // "User john is #234"
+	                        $('.store_note'+key).html(json['store_note'][key]);
+
+	                        console.log(json['store_note'][key]);
+	                    }
+
+			            if (json['status']) {
+			                console.log("yesz");
+			                console.log(text);
+			                $("#proceed_to_checkout").removeAttr("disabled");
+			                $("#proceed_to_checkout").attr("href", json['href']);
+			                //$("#proceed_to_checkout_button").html(json['text_proceed_to_checkout']);
+			                //$('.checkout-modal-text').html(json['text_proceed_to_checkout']);
+
+			                $("#proceed_to_checkout_button").css({ 'background-color' : '', 'border-color' : '' });
+			                $('.checkout-modal-text').html(json['text_proceed_to_checkout']);
+                        	$('.checkout-loader').hide();
+			                
+			            } else {    
+			                console.log("no frm jsz");
+			                $("#proceed_to_checkout").attr("disabled", "disabled");
+			                $("#proceed_to_checkout").removeAttr("href");
+			                //$("#proceed_to_checkout_button").html(json['amount']);
+			                //$('.checkout-modal-text').html(json['amount']);
+                        	$('.checkout-loader').hide();
+                        	$('.checkout-modal-text').html(json['text_proceed_to_checkout']);
+                        	$("#proceed_to_checkout_button").css('background-color', '#ccc');
+			                $("#proceed_to_checkout_button").css('border-color', '#ccc');
+
+                        	
+
+			            }
+			            
+			            
+			        }
+			    });
+
+			    
+
+
+			}
+		});
+});
+
 </script>
+
+<style>
+
+.delete-item:before {
+    content: "\f014";
+    font-family: FontAwesome;
+    font-size: 22px;
+    background-color: #ec9f4e !important;
+    color: white;
+}
+
+
+
+.delete-item {
+    background-color: #ec9f4e !important;
+    background-image: none;
+    color: #333;
+    cursor: pointer;
+    padding: 1px 10px ;
+    cursor: pointer;
+    text-decoration: none;    
+    transition: all 0.3s linear;
+    -moz-transition: all 0.3s linear;
+    -webkit-transition: all 0.3s linear;
+    border: 1px #ddd solid;
+    border-radius: 999px;
+    position: absolute;
+ right: 18px;
+    top: -10px;
+}
+
+.mycart-product-info  h3{
+margin-top: 30px;
+}
+
+
+.product-quantity {
+    position: absolute;
+    left: 230px;
+    top: 45px !important;
+}
+
+
+
+</style>

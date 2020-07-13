@@ -352,7 +352,7 @@
 
  */
 
-    $('.zipcode-enter').focus();
+   // $('.zipcode-enter').focus();
 
     $('.date-dob').datepicker({
         pickTime: false,
