@@ -358,7 +358,7 @@ final class Client
     }
 
     /**
-     * Create a new Cash On Delivery order.
+     * Create a new Cash On Delivery/Corporate Account/ Cheque Payment order.
      *
      * @param integer $amount Amount in cents.
      * @param string $currency A valid currency code.

@@ -64,7 +64,7 @@ $_['label_msg']        = 'Message';
 $_['step1']	   		   = 'Free Home Delivery';
 $_['step2']	   		   = 'Best Quality Assured';
 $_['step3']	  		   = 'Store Price Guaranteed';
-$_['step4']	  		   = 'Cash on Delivery';
+$_['step4']	  		   = 'Corporate Account/ Cheque Payment';//'Cash on Delivery';
 
 //Button
 $_['button_send']      = 'Send Message';
