@@ -1996,7 +1996,7 @@ class ControllerAccountOrder extends Controller {
 	
 			foreach ($method_data as $key => $value) {
 				if($key == 'mpesa'){
-					$mpesaOnline =true;
+					$mpesaOnline = false;
 				}
 				$sort_order[$key] = $value['sort_order'];
 			}
