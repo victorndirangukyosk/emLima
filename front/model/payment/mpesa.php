@@ -88,9 +88,13 @@ class ModelPaymentMpesa extends Model {
 
 	public function getMpesaByOrderId($order_id) {
 
-		$result = $this->db->query("SELECT * FROM `" . DB_PREFIX . "mpesa_order` WHERE `order_id` = '" . $this->db->escape($order_id) . "'")->rows;
-
-		return $result;
+		$result = $this->db->query("SELECT * FROM `" . DB_PREFIX . "mpesa_order` WHERE `order_id` = '" . $this->db->escape($order_id) . "'");
+		
+		if(count($result->rows) > 0){
+			$res = $result->rows[$result->num_rows -1];
+		}
+		//echo '<pre>';print_r($res);exit;
+		return $res;
 	}
 
 	public function getMpesaByOrderIdApi($order_id) {

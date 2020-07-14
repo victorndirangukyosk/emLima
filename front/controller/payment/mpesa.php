@@ -77,10 +77,10 @@ class ControllerPaymentMpesa extends Controller {
                 $LipaNaMpesaPasskey = $this->config->get('mpesa_lipanampesapasskey');
                 $TransactionType = 'CustomerPayBillOnline'; //'CustomerBuyGoodsOnline';
                 $CallBackURL = $this->url->link('deliversystem/deliversystem/mpesaOrderStatus', '', 'SSL');
-                //$CallBackURL = 'ces';
+                //$CallBackURL = 'https://a1c6dda0aaba.ngrok.io/kwikbasket/index.php?path=deliversystem/deliversystem/mpesaOrderStatus';
 
                 $Amount = $amount;
-
+                //$Amount = 10;
                 $PartyB = $this->config->get('mpesa_business_short_code');
                 
                 $PhoneNumber = $this->config->get('config_telephone_code')."".$this->request->post['mobile'];
@@ -141,7 +141,7 @@ class ControllerPaymentMpesa extends Controller {
 
         $json['error'] = 'Transaction Failed. Please Try again.';
 
-        if ($this->session->data['payment_method']['code'] == 'mpesa' ) {
+        if ($this->session->data['payment_method']['code'] == 'mpesa' || $this->request->post['payment_method'] =='mpesa' ) {
             $this->load->language('payment/mpesa');
 
             $this->load->model('payment/mpesa');
@@ -150,6 +150,10 @@ class ControllerPaymentMpesa extends Controller {
 
             foreach ($this->session->data['order_id'] as $key => $value) {
                 $order_id = $value;
+            }
+
+            if(isset($this->request->post['order_id'])){
+                $order_id = $this->request->post['order_id'];
             }
 
             /*$mpesa= new \Safaricom\Mpesa\Mpesa('shiabWTekqy4Iod73mTmWJdD9VIhC3fl','TqNNiqllXfRqayxz','live','true');

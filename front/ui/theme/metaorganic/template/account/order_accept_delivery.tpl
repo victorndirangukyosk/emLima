@@ -286,10 +286,11 @@
 	    
 	    $('#error_msg').hide();
 	    $('#success_msg').hide();
-
+        var order_id = $('input[name="order_id"]').val();
     	$.ajax({
 	        type: 'post',
 	        url: 'index.php?path=payment/mpesa/complete',
+			data: 'payment_method=mpesa&order_id='+order_id,
             dataType: 'json',
 	        cache: false,
 	        beforeSend: function() {
@@ -309,8 +310,9 @@
 	        		
 	        		$('#success_msg').html('Payment Successfull.');
 	        		$('#success_msg').show();
-
-	        		setTimeout(function(){ location = 'http://localhost:90/kwikbasket/checkout-success'; }, 1500);
+                    setTimeout(function(){ location = '<?php echo $continue; ?>'; }, 1500);
+	        		//setTimeout(function(){ location = 'http://localhost:90/kwikbasket/checkout-success'; }, 1500);
+					
 
 	        	} else {
 
