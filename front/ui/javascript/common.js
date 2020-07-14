@@ -288,7 +288,7 @@ $.fn.liveSearch = function(option) {
 		}
 		
 		$(this).after('<ul class="dropdown-menu search-dropdown" style="padding:2px 2px 2px 2px;"></ul>');
-		$(this).siblings('ul.dropdown-menu').delegate('a', 'click', $.proxy(this.click, this)); 
+		// $(this).siblings('ul.dropdown-menu').delegate('a', 'click', $.proxy(this.click, this)); 
 		
 	});
 };
@@ -916,7 +916,8 @@ $(document).delegate('.agree', 'click', function(e) {
 	
 					for (i = 0; i < json.length; i++) {
 						if (!json[i]['category']) {
-							html += '<li data-img="' + json[i]['img'] + '" data-value="' + json[i]['value'] + '"><a href="'+json[i]['href']+'"><img height="50px" src="' + json[i]['img'] + '"/> ' + json[i]['label'] + '<br> ' +' KES   ' + json[i]['special_price'] + '  ( per ' + json[i]['unit'] + ' )</li>';
+							//html += '<li data-img="' + json[i]['img'] + '" data-value="' + json[i]['value'] + '"><a href="'+json[i]['href']+'"><img height="50px" src="' + json[i]['img'] + '"/> ' + json[i]['label'] + '<br> ' +' KES   ' + json[i]['special_price'] + '  ( per ' + json[i]['unit'] + ' )</li>';
+							html += '<li><a class="product-detail-bnt open-popup" role="button" data-store="' + json[i]['store_id'] + '" data-id="' + json[i]['product_store_id'] + '" target="_blank"  aria-label="'+ json[i]['label'] +'"><div><img height="50px" src="' + json[i]['img'] + '"/> ' + json[i]['label'] + '<br> ' +' KES   ' + json[i]['special_price'] + '  ( per ' + json[i]['unit'] + ' )</div></a></li>';
 						}
 					}
 	
@@ -954,7 +955,7 @@ $(document).delegate('.agree', 'click', function(e) {
 			}
 			
 			$(this).after('<ul class="dropdown-menu search-dropdown"></ul>');
-			$(this).siblings('ul.dropdown-menu').delegate('a', 'click', $.proxy(this.click, this));	
+			// $(this).siblings('ul.dropdown-menu').delegate('a', 'click', $.proxy(this.click, this));	
 			
 		});
 	}
@@ -978,7 +979,9 @@ $(document).delegate('.agree', 'click', function(e) {
 														href: item['href_cat'],
 														img: item['image'],
 														special_price : item['special_price'],
-														unit : item['unit']
+														product_store_id : item['product_store_id'],
+														store_id : item['store_id']
+
 												}
 											} else {
 												return {
@@ -989,7 +992,10 @@ $(document).delegate('.agree', 'click', function(e) {
 														href: item['href_cat'],
 														img: item['image'],
 														special_price : item['special_price'],
-														unit : item['unit']
+														unit : item['unit'],
+														product_store_id : item['product_store_id'],
+														store_id : item['store_id']
+
 												}
 											}
 											

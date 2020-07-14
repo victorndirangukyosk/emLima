@@ -1115,6 +1115,9 @@
                     $('.modal-wrapper').html(data);
                     $('#popupmodal').modal('show');
                 });
+
+                if($('#product_name').length)
+                $('#product_name').val('');
             });
         });
 		
