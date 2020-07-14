@@ -181,9 +181,9 @@
 </span>
 </div>
 <div class="col-md-2" style="margin-right: 2px;">
-<button type="button" id="button-confirm" data-toggle="collapse" data-loading-text="checking phone..." class="btn btn-default">PAY &amp; CONFIRM</button>
+<button type="button" id="button-confirm" data-toggle="collapse" style="width:200px;" data-loading-text="checking phone..." class="btn btn-default">PAY &amp; CONFIRM</button>
 
-<button type="button" id="button-retry" class="btn btn-default" style="display: none;"> Retry</button>
+<button type="button" id="button-retry" class="btn btn-default" style="display: none;width:200px;"> Retry</button>
 
 <button type="button" id="button-complete" data-toggle="collapse" data-loading-text="checking payment..." class="btn btn-default" style="display: none;">Confirm Payment</button>
 </div>
