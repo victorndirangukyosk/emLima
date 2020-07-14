@@ -2955,8 +2955,8 @@ class ControllerSaleOrder extends Controller
 
 
             $EditedProducts = $this->model_sale_order->getRealOrderProducts($this->request->get['order_id']);
-//             echo '<pre>';print_r($EditedProducts);exit;
             $original_products = $products = $this->model_sale_order->getOrderProducts($this->request->get['order_id']);
+            //echo '<pre>';print_r($products);exit;
 
 
             if ($this->model_sale_order->hasRealOrderProducts($this->request->get['order_id'])) {
@@ -3011,6 +3011,7 @@ class ControllerSaleOrder extends Controller
                         'name' => $original_product['name'],
                         'unit' => $original_product['unit'],
                         'product_type' => $original_product['product_type'],
+                        'produce_type' => $original_product['produce_type'],
                         'model' => $original_product['model'],
                         'option' => $option_data,
                         'quantity' => $original_product['quantity'],
@@ -3033,6 +3034,7 @@ class ControllerSaleOrder extends Controller
                             'name' => $original_product['name'],
                             'unit' => $original_product['unit'],
                             'product_type' => $original_product['product_type'],
+                            'produce_type' => $original_product['produce_type'],
                             'model' => $original_product['model'],
                             'option' => $option_data,
                             'quantity_updated' => $original_product['quantity_updated'],
@@ -3063,6 +3065,7 @@ class ControllerSaleOrder extends Controller
                         'name' => $original_product['name'],
                         'unit' => $original_product['unit'],
                         'product_type' => $original_product['product_type'],
+                        'produce_type' => $original_product['produce_type'],
                         'model' => $original_product['model'],
                         'option' => $option_data,
                         'quantity' => $original_product['quantity'],
@@ -3111,6 +3114,7 @@ class ControllerSaleOrder extends Controller
                     'name' => $product['name'],
                     'unit' => $product['unit'],
                     'product_type' => $product['product_type'],
+                    'produce_type' => $product['produce_type'],
                     'model' => $product['model'],
                     'option' => $option_data,
                     'quantity' => $product['quantity'],
