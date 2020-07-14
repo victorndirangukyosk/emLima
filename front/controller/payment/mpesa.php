@@ -33,7 +33,7 @@ class ControllerPaymentMpesa extends Controller {
         $log = new Log('error.log');
         $json['processed'] = false;
 
-        if ($this->session->data['payment_method']['code'] == 'mpesa') {
+        if ($this->session->data['payment_method']['code'] == 'mpesa' || $this->request->post['payment_method'] =='mpesa') {
             $this->load->language('payment/mpesa');
 
             $this->load->model('payment/mpesa');
@@ -41,6 +41,10 @@ class ControllerPaymentMpesa extends Controller {
             $this->load->model('checkout/order');
             foreach ($this->session->data['order_id'] as $key => $value) {
                 $order_id = $value;
+            }
+
+            if(isset($this->request->post['order_id'])){
+                $order_id = $this->request->post['order_id'];
             }
 
             $amount = 0;

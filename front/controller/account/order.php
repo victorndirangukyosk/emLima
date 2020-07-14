@@ -150,12 +150,14 @@ class ControllerAccountOrder extends Controller {
 				}
 			}
 
+			$this->load->model('sale/order');
 
 			$data['orders'][] = array(
 				'order_id'   => $result['order_id'],
 				'name'       => $result['firstname'] . ' ' . $result['lastname'],
 				'shipping_name' => $result['shipping_name'],
 				'payment_method' => $result['payment_method'],
+				'payment_transaction_id' => $this->model_sale_order->getOrderTransactionId($result['order_id']),
 				'shipping_address' => $shipping_address,
 				'order_total' => $order_total_detail,
 				'store_name' => $result['store_name'],
@@ -186,7 +188,7 @@ class ControllerAccountOrder extends Controller {
 
 		$data['pagination'] = $pagination->render();
 
-		//echo "<pre>";print_r($pagination->render());die;
+		//echo "<pre>";print_r($data['orders']);die;
 		$data['results'] = sprintf($this->language->get('text_pagination'), ($order_total) ? (($page - 1) * 10) + 1 : 0, ((($page - 1) * 10) > ($order_total - 10)) ? $order_total : ((($page - 1) * 10) + 10), $order_total, ceil($order_total / 10));
 
 		$data['continue'] = $this->url->link('account/account', '', 'SSL');
@@ -1959,6 +1961,49 @@ class ControllerAccountOrder extends Controller {
 			}
 			//echo "<pre>";print_r($data);die;
 			
+			// Payment Methods
+			$mpesaOnline = false;
+			$method_data = array();
+
+			$this->load->model('extension/extension');
+	
+			$results = $this->model_extension_extension->getExtensions('payment');
+			
+			//echo "<pre>";print_r($results);die;  
+			$recurring = $this->cart->hasRecurringProducts();
+	
+			foreach ($results as $result) {
+		  
+				if ($this->config->get($result['code'] . '_status')) {
+					$this->load->model('payment/' . $result['code']);
+	
+					$method = $this->{'model_payment_' . $result['code']}->getMethod($total);
+					
+					if ($method) {
+						if ($recurring) {
+							if (method_exists($this->{'model_payment_' . $result['code']}, 'recurringPayments') && $this->{'model_payment_' . $result['code']}->recurringPayments()) {
+								$method_data[$result['code']] = $method;
+							}
+						} else {
+							$method_data[$result['code']] = $method;
+						}
+					}
+				}
+			}
+			$sort_order = array();
+			
+			//echo "<pre>";print_r($method_data);die;  
+	
+			foreach ($method_data as $key => $value) {
+				if($key == 'mpesa'){
+					$mpesaOnline =true;
+				}
+				$sort_order[$key] = $value['sort_order'];
+			}
+			
+			//echo "<pre>===";print_r($mpesaOnline);die;  
+			array_multisort($sort_order, SORT_ASC, $method_data);
+			$data['mpesaOnline'] = $mpesaOnline;
 			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/order_accept_delivery.tpl')) {
 				$this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/order_accept_delivery.tpl', $data));
 			} else {

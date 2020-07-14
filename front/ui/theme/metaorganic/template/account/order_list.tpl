@@ -65,9 +65,25 @@
                                                     </div>
                                                 </li>
                                                 <li class="list-group-item">
-                                                    <div class="my-order-refund">
-                                                        <i class="fa fa-money"></i> <span><?= $text_refund_text_part1 ?> <strong><?= $text_refund_text_part2 ?> </strong> <?= $text_refund_text_part3 ?></span>
-                                                    </div>
+                                                  <div class="my-order-details" style="border: none !important;">
+                                                            <div class="row">
+                                                                <div class="col-md-4"><?= $text_payment_options?></div>
+                                                                <div class="col-md-4"><?php echo $order['payment_method']; ?></div>
+																<?php if ($order['payment_method'] == 'mPesa Online'){
+																	if(!empty($order['payment_transaction_id'])){
+																		$payment_status = '<span style="color:green">Success ('.$order['payment_transaction_id'].')</span>';
+																	}else{
+																		$payment_status = '<span style="color:red">Failed</span>';
+																	}
+																	
+																	if($order['status'] == 'Cancelled'){
+																	   $payment_status = '<span style="color:#'.$order['order_status_color'].'">Cancelled</span>';
+																	}
+																	?>
+																<div class="col-md-4"><?php echo $payment_status; ?></div>
+																<?php } ?>
+                                                            </div>
+                                                   </div>
                                                 </li>
                                                 <li class="list-group-item my-order-details-block">
                                                     <div class="collapse" id="<?= $order['order_id'] ?>">
@@ -95,17 +111,17 @@
                                                             </div>
                                                         </div>
                                                         
-                                                        <div class="my-order-details">
-                                                            <div class="row">
-                                                                <div class="col-md-4"><?= $text_payment_options?></div>
-                                                                <div class="col-md-8"><?php echo $order['payment_method']; ?></div>
-                                                            </div>
-                                                        </div>
+                                                        
                                                     </div>
                                                 </li> 
                                                 <li class="list-group-item">
                                                     <div class="my-order-showaddress">  
                                                         <a class="btn-link text_green" role="button" data-toggle="collapse" href="#<?= $order['order_id'] ?>" aria-expanded="false" aria-controls="<?= $order['order_id'] ?>"><?= $text_view_billing?></a>&nbsp;|&nbsp;<a class="btn-link text_green" role="button" href="<?php echo ($order['realproducts'] ? $order['real_href'] : $order['href'].'&order_status='.urlencode($order['status'])) ;?>" aria-expanded="false" aria-controls="<?= $order['order_status'] ?>"><?= $text_view_order?></a>
+                                                    </div>
+                                                </li>
+												<li class="list-group-item">
+                                                    <div class="my-order-refund" style="font-size:13px;">
+                                                        <i class="fa fa-money"></i> <span><?= $text_refund_text_part1 ?> <strong><?= $text_refund_text_part2 ?> </strong> <?= $text_refund_text_part3 ?></span>
                                                     </div>
                                                 </li>
                                             </div>
