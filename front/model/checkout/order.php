@@ -144,7 +144,10 @@ class ModelCheckoutOrder extends Model {
 
 				if (isset($data['products'])) {
 					foreach ($data['products'] as $product) {
-						$this->db->query("INSERT INTO " . DB_PREFIX . "order_product SET vendor_id='" . (int) $product['vendor_id'] . "', store_id='" . (int) $product['store_id']. "', product_type='" . $product['product_type'] . "',product_note='" . $product['product_note'] . "', general_product_id='" . $product['product_id']  . "', unit='" . $product['unit'] ."', order_id = '" . (int) $order_id . "', variation_id = '" . (int) $product['store_product_variation_id'] . "', product_id = '" . (int) $product['product_store_id'] . "', name = '" . $this->db->escape($product['name']) . "', model = '" . $this->db->escape($product['model']) . "', quantity = '" . (int) $product['quantity'] . "', price = '" . (float) $product['price'] . "', total = '" . (float) $product['total'] . "', tax = '" . (float) $product['tax'] . "', reward = '" . (int) $product['reward'] . "'");
+						$produce_type='';
+						foreach ($product['produce_type'] as $producttype) 
+							{$produce_type=$produce_type.' '.$producttype['type'].'-'.$producttype['value'];}
+						$this->db->query("INSERT INTO " . DB_PREFIX . "order_product SET vendor_id='" . (int) $product['vendor_id'] . "', store_id='" . (int) $product['store_id']. "', product_type='" . $product['product_type'] . "',product_note='" . $product['product_note'] . "', general_product_id='" . $product['product_id']  . "', unit='" . $product['unit'] ."', order_id = '" . (int) $order_id . "', variation_id = '" . (int) $product['store_product_variation_id'] . "', product_id = '" . (int) $product['product_store_id'] . "', name = '" . $this->db->escape($product['name']) . "', model = '" . $this->db->escape($product['model']) . "', quantity = '" . (int) $product['quantity'] . "', price = '" . (float) $product['price'] . "', total = '" . (float) $product['total'] . "', tax = '" . (float) $product['tax'] . "', reward = '" . (int) $product['reward'] . "', produce_type = '" . $this->db->escape($produce_type) . "'");
 					}
 				}
 				if (isset($data['totals'])) {
@@ -182,7 +185,13 @@ class ModelCheckoutOrder extends Model {
 
 				if ( isset( $data['products'] ) ) {
 					foreach ( $data['products'] as $product ) {
-						$this->db->query( "INSERT INTO " . DB_PREFIX . "order_product SET vendor_id='" . (int) $product['vendor_id'] . "', store_id='" . (int) $product['store_id'] . "', product_type='" . $product['product_type'] . "',product_note='" . $product['product_note'] . "', general_product_id='" . $product['product_id']  . "', unit='" . $product['unit'] . "', order_id = '" . (int) $order_id . "', variation_id = '" . (int) $product['store_product_variation_id'] . "', product_id = '" . (int) $product['product_store_id'] . "', name = '" . $this->db->escape( $product['name'] ) . "', model = '" . $this->db->escape( $product['model'] ) . "', quantity = '" . (int) $product['quantity'] . "', price = '" . (float) $product['price'] . "', total = '" . (float) $product['total'] . "', tax = '" . (float) $product['tax'] . "', reward = '" . (int) $product['reward'] . "'" );
+						$produce_type='';
+						foreach ($product['produce_type'] as $producttype) 
+							{
+								$produce_type=$produce_type.' '.$producttype['type'].'-'.$producttype['value'];
+							}
+
+						$this->db->query( "INSERT INTO " . DB_PREFIX . "order_product SET vendor_id='" . (int) $product['vendor_id'] . "', store_id='" . (int) $product['store_id'] . "', product_type='" . $product['product_type'] . "',product_note='" . $product['product_note'] . "', general_product_id='" . $product['product_id']  . "', unit='" . $product['unit'] . "', order_id = '" . (int) $order_id . "', variation_id = '" . (int) $product['store_product_variation_id'] . "', product_id = '" . (int) $product['product_store_id'] . "', name = '" . $this->db->escape( $product['name'] ) . "', model = '" . $this->db->escape( $product['model'] ) . "', quantity = '" . (int) $product['quantity'] . "', price = '" . (float) $product['price'] . "', total = '" . (float) $product['total'] . "', tax = '" . (float) $product['tax'] . "', reward = '" . (int) $product['reward'] . "', produce_type = '" . $this->db->escape($produce_type) . "'");
 					}
 				}
 
@@ -256,7 +265,13 @@ class ModelCheckoutOrder extends Model {
 		// Products
 		if ( isset( $data['products'] ) ) {
 			foreach ( $data['products'] as $product ) {
-				$this->db->query( "INSERT INTO " . DB_PREFIX . "order_product SET vendor_id='" . (int) $product['vendor_id'] . "', store_id='" . (int) $product['store_id'] . "', product_type='" . $product['product_type'] . "', order_id = '" . (int) $order_id . "', variation_id = '" . (int) $product['store_product_variation_id'] . "', product_id = '" . (int) $product['product_store_id'] . "', name = '" . $this->db->escape( $product['name'] ) . "', model = '" . $this->db->escape( $product['model'] ) . "', quantity = '" . (int) $product['quantity'] . "', price = '" . (float) $product['price'] . "', total = '" . (float) $product['total'] . "', tax = '" . (float) $product['tax'] . "', reward = '" . (int) $product['reward'] . "'" );
+
+				$produce_type='';
+						foreach ($product['produce_type'] as $producttype) 
+							{
+								$produce_type=$produce_type.' '.$producttype['type'].'-'.$producttype['value'];
+							}
+				$this->db->query( "INSERT INTO " . DB_PREFIX . "order_product SET vendor_id='" . (int) $product['vendor_id'] . "', store_id='" . (int) $product['store_id'] . "', product_type='" . $product['product_type'] . "', order_id = '" . (int) $order_id . "', variation_id = '" . (int) $product['store_product_variation_id'] . "', product_id = '" . (int) $product['product_store_id'] . "', name = '" . $this->db->escape( $product['name'] ) . "', model = '" . $this->db->escape( $product['model'] ) . "', quantity = '" . (int) $product['quantity'] . "', price = '" . (float) $product['price'] . "', total = '" . (float) $product['total'] . "', tax = '" . (float) $product['tax'] . "', reward = '" . (int) $product['reward'] . "', produce_type = '" . $this->db->escape($produce_type) . "'");
 			}
 		}
 

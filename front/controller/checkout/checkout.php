@@ -94,6 +94,7 @@ class ControllerCheckoutCheckout extends Controller {
                 'thumb' => $image,
                 'name' => $product['name'],
                 'product_type' => $product['product_type'],
+                'produce_type' => $product['produce_type'],
                 'unit' => $product['unit'],                    
                 'model' => $product['model'],
                 'quantity' => $product['quantity'],

@@ -1104,6 +1104,7 @@ class ControllerCheckoutConfirm extends Controller {
 		                    'name' => $product['name'],
 		                    'unit' => $product['unit'],
 							'product_type' => $product['product_type'],
+							'produce_type' => $product['produce_type'],
 							'product_note' => $product['product_note'],
 		                    'model' => $product['model'],
 		                    'option' => $option_data,
