@@ -45,7 +45,7 @@
     		                    <div class="col-md-8 col-sm-8 nopl col-xs-8">
     		                        <div class="mycart-product-info">
 
-                                       <a title="Remove item" class="delete-item" data-value='<?= $product["key"] ?>'  style=" background-color: #ec9f4e ;">  </a>
+                                       <a title="Remove item" class="delete-item" data-value='<?= $product["key"] ?>'  product_id='<?= $product["product_store_id"] ?>'  style=" background-color: #ec9f4e ;">  </a>
     		                            <h3> <?php echo $product['name']; ?> </h3>
                                         <div style="font-size:13px;">
                                                 <?php  $fpt ='';
@@ -152,6 +152,7 @@
 var key=$(this).attr('data-value');
  //alert(key); 
 
+ $product_id=$(this).attr('product_id'); 
  	$.ajax({
 			url: 'index.php?path=checkout/cart/remove',
 			type: 'post',
@@ -163,12 +164,14 @@ var key=$(this).attr('data-value');
 			complete: function() {
 				//$('#cart > button').button('reset');
 			},			
-			success: function(json) {	
+			success: function(json) { 
                            // Hide for qnty Box
 				/*$qty_wrapper = $(document).find('#'+$product_store_id+'-'+$variation_id+' .middle-quantity').html($qty);
     			 $qty_wrapper = $(document).find('.unique'+$product_store_id+'-'+$variation_id+' .middle-quantity').html($qty);
     			 $qty_wrapper = $(document).find('.unique_middle_button'+$product_store_id+'-'+$variation_id).html($qty);
 				*/
+                $('#flag-qty-id-'+$product_id+'-0').html('');
+                $('#flag-qty-id-'+$product_id+'-0').css("display","none");
 				 //reflact changes in list 
                 $('#action_'+json['product_id']+'[data-variation-id="'+json['variation_id']+'"] .middle-quantity').html(json['quantity']);
                 
@@ -225,7 +228,7 @@ var key=$(this).attr('data-value');
                         	$("#proceed_to_checkout_button").css('background-color', '#ccc');
 			                $("#proceed_to_checkout_button").css('border-color', '#ccc');
 
-                        	
+                         
 
 			            }
 			            
@@ -238,6 +241,7 @@ var key=$(this).attr('data-value');
 
 			}
 		});
+ 	
 });
 
 </script>
