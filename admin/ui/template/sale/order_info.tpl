@@ -610,7 +610,9 @@
                                     </span>
                                 <?php } ?>
                         <?php } } ?>
-							
+						
+						<br>						
+							<?php echo $product['produce_type']; ?>
 						</td>
 					  
 					  <td class="text-right"><?php echo $product['quantity']; ?></td>
