@@ -807,7 +807,7 @@ class ModelSaleOrder extends Model {
 
         if(!$query->num_rows) {
 
-            $sql = "INSERT into " . DB_PREFIX . "real_order_product SET name = '" . $this->db->escape($data['name']) . "', quantity = '" . $this->db->escape($data['quantity']) . "', price = '" . $this->db->escape($data['price']) . "', model = '" . $this->db->escape($data['model']) . "', unit = '" . $this->db->escape($data['unit'])  . "', vendor_id = '" . $data['vendor_id'] . "', store_id = '" . $data['store_id'] . "', order_id = '" . $order_id . "', product_id = '" . $product_id  . "', total = '" . $total . "'";
+            $sql = "INSERT into " . DB_PREFIX . "real_order_product SET name = '" . $this->db->escape($data['name']) . "', quantity = '" . $this->db->escape($data['quantity']) . "', price = '" . $this->db->escape($data['price']) . "', model = '" . $this->db->escape($data['model']) . "', unit = '" . $this->db->escape($data['unit'])  . "', vendor_id = '" . $data['vendor_id'] . "', store_id = '" . $data['store_id'] . "', order_id = '" . $order_id . "', product_id = '" . $product_id  . "',produce_type = '" . $data['produce_type']  . "',product_note = '" . $data['product_note']  . "', total = '" . $total . "'";
        
             $query = $this->db->query($sql);
 
@@ -847,7 +847,7 @@ class ModelSaleOrder extends Model {
 
         if(!$query->num_rows) {
 
-            $sql = "INSERT into " . DB_PREFIX . "real_order_product SET name = '" . $this->db->escape($data['name']) . "', quantity = '" . $this->db->escape($data['quantity']) . "', price = '" . $this->db->escape($data['price']) . "', model = '" . $this->db->escape($data['model']) . "', unit = '" . $this->db->escape($data['unit'])  . "', vendor_id = '" . $data['vendor_id'] . "', store_id = '" . $data['store_id'] . "', order_id = '" . $order_id . "', product_id = '" . $product_id  . "', total = '" . $total . "'";
+            $sql = "INSERT into " . DB_PREFIX . "real_order_product SET name = '" . $this->db->escape($data['name']) . "', quantity = '" . $this->db->escape($data['quantity']) . "', price = '" . $this->db->escape($data['price']) . "', model = '" . $this->db->escape($data['model']) . "', unit = '" . $this->db->escape($data['unit'])  . "', vendor_id = '" . $data['vendor_id'] . "', store_id = '" . $data['store_id'] . "', order_id = '" . $order_id . "', product_id = '" . $product_id  . "',produce_type = '" . $data['produce_type']  . "',product_note = '" . $data['product_note']  . "', total = '" . $total . "'";
        
             $query = $this->db->query($sql);
 
