@@ -5,10 +5,12 @@
                 <div class="col-md-12">
                     <div class="my-order-view-dashboard">
                         <div class="row">
-                            <!--<div class="col-md-11">
-                                <div class="back-link-block"><a href="<?php echo $continue; ?>"> <span class="back-arrow"><i class="fa fa-long-arrow-left"></i> </span> <?= $text_go_back ?></a></div>
-                            </div>-->
-							
+                            <div class="col-md-11">
+                                <div class="back-link-block"><a href="<?php echo $account; ?>"> <span class="back-arrow"><i class="fa fa-long-arrow-left"></i> </span> <?= $text_go_back ?></a></div>
+                            </div>
+							 <div class="col-md-11">
+                                <span id="top-success-msg" style="color:green"></div>
+                            </div>
                         </div>
                         <div class="row">
                             <div class="col-md-12">
@@ -155,10 +157,11 @@
 											<a onclick="accept_reject_delivery()" class="btn btn-default btn-xl btn-accept-reject" style="margin:5px;float:right" >Submit</a>
                                         </div>
                                     </div>
+									<input type="hidden" name="mpesaOnline" value="<?php echo $mpesaOnline; ?>">
 <?php if($mpesaOnline == true){?>			
-<div id="pay-confirm-order" >
+<div id="pay-confirm-order" class="row confirm_order_class" style="display:none;">
 <div class="col-md-10">
-<h2>mPesa Online</h2>
+<h2>Payment mPesa Online</h2>
 <h3 style="color: #f97900;">Please enter mpesa registered mobile number</h3>
 <div class="alert alert-danger" id="error_msg" style="margin-bottom: 7px; display: none;">
 </div>
@@ -1129,6 +1132,7 @@ __kdt.push({"post_on_load": false});
 		
     });
 	function accept_reject_delivery(){
+		   var mpesaonline = $('input[name="mpesaOnline"]').val();
 		   var error ='';
 		   var productsActionError = [];
 		   var productsActionNoteError = [];
@@ -1190,8 +1194,16 @@ __kdt.push({"post_on_load": false});
                     console.log(response);
 
                     if(response['status'] == true) {
-						alert('Delivery Process initiated!');
-                        location = redirect_url;
+						if(mpesaonline ==1){
+							$('.my-order').hide();
+							$('#pay-confirm-order').show();
+							$('span#top-success-msg').html('Delivery Process initiated! successfully!,Please make payment if want to pay online.')
+						}else{
+						 //alert('Delivery Process initiated!');
+						  $('.my-order').hide();
+						  $('span#top-success-msg').html('Delivery Process initiated! successfully!')
+                          //location = redirect_url;
+						}
                     } else {
                         alert('Something went wrong!');
                     }
@@ -1205,6 +1217,14 @@ __kdt.push({"post_on_load": false});
 <style>
 .error {
     color: red;
+}
+
+.confirm_order_class{
+	padding:20px;
+	background-color: #fff;
+	border: 1px solid #d7dcd6;
+	margin-right: 1px;
+	margin-left:1px;
 }
 </style>
 </html>

@@ -68,10 +68,11 @@
                                                   <div class="my-order-details" style="border: none !important;">
                                                             <div class="row">
                                                                 <div class="col-md-4"><?= $text_payment_options?></div>
-                                                                <div class="col-md-4"><?php echo $order['payment_method']; ?></div>
+                                                                <div class="col-md-8"><?php echo $order['payment_method']; ?></div>
+																
 																<?php if ($order['payment_method'] == 'mPesa Online'){
 																	if(!empty($order['payment_transaction_id'])){
-																		$payment_status = '<span style="color:green">Success ('.$order['payment_transaction_id'].')</span>';
+																		$payment_status = '<span style="color:green">Success</span>';
 																	}else{
 																		$payment_status = '<span style="color:red">Failed</span>';
 																	}
@@ -80,7 +81,13 @@
 																	   $payment_status = '<span style="color:#'.$order['order_status_color'].'">Cancelled</span>';
 																	}
 																	?>
-																<div class="col-md-4"><?php echo $payment_status; ?></div>
+																<div class="col-md-4">Payment Status</div>
+																<div class="col-md-8"><?php echo $payment_status; ?></div>
+																<?php if(!empty($order['payment_transaction_id'])){?>
+																<div class="col-md-4">Transaction Id</div>
+																<div class="col-md-8"><?php echo $order['payment_transaction_id']; ?></div>
+	
+																<?php } ?>
 																<?php } ?>
                                                             </div>
                                                    </div>
