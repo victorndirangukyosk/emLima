@@ -12,7 +12,7 @@ const gulp = require('gulp'),
   cssnano = require('gulp-cssnano'),
   sourcemaps = require('gulp-sourcemaps'),
   imagemin = require('gulp-imagemin');
-  htmlmin = require('gulp-htmlmin'),
+htmlmin = require('gulp-htmlmin'),
   package = require('./package.json');
 
 const banner = [
@@ -31,8 +31,9 @@ const sourceDirectory = 'landing/src/';
 const templateDirectory = 'front/ui/theme/metaorganic/';
 const assetsDirectory = templateDirectory + 'assets_landing_page/';
 
-gulp.task('smarty', function() {
+gulp.task('smarty', function () {
   return gulp.src(sourceDirectory + '*.html')
+    .pipe(gulp.dest('landing/build'))
     .pipe(replace('assets/', '<?= $base; ?>front/ui/theme/metaorganic/assets_landing_page/'))
     .pipe(htmlmin({
       collapseWhitespace: true
@@ -43,23 +44,26 @@ gulp.task('smarty', function() {
     .pipe(gulp.dest(templateDirectory + 'template/common'));
 });
 
-gulp.task('favicon', function() {
+gulp.task('favicon', function () {
   return gulp.src(sourceDirectory + '*.ico')
-  .pipe(gulp.dest(assetsDirectory));
+    .pipe(gulp.dest('landing/build'))
+    .pipe(gulp.dest(assetsDirectory));
 });
 
-gulp.task('fonts', function() {
+gulp.task('fonts', function () {
   return gulp.src(sourceDirectory + 'assets/fonts/*')
-  .pipe(gulp.dest(assetsDirectory + 'fonts'));
+    .pipe(gulp.dest('landing/build/assets/fonts'))
+    .pipe(gulp.dest(assetsDirectory + 'fonts'));
 });
 
-gulp.task('img', function() {
+gulp.task('img', function () {
   return gulp.src(sourceDirectory + 'assets/img/*')
     .pipe(imagemin())
+    .pipe(gulp.dest('landing/build/assets/img'))
     .pipe(gulp.dest(assetsDirectory + 'img'));
 });
 
-gulp.task('css', function() {
+gulp.task('css', function () {
   return gulp.src(sourceDirectory + 'assets/scss/style.scss')
     .pipe(sourcemaps.init())
     .pipe(wait(200))
@@ -73,13 +77,14 @@ gulp.task('css', function() {
       package: package
     }))
     .pipe(sourcemaps.write())
+    .pipe(gulp.dest('landing/build/assets/css'))
     .pipe(gulp.dest(assetsDirectory + 'css'))
     .pipe(browserSync.reload({
       stream: true
     }));
 });
 
-gulp.task('js', function() {
+gulp.task('js', function () {
   gulp.src(sourceDirectory + 'assets/js/scripts.js')
     .pipe(sourcemaps.init())
     .pipe(jshint('.jshintrc'))
@@ -88,7 +93,7 @@ gulp.task('js', function() {
       package: package
     }))
     .pipe(uglify())
-    .on('error', function(err) {
+    .on('error', function (err) {
       gutil.log(gutil.colors.red('[Error]'), err.toString());
     })
     .pipe(header(banner, {
@@ -98,6 +103,7 @@ gulp.task('js', function() {
       suffix: '.min'
     }))
     .pipe(sourcemaps.write())
+    .pipe(gulp.dest('landing/build/assets/js'))
     .pipe(gulp.dest(assetsDirectory + 'js'))
     .pipe(browserSync.reload({
       stream: true,
@@ -105,11 +111,24 @@ gulp.task('js', function() {
     }));
 });
 
-gulp.task('default', ['smarty', 'css', 'js', 'favicon', 'img', 'fonts'], function() {
-    gulp.watch(sourceDirectory + "assets/scss/**/*.scss", ['css']);
-    gulp.watch(sourceDirectory + "assets/js/*.js", ['js']);
-    gulp.watch(sourceDirectory + "*.html", ['smarty']);
-    gulp.watch(sourceDirectory + "*.ico", ['favicon']);
-    gulp.watch(sourceDirectory + "assets/img/*.{png,jpg,jpeg,gif,svg}", ['img']);
-    gulp.watch(sourceDirectory + "assets/fonts/*.{woff2,woff,otf,ttf}", ['fonts']);
+gulp.task('browser-sync', function() {
+  browserSync.init(null, {
+    server: {
+      baseDir: "landing/build"
+    }
+  });
+});
+
+gulp.task('bs-reload', function() {
+  browserSync.reload();
+});
+
+gulp.task('default', ['smarty', 'css', 'js', 'favicon', 'img', 'browser-sync', 'fonts'], function () {
+  gulp.watch(sourceDirectory + "assets/scss/**/*.scss", ['css']);
+  gulp.watch(sourceDirectory + "assets/js/*.js", ['js']);
+  gulp.watch(sourceDirectory + "*.html", ['smarty']);
+  gulp.watch(sourceDirectory + "*.ico", ['favicon']);
+  gulp.watch(sourceDirectory + "assets/img/*.{png,jpg,jpeg,gif,svg}", ['img']);
+  gulp.watch(sourceDirectory + "assets/fonts/*.{woff2,woff,otf,ttf}", ['fonts']);
+  gulp.watch("landing/build/*.html", ['bs-reload']);
 });
