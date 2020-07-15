@@ -365,7 +365,7 @@ class ControllerSaleOrder extends Controller
                         'option' => $option_data,
                         'quantity' => $product['quantity'],
                         'produce_type' => $product['produce_type'],
-                        'product_note' => $product['produce_note'],
+                        'product_note' => $product['product_note'],
                         'price' => $product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0),
                         //'total' => $product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0)
                         'total' => ($product['price'] * $product['quantity']) + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0)
