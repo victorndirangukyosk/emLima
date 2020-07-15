@@ -601,6 +601,7 @@ class ModelSaleOrder extends Model {
         return $query->rows;
     }
 
+
     public function getOrderProducts($order_id, $store_id = 0) {
        
         $sql = "SELECT * ,'0' as quantity_updated,'0' as unit_updated FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int) $order_id . "'";
@@ -612,6 +613,31 @@ class ModelSaleOrder extends Model {
         $query = $this->db->query($sql);
 
         return $query->rows;
+    }
+
+
+    public function getOrderAndRealOrderProducts($order_id, $store_id = 0) {
+       
+        $sql1 = "SELECT * ,'0' as quantity_updated,'0' as unit_updated FROM " . DB_PREFIX . "real_order_product WHERE order_id = '" . (int) $order_id . "'";
+
+        $sql2 = "SELECT * ,'0' as quantity_updated,'0' as unit_updated FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int) $order_id . "'";
+        
+        if($store_id) {
+            $sql1 .= " AND store_id='".$store_id."'";
+            $sql2 .= " AND store_id='".$store_id."'";
+        }
+        
+        $query = $this->db->query($sql1);
+        if($query->rows)
+        {
+            return $query->rows;
+        }
+        else{
+            $query = $this->db->query($sql2);
+            return $query->rows;
+        }
+
+       
     }
 
     public function getOrderProductsItems($order_id, $store_id = 0) {

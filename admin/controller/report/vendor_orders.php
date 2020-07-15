@@ -423,7 +423,7 @@ class ControllerReportVendorOrders extends Controller {
 
         foreach ($results as $index => $order) {
             $data['orders'][$index] = $order;
-            $orderProducts = $this->model_sale_order->getOrderProducts($data['orders'][$index]['order_id']);
+            $orderProducts = $this->model_sale_order->getOrderAndRealOrderProducts($data['orders'][$index]['order_id']); 
             $data['orders'][$index]['products'] = $orderProducts;
 
             foreach ($orderProducts as $product) {

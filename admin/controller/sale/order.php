@@ -4045,17 +4045,23 @@ class ControllerSaleOrder extends Controller
               'customer' => $order['customer'] . ' Order#' . $order['order_id'],
               'amount' => $order['total']
             ];
-            $totalOrdersAmount += $order['total'];
+           // $totalOrdersAmount += $order['total'];
         }
-        $data['consolidation']['total'] = $totalOrdersAmount;
+       // $data['consolidation']['total'] = $totalOrdersAmount;
 
         foreach ($results as $index => $order) {
             $data['orders'][$index] = $order;
-            $orderProducts = $this->getOrderProductsWithVariances($data['orders'][$index]['order_id']);
+            $orderProducts = $this->getOrderProductsWithVariancesNew($data['orders'][$index]['order_id']);
             $data['orders'][$index]['products'] = $orderProducts;
+            
+            foreach ($orderProducts as $item) {
+                $sum += $item['total_updatedvalue'];
+            }
+            $data['consolidation'][$index]['amount'] = $sum;
+              $totalOrdersAmount += $sum;
         }
-
-//        echo "<pre>";print_r($data);die;
+        $data['consolidation']['total'] = $totalOrdersAmount;
+      // echo "<pre>";print_r($data);die;
 
         $this->load->model('report/excel');
         $this->model_report_excel->download_consolidated_calculation_sheet_excel($data);
@@ -4151,7 +4157,56 @@ class ControllerSaleOrder extends Controller
             }
         }
         return $orderProducts;
+    } 
+
+
+    public function getOrderProductsWithVariancesNew($order_id) {
+        $this->load->model('sale/order');       
+
+        $orderProducts = array();
+
+        if ($this->model_sale_order->hasRealOrderProducts($order_id)) {
+             // Order products with weight change
+        $originalProducts = $products= $this->model_sale_order->getRealOrderProducts($order_id);
+            
+        } else {
+        // Products as the user ordered them on the platform
+         $originalProducts = $products = $this->model_sale_order->getOrderProducts($order_id);
+           
+        }
+
+        foreach ($originalProducts as $originalProduct) {
+            $totalUpdated = $originalProduct['price'] * $originalProduct['quantity']
+                + ($this->config->get('config_tax') ? $originalProduct['tax'] : 0);
+
+            $uomOrderedWithoutApproximations = trim(explode('(', $originalProduct['unit'])[0]);
+
+            $orderProducts[] = array(
+                'order_product_id' => $originalProduct['order_product_id'],
+                'product_id' => $originalProduct['product_id'],
+                'vendor_id' => $originalProduct['vendor_id'],
+                'store_id' => $originalProduct['store_id'],
+                'name' => $originalProduct['name'],
+                'unit' => $uomOrderedWithoutApproximations,
+                'product_type' => $originalProduct['product_type'],
+                'model' => $originalProduct['model'],
+                'quantity' => $originalProduct['quantity'],
+                'quantity_updated' => $originalProduct['quantity'],
+                'unit_updated' => $uomOrderedWithoutApproximations,
+                'price' => $this->currency->format($originalProduct['price'] + ($this->config->get('config_tax') ? $originalProduct['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
+                'total' => $this->currency->format($originalProduct['total'] + ($this->config->get('config_tax') ? ($originalProduct['tax'] * $originalProduct['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
+                'total_updated' => $this->currency->format($totalUpdated, $order_info['currency_code'], $order_info['currency_value']),
+                'total_updated_currency' => trim(explode(' ', $this->currency->format($totalUpdated, $order_info['currency_code'], $order_info['currency_value']))[0]),
+                'total_updated_value' => trim(explode(' ', $this->currency->format($totalUpdated, $order_info['currency_code'], $order_info['currency_value']))[1]),
+                'total_updatedvalue' => $totalUpdated
+            );
+        }
+
+        return $orderProducts;
     }
+
+
+
 
     public function orderCalculationSheet()
     {

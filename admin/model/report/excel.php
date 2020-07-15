@@ -1013,7 +1013,7 @@ class ModelReportExcel extends Model {
     }
 
     public function download_consolidated_calculation_sheet_excel($data) {
-//	    echo "<pre>";print_r($data);die;
+ //	    echo "<pre>";print_r($data);die;
 
         $this->load->library('excel');
         $this->load->library('iofactory');
@@ -1154,11 +1154,11 @@ class ModelReportExcel extends Model {
                     $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $product['price']);
                     $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $product['total_updated']);
 
-                    $totalOrderAmount += $product['total_updated'];
+                    $totalOrderAmount += $product['total_updatedvalue'];
 
                     $row++;
                 }
-
+				$totalOrderAmount=$this->currency->format($totalOrderAmount);
                 $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(5, $row)->applyFromArray($title);
                 $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(6, $row)->applyFromArray($title);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, "Total");
