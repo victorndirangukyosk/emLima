@@ -2003,9 +2003,15 @@ class ControllerAccountOrder extends Controller {
 			
 			//echo "<pre>===";print_r($mpesaOnline);die;  
 			array_multisort($sort_order, SORT_ASC, $method_data);
+			$this->load->model('sale/order');
+			$transcation_id = $this->model_sale_order->getOrderTransactionId($order_id);
+			if(!empty($transcation_id)){
+				$mpesaOnline = false;
+			}
 			$data['mpesaOnline'] = $mpesaOnline;
 			$data['account'] = $this->url->link('account/order');
 			$data['continue'] = $this->url->link('checkout/success');
+			
 			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/order_accept_delivery.tpl')) {
 				$this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/order_accept_delivery.tpl', $data));
 			} else {
