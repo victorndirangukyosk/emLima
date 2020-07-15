@@ -488,7 +488,7 @@ class ModelSaleOrder extends Model {
     }
 
     public function getOrders($data = array()) {
-        $sql = "SELECT c.name as city, o.firstname,o.lastname, (SELECT cust.company_name FROM hf7_customer cust WHERE o.customer_id = cust.customer_id ) AS company_name,o.order_id, o.delivery_date, o.delivery_timeslot, o.shipping_method, o.shipping_address, o.payment_method, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS status,(SELECT os.color FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS color, o.shipping_code, o.order_status_id,o.store_name,  o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified,o.po_number FROM `" . DB_PREFIX . "order` o ";
+        $sql = "SELECT c.name as city, o.firstname,o.lastname,o.comment, (SELECT cust.company_name FROM hf7_customer cust WHERE o.customer_id = cust.customer_id ) AS company_name,o.order_id, o.delivery_date, o.delivery_timeslot, o.shipping_method, o.shipping_address, o.payment_method, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS status,(SELECT os.color FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS color, o.shipping_code, o.order_status_id,o.store_name,  o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified,o.po_number FROM `" . DB_PREFIX . "order` o ";
 
         $sql .= 'left join `'.DB_PREFIX.'city` c on c.city_id = o.shipping_city_id';
         $sql .= " LEFT JOIN ".DB_PREFIX."store on(".DB_PREFIX."store.store_id = o.store_id) ";
@@ -807,7 +807,7 @@ class ModelSaleOrder extends Model {
 
         if(!$query->num_rows) {
 
-            $sql = "INSERT into " . DB_PREFIX . "real_order_product SET name = '" . $this->db->escape($data['name']) . "', quantity = '" . $this->db->escape($data['quantity']) . "', price = '" . $this->db->escape($data['price']) . "', model = '" . $this->db->escape($data['model']) . "', unit = '" . $this->db->escape($data['unit'])  . "', vendor_id = '" . $data['vendor_id'] . "', store_id = '" . $data['store_id'] . "', order_id = '" . $order_id . "', product_id = '" . $product_id  . "', total = '" . $total . "'";
+            $sql = "INSERT into " . DB_PREFIX . "real_order_product SET name = '" . $this->db->escape($data['name']) . "', quantity = '" . $this->db->escape($data['quantity']) . "', price = '" . $this->db->escape($data['price']) . "', model = '" . $this->db->escape($data['model']) . "', unit = '" . $this->db->escape($data['unit'])  . "', vendor_id = '" . $data['vendor_id'] . "', store_id = '" . $data['store_id'] . "', order_id = '" . $order_id . "', product_id = '" . $product_id  . "',produce_type = '" . $data['produce_type']  . "',product_note = '" . $data['product_note']  . "', total = '" . $total . "'";
        
             $query = $this->db->query($sql);
 
@@ -847,7 +847,7 @@ class ModelSaleOrder extends Model {
 
         if(!$query->num_rows) {
 
-            $sql = "INSERT into " . DB_PREFIX . "real_order_product SET name = '" . $this->db->escape($data['name']) . "', quantity = '" . $this->db->escape($data['quantity']) . "', price = '" . $this->db->escape($data['price']) . "', model = '" . $this->db->escape($data['model']) . "', unit = '" . $this->db->escape($data['unit'])  . "', vendor_id = '" . $data['vendor_id'] . "', store_id = '" . $data['store_id'] . "', order_id = '" . $order_id . "', product_id = '" . $product_id  . "', total = '" . $total . "'";
+            $sql = "INSERT into " . DB_PREFIX . "real_order_product SET name = '" . $this->db->escape($data['name']) . "', quantity = '" . $this->db->escape($data['quantity']) . "', price = '" . $this->db->escape($data['price']) . "', model = '" . $this->db->escape($data['model']) . "', unit = '" . $this->db->escape($data['unit'])  . "', vendor_id = '" . $data['vendor_id'] . "', store_id = '" . $data['store_id'] . "', order_id = '" . $order_id . "', product_id = '" . $product_id  . "',produce_type = '" . $data['produce_type']  . "',product_note = '" . $data['product_note']  . "', total = '" . $total . "'";
        
             $query = $this->db->query($sql);
 
