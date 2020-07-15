@@ -4,51 +4,90 @@
   <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> <?php echo $error_warning; ?></div>
   <?php } ?>
   <div class="row">
-    <div id="content" class="account-section">
-      <?php echo $content_top; ?>
-      <form action="<?php echo $action; ?>" id="profileinfo-edit-form" method="post" enctype="multipart/form-data" class="form-horizontal">
-      <div class="secion-row">
-      <br />
-      
-        <fieldset>
-            <div class="form-group required has-feedback">
-                <label for="name" class="col-sm-4 control-label"><?= $entry_location ?></label>
-                <div class="col-sm-6">
-                    <input type="text" value="<?php echo $location; ?>" size="30" placeholder="<?= $entry_location ?>" name="location" id="input-location" class="form-control input-lg" />
-                     <?php if($error_location) { ?>
-                      <div class="text-danger"><?php echo $error_location; ?></div>
-                      <?php } ?>
-                </div>
-            </div>
-          <div class="form-group required has-feedback">
-            <label class="col-sm-4 control-label" for="input-lastname"><?php echo $entry_requirement; ?></label>
-            <div class="col-sm-6">
-              <input type="text" name="requirement" value="<?php echo $requirement; ?>" placeholder="<?php echo $entry_requirement; ?>" id="input-requirement" class="form-control input-lg" />
-              <?php if($error_requirement) { ?>
-              <div class="text-danger"><?php echo $error_requirement; ?></div>
-              <?php } ?>
-            </div>
-          </div>
-          <div class="form-group required">
-            <label class="col-sm-4 control-label" for="input-email"><?php echo $entry_mandatory_products; ?></label>
-            <div class="col-sm-6">
-              <input type="text" name="mandatory_products" id="input-mandatory_products" value="<?php echo $mandatory_products; ?>" placeholder="<?php echo $entry_mandatory_products; ?>" class="form-control input-lg" />
-              <?php if($error_mandatory_products) { ?>
-               <div class="text-danger"><?php echo $error_mandatory_products; ?></div>
-              <?php } ?>
-            </div>
-          </div>
-        </fieldset>
-      
-      </div>
-      <div class="secion-row text-center" style="margin-bottom: 20px; float: right; margin-right: 14.7%;">
-              <button type="submit" data-style="zoom-out" id="save-button" class="btn btn-default"><span class="ladda-label"><?= $button_save ?></span><span class="ladda-spinner"></span></button>
-            </div>
-      </div>
-      </form>
-    </div>
-</div>
-       
+  <div class="col-md-9">
+	<ul class="nav nav-tabs">
+	  <li class="active"><a data-toggle="tab" href="#pending">Pending Payments</a></li>
+	  <li><a data-toggle="tab" href="#successfull">Successfull Payments</a></li>
+	  <li><a data-toggle="tab" href="#cancelled">Cancelled Payments</a></li>
+	</ul>
+
+		<div class="tab-content">
+		  <div id="pending" class="tab-pane fade in active">
+			<table class="table table-bordered">
+				<thead>
+				  <tr>
+					<th>Order Id </th>
+					<th>Total Amount</th>
+					<th>Order Date</th>
+					<th>Action</th>
+				  </tr>
+				</thead>
+				<tbody>
+				 <?php if(count($pending_transactions)){?>
+                  <?php foreach($pending_transactions as $transaction){?>
+				  <tr>
+					<td><?php echo $transaction['order_id'];?></td>
+					<td><?php echo round($transaction['total'],2).' '.$transaction['currency_code'];?></td>
+					<td><?php echo $transaction['date_added'];?></td>
+					<td><a href="#">Pay Now</a></td>
+				  </tr>
+				  <?php } ?>
+				 <?php } ?>
+				</tbody>
+			  </table>
+		  </div>
+		  <div id="successfull" class="tab-pane fade">
+			<table class="table table-bordered">
+				<thead>
+				  <tr>
+					<th>Order Id </th>
+					<th>Total Amount</th>
+					<th>Order Date</th>
+					<!--<th>Action</th>-->
+				  </tr>
+				</thead>
+				<tbody>
+				 <?php if(count($success_transactions)){?>
+                  <?php foreach($success_transactions as $transaction){?>
+				  <tr>
+					<td><?php echo $transaction['order_id'];?></td>
+					<td><?php echo round($transaction['total'],2).' '.$transaction['currency_code'];?></td>
+					<td><?php echo $transaction['date_added'];?></td>
+					<!--<td>Pay Now</td>-->
+				  </tr>
+				  <?php } ?>
+				 <?php } ?>
+				</tbody>
+			  </table>
+		  </div>
+		  <div id="cancelled" class="tab-pane fade">
+			<table class="table table-bordered">
+				<thead>
+				  <tr>
+					<th>Order Id </th>
+					<th>Total Amount</th>
+					<th>Order Date</th>
+					<!--<th>Action</th>-->
+				  </tr>
+				</thead>
+				<tbody>
+				 <?php if(count($cancelled_transactions)){?>
+                  <?php foreach($cancelled_transactions as $transaction){?>
+				  <tr>
+					<td><?php echo $transaction['order_id'];?></td>
+					<td><?php echo round($transaction['total'],2).' '.$transaction['currency_code'];?></td>
+					<td><?php echo $transaction['date_added'];?></td>
+					<!--<td>Pay Now</td>-->
+				  </tr>
+				  <?php } ?>
+				 <?php } ?>
+				</tbody>
+			  </table>
+		  </div>
+		</div>
+   </div>
+   </div>
+   </div>
 
                         </div>
                     </div>
@@ -231,5 +270,10 @@ $('button[id^=\'button-custom-field\']').on('click', function() {
       </script>
       
     <?php } ?>
+	<style>
+	.nav-tabs>li {
+		width: 33.3%;
+    }
+	</style>
 </body>
 </html>

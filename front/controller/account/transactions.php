@@ -233,13 +233,16 @@ class Controlleraccounttransactions extends Controller {
 		$this->load->model('account/order');
 		$order_total = $this->model_account_order->getTotalOrders();
 
-        $PaymentFilter = "'mPesa On Delivery','Cash On Delivery'";
+        $PaymentFilter = "'mPesa On Delivery','Cash On Delivery','mPesa Online'";
+        $statusCancelledFilter  = "'Cancelled'";
         $statusPendingFilter  = "'Cancelled','Delivered','Refunded','Returned','Partially Delivered'";
-        $results_pending = $this->model_account_order->getOrders(($page - 1) * 10, 10,$PaymentFilter,$statusPendingFilter);
-        $results_pending = $this->model_account_order->getOrders(($page - 1) * 10, 10,$PaymentFilter,$statusPendingFilter);
+        $results_pending = $this->model_account_order->getOrders(($page - 1) * 10, 10,$PaymentFilter,$statusPendingFilter,$In=false);
+        $results_success = $this->model_account_order->getOrders(($page - 1) * 10, 10,$PaymentFilter,$statusPendingFilter,$In=true);
+        $results_cancelled = $this->model_account_order->getOrders(($page - 1) * 10, 10,$PaymentFilter,$statusCancelledFilter,$In=true);
         $data['pending_transactions'] = $results_pending;
-        //$data['pending_transactions'] = $results_pending;
-	    //echo "<pre>";print_r($results);die;
+        $data['success_transactions'] = $results_success;
+        $data['cancelled_transactions'] = $results_cancelled;
+	    //echo "<pre>";print_r($results_success);die;
         //echo "<pre>";print_r($data['telephone'] );die;
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/my_transactions.tpl')) {
             $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/my_transactions.tpl', $data));
