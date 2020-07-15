@@ -106,10 +106,10 @@ gulp.task('js', function() {
 });
 
 gulp.task('default', ['smarty', 'css', 'js', 'favicon', 'img', 'fonts'], function() {
-    gulp.watch("src/assets/scss/**/*.scss", ['css']);
-    gulp.watch("src/assets/js/*.js", ['js']);
-    gulp.watch("src/*.html", ['smarty']);
-    gulp.watch("src/*.ico", ['favicon']);
-    gulp.watch("src/assets/img/*.{png,jpg,jpeg,gif,svg}", ['img']);
-    gulp.watch("src/assets/fonts/*.{woff2,woff,otf,ttf}", ['fonts']);
+    gulp.watch(sourceDirectory + "assets/scss/**/*.scss", ['css']);
+    gulp.watch(sourceDirectory + "assets/js/*.js", ['js']);
+    gulp.watch(sourceDirectory + "*.html", ['smarty']);
+    gulp.watch(sourceDirectory + "*.ico", ['favicon']);
+    gulp.watch(sourceDirectory + "assets/img/*.{png,jpg,jpeg,gif,svg}", ['img']);
+    gulp.watch(sourceDirectory + "assets/fonts/*.{woff2,woff,otf,ttf}", ['fonts']);
 });
