@@ -1,0 +1,149 @@
+@font-face {
+  font-family: 'Sofia Pro';
+  src: url("../fonts/SofiaProRegular.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal; }
+
+@font-face {
+  font-family: 'Sofia Pro';
+  src: url("../fonts/SofiaProMedium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal; }
+
+@font-face {
+  font-family: 'Sofia Pro';
+  src: url("../fonts/SofiaProBold.woff2") format("woff2");
+  font-weight: bold;
+  font-style: normal; }
+
+@font-face {
+  font-family: 'Bw Modelica';
+  src: url("../fonts/BwModelica-Regular.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal; }
+
+@font-face {
+  font-family: 'Bw Modelica';
+  src: url("../fonts/BwModelica-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal; }
+
+@font-face {
+  font-family: 'Bw Modelica';
+  src: url("../fonts/BwModelica-Bold.woff2") format("woff2");
+  font-weight: bold;
+  font-style: normal; }
+
+@font-face {
+  font-family: 'NeurialGrotesk';
+  src: url("../fonts/NeurialGrotesk-Regular.otf");
+  font-weight: normal;
+  font-style: normal; }
+
+@font-face {
+  font-family: 'NeurialGrotesk';
+  src: url("../fonts/NeurialGrotesk-Medium.otf");
+  font-weight: 500;
+  font-style: normal; }
+
+@font-face {
+  font-family: 'NeurialGrotesk';
+  src: url("../fonts/NeurialGrotesk-Bold.otf");
+  font-weight: bold;
+  font-style: normal; }
+
+body {
+  font-family: 'Sofia Pro', sans-serif; }
+
+.nav-link {
+  font-family: 'NeurialGrotesk', sans-serif; }
+
+body {
+  background-color: #F9F9F9; }
+
+section#hero {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-flow: row nowrap;
+      flex-flow: row nowrap;
+  -ms-flex-align: center;
+      align-items: center;
+  min-height: 60vh;
+  background-image: url("../img/hero-banner.jpg");
+  background-size: cover;
+  background-position-x: -2rem; }
+  section#hero .hero-title {
+    font-family: 'Bw Modelica';
+    font-weight: bold;
+    font-size: 32px; }
+  section#hero .hero-subtitle {
+    color: #696969;
+    max-width: 420px;
+    font-size: 16px; }
+
+footer {
+  font-family: 'NeurialGrotesk'; }
+  footer .footers-info {
+    font-size: 1rem; }
+  footer .footers a {
+    color: #696969; }
+  footer .footers p {
+    color: #696969; }
+  footer .footers ul {
+    line-height: 30px; }
+  footer .footers h5 {
+    font-size: 1rem; }
+  footer #social-fb:hover {
+    color: #3B5998;
+    transition: all .001s; }
+  footer #social-tw:hover {
+    color: #4099FF;
+    transition: all .001s; }
+  footer #social-li:hover {
+    color: #006097;
+    transition: all .001s; }
+  footer #social-in:hover {
+    color: #d61a2a;
+    transition: all .001s; }
+
+.btn {
+  color: #EC7123; }
+  .btn:hover {
+    color: #DD6B20; }
+  .btn:focus {
+    box-shadow: none; }
+
+.btn-cta {
+  padding: 10px 20px; }
+
+.btn-primary {
+  color: #fff;
+  background: #EC7123;
+  border: none; }
+  .btn-primary:not(:disabled):not(.disabled):active {
+    background-color: #DD6B20 !important;
+    box-shadow: none !important; }
+  .btn-primary:hover {
+    background-color: #EC7123;
+    color: #fff;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2), -2px -2px 5px rgba(0, 0, 0, 0.2); }
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgb(236, 113, 35)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E"); }
+
+* {
+  outline: none; }
+
+.logo {
+  width: 150px; }
+
+.nav-link {
+  color: rgba(0, 0, 0, 0.75); }
+  .nav-link:hover {
+    color: black; }
+
+@media only screen and (max-width: 500px) {
+  section#hero {
+    background-position-x: -24rem;
+    background-position-y: 17rem;
+    background-repeat: no-repeat; } }

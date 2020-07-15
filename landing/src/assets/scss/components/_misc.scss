@@ -1,0 +1,15 @@
+* {
+    outline: none;
+}
+
+.logo {
+    width: 150px;
+}
+
+.nav-link {
+    color:  rgba($color: #000, $alpha: .75);
+
+    &:hover {
+        color:  rgba($color: #000, $alpha: 1);
+    }
+}

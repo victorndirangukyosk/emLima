@@ -1,0 +1,71 @@
+body {
+  background-color: $bg-gray;
+}
+
+section#hero {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  min-height: 60vh;
+  background-image: url('../img/hero-banner.jpg');
+  background-size: cover;
+  background-position-x: -2rem;
+
+  .hero-title {
+    font-family: 'Bw Modelica';
+    font-weight: bold;
+    font-size: 32px;
+  }
+
+  .hero-subtitle {
+    color: $gray-dark;
+    max-width: 420px;
+    font-size: 16px;
+  }
+}
+
+footer {
+  font-family: 'NeurialGrotesk';
+
+  .footers-info {
+    font-size: 1rem;
+  }
+  .footers {
+    a {
+      color: $gray-dark;
+    }
+
+    p {
+      color: $gray-dark;
+    }
+
+    ul {
+      line-height: 30px;
+    }
+
+    h5 {
+      font-size: 1rem;
+    }
+  }
+
+  #social-fb:hover {
+    color: #3B5998;
+    transition: all .001s;
+  }
+  
+  #social-tw:hover {
+    color: #4099FF;
+    transition: all .001s;
+  }
+  
+  #social-li:hover {
+    color: #006097;
+    transition: all .001s;
+  }
+  
+  #social-in:hover {
+    color: #d61a2a;
+    transition: all .001s;
+  }
+}
+
