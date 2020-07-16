@@ -27,7 +27,11 @@
        justify-content: center;
        text-align: center;
        background-position-x: center;
-       background-position-y: 15vh;
+       background-position-y: 30vh;
+
+       .hero-title {
+           margin-top: 3rem;
+       }
     }
 
     section#kwikbasket-promise {
