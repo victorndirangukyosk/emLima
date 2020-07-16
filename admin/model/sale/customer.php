@@ -176,11 +176,11 @@ class ModelSaleCustomer extends Model {
 
 
     public function getCompanies($data = array()) {
-        $sql = "SELECT distinct c.company_name AS name FROM " . DB_PREFIX . "customer ";
+        $sql = "SELECT distinct company_name AS name FROM " . DB_PREFIX . "customer ";
 
         if (!empty($data['filter_name'])) {            
 
-            $sql .= " where c.company_name LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+            $sql .= " where company_name LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
             
         }   
             $sql .= " ORDER BY company_name";

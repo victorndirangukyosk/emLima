@@ -1868,7 +1868,10 @@ class ControllerSaleCustomer extends Controller {
                 $filter_name = $this->request->get['filter_name'];
             } else {
                 $filter_name = '';
-            } 
+            }
+
+         
+
             $this->load->model('sale/customer');
 
             $filter_data = array(
@@ -1878,22 +1881,24 @@ class ControllerSaleCustomer extends Controller {
             );
 
             $results = $this->model_sale_customer->getCompanies($filter_data);
-
-            foreach ($results as $result) {
-                $json[] = array(                    
-                    'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8'))
+            foreach ($results as $result) {               
+            
+                $json[] = array(                      
+                    'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8'))                   
                     
                 );
             }
         }
 
         $sort_order = array();
+
         foreach ($json as $key => $value) {
             $sort_order[$key] = $value['name'];
         }
 
         array_multisort($sort_order, SORT_ASC, $json);
+
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
-    } 
+    }
 }
