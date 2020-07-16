@@ -715,7 +715,8 @@
                                 <?= $text_not_replacable ?>
                             </span>
                         <?php } ?>
-
+<br>						
+							<?php echo $original_product['produce_type']; ?>
 							
 						</td>
 					  

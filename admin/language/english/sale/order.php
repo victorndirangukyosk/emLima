@@ -172,6 +172,7 @@ $_['column_date_added']                       = 'Date Added';
 $_['column_date_modified']                    = 'Date Modified';
 $_['column_total']                            = 'Total';
 $_['column_product']                          = 'Product';
+$_['column_produce_type']                          = 'Produce Type';
 $_['column_unit']                             = 'Unit';
 $_['column_model']                            = 'SKU';
 $_['column_quantity']                         = 'Quantity';

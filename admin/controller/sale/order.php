@@ -213,6 +213,7 @@ class ControllerSaleOrder extends Controller
         $data['text_shipping_method'] = $this->language->get('text_shipping_method');
 
         $data['column_product'] = $this->language->get('column_product');
+        $data['column_produce_type'] = $this->language->get('column_produce_type');
 
         $data['column_unit'] = $this->language->get('column_unit') . ' ( Ordered ) ';
         $data['column_model'] = $this->language->get('column_model');
@@ -468,6 +469,7 @@ class ControllerSaleOrder extends Controller
         $data['text_shipping_method'] = $this->language->get('text_shipping_method');
 
         $data['column_product'] = $this->language->get('column_product');
+        $data['column_produce_type'] = $this->language->get('column_produce_type');
         $data['column_particular'] = $this->language->get('column_particular');
 
         $data['column_unit'] = $this->language->get('column_unit');
@@ -622,6 +624,8 @@ class ControllerSaleOrder extends Controller
         $data['text_shipping_method'] = $this->language->get('text_shipping_method');
 
         $data['column_product'] = $this->language->get('column_product');
+        $data['column_produce_type'] = $this->language->get('column_produce_type');
+
         $data['column_particular'] = $this->language->get('column_particular');
 
         $data['column_unit'] = $this->language->get('column_unit');
@@ -1519,6 +1523,7 @@ class ControllerSaleOrder extends Controller
         $data['tab_location'] = $this->language->get('tab_location');
 
         $data['column_product'] = $this->language->get('column_product');
+       // $data['column_produce_type'] = $this->language->get('column_produce_type');
         $data['column_model'] = $this->language->get('column_model');
         $data['column_quantity'] = $this->language->get('column_quantity');
         $data['column_price'] = $this->language->get('column_price');
@@ -2045,6 +2050,8 @@ class ControllerSaleOrder extends Controller
             $data['help_error'] = $this->language->get('help_error');
 
             $data['column_product'] = $this->language->get('column_product');
+        $data['column_produce_type'] = $this->language->get('column_produce_type');
+
             $data['column_model'] = $this->language->get('column_model');
             $data['column_quantity'] = $this->language->get('column_quantity') . '( Ordered )';
             $data['column_quantity_update'] = $this->language->get('column_quantity') . '( Updated )';
@@ -3836,6 +3843,8 @@ class ControllerSaleOrder extends Controller
         $data['text_shipping_method'] = $this->language->get('text_shipping_method');
 
         $data['column_product'] = $this->language->get('column_product');
+        $data['column_produce_type'] = $this->language->get('column_produce_type');
+
 
         $data['column_model'] = $this->language->get('column_model');
         $data['column_unit'] = $this->language->get('column_unit') . ' Ordered';
@@ -4369,6 +4378,7 @@ class ControllerSaleOrder extends Controller
         $data['text_shipping_method'] = $this->language->get('text_shipping_method');
 
         $data['column_product'] = $this->language->get('column_product');
+        $data['column_produce_type'] = $this->language->get('column_produce_type');
 
         $data['column_unit'] = $this->language->get('column_unit');
         $data['column_model'] = $this->language->get('column_model');
@@ -4583,6 +4593,8 @@ class ControllerSaleOrder extends Controller
         $data['column_location'] = $this->language->get('column_location');
         $data['column_reference'] = $this->language->get('column_reference');
         $data['column_product'] = $this->language->get('column_product');
+        $data['column_produce_type'] = $this->language->get('column_produce_type');
+
         $data['column_weight'] = $this->language->get('column_weight');
         $data['column_model'] = $this->language->get('column_model');
         $data['column_unit'] = $this->language->get('column_unit');
