@@ -49,13 +49,22 @@ section#hero {
 }
 
 section#kwikbasket-promise {
+  display: flex;
+  justify-content: center;
+  position: relative;
   min-height: 70vh;
   background-image: url('../img/kwikbasket-promise.svg');
   background-size: 80%;
   background-position-x: center;
   background-position-y: center;
   background-repeat: no-repeat;
+
+  .app-download-btn {
+    position: absolute;
+    bottom: 0;
+  }
 }
+
 
 footer {
   font-family: 'NeurialGrotesk';
