@@ -74,7 +74,8 @@ class ControllerReportSaleTransaction extends Controller {
 
         if (isset($this->request->get['filter_date_added'])) {
             $filter_date_added = $this->request->get['filter_date_added'];
-        } else {
+        } 
+        else {
             $filter_date_added = '1990-01-01';
         }
 
@@ -89,7 +90,8 @@ class ControllerReportSaleTransaction extends Controller {
 
         if (isset($this->request->get['filter_date_modified'])) {
             $filter_date_modified = $this->request->get['filter_date_modified'];
-        } else {
+        } 
+        else {
             $filter_date_modified = date('Y-m-d');
         }
         

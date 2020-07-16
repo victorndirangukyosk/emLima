@@ -499,8 +499,40 @@ class ModelReportExcel extends Model {
 		$this->load->model('report/product');
 
 		$rows = $this->model_report_sale_transaction->getOrders($data);
-		
-		//echo "<pre>";print_r($rows);die;	 
+
+
+        $i=0;
+		foreach ($rows as $result) {
+
+            $sub_total = 0;
+            $latest_total = 0;
+            $totals = $this->model_report_sale_transaction->getOrderTotals($result['order_id']);
+ //echo "<pre>";print_r($totals);die;
+            foreach ($totals as $total) {
+                if($total['code'] == 'sub_total') {
+                    $sub_total = $total['value'];
+                    //break;
+                }
+                if($total['code'] == 'total') {
+                    $latest_total = $total['value'];
+                    //break;
+                }
+            }
+
+            // $transaction_id = '';
+            // $order_transaction_data = $this->model_report_sale_transaction->getOrderTransactionId($result['order_id']);
+
+            // if (count($order_transaction_data) > 0) {
+            //     $transaction_id = trim($order_transaction_data['transaction_id']);
+            // }
+
+			$rows[$i]['subtotal']=$this->currency->format($sub_total);
+			$rows[$i]['total']=  $this->currency->format($latest_total); 
+			$i++;
+        }
+
+
+	 // echo "<pre>";print_r($rows);die;	 
 		try {
 			// set appropriate timeout limit
 			set_time_limit(1800);
@@ -537,14 +569,55 @@ class ModelReportExcel extends Model {
 				),));
 
 			//subtitle 
-			$from = date('d-m-Y', strtotime($data['filter_date_added']));
-			$to = date('d-m-Y', strtotime($data['filter_date_modified']));
-			$objPHPExcel->getActiveSheet()->mergeCells("A3:I3");
-			$html = 'FROM '.$from.' TO '.$to;
+			// 
+			// 
+			// $orderDate = date('d-m-Y', strtotime($data['filter_date_order']));
 
-			if($data['filter_date_added'] == '1990-01-01') {
-				$html = 'START TO '.$to;
-			}
+			// $deliveryDate = date('d-m-Y', strtotime($data['filter_date_delivery']));
+
+			// $from = date('d-m-Y', strtotime($data['filter_date_added']));
+			// $to = date('d-m-Y', strtotime($data['filter_date_modified']));
+			// //$orderID=$data['filter_order_id'];
+
+			// $objPHPExcel->getActiveSheet()->mergeCells("A3:I3");
+			// $html = 'FROM '.$from.' TO '.$to;
+
+			// if($data['filter_date_added'] == '1990-01-01') {
+			// 	$html = 'START TO '.$to;
+			// }
+
+			
+			// $html ='Filters Applied ' ;
+			
+			// if($data['filter_date_added']) {
+			
+			// 	$html = 	$html + 'Start Date:'.$from.' ' ;
+			// }
+
+			// if($data['filter_date_modified']) {
+			
+			// 	$html = 	$html + 'To Date:'.$to.' ' ;
+			// }
+
+
+			
+			// if($data['filter_date_order']) {
+			// 	$order = date('d-m-Y', strtotime($data['filter_date_order']));
+			// 	$html = 	$html + 'Order Date:'.$order.' ' ;
+			// }
+
+
+			
+			// if($data['filter_date_delivery']) {
+			// 	$delivery = date('d-m-Y', strtotime($data['filter_date_delivery']));
+			// 	$html = 	$html + 'Delivery Date:'.$delivery.' ' ;
+			// }
+
+	
+			// if($data['filter_company']) {
+			// 	$company = $data['filter_company'];
+			// 	$html = 	$html + 'Company :'.$company.' ' ;
+			// }
 
 			$objPHPExcel->getActiveSheet()->setCellValue("A3", $html);
 			$objPHPExcel->getActiveSheet()->getStyle("A1:I3")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
@@ -562,17 +635,32 @@ class ModelReportExcel extends Model {
 
 
 			$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 4, 'Order ID');
-			$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'Customer Name');
+			$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'Company Name');
 
-			$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 4, 'Transaction ID');
+			$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 4, 'Customer Name');
+			$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 4, 'Order Date');
+
+			$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 4, ' Delivery Date');
+
+
+			$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 4, 'Transaction ID');
+			$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, 4, 'Delivery Status');
+
 			
-			$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 4, 'Payment Method');
-			$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 4, 'Total');
+			$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, 4, 'Payment Method');
+			$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(8, 4, 'Amount');
 
 
 		 
 			$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 4)->applyFromArray($title);
 			$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 4)->applyFromArray($title);
+			$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(2, 4)->applyFromArray($title);
+			$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(3, 4)->applyFromArray($title);
+			$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(4, 4)->applyFromArray($title);
+			$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(5, 4)->applyFromArray($title);
+			$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(6, 4)->applyFromArray($title);
+			$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(7, 4)->applyFromArray($title);
+			$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(8, 4)->applyFromArray($title);
 			
 			// Fetching the table data
 			$row = 5;
@@ -584,10 +672,15 @@ class ModelReportExcel extends Model {
 					$amount = 0;
 				}*/
 				$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $result['order_id']);
-				$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['customer']);
-				$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['transaction_id']);
-				$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['payment_method']);
-				$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['total']);
+				$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['company']);
+				$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['customer']);				
+				$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row,date($this->language->get('date_format_short'), strtotime($result['date_added'])));
+				$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, date($this->language->get('date_format_short'), strtotime($result['delivery_date'])));
+				$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $result['transaction_id']);
+				$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $result['status']);
+
+				$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, $row, $result['payment_method']);
+				$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(8, $row, $result['total']); 
 			  
 				$row++;
 			}
