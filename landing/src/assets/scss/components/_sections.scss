@@ -26,7 +26,7 @@ section#hero {
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
-  min-height: 60vh;
+  min-height: 70vh;
   background-image: url('../img/hero-banner.jpg');
   background-repeat: no-repeat;
           
@@ -71,7 +71,7 @@ section#order-cycle {
 
   .order-step {
     img {
-      width: 80%;
+      width: 70%;
     }
 
     .step-content {
