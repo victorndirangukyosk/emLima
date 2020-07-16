@@ -23,7 +23,6 @@ class Controlleraccounttransactions extends Controller {
 
 
     public function index() {  
-
         $data['kondutoStatus'] = $this->config->get('config_konduto_status');
         
         $data['konduto_public_key'] = $this->config->get('config_konduto_public_key');
@@ -216,7 +215,7 @@ class Controlleraccounttransactions extends Controller {
         $data['header'] = $this->load->controller('common/header/information');
 
         $data['account_edit'] = $this->load->controller('account/edit');
-
+        $data['pay'] = $this->url->link('account/transactions','pay=online');
         $data['home'] = $this->url->link('common/home/toHome');
         //$data['telephone'] =  $this->formatTelephone($this->customer->getTelephone());
         /** Added new params */
@@ -233,17 +232,37 @@ class Controlleraccounttransactions extends Controller {
 		$this->load->model('account/order');
 		$order_total = $this->model_account_order->getTotalOrders();
 
-        $PaymentFilter = "'mPesa On Delivery','Cash On Delivery','mPesa Online'";
-        $statusCancelledFilter  = "'Cancelled'";
-        $statusPendingFilter  = "'Cancelled','Delivered','Refunded','Returned','Partially Delivered'";
-        $results_pending = $this->model_account_order->getOrders(($page - 1) * 10, 10,$PaymentFilter,$statusPendingFilter,$In=false);
-        $results_success = $this->model_account_order->getOrders(($page - 1) * 10, 10,$PaymentFilter,$statusPendingFilter,$In=true);
-        $results_cancelled = $this->model_account_order->getOrders(($page - 1) * 10, 10,$PaymentFilter,$statusCancelledFilter,$In=true);
-        $data['pending_transactions'] = $results_pending;
-        $data['success_transactions'] = $results_success;
-        $data['cancelled_transactions'] = $results_cancelled;
-	    //echo "<pre>";print_r($results_success);die;
-        //echo "<pre>";print_r($data['telephone'] );die;
+        $results_orders = $this->model_account_order->getOrders(($page - 1) * 10, 10,$NoLimit=true);
+        $PaymentFilter = array('mPesa On Delivery','Cash On Delivery','mPesa Online');
+        $statusCancelledFilter  = array('Cancelled');
+        $statusSucessFilter  =  array('Delivered','Partially Delivered');
+        $statusPendingFilter  = array('Cancelled','Delivered','Refunded','Returned','Partially Delivered');
+        //$results_pending = $this->model_account_order->getOrders(($page - 1) * 10, 10,$PaymentFilter,$statusPendingFilter,$In=false);
+        //$results_success = $this->model_account_order->getOrders(($page - 1) * 10, 10,$PaymentFilter,$statusPendingFilter,$In=true);
+        //$results_cancelled = $this->model_account_order->getOrders(($page - 1) * 10, 10,$PaymentFilter,$statusCancelledFilter,$In=true);
+        $data['pending_transactions'] = array();
+        $data['success_transactions'] = array();
+        $data['cancelled_transactions'] = array();
+        //echo "<pre>";print_r($results_orders);die;
+        if(count($results_orders)>0){
+            foreach($results_orders as $order){
+                $this->load->model('sale/order');
+			    $order['transcation_id'] = $this->model_sale_order->getOrderTransactionId($order['order_id']);
+                //echo "<pre>";print_r($order);die;
+                if(in_array($order['payment_method'],$PaymentFilter)){
+                 if(!empty($order['transcation_id'])){
+                 //if(in_array($order['status'],$statusSucessFilter) && !empty($order['transcation_id'])){
+                    $data['success_transactions'][] = $order;
+                 }else if(in_array($order['status'],$statusCancelledFilter)){
+                    $data['cancelled_transactions'][] = $order;
+                 }else  if(!in_array($order['status'],$statusCancelledFilter)){
+                    $data['pending_transactions'][] = $order;
+                 }
+
+               }
+            }
+        }
+        //echo "<pre>";print_r($data);die;
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/my_transactions.tpl')) {
             $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/my_transactions.tpl', $data));
         } else {
