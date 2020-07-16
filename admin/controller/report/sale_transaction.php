@@ -34,6 +34,13 @@ class ControllerReportSaleTransaction extends Controller {
             $filter_customer = null;
         }
 
+        if (isset($this->request->get['filter_company'])) {
+            $filter_company = $this->request->get['filter_company'];
+        } else {
+            $filter_company = null;
+        }
+
+
         if (isset($this->request->get['filter_vendor'])) {
             $filter_vendor = $this->request->get['filter_vendor'];
         } else {
@@ -71,6 +78,15 @@ class ControllerReportSaleTransaction extends Controller {
             $filter_date_added = '1990-01-01';
         }
 
+        if (isset($this->request->get['filter_date_order'])) {
+            $filter_date_order = $this->request->get['filter_date_order'];
+        } 
+
+
+        if (isset($this->request->get['filter_date_delivery'])) {
+            $filter_date_delivery = $this->request->get['filter_date_delivery'];
+        }  
+
         if (isset($this->request->get['filter_date_modified'])) {
             $filter_date_modified = $this->request->get['filter_date_modified'];
         } else {
@@ -88,9 +104,12 @@ class ControllerReportSaleTransaction extends Controller {
             'filter_order_id' => $filter_order_id,
             'filter_transaction_id' => $filter_transaction_id,
             'filter_customer' => $filter_customer,
+            'filter_company' => $filter_company,
             'filter_payment' => $filter_payment,
             'filter_order_status' => $filter_order_status,
             'filter_date_added' => $filter_date_added,
+            'filter_date_order' => $filter_date_order,
+            'filter_date_delivery' => $filter_date_delivery,
             'filter_date_modified' => $filter_date_modified,
             'sort' => $sort,
             'order' => 'DESC',
@@ -145,6 +164,14 @@ class ControllerReportSaleTransaction extends Controller {
             $filter_customer = null;
         }
 
+
+        if (isset($this->request->get['filter_company'])) {
+            $filter_company = $this->request->get['filter_company'];
+        } else {
+            $filter_company = null;
+        }
+
+
         if (isset($this->request->get['filter_vendor'])) {
             $filter_vendor = $this->request->get['filter_vendor'];
         } else {
@@ -189,6 +216,20 @@ class ControllerReportSaleTransaction extends Controller {
             $filter_date_added = null;
         }
 
+
+        if (isset($this->request->get['filter_date_order'])) {
+            $filter_date_order = $this->request->get['filter_date_order'];
+        } else {
+            $filter_date_order = null;
+        }
+
+
+        if (isset($this->request->get['filter_date_delivery'])) {
+            $filter_date_delivery = $this->request->get['filter_date_delivery'];
+        } else {
+            $filter_date_delivery = null;
+        }
+
         if (isset($this->request->get['filter_date_modified'])) {
             $filter_date_modified = $this->request->get['filter_date_modified'];
         } else {
@@ -231,6 +272,11 @@ class ControllerReportSaleTransaction extends Controller {
             $url .= '&filter_customer=' . urlencode(html_entity_decode($this->request->get['filter_customer'], ENT_QUOTES, 'UTF-8'));
         }
 
+
+        if (isset($this->request->get['filter_company'])) {
+            $url .= '&filter_company=' . urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
+        }
+
         if (isset($this->request->get['filter_vendor'])) {
             $url .= '&filter_vendor=' . urlencode(html_entity_decode($this->request->get['filter_vendor'], ENT_QUOTES, 'UTF-8'));
         }
@@ -260,6 +306,14 @@ class ControllerReportSaleTransaction extends Controller {
 
         if (isset($this->request->get['filter_date_added'])) {
             $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
+        }
+
+        if (isset($this->request->get['filter_date_order'])) {
+            $url .= '&filter_date_order=' . $this->request->get['filter_date_order'];
+        }
+
+        if (isset($this->request->get['filter_date_delivery'])) {
+            $url .= '&filter_date_delivery=' . $this->request->get['filter_date_delivery'];
         }
 
         if (isset($this->request->get['filter_date_modified'])) {
@@ -301,9 +355,12 @@ class ControllerReportSaleTransaction extends Controller {
             'filter_order_id' => $filter_order_id,
             'filter_transaction_id' => $filter_transaction_id,
             'filter_customer' => $filter_customer,
+            'filter_company' => $filter_company,
             'filter_payment' => $filter_payment,
             'filter_order_status' => $filter_order_status,
             'filter_date_added' => $filter_date_added,
+            'filter_date_order' => $filter_date_order,
+            'filter_date_delivery' => $filter_date_delivery,
             'filter_date_modified' => $filter_date_modified,
             'sort' => $sort,
             'order' => $order,
@@ -348,6 +405,7 @@ class ControllerReportSaleTransaction extends Controller {
             $data['orders'][] = array(
                 'order_id' => $result['order_id'],
                 'customer' => $result['customer'],
+                'company' => $result['company'],
                 'status' => $result['status'],
 
                 'payment_method' => $result['payment_method'],
@@ -366,6 +424,8 @@ class ControllerReportSaleTransaction extends Controller {
                 //'total' => $this->currency->format($result['total'], $result['currency_code'], $result['currency_value']),
                 'sub_total' => $this->currency->format($sub_total, $result['currency_code'], $result['currency_value']),
                 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
+                //'order_date' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
+                'delivery_date' => date($this->language->get('date_format_short'), strtotime($result['delivery_date'])),
                 'date_modified' => date($this->language->get('date_format_short'), strtotime($result['date_modified'])),
                 'shipping_code' => $result['shipping_code'],
                 'view' => $this->url->link('sale/order/info', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL'),
@@ -573,7 +633,7 @@ class ControllerReportSaleTransaction extends Controller {
         $pagination->total = $order_total;
         $pagination->page = $page;
         $pagination->limit = $this->config->get('config_limit_admin');
-        $pagination->url = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+        $pagination->url = $this->url->link('report/sale_transaction', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
@@ -583,6 +643,7 @@ class ControllerReportSaleTransaction extends Controller {
         $data['filter_order_id'] = $filter_order_id;
         $data['filter_transaction_id'] = $filter_transaction_id;
         $data['filter_customer'] = $filter_customer;
+        $data['filter_company'] = $filter_company;
         $data['filter_vendor'] = $filter_vendor;
         $data['filter_store_name'] = $filter_store_name;
         $data['filter_delivery_method'] = $filter_delivery_method;
@@ -591,6 +652,8 @@ class ControllerReportSaleTransaction extends Controller {
         $data['filter_order_status'] = $filter_order_status;
         $data['filter_total'] = $filter_total;
         $data['filter_date_added'] = $filter_date_added;
+        $data['filter_date_order'] = $filter_date_order;
+        $data['filter_date_delivery'] = $filter_date_delivery;
         $data['filter_date_modified'] = $filter_date_modified;
 
         $this->load->model('localisation/order_status');

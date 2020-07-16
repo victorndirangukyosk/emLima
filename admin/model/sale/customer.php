@@ -174,6 +174,41 @@ class ModelSaleCustomer extends Model {
         return $query->rows;
     }
 
+
+    public function getCompanies($data = array()) {
+        $sql = "SELECT distinct c.company_name AS name FROM " . DB_PREFIX . "customer ";
+
+        if (!empty($data['filter_name'])) {            
+
+            $sql .= " where c.company_name LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+            
+        }   
+            $sql .= " ORDER BY company_name";
+        
+
+        if (isset($data['order']) && ($data['order'] == 'DESC')) {
+            $sql .= " DESC";
+        } else {
+            $sql .= " ASC";
+        }
+
+        if (isset($data['start']) || isset($data['limit'])) {
+            if ($data['start'] < 0) {
+                $data['start'] = 0;
+            }
+
+            if ($data['limit'] < 1) {
+                $data['limit'] = 20;
+            }
+
+            $sql .= " LIMIT " . (int) $data['start'] . "," . (int) $data['limit'];
+        }
+
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
+
     public function approve($customer_id) {
         $customer_info = $this->getCustomer($customer_id);
 
