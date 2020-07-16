@@ -9,6 +9,16 @@ body {
   flex-direction: column;
 }
 
+h4.section-header {
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.6rem;
+}
+
+section {
+  padding: 2.5rem 0rem;
+}
+
 section#hero {
   display: flex;
   flex-flow: row nowrap;
@@ -29,6 +39,15 @@ section#hero {
     max-width: 420px;
     font-size: 16px;
   }
+}
+
+section#kwikbasket-promise {
+  min-height: 70vh;
+  background-image: url('../img/kwikbasket-promise.svg');
+  background-size: 80%;
+  background-position-x: center;
+  background-position-y: center;
+  background-repeat: no-repeat;
 }
 
 footer {

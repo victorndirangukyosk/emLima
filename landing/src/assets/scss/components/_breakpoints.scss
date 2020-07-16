@@ -20,11 +20,17 @@
 
 }
 
-
-@media only screen and (max-width:500px) {
+// Mobile sized screens
+@media only screen and (max-width:600px) {
     section#hero {
         background-position-x: -24rem;
         background-position-y: 17rem;
+        background-repeat: no-repeat;
+    }
+
+    section#kwikbasket-promise {
+        background-size: 100%;
+        background-position-y: 4rem;
         background-repeat: no-repeat;
     }
 }
