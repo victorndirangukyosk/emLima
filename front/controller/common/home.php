@@ -157,11 +157,9 @@ class ControllerCommonHome extends Controller {
     $data['register'] = $this->url->link('account/register', '', 'SSL');
     $data['forgotten'] = $this->url->link('account/forgotten', '', 'SSL');
 
-    if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/index.tpl')) {
-      $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/index.tpl', $data));
-    } else {
-      $this->response->setOutput($this->load->view('default/template/common/homepage.tpl', $data));
-    }
+//    echo "<pre>";print_r($data);die;
+
+    $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/index.tpl', $data));
 	}
 
 	public function index() {

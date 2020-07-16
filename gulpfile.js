@@ -41,7 +41,7 @@ gulp.task('smarty', function () {
     .pipe(rename({
       extname: '.tpl'
     }))
-    .pipe(gulp.dest(templateDirectory + 'template/common'));
+    .pipe(gulp.dest(templateDirectory + 'template/landing_page'));
 });
 
 gulp.task('favicon', function () {
