@@ -9,10 +9,11 @@ const gulp = require('gulp'),
   jshint = require('gulp-jshint'),
   header = require('gulp-header'),
   rename = require('gulp-rename'),
+  fileInclude = require('gulp-file-include'),
   cssnano = require('gulp-cssnano'),
   sourcemaps = require('gulp-sourcemaps'),
-  imagemin = require('gulp-imagemin');
-htmlmin = require('gulp-htmlmin'),
+  imagemin = require('gulp-imagemin'),
+  htmlmin = require('gulp-htmlmin'),
   package = require('./package.json');
 
 const banner = [
@@ -32,7 +33,10 @@ const templateDirectory = 'front/ui/theme/metaorganic/';
 const assetsDirectory = templateDirectory + 'assets_landing_page/';
 
 gulp.task('smarty', function () {
-  return gulp.src(sourceDirectory + '*.html')
+  return gulp.src(sourceDirectory + '/templates/*.html')
+    .pipe(fileInclude({
+      prefix: '@@'
+    }))
     .pipe(gulp.dest('landing/build'))
     .pipe(replace('assets/', '<?= $base; ?>front/ui/theme/metaorganic/assets_landing_page/'))
     .pipe(htmlmin({
@@ -126,7 +130,7 @@ gulp.task('bs-reload', function() {
 gulp.task('default', ['smarty', 'css', 'js', 'favicon', 'img', 'browser-sync', 'fonts'], function () {
   gulp.watch(sourceDirectory + "assets/scss/**/*.scss", ['css']);
   gulp.watch(sourceDirectory + "assets/js/*.js", ['js']);
-  gulp.watch(sourceDirectory + "*.html", ['smarty']);
+  gulp.watch(sourceDirectory + '/templates/*.html', ['smarty']);
   gulp.watch(sourceDirectory + "*.ico", ['favicon']);
   gulp.watch(sourceDirectory + "assets/img/*.{png,jpg,jpeg,gif,svg}", ['img']);
   gulp.watch(sourceDirectory + "assets/fonts/*.{woff2,woff,otf,ttf}", ['fonts']);
