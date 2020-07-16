@@ -98,7 +98,7 @@
       <thead>
         <tr>
           <td style="width: 15%;" ><b><?php echo $column_product; ?></b></td>
-          <!--<td style="width: 15%;" ><b><?php echo $column_produce_type; ?></b></td>-->
+          <td style="width: 15%;" ><b><?php echo $column_produce_type; ?></b></td> 
           <td style="width: 15%;"><b><?php echo $column_unit; ?></b></td>
           <td class="text-right"><b><?php echo $column_quantity; ?></b></td>
 		   <td style="width: 15%;"><b><?php echo $column_unit_update; ?></b></td>
@@ -112,7 +112,7 @@
         <?php foreach ($order['product'] as $product) { ?>
         <tr>
           <td class="text-right" ><input type="text" class="form-control" name="products[<?php echo $product['product_id']?>][name]" value="<?php echo $product['name']; ?>"/></td>
-          <!--<td class="text-right"><input type="text" class="form-control"  disabled name="products[<?php echo $product['product_id']?>][produce_type]" placeholder='-' value="<?php if($product['produce_type']<>null){echo $product['produce_type'];}?>"/></td>-->
+          <td class="text-right"><input type="text" class="form-control"  disabled name="products[<?php echo $product['product_id']?>][produce_type]" placeholder='-' value="<?php if($product['produce_type']<>null){echo $product['produce_type'];}?>"/></td> 
           <td class="text-right"><input type="text" class="form-control"  disabled name="products[<?php echo $product['product_id']?>][unit]" value="<?php echo $product['unit']; ?>"/></td>
           <td class="text-right">
 
@@ -146,7 +146,7 @@
         <?php } ?>
         
         <tr class="productsAdd">
-          <td colspan="7">
+          <td colspan="8">
           </td>
           <td>
               <button type="button" onclick="add();" data-toggle="tooltip" title="" class="btn btn-primary" data-original-title="Add Product"><i class="fa fa-plus-circle"></i></button>
@@ -310,10 +310,10 @@ $(document).delegate('.changeTotal','change', function() {
   console.log("change");
   console.log($(this).val());
 
-  var q = $(this).parent().parent().children().eq(4).children().val();
-  var p = $(this).parent().parent().children().eq(5).children().val();
+  var q = $(this).parent().parent().children().eq(5).children().val();
+  var p = $(this).parent().parent().children().eq(6).children().val();
 
-  $(this).parent().parent().children().eq(6).children().val(p*q);
+  $(this).parent().parent().children().eq(7).children().val(p*q);
 
   var sum =0;
   var inbetweensum =0;
@@ -576,6 +576,10 @@ function add() {
   $html  = '<tr>';        
   $html += '<td class="text-right">';
   $html += '<input type="text" class="form-control" name="products['+noProduct+'][name]" value=""/>';
+  
+  $html += '</td>';
+   $html += '<td class="text-right">';
+  $html += '<input type="text" class="form-control" disabled  name="products['+noProduct+'][produce_type]" value="-"/>';
   
   $html += '</td>';
 
