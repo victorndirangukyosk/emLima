@@ -23,9 +23,11 @@
 // Mobile sized screens
 @media only screen and (max-width:600px) {
     section#hero {
-        background-position-x: -24rem;
-        background-position-y: 17rem;
-        background-repeat: no-repeat;
+       align-items: start;
+       justify-content: center;
+       text-align: center;
+       background-position-x: center;
+       background-position-y: 15vh;
     }
 
     section#kwikbasket-promise {
