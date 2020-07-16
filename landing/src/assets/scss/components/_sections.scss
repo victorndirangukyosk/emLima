@@ -7,6 +7,7 @@ body {
   min-height: 100%;
   display: flex;
   flex-direction: column;
+  text-rendering: optimizeLegibility;
 }
 
 h4.section-header {
@@ -25,7 +26,7 @@ section#hero {
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
-  min-height: 70vh;
+  min-height: 60vh;
   background-image: url('../img/hero-banner.jpg');
   background-repeat: no-repeat;
           
@@ -52,8 +53,8 @@ section#kwikbasket-promise {
   display: flex;
   justify-content: center;
   position: relative;
-  min-height: 70vh;
-  background-image: url('../img/kwikbasket-promise.svg');
+  min-height: 80vh;
+  background: url('../img/kwikbasket-promise.svg'), #fff;
   background-size: 80%;
   background-position-x: center;
   background-position-y: center;
@@ -62,6 +63,37 @@ section#kwikbasket-promise {
   .app-download-btn {
     position: absolute;
     bottom: 0;
+  }
+}
+
+section#order-cycle {
+  font-family: 'NeurialGrotesk';
+
+  .order-step {
+    img {
+      width: 80%;
+    }
+
+    .step-content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-flow: column nowrap;
+      h5 {
+        font-family: 'Poppins';
+        font-size: 1.1rem;
+        text-transform: uppercase;
+        font-weight: bold;
+        margin-top: 25px;
+        margin-bottom: 25px;
+      }
+  
+      p {
+        text-align: justify;
+        font-size: 1rem;
+        max-width: 38ch;
+      }
+    }
   }
 }
 
@@ -75,6 +107,7 @@ footer {
   }
 
   .footers {
+    background-color: #fff;
     a {
       color: $gray-dark;
     }
@@ -110,6 +143,10 @@ footer {
   #social-in:hover {
     color: #d61a2a;
     transition: all .001s;
+  }
+
+  .copyright {
+    background-color: #fff;
   }
 }
 

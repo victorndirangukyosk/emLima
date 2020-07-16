@@ -6,6 +6,16 @@
     width: 150px;
 }
 
+.scrolled {
+    background-color: #fff !important;
+    transition: background-color 200ms ease-in;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+nav {
+    background-color: $bg-gray;
+}
+
 .nav-link {
     color:  rgba($color: #000, $alpha: .75);
     padding-right: 1.2rem !important;
