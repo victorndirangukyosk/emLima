@@ -621,6 +621,8 @@ class ModelReportExcel extends Model {
 
 			$objPHPExcel->getActiveSheet()->setCellValue("A3", $html);
 			$objPHPExcel->getActiveSheet()->getStyle("A1:I3")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+			$objPHPExcel->getActiveSheet()->getStyle("I")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+
 			
 			/*$objPHPExcel->getActiveSheet()->getColumnDimension("A")->setWidth(20);
 			$objPHPExcel->getActiveSheet()->getColumnDimension("B")->setWidth(20);  
