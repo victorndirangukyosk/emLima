@@ -298,8 +298,26 @@ class ModelSaleOrder extends Model {
         return $query->row['total'];
     }
 
+    public function getOrderData($order_id) {
+        $order_query = $this->db->query("SELECT o.*,  CONCAT(c.firstname, ' ', c.lastname) AS customer ,c.customer_id FROM `" . DB_PREFIX . "order` o   Left Join  `" . DB_PREFIX . "customer` c on  c.customer_id = o.customer_id WHERE o.order_id = '" . (int) $order_id . "'");
+        //echo $this->db->last_query();die;
+
+        if ($order_query->num_rows) {         
+
+            return array(
+                'order_id' => $order_query->row['order_id'],
+                'invoice_no' => $order_query->row['invoice_no'],
+                'invoice_prefix' => $order_query->row['invoice_prefix'],                    
+                'customer_id' => $order_query->row['customer_id'],
+                'invoice_sufix' => $order_query->row['invoice_sufix'],
+            );            
+        } else {
+            return;
+        }
+     
+}
     public function createInvoiceNo($order_id) {
-        $order_info = $this->getOrder($order_id);
+        $order_info = $this->getOrderData($order_id);
 
         if ($order_info && !$order_info['invoice_no']) {
             $query = $this->db->query("SELECT MAX(invoice_no) AS invoice_no FROM `" . DB_PREFIX . "order` WHERE invoice_prefix = '" . $this->db->escape($order_info['invoice_prefix']) . "'");
@@ -313,6 +331,11 @@ class ModelSaleOrder extends Model {
             $this->db->query("UPDATE `" . DB_PREFIX . "order` SET invoice_no = '" . (int) $invoice_no . "', invoice_prefix = '" . $this->db->escape($order_info['invoice_prefix']) . "' WHERE order_id = '" . (int) $order_id . "'");
 
             return $order_info['invoice_prefix'] . $invoice_no;
+
+            $invoice_sufix='-'.$order_info['customer_id'] .'-'.$order_id;
+            $this->db->query("UPDATE `" . DB_PREFIX . "order` SET invoice_no = '" . (int) $invoice_no . "', invoice_prefix = '" . $this->db->escape($order_info['invoice_prefix']) . "', invoice_sufix = '" .$invoice_sufix . "' WHERE order_id = '" . (int) $order_id . "'");
+
+            return $order_info['invoice_prefix'] . $invoice_no.$invoice_sufix; 
         }
     }
 

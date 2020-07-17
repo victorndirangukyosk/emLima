@@ -31,7 +31,7 @@
                                 </div>
                             </div>
                             <div class="col-md-4 offset-md-4 text-right">
-                                <h4 class="bold">INVOICE #KB<?= $invoice_no ?></h4>
+                                <h5 class="bold">INVOICE #<?= $invoice_no ?></h5>
                             </div>
                         </div>
 
