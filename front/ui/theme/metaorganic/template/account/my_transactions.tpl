@@ -13,6 +13,7 @@
 	</ul>
 
 		<div class="tab-content">
+		<a class="btn btn-default" href="<?php echo $pay;?>">Pay Any Amount</a>
 		  <div id="pending" class="tab-pane fade in active">
 			<table class="table table-bordered">
 				<thead>
@@ -32,7 +33,7 @@
 					<td><?php echo $transaction['date_added'];?></td>
 					<td><?php echo round($transaction['total'],2).' '.$transaction['currency_code'];?></td>
 					<td><?php echo $transaction['payment_method'];?></td>
-					<td><a href="<?php echo $pay.'&order_id='.$transaction['order_id'];?>">Pay Now</a></td>
+					<td><a  class="btn btn-default" href="<?php echo $pay.'&order_id='.$transaction['order_id'];?>">Pay Now</a></td>
 				  </tr>
 				  <?php } ?>
 				  <?php }else{ ?>

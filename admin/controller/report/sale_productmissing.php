@@ -262,7 +262,11 @@ class ControllerReportSaleProductMissing extends Controller {
                 array_push($data['orders'], $torders1);
             }
         }
-
+       
+        if(isset($this->request->get['download_excel']) && ($this->request->get['download_excel'] == true)){
+        $this->load->model('report/excel');
+        $this->model_report_excel->download_saleorderproductmissingNew($data);
+        }
         //echo "<pre>";print_r($data['orders']);die;
         $data['heading_title'] = $this->language->get('heading_title');
 
