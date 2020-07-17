@@ -310,7 +310,7 @@ class ControllerSaleOrder extends Controller
                 $data['store_name'] = $store_data['name'];
 
                 if ($order_info['invoice_no']) {
-                    $invoice_no = $order_info['invoice_prefix'] . $order_info['invoice_no'];
+                    $invoice_no = $order_info['invoice_prefix'] . $order_info['invoice_no'].$order_info['invoice_sufix'] ;
                 } else {
                     $invoice_no = '';
                 }
@@ -2231,7 +2231,7 @@ class ControllerSaleOrder extends Controller
             $data['order_id'] = $this->request->get['order_id'];
 
             if ($order_info['invoice_no']) {
-                $data['invoice_no'] = $order_info['invoice_prefix'] . $order_info['invoice_no'];
+                $data['invoice_no'] = $order_info['invoice_prefix'] . $order_info['invoice_no'].$order_info['invoice_sufix'];
             } else {
                 $data['invoice_no'] = '';
             }
@@ -3926,7 +3926,7 @@ class ControllerSaleOrder extends Controller
                 $data['store_name'] = $store_data['name'];
 
                 if ($order_info['invoice_no']) {
-                    $invoice_no = $order_info['invoice_prefix'] . $order_info['invoice_no'];
+                    $invoice_no = $order_info['invoice_prefix'] . $order_info['invoice_no'].$order_info['invoice_sufix'];
                 } else {
                     $invoice_no = '';
                 }
@@ -4261,7 +4261,7 @@ class ControllerSaleOrder extends Controller
                 }
 
                 if ($order_info['invoice_no']) {
-                    $invoice_no = $order_info['invoice_prefix'] . $order_info['invoice_no'];
+                    $invoice_no = $order_info['invoice_prefix'] . $order_info['invoice_no'].$order_info['invoice_sufix'];
                 } else {
                     $invoice_no = '';
                 }
@@ -4458,7 +4458,7 @@ class ControllerSaleOrder extends Controller
                 $data['store_name'] = $store_data['name'];
 
                 if ($order_info['invoice_no']) {
-                    $invoice_no = $order_info['invoice_prefix'] . $order_info['invoice_no'];
+                    $invoice_no = $order_info['invoice_prefix'] . $order_info['invoice_no'].$order_info['invoice_sufix'];
                 } else {
                     $invoice_no = '';
                 }
@@ -4655,7 +4655,7 @@ class ControllerSaleOrder extends Controller
 
 
                 if ($order_info['invoice_no']) {
-                    $invoice_no = $order_info['invoice_prefix'] . $order_info['invoice_no'];
+                    $invoice_no = $order_info['invoice_prefix'] . $order_info['invoice_no'].$order_info['invoice_sufix'];
                 } else {
                     $invoice_no = '';
                 }
@@ -6172,6 +6172,7 @@ class ControllerSaleOrder extends Controller
                 'order_id' => $order_query->row['order_id'],
                 'invoice_no' => $order_query->row['invoice_no'],
                 'invoice_prefix' => $order_query->row['invoice_prefix'],
+                'invoice_sufix' => $order_query->row['invoice_sufix'],
                 'store_id' => $order_query->row['store_id'],
                 'store_name' => $order_query->row['store_name'],
                 'store_url' => $order_query->row['store_url'],

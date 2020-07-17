@@ -1749,12 +1749,40 @@ $('#button-reverse-payment').on('click', function() {
 });
 
 $('#button-history').on('click', function() {
+	 
+	 //alert($('select[name=\'order_status_id\'] option:selected').text());
   if(typeof verifyStatusChange == 'function'){
 	if(verifyStatusChange() == false){
 	  return false;
 	}
   }
 
+if($('select[name=\'order_status_id\'] option:selected').text()=='Delivered')
+{
+	 
+	$.ajax({
+		url: 'index.php?path=sale/order/createinvoiceno&token=<?php echo $token; ?>&order_id=<?php echo $order_id; ?>',
+		dataType: 'json',
+		beforeSend: function() {
+			$('#button-invoice').button('loading');			
+		},
+		
+		success: function(json) {
+			$('.alert').remove();
+						
+			if (json['error']) {
+				$('#tab-order').prepend('<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> ' + json['error'] + '</div>');
+			}
+			
+			if (json['invoice_no']) {
+				$('#button-invoice').replaceWith(json['invoice_no']);
+			}
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {
+			//alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+	});
+}
 	$.ajax({
 		url: 'index.php?path=sale/order/api&token=<?php echo $token; ?>&api=api/order/history&order_id=<?php echo $order_id; ?>',
 		type: 'post',
@@ -1783,7 +1811,8 @@ $('#button-history').on('click', function() {
 				$('#order-status').html($('select[name=\'order_status_id\'] option:selected').text());			
 
 				location = location;
-			}			
+			}	 
+
 		},			
 		error: function(xhr, ajaxOptions, thrownError) {
 			//alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
