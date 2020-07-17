@@ -2369,7 +2369,7 @@ class ModelReportExcel extends Model {
         $data['torders'] = array();
 
         //echo "<pre>";print_r($results);die;
-        foreach ($results as $result) {
+        /*foreach ($results as $result) {
 
            
 
@@ -2442,7 +2442,88 @@ class ModelReportExcel extends Model {
                 array_push($data['orders'], $torders1);
             }
         }
+		*/
+		
+		foreach ($results as $result) {
 
+           
+
+            $is_edited = $this->model_sale_order->hasRealOrderProducts($result['order_id']);
+
+            if(!$is_edited) {
+                continue;
+            }
+
+            $EditedProducts = $this->model_sale_order->getRealOrderProducts($result['order_id']);
+
+            $OrignalProducts = $this->model_sale_order->getOrderProducts($result['order_id']);
+
+            /*echo "<pre>";print_r($OrignalProducts);
+            echo "<pre>";print_r($EditedProducts);die;*/
+
+            foreach ($OrignalProducts as $OrignalProduct) {
+
+                $present = false;
+
+                foreach ($EditedProducts as $EditedProduct) {
+                    if(!empty($OrignalProduct['name']) && $OrignalProduct['name'] == $EditedProduct['name'] && $OrignalProduct['unit'] == $EditedProduct['unit']) {
+                        $present = true;
+                    }
+                }
+
+                if(!$present && !empty($OrignalProduct['name'])) {
+
+                    $data['torders'][] = array(
+                        'store' => $result['store_name'],
+                        'model' => $OrignalProduct['model'],
+
+                        'product_name' => $OrignalProduct['name'],
+                        'unit' => $OrignalProduct['unit'],
+                        'product_qty' => $OrignalProduct['quantity'],
+                    );
+
+                }
+            }
+        }
+
+        //echo "<pre>";print_r($data['torders']);die;
+        foreach ($data['torders'] as $torders1) {
+                
+            $ex = false;
+
+            foreach ($data['orders'] as $value1) {
+
+                if($value1['model'] == $torders1['model'] && $value1['store'] == $torders1['store']) {
+
+                    $ex = true;
+
+                }
+
+            }
+
+            if(!$ex) {
+                $sum = 0;
+
+                foreach ($data['torders'] as $key => $torders2) {
+                    
+                    if($torders1['model'] == $torders2['model'] && $torders1['store'] == $torders2['store']) {
+
+                        $sum += $torders2['product_qty'];
+
+                        unset($data['torders'][$key]);
+
+                    }
+
+                }
+
+                $torders1['product_qty'] = $sum;
+
+                $order_total++;
+
+                array_push($data['orders'], $torders1);
+            }
+		}
+		
         $rows = $data['orders'];
 		
 		//echo "<pre>";print_r($rows);die;	 
