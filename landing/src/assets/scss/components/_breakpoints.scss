@@ -23,21 +23,19 @@
 // Mobile sized screens
 @media only screen and (max-width:600px) {
     section#hero {
-       min-height: 100vh;
        align-items: start;
-       justify-content: center;
-       text-align: center;
        background-position-x: center;
        background-position-y: 30vh;
 
        .hero-title {
-           margin-top: 3rem;
+           margin-top: 7rem;
        }
     }
 
-    section#kwikbasket-promise {
+    section#what-we-do {
+        min-height: 42rem;
         background-size: 100%;
-        background-position-y: 4rem;
+        background-position-y: 7.5rem;
         background-repeat: no-repeat;
     }
 }

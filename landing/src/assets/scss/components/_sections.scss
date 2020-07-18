@@ -10,15 +10,30 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-h4.section-header {
-  font-family: "NeurialGrotesk";
-  text-align: center;
-  font-weight: bold;
-  font-size: 1.4rem;
-}
-
 section {
   padding: 2.5rem 0rem;
+
+  .section-header {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .section-title {
+    font-family: "NeurialGrotesk";
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.4rem;
+    margin-bottom: .8rem;
+  }
+
+  .section-subtitle {
+    font-family: "NeurialGrotesk";
+    text-align: center;
+    max-width: 75ch;
+  }
 }
 
 section#hero {
@@ -26,9 +41,10 @@ section#hero {
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
-  min-height: 70vh;
+  min-height: 100vh;
   background-image: url("../img/hero-banner.jpg");
   background-repeat: no-repeat;
+  background-size: cover;
 
   .hero-title {
     font-weight: bold;
@@ -49,21 +65,19 @@ section#hero {
   }
 }
 
-section#kwikbasket-promise {
+section#what-we-do {
   display: flex;
-  justify-content: center;
-  position: relative;
-  min-height: 80vh;
+  min-height: 30rem;
   background: url("../img/kwikbasket-promise.svg"), #fff;
   background-size: 80%;
   background-position-x: center;
-  background-position-y: center;
+  background-position-y: 1.4rem;
   background-repeat: no-repeat;
+}
 
-  .app-download-btn {
-    position: absolute;
-    bottom: 0;
-  }
+section#app-download {
+  font-family: "NeurialGrotesk";
+  background-color: #292F36;
 }
 
 section#order-cycle {
@@ -73,6 +87,7 @@ section#order-cycle {
     img {
       width: 70%;
     }
+    margin-top: 4rem;
 
     .step-content {
       display: flex;
@@ -80,11 +95,9 @@ section#order-cycle {
       align-items: center;
       flex-flow: column nowrap;
       h5 {
-        font-family: "Poppins";
         font-size: 1.1rem;
-        text-transform: uppercase;
         font-weight: bold;
-        margin-top: 25px;
+        margin-top: 30px;
         margin-bottom: 25px;
       }
 
