@@ -38,3 +38,17 @@ nav {
     box-shadow: none;
     border-color: #F6AD55;
 }
+
+[data-scroll] {
+    transition: all .7s;
+}
+
+[data-scroll="in"] {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+[data-scroll="out"] {
+    opacity: 0;
+    transform: translateX(-200px);
+}
