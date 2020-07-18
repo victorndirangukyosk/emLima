@@ -110,6 +110,20 @@ section#order-cycle {
   }
 }
 
+section#partners {
+  background-color: #fff;
+
+  img.partner-logo {
+    cursor: pointer;
+    width: 150px;
+    filter: grayscale(1);
+
+    &:hover {
+      filter: none;
+    }
+  }
+}
+
 footer {
   font-family: "NeurialGrotesk";
   margin-top: auto;
