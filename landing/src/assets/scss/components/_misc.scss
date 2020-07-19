@@ -39,6 +39,15 @@ nav {
     border-color: #F6AD55;
 }
 
+.anim-from-top {
+    opacity: 0;
+    transform: translateY(-200px);
+}
+
+.anim-from-bottom {
+    transform: translateY(200px);
+}
+
 [data-scroll] {
     transition: all .7s;
 }

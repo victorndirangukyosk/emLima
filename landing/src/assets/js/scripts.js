@@ -20,6 +20,19 @@
     // Landing page scroll animations
     ScrollOut();
 
+    // Hero section animation
+    gsap.to(".anim-from-top", {
+      opacity: 1,
+      y: 0, 
+      duration: .5,
+      ease: 'elastic'
+    });
+
+    gsap.to(".anim-from-bottom", {
+      y: 0, 
+      duration: .5
+    });
+
     // Customer Login
     $(document).delegate('#login-button', 'click', function (e) {
       e.preventDefault();
