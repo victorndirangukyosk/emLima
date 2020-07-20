@@ -166,6 +166,10 @@ class ControllerCommonHome extends Controller {
     $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/terms-and-conditions.tpl'));
   }
 
+  public function privacy_policy() {
+    $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/privacy-policy.tpl'));
+  }
+
 	public function index() {
 		if(!isset($this->session->data['customer_id'])){
 			if(isset($_REQUEST['action']) && ($_REQUEST['action'] == 'shop')){
