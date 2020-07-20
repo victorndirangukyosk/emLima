@@ -125,6 +125,50 @@ section#partners {
   }
 }
 
+section#about-us {
+  margin-top: 6rem;
+  font-family: "NeurialGrotesk";
+}
+
+section#founding-investors {
+  background-color: #fff;
+  font-family: "NeurialGrotesk";
+
+  img {
+    width: 180px;
+    margin-bottom: 16px;
+  }
+
+  .founding-investor {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+section#our-team {
+  font-family: "NeurialGrotesk";
+  .team-member {
+    img {
+      width: 170px;
+    }
+
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .team-member-info {
+    margin-top: 16px;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
 footer {
   font-family: "NeurialGrotesk";
   margin-top: auto;

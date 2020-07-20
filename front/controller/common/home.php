@@ -162,6 +162,10 @@ class ControllerCommonHome extends Controller {
     $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/index.tpl', $data));
 	}
 
+  public function about_us() {
+    $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/about-us.tpl'));
+  }
+
 	public function terms_and_conditions() {
     $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/terms-and-conditions.tpl'));
   }
