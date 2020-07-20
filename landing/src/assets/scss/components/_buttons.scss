@@ -18,6 +18,7 @@
     &:not(:disabled):not(.disabled):active {
         background-color: $primary-color-darkest !important;
         box-shadow: none !important;
+        border-color: transparent;
     }
 
     &:hover {
