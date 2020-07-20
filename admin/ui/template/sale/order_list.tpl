@@ -271,7 +271,7 @@
                                     <td class="text-left"><?php echo $order['delivery_timeslot']; ?></td>
                                     
                                     <?php if (!$this->user->isVendor()): ?>
-                                        <td class="text-right"><?php echo $order['payment_method']; ?></td>
+                                        <td class="text-right"  style="width:120px"><?php echo $order['payment_method']; ?></td>
                                      <?php endif ?>  
 
                                     
