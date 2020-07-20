@@ -3,7 +3,7 @@
 }
 
 .logo {
-    width: 150px;
+    width: 180px;
 }
 
 .scrolled {
@@ -37,6 +37,22 @@ nav {
 .form-control:focus {
     box-shadow: none;
     border-color: #F6AD55;
+}
+
+.text-content-container {
+    margin-top: 8rem;
+    font-family: "NeurialGrotesk";
+
+    h6 {
+        color: $primary-color;
+        margin-top: 2.2rem;
+        text-transform: uppercase;
+    }
+
+    p {
+        color: #6c757d;
+        line-height: 1.5rem;
+    }
 }
 
 .anim-from-top {

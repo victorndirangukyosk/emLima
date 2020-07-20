@@ -42,19 +42,20 @@ section#hero {
   flex-flow: row nowrap;
   align-items: center;
   min-height: 100vh;
+  font-size: 19px;
   background-image: url("../img/hero-banner.jpg");
   background-repeat: no-repeat;
   background-size: cover;
 
   .hero-title {
     font-weight: bold;
-    font-size: 1.8rem;
+    font-size: 1.8em;
   }
 
   .hero-subtitle {
     color: $gray-dark;
     max-width: 420px;
-    font-size: 1.2rem;
+    font-size: 1.2em;
     font-weight: 500;
   }
 
@@ -173,6 +174,39 @@ footer {
 
   .copyright {
     background-color: #fff;
+    font-size: .9rem;
+
+    .content-container {
+      width: 100%;
+      display: flex;
+      flex-flow: row wrap;
+      justify-content: space-between;
+
+      ul {
+        list-style: none;
+        display: flex;
+        flex-direction: row nowrap;
+        justify-content: space-around;
+        margin: 0;
+        padding: 0;
+
+        :nth-child(1) {
+          margin-right: 8px;
+        }
+  
+        li {
+          text-decoration: none;
+        }
+        
+        a {
+          color: #6c757d;
+  
+          &:hover {
+            text-decoration: none;
+          }
+        }
+      }
+    }
   }
 }
 

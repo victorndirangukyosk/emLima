@@ -21,14 +21,14 @@
     ScrollOut();
 
     // Hero section animation
-    gsap.to(".anim-from-top", {
+    gsap.to('.anim-from-top', {
       opacity: 1,
       y: 0, 
       duration: .5,
       ease: 'elastic'
     });
 
-    gsap.to(".anim-from-bottom", {
+    gsap.to('.anim-from-bottom', {
       y: 0, 
       duration: .5
     });
@@ -51,8 +51,8 @@
           dataType: 'json',
           success: function (json) {
             if (json['status']) {
-              if (json['temppassword'] == "1") {
-                location = $('.base_url').attr('href') + "/changepass";
+              if (json['temppassword'] == '1') {
+                location = $('.base_url').attr('href') + '/changepass';
                 console.log($('.base_url'));
               }
               else {
