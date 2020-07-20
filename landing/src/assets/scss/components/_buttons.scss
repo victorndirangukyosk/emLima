@@ -15,6 +15,11 @@
     border-color: $primary-color;
     box-shadow: none;
 
+    &:not(:disabled):not(.disabled):active {
+        background-color: $primary-color-darkest !important;
+        box-shadow: none !important;
+    }
+
     &:hover {
         box-shadow: none;
         border-color: $primary-color !important;
