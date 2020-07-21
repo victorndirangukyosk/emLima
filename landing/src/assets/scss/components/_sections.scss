@@ -25,7 +25,7 @@ section {
     text-align: center;
     font-weight: bold;
     font-size: 1.4rem;
-    margin-bottom: .8rem;
+    margin-bottom: 0.8rem;
   }
 
   .section-subtitle {
@@ -74,11 +74,10 @@ section#what-we-do {
 }
 
 section#app-download {
-  background-color: #292F36;
+  background-color: #292f36;
 }
 
 section#order-cycle {
-
   .order-step {
     img {
       width: 70%;
@@ -161,11 +160,11 @@ section#our-team {
   }
 }
 
-section#partnership-programme{
+section#partnership-programme {
   margin-top: 6rem;
 }
 
-section#partner-registration{
+section#partner-registration {
   color: #fff;
   background-color: $primary-color;
 }
@@ -184,6 +183,84 @@ section#careers {
 
 section#blog {
   margin-top: 6rem;
+}
+
+section#faq {
+  margin-top: 6rem;
+
+  [data-toggle="collapse"] i:before {
+    font-family: 'FontAwesome';
+    content: "\f068";
+  }
+
+  [data-toggle="collapse"].collapsed i:before {
+    font-family: 'FontAwesome';
+    content: "\f067";
+  }
+
+  #accordion {
+    .card-header {
+      margin-bottom: 8px;
+    }
+    .accordion-title {
+      position: relative;
+      display: block;
+      padding: 8px 0 8px 50px;
+      background: #292f36;
+      border-radius: 8px;
+      overflow: hidden;
+      text-decoration: none;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 700;
+      width: 100%;
+      text-align: left;
+      transition: all 0.4s ease-in-out;
+      i {
+        position: absolute;
+        width: 40px;
+        height: 100%;
+        left: 0;
+        top: 0;
+        color: #fff;
+        background: radial-gradient(rgba(#292f36, 0.8), #292f36);
+        text-align: center;
+        border-right: 1px solid transparent;
+      }
+      &:hover {
+        padding-left: 60px;
+        background: #292f36;
+        color: #fff;
+
+        i {
+          border-right: 1px solid #fff;
+        }
+      }
+    }
+    .accordion-body {
+      padding: 40px 55px;
+
+      ul {
+        list-style: none;
+        margin-left: 0;
+        padding-left: 0;
+      }
+
+      li {
+        padding-left: 1.2rem;
+        text-indent: -1.2rem;
+
+        &:before {
+          content: "\f10a";
+          padding-right: 5px;
+          font-family: "Flaticon";
+          font-size: 16px;
+          font-style: normal;
+          color: #213744;
+        }
+      }
+    }
+  }
 }
 
 footer {
@@ -234,7 +311,7 @@ footer {
 
   .copyright {
     background-color: #fff;
-    font-size: .9rem;
+    font-size: 0.9rem;
 
     .content-container {
       width: 100%;
@@ -253,14 +330,14 @@ footer {
         :nth-child(1) {
           margin-right: 8px;
         }
-  
+
         li {
           text-decoration: none;
         }
-        
+
         a {
           color: #6c757d;
-  
+
           &:hover {
             text-decoration: none;
           }
@@ -282,7 +359,7 @@ footer {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='34' height='44' viewBox='0 0 34 44'%3E%3Cg fill='%23e4e4e4' fill-opacity='0.4'%3E%3Cpath fill-rule='evenodd' d='M1 6.2C.72 5.55.38 4.94 0 4.36v13.28c.38-.58.72-1.2 1-1.84A12.04 12.04 0 0 0 7.2 22 12.04 12.04 0 0 0 1 28.2c-.28-.65-.62-1.26-1-1.84v13.28c.38-.58.72-1.2 1-1.84A12.04 12.04 0 0 0 7.2 44h21.6a12.05 12.05 0 0 0 5.2-4.36V26.36A12.05 12.05 0 0 0 28.8 22a12.05 12.05 0 0 0 5.2-4.36V4.36A12.05 12.05 0 0 0 28.8 0H7.2A12.04 12.04 0 0 0 1 6.2zM17.36 23H12a10 10 0 1 0 0 20h5.36a11.99 11.99 0 0 1 0-20zm1.28-2H24a10 10 0 1 0 0-20h-5.36a11.99 11.99 0 0 1 0 20zM12 1a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 14a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-3.46-2a2 2 0 1 0-3.47 2 2 2 0 0 0 3.47-2zm0-4a2 2 0 1 0-3.47-2 2 2 0 0 0 3.47 2zM12 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm3.46 2a2 2 0 1 0 3.47-2 2 2 0 0 0-3.47 2zm0 4a2 2 0 1 0 3.47 2 2 2 0 0 0-3.47-2zM24 43a10 10 0 1 0 0-20 10 10 0 0 0 0 20zm0-14a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm3.46 2a2 2 0 1 0 3.47-2 2 2 0 0 0-3.47 2zm0 4a2 2 0 1 0 3.47 2 2 2 0 0 0-3.47-2zM24 37a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-3.46-2a2 2 0 1 0-3.47 2 2 2 0 0 0 3.47-2zm0-4a2 2 0 1 0-3.47-2 2 2 0 0 0 3.47 2z'/%3E%3C/g%3E%3C/svg%3E");
 
   label {
-    font-size: .8rem;
+    font-size: 0.8rem;
     color: grey;
   }
 
