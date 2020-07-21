@@ -244,6 +244,7 @@ class Controlleraccounttransactions extends Controller {
         $data['success_transactions'] = array();
         $data['cancelled_transactions'] = array();
         //echo "<pre>";print_r($results_orders);die;
+        $totalPendingAmount = 0;
         if(count($results_orders)>0){
             foreach($results_orders as $order){
                 $this->load->model('sale/order');
@@ -256,6 +257,8 @@ class Controlleraccounttransactions extends Controller {
                  }else if(in_array($order['status'],$statusCancelledFilter)){
                     $data['cancelled_transactions'][] = $order;
                  }else  if(!in_array($order['status'],$statusCancelledFilter)){
+                    $totalPendingAmount = $totalPendingAmount + $order['total'];
+                    $data['pending_order_id'][] = $order['order_id'];
                     $data['pending_transactions'][] = $order;
                  }
 
@@ -263,6 +266,8 @@ class Controlleraccounttransactions extends Controller {
             }
         }
         //echo "<pre>";print_r($data);die;
+        $data['total_pending_amount'] = $totalPendingAmount;
+        $data['pending_order_id'] = implode('--',$data['pending_order_id']);
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/my_transactions.tpl')) {
             $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/my_transactions.tpl', $data));
         } else {

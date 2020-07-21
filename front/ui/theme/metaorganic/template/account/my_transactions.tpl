@@ -1,10 +1,10 @@
+<?php //echo '<pre>';print_r($_SESSION);exit;?>
 <?php echo $header; ?>
                       <div class="container">
   <?php if ($error_warning) { ?>
   <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> <?php echo $error_warning; ?></div>
   <?php } ?>
   <div class="row">
-  <?php if(!isset($_REQUEST['pay'])){?>
   <div class="col-md-9">
 	<ul class="nav nav-tabs">
 	  <li class="active"><a data-toggle="tab" href="#pending">Pending Payments</a></li>
@@ -13,7 +13,6 @@
 	</ul>
 
 		<div class="tab-content">
-		<a class="btn btn-default" href="<?php echo $pay;?>">Pay Any Amount</a>
 		  <div id="pending" class="tab-pane fade in active">
 			<table class="table table-bordered">
 				<thead>
@@ -31,9 +30,9 @@
 				  <tr>
 					<td><?php echo $transaction['order_id'];?></td>
 					<td><?php echo $transaction['date_added'];?></td>
-					<td><?php echo round($transaction['total'],2).' '.$transaction['currency_code'];?></td>
+					<td><?php echo $transaction['currency_code'].' '.round($transaction['total'],2);?></td>
 					<td><?php echo $transaction['payment_method'];?></td>
-					<td><a  class="btn btn-default" href="<?php echo $pay.'&order_id='.$transaction['order_id'];?>">Pay Now</a></td>
+					<td><a  class="btn btn-default" onclick="changeOrderIdForPay('<?php echo $transaction['order_id'];?>','<?php echo round($transaction['total'],2)?>')">Pay Now</a></td>
 				  </tr>
 				  <?php } ?>
 				  <?php }else{ ?>
@@ -61,7 +60,7 @@
                   <?php foreach($success_transactions as $transaction){?>
 				  <tr>
 					<td><?php echo $transaction['order_id'];?></td>
-					<td><?php echo round($transaction['total'],2).' '.$transaction['currency_code'];?></td>
+					<td><?php echo $transaction['currency_code'].' '.round($transaction['total'],2);?></td>
 					<td><?php echo $transaction['date_added'];?></td>
 					<td><?php echo $transaction['payment_method'];?></td>
 					<td><?php echo $transaction['transcation_id'];?></td>
@@ -92,7 +91,7 @@
                   <?php foreach($cancelled_transactions as $transaction){?>
 				  <tr>
 					<td><?php echo $transaction['order_id'];?></td>
-					<td><?php echo round($transaction['total'],2).' '.$transaction['currency_code'];?></td>
+					<td><?php echo $transaction['currency_code'].' '.round($transaction['total'],2);?></td>
 					<td><?php echo $transaction['date_added'];?></td>
 					<td><?php echo $transaction['payment_method'];?></td>
 					<!--<td>Pay Now</td>-->
@@ -108,11 +107,25 @@
 		  </div>
 		</div>
    </div>
-  <?php }else { ?>
+   <div class="col-md-9" id="payment_options">
+   Payment Options
+	<div class="radio">
+	  <label><input class="option_pay" onchange="payOptionSelected()"  value="pay_full" type="radio" name="pay_option">Pay Full</label>
+	</div>
+	<div class="radio">
+	  <label><input type="radio" class="option_pay" onchange="payOptionSelected()" value="pay_other" name="pay_option">Pay Other Amount</label>
+	</div>
+   </div>
+
 <div id="pay-confirm-order" class="col-md-9 confirm_order_class" style="padding:35px;">
 
 <h2>Payment mPesa Online</h2>
 <input type="hidden" name="order_id" value="<?php echo $this->request->get['order_id'];?>">
+<input type="hidden" name="customer_id" value="<?php echo $_SESSION['customer_id'];?>">
+<input type="hidden" name="total_pending_amount" value="<?php echo $total_pending_amount;?>">
+<input type="hidden" name="pending_order_id" value="<?php echo $pending_order_id;?>">
+
+
 <h3 style="color: #f97900;">Please enter mpesa registered mobile number</h3>
 <div class="alert alert-danger" id="error_msg" style="margin-bottom: 7px; display: none;">
 </div>
@@ -131,6 +144,7 @@
     </p>
 
 <input id="mpesa_phone_number" name="telephone" type="text" value="" class="form-control input-md" required="" placeholder="Mobile number" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 &amp;&amp; event.charCode <= 57" minlength="9" maxlength="9" style="display: inline-block;    width: 22%;">
+<input id="mpesa_amount" name="amount_to_pay" type="text" value="" readonly class="form-control input-md" required="" placeholder="Amount" onkeypress="return (event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 &amp;&amp; event.charCode <= 57" minlength="9" maxlength="9" style="display:inline-block; width: 22%;margin-left: 10px;">
 
 </span>
 
@@ -173,11 +187,17 @@
 
 	    $('#error_msg').hide();
         var order_id = $('input[name="order_id"]').val();
+		var mpesa_amount = $('input[name="amount_to_pay"]').val();
+		var customer = $('input[name="customer_id"]').val();
+		var pending_order_id = $('input[name="pending_order_id"]').val();
+		if(mpesa_amount =='' || mpesa_amount < 1){
+			alert('Please select valid amount to pay');
+		}else{
 	    if($('#mpesa_phone_number').val().length >= 9) {
 	    	$.ajax({
 		        type: 'post',
 		        url: 'index.php?path=payment/mpesa/confirm',
-		        data: 'mobile=' + encodeURIComponent($('#mpesa_phone_number').val())+'&payment_method=mpesa&order_id='+order_id,
+		        data: 'mobile=' + encodeURIComponent($('#mpesa_phone_number').val())+'&payment_method=mpesa&order_id='+order_id+'&amount='+mpesa_amount+'&pending_order_ids='+pending_order_id,
 	            dataType: 'json',
 		        cache: false,
 		        beforeSend: function() {
@@ -232,6 +252,7 @@
 		        }
 		    });
 	    }
+		}
 	});
 
 	$('#button-complete').on('click', function() {
@@ -292,7 +313,7 @@
 </script> 
     
  </div>
-  <?php } ?>
+
    </div>
    </div>
 
@@ -471,6 +492,30 @@ $('button[id^=\'button-custom-field\']').on('click', function() {
         todayHighlight: true,
         autoclose: true,
     });    
+	
+	function changeOrderIdForPay(orderId,amount_to_pay){
+		$('input[name="order_id"]').val(orderId);
+		$('#mpesa_amount').val(amount_to_pay);
+		$('div#payment_options').hide();
+		$('div#payment_options').focus();
+		/* $('html, body').animate({
+          scrollTop: $("#payment_options").offset().top
+          }, 2000);
+		*/
+	}
+	
+	function payOptionSelected(){
+		//total_pending_amount
+	    var radioValue = $("input[name='pay_option']:checked").val();
+	    var total_pending_amount = $("input[name='total_pending_amount']").val();
+	   if(radioValue == 'pay_full'){
+		   $('#mpesa_amount').attr('readonly',true);
+		   $('#mpesa_amount').val(total_pending_amount);
+	   }else{
+		   $('#mpesa_amount').attr('readonly',false);
+		   $('#mpesa_amount').val('');
+	   }
+	}
 </script> 
                  
 
@@ -484,6 +529,10 @@ $('button[id^=\'button-custom-field\']').on('click', function() {
 	.nav-tabs>li {
 		width: 33.3%;
     }
+	
+	.option_pay {
+		margin-top:-3px !important;
+	}
 	</style>
 </body>
 </html>

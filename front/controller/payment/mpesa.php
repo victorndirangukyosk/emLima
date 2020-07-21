@@ -56,6 +56,10 @@ class ControllerPaymentMpesa extends Controller {
                 }
             }
 
+            if(empty($order_id)){
+               $amount =  (int) $this->request->post['amount'];
+            }
+
             $live = "true";
 
             $mpesa= new \Safaricom\Mpesa\Mpesa($this->config->get('mpesa_customer_key'),$this->config->get('mpesa_customer_secret'),$this->config->get('mpesa_environment'),$live);
@@ -69,7 +73,6 @@ class ControllerPaymentMpesa extends Controller {
 
             if(!$sta) {
 
-                
 
                 $PartyA = $this->config->get('config_telephone_code')."".$this->request->post['mobile'];
                 
@@ -86,6 +89,11 @@ class ControllerPaymentMpesa extends Controller {
                 $PhoneNumber = $this->config->get('config_telephone_code')."".$this->request->post['mobile'];
                 $AccountReference = 'GPK';//$this->config->get('config_name');
                 $TransactionDesc = '#'.$order_id;
+
+                if(empty($order_id)){
+                    $TransactionDesc = '#'.$this->request->post['pending_order_ids'];
+                }
+
                 $Remarks = 'PAYMENT';
 
                 $log->write($BusinessShortCode."x". $LipaNaMpesaPasskey."x". $TransactionType."amount". $Amount."x". $PartyA."x". $PartyB."x". $PhoneNumber."x". $CallBackURL."x". $AccountReference."x". $TransactionDesc."x". $Remarks);
