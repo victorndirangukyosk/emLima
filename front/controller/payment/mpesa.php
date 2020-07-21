@@ -89,9 +89,13 @@ class ControllerPaymentMpesa extends Controller {
                 $PhoneNumber = $this->config->get('config_telephone_code')."".$this->request->post['mobile'];
                 $AccountReference = 'GPK';//$this->config->get('config_name');
                 $TransactionDesc = '#'.$order_id;
-
+                
                 if(empty($order_id)){
-                    $TransactionDesc = '#'.$this->request->post['pending_order_ids'];
+                    if(isset($this->request->post['paymode']) && !empty($this->request->post['paymode']) && $this->request->post['paymode'] == 'pay_other' ){
+                        $TransactionDesc = '#'.$this->request->post['pending_order_ids'].'##'.$this->request->post['customer'];
+                    }else{
+                      $TransactionDesc = '#'.$this->request->post['pending_order_ids'];
+                    }
                 }
 
                 $Remarks = 'PAYMENT';
@@ -118,9 +122,22 @@ class ControllerPaymentMpesa extends Controller {
 
                 if(isset($stkPushSimulation->ResponseCode) && $stkPushSimulation->ResponseCode == 0) {
                    
+                    if(!empty($order_id)){
                     //save in 
                     $this->model_payment_mpesa->addOrder($order_info, $stkPushSimulation->MerchantRequestID, $stkPushSimulation->CheckoutRequestID);
-
+                    }else{
+                        if(isset($this->request->post['paymode']) && !empty($this->request->post['paymode']) && $this->request->post['paymode'] == 'pay_other' ){
+                           //$TransactionDesc = '#'.$this->request->post['pending_order_ids'].'##'.$this->request->post['customer'];
+                        }else{
+                            $pendingOrdersIds = explode('--',$this->request->post['pending_order_ids']);
+                            if(count($pendingOrdersIds)){
+                                foreach($pendingOrdersIds as $key=>$value){
+                                $order_info = $this->model_checkout_order->getOrder($value);
+                                $this->model_payment_mpesa->addOrder($order_info, $stkPushSimulation->MerchantRequestID, $stkPushSimulation->CheckoutRequestID);
+                            }
+                         }
+                      }
+                    }
                     /*foreach ($this->session->data['order_id'] as $order_id) {
 
                         $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('mpesa_order_status_id'));

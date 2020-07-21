@@ -190,6 +190,7 @@
 		var mpesa_amount = $('input[name="amount_to_pay"]').val();
 		var customer = $('input[name="customer_id"]').val();
 		var pending_order_id = $('input[name="pending_order_id"]').val();
+		var paymode = $("input[name='pay_option']:checked").val();
 		if(mpesa_amount =='' || mpesa_amount < 1){
 			alert('Please select valid amount to pay');
 		}else{
@@ -197,7 +198,7 @@
 	    	$.ajax({
 		        type: 'post',
 		        url: 'index.php?path=payment/mpesa/confirm',
-		        data: 'mobile=' + encodeURIComponent($('#mpesa_phone_number').val())+'&payment_method=mpesa&order_id='+order_id+'&amount='+mpesa_amount+'&pending_order_ids='+pending_order_id,
+		        data: 'mobile=' + encodeURIComponent($('#mpesa_phone_number').val())+'&payment_method=mpesa&order_id='+order_id+'&amount='+mpesa_amount+'&pending_order_ids='+pending_order_id+'&customer='+customer+'&paymode='+paymode,
 	            dataType: 'json',
 		        cache: false,
 		        beforeSend: function() {
