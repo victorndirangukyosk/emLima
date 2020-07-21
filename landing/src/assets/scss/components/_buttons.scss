@@ -61,6 +61,24 @@
     }
 }
 
+.btn-secondary {
+    color: #fff;
+    background: $secondary-color;
+    border: none;
+
+    
+    &:not(:disabled):not(.disabled):active {
+        background-color: $primary-color-darkest !important;
+        box-shadow: none !important;
+    }
+
+    &:hover {
+        background-color: $secondary-color;
+        color: #fff;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+}
+
 .btn-primary.disabled, .btn-primary:disabled {
     color: #fff;
     background: #EC7123;

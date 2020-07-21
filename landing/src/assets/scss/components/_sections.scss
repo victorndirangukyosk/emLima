@@ -22,7 +22,6 @@ section {
   }
 
   .section-title {
-    font-family: "NeurialGrotesk";
     text-align: center;
     font-weight: bold;
     font-size: 1.4rem;
@@ -30,14 +29,12 @@ section {
   }
 
   .section-subtitle {
-    font-family: "NeurialGrotesk";
     text-align: center;
     max-width: 75ch;
   }
 }
 
 section#hero {
-  font-family: "NeurialGrotesk";
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
@@ -77,12 +74,10 @@ section#what-we-do {
 }
 
 section#app-download {
-  font-family: "NeurialGrotesk";
   background-color: #292F36;
 }
 
 section#order-cycle {
-  font-family: "NeurialGrotesk";
 
   .order-step {
     img {
@@ -112,7 +107,6 @@ section#order-cycle {
 }
 
 section#partners {
-  font-family: "NeurialGrotesk";
   background-color: #fff;
 
   img.partner-logo {
@@ -128,12 +122,10 @@ section#partners {
 
 section#about-us {
   margin-top: 6rem;
-  font-family: "NeurialGrotesk";
 }
 
 section#founding-investors {
   background-color: #fff;
-  font-family: "NeurialGrotesk";
 
   img {
     width: 180px;
@@ -149,7 +141,6 @@ section#founding-investors {
 }
 
 section#our-team {
-  font-family: "NeurialGrotesk";
   .team-member {
     img {
       width: 170px;
@@ -170,8 +161,16 @@ section#our-team {
   }
 }
 
+section#partnership-programme{
+  margin-top: 6rem;
+}
+
+section#partner-registration{
+  color: #fff;
+  background-color: $primary-color;
+}
+
 footer {
-  font-family: "NeurialGrotesk";
   margin-top: auto;
 
   .footers-info {
@@ -257,7 +256,6 @@ footer {
 
 // Auth pages
 .auth-layout-wrap {
-  font-family: "NeurialGrotesk";
   display: flex;
   flex-direction: column;
   justify-content: center;
