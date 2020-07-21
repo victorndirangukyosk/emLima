@@ -190,25 +190,28 @@ class ControllerReportSaleProductMissing extends Controller {
             $is_edited = $this->model_sale_order->hasRealOrderProducts($result['order_id']);
 
             if(!$is_edited) {
-                continue;
+                //continue;
+                $OrignalProducts=  $EditedProducts = $this->model_sale_order->getRealOrderProducts($result['order_id']);
             }
 
-            $EditedProducts = $this->model_sale_order->getRealOrderProducts($result['order_id']);
+            else{
 
             $OrignalProducts = $this->model_sale_order->getOrderProducts($result['order_id']);
+            }
 
             /*echo "<pre>";print_r($OrignalProducts);
             echo "<pre>";print_r($EditedProducts);die;*/
+            //as per the today discussion, stock out means total stock ordered or out after deliverty
 
             foreach ($OrignalProducts as $OrignalProduct) {
 
-                $present = false;
+                // $present = false;
 
-                foreach ($EditedProducts as $EditedProduct) {
-                    if(!empty($OrignalProduct['name']) && $OrignalProduct['name'] == $EditedProduct['name'] && $OrignalProduct['unit'] == $EditedProduct['unit']) {
-                        $present = true;
-                    }
-                }
+                // foreach ($EditedProducts as $EditedProduct) {
+                //     if(!empty($OrignalProduct['name']) && $OrignalProduct['name'] == $EditedProduct['name'] && $OrignalProduct['unit'] == $EditedProduct['unit']) {
+                //         $present = true;
+                //     }
+                // }
 
                 if(!$present && !empty($OrignalProduct['name'])) {
 
@@ -225,20 +228,20 @@ class ControllerReportSaleProductMissing extends Controller {
             }
         }
 
-        //echo "<pre>";print_r($data['torders']);die;
+         //echo "<pre>";print_r($data['torders']);die;
         foreach ($data['torders'] as $torders1) {
                 
             $ex = false;
 
-            foreach ($data['orders'] as $value1) {
+            // foreach ($data['orders'] as $value1) {
 
-                if($value1['model'] == $torders1['model'] && $value1['store'] == $torders1['store']) {
+            //     if($value1['model'] == $torders1['model'] && $value1['store'] == $torders1['store']) {
 
-                    $ex = true;
+            //         $ex = true;
 
-                }
+            //     }
 
-            }
+            // }
 
             if(!$ex) {
                 $sum = 0;
