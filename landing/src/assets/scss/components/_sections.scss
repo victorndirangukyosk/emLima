@@ -170,6 +170,22 @@ section#partner-registration{
   background-color: $primary-color;
 }
 
+section#careers {
+  margin-top: 6rem;
+
+  #careers-form {
+    padding: 2rem;
+    background-color: $primary-color;
+    color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+}
+
+section#blog {
+  margin-top: 6rem;
+}
+
 footer {
   margin-top: auto;
 
