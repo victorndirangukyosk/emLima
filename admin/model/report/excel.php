@@ -2558,9 +2558,9 @@ class ModelReportExcel extends Model {
 			);
 
 			//Company name, address 
-			$objPHPExcel->getActiveSheet()->mergeCells("A1:I2");
+			$objPHPExcel->getActiveSheet()->mergeCells("A1:E2");
 			$objPHPExcel->getActiveSheet()->setCellValue("A1", 'VIRTUAL SUPERMARKETS LIMITED');
-			$objPHPExcel->getActiveSheet()->getStyle("A1:I6")->applyFromArray(array("font" => array("bold" => true), 'color' => array(
+			$objPHPExcel->getActiveSheet()->getStyle("A1:E6")->applyFromArray(array("font" => array("bold" => true), 'color' => array(
 					'rgb' => '4390df'
 				),));
 
@@ -2583,13 +2583,13 @@ class ModelReportExcel extends Model {
 				$storename = 'Combined';
 			}
 
-			$objPHPExcel->getActiveSheet()->mergeCells("A4:I4");
-			$objPHPExcel->getActiveSheet()->mergeCells("A5:I5");
+			$objPHPExcel->getActiveSheet()->mergeCells("A4:E4");
+			$objPHPExcel->getActiveSheet()->mergeCells("A5:E5");
 
 
 
-			$objPHPExcel->getActiveSheet()->getStyle("A1:I3")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-			$objPHPExcel->getActiveSheet()->getStyle("A4:I4")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+			$objPHPExcel->getActiveSheet()->getStyle("A1:E3")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+			$objPHPExcel->getActiveSheet()->getStyle("A4:E4")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 			
 
 			foreach(range('A','L') as $columnID) {
