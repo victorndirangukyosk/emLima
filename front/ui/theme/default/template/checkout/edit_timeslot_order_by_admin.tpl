@@ -38,8 +38,8 @@
                                     <?php if(count($values) > 0 ) { ?>
                                         <?php foreach ($values as $value): ?>
                                             <li class="list-group-item timeslot-selected" id="time_selected" data-value="<?= $value['timeslot']?>" data-date="<?= $key ?>" data-store="<?= $store['store_id'] ?>" >
-                                                <label class="radio-inline"><?= $value['timeslot']?>
-                                                    <input style="    margin-top: -15px;" type="radio" name="radAnswer_<?= $store['store_id'] ?>" />
+                                                    <input style="    margin-top: -15px;cursor:pointer" type="radio" name="radAnswer_<?= $store['store_id'] ?>" />
+                                                <label  style="    margin-top: -12px;cursor:default"  class="radio-inline"><?= $value['timeslot']?>
                                                     
                                                 </label>
 
@@ -59,8 +59,9 @@
                                     <?php if(count($values) > 0 ) { ?>
                                         <?php foreach ($values as $value): ?>
                                             <li class="list-group-item timeslot-selected" id="time_selected" data-value="<?= $value['timeslot']?>" data-date="<?= $key?>" data-store="<?= $store['store_id'] ?>" >
-                                                <label class="radio-inline"><?= $value['timeslot']?>
-                                                    <input style="    margin-top: -15px;" type="radio" name="radAnswer_<?= $store['store_id'] ?>" />
+                                               <input style="    margin-top: -15px;cursor:pointer" type="radio" name="radAnswer_<?= $store['store_id'] ?>" />
+                                                 <label  style="    margin-top: -12px;cursor:default;"  class="radio-inline"><?= $value['timeslot']?>
+                                                   
                                                 </label>
                                             </li>
                                         <?php endforeach ?>
