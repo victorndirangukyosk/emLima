@@ -833,6 +833,9 @@ class ControllerProductProduct extends Controller {
             $data['images'] = array();
 
 			$results = $this->model_assets_product->getProductImages( $product_info['product_id'] );
+			$this->load->model( 'account/wishlist' );
+
+			$isWishListID=$this->model_account_wishlist->getWishlistIDCustomerProduct( $product_info['product_id'] );
 
 			foreach ( $results as $result ) {
 				$data['images'][] = array(
@@ -961,12 +964,13 @@ class ControllerProductProduct extends Controller {
 				// 		'special' => $special_price
 				// 	)
 				// ),
-                'variations' => $this->model_assets_product->getProductVariationsNew($product_info['name'],$store_id),
+				'variations' => $this->model_assets_product->getProductVariationsNew($product_info['name'],$store_id),
+				'isWishListID' =>$isWishListID
 
 			);
 			
 
-		    //echo '<pre>';print_r( $data['product']);exit;
+		     //echo '<pre>';print_r( $data['product']);exit;
             if ( isset( $this->session->data['cart'][$key] ) ) {
 		        $data['product']['qty_in_cart'] = $this->session->data['cart'][$key]['quantity'];		       
 		        $data['product']['actualCart'] = 1;
