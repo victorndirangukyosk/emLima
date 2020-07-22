@@ -85,73 +85,168 @@
       }
     });
 
+    var autocomplete;
+    autocomplete = new google.maps.places.Autocomplete((document.getElementById('register-location')), {
+        types: ['geocode'],
+        componentRestrictions: {
+          country: 'KE'
+      }
+    });
+	
+    google.maps.event.addListener(autocomplete, 'place_changed', function () {
+        var near_place = autocomplete.getPlace();
+    });
+
     $(document).delegate('#register-button', 'click', function (e) {
       e.preventDefault();
+
+      const firstName = $('#register-first-name').val();
+      const lastName = $('#register-last-name').val();
+      const email = $('#register-email').val();
+      const phone = $('#register-phone').val();
+      const companyName = $('#register-company-name').val(); 
+      const companyAddress = $('#register-company-address').val();
+      const businessType = $('#register-business-type').val();
+      const buildingName = $('#register-building-name').val();
+      const addressLine = $('#register-address-line').val();
+      const location = $('#register-location').val();
+      const password = $('#register-password').val();
+      const passwordConfirmation = $('#register-password-confirm').val();
+      
+      const registrationView = $('#registration-view');
+      const otpView = $('#otp-view');
 
       const registerButton = $('#register-button');
       const registerForm = $('#register-form')[0];
       const formIsValid = registerForm.reportValidity();
 
       if(formIsValid) {
-        const firstName = $('#register-first-name').val();
-        const lastName = $('#register-last-name').val();
-        const email = $('#register-email').val();
-        const phone = $('#register-phone').val();
-        const companyName = $('#register-company-name').val(); 
-        const companyAddress = $('#register-company-address').val();
-        const businessType = $('#register-business-type').val();
-        const buildingName = $('#register-building-name').val();
-        const addressLine = $('#register-address-line').val();
-        const location = $('#register-location').val();
-        const password = $('#register-password').val();
-        const passwordConfirmation = $('#register-password-confirm').val();
-
         if(passwordConfirmation !== password) {
           iziToast.warning({
             position: 'topRight',
             message: 'Passwords do no match'
           });
         } else {
-          registerButton.text('PLEASE WAIT');
-          registerButton.toggleClass('disabled');
+          if(grecaptcha.getResponse() == '') {
+            iziToast.warning({
+              position: 'topRight',
+              message: 'Please complete captcha'
+            });
+          } else {
+            registerButton.text('PLEASE WAIT');
+            registerButton.toggleClass('disabled');
 
-          $.ajax({
-            url: 'index.php?path=account/register/register_send_otp',
-            type: 'post',
-            dataType: 'json',
-            data: { 
-              firstname: firstName, 
-              lastname: lastName,
-              email: email,
-              telephone: phone,
-              company_name: companyName,
-              company_address: companyAddress,
-              customer_group_id: businessType,
-              house_building: buildingName,
-              address: addressLine,
-              location: location,
-              password: password,
-              confirm: passwordConfirmation
-            },
-            success: function (json) {
-              if (json['status']) {
-                iziToast.warning({
-                  position: 'topRight',
-                  message: 'Account created successfully'
-                });
-              } else {
-                iziToast.warning({
-                  position: 'topRight',
-                  title: 'Oops',
-                  message: 'We couldn\'t create your account'
-                });
-
+            $.ajax({
+              url: 'index.php?path=account/register/register_send_otp',
+              type: 'POST',
+              dataType: 'json',
+              data: { 
+                firstname: firstName, 
+                lastname: lastName,
+                email: email,
+                telephone: phone,
+                company_name: companyName,
+                company_address: companyAddress,
+                customer_group_id: businessType,
+                house_building: buildingName,
+                address: addressLine,
+                location: location,
+                password: password,
+                confirm: passwordConfirmation
+              },
+              success: function (json) {
                 registerButton.text('SIGN UP');
                 registerButton.toggleClass('disabled');
+
+                if (json['status']) {
+                  iziToast.success({
+                    position: 'topRight',
+                    message: json['success_message']
+                  });
+                  
+                  registrationView.hide();
+                  otpView.show();
+                } else {
+                  iziToast.warning({
+                    position: 'topRight',
+                    title: 'Oops',
+                    message: 'We couldn\'t create your account'
+                  });
+                }
               }
-            }
-          });
+            });
+          }
         }
+      }
+    });
+
+    // OTP Verification
+    $(document).delegate('#otp-verify-button', 'click', function (e) {
+      e.preventDefault();
+
+      const firstName = $('#register-first-name').val();
+      const lastName = $('#register-last-name').val();
+      const email = $('#register-email').val();
+      const phone = $('#register-phone').val();
+      const companyName = $('#register-company-name').val(); 
+      const companyAddress = $('#register-company-address').val();
+      const businessType = $('#register-business-type').val();
+      const buildingName = $('#register-building-name').val();
+      const addressLine = $('#register-address-line').val();
+      const location = $('#register-location').val();
+      const password = $('#register-password').val();
+      const passwordConfirmation = $('#register-password-confirm').val();
+      
+      const otp = $('#otp-value').val();
+      const verifyButton = $('#otp-verify-button');
+
+      if(otp.length > 3) {
+        verifyButton.text('PLEASE WAIT');
+        verifyButton.toggleClass('disabled');
+
+        $.ajax({
+          url: 'index.php?path=account/register/register_verify_otp',
+          type: 'POST',
+          dataType: 'json',
+          data: { 
+            firstname: firstName, 
+            lastname: lastName,
+            email: email,
+            telephone: phone,
+            company_name: companyName,
+            company_address: companyAddress,
+            customer_group_id: businessType,
+            house_building: buildingName,
+            address: addressLine,
+            location: location,
+            password: password,
+            confirm: passwordConfirmation,
+            signup_otp: otp
+          },
+          success: function (json) {
+            verifyButton.text('VERIFY');
+            verifyButton.toggleClass('disabled');
+            $('#otp-value').val('');
+
+            if (json['status']) {
+              iziToast.success({
+                timeout: false,
+                position: 'topRight',
+                message: json['success_message']
+              });
+            } else {
+              iziToast.warning({
+                position: 'topRight',
+                message: 'We couldn\'t verify your account. Please check the OTP'
+              });
+            }
+          }
+        });
+      } else {
+        iziToast.error({
+          position: 'topRight',
+          message: 'Please enter a valid OTP'
+        });
       }
     });
   });
