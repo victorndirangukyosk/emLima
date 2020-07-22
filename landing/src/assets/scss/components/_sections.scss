@@ -43,6 +43,7 @@ section#hero {
   background-image: url("../img/hero-banner.jpg");
   background-repeat: no-repeat;
   background-size: cover;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 
   .hero-title {
     font-weight: bold;
@@ -66,7 +67,7 @@ section#hero {
 section#what-we-do {
   display: flex;
   min-height: 30rem;
-  background: url("../img/kwikbasket-promise.svg"), #fff;
+  background: url("../img/kwikbasket-promise.svg");
   background-size: 80%;
   background-position-x: center;
   background-position-y: 1.4rem;
@@ -111,6 +112,21 @@ section#partners {
   img.partner-logo {
     cursor: pointer;
     width: 150px;
+    filter: grayscale(1);
+
+    &:hover {
+      filter: none;
+    }
+  }
+}
+
+section#existing-clients {
+  background-color: #fff;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+
+  img.client-logo {
+    cursor: pointer;
+    width: 100px;
     filter: grayscale(1);
 
     &:hover {
