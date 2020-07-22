@@ -1,0 +1,80 @@
+* {
+    outline: none;
+}
+
+.logo {
+    width: 180px;
+}
+
+.scrolled {
+    background-color: #fff !important;
+    transition: background-color 200ms ease-in;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+nav {
+    background-color: $bg-gray;
+}
+
+.nav-link {
+    color:  rgba($color: #000, $alpha: .75);
+    padding-right: 1.2rem !important;
+    padding-left: 1.2rem !important;
+
+    &:hover {
+        color:  rgba($color: #000, $alpha: 1);
+    }
+}
+
+.primary-text {
+    color: $primary-color;
+}
+
+.secondary-text {
+    color: $secondary-color;
+}
+
+.form-control:focus {
+    box-shadow: none;
+    border-color: #F6AD55;
+}
+
+.text-content-container {
+    margin-top: 8rem;
+    font-family: "NeurialGrotesk";
+    margin-bottom: 4rem;
+
+    h6 {
+        color: $primary-color;
+        margin-top: 2.2rem;
+        text-transform: uppercase;
+    }
+
+    p {
+        color: #6c757d;
+        line-height: 1.5rem;
+    }
+}
+
+.anim-from-top {
+    opacity: 0;
+    transform: translateY(-200px);
+}
+
+.anim-from-bottom {
+    transform: translateY(200px);
+}
+
+[data-scroll] {
+    transition: all .7s;
+}
+
+[data-scroll="in"] {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+[data-scroll="out"] {
+    opacity: 0;
+    transform: translateX(-200px);
+}

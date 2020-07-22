@@ -1,0 +1,64 @@
+@@include('./_partials/header.html')
+<main>
+    <div class="auth-layout-wrap">
+        <div class="auth-content">
+            <div class="card o-hidden">
+                <div id="login-view" class="row">
+                    <div class="col-md-12">
+                        <div class="p-4">
+                            <div class="auth-logo text-center mb-4">
+                                <a class="base_url" href='<?= BASE_URL."/index.php" ?>'>
+                                    <img src="assets/img/logo.svg" class="logo" alt="KwikBasket Logo">
+                                </a>
+                            </div>
+                            <h1 class="mb-2 auth-card-header">Log In</h1>
+                            <form>
+                                <div class="form-group">
+                                    <label for="email">Email address</label>
+                                    <input required type="email" class="form-control" id="login-email" aria-describedby="emailHelp">
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="password">Password</label>
+                                    <input required type="password" class="form-control" id="login-password">
+                                  </div>
+                                  <button id="login-button" class="btn btn-primary mt-1 btn-block">LOGIN</button>
+                            </form>
+                            <div class="mt-3 text-center"><a href='<?= BASE_URL."/index.php?path=account/login/newCustomer" ?>' class="btn">Create An Account</a></div>
+                            <div class="mt-3 text-center"><a href="#" id="forgot-password-btn" class="text-muted"><u>Forgot
+                                        Password?</u></a></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="forgot-password-view" class="row">
+                    <div class="col-md-12">
+                        <div class="p-4">
+                            <div class="auth-logo text-center mb-4">
+                                <a class="base_url" href='<?= BASE_URL."/index.php" ?>'>
+                                    <img src="assets/img/logo.svg" class="logo" alt="KwikBasket Logo">
+                                </a>
+                            </div>
+                            <h1 class="mb-2 auth-card-header">Reset Password</h1>
+                            <form>
+                                <div class="form-group">
+                                    <label for="reset-password-email">Account Email Address</label>
+                                    <input required type="email" class="form-control" id="reset-password-email">
+                                  </div>
+                                  <button id="password-reset-button" class="btn btn-primary mt-1 btn-block">RESET PASSWORD</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container mt-5">
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <a href='<?= BASE_URL."/index.php" ?>' class="btn">Back To Homepage</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+@@include('./_partials/footer.html')

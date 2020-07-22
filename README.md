@@ -14,7 +14,13 @@
  
  2) Backend : http://localhost/multivendorgrocery/admin
 
+####  Landing Page
 
+Install dependencies `npm install`
+
+Run `gulp`
+
+(gulp should be installed globally `npm install -g gulp`)
 
 
 challenges:

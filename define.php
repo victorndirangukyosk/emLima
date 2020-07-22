@@ -27,6 +27,8 @@ $base = __DIR__;
 define('DIR_BASE', $base . '/');
 define('DIR_ROOT', $base . '/');
 
+define('BCC_MAILS', 'test@gmail.com');
+
 
 //define('const_latitude', '-1.299392');
 //define('const_longitude', '36.7818779');
@@ -60,7 +62,7 @@ if (!file_exists(DIR_ROOT . 'config.php') or ( filesize(DIR_ROOT . 'config.php')
 
         exit();
     } else {
-        
+
         echo 'No configuration file found and no installation code available. Exiting...';
 
         exit();

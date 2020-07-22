@@ -1,0 +1,398 @@
+html {
+  height: 100%;
+}
+
+body {
+  background-color: $bg-gray;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  text-rendering: optimizeLegibility;
+}
+
+section {
+  padding: 2.5rem 0rem;
+
+  .section-header {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .section-title {
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.4rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .section-subtitle {
+    text-align: center;
+    max-width: 75ch;
+  }
+}
+
+section#hero {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  min-height: 100vh;
+  font-size: 19px;
+  background-image: url("../img/hero-banner.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+
+  .hero-title {
+    font-weight: bold;
+    font-size: 1.8em;
+  }
+
+  .hero-subtitle {
+    color: $gray-dark;
+    max-width: 420px;
+    font-size: 1.2em;
+    font-weight: 500;
+  }
+
+  .hero-description {
+    color: $gray-dark;
+    max-width: 420px;
+    font-size: 16px;
+  }
+}
+
+section#what-we-do {
+  display: flex;
+  min-height: 38rem;
+  background: url("../img/kwikbasket-promise.svg");
+  background-size: 75%;
+  background-position-x: center;
+  background-position-y: 1.4rem;
+  background-repeat: no-repeat;
+}
+
+section#app-download {
+  background-color: #292f36;
+}
+
+section#order-cycle {
+  .order-step {
+    img {
+      width: 70%;
+    }
+    margin-top: 4rem;
+
+    .step-content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-flow: column nowrap;
+      h5 {
+        font-size: 1.1rem;
+        font-weight: bold;
+        margin-top: 30px;
+        margin-bottom: 25px;
+      }
+
+      p {
+        text-align: justify;
+        font-size: 1rem;
+        max-width: 38ch;
+      }
+    }
+  }
+}
+
+section#partners {
+  background-color: #fff;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+
+  img.partner-logo {
+    cursor: pointer;
+    width: 150px;
+    filter: grayscale(1);
+
+    &:hover {
+      filter: none;
+    }
+  }
+}
+
+section#existing-clients {
+  background-color: #fff;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+
+  img.client-logo {
+    cursor: pointer;
+    width: 100px;
+    filter: grayscale(1);
+
+    &:hover {
+      filter: none;
+    }
+  }
+}
+
+section#about-us {
+  margin-top: 6rem;
+}
+
+section#founding-investors {
+  background-color: #fff;
+
+  img {
+    width: 180px;
+    margin-bottom: 16px;
+  }
+
+  .founding-investor {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+section#our-team {
+  .team-member {
+    img {
+      width: 170px;
+    }
+
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .team-member-info {
+    margin-top: 16px;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+section#partnership-programme {
+  margin-top: 6rem;
+}
+
+section#partner-registration {
+  color: #fff;
+  background-color: $primary-color;
+}
+
+section#careers {
+  margin-top: 6rem;
+
+  #careers-form {
+    padding: 2rem;
+    background-color: $primary-color;
+    color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+}
+
+section#blog {
+  margin-top: 6rem;
+}
+
+section#faq {
+  margin-top: 6rem;
+
+  [data-toggle="collapse"] i:before {
+    font-family: 'FontAwesome';
+    content: "\f068";
+  }
+
+  [data-toggle="collapse"].collapsed i:before {
+    font-family: 'FontAwesome';
+    content: "\f067";
+  }
+
+  #accordion {
+    .card-header {
+      margin-bottom: 8px;
+    }
+    .accordion-title {
+      position: relative;
+      display: block;
+      padding: 8px 0 8px 50px;
+      background: #292f36;
+      border-radius: 8px;
+      overflow: hidden;
+      text-decoration: none;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 700;
+      width: 100%;
+      text-align: left;
+      transition: all 0.4s ease-in-out;
+      i {
+        position: absolute;
+        width: 40px;
+        height: 100%;
+        left: 0;
+        top: 0;
+        color: #fff;
+        background: radial-gradient(rgba(#292f36, 0.8), #292f36);
+        text-align: center;
+        border-right: 1px solid transparent;
+      }
+      &:hover {
+        padding-left: 60px;
+        background: #292f36;
+        color: #fff;
+
+        i {
+          border-right: 1px solid #fff;
+        }
+      }
+    }
+    .accordion-body {
+      padding: 40px 55px;
+
+      ul {
+        list-style: none;
+        margin-left: 0;
+        padding-left: 0;
+      }
+
+      li {
+        padding-left: 1.2rem;
+        text-indent: -1.2rem;
+
+        &:before {
+          content: "\f10a";
+          padding-right: 5px;
+          font-family: "Flaticon";
+          font-size: 16px;
+          font-style: normal;
+          color: #213744;
+        }
+      }
+    }
+  }
+}
+
+footer {
+  margin-top: auto;
+
+  .footers-info {
+    font-size: 1rem;
+  }
+
+  .footers {
+    background-color: #fff;
+    a {
+      color: $gray-dark;
+    }
+
+    p {
+      color: $gray-dark;
+    }
+
+    ul {
+      line-height: 30px;
+    }
+
+    h5 {
+      font-size: 1rem;
+    }
+  }
+
+  #social-fb:hover {
+    color: #3b5998;
+    transition: all 0.001s;
+  }
+
+  #social-tw:hover {
+    color: #4099ff;
+    transition: all 0.001s;
+  }
+
+  #social-li:hover {
+    color: #006097;
+    transition: all 0.001s;
+  }
+
+  #social-in:hover {
+    color: #d61a2a;
+    transition: all 0.001s;
+  }
+
+  .copyright {
+    background-color: #fff;
+    font-size: 0.9rem;
+
+    .content-container {
+      width: 100%;
+      display: flex;
+      flex-flow: row wrap;
+      justify-content: space-between;
+
+      ul {
+        list-style: none;
+        display: flex;
+        flex-direction: row nowrap;
+        justify-content: space-around;
+        margin: 0;
+        padding: 0;
+
+        :nth-child(1) {
+          margin-right: 8px;
+        }
+
+        li {
+          text-decoration: none;
+        }
+
+        a {
+          color: #6c757d;
+
+          &:hover {
+            text-decoration: none;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Auth pages
+.auth-layout-wrap {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 2rem 0rem;
+  background-color: #f9f9f9;
+
+  label {
+    font-size: 0.8rem;
+    color: grey;
+  }
+
+  .auth-content {
+    min-width: 340px;
+    margin: auto;
+
+    .auth-card-header {
+      font-size: 18px;
+    }
+  }
+
+  #forgot-password-view {
+    display: none;
+  }
+
+  #otp-view {
+    display: none;
+  }
+}
