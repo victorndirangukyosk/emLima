@@ -607,7 +607,6 @@ class ControllerAccountLogin extends Controller
     $data['text_have_account'] = $this->language->get('text_have_account');
     $data['text_forget_password'] = $this->language->get('text_forget_password');
 
-
     $data['forget_link'] = $this->url->link('account/forgotten');
 
 
@@ -1045,16 +1044,7 @@ class ControllerAccountLogin extends Controller
       $data['site_key'] = '';
     }
 
-    //echo '<pre>';print_r($data);exit;
-    /* if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/customer_login.tpl')) {
-         $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/customer_login.tpl', $data));
-     } else {
-         $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/customer_login.tpl', $data));
-     }
-     */
-
-    $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/farmerregisterpage.tpl', $data));
-
+    $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/farmer-registration.tpl', $data));
   }
 
 }

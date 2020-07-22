@@ -55,14 +55,9 @@
                                     <div class="form-group col-md-6">
                                         <label for="register-business-type">Business Type</label>
                                         <select class="form-control" id="register-business-type">
-                                            <option value="6"> Restaurant</option>
-                                            <option value="4"> Super Market</option>
-                                            <option value="3"> Caterer</option>
-                                            <option value="7"> Hostel (Colleges &amp; Schools)</option>
-                                            <option value="10"> Hospitals</option>
-                                            <option value="11"> Industrial Canteens</option>
-                                            <option value="9"> Others</option>
-                                            <option value="12"> Champions</option>
+                                            <?php foreach($customer_groups as $customer_group){?>
+                                                <option value="<?=$customer_group['customer_group_id']?>"> <?=$customer_group['name']?></option>
+                                            <?php } ?>
                                         </select>
                                     </div>
                                     <div class="form-group col-md-6">

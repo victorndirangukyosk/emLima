@@ -289,6 +289,69 @@
         });
       }
     });
+
+    $('#farmer-register-button').click(function(e) {
+      e.preventDefault();
+
+      const firstName = $('#farmer-first-name').val();
+      const lastName = $('#farmer-last-name').val();
+      const email = $('#farmer-email').val();
+      const phone = $('#farmer-phone').val();
+      const farmerType = $('#farmer-type').val();
+      const farmLocation = $('#farmer-location').val();
+      const produceDescription = $('farmer-produce-grown').val();
+
+      const registerButton = $('#farmer-register-button');
+
+      if(grecaptcha.getResponse() == '') {
+        iziToast.warning({
+          position: 'topRight',
+          message: 'Please complete captcha'
+        });
+      } else {
+        if($('#farmer-registration-form')[0].reportValidity()) {
+          iziToast.success({
+            position: 'topRight',
+            message: 'Thanks for registering. We\'ll get in touch'
+          });
+
+          $('#farmer-registration-form')[0].reset();
+          // registerButton.text('PLEASE WAIT');
+          // registerButton.toggleClass('disabled');
+          
+          // $.ajax({
+          //   url: 'index.php?path=account/farmerregister/register',
+          //   type: 'POST',
+          //   dataType: 'json',
+          //   data: { 
+          //     name: firstName + ' ' + lastName,
+          //     email: email,
+          //     telephone: phone
+          //   },
+          //   success: function (json) {
+          //     registerButton.text('REGISTER');
+          //     registerButton.toggleClass('disabled');
+
+          //     if (json['status']) {
+          //       iziToast.success({
+          //         position: 'topRight',
+          //         message: json['success_message']
+          //       });
+
+          //       $('#farmer-registration-form')[0].reset();
+
+          //     } else {
+          //       iziToast.warning({
+          //         position: 'topRight',
+          //         title: 'Oops',
+          //         message: 'We couldn\'t register you. Please try again'
+          //       });
+          //     }
+          //   }
+          // });
+        }
+      }
+    });
   });
 
 })(jQuery, window, document);
