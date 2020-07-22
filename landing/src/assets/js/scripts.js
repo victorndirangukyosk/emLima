@@ -85,18 +85,6 @@
       }
     });
 
-    var autocomplete;
-    autocomplete = new google.maps.places.Autocomplete((document.getElementById('register-location')), {
-        types: ['geocode'],
-        componentRestrictions: {
-          country: 'KE'
-      }
-    });
-	
-    google.maps.event.addListener(autocomplete, 'place_changed', function () {
-        var near_place = autocomplete.getPlace();
-    });
-
     $(document).delegate('#register-button', 'click', function (e) {
       e.preventDefault();
 
@@ -246,6 +234,58 @@
         iziToast.error({
           position: 'topRight',
           message: 'Please enter a valid OTP'
+        });
+      }
+    });
+
+    $('#forgot-password-btn').click(function(e) {
+      e.preventDefault();
+
+      $('#login-view').hide();
+      $('#forgot-password-view').show();
+      
+    });
+
+    $('#password-reset-button').click(function(e) {
+      e.preventDefault();
+
+      const email = $('#reset-password-email').val();
+      const resetButton = $('#password-reset-button');
+
+      if(email.length == 0) {
+        iziToast.warning({
+          position: 'topRight',
+          message: 'Please enter your account email'
+        });
+      } else {
+        resetButton.text('PLEASE WAIT');
+        resetButton.toggleClass('disabled');
+  
+        $.ajax({
+          url: 'index.php?path=account/forgotten',
+          type: 'POST',
+          dataType: 'json',
+          data: { 
+            email: email
+          },
+          success: function (json) {
+            resetButton.text('RESET PASSWORD');
+            resetButton.toggleClass('disabled');
+            $('#reset-password-email').val('');
+  
+            if (json['status']) {
+              iziToast.success({
+                timeout: false,
+                position: 'topRight',
+                message: json['text_message']
+              });
+            } else {
+              iziToast.warning({
+                position: 'topRight',
+                message: 'We couldn\'t find an account with that email address'
+              });
+            }
+          }
         });
       }
     });

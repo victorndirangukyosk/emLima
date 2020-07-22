@@ -126,4 +126,18 @@
         </div>
     </div>
 </main>
+
+<script type="text/javascript">
+    var autocomplete;
+    autocomplete = new google.maps.places.Autocomplete((document.getElementById('register-location')), {
+        types: ['geocode'],
+        componentRestrictions: {
+          country: 'KE'
+      }
+    });
+	
+    google.maps.event.addListener(autocomplete, 'place_changed', function () {
+        var near_place = autocomplete.getPlace();
+    });
+</script>
 @@include('./_partials/footer.html')

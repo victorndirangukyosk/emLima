@@ -162,6 +162,22 @@ class ControllerCommonHome extends Controller {
     $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/index.tpl', $data));
 	}
 
+	public function faq() {
+    $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/faq.tpl'));
+  }
+
+  public function blog() {
+    $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/blog.tpl'));
+  }
+
+  public function careers() {
+    $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/careers.tpl'));
+  }
+
+	public function partners() {
+    $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/partners.tpl'));
+  }
+
   public function about_us() {
     $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/about-us.tpl'));
   }
