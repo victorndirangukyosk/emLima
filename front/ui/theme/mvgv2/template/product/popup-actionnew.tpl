@@ -8,7 +8,7 @@
                                                         </div>
 
 
-                                                 <div class="variation-selector-container" style="width: 250px;">
+                                                 <div class="variation-selector-container" style="width: 295px;">
                                                       <p class="variations-title" style="margin-left: -10px; display: none;"> variants</p>
                                                       <select class="product-variation">
                                                       <?php foreach($product['variations'] as $variation) { ?>
@@ -27,7 +27,7 @@
 												  <?php 
 												  //echo '<pre>';echo count($product['produce_type']);exit;
 												  if(count($product['produce_type'])>0){?>
-												  <div class="variation-selector-container" style="width: 250px;">
+												  <div class="variation-selector-container" style="width: 295px;">
                                                       <p class="variations-title" style="margin-left: -10px; display: none;"> variants</p>
                                                       <select name="produce-type" class="produce-type" data-defaultquantity="<?php echo $product['qty_in_cart']?>">
 													  <!--<option value="" data-defaultquantity="<?php echo $product['qty_in_cart']?>"> Select Produce Type </option>-->
@@ -75,14 +75,15 @@
 
 <div class="col-md-4">
 
-<div   id="add-btn-wishlist">
-  <a id="WishlistButton-id-<?= $product['store_product_variation_id'] ?>"  style="<?php if($product['isWishListID']==1){echo "color:red";}?>"  >
- <span data-action="<?= $product['isWishListID']==1 ? 'delete' : 'add'; ?>" 
+<div   id="add-btn-wishlist" class="btn newui">
+  <a id="WishlistButton-id-<?= $product['store_product_variation_id'] ?>" style="color:white"   >
+  
+ <span  data-action="<?= $product['isWishListID']==1 ? 'delete' : 'add'; ?>" 
        id="add-wishlist"
        data-store-id="<?= ACTIVE_STORE_ID ?>" 
        data-id="<?= $product['product_info']['product_id'] ?>"              
-         >
-<i class="fas fa-heart" style="line-height:2;"></i>
+         > <?=$product['isWishListID']==1?"Added To List":"Add To My List"?> 
+ 
  </span>
  </a>
  
@@ -92,7 +93,7 @@
  
 </div>
 
- <div class="variation-selector-container" style="width: 230px;">
+ <div class="variation-selector-container" style="width: 275px;">
 	<textarea name="product_notes" class="form-control" maxlength="200" placeholder="Product Notes" id="product_notes" style="height: 50px; margin-top:10px;"></textarea>
  </div>
 
@@ -193,15 +194,15 @@ $(document).delegate('.product-variation', 'change', function() {
     // newcartcontrol.attr('id', newcartId);
 
     wishlistHolder.attr('data-id', newproID);
-      let newwlqtId = $('#WishlistButton-id-0'); 
+      //let newwlqtId = $('#WishlistButton-id-0'); 
     if(newwlID==1)
     {
       
- newwlqtId.attr('style','color:red');
+ wishlistHolder.text("Added To List");
   wishlistHolder.attr('data-action','delete');  
     }
     else{
- newwlqtId.attr('style','color:black');
+wishlistHolder.text("Add To My List");
   wishlistHolder.attr('data-action','add');  
 
 
@@ -291,11 +292,15 @@ $('#add-wishlist').on('click', function() {
 		 $action = $(this).attr('data-action');  
         
  // alert( $product_id);
- let newcartId = $('#WishlistButton-id-0'); 
+ //let newcartId = $('#WishlistButton-id-0'); 
 
 if($action=='add')
 {
-  newcartId.attr('style','color:red');
+    $(this).text("Added To List");
+  $(this).attr('data-action','delete');
+  $('.product-variation option:selected').attr("data-iswl",1);
+
+  
 			$.ajax({
 				url: 'index.php?path=account/wishlist/createWishlist&listproductId='+$product_id,
 				dataType: 'html',                
@@ -306,12 +311,17 @@ if($action=='add')
 				 
 				},
 				success: function(html) {
-					   newcartId.attr('style','color:red');
+					 
+
 				}
 			});
 }
 else{
-newcartId.attr('style','color:black');
+  $(this).text("Add To My List");
+
+  $(this).attr('data-action','add');
+  $('.product-variation option:selected').attr("data-iswl",0);
+
     $.ajax({
 				url: 'index.php?path=account/wishlist/deleteWishlistProductByID&listproductId='+$product_id,
 				dataType: 'html',                
@@ -322,7 +332,9 @@ newcartId.attr('style','color:black');
 				 
 				},
 				success: function(html) {
-					   newcartId.attr('style','color:black');
+ 
+
+					   
 				}
 			});
 
@@ -334,23 +346,13 @@ newcartId.attr('style','color:black');
 
 <style>
 
-.ListButton {
-    border-radius: 0 2px 2px 0;
-    color: #fff;
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-align: center;
-    align-items: center;
-    -ms-flex-pack: justify;
-    justify-content: space-between;
-    font-size: 12px!important;
-    font-weight: 600;
-    text-transform: uppercase;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    cursor: pointer;
+.newui {
+    border-radius: 0 2px 2px 0;    
+    background-color: grey;
+    border-color: black;
+    font-size: 12px;
+    font-weight: 400;
+    
 }
 </style>
 
