@@ -399,6 +399,12 @@ class ControllerReportSaleProductMissing extends Controller {
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
 
+//as the dynamic pagination will not work for this calculation , applied pagination on array
+        $start= ($page - 1) * $this->config->get('config_limit_admin');
+       $limit= $this->config->get('config_limit_admin');
+
+        $data['orders'] = array_slice( $data['orders'],  $start, $limit ); 
+        //echo "<pre>";print_r($data['orders']);die;
         $this->response->setOutput($this->load->view('report/sale_productmissing.tpl', $data));
     }
     
