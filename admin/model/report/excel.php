@@ -2495,22 +2495,22 @@ class ModelReportExcel extends Model {
                 
             $ex = false;
 
-            // foreach ($data['orders'] as $value1) {
+            foreach ($data['orders'] as $value1) {
 
-            //     if($value1['model'] == $torders1['model'] && $value1['store'] == $torders1['store']) {
+                if($value1['product_name'] == $torders1['product_name'] && $value1['store'] == $torders1['store']) {
 
-            //         $ex = true;
+                    $ex = true;
 
-            //     }
+                }
 
-            // }
+            }
 
             if(!$ex) {
                 $sum = 0;
 
                 foreach ($data['torders'] as $key => $torders2) {
                     
-                    if($torders1['model'] == $torders2['model'] && $torders1['store'] == $torders2['store']) {
+                    if($torders1['product_name'] == $torders2['product_name'] && $torders1['store'] == $torders2['store']) {
 
                         $sum += $torders2['product_qty'];
 
@@ -2559,7 +2559,7 @@ class ModelReportExcel extends Model {
 
 			//Company name, address 
 			$objPHPExcel->getActiveSheet()->mergeCells("A1:E2");
-			$objPHPExcel->getActiveSheet()->setCellValue("A1", 'VIRTUAL SUPERMARKETS LIMITED');
+			$objPHPExcel->getActiveSheet()->setCellValue("A1", '');
 			$objPHPExcel->getActiveSheet()->getStyle("A1:E6")->applyFromArray(array("font" => array("bold" => true), 'color' => array(
 					'rgb' => '4390df'
 				),));
@@ -2567,7 +2567,7 @@ class ModelReportExcel extends Model {
 			//subtitle 
 			$from = date('d/m/Y', strtotime($data['filter_date_start']));
 			$to = date('d/m/Y', strtotime($data['filter_date_end']));
-			$objPHPExcel->getActiveSheet()->mergeCells("A3:I3");
+			$objPHPExcel->getActiveSheet()->mergeCells("A3:E3");
 			$html1 = 'STOCK OUT PRODUCTS';
 
 			$html = 'FROM '.$from.' TO '.$to;

@@ -182,7 +182,7 @@ class ControllerReportSaleProductMissing extends Controller {
 
         $results = $this->model_report_sale->getproductmissingOrders($filter_data);
 
-        //echo "<pre>";print_r($results);die;
+//echo "<pre>";print_r($results);die;
         foreach ($results as $result) {
 
            
@@ -228,27 +228,27 @@ class ControllerReportSaleProductMissing extends Controller {
             }
         }
 
-         //echo "<pre>";print_r($data['torders']);die;
+         // echo "<pre>";print_r($data['torders']);die;
         foreach ($data['torders'] as $torders1) {
                 
             $ex = false;
 
-            // foreach ($data['orders'] as $value1) {
+            foreach ($data['orders'] as $value1) {
 
-            //     if($value1['model'] == $torders1['model'] && $value1['store'] == $torders1['store']) {
+                if($value1['product_name'] == $torders1['product_name'] && $value1['store'] == $torders1['store']) {
 
-            //         $ex = true;
+                    $ex = true;
 
-            //     }
+                }
 
-            // }
+            }
 
             if(!$ex) {
                 $sum = 0;
 
                 foreach ($data['torders'] as $key => $torders2) {
                     
-                    if($torders1['model'] == $torders2['model'] && $torders1['store'] == $torders2['store']) {
+                    if($torders1['product_name'] == $torders2['product_name'] && $torders1['store'] == $torders2['store']) {
 
                         $sum += $torders2['product_qty'];
 
