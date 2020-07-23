@@ -91,6 +91,8 @@ $_['text_tax']                         = 'Taxes';
 $_['text_tax_class']                   = 'Tax Classes';
 $_['text_tax_rate']                    = 'Tax Rates';
 $_['text_tools']                       = 'Tools';
+$_['text_report_customer_statement']       = 'Statement';
+
 
 $_['text_vendor']                       = 'Vendor';
 $_['text_vendor_info']                       = 'Information';

@@ -1,4 +1,3 @@
-
  
 
   
@@ -9,7 +8,7 @@
                                                         </div>
 
 
-                                                 <div class="variation-selector-container" style="width: 250px;">
+                                                 <div class="variation-selector-container" style="width: 295px;">
                                                       <p class="variations-title" style="margin-left: -10px; display: none;"> variants</p>
                                                       <select class="product-variation">
                                                       <?php foreach($product['variations'] as $variation) { ?>
@@ -17,6 +16,8 @@
                                                       data-price="<?php echo $variation[price]; ?>"
                                                       data-quantity="<?php echo $variation[qty_in_cart]; ?>"
                                                       data-key="<?php echo $variation[key]; ?>"
+                                                       data-productid="<?= $variation['product_id'] ?>"
+                                                       data-isWl="<?= $variation['isWishListID'] ?>"
                                                       data-special="<?php echo $variation[special_price]; ?>">
                                                       <?php  echo 'Per ' . $variation['unit']; ?>
                                                       </option>
@@ -26,7 +27,7 @@
 												  <?php 
 												  //echo '<pre>';echo count($product['produce_type']);exit;
 												  if(count($product['produce_type'])>0){?>
-												  <div class="variation-selector-container" style="width: 250px;">
+												  <div class="variation-selector-container" style="width: 295px;">
                                                       <p class="variations-title" style="margin-left: -10px; display: none;"> variants</p>
                                                       <select name="produce-type" class="produce-type" data-defaultquantity="<?php echo $product['qty_in_cart']?>">
 													  <!--<option value="" data-defaultquantity="<?php echo $product['qty_in_cart']?>"> Select Produce Type </option>-->
@@ -52,8 +53,9 @@
     <p class="info"><?php if(isset($text_incart)) $text_incart ?></p>       
     <!--<p class="error-msg" ></p>-->
 </div>
+<div class="col-md-5">
 <div class="qtybtns-addbtnd addcart-block" id="add-btn-container">
- <input type="text" class="input-cart-qty" id="cart-qty-<?= $product['product_store_id'] ?>-<?= $product['store_product_variation_id'] ?>" value="<?php if($product['qty_in_cart']>0){echo $product['qty_in_cart'];}?>" placeholder="Add Qty">
+ <input type="text" style="margin-left: -15px;" class="input-cart-qty" id="cart-qty-<?= $product['product_store_id'] ?>-<?= $product['store_product_variation_id'] ?>" value="<?php if($product['qty_in_cart']>0){echo $product['qty_in_cart'];}?>" placeholder="Add Qty">
  <a id="AtcButton-id-<?= $product['store_product_variation_id'] ?>" style="<?php if($product['qty_in_cart']>0){echo "background-color:#ea7128";}?>" class="AtcButton__container___1RZ9c AtcButton__with_counter___3YxLq atc_ AtcButton__small___1a1kH" >
  <span data-action="<?= $product['qty_in_cart'] ? 'update' : 'add'; ?>"
        data-key='<?= $product["key"] ?>'
@@ -61,7 +63,7 @@
        id="add-cart-btnnew"
        data-store-id="<?= ACTIVE_STORE_ID ?>"
        data-variation-id="<?= $product['store_product_variation_id'] ?>"
-       data-id="<?= $product['product_store_id'] ?>"
+       data-id="<?= $product['product_store_id'] ?>"      
        data-producetype-id=""       
        style="display: <?= $product['qty_in_cart'] ? 'block' : 'block'; ?>"  data-dismiss="modal">
  <i class="fas fa-cart-plus"></i>
@@ -69,8 +71,29 @@
  </a>
  
 </div>
+</div>
 
- <div class="variation-selector-container" style="width: 230px;">
+<div class="col-md-4">
+
+<div   id="add-btn-wishlist" class="btn newui">
+  <a id="WishlistButton-id-<?= $product['store_product_variation_id'] ?>" style="color:white"   >
+  
+ <span  data-action="<?= $product['isWishListID']==1 ? 'delete' : 'add'; ?>" 
+       id="add-wishlist"
+       data-store-id="<?= ACTIVE_STORE_ID ?>" 
+       data-id="<?= $product['product_info']['product_id'] ?>"              
+         > <?=$product['isWishListID']==1?"Added To List":"Add To My List"?> 
+ 
+ </span>
+ </a>
+ 
+</div>
+
+
+ 
+</div>
+
+ <div class="variation-selector-container" style="width: 275px;">
 	<textarea name="product_notes" class="form-control" maxlength="200" placeholder="Product Notes" id="product_notes" style="height: 50px; margin-top:10px;"></textarea>
  </div>
 
@@ -152,6 +175,8 @@ $(document).delegate('.product-variation', 'change', function() {
      
     const newProductId = $(this).children("option:selected").val();
     const newPrice = $(this).children("option:selected").attr('data-price');
+    const newproID = $(this).children("option:selected").attr('data-productid');
+    const newwlID = $(this).children("option:selected").attr('data-isWl');
     const newSpecial = $(this).children("option:selected").attr('data-special');
     const dataKey = $(this).children("option:selected").attr('data-key');
     const qty_in_cart1 = $(this).children("option:selected").attr('data-quantity');
@@ -163,9 +188,27 @@ $(document).delegate('.product-variation', 'change', function() {
      //$('#content-container').html('KES '  +qty_in_cart1);
  
     let dataHolder = $('#add-cart-btnnew');
+    let wishlistHolder = $('#add-wishlist');
      let productQuantityInput = $('.input-cart-qty');    
      //let newcartcontrol = $('.AtcButton__container___1RZ9c AtcButton__with_counter___3YxLq atc_ AtcButton__small___1a1kH');    
     // newcartcontrol.attr('id', newcartId);
+
+    wishlistHolder.attr('data-id', newproID);
+      //let newwlqtId = $('#WishlistButton-id-0'); 
+    if(newwlID==1)
+    {
+      
+ wishlistHolder.text("Added To List");
+  wishlistHolder.attr('data-action','delete');  
+    }
+    else{
+wishlistHolder.text("Add To My List");
+  wishlistHolder.attr('data-action','add');  
+
+
+
+    }
+
  let newcartId = $('#AtcButton-id-0');  
     if(qty_in_cart1>0)
     {
@@ -243,5 +286,73 @@ $(document).delegate('.produce-type', 'change', function() {
 
 });
 
+
+$('#add-wishlist').on('click', function() {
+		 $product_id = $(this).attr('data-id');  
+		 $action = $(this).attr('data-action');  
+        
+ // alert( $product_id);
+ //let newcartId = $('#WishlistButton-id-0'); 
+
+if($action=='add')
+{
+    $(this).text("Added To List");
+  $(this).attr('data-action','delete');
+  $('.product-variation option:selected').attr("data-iswl",1);
+
+  
+			$.ajax({
+				url: 'index.php?path=account/wishlist/createWishlist&listproductId='+$product_id,
+				dataType: 'html',                
+				beforeSend: function() {
+					 
+				},
+				complete: function() {
+				 
+				},
+				success: function(html) {
+					 
+
+				}
+			});
+}
+else{
+  $(this).text("Add To My List");
+
+  $(this).attr('data-action','add');
+  $('.product-variation option:selected').attr("data-iswl",0);
+
+    $.ajax({
+				url: 'index.php?path=account/wishlist/deleteWishlistProductByID&listproductId='+$product_id,
+				dataType: 'html',                
+				beforeSend: function() {
+					 
+				},
+				complete: function() {
+				 
+				},
+				success: function(html) {
+ 
+
+					   
+				}
+			});
+
+}
+			 
+		});
+
 </script>
+
+<style>
+
+.newui {
+    border-radius: 0 2px 2px 0;    
+    background-color: grey;
+    border-color: black;
+    font-size: 12px;
+    font-weight: 400;
+    
+}
+</style>
 

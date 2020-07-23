@@ -2451,25 +2451,29 @@ class ModelReportExcel extends Model {
             $is_edited = $this->model_sale_order->hasRealOrderProducts($result['order_id']);
 
             if(!$is_edited) {
-                continue;
+                //continue;
+                $OrignalProducts=  $EditedProducts = $this->model_sale_order->getRealOrderProducts($result['order_id']);
             }
+			else{
 
-            $EditedProducts = $this->model_sale_order->getRealOrderProducts($result['order_id']);
+				$OrignalProducts = $this->model_sale_order->getOrderProducts($result['order_id']);
+				}
+           // $EditedProducts = $this->model_sale_order->getRealOrderProducts($result['order_id']);
 
-            $OrignalProducts = $this->model_sale_order->getOrderProducts($result['order_id']);
+           // $OrignalProducts = $this->model_sale_order->getOrderProducts($result['order_id']);
 
             /*echo "<pre>";print_r($OrignalProducts);
             echo "<pre>";print_r($EditedProducts);die;*/
 
             foreach ($OrignalProducts as $OrignalProduct) {
 
-                $present = false;
+                // $present = false;
 
-                foreach ($EditedProducts as $EditedProduct) {
-                    if(!empty($OrignalProduct['name']) && $OrignalProduct['name'] == $EditedProduct['name'] && $OrignalProduct['unit'] == $EditedProduct['unit']) {
-                        $present = true;
-                    }
-                }
+                // foreach ($EditedProducts as $EditedProduct) {
+                //     if(!empty($OrignalProduct['name']) && $OrignalProduct['name'] == $EditedProduct['name'] && $OrignalProduct['unit'] == $EditedProduct['unit']) {
+                //         $present = true;
+                //     }
+                // }
 
                 if(!$present && !empty($OrignalProduct['name'])) {
 
@@ -2491,15 +2495,15 @@ class ModelReportExcel extends Model {
                 
             $ex = false;
 
-            foreach ($data['orders'] as $value1) {
+            // foreach ($data['orders'] as $value1) {
 
-                if($value1['model'] == $torders1['model'] && $value1['store'] == $torders1['store']) {
+            //     if($value1['model'] == $torders1['model'] && $value1['store'] == $torders1['store']) {
 
-                    $ex = true;
+            //         $ex = true;
 
-                }
+            //     }
 
-            }
+            // }
 
             if(!$ex) {
                 $sum = 0;
@@ -2554,9 +2558,9 @@ class ModelReportExcel extends Model {
 			);
 
 			//Company name, address 
-			$objPHPExcel->getActiveSheet()->mergeCells("A1:I2");
+			$objPHPExcel->getActiveSheet()->mergeCells("A1:E2");
 			$objPHPExcel->getActiveSheet()->setCellValue("A1", 'VIRTUAL SUPERMARKETS LIMITED');
-			$objPHPExcel->getActiveSheet()->getStyle("A1:I6")->applyFromArray(array("font" => array("bold" => true), 'color' => array(
+			$objPHPExcel->getActiveSheet()->getStyle("A1:E6")->applyFromArray(array("font" => array("bold" => true), 'color' => array(
 					'rgb' => '4390df'
 				),));
 
@@ -2579,13 +2583,13 @@ class ModelReportExcel extends Model {
 				$storename = 'Combined';
 			}
 
-			$objPHPExcel->getActiveSheet()->mergeCells("A4:I4");
-			$objPHPExcel->getActiveSheet()->mergeCells("A5:I5");
+			$objPHPExcel->getActiveSheet()->mergeCells("A4:E4");
+			$objPHPExcel->getActiveSheet()->mergeCells("A5:E5");
 
 
 
-			$objPHPExcel->getActiveSheet()->getStyle("A1:I3")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-			$objPHPExcel->getActiveSheet()->getStyle("A4:I4")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+			$objPHPExcel->getActiveSheet()->getStyle("A1:E3")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+			$objPHPExcel->getActiveSheet()->getStyle("A4:E4")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 			
 
 			foreach(range('A','L') as $columnID) {

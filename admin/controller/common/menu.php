@@ -143,6 +143,8 @@ class ControllerCommonMenu extends Controller {
 		$data['report_shopper'] = $this->url->link('report/shopper', 'token=' . $this->session->data['token'], 'SSL');        
 		$data['report_customer_reward'] = $this->url->link('report/customer_reward', 'token=' . $this->session->data['token'], 'SSL');
 		$data['report_customer_credit'] = $this->url->link('report/customer_credit', 'token=' . $this->session->data['token'], 'SSL');
+		$data['report_customer_statement'] = $this->url->link('report/customer_statement', 'token=' . $this->session->data['token'], 'SSL');
+
 		$data['report_marketing'] = $this->url->link('report/marketing', 'token=' . $this->session->data['token'], 'SSL');
 			
 		$data['report_vendor_commission'] = $this->url->link('report/commission', 'token=' . $this->session->data['token'], 'SSL');
@@ -466,6 +468,8 @@ class ControllerCommonMenu extends Controller {
 		$data['report_customer_order'] = $this->url->link('report/customer_order', 'token=' . $this->session->data['token'], 'SSL');
 		$data['report_customer_reward'] = $this->url->link('report/customer_reward', 'token=' . $this->session->data['token'], 'SSL');
 		$data['report_customer_credit'] = $this->url->link('report/customer_credit', 'token=' . $this->session->data['token'], 'SSL');
+		$data['report_customer_statement'] = $this->url->link('report/customer_statement', 'token=' . $this->session->data['token'], 'SSL');
+
 		$data['report_marketing'] = $this->url->link('report/marketing', 'token=' . $this->session->data['token'], 'SSL');
 		
 		$data['report_commission'] = $this->url->link('report/vendor_commission', 'token=' . $this->session->data['token'], 'SSL');
@@ -542,6 +546,8 @@ class ControllerCommonMenu extends Controller {
 		$data['preturn_customer_order'] = $this->user->hasPermission('access', 'report/customer_order');
 		$data['preturn_customer_reward'] = $this->user->hasPermission('access', 'report/customer_reward');
 		$data['preturn_customer_credit'] = $this->user->hasPermission('access', 'report/customer_credit');
+		$data['preturn_customer_statement'] = $this->user->hasPermission('access', 'report/customer_statement');
+
 		$data['preturn_marketing'] = $this->user->hasPermission('access', 'report/marketing');
 		
 		$data['preturn_report_vendor_order'] = $this->user->hasPermission('access', 'report/vendor_order');

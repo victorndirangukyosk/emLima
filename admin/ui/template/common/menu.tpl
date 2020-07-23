@@ -376,6 +376,9 @@
                     <?php if($preturn_customer_credit) { ?>
                     <li><a href="<?php echo $report_customer_credit; ?>"><?php echo $text_report_customer_credit; ?></a></li>
                     <?php } ?>
+                     <?php if($preturn_customer_order) { ?>
+                    <li><a href="<?php echo $report_customer_statement; ?>"><?php echo $text_report_customer_statement; ?></a></li>
+                    <?php } ?>
                 </ul>
             </li>
             <?php }?>

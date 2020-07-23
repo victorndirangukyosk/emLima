@@ -173,5 +173,38 @@ class ModelAccountWishList extends Model {
         //return $query;
         return $query->row['total'];
     }
+
+
+    public function getWishlistPresentForCustomer() {
+        $query = $this->db->query("SELECT  wishlist_id AS total FROM `" . DB_PREFIX . "wishlist` w WHERE customer_id = " . (int) $this->customer->getId()."" );
+
+        //return $query;
+        return $query->row['total'];
+    }
+
+
+    public function getWishlistIDCustomerProduct($product_id) {
+        $query = $this->db->query("SELECT  COUNT(*) AS total FROM `" . DB_PREFIX . "wishlist` w join `" . DB_PREFIX . "wishlist_products` wp on w.wishlist_id =wp.wishlist_id WHERE customer_id = " . (int) $this->customer->getId()." and product_id =".$product_id );
+
+        // echo "<pre>";print_r($query);die;
+         return $query->row['total'];
+    }
+
+
+    public function deleteWishlistProductByID($product_id) {
+
+        $query = $this->db->query("SELECT  wishlist_id AS id FROM `" . DB_PREFIX . "wishlist` w WHERE customer_id = " . (int) $this->customer->getId()."" );         
+       $wishlistID= $query->row['id'];
+      
+     if( $wishlistID>0)
+        {
+           // echo ("DELETE FROM `" . DB_PREFIX . "wishlist_products` wp  WHERE wishlist_id = " . (int)$wishlistID . " and product_id = ".$product_id);die;
+
+        $query = $this->db->query("DELETE FROM `" . DB_PREFIX . "wishlist_products`   WHERE wishlist_id = " . (int)$wishlistID . " and product_id = ".$product_id);       
+       
+        return true;
+         }
+       return false;
+    }
     
 }
