@@ -266,6 +266,7 @@
                         <label class="col-sm-2 control-label" for="input-price-category">Price Category</label>
                         <div class="col-sm-10">
                           <select name="customer_category" id="input-price-category" class="form-control">
+                            <option value="">Select Category</option>
                             <?php foreach ($price_categories as $category) { ?>
                             <?php if(isset($customer_category) && ($customer_category== $category['price_category'])){?>
                             <option selected="selected" value="<?php echo $category['price_category']; ?>"><?php echo $category['price_category']; ?></option>
