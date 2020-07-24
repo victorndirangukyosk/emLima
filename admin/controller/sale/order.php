@@ -6936,4 +6936,33 @@ class ControllerSaleOrder extends Controller
     }
 
 
+
+    public function consolidatedOrderProducts() {
+        $orderid = $this->request->get['order_id'];
+        $customer = $this->request->get['customer']; 
+
+        $data = array();         
+            $data['consolidation'][] = [
+              'orderid' => $orderid,
+              'customer' => $customer             
+            ];           
+        
+            
+            $orderProducts = $this->getOrderProductsWithVariancesNew($orderid);
+            $data['products'] = $orderProducts;
+			$sum=0;
+            foreach ($orderProducts as $item) {
+                $sum += $item['total_updatedvalue'];
+            }
+            // $data['consolidation'][$index]['amount'] = $sum;
+            //   $totalOrdersAmount += $sum;
+       
+        // $data['consolidation']['total'] = $totalOrdersAmount;
+       
+
+        $this->load->model('report/excel');
+        $this->model_report_excel->download_order_products_excel($data);
+    }
+
+
 }

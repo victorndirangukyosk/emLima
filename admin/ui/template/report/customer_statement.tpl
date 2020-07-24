@@ -22,6 +22,38 @@
       <div class="panel-body">
         <div class="well" style="display:none;">
           <div class="row">
+
+           <div class="col-sm-6">
+
+           <div class="form-group">
+                <label class="control-label" for="input-customer"><?php echo $entry_customer; ?></label>
+                <select name="filter_customer" id="input-customer" class="form-control">
+                  <option value="0">Please Select</option>
+                  <?php foreach ($customer_names as $cust) { ?>
+                  <?php if ($cust['customer_id'] == $filter_customer) { ?>
+                  <option value="<?php echo $cust['customer_id']; ?>" selected="selected"><?php echo $cust['name']; ?></option>
+                  <?php } else { ?>
+                  <option value="<?php echo $cust['customer_id']; ?>"><?php echo $cust['name']; ?></option>
+                  <?php } ?>
+                  <?php } ?>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="control-label" for="input-status"><?php echo $entry_status; ?></label>
+                <select name="filter_order_status_id" id="input-status" class="form-control">
+                  <option value="0"><?php echo $text_all_status; ?></option>
+                  <?php foreach ($order_statuses as $order_status) { ?>
+                  <?php if ($order_status['order_status_id'] == $filter_order_status_id) { ?>
+                  <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
+                  <?php } else { ?>
+                  <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
+                  <?php } ?>
+                  <?php } ?>
+                </select>
+              </div>
+            </div>
+
             <div class="col-sm-6">
               <div class="form-group">
                 <label class="control-label" for="input-date-start"><?php echo $entry_date_start; ?></label>
@@ -40,22 +72,8 @@
                   </span></div>
               </div>
             </div>
-            <div class="col-sm-6">
-              <div class="form-group">
-                <label class="control-label" for="input-status"><?php echo $entry_status; ?></label>
-                <select name="filter_order_status_id" id="input-status" class="form-control">
-                  <option value="0"><?php echo $text_all_status; ?></option>
-                  <?php foreach ($order_statuses as $order_status) { ?>
-                  <?php if ($order_status['order_status_id'] == $filter_order_status_id) { ?>
-                  <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
-                  <?php } else { ?>
-                  <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
-                  <?php } ?>
-                  <?php } ?>
-                </select>
-              </div>
               <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
-            </div>
+           
           </div>
         </div>
         <div class="table-responsive">
@@ -63,13 +81,16 @@
             <thead>
               <tr>
                 <td class="text-left"><?php echo $column_customer; ?></td>
-                <td class="text-left"><?php echo $column_email; ?></td>
+                <!--<td class="text-left"><?php echo $column_email; ?></td>
                 <td class="text-left"><?php echo $column_customer_group; ?></td>
-                <td class="text-left"><?php echo $column_status; ?></td>
-                <td class="text-right"><?php echo $column_orders; ?></td>
+                <td class="text-left"><?php echo $column_status; ?></td>-->
+                <td class="text-right">Order Id</td> 
+                <td class="text-right">Order Date</td> 
+                <!--<td class="text-right"><?php echo $column_products; ?></td>-->
                 <td class="text-right"><?php echo $column_products; ?></td>
+                <!--<td class="text-right"><?php echo $column_total; ?></td>-->
                 <td class="text-right"><?php echo $column_total; ?></td>
-                <td class="text-right"><?php echo $column_action; ?></td>
+                <td class="text-center"><?php echo $column_action; ?></td>
               </tr>
             </thead>
             <tbody>
@@ -77,13 +98,16 @@
               <?php foreach ($customers as $customer) { ?>
               <tr>
                 <td class="text-left"><?php echo $customer['customer']; ?></td>
-                <td class="text-left"><?php echo $customer['email']; ?></td>
+               <!-- <td class="text-left"><?php echo $customer['email']; ?></td>
                 <td class="text-left"><?php echo $customer['customer_group']; ?></td>
-                <td class="text-left"><?php echo $customer['status']; ?></td>
-                <td class="text-right"><?php echo $customer['orders']; ?></td>
-                <td class="text-right"><?php echo $customer['products']; ?></td>
-                <td class="text-right"><?php echo $customer['total']; ?></td>
-                <td class="text-right"><a href="<?php echo $customer['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a></td>
+                <td class="text-left"><?php echo $customer['status']; ?></td>-->
+                <td class="text-right"><?php echo $customer['order_id']; ?></td> 
+                <td class="text-right"><?php echo $customer['date_added']; ?></td> 
+                <!--<td class="text-right"><?php echo $customer['products']; ?></td>-->
+                <td class="text-right"><?php echo $customer['editedproducts']; ?></td>
+                <!--<td class="text-right"><?php echo $customer['total']; ?></td>-->
+                <td class="text-right"><?php echo $customer['subtotal']; ?></td>
+                <td class="text-center"><a id="download-order-products" data-toggle="tooltip" data="<?php echo $customer['customer']; ?>" value=<?php echo $customer['order_id']; ?>  title="Download Products" class="btn btn-info"><i class="fa fa-file-excel-o"></i></a></td>
               </tr>
               <?php } ?>
               <?php } else { ?>
@@ -103,7 +127,18 @@
   </div>
   <script type="text/javascript"><!--
 $('#button-filter').on('click', function() {
-	url = 'index.php?path=report/customer_order&token=<?php echo $token; ?>';
+	url = 'index.php?path=report/customer_order/statement&token=<?php echo $token; ?>';
+
+  var filter_customer = $('select[name=\'filter_customer\']').val();
+	
+	if (filter_customer != 0) {
+		url += '&filter_customer=' + encodeURIComponent(filter_customer);
+	}	
+  else{
+    alert("Please select customer");
+    return;
+  }
+
 	
 	var filter_date_start = $('input[name=\'filter_date_start\']').val();
 	
@@ -123,6 +158,8 @@ $('#button-filter').on('click', function() {
 		url += '&filter_order_status_id=' + encodeURIComponent(filter_order_status_id);
 	}	
 
+  
+
 	location = url;
 });
 //--></script> 
@@ -130,5 +167,23 @@ $('#button-filter').on('click', function() {
 $('.date').datetimepicker({
 	pickTime: false
 });
+
+
+
+        $("#download-order-products").click(function(e) {
+ 
+            e.preventDefault();
+            $orderid = $(this).attr('value');
+            $customer = $(this).attr('data');
+           
+ 
+            if ($orderid > 0) {                
+                const url = 'index.php?path=sale/order/consolidatedOrderProducts&token=<?php echo $token; ?>&order_id=' + encodeURIComponent($orderid)+'&customer='+$customer;
+                location = url;
+            }
+        });
+
+
 //--></script></div>
 <?php echo $footer; ?>
+ 
