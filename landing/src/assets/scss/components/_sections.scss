@@ -11,7 +11,7 @@ body {
 }
 
 section {
-  padding: 2.5rem 0rem;
+  padding: 4rem 0rem;
 
   .section-header {
     width: 100%;
@@ -38,8 +38,8 @@ section#hero {
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
-  min-height: 100vh;
-  font-size: 19px;
+  min-height: 80vh;
+  font-size: 18px;
   background-image: url("../img/hero-banner.jpg");
   background-repeat: no-repeat;
   background-size: cover;
@@ -64,14 +64,49 @@ section#hero {
   }
 }
 
+section#existing-clients {
+  background-color: #fff;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+
+  img.client-logo {
+    cursor: pointer;
+    width: 100px;
+    margin: 1.5rem;
+  }
+}
+
 section#what-we-do {
-  display: flex;
-  min-height: 38rem;
-  background: url("../img/kwikbasket-promise.svg");
-  background-size: 75%;
-  background-position-x: center;
-  background-position-y: 1.4rem;
-  background-repeat: no-repeat;
+  .kwikbasket-promise {
+    img {
+      width: 100%;
+    }
+
+    .promise-description {
+      margin-top: 2rem;
+
+      h6 {
+        text-align: center;
+        margin-bottom: .9rem;
+      }
+
+      ul {
+        list-style: none;
+        li{
+          text-align: center;
+          margin-bottom: .5rem;
+
+          &::before {
+            content: "\2713"; 
+            color: $primary-color; 
+            font-weight: bold; 
+            display: inline-block; 
+            width: 2em; 
+            margin-left: -1.5em; 
+          }
+        }
+      }
+    }
+  }
 }
 
 section#app-download {
@@ -83,24 +118,35 @@ section#order-cycle {
     img {
       width: 70%;
     }
-    margin-top: 4rem;
 
     .step-content {
       display: flex;
-      justify-content: center;
       align-items: center;
       flex-flow: column nowrap;
+
+      img {
+        width: 100px;
+      }
+
       h5 {
+        justify-self: flex-start;
         font-size: 1.1rem;
         font-weight: bold;
         margin-top: 30px;
         margin-bottom: 25px;
+        color: #0f752a;
       }
 
       p {
         text-align: justify;
         font-size: 1rem;
         max-width: 38ch;
+        line-height: 1.8rem;
+        margin-bottom: 2rem;
+      }
+
+      a {
+        margin-top: auto;
       }
     }
   }
@@ -113,21 +159,6 @@ section#partners {
   img.partner-logo {
     cursor: pointer;
     width: 150px;
-    filter: grayscale(1);
-
-    &:hover {
-      filter: none;
-    }
-  }
-}
-
-section#existing-clients {
-  background-color: #fff;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-
-  img.client-logo {
-    cursor: pointer;
-    width: 100px;
     filter: grayscale(1);
 
     &:hover {

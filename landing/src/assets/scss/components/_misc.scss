@@ -13,7 +13,7 @@
 }
 
 nav {
-    background-color: $bg-gray;
+    background-color: transparent;
 }
 
 .nav-link {
@@ -23,6 +23,7 @@ nav {
 
     &:hover {
         color:  rgba($color: #000, $alpha: 1);
+        border-bottom: 1px solid $secondary-color;
     }
 }
 
@@ -54,6 +55,11 @@ nav {
         color: #6c757d;
         line-height: 1.5rem;
     }
+}
+
+.card {
+    border: none !important;
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -2px rgba(0,0,0,.05) !important;
 }
 
 .anim-from-top {
