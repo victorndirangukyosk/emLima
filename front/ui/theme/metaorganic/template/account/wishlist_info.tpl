@@ -420,7 +420,9 @@ __kdt.push({"post_on_load": false});
  $store_id = 75;
         var productIds = [];
         var added = false;
+        $cnt=0;
         $("input:checkbox[name='wishlist_products']:checked").each(function(){
+            $cnt=1;
             productIds.push($(this).val());
 
             console.log("Buy Now");
@@ -447,6 +449,12 @@ __kdt.push({"post_on_load": false});
 
             }
         });
+
+
+        if($cnt==0)
+        {
+ alert("Please select any product");
+        }
 
          /*if(added) {
           $.ajax({

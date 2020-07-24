@@ -75,7 +75,7 @@
 
 <div class="col-md-4">
 
-<div   id="add-btn-wishlist" class="btn newui">
+<div   id="add-btn-wishlist" class="btn newui"    style="<?php if($product['isWishListID']==1){echo "background-color:#ea7128";} else {echo "background-color:grey";}?>" >
   <a id="WishlistButton-id-<?= $product['store_product_variation_id'] ?>" style="color:white"   >
   
  <span  data-action="<?= $product['isWishListID']==1 ? 'delete' : 'add'; ?>" 
@@ -189,6 +189,7 @@ $(document).delegate('.product-variation', 'change', function() {
  
     let dataHolder = $('#add-cart-btnnew');
     let wishlistHolder = $('#add-wishlist');
+     let wishlistbuttonHolder = $('#add-btn-wishlist');
      let productQuantityInput = $('.input-cart-qty');    
      //let newcartcontrol = $('.AtcButton__container___1RZ9c AtcButton__with_counter___3YxLq atc_ AtcButton__small___1a1kH');    
     // newcartcontrol.attr('id', newcartId);
@@ -200,10 +201,13 @@ $(document).delegate('.product-variation', 'change', function() {
       
  wishlistHolder.text("Added To List");
   wishlistHolder.attr('data-action','delete');  
+  wishlistbuttonHolder.attr('style','background-color:#ea7128');
     }
     else{
 wishlistHolder.text("Add To My List");
   wishlistHolder.attr('data-action','add');  
+    wishlistbuttonHolder.attr('style','background-color:grey');
+
 
 
 
@@ -293,11 +297,13 @@ $('#add-wishlist').on('click', function() {
         
  // alert( $product_id);
  //let newcartId = $('#WishlistButton-id-0'); 
-
+ let wishlistbuttonHolder = $('#add-btn-wishlist');
 if($action=='add')
 {
     $(this).text("Added To List");
   $(this).attr('data-action','delete');
+  wishlistbuttonHolder.attr('style','background-color:#ea7128');
+
   $('.product-variation option:selected').attr("data-iswl",1);
 
   
@@ -320,6 +326,9 @@ else{
   $(this).text("Add To My List");
 
   $(this).attr('data-action','add');
+  wishlistbuttonHolder.attr('style','background-color:grey');
+
+
   $('.product-variation option:selected').attr("data-iswl",0);
 
     $.ajax({
@@ -347,8 +356,7 @@ else{
 <style>
 
 .newui {
-    border-radius: 0 2px 2px 0;    
-    background-color: grey;
+    border-radius: 0 2px 2px 0; 
     border-color: black;
     font-size: 12px;
     font-weight: 400;
