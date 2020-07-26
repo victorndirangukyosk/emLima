@@ -174,6 +174,10 @@ class ControllerCommonHome extends Controller {
     $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/careers.tpl'));
   }
 
+  public function farmers() {
+    $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/farmer-engagement.tpl'));
+  }
+
 	public function partners() {
     $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/partners.tpl'));
   }

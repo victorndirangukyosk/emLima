@@ -82,7 +82,7 @@ section#what-we-do {
     }
 
     .promise-description {
-      margin-top: 2rem;
+      margin: 2rem 0rem;
 
       h6 {
         text-align: center;
@@ -91,6 +91,7 @@ section#what-we-do {
 
       ul {
         list-style: none;
+        padding-left: 0px;
         li{
           text-align: center;
           margin-bottom: .5rem;
@@ -114,6 +115,7 @@ section#app-download {
 }
 
 section#order-cycle {
+  background-color: #f4f4f4;
   .order-step {
     img {
       width: 70%;
@@ -209,6 +211,10 @@ section#our-team {
 }
 
 section#partnership-programme {
+  margin-top: 6rem;
+}
+
+section#farmer-engagement {
   margin-top: 6rem;
 }
 
