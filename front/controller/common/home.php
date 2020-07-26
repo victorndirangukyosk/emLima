@@ -170,6 +170,10 @@ class ControllerCommonHome extends Controller {
     $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/blog.tpl'));
   }
 
+  public function technology() {
+    $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/technology.tpl'));
+  }
+
   public function careers() {
     $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/careers.tpl'));
   }

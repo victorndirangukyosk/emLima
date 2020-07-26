@@ -173,6 +173,21 @@ section#about-us {
   margin-top: 6rem;
 }
 
+section#technology {
+  margin-top: 6rem;
+
+  h6 {
+    color: $primary-color;
+    margin-top: 2.2rem;
+    font-size: 1.25rem;
+  }
+
+  ul {
+    padding-left: 0px;
+    list-style: none;
+  }
+}
+
 section#founding-investors {
   background-color: #fff;
 
