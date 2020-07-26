@@ -163,7 +163,9 @@ class ControllerCommonHome extends Controller {
 	}
 
 	public function faq() {
-    $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/faq.tpl'));
+    $this->load->model('catalog/help');
+	  $data = $results = $this->model_catalog_help->getHelps();
+    $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/faq.tpl', $data));
   }
 
   public function blog() {
