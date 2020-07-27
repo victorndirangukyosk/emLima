@@ -1,7 +1,7 @@
 <?php
 
 
-class Route extends Object
+class Route extends SmartObject
 {
 
     protected $registry;
