@@ -189,7 +189,8 @@ class ControllerCommonHome extends Controller {
   }
 
   public function careers() {
-    $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/careers.tpl'));
+    $data['site_key'] = $this->config->get('config_google_captcha_public');
+    $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/careers.tpl', $data));
   }
 
   public function farmers() {
@@ -197,7 +198,8 @@ class ControllerCommonHome extends Controller {
   }
 
 	public function partners() {
-    $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/partners.tpl'));
+    $data['site_key'] = $this->config->get('config_google_captcha_public');
+    $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/partners.tpl', $data));
   }
 
   public function about_us() {
