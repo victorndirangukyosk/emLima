@@ -38,16 +38,17 @@ section#hero {
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
-  min-height: 80vh;
-  font-size: 18px;
+  min-height: 100vh;
+  font-size: 16px;
   background-image: url("../img/hero-banner.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 
   .hero-title {
+    margin-top: 6rem;
     font-weight: bold;
-    font-size: 1.8em;
+    font-size: 1.5em;
   }
 
   .hero-subtitle {
@@ -152,7 +153,7 @@ section#order-cycle {
       p {
         text-align: justify;
         font-size: 1rem;
-        max-width: 38ch;
+        max-width: 30ch;
         line-height: 1.8rem;
         margin-bottom: 2rem;
       }
@@ -285,13 +286,12 @@ section#faq {
       position: relative;
       display: block;
       padding: 8px 0 8px 50px;
-      background: #292f36;
+      background: #f9f9f9;
       border-radius: 8px;
       overflow: hidden;
       text-decoration: none;
-      color: #fff;
+      color: #000;
       font-size: 16px;
-      font-weight: 700;
       width: 100%;
       text-align: left;
       transition: all 0.4s ease-in-out;

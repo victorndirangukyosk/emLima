@@ -13,7 +13,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div id="accordion" class="py-3">
-                        <h6 class="mb-3"><?= $category['category'] ?></h6>
+                        <h6 class="mb-3"><strong><?= $category['category'] ?></strong></h6>
                         <?php foreach($category['questions'] as $faq) { ?>
                             <div class="card border-0 wow fadeInUp" style="visibility: visible; animation-name: fadeInUp;">
                                 <div class="card-header p-0 border-0" id="heading-<?= $faq['help_id'] ?>">
