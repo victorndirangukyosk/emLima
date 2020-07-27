@@ -222,6 +222,10 @@
                 position: 'topRight',
                 message: json['success_message']
               });
+
+              setTimeout(function() {
+                window.location = $('.base_url').attr('href');
+              }, 3000)
             } else {
               iziToast.warning({
                 position: 'topRight',
