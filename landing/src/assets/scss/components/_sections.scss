@@ -116,6 +116,16 @@ section#app-download {
 
 section#order-cycle {
   background-color: #f4f4f4;
+
+  .scorecard {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    img {
+      width: 70px;
+      margin-right: 1rem;
+    }
+  }
   .order-step {
     img {
       width: 70%;
@@ -136,7 +146,7 @@ section#order-cycle {
         font-weight: bold;
         margin-top: 30px;
         margin-bottom: 25px;
-        color: #0f752a;
+        color: $secondary-color;
       }
 
       p {
