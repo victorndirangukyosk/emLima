@@ -3,7 +3,7 @@
 
 use Joomla\Profiler\Profiler;
 
-class App extends Object {
+class App extends SmartObject {
 
     protected $registry;
 

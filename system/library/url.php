@@ -1,6 +1,6 @@
 <?php
 
-class Url extends Object {
+class Url extends SmartObject {
 
     protected $domain;
     protected $ssl;

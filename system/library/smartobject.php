@@ -1,7 +1,7 @@
 <?php
 
 
-class Object {
+class SmartObject {
 
 	public function get($property, $default = null) {
         if (isset($this->$property)) {

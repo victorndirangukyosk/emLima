@@ -1,6 +1,6 @@
 <?php
 
-class Update extends Object {
+class Update extends SmartObject {
 
 	public function __construct($registry) {
 		$this->db = $registry->get('db');
