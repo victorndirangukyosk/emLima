@@ -296,11 +296,12 @@ $(document).delegate('#add-cart-btn', 'click', function() {
     */  
     //$quantity = parseInt($(this).parent().parent().find('.middle-quantity').html());
     $quantity = $('#cart-qty-'+$product_id+'-'+$variation_id).val();
-    $quantity = parseInt($quantity);
+    $quantity = $quantity;
+    $quantityParsed = parseInt($quantity);
      //alert($quantity);
      //alert($action);
     // TODO: Adding multiple variants of same product to cart?
-    if ($quantity > 0) {
+    if ($quantityParsed > 0) {
        if($action == 'add'){
         cart.add($product_id, $quantity, $variation_id,$store_id);
         $(this).attr('data-action','update');
@@ -373,10 +374,10 @@ $(document).delegate('#add-cart-btnnew', 'click', function() {
     */  
     //$quantity = parseInt($(this).parent().parent().find('.middle-quantity').html());
     $quantity = $('#cart-qty-'+$product_id+'-'+$variation_id).val();
-    $quantity = parseInt($quantity);
+    $quantity = parseFloat($quantity);
     $newquantityvalue=0;    
-    $newquantityvalue=parseInt($mainquantity) + $quantity-parseInt($oldquantity);
-     //alert($action);
+    $newquantityvalue=parseFloat($mainquantity) + $quantity-parseFloat($oldquantity);
+
     // TODO: Adding multiple variants of same product to cart? 
     if ($quantity > 0) {
        if($action == 'add'){

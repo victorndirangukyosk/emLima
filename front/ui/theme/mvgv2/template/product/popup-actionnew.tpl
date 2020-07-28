@@ -55,7 +55,7 @@
 </div>
 <div class="col-md-5">
 <div class="qtybtns-addbtnd addcart-block" id="add-btn-container">
- <input type="text" style="margin-left: -15px;" class="input-cart-qty" id="cart-qty-<?= $product['product_store_id'] ?>-<?= $product['store_product_variation_id'] ?>" value="<?php if($product['qty_in_cart']>0){echo $product['qty_in_cart'];}?>" placeholder="Add Qty">
+ <input type="text" onkeypress="return validateFloatKeyPress(this, event);" autocomplete="off"  style="margin-left: -15px;" class="input-cart-qty" id="cart-qty-<?= $product['product_store_id'] ?>-<?= $product['store_product_variation_id'] ?>" value="<?php if($product['qty_in_cart']>0){echo $product['qty_in_cart'];}?>" placeholder="Add Qty">
  <a id="AtcButton-id-<?= $product['store_product_variation_id'] ?>" style="<?php if($product['qty_in_cart']>0){echo "background-color:#ea7128";}?>" class="AtcButton__container___1RZ9c AtcButton__with_counter___3YxLq atc_ AtcButton__small___1a1kH" >
  <span data-action="<?= $product['qty_in_cart'] ? 'update' : 'add'; ?>"
        data-key='<?= $product["key"] ?>'
@@ -147,10 +147,77 @@
 
 
 <script>
+function isNumberKey(txt, evt) {
+      var charCode = (evt.which) ? evt.which : evt.keyCode;
+      if (charCode == 46) {
+        //Check if the text already contains the . character
+        
+        if (txt.value.indexOf('.') === -1  ) {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+         
 
+        if (charCode > 31 &&
+          (charCode < 48 || charCode > 57))
+          return false;
+      }
+      return true;
+    }
+
+    function validateFloatKeyPress(el, evt) {
+
+       $optionvalue=$('.product-variation option:selected').text().trim();
+       //alert($optionvalue);
+       if($optionvalue=="Per Kg")
+       {
+    var charCode = (evt.which) ? evt.which : event.keyCode;
+    var number = el.value.split('.');
+    if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
+        return false;
+    }
+    //just one dot
+    if(number.length>1 && charCode == 46){
+         return false;
+    }
+    //get the carat position
+    var caratPos = getSelectionStart(el);
+    var dotPos = el.value.indexOf(".");
+    if( caratPos > dotPos && dotPos>-1 && (number[1].length > 1)){
+        return false;
+    }
+    return true;
+       }
+
+       else{
+ var charCode = (evt.which) ? evt.which : event.keyCode;
+        if (charCode > 31 &&
+          (charCode < 48 || charCode > 57))
+          return false;
+          else
+      
+      return true;
+       }
+}
+
+
+function getSelectionStart(o) {
+	if (o.createTextRange) {
+		var r = document.selection.createRange().duplicate()
+		r.moveEnd('character', o.value.length)
+		if (r.text == '') return o.value.length
+		return o.value.lastIndexOf(r.text)
+	} else return o.selectionStart
+}
  
 
 $(function() {
+
+   $('.input-cart-qty').on("cut copy paste",function(e) {
+      e.preventDefault();
+   });
     $("select.product-variation").prop('disabled', function() {
         return $('option', this).length < 2;
     });

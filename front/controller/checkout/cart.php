@@ -404,7 +404,7 @@ class ControllerCheckoutCart extends Controller {
 		
 		if ($product_info) {
 			if (isset($this->request->post['quantity'])) {
-				$quantity = (int) $this->request->post['quantity'];
+				$quantity =  $this->request->post['quantity'];
 			} else {
 				$quantity = $product_info['min_quantity'] ? $product_info['min_quantity'] : 1;
 			}
@@ -680,7 +680,7 @@ class ControllerCheckoutCart extends Controller {
 		
 		if ($product_info) {
 			if (isset($this->request->post['quantity'])) {
-				$quantity = (int) $this->request->post['quantity'];
+				$quantity =   $this->request->post['quantity'];
 			} else {
 				$quantity = $product_info['min_quantity'] ? $product_info['min_quantity'] : 1;
 			}

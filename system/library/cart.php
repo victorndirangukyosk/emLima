@@ -507,11 +507,11 @@ class Cart {
         { 
             $log->write("cart add123");
 
-            if ((int) $qty && ((int) $qty > 0)) {
+            if ( (float) $qty && ((float) $qty > 0)) {
                 if (!isset($this->session->data['cart'][$key])) {
-                    $this->session->data['cart'][$key]['quantity'] = (int) $qty;
+                    $this->session->data['cart'][$key]['quantity'] = (float) $qty;
                 } else {
-                    $this->session->data['cart'][$key]['quantity'] += (int) $qty;
+                    $this->session->data['cart'][$key]['quantity'] += (float)  $qty;
                 }
     
                 $this->session->data['cart'][$key]['product_note'] =  $product_note;       
@@ -525,20 +525,20 @@ class Cart {
         {
              $log->write("cart add456");
 
-        if ((int) $qty && ((int) $qty > 0)) {
+        if ((float)$qty && ( (float)$qty > 0)) {
             if (!isset($this->session->data['cart'][$key])) {
 
                 $this->session->data['cart'][$key]['produce_type'][0]['type'] = $produce_type;
                 $this->session->data['cart'][$key]['produce_type'][0]['value'] = $qty;
                
-                $this->session->data['cart'][$key]['quantity'] = (int) $qty;
+                $this->session->data['cart'][$key]['quantity'] = (float)  $qty;
 
                
             } else {
                 if (!isset($this->session->data['cart'][$key]['produce_type'] )) {
                     $this->session->data['cart'][$key]['produce_type'][0]['type'] = $produce_type;
                     $this->session->data['cart'][$key]['produce_type'][0]['value'] = $qty;
-                $this->session->data['cart'][$key]['quantity'] += (int) $qty;
+                $this->session->data['cart'][$key]['quantity'] +=(float)  $qty;
 
 
                 }
@@ -572,11 +572,11 @@ class Cart {
                             $this->session->data['cart'][$key]['produce_type'][$count]['value'] = $qty; 
                             $newquantity=$oldquantity +$qty;
 
-                            $this->session->data['cart'][$key]['quantity'] = (int) $newquantity;
+                            $this->session->data['cart'][$key]['quantity'] =(float)  $newquantity;
                         }
                         else{
                             $this->session->data['cart'][$key]['produce_type']  = $preProduceTypes; 
-                            $this->session->data['cart'][$key]['quantity'] = (int) $newquantity;
+                            $this->session->data['cart'][$key]['quantity'] = (float)  $newquantity;
                         }
 
                        
@@ -629,16 +629,16 @@ class Cart {
         $log = new Log('error.log');
         /*$log->write("cart content");
         */
-        if ((int) $qty && ((int) $qty > 0) && isset($this->session->data['cart'][$key])) {
-            $this->session->data['cart'][$key]['quantity'] = (int) $qty;
+        if ((float)  $qty && ( (float) $qty > 0) && isset($this->session->data['cart'][$key])) {
+            $this->session->data['cart'][$key]['quantity'] = (float) $qty;
         } else {
            
             $this->remove($key);
         }
            
         
-        if ((int) $qty && ((int) $qty > 0) ) {
-            $this->session->data['temp_cart'][$key]['quantity'] = (int) $qty;
+        if (  $qty && (  $qty > 0) ) {
+            $this->session->data['temp_cart'][$key]['quantity'] =(float)$qty;
             //$this->session->data['temp_cart'][$key]['ripe'] =   $ripe;
             $this->session->data['temp_cart'][$key]['product_note'] =  $product_note;
             $this->session->data['temp_cart'][$key]['produce_type'] =  $produce_type;
@@ -668,7 +668,7 @@ class Cart {
          }
         
              $this->session->data['cart'][$key]['produce_type']  = $preProduceTypes; 
-             $this->session->data['cart'][$key]['quantity'] = (int) $newquantity;
+             $this->session->data['cart'][$key]['quantity'] = (float)  $newquantity;
         
     }
     }
@@ -698,7 +698,7 @@ class Cart {
          }
         
              $this->session->data['cart'][$key]['produce_type']  = $preProduceTypes; 
-             $this->session->data['cart'][$key]['quantity'] = (int) $newquantity;
+             $this->session->data['cart'][$key]['quantity'] = (float)  $newquantity;
         
            
          
