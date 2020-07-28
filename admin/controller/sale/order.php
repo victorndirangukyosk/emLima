@@ -410,6 +410,7 @@ class ControllerSaleOrder extends Controller
                     'shipping_city' => $order_info['shipping_city'],
                     'shipping_contact_no' => ($order_info['shipping_contact_no']) ? $order_info['shipping_contact_no'] : $order_info['telephone'],
                     'shipping_name' => $order_info['shipping_name'],
+                    'po_number' => $order_info['po_number'],
                     'shipping_method' => $order_info['shipping_method'],
                     'payment_method' => $order_info['payment_method'],
                     'product' => $product_data,
@@ -417,6 +418,10 @@ class ControllerSaleOrder extends Controller
                     'customer_id' => $order_info['customer_id'],
                     'comment' => nl2br($order_info['comment'])
                 );
+
+                // echo '<pre>';
+                // print_r($order_info);
+                // echo  '</pre>';die;
             }
         }
 
@@ -4810,7 +4815,10 @@ class ControllerSaleOrder extends Controller
 
         $allp_id = true;
 
-        //echo "<pre>";print_r($datas['products']);die;
+        //  echo "<pre>";print_r($datas);die;
+         
+        $this->model_sale_order->updatePO($this->request->get['order_id'], $datas['po_number']);
+        
         foreach ($datas['products'] as $p_id_key => $updateProduct) {
 
             if (!is_numeric($updateProduct['product_id'])) {
