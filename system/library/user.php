@@ -1,6 +1,6 @@
 <?php
 
-class User extends Object {
+class User extends SmartObject {
 
     protected $user_id;
     protected $username;

@@ -450,7 +450,8 @@ class ModelAssetsProduct extends Model {
 						$r['special_price'] = $s_price;
 						$r['price'] = $o_price;
 					}
-
+					$isWishListID=$this->model_account_wishlist->getWishlistIDCustomerProduct( $r['product_id'] );
+					$r['isWishListID'] = $isWishListID;
 					$res = array(
                         'variation_id' => $r['product_store_id'],
                         'unit' => $r['unit'],
@@ -461,6 +462,7 @@ class ModelAssetsProduct extends Model {
 						'max_qty' => $r['min_quantity'] > 0 ? $r['min_quantity'] : $r['quantity'],
 						'qty_in_cart' => $r['qty_in_cart'],
 						'key' => $key,
+						'isWishListID' => $isWishListID,
 
                     );
 					

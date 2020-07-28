@@ -32,6 +32,7 @@
                             </div>
                             <div class="col-md-4 offset-md-4 text-right">
                                 <h5 class="bold">INVOICE #<?= $invoice_no ?></h5>
+                                <h5 class="bold">P.O Number #<?= $po_number ?></h5>
                             </div>
                         </div>
 
@@ -56,10 +57,10 @@
                                     <li>Placed On <?= $date_added ?></li>
                                     <li>Delivered On <?= $delivery_date ?></li>
                                     <li><?= $shipping_method ?></li>
-                                    <li><?= $payment_method ?></li>
+                                   <!-- <li><?= $payment_method ?></li>
                                       <?php if($po_number)  {?>                                     
                   <li>P.O Number:<?= $po_number ?></li>
-                  <?php }?>
+                  <?php }?>-->
                                 </ul>
                             </div>
                         </div>

@@ -182,7 +182,7 @@ class ControllerReportSaleProductMissing extends Controller {
 
         $results = $this->model_report_sale->getproductmissingOrders($filter_data);
 
-        //echo "<pre>";print_r($results);die;
+//echo "<pre>";print_r($results);die;
         foreach ($results as $result) {
 
            
@@ -221,36 +221,36 @@ class ControllerReportSaleProductMissing extends Controller {
 
                         'product_name' => $OrignalProduct['name'],
                         'unit' => $OrignalProduct['unit'],
-                        'product_qty' => $OrignalProduct['quantity'],
+                        'product_qty' =>(float) $OrignalProduct['quantity'],
                     );
 
                 }
             }
         }
 
-         //echo "<pre>";print_r($data['torders']);die;
+         // echo "<pre>";print_r($data['torders']);die;
         foreach ($data['torders'] as $torders1) {
                 
             $ex = false;
 
-            // foreach ($data['orders'] as $value1) {
+            foreach ($data['orders'] as $value1) {
 
-            //     if($value1['model'] == $torders1['model'] && $value1['store'] == $torders1['store']) {
+                if($value1['product_name'] == $torders1['product_name'] && $value1['store'] == $torders1['store']) {
 
-            //         $ex = true;
+                    $ex = true;
 
-            //     }
+                }
 
-            // }
+            }
 
             if(!$ex) {
-                $sum = 0;
+                $sum =(float) 0.0;
 
                 foreach ($data['torders'] as $key => $torders2) {
                     
-                    if($torders1['model'] == $torders2['model'] && $torders1['store'] == $torders2['store']) {
+                    if($torders1['product_name'] == $torders2['product_name'] && $torders1['store'] == $torders2['store']) {
 
-                        $sum += $torders2['product_qty'];
+                        $sum +=(float) $torders2['product_qty'];
 
                         unset($data['torders'][$key]);
 
@@ -258,7 +258,7 @@ class ControllerReportSaleProductMissing extends Controller {
 
                 }
 
-                $torders1['product_qty'] = $sum;
+                $torders1['product_qty'] =(float) $sum;
 
                 $order_total++;
 
@@ -399,6 +399,12 @@ class ControllerReportSaleProductMissing extends Controller {
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
 
+//as the dynamic pagination will not work for this calculation , applied pagination on array
+        $start= ($page - 1) * $this->config->get('config_limit_admin');
+       $limit= $this->config->get('config_limit_admin');
+
+        $data['orders'] = array_slice( $data['orders'],  $start, $limit ); 
+        //echo "<pre>";print_r($data['orders']);die;
         $this->response->setOutput($this->load->view('report/sale_productmissing.tpl', $data));
     }
     

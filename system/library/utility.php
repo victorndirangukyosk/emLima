@@ -1,6 +1,6 @@
 <?php
 
-class Utility extends Object {
+class Utility extends SmartObject {
 
 	public function __construct($registry) {
 		$this->db = $registry->get('db');

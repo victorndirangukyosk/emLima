@@ -352,7 +352,7 @@ class ControllerCatalogProduct extends Controller {
         $this->load->model('sale/customer_group');
 		$price_categories =  $this->model_sale_customer_group->getPriceCategories();
         $update_data = $this->request->get['updatedata'];
-		//echo'<pre>';print_r($price_categories);exit;
+		//echo'<pre>';print_r($update_data);exit;
         //$this->document->setTitle($this->language->get('heading_title'));
 
         $this->load->model('catalog/product');
@@ -363,11 +363,26 @@ class ControllerCatalogProduct extends Controller {
               if($update_data[$price_cat['price_category']])
 			   $data[] =$this->model_catalog_vendor_product->updateCategoryPrices($price_cat['price_category'], $update_data );
 			}	
-		
+		$this->cacheProductPrices(75);
 		$this->session->data['success'] = 'Product Category Prices modified successfully!';
         echo 0;
         exit();
     }
+
+    protected function cacheProductPrices($store_id){
+		$this->cache->delete('category_price_data');
+		$cache_price_data = array();
+		$sql = "SELECT * FROM `" . DB_PREFIX . "product_category_prices` where `store_id` = $store_id";
+		//echo $sql;exit;
+		$resultsdata = $this->db->query($sql);
+		//echo '<pre>'; print_r($resultsdata);exit;
+		if(count($resultsdata->rows)>0){
+          foreach($resultsdata->rows as $result){
+			$cache_price_data[$result['product_store_id'].'_'.$result['price_category'].'_'.$store_id] = $result['price'];
+		  }
+		}
+		$this->cache->set('category_price_data',$cache_price_data);
+	}
     protected function getList() {
         if (isset($this->request->get['filter_name'])) {
             $filter_name = $this->request->get['filter_name'];

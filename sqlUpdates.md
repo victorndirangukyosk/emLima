@@ -75,3 +75,6 @@ CREATE TABLE `hf7_product_category_prices` (
 
 
    ALTER TABLE `hf7_order_product` ADD COLUMN `produce_type` VARCHAR(500) DEFAULT NULL ;
+
+   
+   ALTER TABLE `hf7_customer` ADD COLUMN `parent` int(11) DEFAULT NULL;

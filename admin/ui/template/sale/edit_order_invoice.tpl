@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <title><?php echo $title; ?></title>
 
-<base href="<?php echo $base; ?>" />
+<base href="<?php echo $base; ?>" /> 
 
 
 <link href="ui/javascript/bootstrap/css/bootstrap.css" rel="stylesheet" media="all" />
@@ -90,10 +90,14 @@
      <?php endif ?>
 
     <form id="edit_invoicex">
+
       
-    
     <table class="table table-bordered" id="edit_invoice">
+          <b><?php echo 'P.O. Number : ' ?></b> 
+          <input type="text" class="" style="width:250px;border-color: grey !important;border-width: thin;border-radius: 5px;" name="po_number" value="<?php echo $order['po_number']; ?>"/>
     
+</br>
+</br>
 
       <thead>
         <tr>

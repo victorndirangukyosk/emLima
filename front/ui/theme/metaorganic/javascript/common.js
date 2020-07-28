@@ -296,11 +296,12 @@ $(document).delegate('#add-cart-btn', 'click', function() {
     */  
     //$quantity = parseInt($(this).parent().parent().find('.middle-quantity').html());
     $quantity = $('#cart-qty-'+$product_id+'-'+$variation_id).val();
-    $quantity = parseInt($quantity);
+    $quantity = $quantity;
+    $quantityParsed = parseInt($quantity);
      //alert($quantity);
      //alert($action);
     // TODO: Adding multiple variants of same product to cart?
-    if ($quantity > 0) {
+    if ($quantityParsed > 0) {
        if($action == 'add'){
         cart.add($product_id, $quantity, $variation_id,$store_id);
         $(this).attr('data-action','update');
@@ -373,10 +374,10 @@ $(document).delegate('#add-cart-btnnew', 'click', function() {
     */  
     //$quantity = parseInt($(this).parent().parent().find('.middle-quantity').html());
     $quantity = $('#cart-qty-'+$product_id+'-'+$variation_id).val();
-    $quantity = parseInt($quantity);
+    $quantity = parseFloat($quantity);
     $newquantityvalue=0;    
-    $newquantityvalue=parseInt($mainquantity) + $quantity-parseInt($oldquantity);
-     //alert($action);
+    $newquantityvalue=parseFloat($mainquantity) + $quantity-parseFloat($oldquantity);
+
     // TODO: Adding multiple variants of same product to cart? 
     if ($quantity > 0) {
        if($action == 'add'){
@@ -510,7 +511,19 @@ $(document).delegate('.plus-quantity', 'click', function() {
 $(document).delegate('.mini-plus-quantity', 'click', function() {
     console.log("add without cart mini");
     $qty_wrapper = $(this).parent().find('.middle-quantity');
-    $qty = parseInt($qty_wrapper.html()) + 1;
+    $product_unit = $(this).data('unit');
+    console.log($product_unit);//unit value didnt find
+
+   $unit = '';
+   $unit = $product_unit.split('-')[1];
+//    alert($unit);
+   if($unit==' Kg')
+   {
+    $qty = parseFloat($qty_wrapper.html()) + 0.5;
+   }
+   else{
+    $qty = parseFloat($qty_wrapper.html()) + 1; 
+   }
 
     console.log($qty_wrapper);
 
@@ -676,7 +689,20 @@ $(document).delegate('.mini-minus-quantity', 'click', function() {
     $product_store_id = $(this).data('id');
     $variation_id = 0;
     console.log('minus mini cart');
-    $qty = parseInt($qty_wrapper.html())-1;
+    $product_unit = $(this).data('unit');
+    console.log($product_unit);//unit value didnt find
+
+   $unit = '';
+   $unit = $product_unit.split('-')[1];
+//    alert($unit);
+   if($unit==' Kg')
+   {
+    $qty = parseFloat($qty_wrapper.html())-0.5;
+   }
+   else{
+    $qty = parseFloat($qty_wrapper.html()) - 1; 
+   }
+   
     $product_id = $(this).attr('data-id');    
     $('#action_'+$product_id+' .error-msg').html('');
     $this = $(this);

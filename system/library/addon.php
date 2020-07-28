@@ -3,7 +3,7 @@
 
 use Symfony\Component\Finder\Finder;
 
-class Addon extends Object {
+class Addon extends SmartObject {
 
     public function __construct($registry) {
         $this->db = $registry->get('db');

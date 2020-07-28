@@ -140,7 +140,9 @@
                                                   <div class="col-md-12">
                                                   
                                                     <?php if($store_selected) { ?>
-                                                        <button id="list-add-to-cart"  class="btn btn-primary" type="button">
+                                                        <button id="list-add-to-cart"  class="btn btn-primary" type="button" >
+
+                                                        
                                                     <?php } else { ?>
                                                         <button id="list-add-to-cart"  class="btn btn-primary" type="button" disabled>
                                                     <?php } ?>
@@ -152,12 +154,12 @@
                                                   </div>
                                                 </div>
 
-                                                <div class="row" style="margin-bottom: 8px">
+                                                <div class="row" style="margin-bottom: 8px;align:center">
 
                                                   
-                                                  <div class="col-md-12">
+                                                  <div class="col-md-12" >
                                                   
-                                                    <a href="<?= $store ?>" class="btn btn-default"><?= $text_shopping?></a>
+                                                    <a href="<?= $store ?>" style="width:257px;" class="btn btn-default"><?= $text_shopping?></a>
                                                      
                                                   </div>
                                                 </div>
@@ -359,9 +361,11 @@ __kdt.push({"post_on_load": false});
     });
 
     $(document).delegate('#list-add-to-cart', 'click', function() {
-
+ 
         console.log('list-add-to-cart');
+ $store_id = 75;
 
+ 
         var productIds = [];
         var added = false;
         $("input:checkbox[name='wishlist_products']:enabled").each(function(){
@@ -371,17 +375,21 @@ __kdt.push({"post_on_load": false});
             $product_id = $(this).val();    
             $variation_id = 0;
             
-                
+             //alert($product_id);   
             //$quantity = parseInt($('#quantity_'+$product_id).html());
             $quantity = 1;//parseInt($('#quantity_'+$product_id).html());
             console.log($quantity+"qnt");
-
             if ($quantity > 0) {
 
-                cart.add($product_id, $quantity, $variation_id);
-                
+               // cart.add($product_id, $quantity, $variation_id);
+                cart.add($product_id, $quantity, $variation_id,$store_id,'','');                
                 added = true;
                 console.log("added to cart");
+
+                // $(this).attr('data-action','update');
+       // $('#AtcButton-id-'+$product_id+'-'+$variation_id).css("background-color","#ea7128");
+      ////  $('#flag-qty-id-'+$product_id+'-'+$variation_id).html($newquantityvalue+' items in cart <i class="fas fa-flag"></i>');        
+     //   $('#flag-qty-id-'+$product_id+'-'+$variation_id).css("display","block");
             }
         });
 
@@ -409,10 +417,12 @@ __kdt.push({"post_on_load": false});
     $(document).delegate('#selected-add-to-cart', 'click', function() {
 
         console.log('selected-add-to-cart');
-
+ $store_id = 75;
         var productIds = [];
         var added = false;
+        $cnt=0;
         $("input:checkbox[name='wishlist_products']:checked").each(function(){
+            $cnt=1;
             productIds.push($(this).val());
 
             console.log("Buy Now");
@@ -426,15 +436,27 @@ __kdt.push({"post_on_load": false});
 
             if ($quantity > 0) {
 
-                cart.add($product_id, $quantity, $variation_id);
-                
+               // cart.add($product_id, $quantity, $variation_id);
+                   cart.add($product_id, $quantity, $variation_id,$store_id,'',''); 
                 added = true;
 
                 console.log("added to cart");
+
+                  //$(this).attr('data-action','update');
+        //$('#AtcButton-id-'+$product_id+'-'+$variation_id).css("background-color","#ea7128");
+        ////$('#flag-qty-id-'+$product_id+'-'+$variation_id).html($newquantityvalue+' items in cart <i class="fas fa-flag"></i>');        
+      //  $('#flag-qty-id-'+$product_id+'-'+$variation_id).css("display","block");
+
             }
         });
 
-        if(added) {
+
+        if($cnt==0)
+        {
+ alert("Please select any product");
+        }
+
+         /*if(added) {
           $.ajax({
             url: 'index.php?path=account/wishlist/addWishlistProductToCart',
             type: 'post',
@@ -447,7 +469,7 @@ __kdt.push({"post_on_load": false});
               setTimeout(function(){ window.location.reload(false); }, 1000);
             }
           });
-        }
+        }*/
 
         console.log(productIds);
     });

@@ -1,7 +1,7 @@
 <?php
 
 
-class Pagecache extends Object {
+class Pagecache extends SmartObject {
 
     protected $key = null;
     protected $uri = null;

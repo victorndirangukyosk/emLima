@@ -12,7 +12,7 @@
                                                 <li class="list-group-item my-order-list-head">
                                                     <i class="fa fa-clock-o"></i> <?= $text_placed_on?> <span><strong><?php echo $wishlist['date_added']; ?></strong></span> <span>
                                                     
-                                                    <a href="#" id="cancelWishlist" data-id='<?=$wishlist["wishlist_id"] ?>' class="btn btn-danger btn-xs btn-custom-remove"><?= $text_cancel ?></a>
+                                                    <a href="#" id="cancelWishlist" data-id='<?=$wishlist["wishlist_id"] ?>' style="margin-right:21px;" class="btn btn-danger btn-xs btn-custom-remove"><?= $text_cancel ?></a>
 
                                                     </span>
                                                 </li>
@@ -27,7 +27,7 @@
                                                             <div class="col-md-8">
                                                                 <div class="my-order-info text-right">
                                                                     <h3 class="my-order-title">
-                                                                        <?php echo ($wishlist['product_count'] > 0 ?  '<a href="'.$wishlist['href'].'" class="btn-link">' . $text_products_count. ' ' .$wishlist['product_count'] .'</a>' : $text_products_count. ' ' .$wishlist['product_count']); ?>
+                                                                        <?php echo ($wishlist['product_count'] > 0 ?  '<a href="'.$wishlist['href'].'" class="btn btn-default btn-xs btn-accept-reject">' .View .' '. Products . ' (' .$wishlist['product_count'].')' .'</a>' : $text_products_count. ' ' .$wishlist['product_count']); ?>
                                                                     </h3>
                                                                     <span class="my-order-id"></span>
                                                                    
