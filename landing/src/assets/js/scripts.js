@@ -158,7 +158,7 @@
                   iziToast.warning({
                     position: 'topRight',
                     title: 'Oops',
-                    message: 'We couldn\'t create your account'
+                    message: json['error_warning']
                   });
                 }
               }
