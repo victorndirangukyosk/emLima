@@ -2483,14 +2483,14 @@ class ModelReportExcel extends Model {
 
                         'product_name' => $OrignalProduct['name'],
                         'unit' => $OrignalProduct['unit'],
-                        'product_qty' => $OrignalProduct['quantity'],
+                        'product_qty' => (float)($OrignalProduct['quantity']),
                     );
 
                 }
             }
         }
 
-        //echo "<pre>";print_r($data['torders']);die;
+          //echo "<pre>";print_r($data['torders']);die;
         foreach ($data['torders'] as $torders1) {
                 
             $ex = false;
@@ -2506,13 +2506,13 @@ class ModelReportExcel extends Model {
             }
 
             if(!$ex) {
-                $sum = 0;
+                $sum =(float) 0.00;
 
                 foreach ($data['torders'] as $key => $torders2) {
                     
                     if($torders1['product_name'] == $torders2['product_name'] && $torders1['store'] == $torders2['store']) {
 
-                        $sum += $torders2['product_qty'];
+                        $sum +=(float) $torders2['product_qty'];
 
                         unset($data['torders'][$key]);
 
@@ -2520,7 +2520,7 @@ class ModelReportExcel extends Model {
 
                 }
 
-                $torders1['product_qty'] = $sum;
+                $torders1['product_qty'] =(float) $sum;
 
                 $order_total++;
 
@@ -3974,7 +3974,7 @@ class ModelReportExcel extends Model {
 		 
 	
 	
-		 // echo "<pre>";print_r($rows);die;	 
+		 // echo "<pre>";print_r($data['customers']);die;	 
 			try {
 				// set appropriate timeout limit
 				set_time_limit(1800);
@@ -4046,8 +4046,8 @@ class ModelReportExcel extends Model {
 						$amount = 0;
 					}*/
 					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $result['customer']);				
-$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['order_id']);
-					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row,date($this->language->get('date_format_short'), strtotime($result['date_added'])));
+					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['order_id']);
+					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row,$result['date_added']);
 					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['products']);
 					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['subtotal']); 
 					$Amount=$Amount+$result['subtotalvalue'];

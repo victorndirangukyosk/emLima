@@ -275,7 +275,7 @@ $this->load->model('sale/order');
                 'order_id' => $result['order_id'],
                 'products' => $result['products'],
                 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])) ,
-                'editedproducts' => (int) $products_qty,
+                'editedproducts' =>   $products_qty,
                 'total' => $this->currency->format($result['total'], $this->config->get('config_currency')),
                 'subtotal'     => $this->currency->format($sub_total)
             );

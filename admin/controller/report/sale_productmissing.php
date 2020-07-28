@@ -221,7 +221,7 @@ class ControllerReportSaleProductMissing extends Controller {
 
                         'product_name' => $OrignalProduct['name'],
                         'unit' => $OrignalProduct['unit'],
-                        'product_qty' => $OrignalProduct['quantity'],
+                        'product_qty' =>(float) $OrignalProduct['quantity'],
                     );
 
                 }
@@ -244,13 +244,13 @@ class ControllerReportSaleProductMissing extends Controller {
             }
 
             if(!$ex) {
-                $sum = 0;
+                $sum =(float) 0.0;
 
                 foreach ($data['torders'] as $key => $torders2) {
                     
                     if($torders1['product_name'] == $torders2['product_name'] && $torders1['store'] == $torders2['store']) {
 
-                        $sum += $torders2['product_qty'];
+                        $sum +=(float) $torders2['product_qty'];
 
                         unset($data['torders'][$key]);
 
@@ -258,7 +258,7 @@ class ControllerReportSaleProductMissing extends Controller {
 
                 }
 
-                $torders1['product_qty'] = $sum;
+                $torders1['product_qty'] =(float) $sum;
 
                 $order_total++;
 
