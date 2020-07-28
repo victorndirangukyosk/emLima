@@ -511,7 +511,19 @@ $(document).delegate('.plus-quantity', 'click', function() {
 $(document).delegate('.mini-plus-quantity', 'click', function() {
     console.log("add without cart mini");
     $qty_wrapper = $(this).parent().find('.middle-quantity');
-    $qty = parseInt($qty_wrapper.html()) + 1;
+    $product_unit = $(this).data('unit');
+    console.log($product_unit);//unit value didnt find
+
+   $unit = '';
+   $unit = $product_unit.split('-')[1];
+//    alert($unit);
+   if($unit==' Kg')
+   {
+    $qty = parseFloat($qty_wrapper.html()) + 0.5;
+   }
+   else{
+    $qty = parseFloat($qty_wrapper.html()) + 1; 
+   }
 
     console.log($qty_wrapper);
 
@@ -677,7 +689,20 @@ $(document).delegate('.mini-minus-quantity', 'click', function() {
     $product_store_id = $(this).data('id');
     $variation_id = 0;
     console.log('minus mini cart');
-    $qty = parseInt($qty_wrapper.html())-1;
+    $product_unit = $(this).data('unit');
+    console.log($product_unit);//unit value didnt find
+
+   $unit = '';
+   $unit = $product_unit.split('-')[1];
+//    alert($unit);
+   if($unit==' Kg')
+   {
+    $qty = parseFloat($qty_wrapper.html())-0.5;
+   }
+   else{
+    $qty = parseFloat($qty_wrapper.html()) - 1; 
+   }
+   
     $product_id = $(this).attr('data-id');    
     $('#action_'+$product_id+' .error-msg').html('');
     $this = $(this);
