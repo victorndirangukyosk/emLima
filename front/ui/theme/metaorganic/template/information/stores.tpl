@@ -9,28 +9,28 @@
                     <div class="modal-footer">
                         <!-- <p><?= $text_verify_number ?></p> -->
                         <a href="<?php echo $checkout; ?>" id="proceed_to_checkout">
-                        
+
                             <button type="button" class="btn btn-primary btn-block btn-lg" id="proceed_to_checkout_button">
                                 <span class="checkout-modal-text"><?= $text_proceed_to_checkout?> </span>
                                 <div class="checkout-loader" style="display: none;"></div>
-                                
+
                             </button>
                         </a>
                     </div>
                 </div>
             </div>
         </div>
-        
+
     </div>
 
- 
+
 
 
 <div >
       <!--<div class="container">
         <div class="row">
           <div class="ad-info">
-          
+
             <h2>Hurry Up!</h2>
             <h3>Deal of the week</h3>
             <h4>From our family farm right to your doorstep.</h4>
@@ -56,7 +56,7 @@
                     </div>
                     <div class="add_cart">
                       <button class="button btn-cart" type="button"><span>Add to Cart</span></button>
-                      
+
                     </div>
                   </div>
                   <div class="item-info">
@@ -206,7 +206,7 @@
         </div>
         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
           <div class="spl-pro"><a href="product-detail.html" title="Fresh Organic Mustard Leaves "><img src="front/ui/theme/organic/images/offer-img.png" alt="Fresh Organic Mustard Leaves "></a>
-            
+
           </div>
         </div>
         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
@@ -221,9 +221,9 @@
     </div>
   </div>
   </div>
-    
-    
-    <?php echo $footer; ?> 
+
+
+    <?php echo $footer; ?>
     <?= $login_modal ?>
     <?= $signup_modal ?>
     <?= $forget_modal ?>
@@ -238,8 +238,8 @@
                     <div class="store-find-block">
                         <div class="mydivsssxx">
                             <div class="store-find">
-                                
-                                <div class="checkout-time-table-new" id="delivery-time-wrapper-new"></div>  
+
+                                <div class="checkout-time-table-new" id="delivery-time-wrapper-new"></div>
                             </div>
                         </div>
                     </div
@@ -262,7 +262,7 @@
                                 <div class="store-head">
                                     <h1><?= $text_heading_title ?></h1>
                                 </div>
-                                <div class="checkout-time-table-new" id="delivery-time-wrapper"></div>  
+                                <div class="checkout-time-table-new" id="delivery-time-wrapper"></div>
                             </div>
                         </div>
                     </div>
@@ -286,20 +286,20 @@
                             <p><?= $text_only_on_change_locality_warning ?></p>
                         <?php } else { ?>
                             <p><?= $text_change_locality_warning ?></p>
-                        <?php } ?>             
+                        <?php } ?>
 
                         <?php if($this->config->get('config_store_location') == 'zipcode') { ?>
 
                             <b> <?= $text_change_location_name ?> : <?= $zipcode ?></b>
                         <?php } else { ?>
                             <b><?= $text_change_location_name ?> : <?= $location_name_full ?></b>
-                            
+
                         <?php } ?>
 
-                        
+
                     </div>
                     <a href="<?php echo $toHome ?>" class="btn btn-primary"><?= $button_change_locality ?></a>
-                    
+
                 </div>
             </div>
         </div>
@@ -319,7 +319,7 @@
   console.log("public_key");
   console.log(public_key);
 __kdt.push({"public_key": public_key}); // The public key identifies your store
-__kdt.push({"post_on_load": false});   
+__kdt.push({"post_on_load": false});
   (function() {
            var kdt = document.createElement('script');
            kdt.id = 'kdtjs'; kdt.type = 'text/javascript';
@@ -374,10 +374,10 @@ __kdt.push({"post_on_load": false});
 </script>
 
 <?php } ?>
-    
+
 
     <script type="text/javascript">
-    
+
     jQuery('.header-search-form').on('click', function() {
         console.log("seaf click");
         jQuery('body').toggleClass('overflow-y-hidden');
@@ -427,14 +427,14 @@ __kdt.push({"post_on_load": false});
                 }}
             });
         }
-        
+
     });
 
     jQuery("ul.nav-tabs a").click(function (e) {
       e.preventDefault();
       jQuery(this).tab('show');
     });
-    
+
     function searchStore() {
         console.log("searchStore");
     }
