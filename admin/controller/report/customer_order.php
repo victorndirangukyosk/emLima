@@ -359,4 +359,50 @@ $this->load->model('sale/order');
         $this->response->setOutput($this->load->view('report/customer_statement.tpl', $data));
     }
 
+    public function statementexcel(){
+
+           
+
+        $this->load->language('report/customer_statement');
+
+        $this->document->setTitle($this->language->get('heading_title'));
+
+        if (isset($this->request->get['filter_date_start'])) {
+            $filter_date_start = $this->request->get['filter_date_start'];
+        } else {
+            $filter_date_start =   '1990-01-01';
+        }
+
+        if (isset($this->request->get['filter_date_end'])) {
+            $filter_date_end = $this->request->get['filter_date_end'];
+        } else {
+            $filter_date_end = date('Y-m-d');
+        }
+
+        if (isset($this->request->get['filter_order_status_id'])) {
+            $filter_order_status_id = $this->request->get['filter_order_status_id'];
+        } else {
+            $filter_order_status_id = 0;
+        }
+
+        if (isset($this->request->get['filter_customer'])) {
+            $filter_customer = $this->request->get['filter_customer'];
+        } else {
+            $filter_customer = 0;
+        }
+
+        $filter_data = array(
+            'filter_date_start' => $filter_date_start,
+            'filter_date_end' => $filter_date_end,
+            'filter_order_status_id' => $filter_order_status_id,
+            'filter_customer' => $filter_customer 
+        );
+
+        
+
+        $this->load->model('report/excel');
+        $this->model_report_excel->download_customer_statement_excel($filter_data);
+    }
+
+
 }

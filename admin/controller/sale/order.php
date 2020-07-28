@@ -6948,11 +6948,13 @@ class ControllerSaleOrder extends Controller
     public function consolidatedOrderProducts() {
         $orderid = $this->request->get['order_id'];
         $customer = $this->request->get['customer']; 
+        $date = $this->request->get['date']; 
 
         $data = array();         
             $data['consolidation'][] = [
               'orderid' => $orderid,
-              'customer' => $customer             
+              'customer' => $customer ,            
+              'date' => $date             
             ];           
         
             

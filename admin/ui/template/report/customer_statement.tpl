@@ -15,6 +15,8 @@
       <div class="panel-heading">
         <h3 class="panel-title"><i class="fa fa-bar-chart"></i> <?php echo $text_list; ?></h3>
 		  <div class="pull-right">
+      
+                    <button type="button" onclick="excel();" data-toggle="tooltip" title="" class="btn btn-success btn-sm" data-original-title="Download Excel"><i class="fa fa-download"></i></button>
 			<button type="button" data-toggle="tooltip" title="<?php echo $button_show_filter; ?>" class="btn btn-primary btn-sm" id="showFilter"><i class="fa fa-eye"></i></button>
 			<button type="button" data-toggle="tooltip" title="<?php echo $button_hide_filter; ?>" class="btn btn-primary btn-sm" id="hideFilter"><i class="fa fa-eye-slash"></i></button>
 		  </div>		
@@ -22,8 +24,8 @@
       <div class="panel-body">
         <div class="well" style="display:none;">
           <div class="row">
-
-           <div class="col-sm-6">
+           
+           <div class="col-sm-4">
 
            <div class="form-group">
                 <label class="control-label" for="input-customer"><?php echo $entry_customer; ?></label>
@@ -54,7 +56,12 @@
               </div>
             </div>
 
-            <div class="col-sm-6">
+             <div class="col-sm-4">
+                  <input type="hidden" name="filter_date "      class="form-control" />
+                              
+ </div>
+ 
+             <div class="col-sm-4">
               <div class="form-group">
                 <label class="control-label" for="input-date-start"><?php echo $entry_date_start; ?></label>
                 <div class="input-group date">
@@ -107,7 +114,7 @@
                 <td class="text-right"><?php echo $customer['editedproducts']; ?></td>
                 <!--<td class="text-right"><?php echo $customer['total']; ?></td>-->
                 <td class="text-right"><?php echo $customer['subtotal']; ?></td>
-                <td class="text-center"><a id="download-order-products" data-toggle="tooltip" data="<?php echo $customer['customer']; ?>" value=<?php echo $customer['order_id']; ?>  title="Download Products" class="btn btn-info"><i class="fa fa-file-excel-o"></i></a></td>
+                <td class="text-center"><a class="download" id="download-order-products"  data-toggle="tooltip" order_date="<?php echo $customer['date_added']; ?>" data="<?php echo $customer['customer']; ?>" value=<?php echo $customer['order_id']; ?>  title="Download Products" class="btn btn-info"><i class="fa fa-file-excel-o"></i></a></td>
               </tr>
               <?php } ?>
               <?php } else { ?>
@@ -164,26 +171,78 @@ $('#button-filter').on('click', function() {
 });
 //--></script> 
   <script type="text/javascript"><!--
-$('.date').datetimepicker({
-	pickTime: false
-});
-
-
-
-        $("#download-order-products").click(function(e) {
  
+function excel() {
+       url = 'index.php?path=report/customer_order/statementexcel&token=<?php echo $token; ?>';
+      
+        
+  var filter_customer = $('select[name=\'filter_customer\']').val();
+	
+	if (filter_customer != 0) {
+		url += '&filter_customer=' + encodeURIComponent(filter_customer);
+	}	
+  else{
+    alert("Please select customer");
+    return;
+  }
+
+	
+	var filter_date_start = $('input[name=\'filter_date_start\']').val();
+	
+	if (filter_date_start) {
+		url += '&filter_date_start=' + encodeURIComponent(filter_date_start);
+	}
+
+	var filter_date_end = $('input[name=\'filter_date_end\']').val();
+	
+	if (filter_date_end) {
+		url += '&filter_date_end=' + encodeURIComponent(filter_date_end);
+	}
+	
+	var filter_order_status_id = $('select[name=\'filter_order_status_id\']').val();
+	
+	if (filter_order_status_id != 0) {
+		url += '&filter_order_status_id=' + encodeURIComponent(filter_order_status_id);
+	}	
+
+    location = url;
+}
+
+
+     $(document).delegate('.download', 'click', function(e) {
+  
             e.preventDefault();
             $orderid = $(this).attr('value');
             $customer = $(this).attr('data');
+            $orderdate = $(this).attr('order_date');
            
  
             if ($orderid > 0) {                
-                const url = 'index.php?path=sale/order/consolidatedOrderProducts&token=<?php echo $token; ?>&order_id=' + encodeURIComponent($orderid)+'&customer='+$customer;
+                const url = 'index.php?path=sale/order/consolidatedOrderProducts&token=<?php echo $token; ?>&order_id=' + encodeURIComponent($orderid)+'&customer='+$customer+'&date='+$orderdate;
                 location = url;
             }
         });
 
+ </script>
 
-//--></script></div>
+
+
+
+    <script src="ui/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
+    <link href="ui/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" media="screen" />
+    <script type="text/javascript"><!--
+  $('.date').datetimepicker({
+            pickTime: false
+        });
+
+    setInterval(function() {
+     location = location;
+    }, 300 * 1000); // 60 * 1000 milsec
+    
+        //--></script></div>
+
+
+
+        
 <?php echo $footer; ?>
  
