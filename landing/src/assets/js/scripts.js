@@ -61,7 +61,7 @@
             } else {
               iziToast.error({
                 position: 'topRight',
-                message: 'Incorrect email or password'
+                message: json['error_warning']
               });
               loginButton.text('LOGIN');
               loginButton.toggleClass('disabled');
