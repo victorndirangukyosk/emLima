@@ -605,6 +605,40 @@ class ControllerAccountAccount extends Controller {
         }
     }
 
+    public function adduser(){
+            $log = new Log('error.log');
+            $log->write('sub customer add');
+            $this->load->model('account/customer');
+
+          
+            $this->request->post['dob'] = null;
+            $this->request->post['parent'] = $this->customer->getId();
+            $this->model_account_customer->addCustomer($this->request->post,true);    
+            $_SESSION['success_msg'] = 'User added successfully!';
+            
+
+            // Add to activity log
+            $this->load->model('account/activity');
+
+            $activity_data = array(
+                'customer_id' => $this->customer->getId(),
+                'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName()
+            );
+            $log->write('Add sub user account1');
+
+            $this->model_account_activity->addActivity('edit', $activity_data);
+
+            $log->write('Add sub user account2');
+
+            /*if(isset($this->session->data['checkout_redirect']) ) {
+                $redirectTo = $this->session->data['checkout_redirect'];
+                unset($this->session->data['checkout_redirect']);
+                $this->response->redirect($redirectTo);
+            }*/
+
+            $this->response->redirect($this->url->link('account/sub_users', '', 'SSL'));
+       
+    }
     public function getShippingName($code,$store_id)
     {
 
@@ -815,7 +849,7 @@ class ControllerAccountAccount extends Controller {
             $this->error['email'] = $this->language->get('error_email');
         }
 
-        if (($this->customer->getEmail() != $this->request->post['email']) && $this->model_account_customer->getTotalCustomersByEmail($this->request->post['email'])) {
+        if (($this->customer->getEmail() != $this->request->post['email']) && !empty($this->request->post['email']) && $this->model_account_customer->getTotalCustomersByEmail($this->request->post['email'])) {
             $this->error['warning'] = $this->language->get('error_exists');
         }
 

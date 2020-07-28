@@ -184,6 +184,16 @@
                                                 <i class="fa fa-credit-card"></i><?= $text_transactions ?></a>
                                             </li>
 
+                                            <li role="presentation">
+                                                <?php if(strpos($sub_users,$_SERVER["REQUEST_URI"]) !== false) { ?>
+                                                    <a href="<?= $sub_users ?>" class="active">
+                                                <?php } else { ?>
+                                                    <a href="<?= $sub_users ?>">
+                                                <?php } ?>
+                                                
+                                                <i class="fa fa-users"></i><?= $text_sub_customer ?></a>
+                                            </li>
+
                                             <li role="presentation" >
                                                 <?php if(strpos($wishlist,$_SERVER["REQUEST_URI"]) !== false) { ?>
                                                     <a href="<?= $wishlist ?>" class="active">
