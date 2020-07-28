@@ -47,7 +47,7 @@ class ModelCheckoutOrder extends Model {
 
 				if (isset($data['products'])) {
 					foreach ($data['products'] as $product) {
-						$this->db->query("INSERT INTO " . DB_PREFIX . "order_product SET vendor_id='" . (int) $product['vendor_id'] . "', store_id='" . (int) $product['store_id']. "', product_type='" . $product['product_type'] . "', unit='" . $product['unit'] ."', order_id = '" . (int) $order_id . "', variation_id = '" . (int) $product['store_product_variation_id'] . "', product_id = '" . (int) $product['product_store_id'] . "', name = '" . $this->db->escape($product['name']) . "', model = '" . $this->db->escape($product['model']) . "', quantity = '" . (int) $product['quantity'] . "', price = '" . (float) $product['price'] . "', total = '" . (float) $product['total'] . "', tax = '" . (float) $product['tax'] . "', reward = '" . (int) $product['reward'] . "'");
+						$this->db->query("INSERT INTO " . DB_PREFIX . "order_product SET vendor_id='" . (int) $product['vendor_id'] . "', store_id='" . (int) $product['store_id']. "', product_type='" . $product['product_type'] . "', unit='" . $product['unit'] ."', order_id = '" . (int) $order_id . "', variation_id = '" . (int) $product['store_product_variation_id'] . "', product_id = '" . (int) $product['product_store_id'] . "', name = '" . $this->db->escape($product['name']) . "', model = '" . $this->db->escape($product['model']) . "', quantity = '" . (float) $product['quantity'] . "', price = '" . (float) $product['price'] . "', total = '" . (float) $product['total'] . "', tax = '" . (float) $product['tax'] . "', reward = '" . (int) $product['reward'] . "'");
 					}
 				}
 				if (isset($data['totals'])) {
@@ -86,7 +86,7 @@ class ModelCheckoutOrder extends Model {
 
 				if ( isset( $data['products'] ) ) {
 					foreach ( $data['products'] as $product ) {
-						$this->db->query( "INSERT INTO " . DB_PREFIX . "order_product SET vendor_id='" . (int) $product['vendor_id'] . "', store_id='" . (int) $product['store_id'] . "', product_type='" . $product['product_type'] . "', unit='" . $product['unit'] . "', order_id = '" . (int) $order_id . "', variation_id = '" . (int) $product['store_product_variation_id'] . "', product_id = '" . (int) $product['product_store_id'] . "', name = '" . $this->db->escape( $product['name'] ) . "', model = '" . $this->db->escape( $product['model'] ) . "', quantity = '" . (int) $product['quantity'] . "', price = '" . (float) $product['price'] . "', total = '" . (float) $product['total'] . "', tax = '" . (float) $product['tax'] . "', reward = '" . (int) $product['reward'] . "'" );
+						$this->db->query( "INSERT INTO " . DB_PREFIX . "order_product SET vendor_id='" . (int) $product['vendor_id'] . "', store_id='" . (int) $product['store_id'] . "', product_type='" . $product['product_type'] . "', unit='" . $product['unit'] . "', order_id = '" . (int) $order_id . "', variation_id = '" . (int) $product['store_product_variation_id'] . "', product_id = '" . (int) $product['product_store_id'] . "', name = '" . $this->db->escape( $product['name'] ) . "', model = '" . $this->db->escape( $product['model'] ) . "', quantity = '" . (float) $product['quantity'] . "', price = '" . (float) $product['price'] . "', total = '" . (float) $product['total'] . "', tax = '" . (float) $product['tax'] . "', reward = '" . (int) $product['reward'] . "'" );
 					}
 				}
 
@@ -147,7 +147,7 @@ class ModelCheckoutOrder extends Model {
 						$produce_type='';
 						foreach ($product['produce_type'] as $producttype) 
 							{$produce_type=$produce_type.' '.$producttype['type'].'-'.$producttype['value'];}
-						$this->db->query("INSERT INTO " . DB_PREFIX . "order_product SET vendor_id='" . (int) $product['vendor_id'] . "', store_id='" . (int) $product['store_id']. "', product_type='" . $product['product_type'] . "',product_note='" . $product['product_note'] . "', general_product_id='" . $product['product_id']  . "', unit='" . $product['unit'] ."', order_id = '" . (int) $order_id . "', variation_id = '" . (int) $product['store_product_variation_id'] . "', product_id = '" . (int) $product['product_store_id'] . "', name = '" . $this->db->escape($product['name']) . "', model = '" . $this->db->escape($product['model']) . "', quantity = '" . (int) $product['quantity'] . "', price = '" . (float) $product['price'] . "', total = '" . (float) $product['total'] . "', tax = '" . (float) $product['tax'] . "', reward = '" . (int) $product['reward'] . "', produce_type = '" . $this->db->escape($produce_type) . "'");
+						$this->db->query("INSERT INTO " . DB_PREFIX . "order_product SET vendor_id='" . (int) $product['vendor_id'] . "', store_id='" . (int) $product['store_id']. "', product_type='" . $product['product_type'] . "',product_note='" . $product['product_note'] . "', general_product_id='" . $product['product_id']  . "', unit='" . $product['unit'] ."', order_id = '" . (int) $order_id . "', variation_id = '" . (int) $product['store_product_variation_id'] . "', product_id = '" . (int) $product['product_store_id'] . "', name = '" . $this->db->escape($product['name']) . "', model = '" . $this->db->escape($product['model']) . "', quantity = '" . (float) $product['quantity'] . "', price = '" . (float) $product['price'] . "', total = '" . (float) $product['total'] . "', tax = '" . (float) $product['tax'] . "', reward = '" . (int) $product['reward'] . "', produce_type = '" . $this->db->escape($produce_type) . "'");
 					}
 				}
 				if (isset($data['totals'])) {
@@ -191,7 +191,7 @@ class ModelCheckoutOrder extends Model {
 								$produce_type=$produce_type.' '.$producttype['type'].'-'.$producttype['value'];
 							}
 
-						$this->db->query( "INSERT INTO " . DB_PREFIX . "order_product SET vendor_id='" . (int) $product['vendor_id'] . "', store_id='" . (int) $product['store_id'] . "', product_type='" . $product['product_type'] . "',product_note='" . $product['product_note'] . "', general_product_id='" . $product['product_id']  . "', unit='" . $product['unit'] . "', order_id = '" . (int) $order_id . "', variation_id = '" . (int) $product['store_product_variation_id'] . "', product_id = '" . (int) $product['product_store_id'] . "', name = '" . $this->db->escape( $product['name'] ) . "', model = '" . $this->db->escape( $product['model'] ) . "', quantity = '" . (int) $product['quantity'] . "', price = '" . (float) $product['price'] . "', total = '" . (float) $product['total'] . "', tax = '" . (float) $product['tax'] . "', reward = '" . (int) $product['reward'] . "', produce_type = '" . $this->db->escape($produce_type) . "'");
+						$this->db->query( "INSERT INTO " . DB_PREFIX . "order_product SET vendor_id='" . (int) $product['vendor_id'] . "', store_id='" . (int) $product['store_id'] . "', product_type='" . $product['product_type'] . "',product_note='" . $product['product_note'] . "', general_product_id='" . $product['product_id']  . "', unit='" . $product['unit'] . "', order_id = '" . (int) $order_id . "', variation_id = '" . (int) $product['store_product_variation_id'] . "', product_id = '" . (int) $product['product_store_id'] . "', name = '" . $this->db->escape( $product['name'] ) . "', model = '" . $this->db->escape( $product['model'] ) . "', quantity = '" . (float) $product['quantity'] . "', price = '" . (float) $product['price'] . "', total = '" . (float) $product['total'] . "', tax = '" . (float) $product['tax'] . "', reward = '" . (int) $product['reward'] . "', produce_type = '" . $this->db->escape($produce_type) . "'");
 					}
 				}
 
@@ -271,7 +271,7 @@ class ModelCheckoutOrder extends Model {
 							{
 								$produce_type=$produce_type.' '.$producttype['type'].'-'.$producttype['value'];
 							}
-				$this->db->query( "INSERT INTO " . DB_PREFIX . "order_product SET vendor_id='" . (int) $product['vendor_id'] . "', store_id='" . (int) $product['store_id'] . "', product_type='" . $product['product_type'] . "', order_id = '" . (int) $order_id . "', variation_id = '" . (int) $product['store_product_variation_id'] . "', product_id = '" . (int) $product['product_store_id'] . "', name = '" . $this->db->escape( $product['name'] ) . "', model = '" . $this->db->escape( $product['model'] ) . "', quantity = '" . (int) $product['quantity'] . "', price = '" . (float) $product['price'] . "', total = '" . (float) $product['total'] . "', tax = '" . (float) $product['tax'] . "', reward = '" . (int) $product['reward'] . "', produce_type = '" . $this->db->escape($produce_type) . "'");
+				$this->db->query( "INSERT INTO " . DB_PREFIX . "order_product SET vendor_id='" . (int) $product['vendor_id'] . "', store_id='" . (int) $product['store_id'] . "', product_type='" . $product['product_type'] . "', order_id = '" . (int) $order_id . "', variation_id = '" . (int) $product['store_product_variation_id'] . "', product_id = '" . (int) $product['product_store_id'] . "', name = '" . $this->db->escape( $product['name'] ) . "', model = '" . $this->db->escape( $product['model'] ) . "', quantity = '" . (float) $product['quantity'] . "', price = '" . (float) $product['price'] . "', total = '" . (float) $product['total'] . "', tax = '" . (float) $product['tax'] . "', reward = '" . (int) $product['reward'] . "', produce_type = '" . $this->db->escape($produce_type) . "'");
 			}
 		}
 
@@ -551,7 +551,7 @@ class ModelCheckoutOrder extends Model {
 
 
 				foreach ( $order_product_query->rows as $order_product ) {
-					$this->db->query( "UPDATE " . DB_PREFIX . "product_to_store SET quantity = (quantity - " . (int) $order_product['quantity'] . ") WHERE product_store_id = '" . (int) $order_product['product_id'] . "' AND subtract_quantity = '1'" );
+					$this->db->query( "UPDATE " . DB_PREFIX . "product_to_store SET quantity = (quantity - " . (float) $order_product['quantity'] . ") WHERE product_store_id = '" . (int) $order_product['product_id'] . "' AND subtract_quantity = '1'" );
 				}
 
 				// Redeem coupon, vouchers and reward points
@@ -584,7 +584,7 @@ class ModelCheckoutOrder extends Model {
 				$product_query = $this->db->query( "SELECT * FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int) $order_id . "'" );
 
 				foreach ( $product_query->rows as $product ) {
-					$this->db->query( "UPDATE `" . DB_PREFIX . "product_to_store` SET quantity = (quantity + " . (int) $product['quantity'] . ") WHERE product_store_id = '" . (int) $product['product_id'] . "' AND subtract_quantity = '1'" );
+					$this->db->query( "UPDATE `" . DB_PREFIX . "product_to_store` SET quantity = (quantity + " . (float) $product['quantity'] . ") WHERE product_store_id = '" . (int) $product['product_id'] . "' AND subtract_quantity = '1'" );
 				}
 				// Remove coupon, vouchers and reward points history
 				$this->load->model( 'account/order' );
