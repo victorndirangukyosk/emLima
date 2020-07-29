@@ -132,7 +132,7 @@ gulp.task('default', ['smarty', 'css', 'js', 'favicon', 'img', 'browser-sync', '
   gulp.watch(sourceDirectory + "assets/js/*.js", ['js']);
   gulp.watch(sourceDirectory + '/templates/**/*.html', ['smarty']);
   gulp.watch(sourceDirectory + "*.ico", ['favicon']);
-  gulp.watch(sourceDirectory + "assets/img/*.{png,jpg,jpeg,gif,svg}", ['img']);
+  gulp.watch(sourceDirectory + "assets/img/*.{png,jpg,jpeg,gif,svg,webp}", ['img']);
   gulp.watch(sourceDirectory + "assets/fonts/*.{woff2,woff,otf,ttf}", ['fonts']);
   gulp.watch("landing/build/*.html", ['bs-reload']);
 });
