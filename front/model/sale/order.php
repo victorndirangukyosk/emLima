@@ -569,4 +569,57 @@ class ModelSaleOrder extends Model {
 
         return $query->row['total'];
     }
+
+
+    public function hasRealOrderProducts($order_id) {
+
+        $sql = "SELECT * FROM " . DB_PREFIX . "real_order_product WHERE order_id = '" . (int) $order_id ."'";
+        
+        $query = $this->db->query($sql);
+
+        if($query->num_rows) {
+            return true;
+        }
+
+        return false;
+    }
+
+
+    public function getRealOrderProductsItems($order_id, $store_id = 0) {
+       
+        $qty = 0;
+ 
+         $sql = "SELECT sum(quantity) as quantity FROM " . DB_PREFIX . "real_order_product WHERE order_id = '" . (int) $order_id . "'";
+         
+         if($store_id) {
+             $sql .= " AND store_id='".$store_id."'";
+         }
+         
+         $query = $this->db->query($sql)->row;
+         
+         if(isset($query['quantity'])) {
+             $qty = $query['quantity'];
+         }
+         return $qty;
+     }
+
+     public function getOrderProductsItems($order_id, $store_id = 0) {
+        
+        $qty = 0;
+
+        $sql = "SELECT sum(quantity) as quantity FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int) $order_id . "'";
+        
+        if($store_id) {
+            $sql .= " AND store_id='".$store_id."'";
+        }
+        
+        $query = $this->db->query($sql)->row;
+
+        if(isset($query['quantity'])) {
+            $qty = $query['quantity'];
+        }
+        return $qty;
+    }
+
+ 
 }
