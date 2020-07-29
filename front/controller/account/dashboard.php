@@ -63,7 +63,7 @@ class ControllerAccountDashboard extends Controller {
 
         $data['heading_title'] = $this->language->get('heading_title');       
         
-        $data['text_no_results'] = $this->language->get('text_your_details');
+        $data['text_no_results'] = $this->language->get('text_no_results');
  
             $customer_info = $this->model_account_dashboard->getCustomerDashboardData($this->customer->getId());
               

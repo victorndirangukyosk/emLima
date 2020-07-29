@@ -132,7 +132,7 @@ $('#block-range li').on('click', function(e) {
 </div>
     </div>
     <div class="row">
-      <div class="col-lg-12 col-md-12 col-sx-12 col-sm-12"><div id="recenttabs" class="panel panel-default">
+      <div class="col-lg-6 col-md-12 col-sx-12 col-sm-12"><div id="recenttabs" class="panel panel-default">
   <div class="panel-heading">
     <h3 class="panel-title"><i class="fa fa-th-list fa-lg"></i> Most bought Products (Last 30 days)
 </h3>
@@ -151,7 +151,7 @@ $('#block-range li').on('click', function(e) {
               <td>Product Name</td>
               <td>Unit of Measure</td>
               <td>Qty</td>
-              <td class="text-center">Action</td>
+              
             </tr>
             </thead>
             <tbody>
@@ -162,7 +162,62 @@ $('#block-range li').on('click', function(e) {
               <td><?php echo $_bestseller['name']; ?></td>
               <td><?php echo $_bestseller['unit']; ?></td>
               <td><?php echo $_bestseller['total']; ?></td>
+               
+            </tr>
+            <?php } ?>
+            <?php } else { ?>
+            <tr>
+              <td class="text-center" colspan="6"><?php echo $text_no_results; ?></td>
+            </tr>
+            <?php } ?>
+                                    </tbody>
+          </table>
+        </div>
+      </div>
+     
+       
+    </div>
+  </div>
+</div>
+</div>
+
+
+ <div class="col-lg-6 col-md-12 col-sx-12 col-sm-12"><div id="recenttabs" class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title"><i class="fa fa-th-list fa-lg"></i> Recent Orders
+</h3>
+  </div>
+  <div class="panel-body"  width="50%">
+    <nav>
+      
+    </nav>
+    <div class="tab-content panel"  width="50%">
+      <div id="dash_recent_orders" class="tab-pane active"  width="50%">
+        <div class="table-responsive"  width="50%">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+              
+              <td>Order Id</td>
+              <td>Status</td>
+              <td>Order Date</td>
+              <td>Delivery Date</td>
+              <td class="text-center">Action</td>
+            </tr>
+            </thead>
+            <tbody>
+                  <?php if ($DashboardData['recent_orders']) { ?>
+            <?php foreach ($DashboardData['recent_orders'] as $ro) { ?>
+            <tr>
+              
+              <td><?php echo $ro['order_id']; ?></td>
+              <td><?php echo $ro['status']; ?></td>
+              <td><?php echo $ro['total']; ?></td>
               <td class="text-center">
+                <a href="" data-toggle="tooltip" title="add to cart" class="btn btn-success">
+                  <i class="icon fa fa-shopping-cart"></i>
+                </a>
+
                 <a href="" data-toggle="tooltip" title="add to cart" class="btn btn-success">
                   <i class="icon fa fa-shopping-cart"></i>
                 </a>
@@ -171,7 +226,7 @@ $('#block-range li').on('click', function(e) {
             <?php } ?>
             <?php } else { ?>
             <tr>
-              <td class="text-center" colspan="6"><?php echo $text_no_results; ?></td>
+              <td class="text-center" colspan="6"><?php echo 'Functionality pending'; ?></td>
             </tr>
             <?php } ?>
                                     </tbody>
