@@ -16,6 +16,6 @@ jobs:
         key: ${{ secrets.STAGING_SERVER_KEY }}
         port : 22
         script: | 
-          cd /var/www/html/staging.kwikbasket.com
+          cd /var/www/html/stage.kwikbasket.com
           sudo su
           git pull origin staging
