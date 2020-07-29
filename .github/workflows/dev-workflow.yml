@@ -1,0 +1,21 @@
+name: Development Deployment Workflow
+on:
+  push:
+    branches: [ develop ]
+
+jobs:
+  deployment:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+    - name: Testing dev.kwikbasket.com server ssh connection
+      uses: appleboy/ssh-action@master
+      with: 
+        host: dev.kwikbasket.com
+        username: emlimadev
+        key: ${{ secrets.DEV_SERVER_KEY }}
+        port : 22
+        script: | 
+          cd /var/www/html/dev.kwikbasket.com
+          git pull origin develop
+          git status
