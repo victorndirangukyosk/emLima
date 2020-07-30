@@ -27,7 +27,6 @@ class ControllerSaleOrder extends Controller
 
 
         $this->getList();
-
     }
 
     public function product_autocomplete()
@@ -279,7 +278,6 @@ class ControllerSaleOrder extends Controller
                 if (!$this->isVendorOrder($order_id)) {
                     $this->response->redirect($this->url->link('error/not_found'));
                 }
-
             }
             //echo "<pre>";print_r($order_info);die;
 
@@ -310,7 +308,7 @@ class ControllerSaleOrder extends Controller
                 $data['store_name'] = $store_data['name'];
 
                 if ($order_info['invoice_no']) {
-                    $invoice_no = $order_info['invoice_prefix'] . $order_info['invoice_no'].$order_info['invoice_sufix'] ;
+                    $invoice_no = $order_info['invoice_prefix'] . $order_info['invoice_no'] . $order_info['invoice_sufix'];
                 } else {
                     $invoice_no = '';
                 }
@@ -324,7 +322,6 @@ class ControllerSaleOrder extends Controller
                 if ($this->model_sale_order->hasRealOrderProducts($order_id)) {
 
                     $products = $this->model_sale_order->getRealOrderProducts($order_id);
-
                 } else {
 
                     $products = $this->model_sale_order->getOrderProducts($order_id);
@@ -563,7 +560,7 @@ class ControllerSaleOrder extends Controller
             'invoice_no' => $data['transaction_id'],
             'date_added' => date($this->language->get('date_format_short'), strtotime($data['transaction_details']['date_added'])),
             'store_name' => $store_name,
-            'store_url' => rtrim(HTTPS_CATALOG, '/'),//$data['base']
+            'store_url' => rtrim(HTTPS_CATALOG, '/'), //$data['base']
             'store_address' => nl2br($store_address),
             'address' => nl2br($data['vendor_details']['address']),
             'store_email' => $store_email,
@@ -722,7 +719,7 @@ class ControllerSaleOrder extends Controller
             'invoice_no' => $data['transaction_id'],
             'date_added' => date($this->language->get('date_format_short'), strtotime($data['transaction_details']['date_added'])),
             'store_name' => $store_name,
-            'store_url' => rtrim(HTTPS_CATALOG, '/'),//$data['base']
+            'store_url' => rtrim(HTTPS_CATALOG, '/'), //$data['base']
             'store_address' => nl2br($store_address),
             'address' => nl2br($data['vendor_details']['address']),
             'store_email' => $store_email,
@@ -1157,7 +1154,7 @@ class ControllerSaleOrder extends Controller
 
         $results = $this->model_sale_order->getOrders($filter_data);
 
-//        echo "<pre>";print_r($results);die;
+        //        echo "<pre>";print_r($results);die;
         foreach ($results as $result) {
 
             $sub_total = 0;
@@ -1446,7 +1443,6 @@ class ControllerSaleOrder extends Controller
 
             return $query->row['user_id'];
         }
-
     }
 
     public function getUser($id)
@@ -1457,7 +1453,6 @@ class ControllerSaleOrder extends Controller
 
             return $query->row['fax'];
         }
-
     }
 
     public function getForm()
@@ -1528,7 +1523,7 @@ class ControllerSaleOrder extends Controller
         $data['tab_location'] = $this->language->get('tab_location');
 
         $data['column_product'] = $this->language->get('column_product');
-       // $data['column_produce_type'] = $this->language->get('column_produce_type');
+        // $data['column_produce_type'] = $this->language->get('column_produce_type');
         $data['column_model'] = $this->language->get('column_model');
         $data['column_quantity'] = $this->language->get('column_quantity');
         $data['column_price'] = $this->language->get('column_price');
@@ -1854,7 +1849,6 @@ class ControllerSaleOrder extends Controller
             if (!$this->isVendorOrder($order_id)) {
                 $this->response->redirect($this->url->link('error/not_found'));
             }
-
         }
 
         $data['order_transaction_id'] = '';
@@ -2055,7 +2049,7 @@ class ControllerSaleOrder extends Controller
             $data['help_error'] = $this->language->get('help_error');
 
             $data['column_product'] = $this->language->get('column_product');
-        $data['column_produce_type'] = $this->language->get('column_produce_type');
+            $data['column_produce_type'] = $this->language->get('column_produce_type');
 
             $data['column_model'] = $this->language->get('column_model');
             $data['column_quantity'] = $this->language->get('column_quantity') . '( Ordered )';
@@ -2202,24 +2196,18 @@ class ControllerSaleOrder extends Controller
                 if ($this->model_sale_order->hasRealOrderProducts($order_id)) {
 
                     $data['invoice'] = $this->url->link('sale/order/newinvoice', 'store_id=' . $store_id . '&token=' . $this->session->data['token'] . '&order_id=' . (int)$this->request->get['order_id'], 'SSL');
-
                 } else {
                     $data['invoice'] = $this->url->link('sale/order/invoice', 'store_id=' . $store_id . '&token=' . $this->session->data['token'] . '&order_id=' . (int)$this->request->get['order_id'], 'SSL');
                 }
-
-
             } else {
                 $data['shipping'] = $this->url->link('sale/order/shipping', 'token=' . $this->session->data['token'] . '&order_id=' . (int)$this->request->get['order_id'], 'SSL');
 
                 if ($this->model_sale_order->hasRealOrderProducts($order_id)) {
 
                     $data['invoice'] = $this->url->link('sale/order/newinvoice', 'token=' . $this->session->data['token'] . '&order_id=' . (int)$this->request->get['order_id'], 'SSL');
-
                 } else {
                     $data['invoice'] = $this->url->link('sale/order/invoice', 'token=' . $this->session->data['token'] . '&order_id=' . (int)$this->request->get['order_id'], 'SSL');
                 }
-
-
             }
 
             //$data['edit'] = $this->url->link('sale/order/edit', 'token=' . $this->session->data['token'] . '&order_id=' . (int) $this->request->get['order_id'], 'SSL');
@@ -2236,7 +2224,7 @@ class ControllerSaleOrder extends Controller
             $data['order_id'] = $this->request->get['order_id'];
 
             if ($order_info['invoice_no']) {
-                $data['invoice_no'] = $order_info['invoice_prefix'] . $order_info['invoice_no'].$order_info['invoice_sufix'];
+                $data['invoice_no'] = $order_info['invoice_prefix'] . $order_info['invoice_no'] . $order_info['invoice_sufix'];
             } else {
                 $data['invoice_no'] = '';
             }
@@ -2636,7 +2624,7 @@ class ControllerSaleOrder extends Controller
             $data['password'] = $this->config->get('config_delivery_secret');
 
 
-            $data['delivery_id'] = $order_info['delivery_id'];//"del_XPeEGFX3Hc4ZeWg5";//
+            $data['delivery_id'] = $order_info['delivery_id']; //"del_XPeEGFX3Hc4ZeWg5";//
             $data['shopper_link'] = $this->config->get('config_shopper_link') . '/storage/';
 
             $data['products_status'] = [];
@@ -2669,7 +2657,6 @@ class ControllerSaleOrder extends Controller
                     } else {
                         $data['products_status'] = $productStatus['data'];
                     }
-
                 }
             }
 
@@ -3030,7 +3017,7 @@ class ControllerSaleOrder extends Controller
                         'option' => $option_data,
                         'quantity' => $original_product['quantity'],
                         'quantity_updated' => $original_product['quantity_updated'],
-                        'unit_updated' => $original_product['unit_updated'],//as of now unit change is not there
+                        'unit_updated' => $original_product['unit_updated'], //as of now unit change is not there
                         'price' => $this->currency->format($original_product['price'] + ($this->config->get('config_tax') ? $original_product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
                         'total' => $this->currency->format($original_product['total'] + ($this->config->get('config_tax') ? ($original_product['tax'] * $original_product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
                         'href' => $this->url->link('catalog/product/edit', 'token=' . $this->session->data['token'] . '&product_id=' . $original_product['product_id'], 'SSL')
@@ -3052,21 +3039,18 @@ class ControllerSaleOrder extends Controller
                             'model' => $original_product['model'],
                             'option' => $option_data,
                             'quantity_updated' => $original_product['quantity_updated'],
-                            'unit_updated' => $original_product['unit_updated'],//as of now unit change is not there 
+                            'unit_updated' => $original_product['unit_updated'], //as of now unit change is not there 
                             'quantity' => $original_product['quantity'],
                             'price' => $this->currency->format($original_product['price'] + ($this->config->get('config_tax') ? $original_product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
                             'total' => $this->currency->format($original_product['total'] + ($this->config->get('config_tax') ? ($original_product['tax'] * $original_product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
                             'href' => $this->url->link('catalog/product/edit', 'token=' . $this->session->data['token'] . '&product_id=' . $original_product['product_id'], 'SSL')
                         );
-
                     }
-
                 }
                 //echo '<pre>';print_r($data['difference_products']);exit;
                 //echo "<pre>";print_r($data['original_products']);die;
 
                 $products = $this->model_sale_order->getRealOrderProducts($this->request->get['order_id']);
-
             } else {
 
                 $products = $this->model_sale_order->getOrderProducts($this->request->get['order_id']);
@@ -3090,7 +3074,6 @@ class ControllerSaleOrder extends Controller
                         'href' => $this->url->link('catalog/product/edit', 'token=' . $this->session->data['token'] . '&product_id=' . $original_product['product_id'], 'SSL')
                     );
                 }
-
             }
 
 
@@ -3133,7 +3116,7 @@ class ControllerSaleOrder extends Controller
                     'option' => $option_data,
                     'quantity' => $product['quantity'],
                     'quantity_updated' => $product['quantity'],
-                    'unit_updated' => $product['unit'],//as of now unit change is not there
+                    'unit_updated' => $product['unit'], //as of now unit change is not there
 
                     'price' => $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
                     'total' => $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
@@ -3525,7 +3508,7 @@ class ControllerSaleOrder extends Controller
 
         return !$this->error;
 
-//        return true;
+        //        return true;
     }
 
     public function createInvoiceNo()
@@ -3812,6 +3795,152 @@ class ControllerSaleOrder extends Controller
         $this->response->setOutput($this->load->view('sale/order_history.tpl', $data));
     }
 
+    function translateAmountToWords(int $number)
+    {
+    
+    /*
+     * A recursive function to turn digits into words
+     * Numbers must be integers from -999,999,999,999 to 999,999,999,999 inclusive.
+     * Zero is a special case, it cause problems even with typecasting if we don't deal with it here    
+    */
+        $max_size = pow(10, 18);
+        if (!$number) return "zero";
+        if ($number < abs($max_size)) {
+            switch ($number) {
+                    // set up some rules for converting digits to words
+                case $number < 0:
+                    $prefix = "negative";
+                    $suffix = $this->translateAmountToWords(-1 * $number);
+                    $string = $prefix . " " . $suffix;
+                    break;
+                case 1:
+                    $string = "one";
+                    break;
+                case 2:
+                    $string = "two";
+                    break;
+                case 3:
+                    $string = "three";
+                    break;
+                case 4:
+                    $string = "four";
+                    break;
+                case 5:
+                    $string = "five";
+                    break;
+                case 6:
+                    $string = "six";
+                    break;
+                case 7:
+                    $string = "seven";
+                    break;
+                case 8:
+                    $string = "eight";
+                    break;
+                case 9:
+                    $string = "nine";
+                    break;
+                case 10:
+                    $string = "ten";
+                    break;
+                case 11:
+                    $string = "eleven";
+                    break;
+                case 12:
+                    $string = "twelve";
+                    break;
+                case 13:
+                    $string = "thirteen";
+                    break;
+                    // fourteen handled later
+                case 15:
+                    $string = "fifteen";
+                    break;
+                case $number < 20:
+                    $string = $this->translateAmountToWords($number % 10);
+                    // eighteen only has one "t"
+                    if ($number == 18) {
+                        $suffix = "een";
+                    } else {
+                        $suffix = "teen";
+                    }
+                    $string .= $suffix;
+                    break;
+                case 20:
+                    $string = "twenty";
+                    break;
+                case 30:
+                    $string = "thirty";
+                    break;
+                case 40:
+                    $string = "forty";
+                    break;
+                case 50:
+                    $string = "fifty";
+                    break;
+                case 60:
+                    $string = "sixty";
+                    break;
+                case 70:
+                    $string = "seventy";
+                    break;
+                case 80:
+                    $string = "eighty";
+                    break;
+                case 90:
+                    $string = "ninety";
+                    break;
+                case $number < 100:
+                    $prefix = $this->translateAmountToWords($number - $number % 10);
+                    $suffix = $this->translateAmountToWords($number % 10);
+                    $string = $prefix . " " . $suffix;
+                    break;
+                    // handles all number 100 to 999
+                case $number < pow(10, 3):
+                    // floor return a float not an integer
+                    $prefix = $this->translateAmountToWords(intval(floor($number / pow(10, 2)))) . " hundred";
+                    if ($number % pow(10, 2)) $suffix = " and " . $this->translateAmountToWords($number % pow(10, 2));
+                    $string = $prefix . $suffix;
+                    break;
+                case $number < pow(10, 6):
+                    // floor return a float not an integer
+                    $prefix = $this->translateAmountToWords(intval(floor($number / pow(10, 3)))) . " thousand";
+                    if ($number % pow(10, 3)) $suffix = $this->translateAmountToWords($number % pow(10, 3));
+                    $string = $prefix . " " . $suffix;
+                    break;
+                case $number < pow(10, 9):
+                    // floor return a float not an integer
+                    $prefix = $this->translateAmountToWords(intval(floor($number / pow(10, 6)))) . " million";
+                    if ($number % pow(10, 6)) $suffix = $this->translateAmountToWords($number % pow(10, 6));
+                    $string = $prefix . " " . $suffix;
+                    break;
+                case $number < pow(10, 12):
+                    // floor return a float not an integer
+                    $prefix = $this->translateAmountToWords(intval(floor($number / pow(10, 9)))) . " billion";
+                    if ($number % pow(10, 9)) $suffix = $this->translateAmountToWords($number % pow(10, 9));
+                    $string = $prefix . " " . $suffix;
+                    break;
+                case $number < pow(10, 15):
+                    // floor return a float not an integer
+                    $prefix = $this->translateAmountToWords(intval(floor($number / pow(10, 12)))) . " trillion";
+                    if ($number % pow(10, 12)) $suffix = $this->translateAmountToWords($number % pow(10, 12));
+                    $string = $prefix . " " . $suffix;
+                    break;
+                    // Be careful not to pass default formatted numbers in the quadrillions+ into this function
+                    // Default formatting is float and causes errors
+                case $number < pow(10, 18):
+                    // floor return a float not an integer
+                    $prefix = $this->translateAmountToWords(intval(floor($number / pow(10, 15)))) . " quadrillion";
+                    if ($number % pow(10, 15)) $suffix = $this->translateAmountToWords($number % pow(10, 15));
+                    $string = $prefix . " " . $suffix;
+                    break;
+            }
+        } else {
+            echo "ERROR with - $number<br/> Number must be an integer between -" . number_format($max_size, 0, ".", ",") . " and " . number_format($max_size, 0, ".", ",") . " exclusive.";
+        }
+        return $string;
+    }
+
     public function invoice()
     {
         $this->load->language('sale/order');
@@ -3892,7 +4021,6 @@ class ControllerSaleOrder extends Controller
                 if (!$this->isVendorOrder($order_id)) {
                     $this->response->redirect($this->url->link('error/not_found'));
                 }
-
             }
 
             if ($order_info) {
@@ -3931,7 +4059,7 @@ class ControllerSaleOrder extends Controller
                 $data['store_name'] = $store_data['name'];
 
                 if ($order_info['invoice_no']) {
-                    $invoice_no = $order_info['invoice_prefix'] . $order_info['invoice_no'].$order_info['invoice_sufix'];
+                    $invoice_no = $order_info['invoice_prefix'] . $order_info['invoice_no'] . $order_info['invoice_sufix'];
                 } else {
                     $invoice_no = '';
                 }
@@ -3943,7 +4071,6 @@ class ControllerSaleOrder extends Controller
                 if ($this->model_sale_order->hasRealOrderProducts($order_id)) {
 
                     $products = $this->model_sale_order->getRealOrderProducts($order_id);
-
                 } else {
 
                     $products = $this->model_sale_order->getOrderProducts($order_id);
@@ -3998,12 +4125,11 @@ class ControllerSaleOrder extends Controller
                     $totals = $this->model_sale_order->getOrderTotals($order_id);
                 }
 
-//                echo "<pre>";print_r($totals);
-
                 foreach ($totals as $total) {
                     $total_data[] = array(
                         'title' => $total['title'],
                         'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
+                        'amount_in_words' => ucwords($this->translateAmountToWords(floor(($total['value'] * 100)/100))) . " Kenyan Shillings"
                     );
                 }
 
@@ -4038,11 +4164,12 @@ class ControllerSaleOrder extends Controller
                 );
             }
         }
-//                echo "<pre>";print_r($data['orders'][0]);die;
+                    //    echo "<pre>";print_r($data['orders'][0]);die;
         $this->response->setOutput($this->load->view('sale/order_invoice.tpl', $data['orders'][0]));
     }
 
-    public function consolidatedCalculationSheet() {
+    public function consolidatedCalculationSheet()
+    {
         $deliveryDate = $this->request->get['filter_delivery_date'];
 
         $filter_data = array(
@@ -4055,35 +4182,36 @@ class ControllerSaleOrder extends Controller
         $data = array();
 
         $totalOrdersAmount = 0;
-        foreach($results as $order) {
+        foreach ($results as $order) {
             $data['consolidation'][] = [
-              'delivery_date' => $order['delivery_date'],
-              'customer' => $order['customer'] . ' Order#' . $order['order_id'],
-              'amount' => $order['total']
+                'delivery_date' => $order['delivery_date'],
+                'customer' => $order['customer'] . ' Order#' . $order['order_id'],
+                'amount' => $order['total']
             ];
-           // $totalOrdersAmount += $order['total'];
+            // $totalOrdersAmount += $order['total'];
         }
-       // $data['consolidation']['total'] = $totalOrdersAmount;
+        // $data['consolidation']['total'] = $totalOrdersAmount;
 
         foreach ($results as $index => $order) {
             $data['orders'][$index] = $order;
             $orderProducts = $this->getOrderProductsWithVariancesNew($data['orders'][$index]['order_id']);
             $data['orders'][$index]['products'] = $orderProducts;
-            
+
             foreach ($orderProducts as $item) {
                 $sum += $item['total_updatedvalue'];
             }
             $data['consolidation'][$index]['amount'] = $sum;
-              $totalOrdersAmount += $sum;
+            $totalOrdersAmount += $sum;
         }
         $data['consolidation']['total'] = $totalOrdersAmount;
-      // echo "<pre>";print_r($data);die;
+        // echo "<pre>";print_r($data);die;
 
         $this->load->model('report/excel');
         $this->model_report_excel->download_consolidated_calculation_sheet_excel($data);
     }
 
-    public function getOrderTotals($order_id, $store_id) {
+    public function getOrderTotals($order_id, $store_id)
+    {
         if ($store_id) {
             $totals = $this->model_sale_order->getVendorOrderTotals($order_id, $store_id);
         } else {
@@ -4093,7 +4221,8 @@ class ControllerSaleOrder extends Controller
         return $totals;
     }
 
-    public function getOrderProductsWithVariances($order_id) {
+    public function getOrderProductsWithVariances($order_id)
+    {
         $this->load->model('sale/order');
 
         // Order products with weight change
@@ -4173,22 +4302,21 @@ class ControllerSaleOrder extends Controller
             }
         }
         return $orderProducts;
-    } 
+    }
 
 
-    public function getOrderProductsWithVariancesNew($order_id) {
-        $this->load->model('sale/order');       
+    public function getOrderProductsWithVariancesNew($order_id)
+    {
+        $this->load->model('sale/order');
 
         $orderProducts = array();
 
         if ($this->model_sale_order->hasRealOrderProducts($order_id)) {
-             // Order products with weight change
-        $originalProducts = $products= $this->model_sale_order->getRealOrderProducts($order_id);
-            
+            // Order products with weight change
+            $originalProducts = $products = $this->model_sale_order->getRealOrderProducts($order_id);
         } else {
-        // Products as the user ordered them on the platform
-         $originalProducts = $products = $this->model_sale_order->getOrderProducts($order_id);
-           
+            // Products as the user ordered them on the platform
+            $originalProducts = $products = $this->model_sale_order->getOrderProducts($order_id);
         }
 
         foreach ($originalProducts as $originalProduct) {
@@ -4266,7 +4394,7 @@ class ControllerSaleOrder extends Controller
                 }
 
                 if ($order_info['invoice_no']) {
-                    $invoice_no = $order_info['invoice_prefix'] . $order_info['invoice_no'].$order_info['invoice_sufix'];
+                    $invoice_no = $order_info['invoice_prefix'] . $order_info['invoice_no'] . $order_info['invoice_sufix'];
                 } else {
                     $invoice_no = '';
                 }
@@ -4424,7 +4552,6 @@ class ControllerSaleOrder extends Controller
                 if (!$this->isVendorOrder($order_id)) {
                     $this->response->redirect($this->url->link('error/not_found'));
                 }
-
             }
 
             if ($order_info) {
@@ -4463,7 +4590,7 @@ class ControllerSaleOrder extends Controller
                 $data['store_name'] = $store_data['name'];
 
                 if ($order_info['invoice_no']) {
-                    $invoice_no = $order_info['invoice_prefix'] . $order_info['invoice_no'].$order_info['invoice_sufix'];
+                    $invoice_no = $order_info['invoice_prefix'] . $order_info['invoice_no'] . $order_info['invoice_sufix'];
                 } else {
                     $invoice_no = '';
                 }
@@ -4630,7 +4757,7 @@ class ControllerSaleOrder extends Controller
 
         foreach ($orders as $order_id) {
             $order_info = $this->model_sale_order->getOrder($order_id);
-      //  echo "<pre>";print_r($order_info);die;
+            //  echo "<pre>";print_r($order_info);die;
 
             if ($this->user->isVendor() && !$this->isVendorOrder($order_info['order_id'])) {
                 continue;
@@ -4648,7 +4775,6 @@ class ControllerSaleOrder extends Controller
                     $store_email = $store_info['email'];
                     $store_telephone = $store_info['telephone'];
                     $store_fax = $store_info['fax'];
-
                 } else {
                     $store_name = $this->config->get('config_name');
                     $store_address = $this->config->get('config_address');
@@ -4660,7 +4786,7 @@ class ControllerSaleOrder extends Controller
 
 
                 if ($order_info['invoice_no']) {
-                    $invoice_no = $order_info['invoice_prefix'] . $order_info['invoice_no'].$order_info['invoice_sufix'];
+                    $invoice_no = $order_info['invoice_prefix'] . $order_info['invoice_no'] . $order_info['invoice_sufix'];
                 } else {
                     $invoice_no = '';
                 }
@@ -4671,8 +4797,8 @@ class ControllerSaleOrder extends Controller
                 // Products as the user ordered them on the platform
                 $originalProducts = $products = $this->model_sale_order->getOrderProducts($order_id);
 
-//                echo "<pre>";print_r($editedProducts);echo "<br>";
-//                echo "<pre>";print_r($original_products); die;
+                //                echo "<pre>";print_r($editedProducts);echo "<br>";
+                //                echo "<pre>";print_r($original_products); die;
 
                 $orderProducts = array();
 
@@ -4790,7 +4916,7 @@ class ControllerSaleOrder extends Controller
             }
         }
 
-//        echo "<pre>";print_r($data['orders'][0]);die;
+        //        echo "<pre>";print_r($data['orders'][0]);die;
 
         $this->response->setOutput($this->load->view('sale/order_shipping.tpl', $data['orders'][0]));
     }
@@ -4816,9 +4942,9 @@ class ControllerSaleOrder extends Controller
         $allp_id = true;
 
         //  echo "<pre>";print_r($datas);die;
-         
+
         $this->model_sale_order->updatePO($this->request->get['order_id'], $datas['po_number']);
-        
+
         foreach ($datas['products'] as $p_id_key => $updateProduct) {
 
             if (!is_numeric($updateProduct['product_id'])) {
@@ -4879,7 +5005,6 @@ class ControllerSaleOrder extends Controller
                 if ($total['code'] == 'total') {
                     $old_total = $total['value'];
                 }
-
             }
 
 
@@ -4895,7 +5020,6 @@ class ControllerSaleOrder extends Controller
                 } else {
                     //$log->write("set");
                 }
-
             }
 
             $sumTotal = 0;
@@ -4943,7 +5067,6 @@ class ControllerSaleOrder extends Controller
                 foreach ($tax_total as $x => $tmpV) {
                     array_push($datas['totals'], $tmpV);
                 }
-
             }
 
             //unset totals coming from web
@@ -4996,7 +5119,6 @@ class ControllerSaleOrder extends Controller
                     if ($store_info) {
                         $free_delivery_amount = $store_info['min_order_cod'];
                     }
-
                 }
 
                 //echo "<pre>";print_r($free_delivery_amount);print_r($old_sub_total);die;
@@ -5020,10 +5142,7 @@ class ControllerSaleOrder extends Controller
                         $value_coming_tmp = $datas['totals']['shipping']['value'];
 
                         $datas['totals']['shipping']['value_coming'] = $value_coming_tmp;
-
                     }
-
-
                 } else {
 
                     $value_coming_tmp = 0;
@@ -5040,10 +5159,7 @@ class ControllerSaleOrder extends Controller
                     $datas['totals']['shipping']['actual_value'] = 0;
 
                     $datas['totals']['shipping']['value_coming'] = $value_coming_tmp;
-
                 }
-
-
             }
 
 
@@ -5091,7 +5207,6 @@ class ControllerSaleOrder extends Controller
                         if ((array_key_exists("value_coming", $tot))) {
                             $orderTotal -= $tot['value_coming'];
                         }
-
                     }
                 }
 
@@ -5162,8 +5277,6 @@ class ControllerSaleOrder extends Controller
                 //not settle only update so reset column settlement_amount
                 $this->model_sale_order->settle_payment($order_id, $orderTotal);
             }
-
-
         } else {
             $json['status'] = false;
         }
@@ -5341,8 +5454,6 @@ class ControllerSaleOrder extends Controller
                 $response['error'] = $this->language->get('error_status_change');
                 $json = json_encode($response);
             }
-
-
         } else {
             $response = array();
             $response['error'] = $this->error;
@@ -5382,7 +5493,6 @@ class ControllerSaleOrder extends Controller
         } else {
             return FALSE;
         }
-
     }
 
     public function editDeliveryRequest($order_id)
@@ -5398,7 +5508,6 @@ class ControllerSaleOrder extends Controller
         if ($this->model_sale_order->hasRealOrderProducts($order_id)) {
 
             $products = $this->model_account_order->getRealOrderProducts($order_id);
-
         } else {
 
             $products = $this->model_account_order->getOrderProducts($order_id);
@@ -5471,9 +5580,9 @@ class ControllerSaleOrder extends Controller
                     "product_name" => htmlspecialchars_decode($product['name']),
                     "product_unit" => $product['unit'],
                     "product_quantity" => $product['quantity'],
-                    "product_image" => $image,//"http:\/\/\/product-images\/camera.jpg",
-                    "product_price" => $product['price'],//"1500.00",//product price unit price?? or total
-                    "product_replaceable" => $replacable//"no"
+                    "product_image" => $image, //"http:\/\/\/product-images\/camera.jpg",
+                    "product_price" => $product['price'], //"1500.00",//product price unit price?? or total
+                    "product_replaceable" => $replacable //"no"
 
                 ];
 
@@ -5484,7 +5593,7 @@ class ControllerSaleOrder extends Controller
 
 
             $data['body'] = [
-                'manifest_id' => $deliveryAlreadyCreated,//order_id,
+                'manifest_id' => $deliveryAlreadyCreated, //order_id,
                 'total_price' => (int)round($new_total),
                 'get_amount' => (int)round($getPayment),
                 'total_type' => $total_type,
@@ -5576,8 +5685,6 @@ class ControllerSaleOrder extends Controller
         $delivery_date = $this->request->post['delivery_date'];
 
         $delivery_time = $this->request->post['delivery_time'];
-
-
     }
 
     public function payment_status()
@@ -5704,7 +5811,6 @@ class ControllerSaleOrder extends Controller
                         curl_setopt($curl, CURLOPT_POST, true);
                         curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($this->request->post));
                     }
-
                 }
 
 
@@ -5944,9 +6050,9 @@ class ControllerSaleOrder extends Controller
                     "product_name" => $product['name'],
                     "product_unit" => $product['unit'],
                     "product_quantity" => $product['quantity'],
-                    "product_image" => $image,//"http:\/\/\/product-images\/camera.jpg",
-                    "product_price" => $product['price'],//"1500.00",//product price unit price?? or total
-                    "product_replaceable" => $replacable//"no"
+                    "product_image" => $image, //"http:\/\/\/product-images\/camera.jpg",
+                    "product_price" => $product['price'], //"1500.00",//product price unit price?? or total
+                    "product_replaceable" => $replacable //"no"
 
                 ];
 
@@ -5979,14 +6085,14 @@ class ControllerSaleOrder extends Controller
             }
 
             $data['body'] = [
-                'pickup_name' => $store_details['name'],//store name??
+                'pickup_name' => $store_details['name'], //store name??
                 'pickup_phone' => $store_details['telephone'],
-                'pickup_address' => $store_details['address'],//
+                'pickup_address' => $store_details['address'], //
                 'pickup_city' => $store_city_name,
                 'pickup_state' => 'Brussels',
                 'from_lat' => $store_details['latitude'],
                 'from_lng' => $store_details['longitude'],
-                'pickup_zipcode' => $store_details['store_zipcode'],//''
+                'pickup_zipcode' => $store_details['store_zipcode'], //''
                 //'pickup_notes' => $data['text_weight'],
                 'pickup_notes' => $store_details['pickup_notes'],
                 'dropoff_name' => $order_info['shipping_name'],
@@ -5994,16 +6100,16 @@ class ControllerSaleOrder extends Controller
                 'dropoff_address' => $deliverAddress,
                 'to_lat' => $order_info['latitude'],
                 'to_lng' => $order_info['longitude'],
-                'dropoff_city' => $order_info['shipping_city'],// from $order_info['city_id'],
+                'dropoff_city' => $order_info['shipping_city'], // from $order_info['city_id'],
                 'dropoff_state' => 'Brussels',
-                'dropoff_zipcode' => $order_info['shipping_zipcode'],// from $order_info['city_id'],
-                'delivery_priority' => $delivery_priority,// normal/express all small
-                'delivery_date' => $order_info['delivery_date'],//2017-04-13
-                'delivery_slot' => $timeSlotAverage,//$order_info['delivery_timeslot'],//"10:30" //delivery slot is time so what will i enter here as i have data in format 06:26pm - 08:32pm
+                'dropoff_zipcode' => $order_info['shipping_zipcode'], // from $order_info['city_id'],
+                'delivery_priority' => $delivery_priority, // normal/express all small
+                'delivery_date' => $order_info['delivery_date'], //2017-04-13
+                'delivery_slot' => $timeSlotAverage, //$order_info['delivery_timeslot'],//"10:30" //delivery slot is time so what will i enter here as i have data in format 06:26pm - 08:32pm
                 'dropoff_notes' => "",
-                'type_of_delivery' => 'delivery',//delivery/return . Is it only one option for this index?
+                'type_of_delivery' => 'delivery', //delivery/return . Is it only one option for this index?
 
-                'manifest_id' => $order_id,//order_id,
+                'manifest_id' => $order_id, //order_id,
                 'manifest_data' => json_encode($data['products']),
                 'payment_method' => $order_info['payment_method'],
                 'payment_code' => $order_info['payment_code'],
@@ -6076,9 +6182,9 @@ class ControllerSaleOrder extends Controller
                     "product_name" => $product['name'],
                     "product_unit" => $product['unit'],
                     "product_quantity" => $product['quantity'],
-                    "product_image" => $image,//"http:\/\/\/product-images\/camera.jpg",
-                    "product_price" => $product['price'],//"1500.00",//product price unit price?? or total
-                    "product_replaceable" => $replacable//"no"
+                    "product_image" => $image, //"http:\/\/\/product-images\/camera.jpg",
+                    "product_price" => $product['price'], //"1500.00",//product price unit price?? or total
+                    "product_replaceable" => $replacable //"no"
 
                 ];
 
@@ -6102,26 +6208,26 @@ class ControllerSaleOrder extends Controller
             $timeSlotAverage = $this->getTimeslotAverage($order_info['delivery_timeslot']);
 
             $data['body'] = [
-                'pickup_name' => $store_details['name'],//store name??
+                'pickup_name' => $store_details['name'], //store name??
                 'pickup_phone' => $store_details['telephone'],
-                'pickup_address' => 'BTM  2nd stage, Axa building',//$store_details['address'],//
-                'pickup_city' => 'Bengaluru',//$store_city_name,// from $order_info['city_id'],
+                'pickup_address' => 'BTM  2nd stage, Axa building', //$store_details['address'],//
+                'pickup_city' => 'Bengaluru', //$store_city_name,// from $order_info['city_id'],
                 'pickup_state' => 'Karnataka',
-                'pickup_zipcode' => '560067',//$store_details['zipcode'],
+                'pickup_zipcode' => '560067', //$store_details['zipcode'],
                 'pickup_notes' => '',
                 'dropoff_name' => $order_info['shipping_name'],
                 'dropoff_phone' => $order_info['telephone'],
-                'dropoff_address' => 'BTM  2nd stage, Axa building',//$order_info['shipping_building_name']." ".$order_info['shipping_landmark'],//'BTM  2nd stage, Axa building',
-                'dropoff_city' => $order_info['shipping_city'],// from $order_info['city_id'],
-                'dropoff_state' => 'Karnataka',// from $order_info['city_id'],
-                'dropoff_zipcode' => '560068',//$order_info['shipping_zipcode'],// from $order_info['city_id'],
-                'delivery_priority' => $delivery_priority,// normal/express all small
-                'delivery_date' => $order_info['delivery_date'],//2017-04-13
-                'delivery_slot' => $timeSlotAverage,//$order_info['delivery_timeslot'],//"10:30" //delivery slot is time so what will i enter here as i have data in format 06:26pm - 08:32pm
+                'dropoff_address' => 'BTM  2nd stage, Axa building', //$order_info['shipping_building_name']." ".$order_info['shipping_landmark'],//'BTM  2nd stage, Axa building',
+                'dropoff_city' => $order_info['shipping_city'], // from $order_info['city_id'],
+                'dropoff_state' => 'Karnataka', // from $order_info['city_id'],
+                'dropoff_zipcode' => '560068', //$order_info['shipping_zipcode'],// from $order_info['city_id'],
+                'delivery_priority' => $delivery_priority, // normal/express all small
+                'delivery_date' => $order_info['delivery_date'], //2017-04-13
+                'delivery_slot' => $timeSlotAverage, //$order_info['delivery_timeslot'],//"10:30" //delivery slot is time so what will i enter here as i have data in format 06:26pm - 08:32pm
                 'dropoff_notes' => "",
-                'type_of_delivery' => 'delivery',//delivery/return . Is it only one option for this index?
+                'type_of_delivery' => 'delivery', //delivery/return . Is it only one option for this index?
 
-                'manifest_id' => $order_id,//order_id,
+                'manifest_id' => $order_id, //order_id,
                 'manifest_data' => json_encode($data['products'])
             ];
             //if pending status create delivery in system
@@ -6239,7 +6345,7 @@ class ControllerSaleOrder extends Controller
     public function getTimeslotAverage($timeslot)
     {
 
-        $str = $timeslot;//"06:26pm - 08:32pm";
+        $str = $timeslot; //"06:26pm - 08:32pm";
         $arr = explode('-', $str);
         //print_r($arr);
         if (count($arr) == 2) {
@@ -6425,7 +6531,6 @@ class ControllerSaleOrder extends Controller
                     } else {
                         return false;
                     }
-
                 }
             }
         }
@@ -6472,7 +6577,6 @@ class ControllerSaleOrder extends Controller
                 } else {
                     return false;
                 }
-
             }
         }
 
@@ -6831,7 +6935,6 @@ class ControllerSaleOrder extends Controller
 
                     /*$this->saveVendorNotification($order_info['customer_id'],$customer_info['device_id'],$order_id,$mobile_notification_template,$mobile_notification_title);*/
                 } else {
-
                 }
                 // customer push notitification end
             }
@@ -6910,69 +7013,65 @@ class ControllerSaleOrder extends Controller
 
         $this->load->model('sale/order');
         //echo 'date.timezone ' ;;
-         $data = $this->request->post;        
-        
+        $data = $this->request->post;
 
-          // echo '<pre>';print_r($this->request->post);exit;
-       
-            if  ($this->request->server['REQUEST_METHOD'] == 'POST') 
-            {
-               
-                     $this->model_sale_order->updatePO($this->request->post['order_id'], $this->request->post['po_number']);
 
-                    
+        // echo '<pre>';print_r($this->request->post);exit;
 
-                     $data['status'] = true; 
-         
-                     if ($this->request->isAjax()) {
-                         $this->response->addHeader('Content-Type: application/json');
-                         $this->response->setOutput(json_encode($data));
-                     }
-                } 
-                else
-                {
+        if ($this->request->server['REQUEST_METHOD'] == 'POST') {
 
-                    $data['status'] = false; 
-        
-                    if ($this->request->isAjax()) {
-                        $this->response->addHeader('Content-Type: application/json');
-                        $this->response->setOutput(json_encode($data));
-                    }
-                }
+            $this->model_sale_order->updatePO($this->request->post['order_id'], $this->request->post['po_number']);
 
-       return true;
+
+
+            $data['status'] = true;
+
+            if ($this->request->isAjax()) {
+                $this->response->addHeader('Content-Type: application/json');
+                $this->response->setOutput(json_encode($data));
+            }
+        } else {
+
+            $data['status'] = false;
+
+            if ($this->request->isAjax()) {
+                $this->response->addHeader('Content-Type: application/json');
+                $this->response->setOutput(json_encode($data));
+            }
+        }
+
+        return true;
     }
 
 
 
-    public function consolidatedOrderProducts() {
+    public function consolidatedOrderProducts()
+    {
         $orderid = $this->request->get['order_id'];
-        $customer = $this->request->get['customer']; 
-        $date = $this->request->get['date']; 
+        $customer = $this->request->get['customer'];
+        $date = $this->request->get['date'];
 
-        $data = array();         
-            $data['consolidation'][] = [
-              'orderid' => $orderid,
-              'customer' => $customer ,            
-              'date' => $date             
-            ];           
-        
-            
-            $orderProducts = $this->getOrderProductsWithVariancesNew($orderid);
-            $data['products'] = $orderProducts;
-			$sum=0;
-            foreach ($orderProducts as $item) {
-                $sum += $item['total_updatedvalue'];
-            }
-            // $data['consolidation'][$index]['amount'] = $sum;
-            //   $totalOrdersAmount += $sum;
-       
+        $data = array();
+        $data['consolidation'][] = [
+            'orderid' => $orderid,
+            'customer' => $customer,
+            'date' => $date
+        ];
+
+
+        $orderProducts = $this->getOrderProductsWithVariancesNew($orderid);
+        $data['products'] = $orderProducts;
+        $sum = 0;
+        foreach ($orderProducts as $item) {
+            $sum += $item['total_updatedvalue'];
+        }
+        // $data['consolidation'][$index]['amount'] = $sum;
+        //   $totalOrdersAmount += $sum;
+
         // $data['consolidation']['total'] = $totalOrdersAmount;
-       
+
 
         $this->load->model('report/excel');
         $this->model_report_excel->download_order_products_excel($data);
     }
-
-
 }

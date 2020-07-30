@@ -34,13 +34,20 @@ section {
   }
 }
 
+.no-webp section#hero {
+  background-image: url("../img/hero-banner.jpg");
+}
+
+.webp section#hero{
+  background-image: url("../img/hero-banner.webp");
+}
+
 section#hero {
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
   min-height: 100vh;
   font-size: 16px;
-  background-image: url("../img/hero-banner.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
@@ -172,11 +179,6 @@ section#partners {
   img.partner-logo {
     cursor: pointer;
     width: 150px;
-    filter: grayscale(1);
-
-    &:hover {
-      filter: none;
-    }
   }
 }
 

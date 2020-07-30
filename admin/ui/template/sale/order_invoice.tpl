@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KwikBasket Invoice</title>
+    <title>KwikBasket Invoice #<?= $order_id ?></title>
     <link rel="stylesheet" href="ui/stylesheet/bootstrap.min.css">
     <link rel="stylesheet" href="ui/javascript/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="ui/stylesheet/print.css">
@@ -27,12 +27,17 @@
                                         <li>+254780703586</li>
                                         <li>operations@kwikbasket.com</li>
                                         <li>www.kwikbasket.com</li>
+                                        <li>KRA PIN Number P051904531E</li>
                                     </ul>
                                 </div>
                             </div>
                             <div class="col-md-4 offset-md-4 text-right">
-                                <h5 class="bold">INVOICE #<?= $invoice_no ?></h5>
-                                <h5 class="bold">P.O Number #<?= $po_number ?></h5>
+                                <h5 class="bold">TAX INVOICE #<?= $invoice_no ?></h5>
+                                <?php if($po_number) { ?>
+                                    <h5 class="bold">P.O. NUMBER <?= $po_number ?></h5>
+                                <?php } ?>
+                                <h5><?= $delivery_date ?></h5>
+                                
                             </div>
                         </div>
 
@@ -94,7 +99,15 @@
                             <?php } ?>
                             </tbody>
                         </table>
-
+                        
+                        <div class="mt-4">
+                            <?php foreach($totals as $total) { ?>
+                                <?php if($total['title'] == 'Total') { ?>
+                                    <h5><strong>Total In Words </strong> <?= $total['amount_in_words']?></h5>
+                                <?php } ?>
+                            <?php } ?>
+                        </div>
+                        
                         <table class="payment-details-table mt-4">
                             <thead>
                             <tr>
@@ -108,10 +121,12 @@
                                 <td>
                                     <h6 class="bold">BANK TRANSFER</h6>
                                     <ul class="list-block">
-                                        <li>Beneficiary Account: KWIKBASKET SOLUTIONS LIMITED</li>
-                                        <li>Account Type: KES</li>
+                                        <li>Beneficiary Name: KWIKBASKET SOLUTIONS LIMITED</li>
+                                        <li>Account Currency: KES</li>
                                         <li>Account Number: 0100006985957</li>
                                         <li>Bank Name: STANBIC BANK KENYA LTD</li>
+                                        <li>Sort Code: 31007</li>
+                                        <li>Branch: Chiromo Road, Nairobi</li>
                                         <li>SWIFT Code: SBICKENX</li>
                                     </ul>
                                 </td>
