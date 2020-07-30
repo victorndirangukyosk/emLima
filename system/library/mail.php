@@ -192,7 +192,8 @@ protected $to;
             $mg->messages()->send($mailgun_domain, [
               'from'    => $this->from,
               'to'      => $this->to,
-              'bcc'     => BCC_MAILS,
+             // 'bcc'     => BCC_MAILS,
+             'bcc'     => 'email.kbtest@gmail.com',
               'subject' => $this->subject,
               'html'    => $this->html
             ]);
