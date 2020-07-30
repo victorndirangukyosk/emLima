@@ -131,6 +131,10 @@ class ModelSaleCustomer extends Model {
             $implode[] = "DATE(c.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
         }
 
+        if (isset($data['filter_parent']) && !is_null($data['filter_parent'])) {
+            $implode[] = "c.parent = '" . (int) $data['filter_parent'] . "'";
+        }
+
         if ($implode) {
             $sql .= " AND " . implode(" AND ", $implode);
         }

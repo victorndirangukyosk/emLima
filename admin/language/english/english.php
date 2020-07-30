@@ -151,6 +151,7 @@ $_['tab_payment']                   = 'Payment Details';
 $_['tab_product']                   = 'Products';
 $_['tab_reward']                    = 'Reward Points';
 $_['tab_referral']                    = 'Referrals';
+$_['tab_sub_customer']                    = 'Sub Users';
 $_['tab_shipping']                  = 'Shipping Details';
 $_['tab_total']                     = 'Totals';
 $_['tab_credit']               		= 'Credits';
