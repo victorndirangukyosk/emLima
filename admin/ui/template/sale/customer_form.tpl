@@ -43,6 +43,7 @@
             <li><a href="#tab-reward" data-toggle="tab"><?php echo $tab_reward; ?></a></li>
             <li><a href="#tab-ip" data-toggle="tab"><?php echo $tab_ip; ?></a></li>
             <li><a href="#tab-referral" data-toggle="tab"><?php echo $tab_referral; ?></a></li>
+			<li><a href="#tab-sub-customer" data-toggle="tab"><?php echo $tab_sub_customer; ?></a></li>
             <?php } ?>
           </ul>
           <div class="tab-content">
@@ -494,10 +495,42 @@
               <div id="referral"></div>
               <br />
             </div>
-
+            <div class="tab-pane" id="tab-referral">
+              <div id="referral"></div>
+              <br />
+            </div>
             <?php } ?>
-            <div class="tab-pane" id="tab-ip">
-              <div id="ip"></div>
+            <div class="tab-pane" id="tab-sub-customer">
+              <table class="table table-bordered">
+            <thead>
+            <tr>
+              <th>Customer Name </th>
+              <th>E-Mail</th>
+              <th>Phone No</th>
+              <th>Customer Group</th>
+              <th>Status</th>
+              <!--<th>Action</th>-->
+            </tr>
+            </thead>
+            <tbody>
+            <?php if(count($sub_users)){?>
+            <?php foreach($sub_users as $user){?>
+            <tr>
+            <td><?php echo $user['firstname'].' '.$user['lastname'];?></td>
+            <td><?php echo $user['email'];?></td>
+            <td><?php echo $user['telephone'];?></td>
+            <td><?php echo $user['customer_group'];?></td>
+            <td><?php echo ($user['approved']==0) ? 'Unverified': 'Verified'?></td>
+            <!--<td>Action</td>-->
+            </tr>
+            <?php } ?>
+            <?php }else{ ?>
+            <tr style="text-align:center">
+              <td colspan="5">No User found</td>
+            </tr>
+            <?php } ?>
+            </tbody>
+          </table>
             </div>
           </div>
         </form>

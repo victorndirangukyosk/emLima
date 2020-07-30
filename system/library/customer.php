@@ -110,6 +110,7 @@ class Customer {
 		if ( $customer_query->num_rows ) {
 			$this->session->data['customer_id'] = $customer_query->row['customer_id'];
 			$this->session->data['customer_category'] = isset($customer_query->row['customer_category']) ? $customer_query->row['customer_category'] : null;
+			$this->session->data['parent'] = $customer_query->row['parent'];
 			/*if ($customer_query->row['cart'] && is_string($customer_query->row['cart'])) {
 				$cart = unserialize($customer_query->row['cart']);
 
