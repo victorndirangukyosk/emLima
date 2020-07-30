@@ -26,6 +26,13 @@ class ModelAccountDashboard extends Model {
         //return $query;
         return $query->rows;
     }
+    
+    public function getRecentOrders($customer_id) {
+        $query = $this->db->query("SELECT o.order_id, o.invoice_no, DATE_FORMAT(o.delivery_date, '%d/%m/%Y') AS delivery_date, DATE_FORMAT(o.date_added, '%d/%m/%Y') AS date_added, o.order_status_id, os.name FROM " . DB_PREFIX . "order AS o JOIN " . DB_PREFIX . "order_status AS os ON (o.order_status_id = os.order_status_id)  WHERE o.customer_id = '" . (int) $customer_id . "' AND o.order_status_id > '0'  order by o.date_added ASC");
+
+        //return $query;
+        return $query->rows;
+    }
    
     public function getMostPurchased($customer_id) {
        // $complete_status_ids = '('.implode(',', $this->config->get('config_complete_status')).')';

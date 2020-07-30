@@ -211,8 +211,9 @@ $('#block-range li').on('click', function(e) {
             <tr>
               
               <td><?php echo $ro['order_id']; ?></td>
-              <td><?php echo $ro['status']; ?></td>
-              <td><?php echo $ro['total']; ?></td>
+              <td><?php echo $ro['name']; ?></td>
+              <td><?php echo $ro['date_added']; ?></td>
+              <td><?php echo $ro['delivery_date']; ?></td>
               <td class="text-center">
                 <a href="" data-toggle="tooltip" title="add to cart" class="btn btn-success">
                   <i class="icon fa fa-shopping-cart"></i>

@@ -134,6 +134,9 @@ class ControllerAccountDashboard extends Controller {
                 'frequency' => $frequency,
                 'most_purhased'=>$most_purchased
             );
+            
+            $recent_orders= $this->model_account_dashboard->getRecentOrders($this->customer->getId());
+            $data['DashboardData'] = array('recent_orders' => $recent_orders);
         }
             
  
