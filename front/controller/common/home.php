@@ -180,6 +180,10 @@ class ControllerCommonHome extends Controller {
     $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/faq.tpl', $data));
   }
 
+  public function covid19() {
+	$this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/covid19.tpl'));
+  }
+
   public function blog() {
     $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/blog.tpl'));
   }
