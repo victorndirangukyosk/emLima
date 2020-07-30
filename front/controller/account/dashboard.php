@@ -136,7 +136,15 @@ class ControllerAccountDashboard extends Controller {
             );
             
             $recent_orders= $this->model_account_dashboard->getRecentOrders($this->customer->getId());
-            $data['DashboardData'] = array('recent_orders' => $recent_orders);
+            foreach($recent_orders as $ro) {
+                $user_recent_orders[] = array('order_id' =>$ro['order_id'],
+                                              'name' =>$ro['name'],
+                                              'date_added' =>$ro['date_added'],
+                                              'delivery_date' =>$ro['delivery_date'],
+                                              'href' => $this->url->link('account/order/info', 'order_id=' . $ro['order_id'], 'SSL'),
+				              'real_href' => $this->url->link('account/order/realinfo', 'order_id=' . $ro['order_id'], 'SSL'),);
+            }
+            $data['DashboardData'] = array('recent_orders' => $user_recent_orders);
         }
             
  

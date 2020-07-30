@@ -215,11 +215,11 @@ $('#block-range li').on('click', function(e) {
               <td><?php echo $ro['date_added']; ?></td>
               <td><?php echo $ro['delivery_date']; ?></td>
               <td class="text-center">
-                <a href="" data-toggle="tooltip" title="add to cart" class="btn btn-success">
+                <a href="<?php echo $ro['href'].'&order_status='.urlencode($ro['name']) ;?>" data-toggle="tooltip" title="add to cart" class="btn btn-success">
                   <i class="icon fa fa-shopping-cart"></i>
                 </a>
 
-                <a href="" data-toggle="tooltip" title="add to cart" class="btn btn-success">
+                <a href="<?php echo $ro['href'].'&order_status='.urlencode($ro['name']) ;?>" data-toggle="tooltip" title="add to cart" class="btn btn-success">
                   <i class="icon fa fa-shopping-cart"></i>
                 </a>
               </td>
