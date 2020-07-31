@@ -293,7 +293,7 @@
                                             <?php } ?>
                                             <?php } else { ?>
                                             <tr>
-                                                <td class="text-center" colspan="6"><?php echo 'Functionality pending'; ?></td>
+                                                <td class="text-center" colspan="6"><?php echo 'No Records Found'; ?></td>
                                             </tr>
                                             <?php } ?>
                                         </tbody>
