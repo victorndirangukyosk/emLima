@@ -183,7 +183,7 @@
                                                 
                                                 <i class="fa fa-credit-card"></i><?= $text_transactions ?></a>
                                             </li>
-
+                                           <?php if(empty($_SESSION['parent'])){?>
                                             <li role="presentation">
                                                 <?php if(strpos($sub_users,$_SERVER["REQUEST_URI"]) !== false) { ?>
                                                     <a href="<?= $sub_users ?>" class="active">
@@ -193,6 +193,7 @@
                                                 
                                                 <i class="fa fa-users"></i><?= $text_sub_customer ?></a>
                                             </li>
+                                            <?php } ?>
 
                                             <li role="presentation" >
                                                 <?php if(strpos($wishlist,$_SERVER["REQUEST_URI"]) !== false) { ?>

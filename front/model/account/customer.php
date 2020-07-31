@@ -517,5 +517,21 @@ class ModelAccountCustomer extends Model {
         }
   
     }
+
+    public function cacheProductPrices($store_id){
+                 $this->cache->delete('category_price_data');
+                       $cache_price_data = array();
+                       $sql = "SELECT * FROM `" . DB_PREFIX . "product_category_prices` where `store_id` = $store_id";
+                       //echo $sql;exit;
+                       $resultsdata = $this->db->query($sql);
+                       //echo '<pre>'; print_r($resultsdata);exit;
+                       if(count($resultsdata->rows)>0){
+                  foreach($resultsdata->rows as $result){
+                               $cache_price_data[$result['product_store_id'].'_'.$result['price_category'].'_'.$store_id] = $result['price'];
+                         }
+                       }
+                       $this->cache->set('category_price_data',$cache_price_data);
+               }
+        
     
 }

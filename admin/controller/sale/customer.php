@@ -842,6 +842,7 @@ class ControllerSaleCustomer extends Controller {
         $data['tab_credit'] = $this->language->get('tab_credit');
         $data['tab_reward'] = $this->language->get('tab_reward');
         $data['tab_referral'] = $this->language->get('tab_referral');
+        $data['tab_sub_customer'] = $this->language->get('tab_sub_customer');
         $data['tab_ip'] = $this->language->get('tab_ip');
 
         $data['token'] = $this->session->data['token'];
@@ -1008,7 +1009,13 @@ class ControllerSaleCustomer extends Controller {
 
         //echo "<pre>";print_r($customer_info);die;
         $this->load->model('sale/customer_group');
-
+        $filter_data = array(
+            'filter_parent' => $this->request->get['customer_id'],
+             'order' => 'DESC',
+             'start' => 0,
+             'limit' =>1000
+         );
+        $data['sub_users']  = $this->model_sale_customer->getCustomers($filter_data);
         $data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups();
         $data['price_categories'] = $this->model_sale_customer_group->getPriceCategories();
 
