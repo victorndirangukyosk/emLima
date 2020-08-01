@@ -82,7 +82,7 @@
 
 
 <!--
-
+REMOVED WISHLIST
 <div class="sp-quantity" class="qtybtns-addbtnd" id="controller-container">
     
     <?php if ($product['qty_in_cart']) { ?> 
