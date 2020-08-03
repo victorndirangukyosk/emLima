@@ -143,7 +143,16 @@ class ControllerAccountDashboard extends Controller {
             }
             $data['DashboardData']['recent_orders'] = $user_recent_orders;
 
-            $recent_activity = $this->model_account_dashboard->getRecentActivity($this->customer->getId());
+            $user_recent_activity = $this->model_account_dashboard->getRecentActivity($this->customer->getId());
+
+
+            foreach ($user_recent_activity as $ra) {
+                $recent_activity[] = array('store_name' => $ra['store_name'],
+                    'order_id' => $ra['order_id'],
+                    'total' => $this->currency->format($ra['total'], $this->config->get('config_currency')),
+                    'date_added' => $ra['date_added']);
+            }
+
             $data['DashboardData']['recent_activity'] = $recent_activity;
             $recent_buying_pattern = $this->model_account_dashboard->getBuyingPattern($this->customer->getId());
             $data['DashboardData']['recent_buying_pattern'] = $recent_buying_pattern;

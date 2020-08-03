@@ -257,7 +257,7 @@
                                 <?php if ($DashboardData['recent_activity']) { ?>
                                 <?php foreach ($DashboardData['recent_activity'] as $resat) { ?>
                                 <div class="table-responsive"  width="50%">
-                                    <?php echo $resat['store_name']." Placed Order # ".$resat['order_id']. " for ".$resat['total']. " Products ". $resat['date_added']; ?>
+                                    <?php echo $resat['store_name']." Placed Order # ".$resat['order_id']. " for KES ".$resat['total']."  ". $resat['date_added']; ?>
                                 </div>
                                 <?php } ?>
                                 <?php } ?>
