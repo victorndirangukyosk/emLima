@@ -240,6 +240,32 @@ __kdt.push({"post_on_load": false});
             }
         });
     });
+    
+        $(document).delegate('#addWishlisttocart', 'click', function(e) {
+
+        e.preventDefault();
+        
+        if(!window.confirm("Are you sure?")) {
+            return false;
+        }
+        console.log("addWishlisttocart click");
+        console.log($(this).attr('data-id'));
+        $('#addWishlisttocart').html('Wait...');
+        var orderId = $(this).attr('data-id');
+        $.ajax({
+            url: 'index.php?path=account/wishlist/addWishlistProductToCart',
+            type: 'post',
+            data: {
+                wishlist_id: $(this).attr('data-id')
+            },
+            dataType: 'json',
+            success: function(json) {
+                console.log(json);
+                
+                setTimeout(function(){ window.location.reload(false); }, 1000);
+            }
+        });
+    });
 
     </script>
 </body>

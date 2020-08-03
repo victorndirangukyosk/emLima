@@ -580,7 +580,8 @@ class ControllerAccountWishList extends Controller {
         $this->load->language('account/wishlist');
 
         $data['text_cart_success'] = $this->language->get('text_cart_success');
-
+        $log = new Log('error.log');
+        $wishlist_id = isset($this->request->post['wishlist_id'])?$this->request->post['wishlist_id']:null;
         //echo "reg";
 
         $this->session->data['success'] = $data['text_cart_success'];
