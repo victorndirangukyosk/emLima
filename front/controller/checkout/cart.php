@@ -1010,6 +1010,16 @@ class ControllerCheckoutCart extends Controller {
 		$this->response->addHeader('Content-Type: application/json');
 		$this->response->setOutput(json_encode($json));
 	}
+        
+        public function save_basket(){
+
+		$this->cart->clear();
+
+		unset($this->session->data['coupon']);
+		$json['location'] = $this->url->link('account/register');
+		$this->response->addHeader('Content-Type: application/json');
+		$this->response->setOutput(json_encode($json));
+	}
 
 
 	public function tax_location(){
