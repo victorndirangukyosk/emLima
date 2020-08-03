@@ -11,7 +11,7 @@
                                             <div class="list-group my-order-group">
                                                 <li class="list-group-item my-order-list-head">
                                                     <i class="fa fa-clock-o"></i> <?= $text_placed_on?> <span><strong><?php echo $wishlist['date_added']; ?></strong></span> <span>
-                                                    
+                                                    <a href="#" id="addWishlisttocart" data-id='<?=$wishlist["wishlist_id"] ?>' style="margin-right:21px;" class="btn btn-info btn-xs">ADD TO CART</a>
                                                     <a href="#" id="cancelWishlist" data-id='<?=$wishlist["wishlist_id"] ?>' style="margin-right:21px;" class="btn btn-danger btn-xs btn-custom-remove"><?= $text_cancel ?></a>
 
                                                     </span>
