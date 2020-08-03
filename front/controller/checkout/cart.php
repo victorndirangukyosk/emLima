@@ -1012,10 +1012,13 @@ class ControllerCheckoutCart extends Controller {
 	}
         
         public function save_basket() {
-
+        $log = new Log('error.log');        
         $products = $this->cart->getProducts();
         foreach ($products as $product) {
-        $this->addProdToWishlist($product['product_store_id']);
+        $log->write('PRODUCT');
+        $log->write($product);
+        $log->write('PRODUCT');
+        $this->addProdToWishlist($product['product_store_id'], $product['quantity']);
         }
         $this->cart->clear();
 
@@ -1025,7 +1028,7 @@ class ControllerCheckoutCart extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-    public function addProdToWishlist($product_id) {
+    public function addProdToWishlist($product_id, $quantity) {
 
 
         $this->load->language('account/wishlist');
@@ -1046,52 +1049,24 @@ class ControllerCheckoutCart extends Controller {
 
         if ( $this->customer->isLogged()) {
             $lists = $this->model_assets_category->getUserLists();
-
-            foreach ($lists as $list) {
-                $this->model_account_wishlist->deleteWishlistProduct($list['wishlist_id'],$this->request->post['listproductId']);
-            }
-        }
             
-        $log->write($wishlist_ids);
-        $log->write($this->request->post['listproductId']);
-        $log->write("createWishlist");
-        if( isset($this->request->post['listproductId']) && isset($wishlist_ids) ) {
-
-            
-
-            foreach ($wishlist_ids as $wishlist_id) {
-                $count = $this->model_account_wishlist->getWishlistPresentById($wishlist_id);
-
-                $log->write($count);
-                $log->write("count");
-                if($count) {
-                    //present
-
-                    $exists = $this->model_account_wishlist->getProductOfWishlist($wishlist_id,$this->request->post['listproductId']);
-
-                    $log->write($exists);
-                    $log->write("exists");
-
-                    if(count($exists) > 0 ) {
-                        $quantity = $exists['quantity'] + 1;
-
-                        $this->model_account_wishlist->updateWishlistProduct($wishlist_id,$this->request->post['listproductId'],$quantity);
-                    } else {
-                        $this->model_account_wishlist->addProductToWishlist($wishlist_id,$this->request->post['listproductId']);
-                    }
-
-                    $data['status'] = true;
-
-                    $data['message'] = $data['text_success_added_in_list'];
-                    
-                } else {
-                    //wishlist not present
+            if (is_array($lists) && count($lists) > 0) {
+                foreach ($lists as $list) {
+                    $this->model_account_wishlist->deleteWishlistProduct($list['wishlist_id'], $this->request->post['listproductId']);
                 }
             }
-        } else {
-            //$data['message'] = $data['text_error_list'];
+            
+            $wishlist_exists = $this->model_account_wishlist->CheckSaveBasketExits();
+            if(is_array($wishlist_exists) && count($wishlist_exists) > 0) {
+            $wishlist_id = $wishlist_exists['wishlist_id'];
+            } else {
+            $wishlist_id = $this->model_account_wishlist->createWishlist('SaveBasket');
+            }
+            $this->model_account_wishlist->addProductToWishlistWithQuantity($wishlist_id,$product_id, $quantity);
         }
-       
+        
+        
+
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($data));
     }

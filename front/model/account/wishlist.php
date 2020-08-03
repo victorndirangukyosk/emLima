@@ -158,6 +158,13 @@ class ModelAccountWishList extends Model {
         //return $query;
         return true;
     }
+    
+    public function addProductToWishlistWithQuantity($wishlist_id, $product_id, $quantity) {
+        $query = $this->db->query("INSERT into `" . DB_PREFIX . "wishlist_products` set wishlist_id = " . (int) $wishlist_id . ",product_id ='" . $product_id . "',quantity = ".$quantity."");
+
+        //return $query;
+        return true;
+    }
 
     public function getProductOfWishlist($wishlist_id,$product_id) {
 
@@ -207,4 +214,9 @@ class ModelAccountWishList extends Model {
        return false;
     }
     
+    public function CheckSaveBasketExits() {
+        $query = $this->db->query("Select * from `" . DB_PREFIX . "wishlist` where name = 'SaveBasket' and customer_id = " . (int) $this->customer->getId() . "");
+        return $query->row;
+    }
+
 }
