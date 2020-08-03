@@ -148,6 +148,8 @@ class ControllerAccountDashboard extends Controller {
 
             foreach ($user_recent_activity as $ra) {
                 $recent_activity[] = array('store_name' => $ra['store_name'],
+                    'firstname' => $ra['firstname'],
+                    'lastname' => $ra['lastname'],
                     'order_id' => $ra['order_id'],
                     'href' => $this->url->link('account/order/info', 'order_id=' . $ra['order_id'], 'SSL'),
                     'total' => $this->currency->format($ra['total'], $this->config->get('config_currency')),

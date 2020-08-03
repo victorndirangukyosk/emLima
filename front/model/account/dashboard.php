@@ -36,7 +36,7 @@ class ModelAccountDashboard extends Model {
     }
 
     public function getRecentActivity($customer_id) {
-        $query = $this->db->query("SELECT o.order_id, o.invoice_no, DATE_FORMAT(o.delivery_date, '%d/%m/%Y') AS delivery_date, DATE_FORMAT(o.date_added, '%d/%m/%Y %H:%i:%s') AS date_added, o.order_status_id, os.name, o.store_id, o.store_name, o.total FROM " . DB_PREFIX . "order AS o JOIN " . DB_PREFIX . "order_status AS os ON (o.order_status_id = os.order_status_id)  WHERE o.customer_id = '" . (int) $customer_id . "' AND o.order_status_id > '0'  order by o.date_added ASC");
+        $query = $this->db->query("SELECT o.order_id, o.invoice_no, o.lastname, o.firstname, DATE_FORMAT(o.delivery_date, '%d/%m/%Y') AS delivery_date, DATE_FORMAT(o.date_added, '%d/%m/%Y %H:%i:%s') AS date_added, o.order_status_id, os.name, o.store_id, o.store_name, o.total FROM " . DB_PREFIX . "order AS o JOIN " . DB_PREFIX . "order_status AS os ON (o.order_status_id = os.order_status_id)  WHERE o.customer_id = '" . (int) $customer_id . "' AND o.order_status_id > '0'  order by o.date_added ASC");
 
         //return $query;
         return $query->rows;
