@@ -158,7 +158,13 @@ class ControllerAccountDashboard extends Controller {
 
             $data['DashboardData']['recent_activity'] = $recent_activity;
             $recent_buying_pattern = $this->model_account_dashboard->getBuyingPattern($this->customer->getId());
-            $data['DashboardData']['recent_buying_pattern'] = $recent_buying_pattern;
+
+            foreach ($recent_buying_pattern as $rbp) {
+                $user_recent_buying_pattern[] = array('date_added' => $rbp['date_added'],
+                    'total' => $this->currency->format($rbp['total'], $this->config->get('config_currency')));
+            }
+
+            $data['DashboardData']['recent_buying_pattern'] = $user_recent_buying_pattern;
         }
 
 
