@@ -1018,7 +1018,7 @@ class ControllerCheckoutCart extends Controller {
         $log->write('PRODUCT');
         $log->write($product);
         $log->write('PRODUCT');
-        $this->addProdToWishlist($product['product_store_id'], $product['quantity']);
+        $this->addProdToWishlist($product['product_id'], $product['quantity']);
         }
         $this->cart->clear();
 

@@ -578,10 +578,26 @@ class ControllerAccountWishList extends Controller {
     public function addWishlistProductToCart() {
 
         $this->load->language('account/wishlist');
+        $this->load->model('account/wishlist');
 
         $data['text_cart_success'] = $this->language->get('text_cart_success');
         $log = new Log('error.log');
-        $wishlist_id = isset($this->request->post['wishlist_id'])?$this->request->post['wishlist_id']:null;
+        $wishlist_id = $this->request->post['wishlist_id'];
+        
+        $wishlist_products =  $this->model_account_wishlist->getWishlistProduct($wishlist_id);
+        $log->write('Wish List Products');
+        $log->write($wishlist_products);
+        $log->write('Wish List Products');
+        
+        if(is_array($wishlist_products) && count($wishlist_products) > 0) {
+            foreach ($wishlist_products as $wishlist_product) {
+            $log->write('Wish List Products 2');
+            $log->write($wishlist_product['product_id']);    
+            $log->write('Wish List Products 2');
+            $this->cart->add($wishlist_product['product_id'], $wishlist_product['quantity'], array(), $recurring_id = 0, $store_id= false, $store_product_variation_id= false,$product_type = 'replacable',$product_note=null,$produce_type=null);
+            }
+        }
+        $this->model_account_wishlist->deleteWishlists($wishlist_id);
         //echo "reg";
 
         $this->session->data['success'] = $data['text_cart_success'];
