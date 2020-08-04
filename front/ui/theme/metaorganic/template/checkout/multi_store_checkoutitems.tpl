@@ -2222,10 +2222,13 @@ $(document).delegate('#savebasket', 'click', function(){
                 dataType: 'json',
                 success: function(json) {
                 console.log(json); 
-                window.location.href = json;
                 if (json['location']) {
-                    location = json.redirect;
-                    location = location;
+                    console.log('success');
+                    console.log(json.location); 
+                    window.location.href = json.location;
+                    return false;
+                    //location = json.redirect;
+                    //location = location;
                 }}
             });
         }
