@@ -1067,6 +1067,7 @@ class ControllerCheckoutCart extends Controller {
             
             $wishlist_exists = $this->model_account_wishlist->CheckSaveBasketExits($list_name);
             $log->write('WISHLIST EXISTS WITH NAME');
+            $log->write($quantity);
             $log->write($wishlist_exists);
             $log->write('WISHLIST EXISTS WITH NAME');
             if(is_array($wishlist_exists) && count($wishlist_exists) > 0) {
