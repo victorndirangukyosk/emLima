@@ -152,7 +152,7 @@
 <a  href="<?php echo $continue; ?>"> <button type="button" title="Continue Shopping" class="button btn-continue" style="width:210px;background-color: #ec9f4e ; padding: 15px 20px 27px 20px;" ><span><span>Continue Shopping</span></span></button></a>
                                                        
                                                        
-<button type="submit" style="width:170px;background-color: #ec9f4e ; padding: 15px 20px 27px 20px;" name="save_basket_action" id="save_basket_action" value="save_basket" title="Save Basket" class="button btn-update" data-confirm="This will move products into basket!!"><span id="savebasket" data-confirm="This will move products into basket!!">Save Basket</span></button>
+<button type="submit" style="width:170px;background-color: #ec9f4e ; padding: 15px 20px 27px 20px;" name="save_basket_action" id="save_basket_action" value="save_basket" title="Save Basket" class="button btn-update" data-confirm="This will move products into basket!!"><span id="savebasket">Save Basket</span></button>
                            <button type="submit" style="width:170px;background-color: #ec9f4e ; padding: 15px 20px 27px 20px;" name="update_cart_action" value="update_qty" title="Update Cart" class="button btn-update"><span id="updatecart">Update Cart</span></button>
                           
                             <button type="submit"  style="width:180px;background-color: #ec9f4e ; padding: 15px 20px 27px 20px;" name="update_cart_action" value="empty_cart" title="Clear Cart" class="button btn-empty" id="empty_cart_button"><span id="clearcart" class="cart-header_items-count clear-cart" style="border-bottom:none;" data-confirm="This will empty your cart!!" >Clear Cart</span></button>
@@ -582,15 +582,26 @@
         }
     });
 
-    $(document).delegate('#save_basket_action', 'click', function(){
-        var choice = confirm($(this).attr('data-confirm'));
-
-        if(choice) {
+ $(document).delegate('#save_basket_action', 'click', function(){
+  
+  var list_name;   
+  var input_val = prompt("Please enter list name:", "");
+  if (input_val == null || input_val == "") {
+    list_name = null;
+  }else {
+    list_name = input_val;
+  }
+        
+        if(list_name == null || list_name == "") {
+            console.log('Save Basket Cancelled!');
+            return false;
+        }
+        if(list_name != null || list_name != "") {
 
             $.ajax({
                 url: 'index.php?path=checkout/cart/save_basket',
                 type: 'post',
-                data:'',
+                data: { 'list_name' : list_name },
                 dataType: 'json',
                 success: function(json) {
                 console.log(json); 

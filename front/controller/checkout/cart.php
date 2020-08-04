@@ -1015,7 +1015,10 @@ class ControllerCheckoutCart extends Controller {
 	}
         
         public function save_basket() {
-        $log = new Log('error.log');        
+        $log = new Log('error.log');
+        $log->write('Save List');        
+        $log->write($this->request->post['list_name']);     
+        $log->write('Save List');        
         $products = $this->cart->getProducts();
         foreach ($products as $product) {
         $log->write('PRODUCT');
