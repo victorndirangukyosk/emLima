@@ -1066,10 +1066,13 @@ class ControllerCheckoutCart extends Controller {
             }
             
             $wishlist_exists = $this->model_account_wishlist->CheckSaveBasketExits($list_name);
+            $log->write('WISHLIST EXISTS WITH NAME');
+            $log->write($wishlist_exists);
+            $log->write('WISHLIST EXISTS WITH NAME');
             if(is_array($wishlist_exists) && count($wishlist_exists) > 0) {
             $wishlist_id = $wishlist_exists['wishlist_id'];
             } else {
-            $wishlist_id = $this->model_account_wishlist->createWishlist('SaveBasket');
+            $wishlist_id = $this->model_account_wishlist->createWishlist($list_name);
             }
             $this->model_account_wishlist->addProductToWishlistWithQuantity($wishlist_id,$product_id, $quantity);
         }
