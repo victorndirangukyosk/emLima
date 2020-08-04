@@ -2221,6 +2221,8 @@ $(document).delegate('#savebasket', 'click', function(){
                 data:'',
                 dataType: 'json',
                 success: function(json) {
+                console.log(json); 
+                window.location.href = json;
                 if (json['location']) {
                     location = json.redirect;
                     location = location;

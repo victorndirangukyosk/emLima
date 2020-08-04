@@ -1024,6 +1024,9 @@ class ControllerCheckoutCart extends Controller {
 
         unset($this->session->data['coupon']);
         $json['location'] = $this->url->link('account/wishlist');
+        $log->write('Wish List URL');
+        $log->write($json['location']);
+        $log->write('Wish List Url');
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
