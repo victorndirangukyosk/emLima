@@ -126,9 +126,9 @@
                                                   <div class="col-md-12">
                                                   
                                                       <?php if($store_selected) { ?>
-                                                          <button id="selected-add-to-cart" class="btn btn-primary" type="button" >
+                                                          <button id="selected-add-to-cart" data-id="<?php echo $wishlist_id; ?>" class="btn btn-primary" type="button" >
                                                       <?php } else { ?>
-                                                          <button id="selected-add-to-cart" class="btn btn-primary" type="button" disabled>
+                                                          <button id="selected-add-to-cart" data-id="<?php echo $wishlist_id; ?>" class="btn btn-primary" type="button" disabled>
                                                       <?php } ?>
                                                        <?= $text_add_selection_to_cart ?></button>
                                                   </div>
@@ -140,11 +140,11 @@
                                                   <div class="col-md-12">
                                                   
                                                     <?php if($store_selected) { ?>
-                                                        <button id="list-add-to-cart"  class="btn btn-primary" type="button" >
+                                                    <button id="list-add-to-cart" data-id="<?php echo $wishlist_id; ?>"  class="btn btn-primary" type="button" >
 
                                                         
                                                     <?php } else { ?>
-                                                        <button id="list-add-to-cart"  class="btn btn-primary" type="button" disabled>
+                                                        <button id="list-add-to-cart" data-id="<?php echo $wishlist_id; ?>" class="btn btn-primary" type="button" disabled>
                                                     <?php } ?>
 
                                                      <?= $text_add_list_to_cart ?> </button>
