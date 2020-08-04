@@ -599,7 +599,7 @@ class ControllerAccountWishList extends Controller {
             $log->write('store details');
             $log->write($store_data);
             $log->write('store details');
-            $this->cart->add($store_data['product_store_id'], $wishlist_product['quantity'], $option = array(), $recurring_id = 0, $store_id= false, $store_product_variation_id= false,$product_type = 'replacable',$product_note=null,$produce_type=null);
+            $this->cart->addCustom($store_data['product_store_id'], $wishlist_product['quantity'], $option = array(), $recurring_id = 0, $store_id= false, $store_product_variation_id= false,$product_type = 'replacable',$product_note=null,$produce_type=null);
             }
         }
         $this->model_account_wishlist->deleteWishlists($wishlist_id);
