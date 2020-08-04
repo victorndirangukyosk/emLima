@@ -1023,7 +1023,7 @@ class ControllerCheckoutCart extends Controller {
         $this->cart->clear();
 
         unset($this->session->data['coupon']);
-        $json['location'] = $this->url->link('account/register');
+        $json['location'] = $this->url->link('account/wishlist');
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
