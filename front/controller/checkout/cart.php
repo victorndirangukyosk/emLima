@@ -1024,7 +1024,7 @@ class ControllerCheckoutCart extends Controller {
         $log->write('PRODUCT');
         $log->write($product);
         $log->write('PRODUCT');
-        $this->addProdToWishlist($product['product_id'], $product['quantity']);
+        $this->addProdToWishlist($product['product_id'], $product['quantity'], $this->request->post['list_name']);
         }
         $this->cart->clear();
 
@@ -1037,7 +1037,7 @@ class ControllerCheckoutCart extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-    public function addProdToWishlist($product_id, $quantity) {
+    public function addProdToWishlist($product_id, $quantity, $list_name) {
 
 
         $this->load->language('account/wishlist');
@@ -1065,7 +1065,7 @@ class ControllerCheckoutCart extends Controller {
                 }
             }
             
-            $wishlist_exists = $this->model_account_wishlist->CheckSaveBasketExits();
+            $wishlist_exists = $this->model_account_wishlist->CheckSaveBasketExits($list_name);
             if(is_array($wishlist_exists) && count($wishlist_exists) > 0) {
             $wishlist_id = $wishlist_exists['wishlist_id'];
             } else {

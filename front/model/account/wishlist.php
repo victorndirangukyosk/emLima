@@ -220,8 +220,8 @@ class ModelAccountWishList extends Model {
        return false;
     }
     
-    public function CheckSaveBasketExits() {
-        $query = $this->db->query("Select * from `" . DB_PREFIX . "wishlist` where name = 'SaveBasket' and customer_id = " . (int) $this->customer->getId() . "");
+    public function CheckSaveBasketExits($list_name) {
+        $query = $this->db->query("Select * from `" . DB_PREFIX . "wishlist` where name = ".$list_name." and customer_id = " . (int) $this->customer->getId() . "");
         return $query->row;
     }
 
