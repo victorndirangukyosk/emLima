@@ -157,14 +157,14 @@ class ControllerAccountDashboard extends Controller {
             }
 
             $data['DashboardData']['recent_activity'] = $recent_activity;
-            $recent_buying_pattern = $this->model_account_dashboard->getBuyingPattern($this->customer->getId());
+            // $recent_buying_pattern = $this->model_account_dashboard->getBuyingPattern($this->customer->getId());
 
-            foreach ($recent_buying_pattern as $rbp) {
-                $user_recent_buying_pattern[] = array('date_added' => $rbp['date_added'],
-                    'total' => $this->currency->format($rbp['total'], $this->config->get('config_currency')));
-            }
+            // foreach ($recent_buying_pattern as $rbp) {
+            //     $user_recent_buying_pattern[] = array('date_added' => $rbp['date_added'],
+            //         'total' => $this->currency->format($rbp['total'], $this->config->get('config_currency')));
+            // }
 
-            $data['DashboardData']['recent_buying_pattern'] = $user_recent_buying_pattern;
+            // $data['DashboardData']['recent_buying_pattern'] = $user_recent_buying_pattern;
         }
 
 
@@ -192,6 +192,119 @@ class ControllerAccountDashboard extends Controller {
 
         // echo "<pre>";print_r($data);die;
         $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/dashboard.tpl', $data));
+    }
+
+
+    public function recentbuyingpattern() { 
+
+       
+        $this->load->model('account/dashboard');       
+
+        $json = $this->getChartData('getSales', true);
+        $json['order']['label'] = 'Order Values/ Day';
+
+        $this->response->setOutput(json_encode($json));
+    }
+
+
+    public function getChartData($modelFunction, $currency_format = false) {
+        $this->load->model('account/dashboard'); 
+        $json = array();
+                
+           $results = $this->model_account_dashboard->getBuyingPattern($this->customer->getId());
+                //echo  count($results->rows);die;
+           $count=count($results->rows);
+                $order_data = array();
+
+                for ($i = 0; $i < $count; $i++) {
+                    $date = $results->rows[$i]['date'] ;
+
+                    //setting default values 
+                    $order_data[$date] = array(
+                        'day' => $date,
+                        'total' => 0
+                    );
+
+                    $json['xaxis'][] = array($i, $date);
+                }
+
+                foreach ($results->rows as $result) {
+                    
+                    $total = $result['total'];
+                    
+                    if ($currency_format) {
+                        $total = $this->currency->format($result['total'], $this->config->get('config_currency'), '', false);
+                    }
+
+                    $order_data[$result['date']] = array(
+                        'day' => $result['date'],
+                        'total' => $total
+                    );
+                }
+
+                $i = 0;
+                foreach ($order_data as $key => $value) {
+                    $json['order']['data'][] = array($i++, $value['total']);
+                }
+                
+   
+    
+
+  return $json;
+    }
+
+    public function getOrderProducts() {
+
+        $order_id = $this->request->post['order_id'];
+        $order_query = $this->db->query( "SELECT product_id,general_product_id,quantity,unit,name,order_id  FROM `" . DB_PREFIX . "order_product` o WHERE o.order_id = '" . (int) $order_id . "'" );
+  
+        if ( $order_query->num_rows ) { 
+            foreach ($order_query->rows   as $ra) {
+            $data[]=   array(
+                'order_id' => $ra['order_id'], 
+                'product_id' => $ra['product_id'],
+                'general_product_id' => $ra['general_product_id'],
+                'quantity' => $ra['quantity'],
+                'unit' => $ra['unit'],
+                'name' => $ra['name']
+                        );
+                    }
+
+                        $this->response->addHeader('Content-Type: application/json');
+                        $this->response->setOutput(json_encode($data));
+        } else {
+            $this->response->addHeader('Content-Type: application/json');
+                        $this->response->setOutput(json_encode(null));
+        }
+    }
+
+    public function addOrderProductToCart() { 
+        $this->load->model('account/wishlist');
+
+        $data['text_cart_success'] = $this->language->get('text_cart_success');
+        $log = new Log('error.log');
+        $wishlist_id = $this->request->post['wishlist_id'];
+        
+        $wishlist_products =  $this->model_account_wishlist->getWishlistProduct($wishlist_id);
+        $log->write('Wish List Products');
+        $log->write($wishlist_products);
+        $log->write('Wish List Products');
+        
+        if(is_array($wishlist_products) && count($wishlist_products) > 0) {
+            foreach ($wishlist_products as $wishlist_product) {
+            $log->write('Wish List Products 2');
+            $log->write($wishlist_product['product_id']);    
+            $log->write('Wish List Products 2');
+            $this->cart->add($wishlist_product['product_id'], $wishlist_product['quantity'], array(), $recurring_id = 0, $store_id= false, $store_product_variation_id= false,$product_type = 'replacable',$product_note=null,$produce_type=null);
+            }
+        }
+        $this->model_account_wishlist->deleteWishlists($wishlist_id);
+        //echo "reg";
+
+        $this->session->data['success'] = $data['text_cart_success'];
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($data));
     }
 
 }

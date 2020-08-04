@@ -29,6 +29,8 @@ class ControllerProductStore extends Controller {
                 $data['wishlist'] = $this->url->link('account/wishlist', '', 'SSL');
                 $data['logged'] = $this->customer->isLogged();
                 $data['account'] = $this->url->link('account/account', '', 'SSL');
+        $data['dashboard'] = $this->url->link('account/dashboard', '', 'SSL');
+
                 $data['register'] = $this->url->link('account/register', '', 'SSL');
                 $data['login'] = $this->url->link('account/login', '', 'SSL');
                 $data['order'] = $this->url->link('account/order', '', 'SSL');

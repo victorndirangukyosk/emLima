@@ -1,37 +1,13 @@
 <?php echo $header; ?>
 
-<link type="text/css" href="admin/ui/stylesheet/stylesheet.css" rel="stylesheet" media="screen" />
-<link href="admin/ui/javascript/bootstrap/shop/shop.css" type="text/css" rel="stylesheet" />
-<link href="admin/ui/javascript/font-awesome/css/font-awesome.min.css" type="text/css" rel="stylesheet" />
-<link href="admin/ui/javascript/summernote/summernote.css" rel="stylesheet">
-<link href="admin/ui/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" media="screen" />
-<link href="admin/ui/javascript/bootstrap-select/css/bootstrap-select.min.css" type="text/css" rel="stylesheet" />
-<link href="admin/ui/stylesheet/custom.css" type="text/css" rel="stylesheet" />
-
-<!-- include libraries(jQuery, bootstrap) -->
-<!-- <link href="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.css" rel="stylesheet">
-<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script> 
-<script src="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.js"></script>  -->
-
-<script type="text/javascript" src="admin/ui/javascript/jquery/jquery-2.1.1.min.js"></script>
-<script type="text/javascript" src="admin/ui/javascript/bootstrap/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="admin/ui/javascript/bootstrap-select/js/bootstrap-select.min.js"></script>
-<script type="text/javascript" src="admin/ui/javascript/tinymce/jquery.tinymce.min.js"></script>
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/4.7.0/jquery.tinymce.min.js"></script> -->
-
-<script src="admin/ui/javascript/common.js" type="text/javascript"></script>
-<script src="admin/ui/javascript/jscolor-2.0.4/jscolor.js" type="text/javascript"></script>
-
 <div id="content">
     <div class="page-header">
         <div class="container-fluid">
             <h3><?php echo Dashboard ?></h3>
-
         </div>
     </div>
+
     <div class="container-fluid">
-
-
 
         <div class="row" id="sum_widgets">
             <div class="col-lg-3 col-md-4 col-sm-6">
@@ -40,10 +16,8 @@
                     <div class="profile-number"><?= $DashboardData['customer_name'] ?> </div>
                     <div class="profile-number"><?= $DashboardData['email'] ?> </div>
                     <div class="profile-number">+254- <?= $DashboardData['telephone'] ?> </div>
-                </div></div>
-
-
-
+                </div>
+            </div>
             <div class="col-lg-3 col-md-4 col-sm-6">
                 <div class="panel profit db mbm">
                     <div class="panel-body">
@@ -61,6 +35,7 @@
 
                 </div>
             </div>
+            
             <div class="col-lg-3 col-md-4 col-sm-6"><div class="panel db mbm">
                     <div class="panel-body">
                         <p class="icon"><i class="icon fa fa-money"></i></p>
@@ -75,7 +50,9 @@
                         <p class="description">Frequency</p>
                     </div>
 
-                </div></div>
+                </div>
+              </div> 
+
             <div class="col-lg-3 col-md-3 col-sm-6"><div class="panel">
                     <div class="panel-body">
                         <p class="description"> <b>Know Your KwikBasket Champion</b></p>
@@ -88,49 +65,15 @@
                             Badge:</br> 
                         </p>
                     </div>
-                </div></div>  
-        </div>
+            </div>
+        </div>  
+        
+        
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sx-12 col-sm-12"><div class="panel panel-default">
-
-
-                </div>
-                <link type="text/css" href="ui/javascript/jquery/daterangepicker/daterangepicker-bs3.css" rel="stylesheet">
-                <script type="text/javascript" src="ui/javascript/jquery/daterangepicker/moment.js"></script>
-                <script type="text/javascript" src="ui/javascript/jquery/daterangepicker/daterangepicker.js"></script>
-                <script type="text/javascript" src="ui/javascript/jquery/flot/jquery.flot.js"></script>
-                <script type="text/javascript" src="ui/javascript/jquery/flot/jquery.flot.resize.js"></script>
-                <script type="text/javascript" src="ui/javascript/jquery/flot/jquery.flot.tickrotor.js"></script>
-
-                <script type="text/javascript">
-                    var start_date = '';
-                    var end_date = '';
-                    var block_range = 'day';
-
-                    jQuery(document).ready(function () {
-
-                    });
-
-                    $('#block-range li').on('click', function (e) {
-                        e.preventDefault();
-
-                        $(this).parent().find('li').removeClass('active');
-                        $(this).addClass('active');
-
-                        block_range = $(this).attr('id');
-
-
-                    });
-
-
-
-
-
-                </script>
-
-
-            </div>
+            </div> 
         </div>
+         
         <div class="row">
             <div class="col-lg-6 col-md-12 col-sx-12 col-sm-12"><div id="recenttabs" class="panel panel-default">
                     <div class="panel-heading">
@@ -138,11 +81,9 @@
                         </h3>
                     </div>
                     <div class="panel-body"  width="50%">
-                        <nav>
-
-                        </nav>
+                        
                         <div class="tab-content panel"  width="50%">
-                            <div id="dash_recent_orders" class="tab-pane active"  width="50%">
+                            
                                 <div class="table-responsive"  width="50%">
                                     <table class="table table-bordered">
                                         <thead>
@@ -173,7 +114,7 @@
                                         </tbody>
                                     </table>
                                 </div>
-                            </div>
+                            
 
 
                         </div>
@@ -192,7 +133,7 @@
 
                         </nav>
                         <div class="tab-content panel"  width="50%">
-                            <div id="dash_recent_orders" class="tab-pane active"  width="50%">
+                          
                                 <div class="table-responsive"  width="50%">
                                     <table class="table table-bordered">
                                         <thead>
@@ -214,13 +155,13 @@
                                                 <td><?php echo $ro['name']; ?></td>
                                                 <td><?php echo $ro['date_added']; ?></td>
                                                 <td><?php echo $ro['delivery_date']; ?></td>
-                                                <td class="text-center">
-                                                    <a href="<?php echo $ro['href'].'&order_status='.urlencode($ro['name']) ;?>" target="_blank" data-toggle="tooltip" title="order info" class="btn btn-success">
-                                                        <i class="icon fa fa-shopping-cart"></i>
-                                                    </a>
+                                                <td >
+                                                    
 
-                                                    <a href="<?php echo $ro['href'].'&order_status='.urlencode($ro['name']) ;?>" target="_blank" data-toggle="tooltip" title="order info" class="btn btn-success">
-                                                        <i class="icon fa fa-shopping-cart"></i>
+                                                    <a  data-confirm="Products in this order will be added to cart !!" class="btn btn-success download"  data-store-id="<?= ACTIVE_STORE_ID ?>"  data-toggle="tooltip"    value="<?php echo $ro['order_id']; ?>" title="Add To Cart/Reorder"><i class="fa fa-dollar"></i></a>
+
+                                                    <a href="<?php echo $ro['href'];?>" target="_blank" data-toggle="tooltip" title="order info" class="btn btn-success">
+                                                        <i class="fa fa-info"></i>
                                                     </a>
                                                 </td>
                                             </tr>
@@ -233,7 +174,7 @@
                                         </tbody>
                                     </table>
                                 </div>
-                            </div>
+                           
 
 
                         </div>
@@ -245,7 +186,7 @@
         <div class="row">
             <div class="col-lg-6 col-md-12 col-sx-12 col-sm-12"><div id="recenttabs" class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title"><i class="fa fa-th-list fa-lg"></i> Recent Activity
+                        <h3 class="panel-title"><i class="fa fa-th-list fa-lg"></i> Recent Activities
                         </h3>
                     </div>
                     <div class="panel-body"  width="50%">
@@ -276,30 +217,26 @@
                         <h3 class="panel-title"><i class="fa fa-th-list fa-lg"></i>Recent Buying Pattern
                         </h3>
                     </div>
-                    <div class="panel-body"  width="50%">
+                    <div id="charts" class="panel-body">
+          <div id="chart-recentbuyingpattern"  class="chart chart_active"></div>
+                 </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+ <div class="row">
+            <div class="col-lg-6 col-md-12 col-sx-12 col-sm-12"><div class="panel panel-default">
+                    <div class="panel-heading">
+                       
+                    </div>
+                    <div  width="50%">
                         <nav>
 
                         </nav>
                         <div class="tab-content panel"  width="50%">
-                            <div id="dash_recent_orders" class="tab-pane active"  width="50%">
-                                <div class="table-responsive"  width="50%">
-                                    <table class="table table-bordered">
-                                        <tbody>
-                                            <?php if ($DashboardData['recent_buying_pattern']) { ?>
-                                            <?php foreach ($DashboardData['recent_buying_pattern'] as $rbp) { ?>
-                                            <tr>
-                                                <td><?php echo $rbp['date_added']; ?></td>
-                                                <td><?php echo $rbp['total']; ?></td>
-                                            </tr>
-                                            <?php } ?>
-                                            <?php } else { ?>
-                                            <tr>
-                                                <td class="text-center" colspan="6"><?php echo 'No Records Found'; ?></td>
-                                            </tr>
-                                            <?php } ?>
-                                        </tbody>
-                                    </table>
-                                </div>
+                            <div   class="tab-pane active"  width="50%">
+                                
                             </div>
 
 
@@ -307,12 +244,26 @@
                     </div>
                 </div>
             </div>
+
+
+           
         </div>
-    </div>
-
-    <?php echo $footer; ?>
+ </div> 
 
 
+<?php echo $footer; ?>
+
+
+
+
+<link type="text/css" href="admin/ui/stylesheet/stylesheet.css" rel="stylesheet" media="screen" />
+<link href="admin/ui/javascript/bootstrap/shop/shop.css" type="text/css" rel="stylesheet" />
+<link href="admin/ui/javascript/font-awesome/css/font-awesome.min.css" type="text/css" rel="stylesheet" />
+<link href="admin/ui/javascript/summernote/summernote.css" rel="stylesheet">
+<link href="admin/ui/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" media="screen" />
+<link href="admin/ui/javascript/bootstrap-select/css/bootstrap-select.min.css" type="text/css" rel="stylesheet" />
+<link href="admin/ui/stylesheet/custom.css" type="text/css" rel="stylesheet" />
+ 
     <style>
         #sum_widgets .db:hover {
             background: #008db9;
@@ -330,7 +281,8 @@
             -moz-border-radius: 0 !important;
             border-radius: 0 !important;
         }
-
+.new {
+}
 
         <link type="text/css" href="ui/stylesheet/stylesheet.css" rel="stylesheet" media="screen" />
         <link href="ui/javascript/bootstrap/shop/shop.css" type="text/css" rel="stylesheet" />
@@ -341,6 +293,162 @@
         <link href="ui/stylesheet/custom.css" type="text/css" rel="stylesheet" />
 
     </style>
+
+    <link type="text/css" href="admin/ui/javascript/jquery/daterangepicker/daterangepicker-bs3.css" rel="stylesheet" />
+<script type="text/javascript" src="http://cdn.jsdelivr.net/jquery.flot/0.8.3/jquery.flot.min.js"></script>
+
+<script type="text/javascript" src="admin/ui/javascript/jquery/daterangepicker/moment.js"></script>
+<script type="text/javascript" src="admin/ui/javascript/jquery/daterangepicker/daterangepicker.js"></script>
+
+<script type="text/javascript" src="admin/ui/javascript/jquery/flot/jquery.flot.resize.js"></script>
+<script type="text/javascript" src="admin/ui/javascript/jquery/flot/jquery.flot.tickrotor.js"></script>
+ 
+
+
+
+<script type="text/javascript">
+   $( document ).ready(function() { 
+   recentPattern();
+});
+ 
+
+function recentPattern() {  
+ //  $('#chart-recentbuyingpattern').html('<div class="loading"><img src="ui/image/loader.gif"></div>');
+ 
+    $.ajax({
+        type: 'get',       
+        url: 'index.php?path=account/dashboard/recentbuyingpattern',      
+        dataType: 'json',
+        success: function(json) {
+          
+            var option = {
+                shadowSize: 0,
+               // lines: {
+                 //   show: false
+                //},
+                series: {
+    bars: {
+        show: true
+    }
+},
+bars: {
+    align: "center",
+    barWidth: 0.5
+},
+                grid: {
+                    backgroundColor: '#FFFFFF',
+                    hoverable: true
+                },
+                //bars: {
+                   // show: true,
+                   // fillColor: '#008db9',
+                   // width:'2px',
+                   // align: "center",
+                //},
+                xaxis: {
+                    show: true,
+                    ticks: json['xaxis'],
+                    rotateTicks : 45
+                },
+                yaxis: {
+                    mode: "money",
+                    min: 0,
+                    tickDecimals: 2,
+                    tickFormatter: function (v, axis) { return "KES " + v.toFixed(axis.tickDecimals) }
+                }
+            };
+
+            json['order']['color'] = "#008db9";
+            $.plot('#chart-recentbuyingpattern', [json['order']], option);
+
+            $('#chart-recentbuyingpattern').bind('plothover', function(event, pos, item) {
+                $('.tooltip').remove();
+
+                if (item) {
+                    $('<div id="tooltip" class="tooltip top in"><div class="tooltip-arrow"></div><div class="tooltip-inner">' + item.datapoint[1].toFixed(2) + '</div></div>').prependTo('body');
+
+                    $('#tooltip').css({
+                        position: 'absolute',
+                        left: item.pageX - ($('#tooltip').outerWidth() / 2),
+                        top: item.pageY - $('#tooltip').outerHeight(),
+                        pointer: 'cusror'
+                    }).fadeIn('slow');
+
+                    $('#chart-recentbuyingpattern').css('cursor', 'pointer');
+                } else {
+                    $('#chart-recentbuyingpattern').css('cursor', 'auto');
+                }
+            });
+
+           
+        },
+        error: function(xhr, ajaxOptions, thrownError) {
+            //alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+        }
+    });
+
+}
+
+
+</script>
+
+<script>
+
+ $(document).delegate('.download', 'click', function(e) {
+     var baseurl = window.location.origin+window.location.pathname;
+    // alert(baseurl);
+  var choice = confirm($(this).attr('data-confirm'));
+ var added = "false";
+   
+   if(choice) {
+            e.preventDefault();
+            $orderid = $(this).attr('value');  
+            $store_id = $(this).attr('data-store-id');   
+       
+              $.ajax({
+                    url: 'index.php?path=account/dashboard/getOrderProducts',
+                    dataType: 'json',
+                    type:'POST',
+                    data: {'order_id':$orderid},
+                    success: function(json) {
+                                  $(json).each(function (index, item) {
+
+               // each iteration
+               var product_id = item.product_id;
+               var quantity = item.quantity;
+               if (quantity > 0) { 
+                    added = "true";
+                cart.add(product_id, quantity, 0,$store_id,'','');                
+               
+                console.log("added to cart"); 
+            }
+           }); 
+                    }
+                }); 
+                //alert(added);
+          //if(added)
+                {
+                    baseurl=baseurl+"?path=checkout/checkoutitems";
+                 
+                    var win = window.open(baseurl, '_blank');
+                if (win) {
+                    //Browser has allowed it to be opened
+                    win.focus();
+                } else {
+                    //Browser has blocked it
+                    alert('Please allow popups for this website');
+                }
+
+              }
+   }
+
+  
+        });
+
+ 
+</script>
+ 
+ 
 
 
 
