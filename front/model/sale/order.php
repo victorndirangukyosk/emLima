@@ -620,6 +620,10 @@ class ModelSaleOrder extends Model {
         }
         return $qty;
     }
+    public function getStoreData($store_id) {
+        
+        return $this->db->query('select * from '.DB_PREFIX.'store where store_id ='.$store_id.'')->row;
+    }
 
  
 }
