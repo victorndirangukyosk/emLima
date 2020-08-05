@@ -145,11 +145,11 @@
                                                   <div class="col-md-12">
                                                   
                                                     <?php if($store_selected) { ?>
-                                                    <button id="list-add-to-cart" data-id="<?php echo $wishlist_id; ?>"  class="btn btn-primary" type="button" >
+                                                    <button id="list-add-to-cart" data-id="<?php echo $wishlist_id; ?>"  class="btn btn-primary" type="button" data-confirm="This will move products into basket!!">
 
                                                         
                                                     <?php } else { ?>
-                                                        <button id="list-add-to-cart" data-id="<?php echo $wishlist_id; ?>" class="btn btn-primary" type="button" disabled>
+                                                        <button id="list-add-to-cart" data-id="<?php echo $wishlist_id; ?>" class="btn btn-primary" type="button" disabled data-confirm="This will move products into basket!!">
                                                     <?php } ?>
 
                                                      <?= $text_add_list_to_cart ?> </button>
@@ -465,10 +465,9 @@ __kdt.push({"post_on_load": false});
             $(document).delegate('#list-add-to-cart', 'click', function(e) {
 
         e.preventDefault();
-        
-        if(!window.confirm("Are you sure?")) {
-            return false;
-        }
+            var choice = confirm($(this).attr('data-confirm'));
+
+    if(choice) {
         console.log("addWishlisttocart click");
         console.log($(this).attr('data-id'));
         $('#addWishlisttocart').html('Wait...');
@@ -486,6 +485,7 @@ __kdt.push({"post_on_load": false});
                 setTimeout(function(){ window.location.reload(false); }, 1000);
             }
         });
+    }
     });
 
 </script>
