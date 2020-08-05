@@ -195,10 +195,10 @@ class ControllerAccountDashboard extends Controller {
     }
 
 
-    public function recentbuyingpattern() { 
+    public function recentbuyingpattern() {
 
-       
-        $this->load->model('account/dashboard');       
+
+        $this->load->model('account/dashboard');
 
         $json = $this->getChartData('getSales', true);
         $json['order']['label'] = 'Order Values/ Day';
@@ -208,9 +208,9 @@ class ControllerAccountDashboard extends Controller {
 
 
     public function getChartData($modelFunction, $currency_format = false) {
-        $this->load->model('account/dashboard'); 
+        $this->load->model('account/dashboard');
         $json = array();
-                
+
            $results = $this->model_account_dashboard->getBuyingPattern($this->customer->getId());
                 //echo  count($results->rows);die;
            $count=count($results->rows);
@@ -219,7 +219,7 @@ class ControllerAccountDashboard extends Controller {
                 for ($i = 0; $i < $count; $i++) {
                     $date = $results->rows[$i]['date'] ;
 
-                    //setting default values 
+                    //setting default values
                     $order_data[$date] = array(
                         'day' => $date,
                         'total' => 0
@@ -229,9 +229,9 @@ class ControllerAccountDashboard extends Controller {
                 }
 
                 foreach ($results->rows as $result) {
-                    
+
                     $total = $result['total'];
-                    
+
                     if ($currency_format) {
                         $total = $this->currency->format($result['total'], $this->config->get('config_currency'), '', false);
                     }
@@ -246,9 +246,9 @@ class ControllerAccountDashboard extends Controller {
                 foreach ($order_data as $key => $value) {
                     $json['order']['data'][] = array($i++, $value['total']);
                 }
-                
-   
-    
+
+
+
 
   return $json;
     }
@@ -257,11 +257,11 @@ class ControllerAccountDashboard extends Controller {
 
         $order_id = $this->request->post['order_id'];
         $order_query = $this->db->query( "SELECT product_id,general_product_id,quantity,unit,name,order_id  FROM `" . DB_PREFIX . "order_product` o WHERE o.order_id = '" . (int) $order_id . "'" );
-  
-        if ( $order_query->num_rows ) { 
+
+        if ( $order_query->num_rows ) {
             foreach ($order_query->rows   as $ra) {
             $data[]=   array(
-                'order_id' => $ra['order_id'], 
+                'order_id' => $ra['order_id'],
                 'product_id' => $ra['product_id'],
                 'general_product_id' => $ra['general_product_id'],
                 'quantity' => $ra['quantity'],
@@ -278,22 +278,22 @@ class ControllerAccountDashboard extends Controller {
         }
     }
 
-    public function addOrderProductToCart() { 
+    public function addOrderProductToCart() {
         $this->load->model('account/wishlist');
 
         $data['text_cart_success'] = $this->language->get('text_cart_success');
         $log = new Log('error.log');
         $wishlist_id = $this->request->post['wishlist_id'];
-        
+
         $wishlist_products =  $this->model_account_wishlist->getWishlistProduct($wishlist_id);
         $log->write('Wish List Products');
         $log->write($wishlist_products);
         $log->write('Wish List Products');
-        
+
         if(is_array($wishlist_products) && count($wishlist_products) > 0) {
             foreach ($wishlist_products as $wishlist_product) {
             $log->write('Wish List Products 2');
-            $log->write($wishlist_product['product_id']);    
+            $log->write($wishlist_product['product_id']);
             $log->write('Wish List Products 2');
             $this->cart->add($wishlist_product['product_id'], $wishlist_product['quantity'], array(), $recurring_id = 0, $store_id= false, $store_product_variation_id= false,$product_type = 'replacable',$product_note=null,$produce_type=null);
             }

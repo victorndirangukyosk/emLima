@@ -19,8 +19,8 @@
     <?php } ?>
 
     <title><?= $title ?></title>
-    
-       
+
+
      <link href="<?= $base;?>front/ui/theme/metaorganic/assets/images/favicon.ico" rel="icon">
     <!-- BEGIN CSS -->
      <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/theme/metaorganic/assets/css/innerpage.min.css">
@@ -31,9 +31,9 @@
     <link href="<?= $base;?>front/ui/theme/metaorganic/assets/css/all.min.css" rel="stylesheet">
     <link href="<?= $base;?>front/ui/theme/metaorganic/assets/css/fontawesome.min.css" rel="stylesheet">
     <link href="<?= $base;?>front/ui/theme/metaorganic/assets/css/brands.min.css" rel="stylesheet">
-    
-    <!-- END CSS -->   
-    
+
+    <!-- END CSS -->
+
 
     <!-- Bootstrap -->
     <link href="<?= $base ?>front/ui/theme/mvgv2/css/bootstrap.min.css" rel="stylesheet">
@@ -44,20 +44,20 @@
     <link rel="stylesheet" type="text/css" href="<?= $base ?>front/ui/theme/mvgv2/css/mycart.min.css">
     <link rel="stylesheet" type="text/css" href="<?= $base; ?>front/ui/theme/mvgv2/css/custom.min.css?v=1.1.0">
 
-    
 
-    
+
+
     <script src="<?= $base; ?>front/ui/theme/mvgv2/js/jquery.min.js"></script>
     <script src="<?= $base; ?>front/ui/javascript/common.js?v=2.0.5" type="text/javascript"></script>
     <script src="<?= $base; ?>front/ui/theme/metaorganic/javascript/common.js?v=2.0.7" charset="UTF-8" type="text/javascript"></script>
-    
+
 
     <?php if ($kondutoStatus) { ?>
     <script src="https://i.k-analytix.com/konduto.min.js" type="text/javascript"></script>
     <?php } ?>
     <?php include 'assets.php';?>
     <script src="<?= $base;?>front/ui/javascript/easyzoom.js"></script>
-    
+
 </head>
 
 <body>
@@ -69,20 +69,20 @@
                     <p class="notice-text"><?= $notice ?></p>
                 <?php } ?>
             </div>
-        <?php } ?>            
+        <?php } ?>
     </div>
-  
+
   <header>
 <div class="col-md-12" style="position: relative; z-index: 1040;  padding-bottom: 20px; border-bottom: 1px solid #ea6f28; margin-bottom: 14px;">
-      
+
       <div class="row" >
        <div class="col-md-2">
                 <div class="header__logo-container">
                      <a class="header__logo-link " href="<?= BASE_URL?>">
                         <img src="<?=$logo?>" />
-                       
+
                      </a>
-                    
+
                 </div>
       </div>
       <div class="col-md-5">
@@ -92,10 +92,10 @@
                         Search
                         <div class="header__mobile-search-close j-mobile-close-search-trigger"></div>
                      </div>
-                     
+
                      <form id="search-form-form" class="search-form c-position-relative search-form--switch-category-position" action="#" method="get">
                         <ul class="header__search-bar-list header__search-bar-item--before-keyword-field">
-                           
+
                            <li class="header__search-bar-item header__search-bar-item--category search-category-container">
                            <div >
                               <select class="form-control" id="selectedCategory">
@@ -104,14 +104,14 @@
                                      //print_r($categoty);exit;?>
                                  <option value="<?=$categoty['id']?>"><?=$categoty['name']?></option>
                                   <?php } ?>
-                                
+
                               </select>
                            </div>
                            </li>
                            <li class="header__search-bar-item header__search-bar-item--location search-location-all">
                               <div class="header__search-location search-location">
                                     <i class="fa fa-map-marker header__search-location-icon" aria-hidden="true"></i>
-                                 
+
                                  <!-- SuggestionWidget  start -->
                                  <div id="search-area-wrp" class="c-sggstnbx header__search-input-wrapper">
                                     <form  id="product-search-form"  class="navbar-form active" role="search" onsubmit="location='<?= $this->url->link('product/search') ?>&search=' + $('input[name=\'product_name\']').val(); return false;">
@@ -124,7 +124,7 @@
 											</div>
 									</span> </div>
 									</form>
-                                   
+
                                       <?php /* if($this->config->get('config_store_location') == 'autosuggestion') { ?>
                                               <input name="zipcode" id="searchTextField"  class="header__search-input zipcode-enter" type="text"  required="" alt=""  maxlength="" size="" tabindex="3" placeholder="Find Stores in your Location" highlight="y" strict="y" autocomplete="off">
                                             <?php } else { ?>
@@ -132,26 +132,26 @@
 
                                             <?php } */ ?>
 
-                                            
+
 
                                             <!--<input type="hidden" name="store_list_url" value="<?=BASE_URL ?>">
 
                                             <input type="hidden" id="store_location" value="<?= $this->config->get('config_store_location'); ?>">-->
-											
 
-											
-											
+
+
+
                                  </div>
                               </div>
                            </li>
                            <!--<li class="header__search-bar-item header__search-bar-item--submit search-submit">
                               <button type="submit" tabindex="5" data-spinner-btn="" class="header__search-button">
                                     <i class="fa fa-search header__search-button-icon header__search-button-icon--search" aria-hidden="true"></i>
-                                
+
                                  <span class="header__search-button-text">Search</span>
                               </button>
                            </li>-->
-                          
+
                         </ul>
                      </form>
                   </div>
@@ -159,11 +159,11 @@
       </div>
       <div class="col-md-5">
             <div class="header__navigation-container" role="navigation">
-               
+
                   <div class="header__primary-navigation-outer-wrapper">
-                     
+
                      <div class="header__primary-navigation-item header__primary-navigation-item--more-categories" >
-                        
+
                      <div class="header__secondary-navigation-tablet-container"></div>
                      <ul class="header__upper-deck-list" >
                         <?php if(!$is_login){?>
@@ -177,16 +177,16 @@
                         </li>
                         <li class="header__upper-deck-item header__upper-deck-item setcartbtn"><div class="butn setui"> <button class="btn btn-default mini-cart-button" role="button" data-toggle="modal" data-target="#store-cart-side" id="mini-cart-button">
 										<span class="badge cart-count"><?= $this->cart->countProducts(); ?></span>
-										<i class="fa fa-shopping-cart"></i> 
+										<i class="fa fa-shopping-cart"></i>
 										<span class="hidden-xs hidden-sm cart-total-amount"><?= $this->currency->format($this->cart->getTotal()); ?></span>
 						</button></div></li>
                         <?php }else{?>
                          <div>
                          <div class="menuset">
                              <!-- <a class="header__upper-deck-item-link" href="<?= $account ?>" > <span class="user-profile-img">Profile</span></a>-->
-                            
-                             <div class="newset"><a class="btn" href="<?= $dashboard ?>" > <span ><?= $full_name ?></span> </a>     
-                           
+
+                             <div class="newset"><a class="btn" href="<?= $dashboard ?>" > <span ><?= $full_name ?></span> </a>
+
                            <div class="dropdownset" style="display:none; margin-top:-2px;">
                                   <div class="dropdownsetnew" style="margin-top: 10px;"><a class="header__upper-deck-item-link" href="<?= $account ?>" ><i class="fa fa-user"></i>Profile</a></div>
                                   <div class="dropdownsetnew"  ><a class="header__upper-deck-item-link" href="<?= $order ?>" ><i class="fa fa-reorder"></i><?= $text_orders ?></a></div>
@@ -201,10 +201,10 @@
                                     <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $help ?>"><i class="fa fa-question-circle"></i><?= $faq ?></a></div>
                                     <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $logout ?>"><i class="fa fa-power-off"></i><?= $text_logout ?></a></div>
                                     </div>
-                                    </div> 
+                                    </div>
                                      <div class="butn setui"><button class="btn btn-default mini-cart-button" role="button" data-toggle="modal" data-target="#store-cart-side" id="mini-cart-button" style="margin-right:10px; margin-top:0px">
 										<span class="badge cart-count"><?= $this->cart->countProducts(); ?></span>
-										<i class="fa fa-shopping-cart"></i> 
+										<i class="fa fa-shopping-cart"></i>
 										<span class="hidden-xs hidden-sm cart-total-amount"><?= $this->currency->format($this->cart->getTotal()); ?></span>
 						</button></div>
                                     </div>
@@ -212,20 +212,20 @@
                        <?php } ?>
                      </ul>
                   </div>
-                  
+
                </div>
-              
-               
-               
+
+
+
             </div>
       </div>
       </div>
-     
+
       </div>
 
-      
 
-   
+
+
   </header>
 
   <script>
@@ -252,7 +252,7 @@
     }else{
       window.location.href = currentpath+'&filter='+search_text;
     }
-    
+
    });
 
     $("#mini-cart-button").click(function(){

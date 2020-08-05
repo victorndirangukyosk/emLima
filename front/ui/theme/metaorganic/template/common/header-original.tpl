@@ -14,13 +14,13 @@
         <link href="<?= $base;?>front/ui/theme/metaorganic/assets/css/all.css" rel="stylesheet">
         <link href="<?= $base;?>front/ui/theme/metaorganic/assets/css/fontawesome.css" rel="stylesheet">
         <link href="<?= $base;?>front/ui/theme/metaorganic/assets/css/brands.css" rel="stylesheet">
-        <!-- END CSS -->   
+        <!-- END CSS -->
         <link rel="shortcut icon" type="image/png" href="image/data/<?php echo $this->config->get('config_icon') ?>"/>
         <link href="image/theme/192x192-f99243ddd270b032e0da78e91a6ef414.png" rel="icon" sizes="192x192" />
         <link href="image/theme/128x128-e16fef127b8a1d546004e7cb716c17d7.png" rel="icon" sizes="128x128" />
 
         <base href="<?php echo $base; ?>" />
-                 
+
         <?php if ($description) { ?>
         <meta name="description" content="<?php echo $description; ?>" />
         <?php } ?>
@@ -28,11 +28,11 @@
         <meta name="keywords" content= "<?php echo $keywords; ?>" />
         <?php } ?>
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-            
+
             <?php if ($icon) { ?>
             <link href="<?php echo $icon; ?>" rel="icon" />
             <?php } ?>
-            
+
             <?php foreach ($metas as $meta) { ?>
             <meta name="<?php echo $meta['name']; ?>" content="<?php echo $meta['content']; ?>" />
             <?php } ?>
@@ -41,8 +41,8 @@
             <link href="<?php echo $link['href']; ?>" rel="<?php echo $link['rel']; ?>" />
             <?php } ?>
 
-            <script src="front/ui/javascript/jquery/jquery-2.1.1.min.js" type="text/javascript"></script>   
-            <script src="front/ui/javascript/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>   
+            <script src="front/ui/javascript/jquery/jquery-2.1.1.min.js" type="text/javascript"></script>
+            <script src="front/ui/javascript/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
             <script src="front/ui/javascript/common.js" type="text/javascript"></script>
 
             <?php foreach ($scripts as $script) { ?>
@@ -54,8 +54,8 @@
             <!-- - if Rails.env.staging? -->
             <!-- %meta{:content => "noindex", :name => "robots"} -->
             <link rel="stylesheet" href="front/ui/theme/mvg/stylesheet/iwp.css" />
-            <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:700,400,600,300" />    
-            <link href="front/ui/theme/mvg/stylesheet/css.css" rel="stylesheet" type="text/css" />    
+            <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:700,400,600,300" />
+            <link href="front/ui/theme/mvg/stylesheet/css.css" rel="stylesheet" type="text/css" />
             <link href="front/ui/theme/mvg/stylesheet/layout.css" media="screen" rel="stylesheet" type="text/css" />
 
             <script src="front/ui/theme/mvg/javascript/common.js" charset="UTF-8" type="text/javascript"></script>
@@ -69,7 +69,7 @@
     </head>
 
     <body class="<?php echo $class; ?>">
-        
+
         <!--[if lte IE 9]>
         <div class='container-fluid'>
             <div class='row'>
@@ -103,12 +103,12 @@
                                 <?php foreach ($categories as $category) { ?>
                                 <li id="classification-1">
                                     <a href="<?= $category['href'] ?>">
-                                        <?= $category['name'] ?>                                        
-                                        
+                                        <?= $category['name'] ?>
+
                                         <?php if($category['children']){ ?>
-                                        <i class="fa fa-plus"></i>                                        
+                                        <i class="fa fa-plus"></i>
                                         <?php } ?>
-                                        
+
                                     </a>
                                     <?php if($category['children']){ ?>
                                     <ul>
@@ -129,7 +129,7 @@
                            <?= $text_menu ?>
                         </div>
                         <div class="resp-menu-list resp-menu-navbar">
-                            <ul>                                
+                            <ul>
                                 <li class="dropdown">
                                     <a role="button" data-toggle="dropdown" class="dropdown-toggle">
                                         <span>
@@ -168,7 +168,7 @@
                                         </span>
                                         <?= $text_account ?>
                                     </a>
-                                </li>     
+                                </li>
                                 <?php }else{ ?>
                                 <li>
                                     <a href="<?= $this->url->link('account/register') ?>" id="sign-out" class="app-link">
@@ -177,7 +177,7 @@
                                         </span>
                                         <?= $text_register ?>
                                     </a>
-                                </li>        
+                                </li>
                                 <li>
                                     <a href="<?= $this->url->link('account/login') ?>" id="sign-in" class="app-link">
                                         <span>
@@ -191,8 +191,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="overlay"></div>          
-            </div>      
+                <div class="overlay"></div>
+            </div>
         </div>
         <div class="mob-nav-container"><div class="resp-wrapper"><div class="resp-wrapper-head">
                     <div class="top-head">
@@ -231,18 +231,18 @@
                                     <i class="fa fa-circle-o-notch fa-spin" style="display: none;"></i>
                                     <span></span>
                                 <!-- <input type="text" placeholder="Search for your product"> -->
-                                
+
                                 <input type="text" name="product_name"  placeholder="Search fors your product" />
                                 <button type="submit"></button>
                                 <div class="resp-searchresult">
                                     <div></div>
                                 </div>
                             </form>
-                            <div class="resp-overlay"></div>                                
-                        </div>                            
+                            <div class="resp-overlay"></div>
+                        </div>
                     </div>
-                </div>                    
-            </div>                    
+                </div>
+            </div>
         </div>
 
         <div class="header">
@@ -276,9 +276,9 @@
 
                     <div class="col-md-6 col-sm-5 col-right col-xs-4 topnavsguest">
                         <ul class="nav navbar-nav navbar-right">
-                            <li>  
+                            <li>
                                 <a href="<?= $this->url->link('information/enquiries') ?>"><?= $list_products ?></a>
-                            </li>    
+                            </li>
                             <li class="dropdown">
                                 <a href="#" data-toggle="dropdown" class="dropdown-toggle">
                                     <span>
@@ -303,7 +303,7 @@
                                             <?= $call ?><br />
                                             <?= $telephone ?>
                                         </a>
-                                    </li>                                    
+                                    </li>
                                 </ul>
                             </li>
 
@@ -311,7 +311,7 @@
                             <li class="dropdown">
                                 <a aria-expanded="false" href="#" data-toggle="dropdown" class="dropdown-toggle">
                                     <?= $text ?>
-                                    <?= $name ?>       
+                                    <?= $name ?>
                                     <span class="fa fa-caret-down"></span>
                                 </a>
                                 <ul role="menu" class="dropdown-menu account">
@@ -363,8 +363,8 @@
                         <!--   Congratulations! -->
                         <!--   %strong Your account has been credited with 28 points -->
                     </div>
-                </div>                    
-            </div>        
+                </div>
+            </div>
         </div>
         <div class="alerter">
             <?php if($notices){ ?>
@@ -373,9 +373,9 @@
                         <p><?= $notice ?></p>
                     <?php } ?>
                 </div>
-            <?php } ?>            
+            <?php } ?>
         </div>
-        
+
 
         <div class="buy-bar-container">
             <div class="headtabs affix-top"><div class="container-fluid">
@@ -399,7 +399,7 @@
                                         <li>
                                             <a href="<?= $category['href'] ?>">
                                                 <?= $category['name'] ?> <i class="fa fa-angle-right"></i>
-                                            </a>                                    
+                                            </a>
 
                                             <div class="drop-menu-2 desk-drop-down">
                                                 <p><?= $category['name'] ?></p>
@@ -409,7 +409,7 @@
                                                     <?php foreach($category['children'] as $child){ ?>
                                                     <li>
                                                         <a href="<?= $child['href'] ?>">
-                                                            <?= $child['name'] ?> 
+                                                            <?= $child['name'] ?>
                                                         </a>
                                                     </li>
                                                     <?php } ?><!-- foreach children -->
@@ -423,7 +423,7 @@
                                         <li class="nonavbordertb">
                                             <a href="<?= $category['href'] ?>">
                                                 <?= $category['name'] ?>
-                                            </a>      
+                                            </a>
                                         </li>
                                         <?php } ?>
                                         <?php } ?>
@@ -465,7 +465,7 @@
                 </div>
                 <div class="new-product-toast-container"><div></div>
 
-                </div>            
-            </div>        
+                </div>
+            </div>
         </div>
 

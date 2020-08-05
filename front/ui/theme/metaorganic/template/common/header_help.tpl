@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="content-language" content="<?= $config_language?>">
-    
+
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <?php if ($description) { ?>
     <meta name="description" content="<?php echo $description; ?>" />
@@ -21,14 +21,14 @@
     <link href="<?= $base;?>front/ui/theme/metaorganic/assets/css/all.css" rel="stylesheet">
     <link href="<?= $base;?>front/ui/theme/metaorganic/assets/css/fontawesome.css" rel="stylesheet">
     <link href="<?= $base;?>front/ui/theme/metaorganic/assets/css/brands.css" rel="stylesheet">
-    <!-- END CSS -->    
+    <!-- END CSS -->
 
     <!-- Bootstrap -->
     <link href="<?= $base;?>front/ui/theme/mvgv2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Hind:300,400,500,600,700" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/theme/mvgv2/css/abhishek.css?v=2.0.6">
     <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/theme/mvgv2/css/style.css?v=5.1">
-    
+
     <?php if ($icon) { ?>
         <link href="<?php echo $icon; ?>" rel="icon" />
     <?php } ?>
@@ -42,7 +42,7 @@
     <?php } ?> -->
 
     <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/theme/mvgv2/stylesheet/layout_help.css">
-    
+
     <script src="<?= $base;?>front/ui/theme/mvgv2/js/jquery.min.js"></script>
     <script src="<?= $base;?>front/ui/javascript/common.js" type="text/javascript"></script>
     <script src="<?= $base;?>front/ui/theme/mvgv2/js/bootstrap.min.js"></script>
@@ -60,11 +60,11 @@
 <body>
    <header>
       <div class="header__primary-navigation-item header__primary-navigation-item--more-categories" style="margin-left: 0px;">
-                        
+
                      <div class="header__secondary-navigation-tablet-container"></div>
-					
+
                      <ul class="header__upper-deck-list" >
-						
+
                         <?php if(!$is_login){?>
                         <li class="header__upper-deck-item header__upper-deck-item--register">
                            <a data-toggle="modal" data-dismiss="modal" data-target="#signupModal-popup" class="header__upper-deck-item-link register" data-spinner-btn="{showOnSubmit: false}">
@@ -78,9 +78,9 @@
                          <div>
                          <div class="menuset">
                              <!-- <a class="header__upper-deck-item-link" href="<?= $account ?>" > <span class="user-profile-img">Profile</span></a>-->
-                            
-                             <div class="newset"><a class="btn" href="<?= $dashboard ?>" > <span ><?= $full_name ?></span> </a>     
-                           
+
+                             <div class="newset"><a class="btn" href="<?= $dashboard ?>" > <span ><?= $full_name ?></span> </a>
+
                            <div class="dropdownset" style="display:none;">
                                   <div class="dropdownsetnew" style="margin-top: 10px;"><a class="header__upper-deck-item-link" href="<?= $account ?>" ><i class="fa fa-user"></i>Profile</a></div>
 
@@ -96,37 +96,37 @@
                                     <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $help ?>"><i class="fa fa-question-circle"></i><?= $faq ?></a></div>
                                     <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $logout ?>"><i class="fa fa-power-off"></i><?= $text_logout ?></a></div>
                                     </div>
-                                    </div> 
+                                    </div>
                                      <div class="butn setui"> <a href="<?= BASE_URL?>/checkout"><button class="btn btn-default mini-cart-button" role="button" data-toggle="modal" data-target="#store-cart-side" id="mini-cart-button">
 										<span class="badge cart-count"><?= $this->cart->countProducts(); ?></span>
-										<i class="fa fa-shopping-cart"></i> 
+										<i class="fa fa-shopping-cart"></i>
 										<span class="hidden-xs hidden-sm cart-total-amount"><?= $this->currency->format($this->cart->getTotal()); ?></span>
 						</button></a></div>
                                     </div>
                                     </div>
                        <?php } ?>
                      </ul>
-                  </div>  
+                  </div>
   <div class="header__navigation-container" role="navigation">
                   <div class="header__primary-navigation-outer-wrapper">
                       <div class="header__logo-container">
                         <a href="<?= BASE_URL;?>">
                         <img src="<?=$logo?>">
                         </a>
-                      
+
                      </div>
                      <div class="header__primary-navigation-wrapper">
-                      
-                        <div class="header__primary-navigation-list"> 
+
+                        <div class="header__primary-navigation-list">
                          <!--<span class ="organic_logo"><img src="<?=$logo?>"></span>-->
                         </div>
                      </div>
-                     
-                     
-                  
+
+
+
                </div>
   </header>
- 
+
     <div class="checkout-wrapper">
         <div class="container">
             <div class="row">
@@ -145,7 +145,7 @@
                 </div>
             </div>
         </div>
-        
+
         <script>
         $(document).ready(function(){
   $(".newset").mouseleave(function(){
@@ -167,7 +167,7 @@
                     if(e.keyCode === 13){
                         $q = $('.help_search').val();
                         location = '<?= $this->url->link('information/help/search') ?>&q='+$q;
-                    }                        
+                    }
                 });
             });
         </script>
