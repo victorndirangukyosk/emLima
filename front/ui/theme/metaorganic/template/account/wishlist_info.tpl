@@ -41,7 +41,7 @@
                                                         <div class="mycart-product-img"><img src="<?= $product['image'] ?>" alt="" class="img-responsive"></div>
                                                     </div>
                                                     
-                                                    <div class="col-md-7">
+                                                    <div class="col-md-4">
                                                         <div class="mycart-product-info">
 
                                                             <?php if($product['is_from_active_store']) { ?>
@@ -60,6 +60,11 @@
                                                             <?php } ?>
                                                         </div>
                                                     </div>
+                                                    
+                                                    <div class="col-md-3">
+                                                     <input disabled type="number" name="" id="" value="<?= $product['quantity']?>" size="4" title="Qty" class="input-text qty" maxlength="12" style="width:80px !important;disabled">    
+                                                    </div>
+                                                    
                                                     <div class="col-md-2 product-price" >
                                                     
                                                       <?php if($product['is_from_active_store']) { ?>

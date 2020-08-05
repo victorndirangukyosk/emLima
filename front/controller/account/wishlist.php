@@ -611,7 +611,44 @@ class ControllerAccountWishList extends Controller {
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($data));
     }
+    
+    public function addWishlistProductToCartByProduct() {
 
+        $this->load->language('account/wishlist');
+        $this->load->model('account/wishlist');
+
+        $data['text_cart_success'] = $this->language->get('text_cart_success');
+        $log = new Log('error.log');
+        $wishlist_id = $this->request->post['wishlist_id'];
+        $product_id = $this->request->post['wishlist_id'];
+        
+        $wishlist_products =  $this->model_account_wishlist->getProductOfWishlist($wishlist_id, $product_id);
+        $log->write('Wish List Products');
+        $log->write($wishlist_products);
+        $log->write('Wish List Products');
+        
+        if(is_array($wishlist_products) && count($wishlist_products) > 0) {
+            foreach ($wishlist_products as $wishlist_product) {
+            $log->write('Wish List Products 2');
+            $log->write($wishlist_product['product_id']);    
+            $log->write('Wish List Products 2');
+            $this->load->model('assets/product');
+            $store_data = $this->model_assets_product->getProductStoreId($wishlist_product['product_id'], 75);
+            $log->write('store details');
+            $log->write($store_data);
+            $log->write('store details');
+            $this->cart->addCustom($store_data['product_store_id'], $wishlist_product['quantity'], $option = array(), $recurring_id = 0, $store_id= false, $store_product_variation_id= false,$product_type = 'replacable',$product_note=null,$produce_type=null);
+            }
+        }
+        $this->model_account_wishlist->deleteWishlists($wishlist_id);
+        //echo "reg";
+
+        $this->session->data['success'] = $data['text_cart_success'];
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($data));
+    }
+    
     public function createWishlist() {
 
   
