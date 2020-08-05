@@ -508,7 +508,7 @@ __kdt.push({"post_on_load": false});
     console.log($(this).attr('id'));
     console.log($(this).attr('data-unit'));
     console.log($("#"+$(this).attr('data-id')).text().replace(/\s/g, ''));
-    onsole.log($(this).attr('data-wishlistid'));    
+    console.log($(this).attr('data-wishlistid'));    
     
     var quantity = $("#"+$(this).attr('data-id')).text().replace(/\s/g, '');
     
