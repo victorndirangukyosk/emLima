@@ -60,10 +60,23 @@
                                                             <?php } ?>
                                                         </div>
                                                     </div>
-                                                    
-                                                    <div class="col-md-3">
-                                                     <input disabled type="number" name="" id="" value="<?= $product['quantity']?>" size="4" title="Qty" class="input-text qty" maxlength="12" style="width:80px !important;disabled">    
-                                                    </div>
+                                                     
+                                                    <div class="col-md-3" id="controller-container">
+
+                                                        <div class="inc-dec-quantity" id="40611-0">           
+                                                            <input type="button" class="sp-minus fff mini-minus-quantity ddd" data-key="" data-id="40611" id="minus" value="-">
+                                                            <span class="sp-input middle-quantity quntity-input product-count" id="">
+                                                                <?= $product['quantity']?>        </span>
+
+
+
+                                                            <input type="button" class="sp-plus fff mini-plus-quantity ddd" data-minimum="98" data-key="" data-id="40611" data-unit="Apples Red - Kg" id="plus" value="+">
+
+
+                                                        </div>
+                                                        <p class="error-msg"></p>
+
+                                                    </div>   
                                                     
                                                     <div class="col-md-2 product-price" >
                                                     
