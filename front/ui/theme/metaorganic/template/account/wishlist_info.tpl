@@ -498,13 +498,61 @@ __kdt.push({"post_on_load": false});
     }
     });
     
-    $(document).delegate('#minus', 'click', function(e) {
+    $(document).delegate('#plus, #minus', 'click', function(e) {
+        
     e.preventDefault();
     
-    });
+    console.log($(this).attr('data-id'));
+    console.log($(this).attr('id'));
+    console.log($(this).attr('data-unit'));
+    console.log($("#"+$(this).attr('data-id')).text().replace(/\s/g, ''));
     
-    $(document).delegate('#plus', 'click', function(e) {
-    e.preventDefault();
+    var quantity = $("#"+$(this).attr('data-id')).text().replace(/\s/g, '');
+    
+   if($(this).attr('id') == 'minus') {
+   if($(this).attr('data-unit')=='Kg' || $(this).attr('data-unit')=='Kgs')
+   {
+    var qty = parseFloat(quantity)-0.5;
+    console.log(qty);
+   }
+   else{
+    var qty = parseFloat(quantity) - 1; 
+    console.log(qty);
+   }
+   }
+   
+   if($(this).attr('id') == 'plus') {
+   if($(this).attr('data-unit')=='Kg' || $(this).attr('data-unit')=='Kgs')
+   {
+    var qty = parseFloat(quantity)+0.5;
+    console.log(qty);
+   }
+   else{
+    var qty = parseFloat(quantity) + 1; 
+    console.log(qty);
+   }
+   }
+    return false;
+    $.ajax({
+			url: 'index.php?path=checkout/cart/update',
+			type: 'post',
+			data: 'key=' + key + '&quantity=' + (typeof(quantity) != 'undefined' ? quantity : 1),
+			dataType: 'json',
+			beforeSend: function() {
+				//$('#cart > button').button('loading');
+			},
+			complete: function() {
+				//$('#cart > button').button('reset');
+			},			
+			success: function(json) {
+
+                //reflact changes in list 
+                $('#row_'+json['product_id']+' .num').html(json['quantity']);
+                       
+                //update total 
+                $('.cart-info-table tbody').load('index.php?path=checkout/cart/total');
+			}
+		});
     });
 </script>
 </html>
