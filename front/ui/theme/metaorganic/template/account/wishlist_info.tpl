@@ -131,9 +131,9 @@
                                                   <div class="col-md-12">
                                                   
                                                       <?php if($store_selected) { ?>
-                                                          <button id="selected-add-to-cart" data-id="<?php echo $wishlist_id; ?>" class="btn btn-primary" type="button" >
+                                                          <button id="selected-add-to-cart" data-id="<?php echo $wishlist_id; ?>" class="btn btn-primary" type="button" data-confirm="This will move products into basket!!">
                                                       <?php } else { ?>
-                                                          <button id="selected-add-to-cart" data-id="<?php echo $wishlist_id; ?>" class="btn btn-primary" type="button" disabled>
+                                                          <button id="selected-add-to-cart" data-id="<?php echo $wishlist_id; ?>" class="btn btn-primary" type="button" disabled data-confirm="This will move products into basket!!">
                                                       <?php } ?>
                                                        <?= $text_add_selection_to_cart ?></button>
                                                   </div>
@@ -366,6 +366,9 @@ __kdt.push({"post_on_load": false});
     });
     
    $(document).delegate('#selected-add-to-cart', 'click', function() {
+    var choice = confirm($(this).attr('data-confirm'));
+
+    if(choice) {  
     var wishlist_id = $(this).attr('data-id');
     var checkedNum = $('input[name="wishlist_products[]"]:checked').length;
     var val = [];
@@ -396,6 +399,7 @@ __kdt.push({"post_on_load": false});
                     //location = location;
                 }}
             });
+        }        
     });
 
     $(document).delegate('#selected-add-to-cart', 'click', function() {
