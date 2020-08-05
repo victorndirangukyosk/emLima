@@ -60,10 +60,20 @@
                                                             <?php } ?>
                                                         </div>
                                                     </div>
-                                                    
-                                                    <div class="col-md-3">
-                                                     <input disabled type="number" name="" id="" value="<?= $product['quantity']?>" size="4" title="Qty" class="input-text qty" maxlength="12" style="width:80px !important;disabled">    
-                                                    </div>
+                                                     
+                                                    <div class="col-md-3" id="controller-container">
+
+                                                        <div class="inc-dec-quantity" id="<?php echo $product['product_id'] ?>">           
+                                                            <input type="button" class="sp-minus fff mini-minus-quantity ddd" data-id="<?php echo $product['product_id'] ?>" data-unit="<?php echo $product['unit'] ?>" data-wishlistid="<?php echo $wishlist_id; ?>" id="minus" value="-">
+                                                            <span class="sp-input middle-quantity quntity-input product-count" id="<?php echo $product['product_id'] ?>">
+                                                                <?= $product['quantity']?>        </span>
+
+                                                            <input type="button" class="sp-plus fff mini-plus-quantity ddd" data-id="<?php echo $product['product_id'] ?>" data-unit="<?php echo $product['unit'] ?>" data-wishlistid="<?php echo $wishlist_id; ?>" id="plus" value="+">
+
+                                                        </div>
+                                                        <p class="error-msg"></p>
+
+                                                    </div>   
                                                     
                                                     <div class="col-md-2 product-price" >
                                                     
@@ -267,7 +277,7 @@ __kdt.push({"post_on_load": false});
 
 <script type="text/javascript">
     $(document).delegate('.wishlist-minus-quantity', 'click', function() {
-
+        return false;
         $qty_wrapper = $(this).parent().find('.middle-quantity');
 
         $total_quantity = parseInt($('#total_quantity').html()) - 1;
@@ -326,7 +336,7 @@ __kdt.push({"post_on_load": false});
         }
     });
     $(document).delegate('.wishlist-plus-quantity', 'click', function() {
-
+        return false;
         $qty_wrapper = $(this).parent().find('.middle-quantity');
 
         $qty = parseInt($qty_wrapper.html())+1;
@@ -487,6 +497,65 @@ __kdt.push({"post_on_load": false});
         });
     }
     });
+    
+    $(document).delegate('#plus, #minus', 'click', function(e) {
+        
+    e.preventDefault();
+    
+    var product_id = $(this).attr('data-id');
+    var wishlist_id = $(this).attr('data-wishlistid');
+    console.log($(this).attr('data-id'));
+    console.log($(this).attr('id'));
+    console.log($(this).attr('data-unit'));
+    console.log($("#"+$(this).attr('data-id')).text().replace(/\s/g, ''));
+    console.log($(this).attr('data-wishlistid'));    
+    
+    var quantity = $("#"+$(this).attr('data-id')).text().replace(/\s/g, '');
+    
+   if($(this).attr('id') == 'minus') {
+   if($(this).attr('data-unit')=='Kg' || $(this).attr('data-unit')=='Kgs')
+   {
+    var qty = parseFloat(quantity)-0.5;
+    console.log(qty);
+   }
+   else{
+    var qty = parseFloat(quantity) - 1; 
+    console.log(qty);
+   }
+   }
+   
+   if($(this).attr('id') == 'plus') {
+   if($(this).attr('data-unit')=='Kg' || $(this).attr('data-unit')=='Kgs')
+   {
+    var qty = parseFloat(quantity)+0.5;
+    console.log(qty);
+   }
+   else{
+    var qty = parseFloat(quantity) + 1; 
+    console.log(qty);
+   }
+   }
+    return false;
+    $.ajax({
+			url: 'index.php?path=account/wishlist/updateWishlistProduct',
+			type: 'post',
+			data: { wishlist_id : wishlist_id, product_id : product_id, quantity : qty },
+			dataType: 'json',
+			beforeSend: function() {
+				//$('#cart > button').button('loading');
+			},
+			complete: function() {
+				//$('#cart > button').button('reset');
+			},			
+			success: function(json) {
 
+                //reflact changes in list 
+                $('#row_'+json['product_id']+' .num').html(json['quantity']);
+                       
+                //update total 
+                $('.cart-info-table tbody').load('index.php?path=checkout/cart/total');
+			}
+		});
+    });
 </script>
 </html>

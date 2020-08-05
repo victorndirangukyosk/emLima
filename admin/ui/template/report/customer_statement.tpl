@@ -28,18 +28,9 @@
            <div class="col-sm-4">
 
            <div class="form-group">
-                <label class="control-label" for="input-customer"><?php echo $entry_customer; ?></label>
-                <select name="filter_customer" id="input-customer" class="form-control">
-                  <option value="0">Please Select</option>
-                  <?php foreach ($customer_names as $cust) { ?>
-                  <?php if ($cust['customer_id'] == $filter_customer) { ?>
-                  <option value="<?php echo $cust['customer_id']; ?>" selected="selected"><?php echo $cust['name']; ?></option>
-                  <?php } else { ?>
-                  <option value="<?php echo $cust['customer_id']; ?>"><?php echo $cust['name']; ?></option>
-                  <?php } ?>
-                  <?php } ?>
-                </select>
-              </div>
+                                <label class="control-label" for="input-company">Company Name</label>
+                                <input type="text" name="filter_company" value="<?php echo $filter_company; ?>" placeholder="Company Name" id="input-company" class="form-control" />
+                            </div>
 
               <div class="form-group">
                 <label class="control-label" for="input-status"><?php echo $entry_status; ?></label>
@@ -56,8 +47,21 @@
               </div>
             </div>
 
+            
+
              <div class="col-sm-4">
                   <input type="hidden" name="filter_date "      class="form-control" />
+
+
+                   <div class="form-group">
+                <label class="control-label" for="input-customer"><?php echo $entry_customer; ?>  Name</label>
+
+                 <input type="text" name="filter_customer" value="<?php echo $filter_customer; ?>" placeholder="Customer Name" id="input-customer" class="form-control" />
+              
+              </div>
+
+
+                  
                               
  </div>
  
@@ -87,7 +91,8 @@
           <table class="table table-bordered table-hover">
             <thead>
               <tr>
-                <td class="text-left">Company Name</td>
+                
+                <td class="text-left">Customer Name</td>
                 <!--<td class="text-left"><?php echo $column_email; ?></td>
                 <td class="text-left"><?php echo $column_customer_group; ?></td>
                 <td class="text-left"><?php echo $column_status; ?></td>-->
@@ -117,7 +122,7 @@
                 <!--<td class="text-right"><?php echo $customer['total']; ?></td>-->
                 <td class="text-right"><?php echo $customer['po_number']; ?></td>
                 <td class="text-right"><?php echo $customer['subtotal']; ?></td>
-                <td class="text-center"><a class="download" id="download-order-products"  data-toggle="tooltip" order_date="<?php echo $customer['date_added']; ?>" data="<?php echo $customer['customer']; ?>" value=<?php echo $customer['order_id']; ?>  title="Download Products" class="btn btn-info"><i class="fa fa-file-excel-o"></i></a></td>
+                <td class="text-center"><a class="download" id="download-order-products"  data-toggle="tooltip" order_date="<?php echo $customer['date_added']; ?>" company="<?php echo $customer['company']; ?>" data="<?php echo $customer['customer']; ?>" value=<?php echo $customer['order_id']; ?>  title="Download Products" class="btn btn-info"><i  style="cursor: pointer;height:20px;width:20px" class="fa fa-file-excel-o"></i></a></td>
               </tr>
               <?php } ?>
               <?php } else { ?>
@@ -139,13 +144,23 @@
 $('#button-filter').on('click', function() {
 	url = 'index.php?path=report/customer_order/statement&token=<?php echo $token; ?>';
 
-  var filter_customer = $('select[name=\'filter_customer\']').val();
-	
-	if (filter_customer != 0) {
-		url += '&filter_customer=' + encodeURIComponent(filter_customer);
-	}	
-  else{
-    alert("Please select customer");
+  
+            var filter_customer = $('input[name=\'filter_customer\']').val();
+
+            if (filter_customer) {
+                url += '&filter_customer=' + encodeURIComponent(filter_customer);
+            }
+
+
+    var filter_company = $('input[name=\'filter_company\']').val();
+
+            if (filter_company) {
+                url += '&filter_company=' + encodeURIComponent(filter_company);
+            }
+  
+  if(filter_customer==0 && filter_company==0)
+  {
+    alert("Please select either customer or company ");
     return;
   }
 
@@ -170,24 +185,88 @@ $('#button-filter').on('click', function() {
 
   
 
+
 	location = url;
 });
 //--></script> 
   <script type="text/javascript"><!--
+
+
+
+
+   $companyName="";
+        $('input[name=\'filter_customer\']').autocomplete({
+          
+
+            'source': function (request, response) {
+                $.ajax({
+                    url: 'index.php?path=sale/customer/autocompletebyCompany&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request)+'&filter_company=' +$companyName,
+                    dataType: 'json',
+                    success: function (json) {
+                        response($.map(json, function (item) {
+                            return {
+                                label: item['name'],
+                                value: item['customer_id']
+                            }
+                        }));
+                    }
+                });
+            },
+            'select': function (item) {
+                $('input[name=\'filter_customer\']').val(item['label']);
+            }
+        });
+
+
+   $('input[name=\'filter_company\']').autocomplete({
+            'source': function (request, response) {
+                $.ajax({
+                    url: 'index.php?path=sale/customer/autocompletecompany&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
+                    dataType: 'json',
+                    success: function (json) {
+                        response($.map(json, function (item) {
+                            return {
+                                label: item['name'],
+                                value: item['name']
+                            }
+                        }));
+
+                        
+                    }
+                });
+                $companyName="";
+            },
+            'select': function (item) {
+                $('input[name=\'filter_company\']').val(item['label']);
+                $('input[name=\'filter_customer\']').val('');
+                $companyName=item['label'];
+            }
+        });
+
  
 function excel() {
        url = 'index.php?path=report/customer_order/statementexcel&token=<?php echo $token; ?>';
       
         
-  var filter_customer = $('select[name=\'filter_customer\']').val();
-	
-	if (filter_customer != 0) {
-		url += '&filter_customer=' + encodeURIComponent(filter_customer);
-	}	
-  else{
-    alert("Please select customer");
+     var filter_customer = $('input[name=\'filter_customer\']').val();
+
+            if (filter_customer) {
+                url += '&filter_customer=' + encodeURIComponent(filter_customer);
+            }
+
+
+    var filter_company = $('input[name=\'filter_company\']').val();
+
+            if (filter_company) {
+                url += '&filter_company=' + encodeURIComponent(filter_company);
+            }
+  
+  if(filter_customer==0 && filter_company==0)
+  {
+    alert("Please select either customer or company ");
     return;
   }
+  
 
 	
 	var filter_date_start = $('input[name=\'filter_date_start\']').val();
@@ -217,11 +296,12 @@ function excel() {
             e.preventDefault();
             $orderid = $(this).attr('value');
             $customer = $(this).attr('data');
+            $company = $(this).attr('company');
             $orderdate = $(this).attr('order_date');
            
  
             if ($orderid > 0) {                
-                const url = 'index.php?path=sale/order/consolidatedOrderProducts&token=<?php echo $token; ?>&order_id=' + encodeURIComponent($orderid)+'&customer='+$customer+'&date='+$orderdate;
+                const url = 'index.php?path=sale/order/consolidatedOrderProducts&token=<?php echo $token; ?>&order_id=' + encodeURIComponent($orderid)+'&customer='+$customer+'&date='+$orderdate+'&company='+$company;
                 location = url;
             }
         });
@@ -248,4 +328,10 @@ function excel() {
 
         
 <?php echo $footer; ?>
- 
+ <style>
+
+ .download
+ {
+   font-size: 1.5em;
+ }
+ </style>
