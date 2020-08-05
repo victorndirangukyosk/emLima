@@ -7049,12 +7049,14 @@ class ControllerSaleOrder extends Controller
     {
         $orderid = $this->request->get['order_id'];
         $customer = $this->request->get['customer'];
+        $company = $this->request->get['company'];
         $date = $this->request->get['date'];
 
         $data = array();
         $data['consolidation'][] = [
             'orderid' => $orderid,
             'customer' => $customer,
+           'company'=>$company,
             'date' => $date
         ];
 

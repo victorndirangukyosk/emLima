@@ -102,6 +102,11 @@ class ModelSaleCustomer extends Model {
             $implode[] = "c.email LIKE '" . $this->db->escape($data['filter_email']) . "%'";
         }
 
+        if (!empty($data['filter_company']) ) {
+            if($data['filter_company']!="")
+            $implode[] = "c.company_name = '" . $this->db->escape($data['filter_company']) . "'";
+        }
+
         if (!empty($data['filter_telephone'])) {
             $implode[] = "c.telephone LIKE '" . $this->db->escape($data['filter_telephone']) . "%'";
         }
@@ -129,6 +134,10 @@ class ModelSaleCustomer extends Model {
 
         if (!empty($data['filter_date_added'])) {
             $implode[] = "DATE(c.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
+        }
+
+        if (isset($data['filter_parent']) && !is_null($data['filter_parent'])) {
+            $implode[] = "c.parent = '" . (int) $data['filter_parent'] . "'";
         }
 
         if ($implode) {
@@ -170,6 +179,9 @@ class ModelSaleCustomer extends Model {
         }
 
         $query = $this->db->query($sql);
+
+
+         //echo "<pre>";print_r($sql);die;
 
         return $query->rows;
     }
@@ -984,23 +996,27 @@ class ModelSaleCustomer extends Model {
             $subject = $this->emailtemplate->getSubject('Customer', 'customer_1', $data);
             $message = $this->emailtemplate->getMessage('Customer', 'customer_1', $data);
             $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_1', $data);
+        
+        
+            $mail = new Mail($this->config->get('config_mail'));
+            $mail->setTo($data['email']);
+            $mail->setFrom($this->config->get('config_from_email'));
+            $mail->setSender($this->config->get('config_name'));
+            $mail->setSubject($subject);
+            $mail->setHTML($message);
+            $mail->send();
+        
         } else {
             #Customer Registration Approve
 
-            $subject = $this->emailtemplate->getSubject('Customer', 'customer_2', $data);
+            // $subject = $this->emailtemplate->getSubject('Customer', 'customer_2', $data);
 
-            $message = $this->emailtemplate->getMessage('Customer', 'customer_2', $data);
-            $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_2', $data);
+            // $message = $this->emailtemplate->getMessage('Customer', 'customer_2', $data);
+             $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_2', $data);
 
         }
 
-        $mail = new Mail($this->config->get('config_mail'));
-        $mail->setTo($data['email']);
-        $mail->setFrom($this->config->get('config_from_email'));
-        $mail->setSender($this->config->get('config_name'));
-        $mail->setSubject($subject);
-        $mail->setHTML($message);
-        $mail->send();
+       
 
         // send message here
         

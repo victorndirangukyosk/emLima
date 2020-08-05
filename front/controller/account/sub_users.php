@@ -24,6 +24,9 @@ class Controlleraccountsubusers extends Controller {
 
     public function index() {  
 
+        if(!empty($_SESSION['parent'])){
+            $this->response->redirect($this->url->link('account/account'));
+        }
         $data['kondutoStatus'] = $this->config->get('config_konduto_status');
         
         $data['konduto_public_key'] = $this->config->get('config_konduto_public_key');

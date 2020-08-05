@@ -1,0 +1,21 @@
+name: Staging Deployment
+on:
+  push:
+    branches: [ staging ]
+
+jobs:
+  deployment:
+    name: Deployment
+    runs-on: ubuntu-latest
+    steps:
+    - name: stage.kwikbasket.com server ssh connection
+      uses: appleboy/ssh-action@master
+      with: 
+        host: stage.kwikbasket.com
+        username: ubuntu
+        key: ${{ secrets.STAGING_SERVER_KEY }}
+        port : 22
+        script: | 
+          cd /var/www/html/stage.kwikbasket.com
+          sudo su
+          git pull origin staging

@@ -661,6 +661,7 @@ class ControllerAccountLogin extends Controller
             $this->session->data['just_loggedin'] = true;
 
             $data['success_message'] = $this->language->get('text_login_success');
+            $this->model_account_customer->cacheProductPrices(75);
           }
         } else {
           $data['status'] = false;

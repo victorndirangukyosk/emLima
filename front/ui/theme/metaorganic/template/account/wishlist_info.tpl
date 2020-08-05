@@ -31,9 +31,9 @@
                                                 <div class="row" style="display: flex;align-items: center;" >
                                                     <div class="col-md-1 checkbox" >
                                                           <?php if($product['is_from_active_store']) { ?>
-                                                            <label></label><input type="checkbox" name="wishlist_products" value="<?php echo $product['product_store_id'] ?>"/></label>
+                                                            <label></label><input type="checkbox" name="wishlist_products" value="<?php echo $product['product_store_id'] ?>" data-id="<?php echo $product['product_id'] ?>"/></label>
                                                         <?php } else { ?>
-                                                              <label><input type="checkbox" name="wishlist_products" value="<?php echo $product['product_store_id'] ?>" disabled/></label>
+                                                              <label><input type="checkbox" name="wishlist_products" value="<?php echo $product['product_store_id'] ?>" data-id="<?php echo $product['product_id'] ?>" disabled/></label>
                                                         <?php } ?>
                                                     </div>
 
@@ -41,7 +41,7 @@
                                                         <div class="mycart-product-img"><img src="<?= $product['image'] ?>" alt="" class="img-responsive"></div>
                                                     </div>
                                                     
-                                                    <div class="col-md-7">
+                                                    <div class="col-md-4">
                                                         <div class="mycart-product-info">
 
                                                             <?php if($product['is_from_active_store']) { ?>
@@ -60,6 +60,21 @@
                                                             <?php } ?>
                                                         </div>
                                                     </div>
+                                                     
+                                                    <div class="col-md-3" id="controller-container">
+
+                                                        <div class="inc-dec-quantity" id="<?php echo $product['product_id'] ?>">           
+                                                            <input type="button" class="sp-minus fff mini-minus-quantity ddd" data-id="<?php echo $product['product_id'] ?>" data-unit="<?php echo $product['unit'] ?>" data-wishlistid="<?php echo $wishlist_id; ?>" id="minus" value="-">
+                                                            <span class="sp-input middle-quantity quntity-input product-count" id="<?php echo 'span'.$product['product_id'] ?>">
+                                                                <?= $product['quantity']?>        </span>
+
+                                                            <input type="button" class="sp-plus fff mini-plus-quantity ddd" data-id="<?php echo $product['product_id'] ?>" data-unit="<?php echo $product['unit'] ?>" data-wishlistid="<?php echo $wishlist_id; ?>" id="plus" value="+">
+
+                                                        </div>
+                                                        <p class="error-msg"></p>
+
+                                                    </div>   
+                                                    
                                                     <div class="col-md-2 product-price" >
                                                     
                                                       <?php if($product['is_from_active_store']) { ?>
@@ -126,9 +141,9 @@
                                                   <div class="col-md-12">
                                                   
                                                       <?php if($store_selected) { ?>
-                                                          <button id="selected-add-to-cart" class="btn btn-primary" type="button" >
+                                                          <button id="selected-add-to-cart" data-id="<?php echo $wishlist_id; ?>" class="btn btn-primary" type="button" data-confirm="This will move products into basket!!">
                                                       <?php } else { ?>
-                                                          <button id="selected-add-to-cart" class="btn btn-primary" type="button" disabled>
+                                                          <button id="selected-add-to-cart" data-id="<?php echo $wishlist_id; ?>" class="btn btn-primary" type="button" disabled data-confirm="This will move products into basket!!">
                                                       <?php } ?>
                                                        <?= $text_add_selection_to_cart ?></button>
                                                   </div>
@@ -140,11 +155,11 @@
                                                   <div class="col-md-12">
                                                   
                                                     <?php if($store_selected) { ?>
-                                                        <button id="list-add-to-cart"  class="btn btn-primary" type="button" >
+                                                    <button id="list-add-to-cart" data-id="<?php echo $wishlist_id; ?>"  class="btn btn-primary" type="button" data-confirm="This will move products into basket!!">
 
                                                         
                                                     <?php } else { ?>
-                                                        <button id="list-add-to-cart"  class="btn btn-primary" type="button" disabled>
+                                                        <button id="list-add-to-cart" data-id="<?php echo $wishlist_id; ?>" class="btn btn-primary" type="button" disabled data-confirm="This will move products into basket!!">
                                                     <?php } ?>
 
                                                      <?= $text_add_list_to_cart ?> </button>
@@ -262,7 +277,7 @@ __kdt.push({"post_on_load": false});
 
 <script type="text/javascript">
     $(document).delegate('.wishlist-minus-quantity', 'click', function() {
-
+        return false;
         $qty_wrapper = $(this).parent().find('.middle-quantity');
 
         $total_quantity = parseInt($('#total_quantity').html()) - 1;
@@ -321,7 +336,7 @@ __kdt.push({"post_on_load": false});
         }
     });
     $(document).delegate('.wishlist-plus-quantity', 'click', function() {
-
+        return false;
         $qty_wrapper = $(this).parent().find('.middle-quantity');
 
         $qty = parseInt($qty_wrapper.html())+1;
@@ -359,63 +374,46 @@ __kdt.push({"post_on_load": false});
             //remove wishlist product ajax call
         }
     });
+    
+   $(document).delegate('#selected-add-to-cart', 'click', function() {
+    var choice = confirm($(this).attr('data-confirm'));
 
-    $(document).delegate('#list-add-to-cart', 'click', function() {
- 
-        console.log('list-add-to-cart');
- $store_id = 75;
-
- 
-        var productIds = [];
-        var added = false;
-        $("input:checkbox[name='wishlist_products']:enabled").each(function(){
-            productIds.push($(this).val());
-
-            console.log("Buy Now");
-            $product_id = $(this).val();    
-            $variation_id = 0;
-            
-             //alert($product_id);   
-            //$quantity = parseInt($('#quantity_'+$product_id).html());
-            $quantity = 1;//parseInt($('#quantity_'+$product_id).html());
-            console.log($quantity+"qnt");
-            if ($quantity > 0) {
-
-               // cart.add($product_id, $quantity, $variation_id);
-                cart.add($product_id, $quantity, $variation_id,$store_id,'','');                
-                added = true;
-                console.log("added to cart");
-
-                // $(this).attr('data-action','update');
-       // $('#AtcButton-id-'+$product_id+'-'+$variation_id).css("background-color","#ea7128");
-      ////  $('#flag-qty-id-'+$product_id+'-'+$variation_id).html($newquantityvalue+' items in cart <i class="fas fa-flag"></i>');        
-     //   $('#flag-qty-id-'+$product_id+'-'+$variation_id).css("display","block");
-            }
-        });
-
-        if(added) {
-          $.ajax({
-            url: 'index.php?path=account/wishlist/addWishlistProductToCart',
-            type: 'post',
-            data: {
-                    x: 'success',
-                },
-            dataType: 'json',
-            success: function(json) {
-              console.log("syc");
-              setTimeout(function(){ window.location.reload(false); }, 1000);
-            }
-          });
-        }
-        
-
-
-        console.log(productIds);
-
+    if(choice) {  
+    var wishlist_id = $(this).attr('data-id');
+    var checkedNum = $('input[name="wishlist_products[]"]:checked').length;
+    var val = [];
+    if (!checkedNum) {
+        $(':checkbox:checked').each(function(i){
+          val[i] = $(this).data("id");
+    });
+    console.log(val);
+    // User didn't check any checkboxes
+    } 
+    if(val.length == 0) {
+        alert('Please select atleast one product!');
+        return false;
+    }
+                $.ajax({
+                url: 'index.php?path=account/wishlist/addWishlistProductToCartByProduct',
+                type: 'post',
+                data: { 'products' : val, 'wishlist_id' : wishlist_id},
+                dataType: 'json',
+                success: function(json) {
+                console.log(json); 
+                if (json['location']) {
+                    console.log('success');
+                    console.log(json.location); 
+                    window.location.href = json.location;
+                    return false;
+                    //location = json.redirect;
+                    //location = location;
+                }}
+            });
+        }        
     });
 
     $(document).delegate('#selected-add-to-cart', 'click', function() {
-
+        return false;
         console.log('selected-add-to-cart');
  $store_id = 75;
         var productIds = [];
@@ -473,6 +471,98 @@ __kdt.push({"post_on_load": false});
 
         console.log(productIds);
     });
+    
+            $(document).delegate('#list-add-to-cart', 'click', function(e) {
 
+        e.preventDefault();
+            var choice = confirm($(this).attr('data-confirm'));
+
+    if(choice) {
+        console.log("addWishlisttocart click");
+        console.log($(this).attr('data-id'));
+        $('#addWishlisttocart').html('Wait...');
+        var orderId = $(this).attr('data-id');
+        $.ajax({
+            url: 'index.php?path=account/wishlist/addWishlistProductToCart',
+            type: 'post',
+            data: {
+                wishlist_id: $(this).attr('data-id')
+            },
+            dataType: 'json',
+            success: function(json) {
+                console.log(json);
+                
+                setTimeout(function(){ window.location.reload(false); }, 1000);
+            }
+        });
+    }
+    });
+    
+    $(document).delegate('#plus, #minus', 'click', function(e) {
+        
+    e.preventDefault();
+    
+    var product_id = $(this).attr('data-id');
+    var wishlist_id = $(this).attr('data-wishlistid');
+    console.log($(this).attr('data-id'));
+    console.log($(this).attr('id'));
+    console.log($(this).attr('data-unit'));
+    console.log($("#"+$(this).attr('data-id')).text().replace(/\s/g, ''));
+    console.log($(this).attr('data-wishlistid'));    
+    
+    var quantity = $("#"+$(this).attr('data-id')).text().replace(/\s/g, '');
+    
+   if($(this).attr('id') == 'minus') {
+   if($(this).attr('data-unit')=='Kg' || $(this).attr('data-unit')=='Kgs')
+   {
+    var qty = parseFloat(quantity)-0.5;
+    console.log(qty);
+   }
+   else{
+    var qty = parseFloat(quantity) - 1; 
+    console.log(qty);
+   }
+   }
+   
+   if($(this).attr('id') == 'plus') {
+   if($(this).attr('data-unit')=='Kg' || $(this).attr('data-unit')=='Kgs')
+   {
+    var qty = parseFloat(quantity)+0.5;
+    console.log(qty);
+   }
+   else{
+    var qty = parseFloat(quantity) + 1; 
+    console.log(qty);
+   }
+   }
+   if(qty < 0) {
+       alert('Invalid Quantity!');
+       return false;
+   }
+    $.ajax({
+			url: 'index.php?path=account/wishlist/updateWishlistProduct',
+			type: 'post',
+			data: { wishlist_id : wishlist_id, product_id : product_id, quantity : qty },
+			dataType: 'json',
+			beforeSend: function() {
+				//$('#cart > button').button('loading');
+			},
+			complete: function() {
+				//$('#cart > button').button('reset');
+			},			
+			success: function(json) {
+                        if(json.status = true) {
+                        $("#span"+product_id).text(qty);
+                        
+                        console.log($("#total_quantity").text().replace(/\s/g, ''));
+                        $("#total_quantity").text(json.total_quantity);
+                        } else {
+                            alert('Please try again later!');
+                            return false;
+                        }
+                        console.log(json);
+	        }
+		});
+    });
 </script>
 </html>
