@@ -196,28 +196,16 @@
                                                 <i class="fa fa-users"></i><?= $text_sub_customer ?></a>
                                             </li>
                                             <?php } ?>
-
-                                            <li role="presentation" >
-                                                <?php if(strpos($wishlist,$_SERVER["REQUEST_URI"]) !== false) { ?>
-                                                    <a href="<?= $wishlist ?>" class="active">
-                                                <?php } else { ?>
-                                                    <a href="<?= $wishlist ?>">
-                                                <?php } ?>
-                                                
-                                                <i class="fa fa-list-alt"></i><?= $text_wishlist ?></a>
-                                            </li>
-
-                                            <li role="presentation" >
-
-                                            <?php if(strpos($refer,$_SERVER["REQUEST_URI"]) !== false) { ?>
-                                                <a href="<?= $refer ?>" class="active">
+                                            
+                                            <li role="presentation">
+                                            <?php if(strpos($address,$_SERVER["REQUEST_URI"]) !== false) { ?>
+                                                <a href="<?= $address ?>" class="active">
                                             <?php } else { ?>
-                                                <a href="<?= $refer ?>">
+                                                <a href="<?= $address ?>">
                                             <?php } ?>
 
-                                            <i class="fa fa-share-alt"></i><?= $text_refer ?></a>
-                                            </li>
-
+                                            <i class="fa fa-address-book"></i><?= $label_address ?> </a></li>
+                                            
                                             <li role="presentation" >
 
                                             <?php if(strpos($order,$_SERVER["REQUEST_URI"]) !== false) { ?>
@@ -228,7 +216,7 @@
 
                                             <i class="fa fa-reorder"></i><?= $text_order ?></a>
                                             </li>
-
+                                            
                                             <?php if($this->config->get('config_account_return_status') == 'yes') { ?>
                                                 <li role="presentation" >
                                                     <?php if(strpos( $return,$_SERVER["REQUEST_URI"]) !== false) { ?>
@@ -240,8 +228,17 @@
                                                     <i class="fa fa-undo"></i><?= $text_return ?></a>
                                                 </li>
                                             <?php } ?>
-                                            
 
+                                            <li role="presentation" >
+                                                <?php if(strpos($wishlist,$_SERVER["REQUEST_URI"]) !== false) { ?>
+                                                    <a href="<?= $wishlist ?>" class="active">
+                                                <?php } else { ?>
+                                                    <a href="<?= $wishlist ?>">
+                                                <?php } ?>
+                                                
+                                                <i class="fa fa-list-alt"></i><?= $text_wishlist ?></a>
+                                            </li>
+                                            
                                             <?php if($this->config->get('config_credit_enabled')) { ?>
 
                                                 <li role="presentation">
@@ -254,7 +251,7 @@
                                                     <i class="fa fa-money"></i><?= $text_cash ?> </a>
                                                 </li>
                                             <?php } ?>
-
+                                            
                                             <?php if($this->config->get('config_reward_enabled')) { ?>
                                             
                                                 <li role="presentation">
@@ -269,14 +266,17 @@
 
                                             <?php } ?>
 
-                                            <li role="presentation">
-                                            <?php if(strpos($address,$_SERVER["REQUEST_URI"]) !== false) { ?>
-                                                <a href="<?= $address ?>" class="active">
+                                            <li role="presentation" >
+
+                                            <?php if(strpos($refer,$_SERVER["REQUEST_URI"]) !== false) { ?>
+                                                <a href="<?= $refer ?>" class="active">
                                             <?php } else { ?>
-                                                <a href="<?= $address ?>">
+                                                <a href="<?= $refer ?>">
                                             <?php } ?>
 
-                                            <i class="fa fa-address-book"></i><?= $label_address ?> </a></li>
+                                            <i class="fa fa-share-alt"></i><?= $text_refer ?></a>
+                                            </li>
+                                            
                                             <li role="presentation"><a href="<?= $logout ?>"><i class="fa fa-power-off"></i> <?= $text_signout ?></a></li>
                                         </ul>
                                     </div>
