@@ -129,6 +129,13 @@ class ModelAccountWishList extends Model {
         //return $query;
         return $query->row['total'];
     }
+    
+    public function getTotalWishlistQuantity() {
+        $query = $this->db->query("SELECT  SUM(wp.quantity) AS total FROM `" . DB_PREFIX . "wishlist` w join `" . DB_PREFIX . "wishlist_products` wp on w.wishlist_id =wp.wishlist_id WHERE customer_id = " . (int) $this->customer->getId());
+
+        //return $query;
+        return $query->row['total'];
+    }
 
     public function getWishlistPresent($name) {
         $query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "wishlist` w WHERE customer_id = " . (int) $this->customer->getId()." and name ='".$name."'" );

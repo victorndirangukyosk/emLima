@@ -535,6 +535,10 @@ __kdt.push({"post_on_load": false});
     console.log(qty);
    }
    }
+   if(qty < 0) {
+       alert('Invalid Quantity!');
+       return false;
+   }
     $.ajax({
 			url: 'index.php?path=account/wishlist/updateWishlistProduct',
 			type: 'post',
@@ -549,8 +553,12 @@ __kdt.push({"post_on_load": false});
 			success: function(json) {
                         if(json.status = true) {
                         $("#span"+product_id).text(qty);
+                        
+                        console.log($("#total_quantity").text().replace(/\s/g, ''));
+                        $("#total_quantity").text(json.total_quantity);
                         } else {
                             alert('Please try again later!');
+                            return false;
                         }
                         console.log(json);
 	        }

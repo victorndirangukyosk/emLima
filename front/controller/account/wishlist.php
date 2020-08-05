@@ -568,6 +568,10 @@ class ControllerAccountWishList extends Controller {
             $this->load->model('account/wishlist');
 
             $this->model_account_wishlist->updateWishlistProduct($wishlist_id,$product_id,$quantity);
+            $log->write('total_quantity');
+            $log->write($this->model_account_wishlist->getTotalWishlist());
+            $data['total_quantity'] = $this->model_account_wishlist->getTotalWishlistQuantity();
+            $log->write('total_quantity');
 
             $data['status'] = true;
         }
