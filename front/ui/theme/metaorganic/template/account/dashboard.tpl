@@ -423,15 +423,23 @@ bars: {
                 console.log("added to cart"); 
             }
            }); 
-                    }
+                    },
+                    complete: function() {
+				 
+                  baseurl=baseurl+"?path=checkout/checkoutitems";
+           var win = window.open(baseurl, '_blank');
+                if (win) {
+                    //Browser has allowed it to be opened
+                    win.focus();
+                } else {
+                    //Browser has blocked it
+                    alert('Please allow popups for this website');
+                }
+			},	
                 }); 
-                //alert(added);
-           
-           baseurl=baseurl+"?path=checkout/checkoutitems";
-           win.href=baseurl;
-           win.open();
-           //location.href=baseurl;
+                //alert(added);         
           
+           
                /* if(added){
                    
                  
