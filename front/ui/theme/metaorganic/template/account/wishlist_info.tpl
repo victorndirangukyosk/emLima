@@ -63,15 +63,12 @@
                                                      
                                                     <div class="col-md-3" id="controller-container">
 
-                                                        <div class="inc-dec-quantity" id="40611-0">           
-                                                            <input type="button" class="sp-minus fff mini-minus-quantity ddd" data-key="" data-id="40611" id="minus" value="-">
-                                                            <span class="sp-input middle-quantity quntity-input product-count" id="">
+                                                        <div class="inc-dec-quantity" id="<?php echo $product['product_id'] ?>">           
+                                                            <input type="button" class="sp-minus fff mini-minus-quantity ddd" data-id="<?php echo $product['product_id'] ?>" data-unit="<?php echo $product['unit'] ?>" id="minus" value="-">
+                                                            <span class="sp-input middle-quantity quntity-input product-count" id="<?php echo $product['product_id'] ?>">
                                                                 <?= $product['quantity']?>        </span>
 
-
-
-                                                            <input type="button" class="sp-plus fff mini-plus-quantity ddd" data-minimum="98" data-key="" data-id="40611" data-unit="Apples Red - Kg" id="plus" value="+">
-
+                                                            <input type="button" class="sp-plus fff mini-plus-quantity ddd" data-id="<?php echo $product['product_id'] ?>" data-unit="<?php echo $product['unit'] ?>" id="plus" value="+">
 
                                                         </div>
                                                         <p class="error-msg"></p>
@@ -280,7 +277,7 @@ __kdt.push({"post_on_load": false});
 
 <script type="text/javascript">
     $(document).delegate('.wishlist-minus-quantity', 'click', function() {
-
+        return false;
         $qty_wrapper = $(this).parent().find('.middle-quantity');
 
         $total_quantity = parseInt($('#total_quantity').html()) - 1;
@@ -339,7 +336,7 @@ __kdt.push({"post_on_load": false});
         }
     });
     $(document).delegate('.wishlist-plus-quantity', 'click', function() {
-
+        return false;
         $qty_wrapper = $(this).parent().find('.middle-quantity');
 
         $qty = parseInt($qty_wrapper.html())+1;
@@ -500,6 +497,14 @@ __kdt.push({"post_on_load": false});
         });
     }
     });
-
+    
+    $(document).delegate('#minus', 'click', function(e) {
+    e.preventDefault();
+    
+    });
+    
+    $(document).delegate('#plus', 'click', function(e) {
+    e.preventDefault();
+    });
 </script>
 </html>
