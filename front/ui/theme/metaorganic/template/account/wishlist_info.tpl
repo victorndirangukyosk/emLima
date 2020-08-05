@@ -31,9 +31,9 @@
                                                 <div class="row" style="display: flex;align-items: center;" >
                                                     <div class="col-md-1 checkbox" >
                                                           <?php if($product['is_from_active_store']) { ?>
-                                                            <label></label><input type="checkbox" name="wishlist_products" value="<?php echo $product['product_store_id'] ?>"/></label>
+                                                            <label></label><input type="checkbox" name="wishlist_products" value="<?php echo $product['product_store_id'] ?>" data-id="<?php echo $product['product_id'] ?>"/></label>
                                                         <?php } else { ?>
-                                                              <label><input type="checkbox" name="wishlist_products" value="<?php echo $product['product_store_id'] ?>" disabled/></label>
+                                                              <label><input type="checkbox" name="wishlist_products" value="<?php echo $product['product_store_id'] ?>" data-id="<?php echo $product['product_id'] ?>" disabled/></label>
                                                         <?php } ?>
                                                     </div>
 
@@ -364,9 +364,42 @@ __kdt.push({"post_on_load": false});
             //remove wishlist product ajax call
         }
     });
+    
+   $(document).delegate('#selected-add-to-cart', 'click', function() {
+    var wishlist_id = $(this).attr('data-id');
+    var checkedNum = $('input[name="wishlist_products[]"]:checked').length;
+    var val = [];
+    if (!checkedNum) {
+        $(':checkbox:checked').each(function(i){
+          val[i] = $(this).data("id");
+    });
+    console.log(val);
+    // User didn't check any checkboxes
+    } 
+    if(val.length == 0) {
+        alert('Please select atleast one product!');
+        return false;
+    }
+                $.ajax({
+                url: 'index.php?path=account/wishlist/addWishlistProductToCartByProduct',
+                type: 'post',
+                data: { 'products' : val, 'wishlist_id' : wishlist_id},
+                dataType: 'json',
+                success: function(json) {
+                console.log(json); 
+                if (json['location']) {
+                    console.log('success');
+                    console.log(json.location); 
+                    window.location.href = json.location;
+                    return false;
+                    //location = json.redirect;
+                    //location = location;
+                }}
+            });
+    });
 
     $(document).delegate('#selected-add-to-cart', 'click', function() {
-
+        return false;
         console.log('selected-add-to-cart');
  $store_id = 75;
         var productIds = [];
