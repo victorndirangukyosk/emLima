@@ -4,11 +4,11 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="kdt:page" content="home-page"> 
+    <meta name="kdt:page" content="home-page">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
     <meta http-equiv="content-language" content="<?= $config_language?>">
-    
+
     <?php if ($description) { ?>
     <meta name="description" content="<?php echo $description; ?>" />
     <?php } ?>
@@ -19,20 +19,20 @@
     <?php if ($icon) { ?>
         <link href="<?php echo $icon; ?>" rel="icon" />
     <?php } ?>
-    
+
      <link href="<?= $base;?>front/ui/theme/metaorganic/assets/images/favicon.ico" rel="icon">
     <!-- BEGIN CSS -->
     <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/theme/metaorganic/assets/css/style.min.css">
     <link href="<?= $base;?>front/ui/theme/metaorganic/assets/css/all.min.css" rel="stylesheet">
     <link href="<?= $base;?>front/ui/theme/metaorganic/assets/css/fontawesome.min.css" rel="stylesheet">
     <link href="<?= $base;?>front/ui/theme/metaorganic/assets/css/brands.min.css" rel="stylesheet">
-      <!-- END CSS -->   
-    
+      <!-- END CSS -->
+
     <!-- Bootstrap -->
     <link href="<?= $base;?>front/ui/theme/mvgv2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Hind:300,400,500,600,700" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/theme/mvgv2/css/style.min.css?v=5.2.7">
-   
+
 
     <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/theme/mvgv2/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="<?= $base ?>front/ui/theme/mvgv2/css/mycart.min.css">
@@ -51,7 +51,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.transitions.min.css">
     <style>
     @media (min-width:768px) and (max-width:1023px) {
-     
+
   	.header__primary-navigation-item--more-categories {
 		background: #fff;
 		border: 0;
@@ -76,15 +76,15 @@
          <div class="header__banner-container-close"></div>
       </div>
       <div class="col-md-12" style="position: relative; z-index: 1040; padding-bottom: 6px; border-bottom: 1px solid #ea6f28; margin-bottom: 14px;">
-      
+
       <div class="row" style="margin-top: 25px;">
       <div class="col-md-2">
                 <div class="header__logo-container">
                      <a class="header__logo-link " href="<?= BASE_URL?>">
                         <img src="<?=$logo?>" />
-                       
+
                      </a>
-                    
+
                 </div>
       </div>
       <div class="col-md-7">
@@ -94,10 +94,10 @@
                         Search
                         <div class="header__mobile-search-close j-mobile-close-search-trigger"></div>
                      </div>
-                     
+
                      <form id="search-form-form" class="search-form c-position-relative search-form--switch-category-position" action="#" method="get">
                         <ul class="header__search-bar-list header__search-bar-item--before-keyword-field">
-                           
+
                            <li class="header__search-bar-item header__search-bar-item--category search-category-container">
                            <div >
                               <select class="form-control" id="selectedCategory">
@@ -106,14 +106,14 @@
                                      //print_r($categoty);exit;?>
                                  <option value="<?=$categoty['id']?>"><?=$categoty['name']?></option>
                                   <?php } ?>
-                                
+
                               </select>
                            </div>
                            </li>
                            <li class="header__search-bar-item header__search-bar-item--location search-location-all">
                               <div class="header__search-location search-location">
                                     <i class="fa fa-map-marker header__search-location-icon" aria-hidden="true"></i>
-                                 
+
                                  <!-- SuggestionWidget  start -->
                                  <div id="search-area-wrp" class="c-sggstnbx header__search-input-wrapper">
                                     <form  id="product-search-form"  class="navbar-form active" role="search" onsubmit="location='<?= $this->url->link('product/search') ?>&search=' + $('input[name=\'product_name\']').val(); return false;">
@@ -126,7 +126,7 @@
 											</div>
 									</span> </div>
 									</form>
-                                   
+
                                       <?php /* if($this->config->get('config_store_location') == 'autosuggestion') { ?>
                                               <input name="zipcode" id="searchTextField"  class="header__search-input zipcode-enter" type="text"  required="" alt=""  maxlength="" size="" tabindex="3" placeholder="Find Stores in your Location" highlight="y" strict="y" autocomplete="off">
                                             <?php } else { ?>
@@ -134,26 +134,26 @@
 
                                             <?php } */ ?>
 
-                                            
+
 
                                             <!--<input type="hidden" name="store_list_url" value="<?=BASE_URL ?>">
 
                                             <input type="hidden" id="store_location" value="<?= $this->config->get('config_store_location'); ?>">-->
-											
 
-											
-											
+
+
+
                                  </div>
                               </div>
                            </li>
                            <!--<li class="header__search-bar-item header__search-bar-item--submit search-submit">
                               <button type="submit" tabindex="5" data-spinner-btn="" class="header__search-button">
                                     <i class="fa fa-search header__search-button-icon header__search-button-icon--search" aria-hidden="true"></i>
-                                
+
                                  <span class="header__search-button-text">Search</span>
                               </button>
                            </li>-->
-                          
+
                         </ul>
                      </form>
                   </div>
@@ -161,11 +161,11 @@
       </div>
       <div class="col-md-3">
             <div class="header__navigation-container" role="navigation">
-               
+
                   <div class="header__primary-navigation-outer-wrapper">
-                     
+
                      <div class="header__primary-navigation-item header__primary-navigation-item--more-categories" >
-                        
+
                      <div class="header__secondary-navigation-tablet-container"></div>
                      <ul class="header__upper-deck-list" >
                         <?php if(!$is_login){?>
@@ -179,18 +179,19 @@
                         </li>
                         <li class="header__upper-deck-item header__upper-deck-item setcartbtn"><div class="butn setui"> <button class="btn btn-default mini-cart-button" role="button" data-toggle="modal" data-target="#store-cart-side" id="mini-cart-button">
 										<span class="badge cart-count"><?= $this->cart->countProducts(); ?></span>
-										<i class="fa fa-shopping-cart"></i> 
+										<i class="fa fa-shopping-cart"></i>
 										<span class="hidden-xs hidden-sm cart-total-amount"><?= $this->currency->format($this->cart->getTotal()); ?></span>
 						</button></div></li>
                         <?php }else{?>
                          <div>
                          <div class="menuset">
                              <!-- <a class="header__upper-deck-item-link" href="<?= $account ?>" > <span class="user-profile-img">Profile</span></a>-->
-                            
-                             <div class="newset"><a class="btn" href="<?= $account ?>" > <span ><?= $full_name ?></span> </a>     
-                           
+
+                             <div class="newset"><a class="btn" href="<?= $dashboard ?>" > <span ><?= $full_name ?></span> </a>
+
                            <div class="dropdownset" style="display:none;">
-                                  <div class="dropdownsetnew" style="margin-top: 10px;"><a class="header__upper-deck-item-link" href="<?= $order ?>" ><i class="fa fa-reorder"></i><?= $text_orders ?></a></div>
+                                  <div class="dropdownsetnew" style="margin-top: 10px;"><a class="header__upper-deck-item-link" href="<?= $account ?>" ><i class="fa fa-user"></i>Profile</a></div>
+                                  <div class="dropdownsetnew"  ><a class="header__upper-deck-item-link" href="<?= $order ?>" ><i class="fa fa-reorder"></i><?= $text_orders ?></a></div>
                                   <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $wishlist ?>" ><i class="fa fa-list-ul"></i><?= $text_my_wishlist?></a></div>
                                     <?php if($this->config->get('config_credit_enabled')) { ?>
 
@@ -202,10 +203,10 @@
                                     <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $help ?>"><i class="fa fa-question-circle"></i><?= $faq ?></a></div>
                                     <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $logout ?>"><i class="fa fa-power-off"></i><?= $text_logout ?></a></div>
                                     </div>
-                                    </div> 
+                                    </div>
                                      <div class="butn setui"><button class="btn btn-default mini-cart-button" role="button" data-toggle="modal" data-target="#store-cart-side" id="mini-cart-button" style="margin-right:10px; margin-top:0px">
 										<span class="badge cart-count"><?= $this->cart->countProducts(); ?></span>
-										<i class="fa fa-shopping-cart"></i> 
+										<i class="fa fa-shopping-cart"></i>
 										<span class="hidden-xs hidden-sm cart-total-amount"><?= $this->currency->format($this->cart->getTotal()); ?></span>
 						</button></div>
                                     </div>
@@ -213,71 +214,71 @@
                        <?php } ?>
                      </ul>
                   </div>
-                  
+
                </div>
-              
-               
-               
+
+
+
             </div>
       </div>
       </div>
-     
+
       </div>
      <!-- <div id="header-new" class="header">
-       
+
          <div class="header__wrapper">
-         
-        
+
+
 
 
 
             <div class="header__top-layer">
-               
+
             <div id="homepage-billboard-new" class="header__home-hero header__home-hero--homenew">
                <div class="header__home-hero-image-wrapper">
                   <picture id="random-hero-image" class="header__home-hero-image" alt="">
                      <!--[if IE 9]>
-                    
+
                      <![endif]-->
                      <!--<img id="random-hero-img" class="header__home-hero-image" alt="" src="assets/images/xxlarge.jpg">-->
                   </picture>
                </div>
-               
-               
-           
+
+
+
             </div>
          </div>
       </div>
        </div>
-       
+
        <div style="clear:both !important"> </div>
-        
-				    <?php 
+
+				    <?php
 					$i=0;
 					foreach($categories as $category){
 					$i++;
 					       $link_array = explode('/',$category['href']);
                            $page_link = end($link_array);
-					   
+
 					  ?>
-										  
+
 											<?php if(count($category['products'])>0){?>
 											 <div class="container--full-width featured-categories <?php echo ($i==1) ? "first-feature-cat": "" ?>">
 											 <div class="container" style="width:100%;">
 					                        <div class="_47ahp" data-test-selector="search-results">
 											 <div class="clearfix featured-categories__header">
-                                              <span class="butsetview"><a href="<?=$this->url->link('product/store', 'store_id='.ACTIVE_STORE_ID).'?cat='.$page_link?>" >View All </a></span>   				  
+                                              <span class="butsetview"><a href="<?=$this->url->link('product/store', 'store_id='.ACTIVE_STORE_ID).'?cat='.$page_link?>" >View All </a></span>
 						  <h2 class="featured-categories__header-title"><span><?=$category['name']?></span></h2>
-                          
+
 					   </div>
                                                 <ul id="items-ul" class="_2tY3C" data-test-selector="item-cards-layout-grid">
-												
-												 <?php 
+
+												 <?php
 													foreach($category['products'] as $product) {
 											//	 echo '<pre>';print_r($product);exit;
 												  ?>
                                                    <li class="col-md-2 ">
-                                                   
+
                                                     <div class="_2sT86 _1fLGj">
                                                     <a class="product-detail-bnt open-popup" role="button" data-store=<?= ACTIVE_STORE_ID?> data-id="<?= $product['product_store_id'] ?>" target="_blank"  aria-label="<?=$product['name']?>">
 
@@ -288,30 +289,30 @@
                                                     <section class="_25Upe">
                                                     <section class="inner_sec">
                                                     <!--<span class="discountuihome" style="color:red; font-weight:bold">Get <?= $product['percent_off'];?>% OFF <i class="fas fa-shopping-basket"></i></span>-->
-                                                  
-                                                   
+
+
                                                     <div class="_3XNMI">
                                                     <div class="_2_3rp">
                                                     <div style="">
                                                     <img class="_1xvs1" src="<?=$product['thumb']?>" title="<?=$product['name']?>" alt="<?=$product['name']?>" style="left: 0%;">
-                                                    
+
                                                     </div>
                                                     </div>
-                                                  
-                                                   
+
+
                                                     </div>
-                                                 
-                                               
+
+
                                         <!--<section class="_1SQpT">
 
-                                        
+
                                             <a role="button" data-store="<?= ACTIVE_STORE_ID;?>" data-id="<?= $product['product_store_id'] ?>" target="_blank" rel="noopener noreferrer"
 										 class="KFSGT product-detail-bnt product-img product-description open-popup" role="toolbar" title="<?=$product['name']?>"></a>
-                                            
+
                                         </section>-->
-                                       
-                                       
-                                        
+
+
+
                                         </section>
                                         </section>
                                         </div>
@@ -320,7 +321,7 @@
                                                     <div class="_25ygu">
                                                      <div class="JHf2a">
                                                         <!--<a class="R8zaM"><?= $heading_title;?></a>-->
-                                                        
+
                                                         </div>
                                                    <!-- <a class="_2Pk9X" tabindex="0">-->
                                                     <?=$product['name']?>
@@ -334,7 +335,7 @@
                                                     </div>
                                                 </div>
                                                 <div class=""><!--col-md-12 col-sm-12 pl0 pr0 setproductimg-->
-                                                 
+
                                                 <div class="_2D2lC">
                                                             <div class="-DeRq">
                                                                </div>
@@ -346,47 +347,47 @@
                                                         </div>
 
 
-                                                       
+
                                                 </div>
-                                                
+
                                         </div>
                                         </div>
-                                        
+
                                         <!-- <section class="_38ivw">
                                             <section class="_9q1LS">
                                                 <section class="_3dJU8">
                                                     <div class="oKU4K">
-                                                      
+
                                                     </div>
                                                 </section>
                                                 <section class="_7H2LP">
                                                     <div class="-DeRq">
                                                         <?= $product['variations'][0]['special'];?></div>
                                                     <div class="_1I1Wt">
-                                                        
+
                                                     <div class="GeySM"><span class="_2g_QW">Unit:</span> <span class="_3TIJT"><?= $product['unit']?></span></div>
                                                 </section>
                                                 <section data-id="<?= $product['product_store_id'] ?>" class="VRlLl"><a class="_3tfm8 _3ePxY  product-detail-bnt product-img product-description open-popup" role="button" data-store=<?= $current_store;?> data-id="<?= $product['product_store_id'] ?>" target="_blank" rel="noopener noreferrer">Preview</a>
                                                     <div class="pro-qty-addbtn" data-store-id="<?= $current_store ?>"data-variation-id="<?= $product['product_variation_store_id'] ?>" id="action_<?= $product['product_variation_store_id'] ?>">
 
 													 <?php require 'action.tpl'; ?>
-									
-												
+
+
                                                 </section>
                                             </section>
                                         </section>
                                        </article>-->
                                        </a>
                                     </div>
-                                  
-                                   
+
+
                                                     </li>
-				
-        
-        
-        
-        
-        
+
+
+
+
+
+
         	<!--- Product Details Modal Start --->
 				     <div id="product_<?=$product['product_id']?>" class="modal fade" role="dialog">
 						   <div class="modal-dialog">
@@ -469,19 +470,19 @@
                   </div>
                 </div>
                                                  <?php }?>
-       
+
                                                </ul>
-											  
+
 											   <?php }?>
-        
+
 				</div>
 				</div>
-	          
-																		
-				</div>	
+
+
 				</div>
-				
-				
+				</div>
+
+
 				   <?php } ?>
                    <?php /* ?>
 				   <div class="featured-categories__scroller">
@@ -501,7 +502,7 @@
                             </a>
                          </div>
                          <?php } ?>
-                         
+
                       </div>
                    </div>
 				   <?php */?>
@@ -516,14 +517,14 @@
                      <h2>No Stores Found, Try with other stores</h2>'
                   <?php } ?>
                </div>
-               
+
                <div class="tabbed__content-container">
                   <div class="tabbed__tab-content homepage-gallery__tab-gallery tabbed__active-content" data-tabbed-role="tab" data-tab-content-name="Diamond Plaza" style="">
-                     
+
                      <div class="tabbed__tab-items c-clearfix">
-                     
+
                         <?php foreach($stores as $store){
-                         
+
                         ?>
                         <a href="<?= $base?>store/<?= $store['href'];?>">
                         <div class="homepage-gallery__block gallery-listing js-click-block" data-analytics="{&quot;category&quot;:&quot;USER_ENGAGEMENT&quot;,&quot;action&quot;:&quot;goto_Mydhukha_gallery&quot;,&quot;label&quot;:&quot;NEW_HP&quot;}">
@@ -536,33 +537,33 @@
                               <h3 class="gallery-listing__title pr0 text-center">
                                  <a href="<?= $base?>store/<?= $store['href'];?>"><span><?= $store['name'];?></span></a>
                               </h3>
-                              
+
                               <a href="<?= $base?>store/<?= $store['href'];?>" class="gallery-listing__extras-link">
                                  <div class="col-md-12 col-sm-12 addressdetailset pr0 pl0 text-center mb10"><i><?= $store['address'];?></i></div>
                                  <div class="gallery-listing__extras ">
                                     <div class="gallery-listing__location col-md-12 pl0 pr0">
                                       <div class="col-md-6 col-sm-6 fontset pl0">
-                                      <i class="fa fa-star" aria-hidden="true"></i> 
-                                      <i class="fa fa-star" aria-hidden="true"></i> 
-                                      <i class="fa fa-star" aria-hidden="true"></i> 
-                                      <i class="fa fa-star" aria-hidden="true"></i> 
-                                      
+                                      <i class="fa fa-star" aria-hidden="true"></i>
+                                      <i class="fa fa-star" aria-hidden="true"></i>
+                                      <i class="fa fa-star" aria-hidden="true"></i>
+                                      <i class="fa fa-star" aria-hidden="true"></i>
+
                                       </div>
                                       <div class="col-md-6 col-sm-6 addressdetailset pr0 storelistdetail"><?= $store['storeTypes'] ?></div>
-                                      
+
                                     </div>
                                  </div>
                               </a>
                               <a href="<?= $base?>store/<?= $store['href'];?>" class="gallery-listing__watchlist watchlist j-watchlist" title="Add to watchlist" data-action="add" data-adid="1243508174">
-                                
+
                                  <span class="watchlist__text">Add to watchlist</span>
                               </a>
                            </div>
                         </div>
                         </a>
                         <?php } ?>
-                       
-                        
+
+
                      </div>
                      <!--div id="see-all" class="tabbed__see-all">
                         <a class="button button--primary-outline tabbed__button-see-all" href="#">See all</a>
@@ -572,8 +573,8 @@
                   <div class="tabbed__tab-content homepage-gallery__tab-watchlist" data-tabbed-role="tab" data-tab-content-name="Lavington" style="display:none;"></div>
                   <div class="tabbed__tab-content homepage-gallery__tab-alerts" data-tabbed-role="tab" data-tab-content-name="Westlands" style="display:none;"></div>
                   <div class="tabbed__tab-content homepage-gallery__tab-alerts" data-tabbed-role="tab" data-tab-content-name="store" style="display:none;"></div>
-                 
-                  
+
+
                </div>
             </div>
          </div>
@@ -582,28 +583,28 @@
       <!-- /.page-container -->
       <div class="below-the-fold">
          <!-- /.page-container -->
-         
+
          <!--<div class="container--full-width popular-searches">
             <div class="container">
                <div class="popular-searches__content">
                   <div id="footer-dynamic" class="c-clear c-text-center">
                      <div class="c-dark-green">
                         <span class="c-bold">Popular Items: </span>
-                        <a href="#" title="" class="popular-searches__link">Item 1</a> 
-						<a href="#" title="" class="popular-searches__link">Item 2</a> 
-						<a href="#" title="" class="popular-searches__link">Item 3</a> 
-						<a href="#" title="" class="popular-searches__link">Item 4</a> 
-						<a href="#" title="" class="popular-searches__link">Item 5</a> 
-						<a href="#" title="" class="popular-searches__link">Item 6</a> 
-						<a href="#" title="" class="popular-searches__link">Item 7</a> 
-						<a href="#" title="" class="popular-searches__link">Item 8</a> 
-						<a href="#" title="" class="popular-searches__link">Item 9</a> 
-						<a href="#" title="" class="popular-searches__link">Item 10</a> 
-						<a href="#" title="" class="popular-searches__link">Item 11</a> 
-						<a href="#" title="" class="popular-searches__link">Item 12</a> 
-						<a href="#" title="" class="popular-searches__link">Item 13</a> 
-						<a href="#" title="" class="popular-searches__link">Item 14</a> 
-						<a href="#" title="" class="popular-searches__link">Item 15</a> 
+                        <a href="#" title="" class="popular-searches__link">Item 1</a>
+						<a href="#" title="" class="popular-searches__link">Item 2</a>
+						<a href="#" title="" class="popular-searches__link">Item 3</a>
+						<a href="#" title="" class="popular-searches__link">Item 4</a>
+						<a href="#" title="" class="popular-searches__link">Item 5</a>
+						<a href="#" title="" class="popular-searches__link">Item 6</a>
+						<a href="#" title="" class="popular-searches__link">Item 7</a>
+						<a href="#" title="" class="popular-searches__link">Item 8</a>
+						<a href="#" title="" class="popular-searches__link">Item 9</a>
+						<a href="#" title="" class="popular-searches__link">Item 10</a>
+						<a href="#" title="" class="popular-searches__link">Item 11</a>
+						<a href="#" title="" class="popular-searches__link">Item 12</a>
+						<a href="#" title="" class="popular-searches__link">Item 13</a>
+						<a href="#" title="" class="popular-searches__link">Item 14</a>
+						<a href="#" title="" class="popular-searches__link">Item 15</a>
                      </div>
                   </div>
                </div>
@@ -612,7 +613,7 @@
          <div class="container--full-width section section--alternate" id="homepage-leaderboard-bottom">
             <div id="div-gpt-ad-632115744089839813-leaderboard-footer" class="clearfix placement google-banner" data-track-action="homepage" data-track-label="bottom1" style="display: none;"></div>
          </div>
-        
+
  </div>
  <!--Cart HTML Start-->
  <div class="store-cart-panel">
@@ -624,21 +625,21 @@
                     <div class="modal-footer">
                         <!-- <p><?= $text_verify_number ?></p> -->
                         <a href="<?php echo $checkout; ?>" id="proceed_to_checkout">
-                        
+
                             <button type="button" class="btn btn-primary btn-block btn-lg" id="proceed_to_checkout_button">
                                 <span class="checkout-modal-text"><?= $text_proceed_to_checkout?> </span>
                                 <div class="checkout-loader" style="display: none;"></div>
-                                
+
                             </button>
                         </a>
                     </div>
                 </div>
             </div>
         </div>
-        
+
 </div>
 <!--Cart HTML End-->
-  <div class="modal-wrapper"></div> 
+  <div class="modal-wrapper"></div>
     <?php echo $footer ?>
     <!-- Phone Modal -->
     <?= $login_modal ?>
@@ -650,10 +651,10 @@
     <script src="<?= $base;?>front/ui/theme/mvgv2/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.js"></script>
 	<script src="<?= $base;?>front/ui/javascript/easyzoom.js"></script>
-    
+
     <script type="text/javascript" src="https://maps.google.com/maps/api/js?key=<?= $this->config->get('config_google_api_key') ?>&libraries=places"></script>
 
-    <script src="<?= $base;?>front/ui/javascript/home.js?v=1.0.4"></script> 
+    <script src="<?= $base;?>front/ui/javascript/home.js?v=1.0.4"></script>
     <script src="<?= $base;?>front/ui/javascript/bxslider/jquery.bxslider.min.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.20.4/sweetalert2.min.js"></script>
@@ -673,7 +674,7 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
     <style type="text/css">
-        
+
         @keyframes highlight {
           0% {
             background: #FFD700
@@ -693,7 +694,7 @@
     <script src="https://cdn.jsdelivr.net/bootstrap.datepicker-fork/1.3.0/js/locales/bootstrap-datepicker.pt-BR.js"></script>
 
     <script type="text/javascript" src="<?= $base;?>front/ui/theme/mvgv2/js/html5lightbox.js"></script>
-   
+
 <script type="text/javascript">
 $(document).ready(function(){
   $(".newset").mouseleave(function(){
@@ -718,7 +719,7 @@ $(document).ready(function(){
    // function aniback() {
 
     //   $.when(
-     //        $('.hero-image').animate({         
+     //        $('.hero-image').animate({
       //          'background-position-y': ($('.hero-image').css('background-position-y').replace(/[^0-9-]/g, '') - 15 ) + 'px'
       //      }, 1000, 'linear')
       //      ).then(aniback);
@@ -726,7 +727,7 @@ $(document).ready(function(){
   //  }
 
 
- /* 
+ /*
     setInterval(function(){
 
     $('.hero-image').animate({
@@ -748,12 +749,12 @@ $(document).ready(function(){
         autoclose: true,
         language: '<?php echo $config_language ?>'
     });
-    
+
     /*$('#signupModal-popup').on('shown.bs.modal', function() {
 
         console.log("load modal");
         $("#register_phone_number").mask("<?= $telephone_mask_number ?>",{autoclear:false,placeholder:"<?= $telephone_mask ?>"});
-        
+
     });
 
     jQuery(function($){
@@ -781,24 +782,24 @@ $(document).ready(function(){
         $('.drawer-nav').addClass('how-it-works-open');
         $('.header-transparent').addClass('how-it-works-open');
         $('.hero-image').addClass('how-it-works-open');
-        
+
     });
-    
+
     $("body").on("click",function(e) {
         if ($('.how-it-works-open').length >= 1) {
-            $('.drawer-nav').removeClass('how-it-works-open'); 
+            $('.drawer-nav').removeClass('how-it-works-open');
             $('.drawer.drawer--top').removeClass('drawer-open');
             $('.header-transparent').removeClass('how-it-works-open');
             $('.hero-image').removeClass('how-it-works-open');
         }
     });
     $(document).delegate('.how-it-works-close', 'click', function(e) {
-        $('.drawer-nav').removeClass('how-it-works-open'); 
+        $('.drawer-nav').removeClass('how-it-works-open');
         $('.drawer.drawer--top').removeClass('drawer-open');
         $('.header-transparent').removeClass('how-it-works-open');
         $('.hero-image').removeClass('how-it-works-open');
     });
-    
+
     function validateInp(elem) {
         var validChars = /[0-9]/;
         var strIn = elem.value;
@@ -810,7 +811,7 @@ $(document).ready(function(){
     }
 
 </script>
-<script type="text/javascript">  
+<script type="text/javascript">
 
     <?php if($this->config->get('config_store_location') == 'zipcode') { ?>
 
@@ -824,7 +825,7 @@ $(document).ready(function(){
 </body>
 
 <?php if ($kondutoStatus) { ?>
-    
+
 
 
 <script src="https://i.k-analytix.com/konduto.min.js" type="text/javascript"></script>
@@ -837,7 +838,7 @@ $(document).ready(function(){
   console.log("public_key");
   console.log(public_key);
 __kdt.push({"public_key": public_key}); // The public key identifies your store
-__kdt.push({"post_on_load": false});   
+__kdt.push({"post_on_load": false});
   (function() {
            var kdt = document.createElement('script');
            kdt.id = 'kdtjs'; kdt.type = 'text/javascript';
@@ -943,7 +944,7 @@ __kdt.push({"post_on_load": false});
             });
         }
     });
-	
+
     $(document).delegate('.close-model', 'click', function(){
         console.log("close product block");
             $('#bannermodal').modal('hide');
@@ -965,7 +966,7 @@ __kdt.push({"post_on_load": false});
 
     </script>
     <script type="text/javascript">
-   
+
     $("#sidebarss").stick_in_parent();
 
 
@@ -976,7 +977,7 @@ __kdt.push({"post_on_load": false});
     }
 
     $('.add-to-list').on('click', function (e) {
-        
+
         console.log("erg");
         data = {
             product_id : $(this).data("id")
@@ -1001,6 +1002,6 @@ __kdt.push({"post_on_load": false});
    $("#mini-cart-button").click(function(){
       $("#toTop").show();
      $("#toTop").css('opacity','1.0');
-    }); 
+    });
 </script>
 </html>

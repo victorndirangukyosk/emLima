@@ -129,6 +129,13 @@ class ModelAccountWishList extends Model {
         //return $query;
         return $query->row['total'];
     }
+    
+    public function getTotalWishlistQuantity() {
+        $query = $this->db->query("SELECT  SUM(wp.quantity) AS total FROM `" . DB_PREFIX . "wishlist` w join `" . DB_PREFIX . "wishlist_products` wp on w.wishlist_id =wp.wishlist_id WHERE customer_id = " . (int) $this->customer->getId());
+
+        //return $query;
+        return $query->row['total'];
+    }
 
     public function getWishlistPresent($name) {
         $query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "wishlist` w WHERE customer_id = " . (int) $this->customer->getId()." and name ='".$name."'" );
@@ -155,6 +162,19 @@ class ModelAccountWishList extends Model {
     public function addProductToWishlist($wishlist_id,$product_id) {
         $query = $this->db->query("INSERT into `" . DB_PREFIX . "wishlist_products` set wishlist_id = " . (int) $wishlist_id.",product_id ='".$product_id."',quantity = 1" );
 
+        //return $query;
+        return true;
+    }
+    
+    public function addProductToWishlistWithQuantity($wishlist_id, $product_id, $quantity) {
+        $query1 = $this->db->query("Select COUNT(*) AS total from `" . DB_PREFIX . "wishlist_products` where wishlist_id = " . (int) $wishlist_id." and product_id =".$product_id);
+        if($query1->row['total'] > 0) {
+        //$query = $this->db->query("UPDATE  `" . DB_PREFIX . "wishlist_products` set quantity = " . (int) $quantity ." where wishlist_id ='".$wishlist_id."'" );
+        
+        $query = $this->db->query("UPDATE `" . DB_PREFIX . "wishlist_products`  SET quantity = ".$quantity ." WHERE wishlist_id = '" . $wishlist_id . "' and product_id = ".$product_id);
+        } else {
+        $query = $this->db->query("INSERT into `" . DB_PREFIX . "wishlist_products` set wishlist_id = " . (int) $wishlist_id . ",product_id ='" . $product_id . "',quantity = ".$quantity."");    
+        }
         //return $query;
         return true;
     }
@@ -207,4 +227,9 @@ class ModelAccountWishList extends Model {
        return false;
     }
     
+    public function CheckSaveBasketExits($list_name) {
+        $query = $this->db->query("Select * from `" . DB_PREFIX . "wishlist` where name = '".$list_name."' and customer_id = " . (int) $this->customer->getId() . "");
+        return $query->row;
+    }
+
 }

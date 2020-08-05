@@ -102,6 +102,15 @@ class ModelAccountCustomer extends Model {
             $subject = $this->emailtemplate->getSubject('Customer', 'customer_1', $data);
             $message = $this->emailtemplate->getMessage('Customer', 'customer_1', $data);
             $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_1', $data);
+
+            $mail = new Mail($this->config->get('config_mail'));
+            $mail->setTo($data['email']);
+            $mail->setFrom($this->config->get('config_from_email'));
+            $mail->setSender($this->config->get('config_name'));
+            $mail->setSubject($subject);
+            $mail->setHTML($message);
+            $mail->send();
+            
         } else {
             #Customer Registration Approve
 
@@ -121,18 +130,12 @@ class ModelAccountCustomer extends Model {
 
             /* verification mail end*/
 
-            $subject = $this->emailtemplate->getSubject('Customer', 'customer_2', $data);
-            $message = $this->emailtemplate->getMessage('Customer', 'customer_2', $data);
+           // $subject = $this->emailtemplate->getSubject('Customer', 'customer_2', $data);
+           // $message = $this->emailtemplate->getMessage('Customer', 'customer_2', $data);
             $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_2', $data);
         }
 
-        $mail = new Mail($this->config->get('config_mail'));
-        $mail->setTo($data['email']);
-        $mail->setFrom($this->config->get('config_from_email'));
-        $mail->setSender($this->config->get('config_name'));
-        $mail->setSubject($subject);
-        $mail->setHTML($message);
-        $mail->send();
+       
 
         // send message here
         if ( $this->emailtemplate->getSmsEnabled('Customer','customer_1')) {
@@ -517,5 +520,21 @@ class ModelAccountCustomer extends Model {
         }
   
     }
+
+    public function cacheProductPrices($store_id){
+                 $this->cache->delete('category_price_data');
+                       $cache_price_data = array();
+                       $sql = "SELECT * FROM `" . DB_PREFIX . "product_category_prices` where `store_id` = $store_id";
+                       //echo $sql;exit;
+                       $resultsdata = $this->db->query($sql);
+                       //echo '<pre>'; print_r($resultsdata);exit;
+                       if(count($resultsdata->rows)>0){
+                  foreach($resultsdata->rows as $result){
+                               $cache_price_data[$result['product_store_id'].'_'.$result['price_category'].'_'.$store_id] = $result['price'];
+                         }
+                       }
+                       $this->cache->set('category_price_data',$cache_price_data);
+               }
+        
     
 }

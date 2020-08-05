@@ -73,25 +73,7 @@
 </div>
 </div>
 
-<div class="col-md-4">
 
-<div   id="add-btn-wishlist" class="btn newui"    style="<?php if($product['isWishListID']==1){echo "background-color:#ea7128";} else {echo "background-color:grey";}?>" >
-  <a id="WishlistButton-id-<?= $product['store_product_variation_id'] ?>" style="color:white"   >
-  
- <span  data-action="<?= $product['isWishListID']==1 ? 'delete' : 'add'; ?>" 
-       id="add-wishlist"
-       data-store-id="<?= ACTIVE_STORE_ID ?>" 
-       data-id="<?= $product['product_info']['product_id'] ?>"              
-         > <?=$product['isWishListID']==1?"Added To List":"Add To My List"?> 
- 
- </span>
- </a>
- 
-</div>
-
-
- 
-</div>
 
  <div class="variation-selector-container" style="width: 275px;">
 	<textarea name="product_notes" class="form-control" maxlength="200" placeholder="Product Notes" id="product_notes" style="height: 50px; margin-top:10px;"></textarea>
@@ -100,7 +82,7 @@
 
 
 <!--
-
+REMOVED WISHLIST
 <div class="sp-quantity" class="qtybtns-addbtnd" id="controller-container">
     
     <?php if ($product['qty_in_cart']) { ?> 

@@ -400,7 +400,10 @@ class ControllerCheckoutCart extends Controller {
 		$this->load->model('assets/product');
 
 		$product_info = $this->model_assets_product->getProduct($product_store_id,false,$store_id);
-
+                $log = new Log('error.log');
+                $log->write('PROD INFO');
+                $log->write($product_info);
+                $log->write('PROD INFO');
 		
 		if ($product_info) {
 			if (isset($this->request->post['quantity'])) {
@@ -1010,6 +1013,76 @@ class ControllerCheckoutCart extends Controller {
 		$this->response->addHeader('Content-Type: application/json');
 		$this->response->setOutput(json_encode($json));
 	}
+        
+        public function save_basket() {
+        $log = new Log('error.log');
+        $log->write('Save List');        
+        $log->write($this->request->post['list_name']);     
+        $log->write('Save List');        
+        $products = $this->cart->getProducts();
+        foreach ($products as $product) {
+        $log->write('PRODUCT');
+        $log->write($product);
+        $log->write('PRODUCT');
+        $this->addProdToWishlist($product['product_id'], $product['quantity'], $this->request->post['list_name']);
+        }
+        $this->cart->clear();
+
+        unset($this->session->data['coupon']);
+        $json['location'] = $this->url->link('account/wishlist');
+        $log->write('Wish List URL');
+        $log->write($json['location']);
+        $log->write('Wish List Url');
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function addProdToWishlist($product_id, $quantity, $list_name) {
+
+
+        $this->load->language('account/wishlist');
+
+        $data['text_success_added_in_list'] = $this->language->get('text_success_added_in_list');
+        $data['text_success_created_list'] = $this->language->get('text_success_created_list');
+
+        $data['text_error_name_list'] = $this->language->get('text_error_name_list');
+        $data['text_error_list'] = $this->language->get('text_error_list');
+
+        $data['message'] = $data['text_success_added_in_list'];
+        $data['status'] = true;
+
+        $log = new Log('error.log');
+
+        $this->load->model('account/wishlist');
+        $this->load->model('assets/category');      
+
+        if ( $this->customer->isLogged()) {
+            $lists = $this->model_assets_category->getUserLists();
+            
+            if (is_array($lists) && count($lists) > 0) {
+                foreach ($lists as $list) {
+                    $this->model_account_wishlist->deleteWishlistProduct($list['wishlist_id'], $this->request->post['listproductId']);
+                }
+            }
+            
+            $wishlist_exists = $this->model_account_wishlist->CheckSaveBasketExits($list_name);
+            $log->write('WISHLIST EXISTS WITH NAME');
+            $log->write($quantity);
+            $log->write($wishlist_exists);
+            $log->write('WISHLIST EXISTS WITH NAME');
+            if(is_array($wishlist_exists) && count($wishlist_exists) > 0) {
+            $wishlist_id = $wishlist_exists['wishlist_id'];
+            } else {
+            $wishlist_id = $this->model_account_wishlist->createWishlist($list_name);
+            }
+            $this->model_account_wishlist->addProductToWishlistWithQuantity($wishlist_id,$product_id, $quantity);
+        }
+        
+        
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($data));
+    }
 
 
 	public function tax_location(){
