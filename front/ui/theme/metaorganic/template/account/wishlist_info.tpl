@@ -64,11 +64,11 @@
                                                     <div class="col-md-3" id="controller-container">
 
                                                         <div class="inc-dec-quantity" id="<?php echo $product['product_id'] ?>">           
-                                                            <input type="button" class="sp-minus fff mini-minus-quantity ddd" data-id="<?php echo $product['product_id'] ?>" data-unit="<?php echo $product['unit'] ?>" id="minus" value="-">
+                                                            <input type="button" class="sp-minus fff mini-minus-quantity ddd" data-id="<?php echo $product['product_id'] ?>" data-unit="<?php echo $product['unit'] ?>" data-wishlistid="<?php echo $wishlist_id; ?>" id="minus" value="-">
                                                             <span class="sp-input middle-quantity quntity-input product-count" id="<?php echo $product['product_id'] ?>">
                                                                 <?= $product['quantity']?>        </span>
 
-                                                            <input type="button" class="sp-plus fff mini-plus-quantity ddd" data-id="<?php echo $product['product_id'] ?>" data-unit="<?php echo $product['unit'] ?>" id="plus" value="+">
+                                                            <input type="button" class="sp-plus fff mini-plus-quantity ddd" data-id="<?php echo $product['product_id'] ?>" data-unit="<?php echo $product['unit'] ?>" data-wishlistid="<?php echo $wishlist_id; ?>" id="plus" value="+">
 
                                                         </div>
                                                         <p class="error-msg"></p>
@@ -502,10 +502,13 @@ __kdt.push({"post_on_load": false});
         
     e.preventDefault();
     
+    var product_id = $(this).attr('data-id');
+    var wishlist_id = $(this).attr('data-wishlistid');
     console.log($(this).attr('data-id'));
     console.log($(this).attr('id'));
     console.log($(this).attr('data-unit'));
     console.log($("#"+$(this).attr('data-id')).text().replace(/\s/g, ''));
+    console.log($(this).attr('data-wishlistid'));    
     
     var quantity = $("#"+$(this).attr('data-id')).text().replace(/\s/g, '');
     
@@ -534,9 +537,9 @@ __kdt.push({"post_on_load": false});
    }
     return false;
     $.ajax({
-			url: 'index.php?path=checkout/cart/update',
+			url: 'index.php?path=account/wishlist/updateWishlistProduct',
 			type: 'post',
-			data: 'key=' + key + '&quantity=' + (typeof(quantity) != 'undefined' ? quantity : 1),
+			data: { wishlist_id : wishlist_id, product_id : product_id, quantity : qty },
 			dataType: 'json',
 			beforeSend: function() {
 				//$('#cart > button').button('loading');
