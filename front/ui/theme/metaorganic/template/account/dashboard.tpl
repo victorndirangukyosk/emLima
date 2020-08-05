@@ -63,9 +63,9 @@
             <p class="icon"><i class="icon fa fa-group"></i></p>
             <h4 class="value"><span> </span></h4>
             <p class="description">Wellington Ayugi
-              </br></br>+254-123456789
+              <!-- </br></br>+254-123456789
               </br></br>
-              wa@kwikbasket.com</br>
+              wa@kwikbasket.com</br> -->
             </p>
           </div>
         </div>
