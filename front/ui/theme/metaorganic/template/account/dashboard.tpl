@@ -279,7 +279,7 @@
     }
   </style>
 
-  <script type="text/javascript" src="http://cdn.jsdelivr.net/jquery.flot/0.8.3/jquery.flot.min.js"></script>
+  <script type="text/javascript" src="//cdn.jsdelivr.net/jquery.flot/0.8.3/jquery.flot.min.js"></script>
   <script type="text/javascript" src="admin/ui/javascript/jquery/daterangepicker/moment.js"></script>
   <script type="text/javascript" src="admin/ui/javascript/jquery/daterangepicker/daterangepicker.js"></script>
   <script type="text/javascript" src="admin/ui/javascript/jquery/flot/jquery.flot.resize.js"></script>
