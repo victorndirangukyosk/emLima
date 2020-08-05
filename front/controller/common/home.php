@@ -163,20 +163,23 @@ class ControllerCommonHome extends Controller {
         $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/index.tpl', $data));
     }
 
-    public function faq() {
-        $this->load->model('catalog/help');
-        $questions = $this->model_catalog_help->getHelps();
-        $categories = $this->model_catalog_help->getCategories();
-
-        $data = array();
-
-
-        foreach ($questions as $question) {
-            $data[$question['category_id']]['questions'][] = $question;
-        }
-
-        $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/faq.tpl', $data));
-    }
+	public function faq() {
+		$this->load->model('catalog/help');
+		  $questions = $this->model_catalog_help->getHelps();
+		  $categories = $this->model_catalog_help->getCategories();
+	
+		  $data = array();
+	
+		foreach ($categories as $category) {
+		  $data[$category['category_id']]['category'] = $category['name'];
+		}
+	
+		  foreach ($questions as $question) {
+			$data[$question['category_id']]['questions'][] = $question;
+		}
+	
+		$this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/faq.tpl', $data));
+	  }
 
     public function covid19() {
 	      $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/covid19.tpl'));
