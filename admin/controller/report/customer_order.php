@@ -183,7 +183,14 @@ class ControllerReportCustomerOrder extends Controller {
         if (isset($this->request->get['filter_customer'])) {
             $filter_customer = $this->request->get['filter_customer'];
         } else {
-            $filter_customer = 0;
+            $filter_customer = "";
+        }
+
+
+        if (isset($this->request->get['filter_company'])) {
+            $filter_company = $this->request->get['filter_company'];
+        } else {
+            $filter_company = "";
         }
 
         if (isset($this->request->get['page'])) {
@@ -208,6 +215,10 @@ class ControllerReportCustomerOrder extends Controller {
 
         if (isset($this->request->get['filter_customer'])) {
             $url .= '&filter_customer=' . $this->request->get['filter_customer'];
+        }
+
+        if (isset($this->request->get['filter_company'])) {
+            $url .= '&filter_company=' . $this->request->get['filter_company'];
         }
 
         if (isset($this->request->get['page'])) {
@@ -235,10 +246,11 @@ class ControllerReportCustomerOrder extends Controller {
             'filter_date_end' => $filter_date_end,
             'filter_order_status_id' => $filter_order_status_id,
             'filter_customer' => $filter_customer,
+            'filter_company' => $filter_company,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
             'limit' => $this->config->get('config_limit_admin')
         );
-if($filter_customer>0)
+if($filter_customer!=""  ||  $filter_company!="")
 {
         $customer_total = $this->model_report_customer->getTotalCustomerOrders($filter_data);
 
@@ -268,6 +280,7 @@ $this->load->model('sale/order');
                 }
             }
             $data['customers'][] = array(
+                'company' => $result['company'],
                 'customer' => $result['customer'],
                 'email' => $result['email'],
                 'customer_group' => $result['customer_group'],
@@ -339,6 +352,10 @@ $this->load->model('sale/order');
             $url .= '&filter_customer=' . $this->request->get['filter_customer'];
         }
 
+        if (isset($this->request->get['filter_company'])) {
+            $url .= '&filter_company=' . $this->request->get['filter_company'];
+        }
+
         $pagination = new Pagination();
         $pagination->total = $customer_total;
         $pagination->page = $page;
@@ -353,6 +370,7 @@ $this->load->model('sale/order');
         $data['filter_date_end'] = $filter_date_end;
         $data['filter_order_status_id'] = $filter_order_status_id;
         $data['filter_customer'] = $filter_customer;
+        $data['filter_company'] = $filter_company;
 
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
@@ -393,11 +411,18 @@ $this->load->model('sale/order');
             $filter_customer = 0;
         }
 
+        if (isset($this->request->get['filter_company'])) {
+            $filter_company = $this->request->get['filter_company'];
+        } else {
+            $filter_company = 0;
+        }
+
         $filter_data = array(
             'filter_date_start' => $filter_date_start,
             'filter_date_end' => $filter_date_end,
             'filter_order_status_id' => $filter_order_status_id,
-            'filter_customer' => $filter_customer 
+            'filter_customer' => $filter_customer ,
+            'filter_company' => $filter_company 
         );
 
         

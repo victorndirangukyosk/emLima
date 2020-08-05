@@ -102,6 +102,11 @@ class ModelSaleCustomer extends Model {
             $implode[] = "c.email LIKE '" . $this->db->escape($data['filter_email']) . "%'";
         }
 
+        if (!empty($data['filter_company']) ) {
+            if($data['filter_company']!="")
+            $implode[] = "c.company_name = '" . $this->db->escape($data['filter_company']) . "'";
+        }
+
         if (!empty($data['filter_telephone'])) {
             $implode[] = "c.telephone LIKE '" . $this->db->escape($data['filter_telephone']) . "%'";
         }
@@ -174,6 +179,9 @@ class ModelSaleCustomer extends Model {
         }
 
         $query = $this->db->query($sql);
+
+
+         //echo "<pre>";print_r($sql);die;
 
         return $query->rows;
     }
