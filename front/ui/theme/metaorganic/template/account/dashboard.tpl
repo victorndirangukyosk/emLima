@@ -426,9 +426,14 @@ bars: {
                     }
                 }); 
                 //alert(added);
-          //if(added)
-                {
-                    baseurl=baseurl+"?path=checkout/checkoutitems";
+           
+           baseurl=baseurl+"?path=checkout/checkoutitems";
+           win.href=baseurl;
+           win.open();
+           //location.href=baseurl;
+          
+               /* if(added){
+                   
                  
                     var win = window.open(baseurl, '_blank');
                 if (win) {
@@ -439,7 +444,7 @@ bars: {
                     alert('Please allow popups for this website');
                 }
 
-              }
+              }*/
    }
 
   
