@@ -65,7 +65,7 @@
 
                                                         <div class="inc-dec-quantity" id="<?php echo $product['product_id'] ?>">           
                                                             <input type="button" class="sp-minus fff mini-minus-quantity ddd" data-id="<?php echo $product['product_id'] ?>" data-unit="<?php echo $product['unit'] ?>" data-wishlistid="<?php echo $wishlist_id; ?>" id="minus" value="-">
-                                                            <span class="sp-input middle-quantity quntity-input product-count" id="<?php echo $product['product_id'] ?>">
+                                                            <span class="sp-input middle-quantity quntity-input product-count" id="<?php echo 'span'.$product['product_id'] ?>">
                                                                 <?= $product['quantity']?>        </span>
 
                                                             <input type="button" class="sp-plus fff mini-plus-quantity ddd" data-id="<?php echo $product['product_id'] ?>" data-unit="<?php echo $product['unit'] ?>" data-wishlistid="<?php echo $wishlist_id; ?>" id="plus" value="+">
@@ -535,7 +535,10 @@ __kdt.push({"post_on_load": false});
     console.log(qty);
    }
    }
-    return false;
+   if(qty < 0) {
+       alert('Invalid Quantity!');
+       return false;
+   }
     $.ajax({
 			url: 'index.php?path=account/wishlist/updateWishlistProduct',
 			type: 'post',
@@ -548,13 +551,17 @@ __kdt.push({"post_on_load": false});
 				//$('#cart > button').button('reset');
 			},			
 			success: function(json) {
-
-                //reflact changes in list 
-                $('#row_'+json['product_id']+' .num').html(json['quantity']);
-                       
-                //update total 
-                $('.cart-info-table tbody').load('index.php?path=checkout/cart/total');
-			}
+                        if(json.status = true) {
+                        $("#span"+product_id).text(qty);
+                        
+                        console.log($("#total_quantity").text().replace(/\s/g, ''));
+                        $("#total_quantity").text(json.total_quantity);
+                        } else {
+                            alert('Please try again later!');
+                            return false;
+                        }
+                        console.log(json);
+	        }
 		});
     });
 </script>
