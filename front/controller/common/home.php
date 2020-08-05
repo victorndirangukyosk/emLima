@@ -170,15 +170,16 @@ class ControllerCommonHome extends Controller {
 
         $data = array();
 
-        foreach ($categories as $category) {
-            $data[$category['category_id']]['category'] = $category['name'];
-        }
 
         foreach ($questions as $question) {
             $data[$question['category_id']]['questions'][] = $question;
         }
 
         $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/faq.tpl', $data));
+    }
+
+    public function covid19() {
+	      $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/covid19.tpl'));
     }
 
     public function blog() {
