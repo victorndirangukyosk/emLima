@@ -3810,11 +3810,11 @@ class ModelReportExcel extends Model {
 					   $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $order['name']);
 					   $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $order['unit_updated']);
 					   $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $order['quantity_updated']);
-					   $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $order['total_updated']);
+					   $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, str_replace("KES"," ",$order['total_updated']));
 					   $Amount=$Amount+$order['total_updated_value'];
 					   $row++;
 				   }
-				   $Amount=$this->currency->format($Amount);
+				   $Amount=str_replace("KES"," ",$this->currency->format($Amount));
 				   $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, $row)->applyFromArray($title);
 				   $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(3, $row)->applyFromArray($title);
 				   $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, "Amount");
@@ -3965,8 +3965,11 @@ class ModelReportExcel extends Model {
 					'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])) ,
 					'editedproducts' => (int) $products_qty,
 					'total' => $this->currency->format($result['total'], $this->config->get('config_currency')),
-					'subtotal'     => $this->currency->format($sub_total),
+					//'subtotal'     => $this->currency->format($sub_total),
 					'subtotalvalue'     => $sub_total,
+					'po_number' => $result['po_number'],
+                
+                'subtotal'     =>str_replace("KES"," ", $this->currency->format($sub_total))
 
 				);
 			}
@@ -4021,11 +4024,11 @@ class ModelReportExcel extends Model {
 						->setAutoSize(true);
 				}
 	
-				$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 4, 'Customer Name');
+				$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 4, 'Company Name');
 				$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'Order ID');
 				$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 4, 'Order Date');	
 				
-				$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 4, 'No. Products');
+				$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 4, 'P.O. Number');
 				$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 4, 'Total');
 	
 	
@@ -4048,12 +4051,12 @@ class ModelReportExcel extends Model {
 					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $result['customer']);				
 					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['order_id']);
 					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row,$result['date_added']);
-					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['products']);
+					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['po_number']);
 					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['subtotal']); 
 					$Amount=$Amount+$result['subtotalvalue'];
 					$row++;
 				}
-				$Amount=$this->currency->format($Amount);
+				$Amount=str_replace("KES"," ",$this->currency->format($Amount));
 				$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, $row)->applyFromArray($title);
 				$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(4, $row)->applyFromArray($title);
 				$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, "Amount");

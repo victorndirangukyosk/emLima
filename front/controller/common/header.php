@@ -177,6 +177,7 @@ class ControllerCommonHeader extends Controller {
         $data['wishlist'] = $this->url->link('account/wishlist', '', 'SSL');
         $data['logged'] = $this->customer->isLogged();
         $data['account'] = $this->url->link('account/account', '', 'SSL');
+        $data['dashboard'] = $this->url->link('account/dashboard', '', 'SSL');
         $data['register'] = $this->url->link('account/register', '', 'SSL');
         $data['login'] = $this->url->link('account/login', '', 'SSL');
         $data['order'] = $this->url->link('account/order', '', 'SSL');
@@ -398,6 +399,8 @@ class ControllerCommonHeader extends Controller {
         $data['wishlist'] = $this->url->link('account/wishlist', '', 'SSL');
         $data['logged'] = $this->customer->isLogged();
         $data['account'] = $this->url->link('account/account', '', 'SSL');
+        $data['dashboard'] = $this->url->link('account/dashboard', '', 'SSL');
+
         $data['profile_info'] = $this->url->link('account/profileinfo', '', 'SSL');
         $data['account_transactions'] = $this->url->link('account/transactions', '', 'SSL');
         $data['sub_users'] = $this->url->link('account/sub_users', '', 'SSL');
@@ -631,6 +634,8 @@ class ControllerCommonHeader extends Controller {
         $data['wishlist'] = $this->url->link('account/wishlist', '', 'SSL');
         $data['logged'] = $this->customer->isLogged();
         $data['account'] = $this->url->link('account/account', '', 'SSL');
+        $data['dashboard'] = $this->url->link('account/dashboard', '', 'SSL');
+
         $data['register'] = $this->url->link('account/register', '', 'SSL');
         $data['login'] = $this->url->link('account/login', '', 'SSL');
         $data['order'] = $this->url->link('account/order', '', 'SSL');
@@ -1158,6 +1163,7 @@ class ControllerCommonHeader extends Controller {
         $data['wishlist'] = $this->url->link('account/wishlist', '', 'SSL');
         $data['logged'] = $this->customer->isLogged();
         $data['account'] = $this->url->link('account/account', '', 'SSL');
+        $data['dashboard'] = $this->url->link('account/dashboard', '', 'SSL');
         $data['register'] = $this->url->link('account/register', '', 'SSL');
         $data['login'] = $this->url->link('account/login', '', 'SSL');
         $data['order'] = $this->url->link('account/order', '', 'SSL');
@@ -1437,6 +1443,8 @@ class ControllerCommonHeader extends Controller {
         $data['wishlist'] = $this->url->link('account/wishlist', '', 'SSL');
         $data['logged'] = $this->customer->isLogged();
         $data['account'] = $this->url->link('account/account', '', 'SSL');
+        $data['dashboard'] = $this->url->link('account/dashboard', '', 'SSL');
+
         $data['register'] = $this->url->link('account/register', '', 'SSL');
         $data['login'] = $this->url->link('account/login', '', 'SSL');
         $data['order'] = $this->url->link('account/order', '', 'SSL');
@@ -1692,6 +1700,8 @@ class ControllerCommonHeader extends Controller {
         $data['wishlist'] = $this->url->link('account/wishlist', '', 'SSL');
         $data['logged'] = $this->customer->isLogged();
         $data['account'] = $this->url->link('account/account', '', 'SSL');
+        $data['dashboard'] = $this->url->link('account/dashboard', '', 'SSL');
+
         $data['register'] = $this->url->link('account/register', '', 'SSL');
         $data['login'] = $this->url->link('account/login', '', 'SSL');
         $data['order'] = $this->url->link('account/order', '', 'SSL');

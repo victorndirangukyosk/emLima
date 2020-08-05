@@ -988,23 +988,27 @@ class ModelSaleCustomer extends Model {
             $subject = $this->emailtemplate->getSubject('Customer', 'customer_1', $data);
             $message = $this->emailtemplate->getMessage('Customer', 'customer_1', $data);
             $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_1', $data);
+        
+        
+            $mail = new Mail($this->config->get('config_mail'));
+            $mail->setTo($data['email']);
+            $mail->setFrom($this->config->get('config_from_email'));
+            $mail->setSender($this->config->get('config_name'));
+            $mail->setSubject($subject);
+            $mail->setHTML($message);
+            $mail->send();
+        
         } else {
             #Customer Registration Approve
 
-            $subject = $this->emailtemplate->getSubject('Customer', 'customer_2', $data);
+            // $subject = $this->emailtemplate->getSubject('Customer', 'customer_2', $data);
 
-            $message = $this->emailtemplate->getMessage('Customer', 'customer_2', $data);
-            $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_2', $data);
+            // $message = $this->emailtemplate->getMessage('Customer', 'customer_2', $data);
+             $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_2', $data);
 
         }
 
-        $mail = new Mail($this->config->get('config_mail'));
-        $mail->setTo($data['email']);
-        $mail->setFrom($this->config->get('config_from_email'));
-        $mail->setSender($this->config->get('config_name'));
-        $mail->setSubject($subject);
-        $mail->setHTML($message);
-        $mail->send();
+       
 
         // send message here
         

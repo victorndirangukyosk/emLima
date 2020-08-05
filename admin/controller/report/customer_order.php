@@ -260,7 +260,7 @@ $this->load->model('sale/order');
             }
             $sub_total = 0;
            $totals = $this->model_sale_order->getOrderTotals($result['order_id']);
-           // echo "<pre>";print_r($totals);die;
+             //echo "<pre>";print_r($results);die;
             foreach ($totals as $total) {
                 if($total['code'] == 'sub_total') {
                     $sub_total = $total['value'];
@@ -276,8 +276,10 @@ $this->load->model('sale/order');
                 'products' => $result['products'],
                 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])) ,
                 'editedproducts' =>   $products_qty,
+                'po_number' => $result['po_number'],
+                // 'total' => $this->currency->format($result['total'], $this->config->get('config_currency')).replace("KES",""),
                 'total' => $this->currency->format($result['total'], $this->config->get('config_currency')),
-                'subtotal'     => $this->currency->format($sub_total)
+                'subtotal'     =>str_replace("KES"," ", $this->currency->format($sub_total))
             );
         }
 //  echo "<pre>";print_r($data['customers']);die;

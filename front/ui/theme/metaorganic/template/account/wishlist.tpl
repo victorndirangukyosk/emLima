@@ -11,7 +11,7 @@
                                             <div class="list-group my-order-group">
                                                 <li class="list-group-item my-order-list-head">
                                                     <i class="fa fa-clock-o"></i> <?= $text_placed_on?> <span><strong><?php echo $wishlist['date_added']; ?></strong></span> <span>
-                                                    
+                                                    <a href="#" id="addWishlisttocart" data-id='<?=$wishlist["wishlist_id"] ?>' style="margin-right:21px;" class="btn btn-info btn-xs">ADD TO CART</a>
                                                     <a href="#" id="cancelWishlist" data-id='<?=$wishlist["wishlist_id"] ?>' style="margin-right:21px;" class="btn btn-danger btn-xs btn-custom-remove"><?= $text_cancel ?></a>
 
                                                     </span>
@@ -228,6 +228,32 @@ __kdt.push({"post_on_load": false});
         var orderId = $(this).attr('data-id');
         $.ajax({
             url: 'index.php?path=account/wishlist/deleteWishlist',
+            type: 'post',
+            data: {
+                wishlist_id: $(this).attr('data-id')
+            },
+            dataType: 'json',
+            success: function(json) {
+                console.log(json);
+                
+                setTimeout(function(){ window.location.reload(false); }, 1000);
+            }
+        });
+    });
+    
+        $(document).delegate('#addWishlisttocart', 'click', function(e) {
+
+        e.preventDefault();
+        
+        if(!window.confirm("Are you sure?")) {
+            return false;
+        }
+        console.log("addWishlisttocart click");
+        console.log($(this).attr('data-id'));
+        $('#addWishlisttocart').html('Wait...');
+        var orderId = $(this).attr('data-id');
+        $.ajax({
+            url: 'index.php?path=account/wishlist/addWishlistProductToCart',
             type: 'post',
             data: {
                 wishlist_id: $(this).attr('data-id')
