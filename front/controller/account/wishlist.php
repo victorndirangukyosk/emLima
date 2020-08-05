@@ -412,7 +412,8 @@ class ControllerAccountWishList extends Controller {
             
             $this->document->setTitle($this->language->get('text_order'));
 
-            $data['heading_title'] = $this->language->get('text_no_order');
+            //$data['heading_title'] = $this->language->get('text_no_order');
+            $data['heading_title'] = 'List not found!';
 
             $data['text_error'] = $this->language->get('text_error');
 
