@@ -407,8 +407,18 @@ class ModelAccountOrder extends Model {
     }
 
     public function getOrder($order_id, $notLogin = false) {
+
+        $s_users = array();
+        $sub_users_query = $this->db->query("SELECT c.customer_id FROM " . DB_PREFIX . "customer c WHERE parent = '" . (int) $this->customer->getId() . "'");
+        $sub_users = $sub_users_query->rows;
+        $s_users = array_column($sub_users, 'customer_id');
+
+        array_push($s_users, $this->customer->getId());
+        $sub_users_od = implode(",", $s_users);
+
         if ($notLogin == false) {
-            $order_query = $this->db->query("SELECT * ," . DB_PREFIX . "order.date_added as order_date ," . DB_PREFIX . "order.email as order_email ," . DB_PREFIX . "order.telephone as order_telephone FROM `" . DB_PREFIX . "order` LEFT JOIN " . DB_PREFIX . "store ON ( " . DB_PREFIX . "store.store_id = " . DB_PREFIX . "order.store_id) LEFT JOIN " . DB_PREFIX . "order_status ON ( " . DB_PREFIX . "order_status.order_status_id = " . DB_PREFIX . "order.order_status_id)  WHERE order_id = '" . (int) $order_id . "' AND customer_id = '" . (int) $this->customer->getId() . "' AND " . DB_PREFIX . "order.order_status_id > '0' ");
+            $order_query = $this->db->query("SELECT * ," . DB_PREFIX . "order.date_added as order_date ," . DB_PREFIX . "order.email as order_email ," . DB_PREFIX . "order.telephone as order_telephone FROM `" . DB_PREFIX . "order` LEFT JOIN " . DB_PREFIX . "store ON ( " . DB_PREFIX . "store.store_id = " . DB_PREFIX . "order.store_id) LEFT JOIN " . DB_PREFIX . "order_status ON ( " . DB_PREFIX . "order_status.order_status_id = " . DB_PREFIX . "order.order_status_id)  WHERE order_id = '" . (int) $order_id . "' AND customer_id IN (".$sub_users_od.") AND " . DB_PREFIX . "order.order_status_id > '0' ");
+            //$order_query = $this->db->query("SELECT * ," . DB_PREFIX . "order.date_added as order_date ," . DB_PREFIX . "order.email as order_email ," . DB_PREFIX . "order.telephone as order_telephone FROM `" . DB_PREFIX . "order` LEFT JOIN " . DB_PREFIX . "store ON ( " . DB_PREFIX . "store.store_id = " . DB_PREFIX . "order.store_id) LEFT JOIN " . DB_PREFIX . "order_status ON ( " . DB_PREFIX . "order_status.order_status_id = " . DB_PREFIX . "order.order_status_id)  WHERE order_id = '" . (int) $order_id . "' AND customer_id = '" . (int) $this->customer->getId() . "' AND " . DB_PREFIX . "order.order_status_id > '0' ");
         } else {
             $order_query = $this->db->query("SELECT * ," . DB_PREFIX . "order.date_added as order_date ," . DB_PREFIX . "order.email as order_email ," . DB_PREFIX . "order.telephone as order_telephone FROM `" . DB_PREFIX . "order` LEFT JOIN " . DB_PREFIX . "store ON ( " . DB_PREFIX . "store.store_id = " . DB_PREFIX . "order.store_id) LEFT JOIN " . DB_PREFIX . "order_status ON ( " . DB_PREFIX . "order_status.order_status_id = " . DB_PREFIX . "order.order_status_id)  WHERE order_id = '" . (int) $order_id . "' AND " . DB_PREFIX . "order.order_status_id > '0' ");
         }
