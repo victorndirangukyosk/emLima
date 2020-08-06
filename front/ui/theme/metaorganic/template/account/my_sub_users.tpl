@@ -501,10 +501,10 @@
       $('<div class="text-danger">Password & Confirm Password should be same!</div>' ).insertAfter( $("input[name='password']"));
     }
 
-    if(grecaptcha.getResponse() == ""){
+    /*if(grecaptcha.getResponse() == ""){
       return_var = false;
       $('<div class="text-danger">Please validate captcha!</div>' ).insertAfter( $(".g-recaptcha"));
-    }
+    }*/
     return return_var;
   }
 </script>
