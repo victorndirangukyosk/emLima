@@ -297,7 +297,7 @@
                                         
                                         <!-- <a href="<?php echo $order['delete']; ?>" id="button-delete<?php echo $order['order_id']; ?>" data-toggle="tooltip" title="<?php echo $button_delete; ?>" class="btn btn-danger"><i class="fa fa-trash-o"></i></a> -->
                                        
-                                       <a href="#" onclick="getPO(<?= $order['order_id'] ?> ,  '<?= $order['po_number'] ?>')"   data-toggle="modal" data-dismiss="modal" data-target="#poModal"    class="btn btn-info" style="border-radius: 0px;"  >PO</a>
+                                       <a href="#" onclick="getPO(<?= $order['order_id'] ?>)"   data-toggle="modal" data-dismiss="modal" data-target="#poModal"    class="btn btn-info" style="border-radius: 0px;"  >PO</a>
                                         </td>
                                         
                                 </tr>
@@ -548,34 +548,65 @@
 <div class="phoneModal-popup">
         <div class="modal fade" id="poModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog" role="document">
-                <div class="modal-content"  width:700px;height:350px>
-                    <div class="modal-body">
+                <div class="modal-content"  >
+                    <div class="modal-body"  style="height:385px;">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <div class="store-find-block">
                             <div class="mydivsss">
                                 <div class="store-find">
                                     <div class="store-head">
-                                        <h2>  Save PO Number     </h2>
+                                        <h2>  Save PO & SAP  data     </h2>
                                           </br> 
                                     </div>
                                     <div id="poModal-message" style="color: red;text-align:center; font-size: 15px;" >
                                     </div>
                                     <div id="poModal-success-message" style="color: green; ; text-align:center; font-size: 15px;">
-                                    </div>
+                                    </div>  
                                       </br>
                                     <!-- Text input-->
                                     <div class="store-form">
                                         <form id="poModal-form" action="" method="post" enctype="multipart/form-data">
+ 
 
-                                            <div class="row">
+                                            <div class="form-row">
                                                 <div class="form-group">
-                                                    <label class="col-md-12 control-label sr-only"  > P.O. Number </label>
+                                                    <label > P.O. Number </label>
                                                         <input id="order_id"   name="order_id" type="hidden"  class="form-control input-md" required>
 
                                                     <div class="col-md-12">
-                                                        <input id="po_number" maxlength="30" required style="max-width:100% ;" name="po_number" type="text" placeholder="P.O. Number" class="form-control input-md" required>
-                                                    </div>
+                                                        <input id="po_number" maxlength="30" required style="max-width:100% ;" name="po_number" type="text" placeholder="P.O. Number" class="form-control" required>
+                                                    <br/> </div>
+
+
                                                 </div>
+                                               
+
+
+                                                 <div class="form-row">
+                                                <div class="form-group">
+                                                    <label    > SAP Customer Number </label>
+
+                                                    <div class="col-md-12">
+                                                        <input id="SAP_customer_no" maxlength="30" required style="max-width:100% ;" name="SAP_customer_no" type="text" placeholder="SAP Customer Number" class="form-control input-md" required>
+                                                    <br/> </div>
+
+                                                   
+                                                </div>
+                                                  
+
+                                                <div class="form-row">
+
+                                                 <div class="form-group">
+                                                    <label    > SAP Doc Number </label>
+
+                                                    <div class="col-md-12">
+                                                        <input id="SAP_doc_no" maxlength="30" required style="max-width:100% ;" name="SAP_doc_no" type="text" placeholder="SAP Doc Number" class="form-control input-md" required>
+                                                    </div>
+
+                                                    
+                                                </div>
+                                                </div>
+
 
                                                  <div class="form-group">
                                                     <div class="col-md-12">
@@ -611,13 +642,44 @@
 <script  type="text/javascript">
 
 
-  function getPO($order_id, $po) {
+  function getPO($order_id) {
                
                 $('#poModal-message').html('');
                $('#poModal-success-message').html('');
-                console.log($order_id);
-                console.log($po);
-               $('input[name="po_number"]').val($po) ;
+                 
+
+                 $.ajax({
+                    url: 'index.php?path=sale/order/getPO&token=<?php echo $token; ?>&order_id='+$order_id,
+                    type: 'POST',
+                    dataType: 'json',
+                    data:{order_id:$order_id},
+                    async: true,
+                    success: function(json) {
+                        console.log(json); 
+                        if (json['status']) {
+                           $('input[name="po_number"]').val(json['po_number']) ;
+                           $('input[name="SAP_customer_no"]').val(json['SAP_customer_no']) ;
+                           $('input[name="SAP_doc_no"]').val(json['SAP_doc_no']) ;
+                        }
+                        else {
+                             $('input[name="po_number"]').val('') ;
+                           $('input[name="SAP_customer_no"]').val('') ;
+                           $('input[name="SAP_doc_no"]').val('') ;
+                            
+                        }
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) { 
+
+                         $('input[name="po_number"]').val('') ;
+                           $('input[name="SAP_customer_no"]').val('') ;
+                           $('input[name="SAP_doc_no"]').val('') ;
+                                
+                                    return false;
+                                }
+                });
+
+
+               
                $('input[name="order_id"]').val($order_id) ;
                   
             }
@@ -625,13 +687,17 @@
 
  function savePO() { 
  
-
+    $('#poModal-message').html('');
+               $('#poModal-success-message').html('');
    var po = $('input[name="po_number"]').val();
+    var scno =  $('input[name="SAP_customer_no"]').val() ;
+     var sdno =   $('input[name="SAP_doc_no"]').val() ;
+
               console.log($('#poModal-form').serialize());
  
-                if (po.length  <= 4) {
+                if (po.length  <= 1 && scno.length<=1 && sdno.length<=1) {
                    
-                      $('#poModal-message').html("Please enter valid PO number");
+                      $('#poModal-message').html("Please enter data");
                        return false;
                 } 
                 else{  
@@ -645,7 +711,7 @@
                     success: function(json) {
                         console.log(json); 
                         if (json['status']) {
-                            $('#poModal-success-message').html('PO Saved Successfully');
+                            $('#poModal-success-message').html(' Saved Successfully');
                         }
                         else {
                             $('#poModal-success-message').html('Please try again');

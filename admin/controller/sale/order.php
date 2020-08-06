@@ -1214,6 +1214,8 @@ class ControllerSaleOrder extends Controller
                 'edit' => $this->url->link('sale/order/EditInvoice', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL'),
                 'delete' => $this->url->link('sale/order/delete', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL'),
                 'po_number' => $result['po_number'],
+                'SAP_customer_no' => $result['SAP_customer_no'],
+                'SAP_doc_no' => $result['SAP_doc_no'],
             );
         }
 
@@ -7016,11 +7018,11 @@ class ControllerSaleOrder extends Controller
         $data = $this->request->post;
 
 
-        // echo '<pre>';print_r($this->request->post);exit;
+       // echo '<pre>';print_r($this->request->post);exit;
 
         if ($this->request->server['REQUEST_METHOD'] == 'POST') {
 
-            $this->model_sale_order->updatePO($this->request->post['order_id'], $this->request->post['po_number']);
+            $this->model_sale_order->updatePO($this->request->post['order_id'], $this->request->post['po_number'], $this->request->post['SAP_customer_no'], $this->request->post['SAP_doc_no']);
 
 
 
@@ -7043,7 +7045,39 @@ class ControllerSaleOrder extends Controller
         return true;
     }
 
+    public function getPO()
+    {
 
+        $this->load->model('sale/order');
+        //echo 'date.timezone ' ;;
+        $data = $this->request->post;
+
+
+       /// echo '<pre>';print_r($this->request->post);exit; 
+
+        if ($this->request->server['REQUEST_METHOD'] == 'POST') {
+
+            $data= $this->model_sale_order->getPO($this->request->post['order_id']);
+
+            $data['status'] = true;
+
+            if ($this->request->isAjax()) {
+                $this->response->addHeader('Content-Type: application/json');
+                $this->response->setOutput(json_encode($data));
+            }
+        } else {
+
+            $data['status'] = false;
+
+            if ($this->request->isAjax()) {
+                $this->response->addHeader('Content-Type: application/json');
+                $this->response->setOutput(json_encode($data));
+            }
+        }
+        //  echo '<pre>';print_r($data);exit;
+
+        return true;
+    }
 
     public function consolidatedOrderProducts()
     {
