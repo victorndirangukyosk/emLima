@@ -1977,8 +1977,8 @@ function saveInAddressBook() {
              $('.checout-invoice-price').text(json.total_amount);
              $('.checkout-payable .checkout-payable-price').text(json.total_amount);
              
-             $('input[id^="spancart['+prod_order_id+'][qty]"]').each(function(input){
-              $('span[id^="spancart['+prod_order_id+'][qty]"]').text(json.products_details.total);
+             $('input[id^="cart['+prod_order_id+'][qty]"]').each(function(input){
+             console.log($('span[id^="spancart['+prod_order_id+'][qty]"]').text(json.products_details.total));
              });
             }
         });
