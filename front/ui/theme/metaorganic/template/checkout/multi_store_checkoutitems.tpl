@@ -121,7 +121,7 @@
         <td class="a-right hidden-table" >
                     <span class="cart-price">
         
-                                                <span class="price font-bold"><?php echo $product['total']; ?></span>                            
+                                                <span class="price font-bold" id="spancart[<?= $i ?>][qty]"><?php echo $product['total']; ?></span>                            
         </span>
             </td>
               <td   class="a-center hidden-table"  >
@@ -1960,9 +1960,10 @@ function saveInAddressBook() {
         $('input[id^="cart['+prod_order_id+'][qty]"]').each(function(input){
         quantity = $('input[id^="cart['+prod_order_id+'][qty]"]').val();
         var input_id = $('input[id^="cart['+prod_order_id+'][qty]"]').attr('id');
+        console.log($('span[id^="spancart['+prod_order_id+'][qty]"]').text());
         console.log('id: ' + input_id + ' value:' + quantity);
-        
         });
+        
         console.log(quantity);
         $.ajax({
             url: 'index.php?path=checkout/cart/update',
@@ -1975,7 +1976,10 @@ function saveInAddressBook() {
              $('.cart-total-amount').text(json.total_amount);
              $('.checout-invoice-price').text(json.total_amount);
              $('.checkout-payable .checkout-payable-price').text(json.total_amount);
-
+             
+             $('input[id^="spancart['+prod_order_id+'][qty]"]').each(function(input){
+              $('span[id^="spancart['+prod_order_id+'][qty]"]').text(json.products_details.total);
+             });
             }
         });
     });
