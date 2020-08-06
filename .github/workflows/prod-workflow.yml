@@ -1,0 +1,20 @@
+name: Production Deployment
+on:
+  push:
+    branches: [ production ]
+
+jobs:
+  deployment:
+    name: Deployment
+    runs-on: ubuntu-latest
+    steps:
+    - name: kwikbasket.com server ssh connection
+      uses: appleboy/ssh-action@master
+      with: 
+        host: kwikbasket.com
+        username: ubuntu
+        key: ${{ secrets.PROD_SERVER_KEY }}
+        port : 22
+        script: | 
+          cd /var/www/html/kwikbasket
+          git pull origin production
