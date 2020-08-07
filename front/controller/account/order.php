@@ -151,6 +151,10 @@ class ControllerAccountOrder extends Controller {
 			}
 
 			$this->load->model('sale/order');
+                        $approve_order_button = NULL;
+                        if(empty($_SESSION['parent']) && $result['customer_id'] != $this->customer->getId()){
+                         $approve_order_button = 'Need Approval';   
+                        }
 
 			$data['orders'][] = array(
 				'order_id'   => $result['order_id'],
@@ -176,6 +180,7 @@ class ControllerAccountOrder extends Controller {
 				'href'       => $this->url->link('account/order/info', 'order_id=' . $result['order_id'], 'SSL'),
 				'real_href'       => $this->url->link('account/order/realinfo', 'order_id=' . $result['order_id'], 'SSL'),
 				'accept_reject_href' => $this->url->link('account/order/accept_reject', 'order_id=' . $result['order_id'], 'SSL'),
+                                'admin_approve_order' => $approve_order_button
 			);
 		} 
 		
