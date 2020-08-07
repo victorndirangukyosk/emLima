@@ -136,14 +136,14 @@
                                                 <?php } elseif($order['parent_approve_order'] == 'Need Approval' && $order['parent_approval'] != 'Pending') { ?>
                                                 <li class="list-group-item">
                                                     <div class="row">
-                                                    <div class="col-md-3">
+                                                    <div class="col-md-4">
                                                     </div>
-                                                    <div class="col-md-3">
+                                                    <div class="col-md-4">
                                                     <div class="my-order-showaddress">  
-                                                            <h3 class="my-order-title label" style="background-color: #8E45FF;display: block;line-height: 2;"><?php echo $order['parent_approval']; ?></h3>
+                                                            <h3 class="my-order-title label" style="background-color: #8E45FF;display: block;line-height: 2; text-align:center;"><?php echo $order['parent_approval']; ?></h3>
                                                     </div>
                                                     </div>
-                                                    <div class="col-md-3">
+                                                    <div class="col-md-4">
                                                     </div>
                                                     </div>
                                                 </li>
