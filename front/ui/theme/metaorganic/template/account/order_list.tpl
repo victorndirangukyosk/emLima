@@ -286,19 +286,46 @@ __kdt.push({"post_on_load": false});
     
     $(document).delegate('#approve_order', 'click', function(e) {
         e.preventDefault();
-        console.log();
         var order_id = $(this).attr('data-id');
         var customer_id = $(this).attr('data-custid');
-        console.log(order_id +' '+ customer_id);
+        var order_status = $(this).attr('id');
+        console.log(order_id +' '+ customer_id+' '+order_status);
         alert('Under progress');
+                $.ajax({
+            url: 'index.php?path=account/order/ApproveOrRejectSubUserOrder',
+            type: 'post',
+            data: {
+                order_id: $(this).attr('data-id'),
+                customer_id:$(this).attr('data-custid'),
+                order_status:$(this).attr('id')
+            },
+            dataType: 'json',
+            success: function(json) {
+                console.log(json);
+            }
+        });
     });
     
     $(document).delegate('#reject_order', 'click', function(e) {
         e.preventDefault();
         var order_id = $(this).attr('data-id');
+        var order_status = $(this).attr('id');
         var customer_id = $(this).attr('data-custid');
-        console.log(order_id +' '+ customer_id);
+        console.log(order_id +' '+ customer_id+' '+order_status);
         alert('Under progress');
+                        $.ajax({
+            url: 'index.php?path=account/order/ApproveOrRejectSubUserOrder',
+            type: 'post',
+            data: {
+                order_id: $(this).attr('data-id'),
+                customer_id:$(this).attr('data-custid'),
+                order_status:$(this).attr('id')
+            },
+            dataType: 'json',
+            success: function(json) {
+                console.log(json);
+            }
+        });
     });
 
 

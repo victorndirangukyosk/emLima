@@ -2444,4 +2444,14 @@ class ControllerAccountOrder extends Controller {
             return $query->row['fax'];
         }
     }
+    
+    public function ApproveOrRejectSubUserOrder() {
+        $order_id = $this->request->post['order_id'];
+        $customer_id = $this->request->post['customer_id'];
+        $order_status = $this->request->post['order_status'];
+        $log = new Log('error.log');
+        $log->write($order_id);
+        $log->write($customer_id);
+        $log->write($order_status);
+    }
 }
