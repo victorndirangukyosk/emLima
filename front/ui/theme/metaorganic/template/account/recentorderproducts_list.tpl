@@ -93,7 +93,7 @@ $('.date').datetimepicker({
 
 function excel() {
             
-    url = 'index.php?path=sale/customer/export_excel&token=<?php echo $token; ?>';
+    url = 'admin/index.php?path=common/dashboard/export_mostpurchased_products_excel&token=<?php echo $token; ?>&customer_id=<?php echo $customer_id; ?>';
     
     location = url;
 }

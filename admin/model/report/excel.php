@@ -4113,6 +4113,114 @@ else{
 			}
 		}
 	   
-		  
+		 
+		public function download_mostpurchased_products_excel($data){
+
+			$this->load->library('excel');
+			$this->load->library('iofactory');
+					
+			// $this->load->language('report/income');
+			// $this->load->model('sale/customer');
+			// $rows = $this->model_sale_customer->getCustomers($data); 
+
+			
+
+			$date = date('Y-m-d', strtotime('-30 day'));
+			$customer_id=$data['customer_id'];
+			$sql ="SELECT SUM( op.quantity )AS total,pd.name,op.unit FROM " . DB_PREFIX . "order_product AS op LEFT JOIN " . DB_PREFIX . "order AS o ON ( op.order_id = o.order_id ) LEFT JOIN  " . DB_PREFIX . "product_description AS pd ON (op.general_product_id = pd.product_id)  WHERE pd.language_id = '" . (int) $this->config->get('config_language_id') . "' AND o.customer_id = " . $customer_id . " AND o.date_added >= " . $date . " GROUP BY pd.name  having sum(op.quantity)>100   ";
+			$query = $this->db->query($sql);
+			$rows = $query->rows;
+			
+	
+			// echo "<pre>";print_r($rows);die;
+			
+			try {
+				// set appropriate timeout limit
+				set_time_limit(1800);
+				
+				$objPHPExcel = new PHPExcel();
+				$objPHPExcel->getProperties()->setTitle("Most bought Products")->setDescription("none");
+				$objPHPExcel->setActiveSheetIndex(0);
+	
+				// Field names in the first row
+				// ID, Photo, Name, Contact no., Reason, Valid from, Valid upto, Intime, Outtime
+				$title = array(
+					'font' => array(
+						'bold' => true,
+						'color' => array(
+							'rgb' => 'FFFFFF'
+						),
+					),
+					'fill' => array(
+						'type' => PHPExcel_Style_Fill::FILL_SOLID,
+						'startcolor' => array(
+							'rgb' => '4390df',
+						),
+					),
+				);
+	
+				//Company name, address 
+				$objPHPExcel->getActiveSheet()->mergeCells("A1:C2");
+				$objPHPExcel->getActiveSheet()->setCellValue("A1", 'Products ');
+				$objPHPExcel->getActiveSheet()->getStyle("A1:C2")->applyFromArray(array("font" => array("bold" => true), 'color' => array(
+						'rgb' => '4390df'
+					),));
+	
+				//subtitle 
+					
+				$objPHPExcel->getActiveSheet()->getStyle("A1:C3")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+				
+				$objPHPExcel->getActiveSheet()->getColumnDimension("A")->setWidth(30);
+				$objPHPExcel->getActiveSheet()->getColumnDimension("B")->setWidth(20);    
+				$objPHPExcel->getActiveSheet()->getColumnDimension("C")->setWidth(15);  
+	
+				// foreach(range('A','L') as $columnID) {
+				// 	$objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+				// 		->setAutoSize(true);
+				// }
+	
+				 
+				$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 4, 'Product Name');
+				$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'Unit of Measure');
+				 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 4, 'Qty'); 
+	
+	
+				$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 4)->applyFromArray($title);
+				$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 4)->applyFromArray($title);
+				$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(2, 4)->applyFromArray($title);
+				
+				// Fetching the table data
+				$row = 5;
+				foreach ($rows as $result) {    
+						$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row,$result['name']);
+						$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row,$result['unit']);
+						$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row,$result['total']); 
+					$row++;
+				}
+				
+				$objPHPExcel->setActiveSheetIndex(0);
+				 
+	
+				$objWriter = PHPExcel_IOFactory::createWriter( $objPHPExcel, 'Excel2007' );  
+				header( 'Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' );
+				$filename="MostBoughtProducts.xlsx";
+				header('Content-Disposition: attachment;filename="'.$filename.'"');
+				header('Cache-Control: max-age=0');
+				$objWriter->save('php://output');
+				exit;
+			} catch (Exception $e) {
+				$errstr = $e->getMessage();
+				$errline = $e->getLine();
+				$errfile = $e->getFile();
+				$errno = $e->getCode();
+				$this->session->data['export_import_error'] = array('errstr' => $errstr, 'errno' => $errno, 'errfile' => $errfile, 'errline' => $errline);
+				if ($this->config->get('config_error_log')) {
+					$this->log->write('PHP ' . get_class($e) . ':  ' . $errstr . ' in ' . $errfile . ' on line ' . $errline);
+				}
+				return;
+			}
+		}
+
+		
 }
 

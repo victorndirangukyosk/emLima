@@ -70,7 +70,8 @@ class ControllerAccountDashboard extends Controller {
 
         $total_orders = $orders = 0;
         if (!empty($customer_info)) {
-
+            $data['token'] = $this->session->data['token'];
+            $data['customer_id'] = $this->customer->getId();
             $total_orders = $this->model_account_dashboard->getTotalOrders($this->customer->getId());
             $orders = $this->model_account_dashboard->getOrders($this->customer->getId());
             $most_purchased = $this->model_account_dashboard->getMostPurchased($this->customer->getId());
@@ -404,6 +405,7 @@ class ControllerAccountDashboard extends Controller {
         
 
         $data['token'] = $this->session->data['token'];
+        $data['customer_id'] = $this->customer->getId();
 
         
 
@@ -638,6 +640,7 @@ class ControllerAccountDashboard extends Controller {
         
 
         $data['token'] = $this->session->data['token'];
+        $data['customer_id'] = $this->customer->getId();
 
         
 

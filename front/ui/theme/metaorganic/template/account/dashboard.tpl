@@ -428,6 +428,14 @@
         });
       }
     });
+
+
+    function excel() {
+            
+    url = 'admin/index.php?path=common/dashboard/export_mostpurchased_products_excel&token=<?php echo $token; ?>&customer_id=<?php echo $customer_id; ?>';
+    
+    location = url;
+}
   </script>
 
 
