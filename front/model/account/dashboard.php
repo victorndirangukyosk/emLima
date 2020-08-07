@@ -64,22 +64,102 @@ class ModelAccountDashboard extends Model {
     }
 
     public function getBuyingPattern($customer_id) {
-            $query = $this->db->query("SELECT  SUM(o.total) AS total,   DATE(o.date_added ) AS date  FROM " . DB_PREFIX . "order AS o JOIN " . DB_PREFIX . "order_status AS os ON (o.order_status_id = os.order_status_id)  WHERE o.customer_id = '" . (int) $customer_id . "' AND o.order_status_id > '0'  GROUP BY ". $group ." DATE(o.date_added) order by o.date_added ASC  ");
+        $query = $this->db->query("SELECT  SUM(o.total) AS total,   DATE(o.date_added ) AS date  FROM " . DB_PREFIX . "order AS o JOIN " . DB_PREFIX . "order_status AS os ON (o.order_status_id = os.order_status_id)  WHERE o.customer_id = '" . (int) $customer_id . "' AND o.order_status_id > '0'  GROUP BY ". $group ." DATE(o.date_added) order by o.date_added ASC Limit 10  ");
 
-         //  $query = $this->db->query("SELECT SUM(total) AS total,  DATE(".DB_PREFIX."order.date_added) AS date  FROM `" . DB_PREFIX . "order` LEFT JOIN ".DB_PREFIX."order_total on(".DB_PREFIX."order.order_id = ".DB_PREFIX."order_total.order_id)    WHERE  ".DB_PREFIX."order.customer_id='" . (int) $customer_id . "' and  ".DB_PREFIX."order_total.code='sub_total' GROUP BY ". $group ."(".DB_PREFIX."order.date_added) ORDER BY ".DB_PREFIX."order.date_added ASC  ");
-       // $query = $this->db->query("SELECT SUM(value) AS total FROM `" . DB_PREFIX . "order`  WHERE order_status_id IN " . $complete_status_ids . " AND DATE(".DB_PREFIX."order.date_added) BETWEEN '" . $this->db->escape($date_start) . "' AND '" . $this->db->escape($date_end) . "'AND ".DB_PREFIX."order_total.code='sub_total'");
-       return $query;
-    }
-     
-    public function getMostPurchased($customer_id) {
-        // $complete_status_ids = '('.implode(',', $this->config->get('config_complete_status')).')';
-        //echo "<pre>";print_r($complete_status_ids);die;
-        $date = date('Y-m-d', strtotime('-30 day'));
-        $query = $this->db->query("SELECT SUM( op.quantity )AS total, op.product_id,op.general_product_id, pd.name,op.unit FROM " . DB_PREFIX . "order_product AS op LEFT JOIN " . DB_PREFIX . "order AS o ON ( op.order_id = o.order_id ) LEFT JOIN  " . DB_PREFIX . "product_description AS pd ON (op.general_product_id = pd.product_id)  WHERE pd.language_id = '" . (int) $this->config->get('config_language_id') . "' AND o.customer_id = " . $customer_id . " AND o.date_added >= " . $date . " GROUP BY pd.name ORDER BY total DESC LIMIT 10");
+     //  $query = $this->db->query("SELECT SUM(total) AS total,  DATE(".DB_PREFIX."order.date_added) AS date  FROM `" . DB_PREFIX . "order` LEFT JOIN ".DB_PREFIX."order_total on(".DB_PREFIX."order.order_id = ".DB_PREFIX."order_total.order_id)    WHERE  ".DB_PREFIX."order.customer_id='" . (int) $customer_id . "' and  ".DB_PREFIX."order_total.code='sub_total' GROUP BY ". $group ."(".DB_PREFIX."order.date_added) ORDER BY ".DB_PREFIX."order.date_added ASC  ");
+   // $query = $this->db->query("SELECT SUM(value) AS total FROM `" . DB_PREFIX . "order`  WHERE order_status_id IN " . $complete_status_ids . " AND DATE(".DB_PREFIX."order.date_added) BETWEEN '" . $this->db->escape($date_start) . "' AND '" . $this->db->escape($date_end) . "'AND ".DB_PREFIX."order_total.code='sub_total'");
+   return $query;
+}
+ 
+public function getMostPurchased($customer_id) {
+    // $complete_status_ids = '('.implode(',', $this->config->get('config_complete_status')).')';
+    //echo "<pre>";print_r($complete_status_ids);die;
+    $date = date('Y-m-d', strtotime('-30 day'));
+    $query = $this->db->query("SELECT SUM( op.quantity )AS total,pd.name,op.unit FROM " . DB_PREFIX . "order_product AS op LEFT JOIN " . DB_PREFIX . "order AS o ON ( op.order_id = o.order_id ) LEFT JOIN  " . DB_PREFIX . "product_description AS pd ON (op.general_product_id = pd.product_id)  WHERE pd.language_id = '" . (int) $this->config->get('config_language_id') . "' AND o.customer_id = " . $customer_id . " AND o.date_added >= " . $date . " GROUP BY pd.name  having sum(op.quantity)>100  ORDER BY total DESC LIMIT 10");
 
-        //  echo "SELECT SUM( op.quantity )AS total, op.product_id,op.general_product_id, pd.name,op.unit FROM " . DB_PREFIX . "order_product AS op LEFT JOIN " . DB_PREFIX . "order AS o ON ( op.order_id = o.order_id ) LEFT JOIN  " . DB_PREFIX . "product_description AS pd ON (op.general_product_id = pd.product_id)  WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') ."' AND o.customer_id = " . $customer_id . " AND o.date_added >= " . $date." GROUP BY pd.name ORDER BY total DESC LIMIT 10";
+      //echo "SELECT SUM( op.quantity )AS total, op.product_id,op.general_product_id, pd.name,op.unit FROM " . DB_PREFIX . "order_product AS op LEFT JOIN " . DB_PREFIX . "order AS o ON ( op.order_id = o.order_id ) LEFT JOIN  " . DB_PREFIX . "product_description AS pd ON (op.general_product_id = pd.product_id)  WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') ."' AND o.customer_id = " . $customer_id . " AND o.date_added >= " . $date."  GROUP BY pd.name having sum(op.quantity)>1 ORDER BY total DESC LIMIT 10";
 //' AND o.order_status_id IN " . $complete_status_ids . "
-        return $query->rows;
+    return $query->rows;
+}
+
+
+public function getrecentorderproducts($data = array()) {
+
+    $date = date('Y-m-d', strtotime('-30 day'));
+    $query ="SELECT SUM( op.quantity )AS total,pd.name,op.unit FROM " . DB_PREFIX . "order_product AS op LEFT JOIN " . DB_PREFIX . "order AS o ON ( op.order_id = o.order_id ) LEFT JOIN  " . DB_PREFIX . "product_description AS pd ON (op.general_product_id = pd.product_id)  WHERE pd.language_id = '" . (int) $this->config->get('config_language_id') . "' AND o.customer_id = " . $customer_id . " AND o.date_added >= " . $date . " GROUP BY pd.name  having sum(op.quantity)>100   ";
+
+    $implode = array();        
+
+    if (!empty($data['filter_product_name'])) {            
+
+            $implode[] = " pd.name LIKE '%" . $this->db->escape($data['filter_product_name']) . "%'";            
     }
+
+
+    if ($implode) {
+        $sql .= " AND " . implode(" AND ", $implode);
+    }
+
+    $sort_data = array(
+        'pd.name',
+        'op.unit',
+        'total'
+    );
+
+    if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
+        $sql .= " ORDER BY " . $data['sort'];
+    } else {
+        $sql .= " ORDER BY total";
+    }
+
+    if (isset($data['order']) && ($data['order'] == 'DESC')) {
+        $sql .= " DESC";
+    } else {
+        $sql .= " ASC";
+    }
+
+    if (isset($data['start']) || isset($data['limit'])) {
+        if ($data['start'] < 0) {
+            $data['start'] = 0;
+        }
+
+        if ($data['limit'] < 1) {
+            $data['limit'] = 20;
+        }
+
+        $sql .= " LIMIT " . (int) $data['start'] . "," . (int) $data['limit'];
+    }
+
+    $query = $this->db->query($sql);
+
+
+     //echo "<pre>";print_r($sql);die;
+
+    return $query->rows;
+}
+
+
+public function getTotalrecentorderproducts($data = array()) {
+    $sql = "SELECT COUNT(*) AS count FROM ". DB_PREFIX . "order_product AS op LEFT JOIN " . DB_PREFIX . "order AS o ON ( op.order_id = o.order_id ) LEFT JOIN  " . DB_PREFIX . "product_description AS pd ON (op.general_product_id = pd.product_id)  WHERE pd.language_id = '" . (int) $this->config->get('config_language_id') . "' AND o.customer_id = " . $customer_id . " AND o.date_added >= " . $date . " GROUP BY pd.name  having sum(op.quantity)>100  ";
+
+    $implode = array();
+
+    
+    if (!empty($data['filter_product_name'])) {            
+
+        $implode[] = " pd.name LIKE '%" . $this->db->escape($data['filter_product_name']) . "%'";            
+        }
+
+
+    if ($implode) {
+        $sql .= " WHERE " . implode(" AND ", $implode);
+    }
+
+    $query = $this->db->query($sql);
+
+    return $query->row['count'];
+}
+
+
 
 }
