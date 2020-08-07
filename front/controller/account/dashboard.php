@@ -309,7 +309,7 @@ class ControllerAccountDashboard extends Controller {
 
 
 
-    protected function getRecentOrderProductsList() {
+    public function getRecentOrderProductsList() {
 
        
 
@@ -328,7 +328,7 @@ class ControllerAccountDashboard extends Controller {
         if (isset($this->request->get['order'])) {
             $order = $this->request->get['order'];
         } else {
-            $order = 'ASC';
+            $order = 'DESC';
         }
 
         if (isset($this->request->get['page'])) {
@@ -357,17 +357,17 @@ class ControllerAccountDashboard extends Controller {
             $url .= '&page=' . $this->request->get['page'];
         }
 
-        $data['breadcrumbs'] = array();
+        // $data['breadcrumbs'] = array();
 
-        $data['breadcrumbs'][] = array(
-            'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL')
-        );
+        // $data['breadcrumbs'][] = array(
+        //     'text' => $this->language->get('text_home'),
+        //     'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL')
+        // );
 
-        $data['breadcrumbs'][] = array(
-            'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('account/dashboard', 'token=' . $this->session->data['token'] . $url, 'SSL')
-        );
+        // $data['breadcrumbs'][] = array(
+        //     'text' => $this->language->get('heading_title'),
+        //     'href' => $this->url->link('account/dashboard', 'token=' . $this->session->data['token'] . $url, 'SSL')
+        // );
 
         
         $data['recentorderproducts'] = array();
@@ -377,14 +377,18 @@ class ControllerAccountDashboard extends Controller {
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin')
+            'limit' => $this->config->get('config_limit_admin'),
+            'customer_id'=>$this->customer->getId()
         );
 
-        $recentorderproducts_total = $this->model_account_dashboard->getTotalrecentorderproducts($filter_data);
+        $this->load->model('account/dashboard');
 
+        $recentorderproducts_total_results= $this->model_account_dashboard->getTotalrecentorderproducts($filter_data);
+
+ $recentorderproducts_total=count($recentorderproducts_total_results);
         $results = $this->model_account_dashboard->getrecentorderproducts($filter_data);
 
-        //echo "<pre>";print_r($results);die;
+        //echo "<pre>";print_r($recentorderproducts_total);die;
         foreach ($results as $result) {
              
 
@@ -412,18 +416,18 @@ class ControllerAccountDashboard extends Controller {
          
 
         if ($order == 'ASC') {
-            $url .= '&order=DESC';
-        } else {
             $url .= '&order=ASC';
+        } else {
+            $url .= '&order=DESC';
         }
 
         if (isset($this->request->get['page'])) {
             $url .= '&page=' . $this->request->get['page'];
         }
 
-        $data['sort_name'] = $this->url->link('account/dashboard', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
-        $data['sort_total'] = $this->url->link('account/dashboard', 'token=' . $this->session->data['token'] . '&sort=total' . $url, 'SSL');
-        $data['sort_unit'] = $this->url->link('account/dashboard', 'token=' . $this->session->data['token'] . '&sort=unit' . $url, 'SSL');
+        $data['sort_name'] = $this->url->link('account/dashboard/getRecentOrderProductsList',  '&sort=pd.name' . $url, 'SSL');
+        $data['sort_total'] = $this->url->link('account/dashboard/getRecentOrderProductsList','&sort=total' . $url, 'SSL');
+        $data['sort_unit'] = $this->url->link('account/dashboard/getRecentOrderProductsList',  '&sort=op.unit' . $url, 'SSL');
         
         $url = '';
 
@@ -445,23 +449,26 @@ class ControllerAccountDashboard extends Controller {
         $pagination->total = $recentorderproducts_total;
         $pagination->page = $page;
         $pagination->limit = $this->config->get('config_limit_admin');
-        $pagination->url = $this->url->link('account/dashboard', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+        $pagination->url = $this->url->link('account/dashboard/getRecentOrderProductsList',  $url . '&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
-        $data['results'] = sprintf($this->language->get('text_pagination'), ($customer_total) ? (($page - 1) * $this->config->get('config_limit_admin')) + 1 : 0, ((($page - 1) * $this->config->get('config_limit_admin')) > ($customer_total - $this->config->get('config_limit_admin'))) ? $customer_total : ((($page - 1) * $this->config->get('config_limit_admin')) + $this->config->get('config_limit_admin')), $customer_total, ceil($customer_total / $this->config->get('config_limit_admin')));
+        $data['results'] = sprintf($this->language->get('text_pagination'), ($recentorderproducts_total) ? (($page - 1) * $this->config->get('config_limit_admin')) + 1 : 0, ((($page - 1) * $this->config->get('config_limit_admin')) > ($recentorderproducts_total - $this->config->get('config_limit_admin'))) ? $recentorderproducts_total : ((($page - 1) * $this->config->get('config_limit_admin')) + $this->config->get('config_limit_admin')), $recentorderproducts_total, ceil($recentorderproducts_total / $this->config->get('config_limit_admin')));
 
         $data['filter_product_name'] = $filter_product_name;
         
-
+        $data['footer'] = $this->load->controller('common/footer');
+        $data['header'] = $this->load->controller('common/header/onlyHeader');
         $this->load->model('account/dashboard'); 
         $data['sort'] = $sort;
         $data['order'] = $order;
+ 
+        // echo "<pre>";print_r($data);die;
 
-        // $data['header'] = $this->load->controller('common/header');
-        // $data['footer'] = $this->load->controller('common/footer');
-
-        $this->response->setOutput($this->load->view('account/recentorderproducts_list.tpl', $data));
+        $this->response->setOutput($this->load->view('metaorganic/template/account/recentorderproducts_list.tpl', $data));
     }
+
+    
+	 
 
 }
