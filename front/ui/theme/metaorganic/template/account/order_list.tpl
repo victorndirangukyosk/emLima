@@ -128,7 +128,7 @@
                                                 </li>
                                                 <?php if($order['parent_approve_order'] == 'Need Approval' && $order['parent_approval'] == 'Pending') { ?>
                                                 <li class="list-group-item">
-                                                    <div class="my-order-showaddress">  
+                                                    <div class="my-order-showaddress" id="<?php echo $order['order_id']; ?>">  
                                                             <a href="#" id="approve_order" data-id="<?= $order['order_id'] ?>" data-custid="<?= $order['customer_id'] ?>" class="btn btn-default btn-xs">APPROVE ORDER</a>
                                                             <a href="#" id="reject_order" data-id="<?= $order['order_id'] ?>" data-custid="<?= $order['customer_id'] ?>" class="btn btn-default btn-xs">REJECT ORDER</a>
                                                     </div>
@@ -303,7 +303,10 @@ __kdt.push({"post_on_load": false});
         var order_id = $(this).attr('data-id');
         var customer_id = $(this).attr('data-custid');
         var order_status = $(this).attr('id');
-        console.log(order_id +' '+ customer_id+' '+order_status);
+        console.log(order_id +' '+ customer_id+' '+order_status); 
+        var parent_div = $(this).parent("div");
+        console.log(parent_div.attr("id"));
+        
         alert('Under progress');
                 $.ajax({
             url: 'index.php?path=account/order/ApproveOrRejectSubUserOrder',
@@ -316,6 +319,8 @@ __kdt.push({"post_on_load": false});
             dataType: 'json',
             success: function(json) {
                 console.log(json);
+                var approved = $('<h3 class="my-order-title label" style="background-color: #8E45FF;display: block;line-height: 2; text-align:center;">Approved</h3>');
+                parent_div.html(approved);
             }
         });
     });
@@ -326,18 +331,23 @@ __kdt.push({"post_on_load": false});
         var order_status = 'Rejected';
         var customer_id = $(this).attr('data-custid');
         console.log(order_id +' '+ customer_id+' '+order_status);
-        alert('Under progress');
+        
+        var parent_div = $(this).parent("div");
+        console.log(parent_div.attr("id"));
+        
                         $.ajax({
             url: 'index.php?path=account/order/ApproveOrRejectSubUserOrder',
             type: 'post',
             data: {
                 order_id: $(this).attr('data-id'),
                 customer_id:$(this).attr('data-custid'),
-                order_status:$(this).attr('id')
+                order_status:order_status
             },
             dataType: 'json',
             success: function(json) {
                 console.log(json);
+                var approved = $('<h3 class="my-order-title label" style="background-color: #8E45FF;display: block;line-height: 2; text-align:center;">Rejected</h3>');
+                parent_div.html(approved);
             }
         });
     });
