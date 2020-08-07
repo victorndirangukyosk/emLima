@@ -129,8 +129,8 @@
                                                 <?php if($order['admin_approve_order'] == 'Need Approval') { ?>
                                                 <li class="list-group-item">
                                                     <div class="my-order-showaddress">  
-                                                            <a href="#" id="approve_order" data-id="<?= $order['order_id'] ?>" class="btn btn-default btn-xs">APPROVE ORDER</a>
-                                                            <a href="#" id="reject_order" data-id="<?= $order['order_id'] ?>" class="btn btn-default btn-xs">REJECT ORDER</a>
+                                                            <a href="#" id="approve_order" data-id="<?= $order['order_id'] ?>" data-custid="<?= $order['customer_id'] ?>" class="btn btn-default btn-xs">APPROVE ORDER</a>
+                                                            <a href="#" id="reject_order" data-id="<?= $order['order_id'] ?>" data-custid="<?= $order['customer_id'] ?>" class="btn btn-default btn-xs">REJECT ORDER</a>
                                                     </div>
                                                 </li>
                                                 <?php } ?>
