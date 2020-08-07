@@ -180,8 +180,9 @@ class ControllerAccountOrder extends Controller {
 				'href'       => $this->url->link('account/order/info', 'order_id=' . $result['order_id'], 'SSL'),
 				'real_href'       => $this->url->link('account/order/realinfo', 'order_id=' . $result['order_id'], 'SSL'),
 				'accept_reject_href' => $this->url->link('account/order/accept_reject', 'order_id=' . $result['order_id'], 'SSL'),
-                                'admin_approve_order' => $approve_order_button,
-                                'customer_id' => $result['customer_id']
+                                'parent_approve_order' => $approve_order_button,
+                                'customer_id' => $result['customer_id'],
+                                'parent_approval' => $result['parent_approval']
 			);
 		} 
 		
