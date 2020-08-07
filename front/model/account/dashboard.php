@@ -92,7 +92,7 @@ public function getMostPurchased($customer_id) {
         return $query->rows;
     }
 
-    public function getrecentorderproducts($data = array()) {
+public function getrecentorderproducts($data = array()) {
 
     $date = date('Y-m-d', strtotime('-30 day'));
     $query ="SELECT SUM( op.quantity )AS total,pd.name,op.unit FROM " . DB_PREFIX . "order_product AS op LEFT JOIN " . DB_PREFIX . "order AS o ON ( op.order_id = o.order_id ) LEFT JOIN  " . DB_PREFIX . "product_description AS pd ON (op.general_product_id = pd.product_id)  WHERE pd.language_id = '" . (int) $this->config->get('config_language_id') . "' AND o.customer_id = " . $customer_id . " AND o.date_added >= " . $date . " GROUP BY pd.name  having sum(op.quantity)>100   ";
