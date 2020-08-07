@@ -526,8 +526,9 @@ class ModelAccountCustomer extends Model {
         $is_he_parent = $this->db->query("SELECT c.parent FROM " . DB_PREFIX . "customer c WHERE customer_id = '" . (int) $this->customer->getId() . "'");
         
         $parent = NULL;
-        if(is_array($is_he_parent) && count($is_he_parent) > 0) {
-        foreach($is_he_parent as $is_he) {
+        $log = new Log('error.log');
+        if(is_array($is_he_parent->rows) && count($is_he_parent->rows) > 0) {
+        foreach($is_he_parent->rows as $is_he) {
         $parent = $is_he['parent'];    
         }
         }
