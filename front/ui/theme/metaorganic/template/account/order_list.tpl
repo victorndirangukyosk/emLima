@@ -126,11 +126,25 @@
                                                         <a class="btn-link text_green" role="button" data-toggle="collapse" href="#<?= $order['order_id'] ?>" aria-expanded="false" aria-controls="<?= $order['order_id'] ?>"><?= $text_view_billing?></a>&nbsp;|&nbsp;<a class="btn-link text_green" role="button" href="<?php echo ($order['realproducts'] ? $order['real_href'] : $order['href'].'&order_status='.urlencode($order['status'])) ;?>" aria-expanded="false" aria-controls="<?= $order['order_status'] ?>"><?= $text_view_order?></a>
                                                     </div>
                                                 </li>
-                                                <?php if($order['admin_approve_order'] == 'Need Approval') { ?>
+                                                <?php if($order['parent_approve_order'] == 'Need Approval' && $order['parent_approval'] == 'Pending') { ?>
                                                 <li class="list-group-item">
                                                     <div class="my-order-showaddress">  
                                                             <a href="#" id="approve_order" data-id="<?= $order['order_id'] ?>" data-custid="<?= $order['customer_id'] ?>" class="btn btn-default btn-xs">APPROVE ORDER</a>
                                                             <a href="#" id="reject_order" data-id="<?= $order['order_id'] ?>" data-custid="<?= $order['customer_id'] ?>" class="btn btn-default btn-xs">REJECT ORDER</a>
+                                                    </div>
+                                                </li>
+                                                <?php } elseif($order['parent_approve_order'] == 'Need Approval' && $order['parent_approval'] != 'Pending') { ?>
+                                                <li class="list-group-item">
+                                                    <div class="row">
+                                                    <div class="col-md-3">
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                    <div class="my-order-showaddress">  
+                                                            <h3 class="my-order-title label" style="background-color: #8E45FF;display: block;line-height: 2;"><?php echo $order['parent_approval']; ?></h3>
+                                                    </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                    </div>
                                                     </div>
                                                 </li>
                                                 <?php } ?>
