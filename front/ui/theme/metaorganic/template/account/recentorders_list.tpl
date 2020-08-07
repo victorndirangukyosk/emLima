@@ -3,9 +3,9 @@
 <div id="content">
   <div class="page-header">
     <div class="container-fluid">
-      <div class="pull-right"> 
+      <!--<div class="pull-right"> 
           <button type="button" onclick="excel();" data-toggle="tooltip" title="" class="btn btn-success " data-original-title="Download Excel"><i class="fa fa-download"></i></button>
-      </div>
+      </div>-->
       <h1><?php echo $heading_title; ?></h1>
       
     </div>
