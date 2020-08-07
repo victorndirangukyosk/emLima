@@ -126,6 +126,14 @@
                                                         <a class="btn-link text_green" role="button" data-toggle="collapse" href="#<?= $order['order_id'] ?>" aria-expanded="false" aria-controls="<?= $order['order_id'] ?>"><?= $text_view_billing?></a>&nbsp;|&nbsp;<a class="btn-link text_green" role="button" href="<?php echo ($order['realproducts'] ? $order['real_href'] : $order['href'].'&order_status='.urlencode($order['status'])) ;?>" aria-expanded="false" aria-controls="<?= $order['order_status'] ?>"><?= $text_view_order?></a>
                                                     </div>
                                                 </li>
+                                                <?php if($order['admin_approve_order'] == 'Need Approval') { ?>
+                                                <li class="list-group-item">
+                                                    <div class="my-order-showaddress">  
+                                                            <a href="#" id="approve_order" data-id="<?= $order['order_id'] ?>" data-custid="<?= $order['customer_id'] ?>" class="btn btn-default btn-xs">APPROVE ORDER</a>
+                                                            <a href="#" id="reject_order" data-id="<?= $order['order_id'] ?>" data-custid="<?= $order['customer_id'] ?>" class="btn btn-default btn-xs">REJECT ORDER</a>
+                                                    </div>
+                                                </li>
+                                                <?php } ?>
 												<li class="list-group-item">
                                                     <div class="my-order-refund" style="font-size:13px;">
                                                         <i class="fa fa-money"></i> <span><?= $text_refund_text_part1 ?> <strong><?= $text_refund_text_part2 ?> </strong> <?= $text_refund_text_part3 ?></span>
@@ -275,6 +283,24 @@ __kdt.push({"post_on_load": false});
 
             /**/
     });
+    
+    $(document).delegate('#approve_order', 'click', function(e) {
+        e.preventDefault();
+        console.log();
+        var order_id = $(this).attr('data-id');
+        var customer_id = $(this).attr('data-custid');
+        console.log(order_id +' '+ customer_id);
+        alert('Under progress');
+    });
+    
+    $(document).delegate('#reject_order', 'click', function(e) {
+        e.preventDefault();
+        var order_id = $(this).attr('data-id');
+        var customer_id = $(this).attr('data-custid');
+        console.log(order_id +' '+ customer_id);
+        alert('Under progress');
+    });
+
 
     $(document).delegate('#cancelOrder', 'click', function(e) {
 
