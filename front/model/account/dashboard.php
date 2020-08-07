@@ -72,18 +72,27 @@ class ModelAccountDashboard extends Model {
 }
  
 public function getMostPurchased($customer_id) {
-    // $complete_status_ids = '('.implode(',', $this->config->get('config_complete_status')).')';
-    //echo "<pre>";print_r($complete_status_ids);die;
-    $date = date('Y-m-d', strtotime('-30 day'));
-    $query = $this->db->query("SELECT SUM( op.quantity )AS total,pd.name,op.unit FROM " . DB_PREFIX . "order_product AS op LEFT JOIN " . DB_PREFIX . "order AS o ON ( op.order_id = o.order_id ) LEFT JOIN  " . DB_PREFIX . "product_description AS pd ON (op.general_product_id = pd.product_id)  WHERE pd.language_id = '" . (int) $this->config->get('config_language_id') . "' AND o.customer_id = " . $customer_id . " AND o.date_added >= " . $date . " GROUP BY pd.name  having sum(op.quantity)>100  ORDER BY total DESC LIMIT 10");
 
-      //echo "SELECT SUM( op.quantity )AS total, op.product_id,op.general_product_id, pd.name,op.unit FROM " . DB_PREFIX . "order_product AS op LEFT JOIN " . DB_PREFIX . "order AS o ON ( op.order_id = o.order_id ) LEFT JOIN  " . DB_PREFIX . "product_description AS pd ON (op.general_product_id = pd.product_id)  WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') ."' AND o.customer_id = " . $customer_id . " AND o.date_added >= " . $date."  GROUP BY pd.name having sum(op.quantity)>1 ORDER BY total DESC LIMIT 10";
+        $s_users = array();
+        $sub_users_query = $this->db->query("SELECT c.customer_id FROM " . DB_PREFIX . "customer c WHERE parent = '" . (int) $customer_id . "'");
+        $sub_users = $sub_users_query->rows;
+        $s_users = array_column($sub_users, 'customer_id');
+
+        array_push($s_users, $customer_id);
+        $sub_users_od = implode(",", $s_users);
+        // $complete_status_ids = '('.implode(',', $this->config->get('config_complete_status')).')';
+        //echo "<pre>";print_r($complete_status_ids);die;
+        $date = date('Y-m-d', strtotime('-30 day'));
+        
+        $query = $this->db->query("SELECT SUM( op.quantity )AS total,pd.name,op.unit FROM " . DB_PREFIX . "order_product AS op LEFT JOIN " . DB_PREFIX . "order AS o ON ( op.order_id = o.order_id ) LEFT JOIN  " . DB_PREFIX . "product_description AS pd ON (op.general_product_id = pd.product_id)  WHERE pd.language_id = '" . (int) $this->config->get('config_language_id') . "' AND o.customer_id IN (".$sub_users_od.") AND o.date_added >= " . $date . " GROUP BY pd.name  having sum(op.quantity)>100  ORDER BY total DESC LIMIT 10");
+        //$query = $this->db->query("SELECT SUM( op.quantity )AS total,pd.name,op.unit FROM " . DB_PREFIX . "order_product AS op LEFT JOIN " . DB_PREFIX . "order AS o ON ( op.order_id = o.order_id ) LEFT JOIN  " . DB_PREFIX . "product_description AS pd ON (op.general_product_id = pd.product_id)  WHERE pd.language_id = '" . (int) $this->config->get('config_language_id') . "' AND o.customer_id = " . $customer_id . " AND o.date_added >= " . $date . " GROUP BY pd.name  having sum(op.quantity)>100  ORDER BY total DESC LIMIT 10");
+
+        //echo "SELECT SUM( op.quantity )AS total, op.product_id,op.general_product_id, pd.name,op.unit FROM " . DB_PREFIX . "order_product AS op LEFT JOIN " . DB_PREFIX . "order AS o ON ( op.order_id = o.order_id ) LEFT JOIN  " . DB_PREFIX . "product_description AS pd ON (op.general_product_id = pd.product_id)  WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') ."' AND o.customer_id = " . $customer_id . " AND o.date_added >= " . $date."  GROUP BY pd.name having sum(op.quantity)>1 ORDER BY total DESC LIMIT 10";
 //' AND o.order_status_id IN " . $complete_status_ids . "
-    return $query->rows;
-}
+        return $query->rows;
+    }
 
-
-public function getrecentorderproducts($data = array()) {
+    public function getrecentorderproducts($data = array()) {
 
     $date = date('Y-m-d', strtotime('-30 day'));
     $query ="SELECT SUM( op.quantity )AS total,pd.name,op.unit FROM " . DB_PREFIX . "order_product AS op LEFT JOIN " . DB_PREFIX . "order AS o ON ( op.order_id = o.order_id ) LEFT JOIN  " . DB_PREFIX . "product_description AS pd ON (op.general_product_id = pd.product_id)  WHERE pd.language_id = '" . (int) $this->config->get('config_language_id') . "' AND o.customer_id = " . $customer_id . " AND o.date_added >= " . $date . " GROUP BY pd.name  having sum(op.quantity)>100   ";
