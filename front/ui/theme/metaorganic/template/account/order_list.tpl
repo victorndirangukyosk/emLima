@@ -283,6 +283,24 @@ __kdt.push({"post_on_load": false});
 
             /**/
     });
+    
+    $(document).delegate('#approve_order', 'click', function(e) {
+        e.preventDefault();
+        console.log();
+        var order_id = $(this).attr('data-id');
+        var customer_id = $(this).attr('data-custid');
+        console.log(order_id +' '+ customer_id);
+        alert('Under progress');
+    });
+    
+    $(document).delegate('#reject_order', 'click', function(e) {
+        e.preventDefault();
+        var order_id = $(this).attr('data-id');
+        var customer_id = $(this).attr('data-custid');
+        console.log(order_id +' '+ customer_id);
+        alert('Under progress');
+    });
+
 
     $(document).delegate('#cancelOrder', 'click', function(e) {
 
