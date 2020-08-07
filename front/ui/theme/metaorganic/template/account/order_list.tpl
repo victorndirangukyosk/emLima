@@ -311,7 +311,7 @@ __kdt.push({"post_on_load": false});
             data: {
                 order_id: $(this).attr('data-id'),
                 customer_id:$(this).attr('data-custid'),
-                order_status:$(this).attr('id')
+                order_status: 'Approved'
             },
             dataType: 'json',
             success: function(json) {
@@ -323,7 +323,7 @@ __kdt.push({"post_on_load": false});
     $(document).delegate('#reject_order', 'click', function(e) {
         e.preventDefault();
         var order_id = $(this).attr('data-id');
-        var order_status = $(this).attr('id');
+        var order_status = 'Rejected';
         var customer_id = $(this).attr('data-custid');
         console.log(order_id +' '+ customer_id+' '+order_status);
         alert('Under progress');
@@ -378,7 +378,7 @@ __kdt.push({"post_on_load": false});
 
     setInterval(function() {
      location = location;
-    }, 30 * 1000); // 60 * 1000 milsec
+    }, 60 * 1000); // 60 * 1000 milsec
     
 
     </script>

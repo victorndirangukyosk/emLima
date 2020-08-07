@@ -793,5 +793,14 @@ class ModelAccountOrder extends Model {
 
         return $resp;
     }
+    
+    public function getSubUserOrderDetails($order_id, $customer_id) {
+        $sub_users_order = $this->db->query("SELECT * FROM " . DB_PREFIX . "order WHERE order_id = '" . (int) $order_id . "' AND customer_id  ='" . (int) $customer_id . "'");
+        return $sub_users_order->row;
+    }
+
+    public function ApproveOrRejectSubUserOrder($order_id, $customer_id, $order_status) {
+        $this->db->query("UPDATE `" . DB_PREFIX . "order` SET parent_approval = '" . $order_status . "' WHERE order_id = '" . (int) $order_id . "' AND customer_id = '" . (int) $customer_id . "'");
+    }
 
 }

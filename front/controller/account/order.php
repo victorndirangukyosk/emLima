@@ -2447,12 +2447,29 @@ class ControllerAccountOrder extends Controller {
     }
     
     public function ApproveOrRejectSubUserOrder() {
+        
+        $json['success'] = 'Something went wrong!';
         $order_id = $this->request->post['order_id'];
         $customer_id = $this->request->post['customer_id'];
         $order_status = $this->request->post['order_status'];
+
         $log = new Log('error.log');
         $log->write($order_id);
         $log->write($customer_id);
         $log->write($order_status);
+
+        $this->load->model('account/order');
+        $sub_users_order_details = $this->model_account_order->getSubUserOrderDetails($order_id, $customer_id);
+        $log->write($sub_users_order_details);
+
+        if (is_array($sub_users_order_details) && count($sub_users_order_details) > 0) {
+            $order_update = $this->model_account_order->ApproveOrRejectSubUserOrder($order_id, $customer_id, $order_status);
+            $json['success'] = 'Order '.$order_status.'!';
+        }
+
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
     }
+
 }
