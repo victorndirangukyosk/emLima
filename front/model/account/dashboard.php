@@ -38,7 +38,7 @@ class ModelAccountDashboard extends Model {
         array_push($s_users, $customer_id);
         $sub_users_od = implode(",", $s_users);
         
-        $query = $this->db->query("SELECT o.order_id, o.invoice_no, DATE_FORMAT(o.delivery_date, '%d/%m/%Y') AS delivery_date, DATE_FORMAT(o.date_added, '%d/%m/%Y') AS date_added, o.order_status_id, os.name FROM " . DB_PREFIX . "order AS o JOIN " . DB_PREFIX . "order_status AS os ON (o.order_status_id = os.order_status_id)  WHERE o.customer_id IN (".$sub_users_od.") AND o.order_status_id > '0'  order by o.date_added Desc");
+        $query = $this->db->query("SELECT o.order_id, o.invoice_no, DATE_FORMAT(o.delivery_date, '%d/%m/%Y') AS delivery_date, DATE_FORMAT(o.date_added, '%d/%m/%Y') AS date_added, o.order_status_id, os.name FROM " . DB_PREFIX . "order AS o JOIN " . DB_PREFIX . "order_status AS os ON (o.order_status_id = os.order_status_id)  WHERE o.customer_id IN (".$sub_users_od.") AND o.order_status_id > '0'  order by o.date_added Desc Limit 10");
         //$query = $this->db->query("SELECT o.order_id, o.invoice_no, DATE_FORMAT(o.delivery_date, '%d/%m/%Y') AS delivery_date, DATE_FORMAT(o.date_added, '%d/%m/%Y') AS date_added, o.order_status_id, os.name FROM " . DB_PREFIX . "order AS o JOIN " . DB_PREFIX . "order_status AS os ON (o.order_status_id = os.order_status_id)  WHERE o.customer_id = '" . (int) $customer_id . "' AND o.order_status_id > '0'  order by o.date_added Desc");
 
         //return $query;
@@ -55,7 +55,7 @@ class ModelAccountDashboard extends Model {
         array_push($s_users, $customer_id);
         $sub_users_od = implode(",", $s_users);
         
-        $query = $this->db->query("SELECT o.order_id, o.invoice_no, o.lastname, o.firstname, DATE_FORMAT(o.delivery_date, '%d/%m/%Y') AS delivery_date, DATE_FORMAT(o.date_added, '%d/%m/%Y %H:%i:%s') AS date_added, o.order_status_id, os.name, o.store_id, o.store_name, o.total FROM " . DB_PREFIX . "order AS o JOIN " . DB_PREFIX . "order_status AS os ON (o.order_status_id = os.order_status_id)  WHERE o.customer_id IN (".$sub_users_od.") AND o.order_status_id > '0'  order by o.date_added ASC");
+        $query = $this->db->query("SELECT o.order_id, o.invoice_no, o.lastname, o.firstname, DATE_FORMAT(o.delivery_date, '%d/%m/%Y') AS delivery_date, DATE_FORMAT(o.date_added, '%d/%m/%Y %H:%i:%s') AS date_added, o.order_status_id, os.name, o.store_id, o.store_name, o.total FROM " . DB_PREFIX . "order AS o JOIN " . DB_PREFIX . "order_status AS os ON (o.order_status_id = os.order_status_id)  WHERE o.customer_id IN (".$sub_users_od.") AND o.order_status_id > '0'  order by o.date_added DESC Limit 10");
         
         //$query = $this->db->query("SELECT o.order_id, o.invoice_no, o.lastname, o.firstname, DATE_FORMAT(o.delivery_date, '%d/%m/%Y') AS delivery_date, DATE_FORMAT(o.date_added, '%d/%m/%Y %H:%i:%s') AS date_added, o.order_status_id, os.name, o.store_id, o.store_name, o.total FROM " . DB_PREFIX . "order AS o JOIN " . DB_PREFIX . "order_status AS os ON (o.order_status_id = os.order_status_id)  WHERE o.customer_id = '" . (int) $customer_id . "' AND o.order_status_id > '0'  order by o.date_added ASC");
         //// echo "SELECT SUM(total) AS total,  DATE(".DB_PREFIX."order.date_added) AS date  FROM `" . DB_PREFIX . "order` LEFT JOIN ".DB_PREFIX."order_total on(".DB_PREFIX."order.order_id = ".DB_PREFIX."order_total.order_id)   JOIN ".DB_PREFIX."store on(".DB_PREFIX."store.store_id = ".DB_PREFIX."order.store_id) WHERE  ".DB_PREFIX."order_total.code='sub_total' GROUP BY ". $group ."(".DB_PREFIX."order.date_added) ORDER BY ".DB_PREFIX."order.date_added ASC";
@@ -176,6 +176,226 @@ public function getTotalrecentorderproducts($data = array()) {
     return $query->rows;
 }
 
+public function getrecentordersofcustomer($data = array()) {    
 
+    
+    $customer_id=$data['customer_id'];
+
+    $s_users = array();
+    $sub_users_query = $this->db->query("SELECT c.customer_id FROM " . DB_PREFIX . "customer c WHERE parent = '" . (int) $customer_id . "'");
+    $sub_users = $sub_users_query->rows;
+    $s_users = array_column($sub_users, 'customer_id');
+    
+    array_push($s_users, $customer_id);
+    $sub_users_od = implode(",", $s_users);
+    
+    $sql = "SELECT o.order_id, o.invoice_no, DATE_FORMAT(o.delivery_date, '%d/%m/%Y') AS delivery_date, DATE_FORMAT(o.date_added, '%d/%m/%Y') AS date_added, o.order_status_id, os.name FROM " . DB_PREFIX . "order AS o JOIN " . DB_PREFIX . "order_status AS os ON (o.order_status_id = os.order_status_id)  WHERE o.customer_id IN (".$sub_users_od.") AND o.order_status_id > '0' ";
+  
+   
+    //$query = $this->db->query("SELECT o.order_id, o.invoice_no, DATE_FORMAT(o.delivery_date, '%d/%m/%Y') AS delivery_date, DATE_FORMAT(o.date_added, '%d/%m/%Y') AS date_added, o.order_status_id  FROM " . DB_PREFIX . "order AS o JOIN " . DB_PREFIX . "order_status AS os ON (o.order_status_id = os.order_status_id)  WHERE o.customer_id IN (".$sub_users_od.") AND o.order_status_id > '0'  order by o.date_added Desc");
+    // echo "<pre>";print_r($query);die;
+    $implode = array();        
+
+    if (!empty($data['filter_product_name'])) {            
+
+            $implode[] = " pd.name LIKE '%" . $this->db->escape($data['filter_product_name']) . "%'";            
+    }
+
+            
+    if (isset($data['filter_order_status'])) {       
+
+        $order_statuses = explode(',', $data['filter_order_status']);
+
+        foreach ($order_statuses as $order_status_id) {
+            $implode[] = "o.order_status_id = '" . (int) $order_status_id . "'";
+        }
+
+        // if ($implode) {
+        //     $sql .= " WHERE (" . implode(" OR ", $implode) . ")";
+        // } else {
+            
+        // }
+    }  
+
+     
+
+    //echo "<pre>";print_r($sql);die;
+    // if (!empty($data['filter_city'])) {
+    //     $implode[] = " AND c.name LIKE '" . $data['filter_city'] . "%'";
+    // }
+
+    // if (!empty($data['filter_order_day'])) {
+
+    //     if($data['filter_order_day'] == 'today') {
+    //         $delivery_date = date('Y-m-d');
+    //     } else {
+    //         $delivery_date = date('Y-m-d',strtotime('+1 day'));
+    //     }
+
+        
+    //     $implode[]= " AND DATE(o.delivery_date) = DATE('" . $this->db->escape($delivery_date) . "')";
+
+         
+    // }
+    
+    if (!empty($data['filter_order_id'])) {
+        $implode[]= " AND o.order_id = '" . (int) $data['filter_order_id'] . "'";
+    }
+
+     
+    
+    if (!empty($data['filter_date_added'])) {
+        $implode[]= " AND DATE(o.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
+    }
+
+    if (!empty($data['filter_date_modified'])) {
+        $implode[]= " AND DATE(o.date_modified) = DATE('" . $this->db->escape($data['filter_date_modified']) . "')";
+    }
+
+    // if (!empty($data['filter_total'])) {
+    //     $implode[]= " AND o.total = '" . (float) $data['filter_total'] . "'";
+    // }
+
+
+
+
+
+    if ($implode) {
+        $sql .= " AND " . implode(" AND ", $implode);
+    }
+
+
+    $sort_data = array(
+        'o.order_id',
+        'status', 
+        'o.date_added',
+        'o.date_modified',
+        //'o.total',
+        //'c.name'
+    );
+
+     
+
+    if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
+        $sql .= " ORDER BY " . $data['sort'];
+    } else {
+        $sql .= " ORDER BY o.order_id";
+    }
+
+    if (isset($data['order']) && ($data['order'] == 'ASC')) {
+        $sql .= " ASC";
+    } else {
+        $sql .= " DESC";
+    }
+
+    if (isset($data['start']) || isset($data['limit'])) {
+        if ($data['start'] < 0) {
+            $data['start'] = 0;
+        }
+
+        if ($data['limit'] < 1) {
+            $data['limit'] = 20;
+        }
+
+        $sql .= " LIMIT " . (int) $data['start'] . "," . (int) $data['limit'];
+    }
+
+    $query = $this->db->query($sql);
+
+    // echo "<pre>";print_r($sql);die;
+    
+
+    return $query->rows;
+}
+
+
+public function getTotalrecentorders($data = array()) {
+
+    $customer_id=$data['customer_id'];
+    
+    $s_users = array();
+    $sub_users_query = $this->db->query("SELECT c.customer_id FROM " . DB_PREFIX . "customer c WHERE parent = '" . (int) $customer_id . "'");
+    $sub_users = $sub_users_query->rows;
+    $s_users = array_column($sub_users, 'customer_id');
+    
+    array_push($s_users, $customer_id);
+    $sub_users_od = implode(",", $s_users);
+
+    
+    $sql = "SELECT COUNT(*) AS count FROM ". DB_PREFIX . "order AS o JOIN " . DB_PREFIX . "order_status AS os ON (o.order_status_id = os.order_status_id)  WHERE o.customer_id IN (".$sub_users_od.") AND o.order_status_id > '0'   ";
+
+     
+    $implode = array();        
+ 
+            
+    if (isset($data['filter_order_status'])) {       
+
+        $order_statuses = explode(',', $data['filter_order_status']);
+
+        foreach ($order_statuses as $order_status_id) {
+            $implode[] = "o.order_status_id = '" . (int) $order_status_id . "'";
+        }
+
+        // if ($implode) {
+        //     $sql .= " WHERE (" . implode(" OR ", $implode) . ")";
+        // } else {
+            
+        // }
+    } 
+    // else {
+    //     $implode[] = " WHERE o.order_status_id > '0'";
+    // }
+
+     
+
+    //echo "<pre>";print_r($sql);die;
+    // if (!empty($data['filter_city'])) {
+    //     $implode[] = " AND c.name LIKE '" . $data['filter_city'] . "%'";
+    // }
+
+    // if (!empty($data['filter_order_day'])) {
+
+    //     if($data['filter_order_day'] == 'today') {
+    //         $delivery_date = date('Y-m-d');
+    //     } else {
+    //         $delivery_date = date('Y-m-d',strtotime('+1 day'));
+    //     }
+
+        
+    //     $implode[]= " AND DATE(o.delivery_date) = DATE('" . $this->db->escape($delivery_date) . "')";
+
+         
+    // }
+    
+    if (!empty($data['filter_order_id'])) {
+        $implode[]= " AND o.order_id = '" . (int) $data['filter_order_id'] . "'";
+    }
+
+     
+    
+    if (!empty($data['filter_date_added'])) {
+        $implode[]= " AND DATE(o.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
+    }
+
+    if (!empty($data['filter_date_modified'])) {
+        $implode[]= " AND DATE(o.date_modified) = DATE('" . $this->db->escape($data['filter_date_modified']) . "')";
+    }
+
+    // if (!empty($data['filter_total'])) {
+    //     $implode[]= " AND o.total = '" . (float) $data['filter_total'] . "'";
+    // }
+
+
+
+
+
+    if ($implode) {
+        $sql .= " AND " . implode(" AND ", $implode);
+    }
+    $query = $this->db->query($sql);
+     
+
+    return $query->row['count'];
+}
 
 }

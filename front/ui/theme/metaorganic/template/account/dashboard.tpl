@@ -182,7 +182,7 @@
             <h3 class="panel-title"><i class="fa fa-th-list fa-lg"></i> Recent Orders
             </h3>
 
-             <span style="margin-top:-5px;background-color: #f38733;" class="butsetview"><a target="_blank" href="<?php echo BASE_URL;?>/index.php?path=account/dashboard/getRecentOrderList">View All </a></span>
+             <span style="margin-top:-5px;background-color: #f38733;" class="butsetview"><a target="_blank" href="<?php echo BASE_URL;?>/index.php?path=account/dashboard/getRecentOrdersList">View All </a></span>
 <div class="pull-right">
 <button type="button" style="margin-top:-5px;height:31px" onclick="excel();" data-toggle="tooltip" title="" class="btn btn-success " data-original-title="Download Excel"><i class="fa fa-download"></i></button>
 </div>
