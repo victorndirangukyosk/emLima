@@ -1178,18 +1178,14 @@ select, input[type="text"], input[type="password"], input[type="datetime"], inpu
     transition: all 0.3s ease 0s;
 }
 #sum_widgets .icon {
-    color: #777777;
-    font-size: 50px;
+    color: #b9b9b9;
+    font-size: 20px;
     margin-bottom: 0px;
     float: right;
 }
 
 #sum_widgets .icon.fa-shopping-cart {
     color: #5cb85c;
-}
-
-#sum_widgets .icon.fa-money {
-    color: #449958;
 }
 
 #sum_widgets .icon .fa-user {

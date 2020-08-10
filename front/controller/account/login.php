@@ -730,15 +730,21 @@ class ControllerAccountLogin extends Controller
         if ($this->config->get('config_tax_customer') == 'shipping') {
           $this->session->data['shipping_address'] = $this->model_account_address->getAddress($this->customer->getAddressId());
         }
-
+        
+        $this->model_account_customer->cacheProductPrices(75);
         $this->trigger->fire('post.customer.login');
 
-        $this->response->redirect($this->url->link('account/account', '', 'SSL'));
+        //$this->response->redirect($this->url->link('account/account', '', 'SSL'));
+        //REDIRECTING TO HOME PAGE
+        $this->response->redirect('/');
       }
     }
 
     if ($this->customer->isLogged()) {
-      $this->response->redirect($this->url->link('account/account', '', 'SSL'));
+        $this->model_account_customer->cacheProductPrices(75);
+        $this->response->redirect('/');
+        //REDIRECTING TO HOME PAGE
+      //$this->response->redirect($this->url->link('account/account', '', 'SSL'));
     }
 
     $this->load->language('account/login');

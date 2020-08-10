@@ -121,7 +121,7 @@
         <td class="a-right hidden-table" >
                     <span class="cart-price">
         
-                                                <span class="price font-bold"><?php echo $product['total']; ?></span>                            
+                                                <span class="price font-bold" id="spancart[<?= $i ?>][qty]"><?php echo $product['total']; ?></span>                            
         </span>
             </td>
               <td   class="a-center hidden-table"  >
@@ -129,8 +129,11 @@
             
 
   </td>
+  <td class="a-center hidden-table a">
+      <a id="update_quantity" class="fa fa-refresh" title="Update product quantity" data-id="<?= $product['key']?>" data-prodorderid="<?= $i?>"><span data-id="<?= $product['key']?>"></span></a>
+  </td>
   <td class="a-center hidden-table">
-  <p> <a title="Remove item" class="button remove-item" style=" background-color: #ec9f4e ;"><span><span><?= $product['key']?></span></span></a></p>
+      <p> <a title="Remove item" class="button remove-item" style="background-color: #ec9f4e ;"><span><span><?= $product['key']?></span></span></a></p>
   </td>
 
 
@@ -1945,6 +1948,41 @@ function saveInAddressBook() {
         });
     });
     
+    $(document).delegate('#update_quantity', 'click', function() {
+        
+        var quantity;
+        console.log($('.cart-count').text());
+        console.log($(this).attr('data-id'));
+        console.log($(this).attr('data-prodorderid'));
+        var prod_order_id = $(this).attr('data-prodorderid');
+        console.log('Update Quantity');
+        
+        $('input[id^="cart['+prod_order_id+'][qty]"]').each(function(input){
+        quantity = $('input[id^="cart['+prod_order_id+'][qty]"]').val();
+        var input_id = $('input[id^="cart['+prod_order_id+'][qty]"]').attr('id');
+        console.log($('span[id^="spancart['+prod_order_id+'][qty]"]').text());
+        console.log('id: ' + input_id + ' value:' + quantity);
+        });
+        
+        console.log(quantity);
+        $.ajax({
+            url: 'index.php?path=checkout/cart/update',
+            type: 'post',
+            data: { key: $(this).attr('data-id'), quantity: quantity },
+            dataType: 'json',
+            success: function(json) {
+             console.log(json);
+             $('.cart-count').text(json.count_products);
+             $('.cart-total-amount').text(json.total_amount);
+             $('.checout-invoice-price').text(json.total_amount);
+             $('.checkout-payable .checkout-payable-price').text(json.total_amount);
+             
+             $('input[id^="cart['+prod_order_id+'][qty]"]').each(function(input){
+             console.log($('span[id^="spancart['+prod_order_id+'][qty]"]').text(json.products_details.total));
+             });
+            }
+        });
+    });
 
     $(document).delegate('#timeslot-next', 'click', function() {
         $('#step-3').addClass('checkout-step-color');
