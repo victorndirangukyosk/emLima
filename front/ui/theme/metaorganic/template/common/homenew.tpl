@@ -206,7 +206,7 @@
                 <?php }else{?>
                 <div>
                   <div class="menuset">
-                    <div class="newset"><a class="btn" href="<?= $dashboard ?>"> <span><?= $full_name ?></span> </a>
+                    <div class="newset" style="margin-top: 20px;"><a class="btn" href="<?= $dashboard ?>"> <span><?= $full_name ?></span> </a>
 
                       <div class="dropdownset" style="display:none;">
                        <div class="dropdownsetnew" style="margin-top: 10px;"><a class="header__upper-deck-item-link"
