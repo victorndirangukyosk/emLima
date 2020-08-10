@@ -1,7 +1,7 @@
 <style>
    .copyright {
       background-color: #fff;
-      font-size: 0.9rem;
+      font-size: 0.9rem !important;
       padding: 2rem 0px;
    }
 
