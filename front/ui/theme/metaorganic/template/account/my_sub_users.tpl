@@ -32,20 +32,24 @@
               <th>E-Mail</th>
               <th>Phone No</th>
               <th>Customer Group</th>
+              <th>Company Name</th>
               <th>Status</th>
-              <!--<th>Action</th>-->
+              <th>Action</th>
             </tr>
             </thead>
             <tbody>
-            <?php if(count($sub_users)){?>
-            <?php foreach($sub_users as $user){?>
+            <?php if(count($sub_users)){ ?>
+            <?php foreach($sub_users as $user){ ?>
             <tr>
             <td><?php echo $user['firstname'].' '.$user['lastname'];?></td>
             <td><?php echo $user['email'];?></td>
             <td><?php echo $user['telephone'];?></td>
             <td><?php echo $user['customer_group'];?></td>
+            <td><?php echo $user['company_name'];?></td>
             <td><?php echo ($user['approved']==0) ? 'Unverified': 'Verified'?></td>
-            <!--<td>Action</td>-->
+            <td><?php if($user['approved'] == 0) { ?> <a data-confirm="Activate sub user!" class="btn btn-success useractivate" data-active="1" data-store-id="<?php echo $user['customer_id']; ?>" data-toggle="tooltip" title="Activate user"><i class="fa fa-check"></i></a> <?php } ?>
+            <?php if($user['approved'] == 1) { ?> <a data-confirm="De activate sub user!" class="btn btn-success useractivate" data-active="0" data-store-id="<?php echo $user['customer_id']; ?>" data-toggle="tooltip" title="De activate user"><i class="fa fa-times"></i></a> <?php } ?>
+            </td>
             </tr>
             <?php } ?>
             <?php }else{ ?>
