@@ -949,7 +949,7 @@ class Cart {
             $product_total += $product['quantity'];
         }
 
-        return $product_total;
+        return count($products);
     }
 
     public function hasProducts() {

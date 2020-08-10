@@ -87,6 +87,8 @@ class ControllerAccountLogout extends Controller {
 		$data['footer'] = $this->load->controller('common/footer');
 		$data['header'] = $this->load->controller('common/header/onlyHeader');
                 
+                //REDIRECTING TO HOME PAGE AFTER LOGOUT
+                $this->response->redirect('/');
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/success.tpl')) {
 			$this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/success.tpl', $data));
 		} else {

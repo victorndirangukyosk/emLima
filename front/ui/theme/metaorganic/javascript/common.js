@@ -334,7 +334,6 @@ $(document).delegate('#add-cart-btn', 'click', function() {
 
 
 $(document).delegate('#add-cart-btnnew', 'click', function() {
-  
     $product_id = $(this).attr('data-id');    
     $variation_id = $(this).attr('data-variation-id');
     $store_id = $(this).attr('data-store-id');

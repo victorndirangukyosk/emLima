@@ -126,6 +126,28 @@
                                                         <a class="btn-link text_green" role="button" data-toggle="collapse" href="#<?= $order['order_id'] ?>" aria-expanded="false" aria-controls="<?= $order['order_id'] ?>"><?= $text_view_billing?></a>&nbsp;|&nbsp;<a class="btn-link text_green" role="button" href="<?php echo ($order['realproducts'] ? $order['real_href'] : $order['href'].'&order_status='.urlencode($order['status'])) ;?>" aria-expanded="false" aria-controls="<?= $order['order_status'] ?>"><?= $text_view_order?></a>
                                                     </div>
                                                 </li>
+                                                <?php if($order['parent_approve_order'] == 'Need Approval' && $order['parent_approval'] == 'Pending') { ?>
+                                                <li class="list-group-item">
+                                                    <div class="my-order-showaddress" id="<?php echo $order['order_id']; ?>">  
+                                                            <a href="#" id="approve_order" data-id="<?= $order['order_id'] ?>" data-custid="<?= $order['customer_id'] ?>" class="btn btn-default btn-xs">APPROVE ORDER</a>
+                                                            <a href="#" id="reject_order" data-id="<?= $order['order_id'] ?>" data-custid="<?= $order['customer_id'] ?>" class="btn btn-default btn-xs">REJECT ORDER</a>
+                                                    </div>
+                                                </li>
+                                                <?php } elseif($order['parent_approve_order'] == 'Need Approval' && $order['parent_approval'] != 'Pending') { ?>
+                                                <li class="list-group-item">
+                                                    <div class="row">
+                                                    <div class="col-md-4">
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                    <div class="my-order-showaddress">  
+                                                            <h3 class="my-order-title label" style="background-color: #8E45FF;display: block;line-height: 2; text-align:center;"><?php echo $order['parent_approval']; ?></h3>
+                                                    </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                    </div>
+                                                    </div>
+                                                </li>
+                                                <?php } ?>
 												<li class="list-group-item">
                                                     <div class="my-order-refund" style="font-size:13px;">
                                                         <i class="fa fa-money"></i> <span><?= $text_refund_text_part1 ?> <strong><?= $text_refund_text_part2 ?> </strong> <?= $text_refund_text_part3 ?></span>
@@ -275,6 +297,61 @@ __kdt.push({"post_on_load": false});
 
             /**/
     });
+    
+    $(document).delegate('#approve_order', 'click', function(e) {
+        e.preventDefault();
+        var order_id = $(this).attr('data-id');
+        var customer_id = $(this).attr('data-custid');
+        var order_status = $(this).attr('id');
+        console.log(order_id +' '+ customer_id+' '+order_status); 
+        var parent_div = $(this).parent("div");
+        console.log(parent_div.attr("id"));
+        
+        alert('Under progress');
+                $.ajax({
+            url: 'index.php?path=account/order/ApproveOrRejectSubUserOrder',
+            type: 'post',
+            data: {
+                order_id: $(this).attr('data-id'),
+                customer_id:$(this).attr('data-custid'),
+                order_status: 'Approved'
+            },
+            dataType: 'json',
+            success: function(json) {
+                console.log(json);
+                var approved = $('<h3 class="my-order-title label" style="background-color: #8E45FF;display: block;line-height: 2; text-align:center;">Approved</h3>');
+                parent_div.html(approved);
+            }
+        });
+    });
+    
+    $(document).delegate('#reject_order', 'click', function(e) {
+        e.preventDefault();
+        var order_id = $(this).attr('data-id');
+        var order_status = 'Rejected';
+        var customer_id = $(this).attr('data-custid');
+        console.log(order_id +' '+ customer_id+' '+order_status);
+        
+        var parent_div = $(this).parent("div");
+        console.log(parent_div.attr("id"));
+        
+                        $.ajax({
+            url: 'index.php?path=account/order/ApproveOrRejectSubUserOrder',
+            type: 'post',
+            data: {
+                order_id: $(this).attr('data-id'),
+                customer_id:$(this).attr('data-custid'),
+                order_status:order_status
+            },
+            dataType: 'json',
+            success: function(json) {
+                console.log(json);
+                var approved = $('<h3 class="my-order-title label" style="background-color: #8E45FF;display: block;line-height: 2; text-align:center;">Rejected</h3>');
+                parent_div.html(approved);
+            }
+        });
+    });
+
 
     $(document).delegate('#cancelOrder', 'click', function(e) {
 
@@ -311,7 +388,7 @@ __kdt.push({"post_on_load": false});
 
     setInterval(function() {
      location = location;
-    }, 30 * 1000); // 60 * 1000 milsec
+    }, 60 * 1000); // 60 * 1000 milsec
     
 
     </script>

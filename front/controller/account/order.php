@@ -151,6 +151,10 @@ class ControllerAccountOrder extends Controller {
 			}
 
 			$this->load->model('sale/order');
+                        $approve_order_button = NULL;
+                        if(empty($_SESSION['parent']) && $result['customer_id'] != $this->customer->getId()){
+                         $approve_order_button = 'Need Approval';   
+                        }
 
 			$data['orders'][] = array(
 				'order_id'   => $result['order_id'],
@@ -176,6 +180,9 @@ class ControllerAccountOrder extends Controller {
 				'href'       => $this->url->link('account/order/info', 'order_id=' . $result['order_id'], 'SSL'),
 				'real_href'       => $this->url->link('account/order/realinfo', 'order_id=' . $result['order_id'], 'SSL'),
 				'accept_reject_href' => $this->url->link('account/order/accept_reject', 'order_id=' . $result['order_id'], 'SSL'),
+                                'parent_approve_order' => $approve_order_button,
+                                'customer_id' => $result['customer_id'],
+                                'parent_approval' => $result['parent_approval']
 			);
 		} 
 		
@@ -2438,4 +2445,31 @@ class ControllerAccountOrder extends Controller {
             return $query->row['fax'];
         }
     }
+    
+    public function ApproveOrRejectSubUserOrder() {
+        
+        $json['success'] = 'Something went wrong!';
+        $order_id = $this->request->post['order_id'];
+        $customer_id = $this->request->post['customer_id'];
+        $order_status = $this->request->post['order_status'];
+
+        $log = new Log('error.log');
+        $log->write($order_id);
+        $log->write($customer_id);
+        $log->write($order_status);
+
+        $this->load->model('account/order');
+        $sub_users_order_details = $this->model_account_order->getSubUserOrderDetails($order_id, $customer_id);
+        $log->write($sub_users_order_details);
+
+        if (is_array($sub_users_order_details) && count($sub_users_order_details) > 0) {
+            $order_update = $this->model_account_order->ApproveOrRejectSubUserOrder($order_id, $customer_id, $order_status);
+            $json['success'] = 'Order '.$order_status.'!';
+        }
+
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
 }
