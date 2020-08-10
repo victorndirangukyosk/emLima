@@ -96,7 +96,16 @@
                              <div class="newset"><a class="btn" href="<?= $dashboard ?>" > <span ><?= $full_name ?></span> </a>
 
                            <div class="dropdownset" style="display:none; margin-top:-1px;">
-                                  <div class="dropdownsetnew" style="margin-top: 10px;"><a class="header__upper-deck-item-link" href="<?= $account ?>" ><i class="fa fa-user"></i>Profile</a></div>
+                            <div class="dropdownsetnew" style="margin-top: 10px;"><a class="header__upper-deck-item-link"
+                                href="<?= $dashboard ?>"><i class="fa fa-user"></i>Dashboard &nbsp;<span class="badge badge-pill badge-light">New</span>
+                                </a></div>
+                                 <div class="dropdownsetnew"><a class="header__upper-deck-item-link"
+                                href="<?= $account ?>"><i class="fa fa-user"></i>My Account</a></div>
+                               <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $help ?>"><i
+                                  class="fa fa-question-circle"></i>Help</a></div>
+                            <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $logout ?>"><i
+                                  class="fa fa-power-off"></i><?= $text_logout ?></a></div>
+                                  <!-- <div class="dropdownsetnew" style="margin-top: 10px;"><a class="header__upper-deck-item-link" href="<?= $account ?>" ><i class="fa fa-user"></i>Profile</a></div>
 
                                   <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $order ?>" ><i class="fa fa-reorder"></i><?= $text_orders ?></a></div>
                                   <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $wishlist ?>" ><i class="fa fa-list-ul"></i><?= $text_my_wishlist?></a></div>
@@ -108,10 +117,10 @@
                                     <div class="dropdownsetnew"><a  class="header__upper-deck-item-link" href="<?= $address ?>" ><i class="fa fa-address-book"></i><?= $label_my_address ?></a></div>
                                    <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="#" class="header__upper-deck-item-link btn-link-white" type="button" data-toggle="modal" data-target="#contactusModal"><i class="fa fa-phone-square"></i><?= $contactus ?></a></div>
                                     <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $help ?>"><i class="fa fa-question-circle"></i><?= $faq ?></a></div>
-                                    <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $logout ?>"><i class="fa fa-power-off"></i><?= $text_logout ?></a></div>
+                                    <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $logout ?>"><i class="fa fa-power-off"></i><?= $text_logout ?></a></div> -->
                                     </div>
                                     </div>
-                                    <div class="butn setui">
+                                    <div class="butn setui" style="position:relative; z-index:-1000;">
                                         <div class="btn btn-default mini-cart-button" role="button" data-toggle="modal"
                                         data-target="#store-cart-side" id="mini-cart-button" 
                                         style="margin-right:10px; margin-top:0px; display:flex; flex-flow: column nowrap;">
