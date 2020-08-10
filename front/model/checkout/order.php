@@ -561,7 +561,6 @@ class ModelCheckoutOrder extends Model {
                         $is_he_parents = $this->model_account_customer->CheckHeIsParent();
                         $order_status_id_sub = $is_he_parents == NULL ? 14 : 15;
                         $log->write($order_status_id.'Add Order History Method222');
-                        // FOR SUB USERS ORDERS
                         
                         if($is_he_parents != NULL) {
                         $this->db->query( "UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id_sub . "', order_pdf_link ='".$pdf_link."', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'" );    
