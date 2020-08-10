@@ -3,8 +3,8 @@
 <div id="content">
   <div class="page-header">
     <div class="container">
-      <div class="col-md-12">
-        <h2><strong><?php echo Dashboard ?></strong></h2>
+      <div class="col-md-12" style="display: flex; justify-content: center;">
+        <h1><strong>MY DASHBOARD</strong></h1>
       </div>
     </div>
   </div>
