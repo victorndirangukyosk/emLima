@@ -22,6 +22,7 @@ class ModelCheckoutOrder extends Model {
 		//echo "<pre>";print_r($this->session->data['order_id']);
 		//print_r($stores);die;
 		$orders = isset($this->session->data['order_id']);
+                $this->load->model('account/customer');
                 $is_he_parents = $this->model_account_customer->CheckHeIsParent();
                 $log->write('addMultiOrder 123');
                 $log->write($is_he_parents);
@@ -125,6 +126,7 @@ class ModelCheckoutOrder extends Model {
 		
 		
 		$orders = isset($this->session->data['order_id']);
+                $this->load->model('account/customer');
                 $is_he_parents = $this->model_account_customer->CheckHeIsParent();
                 $log->write('addMultiOrder 123');
                 $log->write($is_he_parents);
@@ -232,7 +234,10 @@ class ModelCheckoutOrder extends Model {
 
 	
 	public function editOrder( $order_id, $data ) {
-
+                
+                
+                $log = new Log('error.log');
+                $log->write('editOrder Method');
 		$this->trigger->fire( 'pre.order.edit', $data );
 
 		// Void the order first
@@ -548,9 +553,21 @@ class ModelCheckoutOrder extends Model {
 	        	}
 	        }
 			
-
+                        // FOR SUB USERS ORDERS
+                        $log->write('Add Order History Method');
+                        $log->write($order_status_id.'Add Order History Method');
+                        $log->write('Add Order History Method');
+                        $this->load->model('account/customer');
+                        $is_he_parents = $this->model_account_customer->CheckHeIsParent();
+                        $order_status_id_sub = $is_he_parents == NULL ? 14 : 15;
+                        $log->write($order_status_id.'Add Order History Method222');
+                        // FOR SUB USERS ORDERS
+                        
+                        if($is_he_parents != NULL) {
+                        $this->db->query( "UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id_sub . "', order_pdf_link ='".$pdf_link."', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'" );    
+                        } else {
 			$this->db->query( "UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', order_pdf_link ='".$pdf_link."', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'" );
-
+                        }
 			$this->db->query( "INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', order_status_id = '" . (int) $order_status_id . "', notify = '" . (int) $notify . "', comment = '" . $this->db->escape( $comment ) . "', date_added = NOW()" );
 
 
