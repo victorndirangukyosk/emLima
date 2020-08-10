@@ -2,19 +2,19 @@
 
 <div id="content">
   <div class="page-header">
-    <div class="container-fluid">
+    <div class="container">
       <div class="col-md-12">
         <h2><strong><?php echo Dashboard ?></strong></h2>
       </div>
     </div>
   </div>
 
-  <div class="container-fluid" style="margin-bottom: 3rem">
+  <div class="container" style="margin-bottom: 3rem">
 
-    <div class="row" id="sum_widgets">
+    <div class="row" id="sum_widgets" style="display: flex; align-items: center; margin-bottom: 48px;">
       <div class="col-lg-3 col-md-4 col-sm-6">
-        <div class="profile-block">
-          <img src="<?= $base;?>front/ui/theme/mvgv2/images/profile.png" alt="">
+        <div class="text-center">
+          <img src="<?= $base;?>front/ui/theme/mvgv2/images/profile.png" alt="KwikBasket User" width="98">
           <div class="profile-number"><?= $DashboardData['customer_name'] ?> </div>
           <div class="profile-number"><?= $DashboardData['email'] ?> </div>
           <div class="profile-number">+254- <?= $DashboardData['telephone'] ?> </div>
@@ -23,16 +23,16 @@
       <div class="col-lg-3 col-md-4 col-sm-6">
         <div class="panel profit db mbm">
           <div class="panel-body">
-            <p class="icon"><i class="icon fa fa-shopping-cart"></i></p>
-            <h4 class="value"><span><?php echo $DashboardData['total_orders']; ?></span></h4>
+            <p class="icon"><i class="icon fa fa-truck"></i></p>
+            <h4 class="value" style="color: unset"><span><?php echo $DashboardData['total_orders']; ?></span></h4>
             <p class="description">Total Orders</p>
           </div>
         </div>
         <div class="panel profit db mbm">
           <div class="panel-body">
-            <p class="icon"><i class="icon fa fa-eur"></i></p>
-            <h4 class="value"><span><?php echo $DashboardData['avg_value']; ?></span></h4>
-            <p class="description">Avg. Value</p>
+            <p class="icon"><i class="icon fa fa-cart-arrow-down"></i></p>
+            <h4 class="value" style="color: unset"><span><?php echo $DashboardData['avg_value']; ?></span></h4>
+            <p class="description">Avg. Order Value</p>
           </div>
 
         </div>
@@ -42,14 +42,14 @@
         <div class="panel db mbm">
           <div class="panel-body">
             <p class="icon"><i class="icon fa fa-money"></i></p>
-            <h4 class="value"><span><?php echo $DashboardData['total_spent']; ?></span></h4>
+            <h4 class="value" style="color: unset"><span><?php echo $DashboardData['total_spent']; ?></span></h4>
             <p class="description">Total Spent</p>
           </div>
         </div>
         <div class="panel profit db mbm">
           <div class="panel-body">
-            <p class="icon"><i class="icon fa fa-list"></i></p>
-            <h4 class="value"><span><?php echo $DashboardData['frequency']; ?></span></h4>
+            <p class="icon"><i class="icon fa fa-line-chart"></i></p>
+            <h4 class="value" style="color: unset"><span><?php echo $DashboardData['frequency']; ?></span></h4>
             <p class="description">Frequency</p>
           </div>
 
