@@ -307,7 +307,7 @@ __kdt.push({"post_on_load": false});
         var parent_div = $(this).parent("div");
         console.log(parent_div.attr("id"));
         
-        alert('Under progress');
+        console.log('Under progress');
                 $.ajax({
             url: 'index.php?path=account/order/ApproveOrRejectSubUserOrder',
             type: 'post',

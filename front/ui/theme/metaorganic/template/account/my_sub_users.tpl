@@ -522,5 +522,10 @@
     margin-top:-3px !important;
   }
 </style>
+<script>
+$(document).delegate('.useractivate', 'click', function(){
+console.log('User Activate!');
+});    
+</script>
 </body>
 </html>
