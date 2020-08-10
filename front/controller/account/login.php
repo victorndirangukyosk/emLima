@@ -733,12 +733,16 @@ class ControllerAccountLogin extends Controller
 
         $this->trigger->fire('post.customer.login');
 
-        $this->response->redirect($this->url->link('account/account', '', 'SSL'));
+        //$this->response->redirect($this->url->link('account/account', '', 'SSL'));
+        //REDIRECTING TO HOME PAGE
+        $this->response->redirect('/');
       }
     }
 
     if ($this->customer->isLogged()) {
-      $this->response->redirect($this->url->link('account/account', '', 'SSL'));
+        $this->response->redirect('/');
+        //REDIRECTING TO HOME PAGE
+      //$this->response->redirect($this->url->link('account/account', '', 'SSL'));
     }
 
     $this->load->language('account/login');
