@@ -227,7 +227,10 @@ class ControllerCommonHome extends Controller {
                 //$this->response->redirect($this->url->link('common/home/homepage'));
             }
         }
-
+        
+        $customer_details = $this->db->query( "SELECT * FROM " . DB_PREFIX . "customer WHERE customer_id = '" . $this->db->escape($this->session->data['customer_id'] ) . "' AND status = '1'" );
+        $this->session->data['customer_category'] = isset($customer_details->row['customer_category']) ? $customer_details->row['customer_category'] : null;
+        
         $log = new Log('error.log');
 
         $data['kondutoStatus'] = $this->config->get('config_konduto_status');
