@@ -62,10 +62,8 @@
             <p class="description"><b>Know Your KwikBasket Champion</b></p>
             <p class="icon"><i class="icon fa fa-group"></i></p>
             <h4 class="value"><span> </span></h4>
-            <p class="description">Wellington Ayugi
-              <!-- </br></br>+254-123456789
-              </br></br>
-              wa@kwikbasket.com</br> -->
+            <p class="description" style="margin-top: 8px !important;">Naomi Bosibori
+            <br>naomi.bosibori@kwikbasket.com
             </p>
           </div>
         </div>
