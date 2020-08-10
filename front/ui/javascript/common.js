@@ -340,7 +340,7 @@ var cart = {
 					$('.cart-panel-content').load('index.php?path=common/cart/newInfo');
                     $('#cart').load('index.php?path=common/cart/info');
 
-                    $('.cart-count').html(json['count_products']);
+                    $('.cart-count').html(json['count_products'] + " ITEMS IN CART");
                     $('.cart-total-amount').html(json['total_amount']);
 
                     $('.cart-total-amount').html(json['total_amount']);
@@ -392,7 +392,7 @@ var cart = {
 
 					$('.cart-panel-content').load('index.php?path=common/cart/newInfo');
 
-					$('.cart-count').html(json['count_products']);
+					$('.cart-count').html(json['count_products'] + " ITEMS IN CART");
                     $('.cart-total-amount').html(json['total_amount']);
 				}
 
@@ -483,7 +483,7 @@ var cart = {
 				    /*start*/
 				    $('.cart-panel-content').load('index.php?path=common/cart/newInfo');
 
-					$('.cart-count').html(json['count_products']);
+					$('.cart-count').html(json['count_products'] + " ITEMS IN CART");
                     $('.cart-total-amount').html(json['total_amount']);
 
                     /*end*/
