@@ -3,8 +3,8 @@
 <div id="content">
   <div class="page-header">
     <div class="container">
-      <div class="col-md-12">
-        <h2><strong><?php echo Dashboard ?></strong></h2>
+      <div class="col-md-12" style="display: flex; justify-content: center;">
+        <h1><strong>MY DASHBOARD</strong></h1>
       </div>
     </div>
   </div>
@@ -62,10 +62,8 @@
             <p class="description"><b>Know Your KwikBasket Champion</b></p>
             <p class="icon"><i class="icon fa fa-group"></i></p>
             <h4 class="value"><span> </span></h4>
-            <p class="description">Wellington Ayugi
-              <!-- </br></br>+254-123456789
-              </br></br>
-              wa@kwikbasket.com</br> -->
+            <p class="description" style="margin-top: 8px !important;">Naomi Bosibori
+            <br>naomi.bosibori@kwikbasket.com
             </p>
           </div>
         </div>
@@ -221,11 +219,11 @@
                       <a data-confirm="Products in this order will be added to cart !!"
                          class="btn btn-success download" data-store-id="<?= ACTIVE_STORE_ID ?>"
                          data-toggle="tooltip" value="<?php echo $ro['order_id']; ?>" title="Add To Cart/Reorder"><i
-                                class="fa fa-shopping-cart"></i></a>
+                                class="fa fa-cart-plus"></i></a>
 
                       <a href="<?php echo $ro['href'];?>" target="_blank" data-toggle="tooltip" title="View Order"
                          class="btn btn-success">
-                        <i class="fa fa-info"></i>
+                        <i class="fa fa-eye"></i>
                       </a>
                     </td>
                   </tr>
