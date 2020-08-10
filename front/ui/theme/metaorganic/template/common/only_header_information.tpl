@@ -80,7 +80,7 @@
   <div class="header__banner-container-close"></div>
 </div>
 <div class="col-md-12"
-     style="position: relative; z-index: 1040; padding-bottom: 6px; border-bottom: 1px solid #ea6f28; margin-bottom: 14px;">
+     style="position: relative; z-index: 1040; padding-bottom: 16px; border-bottom: 1px solid #ea6f28; margin-bottom: 14px;">
 
   <div class="row" style="margin-top: 25px;">
     <div class="col-md-2">
@@ -154,13 +154,17 @@
           </div>
         </div>
         <div class="butn setui">
-          <button class="btn btn-default mini-cart-button" role="button" data-toggle="modal"
-                  data-target="#store-cart-side" id="mini-cart-button" style="margin-right:10px; margin-top:0px">
-            <span class="badge cart-count"><?= $this->cart->countProducts(); ?></span>
-            <i class="fa fa-shopping-cart"></i>
-            <span class="hidden-xs hidden-sm cart-total-amount"><?= $this->
-              currency->format($this->cart->getTotal()); ?></span>
-          </button>
+          <div class="btn btn-default mini-cart-button" role="button" data-toggle="modal"
+                  data-target="#store-cart-side" id="mini-cart-button" 
+                  style="margin-right:10px; margin-top:0px; display:flex; flex-flow: column nowrap;">
+                  <div  style="display:flex; align-items: center;">
+                    <i class="fa fa-shopping-cart"></i>&nbsp;&nbsp;
+                    <span class="hidden-xs hidden-sm cart-total-amount"><?= $this->
+                      currency->format($this->cart->getTotal()); ?></span>
+                  </div>
+              <span class="badge cart-count" style="margin: 4px 0px;"><?= $this->cart->countProducts(); ?> items in cart</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -111,11 +111,18 @@
                                     <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $logout ?>"><i class="fa fa-power-off"></i><?= $text_logout ?></a></div>
                                     </div>
                                     </div>
-                                      <div class="butn setui"> <a href="<?= BASE_URL?>/index.php?path=checkout/checkoutitems"><button class="btn btn-default mini-cart-button" role="button" data-toggle="modal" data-target="#store-cart-side" id="mini-cart-button">
-										<span class="badge cart-count"><?= $this->cart->countProducts(); ?></span>
-										<i class="fa fa-shopping-cart"></i>
-										<span class="hidden-xs hidden-sm cart-total-amount"><?= $this->currency->format($this->cart->getTotal()); ?></span>
-						</button></a></div>
+                                    <div class="butn setui">
+                                        <div class="btn btn-default mini-cart-button" role="button" data-toggle="modal"
+                                        data-target="#store-cart-side" id="mini-cart-button" 
+                                        style="margin-right:10px; margin-top:0px; display:flex; flex-flow: column nowrap;">
+                                        <div  style="display:flex; align-items: center;">
+                                            <i class="fa fa-shopping-cart"></i>&nbsp;&nbsp;
+                                            <span class="hidden-xs hidden-sm cart-total-amount"><?= $this->
+                                            currency->format($this->cart->getTotal()); ?></span>
+                                        </div>
+                                    <span class="badge cart-count" style="margin: 4px 0px;"><?= $this->cart->countProducts(); ?> items in cart</span>
+                                    </div>
+                                     </div>
                                     </div>
                                     </div>
                        <?php } ?>
