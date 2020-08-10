@@ -232,6 +232,7 @@ class ControllerCommonHome extends Controller {
         $this->session->data['customer_category'] = isset($customer_details->row['customer_category']) ? $customer_details->row['customer_category'] : null;
         
         $log = new Log('error.log');
+        $log->write($this->session->data['customer_category'].'customer_category');
 
         $data['kondutoStatus'] = $this->config->get('config_konduto_status');
 
