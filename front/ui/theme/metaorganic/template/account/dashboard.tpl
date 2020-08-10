@@ -219,11 +219,11 @@
                       <a data-confirm="Products in this order will be added to cart !!"
                          class="btn btn-success download" data-store-id="<?= ACTIVE_STORE_ID ?>"
                          data-toggle="tooltip" value="<?php echo $ro['order_id']; ?>" title="Add To Cart/Reorder"><i
-                                class="fa fa-shopping-cart"></i></a>
+                                class="fa fa-cart-plus"></i></a>
 
                       <a href="<?php echo $ro['href'];?>" target="_blank" data-toggle="tooltip" title="View Order"
                          class="btn btn-success">
-                        <i class="fa fa-info"></i>
+                        <i class="fa fa-eye"></i>
                       </a>
                     </td>
                   </tr>
