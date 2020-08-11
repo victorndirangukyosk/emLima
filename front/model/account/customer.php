@@ -445,6 +445,15 @@ class ModelAccountCustomer extends Model {
 //            }
         }
     }
+    
+    public function approvecustom($customer_id, $approve_id) {
+
+        $customer_info = $this->getCustomer($customer_id);
+
+        if ($customer_info) {
+            $this->db->query("UPDATE " . DB_PREFIX . "customer SET approved = '" . (int) $approve_id . "', token = '' WHERE customer_id = '" . (int) $customer_id . "'");
+        }
+    }
 
     public function resendVerificationEmail($data, $customer_id) {
 

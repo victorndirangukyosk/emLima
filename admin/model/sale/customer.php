@@ -263,7 +263,7 @@ class ModelSaleCustomer extends Model {
             
         }
     }
-
+    
     public function getAddress($address_id) {
         $address_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "address WHERE address_id = '" . (int) $address_id . "'");
 

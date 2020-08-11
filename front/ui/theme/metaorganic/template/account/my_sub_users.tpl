@@ -530,6 +530,22 @@ console.log('User Activate!');
 var user_id = $(this).attr('data-store-id');
 var active_status = $(this).attr('data-active');
 
+if(active_status == 0) {
+$(this).find('i').toggleClass('fa-times fa-check');
+console.log(active_status+' '+'Active Status');
+$(this).attr('data-confirm', 'Activate sub user!');
+$(this).attr('data-active', '1');
+$(this).attr('title', 'Activate user');
+}
+ 
+if(active_status == 1) {
+$(this).find('i').toggleClass('fa-check fa-times');
+console.log(active_status+' '+'Active Status');
+$(this).attr('data-confirm', 'De activate sub user!');
+$(this).attr('data-active', '0');
+$(this).attr('title', 'De activate user');
+}
+
         $.ajax({
             url: 'index.php?path=account/sub_users/ActivateSubUsers',
             type: 'post',
@@ -537,7 +553,16 @@ var active_status = $(this).attr('data-active');
             dataType: 'json',
             success: function(json) {
              console.log(json);
-             
+             if(active_status == 0) {
+             $(this).find('i').toggleClass('fa-times fa-check');
+             console.log(active_status+' '+'Active Status');
+            }
+            
+            if(active_status == 1) {
+             $(this).find('i').toggleClass('fa-times fa-check');
+             console.log(active_status+' '+'Active Status');
+            }
+            
             }
         });
         }        
