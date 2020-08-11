@@ -624,4 +624,16 @@ class Controlleraccountsubusers extends Controller {
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
+    
+    public function EmailUnique() {
+        $log = new Log('error.log');
+        $log->write($this->request->post['email']);
+        $this->load->model('account/customer');
+        $count = $this->model_account_customer->getTotalCustomersByEmail($this->request->post['email']);
+        $log->write($count.'Email Count');
+        
+        $json['success'] = $count == 0 || $count == NULL ? TRUE : FALSE;
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
 }

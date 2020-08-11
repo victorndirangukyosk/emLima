@@ -570,6 +570,26 @@ $('.status'+user_id).html('Verified');
         });
         }        
 });    
+$(document).delegate('#email', 'blur', function(){
+    console.log($(this).val());
+            $.ajax({
+            url: 'index.php?path=account/sub_users/EmailUnique',
+            type: 'post',
+            data: { email: $(this).val() },
+            dataType: 'json',
+            success: function(json) {
+             if(json.success == false) {
+             console.log(json.success);  
+             $("#save-button").prop('disabled', true);
+             }
+             
+             if(json.success == true) {
+             console.log(json.success);
+             $("#save-button").prop('disabled', false);
+             }
+            }
+        });
+});    
 </script>
 </body>
 </html>
