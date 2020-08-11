@@ -581,11 +581,13 @@ $(document).delegate('#email', 'blur', function(){
              if(json.success == false) {
              console.log(json.success);  
              $("#save-button").prop('disabled', true);
+             $('<div class="text-danger">Email address shold be unique</div>' ).insertAfter( $("input[name='email']"));
              }
              
              if(json.success == true) {
              console.log(json.success);
              $("#save-button").prop('disabled', false);
+             $('.text-danger').remove();
              }
             }
         });
