@@ -614,7 +614,10 @@ class Controlleraccountsubusers extends Controller {
         $log = new Log('error.log');
         $log->write($this->request->post['user_id']);
         $log->write($this->request->post['active_status']);
-        $customer_info = $this->model_account_customer->approve($this->request->post['user_id']);
+        $user_id = $this->request->post['user_id'];
+        $log->write($user_id.'USER ID');
+        $this->load->model('account/customer');
+        $this->model_account_customer->approve($user_id);
         
         $json['success'] = 'User activated!';
         $this->response->addHeader('Content-Type: application/json');
