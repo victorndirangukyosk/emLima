@@ -508,15 +508,19 @@ class ModelApiCheckout extends Model {
                         $order_status_id_sub = $is_he_parents == NULL ? 14 : 15;
                         $log->write($order_status_id.'Add Order History Method222');
                         $query_order_history = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "order_history` o WHERE order_id = '" . (int) $order_id . "'");
+
                         
-                        // FOR SUB USERS ORDERS
-                        if($is_he_parents != NULL && $query_order_history->row['total'] == 0) {
+                        if($is_he_parents != NULL) {
                         $this->db->query( "UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id_sub . "', order_pdf_link ='".$pdf_link."', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'" );    
+                        if($query_order_history->row['total'] == 0){
                         $this->db->query( "INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', order_status_id = '" . (int) $order_status_id_sub . "', notify = '" . (int) $notify . "', comment = '" . $this->db->escape( $comment ) . "', date_added = NOW()" );
-                        } else {
-			$this->db->query( "UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', order_pdf_link ='".$pdf_link."', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'" );
-                        $this->db->query( "INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', order_status_id = '" . (int) $order_status_id . "', notify = '" . (int) $notify . "', comment = '" . $this->db->escape( $comment ) . "', date_added = NOW()" );
+                        }} elseif($is_he_parents == NULL && $order_status_id == 0) {
+                        $log->write($order_status_id.'MAIN USERS ORDERS');    
+			$this->db->query( "UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id_sub . "', order_pdf_link ='".$pdf_link."', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'" );
+                        if($query_order_history->row['total'] == 0) {
+                        $this->db->query( "INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', order_status_id = '" . (int) $order_status_id_sub . "', notify = '" . (int) $notify . "', comment = '" . $this->db->escape( $comment ) . "', date_added = NOW()" );
                         }
+                        } 
 
 
 			// If current order status is not processing or complete but new status is processing or complete then commence completing the order
