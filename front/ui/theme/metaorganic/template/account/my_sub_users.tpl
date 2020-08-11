@@ -525,6 +525,19 @@
 <script>
 $(document).delegate('.useractivate', 'click', function(){
 console.log('User Activate!');
+var user_id = $(this).attr('data-store-id');
+var active_status = $(this).attr('data-active');
+
+        $.ajax({
+            url: 'index.php?path=account/sub_users/ActivateSubUsers',
+            type: 'post',
+            data: { user_id: user_id, active_status: active_status },
+            dataType: 'json',
+            success: function(json) {
+             console.log(json);
+             
+            }
+        });
 });    
 </script>
 </body>

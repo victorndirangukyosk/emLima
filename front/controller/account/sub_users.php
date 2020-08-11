@@ -610,5 +610,10 @@ class Controlleraccountsubusers extends Controller {
         return !$this->error;
     }
 
-        
+    public function ActivateSubUsers() {
+        $log = new Log('error.log');
+        $log->write($this->request->post['user_id']);
+        $log->write($this->request->post['active_status']);
+        $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+    }
 }

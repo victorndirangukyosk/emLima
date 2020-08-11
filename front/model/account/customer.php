@@ -418,31 +418,31 @@ class ModelAccountCustomer extends Model {
             $this->db->query("UPDATE " . DB_PREFIX . "customer SET approved = '1' , token = '' WHERE customer_id = '" . (int) $customer_id . "'");
 
 
-
-            $store_name = $this->config->get('config_name');
-            $store_url = HTTP_CATALOG . 'index.php?path=account/login';
-
-
-            $customer_info['store_name'] = $store_name;
-            $customer_info['account_href'] = $store_url;
-
-            $subject = $this->emailtemplate->getSubject('Customer', 'customer_4', $customer_info);
-            $message = $this->emailtemplate->getMessage('Customer', 'customer_4', $customer_info);
-
-            $mail = new Mail($this->config->get('config_mail'));
-            $mail->setTo($customer_info['email']);
-            $mail->setFrom($this->config->get('config_from_email'));
-            $mail->setSender($this->config->get('config_name'));
-            $mail->setSubject($subject);
-            $mail->setHTML($message);
-            $mail->send();
-
-            $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_4', $customer_info);
-            // send message here
-            if ($this->emailtemplate->getSmsEnabled('Customer', 'customer_4')) {
-
-                $ret = $this->emailtemplate->sendmessage($customer_info['telephone'], $sms_message);
-            }
+//AFTER CUSTOMER VERIFIED MAIL SENDING
+//            $store_name = $this->config->get('config_name');
+//            $store_url = HTTP_CATALOG . 'index.php?path=account/login';
+//
+//
+//            $customer_info['store_name'] = $store_name;
+//            $customer_info['account_href'] = $store_url;
+//
+//            $subject = $this->emailtemplate->getSubject('Customer', 'customer_4', $customer_info);
+//            $message = $this->emailtemplate->getMessage('Customer', 'customer_4', $customer_info);
+//
+//            $mail = new Mail($this->config->get('config_mail'));
+//            $mail->setTo($customer_info['email']);
+//            $mail->setFrom($this->config->get('config_from_email'));
+//            $mail->setSender($this->config->get('config_name'));
+//            $mail->setSubject($subject);
+//            $mail->setHTML($message);
+//            $mail->send();
+//
+//            $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_4', $customer_info);
+//            // send message here
+//            if ($this->emailtemplate->getSmsEnabled('Customer', 'customer_4')) {
+//
+//                $ret = $this->emailtemplate->sendmessage($customer_info['telephone'], $sms_message);
+//            }
         }
     }
 
