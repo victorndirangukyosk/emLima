@@ -524,6 +524,8 @@
 </style>
 <script>
 $(document).delegate('.useractivate', 'click', function(){
+var choice = confirm($(this).attr('data-confirm'));
+if (choice) {
 console.log('User Activate!');
 var user_id = $(this).attr('data-store-id');
 var active_status = $(this).attr('data-active');
@@ -538,6 +540,7 @@ var active_status = $(this).attr('data-active');
              
             }
         });
+        }        
 });    
 </script>
 </body>
