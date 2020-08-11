@@ -46,7 +46,7 @@
             <td><?php echo $user['telephone'];?></td>
             <td><?php echo $user['customer_group'];?></td>
             <td><?php echo $user['company_name'];?></td>
-            <td><?php echo ($user['approved']==0) ? 'Unverified': 'Verified'?></td>
+            <td class="status<?php echo $user['customer_id']; ?>"><?php echo ($user['approved']==0) ? 'Unverified': 'Verified'?></td>
             <td><?php if($user['approved'] == 0) { ?> <a data-confirm="Activate sub user!" class="btn btn-success useractivate" data-active="1" data-store-id="<?php echo $user['customer_id']; ?>" data-toggle="tooltip" title="Activate user"><i class="fa fa-check"></i></a> <?php } ?>
             <?php if($user['approved'] == 1) { ?> <a data-confirm="De activate sub user!" class="btn btn-success useractivate" data-active="0" data-store-id="<?php echo $user['customer_id']; ?>" data-toggle="tooltip" title="De activate user"><i class="fa fa-times"></i></a> <?php } ?>
             </td>
@@ -536,6 +536,7 @@ console.log(active_status+' '+'Active Status');
 $(this).attr('data-confirm', 'Activate sub user!');
 $(this).attr('data-active', '1');
 $(this).attr('title', 'Activate user');
+$('.status'+user_id).html('Verified');
 }
  
 if(active_status == 1) {
@@ -544,6 +545,7 @@ console.log(active_status+' '+'Active Status');
 $(this).attr('data-confirm', 'De activate sub user!');
 $(this).attr('data-active', '0');
 $(this).attr('title', 'De activate user');
+$('.status'+user_id).html('Unverified');
 }
 
         $.ajax({
@@ -556,6 +558,7 @@ $(this).attr('title', 'De activate user');
              if(active_status == 0) {
              $(this).find('i').toggleClass('fa-times fa-check');
              console.log(active_status+' '+'Active Status');
+             $('.status'+user_id).html('Verified');
             }
             
             if(active_status == 1) {
