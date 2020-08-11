@@ -536,7 +536,7 @@ console.log(active_status+' '+'Active Status');
 $(this).attr('data-confirm', 'Activate sub user!');
 $(this).attr('data-active', '1');
 $(this).attr('title', 'Activate user');
-$('.status'+user_id).html('Verified');
+$('.status'+user_id).html('Unverified');
 }
  
 if(active_status == 1) {
@@ -545,7 +545,7 @@ console.log(active_status+' '+'Active Status');
 $(this).attr('data-confirm', 'De activate sub user!');
 $(this).attr('data-active', '0');
 $(this).attr('title', 'De activate user');
-$('.status'+user_id).html('Unverified');
+$('.status'+user_id).html('Verified');
 }
 
         $.ajax({

@@ -24,6 +24,7 @@ class Controlleraccountsubusers extends Controller {
 
     public function index() {  
 
+        //unset($_SESSION['success_msg']);
         if(!empty($_SESSION['parent'])){
             $this->response->redirect($this->url->link('account/account'));
         }
