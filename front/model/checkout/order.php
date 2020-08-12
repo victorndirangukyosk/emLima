@@ -335,7 +335,10 @@ class ModelCheckoutOrder extends Model {
 
 	public function getOrder( $order_id ) {
 		$order_query = $this->db->query( "SELECT *, (SELECT os.name FROM `" . DB_PREFIX . "order_status` os WHERE os.order_status_id = o.order_status_id AND os.language_id = o.language_id) AS order_status FROM `" . DB_PREFIX . "order` o WHERE o.order_id = '" . (int) $order_id . "'" );
-
+                $log = new Log('error.log');
+                $log->write('getOrder Method');
+                $log->write($order_query->rows);
+                $log->write('getOrder Method');
 		if ( $order_query->num_rows ) {
 
 			$this->load->model( 'localisation/language' );
