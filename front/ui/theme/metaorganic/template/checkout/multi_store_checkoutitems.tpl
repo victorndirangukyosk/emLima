@@ -151,7 +151,7 @@
 
 <tfoot>
 <tr class="first last">
-<td colspan="9" class="a-right last">
+<td colspan="12" class="a-right last">
 <a  href="<?php echo $continue; ?>"> <button type="button" title="Continue Shopping" class="button btn-continue" style="width:210px;background-color: #ec9f4e ; padding: 15px 20px 27px 20px;" ><span><span>Continue Shopping</span></span></button></a>
                                                        
                                                        
