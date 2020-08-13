@@ -4049,10 +4049,11 @@ else{
 				$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 4, 'Customer Name');
                                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'Company Name');
 				$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 4, 'Order Id');
-				$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 4, 'Delivery Date');	
+                                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 4, 'Order Date');	
+				$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 4, 'Delivery Date');	
 				
-				$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 4, 'P.O. Number');
-				$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 4, 'Total');
+				$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 4, 'P.O. Number');
+				$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, 4, 'Order Value');
 	
 	
 			 
@@ -4062,9 +4063,10 @@ else{
 				$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(3, 4)->applyFromArray($title);
 				$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(4, 4)->applyFromArray($title);
 				$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(5, 4)->applyFromArray($title); 
+                                $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(6, 4)->applyFromArray($title); 
 				
 				// Fetching the table data
-				$row = 6;$Amount=0;
+				$row = 7;$Amount=0;
 				foreach ($data['customers'] as $result) {    
 					
 					/*if($result['pt']) {
@@ -4075,17 +4077,18 @@ else{
 					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $result['customer']);				
 				        $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['company']);				
                                         $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['order_id']);
-					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row,$result['delivery_date']);
-					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['po_number']);
-					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $result['subtotal']); 
+                                        $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row,$result['date_added']);
+					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row,$result['delivery_date']);
+					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $result['po_number']);
+					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $result['subtotal']); 
 					$Amount=$Amount+$result['subtotalvalue'];
 					$row++;
 				}
 				$Amount=str_replace("KES"," ",$this->currency->format($Amount));
 				$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, $row)->applyFromArray($title);
-				$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(5, $row)->applyFromArray($title);
+				$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(6, $row)->applyFromArray($title);
 				$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, "Amount");
-				$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $Amount);
+				$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $Amount);
 
 
 				$objPHPExcel->setActiveSheetIndex(0);
