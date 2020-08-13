@@ -256,6 +256,13 @@
     </li>
     <?php } ?>
 
+    <li><a class="parent"><i class="fa fa-envelope-o fa-fw"></i> <span>Bulk Email</span></a>
+        <ul class="collapse">
+            <li><a href="<?php echo $bulk_email; ?>">Send Bulk Email</a></li>           
+            <li><a href="<?php echo $email_groups; ?>">Email Groups</a></li>
+        </ul>
+    </li>
+
     <?php
     if( $preturn_report_shopper_order!= false || $preturn_report_shopper!= false || $preturn_report_vendor != false || $preturn_report_vendor_order != false || $preturn_sale_order != false || $preturn_sale_advanced != false  || $preturn_sale_tax != false || $preturn_sale_payment != false || $preturn_sale_transaction != false  || $preturn_sale_shipping != false || $preturn_sale_return != false || $preturn_sale_coupon != false || $preturn_product_viewed != false || $preturn_product_purchased != false || $preturn_customer_online != false || $preturn_customer_activity != false || $preturn_customer_order != false || $preturn_customer_reward != false || $preturn_customer_credit != false || $preturn_marketing != false  ) {
     ?>
