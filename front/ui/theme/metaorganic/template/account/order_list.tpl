@@ -319,7 +319,7 @@ __kdt.push({"post_on_load": false});
             dataType: 'json',
             success: function(json) {
                 console.log(json);
-                var approved = $('<h3 class="my-order-title label" style="background-color: #8E45FF;display: block;line-height: 2; text-align:center;">Approved</h3>');
+                var approved = $('<li class="list-group-item"><div class="row"><div class="col-md-4"></div><div class="col-md-4"><div class="my-order-showaddress"><h3 class="my-order-title label" style="background-color: #8E45FF;display: block;line-height: 2; text-align:center;">Approved</h3></div></div><div class="col-md-4"></div></div>');
                 parent_div.html(approved);
             }
         });
@@ -346,7 +346,7 @@ __kdt.push({"post_on_load": false});
             dataType: 'json',
             success: function(json) {
                 console.log(json);
-                var approved = $('<h3 class="my-order-title label" style="background-color: #8E45FF;display: block;line-height: 2; text-align:center;">Rejected</h3>');
+                var approved = $('<li class="list-group-item"><div class="row"><div class="col-md-4"></div><div class="col-md-4"><div class="my-order-showaddress"><h3 class="my-order-title label" style="background-color: #8E45FF;display: block;line-height: 2; text-align:center;">Rejected</h3></div></div><div class="col-md-4"></div></div>');
                 parent_div.html(approved);
             }
         });

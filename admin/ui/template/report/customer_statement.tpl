@@ -93,16 +93,19 @@
               <tr>
                 
                 <td class="text-left">Customer Name</td>
+                <td class="text-left">Company Name</td>
                 <!--<td class="text-left"><?php echo $column_email; ?></td>
                 <td class="text-left"><?php echo $column_customer_group; ?></td>
                 <td class="text-left"><?php echo $column_status; ?></td>-->
                 <td class="text-right">Order Id</td> 
                 <td class="text-right">Order Date</td> 
+                <td class="text-right">Delivery Date</td> 
                 <!--<td class="text-right"><?php echo $column_products; ?></td> 
                 <td class="text-right"><?php echo $column_products; ?></td>-->
                 <!--<td class="text-right"><?php echo $column_total; ?></td>-->
                 <td class="text-right">P.O. Number</td>
-                <td class="text-right"><?php echo $column_total; ?></td>
+                <!--<td class="text-right"><?php echo $column_total; ?></td>-->
+                <td class="text-right">Order value</td>
                 <td class="text-center"><?php echo $column_action; ?></td>
               </tr>
             </thead>
@@ -111,18 +114,20 @@
               <?php foreach ($customers as $customer) { ?>
               <tr>
                 <td class="text-left"><?php echo $customer['customer']; ?></td>
+                <td class="text-left"><?php echo $customer['company']; ?></td>
                <!-- <td class="text-left"><?php echo $customer['email']; ?></td>
                 <td class="text-left"><?php echo $customer['customer_group']; ?></td>
                 <td class="text-left"><?php echo $customer['status']; ?></td>-->
                 <td class="text-right"><?php echo $customer['order_id']; ?></td> 
                 <td class="text-right"><?php echo $customer['date_added']; ?></td> 
+                <td class="text-right"><?php echo $customer['delivery_date']; ?></td> 
                 <!--<td class="text-right"><?php echo $customer['products']; ?></td> 
                 <td class="text-right"><?php echo $customer['editedproducts']; ?></td>-->
 
                 <!--<td class="text-right"><?php echo $customer['total']; ?></td>-->
                 <td class="text-right"><?php echo $customer['po_number']; ?></td>
                 <td class="text-right"><?php echo $customer['subtotal']; ?></td>
-                <td class="text-center"><a class="download" id="download-order-products"  data-toggle="tooltip" order_date="<?php echo $customer['date_added']; ?>" company="<?php echo $customer['company']; ?>" data="<?php echo $customer['customer']; ?>" value=<?php echo $customer['order_id']; ?>  title="Download Products" class="btn btn-info"><i  style="cursor: pointer;height:20px;width:20px" class="fa fa-file-excel-o"></i></a></td>
+                <td class="text-center"><a class="download" id="download-order-products"  data-toggle="tooltip" order_date="<?php echo $customer['date_added']; ?>" company="<?php echo $customer['company']; ?>" data="<?php echo $customer['customer']; ?>" value=<?php echo $customer['order_id']; ?>  title="Download Statements" class="btn btn-info"><i  style="cursor: pointer;height:20px;width:20px" class="fa fa-file-excel-o"></i></a></td>
               </tr>
               <?php } ?>
               <?php } else { ?>
