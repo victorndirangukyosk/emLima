@@ -313,7 +313,7 @@
           <h2 class="featured-categories__header-title"><span><?=$category['name']?></span></h2>
 
         </div>
-        <ul id="items-ul" class="_2tY3C" data-test-selector="item-cards-layout-grid">
+        <ul id="items-ul" class="_2tY3C" data-test-selector="item-cards-layout-grid" style="width: 100%;">
 
           <?php
 													foreach($category['products'] as $product) {
