@@ -4168,6 +4168,7 @@ class ControllerSaleOrder extends Controller
         }
         
         //    echo "<pre>";print_r($data['orders'][0]);die;
+        try{
         $log = new Log('error.log');
         $log->write(DIR_TEMPLATE);
         require_once DIR_ROOT . '/vendor/autoload.php';
@@ -4181,6 +4182,11 @@ class ControllerSaleOrder extends Controller
         $mpdf->WriteHTML($this->load->view('sale/order_invoice_mpdf.tpl', $data['orders'][0]),\Mpdf\HTMLParserMode::HTML_BODY);
         $mpdf->Output();
         $mpdf->Output("KwikBasket Invoice # ".$order_id.".pdf", 'D');
+        } catch (\Mpdf\MpdfException $e) { // Note: safer fully qualified exception 
+                                   //       name used for catch
+        // Process the exception, log, print etc.
+        echo $e->getMessage();
+        }
         
         $this->response->setOutput($this->load->view('sale/order_invoice.tpl', $data['orders'][0]));
     }
