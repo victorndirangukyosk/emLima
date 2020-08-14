@@ -3942,7 +3942,257 @@ class ControllerSaleOrder extends Controller
         }
         return $string;
     }
+    
+    public function printinvoice()
+    {
+        $this->load->language('sale/order');
 
+        $data['title'] = $this->language->get('text_invoice');
+
+        if ($this->request->server['HTTPS']) {
+            $data['base'] = HTTPS_SERVER;
+        } else {
+            $data['base'] = HTTP_SERVER;
+        }
+
+        $data['direction'] = $this->language->get('direction');
+        $data['lang'] = $this->language->get('code');
+
+
+        $data['text_date_delivered'] = $this->language->get('text_date_delivered');
+        $data['text_invoice'] = $this->language->get('text_invoice');
+        $data['text_order_detail'] = $this->language->get('text_order_detail');
+        $data['text_order_id'] = $this->language->get('text_order_id');
+        $data['text_invoice_no'] = $this->language->get('text_invoice_no');
+        $data['text_invoice_date'] = $this->language->get('text_invoice_date');
+        $data['text_date_added'] = $this->language->get('text_date_added');
+        $data['text_telephone'] = $this->language->get('text_telephone');
+        $data['text_fax'] = $this->language->get('text_fax');
+        $data['text_name'] = $this->language->get('text_name');
+        $data['text_contact_no'] = $this->language->get('text_contact_no');
+        $data['text_email'] = $this->language->get('text_email');
+        $data['text_website'] = $this->language->get('text_website');
+        $data['text_to'] = $this->language->get('text_to');
+        $data['text_po_no'] = $this->language->get('text_po_no');
+        $data['text_ship_to'] = $this->language->get('text_ship_to');
+        $data['text_payment_method'] = $this->language->get('text_payment_method');
+        $data['text_shipping_method'] = $this->language->get('text_shipping_method');
+
+        $data['column_product'] = $this->language->get('column_product');
+        $data['column_produce_type'] = $this->language->get('column_produce_type');
+
+
+        $data['column_model'] = $this->language->get('column_model');
+        $data['column_unit'] = $this->language->get('column_unit') . ' Ordered';
+        $data['column_quantity'] = $this->language->get('column_quantity') . ' Ordered';
+        $data['column_unit_change'] = $this->language->get('column_unit') . ' Change';
+        $data['column_quantity_change'] = $this->language->get('column_quantity') . ' Change';
+        $data['column_price'] = $this->language->get('column_price');
+        $data['column_total'] = $this->language->get('column_total');
+        $data['column_comment'] = $this->language->get('column_comment');
+
+        $data['text_tax'] = $this->language->get('text_tax');
+        $data['text_cpf_number'] = $this->language->get('text_cpf_number');
+
+        $this->load->model('sale/order');
+        $this->load->model('tool/image');
+
+        $this->load->model('setting/setting');
+
+        $data['orders'] = array();
+
+        $orders = array();
+
+        if (isset($this->request->post['selected'])) {
+            $orders = $this->request->post['selected'];
+        } elseif (isset($this->request->get['order_id'])) {
+            $orders[] = $this->request->get['order_id'];
+        }
+
+        if (isset($this->request->get['store_id'])) {
+            $store_id = $this->request->get['store_id'];
+        } else {
+            $store_id = 0;
+        }
+
+        foreach ($orders as $order_id) {
+            $order_info = $this->model_sale_order->getOrder($order_id);
+            //check vendor order 
+
+            if ($this->user->isVendor()) {
+                if (!$this->isVendorOrder($order_id)) {
+                    $this->response->redirect($this->url->link('error/not_found'));
+                }
+            }
+
+            if ($order_info) {
+
+
+                $store_info = $this->model_setting_setting->getSetting('config', $order_info['store_id']);
+                // if ($store_info) {
+                //     $store_address = $store_info['config_address'];
+                //     $store_email = $store_info['config_email'];
+                //     $store_telephone = $store_info['config_telephone'];
+                //     $store_fax = $store_info['config_fax'];
+                // } else {
+                //     $store_address = $this->config->get('config_address');
+                //     $store_email = $this->config->get('config_email');
+                //     $store_telephone = $this->config->get('config_telephone');
+                //     $store_fax = $this->config->get('config_fax');
+                // }
+
+                $store_data = $this->model_sale_order->getStoreData($order_info['store_id']);
+                if ($store_data) {
+                    $store_address = $store_data['address'];
+                    $store_email = $store_data['email'];
+                    $store_telephone = $store_data['telephone'];
+                    $store_fax = $store_data['fax'];
+                    $store_tax = $store_data['tax'];
+                } else {
+                    $store_address = $this->config->get('config_address');
+                    $store_email = $this->config->get('config_email');
+                    $store_telephone = $this->config->get('config_telephone');
+                    $store_fax = $this->config->get('config_fax');
+                    $store_tax = '';
+                }
+
+
+                $data['store_logo'] = $this->model_tool_image->resize($store_data['logo'], 300, 300);
+                $data['store_name'] = $store_data['name'];
+
+                if ($order_info['invoice_no']) {
+                    $invoice_no = $order_info['invoice_prefix'] . $order_info['invoice_no'] . $order_info['invoice_sufix'];
+                } else {
+                    $invoice_no = '';
+                }
+
+                $this->load->model('tool/upload');
+
+                $product_data = array();
+
+                if ($this->model_sale_order->hasRealOrderProducts($order_id)) {
+
+                    $products = $this->model_sale_order->getRealOrderProducts($order_id);
+                } else {
+
+                    $products = $this->model_sale_order->getOrderProducts($order_id);
+                }
+
+                foreach ($products as $product) {
+
+                    if ($store_id && $product['store_id'] != $store_id) {
+                        continue;
+                    }
+                    $option_data = array();
+
+                    $options = $this->model_sale_order->getOrderOptions($order_id, $product['order_product_id']);
+
+                    foreach ($options as $option) {
+                        if ($option['type'] != 'file') {
+                            $value = $option['value'];
+                        } else {
+                            $upload_info = $this->model_tool_upload->getUploadByCode($option['value']);
+
+                            if ($upload_info) {
+                                $value = $upload_info['name'];
+                            } else {
+                                $value = '';
+                            }
+                        }
+
+                        $option_data[] = array(
+                            'name' => $option['name'],
+                            'value' => $value
+                        );
+                    }
+
+                    $product_data[] = array(
+                        'product_id' => $product['product_id'],
+                        'name' => $product['name'],
+                        'model' => $product['model'],
+                        'unit' => $product['unit'],
+                        'option' => $option_data,
+                        'quantity' => $product['quantity'],
+                        'price' => $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
+                        'total' => $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value'])
+                    );
+                }
+
+
+                $total_data = array();
+
+                if ($store_id) {
+                    $totals = $this->model_sale_order->getVendorOrderTotals($order_id, $store_id);
+                } else {
+                    $totals = $this->model_sale_order->getOrderTotals($order_id);
+                }
+
+                foreach ($totals as $total) {
+                    $total_data[] = array(
+                        'title' => $total['title'],
+                        'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
+                        'amount_in_words' => ucwords($this->translateAmountToWords(floor(($total['value'] * 100)/100))) . " Kenyan Shillings"
+                    );
+                }
+
+                $data['orders'][] = array(
+                    'order_id' => $order_id,
+                    'invoice_no' => $invoice_no,
+                    'date_added' => date($this->language->get('datetime_format'), strtotime($order_info['date_added'])),
+                    'delivery_date' => date($this->language->get('date_format_short'), strtotime($order_info['delivery_date'])),
+                    'delivery_timeslot' => $order_info['delivery_timeslot'],
+                    'store_name' => $order_info['store_name'],
+                    'store_url' => rtrim($order_info['store_url'], '/'),
+                    'store_address' => nl2br($store_address),
+                    'store_email' => $store_email,
+                    'store_tax' => $store_tax,
+                    'store_telephone' => $store_telephone,
+                    'store_fax' => $store_fax,
+                    'email' => $order_info['email'],
+                    'cpf_number' => $this->getUser($order_info['customer_id']),
+                    'telephone' => $order_info['telephone'],
+                    'shipping_address' => $order_info['shipping_address'],
+                    'shipping_city' => $order_info['shipping_city'],
+                    'shipping_flat_number' => $order_info['shipping_flat_number'],
+                    'shipping_contact_no' => ($order_info['shipping_contact_no']) ? $order_info['shipping_contact_no'] : $order_info['telephone'],
+                    'shipping_name' => ($order_info['shipping_name']) ? $order_info['shipping_name'] : $order_info['firstname'] . ' ' . $order_info['lastname'],
+                    'customer_company_name' => $order_info['customer_company_name'],
+                    'shipping_method' => $order_info['shipping_method'],
+                    'po_number' => $order_info['po_number'],
+                    'payment_method' => $order_info['payment_method'],
+                    'products' => $product_data,
+                    'totals' => $total_data,
+                    'comment' => nl2br($order_info['comment'])
+                );
+            }
+        }
+        
+        //    echo "<pre>";print_r($data['orders'][0]);die;
+        try{
+        $log = new Log('error.log');
+        $log->write(DIR_TEMPLATE);
+        require_once DIR_ROOT . '/vendor/autoload.php';
+        $mpdf = new \Mpdf\Mpdf();
+        $stylesheet = file_get_contents(DIR_TEMPLATE.'pdf_css/bootstrap.min.css');
+        $stylesheet2 = file_get_contents(DIR_TEMPLATE.'pdf_css/font-awesome.min.css');
+        $stylesheet3 = file_get_contents(DIR_TEMPLATE.'pdf_css/print.css');
+        $mpdf->WriteHTML($stylesheet,\Mpdf\HTMLParserMode::HEADER_CSS);
+        $mpdf->WriteHTML($stylesheet2,\Mpdf\HTMLParserMode::HEADER_CSS);
+        $mpdf->WriteHTML($stylesheet3,\Mpdf\HTMLParserMode::HEADER_CSS);
+        $mpdf->WriteHTML($this->load->view('sale/order_invoice_mpdf.tpl', $data['orders'][0]),\Mpdf\HTMLParserMode::HTML_BODY);
+        //$mpdf->Output();
+        $mpdf->Output("KwikBasket Invoice # ".$order_id.".pdf", 'D');
+        } catch (\Mpdf\MpdfException $e) { // Note: safer fully qualified exception 
+                                   //       name used for catch
+        // Process the exception, log, print etc.
+        $log = new Log('error.log');
+        $log->write($e->getMessage());
+        echo $e->getMessage();
+        }
+        
+        $this->response->setOutput($this->load->view('sale/order_invoice.tpl', $data['orders'][0]));
+    }
+    
     public function invoice()
     {
         $this->load->language('sale/order');
@@ -4166,7 +4416,22 @@ class ControllerSaleOrder extends Controller
                 );
             }
         }
-                    //    echo "<pre>";print_r($data['orders'][0]);die;
+        
+        //    echo "<pre>";print_r($data['orders'][0]);die;
+        /*$log = new Log('error.log');
+        $log->write(DIR_TEMPLATE);
+        require_once DIR_ROOT . '/vendor/autoload.php';
+        $mpdf = new \Mpdf\Mpdf();
+        $stylesheet = file_get_contents(DIR_TEMPLATE.'pdf_css/bootstrap.min.css');
+        $stylesheet2 = file_get_contents(DIR_TEMPLATE.'pdf_css/font-awesome.min.css');
+        $stylesheet3 = file_get_contents(DIR_TEMPLATE.'pdf_css/print.css');
+        $mpdf->WriteHTML($stylesheet,\Mpdf\HTMLParserMode::HEADER_CSS);
+        $mpdf->WriteHTML($stylesheet2,\Mpdf\HTMLParserMode::HEADER_CSS);
+        $mpdf->WriteHTML($stylesheet3,\Mpdf\HTMLParserMode::HEADER_CSS);
+        $mpdf->WriteHTML($this->load->view('sale/order_invoice_mpdf.tpl', $data['orders'][0]),\Mpdf\HTMLParserMode::HTML_BODY);
+        $mpdf->Output();
+        $mpdf->Output("KwikBasket Invoice # ".$order_id.".pdf", 'D');*/
+        
         $this->response->setOutput($this->load->view('sale/order_invoice.tpl', $data['orders'][0]));
     }
 

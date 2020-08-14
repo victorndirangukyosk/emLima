@@ -32,20 +32,24 @@
               <th>E-Mail</th>
               <th>Phone No</th>
               <th>Customer Group</th>
+              <th>Company Name</th>
               <th>Status</th>
-              <!--<th>Action</th>-->
+              <th>Action</th>
             </tr>
             </thead>
             <tbody>
-            <?php if(count($sub_users)){?>
-            <?php foreach($sub_users as $user){?>
+            <?php if(count($sub_users)){ ?>
+            <?php foreach($sub_users as $user){ ?>
             <tr>
             <td><?php echo $user['firstname'].' '.$user['lastname'];?></td>
             <td><?php echo $user['email'];?></td>
             <td><?php echo $user['telephone'];?></td>
             <td><?php echo $user['customer_group'];?></td>
-            <td><?php echo ($user['approved']==0) ? 'Unverified': 'Verified'?></td>
-            <!--<td>Action</td>-->
+            <td><?php echo $user['company_name'];?></td>
+            <td class="status<?php echo $user['customer_id']; ?>"><?php echo ($user['approved']==0) ? 'Unverified': 'Verified'?></td>
+            <td><?php if($user['approved'] == 0) { ?> <a data-confirm="Activate sub user!" class="btn btn-success useractivate" data-active="1" data-store-id="<?php echo $user['customer_id']; ?>" data-toggle="tooltip" title="Activate user"><i class="fa fa-check"></i></a> <?php } ?>
+            <?php if($user['approved'] == 1) { ?> <a data-confirm="De activate sub user!" class="btn btn-success useractivate" data-active="0" data-store-id="<?php echo $user['customer_id']; ?>" data-toggle="tooltip" title="De activate user"><i class="fa fa-times"></i></a> <?php } ?>
+            </td>
             </tr>
             <?php } ?>
             <?php }else{ ?>
@@ -518,5 +522,77 @@
     margin-top:-3px !important;
   }
 </style>
+<script>
+$(document).delegate('.useractivate', 'click', function(){
+var choice = confirm($(this).attr('data-confirm'));
+if (choice) {
+console.log('User Activate!');
+var user_id = $(this).attr('data-store-id');
+var active_status = $(this).attr('data-active');
+
+if(active_status == 0) {
+$(this).find('i').toggleClass('fa-times fa-check');
+console.log(active_status+' '+'Active Status');
+$(this).attr('data-confirm', 'Activate sub user!');
+$(this).attr('data-active', '1');
+$(this).attr('title', 'Activate user');
+$('.status'+user_id).html('Unverified');
+}
+ 
+if(active_status == 1) {
+$(this).find('i').toggleClass('fa-check fa-times');
+console.log(active_status+' '+'Active Status');
+$(this).attr('data-confirm', 'De activate sub user!');
+$(this).attr('data-active', '0');
+$(this).attr('title', 'De activate user');
+$('.status'+user_id).html('Verified');
+}
+
+        $.ajax({
+            url: 'index.php?path=account/sub_users/ActivateSubUsers',
+            type: 'post',
+            data: { user_id: user_id, active_status: active_status },
+            dataType: 'json',
+            success: function(json) {
+             console.log(json);
+             if(active_status == 0) {
+             $(this).find('i').toggleClass('fa-times fa-check');
+             console.log(active_status+' '+'Active Status');
+             $('.status'+user_id).html('Verified');
+            }
+            
+            if(active_status == 1) {
+             $(this).find('i').toggleClass('fa-times fa-check');
+             console.log(active_status+' '+'Active Status');
+            }
+            
+            }
+        });
+        }        
+});    
+$(document).delegate('#email', 'blur', function(){
+    console.log($(this).val());
+            $.ajax({
+            url: 'index.php?path=account/sub_users/EmailUnique',
+            type: 'post',
+            data: { email: $(this).val() },
+            dataType: 'json',
+            success: function(json) {
+             if(json.success == false) {
+             console.log(json.success);  
+             $("#save-button").prop('disabled', true);
+             $('<div class="text-danger">Email address shold be unique</div>' ).insertAfter( $("input[name='email']"));
+             }
+             
+             if(json.success == true) {
+             console.log(json.success);
+             $("#save-button").prop('disabled', false);
+             $('.text-danger').remove();
+             }
+            }
+        });
+});
+setTimeout(function () { location.reload(true); }, 50000);
+</script>
 </body>
 </html>

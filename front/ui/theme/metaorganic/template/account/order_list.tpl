@@ -29,7 +29,7 @@
                                                         <div class="row">
                                                             <div class="col-md-3">
                                                                 <div class="my-order-delivery">
-                                                                    <h3 class="my-order-title label" style="background-color: #<?= $order['order_status_color']; ?>;display: block;line-height: 2;"><?php echo $order['status']; ?></h3>
+                                                                    <h3 class="my-order-title label" id="orderstatus<?= $order['order_id']; ?>" style="background-color: #<?= $order['order_status_color']; ?>;display: block;line-height: 2;"><?php echo $order['status']; ?></h3>
 
                                                                     <span class="my-order-date">ETA: <?php echo $order['eta_date']; ?>, <?php echo $order['eta_time']; ?></span>
                                                                 </div>
@@ -306,8 +306,10 @@ __kdt.push({"post_on_load": false});
         console.log(order_id +' '+ customer_id+' '+order_status); 
         var parent_div = $(this).parent("div");
         console.log(parent_div.attr("id"));
+        console.log('Hi');
+        console.log($('.col-md-3').children('.my-order-delivery').find('h3').text());
         
-        alert('Under progress');
+        console.log('Under progress');
                 $.ajax({
             url: 'index.php?path=account/order/ApproveOrRejectSubUserOrder',
             type: 'post',
@@ -319,8 +321,9 @@ __kdt.push({"post_on_load": false});
             dataType: 'json',
             success: function(json) {
                 console.log(json);
-                var approved = $('<h3 class="my-order-title label" style="background-color: #8E45FF;display: block;line-height: 2; text-align:center;">Approved</h3>');
+                var approved = $('<li class="list-group-item"><div class="row"><div class="col-md-4"></div><div class="col-md-4"><div class="my-order-showaddress"><h3 class="my-order-title label" style="background-color: #8E45FF;display: block;line-height: 2; text-align:center;">Approved</h3></div></div><div class="col-md-4"></div></div>');
                 parent_div.html(approved);
+                $('#orderstatus'+order_id).text('Order Received');
             }
         });
     });
@@ -346,8 +349,9 @@ __kdt.push({"post_on_load": false});
             dataType: 'json',
             success: function(json) {
                 console.log(json);
-                var approved = $('<h3 class="my-order-title label" style="background-color: #8E45FF;display: block;line-height: 2; text-align:center;">Rejected</h3>');
+                var approved = $('<li class="list-group-item"><div class="row"><div class="col-md-4"></div><div class="col-md-4"><div class="my-order-showaddress"><h3 class="my-order-title label" style="background-color: #8E45FF;display: block;line-height: 2; text-align:center;">Rejected</h3></div></div><div class="col-md-4"></div></div>');
                 parent_div.html(approved);
+                $('#orderstatus'+order_id).text('Order Rejected');
             }
         });
     });
@@ -388,7 +392,7 @@ __kdt.push({"post_on_load": false});
 
     setInterval(function() {
      location = location;
-    }, 60 * 1000); // 60 * 1000 milsec
+    }, 6000 * 1000); // 60 * 1000 milsec
     
 
     </script>

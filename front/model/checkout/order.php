@@ -316,7 +316,7 @@ class ModelCheckoutOrder extends Model {
 		$this->db->query( "DELETE FROM `" . DB_PREFIX . "order` WHERE order_id = '" . (int) $order_id . "'" );
 		$this->db->query( "DELETE FROM `" . DB_PREFIX . "order_custom_field` WHERE order_id = '" . (int) $order_id . "'" );
 		$this->db->query( "DELETE FROM `" . DB_PREFIX . "order_fraud` WHERE order_id = '" . (int) $order_id . "'" );
-		$this->db->query( "DELETE FROM `" . DB_PREFIX . "order_history` WHERE order_id = '" . (int) $order_id . "'" );
+		$this->db->query( "DELETE FROM `" . DB_PREFIX . "order_history` WHERE order_id = '" . (int) $order_id . "' AND order_status_id=0" );
 		$this->db->query( "DELETE FROM `" . DB_PREFIX . "order_option` WHERE order_id = '" . (int) $order_id . "'" );
 		$this->db->query( "DELETE FROM `" . DB_PREFIX . "order_product` WHERE order_id = '" . (int) $order_id . "'" );
 		$this->db->query( "DELETE `or`, ort FROM `" . DB_PREFIX . "order_recurring` `or`, `" . DB_PREFIX . "order_recurring_transaction` `ort` WHERE order_id = '" . (int) $order_id . "' AND ort.order_recurring_id = `or`.order_recurring_id" );
@@ -335,7 +335,10 @@ class ModelCheckoutOrder extends Model {
 
 	public function getOrder( $order_id ) {
 		$order_query = $this->db->query( "SELECT *, (SELECT os.name FROM `" . DB_PREFIX . "order_status` os WHERE os.order_status_id = o.order_status_id AND os.language_id = o.language_id) AS order_status FROM `" . DB_PREFIX . "order` o WHERE o.order_id = '" . (int) $order_id . "'" );
-
+                $log = new Log('error.log');
+                $log->write('getOrder Method');
+                $log->write($order_query->rows);
+                $log->write('getOrder Method');
 		if ( $order_query->num_rows ) {
 
 			$this->load->model( 'localisation/language' );
@@ -561,13 +564,21 @@ class ModelCheckoutOrder extends Model {
                         $is_he_parents = $this->model_account_customer->CheckHeIsParent();
                         $order_status_id_sub = $is_he_parents == NULL ? 14 : 15;
                         $log->write($order_status_id.'Add Order History Method222');
+                        $query_order_history = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "order_history` o WHERE order_id = '" . (int) $order_id . "'");
+
                         
                         if($is_he_parents != NULL) {
                         $this->db->query( "UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id_sub . "', order_pdf_link ='".$pdf_link."', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'" );    
-                        } else {
-			$this->db->query( "UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', order_pdf_link ='".$pdf_link."', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'" );
+                        if($query_order_history->row['total'] == 0){
+                        $this->db->query( "INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', order_status_id = '" . (int) $order_status_id_sub . "', notify = '" . (int) $notify . "', comment = '" . $this->db->escape( $comment ) . "', date_added = NOW()" );
+                        }} elseif($is_he_parents == NULL && $order_status_id == 0) {
+                        $log->write($order_status_id.'MAIN USERS ORDERS');    
+			$this->db->query( "UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id_sub . "', order_pdf_link ='".$pdf_link."', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'" );
+                        if($query_order_history->row['total'] == 0) {
+                        $this->db->query( "INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', order_status_id = '" . (int) $order_status_id_sub . "', notify = '" . (int) $notify . "', comment = '" . $this->db->escape( $comment ) . "', date_added = NOW()" );
                         }
-			$this->db->query( "INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', order_status_id = '" . (int) $order_status_id . "', notify = '" . (int) $notify . "', comment = '" . $this->db->escape( $comment ) . "', date_added = NOW()" );
+                        } 
+                        
 
 
 			// If current order status is not processing or complete but new status is processing or complete then commence completing the order

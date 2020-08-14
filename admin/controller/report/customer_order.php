@@ -288,6 +288,7 @@ $this->load->model('sale/order');
                 'order_id' => $result['order_id'],
                 'products' => $result['products'],
                 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])) ,
+                'delivery_date' => date($this->language->get('date_format_short'), strtotime($result['delivery_date'])) ,
                 'editedproducts' =>   $products_qty,
                 'po_number' => $result['po_number'],
                 // 'total' => $this->currency->format($result['total'], $this->config->get('config_currency')).replace("KES",""),

@@ -226,44 +226,44 @@ class ModelSaleCustomer extends Model {
 
         if ($customer_info) {
             $this->db->query("UPDATE " . DB_PREFIX . "customer SET approved = '1' WHERE customer_id = '" . (int) $customer_id . "'");
-
-            $this->load->model('setting/store');
-
-            $store_info = $this->model_setting_store->getStore($customer_info['store_id']);
-
-            if ($store_info) {
-                $store_name = $store_info['name'];
-                $store_url = $store_info['url'] . 'index.php?path=account/login';
-            } else {
-                $store_name = $this->config->get('config_name');
-                $store_url = HTTP_CATALOG . 'index.php?path=account/login';
-            }
-
-            $customer_info['store_name'] = $store_name;
-            $customer_info['account_href'] = $store_url;
-
-            $subject = $this->emailtemplate->getSubject('Customer', 'customer_4', $customer_info);
-            $message = $this->emailtemplate->getMessage('Customer', 'customer_4', $customer_info);
-
-            $mail = new Mail($this->config->get('config_mail'));
-            $mail->setTo($customer_info['email']);
-            $mail->setFrom($this->config->get('config_from_email'));
-            $mail->setSender($this->config->get('config_name'));
-            $mail->setSubject($subject);
-            $mail->setHTML($message);
-            $mail->send();
-
-            $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_4', $customer_info);
-            // send message here
-            if ( $this->emailtemplate->getSmsEnabled('Customer','customer_4')) {
-             
-                $ret =  $this->emailtemplate->sendmessage($customer_info['telephone'],$sms_message);
-                
-            }
+//AFTER CUSTOMER VERIFIED MAIL SENDING
+//            $this->load->model('setting/store');
+//
+//            $store_info = $this->model_setting_store->getStore($customer_info['store_id']);
+//
+//            if ($store_info) {
+//                $store_name = $store_info['name'];
+//                $store_url = $store_info['url'] . 'index.php?path=account/login';
+//            } else {
+//                $store_name = $this->config->get('config_name');
+//                $store_url = HTTP_CATALOG . 'index.php?path=account/login';
+//            }
+//
+//            $customer_info['store_name'] = $store_name;
+//            $customer_info['account_href'] = $store_url;
+//
+//            $subject = $this->emailtemplate->getSubject('Customer', 'customer_4', $customer_info);
+//            $message = $this->emailtemplate->getMessage('Customer', 'customer_4', $customer_info);
+//
+//            $mail = new Mail($this->config->get('config_mail'));
+//            $mail->setTo($customer_info['email']);
+//            $mail->setFrom($this->config->get('config_from_email'));
+//            $mail->setSender($this->config->get('config_name'));
+//            $mail->setSubject($subject);
+//            $mail->setHTML($message);
+//            $mail->send();
+//
+//            $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_4', $customer_info);
+//            // send message here
+//            if ( $this->emailtemplate->getSmsEnabled('Customer','customer_4')) {
+//             
+//                $ret =  $this->emailtemplate->sendmessage($customer_info['telephone'],$sms_message);
+//                
+//            }
             
         }
     }
-
+    
     public function getAddress($address_id) {
         $address_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "address WHERE address_id = '" . (int) $address_id . "'");
 

@@ -77,6 +77,9 @@ class ControllerCommonMenu extends Controller {
 		$data['currency'] = $this->url->link('localisation/currency', 'token=' . $this->session->data['token'], 'SSL');
 		$data['customer'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'].'&sort=c.date_added&order=DESC', 'SSL');
 
+		$data['bulk_email'] = $this->url->link('email/bulk_email', 'token=' . $this->session->data['token'], 'SSL');
+		$data['email_groups'] = $this->url->link('email/email_groups', 'token=' . $this->session->data['token'], 'SSL');
+
 		$data['customer_fields'] = $this->url->link('sale/customer_field', 'token=' . $this->session->data['token'], 'SSL');
 		$data['customer_group'] = $this->url->link('sale/customer_group', 'token=' . $this->session->data['token'], 'SSL');
 		$data['customer_ban_ip'] = $this->url->link('sale/customer_ban_ip', 'token=' . $this->session->data['token'], 'SSL');

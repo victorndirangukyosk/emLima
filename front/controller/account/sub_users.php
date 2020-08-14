@@ -24,6 +24,7 @@ class Controlleraccountsubusers extends Controller {
 
     public function index() {  
 
+        //unset($_SESSION['success_msg']);
         if(!empty($_SESSION['parent'])){
             $this->response->redirect($this->url->link('account/account'));
         }
@@ -610,5 +611,29 @@ class Controlleraccountsubusers extends Controller {
         return !$this->error;
     }
 
+    public function ActivateSubUsers() {
+        $log = new Log('error.log');
+        $log->write($this->request->post['user_id']);
+        $log->write($this->request->post['active_status']);
+        $user_id = $this->request->post['user_id'];
+        $log->write($user_id.'USER ID');
+        $this->load->model('account/customer');
+        $this->model_account_customer->approvecustom($user_id, $this->request->post['active_status']);
         
+        $json['success'] = 'User activated!';
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+    
+    public function EmailUnique() {
+        $log = new Log('error.log');
+        $log->write($this->request->post['email']);
+        $this->load->model('account/customer');
+        $count = $this->model_account_customer->getTotalCustomersByEmail($this->request->post['email']);
+        $log->write($count.'Email Count');
+        
+        $json['success'] = $count == 0 || $count == NULL ? TRUE : FALSE;
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
 }
