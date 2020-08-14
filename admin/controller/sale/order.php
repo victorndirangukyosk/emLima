@@ -4179,7 +4179,8 @@ class ControllerSaleOrder extends Controller
         $mpdf->WriteHTML($stylesheet2,\Mpdf\HTMLParserMode::HEADER_CSS);
         $mpdf->WriteHTML($stylesheet3,\Mpdf\HTMLParserMode::HEADER_CSS);
         $mpdf->WriteHTML($this->load->view('sale/order_invoice_mpdf.tpl', $data['orders'][0]),\Mpdf\HTMLParserMode::HTML_BODY);
-        $mpdf->Output("KwikBasket Invoice # ".$order_id.".pdf", 'D');
+        $mpdf->Output();
+        //$mpdf->Output("KwikBasket Invoice # ".$order_id.".pdf", 'D');
         
         $this->response->setOutput($this->load->view('sale/order_invoice.tpl', $data['orders'][0]));
     }
