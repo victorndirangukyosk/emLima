@@ -4034,7 +4034,12 @@ else{
 				$objPHPExcel->getActiveSheet()->getStyle("A1:E2")->applyFromArray(array("font" => array("bold" => true), 'color' => array(
 						'rgb' => '4390df'
 					),));
-	 
+                                
+                                //subtitle 
+			        $from = date('d-m-Y', strtotime($data['filter_date_start']));
+			        $to = date('d-m-Y', strtotime($data['filter_date_end']));
+			        $objPHPExcel->getActiveSheet()->mergeCells("A3:I3");
+			        $html = 'FROM '.$from.' TO '.$to;
 				   
 				$objPHPExcel->getActiveSheet()->setCellValue("A3", $html);
 				$objPHPExcel->getActiveSheet()->getStyle("A1:E3")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
