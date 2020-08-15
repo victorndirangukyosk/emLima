@@ -3987,7 +3987,8 @@ class ModelReportExcel extends Model {
 	
 		 
 	
-	
+                            $log = new Log('error.log');
+                            $log->write($data['customers'].'download_customer_statement_excel');
 		 // echo "<pre>";print_r($data['customers']);die;	 
 			try {
 				// set appropriate timeout limit
