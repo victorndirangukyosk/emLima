@@ -263,6 +263,8 @@ else{
 }
 $this->load->model('sale/order');
         if(is_array($results) && count($results) > 0) {
+        $log = new Log('error.log');
+        $log->write('Yes It Is Array');
         foreach ($results as $result) {
 
             $products_qty = 0;
