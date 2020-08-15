@@ -4080,6 +4080,7 @@ else{
 					}else{
 						$amount = 0;
 					}*/
+                                        $log->write($result.'RESULT download_customer_statement_excel');
 					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $result['customer']);				
 				        $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['company']);				
                                         $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['order_id']);
@@ -4103,6 +4104,7 @@ else{
 				// Sending headers to force the user to download the file
 				//header('Content-Type: application/vnd.ms-excel');
 				//header("Content-type: application/octet-stream");
+                                $log->write($data['customers'][0]['customer'].'RESULT2 download_customer_statement_excel');
                                 $log->write('download_customer_statement_excel');
 				$objWriter = PHPExcel_IOFactory::createWriter( $objPHPExcel, 'Excel2007' );
 				$filename = 'Customer_order_statement_'.$data['customers'][0]['customer'].".xlsx";
