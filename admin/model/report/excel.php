@@ -4103,6 +4103,7 @@ else{
 				// Sending headers to force the user to download the file
 				//header('Content-Type: application/vnd.ms-excel');
 				//header("Content-type: application/octet-stream");
+                                $log->write('download_customer_statement_excel');
 				$objWriter = PHPExcel_IOFactory::createWriter( $objPHPExcel, 'Excel2007' );
 				$filename = 'Customer_order_statement_'.$data['customers'][0]['customer'].".xlsx";
 	   
@@ -4118,6 +4119,7 @@ else{
 				$errline = $e->getLine();
 				$errfile = $e->getFile();
 				$errno = $e->getCode();
+                                $log->write($errstr.' '.$errline.' '.$errfile.' '.$errno.' '.'download_customer_statement_excel');
 				$this->session->data['export_import_error'] = array('errstr' => $errstr, 'errno' => $errno, 'errfile' => $errfile, 'errline' => $errline);
 				if ($this->config->get('config_error_log')) {
 					$this->log->write('PHP ' . get_class($e) . ':  ' . $errstr . ' in ' . $errfile . ' on line ' . $errline);
