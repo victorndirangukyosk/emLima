@@ -4080,7 +4080,9 @@ else{
 					}else{
 						$amount = 0;
 					}*/
-                                        $log->write($result.'RESULT download_customer_statement_excel');
+                                        $log->write('RESULT download_customer_statement_excel');
+                                        $log->write($result);
+                                        $log->write('RESULT download_customer_statement_excel');
 					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $result['customer']);				
 				        $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['company']);				
                                         $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['order_id']);
