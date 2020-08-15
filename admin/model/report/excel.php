@@ -3991,7 +3991,7 @@ class ModelReportExcel extends Model {
 		 // echo "<pre>";print_r($data['customers']);die;	 
 			try {
 				// set appropriate timeout limit
-				set_time_limit(1800);
+				set_time_limit(3500);
 				
 				$objPHPExcel = new PHPExcel();
 				$objPHPExcel->getProperties()->setTitle("Customer Order Statement")->setDescription("none");
