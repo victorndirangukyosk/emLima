@@ -4107,9 +4107,9 @@ else{
 				$objWriter = PHPExcel_IOFactory::createWriter( $objPHPExcel, 'Excel2007' );
 				$filename = 'Customer_order_statement_'.$data['customers'][0]['customer'].".xlsx";
 	   
-//				header( 'Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' );
-//				header('Content-Disposition: attachment;filename="'. $filename .'"');
-//				header('Cache-Control: max-age=0');
+				header( 'Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' );
+				header('Content-Disposition: attachment;filename="'. $filename .'"');
+				header('Cache-Control: max-age=0');
 	
 				
 				$objWriter->save('php://output');
