@@ -641,6 +641,46 @@ class ModelAssetsProduct extends Model {
 		return $ret;
 	}
 
+
+	public function getMostBoughtProducts($store_id ,$customer_id ,$productsID=null) {
+		$date = date('Y-m-d', strtotime('-30 day')); 
+		//$sql ="SELECT SUM( op.quantity )AS total,pd.name,op.unit FROM " . DB_PREFIX . "order_product AS op LEFT JOIN " . DB_PREFIX . "order AS o ON ( op.order_id = o.order_id ) LEFT JOIN  " . DB_PREFIX . "product_description AS pd ON (op.general_product_id = pd.product_id)  WHERE pd.language_id = '" . (int) $this->config->get('config_language_id') . "' AND o.customer_id = " . $customer_id . " AND o.date_added >= " . $date . " GROUP BY pd.name  having sum(op.quantity)>100   ";
+		//$where_in = array('Avocados','Potatoes','Coriander');
+
+		
+
+		$where_in ="SELECT  op.general_product_id  FROM " . DB_PREFIX . "order_product AS op LEFT JOIN " . DB_PREFIX . "order AS o ON ( op.order_id = o.order_id ) LEFT JOIN  " . DB_PREFIX . "product_description AS pd ON (op.general_product_id = pd.product_id)  WHERE pd.language_id = '" . (int) $this->config->get('config_language_id') . "' AND o.customer_id = " . $customer_id . " AND o.date_added >= " . $date . " GROUP BY pd.name  having sum(op.quantity)>100   ";
+		  // echo "<pre>";print_r($_SESSION);die;
+		$where_in =$this->db->query($where_in)->rows;
+		 
+
+		$array = array_column($where_in, 'general_product_id');
+		  // echo "<pre>";print_r($array);die;
+		$this->db->select('product_to_store.*,product_to_category.category_id,product.*,product_description.*,product_description.name as pd_name', FALSE);
+		$this->db->join('product', 'product.product_id = product_to_store.product_id', 'left');
+		$this->db->join('product_description', 'product_description.product_id = product_to_store.product_id', 'left');
+		$this->db->join('product_to_category', 'product_to_category.product_id = product_to_store.product_id', 'left');
+
+		  
+		$this->db->group_by('product_description.name');
+	    $this->db->where('product_to_store.store_id', $store_id);
+	    $this->db->where('product_to_store.status', 1);
+	    $this->db->where('product_to_store.quantity >=', 1);
+	    $this->db->where('product_description.language_id', $this->config->get('config_language_id'));
+		$this->db->where('product.status',1);
+		$this->db->where_in('product.product_id', $array);
+		if($productsID)
+		$this->db->where_not_in('product.product_id', $productsID);
+		
+	
+		$ret = $this->db->get('product_to_store', $limit, $offset)->rows;
+		//die;
+ 	   //echo $this->db->last_query();die;
+
+//		echo "<pre>";print_r($ret);die;
+		return $ret;
+	}
+
 	
 	public function getCollectionProducts( $data = array() ) {
 		$store_id = $this->session->data['config_store_id'];

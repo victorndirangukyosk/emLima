@@ -52,8 +52,8 @@ class ControllerCheckoutCheckoutItems extends Controller {
         // Validate minimum quantity requirements.
         $products = $this->cart->getProducts();
 
-
-        //echo "<pre>";print_r($products);die;
+        $productsID=  array_column($products, 'product_id');
+        // echo "<pre>";print_r($productsID);die;
 
 
 
@@ -568,6 +568,10 @@ class ControllerCheckoutCheckoutItems extends Controller {
 
         $data['products'] = $products;
 
+
+        $data['mostboughtproducts'] = $this->make_slides( $this->getMostBoughtProducts($productsID));
+//    echo "<pre>";print_r($data['mostboughtproducts']);die;
+
         // if($this->config->get('config_multi_store')) {
         // if ( file_exists( DIR_TEMPLATE . $this->config->get( 'config_template' ) . '/template/checkout/multi_store_checkoutitems.tpl' ) ) {
         $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/checkout/multi_store_checkoutitems.tpl', $data));
@@ -589,6 +593,162 @@ class ControllerCheckoutCheckoutItems extends Controller {
           $this->response->setOutput( $this->load->view( 'default/template/checkout/checkout.tpl', $data ) );
           } */
     }
+
+
+    
+    public function getMostBoughtProducts($productsID) {
+
+        $this->load->model('assets/product');
+        $this->load->model('tool/image');
+
+        $cachePrice_data = $this->cache->get('category_price_data');
+         //echo '<pre>';print_r(ACTIVE_STORE_ID);exit;
+        $results = $this->model_assets_product->getMostBoughtProducts(ACTIVE_STORE_ID, $this->customer->getId(),$productsID);
+
+        $data['products'] = array();
+
+        //  echo "<pre>";print_r($results);die;
+        foreach ($results as $result) {
+
+            // if qty less then 1 dont show product
+            if ($result['quantity'] <= 0)
+                continue;
+
+            if (file_exists(DIR_IMAGE . $result['image'])) {
+                $image = $this->model_tool_image->resize($result['image'], $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
+            } else {
+                $image = $this->model_tool_image->resize('placeholder.png', $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
+            }
+
+
+            //if category discount define override special price
+
+
+            $discount = '';
+
+            $s_price = 0;
+            $o_price = 0;
+
+            if (!$this->config->get('config_inclusiv_tax')) {
+                //get price html
+                if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+                    $price = $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')));
+
+                    $o_price = $this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax'));
+                } else {
+                    $price = false;
+                }
+                if ((float) $result['special_price']) {
+                    $special_price = $this->currency->format($this->tax->calculate($result['special_price'], $result['tax_class_id'], $this->config->get('config_tax')));
+
+                    $s_price = $this->tax->calculate($result['special_price'], $result['tax_class_id'], $this->config->get('config_tax'));
+                } else {
+                    $special_price = false;
+                }
+            } else {
+                if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+                    $price = $this->currency->format($result['price']);
+                } else {
+                    $price = $result['price'];
+                }
+
+                if ((float) $result['special_price']) {
+                    $special_price = $this->currency->format($result['special_price']);
+                } else {
+                    $special_price = $result['special_price'];
+                }
+
+
+                $s_price = $result['special_price'];
+                $o_price = $result['price'];
+
+                //echo $s_price.'===>'.$o_price.'==>'.$special_price.'===>'.$price;//exit;
+
+                if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$result['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $filter_data['store_id']])) {
+                    $s_price = $cachePrice_data[$result['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $filter_data['store_id']];
+                    $o_price = $cachePrice_data[$result['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $filter_data['store_id']];
+                    $special_price = $this->currency->format($s_price);
+                    $price = $this->currency->format($o_price);
+                }
+            }
+
+
+            //get qty in cart
+            if (!empty($this->session->data['config_store_id'])) {
+                $key = base64_encode(serialize(array('product_store_id' => (int) $result['product_store_id'], 'store_id' => $this->session->data['config_store_id'])));
+            } else {
+                $key = base64_encode(serialize(array('product_store_id' => (int) $result['product_store_id'], 'store_id' => $filter_data['store_id'])));
+            }
+            if (isset($this->session->data['cart'][$key])) {
+                $qty_in_cart = $this->session->data['cart'][$key]['quantity'];
+            } else {
+                $qty_in_cart = 0;
+            }
+
+
+            //$result['name'] = strlen($result['name']) > 27 ? substr($result['name'],0,27)."..." : $result['name'];
+            $name = $result['name'];
+            if (isset($result['pd_name'])) {
+                $name = $result['pd_name'];
+            }
+
+            //$name .= str_repeat('&nbsp;',30 - strlen($result['name']));
+
+
+            $percent_off = null;
+            if (isset($s_price) && isset($o_price) && $o_price != 0 && $s_price != 0) {
+                $percent_off = (($o_price - $s_price) / $o_price) * 100;
+            }
+
+            // Avoid adding duplicates for similar products with different variations
+
+            $productNames = array_column($data['products'], 'name');
+            if (array_search($result['name'], $productNames) !== false) {
+                // Add variation to existing product
+                $productIndex = array_search($result['name'], $productNames);
+                // TODO: Check for product variation duplicates
+                $data['products'][$productIndex][variations][] = array(
+                    'variation_id' => $result['product_store_id'],
+                    'unit' => $result['unit'],
+                    'weight' => floatval($result['weight']),
+                    'price' => $price,
+                    'special' => $special_price
+                );
+            } else {
+                // Add as new product
+                $data['products'][] = array(
+                    'key' => $key,
+                    'qty_in_cart' => $qty_in_cart,
+                    'variations' => $this->model_assets_product->getVariations($result['product_store_id']),
+                    'store_product_variation_id' => 0,
+                    'product_id' => $result['product_id'],
+                    'product_store_id' => $result['product_store_id'],
+                    'default_variation_name' => $result['default_variation_name'],
+                    'thumb' => $image,
+                    'name' => $name,
+                    'variations' => array(
+                        array(
+                            'variation_id' => $result['product_store_id'],
+                            'unit' => $result['unit'],
+                            'weight' => floatval($result['weight']),
+                            'price' => $price,
+                            'special' => $special_price
+                        )
+                    ),
+                    'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('config_product_description_length')) . '..',
+                    'percent_off' => number_format($percent_off, 0),
+                    'tax' => $result['tax_percentage'],
+                    'minimum' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity'],
+                    'rating' => 0,
+                    'href' => $this->url->link('product/product', '&product_store_id=' . $result['product_store_id'])
+                );
+            }
+        }
+         //echo "<pre>";print_r($data['products']);die;
+
+        return $data['products'];
+    }
+    
 
     public function country() {
         $json = array();
@@ -908,5 +1068,104 @@ class ControllerCheckoutCheckoutItems extends Controller {
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
+
+
+    
+function make_slide_indicators($result)
+{
+ $output = ''; 
+ $count = 0;
+ 
+ while($row = mysqli_fetch_array($result))
+ {
+  if($count == 0)
+  {
+   $output .= '
+   <li data-target="#dynamic_slide_show" data-slide-to="'.$count.'" class="active"></li>
+   ';
+  }
+  else
+  {
+   $output .= '
+   <li data-target="#dynamic_slide_show" data-slide-to="'.$count.'"></li>
+   ';
+  }
+  $count = $count + 1;
+ }
+ return $output;
+}
+
+function make_slides($result)
+{
+ $output = '';
+ $itemsperslide=4;
+ $totalcount=count($result);
+ console.log($totalcount);
+ $count = 0; $i=0;
+ if( $totalcount==0)
+ $noofslides=0;
+ else if($totalcount<=$itemsperslide && $totalcount>0) 
+ {
+ $noofslides=1;
+ $itemsperslide=$totalcount;
+ }
+ else
+ $noofslides= ceil($totalcount/$itemsperslide);
+
+
+
+ for ($slide=1;$slide<=$noofslides;$slide++ )
+ {
+
+//  echo "<pre>";print_r($totalcount);die;
+
+    if($slide == 1 )
+    {
+     $output .= '<div class="item active"> 	<div class="row">';
+     for($i;$i<$itemsperslide;$i++)
+     {   
+
+$output .= '<div> <a class="product-detail-bnt open-popup" role="button" data-store='. ACTIVE_STORE_ID  ;
+    $output .= '    data-id="'.$result[$i]["product_store_id"].'" target="_blank" aria-label="'.$result[$i]["name"].'"> ';
+         $output .= ' <div class="col-sm-3"> <div class="thumb-wrapper">  <div class="img-box">';
+         
+      $output .= '<img class="_1xvs1" src="'.$result[$i]["thumb"].'" title="'.$result[$i]["name"].'" alt="'.$result[$i]["name"].'" style="left: 0%;"> ';
+          $output .= '  </div>           <div class="thumb-content">           <h4>'.$result[$i]["name"].'</h4>';
+         $output .= '     <p class="item-price"><span>' .$result[$i]["variations"][0]['special'].' / Per'.$result[$i]["variations"][0]['unit'].'  </span></p>';
+                 
+        $output .= '     </div>  </div> </div></a></div>';   
+     }
+      $output .= ' </div> </div>';
+
+     
+    }
+    else{
+        $output .= '<div class="item"> 	<div class="row">';
+        $itemspernewslide=$itemsperslide+$i;
+        for($i;$i<$itemspernewslide;$i++)
+     { 
+         if($i<$totalcount)
+         {
+        $output .= '<div> <a class="product-detail-bnt open-popup" role="button" data-store='. ACTIVE_STORE_ID  ;
+        $output .= '    data-id="'.$result[$i]["product_store_id"].'" target="_blank" aria-label="'.$result[$i]["name"].'"> ';
+             $output .= ' <div class="col-sm-3"> <div class="thumb-wrapper">  <div class="img-box">';
+             
+          $output .= '<img class="_1xvs1" src="'.$result[$i]["thumb"].'" title="'.$result[$i]["name"].'" alt="'.$result[$i]["name"].'" style="left: 0%;"> ';
+              $output .= '  </div>           <div class="thumb-content">           <h4>'.$result[$i]["name"].'</h4>';
+             $output .= '     <p class="item-price"><span>' .$result[$i]["variations"][0]['special'].' / Per'.$result[$i]["variations"][0]['unit'].'  </span></p>';
+                     
+            $output .= '     </div>  </div> </div></a></div>'; 
+         }  
+
+     }
+     $output .= '</div></div>';
+    }
+     
+ }
+//  echo "<pre>";print_r($output);die;
+ return $output;
+}
+
+
 
 }
