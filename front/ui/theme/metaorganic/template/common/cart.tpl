@@ -46,7 +46,7 @@
     		                        <div class="mycart-product-info">
 
                                        <a title="Remove item" class="delete-item" data-value='<?= $product["key"] ?>'  product_id='<?= $product["product_store_id"] ?>'  style=" background-color: #ec9f4e ;">  </a>
-    		                            <h3> <?php echo $product['name']; ?> </h3>
+    		                            <h3 style="width:200px;"> <?php echo $product['name']; ?> </h3>
                                         <div style="font-size:13px;">
                                                 <?php  $fpt ='';
                                                 foreach ($product['produce_type'] as $pt) {
