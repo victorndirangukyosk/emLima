@@ -949,7 +949,7 @@ var cart = {
                         
 					$('#cart').load('index.php?path=common/cart/info');
 
-					$('.cart-panel-content').load('index.php?path=common/cart/newInfodsdfdsfsdf');
+					$('.cart-panel-content').load('index.php?path=common/cart/newInfo');
 
 					$('.cart-count').html(json['count_products']);
                     $('.cart-total-amount').html(json['total_amount']);
