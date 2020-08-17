@@ -2393,16 +2393,16 @@ h2::after {
 	bottom: -20px;
 }
 .carousel {
-	margin: 50px auto;
-	padding: 0 70px;
+	margin: 1px auto;
+	padding: 0 80px;
 }
 .carousel .item {
-	min-height: 330px;
+	min-height: 230px;
     text-align: center;
 	overflow: hidden;
 }
 .carousel .item .img-box {
-	height: 160px;
+	height: 100px;
 	width: 100%;
 	position: relative;
 }
