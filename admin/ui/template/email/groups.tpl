@@ -109,6 +109,8 @@
 <script>
   $('.group-delete').click(function (e) {
     e.preventDefault();
+    e.stopPropagation();
+    
     const deleteUrl = $(e.target).data('deleteUrl');
 
     Swal.fire({
@@ -123,7 +125,7 @@
       if (result.value) {
         window.location = deleteUrl;
       }
-    })
+    });
   })
 </script>
 <?php echo $footer; ?>
