@@ -886,7 +886,7 @@ $(document).delegate('.agree', 'click', function (e) {
 
 			// Click
 			this.click = function (event) {
-				event.preventDefault();
+				 event.preventDefault();
 
 				value = $(event.target).parent().attr('data-value');
 
@@ -965,7 +965,7 @@ $(document).delegate('.agree', 'click', function (e) {
 								<span data-action="add"
 									data-key="YToyOntzOjE2OiJwcm9kdWN0X3N0b3JlX2lkIjtpOjQwNjExO3M6ODoic3RvcmVfaWQiO3M6MjoiNzUiO30="
 									class="AtcButton__button_text___VoXuy unique_add_button${ json[i]['product_store_id'] }-0" 
-									id="add-cart-btnnew" 
+									id="add-cart-btnnew"  Searchid="1"
 									data-store-id="${ json[i]['store_id'] }"
 									data-variation-id="0" 
 									data-id="${ json[i]['product_store_id'] }" 
