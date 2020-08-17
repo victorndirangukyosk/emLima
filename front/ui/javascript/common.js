@@ -230,6 +230,8 @@ $.fn.liveSearch = function (option) {
 		// Hide
 		this.hide = function () {
 			$(this).siblings('ul.dropdown-menu').hide();
+			$(this).siblings('ul.dropdown-menu').html("");
+
 		}
 
 		// Request
@@ -871,6 +873,7 @@ $(document).delegate('.agree', 'click', function (e) {
 
 			// Keydown
 			$(this).on('keydown', function (event) {
+				
 				switch (event.keyCode) {
 					case 27: // escape
 						this.hide();
@@ -908,6 +911,7 @@ $(document).delegate('.agree', 'click', function (e) {
 			// Hide
 			this.hide = function () {
 				$(this).siblings('ul.dropdown-menu').hide();
+				$(this).siblings('ul.dropdown-menu').html("");
 			}
 
 			// Request

@@ -326,7 +326,7 @@ $(document).delegate('.produce-type', 'change', function() {
      dataHolder.attr('data-action', 'add'); 
     }
     else{
-         alert('asd');
+          
         productQuantityInput.val(mainquantity); 
         if(mainquantity>0)
         dataHolder.attr('data-action', 'update');
