@@ -15,7 +15,8 @@ class ControllerEmailGroups extends Controller {
                 'group_id' => $result['id'],
                 'name' => $result['name'],
                 'description' => $result['description'],
-                'edit' => $this->url->link('email/groups/edit', 'token=' . $this->session->data['token'] . '&group_id=' . $result['id'], 'SSL')
+				'edit' => $this->url->link('email/groups/edit', 'token=' . $this->session->data['token'] . '&group_id=' . $result['id'], 'SSL'),
+				'delete' => $this->url->link('email/groups/delete', 'token=' . $this->session->data['token'] . '&group_id=' . $result['id'], 'SSL')
             );
         }
 
@@ -25,14 +26,20 @@ class ControllerEmailGroups extends Controller {
         $data['column_left'] = $this->load->controller('common/column_left');
 		$data['footer'] = $this->load->controller('common/footer');
 		
-		// echo "<pre>";print_r($data['groups']);die;
-
 		$this->response->setOutput($this->load->view('email/groups.tpl', $data));
 	}
 
 	public function add() {
 		$this->document->setTitle("Add Email Group");
 		$this->load->model('email/groups');
+
+		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+			$this->model_email_groups->addGroup([
+				'name' => $this->request->post['group-name'],
+				'description' => $this->request->post['group-description']
+			]);
+			$this->response->redirect($this->url->link('email/groups', 'token=' . $this->session->data['token'], 'SSL'));
+		}
 
 		$this->getForm();
 	}
@@ -50,6 +57,13 @@ class ControllerEmailGroups extends Controller {
 		}
 
 		$this->getForm();
+	}
+
+	public function delete() {
+		$this->load->model('email/groups');
+		$this->model_email_groups->deleteGroup($this->request->get['group_id']);
+		
+		$this->response->redirect($this->url->link('email/groups', 'token=' . $this->session->data['token'], 'SSL'));
 	}
 
 	protected function getForm() {   

@@ -18,7 +18,7 @@ class ModelEmailGroups extends Model {
     }
 
     public function addGroup($data) {
-        $this->db->query("INSERT INTO " . DB_PREFIX . "email_groups SET name = '" . $this->db->escape($data['name']) . "', description = '" . $this->db->escape($data['description']));
+        $this->db->query("INSERT INTO " . DB_PREFIX . "email_groups SET name = '" . $this->db->escape($data['name']) . "', description = '" . $this->db->escape($data['description']) . "'");
         $groupId = $this->db->getLastId();
         return $groupId;
     }
