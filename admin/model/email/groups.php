@@ -7,6 +7,16 @@ class ModelEmailGroups extends Model {
 		return $query->rows;
     }
 
+    public function getGroupById($groupId) {
+        $query = $this->db->query("SELECT * FROM ".DB_PREFIX."email_groups WHERE id = '" . (int)$groupId . "'");
+		return $query->row;
+    }
+
+    public function getGroupByName($groupName) {
+        $query = $this->db->query("SELECT * FROM ".DB_PREFIX."email_groups WHERE name = '" . $this->db->escape($groupName) . "'");
+		return $query->row;
+    }
+
     public function addGroup($data) {
         $this->db->query("INSERT INTO " . DB_PREFIX . "email_groups SET name = '" . $this->db->escape($data['name']) . "', description = '" . $this->db->escape($data['description']));
         $groupId = $this->db->getLastId();
