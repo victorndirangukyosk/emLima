@@ -557,7 +557,9 @@
           border-radius: 4px;
         }
       </style>
+       <?php if(count($category['products'])>11){?>
       <span class="view-all-button"><a href="<?=$this->url->link('product/store', 'store_id='.ACTIVE_STORE_ID).'?cat='.$page_link?>" >View All <?=$category['name']?></a></span>
+   <?php } ?>
     </div>
 
 
