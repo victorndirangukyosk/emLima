@@ -356,6 +356,7 @@ $(document).delegate('#add-cart-btnnew', 'click', function() {
  {
      console.log($Searchid);//if focus is not set, the popup is not closing
     $('#product_name').focus();
+    $('#product_name').val("");
  }
 
     //below hides 2 buttons one in popup and other in product list page

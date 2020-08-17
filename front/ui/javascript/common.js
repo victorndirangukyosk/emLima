@@ -847,7 +847,7 @@ $(document).delegate('.agree', 'click', function (e) {
 
 			// Focus
 			$(this).on('focus', function () {
-				this.request();
+				//this.request();
 			});
 
 			// Blur
