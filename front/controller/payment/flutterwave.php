@@ -848,6 +848,26 @@ class ControllerPaymentFlutterwave extends Controller {
         echo "tx_ref : " . $this->request->get['tx_ref'];
         echo "transaction_id : " . $this->request->get['transaction_id'];
         echo "Payment Status Checking";
+
+        //if ($this->session->data['payment_method']['code'] == 'flutterwave' || $this->request->post['payment_method'] == 'flutterwave') {
+
+            $this->load->language('payment/flutterwave');
+
+            $this->load->model('payment/flutterwave');
+
+            $this->load->model('checkout/order');
+
+            foreach ($this->session->data['order_id'] as $key => $value) {
+                $order_id = $value;
+            }
+
+            if (isset($this->request->post['order_id'])) {
+                $order_id = $this->request->post['order_id'];
+            }
+
+            $flutterwaveDetails = $this->model_payment_flutterwave->getFlutterwaveByOrderId($order_id, $this->request->get['tx_ref']);
+            print_r($flutterwaveDetails);
+        //}
         exit;
     }
 

@@ -84,9 +84,9 @@ class ModelPaymentFlutterwave extends Model {
         return $result;
     }
 
-    public function getMpesaByOrderId($order_id) {
+    public function getFlutterwaveByOrderId($order_id, $tx_ref) {
 
-        $result = $this->db->query("SELECT * FROM `" . DB_PREFIX . "flutterwave_order` WHERE `order_id` = '" . $this->db->escape($order_id) . "'");
+        $result = $this->db->query("SELECT * FROM `" . DB_PREFIX . "flutterwave_order` WHERE `order_id` = '" . $this->db->escape($order_id) . "' AND tx_ref = '" . $tx_ref . "'");
 
         if (count($result->rows) > 0) {
             $res = $result->rows[$result->num_rows - 1];
