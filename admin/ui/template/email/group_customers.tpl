@@ -3,10 +3,10 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@9.17.1/dist/sweetalert2.min.css">
   <div class="page-header">
     <div class="container-fluid">
-      <div class="pull-right"><a href="<?php echo $add; ?>" data-toggle="tooltip" title="Add New Group"
+      <div class="pull-right"><a href="<?php echo $add; ?>" data-toggle="tooltip" title="Add Customer To This Group"
           class="btn btn-success"><i class="fa fa-plus"></i></a>
       </div>
-      <h1>Email Groups</h1>
+      <h1>Group Customers</h1>
     </div>
   </div>
   <div class="container-fluid">
@@ -22,7 +22,7 @@
     <?php } ?>
     <div class="panel panel-default">
       <div class="panel-heading">
-        <h3 class="panel-title"><i class="fa fa-list"></i> Email Groups List</h3>
+        <h3 class="panel-title"><i class="fa fa-list"></i> Group Customers</h3>
       </div>
       <div class="panel-body">
         <form action="<?php echo $delete; ?>" method="post" enctype="multipart/form-data" id="form-email-groups">
@@ -31,35 +31,35 @@
               <thead>
                 <tr>
                   <td class="text-left">
-                    Group Name
+                    Customer Name
                   </td>
                   <td class="text-left">
-                    Group Description
+                    Email Address
                   </td>
                   <td class="text-right">
-                    Actions
+                    Phone Number
+                  </td>
+                  <td class="text-right">
+                    Action
                   </td>
                 </tr>
               </thead>
               <tbody>
-                <?php if ($groups) { ?>
-                <?php foreach ($groups as $group) { ?>
+                <?php if ($customers) { ?>
+                <?php foreach ($customers as $customer) { ?>
                 <tr>
-                  <td class="text-left"><?php echo $group['name']; ?></td>
-                  <td class="text-left"><?php echo $group['description']; ?></td>
+                  <td class="text-left"><?php echo $customer['name'] ; ?></td>
+                  <td class="text-left"><?php echo $customer['email']; ?></td>
+                  <td class="text-left"><?php echo $customer['telephone']; ?></td>
                   <td class="text-right">
-                    <a href="<?php echo $group['customers']; ?>" data-toggle="tooltip" title="View Customers in Group"
-                      class="btn btn-primary"><i class="fa fa-users"></i></a>
-                    <a href="<?php echo $group['edit']; ?>" data-toggle="tooltip" title="Edit Group"
-                      class="btn btn-primary"><i class="fa fa-pencil"></i></a>
-                    <a href="#" data-delete-url="<?php echo $group['delete']; ?>" data-toggle="tooltip"
-                      title="Delete Group" class="btn btn-danger group-delete"><i class="fa fa-trash"></i></a>
+                    <a href="#" data-delete-url="<?php echo $customer['delete']; ?>" data-toggle="tooltip"
+                      title="Remove Customer From Group" class="btn btn-danger group-customer-remove"><i class="fa fa-times"></i></a>
                   </td>
                 </tr>
                 <?php } ?>
                 <?php } else { ?>
                 <tr>
-                  <td class="text-center" colspan="6">No Email Groups Found</td>
+                  <td class="text-center" colspan="6">No customers in this group</td>
                 </tr>
                 <?php } ?>
               </tbody>
@@ -72,7 +72,7 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script>
-  $('.group-delete').click(function (e) {
+  $('.group-customer-remove').click(function (e) {
     e.preventDefault();
     e.stopPropagation();
     
