@@ -840,7 +840,11 @@ class ControllerPaymentFlutterwave extends Controller {
     }
 
     public function status() {
-        echo "Payment Completed";
+
+        echo "status : " . $this->request->get['status'];
+        echo "tx_ref : " . $this->request->get['tx_ref'];
+        echo "transaction_id : " . $this->request->get['transaction_id'];
+        echo "Payment Status Checking";
         exit;
     }
 
