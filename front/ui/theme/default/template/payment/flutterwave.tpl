@@ -44,14 +44,14 @@
         $.ajax({
             url: 'index.php?path=payment/flutterwave/confirm',
             type: 'post',
-            data: {'payment_option': payment_options },
+            data: { 'payment_option': payment_options },
             dataType: 'json',
             success: function (json) {
                 console.log(json);
             if(json.status == 'success') {
                 window.location.href = json.data.link;
             } else { 
-                
+               alert('Something went wrong please try again later!'); 
             } 
             }
         });

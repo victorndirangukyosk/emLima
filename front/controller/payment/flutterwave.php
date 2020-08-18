@@ -95,7 +95,7 @@ class ControllerPaymentFlutterwave extends Controller {
         $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
         $log->write('Flutterwave Creds Customer Info');
         //$log->write($customer_info);
-        $log->write($this->request->post["payment_option"].'PAYMENT OPTIONS');
+        $log->write($this->request->post["payment_option"] . 'PAYMENT OPTIONS');
         $log->write('Flutterwave Creds Customer Info');
 
         $log->write('Flutterwave Order Info');
@@ -128,7 +128,7 @@ class ControllerPaymentFlutterwave extends Controller {
             CURLOPT_CUSTOMREQUEST => "POST",
             CURLOPT_POSTFIELDS => json_encode([
                 "tx_ref" => $txref,
-                "redirect_url" => $redirect_url,
+                "redirect_url" => $this->url->link('payment/flutterwave/status', '', 'SSL'),
                 "customer" => array("email" => $customer_email, "phone_number" => $customer_phone, "name" => $customer_name),
                 "amount" => $amount,
                 "customer_email" => $customer_email,
@@ -836,6 +836,11 @@ class ControllerPaymentFlutterwave extends Controller {
 
     public function cancelled() {
         echo "Payment Cancelled";
+        exit;
+    }
+
+    public function status() {
+        echo "Payment Completed";
         exit;
     }
 
