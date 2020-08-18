@@ -236,7 +236,8 @@ class ControllerPaymentFlutterwave extends Controller {
             foreach ($this->session->data['order_id'] as $order_id) {
                 $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('flutterwave_order_status_id'));
             }
-
+            
+            $this->model_payment_flutterwave->insertOrderTransactionId($order_id, $transaction_id);
             $this->model_payment_flutterwavetransactions->addOrderTransaction($transaction['data'], $order_id);
             $log = new Log('error.log');
             $log->write($transaction);
