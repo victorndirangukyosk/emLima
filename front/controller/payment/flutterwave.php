@@ -851,22 +851,24 @@ class ControllerPaymentFlutterwave extends Controller {
 
         //if ($this->session->data['payment_method']['code'] == 'flutterwave' || $this->request->post['payment_method'] == 'flutterwave') {
 
-            $this->load->language('payment/flutterwave');
+        $this->load->language('payment/flutterwave');
 
-            $this->load->model('payment/flutterwave');
+        $this->load->model('payment/flutterwave');
 
-            $this->load->model('checkout/order');
+        $this->load->model('checkout/order');
 
-            foreach ($this->session->data['order_id'] as $key => $value) {
-                $order_id = $value;
-            }
+        foreach ($this->session->data['order_id'] as $key => $value) {
+            $order_id = $value;
+        }
 
-            if (isset($this->request->post['order_id'])) {
-                $order_id = $this->request->post['order_id'];
-            }
+        if (isset($this->request->post['order_id'])) {
+            $order_id = $this->request->post['order_id'];
+        }
 
-            $flutterwaveDetails = $this->model_payment_flutterwave->getFlutterwaveByOrderId($order_id, $this->request->get['tx_ref']);
-            print_r($flutterwaveDetails);
+        $flutterwaveDetails = $this->model_payment_flutterwave->getFlutterwaveByOrderId($order_id, $this->request->get['tx_ref']);
+        if ($flutterwaveDetails != NULL) {
+            $this->model_payment_flutterwave->updateFlutterwaveOrder($order_id, $this->request->get['tx_ref'], $this->request->get['transaction_id'], $this->request->get['status']);
+        }
         //}
         exit;
     }

@@ -54,9 +54,10 @@ class ModelPaymentFlutterwave extends Model {
         $query = $this->db->query($sql);
     }
 
-    public function updateMpesaOrder($order_id, $mpesa_receipt_number) {
+    public function updateFlutterwaveOrder($order_id, $flutterwave_tx_ref, $flutterwave_transaction_id, $status) {
 
-        $this->db->query("UPDATE `" . DB_PREFIX . "flutterwave_order` SET `mpesa_receipt_number` = " . $this->db->escape($mpesa_receipt_number) . " where order_id=" . $order_id);
+        $this->db->query("UPDATE " . DB_PREFIX . "flutterwave_order SET flutterwave_transaction_id = '" . $flutterwave_transaction_id . "', status = '" . $status . "', updated_at = '" . date("Y-m-d H:i:s") . "' WHERE order_id = '" . (int) $order_id . "' AND tx_ref = '" . $flutterwave_tx_ref . "'");
+        //$this->db->query("UPDATE `" . DB_PREFIX . "flutterwave_order` SET `flutterwave_transaction_id` = " . $flutterwave_transaction_id . ", `status` = " . $status . ", `updated_at` = " . date("Y-m-d H:i:s") . " where order_id=" . $order_id . "' AND tx_ref = '" . $flutterwave_tx_ref . "'");
     }
 
     public function updateOrderIdMpesaOrder($order_id, $mpesa_receipt_number) {
