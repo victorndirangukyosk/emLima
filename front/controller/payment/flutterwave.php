@@ -894,7 +894,6 @@ class ControllerPaymentFlutterwave extends Controller {
         $this->model_payment_flutterwavetransactions->addOrderTransaction($transaction['data'], $order_id);
         $log = new Log('error.log');
         $log->write($transaction);
-        exit;
 
         $flutterwaveDetails = $this->model_payment_flutterwave->getFlutterwaveByOrderId($order_id, $this->request->get['tx_ref']);
         if ($flutterwaveDetails != NULL) {
