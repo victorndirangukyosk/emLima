@@ -25,11 +25,11 @@ class ModelPaymentFlutterwave extends Model {
         return $method_data;
     }
 
-    public function addOrder($order_info, $request_id, $checkout_request_id) {
+    public function addOrder($order_info, $tx_ref) {
 
         //$this->db->query("DELETE FROM " . DB_PREFIX . "mpesa_order WHERE order_id = " . (int) $order_info['order_id']);
 
-        $this->db->query("INSERT INTO `" . DB_PREFIX . "flutterwave_order` SET `order_id` = '" . (int) $order_info['order_id'] . "', `request_id` = '" . $request_id . "', `checkout_request_id` = '" . $checkout_request_id . "'");
+        $this->db->query("INSERT INTO `" . DB_PREFIX . "flutterwave_order` SET `order_id` = '" . (int) $order_info['order_id'] . "', `tx_ref` = '" . $tx_ref . "', `created_at` = '" . date("Y-m-d H:i:s") . "'");
 
         return $this->db->getLastId();
     }

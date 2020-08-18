@@ -109,7 +109,7 @@ class ControllerPaymentFlutterwave extends Controller {
         $curl = curl_init();
 
         $txref = "kwikbasket-" . $order_id . "-" . $customer_info['customer_id'] . "-" . time(); // ensure you generate unique references per transaction.
-        $redirect_url = "http://kwikbasket.test";
+        $redirect_url = $this->url->link('payment/flutterwave/status', '', 'SSL');
         $customer_email = $customer_info['email'];
         $customer_phone = $customer_info['telephone'];
         $customer_name = $customer_info['firstname'] . " " . $customer_info['lastname'];
@@ -164,6 +164,9 @@ class ControllerPaymentFlutterwave extends Controller {
         // redirect to page so User can pay
         // uncomment this line to allow the user redirect to the payment page
         //header('Location: ' . $transaction->data->link);
+        $this->load->model('payment/flutterwave');
+        $this->load->model('checkout/order');
+        $this->model_payment_flutterwave->addOrder($order_info, $txref);
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($transaction));
     }
