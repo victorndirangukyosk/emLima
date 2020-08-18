@@ -844,18 +844,18 @@ class ControllerPaymentFlutterwave extends Controller {
 
     public function status() {
 
-        echo "status : " . $this->request->get['status'];
-        echo "tx_ref : " . $this->request->get['tx_ref'];
-        echo "transaction_id : " . $this->request->get['transaction_id'];
-        echo "Payment Status Checking";
+        /* echo "status : " . $this->request->get['status'];
+          echo "tx_ref : " . $this->request->get['tx_ref'];
+          echo "transaction_id : " . $this->request->get['transaction_id'];
+          echo "Payment Status Checking"; */
 
         //if ($this->session->data['payment_method']['code'] == 'flutterwave' || $this->request->post['payment_method'] == 'flutterwave') {
 
         $this->load->language('payment/flutterwave');
-
         $this->load->model('payment/flutterwave');
-
+        $this->load->model('payment/flutterwavetransactions');
         $this->load->model('checkout/order');
+        $this->load->model('setting/setting');
 
         foreach ($this->session->data['order_id'] as $key => $value) {
             $order_id = $value;
@@ -864,6 +864,37 @@ class ControllerPaymentFlutterwave extends Controller {
         if (isset($this->request->post['order_id'])) {
             $order_id = $this->request->post['order_id'];
         }
+        $flutter_creds = $this->model_setting_setting->getSetting('flutterwave', 0);
+
+        $curl = curl_init();
+
+        $public_key = $flutter_creds['flutterwave_secret_key']; // get your public key from the dashboard.
+        $transaction_id = $this->request->get['transaction_id'];
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => "https://api.flutterwave.com/v3/transactions/" . $transaction_id . "/verify",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_CUSTOMREQUEST => "GET",
+            CURLOPT_HTTPHEADER => [
+                "Authorization: Bearer " . $public_key,
+                "content-type: application/json",
+                "cache-control: no-cache"
+            ],
+        ));
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+
+        if ($err) {
+            // there was an error contacting the rave API
+            die('Curl returned error: ' . $err);
+        }
+
+        $transaction = json_decode($response, true);
+        $this->model_payment_flutterwavetransactions->addOrderTransaction($transaction['data'], $order_id);
+        $log = new Log('error.log');
+        $log->write($transaction);
+        exit;
 
         $flutterwaveDetails = $this->model_payment_flutterwave->getFlutterwaveByOrderId($order_id, $this->request->get['tx_ref']);
         if ($flutterwaveDetails != NULL) {
