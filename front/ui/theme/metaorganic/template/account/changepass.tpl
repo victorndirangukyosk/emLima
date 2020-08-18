@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width,initial-scale=1"> 
-<link rel="preload" href="<?= $base; ?>front/ui/theme/metaorganic/assets_landing_page/css/style.min.css" as="style">
-<link rel="stylesheet" href="<?= $base; ?>front/ui/theme/metaorganic/assets_landing_page/css/reset.css">
-<link rel="stylesheet" href="<?= $base; ?>front/ui/theme/metaorganic/assets_landing_page/css/bootstrap.min.css">
-<link rel="stylesheet" href="<?= $base; ?>front/ui/theme/metaorganic/assets_landing_page/css/font-awesome.min.css">
-<link rel="stylesheet" type="text/css" href="<?= $base; ?>front/ui/theme/metaorganic/assets_landing_page/css/iziToast.min.css">
-<link rel="stylesheet" href="<?= $base; ?>front/ui/theme/metaorganic/assets_landing_page/css/style.min.css">
+<link rel="preload" href="<?= BASE_URL;?>/front/ui/theme/metaorganic/assets_landing_page/css/style.min.css" as="style">
+<link rel="stylesheet" href="<?= BASE_URL;?>/front/ui/theme/metaorganic/assets_landing_page/css/reset.css">
+<link rel="stylesheet" href="<?= BASE_URL;?>/front/ui/theme/metaorganic/assets_landing_page/css/bootstrap.min.css">
+<link rel="stylesheet" href="<?= BASE_URL;?>/front/ui/theme/metaorganic/assets_landing_page/css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="<?= BASE_URL;?>/front/ui/theme/metaorganic/assets_landing_page/css/iziToast.min.css">
+<link rel="stylesheet" href="<?= BASE_URL;?>/front/ui/theme/metaorganic/assets_landing_page/css/style.min.css">
 </head>
 <body>
 <main>
@@ -19,7 +19,7 @@
 <div class="p-4">  
 
 <div class="auth-logo text-center mb-4"><a class="base_url" href="<?= BASE_URL."/index.php" ?>">
-<img src="<?= $base; ?>front/ui/theme/metaorganic/assets_landing_page/img/logo.svg" class="logo" alt="KwikBasket Logo"></a>
+<img src="<?= BASE_URL."/front/ui/theme/metaorganic/assets_landing_page/img/logo.svg"?>" class="logo" alt="KwikBasket Logo"></a>
 </div><h1 class="mb-2 auth-card-header">Change Password</h1>
 
 <form action="changepass" method="post"  enctype="multipart/form-data" class="form-horizontal">
@@ -52,6 +52,13 @@
 
 
 
-   </div></div></div></div><div class="container mt-5"><div class="row"><div class="col-md-12 text-center"></div></div></div></div></div></main><script src="<?= $base; ?>front/ui/theme/metaorganic/assets_landing_page/js/jquery-3.2.1.min.js"></script><script src="<?= $base; ?>front/ui/theme/metaorganic/assets_landing_page/js/popper.min.js"></script><script src="<?= $base; ?>front/ui/theme/metaorganic/assets_landing_page/js/bootstrap.min.js"></script><script src="<?= $base; ?>front/ui/theme/metaorganic/assets_landing_page/js/scroll-out.min.js"></script><script src="<?= $base; ?>front/ui/theme/metaorganic/assets_landing_page/js/iziToast.min.js" async defer="defer"></script><script src="<?= $base; ?>front/ui/theme/metaorganic/assets_landing_page/js/gsap.min.js"></script><script src="<?= $base; ?>front/ui/theme/metaorganic/assets_landing_page/js/modernizr-custom.js">
-</script><script src="<?= $base; ?>front/ui/theme/metaorganic/assets_landing_page/js/scripts.min.js"></script>
+   </div></div></div></div><div class="container mt-5"><div class="row"><div class="col-md-12 text-center"></div></div>
+   </div></div></div></main><script src="<?= BASE_URL; ?>/front/ui/theme/metaorganic/assets_landing_page/js/jquery-3.2.1.min.js">
+   </script><script src="<?= BASE_URL;?>/front/ui/theme/metaorganic/assets_landing_page/js/popper.min.js"></script>
+   <script src="<?= BASE_URL;?>/front/ui/theme/metaorganic/assets_landing_page/js/bootstrap.min.js"></script>
+   <script src="<?= BASE_URL;?>/front/ui/theme/metaorganic/assets_landing_page/js/scroll-out.min.js"></script>
+   <script src="<?= BASE_URL;?>/front/ui/theme/metaorganic/assets_landing_page/js/iziToast.min.js" async defer="defer">
+   </script><script src="<?= BASE_URL;?>/front/ui/theme/metaorganic/assets_landing_page/js/gsap.min.js"></script>
+   <script src="<?= BASE_URL;?>/front/ui/theme/metaorganic/assets_landing_page/js/modernizr-custom.js">
+</script><script src="<?= BASE_URL;?>/front/ui/theme/metaorganic/assets_landing_page/js/scripts.min.js"></script>
 </body></html>  
