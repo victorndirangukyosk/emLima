@@ -161,6 +161,10 @@ class ControllerPaymentFlutterwave extends Controller {
                 print_r('API returned error: ' . $transaction->message);
             }
 
+            foreach ($this->session->data['order_id'] as $order_id) {
+                $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('flutterwave_failed_order_status_id'));
+            }
+
             // uncomment out this line if you want to redirect the user to the payment page
             //print_r($transaction->data->message);
             // redirect to page so User can pay
@@ -228,6 +232,11 @@ class ControllerPaymentFlutterwave extends Controller {
             }
 
             $transaction = json_decode($response, true);
+
+            foreach ($this->session->data['order_id'] as $order_id) {
+                $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('flutterwave_order_status_id'));
+            }
+
             $this->model_payment_flutterwavetransactions->addOrderTransaction($transaction['data'], $order_id);
             $log = new Log('error.log');
             $log->write($transaction);
@@ -237,7 +246,7 @@ class ControllerPaymentFlutterwave extends Controller {
                 $this->model_payment_flutterwave->updateFlutterwaveOrder($order_id, $this->request->get['tx_ref'], $this->request->get['transaction_id'], $this->request->get['status']);
             }
         }
-        exit;
+        $this->response->redirect($this->url->link('checkout/success'));
     }
 
 }
