@@ -200,6 +200,8 @@ class ControllerPaymentFlutterwave extends Controller {
             $this->load->model('payment/flutterwavetransactions');
             $this->load->model('checkout/order');
             $this->load->model('setting/setting');
+            $this->load->model('account/customer');
+            $log = new Log('error.log');
 
             foreach ($this->session->data['order_id'] as $key => $value) {
                 $order_id = $value;
@@ -209,45 +211,50 @@ class ControllerPaymentFlutterwave extends Controller {
                 $order_id = $this->request->post['order_id'];
             }
             $flutter_creds = $this->model_setting_setting->getSetting('flutterwave', 0);
-
-            $curl = curl_init();
-
             $public_key = $flutter_creds['flutterwave_secret_key']; // get your public key from the dashboard.
             $transaction_id = $this->request->get['transaction_id'];
+            $order_info = $this->model_checkout_order->getOrder($order_id);
+            $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
 
-            curl_setopt_array($curl, array(
-                CURLOPT_URL => "https://api.flutterwave.com/v3/transactions/" . $transaction_id . "/verify",
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_CUSTOMREQUEST => "GET",
-                CURLOPT_HTTPHEADER => [
-                    "Authorization: Bearer " . $public_key,
-                    "content-type: application/json",
-                    "cache-control: no-cache"
-                ],
-            ));
+            if ($this->request->get['status'] == 'successful') {
+                $curl = curl_init();
 
-            $response = curl_exec($curl);
-            $err = curl_error($curl);
+                curl_setopt_array($curl, array(
+                    CURLOPT_URL => "https://api.flutterwave.com/v3/transactions/" . $transaction_id . "/verify",
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_CUSTOMREQUEST => "GET",
+                    CURLOPT_HTTPHEADER => [
+                        "Authorization: Bearer " . $public_key,
+                        "content-type: application/json",
+                        "cache-control: no-cache"
+                    ],
+                ));
 
-            if ($err) {
-                // there was an error contacting the rave API
-                die('Curl returned error: ' . $err);
-            }
+                $response = curl_exec($curl);
+                $err = curl_error($curl);
 
-            $transaction = json_decode($response, true);
+                if ($err) {
+                    // there was an error contacting the rave API
+                    die('Curl returned error: ' . $err);
+                }
 
-            foreach ($this->session->data['order_id'] as $order_id) {
+                $transaction = json_decode($response, true);
+
                 $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('flutterwave_order_status_id'));
+                $this->model_checkout_order->UpdateOrderStatusFlutterWave($order_id, $this->config->get('flutterwave_order_status_id'), $customer_info['customer_id']);
+                $this->model_payment_flutterwave->insertOrderTransactionId($order_id, $transaction_id);
+                $this->model_payment_flutterwavetransactions->addOrderTransaction($transaction['data'], $order_id);
+                $log->write($transaction);
             }
 
-            $this->model_payment_flutterwave->insertOrderTransactionId($order_id, $transaction_id);
-            $this->model_payment_flutterwavetransactions->addOrderTransaction($transaction['data'], $order_id);
-            $log = new Log('error.log');
-            $log->write($transaction);
+            if ($this->request->get['status'] == 'cancelled' || $this->request->get['status'] != 'successful') {
 
-            $flutterwaveDetails = $this->model_payment_flutterwave->getFlutterwaveByOrderId($order_id, $this->request->get['tx_ref']);
-            if ($flutterwaveDetails != NULL) {
-                $this->model_payment_flutterwave->updateFlutterwaveOrder($order_id, $this->request->get['tx_ref'], $this->request->get['transaction_id'], $this->request->get['status']);
+                $flutterwaveDetails = $this->model_payment_flutterwave->getFlutterwaveByOrderId($order_id, $this->request->get['tx_ref']);
+                if ($flutterwaveDetails != NULL) {
+                    $this->model_payment_flutterwave->updateFlutterwaveOrder($order_id, $this->request->get['tx_ref'], $this->request->get['transaction_id'], $this->request->get['status']);
+                }
+                $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('flutterwave_failed_order_status_id'));
+                $this->model_checkout_order->UpdateOrderStatusFlutterWave($order_id, $this->config->get('flutterwave_failed_order_status_id'), $customer_info['customer_id']);
             }
         }
         $this->response->redirect($this->url->link('checkout/success'));
