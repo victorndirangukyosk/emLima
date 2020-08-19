@@ -1647,7 +1647,7 @@ class ModelCheckoutOrder extends Model {
     }
 
     public function UpdateOrderStatusFlutterWave($order_id, $order_status_id, $customer_id) {
-        $this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id  = '" . $order_status_id . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . " AND `customer_id` = '" . (int) $customer_id . "'");
+        $this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id  = '" . $order_status_id . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "' AND `customer_id` = '" . (int) $customer_id . "'");
     }
 
 }
