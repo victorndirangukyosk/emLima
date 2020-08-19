@@ -5,23 +5,9 @@
         <div class="col-sm-6 col-md-4">
             <select id="payment_options" name="payment_options" class="form-control">
                 <option value="">Select Payment Option</option>
-                <option value="account">Account</option>
-                <option value="card">Card</option>
-                <option value="banktransfer">Bank Transfer</option>
-                <option value="mpesa">mPesa</option>
-                <option value="mobilemoneyrwanda">Mobile Money Rwanda</option>
-                <option value="mobilemoneyzambia">Mobile Money Zambia</option>
-                <option value="qr">QR</option>
-                <option value="mobilemoneyuganda">Mobile Money Uganda</option>
-                <option value="ussd">USSD</option>
-                <option value="credit">Credit</option>
-                <option value="barter">Barter</option>
-                <option value="mobilemoneyghana">Mobile Money Ghana</option>
-                <option value="payattitude">PayAttitude</option>
-                <option value="mobilemoneyfranco">Mobile Money Franco</option>
-                <option value="paga">Paga</option>
-                <option value="1voucher">1Voucher</option>
-                <option value="mobilemoneytanzania">Mobile Money Tanzania</option>
+              <?php foreach ($payment_options as $payment_option) { ?>
+              <option value="<?php echo $payment_option['payment_option_code']; ?> "><?php echo $payment_option['payment_option_name']; ?></option>
+              <?php } ?>
             </select> 
         </div>
     </div>   

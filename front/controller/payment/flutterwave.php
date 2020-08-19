@@ -8,6 +8,7 @@ class ControllerPaymentFlutterwave extends Controller {
         $this->load->model('setting/setting');
         $this->load->model('payment/flutterwave');
         $this->load->model('checkout/order');
+        $this->load->model('payment/flutterwavepaymentoptions');
 
         $data['text_instruction'] = $this->language->get('text_instruction');
         $data['text_payable'] = $this->language->get('text_payable');
@@ -24,6 +25,8 @@ class ControllerPaymentFlutterwave extends Controller {
         $data['customer_number'] = $this->customer->getTelephone();
 
         $data['action'] = $this->url->link('payment/flutterwave/confirm', '', 'SSL');
+
+        $data['payment_options'] = $this->model_payment_flutterwavepaymentoptions->getpaymentoptions();
 
         $flutter_creds = $this->model_setting_setting->getSetting('flutterwave', 0);
         $log = new Log('error.log');
@@ -236,7 +239,7 @@ class ControllerPaymentFlutterwave extends Controller {
             foreach ($this->session->data['order_id'] as $order_id) {
                 $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('flutterwave_order_status_id'));
             }
-            
+
             $this->model_payment_flutterwave->insertOrderTransactionId($order_id, $transaction_id);
             $this->model_payment_flutterwavetransactions->addOrderTransaction($transaction['data'], $order_id);
             $log = new Log('error.log');
