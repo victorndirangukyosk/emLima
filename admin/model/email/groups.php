@@ -28,6 +28,14 @@ class ModelEmailGroups extends Model {
         return $groupId;
     }
 
+    public function addCustomerToGroup($groupId, $customerId) {
+        // Check whether user already exists in the group first
+        $query = $this->db->query("SELECT * FROM ". DB_PREFIX . "customer_email_group WHERE group_id = '" . (int) $groupId . "' AND customer_id = '". (int) $customerId . "'");
+        if(!$query->rows) {
+            $this->db->query("INSERT INTO ". DB_PREFIX . "customer_email_group SET group_id = '" . (int) $groupId . "', customer_id = '". (int) $customerId ."'");
+        }
+    }
+
     public function editGroup($groupId, $data) {
         $this->db->query("UPDATE " . DB_PREFIX . "email_groups SET name = '" . $this->db->escape($data['name']) . "', description = '" . $this->db->escape($data['description']) . "' WHERE id = '" . (int)$groupId . "'");
     }

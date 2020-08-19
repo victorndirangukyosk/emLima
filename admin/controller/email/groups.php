@@ -145,8 +145,10 @@ class ControllerEmailGroups extends Controller {
 				'telephone' => $result['telephone'],
 				'delete' => $this->url->link('email/groups/removeCustomerFromGroup', 'token=' . $this->session->data['token'] . '&group_id=' . $groupId.'&customer_id=' . $result['customer_id'], 'SSL')
             );
-        }
-
+		}
+		
+		$data['group'] = $this->model_email_groups->getGroupById($groupId);
+		$data['token'] = $this->session->data['token'];
 		$data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
 		$data['footer'] = $this->load->controller('common/footer');
@@ -155,7 +157,12 @@ class ControllerEmailGroups extends Controller {
 	}
 
 	public function addCustomerToGroup() {
+		$groupId = $this->request->get['group_id'];
+		$customerId = $this->request->get['customer_id'];
 
+		$this->load->model('email/groups');
+		$this->model_email_groups->addCustomerToGroup($groupId, $customerId);
+		$this->response->redirect($this->url->link('email/groups/groupCustomers', 'token=' . $this->session->data['token'] . '&group_id=' . $groupId, 'SSL'));
 	}
 
 	public function removeCustomerFromGroup() {
