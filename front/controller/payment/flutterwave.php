@@ -244,12 +244,17 @@ class ControllerPaymentFlutterwave extends Controller {
                 $this->model_checkout_order->UpdateOrderStatusFlutterWave($order_id, $this->config->get('flutterwave_order_status_id'), $customer_info['customer_id']);
                 $this->model_payment_flutterwave->insertOrderTransactionId($order_id, $transaction_id);
                 $this->model_payment_flutterwavetransactions->addOrderTransaction($transaction['data'], $order_id);
+                $flutterwaveDetails = $this->model_payment_flutterwave->getFlutterwaveByOrderId($order_id, $this->request->get['tx_ref']);
+                if ($flutterwaveDetails != NULL) {
+                    $this->model_payment_flutterwave->updateFlutterwaveOrder($order_id, $this->request->get['tx_ref'], $this->request->get['transaction_id'], $this->request->get['status']);
+                }
                 $log->write($transaction);
                 $this->response->redirect($this->url->link('checkout/success'));
             }
 
             if ($this->request->get['status'] == 'cancelled' || $this->request->get['status'] != 'successful') {
-
+                /*If Transaction Not Success We Wont Get Transaction Id*/
+                $this->request->get['transaction_id'] = '';
                 $flutterwaveDetails = $this->model_payment_flutterwave->getFlutterwaveByOrderId($order_id, $this->request->get['tx_ref']);
                 if ($flutterwaveDetails != NULL) {
                     $this->model_payment_flutterwave->updateFlutterwaveOrder($order_id, $this->request->get['tx_ref'], $this->request->get['transaction_id'], $this->request->get['status']);
