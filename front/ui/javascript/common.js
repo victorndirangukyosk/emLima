@@ -965,7 +965,7 @@ $(document).delegate('.agree', 'click', function (e) {
 								<span data-action="add"
 									data-key="YToyOntzOjE2OiJwcm9kdWN0X3N0b3JlX2lkIjtpOjQwNjExO3M6ODoic3RvcmVfaWQiO3M6MjoiNzUiO30="
 									class="AtcButton__button_text___VoXuy unique_add_button${ json[i]['product_store_id'] }-0" 
-									id="add-cart-btnnew"  Searchid="1"
+									id="add-cart-btnnew"  Searchid="1"  quantityadded="${ json[i]['quantityadded'] }"   key1="${ json[i]['key1'] }"
 									data-store-id="${ json[i]['store_id'] }"
 									data-variation-id="0" 
 									data-id="${ json[i]['product_store_id'] }" 
@@ -1039,7 +1039,8 @@ $(document).delegate('.agree', 'click', function (e) {
 									img: item['image'],
 									special_price: item['special_price'],
 									product_store_id: item['product_store_id'],
-									store_id: item['store_id']
+									store_id: item['store_id'],
+									quantityadded: item['quantityadded']
 
 								}
 							} else {
@@ -1053,7 +1054,8 @@ $(document).delegate('.agree', 'click', function (e) {
 									special_price: item['special_price'],
 									unit: item['unit'],
 									product_store_id: item['product_store_id'],
-									store_id: item['store_id']
+									store_id: item['store_id'],
+									quantityadded: item['quantityadded']
 
 								}
 							}

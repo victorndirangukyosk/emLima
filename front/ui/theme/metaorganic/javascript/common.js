@@ -354,9 +354,11 @@ $(document).delegate('#add-cart-btnnew', 'click', function() {
     }
  if($Searchid==1)
  {
+    $quantityadded = $(this).attr('quantityadded'); 
      console.log($Searchid);//if focus is not set, the popup is not closing
     $('#product_name').focus();
     $('#product_name').val("");
+    $mainquantity=$quantityadded;
  }
 
     //below hides 2 buttons one in popup and other in product list page

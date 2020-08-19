@@ -756,6 +756,20 @@ class ControllerAccountDashboard extends Controller {
 
         $this->response->setOutput($this->load->view('metaorganic/template/account/recentorders_list.tpl', $data));
     }
-	 
+     
+    
+
+    public function export_mostpurchased_products_excel($customer_id) {
+        $data = array();
+
+        if (isset($this->request->get['customer_id'])) {
+            $data['customer_id'] = $this->request->get['customer_id'];
+        } 
+
+        
+        $this->load->model('account/dashboard');
+        $this->model_account_dashboard->download_mostpurchased_products_excel($data);
+    }
+
 
 }

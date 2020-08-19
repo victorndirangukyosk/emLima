@@ -18,7 +18,7 @@
 <div class="col-md-12">
 <div class="p-4">  
 
-<div class="auth-logo text-center mb-4"><a class="base_url" href="<?= BASE_URL."/index.php" ?>">
+<div class="auth-logo text-center mb-4"><a class="base_url" >
 <img src="<?= BASE_URL."/front/ui/theme/metaorganic/assets_landing_page/img/logo.svg"?>" class="logo" alt="KwikBasket Logo"></a>
 </div><h1 class="mb-2 auth-card-header">Change Password</h1>
 
