@@ -245,6 +245,7 @@ class ControllerPaymentFlutterwave extends Controller {
                 $this->model_payment_flutterwave->insertOrderTransactionId($order_id, $transaction_id);
                 $this->model_payment_flutterwavetransactions->addOrderTransaction($transaction['data'], $order_id);
                 $log->write($transaction);
+                $this->response->redirect($this->url->link('checkout/success/orderfailed'));
             }
 
             if ($this->request->get['status'] == 'cancelled' || $this->request->get['status'] != 'successful') {
@@ -255,9 +256,9 @@ class ControllerPaymentFlutterwave extends Controller {
                 }
                 $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('flutterwave_failed_order_status_id'));
                 $this->model_checkout_order->UpdateOrderStatusFlutterWave($order_id, $this->config->get('flutterwave_failed_order_status_id'), $customer_info['customer_id']);
+                $this->response->redirect($this->url->link('checkout/success/orderfailed'));
             }
         }
-        $this->response->redirect($this->url->link('checkout/success'));
     }
 
 }
