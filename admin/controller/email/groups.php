@@ -4,17 +4,16 @@ class ControllerEmailGroups extends Controller {
     
     public function index() {
 		$this->document->setTitle("Bulk Email Groups");
-
 		$this->load->model('email/groups');
 
 		$data = array();
-		
 		$results = $this->model_email_groups->getGroups();
         foreach ($results as $result) {
             $data['groups'][] = array(
                 'group_id' => $result['id'],
                 'name' => $result['name'],
-                'description' => $result['description'],
+				'description' => $result['description'],
+				'customers' => $this->url->link('email/groups/groupCustomers', 'token=' . $this->session->data['token'] . '&group_id=' . $result['id'], 'SSL'),
 				'edit' => $this->url->link('email/groups/edit', 'token=' . $this->session->data['token'] . '&group_id=' . $result['id'], 'SSL'),
 				'delete' => $this->url->link('email/groups/delete', 'token=' . $this->session->data['token'] . '&group_id=' . $result['id'], 'SSL')
             );
@@ -129,5 +128,49 @@ class ControllerEmailGroups extends Controller {
         }
 
         return !$this->error;
+	}
+
+	public function groupCustomers() {
+		$this->document->setTitle("Group Customers");
+		$this->load->model('email/groups');
+
+		$groupId = $this->request->get['group_id'];
+		
+		$data = array();
+		$results = $this->model_email_groups->getCustomersInGroup($groupId);
+		foreach ($results as $result) {
+            $data['customers'][] = array(
+                'name' => $result['firstname'] . ' ' . $result['lastname'],
+				'email' => $result['email'],
+				'telephone' => $result['telephone'],
+				'delete' => $this->url->link('email/groups/removeCustomerFromGroup', 'token=' . $this->session->data['token'] . '&group_id=' . $groupId.'&customer_id=' . $result['customer_id'], 'SSL')
+            );
+		}
+		
+		$data['group'] = $this->model_email_groups->getGroupById($groupId);
+		$data['token'] = $this->session->data['token'];
+		$data['header'] = $this->load->controller('common/header');
+        $data['column_left'] = $this->load->controller('common/column_left');
+		$data['footer'] = $this->load->controller('common/footer');
+
+		$this->response->setOutput($this->load->view('email/group_customers.tpl', $data));
+	}
+
+	public function addCustomerToGroup() {
+		$groupId = $this->request->get['group_id'];
+		$customerId = $this->request->get['customer_id'];
+
+		$this->load->model('email/groups');
+		$this->model_email_groups->addCustomerToGroup($groupId, $customerId);
+		$this->response->redirect($this->url->link('email/groups/groupCustomers', 'token=' . $this->session->data['token'] . '&group_id=' . $groupId, 'SSL'));
+	}
+
+	public function removeCustomerFromGroup() {
+		$groupId = $this->request->get['group_id'];
+		$customerId = $this->request->get['customer_id'];
+		
+		$this->load->model('email/groups');
+		$this->model_email_groups->deleteCustomerFromGroup($groupId, $customerId);
+		$this->response->redirect($this->url->link('email/groups/groupCustomers', 'token=' . $this->session->data['token'] . '&group_id=' . $groupId, 'SSL'));
 	}
 }

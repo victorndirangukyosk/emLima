@@ -592,7 +592,7 @@ $(document).delegate('#email', 'blur', function(){
             }
         });
 });
-setTimeout(function () { location.reload(true); }, 50000);
+//setTimeout(function () { location.reload(true); }, 50000);
 </script>
 </body>
 </html>
