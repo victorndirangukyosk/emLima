@@ -637,15 +637,16 @@ class ControllerAccountWishList extends Controller {
         $log->write($wishlist_product);
         $log->write('Wish List Products');
         $store_data = $this->model_assets_product->getProductStoreId($product_id, 75);
-        $log->write('Store Details');
-        $log->write($wishlist_product);
-        $log->write('Store Details');
+        $log->write('Store Details123');
+        $log->write($store_data);
+        $log->write('Store Details123');
         $this->cart->addCustom($store_data['product_store_id'], $wishlist_product['quantity'], $option = array(), $recurring_id = 0, $store_data['store_id'], $store_product_variation_id= false,$product_type = 'replacable',$product_note=null,$produce_type=null);
         $this->model_account_wishlist->deleteWishlistProduct($wishlist_id, $product_id);
         }
         
         $this->session->data['success'] = $data['text_cart_success'];
         $data['location'] = $this->url->link('checkout/checkoutitems', '', 'SSL');
+        $data['status'] = 'success';
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($data));
