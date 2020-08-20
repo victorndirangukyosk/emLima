@@ -416,66 +416,6 @@
         }
     });
 
-    $(document).delegate('#selected-add-to-cart', 'click', function () {
-        return false;
-        console.log('selected-add-to-cart');
-        $store_id = 75;
-        var productIds = [];
-        var added = false;
-        $cnt = 0;
-        $("input:checkbox[name='wishlist_products']:checked").each(function () {
-            $cnt = 1;
-            productIds.push($(this).val());
-
-            console.log("Buy Now");
-            $product_id = $(this).val();
-            $variation_id = 0;
-
-
-            //$quantity = parseInt($('#quantity_'+$product_id).html());
-            $quantity = 1;
-            console.log($quantity + "qnt");
-
-            if ($quantity > 0) {
-
-                // cart.add($product_id, $quantity, $variation_id);
-                cart.add($product_id, $quantity, $variation_id, $store_id, '', '');
-                added = true;
-
-                console.log("added to cart");
-
-                //$(this).attr('data-action','update');
-                //$('#AtcButton-id-'+$product_id+'-'+$variation_id).css("background-color","#ea7128");
-                ////$('#flag-qty-id-'+$product_id+'-'+$variation_id).html($newquantityvalue+' items in cart <i class="fas fa-flag"></i>');        
-                //  $('#flag-qty-id-'+$product_id+'-'+$variation_id).css("display","block");
-
-            }
-        });
-
-
-        if ($cnt == 0)
-        {
-            alert("Please select any product");
-        }
-
-        /*if(added) {
-         $.ajax({
-         url: 'index.php?path=account/wishlist/addWishlistProductToCart',
-         type: 'post',
-         data: {
-         x: 'success',
-         },
-         dataType: 'json',
-         success: function(json) {
-         console.log("syc");
-         setTimeout(function(){ window.location.reload(false); }, 1000);
-         }
-         });
-         }*/
-
-        console.log(productIds);
-    });
-
     $(document).delegate('#list-add-to-cart', 'click', function (e) {
 
         e.preventDefault();
