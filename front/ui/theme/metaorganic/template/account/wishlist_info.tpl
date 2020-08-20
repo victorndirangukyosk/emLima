@@ -406,7 +406,7 @@
                         console.log(json.location);
                         var timer = setTimeout(function () {
                             window.location.href = json.location;
-                        }, 10000);
+                        }, 1000);
                         //return false;
                         //location = json.redirect;
                         //location = location;
