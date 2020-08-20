@@ -470,7 +470,7 @@ class Cart {
         return $tax_data;
     }
     
-    public function addCustom($product_store_id, $qty, $option = array(), $recurring_id = 0, $store_id= false, $store_product_variation_id= false,$product_type = 'replacable',$product_note=null,$produce_type=null) {
+    public function addCustom($product_store_id, $qty, $option = array(), $recurring_id = 0, $store_id, $store_product_variation_id= false,$product_type = 'replacable',$product_note=null,$produce_type=null) {
         $this->data = array();
 
         $product['product_store_id'] = (int) $product_store_id;
