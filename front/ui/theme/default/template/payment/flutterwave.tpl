@@ -5,15 +5,14 @@
         <div class="col-sm-6 col-md-4">
             <select id="payment_options" name="payment_options" class="form-control">
                 <option value="">Select Payment Option</option>
-              <?php foreach ($payment_options as $payment_option) { ?>
-              <option value="<?php echo $payment_option['payment_option_code']; ?> "><?php echo $payment_option['payment_option_name']; ?></option>
-              <?php } ?>
+                <?php foreach ($payment_options as $payment_option) { ?>
+                <option value="<?php echo $payment_option['payment_option_code']; ?> "><?php echo $payment_option['payment_option_name']; ?></option>
+                <?php } ?>
             </select> 
         </div>
     </div>   
 </span>
-<button type="button" id="button-confirm" class="btn btn-default">PAY &amp; CONFIRM</button>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<button type="button" id="button-confirm" data-toggle="collapse" data-loading-text="redirecting to payment page..." class="btn btn-default">PAY &amp; CONFIRM</button>
 <script type="text/javascript">
     $('#button-confirm').on('click', function () {
         var payment_options = $('#payment_options').val();
@@ -26,19 +25,24 @@
 
     $(document).delegate('#button-confirm', 'click', function () {
         console.log("button-confirm click");
+        $("#button-confirm").prop("disabled", true);
         var payment_options = $('#payment_options').val();
         $.ajax({
             url: 'index.php?path=payment/flutterwave/confirm',
             type: 'post',
-            data: { 'payment_option': payment_options },
+            data: {'payment_option': payment_options},
             dataType: 'json',
+            beforeSend: function () {
+                $('#button-confirm').button('loading');
+            },
             success: function (json) {
                 console.log(json);
-            if(json.status == 'success') {
-                window.location.href = json.data.link;
-            } else { 
-               alert('Something went wrong please try again later!'); 
-            } 
+                if (json.status == 'success') {
+                    window.location.href = json.data.link;
+                } else {
+                    $("#button-confirm").prop("disabled", false);
+                    alert('Something went wrong please try again later!');
+                }
             }
         });
     });
