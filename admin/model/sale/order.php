@@ -633,7 +633,7 @@ class ModelSaleOrder extends Model {
           
                
       // if (isset($data['filter_order_status'])) {
-        $sql .= " WHERE o.order_status_id != '6'  And  o.order_status_id > '0'";
+        $sql .= " WHERE o.order_status_id != '6'  And o.order_status_id != '15'  And o.order_status_id > '0'";
            
        //} else {
            // $sql .= " WHERE o.order_status_id > '0'";
