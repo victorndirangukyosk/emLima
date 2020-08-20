@@ -305,7 +305,7 @@ class ModelCheckoutOrder extends Model {
         $this->db->query("DELETE FROM `" . DB_PREFIX . "order` WHERE order_id = '" . (int) $order_id . "'");
         $this->db->query("DELETE FROM `" . DB_PREFIX . "order_custom_field` WHERE order_id = '" . (int) $order_id . "'");
         $this->db->query("DELETE FROM `" . DB_PREFIX . "order_fraud` WHERE order_id = '" . (int) $order_id . "'");
-        $this->db->query("DELETE FROM `" . DB_PREFIX . "order_history` WHERE order_id = '" . (int) $order_id . "' AND order_status_id=0");
+        $this->db->query("DELETE FROM `" . DB_PREFIX . "order_history` WHERE order_id = '" . (int) $order_id . "'");
         $this->db->query("DELETE FROM `" . DB_PREFIX . "order_option` WHERE order_id = '" . (int) $order_id . "'");
         $this->db->query("DELETE FROM `" . DB_PREFIX . "order_product` WHERE order_id = '" . (int) $order_id . "'");
         $this->db->query("DELETE `or`, ort FROM `" . DB_PREFIX . "order_recurring` `or`, `" . DB_PREFIX . "order_recurring_transaction` `ort` WHERE order_id = '" . (int) $order_id . "' AND ort.order_recurring_id = `or`.order_recurring_id");
@@ -538,7 +538,11 @@ class ModelCheckoutOrder extends Model {
                 }
             }
 
-            if ($order_status_id == 0) {
+            if ($order_status_id > 0) {
+                $this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', order_pdf_link ='" . $pdf_link . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
+
+                $this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', order_status_id = '" . (int) $order_status_id . "', notify = '" . (int) $notify . "', comment = '" . $this->db->escape($comment) . "', date_added = NOW()");
+            } else {
                 // FOR SUB USERS ORDERS
                 $log->write('Add Order History Method');
                 $log->write($order_status_id . 'Add Order History Method');
@@ -562,10 +566,6 @@ class ModelCheckoutOrder extends Model {
                         $this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', order_status_id = '" . (int) $order_status_id_sub . "', notify = '" . (int) $notify . "', comment = '" . $this->db->escape($comment) . "', date_added = NOW()");
                     }
                 }
-            } else {
-                $this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', order_pdf_link ='" . $pdf_link . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
-
-                $this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', order_status_id = '" . (int) $order_status_id . "', notify = '" . (int) $notify . "', comment = '" . $this->db->escape($comment) . "', date_added = NOW()");
             }
 
 
