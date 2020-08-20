@@ -335,6 +335,8 @@ $(document).delegate('#add-cart-btn', 'click', function() {
 
 $(document).delegate('#add-cart-btnnew', 'click', function() {
     $product_id = $(this).attr('data-id');    
+    $Searchid = $(this).attr('Searchid');    
+
     $variation_id = $(this).attr('data-variation-id');
     $store_id = $(this).attr('data-store-id');
     $action = $(this).attr('data-action');
@@ -350,7 +352,14 @@ $(document).delegate('#add-cart-btnnew', 'click', function() {
         $mainquantity=0; 
         $oldquantity=0;
     }
- 
+ if($Searchid==1)
+ {
+    $quantityadded = $(this).attr('quantityadded'); 
+     console.log($Searchid);//if focus is not set, the popup is not closing
+    $('#product_name').focus();
+    $('#product_name').val("");
+    $mainquantity=$quantityadded;
+ }
 
     //below hides 2 buttons one in popup and other in product list page
 

@@ -466,7 +466,7 @@ class ModelReportCustomer extends Model {
 	}
 
 	public function getCustomerOrders($data = array()) {
-        $sql = "SELECT c.company_name  as company,c.customer_id, CONCAT(c.firstname, ' ', c.lastname) AS customer, c.email, cgd.name AS customer_group, c.status, o.order_id,o.po_number,o.date_added,o.order_status_id, SUM(op.quantity) as products, SUM(DISTINCT o.total) AS total FROM `" . DB_PREFIX . "order` o LEFT JOIN `" . DB_PREFIX . "order_product` op ON (o.order_id = op.order_id)LEFT JOIN `" . DB_PREFIX . "customer` c ON (o.customer_id = c.customer_id) LEFT JOIN `" . DB_PREFIX . "customer_group_description` cgd ON (c.customer_group_id = cgd.customer_group_id) WHERE o.customer_id > 0 AND cgd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+        $sql = "SELECT c.company_name  as company, o.delivery_date  as delivery_date,c.customer_id, CONCAT(c.firstname, ' ', c.lastname) AS customer, c.email, cgd.name AS customer_group, c.status, o.order_id,o.po_number,o.date_added,o.order_status_id, SUM(op.quantity) as products, SUM(DISTINCT o.total) AS total FROM `" . DB_PREFIX . "order` o LEFT JOIN `" . DB_PREFIX . "order_product` op ON (o.order_id = op.order_id)LEFT JOIN `" . DB_PREFIX . "customer` c ON (o.customer_id = c.customer_id) LEFT JOIN `" . DB_PREFIX . "customer_group_description` cgd ON (c.customer_group_id = cgd.customer_group_id) WHERE o.customer_id > 0 AND cgd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
         if (!empty($data['filter_order_status_id'])) {
             $sql .= " AND o.order_status_id = '" . (int)$data['filter_order_status_id'] . "'";
@@ -494,7 +494,7 @@ class ModelReportCustomer extends Model {
 			$sql .= " AND c.company_name   LIKE '%" . $this->db->escape($data['filter_company']) . "%'";
 		}  
 
-        $sql .= " GROUP BY o.order_id desc";
+        $sql .= " GROUP BY o.order_id ORDER BY o.delivery_date asc";
 
         //$sql = "SELECT t.customer_id, t.customer, t.email, t.customer_group, t.status, COUNT(DISTINCT t.order_id) AS orders, SUM(t.products) AS products, SUM(t.total) AS total FROM (" . $sql . ") AS t GROUP BY t.customer_id ORDER BY total DESC";     
 

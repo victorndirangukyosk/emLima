@@ -1,0 +1,145 @@
+@font-face {
+    font-family: 'Sofia Pro';
+    src: url('../fonts/SofiaProRegular.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Sofia Pro';
+    src: url('../fonts/SofiaProMedium.woff2') format('woff2');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Sofia Pro';
+    src: url('../fonts/SofiaProBold.woff2') format('woff2');
+    font-weight: bold;
+    font-style: normal;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+body {
+    font-family: 'Sofia Pro', sans-serif;
+}
+
+.page {
+    margin: .9rem auto !important;
+}
+
+.document-actions {
+    position: fixed;
+    bottom: 10vh;
+    right: 2vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: stretch;
+}
+
+.document-container {
+    width: 100%;
+}
+
+.btn-primary {
+    background-color: #2ba349;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #EC7123;
+}
+
+ul.list-block {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.datatable, .payment-details-table {
+    width: 100%;
+}
+
+.datatable-header {
+    display: table-header-group;
+}
+
+.datatable > thead {
+    font-weight: bold;
+}
+
+.payment-details-table {
+    page-break-inside: avoid;
+}
+
+.payment-details-table > thead {
+    font-weight: bold;
+}
+
+.payment-details-table > thead tr {
+    border-bottom: 1px solid rgb(156, 156, 156);
+}
+
+.datatable td {
+    padding: 4px 6px;
+}
+
+.datatable tr {
+    border-bottom: 1px solid rgb(156, 156, 156);
+}
+
+.header, .header-space {
+    height: 0px;
+}
+
+.footer, .footer-space {
+    height: 80px;
+    opacity: 0;
+}
+
+.footer {
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    opacity: 0;
+}
+
+.price-container {
+    display: flex;
+    flex-flow: row nowrap;
+}
+
+.price-container .currency {
+    flex: 1;
+}
+
+.price-container .value {
+    flex: 1;
+}
+
+@media print {
+    .footer {
+        opacity: 1;
+    }
+
+    .document-actions {
+        display: none;
+    }
+
+    @page {
+        margin: 2mm 4mm
+    }
+}

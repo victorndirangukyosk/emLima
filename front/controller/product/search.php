@@ -658,6 +658,23 @@ class ControllerProductSearch extends Controller {
 					$value['image'] = $this->model_tool_image->resize( 'placeholder.png',100,100 );
 				}
 
+				 if($this->session->data['config_store_id']){
+				 	$store_id1 = $this->session->data['config_store_id'];
+				 }
+				 else{
+				 	$store_id1 = 	$value['store_id'] ;
+				 }
+				 $key1 = base64_encode( serialize( array( 'product_store_id' => (int) $value['product_store_id'], 'store_id'=> $store_id1 ) ) );
+				 $value['key1'] =$key1;
+				 if($this->session->data['cart'][$key1]['quantity'])
+				 {
+				 $value['quantityadded'] = $this->session->data['cart'][$key1]['quantity'];
+				 }
+				 else{
+					$value['quantityadded'] =0;
+				 }
+
+
 			
 					if( CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$value['product_store_id'].'_'.$_SESSION['customer_category'].'_'.ACTIVE_STORE_ID])){
 						//echo $cachePrice_data[$product_info['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$store_id];//exit;

@@ -182,7 +182,7 @@
                                                 <i class="fa fa-edit"></i><?= $text_profile ?></a>
                                             </li>
 
-                                            <li role="presentation">
+                                            <!--<li role="presentation">
                                                 <?php if(strpos($profile_info,$_SERVER["REQUEST_URI"]) !== false) { ?>
                                                     <a href="<?= $profile_info ?>" class="active">
                                                 <?php } else { ?>
@@ -190,7 +190,7 @@
                                                 <?php } ?>
 
                                                 <i class="fa fa-edit"></i><?= $text_profile_info ?></a>
-                                            </li>
+                                            </li>-->
 
                                             <li role="presentation">
                                                 <?php if(strpos($account_transactions,$_SERVER["REQUEST_URI"]) !== false) { ?>

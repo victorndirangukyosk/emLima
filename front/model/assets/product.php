@@ -641,6 +641,75 @@ class ModelAssetsProduct extends Model {
 		return $ret;
 	}
 
+// bought products in last 10 orders
+//if orders less than 5 then fecth from Top selling products
+	public function getMostBoughtProducts($store_id ,$customer_id ,$productsID=null) {
+		// $date = date('Y-m-d', strtotime('-30 day')); 
+		//$sql ="SELECT SUM( op.quantity )AS total,pd.name,op.unit FROM " . DB_PREFIX . "order_product AS op LEFT JOIN " . DB_PREFIX . "order AS o ON ( op.order_id = o.order_id ) LEFT JOIN  " . DB_PREFIX . "product_description AS pd ON (op.general_product_id = pd.product_id)  WHERE pd.language_id = '" . (int) $this->config->get('config_language_id') . "' AND o.customer_id = " . $customer_id . " AND o.date_added >= " . $date . " GROUP BY pd.name  having sum(op.quantity)>100   ";
+		// $where_in ="SELECT  op.general_product_id  FROM " . DB_PREFIX . "order_product AS op LEFT JOIN " . DB_PREFIX . "order AS o ON ( op.order_id = o.order_id ) LEFT JOIN  " . DB_PREFIX . "product_description AS pd ON (op.general_product_id = pd.product_id)  WHERE pd.language_id = '" . (int) $this->config->get('config_language_id') . "' AND o.customer_id = " . $customer_id . "AND o.date_added >= " . $date . "  GROUP BY pd.name  having sum(op.quantity)>100   ";
+		//$where_in =$this->db->query($where_in)->rows;	
+		//$array = array_column($where_in, 'general_product_id');
+
+		  $order_id ="SELECT  o.order_id  FROM " . DB_PREFIX . "order AS o  where  o.customer_id = " . $customer_id . " order by o.order_id desc Limit 10 ";		 
+		  $order_id =$this->db->query($order_id)->rows;
+		 $arrayorder_id = array_column($order_id, 'order_id'); 
+		
+		$ordercount=	count($arrayorder_id);
+		 if($ordercount>8)
+		 { 
+			 $this->db->select('general_product_id', FALSE); 
+			$this->db->where_in('order_id', $arrayorder_id); 
+			$where_in = $this->db->get('order_product', $limit, $offset)->rows;
+			
+		 }
+
+		 else if($ordercount>0 && $ordercount<=8){
+
+			$this->db->select('general_product_id', FALSE); 
+			$this->db->where_in('order_id', $arrayorder_id); 
+			$where_in0 = $this->db->get('order_product', $limit, $offset)->rows;
+
+			$complete_status_ids = '('.implode(',', $this->config->get('config_complete_status')).')';
+			//$query = $this->db->query("SELECT SUM( op.quantity )AS total, op.product_id,op.general_product_id, pd.name FROM " . DB_PREFIX . "order_product AS op LEFT JOIN " . DB_PREFIX . "order AS o ON ( op.order_id = o.order_id ) LEFT JOIN  " . DB_PREFIX . "product_description AS pd ON (op.general_product_id = pd.product_id)  WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') ."' AND o.order_status_id IN " . $complete_status_ids . " GROUP BY pd.name ORDER BY total DESC LIMIT 5");
+			$where_in =  "SELECT SUM( op.quantity )AS total, op.general_product_id,pd.name  FROM " . DB_PREFIX . "order_product AS op LEFT JOIN " . DB_PREFIX . "order AS o ON ( op.order_id = o.order_id ) LEFT JOIN  " . DB_PREFIX . "product_description AS pd ON (op.general_product_id = pd.product_id)  WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') ."' AND o.order_status_id IN " . $complete_status_ids . " GROUP BY pd.name ORDER BY total DESC LIMIT 10";
+		   $where_in =$this->db->query($where_in)->rows;
+		   $where_in=array_merge($where_in,$where_in0);
+		}
+		else{
+
+			$complete_status_ids = '('.implode(',', $this->config->get('config_complete_status')).')';
+			$where_in =  "SELECT SUM( op.quantity )AS total, op.general_product_id,pd.name  FROM " . DB_PREFIX . "order_product AS op LEFT JOIN " . DB_PREFIX . "order AS o ON ( op.order_id = o.order_id ) LEFT JOIN  " . DB_PREFIX . "product_description AS pd ON (op.general_product_id = pd.product_id)  WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') ."' AND o.order_status_id IN " . $complete_status_ids . " GROUP BY pd.name ORDER BY total DESC LIMIT 20";
+			$where_in =$this->db->query($where_in)->rows;
+
+		} 	
+		  // echo "<pre>";print_r($where_in); ;
+		 $array = array_column($where_in, 'general_product_id');
+		   // echo "<pre>";print_r($array); ;
+		$this->db->select('product_to_store.*,product_to_category.category_id,product.*,product_description.*,product_description.name as pd_name', FALSE);
+		$this->db->join('product', 'product.product_id = product_to_store.product_id', 'left');
+		$this->db->join('product_description', 'product_description.product_id = product_to_store.product_id', 'left');
+		$this->db->join('product_to_category', 'product_to_category.product_id = product_to_store.product_id', 'left');
+
+		  
+		$this->db->group_by('product_description.name');
+	    $this->db->where('product_to_store.store_id', $store_id);
+	    $this->db->where('product_to_store.status', 1);
+	    $this->db->where('product_to_store.quantity >=', 1);
+	    $this->db->where('product_description.language_id', $this->config->get('config_language_id'));
+		$this->db->where('product.status',1);
+		$this->db->where_in('product.product_id', $array);
+		if($productsID)
+		$this->db->where_not_in('product.product_id', $productsID);
+		
+	
+		$ret = $this->db->get('product_to_store', $limit, $offset)->rows;
+		//die;
+ 	   // echo $this->db->last_query(); ;
+
+//		echo "<pre>";print_r($ret);die;
+		return $ret;
+	}
+
 	
 	public function getCollectionProducts( $data = array() ) {
 		$store_id = $this->session->data['config_store_id'];

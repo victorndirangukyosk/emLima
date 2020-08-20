@@ -262,6 +262,9 @@ else{
     $results =null;
 }
 $this->load->model('sale/order');
+        if(is_array($results) && count($results) > 0) {
+        $log = new Log('error.log');
+        $log->write('Yes It Is Array');
         foreach ($results as $result) {
 
             $products_qty = 0;
@@ -288,12 +291,14 @@ $this->load->model('sale/order');
                 'order_id' => $result['order_id'],
                 'products' => $result['products'],
                 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])) ,
+                'delivery_date' => date($this->language->get('date_format_short'), strtotime($result['delivery_date'])) ,
                 'editedproducts' =>   $products_qty,
                 'po_number' => $result['po_number'],
                 // 'total' => $this->currency->format($result['total'], $this->config->get('config_currency')).replace("KES",""),
                 'total' => $this->currency->format($result['total'], $this->config->get('config_currency')),
                 'subtotal'     =>str_replace("KES"," ", $this->currency->format($sub_total))
             );
+        }
         }
 //  echo "<pre>";print_r($data['customers']);die;
         $data['heading_title'] = $this->language->get('heading_title');
