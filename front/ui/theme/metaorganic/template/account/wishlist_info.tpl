@@ -407,7 +407,7 @@
                         var timer = setTimeout(function () {
                             window.location.href = json.location;
                         }, 10000);
-                        //return false;
+                        return false;
                         //location = json.redirect;
                         //location = location;
                     }
