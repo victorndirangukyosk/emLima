@@ -379,27 +379,30 @@
 
     $(document).delegate('#selected-add-to-cart', 'click', function () {
         var choice = confirm($(this).attr('data-confirm'));
-
-        if (choice) {
+        if (choice == true) {
             var wishlist_id = $(this).attr('data-id');
             var checkedNum = $('input[name="wishlist_products[]"]:checked').length;
+            console.log(wishlist_id);
+            console.log(checkedNum);
             var val = [];
             if (!checkedNum) {
                 $(':checkbox:checked').each(function (i) {
                     val[i] = $(this).data("id");
                 });
                 console.log(val);
-                // User didn't check any checkboxes
             }
             if (val.length == 0) {
                 alert('Please select atleast one product!');
                 return false;
             }
+
             $.ajax({
                 url: 'index.php?path=account/wishlist/addWishlistProductToCartByProduct',
                 type: 'post',
                 data: {'products': val, 'wishlist_id': wishlist_id},
                 dataType: 'json',
+                cache: false,
+                async: true,
                 success: function (json) {
                     console.log(json.status);
                     if (json.location != null && json.status == 'success') {
@@ -407,7 +410,7 @@
                         var timer = setTimeout(function () {
                             window.location.href = json.location;
                         }, 1000);
-                        //return false;
+                        return false;
                         //location = json.redirect;
                         //location = location;
                     }
