@@ -673,6 +673,30 @@ class ControllerAccountLogin extends Controller {
             $data['error_warning'] = $this->language->get('error_login');
         }
 
+        $data['redirect'] = '';
+        //check email sessions
+        $log = new Log('error.log');
+        $this->load->model('checkout/order');
+        $order_info = $this->model_checkout_order->getOrder($this->session->data['email_sub_user_order_id']);
+        $log->write('EMAIL SESSION');
+        $log->write($order_info);
+        $log->write('EMAIL SESSION');
+
+        if ($order_info != NULL) {
+
+            $this->load->model('account/customer');
+            $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
+            $log->write('EMAIL SESSION');
+            $log->write($customer_info);
+            $log->write('EMAIL SESSION');
+
+            if ($customer_info == NULL || $customer_info['customer_id'] == $this->session->data['sub_user_id']) {
+                $log->write('ORDER INFO CUSTOMER ID PROVIDED CUSTOMER ID MATCHED');
+                $this->session->data['redirect'] = $this->url->link('account/order', '', 'SSL');
+                $data['redirect'] = $this->url->link('account/order', '', 'SSL');
+                $log->write($data);
+            }
+        }
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($data));
@@ -1032,8 +1056,16 @@ class ControllerAccountLogin extends Controller {
         $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/farmer-registration.tpl', $data));
     }
 
-    public function CheckSubUserOrder($param) {
-        
+    public function checksubuserorder() {
+        echo "order_token : " . $this->request->get['order_token'];
+        echo "order_token : " . $this->request->get['user_token'];
+        echo "Order Details Checking";
+        $log = new Log('error.log');
+        $log->write('checksubuserorder');
+
+        echo $this->session->data['email_sub_user_order_id'] = $this->request->get['order_token'];
+        echo $this->session->data['email_sub_user_id'] = $this->request->get['user_token'];
+        $this->response->redirect($this->url->link('account/login/customer', '', 'SSL'));
     }
 
 }

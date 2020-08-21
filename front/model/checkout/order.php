@@ -1663,35 +1663,7 @@ class ModelCheckoutOrder extends Model {
         $this->load->model('account/customer');
         $is_he_parents = $this->model_account_customer->CheckHeIsParent();
         $customer_info = $this->model_account_customer->getCustomer($is_he_parents);
-
-
         $order_info = $this->getOrder($order_id);
-
-        if ($order_info) {
-            $store_name = $order_info['firstname'] . ' ' . $order_info['lastname'];
-            $store_url = $this->url->link('account/login/customer');
-        }
-
-        $customer_info['store_name'] = $store_name;
-        $customer_info['site_url'] = $store_url;
-        $customer_info['sub_firstname'] = $order_info['firstname'];
-        $customer_info['sub_lastname'] = $order_info['lastname'];
-        $customer_info['confirm_code'] = 1;
-
-        $log->write('EMAIL SENDING');
-        $log->write($customer_info);
-        $log->write('EMAIL SENDING');
-
-        $subject = $this->emailtemplate->getSubject('Customer', 'customer_7', $customer_info);
-        $message = $this->emailtemplate->getMessage('Customer', 'customer_7', $customer_info);
-
-        $mail = new Mail($this->config->get('config_mail'));
-        $mail->setTo($customer_info['email']);
-        $mail->setFrom($this->config->get('config_from_email'));
-        $mail->setSender($this->config->get('config_name'));
-        $mail->setSubject($subject);
-        $mail->setHTML($message);
-        $mail->send();
     }
 
 }
