@@ -559,11 +559,12 @@ class ModelCheckoutOrder extends Model {
 
 
                 if ($is_he_parents != NULL) {
-                    $log->write($order_status_id . 'MAIN SUB USERS ORDERS PLACING');
+                    $log->write($order_status_id . 'SUB USERS ORDERS PLACING');
                     $this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id_sub . "', order_pdf_link ='" . $pdf_link . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
                     if ($query_order_history->row['total'] == 0) {
                         $this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', order_status_id = '" . (int) $order_status_id_sub . "', notify = '" . (int) $notify . "', comment = '" . $this->db->escape($comment) . "', date_added = NOW()");
                     }
+                    $this->SendMailToParentUser($order_id);
                 } elseif ($is_he_parents == NULL && $order_status_id == 0) {
                     $log->write($order_status_id . 'MAIN USERS ORDERS PLACING');
                     $this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id_sub . "', order_pdf_link ='" . $pdf_link . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
@@ -1655,6 +1656,44 @@ class ModelCheckoutOrder extends Model {
         }
 
         return $refundToCustomerWallet;
+    }
+
+    public function SendMailToParentUser($order_id) {
+        $log = new Log('error.log');
+        $this->load->model('account/customer');
+        $is_he_parents = $this->model_account_customer->CheckHeIsParent();
+        $customer_info = $this->model_account_customer->getCustomer($is_he_parents);
+
+
+        $order_info = $this->getOrder($order_id);
+
+        if ($order_info) {
+            $store_name = $order_info['firstname'] . ' ' . $order_info['lastname'];
+            $store_url = $this->url->link('account/login/customer');
+        }
+
+        $customer_info['store_name'] = $store_name;
+        $customer_info['site_url'] = $store_url;
+        $customer_info['sub_firstname'] = $order_info['firstname'];
+        $customer_info['sub_lastname'] = $order_info['lastname'];
+        $customer_info['activate_href'] = $store_url;
+        $customer_info['account_href'] = $store_url;
+        $customer_info['system_name'] = $store_url;
+
+        $log->write('EMAIL SENDING');
+        $log->write($customer_info);
+        $log->write('EMAIL SENDING');
+
+        $subject = $this->emailtemplate->getSubject('Customer', 'customer_7', $customer_info);
+        $message = $this->emailtemplate->getMessage('Customer', 'customer_7', $customer_info);
+
+        $mail = new Mail($this->config->get('config_mail'));
+        $mail->setTo($customer_info['email']);
+        $mail->setFrom($this->config->get('config_from_email'));
+        $mail->setSender($this->config->get('config_name'));
+        $mail->setSubject($subject);
+        $mail->setHTML($message);
+        $mail->send();
     }
 
 }
