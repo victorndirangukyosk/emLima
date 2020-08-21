@@ -305,7 +305,8 @@ class ModelCheckoutOrder extends Model {
         $this->db->query("DELETE FROM `" . DB_PREFIX . "order` WHERE order_id = '" . (int) $order_id . "'");
         $this->db->query("DELETE FROM `" . DB_PREFIX . "order_custom_field` WHERE order_id = '" . (int) $order_id . "'");
         $this->db->query("DELETE FROM `" . DB_PREFIX . "order_fraud` WHERE order_id = '" . (int) $order_id . "'");
-        $this->db->query("DELETE FROM `" . DB_PREFIX . "order_history` WHERE order_id = '" . (int) $order_id . "'");
+        $this->db->query("DELETE FROM `" . DB_PREFIX . "order_history` WHERE order_id = '" . (int) $order_id . "' AND order_status_id  = 0 ");
+        //$this->db->query("DELETE FROM `" . DB_PREFIX . "order_history` WHERE order_id = '" . (int) $order_id . "'");
         $this->db->query("DELETE FROM `" . DB_PREFIX . "order_option` WHERE order_id = '" . (int) $order_id . "'");
         $this->db->query("DELETE FROM `" . DB_PREFIX . "order_product` WHERE order_id = '" . (int) $order_id . "'");
         $this->db->query("DELETE `or`, ort FROM `" . DB_PREFIX . "order_recurring` `or`, `" . DB_PREFIX . "order_recurring_transaction` `ort` WHERE order_id = '" . (int) $order_id . "' AND ort.order_recurring_id = `or`.order_recurring_id");
@@ -538,7 +539,10 @@ class ModelCheckoutOrder extends Model {
                 }
             }
 
-            if ($order_status_id > 0) {
+            $log->write($this->customer->getId() . 'CUSTOMER ID');
+            //HE IS ADMIN CUSTOMER ID EMPTY
+            $log->write('Non Customer User Updating Order Status');
+            if ($order_status_id > 0 && $this->customer->getId() == NULL) {
                 $this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', order_pdf_link ='" . $pdf_link . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
 
                 $this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', order_status_id = '" . (int) $order_status_id . "', notify = '" . (int) $notify . "', comment = '" . $this->db->escape($comment) . "', date_added = NOW()");
@@ -555,12 +559,13 @@ class ModelCheckoutOrder extends Model {
 
 
                 if ($is_he_parents != NULL) {
+                    $log->write($order_status_id . 'MAIN SUB USERS ORDERS PLACING');
                     $this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id_sub . "', order_pdf_link ='" . $pdf_link . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
                     if ($query_order_history->row['total'] == 0) {
                         $this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', order_status_id = '" . (int) $order_status_id_sub . "', notify = '" . (int) $notify . "', comment = '" . $this->db->escape($comment) . "', date_added = NOW()");
                     }
                 } elseif ($is_he_parents == NULL && $order_status_id == 0) {
-                    $log->write($order_status_id . 'MAIN USERS ORDERS');
+                    $log->write($order_status_id . 'MAIN USERS ORDERS PLACING');
                     $this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id_sub . "', order_pdf_link ='" . $pdf_link . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
                     if ($query_order_history->row['total'] == 0) {
                         $this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', order_status_id = '" . (int) $order_status_id_sub . "', notify = '" . (int) $notify . "', comment = '" . $this->db->escape($comment) . "', date_added = NOW()");
