@@ -452,7 +452,7 @@ if($item[1]==0)
 
     // Customer
     public function getCustomerFind() {
-        $result = array('{firstname}', '{lastname}', '{date}', '{store_name}', '{email}', '{password}', '{account_href}', '{activate_href}', '{site_url}' , '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}','{privacy_policy}','{system_email}', '{system_phone}', '{amount}', '{transfer_type}',  '{ip_address}',);
+        $result = array('{firstname}', '{lastname}', '{date}', '{store_name}', '{email}', '{password}', '{account_href}', '{activate_href}', '{order_link}', '{site_url}' , '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}','{privacy_policy}','{system_email}', '{system_phone}', '{amount}', '{transfer_type}',  '{ip_address}',);
         return $result;
     }
 
@@ -465,9 +465,10 @@ if($item[1]==0)
             'email' => $data['email'],
             'password' => $data['password'],
             'account_href' => HTTP_CATALOG.'index.php?path=account/login',
-
+            
             'activate_href' => (!empty($data['confirm_code'])) ? $this->url->link('account/activate', 'token=' . $data['confirm_code'], 'SSL') : '',
-
+            'order_link' => $data['order_link'],
+            
             //common replace
             'site_url'=> HTTPS_CATALOG,
             //'logo'=> HTTPS_CATALOG.'image/' . $this->config->get('config_logo'),

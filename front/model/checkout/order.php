@@ -1660,10 +1660,33 @@ class ModelCheckoutOrder extends Model {
 
     public function SendMailToParentUser($order_id) {
         $log = new Log('error.log');
+        $log->write('SEND MAIL');
         $this->load->model('account/customer');
         $is_he_parents = $this->model_account_customer->CheckHeIsParent();
         $customer_info = $this->model_account_customer->getCustomer($is_he_parents);
         $order_info = $this->getOrder($order_id);
+        if ($order_info) {
+            $store_name = $order_info['firstname'] . ' ' . $order_info['lastname'];
+            $store_url = $this->url->link('account/login/customer');
+        }
+
+        $customer_info['store_name'] = $store_name;
+        $customer_info['order_link'] = $this->url->link('account/login/customer', 'order_token=' . $order_info['order_id'] . '&user_token=' . $order_info['customer_id'], 'SSL');
+
+        $log->write('EMAIL SENDING');
+        $log->write($customer_info);
+        $log->write('EMAIL SENDING');
+
+        $subject = $this->emailtemplate->getSubject('Customer', 'customer_7', $customer_info);
+        $message = $this->emailtemplate->getMessage('Customer', 'customer_7', $customer_info);
+
+        $mail = new Mail($this->config->get('config_mail'));
+        $mail->setTo($customer_info['email']);
+        $mail->setFrom($this->config->get('config_from_email'));
+        $mail->setSender($this->config->get('config_name'));
+        $mail->setSubject($subject);
+        $mail->setHTML($message);
+        $mail->send();
     }
 
 }
