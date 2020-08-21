@@ -1676,9 +1676,7 @@ class ModelCheckoutOrder extends Model {
         $customer_info['site_url'] = $store_url;
         $customer_info['sub_firstname'] = $order_info['firstname'];
         $customer_info['sub_lastname'] = $order_info['lastname'];
-        $customer_info['activate_href'] = $store_url;
-        $customer_info['account_href'] = $store_url;
-        $customer_info['system_name'] = $store_url;
+        $customer_info['confirm_code'] = 1;
 
         $log->write('EMAIL SENDING');
         $log->write($customer_info);
