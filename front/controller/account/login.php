@@ -694,6 +694,9 @@ class ControllerAccountLogin extends Controller {
                 $log->write('ORDER INFO CUSTOMER ID PROVIDED CUSTOMER ID MATCHED');
                 $this->session->data['redirect'] = $this->url->link('account/order', '', 'SSL');
                 $data['redirect'] = $this->url->link('account/order', '', 'SSL');
+                unset($this->session->data['redirect']);
+                unset($this->session->data['email_sub_user_order_id']);
+                unset($this->session->data['email_sub_user_id']);
                 $log->write($data);
             }
         }
