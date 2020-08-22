@@ -690,13 +690,14 @@ class ControllerAccountLogin extends Controller {
             $log->write($customer_info);
             $log->write('EMAIL SESSION');
 
-            if ($customer_info == NULL || $customer_info['customer_id'] == $this->session->data['sub_user_id']) {
+            if ($customer_info != NULL && $customer_info['customer_id'] == $this->session->data['email_sub_user_id'] && $this->customer->getId() == $this->session->data['email_parent_user_id']) {
                 $log->write('ORDER INFO CUSTOMER ID PROVIDED CUSTOMER ID MATCHED');
                 $this->session->data['redirect'] = $this->url->link('account/order', '', 'SSL');
                 $data['redirect'] = $this->url->link('account/order', '', 'SSL');
                 unset($this->session->data['redirect']);
                 unset($this->session->data['email_sub_user_order_id']);
                 unset($this->session->data['email_sub_user_id']);
+                unset($this->session->data['email_parent_user_id']);
                 $log->write($data);
             }
         }
@@ -1060,15 +1061,36 @@ class ControllerAccountLogin extends Controller {
     }
 
     public function checksubuserorder() {
-        echo "order_token : " . $this->request->get['order_token'];
-        echo "order_token : " . $this->request->get['user_token'];
+
+        $decryption_iv = '1234567891011121';
+        $decryption_key = "KwikBasket";
+        $options = 0;
+        $ciphering = "AES-128-CTR";
+        $iv_length = openssl_cipher_iv_length($ciphering);
+
+        $order_id = openssl_decrypt($this->request->get['order_token'], $ciphering, $decryption_key, $options, $decryption_iv);
+        $user_id = openssl_decrypt($this->request->get['user_token'], $ciphering, $decryption_key, $options, $decryption_iv);
+        $parent_user_id = openssl_decrypt($this->request->get['parent_user_token'], $ciphering, $decryption_key, $options, $decryption_iv);
+
+        echo "order_token : " . $order_id;
+        echo "sub_user_token : " . $user_id;
+        echo "parent_user_token : " . $parent_user_id;
         echo "Order Details Checking";
         $log = new Log('error.log');
+        $log->write('order_token : ' . $order_id);
+        $log->write('sub_user_token : ' . $user_id);
+        $log->write('parent_token : ' . $parent_user_id);
         $log->write('checksubuserorder');
 
-        echo $this->session->data['email_sub_user_order_id'] = $this->request->get['order_token'];
-        echo $this->session->data['email_sub_user_id'] = $this->request->get['user_token'];
-        $this->response->redirect($this->url->link('account/login/customer', '', 'SSL'));
+        echo $this->session->data['email_sub_user_order_id'] = $order_id;
+        echo $this->session->data['email_sub_user_id'] = $user_id;
+        echo $this->session->data['email_parent_user_id'] = $parent_user_id;
+
+        if ($this->customer->isLogged() && $this->customer->getId() == $parent_user_id) {
+            $this->response->redirect($this->url->link('account/order', '', 'SSL'));
+        } else {
+            $this->response->redirect($this->url->link('account/login/customer', '', 'SSL'));
+        }
     }
 
 }

@@ -1658,20 +1658,35 @@ class ModelCheckoutOrder extends Model {
         return $refundToCustomerWallet;
     }
 
+    public function getOrderNew($order_id) {
+        $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order` WHERE order_id  = '" . $order_id . "'");
+        return $query->row;
+    }
+
     public function SendMailToParentUser($order_id) {
         $log = new Log('error.log');
         $log->write('SEND MAIL');
         $this->load->model('account/customer');
         $is_he_parents = $this->model_account_customer->CheckHeIsParent();
         $customer_info = $this->model_account_customer->getCustomer($is_he_parents);
-        $order_info = $this->getOrder($order_id);
+        $order_info = $this->getOrderNew($order_id);
         if ($order_info) {
             $store_name = $order_info['firstname'] . ' ' . $order_info['lastname'];
             $store_url = $this->url->link('account/login/customer');
         }
 
+        $ciphering = "AES-128-CTR";
+        $iv_length = openssl_cipher_iv_length($ciphering);
+        $options = 0;
+        $encryption_iv = '1234567891011121';
+        $encryption_key = "KwikBasket";
+
+        $order_id = openssl_encrypt($order_info['order_id'], $ciphering, $encryption_key, $options, $encryption_iv);
+        $customer_id = openssl_encrypt($order_info['customer_id'], $ciphering, $encryption_key, $options, $encryption_iv);
+        $parent_id = openssl_encrypt($is_he_parents, $ciphering, $encryption_key, $options, $encryption_iv);
+
         $customer_info['store_name'] = $store_name;
-        $customer_info['order_link'] = $this->url->link('account/login/customer', 'order_token=' . $order_info['order_id'] . '&user_token=' . $order_info['customer_id'], 'SSL');
+        $customer_info['order_link'] = $this->url->link('account/login/checksubuserorder', 'order_token=' . $order_id . '&user_token=' . $customer_id . '&parent_user_token=' . $parent_id, 'SSL');
 
         $log->write('EMAIL SENDING');
         $log->write($customer_info);
