@@ -417,7 +417,7 @@ class ModelAccountOrder extends Model {
         $sub_users_od = implode(",", $s_users);
 
         if ($notLogin == false) {
-            $order_query = $this->db->query("SELECT * ," . DB_PREFIX . "order.date_added as order_date ," . DB_PREFIX . "order.email as order_email ," . DB_PREFIX . "order.telephone as order_telephone FROM `" . DB_PREFIX . "order` LEFT JOIN " . DB_PREFIX . "store ON ( " . DB_PREFIX . "store.store_id = " . DB_PREFIX . "order.store_id) LEFT JOIN " . DB_PREFIX . "order_status ON ( " . DB_PREFIX . "order_status.order_status_id = " . DB_PREFIX . "order.order_status_id)  WHERE order_id = '" . (int) $order_id . "' AND customer_id IN (".$sub_users_od.") AND " . DB_PREFIX . "order.order_status_id > '0' ");
+            $order_query = $this->db->query("SELECT * ," . DB_PREFIX . "order.date_added as order_date ," . DB_PREFIX . "order.email as order_email ," . DB_PREFIX . "order.telephone as order_telephone FROM `" . DB_PREFIX . "order` LEFT JOIN " . DB_PREFIX . "store ON ( " . DB_PREFIX . "store.store_id = " . DB_PREFIX . "order.store_id) LEFT JOIN " . DB_PREFIX . "order_status ON ( " . DB_PREFIX . "order_status.order_status_id = " . DB_PREFIX . "order.order_status_id)  WHERE order_id = '" . (int) $order_id . "' AND customer_id IN (" . $sub_users_od . ") AND " . DB_PREFIX . "order.order_status_id > '0' ");
             //$order_query = $this->db->query("SELECT * ," . DB_PREFIX . "order.date_added as order_date ," . DB_PREFIX . "order.email as order_email ," . DB_PREFIX . "order.telephone as order_telephone FROM `" . DB_PREFIX . "order` LEFT JOIN " . DB_PREFIX . "store ON ( " . DB_PREFIX . "store.store_id = " . DB_PREFIX . "order.store_id) LEFT JOIN " . DB_PREFIX . "order_status ON ( " . DB_PREFIX . "order_status.order_status_id = " . DB_PREFIX . "order.order_status_id)  WHERE order_id = '" . (int) $order_id . "' AND customer_id = '" . (int) $this->customer->getId() . "' AND " . DB_PREFIX . "order.order_status_id > '0' ");
         } else {
             $order_query = $this->db->query("SELECT * ," . DB_PREFIX . "order.date_added as order_date ," . DB_PREFIX . "order.email as order_email ," . DB_PREFIX . "order.telephone as order_telephone FROM `" . DB_PREFIX . "order` LEFT JOIN " . DB_PREFIX . "store ON ( " . DB_PREFIX . "store.store_id = " . DB_PREFIX . "order.store_id) LEFT JOIN " . DB_PREFIX . "order_status ON ( " . DB_PREFIX . "order_status.order_status_id = " . DB_PREFIX . "order.order_status_id)  WHERE order_id = '" . (int) $order_id . "' AND " . DB_PREFIX . "order.order_status_id > '0' ");
@@ -537,25 +537,24 @@ class ModelAccountOrder extends Model {
             $limit = 1;
         }
 
+        $s_users = array();
+        $sub_users_query = $this->db->query("SELECT c.customer_id FROM " . DB_PREFIX . "customer c WHERE parent = '" . (int) $this->customer->getId() . "'");
+        $sub_users = $sub_users_query->rows;
+        $s_users = array_column($sub_users, 'customer_id');
+
+        array_push($s_users, $this->customer->getId());
+        $sub_users_od = implode(",", $s_users);
+
         if ($noLimit == false) {
-            
-            $s_users = array();
-            $sub_users_query = $this->db->query("SELECT c.customer_id FROM " . DB_PREFIX . "customer c WHERE parent = '" . (int) $this->customer->getId() . "'");
-            $sub_users = $sub_users_query->rows;
-            $s_users = array_column($sub_users, 'customer_id');
-            
-            array_push($s_users, $this->customer->getId());
-            $sub_users_od = implode(",",$s_users);
-            
             //$sub_users_orders = $this->db->query("SELECT o.order_id FROM " . DB_PREFIX . "order o WHERE customer_id IN (".$sub_users_od.")");
             //$ord = $sub_users_orders->rows;
             //echo "<pre>";print_r($ord);die;
-            
-            $query = $this->db->query("SELECT o.customer_id, o.parent_approval, o.delivery_date,o.delivery_timeslot,o.shipping_zipcode,o.shipping_city_id,o.payment_method,o.shipping_address,o.shipping_flat_number,o.shipping_method,o.shipping_building_name,o.store_name,o.shipping_name, o.order_id, o.firstname, o.lastname, os.name as status , os.color as order_status_color ,o.order_status_id, o.date_modified , o.date_added, o.total, o.currency_code, o.currency_value FROM `" . DB_PREFIX . "order` o LEFT JOIN " . DB_PREFIX . "order_status os ON (o.order_status_id = os.order_status_id) WHERE o.customer_id IN (".$sub_users_od.") AND o.order_status_id > '0' AND os.language_id = '" . (int) $this->config->get('config_language_id') . "' ORDER BY o.order_id DESC LIMIT " . (int) $start . "," . (int) $limit);
-            
+
+            $query = $this->db->query("SELECT o.customer_id, o.parent_approval, o.delivery_date,o.delivery_timeslot,o.shipping_zipcode,o.shipping_city_id,o.payment_method,o.shipping_address,o.shipping_flat_number,o.shipping_method,o.shipping_building_name,o.store_name,o.shipping_name, o.order_id, o.firstname, o.lastname, os.name as status , os.color as order_status_color ,o.order_status_id, o.date_modified , o.date_added, o.total, o.currency_code, o.currency_value FROM `" . DB_PREFIX . "order` o LEFT JOIN " . DB_PREFIX . "order_status os ON (o.order_status_id = os.order_status_id) WHERE o.customer_id IN (" . $sub_users_od . ") AND o.order_status_id > '0' AND os.language_id = '" . (int) $this->config->get('config_language_id') . "' ORDER BY o.order_id DESC LIMIT " . (int) $start . "," . (int) $limit);
+
             //$query = $this->db->query("SELECT o.delivery_date,o.delivery_timeslot,o.shipping_zipcode,o.shipping_city_id,o.payment_method,o.shipping_address,o.shipping_flat_number,o.shipping_method,o.shipping_building_name,o.store_name,o.shipping_name, o.order_id, o.firstname, o.lastname, os.name as status , os.color as order_status_color ,o.order_status_id, o.date_modified , o.date_added, o.total, o.currency_code, o.currency_value FROM `" . DB_PREFIX . "order` o LEFT JOIN " . DB_PREFIX . "order_status os ON (o.order_status_id = os.order_status_id) WHERE o.customer_id = '" . (int) $this->customer->getId() . "' AND o.order_status_id > '0' AND os.language_id = '" . (int) $this->config->get('config_language_id') . "' ORDER BY o.order_id DESC LIMIT " . (int) $start . "," . (int) $limit);
         } else {
-              $query = $this->db->query("SELECT o.customer_id, o.parent_approval, o.delivery_date,o.delivery_timeslot,o.shipping_zipcode,o.shipping_city_id,o.payment_method,o.shipping_address,o.shipping_flat_number,o.shipping_method,o.shipping_building_name,o.store_name,o.shipping_name, o.order_id, o.firstname, o.lastname, os.name as status , os.color as order_status_color ,o.order_status_id, o.date_modified , o.date_added, o.total, o.currency_code, o.currency_value FROM `" . DB_PREFIX . "order` o LEFT JOIN " . DB_PREFIX . "order_status os ON (o.order_status_id = os.order_status_id) WHERE o.customer_id IN (".$sub_users_od.") AND o.order_status_id > '0' AND os.language_id = '" . (int) $this->config->get('config_language_id') . "' ORDER BY o.order_id DESC");
+            $query = $this->db->query("SELECT o.customer_id, o.parent_approval, o.delivery_date,o.delivery_timeslot,o.shipping_zipcode,o.shipping_city_id,o.payment_method,o.shipping_address,o.shipping_flat_number,o.shipping_method,o.shipping_building_name,o.store_name,o.shipping_name, o.order_id, o.firstname, o.lastname, os.name as status , os.color as order_status_color ,o.order_status_id, o.date_modified , o.date_added, o.total, o.currency_code, o.currency_value FROM `" . DB_PREFIX . "order` o LEFT JOIN " . DB_PREFIX . "order_status os ON (o.order_status_id = os.order_status_id) WHERE o.customer_id IN (" . $sub_users_od . ") AND o.order_status_id > '0' AND os.language_id = '" . (int) $this->config->get('config_language_id') . "' ORDER BY o.order_id DESC");
             //$query = $this->db->query("SELECT o.delivery_date,o.delivery_timeslot,o.shipping_zipcode,o.shipping_city_id,o.payment_method,o.shipping_address,o.shipping_flat_number,o.shipping_method,o.shipping_building_name,o.store_name,o.shipping_name, o.order_id, o.firstname, o.lastname, os.name as status , os.color as order_status_color ,o.order_status_id, o.date_modified , o.date_added, o.total, o.currency_code, o.currency_value FROM `" . DB_PREFIX . "order` o LEFT JOIN " . DB_PREFIX . "order_status os ON (o.order_status_id = os.order_status_id) WHERE o.customer_id = '" . (int) $this->customer->getId() . "' AND o.order_status_id > '0' AND os.language_id = '" . (int) $this->config->get('config_language_id') . "' ORDER BY o.order_id DESC");
         }
         /* if($statuses == null && $payment_methods == null){
@@ -568,7 +567,8 @@ class ModelAccountOrder extends Model {
           }
           $query = $this->db->query($sql);
           } */
-
+        $log = new Log('error.log');
+        $log->write($query->rows);
         return $query->rows;
     }
 
@@ -793,20 +793,20 @@ class ModelAccountOrder extends Model {
 
         return $resp;
     }
-    
+
     public function getSubUserOrderDetails($order_id, $customer_id) {
         $sub_users_order = $this->db->query("SELECT * FROM " . DB_PREFIX . "order WHERE order_id = '" . (int) $order_id . "' AND customer_id  ='" . (int) $customer_id . "'");
         return $sub_users_order->row;
     }
 
     public function ApproveOrRejectSubUserOrder($order_id, $customer_id, $order_status) {
-        if($order_status == 'Approved') {
-        $this->db->query("UPDATE `" . DB_PREFIX . "order` SET parent_approval = '" . $order_status . "', order_status_id = 14  WHERE order_id = '" . (int) $order_id . "' AND customer_id = '" . (int) $customer_id . "'");
-        $this->db->query( "INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', order_status_id = 14, notify = 1, comment = 'Order Approved By Parent User', date_added = NOW()" );
+        if ($order_status == 'Approved') {
+            $this->db->query("UPDATE `" . DB_PREFIX . "order` SET parent_approval = '" . $order_status . "', order_status_id = 14  WHERE order_id = '" . (int) $order_id . "' AND customer_id = '" . (int) $customer_id . "'");
+            $this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', order_status_id = 14, notify = 1, comment = 'Order Approved By Parent User', date_added = NOW()");
         }
-        if($order_status == 'Rejected') {
-        $this->db->query("UPDATE `" . DB_PREFIX . "order` SET parent_approval = '" . $order_status . "', order_status_id = 16 WHERE order_id = '" . (int) $order_id . "' AND customer_id = '" . (int) $customer_id . "'");
-        $this->db->query( "INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', order_status_id = 16, notify = 1, comment = 'Order Rejected By Parent User', date_added = NOW()" );
+        if ($order_status == 'Rejected') {
+            $this->db->query("UPDATE `" . DB_PREFIX . "order` SET parent_approval = '" . $order_status . "', order_status_id = 16 WHERE order_id = '" . (int) $order_id . "' AND customer_id = '" . (int) $customer_id . "'");
+            $this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', order_status_id = 16, notify = 1, comment = 'Order Rejected By Parent User', date_added = NOW()");
         }
     }
 
