@@ -126,7 +126,7 @@
                                                         <a class="btn-link text_green" role="button" data-toggle="collapse" href="#<?= $order['order_id'] ?>" aria-expanded="false" aria-controls="<?= $order['order_id'] ?>"><?= $text_view_billing?></a>&nbsp;|&nbsp;<a class="btn-link text_green" role="button" href="<?php echo ($order['realproducts'] ? $order['real_href'] : $order['href'].'&order_status='.urlencode($order['status'])) ;?>" aria-expanded="false" aria-controls="<?= $order['order_status'] ?>"><?= $text_view_order?></a>
                                                     </div>
                                                 </li>
-                                                <?php if($order['parent_approve_order'] == 'Need Approval' && $order['parent_approval'] == 'Pending') { ?>
+                                                <?php if($order['status'] == 'Order Approval Pending' && $order['parent_approve_order'] == 'Need Approval' && $order['parent_approval'] == 'Pending') { ?>
                                                 <li class="list-group-item">
                                                     <div class="my-order-showaddress" id="<?php echo $order['order_id']; ?>">  
                                                             <a href="#" id="approve_order" data-id="<?= $order['order_id'] ?>" data-custid="<?= $order['customer_id'] ?>" class="btn btn-default btn-xs">APPROVE ORDER</a>
