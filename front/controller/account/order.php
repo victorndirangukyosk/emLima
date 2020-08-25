@@ -2996,4 +2996,32 @@ class ControllerAccountOrder extends Controller {
         }
     }
 
+    public function edit_order_quantity() {
+
+        $log = new Log('error.log');
+        $json = array();
+        $order_id = $this->request->post['order_id'];
+        $log->write($order_id);
+        $product_id = $this->request->post['product_id'];
+        $quantity = $this->request->post['quantity'];
+        $unit = $this->request->post['unit'];
+
+        $this->load->model('account/order');
+        $order_info = $this->model_account_order->getOrder($order_id, true);
+        if ($order_info != NULL && $order_info['order_status_id'] == 15) {
+            $order_products = $this->model_account_order->getOrderProducts($order_id);
+            $key = array_search($product_id, array_column($order_products, 'product_id'));
+            $this->db->query("UPDATE " . DB_PREFIX . "order_product SET quantity = " . $quantity . " WHERE order_product_id = '" . (int) $order_products['order_product_id'] . "' AND order_id  = '" . (int) $order_id . "' AND product_id = '" . (int) $product_id . "'");
+            $this->db->query("UPDATE " . DB_PREFIX . "real_order_product SET quantity = " . $quantity . " WHERE order_product_id = '" . (int) $order_products['order_product_id'] . "' AND order_id  = '" . (int) $order_id . "' AND product_id = '" . (int) $product_id . "'");
+
+            $log->write($order_products);
+            $log->write($key);
+        } else {
+            $json['status'] = 'You Cant Update Order In This Status!';
+        }
+        $log->write('edit_order_quantity');
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
 }

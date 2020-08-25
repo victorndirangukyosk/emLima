@@ -1040,10 +1040,10 @@
         <script>
             $(document).delegate('#plus, #minus', 'click', function (e) {
             alert('in progress');
-            return false;
+            //return false;
             e.preventDefault();
             var product_id = $(this).attr('data-id');
-            var wishlist_id = $(this).attr('data-orderid');
+            var order_id = $(this).attr('data-orderid');
             console.log($(this).attr('data-id'));
             console.log($(this).attr('id'));
             console.log($(this).attr('data-unit'));
@@ -1076,9 +1076,9 @@
             return false;
             }
             $.ajax({
-            url: 'index.php?path=account/wishlist/updateWishlistProduct',
+            url: 'index.php?path=account/order/edit_order_quantity',
                     type: 'post',
-                    data: { order_id: order_id, product_id: product_id, quantity: qty},
+                    data: { order_id: order_id, product_id: product_id, quantity: qty, unit: $(this).attr('data-unit')},
                     dataType: 'json',
                     beforeSend: function () {
                     //$('#cart > button').button('loading');
