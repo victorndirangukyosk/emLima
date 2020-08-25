@@ -211,15 +211,15 @@
                                                         <?php } else { ?>
                                                         <div class="col-md-3 col-xs-8">
                                                             <?php } ?>
-                                                            <div class="my-order-price">
+                                                            <!--<div class="my-order-price">
                                                                 <?php echo $product['quantity']; ?> x <?php echo $product['price']; ?>
-                                                            </div>
-                                                            <div class="inc-dec-quantity" id="<?php echo $product['product_id'] ?>">           
-                                                                <input type="button" class="sp-minus fff mini-minus-quantity ddd" data-id="<?php echo $product['product_id'] ?>" data-unit="<?php echo $product['unit'] ?>" data-wishlistid="<?php echo $wishlist_id; ?>" id="minus" value="-">
+                                                            </div>-->
+                                                            <div class="my-order-price" id="<?php echo $product['product_id'] ?>">           
+                                                                <input type="button" class="sp-minus fff mini-minus-quantity ddd" data-id="<?php echo $product['product_id'] ?>" data-unit="<?php echo $product['unit'] ?>" data-orderid="<?php echo $order_id; ?>" id="minus" value="-">
                                                                 <span class="sp-input middle-quantity quntity-input product-count" id="<?php echo 'span'.$product['product_id'] ?>">
                                                                     <?= $product['quantity']?>        </span>
 
-                                                                <input type="button" class="sp-plus fff mini-plus-quantity ddd" data-id="<?php echo $product['product_id'] ?>" data-unit="<?php echo $product['unit'] ?>" data-wishlistid="<?php echo $wishlist_id; ?>" id="plus" value="+">
+                                                                <input type="button" class="sp-plus fff mini-plus-quantity ddd" data-id="<?php echo $product['product_id'] ?>" data-unit="<?php echo $product['unit'] ?>" data-orderid="<?php echo $order_id; ?>" id="plus" value="+">
 
                                                             </div>
                                                         </div>
@@ -1038,78 +1038,66 @@
 
         </script>
         <script>
+            $(document).delegate('#plus, #minus', 'click', function (e) {
+            alert('in progress');
+            return false;
+            e.preventDefault();
+            var product_id = $(this).attr('data-id');
+            var wishlist_id = $(this).attr('data-orderid');
+            console.log($(this).attr('data-id'));
+            console.log($(this).attr('id'));
+            console.log($(this).attr('data-unit'));
+            console.log($("#" + $(this).attr('data-id')).text().replace(/\s/g, ''));
+            console.log($(this).attr('data-orderid'));
+            var quantity = $("#" + $(this).attr('data-id')).text().replace(/\s/g, '');
+            if ($(this).attr('id') == 'minus') {
+            if ($(this).attr('data-unit') == 'Kg' || $(this).attr('data-unit') == 'Kgs')
+            {
+            var qty = parseFloat(quantity) - 0.5;
+            console.log(qty);
+            } else {
+            var qty = parseFloat(quantity) - 1;
+            console.log(qty);
+            }
+            }
 
-            function checkProductSelected(){
-            var len = $("input.select-item:checked:checked").length;
-            if (len > 0){
-            return true;
-            } else{
-            alert('Please select at least one product');
+            if ($(this).attr('id') == 'plus') {
+            if ($(this).attr('data-unit') == 'Kg' || $(this).attr('data-unit') == 'Kgs')
+            {
+            var qty = parseFloat(quantity) + 0.5;
+            console.log(qty);
+            } else {
+            var qty = parseFloat(quantity) + 1;
+            console.log(qty);
+            }
+            }
+            if (qty < 0) {
+            alert('Invalid Quantity!');
             return false;
             }
-            }
-
-            $(function(){
-
-            //button select all or cancel
-            /*$("#select-all").click(function () {
-             var all = $("input.select-all")[0];
-             all.checked = !all.checked
-             var checked = all.checked;
-             $("input.select-item").each(function (index,item) {
-             item.checked = checked;
-             });
-             });
-             
-             //button select invert
-             $("#select-invert").click(function () {
-             $("input.select-item").each(function (index,item) {
-             item.checked = !item.checked;
-             });
-             checkSelected();
-             });
-             
-             //button get selected info
-             $("#selected").click(function () {
-             var items=[];
-             $("input.select-item:checked:checked").each(function (index,item) {
-             items[index] = item.value;
-             });
-             if (items.length < 1) {
-             alert("no selected items!!!");
-             }else {
-             var values = items.join(',');
-             console.log(values);
-             var html = $("<div></div>");
-             html.html("selected:"+values);
-             html.appendTo("body");
-             }
-             });
-             */
-
-            //column checkbox select all or cancel
-            $("input.select-all").click(function () {
-            var checked = this.checked;
-            $("input.select-item").each(function (index, item) {
-            item.checked = checked;
+            $.ajax({
+            url: 'index.php?path=account/wishlist/updateWishlistProduct',
+                    type: 'post',
+                    data: { order_id: order_id, product_id: product_id, quantity: qty},
+                    dataType: 'json',
+                    beforeSend: function () {
+                    //$('#cart > button').button('loading');
+                    },
+                    complete: function () {
+                    //$('#cart > button').button('reset');
+                    },
+                    success: function (json) {
+                    if (json.status = true) {
+                    $("#span" + product_id).text(qty);
+                    console.log($("#total_quantity").text().replace(/\s/g, ''));
+                    $("#total_quantity").text(json.total_quantity);
+                    } else {
+                    alert('Please try again later!');
+                    return false;
+                    }
+                    console.log(json);
+                    }
             });
-            });
-            //check selected items
-            $("input.select-item").click(function () {
-            var checked = this.checked;
-            console.log(checked);
-            checkSelected();
-            });
-            //check is all selected
-            function checkSelected() {
-            var all = $("input.select-all")[0];
-            var total = $("input.select-item").length;
-            var len = $("input.select-item:checked:checked").length;
-            console.log("total:" + total);
-            console.log("len:" + len);
-            all.checked = len === total;
-            }
-
             });
         </script>
         </html>
