@@ -3010,7 +3010,66 @@ class ControllerAccountOrder extends Controller {
         $order_info = $this->model_account_order->getOrder($order_id, true);
         if ($order_info != NULL && $order_info['order_status_id'] == 15) {
             $order_products = $this->model_account_order->getOrderProducts($order_id);
+            $log->write($order_products);
+
             $key = array_search($product_id, array_column($order_products, 'product_id'));
+
+            $this->load->model('assets/product');
+            $product_info = $this->model_assets_product->getProductForPopup($order_products[$key]['product_id'], false, $order_products[$key]['store_id']);
+            $s_price = 0;
+            $o_price = 0;
+
+            if (!$this->config->get('config_inclusiv_tax')) {
+                //get price html
+                if (( $this->config->get('config_customer_price') && $this->customer->isLogged() ) || !$this->config->get('config_customer_price')) {
+                    $product_info['price'] = $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')));
+
+                    $o_price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
+                } else {
+                    $product_info['price'] = false;
+                }
+                if ((float) $product_info['special_price']) {
+                    $product_info['special_price'] = $this->currency->format($this->tax->calculate($product_info['special_price'], $product_info['tax_class_id'], $this->config->get('config_tax')));
+
+                    $s_price = $this->tax->calculate($product_info['special_price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
+                } else {
+                    $product_info['special_price'] = false;
+                }
+            } else {
+
+                $s_price = $product_info['special_price'];
+                $o_price = $product_info['price'];
+
+                if (( $this->config->get('config_customer_price') && $this->customer->isLogged() ) || !$this->config->get('config_customer_price')) {
+                    $product_info['price'] = $this->currency->format($product_info['price']);
+                } else {
+                    $product_info['price'] = $product_info['price'];
+                }
+
+                if ((float) $product_info['special_price']) {
+                    $product_info['special_price'] = $this->currency->format($product_info['special_price']);
+                } else {
+                    $product_info['special_price'] = $product_info['special_price'];
+                }
+            }
+
+            $cachePrice_data = $this->cache->get('category_price_data');
+            if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$product_info['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $order_products[$key]['store_id']])) {
+                $s_price = $cachePrice_data[$product_info['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $order_products[$key]['store_id']];
+                $o_price = $cachePrice_data[$product_info['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $order_products[$key]['store_id']];
+                $product_info['special_price'] = $this->currency->format($s_price);
+                $product_info['price'] = $this->currency->format($o_price);
+            }
+
+            $percent_off = null;
+            if (isset($s_price) && isset($o_price) && $o_price != 0 && $s_price != 0) {
+                $percent_off = (($o_price - $s_price) / $o_price) * 100;
+            }
+            $log->write('product info');
+            $log->write($product_info);
+            $log->write('product info');
+            exit;
+
             $this->db->query("UPDATE " . DB_PREFIX . "order_product SET quantity = " . $quantity . " WHERE order_product_id = '" . (int) $order_products['order_product_id'] . "' AND order_id  = '" . (int) $order_id . "' AND product_id = '" . (int) $product_id . "'");
             $this->db->query("UPDATE " . DB_PREFIX . "real_order_product SET quantity = " . $quantity . " WHERE order_product_id = '" . (int) $order_products['order_product_id'] . "' AND order_id  = '" . (int) $order_id . "' AND product_id = '" . (int) $product_id . "'");
 
