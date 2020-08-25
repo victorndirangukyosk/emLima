@@ -747,8 +747,9 @@ class ControllerCatalogVendorProduct extends Controller {
 		$data['column_left'] = $this->load->controller( 'common/column_left' );
 		$data['footer'] = $this->load->controller( 'common/footer' );
 		$this->load->model('sale/customer_group');
-                /*PREVIOUS CODE
-                $data['price_categories'] =  $this->model_sale_customer_group->getPriceCategories();*/
+                /*PREVIOUS CODE*/
+                //$data['price_categories'] =  $this->model_sale_customer_group->getPriceCategories();
+                $data['price_categories_list'] =  $this->model_sale_customer_group->getPriceCategories();
 		$data['price_categories'] =  $this->model_sale_customer_group->getPriceCategoriesfilter($filter_category_price);
 		$data['category_prices'] =  $category_prices;
 		//echo '<pre>';print_r($cachePrice_data);exit;

@@ -57,7 +57,7 @@
                                 <label class="control-label" for="input-category">Price Category</label>
                                 <select name="filter_category_price" id="input-category-price" class="form-control">
                                     <option value="*"></option>
-                                    <?php foreach ($price_categories as $price_category) { ?>
+                                    <?php foreach ($price_categories_list as $price_category) { ?>
                                     <?php if ($price_category['price_category'] == $filter_category_price) { ?>
                                     <option value="<?php echo $price_category['price_category']; ?>" selected="selected"><?php echo $price_category['price_category']; ?></option>
                                     <?php } else { ?>
