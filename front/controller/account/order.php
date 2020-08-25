@@ -3077,9 +3077,13 @@ class ControllerAccountOrder extends Controller {
 
             $this->db->query("UPDATE " . DB_PREFIX . "order_product SET quantity = " . $quantity . ", total = " . $total . " WHERE order_product_id = '" . (int) $order_products[$key]['order_product_id'] . "' AND order_id  = '" . (int) $order_id . "' AND product_id = '" . (int) $product_id . "'");
             $this->db->query("UPDATE " . DB_PREFIX . "real_order_product SET quantity = " . $quantity . ", total = " . $total . " WHERE order_product_id = '" . (int) $order_products[$key]['order_product_id'] . "' AND order_id  = '" . (int) $order_id . "' AND product_id = '" . (int) $product_id . "'");
+            $order_totals = $this->db->query("SELECT SUM(total) AS total FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int) $order_id . "'");
+            $this->db->query("UPDATE " . DB_PREFIX . "order_total SET `value` = '" . $order_totals->row['total'] . "' WHERE order_id = '" . $order_id . "' AND code='total'");
+            $this->db->query("UPDATE " . DB_PREFIX . "order_total SET `value` = '" . $order_totals->row['total'] . "' WHERE order_id = '" . $order_id . "' AND code='sub_total'");
 
             $log->write($order_products);
             $log->write($key);
+            $log->write($order_totals->row['total']);
         } else {
             $json['status'] = 'You Cant Update Order In This Status!';
         }
