@@ -3068,10 +3068,15 @@ class ControllerAccountOrder extends Controller {
             $log->write('product info');
             $log->write($product_info);
             $log->write('product info');
-            exit;
+            $special_price = explode(" ", $product_info['special_price']);
+            $log->write($special_price);
+            $total = $special_price[1] * $quantity + ($this->config->get('config_tax') ? ($order_products[$key]['tax'] * $quantity) : 0);
+            $log->write($total);
+            $log->write($product_id);
+            $log->write($product_id);
 
-            $this->db->query("UPDATE " . DB_PREFIX . "order_product SET quantity = " . $quantity . " WHERE order_product_id = '" . (int) $order_products['order_product_id'] . "' AND order_id  = '" . (int) $order_id . "' AND product_id = '" . (int) $product_id . "'");
-            $this->db->query("UPDATE " . DB_PREFIX . "real_order_product SET quantity = " . $quantity . " WHERE order_product_id = '" . (int) $order_products['order_product_id'] . "' AND order_id  = '" . (int) $order_id . "' AND product_id = '" . (int) $product_id . "'");
+            $this->db->query("UPDATE " . DB_PREFIX . "order_product SET quantity = " . $quantity . ", total = " . $total . " WHERE order_product_id = '" . (int) $order_products[$key]['order_product_id'] . "' AND order_id  = '" . (int) $order_id . "' AND product_id = '" . (int) $product_id . "'");
+            $this->db->query("UPDATE " . DB_PREFIX . "real_order_product SET quantity = " . $quantity . ", total = " . $total . " WHERE order_product_id = '" . (int) $order_products[$key]['order_product_id'] . "' AND order_id  = '" . (int) $order_id . "' AND product_id = '" . (int) $product_id . "'");
 
             $log->write($order_products);
             $log->write($key);
