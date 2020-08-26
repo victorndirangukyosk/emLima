@@ -3000,6 +3000,8 @@ class ControllerAccountOrder extends Controller {
 
         $log = new Log('error.log');
         $json = array();
+        $json['location'] = 'module';
+
         $order_id = $this->request->post['order_id'];
         $log->write($order_id);
         $product_id = $this->request->post['product_id'];
@@ -3078,12 +3080,22 @@ class ControllerAccountOrder extends Controller {
             $this->db->query("UPDATE " . DB_PREFIX . "order_product SET quantity = " . $quantity . ", total = " . $total . " WHERE order_product_id = '" . (int) $order_products[$key]['order_product_id'] . "' AND order_id  = '" . (int) $order_id . "' AND product_id = '" . (int) $product_id . "'");
             $this->db->query("UPDATE " . DB_PREFIX . "real_order_product SET quantity = " . $quantity . ", total = " . $total . " WHERE order_product_id = '" . (int) $order_products[$key]['order_product_id'] . "' AND order_id  = '" . (int) $order_id . "' AND product_id = '" . (int) $product_id . "'");
             $order_totals = $this->db->query("SELECT SUM(total) AS total FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int) $order_id . "'");
+            $order_product_details = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_product WHERE order_product_id = '" . (int) $order_products[$key]['order_product_id'] . "' AND order_id  = '" . (int) $order_id . "' AND product_id = '" . (int) $product_id . "'");
             $this->db->query("UPDATE " . DB_PREFIX . "order_total SET `value` = '" . $order_totals->row['total'] . "' WHERE order_id = '" . $order_id . "' AND code='total'");
             $this->db->query("UPDATE " . DB_PREFIX . "order_total SET `value` = '" . $order_totals->row['total'] . "' WHERE order_id = '" . $order_id . "' AND code='sub_total'");
+            $total_products = $this->db->query("SELECT SUM(quantity) AS quantity FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int) $order_id . "'");
+
+            $json['count_products'] = $total_products->row['quantity'];
+            $json['total_amount'] = $this->currency->format($order_totals->row['total']);
+            $json['quantity'] = $total_products->row['quantity'];
+            $json['product_total_price'] = $this->currency->format($order_product_details->row['total']);
 
             $log->write($order_products);
             $log->write($key);
             $log->write($order_totals->row['total']);
+            $log->write($order_product_details);
+            $json['status'] = true;
+            $json['status'] = 'Your Order Updated!';
         } else {
             $json['status'] = 'You Cant Update Order In This Status!';
         }
