@@ -1039,7 +1039,7 @@
         </script>
         <script>
             $(document).delegate('#plus, #minus', 'click', function (e) {
-            alert('in progress');
+            //alert('in progress');
             //return false;
             e.preventDefault();
             var product_id = $(this).attr('data-id');
