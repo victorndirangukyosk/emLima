@@ -276,7 +276,7 @@
                                 <div class="form-group required">
                                     <label class="col-sm-3 control-label" for="flat">Your Location</label>
                                     <div class="col-sm-6 col-xs-12">
-                                        <input  name="modal_address_locality" id="Locality" type="text"  class="form-control input-md LocalityId" required="">
+                                        <input  name="modal_address_locality" id="txtPlaces" type="text"  class="form-control input-md LocalityId" required="">
                                     </div>
                                 </div>
 
@@ -391,6 +391,22 @@
 </script>
 
 <?php } ?>
+<script type="text/javascript" src="https://maps.google.com/maps/api/js?key=<?= $this->config->get('config_google_api_key') ?>&libraries=places"></script>
+<script>
+    google.maps.event.addDomListener(window, 'load', function () {
+        var places = new google.maps.places.Autocomplete(document.getElementById('txtPlaces'));
+        google.maps.event.addListener(places, 'place_changed', function () {
+            var place = places.getPlace();
+            var address = place.formatted_address;
+            var latitude = place.geometry.location.A;
+            var longitude = place.geometry.location.F;
+            var mesg = "Address: " + address;
+            mesg += "\nLatitude: " + latitude;
+            mesg += "\nLongitude: " + longitude;
+            //alert(mesg);
+        });
+    });
+</script>
 <script type="text/javascript">
     $('button[id^=\'button-custom-field\']').on('click', function () {
         var node = this;
@@ -554,7 +570,7 @@
             return_var = false;
             $('<div class="text-danger">House No. and Building Name is mandatory!</div>').insertAfter($("input[name='modal_address_flat']"));
         }
-        
+
         if ($("input[name='modal_address_locality']").val() == "") {
             return_var = false;
             $('<div class="text-danger">Your Location is mandatory!</div>').insertAfter($("input[name='modal_address_locality']"));
