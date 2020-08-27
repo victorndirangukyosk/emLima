@@ -239,6 +239,47 @@
                                     </div>
                                 </div>
 
+                                <div class="form-group required">
+                                    <label class="col-sm-3 control-label" for="address">Address Type</label>
+                                    <div class="col-sm-6 col-xs-12">
+                                        <div class="select-locations">
+                                            <div class="col-sm-3 col-xs-6">
+                                                <label class="control control--radio">Home
+                                                    <input type="radio" name="modal_address_type" value="home" checked="checked" />
+                                                    <div class="control__indicator"></div>
+                                                </label>
+                                            </div>
+                                            <div class="col-sm-3 col-xs-6">
+                                                <label class="control control--radio">Office
+                                                    <input type="radio" value="office" name="modal_address_type" />
+                                                    <div class="control__indicator"></div>
+                                                </label>
+                                            </div>
+                                            <div class="col-sm-3 col-xs-6">
+                                                <label class="control control--radio">Other
+                                                    <input type="radio" value="other" name="modal_address_type" />
+                                                    <div class="control__indicator"></div>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Text input-->
+                                <div class="form-group required">
+                                    <label class="col-sm-3 control-label" for="flat">House No. and Building Name</label>
+                                    <div class="col-sm-6 col-xs-12">
+                                        <input id="flat" name="modal_address_flat" type="text" placeholder="45, Sunshine Apartments" class="form-control input-md" required="">
+                                    </div>
+                                </div>
+
+                                <div class="form-group required">
+                                    <label class="col-sm-3 control-label" for="flat">Your Location</label>
+                                    <div class="col-sm-6 col-xs-12">
+                                        <input  name="modal_address_locality" id="Locality" type="text"  class="form-control input-md LocalityId" required="">
+                                    </div>
+                                </div>
+
                                 <?php if ($site_key) { ?>
                                 <div class="form-group  ">
                                     <label class="col-sm-3 control-label" for="input-date-added"></label>
