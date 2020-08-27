@@ -193,7 +193,7 @@
                                     <?php } ?>
                                   </div>
                                 </div> -->
-                                <input type="hidden" name="tax" id="tax_number" value="" placeholder="<?php echo $taxnumber_mask; ?>" class="form-control" />
+                                <input type="hidden" name="tax" id="tax_number" value="" placeholder="<?php echo $taxnumber_mask; ?>" class="form-control" readonly="" />
 
                                 <div class="form-group required" style="display:none">
                                     <label class="col-sm-3 control-label" for="input-telephone"><?php echo $entry_gender; ?></label>

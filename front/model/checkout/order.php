@@ -1703,6 +1703,7 @@ class ModelCheckoutOrder extends Model {
         $mail->setHTML($message);
         $mail->send();
 
+        $log->write('SMS SENDING');
         $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_4', $customer_info);
         // send message here
         if ($this->emailtemplate->getSmsEnabled('Customer', 'customer_7')) {
