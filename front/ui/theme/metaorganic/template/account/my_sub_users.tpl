@@ -116,6 +116,17 @@
                                     </div>
                                 </div>
 
+                                <div class="form-group required">
+                                    <label class="col-sm-3 control-label" for="flat">Branch Location</label>
+                                    <div class="col-sm-6 col-xs-12">
+                                        <input  name="modal_address_locality" id="txtPlaces" type="text"  class="form-control input-md LocalityId" required="">
+                                        <input type="hidden" id="latitude" name="latitude" value=""/>
+                                        <input type="hidden" id="longitude" name="longitude" value=""/>
+                                        <input type="hidden" id="zipcode" name="zipcode" value=""/>
+                                        <input type="hidden" id="customaddress" name="customaddress" value=""/>
+                                    </div>
+                                </div>
+
 
                                 <div class="form-group required">
                                     <label class="col-sm-3 control-label" for="input-telephone"><?php echo $entry_phone; ?></label>
@@ -239,7 +250,7 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group required">
+                                <!--<div class="form-group required">
                                     <label class="col-sm-3 control-label" for="address">Address Type</label>
                                     <div class="col-sm-6 col-xs-12">
                                         <div class="select-locations">
@@ -263,26 +274,15 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div>-->
 
                                 <!-- Text input-->
-                                <div class="form-group required">
+                                <!--<div class="form-group required">
                                     <label class="col-sm-3 control-label" for="flat">House No. and Building Name</label>
                                     <div class="col-sm-6 col-xs-12">
                                         <input id="flat" name="modal_address_flat" type="text" placeholder="45, Sunshine Apartments" class="form-control input-lg" required="">
                                     </div>
-                                </div>
-
-                                <div class="form-group required">
-                                    <label class="col-sm-3 control-label" for="flat">Your Location</label>
-                                    <div class="col-sm-6 col-xs-12">
-                                        <input  name="modal_address_locality" id="txtPlaces" type="text"  class="form-control input-md LocalityId" required="">
-                                        <input type="hidden" id="latitude" name="latitude" value=""/>
-                                        <input type="hidden" id="longitude" name="longitude" value=""/>
-                                        <input type="hidden" id="zipcode" name="zipcode" value=""/>
-                                        <input type="hidden" id="address" name="address" value=""/>
-                                    </div>
-                                </div>
+                                </div>-->
 
                                 <?php if ($site_key) { ?>
                                 <div class="form-group  ">
@@ -411,7 +411,7 @@
             console.log(place);
             $('#latitude').val(latitude);
             $('#longitude').val(longitude);
-            $('#address').val(address);
+            $('#customaddress').val(address);
         });
     });
 </script>

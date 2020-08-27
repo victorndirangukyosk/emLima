@@ -4,7 +4,7 @@ class ModelAccountCustomer extends Model {
 
     //overrided for direct login
     public function addCustomer($data, $override = false) {
-        // echo '<pre>';print_r($data);exit;
+        //echo '<pre>';print_r($data);exit;
         $log = new Log('error.log');
         if (!isset($data['dob'])) {
             $log->write('customer in');
@@ -87,6 +87,13 @@ class ModelAccountCustomer extends Model {
         if (!empty($data['address'])) {
             //$this->db->query("INSERT INTO " . DB_PREFIX . "address SET customer_id = '" . (int) $customer_id . "', name = '" . $this->db->escape($data['firstname']) . " " . $this->db->escape($data['lastname']). "',  address = '" . $this->db->escape($data['address']) . "', location = '" . $this->db->escape($data['address_2']) . "', city = '" . $this->db->escape($data['city']) . "', postcode = '" . $this->db->escape($data['postcode']) . "', country_id = '" . (int) $data['country_id'] . "', zone_id = '" . (int) $data['zone_id'] . "', custom_field = '" . $this->db->escape(isset($data['custom_field']['address']) ? serialize($data['custom_field']['address']) : '') . "'");
             $this->db->query("INSERT INTO " . DB_PREFIX . "address SET customer_id = '" . (int) $customer_id . "', name = '" . $this->db->escape($data['firstname']) . " " . $this->db->escape($data['lastname']) . "',  address = '" . $this->db->escape($data['address']) . " " . $this->db->escape($data['location']) . "', building_name = '" . $this->db->escape($data['house_building']) . "'");
+            $address_id = $this->db->getLastId();
+            $this->db->query("UPDATE " . DB_PREFIX . "customer SET address_id = '" . (int) $address_id . "' WHERE customer_id = '" . (int) $customer_id . "'");
+        }
+
+        if (!empty($data['company_address'])) {
+            //$this->db->query("INSERT INTO " . DB_PREFIX . "address SET customer_id = '" . (int) $customer_id . "', name = '" . $this->db->escape($data['firstname']) . " " . $this->db->escape($data['lastname']). "',  address = '" . $this->db->escape($data['address']) . "', location = '" . $this->db->escape($data['address_2']) . "', city = '" . $this->db->escape($data['city']) . "', postcode = '" . $this->db->escape($data['postcode']) . "', country_id = '" . (int) $data['country_id'] . "', zone_id = '" . (int) $data['zone_id'] . "', custom_field = '" . $this->db->escape(isset($data['custom_field']['address']) ? serialize($data['custom_field']['address']) : '') . "'");
+            $this->db->query("INSERT INTO " . DB_PREFIX . "address SET customer_id = '" . (int) $customer_id . "', name = '" . $this->db->escape($data['firstname']) . " " . $this->db->escape($data['lastname']) . "',  address = '" . $this->db->escape($data['company_address']) . " " . $this->db->escape($data['modal_address_locality']) . "', latitude = '" . $this->db->escape($data['latitude']) . "', longitude = '" . $this->db->escape($data['longitude']) . "'");
             $address_id = $this->db->getLastId();
             $this->db->query("UPDATE " . DB_PREFIX . "customer SET address_id = '" . (int) $address_id . "' WHERE customer_id = '" . (int) $customer_id . "'");
         }
