@@ -460,6 +460,15 @@ class ModelAccountCustomer extends Model {
         }
     }
 
+    public function deletecustom($customer_id) {
+
+        $customer_info = $this->getCustomer($customer_id);
+
+        if ($customer_info) {
+            $this->db->query("DELETE FROM `" . DB_PREFIX . "customer` WHERE `customer_id` = '" . (int) $customer_id . "'");
+        }
+    }
+
     public function resendVerificationEmail($data, $customer_id) {
 
         $data['confirm_code'] = substr(sha1(uniqid(mt_rand(), true)), 0, 25);
