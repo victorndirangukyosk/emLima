@@ -2449,6 +2449,16 @@ class ControllerAccountOrder extends Controller {
     }
 
     public function edit_order() {
+
+        $this->load->model('account/customer');
+        $is_he_parents = $this->model_account_customer->CheckHeIsParent();
+        if ($is_he_parents != NULL) {
+            if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/error/not_found.tpl')) {
+                $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/error/not_found.tpl', $data));
+            } else {
+                $this->response->setOutput($this->load->view('default/template/error/not_found.tpl', $data));
+            }
+        }
         $redirectNotLogin = true;
         $this->load->language('account/order');
         $this->load->language('account/return');
