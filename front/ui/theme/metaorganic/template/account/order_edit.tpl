@@ -224,7 +224,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-md-2 col-xs-8">
-                                                            <div class="my-order-price">
+                                                            <div class="my-order-price" id="producttotal<?php echo $product['product_id'] ?>">
                                                                 <?php echo $product['total']; ?>
                                                             </div>
                                                         </div>
@@ -287,7 +287,7 @@
 
 
                                                         <?php } else {?>
-                                                                <div class="checkout-payable-price"><?php echo $total['text']; ?></div>
+                                                                <div class="checkout-payable-price" id="total<?php echo $order_id; ?>"><?php echo $total['text']; ?></div>
                                                             <?php } ?>
                                                     </div>
                                                     <?php } elseif(strpos($total['title'], 'Delivery') !== false) { ?>
@@ -332,7 +332,7 @@
 
                                                     <div class="checkout-invoice">
                                                         <div class="checout-invoice-title"><?php echo $total['title']; ?></div>
-                                                        <div class="checout-invoice-price"><?php echo $total['text']; ?></div>
+                                                        <div class="checout-invoice-price" id="subtotal<?php echo $order_id; ?>"><?php echo $total['text']; ?></div>
                                                     </div>
                                                     <?php } ?>
                                                     <?php } }?>
@@ -1039,7 +1039,7 @@
         </script>
         <script>
             $(document).delegate('#plus, #minus', 'click', function (e) {
-            alert('in progress');
+            //alert('in progress');
             //return false;
             e.preventDefault();
             var product_id = $(this).attr('data-id');
@@ -1089,8 +1089,10 @@
                     success: function (json) {
                     if (json.status = true) {
                     $("#span" + product_id).text(qty);
-                    console.log($("#total_quantity").text().replace(/\s/g, ''));
-                    $("#total_quantity").text(json.total_quantity);
+                    $("#producttotal" + product_id).text(json.product_total_price);
+                    $("#subtotal" + order_id).text(json.total_amount);
+                    $("#subtotal" + order_id).text(json.total_amount);
+                    $("#total" + order_id).text(json.total_amount);
                     } else {
                     alert('Please try again later!');
                     return false;

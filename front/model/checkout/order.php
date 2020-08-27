@@ -1669,7 +1669,7 @@ class ModelCheckoutOrder extends Model {
         $this->load->model('account/customer');
         $is_he_parents = $this->model_account_customer->CheckHeIsParent();
         $customer_info = $this->model_account_customer->getCustomer($is_he_parents);
-        $order_info = $this->getOrderNew($order_id);
+        $order_info = $this->getOrder($order_id);
         if ($order_info) {
             $store_name = $order_info['firstname'] . ' ' . $order_info['lastname'];
             $store_url = $this->url->link('account/login/customer');
