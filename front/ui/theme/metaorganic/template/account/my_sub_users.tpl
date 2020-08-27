@@ -398,12 +398,12 @@
         google.maps.event.addListener(places, 'place_changed', function () {
             var place = places.getPlace();
             var address = place.formatted_address;
-            var latitude = place.geometry.location.A;
-            var longitude = place.geometry.location.F;
+            var latitude = place.geometry.location.lat();
+            var longitude = place.geometry.location.lng();
             var mesg = "Address: " + address;
-            mesg += "\nLatitude: " + latitude;
-            mesg += "\nLongitude: " + longitude;
-            //alert(mesg);
+            mesg += "\nLatitude: " + place.geometry.location.lat();
+            mesg += "\nLongitude: " + place.geometry.location.lng();
+            console.log(mesg);
         });
     });
 </script>
