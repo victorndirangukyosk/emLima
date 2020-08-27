@@ -1702,6 +1702,12 @@ class ModelCheckoutOrder extends Model {
         $mail->setSubject($subject);
         $mail->setHTML($message);
         $mail->send();
+
+        $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_4', $customer_info);
+        // send message here
+        if ($this->emailtemplate->getSmsEnabled('Customer', 'customer_7')) {
+            $ret = $this->emailtemplate->sendmessage($customer_info['telephone'], $sms_message);
+        }
     }
 
 }

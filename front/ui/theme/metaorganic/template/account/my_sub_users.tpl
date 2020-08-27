@@ -269,7 +269,7 @@
                                 <div class="form-group required">
                                     <label class="col-sm-3 control-label" for="flat">House No. and Building Name</label>
                                     <div class="col-sm-6 col-xs-12">
-                                        <input id="flat" name="modal_address_flat" type="text" placeholder="45, Sunshine Apartments" class="form-control input-md" required="">
+                                        <input id="flat" name="modal_address_flat" type="text" placeholder="45, Sunshine Apartments" class="form-control input-lg" required="">
                                     </div>
                                 </div>
 
