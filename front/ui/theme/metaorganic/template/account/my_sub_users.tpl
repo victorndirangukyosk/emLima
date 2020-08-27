@@ -277,6 +277,10 @@
                                     <label class="col-sm-3 control-label" for="flat">Your Location</label>
                                     <div class="col-sm-6 col-xs-12">
                                         <input  name="modal_address_locality" id="txtPlaces" type="text"  class="form-control input-md LocalityId" required="">
+                                        <input type="hidden" id="latitude" name="latitude" value=""/>
+                                        <input type="hidden" id="longitude" name="longitude" value=""/>
+                                        <input type="hidden" id="zipcode" name="zipcode" value=""/>
+                                        <input type="hidden" id="address" name="address" value=""/>
                                     </div>
                                 </div>
 
@@ -401,9 +405,13 @@
             var latitude = place.geometry.location.lat();
             var longitude = place.geometry.location.lng();
             var mesg = "Address: " + address;
-            mesg += "\nLatitude: " + place.geometry.location.lat();
-            mesg += "\nLongitude: " + place.geometry.location.lng();
-            console.log(mesg);
+            mesg += "\nLatitude: " + latitude;
+            mesg += "\nLongitude: " + longitude;
+            mesg += "\place: " + place;
+            console.log(place);
+            $('#latitude').val(latitude);
+            $('#longitude').val(longitude);
+            $('#address').val(address);
         });
     });
 </script>
