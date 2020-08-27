@@ -40,7 +40,7 @@
                         <tbody>
                             <?php if(count($sub_users)){ ?>
                             <?php foreach($sub_users as $user){ ?>
-                            <tr>
+                            <tr id="user<?php echo $user['customer_id']; ?>">
                                 <td><?php echo $user['firstname'].' '.$user['lastname'];?></td>
                                 <td><?php echo $user['email'];?></td>
                                 <td><?php echo $user['telephone'];?></td>
@@ -610,6 +610,7 @@
                 dataType: 'json',
                 success: function (json) {
                     console.log(json);
+                    $('#user' + user_id).remove();
                 }
             });
         }
