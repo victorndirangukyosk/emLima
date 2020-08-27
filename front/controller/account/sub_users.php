@@ -187,20 +187,17 @@ class Controlleraccountsubusers extends Controller {
             $data['location'] = $this->request->post['location'];
         } else {
             $data['location'] = $customer_info['location'];
-            ;
         }
 
         if (isset($this->request->post['requirement'])) {
             $data['requirement'] = $this->request->post['requirement'];
         } else {
             $data['requirement'] = $customer_info['requirement_per_week'];
-            ;
         }
         if (isset($this->request->post['mandatory_products'])) {
             $data['mandatory_products'] = $this->request->post['mandatory_products'];
         } else {
             $data['mandatory_products'] = $customer_info['mandatory_veg_fruits'];
-            ;
         }
 
         if ($this->request->server['HTTPS']) {

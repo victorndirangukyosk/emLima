@@ -550,6 +550,16 @@
             $('<div class="text-danger">Password & Confirm Password should be same!</div>').insertAfter($("input[name='password']"));
         }
 
+        if ($("input[name='modal_address_flat']").val() == "") {
+            return_var = false;
+            $('<div class="text-danger">House No. and Building Name is mandatory!</div>').insertAfter($("input[name='modal_address_flat']"));
+        }
+        
+        if ($("input[name='modal_address_locality']").val() == "") {
+            return_var = false;
+            $('<div class="text-danger">Your Location is mandatory!</div>').insertAfter($("input[name='modal_address_locality']"));
+        }
+
         /*if(grecaptcha.getResponse() == ""){
          return_var = false;
          $('<div class="text-danger">Please validate captcha!</div>' ).insertAfter( $(".g-recaptcha"));
