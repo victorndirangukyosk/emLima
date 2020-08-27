@@ -28,11 +28,11 @@
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th>Customer Name </th>
-                                <th>E-Mail</th>
+                                <th>Contact Person Name</th>
+                                <th>Branch Email</th>
                                 <th>Phone No</th>
                                 <th>Customer Group</th>
-                                <th>Company Name</th>
+                                <th>Branch Name</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
@@ -67,27 +67,27 @@
 
                             <fieldset>
                                 <div class="form-group required has-feedback">
-                                    <label for="name" class="col-sm-3 control-label"><?= $entry_firstname ?></label>
+                                    <label for="name" class="col-sm-3 control-label">Contact Person First Name</label>
                                     <div class="col-sm-6">
-                                        <input type="text" value="" size="30" placeholder="First Name" name="firstname" maxlength="100" id="name" class="form-control input-lg" />
+                                        <input type="text" value="" size="30" placeholder="Contact Person First Name" name="firstname" maxlength="100" id="name" class="form-control input-lg" />
                                         <?php if($error_firstname) { ?>
                                         <div class="text-danger"><?php echo $error_firstname; ?></div>
                                         <?php } ?>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-3 control-label" for="input-lastname"><?php echo $entry_lastname; ?></label>
+                                    <label class="col-sm-3 control-label" for="input-lastname">Contact Person Last Name</label>
                                     <div class="col-sm-6 col-xs-12">
-                                        <input type="text" name="lastname" value="" placeholder="<?php echo $entry_lastname; ?>" id="input-lastname" class="form-control input-lg" />
+                                        <input type="text" name="lastname" value="" placeholder="Contact Person Last Name" id="input-lastname" class="form-control input-lg" />
                                         <?php if($error_lastname) { ?>
                                         <div class="text-danger"><?php echo $error_lastname; ?></div>
                                         <?php } ?>
                                     </div>
                                 </div>
                                 <div class="form-group required">
-                                    <label class="col-sm-3 control-label" for="input-email"><?php echo $entry_email; ?></label>
+                                    <label class="col-sm-3 control-label" for="input-email">Branch Email</label>
                                     <div class="col-sm-6 col-xs-12">
-                                        <input type="email" name="email" id="email" value="" placeholder="<?php echo $entry_email; ?>" id="input-email" class="form-control input-lg" />
+                                        <input type="email" name="email" id="email" value="" placeholder="Branch Email" id="input-email" class="form-control input-lg" />
                                         <?php if($error_email) { ?>
                                         <div class="text-danger"><?php echo $error_email; ?></div>
                                         <?php } ?>
@@ -96,9 +96,9 @@
 
 
                                 <div class="form-group required has-feedback">
-                                    <label for="name" class="col-sm-3 control-label"><?= $entry_companyname ?></label>
+                                    <label for="name" class="col-sm-3 control-label">Branch Name</label>
                                     <div class="col-sm-6">
-                                        <input type="text" value="" size="30" placeholder="Company Name" name="company_name" maxlength="100" id="name" class="form-control input-lg" />
+                                        <input type="text" value="" size="30" placeholder="Branch Name" name="company_name" maxlength="100" id="name" class="form-control input-lg" />
                                         <?php if($error_companyname) { ?>
                                         <div class="text-danger"><?php echo $error_companyname; ?></div>
                                         <?php } ?>
@@ -107,9 +107,9 @@
 
 
                                 <div class="form-group required has-feedback">
-                                    <label for="name" class="col-sm-3 control-label"><?= $entry_companyaddress ?></label>
+                                    <label for="name" class="col-sm-3 control-label">Branch Address</label>
                                     <div class="col-sm-6">
-                                        <input type="text" value="" size="30" placeholder="Company Address" name="company_address" maxlength="100" id="name" class="form-control input-lg" />
+                                        <input type="text" value="" size="30" placeholder="Branch Address" name="company_address" maxlength="100" id="name" class="form-control input-lg" />
                                         <?php if($error_companyaddress) { ?>
                                         <div class="text-danger"><?php echo $error_companyaddress; ?></div>
                                         <?php } ?>
