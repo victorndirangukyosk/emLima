@@ -49,7 +49,7 @@
             <td class="status<?php echo $user['customer_id']; ?>"><?php echo ($user['approved']==0) ? 'Unverified': 'Verified'?></td>
             <td><?php if($user['approved'] == 0) { ?> <a data-confirm="Activate sub user!" class="btn btn-success useractivate" data-active="1" data-store-id="<?php echo $user['customer_id']; ?>" data-toggle="tooltip" title="Activate user"><i class="fa fa-check"></i></a> <?php } ?>
             <?php if($user['approved'] == 1) { ?> <a data-confirm="De activate sub user!" class="btn btn-success useractivate" data-active="0" data-store-id="<?php echo $user['customer_id']; ?>" data-toggle="tooltip" title="De activate user"><i class="fa fa-times"></i></a> <?php } ?>
-            </td>
+            <a data-confirm="Delete sub user!" class="btn btn-success userdelete" data-active="0" data-store-id="<?php echo $user['customer_id']; ?>" data-toggle="tooltip" title="Delete sub user"><i class="fa fa-trash"></i></a></td>
             </tr>
             <?php } ?>
             <?php }else{ ?>
