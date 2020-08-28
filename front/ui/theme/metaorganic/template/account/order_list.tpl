@@ -124,7 +124,7 @@
                     <li class="list-group-item">
                         <div class="my-order-showaddress">  
                             <a class="btn-link text_green" role="button" data-toggle="collapse" href="#<?= $order['order_id'] ?>" aria-expanded="false" aria-controls="<?= $order['order_id'] ?>"><?= $text_view_billing?></a>&nbsp;|&nbsp;<a class="btn-link text_green" role="button" href="<?php echo ($order['realproducts'] ? $order['real_href'] : $order['href'].'&order_status='.urlencode($order['status'])) ;?>" aria-expanded="false" aria-controls="<?= $order['order_status'] ?>"><?= $text_view_order?></a>
-                            <?php if($order['edit_order'] != NULL) { ?> |&nbsp;<a class="btn-link text_green" role="button" href="<?php echo $order['edit_order']; ?>" aria-expanded="false">Edit Order</a> <?php } ?>
+                            <?php if($order['edit_order'] != NULL) { ?> |&nbsp;<a class="btn-link text_green" role="button" href="<?php echo $order['edit_order']; ?>" id="editorder<?php echo $order['order_id']; ?>" aria-expanded="false">Edit Order</a> <?php } ?>
                         </div>
                     </li>
                     <?php if($order['status'] == 'Order Approval Pending' && $order['parent_approve_order'] == 'Need Approval' && $order['parent_approval'] == 'Pending') { ?>
@@ -327,6 +327,7 @@
                 var approved = $('<li class="list-group-item"><div class="row"><div class="col-md-4"></div><div class="col-md-4"><div class="my-order-showaddress"><h3 class="my-order-title label" style="background-color: #8E45FF;display: block;line-height: 2; text-align:center;">Approved</h3></div></div><div class="col-md-4"></div></div>');
                 parent_div.html(approved);
                 $('#orderstatus' + order_id).text('Order Received');
+                $('#editorder' + order_id).remove();
             }
         });
     });
@@ -355,6 +356,7 @@
                 var approved = $('<li class="list-group-item"><div class="row"><div class="col-md-4"></div><div class="col-md-4"><div class="my-order-showaddress"><h3 class="my-order-title label" style="background-color: #8E45FF;display: block;line-height: 2; text-align:center;">Rejected</h3></div></div><div class="col-md-4"></div></div>');
                 parent_div.html(approved);
                 $('#orderstatus' + order_id).text('Order Rejected');
+                $('#editorder' + order_id).remove();
             }
         });
     });
