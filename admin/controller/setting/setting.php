@@ -1,6 +1,5 @@
 <?php
 require_once DIR_SYSTEM.'/vendor/autoload.php'; // Loads the library
-//require DIR_SYSTEM. '/vendor/twilio-php-master/Twilio/autoload.php';
 use Twilio\Rest\Client;
 
 require DIR_SYSTEM. '/vendor/zenvia/human_gateway_client_api/HumanClientMain.php';
@@ -2172,14 +2171,24 @@ class ControllerSettingSetting extends Controller {
             $data['config_uwaziimobile_sms_sender_id'] = $this->config->get('config_uwaziimobile_sms_sender_id');
         }
 
-
         if (isset($this->request->post['config_uwaziimobile_sms_number'])) {
             $data['config_uwaziimobile_sms_number'] = $this->request->post['config_uwaziimobile_sms_number'];
         } else {
             $data['config_uwaziimobile_sms_number'] = $this->config->get('config_uwaziimobile_sms_number');
         }
-        
 
+        if (isset($this->request->post['config_africastalking_sms_username'])) {
+            $data['config_africastalking_sms_username'] = $this->request->post['config_africastalking_sms_username'];
+        } else {
+            $data['config_africastalking_sms_username'] = $this->config->get('config_africastalking_sms_username');
+        }
+
+        if (isset($this->request->post['config_africastalking_sms_api_key'])) {
+            $data['config_africastalking_sms_api_key'] = $this->request->post['config_africastalking_sms_api_key'];
+        } else {
+            $data['config_africastalking_sms_api_key'] = $this->config->get('config_africastalking_sms_api_key');
+        }
+        
 
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
@@ -2445,14 +2454,24 @@ class ControllerSettingSetting extends Controller {
     }
 
     public function sendmessage($to,$message){
-
         $log = new Log('error.log');
         
         $result['status'] = false;
         $result['message'] = 'Failed';
-        //zenvia,twilio
+       
+        if($this->config->get('config_sms_protocol') == 'africastalking') {
+            $username = $this->config->get('config_africastalking_sms_username'); 
+            $apiKey   = $this->config->get('config_africastalking_sms_api_key');;
+            $AT = new \AfricasTalking\SDK\AfricasTalking($username, $apiKey);
+            $sms = $AT->sms();
 
-        if($this->config->get('config_sms_protocol') == 'twilio') {
+            $sms->send([
+                'to'      => $this->formatPhoneNumber($to),
+                'message' => $message
+            ]);
+
+            $log->write("Africa's Talking Sending SMS " . $message . " to ". $to);
+        } elseif($this->config->get('config_sms_protocol') == 'twilio') {
             $sid = $this->config->get('config_sms_sender_id');
             $token  = $this->config->get('config_sms_token');
             $from  = $this->config->get('config_sms_number');
@@ -2636,4 +2655,13 @@ class ControllerSettingSetting extends Controller {
         return $result;
     }
 
+    public function formatPhoneNumber($phoneNumber) {
+        $phoneUtil = \libphonenumber\PhoneNumberUtil::getInstance();
+        try {
+            $numberPrototype = $phoneUtil->parse($phoneNumber, "KE");
+            return $phoneUtil->format($numberPrototype, \libphonenumber\PhoneNumberFormat::E164);
+        } catch (\libphonenumber\NumberParseException $e) {
+            var_dump($e);
+        }
+    }
 }
