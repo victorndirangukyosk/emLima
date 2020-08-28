@@ -607,7 +607,7 @@ class ControllerAccountWishList extends Controller {
             $this->cart->addCustom($store_data['product_store_id'], $wishlist_product['quantity'], $option = array(), $recurring_id = 0, $store_data['store_id'], $store_product_variation_id= false,$product_type = 'replacable',$product_note=null,$produce_type=null);
             }
         }
-        $this->model_account_wishlist->deleteWishlists($wishlist_id);
+       // $this->model_account_wishlist->deleteWishlists($wishlist_id);
         //echo "reg";
 
         $this->session->data['success'] = $data['text_cart_success'];
@@ -641,7 +641,8 @@ class ControllerAccountWishList extends Controller {
         $log->write($store_data);
         $log->write('Store Details123');
         $this->cart->addCustom($store_data['product_store_id'], $wishlist_product['quantity'], $option = array(), $recurring_id = 0, $store_data['store_id'], $store_product_variation_id= false,$product_type = 'replacable',$product_note=null,$produce_type=null);
-        $this->model_account_wishlist->deleteWishlistProduct($wishlist_id, $product_id);
+        //$this->model_account_wishlist->deleteWishlistProduct($wishlist_id, $product_id);
+        //Items should remain in whishlist
         }
         
         $this->session->data['success'] = $data['text_cart_success'];
@@ -727,13 +728,13 @@ class ControllerAccountWishList extends Controller {
         $this->load->model('assets/category');
         $wishlist_ids = isset($this->request->post['add_to_list'])?$this->request->post['add_to_list']:null;
 
-        if ( $this->customer->isLogged()) {
-            $lists = $this->model_assets_category->getUserLists();
+        // if ( $this->customer->isLogged()) {
+        //     $lists = $this->model_assets_category->getUserLists();
 
-            foreach ($lists as $list) {
-                $this->model_account_wishlist->deleteWishlistProduct($list['wishlist_id'],$this->request->post['listproductId']);
-            }
-        }
+            // foreach ($lists as $list) {
+            //     $this->model_account_wishlist->deleteWishlistProduct($list['wishlist_id'],$this->request->post['listproductId']);
+            // }
+        // }
             
         $log->write($wishlist_ids);
         $log->write($this->request->post['listproductId']);
@@ -800,13 +801,13 @@ class ControllerAccountWishList extends Controller {
         $this->load->model('account/wishlist');
         $this->load->model('assets/category');      
 
-        if ( $this->customer->isLogged()) {
-            $lists = $this->model_assets_category->getUserLists();
+        // if ( $this->customer->isLogged()) {
+        //     $lists = $this->model_assets_category->getUserLists();
 
-            foreach ($lists as $list) {
-                $this->model_account_wishlist->deleteWishlistProduct($list['wishlist_id'],$this->request->post['listproductId']);
-            }
-        }
+        //     foreach ($lists as $list) {
+        //         $this->model_account_wishlist->deleteWishlistProduct($list['wishlist_id'],$this->request->post['listproductId']);
+        //     }
+        // }
             
         $log->write($wishlist_ids);
         $log->write($this->request->post['listproductId']);

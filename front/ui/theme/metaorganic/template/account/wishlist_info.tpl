@@ -141,9 +141,9 @@
                                                 <div class="col-md-12">
 
                                                     <?php if($store_selected) { ?>
-                                                    <button id="selected-add-to-cart" data-id="<?php echo $wishlist_id; ?>" class="btn btn-primary" type="button" data-confirm="This will move products into basket!!">
+                                                    <button id="selected-add-to-cart" data-id="<?php echo $wishlist_id; ?>" class="btn btn-primary" type="button" data-confirm="This will  add products to basket!!">
                                                         <?php } else { ?>
-                                                        <button id="selected-add-to-cart" data-id="<?php echo $wishlist_id; ?>" class="btn btn-primary" type="button" disabled data-confirm="This will move products into basket!!">
+                                                        <button id="selected-add-to-cart" data-id="<?php echo $wishlist_id; ?>" class="btn btn-primary" type="button" disabled data-confirm="This will add products to basket!!">
                                                             <?php } ?>
                                                             <?= $text_add_selection_to_cart ?></button>
                                                 </div>
@@ -155,11 +155,11 @@
                                                 <div class="col-md-12">
 
                                                     <?php if($store_selected) { ?>
-                                                    <button id="list-add-to-cart" data-id="<?php echo $wishlist_id; ?>"  class="btn btn-primary" type="button" data-confirm="This will move products into basket!!">
+                                                    <button id="list-add-to-cart" data-id="<?php echo $wishlist_id; ?>"  class="btn btn-primary" type="button" data-confirm="This will add products to basket!!">
 
 
                                                         <?php } else { ?>
-                                                        <button id="list-add-to-cart" data-id="<?php echo $wishlist_id; ?>" class="btn btn-primary" type="button" disabled data-confirm="This will move products into basket!!">
+                                                        <button id="list-add-to-cart" data-id="<?php echo $wishlist_id; ?>" class="btn btn-primary" type="button" disabled data-confirm="This will add products to basket!!">
                                                             <?php } ?>
 
                                                             <?= $text_add_list_to_cart ?> </button>
