@@ -399,7 +399,7 @@
 <script>
     google.maps.event.addDomListener(window, 'load', function () {
         var options = {
-            types: ['geocode'], // or '(cities)' if that's what you want?
+            //types: ['geocode'], // or '(cities)' if that's what you want?
             componentRestrictions: {country: "KE"}
         };
 
