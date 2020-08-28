@@ -220,11 +220,11 @@
                                                                 <?php echo $product['quantity']; ?> x <?php echo $product['price']; ?>
                                                             </div>-->
                                                             <div class="my-order-price" id="<?php echo $product['product_id'] ?>">           
-                                                                <input type="button" class="sp-minus fff mini-minus-quantity ddd" data-id="<?php echo $product['product_id'] ?>" data-unit="<?php echo $product['unit'] ?>" data-orderid="<?php echo $order_id; ?>" id="minus" value="-">
-                                                                <span class="sp-input middle-quantity quntity-input product-count" id="<?php echo 'span'.$product['product_id'] ?>">
+                                                                <input type="button" class="sp-minus fff mini-minus-quantity ddd" data-id="<?php echo $product['product_id'] ?>" data-unit="<?php echo $product['unit'] ?>" data-orderid="<?php echo $order_id; ?>" id="minus" value="-" <?php if($order_status_id != 15) { ?> disabled="" <?php } ?>>
+                                                                       <span class="sp-input middle-quantity quntity-input product-count" id="<?php echo 'span'.$product['product_id'] ?>">
                                                                     <?php if($product['unit'] == 'Kg' || $product['unit'] == 'Kgs' ) { echo  number_format($product['quantity'], 2); } else { echo round($product['quantity'], 0); } ?>        </span>
 
-                                                                <input type="button" class="sp-plus fff mini-plus-quantity ddd" data-id="<?php echo $product['product_id'] ?>" data-unit="<?php echo $product['unit'] ?>" data-orderid="<?php echo $order_id; ?>" id="plus" value="+">
+                                                                <input type="button" class="sp-plus fff mini-plus-quantity ddd" data-id="<?php echo $product['product_id'] ?>" data-unit="<?php echo $product['unit'] ?>" data-orderid="<?php echo $order_id; ?>" id="plus" value="+" <?php if($order_status_id != 15) { ?> disabled="" <?php } ?>>
 
                                                             </div>
                                                         </div>
@@ -349,6 +349,7 @@
                                                 <div class="checkout-sidebar-merchant-box-old">
                                                     <li class="list-group-item my-order-list-head"><center><h2 class="my-order-list-title">Actions</h2></center></li>
                                                     <div class="checkout-sidebar">
+                                                        <input type="hidden" value="<?php echo $order_status_id; ?>" id="order_status_number" name="order_status_number">
                                                         <?php if($order_status_id == 15) { ?>
                                                         <div class="row" style="margin-bottom: 8px">
                                                             <div class="col-md-12" id="approve_order_div">
@@ -1113,6 +1114,10 @@
             });
             $(document).delegate('#approve_order', 'click', function (e) {
             e.preventDefault();
+            var order_status_number = $('#order_status_number').val();
+            if (order_status_number != 15) {
+            alert('You cant update order in this stage!');
+            }
             var order_id = $(this).attr('data-id');
             var customer_id = $(this).attr('data-custid');
             var logged_customer_id = $(this).attr('data-logcustid');
@@ -1141,6 +1146,10 @@
             });
             $(document).delegate('#reject_order', 'click', function (e) {
             e.preventDefault();
+            var order_status_number = $('#order_status_number').val();
+            if (order_status_number != 15) {
+            alert('You cant update order in this stage!');
+            }
             var order_id = $(this).attr('data-id');
             var order_status = 'Rejected';
             var customer_id = $(this).attr('data-custid');
