@@ -408,8 +408,36 @@ else{
     border-radius: 0 2px 2px 0; 
     border-color: black;
     font-size: 12px;
-    font-weight: 400;
-    
+    font-weight: 400;    
+}
+ 
+
+.rating {
+    color: #000;
+    font-size: 20px;
+    font-weight: 300;
+    text-align: center;
+    text-transform: uppercase;
+    position: relative;
+      margin: 0; 
+      position: unset;
+      
+}
+
+.product-variation
+{
+  width:200px;
+  height:40px;
+  border-radius: 0;
+  border-color: black;
+}
+
+.produce-type
+{
+  width:200px;
+  height:40px;
+  border-radius: 0;
+  border-color: black;
 }
 </style>
 

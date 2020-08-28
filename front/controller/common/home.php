@@ -306,6 +306,24 @@ class ControllerCommonHome extends Controller {
 
         $this->load->model('tool/image');
         $this->load->language('common/home');
+        $this->load->model('account/wishlist');
+
+        $wishlist_results = $this->model_account_wishlist->getWishlists();
+        foreach ($wishlist_results as $result) {
+            $wishlist_products =  $this->model_account_wishlist->getWishlistProduct($result['wishlist_id']);
+            $totalCount = 0;
+            if(!empty($wishlist_products)) {
+                $totalCount = count($wishlist_products);
+            }
+            $data['wishlists'][] = array(
+                'wishlist_id'   => $result['wishlist_id'],
+                'name'       => $result['name'],
+                'date_added' => date($this->language->get('date_format_medium'), strtotime($result['date_added'])),
+                'product_count' => $totalCount,
+                'products'   => $wishlist_products,
+                'href'       => $this->url->link('account/wishlist/info', 'wishlist_id=' . $result['wishlist_id'], 'SSL'),
+            );
+        } 
 
         $data['blocks'] = [];
 

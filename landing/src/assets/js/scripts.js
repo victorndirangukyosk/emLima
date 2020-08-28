@@ -51,7 +51,10 @@
           dataType: 'json',
           success: function (json) {
             if (json['status']) {
-              if (json['temppassword'] == '1') {
+              if(json['redirect'] != null) {
+                  window.location.href = json['redirect'];
+              }
+              else if (json['temppassword'] == '1') {
                 location = $('.base_url').attr('href') + '/changepass';
                 console.log($('.base_url'));
               }

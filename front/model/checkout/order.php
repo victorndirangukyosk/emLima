@@ -305,7 +305,8 @@ class ModelCheckoutOrder extends Model {
         $this->db->query("DELETE FROM `" . DB_PREFIX . "order` WHERE order_id = '" . (int) $order_id . "'");
         $this->db->query("DELETE FROM `" . DB_PREFIX . "order_custom_field` WHERE order_id = '" . (int) $order_id . "'");
         $this->db->query("DELETE FROM `" . DB_PREFIX . "order_fraud` WHERE order_id = '" . (int) $order_id . "'");
-        $this->db->query("DELETE FROM `" . DB_PREFIX . "order_history` WHERE order_id = '" . (int) $order_id . "'");
+        $this->db->query("DELETE FROM `" . DB_PREFIX . "order_history` WHERE order_id = '" . (int) $order_id . "' AND order_status_id  = 0 ");
+        //$this->db->query("DELETE FROM `" . DB_PREFIX . "order_history` WHERE order_id = '" . (int) $order_id . "'");
         $this->db->query("DELETE FROM `" . DB_PREFIX . "order_option` WHERE order_id = '" . (int) $order_id . "'");
         $this->db->query("DELETE FROM `" . DB_PREFIX . "order_product` WHERE order_id = '" . (int) $order_id . "'");
         $this->db->query("DELETE `or`, ort FROM `" . DB_PREFIX . "order_recurring` `or`, `" . DB_PREFIX . "order_recurring_transaction` `ort` WHERE order_id = '" . (int) $order_id . "' AND ort.order_recurring_id = `or`.order_recurring_id");
@@ -538,7 +539,10 @@ class ModelCheckoutOrder extends Model {
                 }
             }
 
-            if ($order_status_id > 0) {
+            $log->write($this->customer->getId() . 'CUSTOMER ID');
+            //HE IS ADMIN CUSTOMER ID EMPTY
+            $log->write('Non Customer User Updating Order Status');
+            if ($order_status_id > 0 && $this->customer->getId() == NULL) {
                 $this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', order_pdf_link ='" . $pdf_link . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
 
                 $this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', order_status_id = '" . (int) $order_status_id . "', notify = '" . (int) $notify . "', comment = '" . $this->db->escape($comment) . "', date_added = NOW()");
@@ -555,12 +559,14 @@ class ModelCheckoutOrder extends Model {
 
 
                 if ($is_he_parents != NULL) {
+                    $log->write($order_status_id . 'SUB USERS ORDERS PLACING');
                     $this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id_sub . "', order_pdf_link ='" . $pdf_link . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
                     if ($query_order_history->row['total'] == 0) {
                         $this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', order_status_id = '" . (int) $order_status_id_sub . "', notify = '" . (int) $notify . "', comment = '" . $this->db->escape($comment) . "', date_added = NOW()");
                     }
+                    //$this->SendMailToParentUser($order_id);
                 } elseif ($is_he_parents == NULL && $order_status_id == 0) {
-                    $log->write($order_status_id . 'MAIN USERS ORDERS');
+                    $log->write($order_status_id . 'MAIN USERS ORDERS PLACING');
                     $this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id_sub . "', order_pdf_link ='" . $pdf_link . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
                     if ($query_order_history->row['total'] == 0) {
                         $this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', order_status_id = '" . (int) $order_status_id_sub . "', notify = '" . (int) $notify . "', comment = '" . $this->db->escape($comment) . "', date_added = NOW()");
@@ -1650,6 +1656,68 @@ class ModelCheckoutOrder extends Model {
         }
 
         return $refundToCustomerWallet;
+    }
+
+    public function getOrderNew($order_id) {
+        $log = new Log('error.log');
+        $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order` WHERE order_id  = '" . $order_id . "'");
+        $log->write($query->row);
+        return $query->row;
+    }
+
+    public function SendMailToParentUser($order_id) {
+        $log = new Log('error.log');
+        $log->write('SEND MAIL');
+        $log->write($order_id);
+        $this->load->model('account/customer');
+        $is_he_parents = $this->model_account_customer->CheckHeIsParent();
+        $customer_info = $this->model_account_customer->getCustomer($is_he_parents);
+        $order_info_custom = $this->getOrderNew($order_id);
+        //$log->write($order_info_custom);
+        $order_info = $this->getOrder($order_id);
+        if ($order_info) {
+            $store_name = $order_info['firstname'] . ' ' . $order_info['lastname'];
+            $store_url = $this->url->link('account/login/customer');
+        }
+        $sub_customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
+
+        $ciphering = "AES-128-CTR";
+        $iv_length = openssl_cipher_iv_length($ciphering);
+        $options = 0;
+        $encryption_iv = '1234567891011121';
+        $encryption_key = "KwikBasket";
+
+        $order_id = openssl_encrypt($order_info['order_id'], $ciphering, $encryption_key, $options, $encryption_iv);
+        $customer_id = openssl_encrypt($order_info['customer_id'], $ciphering, $encryption_key, $options, $encryption_iv);
+        $parent_id = openssl_encrypt($is_he_parents, $ciphering, $encryption_key, $options, $encryption_iv);
+
+        $customer_info['store_name'] = $store_name;
+        $customer_info['branchname'] = $sub_customer_info['company_name'];
+        $customer_info['subuserfirstname'] = $sub_customer_info['firstname'];
+        $customer_info['subuserlastname'] = $sub_customer_info['lastname'];
+        $customer_info['order_link'] = $this->url->link('account/login/checksubuserorder', 'order_token=' . $order_id . '&user_token=' . $customer_id . '&parent_user_token=' . $parent_id, 'SSL');
+
+        $log->write('EMAIL SENDING');
+        $log->write($customer_info);
+        $log->write('EMAIL SENDING');
+
+        $subject = $this->emailtemplate->getSubject('Customer', 'customer_7', $customer_info);
+        $message = $this->emailtemplate->getMessage('Customer', 'customer_7', $customer_info);
+
+        $mail = new Mail($this->config->get('config_mail'));
+        $mail->setTo($customer_info['email']);
+        $mail->setFrom($this->config->get('config_from_email'));
+        $mail->setSender($this->config->get('config_name'));
+        $mail->setSubject($subject);
+        $mail->setHTML($message);
+        $mail->send();
+
+        $log->write('SMS SENDING');
+        $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_4', $customer_info);
+        // send message here
+        if ($this->emailtemplate->getSmsEnabled('Customer', 'customer_7')) {
+            $ret = $this->emailtemplate->sendmessage($customer_info['telephone'], $sms_message);
+        }
     }
 
 }
