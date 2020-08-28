@@ -1659,16 +1659,21 @@ class ModelCheckoutOrder extends Model {
     }
 
     public function getOrderNew($order_id) {
+        $log = new Log('error.log');
         $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order` WHERE order_id  = '" . $order_id . "'");
+        $log->write($query->row);
         return $query->row;
     }
 
     public function SendMailToParentUser($order_id) {
         $log = new Log('error.log');
         $log->write('SEND MAIL');
+        $log->write($order_id);
         $this->load->model('account/customer');
         $is_he_parents = $this->model_account_customer->CheckHeIsParent();
         $customer_info = $this->model_account_customer->getCustomer($is_he_parents);
+        $order_info_custom = $this->getOrderNew($order_id);
+        //$log->write($order_info_custom);
         $order_info = $this->getOrder($order_id);
         if ($order_info) {
             $store_name = $order_info['firstname'] . ' ' . $order_info['lastname'];
