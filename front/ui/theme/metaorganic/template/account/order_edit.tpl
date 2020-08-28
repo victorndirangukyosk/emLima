@@ -346,15 +346,23 @@
                                                     </div>
                                                 </div>      
 
-
-
-
                                                 <div class="checkout-sidebar-merchant-box-old">
                                                     <li class="list-group-item my-order-list-head"><center><h2 class="my-order-list-title">Actions</h2></center></li>
+                                                    <div class="checkout-sidebar">
 
+                                                        <div class="row" style="margin-bottom: 8px">
+                                                            <div class="col-md-12">
+                                                                <button id="selected-add-to-cart" data-id="150" class="btn btn-primary" type="button">APPROVE ORDER</button>
+                                                            </div>
+                                                        </div>
 
+                                                        <div class="row" style="margin-bottom: 8px">
+                                                            <div class="col-md-12">
+                                                                <button id="list-add-to-cart" data-id="150" class="btn btn-primary" type="button">REJECT ORDER</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
-
 
                                             </div>
 
