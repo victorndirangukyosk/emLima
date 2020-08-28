@@ -36,7 +36,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="my-order-info">
-                                        <h3 class="my-order-title"><?php echo $order['store_name']; ?> (<?php echo $order['name'];; ?>) - <?php echo $order['total']; ?></h3>
+                                        <h3 class="my-order-title"><?php if($order['order_company'] == NULL) { echo $order['store_name']; ?> (<?php echo $order['name']; ?>) <?php } else { echo $order['order_company']; } ?>- <?php echo $order['total']; ?></h3>
 
                                         <?php if($order['realproducts']) { ?>
 
