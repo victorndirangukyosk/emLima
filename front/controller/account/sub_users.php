@@ -210,6 +210,7 @@ class Controlleraccountsubusers extends Controller {
         $data['base'] = $server;
 
         $data['action'] = $this->url->link('account/profileinfo', '', 'SSL');
+        $data['taxnumber_mask'] = $customer_info['fax'];
 
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['column_right'] = $this->load->controller('common/column_right');
@@ -521,6 +522,7 @@ class Controlleraccountsubusers extends Controller {
         $data['base'] = $server;
 
         $data['action'] = $this->url->link('account/account/adduser', '', 'SSL');
+        $data['tax_no'] = '';
 
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['column_right'] = $this->load->controller('common/column_right');

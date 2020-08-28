@@ -156,6 +156,8 @@ class ControllerAccountOrder extends Controller {
             if (empty($_SESSION['parent']) && $result['customer_id'] != $this->customer->getId()) {
                 $approve_order_button = 'Need Approval';
             }
+            $this->load->model('account/customer');
+            $is_he_parents = $this->model_account_customer->CheckHeIsParent();
 
             $data['orders'][] = array(
                 'order_id' => $result['order_id'],
@@ -184,7 +186,7 @@ class ControllerAccountOrder extends Controller {
                 'parent_approve_order' => $approve_order_button,
                 'customer_id' => $result['customer_id'],
                 'parent_approval' => $result['parent_approval'],
-                'edit_order' => $result['order_status_id'] == 15 ? $this->url->link('account/order/edit_order', 'order_id=' . $result['order_id'], 'SSL') : ''
+                'edit_order' => $result['order_status_id'] == 15 && $is_he_parents == NULL ? $this->url->link('account/order/edit_order', 'order_id=' . $result['order_id'], 'SSL') : ''
             );
         }
 
@@ -2447,6 +2449,16 @@ class ControllerAccountOrder extends Controller {
     }
 
     public function edit_order() {
+
+        $this->load->model('account/customer');
+        $is_he_parents = $this->model_account_customer->CheckHeIsParent();
+        if ($is_he_parents != NULL) {
+            if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/error/not_found.tpl')) {
+                $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/error/not_found.tpl', $data));
+            } else {
+                $this->response->setOutput($this->load->view('default/template/error/not_found.tpl', $data));
+            }
+        }
         $redirectNotLogin = true;
         $this->load->language('account/order');
         $this->load->language('account/return');

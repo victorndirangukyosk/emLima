@@ -116,6 +116,17 @@
                                     </div>
                                 </div>
 
+                                <div class="form-group required">
+                                    <label class="col-sm-3 control-label" for="flat">Branch Location</label>
+                                    <div class="col-sm-6 col-xs-12">
+                                        <input  name="modal_address_locality" id="txtPlaces" type="text"  class="form-control input-md LocalityId" required="">
+                                        <input type="hidden" id="latitude" name="latitude" value=""/>
+                                        <input type="hidden" id="longitude" name="longitude" value=""/>
+                                        <input type="hidden" id="zipcode" name="zipcode" value=""/>
+                                        <input type="hidden" id="customaddress" name="customaddress" value=""/>
+                                    </div>
+                                </div>
+
 
                                 <div class="form-group required">
                                     <label class="col-sm-3 control-label" for="input-telephone"><?php echo $entry_phone; ?></label>
@@ -166,7 +177,7 @@
                                 <div class="form-group  has-feedback">
                                   <label for="name" class="col-sm-3 control-label"><?= $entry_fax ?></label>
                                   <div class="col-sm-6">
-                                    <input type="text" value="<?php echo $fax; ?>" size="30" placeholder="Tax No" name="fax" maxlength="100" id="name" class="form-control input-lg" />
+                                    <input type="text" value="<?php echo $fax; ?>" size="30" placeholder="Tax No" name="fax" maxlength="100" id="name" class="form-control input-lg" readonly=""/>
                                     <?php if($error_fax) { ?>
                                     <div class="text-danger"><?php echo $error_fax; ?></div>
                                     <?php } ?>
@@ -182,7 +193,7 @@
                                     <?php } ?>
                                   </div>
                                 </div> -->
-                                <input type="hidden" name="tax" id="tax_number" value="" placeholder="<?php echo $taxnumber_mask; ?>" class="form-control" />
+                                <input type="hidden" name="tax" id="tax_number" value="" placeholder="<?php echo $taxnumber_mask; ?>" class="form-control" readonly="" />
 
                                 <div class="form-group required" style="display:none">
                                     <label class="col-sm-3 control-label" for="input-telephone"><?php echo $entry_gender; ?></label>
@@ -239,7 +250,7 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group required">
+                                <!--<div class="form-group required">
                                     <label class="col-sm-3 control-label" for="address">Address Type</label>
                                     <div class="col-sm-6 col-xs-12">
                                         <div class="select-locations">
@@ -263,22 +274,15 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div>-->
 
                                 <!-- Text input-->
-                                <div class="form-group required">
+                                <!--<div class="form-group required">
                                     <label class="col-sm-3 control-label" for="flat">House No. and Building Name</label>
                                     <div class="col-sm-6 col-xs-12">
                                         <input id="flat" name="modal_address_flat" type="text" placeholder="45, Sunshine Apartments" class="form-control input-lg" required="">
                                     </div>
-                                </div>
-
-                                <div class="form-group required">
-                                    <label class="col-sm-3 control-label" for="flat">Your Location</label>
-                                    <div class="col-sm-6 col-xs-12">
-                                        <input  name="modal_address_locality" id="Locality" type="text"  class="form-control input-md LocalityId" required="">
-                                    </div>
-                                </div>
+                                </div>-->
 
                                 <?php if ($site_key) { ?>
                                 <div class="form-group  ">
@@ -391,6 +395,31 @@
 </script>
 
 <?php } ?>
+<script type="text/javascript" src="https://maps.google.com/maps/api/js?key=<?= $this->config->get('config_google_api_key') ?>&libraries=places"></script>
+<script>
+    google.maps.event.addDomListener(window, 'load', function () {
+        var options = {
+            //types: ['geocode'], // or '(cities)' if that's what you want?
+            componentRestrictions: {country: "KE"}
+        };
+
+        var places = new google.maps.places.Autocomplete(document.getElementById('txtPlaces'), options);
+        google.maps.event.addListener(places, 'place_changed', function () {
+            var place = places.getPlace();
+            var address = place.formatted_address;
+            var latitude = place.geometry.location.lat();
+            var longitude = place.geometry.location.lng();
+            var mesg = "Address: " + address;
+            mesg += "\nLatitude: " + latitude;
+            mesg += "\nLongitude: " + longitude;
+            mesg += "\place: " + place;
+            console.log(place);
+            $('#latitude').val(latitude);
+            $('#longitude').val(longitude);
+            $('#customaddress').val(address);
+        });
+    });
+</script>
 <script type="text/javascript">
     $('button[id^=\'button-custom-field\']').on('click', function () {
         var node = this;
@@ -554,7 +583,7 @@
             return_var = false;
             $('<div class="text-danger">House No. and Building Name is mandatory!</div>').insertAfter($("input[name='modal_address_flat']"));
         }
-        
+
         if ($("input[name='modal_address_locality']").val() == "") {
             return_var = false;
             $('<div class="text-danger">Your Location is mandatory!</div>').insertAfter($("input[name='modal_address_locality']"));
