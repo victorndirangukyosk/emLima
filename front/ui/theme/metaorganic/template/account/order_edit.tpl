@@ -222,7 +222,7 @@
                                                             <div class="my-order-price" id="<?php echo $product['product_id'] ?>">           
                                                                 <input type="button" class="sp-minus fff mini-minus-quantity ddd" data-id="<?php echo $product['product_id'] ?>" data-unit="<?php echo $product['unit'] ?>" data-orderid="<?php echo $order_id; ?>" id="minus" value="-">
                                                                 <span class="sp-input middle-quantity quntity-input product-count" id="<?php echo 'span'.$product['product_id'] ?>">
-                                                                    <?= number_format($product['quantity'], 2)?>        </span>
+                                                                    <?php if($product['unit'] == 'Kg' || $product['unit'] == 'Kgs' ) { echo  number_format($product['quantity'], 2); } else { echo round($product['quantity'], 0); } ?>        </span>
 
                                                                 <input type="button" class="sp-plus fff mini-plus-quantity ddd" data-id="<?php echo $product['product_id'] ?>" data-unit="<?php echo $product['unit'] ?>" data-orderid="<?php echo $order_id; ?>" id="plus" value="+">
 
