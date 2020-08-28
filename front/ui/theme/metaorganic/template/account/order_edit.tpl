@@ -6,6 +6,13 @@
                 <div class="my-order-view-dashboard">
                     <div class="row">
                         <div class="col-md-12">
+                            <div class="alerter" style="display: none;">
+                                <div class="alert alert-info normalalert">
+                                    <p class="notice-text">Order updated successfully!</p>
+                                </div>
+                            </div>
+                        </div>                           
+                        <div class="col-md-12">
                             <div class="back-link-block"><a href="<?php echo $continue; ?>"> <span class="back-arrow"><i class="fa fa-long-arrow-left"></i> </span> <?= $text_go_back ?></a></div>
                         </div>
                     </div>
@@ -1104,6 +1111,8 @@
                     $("#subtotal" + order_id).text(json.total_amount);
                     $("#subtotal" + order_id).text(json.total_amount);
                     $("#total" + order_id).text(json.total_amount);
+                    $(".alerter").show();
+                    $('.alerter').delay(5000).fadeOut('slow');
                     } else {
                     alert('Please try again later!');
                     return false;
