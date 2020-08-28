@@ -2904,6 +2904,8 @@ class ControllerAccountOrder extends Controller {
             $data['continue'] = $this->url->link('account/order', '', 'SSL');
             $data['order_customer_id'] = $order_info['customer_id'];
             $data['loogged_customer_id'] = $this->customer->getId();
+            $data['order_status_id'] = $order_info['order_status_id'];
+            $data['order_status_name'] = $order_info['status'];
 
             $data['column_left'] = $this->load->controller('common/column_left');
             $data['column_right'] = $this->load->controller('common/column_right');
