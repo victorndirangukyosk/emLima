@@ -1141,6 +1141,7 @@
                     $('#approve_order').remove();
                     $('#reject_order').remove();
                     $('#approve_order_div').append(button);
+                    location.reload();
                     }
             });
             });
@@ -1171,6 +1172,7 @@
                     $('#approve_order').remove();
                     $('#reject_order').remove();
                     $('#approve_order_div').append(button);
+                    location.reload();
                     }
             });
             });
