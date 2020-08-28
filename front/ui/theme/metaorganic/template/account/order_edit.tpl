@@ -6,6 +6,13 @@
                 <div class="my-order-view-dashboard">
                     <div class="row">
                         <div class="col-md-12">
+                            <div class="alerter" style="display: none;">
+                                <div class="alert alert-info normalalert">
+                                    <p class="notice-text">Order updated successfully!</p>
+                                </div>
+                            </div>
+                        </div>                           
+                        <div class="col-md-12">
                             <div class="back-link-block"><a href="<?php echo $continue; ?>"> <span class="back-arrow"><i class="fa fa-long-arrow-left"></i> </span> <?= $text_go_back ?></a></div>
                         </div>
                     </div>
@@ -221,7 +228,7 @@
                                                             </div>-->
                                                             <div class="my-order-price" id="<?php echo $product['product_id'] ?>">           
                                                                 <input type="button" class="sp-minus fff mini-minus-quantity ddd" data-id="<?php echo $product['product_id'] ?>" data-unit="<?php echo $product['unit'] ?>" data-orderid="<?php echo $order_id; ?>" id="minus" value="-" <?php if($order_status_id != 15) { ?> disabled="" <?php } ?>>
-                                                                       <span class="sp-input middle-quantity quntity-input product-count" id="<?php echo 'span'.$product['product_id'] ?>">
+                                                                       <span class="sp-input middle-quantity quntity-input product-count" id="<?php echo 'span'.$product['product_id'] ?>" style="width:50px;">
                                                                     <?php if($product['unit'] == 'Kg' || $product['unit'] == 'Kgs' ) { echo  number_format($product['quantity'], 2); } else { echo round($product['quantity'], 0); } ?>        </span>
 
                                                                 <input type="button" class="sp-plus fff mini-plus-quantity ddd" data-id="<?php echo $product['product_id'] ?>" data-unit="<?php echo $product['unit'] ?>" data-orderid="<?php echo $order_id; ?>" id="plus" value="+" <?php if($order_status_id != 15) { ?> disabled="" <?php } ?>>
@@ -1104,6 +1111,8 @@
                     $("#subtotal" + order_id).text(json.total_amount);
                     $("#subtotal" + order_id).text(json.total_amount);
                     $("#total" + order_id).text(json.total_amount);
+                    $(".alerter").show();
+                    $('.alerter').delay(5000).fadeOut('slow');
                     } else {
                     alert('Please try again later!');
                     return false;

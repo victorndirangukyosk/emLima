@@ -1659,21 +1659,27 @@ class ModelCheckoutOrder extends Model {
     }
 
     public function getOrderNew($order_id) {
+        $log = new Log('error.log');
         $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order` WHERE order_id  = '" . $order_id . "'");
+        $log->write($query->row);
         return $query->row;
     }
 
     public function SendMailToParentUser($order_id) {
         $log = new Log('error.log');
         $log->write('SEND MAIL');
+        $log->write($order_id);
         $this->load->model('account/customer');
         $is_he_parents = $this->model_account_customer->CheckHeIsParent();
         $customer_info = $this->model_account_customer->getCustomer($is_he_parents);
+        $order_info_custom = $this->getOrderNew($order_id);
+        //$log->write($order_info_custom);
         $order_info = $this->getOrder($order_id);
         if ($order_info) {
             $store_name = $order_info['firstname'] . ' ' . $order_info['lastname'];
             $store_url = $this->url->link('account/login/customer');
         }
+        $sub_customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
 
         $ciphering = "AES-128-CTR";
         $iv_length = openssl_cipher_iv_length($ciphering);
@@ -1686,6 +1692,9 @@ class ModelCheckoutOrder extends Model {
         $parent_id = openssl_encrypt($is_he_parents, $ciphering, $encryption_key, $options, $encryption_iv);
 
         $customer_info['store_name'] = $store_name;
+        $customer_info['branchname'] = $sub_customer_info['company_name'];
+        $customer_info['subuserfirstname'] = $sub_customer_info['firstname'];
+        $customer_info['subuserlastname'] = $sub_customer_info['lastname'];
         $customer_info['order_link'] = $this->url->link('account/login/checksubuserorder', 'order_token=' . $order_id . '&user_token=' . $customer_id . '&parent_user_token=' . $parent_id, 'SSL');
 
         $log->write('EMAIL SENDING');
