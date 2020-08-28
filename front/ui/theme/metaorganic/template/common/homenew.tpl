@@ -206,14 +206,16 @@
                 <?php }else{?>
                 <div>
                   <div class="menuset">
-                    <div class="newset" style="margin-top: 20px;"><a class="btn" href="<?= $dashboard ?>"> <span><?= $full_name ?></span> </a>
+                    <div class="newset" style="margin-top: 20px;"><a class="btn" href="<?= $dashboard ?>">
+                        <span><?= $full_name ?></span> </a>
 
                       <div class="dropdownset" style="display:none;">
-                       <div class="dropdownsetnew" style="margin-top: 10px;"><a class="header__upper-deck-item-link"
-                            href="<?= $dashboard ?>"><i class="fa fa-user"></i>Dashboard &nbsp;<span class="badge badge-pill badge-light">New</span></a></div>
-                             <div class="dropdownsetnew"><a class="header__upper-deck-item-link"
-                            href="<?= $account ?>"><i class="fa fa-user"></i>My Account</a></div>
-                           <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $help ?>"><i
+                        <div class="dropdownsetnew" style="margin-top: 10px;"><a class="header__upper-deck-item-link"
+                            href="<?= $dashboard ?>"><i class="fa fa-user"></i>Dashboard &nbsp;<span
+                              class="badge badge-pill badge-light">New</span></a></div>
+                        <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $account ?>"><i
+                              class="fa fa-user"></i>My Account</a></div>
+                        <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $help ?>"><i
                               class="fa fa-question-circle"></i>Help</a></div>
                         <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $logout ?>"><i
                               class="fa fa-power-off"></i><?= $text_logout ?></a></div>
@@ -237,20 +239,21 @@
                             class="header__upper-deck-item-link btn-link-white" type="button" data-toggle="modal"
                             data-target="#contactusModal"><i class="fa fa-phone-square"></i><?= $contactus ?></a></div>
                          -->
-                        
+
                       </div>
                     </div>
                     <div class="butn setui" style="position:relative; z-index:-1000;">
                       <div class="btn btn-default mini-cart-button" role="button" data-toggle="modal"
-                      data-target="#store-cart-side" id="mini-cart-button" 
-                      style="margin-right:10px; margin-top:0px; display:flex; flex-flow: column nowrap;">
-                      <div  style="display:flex; align-items: center;">
-                        <i class="fa fa-shopping-cart"></i>&nbsp;&nbsp;
-                        <span class="hidden-xs hidden-sm cart-total-amount"><?= $this->
+                        data-target="#store-cart-side" id="mini-cart-button"
+                        style="margin-right:10px; margin-top:0px; display:flex; flex-flow: column nowrap;">
+                        <div style="display:flex; align-items: center;">
+                          <i class="fa fa-shopping-cart"></i>&nbsp;&nbsp;
+                          <span class="hidden-xs hidden-sm cart-total-amount"><?= $this->
                           currency->format($this->cart->getTotal()); ?></span>
+                        </div>
+                        <span class="badge cart-count" style="margin: 4px 0px;"><?= $this->cart->countProducts(); ?>
+                          items in cart</span>
                       </div>
-                      <span class="badge cart-count" style="margin: 4px 0px;"><?= $this->cart->countProducts(); ?> items in cart</span>
-                    </div>
                     </div>
                   </div>
                 </div>
@@ -295,6 +298,68 @@
   </div>
 
   <div style="clear:both !important"> </div>
+  <?php if (isset($wishlists)) { ?>
+  <div class="container" style="padding-top: 24px;">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel-group" id="accordion" role="tablist">
+          <div class="panel panel-default">
+            <div class="panel-heading" role="tab" style="background-color: #ea7128">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#my-lists"
+                   style="color: #fff !important; display: inline-block; width: 100%;">
+                  My Lists
+                </a>
+              </h4>
+            </div>
+            <div id="my-lists" class="panel-collapse collapse in" role="tabpanel">
+              <div class="panel-body">
+                <div class="order-details">
+                  <?php foreach ($wishlists as $wishlist) { ?>
+
+                  <div class="list-group my-order-group">
+                    <li class="list-group-item my-order-list-head">
+                      <i class="fa fa-clock-o"></i> Added On
+                      <span><strong><?php echo $wishlist['date_added']; ?></strong></span> 
+                      <!-- <span>
+                        <a href="#" id="addWishlisttocart" data-id='<?=$wishlist["wishlist_id"] ?>'
+                          style="margin-right:21px;" class="btn btn-info btn-xs">ADD TO CART</a>
+                        <a href="#" id="cancelWishlist" data-id='<?=$wishlist["wishlist_id"] ?>'
+                          style="margin-right:21px;"
+                          class="btn btn-danger btn-xs btn-custom-remove">DELETE</a>
+                      </span> -->
+                    </li>
+                    <li class="list-group-item">
+                      <div class="my-order-block">
+                        <div class="row">
+                          <div class="col-md-4">
+                            <div class="my-order-delivery">
+                              <h3 class="my-order-title"><?php echo $wishlist['name']; ?></h3>
+                            </div>
+                          </div>
+                          <div class="col-md-8">
+                            <div class="my-order-info text-right">
+                              <h3 class="my-order-title">
+                                <?php echo ($wishlist['product_count'] > 0 ?  '<a href="'.$wishlist['href'].'" class="btn btn-default btn-accept-reject">' .Process .' '. Order . ' (' .$wishlist['product_count'].' Products)' .'</a>' : $text_products_count. ' ' .$wishlist['product_count']); ?>
+                              </h3>
+                              <span class="my-order-id"></span>
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                  </div>
+                  <?php } ?>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <?php } ?>
 
   <?php
 					$i=0;
@@ -553,13 +618,15 @@
           text-transform: uppercase;
           user-select: none;
           cursor: pointer;
-          background-color: rgb(132,194,37);
+          background-color: rgb(132, 194, 37);
           border-radius: 4px;
         }
       </style>
-       <?php if(count($category['products'])>11){?>
-      <span class="view-all-button"><a href="<?=$this->url->link('product/store', 'store_id='.ACTIVE_STORE_ID).'?cat='.$page_link?>" >View All <?=$category['name']?></a></span>
-   <?php } ?>
+      <?php if(count($category['products'])>11){?>
+      <span class="view-all-button"><a
+          href="<?=$this->url->link('product/store', 'store_id='.ACTIVE_STORE_ID).'?cat='.$page_link?>">View All
+          <?=$category['name']?></a></span>
+      <?php } ?>
     </div>
 
 

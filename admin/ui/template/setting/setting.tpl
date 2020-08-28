@@ -2386,6 +2386,12 @@
                                 <label class="col-sm-2 control-label" for="input-sms-protocol"><span data-toggle="tooltip" title="<?php echo $help_sms_protocol; ?>"><?php echo $entry_sms_protocol; ?></span></label>
                                 <div class="col-sm-10">
                                     <select name="config_sms_protocol" id="input-sms-protocol" class="form-control">
+                                        <?php if ($config_sms_protocol == 'africastalking') { ?>
+                                        <option value="africastalking" selected="selected">Africa's Talking</option>
+                                        <?php } else {?>
+                                        <option value="africastalking">Africa's Talking</option>
+                                        <?php } ?>
+
                                         <?php if ($config_sms_protocol == 'twilio') { ?>
                                         <option value="twilio" selected="selected"><?php echo $text_twilio; ?></option>
                                         <?php } else { ?>
@@ -2414,7 +2420,21 @@
                                     </select>
                                 </div>
                             </div>
-
+                            <!-- Africa's Talking -->
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-smtp-encryption"><span data-toggle="tooltip" title="Africa's Talking username">Africa's Talking Username</span></label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="config_africastalking_sms_username" value="<?php echo $config_africastalking_sms_username; ?>" id="input-smtp-port" class="form-control" <?php echo ($config_sms_protocol == 'africastalking') ? '' : 'readonly="readonly"' ?> />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-smtp-encryption"><span data-toggle="tooltip" title="Africa's Talking API Key">Africa's Talking API Key</span></label>
+                                <div class="col-sm-10">
+                                     <input type="text" name="config_africastalking_sms_api_key" value="<?php echo $config_africastalking_sms_api_key; ?>" id="input-smtp-port" class="form-control" <?php echo ($config_sms_protocol == 'africastalking') ? '' : 'readonly="readonly"' ?> />
+                                </div>
+                            </div>
+                        
+                            <!-- Twilio -->
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="input-smtp-encryption"><span data-toggle="tooltip" title="Sms Sender id"><?= $entry_sms_id ?></span></label>
                                 <div class="col-sm-10">

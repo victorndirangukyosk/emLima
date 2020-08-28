@@ -1,6 +1,6 @@
 <?php
 
-require_once DIR_SYSTEM.'/vendor/konduto/vendor/autoload.php';
+require_once DIR_SYSTEM . '/vendor/konduto/vendor/autoload.php';
 
 //require_once DIR_SYSTEM.'/vendor/mpesa-php-sdk-master/vendor/autoload.php';
 
@@ -11,31 +11,31 @@ use paragraph1\phpFCM\Client as FCMClient;
 use paragraph1\phpFCM\Message;
 use paragraph1\phpFCM\Recipient\Device;
 use paragraph1\phpFCM\Notification;
-require_once DIR_SYSTEM.'/vendor/fcp-php/autoload.php';
 
-require DIR_SYSTEM.'vendor/Facebook/autoload.php';
+require_once DIR_SYSTEM . '/vendor/fcp-php/autoload.php';
 
-require_once DIR_APPLICATION.'/controller/api/settings.php';
+require DIR_SYSTEM . 'vendor/Facebook/autoload.php';
+
+require_once DIR_APPLICATION . '/controller/api/settings.php';
 
 class Controlleraccountsubusers extends Controller {
 
     private $error = array();
 
-
-    public function index() {  
+    public function index() {
 
         //unset($_SESSION['success_msg']);
-        if(!empty($_SESSION['parent'])){
+        if (!empty($_SESSION['parent'])) {
             $this->response->redirect($this->url->link('account/account'));
         }
         $data['kondutoStatus'] = $this->config->get('config_konduto_status');
-        
+
         $data['konduto_public_key'] = $this->config->get('config_konduto_public_key');
-        
+
         $data['redirect_coming'] = false;
 
-        $this->document->addStyle('/front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_login.css');
-        
+        $this->document->addStyle('/front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_login.css');
+
         if (!$this->customer->isLogged()) {
             $this->session->data['redirect'] = $this->url->link('account/profileinfo', '', 'SSL');
 
@@ -44,19 +44,19 @@ class Controlleraccountsubusers extends Controller {
 
         $this->load->language('account/edit');
         $this->load->language('account/account');
-        
+
 
         $this->document->setTitle('Add User');
         $this->load->model('account/customer');
 
-   
-        
+
+
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_account_customer->addEditCustomerInfo($this->customer->getId(),$this->request->post);
+            $this->model_account_customer->addEditCustomerInfo($this->customer->getId(), $this->request->post);
             $this->session->data['success'] = $this->language->get('text_success');
-            
-            
-            
+
+
+
             // Add to activity log
             $this->load->model('account/activity');
 
@@ -70,7 +70,7 @@ class Controlleraccountsubusers extends Controller {
             $this->model_account_activity->addActivity('profileinfo', $activity_data);
 
             $log->write('account profileinfo');
-            
+
 
             $this->response->redirect($this->url->link('account/profileinfo', '', 'SSL'));
         }
@@ -87,24 +87,24 @@ class Controlleraccountsubusers extends Controller {
             'href' => $this->url->link('account/account', '', 'SSL')
         );
 
-       
+
 
         $data['heading_title'] = $this->language->get('heading_title');
-        
+
         $data['text_your_details'] = $this->language->get('text_your_details');
         $data['text_additional'] = $this->language->get('text_additional');
         $data['text_select'] = $this->language->get('text_select');
         $data['text_loading'] = $this->language->get('text_loading');
-        
+
 
         $data['text_male'] = $this->language->get('text_male');
         $data['text_female'] = $this->language->get('text_female');
         $data['text_other'] = $this->language->get('text_other');
         $data['entry_dob'] = $this->language->get('entry_dob');
-        
+
         $data['entry_password'] = $this->language->get('entry_password');
         $data['entry_confirmpassword'] = $this->language->get('entry_confirmpassword');
-        
+
 
         $data['entry_location'] = $this->language->get('entry_location');
         $data['entry_requirement'] = $this->language->get('entry_requirement');
@@ -153,10 +153,10 @@ class Controlleraccountsubusers extends Controller {
         $data['newsletter'] = $this->url->link('account/newsletter', '', 'SSL');
         $data['logout'] = $this->url->link('account/logout', '', 'SSL');
         $data['recurring'] = $this->url->link('account/recurring', '', 'SSL');
-        
+
         if ($this->request->server['REQUEST_METHOD'] != 'POST') {
             $customer_info = $this->model_account_customer->getCustomerOtherInfo($this->customer->getId());
-             // echo '<pre>';print_r($customer_info);exit;
+            // echo '<pre>';print_r($customer_info);exit;
         }
 
         if (isset($this->error['warning'])) {
@@ -185,32 +185,33 @@ class Controlleraccountsubusers extends Controller {
 
         if (isset($this->request->post['location'])) {
             $data['location'] = $this->request->post['location'];
-        }else{
-            $data['location'] = $customer_info['location'];;
+        } else {
+            $data['location'] = $customer_info['location'];
         }
 
         if (isset($this->request->post['requirement'])) {
             $data['requirement'] = $this->request->post['requirement'];
-        }else{
-            $data['requirement'] = $customer_info['requirement_per_week'];;
+        } else {
+            $data['requirement'] = $customer_info['requirement_per_week'];
         }
         if (isset($this->request->post['mandatory_products'])) {
             $data['mandatory_products'] = $this->request->post['mandatory_products'];
-        }else{
-            $data['mandatory_products'] = $customer_info['mandatory_veg_fruits'];;
+        } else {
+            $data['mandatory_products'] = $customer_info['mandatory_veg_fruits'];
         }
-    
+
         if ($this->request->server['HTTPS']) {
             $server = $this->config->get('config_ssl');
         } else {
             $server = $this->config->get('config_url');
         }
 
-        
+
         $data['base'] = $server;
 
         $data['action'] = $this->url->link('account/profileinfo', '', 'SSL');
-        
+        $data['taxnumber_mask'] = $customer_info['fax'];
+
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['column_right'] = $this->load->controller('common/column_right');
         $data['content_top'] = $this->load->controller('common/content_top');
@@ -220,7 +221,7 @@ class Controlleraccountsubusers extends Controller {
         $data['header'] = $this->load->controller('common/header/information');
 
         $data['account_edit'] = $this->load->controller('account/edit');
-        $data['pay'] = $this->url->link('account/transactions','pay=online');
+        $data['pay'] = $this->url->link('account/transactions', 'pay=online');
         $data['home'] = $this->url->link('common/home/toHome');
         //$data['telephone'] =  $this->formatTelephone($this->customer->getTelephone());
         /** Added new params */
@@ -231,36 +232,36 @@ class Controlleraccountsubusers extends Controller {
         $data['label_my_address'] = $this->language->get('label_my_address');
         $data['contactus'] = $this->language->get('contactus');
         $data['text_cash'] = $this->language->get('text_cash');
-        
+
         $data['orders'] = array();
         $filter_data = array(
-           'filter_parent' => $_SESSION['customer_id'],
+            'filter_parent' => $_SESSION['customer_id'],
             'order' => 'DESC',
             'start' => 0,
-            'limit' =>1000
+            'limit' => 1000
         );
         $this->load->model('sale/order');
         $customer_total = $this->model_sale_order->getTotalCustomers($filter_data);
         $result_customers = $this->model_sale_order->getCustomers($filter_data);
 
         $data['heading_title'] = $this->language->get('heading_title');
-        
+
         //echo "<pre>";print_r($data['title']);die;
 
         $data['text_your_details'] = $this->language->get('text_your_details');
         $data['text_additional'] = $this->language->get('text_additional');
         $data['text_select'] = $this->language->get('text_select');
         $data['text_loading'] = $this->language->get('text_loading');
-        
+
 
         $data['text_male'] = $this->language->get('text_male');
         $data['text_female'] = $this->language->get('text_female');
         $data['text_other'] = $this->language->get('text_other');
         $data['entry_dob'] = $this->language->get('entry_dob');
-        
+
         $data['entry_password'] = $this->language->get('entry_password');
         $data['entry_confirmpassword'] = $this->language->get('entry_confirmpassword');
-        
+
 
         $data['entry_firstname'] = $this->language->get('entry_firstname');
         $data['entry_lastname'] = $this->language->get('entry_lastname');
@@ -316,7 +317,7 @@ class Controlleraccountsubusers extends Controller {
         $data['newsletter'] = $this->url->link('account/newsletter', '', 'SSL');
         $data['logout'] = $this->url->link('account/logout', '', 'SSL');
         $data['recurring'] = $this->url->link('account/recurring', '', 'SSL');
-        
+
         if ($this->request->server['REQUEST_METHOD'] != 'POST') {
             $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
         }
@@ -363,7 +364,7 @@ class Controlleraccountsubusers extends Controller {
         } else {
             $data['error_confirmpassword'] = '';
         }
-        
+
 
         if (isset($this->error['email'])) {
             $data['error_email'] = $this->error['email'];
@@ -383,7 +384,7 @@ class Controlleraccountsubusers extends Controller {
             $data['error_tax'] = '';
         }
 
-        
+
 
         if (isset($this->error['dob'])) {
             $data['error_dob'] = $this->error['dob'];
@@ -406,12 +407,11 @@ class Controlleraccountsubusers extends Controller {
         if (isset($this->request->post['gender'])) {
             $data['gender'] = $this->request->post['gender'];
         } elseif (!empty($customer_info)) {
-            if(empty($customer_info['gender'])) {
+            if (empty($customer_info['gender'])) {
                 $data['gender'] = 'male';
             } else {
-                $data['gender'] = $customer_info['gender'];    
+                $data['gender'] = $customer_info['gender'];
             }
-            
         } else {
             $data['gender'] = 'male';
         }
@@ -492,7 +492,7 @@ class Controlleraccountsubusers extends Controller {
 
         if ($this->config->get('config_google_captcha_status')) {
             $this->document->addScript('https://www.google.com/recaptcha/api.js');
-            
+
             $data['site_key'] = $this->config->get('config_google_captcha_public');
         } else {
             $data['site_key'] = '';
@@ -509,20 +509,21 @@ class Controlleraccountsubusers extends Controller {
 
         $data['telephone_mask'] = $this->config->get('config_telephone_mask');
 
-        if(isset($data['telephone_mask'])) {
-            $data['telephone_mask_number'] = str_replace('#', '9', $this->config->get('config_telephone_mask'));    
+        if (isset($data['telephone_mask'])) {
+            $data['telephone_mask_number'] = str_replace('#', '9', $this->config->get('config_telephone_mask'));
         }
 
         $data['taxnumber_mask'] = $this->config->get('config_taxnumber_mask');
 
-        if(isset($data['taxnumber_mask'])) {
-            $data['taxnumber_mask_number'] = str_replace('#', '*', $this->config->get('config_taxnumber_mask'));    
+        if (isset($data['taxnumber_mask'])) {
+            $data['taxnumber_mask_number'] = str_replace('#', '*', $this->config->get('config_taxnumber_mask'));
         }
-        
+
         $data['base'] = $server;
 
         $data['action'] = $this->url->link('account/account/adduser', '', 'SSL');
-        
+        $data['tax_no'] = '';
+
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['column_right'] = $this->load->controller('common/column_right');
         $data['content_top'] = $this->load->controller('common/content_top');
@@ -534,7 +535,7 @@ class Controlleraccountsubusers extends Controller {
         $data['account_edit'] = $this->load->controller('account/edit');
 
         $data['home'] = $this->url->link('common/home/toHome');
-        $data['telephone'] =  $this->customer->getTelephone();
+        $data['telephone'] = $this->customer->getTelephone();
         /** Added new params */
         $data['is_login'] = $this->customer->isLogged();
         $data['full_name'] = $this->customer->getFirstName();
@@ -544,45 +545,45 @@ class Controlleraccountsubusers extends Controller {
         $data['contactus'] = $this->language->get('contactus');
         $data['text_cash'] = $this->language->get('text_cash');
         //echo '<pre>'; print_r($result_customers);exit;
-		/*$this->load->model('account/order');
-		$order_total = $this->model_account_order->getTotalOrders();
+        /* $this->load->model('account/order');
+          $order_total = $this->model_account_order->getTotalOrders();
 
-        $results_orders = $this->model_account_order->getOrders(($page - 1) * 10, 10,$NoLimit=true);
-        $PaymentFilter = array('mPesa On Delivery','Cash On Delivery','mPesa Online');
-        $statusCancelledFilter  = array('Cancelled');
-        $statusSucessFilter  =  array('Delivered','Partially Delivered');
-        $statusPendingFilter  = array('Cancelled','Delivered','Refunded','Returned','Partially Delivered');
-        //$results_pending = $this->model_account_order->getOrders(($page - 1) * 10, 10,$PaymentFilter,$statusPendingFilter,$In=false);
-        //$results_success = $this->model_account_order->getOrders(($page - 1) * 10, 10,$PaymentFilter,$statusPendingFilter,$In=true);
-        //$results_cancelled = $this->model_account_order->getOrders(($page - 1) * 10, 10,$PaymentFilter,$statusCancelledFilter,$In=true);
-        $data['pending_transactions'] = array();
-        $data['success_transactions'] = array();
-        $data['cancelled_transactions'] = array();
-        //echo "<pre>";print_r($results_orders);die;
-        $totalPendingAmount = 0;
-        if(count($results_orders)>0){
-            foreach($results_orders as $order){
-                $this->load->model('sale/order');
-			    $order['transcation_id'] = $this->model_sale_order->getOrderTransactionId($order['order_id']);
-                //echo "<pre>";print_r($order);die;
-                if(in_array($order['payment_method'],$PaymentFilter)){
-                 if(!empty($order['transcation_id'])){
-                 //if(in_array($order['status'],$statusSucessFilter) && !empty($order['transcation_id'])){
-                    $data['success_transactions'][] = $order;
-                 }else if(in_array($order['status'],$statusCancelledFilter)){
-                    $data['cancelled_transactions'][] = $order;
-                 }else  if(!in_array($order['status'],$statusCancelledFilter)){
-                    $totalPendingAmount = $totalPendingAmount + $order['total'];
-                    $data['pending_order_id'][] = $order['order_id'];
-                    $data['pending_transactions'][] = $order;
-                 }
+          $results_orders = $this->model_account_order->getOrders(($page - 1) * 10, 10,$NoLimit=true);
+          $PaymentFilter = array('mPesa On Delivery','Cash On Delivery','mPesa Online');
+          $statusCancelledFilter  = array('Cancelled');
+          $statusSucessFilter  =  array('Delivered','Partially Delivered');
+          $statusPendingFilter  = array('Cancelled','Delivered','Refunded','Returned','Partially Delivered');
+          //$results_pending = $this->model_account_order->getOrders(($page - 1) * 10, 10,$PaymentFilter,$statusPendingFilter,$In=false);
+          //$results_success = $this->model_account_order->getOrders(($page - 1) * 10, 10,$PaymentFilter,$statusPendingFilter,$In=true);
+          //$results_cancelled = $this->model_account_order->getOrders(($page - 1) * 10, 10,$PaymentFilter,$statusCancelledFilter,$In=true);
+          $data['pending_transactions'] = array();
+          $data['success_transactions'] = array();
+          $data['cancelled_transactions'] = array();
+          //echo "<pre>";print_r($results_orders);die;
+          $totalPendingAmount = 0;
+          if(count($results_orders)>0){
+          foreach($results_orders as $order){
+          $this->load->model('sale/order');
+          $order['transcation_id'] = $this->model_sale_order->getOrderTransactionId($order['order_id']);
+          //echo "<pre>";print_r($order);die;
+          if(in_array($order['payment_method'],$PaymentFilter)){
+          if(!empty($order['transcation_id'])){
+          //if(in_array($order['status'],$statusSucessFilter) && !empty($order['transcation_id'])){
+          $data['success_transactions'][] = $order;
+          }else if(in_array($order['status'],$statusCancelledFilter)){
+          $data['cancelled_transactions'][] = $order;
+          }else  if(!in_array($order['status'],$statusCancelledFilter)){
+          $totalPendingAmount = $totalPendingAmount + $order['total'];
+          $data['pending_order_id'][] = $order['order_id'];
+          $data['pending_transactions'][] = $order;
+          }
 
-               }
-            }
-        }
-        //echo "<pre>";print_r($data);die;
-        $data['total_pending_amount'] = $totalPendingAmount;
-        $data['pending_order_id'] = implode('--',$data['pending_order_id']);*/
+          }
+          }
+          }
+          //echo "<pre>";print_r($data);die;
+          $data['total_pending_amount'] = $totalPendingAmount;
+          $data['pending_order_id'] = implode('--',$data['pending_order_id']); */
         $data['sub_users'] = $result_customers;
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/my_sub_users.tpl')) {
             $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/my_sub_users.tpl', $data));
@@ -590,7 +591,6 @@ class Controlleraccountsubusers extends Controller {
             $this->response->setOutput($this->load->view('default/template/account/my_sub_users.tpl', $data));
         }
     }
-
 
     protected function validate() {
         //print_r($this->request->post);die;
@@ -607,7 +607,7 @@ class Controlleraccountsubusers extends Controller {
         if ((utf8_strlen(trim($this->request->post['mandatory_products'])) < 1)) {
             $this->error['mandatory_products'] = $this->language->get('error_mandatory_products');
         }
-       
+
         return !$this->error;
     }
 
@@ -616,24 +616,38 @@ class Controlleraccountsubusers extends Controller {
         $log->write($this->request->post['user_id']);
         $log->write($this->request->post['active_status']);
         $user_id = $this->request->post['user_id'];
-        $log->write($user_id.'USER ID');
+        $log->write($user_id . 'USER ID');
         $this->load->model('account/customer');
         $this->model_account_customer->approvecustom($user_id, $this->request->post['active_status']);
-        
+
         $json['success'] = 'User activated!';
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
-    
+
+    public function DeleteSubUsers() {
+        $log = new Log('error.log');
+        $log->write($this->request->post['user_id']);
+        $user_id = $this->request->post['user_id'];
+        $log->write($user_id . 'USER ID');
+        $this->load->model('account/customer');
+        $this->model_account_customer->deletecustom($user_id);
+
+        $json['success'] = 'User deleted!';
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
     public function EmailUnique() {
         $log = new Log('error.log');
         $log->write($this->request->post['email']);
         $this->load->model('account/customer');
         $count = $this->model_account_customer->getTotalCustomersByEmail($this->request->post['email']);
-        $log->write($count.'Email Count');
-        
+        $log->write($count . 'Email Count');
+
         $json['success'] = $count == 0 || $count == NULL ? TRUE : FALSE;
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
+
 }
