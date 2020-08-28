@@ -352,13 +352,13 @@
 
                                                         <div class="row" style="margin-bottom: 8px">
                                                             <div class="col-md-12">
-                                                                <button id="selected-add-to-cart" data-id="150" class="btn btn-primary" type="button">APPROVE ORDER</button>
+                                                                <button id="approve_order" data-id="<?php echo $order_id; ?>" data-custid="<?php echo $order_customer_id; ?>" data-logcustid="<?php echo $loogged_customer_id; ?>" class="btn btn-primary" type="button">APPROVE ORDER</button>
                                                             </div>
                                                         </div>
 
                                                         <div class="row" style="margin-bottom: 8px">
                                                             <div class="col-md-12">
-                                                                <button id="list-add-to-cart" data-id="150" class="btn btn-primary" type="button">REJECT ORDER</button>
+                                                                <button id="reject_order" data-id="<?php echo $order_id; ?>" data-custid="<?php echo $order_customer_id; ?>" data-logcustid="<?php echo $loogged_customer_id; ?>" class="btn btn-primary" type="button">REJECT ORDER</button>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1101,6 +1101,63 @@
                     return false;
                     }
                     console.log(json);
+                    }
+            });
+            });
+            $(document).delegate('#approve_order', 'click', function (e) {
+            return false;
+            e.preventDefault();
+            var order_id = $(this).attr('data-id');
+            var customer_id = $(this).attr('data-custid');
+            var order_status = $(this).attr('id');
+            console.log(order_id + ' ' + customer_id + ' ' + order_status);
+            var parent_div = $(this).parent("div");
+            console.log(parent_div.attr("id"));
+            console.log('Hi');
+            console.log($('.col-md-3').children('.my-order-delivery').find('h3').text());
+            console.log('Under progress');
+            $.ajax({
+            url: 'index.php?path=account/order/ApproveOrRejectSubUserOrder',
+                    type: 'post',
+                    data: {
+                    order_id: $(this).attr('data-id'),
+                            customer_id: $(this).attr('data-custid'),
+                            order_status: 'Approved'
+                    },
+                    dataType: 'json',
+                    success: function (json) {
+                    console.log(json);
+                    var approved = $('<li class="list-group-item"><div class="row"><div class="col-md-4"></div><div class="col-md-4"><div class="my-order-showaddress"><h3 class="my-order-title label" style="background-color: #8E45FF;display: block;line-height: 2; text-align:center;">Approved</h3></div></div><div class="col-md-4"></div></div>');
+                    parent_div.html(approved);
+                    $('#orderstatus' + order_id).text('Order Received');
+                    $('#editorder' + order_id).remove();
+                    }
+            });
+            });
+            $(document).delegate('#reject_order', 'click', function (e) {
+            return false;
+            e.preventDefault();
+            var order_id = $(this).attr('data-id');
+            var order_status = 'Rejected';
+            var customer_id = $(this).attr('data-custid');
+            console.log(order_id + ' ' + customer_id + ' ' + order_status);
+            var parent_div = $(this).parent("div");
+            console.log(parent_div.attr("id"));
+            $.ajax({
+            url: 'index.php?path=account/order/ApproveOrRejectSubUserOrder',
+                    type: 'post',
+                    data: {
+                    order_id: $(this).attr('data-id'),
+                            customer_id: $(this).attr('data-custid'),
+                            order_status: order_status
+                    },
+                    dataType: 'json',
+                    success: function (json) {
+                    console.log(json);
+                    var approved = $('<li class="list-group-item"><div class="row"><div class="col-md-4"></div><div class="col-md-4"><div class="my-order-showaddress"><h3 class="my-order-title label" style="background-color: #8E45FF;display: block;line-height: 2; text-align:center;">Rejected</h3></div></div><div class="col-md-4"></div></div>');
+                    parent_div.html(approved);
+                    $('#orderstatus' + order_id).text('Order Rejected');
+                    $('#editorder' + order_id).remove();
                     }
             });
             });
