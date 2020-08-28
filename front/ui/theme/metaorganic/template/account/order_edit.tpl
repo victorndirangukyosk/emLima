@@ -1105,17 +1105,14 @@
             });
             });
             $(document).delegate('#approve_order', 'click', function (e) {
-            return false;
             e.preventDefault();
             var order_id = $(this).attr('data-id');
             var customer_id = $(this).attr('data-custid');
             var order_status = $(this).attr('id');
             console.log(order_id + ' ' + customer_id + ' ' + order_status);
-            var parent_div = $(this).parent("div");
-            console.log(parent_div.attr("id"));
             console.log('Hi');
-            console.log($('.col-md-3').children('.my-order-delivery').find('h3').text());
             console.log('Under progress');
+            return false;
             $.ajax({
             url: 'index.php?path=account/order/ApproveOrRejectSubUserOrder',
                     type: 'post',
@@ -1135,14 +1132,12 @@
             });
             });
             $(document).delegate('#reject_order', 'click', function (e) {
-            return false;
             e.preventDefault();
             var order_id = $(this).attr('data-id');
             var order_status = 'Rejected';
             var customer_id = $(this).attr('data-custid');
             console.log(order_id + ' ' + customer_id + ' ' + order_status);
-            var parent_div = $(this).parent("div");
-            console.log(parent_div.attr("id"));
+            return false;
             $.ajax({
             url: 'index.php?path=account/order/ApproveOrRejectSubUserOrder',
                     type: 'post',
