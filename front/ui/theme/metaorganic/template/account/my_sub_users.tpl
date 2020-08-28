@@ -398,7 +398,12 @@
 <script type="text/javascript" src="https://maps.google.com/maps/api/js?key=<?= $this->config->get('config_google_api_key') ?>&libraries=places"></script>
 <script>
     google.maps.event.addDomListener(window, 'load', function () {
-        var places = new google.maps.places.Autocomplete(document.getElementById('txtPlaces'));
+        var options = {
+            types: ['geocode'], // or '(cities)' if that's what you want?
+            componentRestrictions: {country: "KE"}
+        };
+
+        var places = new google.maps.places.Autocomplete(document.getElementById('txtPlaces'), options);
         google.maps.event.addListener(places, 'place_changed', function () {
             var place = places.getPlace();
             var address = place.formatted_address;
