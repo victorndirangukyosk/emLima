@@ -20,6 +20,7 @@ class ModelSaleCustomer extends Model {
         }
 
         if (!empty($data['send_email'])) {
+            /*EMAIL SENDING WHEN CREATING USER FROM ADMIN PORTAL*/
             $this->sendCustomerRegisterMail($data);
         }
 
