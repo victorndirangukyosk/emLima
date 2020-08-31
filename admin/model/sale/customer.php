@@ -20,7 +20,8 @@ class ModelSaleCustomer extends Model {
         }
 
         if (!empty($data['send_email'])) {
-            $this->sendCustomerRegisterMail($data);
+            /*REMOVED EMAIL SENDING WHEN CREATING USER FROM ADMIN PORTAL*/
+            //$this->sendCustomerRegisterMail($data);
         }
 
         return $customer_id;
