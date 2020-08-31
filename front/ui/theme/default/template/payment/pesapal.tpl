@@ -1,3 +1,6 @@
+<iframe src="<?php echo $iframe;?>" width="100%" height="700px"  scrolling="no" frameBorder="0">
+	<p>Browser unable to load iFrame</p>
+</iframe>
 <h2><?php echo $text_instruction; ?></h2>
 <h3 style="color: #f97900;">Please enter pesapal registered mobile number</h3>
 <div class="alert alert-danger" id="error_msg" style="margin-bottom: 7px;">
