@@ -187,7 +187,7 @@ class ControllerAccountOrder extends Controller {
                 'parent_approve_order' => $approve_order_button,
                 'customer_id' => $result['customer_id'],
                 'parent_approval' => $result['parent_approval'],
-                'edit_order' => $result['order_status_id'] == 15 && $is_he_parents == NULL ? $this->url->link('account/order/edit_order', 'order_id=' . $result['order_id'], 'SSL') : '',
+                'edit_order' => $result['order_status_id'] == 15 && empty($_SESSION['parent']) ? $this->url->link('account/order/edit_order', 'order_id=' . $result['order_id'], 'SSL') : '',
                 'order_company' => isset($customer_info) && $customer_info['company_name'] != NULL ? $customer_info['company_name'] : NULL
             );
         }
