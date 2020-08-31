@@ -159,6 +159,11 @@ class ControllerAccountOrder extends Controller {
             $this->load->model('account/customer');
             $customer_info = $this->model_account_customer->getCustomer($result['customer_id']);
             $is_he_parents = $this->model_account_customer->CheckHeIsParent();
+            
+            $log = new Log('error.log');
+            $log->write('IS HE PARENT USER');
+            $log->write($is_he_parents);
+            $log->write('IS HE PARENT USER');
 
             $data['orders'][] = array(
                 'order_id' => $result['order_id'],
