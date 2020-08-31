@@ -112,6 +112,7 @@ class ModelApiCheckout extends Model {
         $log->write($is_he_parents);
         $log->write('addMultiOrder 123');
         $parent_approval = $is_he_parents == NULL ? 'Approved' : 'Pending';
+        $order_status_id = $is_he_parents == NULL ? 14 : 15;
 
         //if ( $orders && count($stores) == count($this->session->data['order_id'])) {
         if ($orders) {
