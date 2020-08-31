@@ -605,6 +605,11 @@
     .option_pay {
         margin-top:-3px !important;
     }
+    .table-bordered>tbody>tr>td {
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
 </style>
 <script>
     $(document).delegate('.useractivate', 'click', function () {

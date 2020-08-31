@@ -1,17 +1,18 @@
 <?php
 
-require_once DIR_SYSTEM.'/vendor/autoload.php'; // Loads the library
-require DIR_SYSTEM. '/vendor/twilio-php-master/Twilio/autoload.php';
+require_once DIR_SYSTEM . '/vendor/autoload.php'; // Loads the library
+require DIR_SYSTEM . '/vendor/twilio-php-master/Twilio/autoload.php';
+
 use Twilio\Rest\Client;
-require DIR_SYSTEM. '/vendor/zenvia/human_gateway_client_api/HumanClientMain.php';
 
-
+require DIR_SYSTEM . '/vendor/zenvia/human_gateway_client_api/HumanClientMain.php';
 
 use paragraph1\phpFCM\Client as FCMClient;
 use paragraph1\phpFCM\Message;
 use paragraph1\phpFCM\Recipient\Device;
 use paragraph1\phpFCM\Notification;
-require_once DIR_SYSTEM.'/vendor/fcp-php/autoload.php';
+
+require_once DIR_SYSTEM . '/vendor/fcp-php/autoload.php';
 
 class Emailtemplate {
 
@@ -50,23 +51,23 @@ class Emailtemplate {
 
         $log = new Log('error.log');
 
-        /*$log->write('in fes rhis constant');
-        $log->write($data);
-        $log->write($template);*/
+        /* $log->write('in fes rhis constant');
+          $log->write($data);
+          $log->write($template); */
         $findFunctionName = 'get' . ucwords($type) . 'Find';
         $replaceFunctionName = 'get' . ucwords($type) . 'Replace';
 
         //$log->write($findFunctionName);
         //$log->write($replaceFunctionName);
-        
-        
+
+
 
         $find = $this->$findFunctionName();
         $replace = $this->$replaceFunctionName($data);
 
 
         if (!empty($template['description'])) {
-            if (ucwords($type) == 'OrderAll' || ucwords($type) == 'VendorOrder' ) {
+            if (ucwords($type) == 'OrderAll' || ucwords($type) == 'VendorOrder') {
 
                 preg_match('/{product:start}(.*){product:stop}/Uis', $template['description'], $template_product);
                 if (!empty($template_product[1])) {
@@ -92,15 +93,14 @@ class Emailtemplate {
                 if (!empty($template_total[1])) {
                     $template['description'] = str_replace($template_total[1], '', $template['description']);
                 }
-
             }
             // print_r($template['description']);
             // die;
             //$log->write($find);
-            /*$log->write("replace");
-            $log->write($template['description']);
-            $log->write($replace);
-            $log->write($find);*/
+            /* $log->write("replace");
+              $log->write($template['description']);
+              $log->write($replace);
+              $log->write($find); */
             $message = trim(str_replace($find, $replace, $template['description']));
             //$log->write($message);
         } else {
@@ -109,7 +109,6 @@ class Emailtemplate {
 
         return $message;
     }
-
 
     public function getSmsMessage($type, $template_id, $data) {
         $template = $this->getEmailTemplate($template_id);
@@ -121,57 +120,55 @@ class Emailtemplate {
         $replace = $this->$replaceFunctionName($data);
 
         if (!empty($template['sms'])) {
-            $message = trim(str_replace($find, $replace,$template['sms']));
+            $message = trim(str_replace($find, $replace, $template['sms']));
         } else {
             $message = $this->getDefaultMessage($type, $template_id, $data);
         }
 
         return $message;
-
     }
 
-    public function getSmsEnabled($type,$template_id){
+    public function getSmsEnabled($type, $template_id) {
         $template = $this->getEmailTemplate($template_id);
         if ($template['sms_status']) {
             return true;
-        }else{
+        } else {
             return false;
-        } 
+        }
     }
 
-    public function getEmailEnabled($type,$template_id){
+    public function getEmailEnabled($type, $template_id) {
         $template = $this->getEmailTemplate($template_id);
         if ($template['email_status']) {
             return true;
-        }else{
+        } else {
             return false;
-        } 
+        }
     }
 
-
-    public function getNotificationEnabled($type,$template_id) {
+    public function getNotificationEnabled($type, $template_id) {
         $template = $this->getEmailTemplate($template_id);
         if ($template['mobile_notification']) {
             return true;
-        }else{
+        } else {
             return false;
-        } 
+        }
     }
 
-    public function sendDynamicPushNotification($to,$deviceId,$message,$title,$sendData,$app_action = 'com.instagolocal.show_wallet' ){
+    public function sendDynamicPushNotification($to, $deviceId, $message, $title, $sendData, $app_action = 'com.instagolocal.show_wallet') {
 
 
         $log = new Log('error.log');
         $log->write('sendDynamicPushNotification');
 
-        /*$log->write($to);
-        $log->write($deviceId);
-        $log->write($message);
-        $log->write($title);
-        $log->write($sendData);*/
+        /* $log->write($to);
+          $log->write($deviceId);
+          $log->write($message);
+          $log->write($title);
+          $log->write($sendData); */
 
-        if(isset($to)) {
-            if(isset($deviceId) && isset($to)) {
+        if (isset($to)) {
+            if (isset($deviceId) && isset($to)) {
 
                 $log->write("api key");
 
@@ -183,32 +180,30 @@ class Emailtemplate {
 
                 $note = new Notification($title, $message);
                 $note->setIcon('notification_icon_resource_name')
-                    ->setColor('#3ca826')
-                    ->setSound('notification_sound')
-                    ->setClickAction($app_action)
-                    ->setBadge(1);
+                        ->setColor('#3ca826')
+                        ->setSound('notification_sound')
+                        ->setClickAction($app_action)
+                        ->setBadge(1);
 
                 $message = new Message();
                 $message->addRecipient(new Device($deviceId));
                 $message->setNotification($note)
-                ->setData($sendData);
+                        ->setData($sendData);
 
                 $response = $client->send($message);
                 //var_dump($response);die;
 
                 $log->write($response);
-                if($response->getStatusCode()) {
-                    $json['success'] = 'Success: push notification sent.';    
+                if ($response->getStatusCode()) {
+                    $json['success'] = 'Success: push notification sent.';
                 } else {
                     $json['error'] = 'fcm api failed ';
                 }
-                
-
             } else {
                 $json['error'] = 'device id empty of user';
             }
         } else {
-            $json['error'] = 'no user_id';   
+            $json['error'] = 'no user_id';
         }
 
         $log->write("retruen");
@@ -225,13 +220,12 @@ class Emailtemplate {
         $replace = $this->$replaceFunctionName($data);
 
         if (!empty($template['mobile_notification_template'])) {
-            $message = trim(str_replace($find, $replace,$template['mobile_notification_template']));
+            $message = trim(str_replace($find, $replace, $template['mobile_notification_template']));
         } else {
             $message = $this->getDefaultMessage($type, $template_id, $data);
         }
 
         return $message;
-
     }
 
     public function getNotificationTitle($type, $template_id, $data) {
@@ -244,15 +238,13 @@ class Emailtemplate {
         $replace = $this->$replaceFunctionName($data);
 
         if (!empty($template['mobile_notification_title'])) {
-            $message = trim(str_replace($find, $replace,$template['mobile_notification_title']));
+            $message = trim(str_replace($find, $replace, $template['mobile_notification_title']));
         } else {
             $message = $this->getDefaultMessage($type, $template_id, $data);
         }
 
         return $message;
-
     }
-
 
     //Mail Text
     public function getText($type, $template_id, $data) {
@@ -267,12 +259,10 @@ class Emailtemplate {
         //$email_template_data = [];
         $item = explode("_", $email_template);
         //  echo "<pre>";print_r($item);die;
-        if($item[0]=="order")
-        {
-if($item[1]==0)
-{$item[1]=1;
-
-}
+        if ($item[0] == "order") {
+            if ($item[1] == 0) {
+                $item[1] = 1;
+            }
         }
         $log = new Log('error.log');
         $log = new Log($email_template);
@@ -283,9 +273,9 @@ if($item[1]==0)
         if (!$query->num_rows) {
             $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "email AS e LEFT JOIN " . DB_PREFIX . "email_description AS ed ON ed.email_id = e.id WHERE e.type = '{$item[0]}' AND e.text_id = '{$item[1]}'");
         }
-/*
-        $log->write($query->rows);*/
-       // echo "<pre>";print_r("SELECT * FROM " . DB_PREFIX . "email AS e LEFT JOIN " . DB_PREFIX . "email_description AS ed ON ed.email_id = e.id WHERE e.type = '{$item[0]}' AND e.text_id = '{$item[1]}' AND ed.language_id = '{$this->config->get('config_language_id')}'");die;
+        /*
+          $log->write($query->rows); */
+        // echo "<pre>";print_r("SELECT * FROM " . DB_PREFIX . "email AS e LEFT JOIN " . DB_PREFIX . "email_description AS ed ON ed.email_id = e.id WHERE e.type = '{$item[0]}' AND e.text_id = '{$item[1]}' AND ed.language_id = '{$this->config->get('config_language_id')}'");die;
 
         foreach ($query->rows as $result) {
             $email_template_data = array(
@@ -296,12 +286,12 @@ if($item[1]==0)
                 'name' => $result['name'],
                 'description' => $result['description'],
                 'status' => $result['status'],
-                'sms_status'=>$result['sms_status'],
-                'email_status'=>$result['email_status'],
-                'sms'=>$result['sms'],
-                'mobile_notification'=>$result['mobile_notification'],
-                'mobile_notification_template'=>$result['mobile_notification_template'],
-                'mobile_notification_title'=>$result['mobile_notification_title'],
+                'sms_status' => $result['sms_status'],
+                'email_status' => $result['email_status'],
+                'sms' => $result['sms'],
+                'mobile_notification' => $result['mobile_notification'],
+                'mobile_notification_template' => $result['mobile_notification_template'],
+                'mobile_notification_title' => $result['mobile_notification_title'],
             );
         }
 
@@ -310,7 +300,7 @@ if($item[1]==0)
 
     // Customer Login OTP
     public function getLoginOTPFind() {
-        $result = array('{username}', '{otp}', '{site_url}' , '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}','{privacy_policy}','{system_email}', '{system_phone}');
+        $result = array('{username}', '{otp}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}');
         return $result;
     }
 
@@ -320,23 +310,20 @@ if($item[1]==0)
         $result = array(
             'username' => $data['username'],
             'otp' => $data['otp'],
-
             //common replace
-            'site_url'=> HTTPS_CATALOG,
+            'site_url' => HTTPS_CATALOG,
             //'logo'=> HTTPS_CATALOG.'image/' . $this->config->get('config_logo'),
-            'logo' => $this->resize($this->config->get('config_logo'),197,34),
+            'logo' => $this->resize($this->config->get('config_logo'), 197, 34),
             //'site_url'=>$this->config->get('config_url'),
-            'system_name'=>$this->config->get('config_name'),
-            'year'=>date('Y'),
-            'help_center'=> $this->url->adminLink('information/help'),
+            'system_name' => $this->config->get('config_name'),
+            'year' => date('Y'),
+            'help_center' => $this->url->adminLink('information/help'),
             //'white_logo'=> HTTPS_CATALOG.'image/'. $this->config->get('config_white_logo'),
-            'white_logo' => $this->resize($this->config->get('config_white_logo'),197,34),
-
+            'white_logo' => $this->resize($this->config->get('config_white_logo'), 197, 34),
             'terms' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_account_id'), 'SSL'),
             'privacy_policy' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_privacy_policy_id'), 'SSL'),
-            'system_email'=>$this->config->get('config_email'),
-            'system_phone'=> '+'.$this->config->get('config_telephone_code').' '.$this->config->get('config_telephone'),
-
+            'system_email' => $this->config->get('config_email'),
+            'system_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $this->config->get('config_telephone'),
         );
 
         return $result;
@@ -344,7 +331,7 @@ if($item[1]==0)
 
     // Customer Regsiter OTP
     public function getRegisterOTPFind() {
-        $result = array('{username}', '{otp}', '{site_url}' , '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}','{privacy_policy}','{system_email}', '{system_phone}');
+        $result = array('{username}', '{otp}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}');
         return $result;
     }
 
@@ -352,23 +339,20 @@ if($item[1]==0)
         $result = array(
             'username' => $data['username'],
             'otp' => $data['otp'],
-
             //common replace
-            'site_url'=> HTTPS_CATALOG,
+            'site_url' => HTTPS_CATALOG,
             //'logo'=> HTTPS_CATALOG.'image/' . $this->config->get('config_logo'),
-            'logo' => $this->resize($this->config->get('config_logo'),197,34),
+            'logo' => $this->resize($this->config->get('config_logo'), 197, 34),
             //'site_url'=>$this->config->get('config_url'),
-            'system_name'=>$this->config->get('config_name'),
-            'year'=>date('Y'),
-            'help_center'=> $this->url->adminLink('information/help'),
+            'system_name' => $this->config->get('config_name'),
+            'year' => date('Y'),
+            'help_center' => $this->url->adminLink('information/help'),
             //'white_logo'=> HTTPS_CATALOG.'image/'. $this->config->get('config_white_logo'),
-            'white_logo' => $this->resize($this->config->get('config_white_logo'),197,34),
-
+            'white_logo' => $this->resize($this->config->get('config_white_logo'), 197, 34),
             'terms' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_account_id'), 'SSL'),
             'privacy_policy' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_privacy_policy_id'), 'SSL'),
-            'system_email'=>$this->config->get('config_email'),
-            'system_phone'=>'+'.$this->config->get('config_telephone_code').' '.$this->config->get('config_telephone'),
-
+            'system_email' => $this->config->get('config_email'),
+            'system_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $this->config->get('config_telephone'),
         );
 
         return $result;
@@ -376,7 +360,7 @@ if($item[1]==0)
 
     // Admin Login 
     public function getLoginFind() {
-        $result = array('{username}', '{store_name}', '{ip_address}', '{site_url}' , '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}','{privacy_policy}','{system_email}', '{system_phone}');
+        $result = array('{username}', '{store_name}', '{ip_address}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}');
         return $result;
     }
 
@@ -386,22 +370,20 @@ if($item[1]==0)
             'username' => $data['username'],
             'store_name' => $data['store_name'],
             'ip_address' => $data['ip_address'],
-
             //common replace
-            'site_url'=> HTTPS_CATALOG,
+            'site_url' => HTTPS_CATALOG,
             //'logo'=> HTTPS_CATALOG.'image/' . $this->config->get('config_logo'),
-            'logo' => $this->resize($this->config->get('config_logo'),197,34),
+            'logo' => $this->resize($this->config->get('config_logo'), 197, 34),
             //'site_url'=>$this->config->get('config_url'),
-            'system_name'=>$this->config->get('config_name'),
-            'year'=>date('Y'),
-            'help_center'=> $this->url->adminLink('information/help'),
+            'system_name' => $this->config->get('config_name'),
+            'year' => date('Y'),
+            'help_center' => $this->url->adminLink('information/help'),
             //'white_logo'=> HTTPS_CATALOG.'image/'. $this->config->get('config_white_logo'),
-            'white_logo' => $this->resize($this->config->get('config_white_logo'),197,34),
-
+            'white_logo' => $this->resize($this->config->get('config_white_logo'), 197, 34),
             'terms' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_account_id'), 'SSL'),
             'privacy_policy' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_privacy_policy_id'), 'SSL'),
-            'system_email'=>$this->config->get('config_email'),
-            'system_phone'=>'+'.$this->config->get('config_telephone_code').' '.$this->config->get('config_telephone'),
+            'system_email' => $this->config->get('config_email'),
+            'system_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $this->config->get('config_telephone'),
         );
         //echo "<pre>";print_r($result);die;
 
@@ -410,7 +392,7 @@ if($item[1]==0)
 
     // Affilate
     public function getAffiliateFind() {
-        $result = array('{firstname}', '{lastname}', '{date}', '{store_name}', '{description}', '{order_id}', '{amount}', '{total}', '{email}', '{password}', '{affiliate_code}', '{account_href}', '{site_url}' , '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}','{privacy_policy}','{system_email}', '{system_phone}');
+        $result = array('{firstname}', '{lastname}', '{date}', '{store_name}', '{description}', '{order_id}', '{amount}', '{total}', '{email}', '{password}', '{affiliate_code}', '{account_href}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}');
         return $result;
     }
 
@@ -428,23 +410,20 @@ if($item[1]==0)
             'password' => (!empty($data['password'])) ? $data['password'] : '',
             'affiliate_code' => (!empty($data['code'])) ? $data['code'] : '',
             'account_href' => $this->url->link('affiliate/login', '', 'SSL'),
-
             //common replace
-            'site_url'=> HTTPS_CATALOG,
+            'site_url' => HTTPS_CATALOG,
             //'logo'=> HTTPS_CATALOG.'image/' . $this->config->get('config_logo'),
-            'logo' => $this->resize($this->config->get('config_logo'),197,34),
+            'logo' => $this->resize($this->config->get('config_logo'), 197, 34),
             //'site_url'=>$this->config->get('config_url'),
-            'system_name'=>$this->config->get('config_name'),
-            'year'=>date('Y'),
-            'help_center'=> $this->url->adminLink('information/help'),
+            'system_name' => $this->config->get('config_name'),
+            'year' => date('Y'),
+            'help_center' => $this->url->adminLink('information/help'),
             //'white_logo'=> HTTPS_CATALOG.'image/'. $this->config->get('config_white_logo'),
-            'white_logo' => $this->resize($this->config->get('config_white_logo'),197,34),
-
+            'white_logo' => $this->resize($this->config->get('config_white_logo'), 197, 34),
             'terms' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_account_id'), 'SSL'),
             'privacy_policy' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_privacy_policy_id'), 'SSL'),
-            'system_email'=>$this->config->get('config_email'),
-            'system_phone'=>'+'.$this->config->get('config_telephone_code').' '.$this->config->get('config_telephone'),
-
+            'system_email' => $this->config->get('config_email'),
+            'system_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $this->config->get('config_telephone'),
         );
 
         return $result;
@@ -452,7 +431,7 @@ if($item[1]==0)
 
     // Customer
     public function getCustomerFind() {
-        $result = array('{firstname}', '{lastname}', '{date}', '{store_name}', '{email}', '{password}', '{account_href}', '{activate_href}', '{order_link}', '{site_url}' , '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}','{privacy_policy}','{system_email}', '{system_phone}', '{amount}', '{transfer_type}',  '{ip_address}',);
+        $result = array('{firstname}', '{lastname}', '{branchname}', '{subuserfirstname}', '{subuserlastname}', '{date}', '{store_name}', '{email}', '{password}', '{account_href}', '{activate_href}', '{order_link}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}', '{amount}', '{transfer_type}', '{ip_address}',);
         return $result;
     }
 
@@ -460,34 +439,33 @@ if($item[1]==0)
         $result = array(
             'firstname' => $data['firstname'],
             'lastname' => $data['lastname'],
+            'branchname' => $data['branchname'],
+            'subuserfirstname' => $data['subuserfirstname'],
+            'subuserlastname' => $data['subuserlastname'],
             'date' => date($this->language->get('date_format_short'), strtotime(date("Y-m-d H:i:s"))),
             'store_name' => $this->config->get('config_name'),
             'email' => $data['email'],
             'password' => $data['password'],
-            'account_href' => HTTP_CATALOG.'index.php?path=account/login',
-            
+            'account_href' => HTTP_CATALOG . 'index.php?path=account/login',
             'activate_href' => (!empty($data['confirm_code'])) ? $this->url->link('account/activate', 'token=' . $data['confirm_code'], 'SSL') : '',
             'order_link' => $data['order_link'],
-            
             //common replace
-            'site_url'=> HTTPS_CATALOG,
+            'site_url' => HTTPS_CATALOG,
             //'logo'=> HTTPS_CATALOG.'image/' . $this->config->get('config_logo'),
-            'logo' => $this->resize($this->config->get('config_logo'),197,34),
+            'logo' => $this->resize($this->config->get('config_logo'), 197, 34),
             //'site_url'=>$this->config->get('config_url'),
-            'system_name'=>$this->config->get('config_name'),
-            'year'=>date('Y'),
-            'help_center'=> $this->url->adminLink('information/help'),
+            'system_name' => $this->config->get('config_name'),
+            'year' => date('Y'),
+            'help_center' => $this->url->adminLink('information/help'),
             //'white_logo'=> HTTPS_CATALOG.'image/'. $this->config->get('config_white_logo'),
-            'white_logo' => $this->resize($this->config->get('config_white_logo'),197,34),
-
+            'white_logo' => $this->resize($this->config->get('config_white_logo'), 197, 34),
             'terms' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_account_id'), 'SSL'),
             'privacy_policy' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_privacy_policy_id'), 'SSL'),
-            'system_email'=>$this->config->get('config_email'),
-            'system_phone'=>'+'.$this->config->get('config_telephone_code').' '.$this->config->get('config_telephone'),
-            'amount'=>isset($data['amount'])?$data['amount']:'',
-            'transfer_type'=>isset($data['transfer_type'])?$data['transfer_type']:'',
+            'system_email' => $this->config->get('config_email'),
+            'system_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $this->config->get('config_telephone'),
+            'amount' => isset($data['amount']) ? $data['amount'] : '',
+            'transfer_type' => isset($data['transfer_type']) ? $data['transfer_type'] : '',
             'ip_address' => $data['ip_address'],
-
         );
 
         return $result;
@@ -495,7 +473,7 @@ if($item[1]==0)
 
     // Referral
     public function getReferralFind() {
-        $result = array('{site_name}', '{name}', '{reward_text}', '{refer_link}', '{site_url}' , '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}','{privacy_policy}','{system_email}', '{system_phone}');
+        $result = array('{site_name}', '{name}', '{reward_text}', '{refer_link}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}');
         return $result;
     }
 
@@ -505,24 +483,20 @@ if($item[1]==0)
             'name' => $data['name'],
             'reward_text' => $data['reward_text'],
             'refer_link' => $data['refer_link'],
-            
-
             //common replace
-            'site_url'=> HTTPS_CATALOG,
+            'site_url' => HTTPS_CATALOG,
             //'logo'=> HTTPS_CATALOG.'image/' . $this->config->get('config_logo'),
-            'logo' => $this->resize($this->config->get('config_logo'),197,34),
+            'logo' => $this->resize($this->config->get('config_logo'), 197, 34),
             //'site_url'=>$this->config->get('config_url'),
-            'system_name'=>$this->config->get('config_name'),
-            'year'=>date('Y'),
-            'help_center'=> $this->url->adminLink('information/help'),
+            'system_name' => $this->config->get('config_name'),
+            'year' => date('Y'),
+            'help_center' => $this->url->adminLink('information/help'),
             //'white_logo'=> HTTPS_CATALOG.'image/'. $this->config->get('config_white_logo'),
-            'white_logo' => $this->resize($this->config->get('config_white_logo'),197,34),
-
+            'white_logo' => $this->resize($this->config->get('config_white_logo'), 197, 34),
             'terms' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_account_id'), 'SSL'),
             'privacy_policy' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_privacy_policy_id'), 'SSL'),
-            'system_email'=>$this->config->get('config_email'),
-            'system_phone'=>'+'.$this->config->get('config_telephone_code').' '.$this->config->get('config_telephone'),
-
+            'system_email' => $this->config->get('config_email'),
+            'system_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $this->config->get('config_telephone'),
         );
 
         return $result;
@@ -530,7 +504,7 @@ if($item[1]==0)
 
     // Coming soon
     public function getComingSoonFind() {
-        $result = array('{website_link}','{email_address}', '{site_url}' , '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}','{privacy_policy}','{system_email}', '{system_phone}');
+        $result = array('{website_link}', '{email_address}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}');
         return $result;
     }
 
@@ -539,23 +513,20 @@ if($item[1]==0)
         $result = array(
             'website_link' => $data['website_link'],
             'email_address' => $data['email_address'],
-
             //common replace
-            'site_url'=> HTTPS_CATALOG,
+            'site_url' => HTTPS_CATALOG,
             //'logo'=> HTTPS_CATALOG.'image/' . $this->config->get('config_logo'),
-            'logo' => $this->resize($this->config->get('config_logo'),197,34),
+            'logo' => $this->resize($this->config->get('config_logo'), 197, 34),
             //'site_url'=>$this->config->get('config_url'),
-            'system_name'=>$this->config->get('config_name'),
-            'year'=>date('Y'),
-            'help_center'=> $this->url->adminLink('information/help'),
+            'system_name' => $this->config->get('config_name'),
+            'year' => date('Y'),
+            'help_center' => $this->url->adminLink('information/help'),
             //'white_logo'=> HTTPS_CATALOG.'image/'. $this->config->get('config_white_logo'),
-            'white_logo' => $this->resize($this->config->get('config_white_logo'),197,34),
-
+            'white_logo' => $this->resize($this->config->get('config_white_logo'), 197, 34),
             'terms' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_account_id'), 'SSL'),
             'privacy_policy' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_privacy_policy_id'), 'SSL'),
-            'system_email'=>$this->config->get('config_email'),
-            'system_phone'=>'+'.$this->config->get('config_telephone_code').' '.$this->config->get('config_telephone'),
-
+            'system_email' => $this->config->get('config_email'),
+            'system_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $this->config->get('config_telephone'),
         );
 
         return $result;
@@ -563,7 +534,7 @@ if($item[1]==0)
 
     // Return
     public function getVendorReturnFind() {
-        $result = array('{return_id}','{product_name}','{unit}','{order_id}', '{site_url}' , '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}','{privacy_policy}','{system_email}', '{system_phone}');
+        $result = array('{return_id}', '{product_name}', '{unit}', '{order_id}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}');
         return $result;
     }
 
@@ -572,25 +543,22 @@ if($item[1]==0)
         $result = array(
             'return_id' => $data['return_id'],
             'product_name' => $data['product_name'],
-             'unit' => $data['unit'],
+            'unit' => $data['unit'],
             'order_id' => $data['order_id'],
-
             //common replace
-            'site_url'=> HTTPS_CATALOG,
+            'site_url' => HTTPS_CATALOG,
             //'logo'=> HTTPS_CATALOG.'image/' . $this->config->get('config_logo'),
-            'logo' => $this->resize($this->config->get('config_logo'),197,34),
+            'logo' => $this->resize($this->config->get('config_logo'), 197, 34),
             //'site_url'=>$this->config->get('config_url'),
-            'system_name'=>$this->config->get('config_name'),
-            'year'=>date('Y'),
-            'help_center'=> $this->url->adminLink('information/help'),
+            'system_name' => $this->config->get('config_name'),
+            'year' => date('Y'),
+            'help_center' => $this->url->adminLink('information/help'),
             //'white_logo'=> HTTPS_CATALOG.'image/'. $this->config->get('config_white_logo'),
-            'white_logo' => $this->resize($this->config->get('config_white_logo'),197,34),
-
+            'white_logo' => $this->resize($this->config->get('config_white_logo'), 197, 34),
             'terms' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_account_id'), 'SSL'),
             'privacy_policy' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_privacy_policy_id'), 'SSL'),
-            'system_email'=>$this->config->get('config_email'),
-            'system_phone'=>'+'.$this->config->get('config_telephone_code').' '.$this->config->get('config_telephone'),
-
+            'system_email' => $this->config->get('config_email'),
+            'system_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $this->config->get('config_telephone'),
         );
 
 
@@ -600,7 +568,7 @@ if($item[1]==0)
 
     // Return
     public function getReturnFind() {
-        $result = array('{return_id}','{product_name}','{unit}','{order_id}', '{site_url}' , '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}','{privacy_policy}','{system_email}', '{system_phone}');
+        $result = array('{return_id}', '{product_name}', '{unit}', '{order_id}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}');
         return $result;
     }
 
@@ -609,76 +577,71 @@ if($item[1]==0)
         $result = array(
             'return_id' => $data['return_id'],
             'product_name' => $data['product_name'],
-             'unit' => $data['unit'],
+            'unit' => $data['unit'],
             'order_id' => $data['order_id'],
-
             //common replace
-            'site_url'=> HTTPS_CATALOG,
+            'site_url' => HTTPS_CATALOG,
             //'logo'=> HTTPS_CATALOG.'image/' . $this->config->get('config_logo'),
-            'logo' => $this->resize($this->config->get('config_logo'),197,34),
+            'logo' => $this->resize($this->config->get('config_logo'), 197, 34),
             //'site_url'=>$this->config->get('config_url'),
-            'system_name'=>$this->config->get('config_name'),
-            'year'=>date('Y'),
-            'help_center'=> $this->url->adminLink('information/help'),
+            'system_name' => $this->config->get('config_name'),
+            'year' => date('Y'),
+            'help_center' => $this->url->adminLink('information/help'),
             //'white_logo'=> HTTPS_CATALOG.'image/'. $this->config->get('config_white_logo'),
-            'white_logo' => $this->resize($this->config->get('config_white_logo'),197,34),
-
+            'white_logo' => $this->resize($this->config->get('config_white_logo'), 197, 34),
             'terms' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_account_id'), 'SSL'),
             'privacy_policy' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_privacy_policy_id'), 'SSL'),
-            'system_email'=>$this->config->get('config_email'),
-            'system_phone'=>'+'.$this->config->get('config_telephone_code').' '.$this->config->get('config_telephone'),
-
+            'system_email' => $this->config->get('config_email'),
+            'system_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $this->config->get('config_telephone'),
         );
 
         return $result;
     }
 
-
-    
     // vendor order mails ( Information )
-    /*public function getVendorOrderFind() {
-        $result = array('{name}', '{email}', '{store_name}', '{enquiry}', '{firstname}', '{lastname}','{mobile}','{approve_link}','{login_link}','{amount}','{order_id}','{order_link}','{transaction_type}', '{site_url}' , '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}','{privacy_policy}','{system_email}', '{system_phone}');
-        return $result;
-    }
+    /* public function getVendorOrderFind() {
+      $result = array('{name}', '{email}', '{store_name}', '{enquiry}', '{firstname}', '{lastname}','{mobile}','{approve_link}','{login_link}','{amount}','{order_id}','{order_link}','{transaction_type}', '{site_url}' , '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}','{privacy_policy}','{system_email}', '{system_phone}');
+      return $result;
+      }
 
 
 
-    public function getVendorOrderReplace($data) {
-        $result = array(
-            'name' => (!empty($data['name'])) ? $data['name'] : '',
-            'email' => (!empty($data['email'])) ? $data['email'] : '',
-            'store_name' => (!empty($data['order_info']['store_name'])) ? $data['order_info']['store_name'] : '',
-            'enquiry' => (!empty($data['enquiry'])) ? $data['enquiry'] : '',
-            'firstname' => (!empty($data['firstname'])) ? $data['firstname'] : '',
-            'lastname' => (!empty($data['lastname'])) ? $data['lastname'] : '',
-            'mobile' => (!empty($data['mobile'])) ? $data['mobile'] : '',
-            'approve_link' => (!empty($data['approve_link'])) ? $data['approve_link'] : '',
-            'login_link' => (!empty($data['login_link'])) ? $data['login_link'] : '',
-            'amount' => (!empty($data['amount'])) ? $data['amount'] : '',
-            'order_id' => (!empty($data['order_id'])) ? $data['order_id'] : '',
-            'order_link' => (!empty($data['order_link'])) ? $data['order_link'] : '',
-             'transaction_type' => (!empty($data['transaction_type'])) ? $data['transaction_type'] : '',
+      public function getVendorOrderReplace($data) {
+      $result = array(
+      'name' => (!empty($data['name'])) ? $data['name'] : '',
+      'email' => (!empty($data['email'])) ? $data['email'] : '',
+      'store_name' => (!empty($data['order_info']['store_name'])) ? $data['order_info']['store_name'] : '',
+      'enquiry' => (!empty($data['enquiry'])) ? $data['enquiry'] : '',
+      'firstname' => (!empty($data['firstname'])) ? $data['firstname'] : '',
+      'lastname' => (!empty($data['lastname'])) ? $data['lastname'] : '',
+      'mobile' => (!empty($data['mobile'])) ? $data['mobile'] : '',
+      'approve_link' => (!empty($data['approve_link'])) ? $data['approve_link'] : '',
+      'login_link' => (!empty($data['login_link'])) ? $data['login_link'] : '',
+      'amount' => (!empty($data['amount'])) ? $data['amount'] : '',
+      'order_id' => (!empty($data['order_id'])) ? $data['order_id'] : '',
+      'order_link' => (!empty($data['order_link'])) ? $data['order_link'] : '',
+      'transaction_type' => (!empty($data['transaction_type'])) ? $data['transaction_type'] : '',
 
-             //common replace
-            'site_url'=> HTTPS_CATALOG,
-            //'logo'=> HTTPS_CATALOG.'image/' . $this->config->get('config_logo'),
-            'logo' => $this->resize($this->config->get('config_logo'),197,34),
-            //'site_url'=>$this->config->get('config_url'),
-            'system_name'=>$this->config->get('config_name'),
-            'year'=>date('Y'),
-            'help_center'=> $this->url->adminLink('information/help'),
-            //'white_logo'=> HTTPS_CATALOG.'image/'. $this->config->get('config_white_logo'),
-            'white_logo' => $this->resize($this->config->get('config_white_logo'),197,34),
+      //common replace
+      'site_url'=> HTTPS_CATALOG,
+      //'logo'=> HTTPS_CATALOG.'image/' . $this->config->get('config_logo'),
+      'logo' => $this->resize($this->config->get('config_logo'),197,34),
+      //'site_url'=>$this->config->get('config_url'),
+      'system_name'=>$this->config->get('config_name'),
+      'year'=>date('Y'),
+      'help_center'=> $this->url->adminLink('information/help'),
+      //'white_logo'=> HTTPS_CATALOG.'image/'. $this->config->get('config_white_logo'),
+      'white_logo' => $this->resize($this->config->get('config_white_logo'),197,34),
 
-            'terms' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_account_id'), 'SSL'),
-            'privacy_policy' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_privacy_policy_id'), 'SSL'),
-            'system_email'=>$this->config->get('config_email'),
-            'system_phone'=>$this->config->get('config_telephone'),
+      'terms' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_account_id'), 'SSL'),
+      'privacy_policy' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_privacy_policy_id'), 'SSL'),
+      'system_email'=>$this->config->get('config_email'),
+      'system_phone'=>$this->config->get('config_telephone'),
 
-        );
+      );
 
-        return $result;
-    }*/
+      return $result;
+      } */
 
     // Order
     public function getVendorOrderFind() {
@@ -686,8 +649,8 @@ if($item[1]==0)
         $result = array(
             '{firstname}', '{lastname}', '{delivery_address}', '{shipping_address}', '{payment_address}', '{order_date}', '{product:start}', '{product:stop}',
             '{total:start}', '{total:stop}', '{voucher:start}', '{voucher:stop}', '{special}', '{date}', '{payment}', '{shipment}', '{order_id}', '{total}', '{invoice_number}',
-            '{order_href}', '{store_url}', '{status_name}', '{store_name}', '{ip}', '{comment:start}', '{comment:stop}','{sub_total}', '{shipping_cost}',
-            '{client_comment}', '{tax:start}', '{tax:stop}', '{tax_amount}', '{email}', '{telephone}','{order_pdf_href}','{delivery_date}','{delivery_time}','{customer_notes}','{site_url}','{customer_cpf}','{store_address}','{store_telephone}','{store_tax_number}','{shipping_contact_number}','{shipping_flat_number}','{shipping_street_address}','{shipping_landmark}','{shipping_zipcode}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}','{privacy_policy}','{system_email}', '{system_phone}'
+            '{order_href}', '{store_url}', '{status_name}', '{store_name}', '{ip}', '{comment:start}', '{comment:stop}', '{sub_total}', '{shipping_cost}',
+            '{client_comment}', '{tax:start}', '{tax:stop}', '{tax_amount}', '{email}', '{telephone}', '{order_pdf_href}', '{delivery_date}', '{delivery_time}', '{customer_notes}', '{site_url}', '{customer_cpf}', '{store_address}', '{store_telephone}', '{store_tax_number}', '{shipping_contact_number}', '{shipping_flat_number}', '{shipping_street_address}', '{shipping_landmark}', '{shipping_zipcode}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}'
         );
 
         return $result;
@@ -699,22 +662,20 @@ if($item[1]==0)
         $log = new Log('error.log');
 
         $log->write('in getVendorOrderReplace');
-        
-        
+
+
 
         foreach ($data as $dataKey => $dataValue) {
             $dataKey = $dataValue;
-
-
         }
 
         // Special
-         $special = array();
+        $special = array();
 
-          // if (sizeof($email_template['special']) <> 0) {
-          // //   $special = $this->_prepareProductSpecial((int)$order_info['customer_group_id'], $email_template['special']);
-          // }
-         
+        // if (sizeof($email_template['special']) <> 0) {
+        // //   $special = $this->_prepareProductSpecial((int)$order_info['customer_group_id'], $email_template['special']);
+        // }
+
 
         $order_info = $data['order_info'];
 
@@ -723,8 +684,8 @@ if($item[1]==0)
         preg_match('/{product:start}(.*){product:stop}/Uis', $emailTemplate['description'], $template_product);
 
         if (sizeof($template_product) > 0) {
-            
-            if(isset($data['new_invoice'])) {
+
+            if (isset($data['new_invoice'])) {
                 //call for new invoice
                 $getProducts = $this->getRealOrderProducts($order_info['order_id']);
             } else {
@@ -738,7 +699,7 @@ if($item[1]==0)
             $products = array();
         }
 
-        
+
 
         // Comment
         preg_match('/{comment:start}(.*){comment:stop}/Uis', $emailTemplate['description'], $template_comment);
@@ -759,7 +720,7 @@ if($item[1]==0)
 
         if (sizeof($template_tax) > 0) {
             // $taxes = $this->getTaxTemplate($totals, $template_tax);
-             $taxes = array();     
+            $taxes = array();
             $emailTemplate['description'] = str_replace($template_tax[1], '', $emailTemplate['description']);
         } else {
             $taxes = array();
@@ -781,7 +742,7 @@ if($item[1]==0)
         $address = $data['address'];
 
         //echo "<pre>";print_r($data);die;
-        $payment_address= $address;
+        $payment_address = $address;
         $invoice_no = $data['order_info']['invoice_no'];
         $totals = $data['totals'];
         $tax_amount = $data['tax_amount'];
@@ -800,8 +761,8 @@ if($item[1]==0)
             'product:stop' => '',
             'total:start' => implode("", $tempTotals),
             'total:stop' => '',
-            'voucher:start'=>'',
-            'voucher:stop'=>'',            
+            'voucher:start' => '',
+            'voucher:stop' => '',
             'special' => (sizeof($special) <> 0) ? implode("<br />", $special) : '',
             'date' => date($this->language->get('full_datetime_format'), strtotime(date("Y-m-d H:i:s"))),
             'payment' => $order_info['payment_method'],
@@ -823,40 +784,36 @@ if($item[1]==0)
             'tax:stop' => '',
             'tax_amount' => $this->currency->format($tax_amount, $order_info['currency_code'], $order_info['currency_value']),
             'email_id' => $order_info['email'],
-            'telephone' => '+'.$this->config->get('config_telephone_code').' '.$order_info['telephone'],
+            'telephone' => '+' . $this->config->get('config_telephone_code') . ' ' . $order_info['telephone'],
             'order_pdf_href' => $data['order_pdf_href'],
             'delivery_date' => $order_info['delivery_date'],
             'delivery_time' => $order_info['delivery_timeslot'],
             'customer_notes' => $order_info['comment'],
-            'customer_cpf'=>$order_info['fax'],
-            'store_address'=>$store_info['address'],
-            'store_telephone'=>'+'.$this->config->get('config_telephone_code').' '.$store_info['telephone'],
-            'store_tax_number'=>$store_info['tax'],
-            'shipping_contact_number'=>$order_info['shipping_contact_no'],
-            'shipping_flat_number' =>$order_info['shipping_name']." <br /> ".$order_info['shipping_flat_number'],
-            'shipping_street_address'=>$order_info['shipping_landmark'],
-            'shipping_landmark'=>$order_info['shipping_landmark'],
-            'shipping_zipcode'=>$order_info['shipping_zipcode'],
-
+            'customer_cpf' => $order_info['fax'],
+            'store_address' => $store_info['address'],
+            'store_telephone' => '+' . $this->config->get('config_telephone_code') . ' ' . $store_info['telephone'],
+            'store_tax_number' => $store_info['tax'],
+            'shipping_contact_number' => $order_info['shipping_contact_no'],
+            'shipping_flat_number' => $order_info['shipping_name'] . " <br /> " . $order_info['shipping_flat_number'],
+            'shipping_street_address' => $order_info['shipping_landmark'],
+            'shipping_landmark' => $order_info['shipping_landmark'],
+            'shipping_zipcode' => $order_info['shipping_zipcode'],
             //common replace
-            'site_url'=> HTTPS_CATALOG,
+            'site_url' => HTTPS_CATALOG,
             //'logo'=> HTTPS_CATALOG.'image/' . $this->config->get('config_logo'),
-            'logo' => $this->resize($this->config->get('config_logo'),197,34),
+            'logo' => $this->resize($this->config->get('config_logo'), 197, 34),
             //'site_url'=>$this->config->get('config_url'),
-            'system_name'=>$this->config->get('config_name'),
-            'year'=>date('Y'),
-            'help_center'=> $this->url->adminLink('information/help'),
+            'system_name' => $this->config->get('config_name'),
+            'year' => date('Y'),
+            'help_center' => $this->url->adminLink('information/help'),
             //'white_logo'=> HTTPS_CATALOG.'image/'. $this->config->get('config_white_logo'),
-            'white_logo' => $this->resize($this->config->get('config_white_logo'),197,34),
-
+            'white_logo' => $this->resize($this->config->get('config_white_logo'), 197, 34),
             'terms' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_account_id'), 'SSL'),
             'privacy_policy' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_privacy_policy_id'), 'SSL'),
-            'system_email'=>$this->config->get('config_email'),
-            'system_phone'=>'+'.$this->config->get('config_telephone_code').' '.$this->config->get('config_telephone'),
-            
-            
+            'system_email' => $this->config->get('config_email'),
+            'system_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $this->config->get('config_telephone'),
         );
-       
+
         return $result;
     }
 
@@ -944,14 +901,11 @@ if($item[1]==0)
     }
 
     // vendor order mails end
-
     // Contact ( Information )
     public function getContactFind() {
-        $result = array('{name}', '{email}', '{store_name}', '{enquiry}', '{firstname}', '{lastname}','{mobile}','{approve_link}','{login_link}','{amount}','{order_id}','{order_link}','{transaction_type}', '{site_url}' , '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}','{privacy_policy}','{system_email}', '{system_phone}');
+        $result = array('{name}', '{email}', '{store_name}', '{enquiry}', '{firstname}', '{lastname}', '{mobile}', '{approve_link}', '{login_link}', '{amount}', '{order_id}', '{order_link}', '{transaction_type}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}');
         return $result;
     }
-
-
 
     public function getContactReplace($data) {
         $result = array(
@@ -967,63 +921,55 @@ if($item[1]==0)
             'amount' => (!empty($data['amount'])) ? $data['amount'] : '',
             'order_id' => (!empty($data['order_id'])) ? $data['order_id'] : '',
             'order_link' => (!empty($data['order_link'])) ? $data['order_link'] : '',
-             'transaction_type' => (!empty($data['transaction_type'])) ? $data['transaction_type'] : '',
-
-             //common replace
-            'site_url'=> HTTPS_CATALOG,
+            'transaction_type' => (!empty($data['transaction_type'])) ? $data['transaction_type'] : '',
+            //common replace
+            'site_url' => HTTPS_CATALOG,
             //'logo'=> HTTPS_CATALOG.'image/' . $this->config->get('config_logo'),
-            'logo' => $this->resize($this->config->get('config_logo'),197,34),
+            'logo' => $this->resize($this->config->get('config_logo'), 197, 34),
             //'site_url'=>$this->config->get('config_url'),
-            'system_name'=>$this->config->get('config_name'),
-            'year'=>date('Y'),
-            'help_center'=> $this->url->adminLink('information/help'),
+            'system_name' => $this->config->get('config_name'),
+            'year' => date('Y'),
+            'help_center' => $this->url->adminLink('information/help'),
             //'white_logo'=> HTTPS_CATALOG.'image/'. $this->config->get('config_white_logo'),
-            'white_logo' => $this->resize($this->config->get('config_white_logo'),197,34),
-
+            'white_logo' => $this->resize($this->config->get('config_white_logo'), 197, 34),
             'terms' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_account_id'), 'SSL'),
             'privacy_policy' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_privacy_policy_id'), 'SSL'),
-            'system_email'=>$this->config->get('config_email'),
-            'system_phone'=>'+'.$this->config->get('config_telephone_code').' '.$this->config->get('config_telephone'),
-
+            'system_email' => $this->config->get('config_email'),
+            'system_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $this->config->get('config_telephone'),
         );
 
         return $result;
     }
 
     public function getSellerFind() {
-        $result = array( '{email}','{firstname}', '{lastname}','{login_link}', '{site_url}' , '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}','{privacy_policy}','{system_email}', '{system_phone}');
+        $result = array('{email}', '{firstname}', '{lastname}', '{login_link}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}');
         return $result;
     }
 
     public function getSellerReplace($data) {
-         $result = array(
-            
+        $result = array(
             'email' => (!empty($data['email'])) ? $data['email'] : '',
             'firstname' => (!empty($data['firstname'])) ? $data['firstname'] : '',
             'lastname' => (!empty($data['lastname'])) ? $data['lastname'] : '',
             'login_link' => (!empty($data['login_link'])) ? $data['login_link'] : '',
-
             //common replace
-            'site_url'=> HTTPS_CATALOG,
+            'site_url' => HTTPS_CATALOG,
             //'logo'=> HTTPS_CATALOG.'image/' . $this->config->get('config_logo'),
-            'logo' => $this->resize($this->config->get('config_logo'),197,34),
+            'logo' => $this->resize($this->config->get('config_logo'), 197, 34),
             //'site_url'=>$this->config->get('config_url'),
-            'system_name'=>$this->config->get('config_name'),
-            'year'=>date('Y'),
-            'help_center'=> $this->url->adminLink('information/help'),
+            'system_name' => $this->config->get('config_name'),
+            'year' => date('Y'),
+            'help_center' => $this->url->adminLink('information/help'),
             //'white_logo'=> HTTPS_CATALOG.'image/'. $this->config->get('config_white_logo'),
-            'white_logo' => $this->resize($this->config->get('config_white_logo'),197,34),
-
+            'white_logo' => $this->resize($this->config->get('config_white_logo'), 197, 34),
             'terms' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_account_id'), 'SSL'),
             'privacy_policy' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_privacy_policy_id'), 'SSL'),
-            'system_email'=>$this->config->get('config_email'),
-            'system_phone'=>'+'.$this->config->get('config_telephone_code').' '.$this->config->get('config_telephone'),
-
+            'system_email' => $this->config->get('config_email'),
+            'system_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $this->config->get('config_telephone'),
         );
 
         return $result;
     }
-
 
     // Order
     public function getOrderAllFind() {
@@ -1031,15 +977,15 @@ if($item[1]==0)
         $result = array(
             '{firstname}', '{lastname}', '{delivery_address}', '{shipping_address}', '{payment_address}', '{order_date}', '{product:start}', '{product:stop}',
             '{total:start}', '{total:stop}', '{voucher:start}', '{voucher:stop}', '{special}', '{date}', '{payment}', '{shipment}', '{order_id}', '{total}', '{invoice_number}',
-            '{order_href}', '{store_url}', '{status_name}', '{store_name}', '{ip}', '{comment:start}', '{comment:stop}','{sub_total}', '{shipping_cost}',
-            '{client_comment}', '{tax:start}', '{tax:stop}', '{tax_amount}', '{email}', '{telephone}','{order_pdf_href}','{delivery_date}','{delivery_time}','{customer_notes}','{customer_cpf}','{store_address}','{store_telephone}','{store_tax_number}','{shipping_contact_number}','{shipping_flat_number}','{shipping_street_address}','{shipping_landmark}','{shipping_zipcode}','{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}','{privacy_policy}','{system_email}', '{system_phone}','{customer_company_name}'
+            '{order_href}', '{store_url}', '{status_name}', '{store_name}', '{ip}', '{comment:start}', '{comment:stop}', '{sub_total}', '{shipping_cost}',
+            '{client_comment}', '{tax:start}', '{tax:stop}', '{tax_amount}', '{email}', '{telephone}', '{order_pdf_href}', '{delivery_date}', '{delivery_time}', '{customer_notes}', '{customer_cpf}', '{store_address}', '{store_telephone}', '{store_tax_number}', '{shipping_contact_number}', '{shipping_flat_number}', '{shipping_street_address}', '{shipping_landmark}', '{shipping_zipcode}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}', '{customer_company_name}'
         );
 
         return $result;
     }
 
     public function getOrderAllReplace($data) {
-        
+
         $emailTemplate = $this->getEmailTemplate($data['template_id']);
         $data['order_href'] = $this->maskingOrderDetailUrl($data['order_href']);
         $log = new Log('error.log');
@@ -1047,21 +993,19 @@ if($item[1]==0)
         $log->write('in getOrderAllReplace');
         //$log->write('in $dathref'.$data['order_href']);
         //die;
-        
+
 
         foreach ($data as $dataKey => $dataValue) {
             $dataKey = $dataValue;
-
-
         }
 
         // Special
-         $special = array();
+        $special = array();
 
-          // if (sizeof($email_template['special']) <> 0) {
-          // //   $special = $this->_prepareProductSpecial((int)$order_info['customer_group_id'], $email_template['special']);
-          // }
-         
+        // if (sizeof($email_template['special']) <> 0) {
+        // //   $special = $this->_prepareProductSpecial((int)$order_info['customer_group_id'], $email_template['special']);
+        // }
+
 
         $order_info = $data['order_info'];
 
@@ -1070,8 +1014,8 @@ if($item[1]==0)
         preg_match('/{product:start}(.*){product:stop}/Uis', $emailTemplate['description'], $template_product);
 
         if (sizeof($template_product) > 0) {
-            
-            if(isset($data['new_invoice'])) {
+
+            if (isset($data['new_invoice'])) {
                 //call for new invoice
                 $getProducts = $this->getRealOrderProducts($order_info['order_id']);
             } else {
@@ -1085,7 +1029,7 @@ if($item[1]==0)
             $products = array();
         }
 
-        
+
 
         // Comment
         preg_match('/{comment:start}(.*){comment:stop}/Uis', $emailTemplate['description'], $template_comment);
@@ -1106,7 +1050,7 @@ if($item[1]==0)
 
         if (sizeof($template_tax) > 0) {
             // $taxes = $this->getTaxTemplate($totals, $template_tax);
-             $taxes = array();     
+            $taxes = array();
             $emailTemplate['description'] = str_replace($template_tax[1], '', $emailTemplate['description']);
         } else {
             $taxes = array();
@@ -1121,7 +1065,7 @@ if($item[1]==0)
         $order_grandtotal = 0;
 
         foreach ($getTotal as $tmpvalue) {
-            if($tmpvalue['code'] == 'total') {
+            if ($tmpvalue['code'] == 'total') {
                 $order_grandtotal = $tmpvalue['value'];
             }
         }
@@ -1136,7 +1080,7 @@ if($item[1]==0)
         $address = $data['address'];
 
         //echo "<pre>";print_r($data);die;
-        $payment_address= $address;
+        $payment_address = $address;
         $invoice_no = $data['order_info']['invoice_no'];
         $totals = $data['totals'];
         $tax_amount = $data['tax_amount'];
@@ -1155,8 +1099,8 @@ if($item[1]==0)
             'product:stop' => '',
             'total:start' => implode("", $tempTotals),
             'total:stop' => '',
-            'voucher:start'=>'',
-            'voucher:stop'=>'',            
+            'voucher:start' => '',
+            'voucher:stop' => '',
             'special' => (sizeof($special) <> 0) ? implode("<br />", $special) : '',
             'date' => date('d M Y h:i A', strtotime(date("Y-m-d H:i:s"))),
             'payment' => $order_info['payment_method'],
@@ -1178,50 +1122,46 @@ if($item[1]==0)
             'tax:stop' => '',
             'tax_amount' => $this->currency->format($tax_amount, $order_info['currency_code'], $order_info['currency_value']),
             'email' => $order_info['email'],
-            'telephone' => '+'.$this->config->get('config_telephone_code').' '.$order_info['telephone'],
+            'telephone' => '+' . $this->config->get('config_telephone_code') . ' ' . $order_info['telephone'],
             'order_pdf_href' => $data['order_pdf_href'],
             'delivery_date' => $order_info['delivery_date'],
             'delivery_time' => $order_info['delivery_timeslot'],
             'customer_notes' => $order_info['comment'],
-            'customer_cpf'=>$order_info['fax'],
-            'customer_company_name'=>$customer_info['company_name'],
-            'store_address'=>$store_info['address'],
-            'store_telephone'=>'+'.$this->config->get('config_telephone_code').' '.$store_info['telephone'],
-            'store_tax_number'=>$store_info['tax'],
-            'shipping_contact_number'=>$order_info['shipping_contact_no'],
-            'shipping_flat_number' => $order_info['shipping_name']." <br /> ".$order_info['shipping_flat_number'],
-            'shipping_street_address'=>$order_info['shipping_landmark'],
-            'shipping_landmark'=>$order_info['shipping_landmark'],
-            'shipping_zipcode'=>$order_info['shipping_zipcode'],
-
+            'customer_cpf' => $order_info['fax'],
+            'customer_company_name' => $customer_info['company_name'],
+            'store_address' => $store_info['address'],
+            'store_telephone' => '+' . $this->config->get('config_telephone_code') . ' ' . $store_info['telephone'],
+            'store_tax_number' => $store_info['tax'],
+            'shipping_contact_number' => $order_info['shipping_contact_no'],
+            'shipping_flat_number' => $order_info['shipping_name'] . " <br /> " . $order_info['shipping_flat_number'],
+            'shipping_street_address' => $order_info['shipping_landmark'],
+            'shipping_landmark' => $order_info['shipping_landmark'],
+            'shipping_zipcode' => $order_info['shipping_zipcode'],
             //common replace
-            'site_url'=> HTTPS_CATALOG,
+            'site_url' => HTTPS_CATALOG,
             //'logo'=> HTTPS_CATALOG.'image/' . $this->config->get('config_logo'),
-            'logo' => $this->resize($this->config->get('config_logo'),197,34),
+            'logo' => $this->resize($this->config->get('config_logo'), 197, 34),
             //'site_url'=>$this->config->get('config_url'),
-            'system_name'=>$this->config->get('config_name'),
-            'year'=>date('Y'),
-            'help_center'=> $this->url->adminLink('information/help'),
+            'system_name' => $this->config->get('config_name'),
+            'year' => date('Y'),
+            'help_center' => $this->url->adminLink('information/help'),
             //'white_logo'=> HTTPS_CATALOG.'image/'. $this->config->get('config_white_logo'),
-            'white_logo' => $this->resize($this->config->get('config_white_logo'),197,34),
-
+            'white_logo' => $this->resize($this->config->get('config_white_logo'), 197, 34),
             'terms' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_account_id'), 'SSL'),
             'privacy_policy' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_privacy_policy_id'), 'SSL'),
-            'system_email'=>$this->config->get('config_email'),
-            'system_phone'=>'+'.$this->config->get('config_telephone_code').' '.$this->config->get('config_telephone'),
-            
-            
+            'system_email' => $this->config->get('config_email'),
+            'system_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $this->config->get('config_telephone'),
         );
-        
-        /*$log->write($result);
-        $log->write($this->language->get('full_datetime_format'));*/
-        
+
+        /* $log->write($result);
+          $log->write($this->language->get('full_datetime_format')); */
+
         return $result;
     }
 
     // Review
     public function getReviewFind() {
-        $result = array('{author}', '{review}', '{date}', '{rating}', '{product}', '{site_url}' , '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}','{privacy_policy}','{system_email}', '{system_phone}');
+        $result = array('{author}', '{review}', '{date}', '{rating}', '{product}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}');
         return $result;
     }
 
@@ -1232,23 +1172,20 @@ if($item[1]==0)
             'date' => date($this->language->get('date_format_short'), time()),
             'rating' => $data['rating'],
             'product' => $data['product'],
-
             //common replace
-            'site_url'=> HTTPS_CATALOG,
+            'site_url' => HTTPS_CATALOG,
             //'logo'=> HTTPS_CATALOG.'image/' . $this->config->get('config_logo'),
-            'logo' => $this->resize($this->config->get('config_logo'),197,34),
+            'logo' => $this->resize($this->config->get('config_logo'), 197, 34),
             //'site_url'=>$this->config->get('config_url'),
-            'system_name'=>$this->config->get('config_name'),
-            'year'=>date('Y'),
-            'help_center'=> $this->url->adminLink('information/help'),
+            'system_name' => $this->config->get('config_name'),
+            'year' => date('Y'),
+            'help_center' => $this->url->adminLink('information/help'),
             //'white_logo'=> HTTPS_CATALOG.'image/'. $this->config->get('config_white_logo'),
-            'white_logo' => $this->resize($this->config->get('config_white_logo'),197,34),
-
+            'white_logo' => $this->resize($this->config->get('config_white_logo'), 197, 34),
             'terms' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_account_id'), 'SSL'),
             'privacy_policy' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_privacy_policy_id'), 'SSL'),
-            'system_email'=>$this->config->get('config_email'),
-            'system_phone'=>'+'.$this->config->get('config_telephone_code').' '.$this->config->get('config_telephone'),
-
+            'system_email' => $this->config->get('config_email'),
+            'system_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $this->config->get('config_telephone'),
         );
 
         return $result;
@@ -1256,10 +1193,9 @@ if($item[1]==0)
 
     // Voucher
     public function getVoucherFind() {
-        $result = array('{recip_name}', '{recip_email}', '{date}', '{store_name}', '{name}', '{amount}', '{message}', '{store_href}', '{image}', '{code}', '{site_url}' , '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}','{privacy_policy}','{system_email}', '{system_phone}');
+        $result = array('{recip_name}', '{recip_email}', '{date}', '{store_name}', '{name}', '{amount}', '{message}', '{store_href}', '{image}', '{code}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}');
         return $result;
     }
-
 
     public function getVoucherReplace($data) {
         $result = array(
@@ -1272,31 +1208,27 @@ if($item[1]==0)
             'message' => $data['message'],
             'store_href' => $data['store_href'],
             'image' => (file_exists(DIR_IMAGE . $data['image'])) ? 'cid:' . md5(basename($data['image'])) : '', 'code' => $data['code'],
-
             //common replace
-            'site_url'=> HTTPS_CATALOG,
+            'site_url' => HTTPS_CATALOG,
             //'logo'=> HTTPS_CATALOG.'image/' . $this->config->get('config_logo'),
-            'logo' => $this->resize($this->config->get('config_logo'),197,34),
+            'logo' => $this->resize($this->config->get('config_logo'), 197, 34),
             //'site_url'=>$this->config->get('config_url'),
-            'system_name'=>$this->config->get('config_name'),
-            'year'=>date('Y'),
-            'help_center'=> $this->url->adminLink('information/help'),
+            'system_name' => $this->config->get('config_name'),
+            'year' => date('Y'),
+            'help_center' => $this->url->adminLink('information/help'),
             //'white_logo'=> HTTPS_CATALOG.'image/'. $this->config->get('config_white_logo'),
-            'white_logo' => $this->resize($this->config->get('config_white_logo'),197,34),
-
+            'white_logo' => $this->resize($this->config->get('config_white_logo'), 197, 34),
             'terms' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_account_id'), 'SSL'),
             'privacy_policy' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_privacy_policy_id'), 'SSL'),
-            'system_email'=>$this->config->get('config_email'),
-            'system_phone'=>'+'.$this->config->get('config_telephone_code').' '.$this->config->get('config_telephone'),
-
+            'system_email' => $this->config->get('config_email'),
+            'system_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $this->config->get('config_telephone'),
         );
         return $result;
     }
 
-
     // invoice
     public function getInvoiceFind() {
-        $result = array('{order_id}', '{total}', '{subtotal}', '{site_url}' , '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}','{privacy_policy}','{system_email}', '{system_phone}');
+        $result = array('{order_id}', '{total}', '{subtotal}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}');
         return $result;
     }
 
@@ -1305,25 +1237,22 @@ if($item[1]==0)
             'order_id' => $data['order_id'],
             'total' => $data['total'],
             'subtotal' => $data['subtotal'],
-
             //common replace
-            'site_url'=> HTTPS_CATALOG,
+            'site_url' => HTTPS_CATALOG,
             //'logo'=> HTTPS_CATALOG.'image/' . $this->config->get('config_logo'),
-            'logo' => $this->resize($this->config->get('config_logo'),197,34),
+            'logo' => $this->resize($this->config->get('config_logo'), 197, 34),
             //'site_url'=>$this->config->get('config_url'),
-            'system_name'=>$this->config->get('config_name'),
-            'year'=>date('Y'),
-            'help_center'=> $this->url->adminLink('information/help'),
+            'system_name' => $this->config->get('config_name'),
+            'year' => date('Y'),
+            'help_center' => $this->url->adminLink('information/help'),
             //'white_logo'=> HTTPS_CATALOG.'image/'. $this->config->get('config_white_logo'),
-            'white_logo' => $this->resize($this->config->get('config_white_logo'),197,34),
-
+            'white_logo' => $this->resize($this->config->get('config_white_logo'), 197, 34),
             'terms' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_account_id'), 'SSL'),
             'privacy_policy' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_privacy_policy_id'), 'SSL'),
-            'system_email'=>$this->config->get('config_email'),
-            'system_phone'=>'+'.$this->config->get('config_telephone_code').' '.$this->config->get('config_telephone'),
-
+            'system_email' => $this->config->get('config_email'),
+            'system_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $this->config->get('config_telephone'),
         );
-        
+
         return $result;
     }
 
@@ -1488,8 +1417,8 @@ if($item[1]==0)
 
     public function getProductFind() {
         $result = array(
-            '{product_image}', '{product_name}','{product_unit}', '{product_model}', '{product_quantity}', '{product_price}', '{product_price_gross}', '{product_attribute}',
-            '{product_option}', '{product_tax}', '{product_total}', '{product_total_gross}', '{site_url}' , '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}','{privacy_policy}','{system_email}', '{system_phone}'
+            '{product_image}', '{product_name}', '{product_unit}', '{product_model}', '{product_quantity}', '{product_price}', '{product_price_gross}', '{product_attribute}',
+            '{product_option}', '{product_tax}', '{product_total}', '{product_total_gross}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}'
         );
 
         return $result;
@@ -1513,23 +1442,20 @@ if($item[1]==0)
             'product_tax' => $this->currency->format($product['tax'], $order_info['currency_code'], $order_info['currency_value']),
             'product_total' => $this->currency->format($product['total'], $order_info['currency_code'], $order_info['currency_value']),
             'product_total_gross' => $this->currency->format($product['total'] + ($product['tax'] * $product['quantity']), $order_info['currency_code'], $order_info['currency_value']),
-
             //common replace
-            'site_url'=> HTTPS_CATALOG,
+            'site_url' => HTTPS_CATALOG,
             //'logo'=> HTTPS_CATALOG.'image/' . $this->config->get('config_logo'),
-            'logo' => $this->resize($this->config->get('config_logo'),197,34),
+            'logo' => $this->resize($this->config->get('config_logo'), 197, 34),
             //'site_url'=>$this->config->get('config_url'),
-            'system_name'=>$this->config->get('config_name'),
-            'year'=>date('Y'),
-            'help_center'=> $this->url->adminLink('information/help'),
+            'system_name' => $this->config->get('config_name'),
+            'year' => date('Y'),
+            'help_center' => $this->url->adminLink('information/help'),
             //'white_logo'=> HTTPS_CATALOG.'image/'. $this->config->get('config_white_logo'),
-            'white_logo' => $this->resize($this->config->get('config_white_logo'),197,34),
-
+            'white_logo' => $this->resize($this->config->get('config_white_logo'), 197, 34),
             'terms' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_account_id'), 'SSL'),
             'privacy_policy' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_privacy_policy_id'), 'SSL'),
-            'system_email'=>$this->config->get('config_email'),
-            'system_phone'=>'+'.$this->config->get('config_telephone_code').' '.$this->config->get('config_telephone'),
-
+            'system_email' => $this->config->get('config_email'),
+            'system_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $this->config->get('config_telephone'),
         );
 
         return $result;
@@ -1592,7 +1518,7 @@ if($item[1]==0)
     }
 
     public function getOrderVoucherFind() {
-        $result = array('{voucher_description}', '{voucher_amount}', '{site_url}' , '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}','{privacy_policy}','{system_email}', '{system_phone}');
+        $result = array('{voucher_description}', '{voucher_amount}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}');
 
         return $result;
     }
@@ -1601,23 +1527,20 @@ if($item[1]==0)
         $result = array(
             'voucher_description' => $voucher['description'],
             'voucher_amount' => $this->currency->format($voucher['amount'], $order_info['currency_code'], $order_info['currency_value']),
-
             //common replace
-            'site_url'=> HTTPS_CATALOG,
+            'site_url' => HTTPS_CATALOG,
             //'logo'=> HTTPS_CATALOG.'image/' . $this->config->get('config_logo'),
-            'logo' => $this->resize($this->config->get('config_logo'),197,34),
+            'logo' => $this->resize($this->config->get('config_logo'), 197, 34),
             //'site_url'=>$this->config->get('config_url'),
-            'system_name'=>$this->config->get('config_name'),
-            'year'=>date('Y'),
-            'help_center'=> $this->url->adminLink('information/help'),
+            'system_name' => $this->config->get('config_name'),
+            'year' => date('Y'),
+            'help_center' => $this->url->adminLink('information/help'),
             //'white_logo'=> HTTPS_CATALOG.'image/'. $this->config->get('config_white_logo'),
-            'white_logo' => $this->resize($this->config->get('config_white_logo'),197,34),
-
+            'white_logo' => $this->resize($this->config->get('config_white_logo'), 197, 34),
             'terms' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_account_id'), 'SSL'),
             'privacy_policy' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_privacy_policy_id'), 'SSL'),
-            'system_email'=>$this->config->get('config_email'),
-            'system_phone'=>'+'.$this->config->get('config_telephone_code').' '.$this->config->get('config_telephone'),
-
+            'system_email' => $this->config->get('config_email'),
+            'system_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $this->config->get('config_telephone'),
         );
 
         return $result;
@@ -1638,7 +1561,7 @@ if($item[1]==0)
     }
 
     public function getCommentFind() {
-        $result = array('{comment}', '{site_url}' , '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}','{privacy_policy}','{system_email}', '{system_phone}');
+        $result = array('{comment}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}');
 
         return $result;
     }
@@ -1646,23 +1569,20 @@ if($item[1]==0)
     public function getCommentReplace($comment) {
         $result = array(
             'comment' => $comment,
-
             //common replace
-            'site_url'=> HTTPS_CATALOG,
+            'site_url' => HTTPS_CATALOG,
             //'logo'=> HTTPS_CATALOG.'image/' . $this->config->get('config_logo'),
-            'logo' => $this->resize($this->config->get('config_logo'),197,34),
+            'logo' => $this->resize($this->config->get('config_logo'), 197, 34),
             //'site_url'=>$this->config->get('config_url'),
-            'system_name'=>$this->config->get('config_name'),
-            'year'=>date('Y'),
-            'help_center'=> $this->url->adminLink('information/help'),
+            'system_name' => $this->config->get('config_name'),
+            'year' => date('Y'),
+            'help_center' => $this->url->adminLink('information/help'),
             //'white_logo'=> HTTPS_CATALOG.'image/'. $this->config->get('config_white_logo'),
-            'white_logo' => $this->resize($this->config->get('config_white_logo'),197,34),
-
+            'white_logo' => $this->resize($this->config->get('config_white_logo'), 197, 34),
             'terms' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_account_id'), 'SSL'),
             'privacy_policy' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_privacy_policy_id'), 'SSL'),
-            'system_email'=>$this->config->get('config_email'),
-            'system_phone'=>'+'.$this->config->get('config_telephone_code').' '.$this->config->get('config_telephone'),
-
+            'system_email' => $this->config->get('config_email'),
+            'system_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $this->config->get('config_telephone'),
         );
 
         return $result;
@@ -1687,7 +1607,7 @@ if($item[1]==0)
     }
 
     public function getTaxFind() {
-        $result = array('{tax_title}', '{tax_value}', '{site_url}' , '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}','{privacy_policy}','{system_email}', '{system_phone}');
+        $result = array('{tax_title}', '{tax_value}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}');
 
         return $result;
     }
@@ -1696,23 +1616,20 @@ if($item[1]==0)
         $result = array(
             'tax_title' => $tax['title'],
             'tax_value' => $tax['text'],
-
             //common replace
-            'site_url'=> HTTPS_CATALOG,
+            'site_url' => HTTPS_CATALOG,
             //'logo'=> HTTPS_CATALOG.'image/' . $this->config->get('config_logo'),
-            'logo' => $this->resize($this->config->get('config_logo'),197,34),
+            'logo' => $this->resize($this->config->get('config_logo'), 197, 34),
             //'site_url'=>$this->config->get('config_url'),
-            'system_name'=>$this->config->get('config_name'),
-            'year'=>date('Y'),
-            'help_center'=> $this->url->adminLink('information/help'),
+            'system_name' => $this->config->get('config_name'),
+            'year' => date('Y'),
+            'help_center' => $this->url->adminLink('information/help'),
             //'white_logo'=> HTTPS_CATALOG.'image/'. $this->config->get('config_white_logo'),
-            'white_logo' => $this->resize($this->config->get('config_white_logo'),197,34),
-
+            'white_logo' => $this->resize($this->config->get('config_white_logo'), 197, 34),
             'terms' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_account_id'), 'SSL'),
             'privacy_policy' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_privacy_policy_id'), 'SSL'),
-            'system_email'=>$this->config->get('config_email'),
-            'system_phone'=>'+'.$this->config->get('config_telephone_code').' '.$this->config->get('config_telephone'),
-
+            'system_email' => $this->config->get('config_email'),
+            'system_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $this->config->get('config_telephone'),
         );
 
         return $result;
@@ -1736,7 +1653,7 @@ if($item[1]==0)
     }
 
     public function getTotalFind() {
-        $result = array('{total_title}', '{total_value}', '{site_url}' , '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}','{privacy_policy}','{system_email}', '{system_phone}');
+        $result = array('{total_title}', '{total_value}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}');
 
         return $result;
     }
@@ -1745,23 +1662,20 @@ if($item[1]==0)
         $result = array(
             'total_title' => $total['title'],
             'total_value' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
-
             //common replace
-            'site_url'=> HTTPS_CATALOG,
+            'site_url' => HTTPS_CATALOG,
             //'logo'=> HTTPS_CATALOG.'image/' . $this->config->get('config_logo'),
-            'logo' => $this->resize($this->config->get('config_logo'),197,34),
+            'logo' => $this->resize($this->config->get('config_logo'), 197, 34),
             //'site_url'=>$this->config->get('config_url'),
-            'system_name'=>$this->config->get('config_name'),
-            'year'=>date('Y'),
-            'help_center'=> $this->url->adminLink('information/help'),
+            'system_name' => $this->config->get('config_name'),
+            'year' => date('Y'),
+            'help_center' => $this->url->adminLink('information/help'),
             //'white_logo'=> HTTPS_CATALOG.'image/'. $this->config->get('config_white_logo'),
-            'white_logo' => $this->resize($this->config->get('config_white_logo'),197,34),
-
+            'white_logo' => $this->resize($this->config->get('config_white_logo'), 197, 34),
             'terms' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_account_id'), 'SSL'),
             'privacy_policy' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_privacy_policy_id'), 'SSL'),
-            'system_email'=>$this->config->get('config_email'),
-            'system_phone'=>'+'.$this->config->get('config_telephone_code').' '.$this->config->get('config_telephone'),
-
+            'system_email' => $this->config->get('config_email'),
+            'system_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $this->config->get('config_telephone'),
         );
 
         return $result;
@@ -1801,7 +1715,7 @@ if($item[1]==0)
     public function getDefaultMessage($type, $template_id, $data) {
 
         $subject = null;
-        
+
         switch (ucwords($type)) {
             case 'Login':
                 $subject = $this->getDefautLoginMessage($template_id, $data);
@@ -1809,9 +1723,9 @@ if($item[1]==0)
             case 'Affilate':
                 $subject = $this->getDefautAffilateMessage($template_id, $data);
                 break;
-            /*case 'Customer':
-                $subject = $this->getDefautCustomerMessage($template_id, $data);
-                break;*/
+            /* case 'Customer':
+              $subject = $this->getDefautCustomerMessage($template_id, $data);
+              break; */
             case 'Contact':
                 $subject = $this->getDefautContactMessage($template_id, $data);
                 break;
@@ -1997,10 +1911,9 @@ if($item[1]==0)
             return HTTP_IMAGE . $new_image;
         }
 
-        if(!trim($this->config->get('config_ssl')) && !trim($this->config->get('config_url')) ) {
+        if (!trim($this->config->get('config_ssl')) && !trim($this->config->get('config_url'))) {
             return HTTP_SERVER . 'image/' . $new_image;
         }
-        
     }
 
     public function getUploadByCode($code) {
@@ -2011,14 +1924,14 @@ if($item[1]==0)
 
     public function getProduct($product_id) {
 
-        
+
         $this->db->join('product', 'product.product_id = product_to_store.product_id', 'left');
         $this->db->join('product_description', 'product_description.product_id = product_to_store.product_id', 'left');
-        $this->db->where('product_to_store.product_store_id',$product_id);
+        $this->db->where('product_to_store.product_store_id', $product_id);
 
-        $query =  $this->db->get('product_to_store');
+        $query = $this->db->get('product_to_store');
 
-       
+
 
         if ($query->num_rows) {
             return array(
@@ -2051,266 +1964,253 @@ if($item[1]==0)
         }
     }
 
-
-
-    public function sendmessageOld($to,$message){
+    public function sendmessageOld($to, $message) {
 
         $log = new Log('error.log');
         /* $sender_id = $this->config->get('config_sms_sender_id');
-        $username  = $this->config->get('config_sms_username');
-        $password  = $this->config->get('config_sms_password');
+          $username  = $this->config->get('config_sms_username');
+          $password  = $this->config->get('config_sms_password');
 
-        $url= 'http://login.smsgatewayhub.com/smsapi/pushsms.aspx?user='.$username.'&pwd='.$password.'&to='.$to.'&sid='.$sender_id.'&msg='.urlencode($message).'&fl=0&gwid=2'; 
-        
-        // Get cURL resource
-        $curl = curl_init();
-        // Set some options - we are passing in a useragent too here
-        curl_setopt_array($curl, array(
-            CURLOPT_RETURNTRANSFER => 1,
-            CURLOPT_URL => $url,
-            CURLOPT_USERAGENT => 'Codular Sample cURL Request'
-        ));
-        //Send the request & save response to $resp
-        $resp = curl_exec($curl);
-        // Close request to clear up some resources
-        curl_close($curl);
-        */
+          $url= 'http://login.smsgatewayhub.com/smsapi/pushsms.aspx?user='.$username.'&pwd='.$password.'&to='.$to.'&sid='.$sender_id.'&msg='.urlencode($message).'&fl=0&gwid=2';
+
+          // Get cURL resource
+          $curl = curl_init();
+          // Set some options - we are passing in a useragent too here
+          curl_setopt_array($curl, array(
+          CURLOPT_RETURNTRANSFER => 1,
+          CURLOPT_URL => $url,
+          CURLOPT_USERAGENT => 'Codular Sample cURL Request'
+          ));
+          //Send the request & save response to $resp
+          $resp = curl_exec($curl);
+          // Close request to clear up some resources
+          curl_close($curl);
+         */
         //zenvia,twilio
 
-        if($this->config->get('config_sms_protocol') == 'twilio') {
+        if ($this->config->get('config_sms_protocol') == 'twilio') {
             $sid = $this->config->get('config_sms_sender_id');
-            $token  = $this->config->get('config_sms_token');
-            $from  = $this->config->get('config_sms_number');
+            $token = $this->config->get('config_sms_token');
+            $from = $this->config->get('config_sms_number');
 
             $log->write("sms twilio 2");
             $log->write($to);
-            if(substr($to,0,1) != '+') {
-                $to = '+'.$to;
+            if (substr($to, 0, 1) != '+') {
+                $to = '+' . $to;
             }
             //$log->write($to);
             $client = new Client($sid, $token);
-            
+
             try {
                 $sms = $client->messages->create(
-                $to,
-                    array(
-                        'from' => $from,
-                        //'from' => '+19789864215',
-                        'body' => $message
-                    )
+                        $to, array(
+                    'from' => $from,
+                    //'from' => '+19789864215',
+                    'body' => $message
+                        )
                 );
             } catch (Exception $exception) {
                 return false;
-            } 
+            }
         } else {
 
             $from = $this->config->get('config_zenvia_sms_sender_id');
-            $authToken  = $this->config->get('config_zenvia_sms_token');
-            $apiEndPoint  = $this->config->get('config_zenvia_sms_number');
-        
+            $authToken = $this->config->get('config_zenvia_sms_token');
+            $apiEndPoint = $this->config->get('config_zenvia_sms_number');
+
             $log->write("zenvia sms");
 
             $postData = array(
                 'sendSmsRequest' => array(
                     'from' => $from,
-                    "to"=>$to,
-                    "msg"=>$message,
-                    "callbackOption"=>"NONE",
-                    "id"=>uniqid(),
-                    "aggregateId"=>"1111"
-
-                 )
+                    "to" => $to,
+                    "msg" => $message,
+                    "callbackOption" => "NONE",
+                    "id" => uniqid(),
+                    "aggregateId" => "1111"
+                )
             );
             //c3VwZXIub25saW5lLndlYjpydFdjSVVZUENO
             $headr = array();
             $headr[] = 'Accept : application/json';
             $headr[] = 'Content-type: application/json';
-            $headr[] = 'Authorization: Basic '.$authToken;
+            $headr[] = 'Authorization: Basic ' . $authToken;
 
             $curl = curl_init();
 
-            curl_setopt($curl, CURLOPT_URL,$apiEndPoint);
-            curl_setopt($curl, CURLOPT_HTTPHEADER, $headr); 
+            curl_setopt($curl, CURLOPT_URL, $apiEndPoint);
+            curl_setopt($curl, CURLOPT_HTTPHEADER, $headr);
 
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($curl, CURLOPT_POST, 1);
-            curl_setopt($curl, CURLOPT_POSTFIELDS,json_encode($postData) );
+            curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($postData));
 
             $response = curl_exec($curl);
 
             curl_close($curl);
-            $response = json_decode($response,true);
+            $response = json_decode($response, true);
 
             if (isset($response['sendSmsResponse'])) {
-                if(is_array($response['sendSmsResponse'])) {
-                    if($response['sendSmsResponse']['statusCode'] == 00) {
-
+                if (is_array($response['sendSmsResponse'])) {
+                    if ($response['sendSmsResponse']['statusCode'] == 00) {
+                        
                     } else {
-                        return false;    
+                        return false;
                     }
-                    
-                }    
+                }
             }
-            
         }
-        
-        
+
+
         return true;
     }
 
-    public function sendmessage($to,$message){
+    public function sendmessage($to, $message) {
 
         $log = new Log('error.log');
-        
+
         $result['status'] = false;
         $result['message'] = 'Failed';
         //zenvia,twilio
 
         $country_prefix = $this->config->get('config_telephone_code');
-        
-        $to = $country_prefix.''.$to;
 
-        if($this->config->get('config_sms_protocol') == 'twilio') {
+        $to = $country_prefix . '' . $to;
+
+        if ($this->config->get('config_sms_protocol') == 'twilio') {
             $sid = $this->config->get('config_sms_sender_id');
-            $token  = $this->config->get('config_sms_token');
-            $from  = $this->config->get('config_sms_number');
-            
+            $token = $this->config->get('config_sms_token');
+            $from = $this->config->get('config_sms_number');
+
             // Your Account Sid and Auth Token from twilio.com/user/account
             //$sid = "AC75111c89124c19fffb2538524b8701ae";
             //$token = "e4231d69832c9c7c65ecc78512d9ec1c";
-
             //$sid = "ACe596b1c5068a7076d1a05552a66503f3";
             //$token = "a15911012556c6795359cba517bb7328";
 
             $log->write("sms twilio 2");
             $log->write($to);
-            if(substr($to,0,1) != '+') {
-                $to = '+'.$to;
+            if (substr($to, 0, 1) != '+') {
+                $to = '+' . $to;
             }
             //$log->write($to);
             $client = new Client($sid, $token);
-            
+
             try {
                 $sms = $client->messages->create(
-                $to,
-                    array(
-                        'from' => $from,
-                        //'from' => '+19789864215',
-                        'body' => $message
-                    )
+                        $to, array(
+                    'from' => $from,
+                    //'from' => '+19789864215',
+                    'body' => $message
+                        )
                 );
             } catch (Exception $exception) {
                 return $result;
-            } 
-        } elseif($this->config->get('config_sms_protocol') == 'zenvia') {
+            }
+        } elseif ($this->config->get('config_sms_protocol') == 'zenvia') {
 
 
             $from = $this->config->get('config_zenvia_sms_sender_id');
-            $authToken  = $this->config->get('config_zenvia_sms_token');
-            $apiEndPoint  = $this->config->get('config_zenvia_sms_number');
-        
+            $authToken = $this->config->get('config_zenvia_sms_token');
+            $apiEndPoint = $this->config->get('config_zenvia_sms_number');
+
             $log->write("zenvia sms  2ss");
 
             $postData = array(
                 'sendSmsRequest' => array(
                     'from' => $from,
-                    "to"=>$to,
-                    "msg"=>$message,
-                    "callbackOption"=>"NONE",
-                    "id"=>uniqid(),
-                    "aggregateId"=>"1111"
-
-                 )
+                    "to" => $to,
+                    "msg" => $message,
+                    "callbackOption" => "NONE",
+                    "id" => uniqid(),
+                    "aggregateId" => "1111"
+                )
             );
 
             $log->write($postData);
             //c3VwZXIub25saW5lLndlYjpydFdjSVVZUENO
-            
+
             $curl = curl_init();
 
-            curl_setopt($curl, CURLOPT_URL,$apiEndPoint);
+            curl_setopt($curl, CURLOPT_URL, $apiEndPoint);
             //curl_setopt($curl, CURLOPT_URL,"https://api-rest.zenvia360.com.br/services/send-sms");
             //https://api-rest.zenvia360.com.br/services/send-sms
-            curl_setopt($curl, CURLOPT_HTTPHEADER, array('Accept: application/json','Content-type: application/json','Authorization: Basic '.$authToken)); 
+            curl_setopt($curl, CURLOPT_HTTPHEADER, array('Accept: application/json', 'Content-type: application/json', 'Authorization: Basic ' . $authToken));
 
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($curl, CURLOPT_POST, 1);
-            curl_setopt($curl, CURLOPT_POSTFIELDS,json_encode($postData) );
+            curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($postData));
 
             $response = curl_exec($curl);
 
             $log->write($response);
 
-            $response = json_decode($response,true);
+            $response = json_decode($response, true);
 
             if (isset($response['sendSmsResponse'])) {
-                if(is_array($response['sendSmsResponse'])) {
-                    if($response['sendSmsResponse']['statusCode'] == 00) {
-
+                if (is_array($response['sendSmsResponse'])) {
+                    if ($response['sendSmsResponse']['statusCode'] == 00) {
+                        
                     } else {
-                        return false;    
+                        return false;
                     }
-                    
-                }    
+                }
             }
             curl_close($curl);
-
-        }  elseif($this->config->get('config_sms_protocol') == 'uwaziimobile') {
+        } elseif ($this->config->get('config_sms_protocol') == 'uwaziimobile') {
 
             $curl = curl_init();
             //$authToken = 'VlNMVEQ6VlNMVEQxMjM0NQ==';
 
             $from = $this->config->get('config_uwaziimobile_sms_number');
             //$from = 'cer';
-            $username  = $this->config->get('config_uwaziimobile_sms_token');
-            $password  = $this->config->get('config_uwaziimobile_sms_sender_id');
+            $username = $this->config->get('config_uwaziimobile_sms_token');
+            $password = $this->config->get('config_uwaziimobile_sms_sender_id');
 
             //echo "<pre>";print_r($from."c".$username."d".$password);die;
-            $str = $username.":".$password;
+            $str = $username . ":" . $password;
 
             $authToken = base64_encode($str);
 
             $apiEndPoint = 'http://107.20.199.106/restapi/sms/1/text/single';
             $postData = array(
-                                'from' => $from,
-                                "to"=>$to,
-                                "text"=>$message);
+                'from' => $from,
+                "to" => $to,
+                "text" => $message);
 
-            curl_setopt($curl, CURLOPT_URL,$apiEndPoint);
+            curl_setopt($curl, CURLOPT_URL, $apiEndPoint);
             //curl_setopt($curl, CURLOPT_URL,"https://api-rest.zenvia360.com.br/services/send-sms");
             //https://api-rest.zenvia360.com.br/services/send-sms
-            curl_setopt($curl, CURLOPT_HTTPHEADER, array('Accept: application/json','Content-type: application/json','Authorization: Basic '.$authToken)); 
+            curl_setopt($curl, CURLOPT_HTTPHEADER, array('Accept: application/json', 'Content-type: application/json', 'Authorization: Basic ' . $authToken));
 
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($curl, CURLOPT_POST, 1);
-            curl_setopt($curl, CURLOPT_POSTFIELDS,json_encode($postData) );
+            curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($postData));
 
 
             try {
-              //$response = $request->send();
-              $response = curl_exec($curl);
+                //$response = $request->send();
+                $response = curl_exec($curl);
 
-              $response = json_decode($response,true);
+                $response = json_decode($response, true);
 
-              //echo "<pre>";print_r($response);die;
-              if(isset($response['messages']) && isset($response['messages'][0]['status']) && $response['messages'][0]['status']['id'] == 0 ) {
+                //echo "<pre>";print_r($response);die;
+                if (isset($response['messages']) && isset($response['messages'][0]['status']) && $response['messages'][0]['status']['id'] == 0) {
 
-                $result['status'] = true;
+                    $result['status'] = true;
+                } else {
+                    $result['status'] = false;
+                    $result['message'] = $response['messages'][0]['status']['description'];
+                }
 
-              } else {
-                $result['status'] = false;
-                $result['message'] = $response['messages'][0]['status']['description'];
-              }
-
-              //
+                //
             } catch (HttpException $ex) {
-             // echo $ex;
-                
+                // echo $ex;
+
                 $result['status'] = false;
             }
 
             return $result;
-
         } else {
             //wayhub
             // $sender_id = 'KRAFTY';
@@ -2318,13 +2218,13 @@ if($item[1]==0)
             // $password  = 'krafty@123';
 
             $sender_id = $this->config->get('config_wayhub_sms_sender_id');
-            $username  = $this->config->get('config_wayhub_sms_token');
-            $password  = $this->config->get('config_wayhub_sms_number');
+            $username = $this->config->get('config_wayhub_sms_token');
+            $password = $this->config->get('config_wayhub_sms_number');
 
             $msg = $message;
 
-            $url= 'http://login.smsgatewayhub.com/smsapi/pushsms.aspx?user='.$username.'&pwd='.$password.'&to='.$to.'&sid='.$sender_id.'&msg='.urlencode($msg).'&fl=0&gwid=2'; 
-            
+            $url = 'http://login.smsgatewayhub.com/smsapi/pushsms.aspx?user=' . $username . '&pwd=' . $password . '&to=' . $to . '&sid=' . $sender_id . '&msg=' . urlencode($msg) . '&fl=0&gwid=2';
+
             // Get cURL resource
             $curl = curl_init();
             // Set some options - we are passing in a useragent too here
@@ -2335,16 +2235,15 @@ if($item[1]==0)
             ));
             // Send the request & save response to $resp
             $resp = curl_exec($curl);
-            
+
             // Close request to clear up some resources
             curl_close($curl);
-
         }
-        
+
         return true;
     }
 
-    public function sendPushNotification($to,$deviceId,$order_id,$store_id,$message,$title,$app_action = 'com.instagolocal.showorder') {
+    public function sendPushNotification($to, $deviceId, $order_id, $store_id, $message, $title, $app_action = 'com.instagolocal.showorder') {
 
 
         $log = new Log('error.log');
@@ -2356,14 +2255,14 @@ if($item[1]==0)
         $log->write($message);
         $log->write($title);
 
-        if(isset($to)) {
-            if(isset($deviceId) && isset($to)) {
+        if (isset($to)) {
+            if (isset($deviceId) && isset($to)) {
 
                 $log->write("api key");
 
                 $apiKey = $this->config->get('config_seller_api_key');
                 //$apiKey = 'AIzaSyAK3VgDt_MTGRaTMfs_9v_YdsK6tjFRsoo';
-                
+
                 $log->write($apiKey);
                 $client = new FCMClient();
                 $client->setApiKey($apiKey);
@@ -2371,43 +2270,40 @@ if($item[1]==0)
 
                 $note = new Notification($title, $message);
                 $note->setIcon('notification_icon_resource_name')
-                    ->setColor('#3ca826')
-                    ->setSound('default')
-                    ->setClickAction($app_action)
-                    ->setBadge(1);
+                        ->setColor('#3ca826')
+                        ->setSound('default')
+                        ->setClickAction($app_action)
+                        ->setBadge(1);
 
                 $message = new Message();
                 //$message->addRecipient(new Device('dLz1Z9CHl_g:APA91bGTZlzoAF-5JGsqHgA9y4N9Odz0h3Dg19dOrE0Sulrnixz-QzMUaasxSljrmncmZGoUAZ0Q-VJytOFsQYfhHfoUJKOCqb4SCnc9z_0sqmwu4fNqmZ_yuIg6vkp19ChJGb1ibuht'));
                 $message->addRecipient(new Device($deviceId));
 
                 //$dataSend = array('order_id' => $order_id,'store_id' => $store_id,"body" => $message,"title" => $title,"click_action"=>$app_action);
-
                 //$log->write($dataSend);
                 $message->setNotification($note)
-                //$message->setData( $dataSend );
-                ->setData(array('order_id' => $order_id,'store_id' => $store_id) );
+                        //$message->setData( $dataSend );
+                        ->setData(array('order_id' => $order_id, 'store_id' => $store_id));
 
                 $response = $client->send($message);
 
                 $log->write($response);
                 //var_dump($response);die;
-                if($response->getStatusCode()) {
-                    $json['success'] = 'Success: push notification sent.';    
+                if ($response->getStatusCode()) {
+                    $json['success'] = 'Success: push notification sent.';
                 } else {
                     $json['error'] = 'fcm api failed ';
                 }
-                
-
             } else {
                 $json['error'] = 'device id empty of user';
             }
         } else {
-            $json['error'] = 'no user_id';   
+            $json['error'] = 'no user_id';
         }
         return true;
     }
 
-    public function sendReturnPushNotification($to,$deviceId,$return_id,$store_id,$message,$title,$app_action = 'com.instagolocal.showorder') {
+    public function sendReturnPushNotification($to, $deviceId, $return_id, $store_id, $message, $title, $app_action = 'com.instagolocal.showorder') {
 
 
         $log = new Log('error.log');
@@ -2419,14 +2315,14 @@ if($item[1]==0)
         $log->write($message);
         $log->write($title);
 
-        if(isset($to)) {
-            if(isset($deviceId) && isset($to)) {
+        if (isset($to)) {
+            if (isset($deviceId) && isset($to)) {
 
                 $log->write("api key");
 
                 $apiKey = $this->config->get('config_seller_api_key');
                 //$apiKey = 'AIzaSyAK3VgDt_MTGRaTMfs_9v_YdsK6tjFRsoo';
-                
+
                 $log->write($apiKey);
                 $client = new FCMClient();
                 $client->setApiKey($apiKey);
@@ -2434,10 +2330,10 @@ if($item[1]==0)
 
                 $note = new Notification($title, $message);
                 $note->setIcon('notification_icon_resource_name')
-                    ->setColor('#3ca826')
-                    ->setSound('default')
-                    //->setClickAction($app_action)
-                    ->setBadge(1);
+                        ->setColor('#3ca826')
+                        ->setSound('default')
+                        //->setClickAction($app_action)
+                        ->setBadge(1);
 
                 $message = new Message();
                 //$message->addRecipient(new Device('dLz1Z9CHl_g:APA91bGTZlzoAF-5JGsqHgA9y4N9Odz0h3Dg19dOrE0Sulrnixz-QzMUaasxSljrmncmZGoUAZ0Q-VJytOFsQYfhHfoUJKOCqb4SCnc9z_0sqmwu4fNqmZ_yuIg6vkp19ChJGb1ibuht'));
@@ -2445,30 +2341,28 @@ if($item[1]==0)
 
                 //$log->write($dataSend);
                 $message->setNotification($note)
-                //$message->setData( $dataSend );
-                ->setData(array('return_id' => $return_id,'store_id' => $store_id) );
+                        //$message->setData( $dataSend );
+                        ->setData(array('return_id' => $return_id, 'store_id' => $store_id));
 
                 $response = $client->send($message);
 
                 $log->write($response);
                 //var_dump($response);die;
-                if($response->getStatusCode()) {
-                    $json['success'] = 'Success: push notification sent.';    
+                if ($response->getStatusCode()) {
+                    $json['success'] = 'Success: push notification sent.';
                 } else {
                     $json['error'] = 'fcm api failed ';
                 }
-                
-
             } else {
                 $json['error'] = 'device id empty of user';
             }
         } else {
-            $json['error'] = 'no user_id';   
+            $json['error'] = 'no user_id';
         }
         return true;
     }
 
-    public function sendCustomerReturnPushNotification($to,$deviceId,$return_id,$store_id,$message,$title,$app_action = 'com.instagolocal.showreturn') {
+    public function sendCustomerReturnPushNotification($to, $deviceId, $return_id, $store_id, $message, $title, $app_action = 'com.instagolocal.showreturn') {
 
 
         $log = new Log('error.log');
@@ -2480,14 +2374,14 @@ if($item[1]==0)
         $log->write($message);
         $log->write($title);
 
-        if(isset($to)) {
-            if(isset($deviceId) && isset($to)) {
+        if (isset($to)) {
+            if (isset($deviceId) && isset($to)) {
 
                 $log->write("api key");
 
                 $apiKey = $this->config->get('config_seller_api_key');
                 //$apiKey = 'AIzaSyAK3VgDt_MTGRaTMfs_9v_YdsK6tjFRsoo';
-                
+
                 $log->write($apiKey);
                 $client = new FCMClient();
                 $client->setApiKey($apiKey);
@@ -2495,10 +2389,10 @@ if($item[1]==0)
 
                 $note = new Notification($title, $message);
                 $note->setIcon('notification_icon_resource_name')
-                    ->setColor('#3ca826')
-                    ->setSound('default')
-                    ->setClickAction($app_action)
-                    ->setBadge(1);
+                        ->setColor('#3ca826')
+                        ->setSound('default')
+                        ->setClickAction($app_action)
+                        ->setBadge(1);
 
                 $message = new Message();
                 //$message->addRecipient(new Device('dLz1Z9CHl_g:APA91bGTZlzoAF-5JGsqHgA9y4N9Odz0h3Dg19dOrE0Sulrnixz-QzMUaasxSljrmncmZGoUAZ0Q-VJytOFsQYfhHfoUJKOCqb4SCnc9z_0sqmwu4fNqmZ_yuIg6vkp19ChJGb1ibuht'));
@@ -2506,32 +2400,28 @@ if($item[1]==0)
 
                 //$log->write($dataSend);
                 $message->setNotification($note)
-                //$message->setData( $dataSend );
-                ->setData(array('return_id' => $return_id,'store_id' => $store_id) );
+                        //$message->setData( $dataSend );
+                        ->setData(array('return_id' => $return_id, 'store_id' => $store_id));
 
                 $response = $client->send($message);
 
                 $log->write($response);
                 //var_dump($response);die;
-                if($response->getStatusCode()) {
-                    $json['success'] = 'Success: push notification sent.';    
+                if ($response->getStatusCode()) {
+                    $json['success'] = 'Success: push notification sent.';
                 } else {
                     $json['error'] = 'fcm api failed ';
                 }
-                
-
             } else {
                 $json['error'] = 'device id empty of user';
             }
         } else {
-            $json['error'] = 'no user_id';   
+            $json['error'] = 'no user_id';
         }
         return true;
     }
 
-
-
-    public function sendVendorPushNotification($to,$deviceId,$wallet_id,$store_id,$message,$title,$args){
+    public function sendVendorPushNotification($to, $deviceId, $wallet_id, $store_id, $message, $title, $args) {
 
 
         $log = new Log('error.log');
@@ -2543,8 +2433,8 @@ if($item[1]==0)
         $log->write($message);
         $log->write($title);
 
-        if(isset($to)) {
-            if(isset($deviceId) && isset($to)) {
+        if (isset($to)) {
+            if (isset($deviceId) && isset($to)) {
 
                 $log->write("api key");
 
@@ -2557,35 +2447,33 @@ if($item[1]==0)
 
                 $note = new Notification($title, $message);
                 $note->setIcon('notification_icon_resource_name')
-                    ->setColor('#3ca826')
-                    ->setSound('notification_sound')
-                    ->setBadge(1);
+                        ->setColor('#3ca826')
+                        ->setSound('notification_sound')
+                        ->setBadge(1);
 
                 $message = new Message();
                 //$message->addRecipient(new Device('dLz1Z9CHl_g:APA91bGTZlzoAF-5JGsqHgA9y4N9Odz0h3Dg19dOrE0Sulrnixz-QzMUaasxSljrmncmZGoUAZ0Q-VJytOFsQYfhHfoUJKOCqb4SCnc9z_0sqmwu4fNqmZ_yuIg6vkp19ChJGb1ibuht'));
                 $message->addRecipient(new Device($deviceId));
                 $message->setNotification($note)
-                    ->setData(array('wallet_id' => $wallet_id,'store_id' => $store_id,'notification_id' => $args['notification_id']));
+                        ->setData(array('wallet_id' => $wallet_id, 'store_id' => $store_id, 'notification_id' => $args['notification_id']));
 
                 $response = $client->send($message);
                 //var_dump($response);die;
-                if($response->getStatusCode()) {
-                    $json['success'] = 'Success: push notification sent.';    
+                if ($response->getStatusCode()) {
+                    $json['success'] = 'Success: push notification sent.';
                 } else {
                     $json['error'] = 'fcm api failed ';
                 }
-                
-
             } else {
                 $json['error'] = 'device id empty of user';
             }
         } else {
-            $json['error'] = 'no user_id';   
+            $json['error'] = 'no user_id';
         }
         return true;
     }
 
-    public function sendOrderVendorPushNotification($to,$deviceId,$order_id,$store_id,$message,$title,$args){
+    public function sendOrderVendorPushNotification($to, $deviceId, $order_id, $store_id, $message, $title, $args) {
 
 
         $log = new Log('error.log');
@@ -2597,8 +2485,8 @@ if($item[1]==0)
         $log->write($message);
         $log->write($title);
 
-        if(isset($to)) {
-            if(isset($deviceId) && isset($to)) {
+        if (isset($to)) {
+            if (isset($deviceId) && isset($to)) {
 
                 $log->write("api key");
 
@@ -2611,54 +2499,51 @@ if($item[1]==0)
 
                 $note = new Notification($title, $message);
                 $note->setIcon('notification_icon_resource_name')
-                    ->setColor('#3ca826')
-                    ->setSound('notification_sound')
-                    ->setBadge(1);
+                        ->setColor('#3ca826')
+                        ->setSound('notification_sound')
+                        ->setBadge(1);
 
                 $message = new Message();
                 //$message->addRecipient(new Device('dLz1Z9CHl_g:APA91bGTZlzoAF-5JGsqHgA9y4N9Odz0h3Dg19dOrE0Sulrnixz-QzMUaasxSljrmncmZGoUAZ0Q-VJytOFsQYfhHfoUJKOCqb4SCnc9z_0sqmwu4fNqmZ_yuIg6vkp19ChJGb1ibuht'));
                 $message->addRecipient(new Device($deviceId));
                 $message->setNotification($note)
-                    ->setData(array('order_id' => $order_id,'store_id' => $store_id,'notification_id' => $args['notification_id']));
+                        ->setData(array('order_id' => $order_id, 'store_id' => $store_id, 'notification_id' => $args['notification_id']));
 
                 $response = $client->send($message);
                 //var_dump($response);die;
-                if($response->getStatusCode()) {
-                    $json['success'] = 'Success: push notification sent.';    
+                if ($response->getStatusCode()) {
+                    $json['success'] = 'Success: push notification sent.';
                 } else {
                     $json['error'] = 'fcm api failed ';
                 }
-                
-
             } else {
                 $json['error'] = 'device id empty of user';
             }
         } else {
-            $json['error'] = 'no user_id';   
+            $json['error'] = 'no user_id';
         }
         return true;
     }
 
-
     public function getRealOrderProducts($order_id, $store_id = 0) {
-       
+
         $sql = "SELECT * FROM " . DB_PREFIX . "real_order_product WHERE order_id = '" . (int) $order_id . "'";
-        
-        if($store_id) {
-            $sql .= " AND store_id='".$store_id."'";
+
+        if ($store_id) {
+            $sql .= " AND store_id='" . $store_id . "'";
         }
-        
+
         $query = $this->db->query($sql);
 
         return $query->rows;
     }
 
-    public function getStore( $store_id ) {
-        return $this->db->query( 'select * from '.DB_PREFIX.'store WHERE store_id="'.$store_id.'"' )->row;
+    public function getStore($store_id) {
+        return $this->db->query('select * from ' . DB_PREFIX . 'store WHERE store_id="' . $store_id . '"')->row;
     }
 
-    public function getCustomer( $customer_id ) {
-        return $this->db->query( 'select * from '.DB_PREFIX.'customer WHERE customer_id="'.$customer_id.'"' )->row;
+    public function getCustomer($customer_id) {
+        return $this->db->query('select * from ' . DB_PREFIX . 'customer WHERE customer_id="' . $customer_id . '"')->row;
     }
 
     public function resize($filename, $width, $height) {
@@ -2696,19 +2581,19 @@ if($item[1]==0)
         }
 
         if (isset($this->request->server['HTTPS']) && $this->request->server['HTTPS']) {
-            return HTTPS_CATALOG. 'image/' . $new_image;
+            return HTTPS_CATALOG . 'image/' . $new_image;
         } else {
             return HTTPS_CATALOG . 'image/' . $new_image;
         }
     }
 
-
-    public function maskingOrderDetailUrl($link){
+    public function maskingOrderDetailUrl($link) {
         $parts = parse_url($link);
         parse_str($parts['query'], $query);
-        $orderId =  $query['order_id'];
-        $decodedOrderId = base64_encode('     '.$query['order_id'].'     ');
-        $maskedhref = $this->url->link('account/order/info','order_id=' . $decodedOrderId);
+        $orderId = $query['order_id'];
+        $decodedOrderId = base64_encode('     ' . $query['order_id'] . '     ');
+        $maskedhref = $this->url->link('account/order/info', 'order_id=' . $decodedOrderId);
         return $maskedhref;
     }
+
 }

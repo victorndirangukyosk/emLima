@@ -6,6 +6,13 @@
                 <div class="my-order-view-dashboard">
                     <div class="row">
                         <div class="col-md-12">
+                            <div class="alerter" style="display: none;">
+                                <div class="alert alert-info normalalert">
+                                    <p class="notice-text">Order updated successfully!</p>
+                                </div>
+                            </div>
+                        </div>                           
+                        <div class="col-md-12">
                             <div class="back-link-block"><a href="<?php echo $continue; ?>"> <span class="back-arrow"><i class="fa fa-long-arrow-left"></i> </span> <?= $text_go_back ?></a></div>
                         </div>
                     </div>
@@ -220,11 +227,11 @@
                                                                 <?php echo $product['quantity']; ?> x <?php echo $product['price']; ?>
                                                             </div>-->
                                                             <div class="my-order-price" id="<?php echo $product['product_id'] ?>">           
-                                                                <input type="button" class="sp-minus fff mini-minus-quantity ddd" data-id="<?php echo $product['product_id'] ?>" data-unit="<?php echo $product['unit'] ?>" data-orderid="<?php echo $order_id; ?>" id="minus" value="-">
-                                                                <span class="sp-input middle-quantity quntity-input product-count" id="<?php echo 'span'.$product['product_id'] ?>">
-                                                                    <?= number_format($product['quantity'], 2)?>        </span>
+                                                                <input type="button" class="sp-minus fff mini-minus-quantity ddd" data-id="<?php echo $product['product_id'] ?>" data-unit="<?php echo $product['unit'] ?>" data-orderid="<?php echo $order_id; ?>" id="minus" value="-" <?php if($order_status_id != 15) { ?> disabled="" <?php } ?>>
+                                                                       <span class="sp-input middle-quantity quntity-input product-count" id="<?php echo 'span'.$product['product_id'] ?>" style="width:50px;">
+                                                                    <?php if($product['unit'] == 'Kg' || $product['unit'] == 'Kgs' ) { echo  number_format($product['quantity'], 2); } else { echo round($product['quantity'], 0); } ?>        </span>
 
-                                                                <input type="button" class="sp-plus fff mini-plus-quantity ddd" data-id="<?php echo $product['product_id'] ?>" data-unit="<?php echo $product['unit'] ?>" data-orderid="<?php echo $order_id; ?>" id="plus" value="+">
+                                                                <input type="button" class="sp-plus fff mini-plus-quantity ddd" data-id="<?php echo $product['product_id'] ?>" data-unit="<?php echo $product['unit'] ?>" data-orderid="<?php echo $order_id; ?>" id="plus" value="+" <?php if($order_status_id != 15) { ?> disabled="" <?php } ?>>
 
                                                             </div>
                                                         </div>
@@ -346,25 +353,31 @@
                                                     </div>
                                                 </div>      
 
+                                                <div class="checkout-sidebar-merchant-box-old">
+                                                    <li class="list-group-item my-order-list-head"><center><h2 class="my-order-list-title">Actions</h2></center></li>
+                                                    <div class="checkout-sidebar">
+                                                        <input type="hidden" value="<?php echo $order_status_id; ?>" id="order_status_number" name="order_status_number">
+                                                        <?php if($order_status_id == 15) { ?>
+                                                        <div class="row" style="margin-bottom: 8px">
+                                                            <div class="col-md-12" id="approve_order_div">
+                                                                <button id="approve_order" data-id="<?php echo $order_id; ?>" data-custid="<?php echo $order_customer_id; ?>" data-logcustid="<?php echo $loogged_customer_id; ?>" class="btn btn-primary" type="button">APPROVE ORDER</button>
+                                                            </div>
+                                                        </div>
 
-
-
-                                                <!-- <div class="checkout-sidebar-merchant-box-old">
-                                                    <div class="my-order-list-title"> <span class="checkout-cart-merchant-name">Order Notes</span></div>
-                                                    </br>
-                                                    </br>
-                                                   
-                                                    
-                                                    <div class="checkout-promocode-form">
-                                                        
-                                                        <textbox style="disabled; "  name="dropoff_notes-<?= $key?>" class="form-control" maxlength="200" value="<?= $comment?>" id="dropoff_notes" style="height: 100px;"><?= $comment?></textbox>
-                                                        
-                                                 
-                                                 
-                                                 <div style="display:none; " class="checkout-sidebar-merchant-box-old"><?= $comment?></div>   </div>
-                
-                                                </div> -->
-
+                                                        <div class="row" style="margin-bottom: 8px">
+                                                            <div class="col-md-12">
+                                                                <button id="reject_order" data-id="<?php echo $order_id; ?>" data-custid="<?php echo $order_customer_id; ?>" data-logcustid="<?php echo $loogged_customer_id; ?>" class="btn btn-primary" type="button">REJECT ORDER</button>
+                                                            </div>
+                                                        </div>
+                                                        <?php }  else { ?>
+                                                        <div class="row" style="margin-bottom: 8px">
+                                                            <div class="col-md-12">
+                                                                <button type="button" class="btn btn-primary" disabled=""><?php echo $order_status_name; ?></button>
+                                                            </div>
+                                                        </div>
+                                                        <?php } ?>
+                                                    </div>
+                                                </div>
 
                                             </div>
 
@@ -1098,11 +1111,77 @@
                     $("#subtotal" + order_id).text(json.total_amount);
                     $("#subtotal" + order_id).text(json.total_amount);
                     $("#total" + order_id).text(json.total_amount);
+                    $(".alerter").show();
+                    $('.alerter').delay(5000).fadeOut('slow');
                     } else {
                     alert('Please try again later!');
                     return false;
                     }
                     console.log(json);
+                    }
+            });
+            });
+            $(document).delegate('#approve_order', 'click', function (e) {
+            e.preventDefault();
+            var order_status_number = $('#order_status_number').val();
+            if (order_status_number != 15) {
+            alert('You cant update order in this stage!');
+            }
+            var order_id = $(this).attr('data-id');
+            var customer_id = $(this).attr('data-custid');
+            var logged_customer_id = $(this).attr('data-logcustid');
+            var order_status = $(this).attr('id');
+            console.log(order_id + ' ' + customer_id + ' ' + order_status);
+            console.log('Hi');
+            console.log('Under progress');
+            //return false;
+            $.ajax({
+            url: 'index.php?path=account/order/ApproveOrRejectSubUserOrder',
+                    type: 'post',
+                    data: {
+                    order_id: $(this).attr('data-id'),
+                            customer_id: $(this).attr('data-custid'),
+                            order_status: 'Approved'
+                    },
+                    dataType: 'json',
+                    success: function (json) {
+                    console.log(json);
+                    var button = $('<button class="btn btn-primary" type="button">Order Received</button>');
+                    $('#approve_order').remove();
+                    $('#reject_order').remove();
+                    $('#approve_order_div').append(button);
+                    location.reload();
+                    }
+            });
+            });
+            $(document).delegate('#reject_order', 'click', function (e) {
+            e.preventDefault();
+            var order_status_number = $('#order_status_number').val();
+            if (order_status_number != 15) {
+            alert('You cant update order in this stage!');
+            }
+            var order_id = $(this).attr('data-id');
+            var order_status = 'Rejected';
+            var customer_id = $(this).attr('data-custid');
+            var logged_customer_id = $(this).attr('data-logcustid');
+            console.log(order_id + ' ' + customer_id + ' ' + order_status);
+            //return false;
+            $.ajax({
+            url: 'index.php?path=account/order/ApproveOrRejectSubUserOrder',
+                    type: 'post',
+                    data: {
+                    order_id: $(this).attr('data-id'),
+                            customer_id: $(this).attr('data-custid'),
+                            order_status: order_status
+                    },
+                    dataType: 'json',
+                    success: function (json) {
+                    console.log(json);
+                    var button = $('<button class="btn btn-primary" type="button">Order Rejected</button>');
+                    $('#approve_order').remove();
+                    $('#reject_order').remove();
+                    $('#approve_order_div').append(button);
+                    location.reload();
                     }
             });
             });

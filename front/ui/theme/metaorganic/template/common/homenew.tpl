@@ -213,6 +213,8 @@
                         <div class="dropdownsetnew" style="margin-top: 10px;"><a class="header__upper-deck-item-link"
                             href="<?= $dashboard ?>"><i class="fa fa-user"></i>Dashboard &nbsp;<span
                               class="badge badge-pill badge-light">New</span></a></div>
+                               <div class="dropdownsetnew"  ><a class="header__upper-deck-item-link"
+                                   href="<?= $wishlist ?>" ><i class="fa fa-shopping-basket"></i>My Basket</a></div>
                         <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $account ?>"><i
                               class="fa fa-user"></i>My Account</a></div>
                         <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $help ?>"><i
@@ -298,7 +300,7 @@
   </div>
 
   <div style="clear:both !important"> </div>
-  <?php if (isset($wishlists)) { ?>
+  <!-- <?php if (isset($wishlists)) { ?>
   <div class="container" style="padding-top: 24px;">
     <div class="row">
       <div class="col-md-12">
@@ -321,13 +323,13 @@
                     <li class="list-group-item my-order-list-head">
                       <i class="fa fa-clock-o"></i> Added On
                       <span><strong><?php echo $wishlist['date_added']; ?></strong></span> 
-                      <!-- <span>
+                      <span>
                         <a href="#" id="addWishlisttocart" data-id='<?=$wishlist["wishlist_id"] ?>'
                           style="margin-right:21px;" class="btn btn-info btn-xs">ADD TO CART</a>
                         <a href="#" id="cancelWishlist" data-id='<?=$wishlist["wishlist_id"] ?>'
                           style="margin-right:21px;"
                           class="btn btn-danger btn-xs btn-custom-remove">DELETE</a>
-                      </span> -->
+                      </span>
                     </li>
                     <li class="list-group-item">
                       <div class="my-order-block">
@@ -359,7 +361,7 @@
       </div>
     </div>
   </div>
-  <?php } ?>
+  <?php } ?> -->
 
   <?php
 					$i=0;

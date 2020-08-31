@@ -101,6 +101,8 @@
                                 </a></div>
                                  <div class="dropdownsetnew"><a class="header__upper-deck-item-link"
                                 href="<?= $account ?>"><i class="fa fa-user"></i>My Account</a></div>
+                                 <div class="dropdownsetnew"  ><a class="header__upper-deck-item-link"
+                                   href="<?= $wishlist ?>" ><i class="fa fa-shopping-basket"></i>My Basket</a></div>
                                <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $help ?>"><i
                                   class="fa fa-question-circle"></i>Help</a></div>
                             <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $logout ?>"><i
@@ -252,7 +254,7 @@
                                                     <a href="<?= $wishlist ?>">
                                                 <?php } ?>
 
-                                                <i class="fa fa-list-alt"></i><?= $text_wishlist ?></a>
+                                                <i class="fa fa-shopping-basket"></i>My Basket</a>
                                             </li>
 
                                             <?php if($this->config->get('config_credit_enabled')) { ?>

@@ -6,8 +6,8 @@ system/log/
 front.zip
 access.log
 .idea/
-#config.php
-#define.php
+config.php
+define.php
 robots.txt
 
 ## Node.js
