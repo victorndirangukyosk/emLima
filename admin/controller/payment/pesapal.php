@@ -148,10 +148,10 @@ class ControllerPaymentPesapal extends Controller {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 
-		if (!$this->request->post['pesapal_customer_key']) {
+		if (!$this->request->post['pesapal_consumer_key']) {
 			$this->error['consumer_key'] = $this->language->get('error_consumer_key');
 		}
-		if (!$this->request->post['pesapal_customer_secret']) {
+		if (!$this->request->post['pesapal_consumer_secret']) {
 			$this->error['consumer_secret'] = $this->language->get('error_consumer_secret');
 		}
 
