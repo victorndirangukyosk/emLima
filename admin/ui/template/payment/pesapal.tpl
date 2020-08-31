@@ -34,46 +34,25 @@
         <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form-pesapal" class="form-horizontal">
 
           <div class="form-group required">
-            <label class="col-sm-2 control-label" for="input-payable">Customer key</label>
+            <label class="col-sm-2 control-label" for="input-payable">Consumer key</label>
             <div class="col-sm-10">
-              <input type="text" name="pesapal_customer_key" value="<?php echo $pesapal_customer_key; ?>" placeholder="Customer key" id="input-payable" class="form-control" />
-              <?php if ($error_customer_key) { ?>
-              <div class="text-danger"><?php echo $error_customer_key; ?></div>
+              <input type="text" name="pesapal_consumer_key" value="<?php echo $pesapal_consumer_key; ?>" placeholder="Consumer key" id="input-payable" class="form-control" />
+              <?php if ($error_consumer_key) { ?>
+              <div class="text-danger"><?php echo $error_consumer_key; ?></div>
               <?php } ?>
             </div>
           </div>
 
           <div class="form-group required">
-            <label class="col-sm-2 control-label" for="input-payable">Customer secret</label>
+            <label class="col-sm-2 control-label" for="input-payable">Consumer secret</label>
             <div class="col-sm-10">
-              <input type="text" name="pesapal_customer_secret" value="<?php echo $pesapal_customer_secret; ?>" placeholder="Customer secret" id="input-payable" class="form-control" />
-              <?php if ($error_customer_secret) { ?>
-              <div class="text-danger"><?php echo $error_customer_secret; ?></div>
+              <input type="text" name="pesapal_consumer_secret" value="<?php echo $pesapal_consumer_secret; ?>" placeholder="Consumer secret" id="input-payable" class="form-control" />
+              <?php if ($error_consumer_secret) { ?>
+              <div class="text-danger"><?php echo $error_consumer_secret; ?></div>
               <?php } ?>
             </div>
           </div>
-
-          <div class="form-group required">
-            <label class="col-sm-2 control-label" for="input-payable">Business Short Code</label>
-            <div class="col-sm-10">
-              <input type="text" name="pesapal_business_short_code" value="<?php echo $pesapal_business_short_code; ?>" placeholder="Business Short Code" id="input-payable" class="form-control" />
-              <?php if ($error_business_short_code) { ?>
-              <div class="text-danger"><?php echo $error_business_short_code; ?></div>
-              <?php } ?>
-            </div>
-          </div>
-
-          <div class="form-group required">
-            <label class="col-sm-2 control-label" for="input-payable">LipaNaPesaPalPass Key</label>
-            <div class="col-sm-10">
-              <input type="text" name="pesapal_lipanapesapalpasskey" value="<?php echo $pesapal_lipanapesapalpasskey; ?>" placeholder="LipaNaPesaPalPass Key" id="input-payable" class="form-control" />
-              <?php if ($error_lipanapesapalpasskey) { ?>
-              <div class="text-danger"><?php echo $error_lipanapesapalpasskey; ?></div>
-              <?php } ?>
-            </div>
-          </div>
-
-
+            
           <div class="form-group">
             <label class="col-sm-2 control-label" for="input-total"><span data-toggle="tooltip" title="<?php echo $help_total; ?>"><?php echo $entry_total; ?></span></label>
             <div class="col-sm-10">

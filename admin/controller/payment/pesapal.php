@@ -23,7 +23,7 @@ class ControllerPaymentPesapal extends Controller {
 		$data['text_enabled'] = $this->language->get('text_enabled');
 		$data['text_disabled'] = $this->language->get('text_disabled');
 
-		$data['entry_customer_key'] = $this->language->get('entry_customer_key');
+		$data['entry_consumer_key'] = $this->language->get('entry_consumer_key');
 		$data['entry_total'] = $this->language->get('entry_total');
 		$data['entry_order_status'] = $this->language->get('entry_order_status');
 		$data['entry_status'] = $this->language->get('entry_status');
@@ -47,27 +47,16 @@ class ControllerPaymentPesapal extends Controller {
 			$data['success'] = '';
 		}
                 
-		if (isset($this->error['customer_key'])) {
-			$data['error_customer_key'] = $this->error['customer_key'];
+		if (isset($this->error['consumer_key'])) {
+			$data['error_consumer_key'] = $this->error['consumer_key'];
 		} else {
-			$data['error_customer_key'] = '';
+			$data['error_consumer_key'] = '';
 		}
 
-		if (isset($this->error['customer_secret'])) {
-			$data['error_customer_secret'] = $this->error['customer_secret'];
+		if (isset($this->error['consumer_secret'])) {
+			$data['error_consumer_secret'] = $this->error['consumer_secret'];
 		} else {
-			$data['error_customer_secret'] = '';
-		}
-
-		if (isset($this->error['business_short_code'])) {
-			$data['error_business_short_code'] = $this->error['business_short_code'];
-		} else {
-			$data['error_business_short_code'] = '';
-		}
-		if (isset($this->error['lipanapesapalpasskey'])) {
-			$data['error_lipanapesapalpasskey'] = $this->error['lipanapesapalpasskey'];
-		} else {
-			$data['error_lipanapesapalpasskey'] = '';
+			$data['error_consumer_secret'] = '';
 		}
 		
 
@@ -94,37 +83,22 @@ class ControllerPaymentPesapal extends Controller {
 
 		$data['cancel'] = $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL');
 
-		if (isset($this->request->post['pesapal_customer_key'])) {
-			$data['pesapal_customer_key'] = $this->request->post['pesapal_customer_key'];
+		if (isset($this->request->post['pesapal_consumer_key'])) {
+			$data['pesapal_consumer_key'] = $this->request->post['pesapal_consumer_key'];
 		} else {
-			$data['pesapal_customer_key'] = $this->config->get('pesapal_customer_key');
+			$data['pesapal_consumer_key'] = $this->config->get('pesapal_consumer_key');
 		}
 
-		if (isset($this->request->post['pesapal_customer_secret'])) {
-			$data['pesapal_customer_secret'] = $this->request->post['pesapal_customer_secret'];
+		if (isset($this->request->post['pesapal_consumer_secret'])) {
+			$data['pesapal_consumer_secret'] = $this->request->post['pesapal_consumer_secret'];
 		} else {
-			$data['pesapal_customer_secret'] = $this->config->get('pesapal_customer_secret');
+			$data['pesapal_consumer_secret'] = $this->config->get('pesapal_consumer_secret');
 		}
 
 		if (isset($this->request->post['pesapal_environment'])) {
 			$data['pesapal_environment'] = $this->request->post['pesapal_environment'];
 		} else {
 			$data['pesapal_environment'] = $this->config->get('pesapal_environment');
-		}
-		
-
-		
-
-		if (isset($this->request->post['pesapal_business_short_code'])) {
-			$data['pesapal_business_short_code'] = $this->request->post['pesapal_business_short_code'];
-		} else {
-			$data['pesapal_business_short_code'] = $this->config->get('pesapal_business_short_code');
-		}
-
-		if (isset($this->request->post['pesapal_lipanapesapalpasskey'])) {
-			$data['pesapal_lipanapesapalpasskey'] = $this->request->post['pesapal_lipanapesapalpasskey'];
-		} else {
-			$data['pesapal_lipanapesapalpasskey'] = $this->config->get('pesapal_lipanapesapalpasskey');
 		}
 
 		if (isset($this->request->post['pesapal_failed_order_status_id'])) {
@@ -175,18 +149,11 @@ class ControllerPaymentPesapal extends Controller {
 		}
 
 		if (!$this->request->post['pesapal_customer_key']) {
-			$this->error['customer_key'] = $this->language->get('error_customer_key');
+			$this->error['consumer_key'] = $this->language->get('error_consumer_key');
 		}
 		if (!$this->request->post['pesapal_customer_secret']) {
-			$this->error['customer_secret'] = $this->language->get('error_customer_secret');
+			$this->error['consumer_secret'] = $this->language->get('error_consumer_secret');
 		}
-		if (!$this->request->post['pesapal_business_short_code']) {
-			$this->error['business_short_code'] = $this->language->get('error_business_short_code');
-		}
-		if (!$this->request->post['pesapal_lipanapesapalpasskey']) {
-			$this->error['lipanapesapalpasskey'] = $this->language->get('error_lipanapesapalpasskey');
-		}
-
 
 		return !$this->error;
 	}
