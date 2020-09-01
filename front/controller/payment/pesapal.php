@@ -1032,13 +1032,30 @@ class ControllerPaymentPesapal extends Controller {
 
     public function ipinlistener() {
 
+        $status = NULL;
+        $order_id = NULL;
         $log = new Log('error.log');
         $log->write('ipinlistener');
         $this->load->model('setting/setting');
         $this->load->model('payment/pesapal');
         $this->load->model('checkout/order');
         $this->load->model('account/customer');
+
+        $pesapalNotification = $this->request->get['pesapal_notification_type'];
+        $pesapalTrackingId = $this->request->get['pesapal_transaction_tracking_id'];
+        $pesapal_merchant_reference = $this->request->get['pesapal_merchant_reference'];
+        if ($pesapal_merchant_reference != NULL) {
+            $order_details = explode("-", $pesapal_merchant_reference);
+            $order_id = $order_details[0];
+        }
+        $log->write('ipinlistener');
+        $log->write($order_id);
+        $log->write('ipinlistener');
+
         $pesapal_creds = $this->model_setting_setting->getSetting('pesapal', 0);
+        $order_info = $this->model_checkout_order->getOrder($order_id);
+        $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
+        $customer_id = $customer_info['customer_id'];
 
         $consumer_key = $pesapal_creds['pesapal_consumer_key']; //Register a merchant account on
         //demo.pesapal.com and use the merchant key for testing.
@@ -1051,9 +1068,9 @@ class ControllerPaymentPesapal extends Controller {
         //'https://demo.pesapal.com/api/querypaymentstatus'; //change to      
         //https://www.pesapal.com/api/querypaymentstatus' when you are ready to go live!
         // Parameters sent to you by PesaPal IPN
-        $pesapalNotification = $this->request->get['pesapal_notification_type'];
-        $pesapalTrackingId = $this->request->get['pesapal_transaction_tracking_id'];
-        $pesapal_merchant_reference = $this->request->get['pesapal_merchant_reference'];
+        /* $pesapalNotification = $pesapalNotification;
+          $pesapalTrackingId = $pesapalTrackingId;
+          $pesapal_merchant_reference = $pesapal_merchant_reference; */
 
         if ($pesapalNotification == "CHANGE" && $pesapalTrackingId != '') {
             $log->write('ipinlistener');
@@ -1091,11 +1108,22 @@ class ControllerPaymentPesapal extends Controller {
             //transaction status
             $elements = preg_split("/=/", substr($response, $header_size));
             $status = $elements[1];
-
+            $log->write('ORDER STATUS');
+            $log->write($status);
+            $log->write('ORDER STATUS');
             curl_close($ch);
 
-//UPDATE YOUR DB TABLE WITH NEW STATUS FOR TRANSACTION WITH pesapal_transaction_tracking_id $pesapalTrackingId
+            if ($status != 'COMPLETED' || $response == NULL || $status == NULL) {
+                $this->model_payment_pesapal->addOrderHistory($order_id, $this->config->get('pesapal_failed_order_status_id'));
+                $this->model_payment_pesapal->updateorderstatusipn($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
+            }
+
+            if ($status == 'COMPLETED') {
+                $this->model_payment_pesapal->addOrderHistory($order_id, $this->config->get('pesapal_order_status_id'));
+                $this->model_payment_pesapal->updateorderstatusipn($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
+            }
         }
+        echo $status;
     }
 
 }
