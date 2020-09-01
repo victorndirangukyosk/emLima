@@ -6,7 +6,7 @@
 <div class="sp-quantity product-quantity" class="mini-qtybtns-addbtnd" id="controller-container">
     <?php if ($product['quantity']) { ?> 
     <div class="inc-dec-quantity" id="<?= $product['product_store_id'] ?>-<?= $product['store_product_variation_id'] ?>">           
-        <input type="button" class="sp-minus fff mini-minus-quantity ddd" data-key='<?= $product["key"] ?>' data-id='<?= $product["product_store_id"] ?>' id="minus" value="-"/>
+        <input type="button" class="sp-minus fff mini-minus-quantity ddd" data-key='<?= $product["key"] ?>' data-id='<?= $product["product_store_id"] ?>' data-unit='<?= $product["name"] ?>' id="minus" value="-"/>
         <span class="sp-input middle-quantity quntity-input product-count" id='<?= $product["key"] ?>'>
             <?= $product['quantity'] ?>
         </span>
