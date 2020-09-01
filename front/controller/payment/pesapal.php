@@ -898,7 +898,39 @@ class ControllerPaymentPesapal extends Controller {
     }
 
     public function status() {
-        
+        $log = new Log('error.log');
+
+        $this->load->language('payment/pesapal');
+        $this->load->model('setting/setting');
+        $this->load->model('payment/pesapal');
+        $this->load->model('checkout/order');
+        $this->load->model('account/customer');
+
+        foreach ($this->session->data['order_id'] as $key => $value) {
+            $order_id = $value;
+        }
+
+        $log->write('Pesapal Order ID');
+        $log->write($this->session->data['order_id']);
+        $log->write('Pesapal Order ID');
+        $order_info = $this->model_checkout_order->getOrder($order_id);
+        $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
+        $log->write('Pesapal Creds Customer Info');
+        $log->write($customer_info);
+        $log->write('Pesapal Creds Customer Info');
+
+        $log->write('Pesapal Order Info');
+        $log->write($order_info);
+        $log->write('Pesapal Order Info');
+
+        if (count($order_info) > 0) {
+            $amount = (int) ($order_info['total']);
+        }
+
+        $transaction_tracking_id = $this->request->get['pesapal_transaction_tracking_id'];
+        $merchant_reference = $this->request->get['pesapal_merchant_reference'];
+        $customer_id = $customer_info['customer_id'];
+        $this->model_payment_pesapal->insertOrderTransactionIdPesapal($order_id, $transaction_tracking_id, $merchant_reference, $customer_id);
     }
 
 }
