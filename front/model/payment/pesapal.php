@@ -108,4 +108,8 @@ class ModelPaymentPesapal extends Model {
         //$query = $this->db->query($sql);
     }
 
+    public function updateorderstatusipn($order_id, $transaction_tracking_id, $merchant_reference, $customer_id, $status) {
+        $this->db->query("UPDATE `" . DB_PREFIX . "pesapal_transactions` SET `status` = '" . $status . "',updated_at = NOW() where order_id='" . $order_id . "' AND pesapal_transaction_tracking_id ='" . $transaction_tracking_id . "'");
+    }
+
 }

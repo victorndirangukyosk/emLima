@@ -944,6 +944,9 @@ class ControllerPaymentPesapal extends Controller {
         $this->load->model('checkout/order');
         $this->load->model('account/customer');
         $pesapal_creds = $this->model_setting_setting->getSetting('pesapal', 0);
+        $order_info = $this->model_checkout_order->getOrder($order_id);
+        $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
+        $customer_id = $customer_info['customer_id'];
 
         $consumer_key = $pesapal_creds['pesapal_consumer_key']; //Register a merchant account on
         //demo.pesapal.com and use the merchant key for testing.
@@ -1006,15 +1009,13 @@ class ControllerPaymentPesapal extends Controller {
             curl_close($ch);
 
             if ($status != 'COMPLETED') {
-                foreach ($this->session->data['order_id'] as $order_id) {
-                    $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('pesapal_failed_order_status_id'));
-                }
+                $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('pesapal_failed_order_status_id'));
+                $this->model_payment_pesapal->updateorderstatusipn($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
             }
 
             if ($status == 'COMPLETED') {
-                foreach ($this->session->data['order_id'] as $order_id) {
-                    $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('pesapal_order_status_id'));
-                }
+                $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('pesapal_order_status_id'));
+                $this->model_payment_pesapal->updateorderstatusipn($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
             }
 
 //UPDATE YOUR DB TABLE WITH NEW STATUS FOR TRANSACTION WITH pesapal_transaction_tracking_id $pesapalTrackingId
