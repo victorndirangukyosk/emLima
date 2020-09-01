@@ -937,6 +937,7 @@ class ControllerPaymentPesapal extends Controller {
 
     public function ipinlistenercustom($pesapalNotification, $pesapalTrackingId, $pesapal_merchant_reference, $order_id) {
 
+        $status = NULL;
         $log = new Log('error.log');
         $log->write('ipinlistener');
         $this->load->model('setting/setting');
@@ -1008,7 +1009,7 @@ class ControllerPaymentPesapal extends Controller {
             $log->write('ORDER STATUS');
             curl_close($ch);
 
-            if ($status != 'COMPLETED') {
+            if ($status != 'COMPLETED' || $response == NULL || $status == NULL) {
                 $this->model_payment_pesapal->addOrderHistory($order_id, $this->config->get('pesapal_failed_order_status_id'));
                 $this->model_payment_pesapal->updateorderstatusipn($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
             }
@@ -1017,8 +1018,6 @@ class ControllerPaymentPesapal extends Controller {
                 $this->model_payment_pesapal->addOrderHistory($order_id, $this->config->get('pesapal_order_status_id'));
                 $this->model_payment_pesapal->updateorderstatusipn($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
             }
-
-//UPDATE YOUR DB TABLE WITH NEW STATUS FOR TRANSACTION WITH pesapal_transaction_tracking_id $pesapalTrackingId
         }
     }
 
