@@ -1,1 +1,4 @@
-<?php// Heading$_['heading_title'] = 'Refine Search';
+<?php
+
+// Heading
+$_['heading_title'] = 'Refine Search';

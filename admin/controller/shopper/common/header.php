@@ -1,8 +1,9 @@
 <?php
 
-class ControllerShopperCommonHeader extends Controller {
-
-    public function index() {
+class ControllerShopperCommonHeader extends Controller
+{
+    public function index()
+    {
         $this->load->language('common/Header');
 
         $data['text_home'] = $this->language->get('text_home');
@@ -15,15 +16,12 @@ class ControllerShopperCommonHeader extends Controller {
 
         $data['config_name'] = $this->config->get('config_name');
 
-        
-
-        
-        $data['wallet'] = $this->url->link('shopper/wallet', 'token=' . $this->session->data['token'], 'SSL');
-        $data['setting'] = $this->url->link('shopper/setting', 'token=' . $this->session->data['token'], 'SSL');
-        $data['password'] = $this->url->link('shopper/setting/password', 'token=' . $this->session->data['token'], 'SSL');
-        $data['request'] = $this->url->link('shopper/request', 'token=' . $this->session->data['token'], 'SSL');
-        $data['order'] = $this->url->link('shopper/order', 'token=' . $this->session->data['token'], 'SSL');    
-        $data['logout'] = $this->url->link('common/logout', 'token=' . $this->session->data['token'], 'SSL');
+        $data['wallet'] = $this->url->link('shopper/wallet', 'token='.$this->session->data['token'], 'SSL');
+        $data['setting'] = $this->url->link('shopper/setting', 'token='.$this->session->data['token'], 'SSL');
+        $data['password'] = $this->url->link('shopper/setting/password', 'token='.$this->session->data['token'], 'SSL');
+        $data['request'] = $this->url->link('shopper/request', 'token='.$this->session->data['token'], 'SSL');
+        $data['order'] = $this->url->link('shopper/order', 'token='.$this->session->data['token'], 'SSL');
+        $data['logout'] = $this->url->link('common/logout', 'token='.$this->session->data['token'], 'SSL');
 
         return $this->load->view('shopper/common/header.tpl', $data);
     }

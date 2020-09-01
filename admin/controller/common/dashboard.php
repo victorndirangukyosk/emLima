@@ -1,28 +1,28 @@
 <?php
 
-class ControllerCommonDashboard extends Controller {
-
-    public function temp(){
-        
+class ControllerCommonDashboard extends Controller
+{
+    public function temp()
+    {
         $this->load->model('catalog/product');
-        
+
         $results = $this->model_catalog_product->getProductIds();
-        
-        foreach($results as $row) {
+
+        foreach ($results as $row) {
             $this->model_catalog_product->copyProduct($row['product_id']);
         }
-        
+
         echo 'done!';
         die();
     }
-    
-    public function index() {
 
+    public function index()
+    {
         $shopper_group_ids = explode(',', $this->config->get('config_shopper_group_ids'));
-        
-        if(in_array($this->user->getGroupId(), $shopper_group_ids)){
-            $this->response->redirect($this->url->link('shopper/request', 'token=' . $this->session->data['token'], 'SSL'));
-        }    
+
+        if (in_array($this->user->getGroupId(), $shopper_group_ids)) {
+            $this->response->redirect($this->url->link('shopper/request', 'token='.$this->session->data['token'], 'SSL'));
+        }
 
         $this->load->language('common/dashboard');
 
@@ -35,17 +35,17 @@ class ControllerCommonDashboard extends Controller {
         $data['text_activity'] = $this->language->get('text_activity');
         $data['text_recent'] = $this->language->get('text_recent');
 
-        $data['breadcrumbs'] = array();
+        $data['breadcrumbs'] = [];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL')
-        );
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
+        ];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL')
-        );
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
+        ];
 
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
@@ -60,8 +60,8 @@ class ControllerCommonDashboard extends Controller {
         }
     }
 
-    private function vendor($data) {
-
+    private function vendor($data)
+    {
         $data['error_install'] = '';
 
         $data['order'] = $this->load->controller('dashboard/order/vendor');
@@ -72,16 +72,16 @@ class ControllerCommonDashboard extends Controller {
         $data['charts'] = $this->load->controller('dashboard/charts');
 
         $data['actualSales'] = $this->load->controller('dashboard/sale/vendorActualSales');
-        
+
         $data['recenttabs'] = $this->load->controller('dashboard/recenttabs');
-        
+
         $this->response->setOutput($this->load->view('common/vendor_dashboard.tpl', $data));
     }
 
-    private function admin($data) {
-
+    private function admin($data)
+    {
         // Check install directory exists
-        if (is_dir(dirname(DIR_APPLICATION) . '/install')) {
+        if (is_dir(dirname(DIR_APPLICATION).'/install')) {
             $data['error_install'] = $this->language->get('error_install');
         } else {
             $data['error_install'] = '';
@@ -107,17 +107,15 @@ class ControllerCommonDashboard extends Controller {
         $this->response->setOutput($this->load->view('common/dashboard.tpl', $data));
     }
 
-
-    public function export_mostpurchased_products_excel($customer_id) {
-        $data = array();
+    public function export_mostpurchased_products_excel($customer_id)
+    {
+        $data = [];
 
         if (isset($this->request->get['customer_id'])) {
             $data['customer_id'] = $this->request->get['customer_id'];
-        } 
+        }
 
-        
         $this->load->model('report/excel');
         $this->model_report_excel->download_mostpurchased_products_excel($data);
     }
-
 }

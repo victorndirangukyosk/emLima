@@ -1,24 +1,27 @@
 <?php
 
-class Update extends SmartObject {
-
-	public function __construct($registry) {
-		$this->db = $registry->get('db');
+class Update extends SmartObject
+{
+    public function __construct($registry)
+    {
+        $this->db = $registry->get('db');
         $this->cache = $registry->get('cache');
         $this->config = $registry->get('config');
         $this->utility = $registry->get('utility');
         $this->addon = new Addon($registry);
-	}
-
-    public function countUpdates() {
-        return array_sum(array_map("count", $this->getUpdates()));
     }
 
-    public function getUpdates() {
+    public function countUpdates()
+    {
+        return array_sum(array_map('count', $this->getUpdates()));
+    }
+
+    public function getUpdates()
+    {
         $data = $this->cache->get('update');
 
         if (empty($data)) {
-            $data = array();
+            $data = [];
 
             $addons = $this->addon->getAddons();
 
@@ -31,13 +34,12 @@ class Update extends SmartObject {
                         $addon = $addons[$id];
                         $type = $addon['product_type'];
 
-                        if (version_compare($addon['product_version'], $addon_version) != 0) {
+                        if (0 != version_compare($addon['product_version'], $addon_version)) {
                             $data[$type][$addon['product_id']] = $addon_version;
                         }
                     }
-                }
-                elseif ($key == 'core') {
-                    if (version_compare(VERSION, $version) != 0) {
+                } elseif ('core' == $key) {
+                    if (0 != version_compare(VERSION, $version)) {
                         $data['core'] = $version;
                     }
                 }
@@ -49,15 +51,16 @@ class Update extends SmartObject {
         return $data;
     }
 
-    public function getVersions() {
+    public function getVersions()
+    {
         $data = $this->cache->get('version');
 
         if (empty($data)) {
-            $data = array();
+            $data = [];
 
             // Check core first
             $info = $this->utility->getInfo();
-            $base_url = '';//http://arastta.io/';
+            $base_url = ''; //http://arastta.io/';
 
             $url = $base_url.'core/1.0/version/'.$info['arastta'].'/'.$info['php'].'/'.$info['mysql'].'/'.$info['langs'].'/'.$info['stores'];
 
@@ -82,35 +85,34 @@ class Update extends SmartObject {
         return $data;
     }
 
-    public function getRemoteVersion($url) {
-        $remote_data = $this->utility->getRemoteData($url, array('referrer' => true));
+    public function getRemoteVersion($url)
+    {
+        $remote_data = $this->utility->getRemoteData($url, ['referrer' => true]);
 
         if (is_string($remote_data)) {
             $version = json_decode($remote_data);
 
             if (is_object($version)) {
                 $latest = $version->latest;
-            }
-            else {
+            } else {
                 $latest = '0.0.0';
             }
-        }
-        else {
+        } else {
             $latest = '0.0.0';
         }
 
         return $latest;
     }
 
-    public function downloadUpdate($product_id, $version) {
+    public function downloadUpdate($product_id, $version)
+    {
         // Check core first
         $info = $this->utility->getInfo();
-        $base_url = '';//
+        $base_url = '';
 
-        if ($product_id == 'core') {
+        if ('core' == $product_id) {
             $url = $base_url.'core/1.0/update/'.$version.'/'.$info['php'].'/'.$info['mysql'];
-        }
-        else {
+        } else {
             $addons = $this->addon->getAddons();
             $type = $addons[$product_id]['product_type'];
 
@@ -118,7 +120,7 @@ class Update extends SmartObject {
             $url = $base_url.$type.'/1.0/update/'.$product_id.'/'.$version.'/'.$info['arastta'];
         }
 
-        $file = $this->utility->getRemoteData($url, array('referrer' => true));
+        $file = $this->utility->getRemoteData($url, ['referrer' => true]);
 
         return $file;
     }

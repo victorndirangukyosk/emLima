@@ -1,12 +1,12 @@
 <?php
 
-class ControllerAccountForgotten extends Controller {
+class ControllerAccountForgotten extends Controller
+{
+    private $error = [];
 
-    private $error = array();
-
-    public function index() {
-
-        $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_login.css');
+    public function index()
+    {
+        $this->document->addStyle('front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_login.css');
 
         if ($this->customer->isLogged()) {
             $this->response->redirect($this->url->link('account/account', '', 'SSL'));
@@ -18,13 +18,12 @@ class ControllerAccountForgotten extends Controller {
 
         $this->load->model('account/customer');
 
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->request->isAjax() && $this->validate()) {
-
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->request->isAjax() && $this->validate()) {
             $this->load->language('mail/forgotten');
 
             $password = substr(sha1(uniqid(mt_rand(), true)), 0, 10);
 
-            $this->model_account_customer->resetPassword($this->request->post['email'], $password,1);
+            $this->model_account_customer->resetPassword($this->request->post['email'], $password, 1);
             //1 implies, new password is generated and user need to update his password
 
             $this->model_account_customer->resetPasswordMail($this->request->post['email'], $password);
@@ -33,17 +32,17 @@ class ControllerAccountForgotten extends Controller {
             $this->session->data['success'] = $this->language->get('text_success');
 
             $this->model_account_customer->deleteLoginAttempts($this->request->post['email']);
-            
+
             // Add to activity log
             $customer_info = $this->model_account_customer->getCustomerByEmail($this->request->post['email']);
 
             if ($customer_info) {
                 $this->load->model('account/activity');
 
-                $activity_data = array(
+                $activity_data = [
                     'customer_id' => $customer_info['customer_id'],
-                    'name' => $customer_info['firstname'] . ' ' . $customer_info['lastname']
-                );
+                    'name' => $customer_info['firstname'].' '.$customer_info['lastname'],
+                ];
 
                 $this->model_account_activity->addActivity('forgotten', $activity_data);
             }
@@ -58,7 +57,6 @@ class ControllerAccountForgotten extends Controller {
             }
             //$this->response->redirect($this->url->link('account/login', '', 'SSL'));
         } else {
-
             if (isset($this->error['warning'])) {
                 $data['error_warning'] = $this->error['warning'];
             } else {
@@ -73,13 +71,12 @@ class ControllerAccountForgotten extends Controller {
                 $this->response->setOutput(json_encode($data));
             }
         }
-        
+
         return true;
     }
 
-    
-    protected function validate() {
-
+    protected function validate()
+    {
         if (!isset($this->request->post['email'])) {
             $this->error['warning'] = $this->language->get('error_email');
         } elseif (!$this->model_account_customer->getTotalCustomersByEmail($this->request->post['email'])) {
@@ -88,5 +85,4 @@ class ControllerAccountForgotten extends Controller {
 
         return !$this->error;
     }
-
 }

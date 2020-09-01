@@ -20,7 +20,6 @@ final class Transactions implements \Iterator
     }
 
     /**
-     * @param array $transactions
      * @return Transactions
      */
     public static function fromArray(array $transactions)
@@ -80,12 +79,13 @@ final class Transactions implements \Iterator
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function valid()
     {
         $key = key($this->transactions);
-        return ($key !== null && $key !== false);
+
+        return null !== $key && false !== $key;
     }
 
     public function rewind()

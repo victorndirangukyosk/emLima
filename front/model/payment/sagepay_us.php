@@ -1,25 +1,28 @@
 <?php
-class ModelPaymentSagePayUS extends Model {
-	public function getMethod($total) {
-		$this->load->language('payment/sagepay_us');
 
-		if ($this->config->get('sagepay_us_total') > 0 && $this->config->get('sagepay_us_total') > $total) {
-			$status = false;
-		} else {
-			$status = true;
-		}
+class ModelPaymentSagePayUS extends Model
+{
+    public function getMethod($total)
+    {
+        $this->load->language('payment/sagepay_us');
 
-		$method_data = array();
+        if ($this->config->get('sagepay_us_total') > 0 && $this->config->get('sagepay_us_total') > $total) {
+            $status = false;
+        } else {
+            $status = true;
+        }
 
-		if ($status) {
-			$method_data = array(
-				'code'       => 'sagepay_us',
-				'title'      => $this->language->get('text_title'),
-				'terms'      => '',
-				'sort_order' => $this->config->get('sagepay_us_sort_order')
-			);
-		}
+        $method_data = [];
 
-		return $method_data;
-	}
+        if ($status) {
+            $method_data = [
+                'code' => 'sagepay_us',
+                'title' => $this->language->get('text_title'),
+                'terms' => '',
+                'sort_order' => $this->config->get('sagepay_us_sort_order'),
+            ];
+        }
+
+        return $method_data;
+    }
 }

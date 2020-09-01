@@ -3,14 +3,12 @@
 namespace Stripe;
 
 /**
- * Class Recipient
- *
- * @package Stripe
+ * Class Recipient.
  */
 class Recipient extends ApiResource
 {
     /**
-     * @param string $id The ID of the recipient to retrieve.
+     * @param string            $id   the ID of the recipient to retrieve
      * @param array|string|null $opts
      *
      * @return Recipient
@@ -21,7 +19,7 @@ class Recipient extends ApiResource
     }
 
     /**
-     * @param array|null $params
+     * @param array|null        $params
      * @param array|string|null $opts
      *
      * @return Collection of Recipients
@@ -32,10 +30,10 @@ class Recipient extends ApiResource
     }
 
     /**
-     * @param array|null $params
+     * @param array|null        $params
      * @param array|string|null $opts
      *
-     * @return Recipient The created recipient.
+     * @return Recipient the created recipient
      */
     public static function create($params = null, $opts = null)
     {
@@ -43,11 +41,11 @@ class Recipient extends ApiResource
     }
 
     /**
-     * @param string $id The ID of the recipient to update.
-     * @param array|null $params
+     * @param string            $id      the ID of the recipient to update
+     * @param array|null        $params
      * @param array|string|null $options
      *
-     * @return Recipient The updated recipient.
+     * @return Recipient the updated recipient
      */
     public static function update($id, $params = null, $options = null)
     {
@@ -57,7 +55,7 @@ class Recipient extends ApiResource
     /**
      * @param array|string|null $opts
      *
-     * @return Recipient The saved recipient.
+     * @return Recipient the saved recipient
      */
     public function save($opts = null)
     {
@@ -67,13 +65,12 @@ class Recipient extends ApiResource
     /**
      * @param array|null $params
      *
-     * @return Recipient The deleted recipient.
+     * @return Recipient the deleted recipient
      */
     public function delete($params = null, $opts = null)
     {
         return $this->_delete($params, $opts);
     }
-
 
     /**
      * @param array|null $params
@@ -82,11 +79,12 @@ class Recipient extends ApiResource
      */
     public function transfers($params = null)
     {
-        if ($params === null) {
-            $params = array();
+        if (null === $params) {
+            $params = [];
         }
         $params['recipient'] = $this->id;
         $transfers = Transfer::all($params, $this->_opts);
+
         return $transfers;
     }
 }

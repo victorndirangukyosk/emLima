@@ -1,8 +1,9 @@
 <?php
 
-class ControllerPaymentPPPayflowIframe extends Controller {
-
-    public function index() {
+class ControllerPaymentPPPayflowIframe extends Controller
+{
+    public function index()
+    {
         $this->load->model('checkout/order');
         $this->load->model('payment/pp_payflow_iframe');
         $this->load->model('localisation/country');
@@ -18,17 +19,17 @@ class ControllerPaymentPPPayflowIframe extends Controller {
 
         $payflow_url = 'https://payflowlink.paypal.com';
 
-        if ($this->config->get('pp_payflow_iframe_transaction_method') == 'sale') {
+        if ('sale' == $this->config->get('pp_payflow_iframe_transaction_method')) {
             $transaction_type = 'S';
         } else {
             $transaction_type = 'A';
         }
 
-        $secure_token_id = md5($this->session->data['order_id'] . mt_rand() . microtime());
+        $secure_token_id = md5($this->session->data['order_id'].mt_rand().microtime());
 
         $this->model_payment_pp_payflow_iframe->addOrder($order_info['order_id'], $secure_token_id);
 
-        //get address 
+        //get address
         $this->load->model('account/address');
         $this->load->model('account/customer');
 
@@ -44,13 +45,13 @@ class ControllerPaymentPPPayflowIframe extends Controller {
 
         if ($address_info) {
             $city = $address_info['city'];
-            $address = $address_info['address'] . ', ' . $address_info['city'];
+            $address = $address_info['address'].', '.$address_info['city'];
         } else {
             $city = '';
             $address = '';
         }
 
-        $url_params = array(
+        $url_params = [
             'TENDER' => 'C',
             'TRXTYPE' => $transaction_type,
             'AMT' => $this->currency->format($order_info['total'], $order_info['currency_code'], false, false),
@@ -64,7 +65,7 @@ class ControllerPaymentPPPayflowIframe extends Controller {
             'BILLTOSTATE' => $this->config->get('config_state_code'),
             'BILLTOZIP' => '',
             'BILLTOCOUNTRY' => $this->config->get('config_country_code'),
-        );
+        ];
 
         $url_params['SHIPTOFIRSTNAME'] = $order_info['shipping_name'];
         $url_params['SHIPTOLASTNAME'] = '';
@@ -82,25 +83,25 @@ class ControllerPaymentPPPayflowIframe extends Controller {
             $secure_token = '';
         }
 
-        $iframe_params = array(
+        $iframe_params = [
             'MODE' => $mode,
             'SECURETOKENID' => $secure_token_id,
             'SECURETOKEN' => $secure_token,
-        );
+        ];
 
-        $data['iframe_url'] = $payflow_url . '?' . http_build_query($iframe_params, '', "&");
+        $data['iframe_url'] = $payflow_url.'?'.http_build_query($iframe_params, '', '&');
         $data['checkout_method'] = $this->config->get('pp_payflow_iframe_checkout_method');
         $data['button_confirm'] = $this->language->get('button_confirm');
 
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/pp_payflow_iframe.tpl')) {
-            return $this->load->view($this->config->get('config_template') . '/template/payment/pp_payflow_iframe.tpl', $data);
+        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/payment/pp_payflow_iframe.tpl')) {
+            return $this->load->view($this->config->get('config_template').'/template/payment/pp_payflow_iframe.tpl', $data);
         } else {
             return $this->load->view('default/template/payment/pp_payflow_iframe.tpl', $data);
         }
     }
 
-    public function paymentReturn() {
-
+    public function paymentReturn()
+    {
         if ($this->request->server['HTTPS']) {
             $server = $this->config->get('config_ssl');
         } else {
@@ -110,76 +111,79 @@ class ControllerPaymentPPPayflowIframe extends Controller {
         $data['url'] = $server.'checkout-success';
         //$this->url->link('checkout/success');
 
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/pp_payflow_iframe_return.tpl')) {
-            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/payment/pp_payflow_iframe_return.tpl', $data));
+        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/payment/pp_payflow_iframe_return.tpl')) {
+            $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/payment/pp_payflow_iframe_return.tpl', $data));
         } else {
             $this->response->setOutput($this->load->view('default/template/payment/pp_payflow_iframe_return.tpl', $data));
         }
     }
 
-    public function paymentCancel() {
+    public function paymentCancel()
+    {
         $data['url'] = $this->url->link('checkout/checkout');
 
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/pp_payflow_iframe_return.tpl')) {
-            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/payment/pp_payflow_iframe_return.tpl', $data));
+        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/payment/pp_payflow_iframe_return.tpl')) {
+            $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/payment/pp_payflow_iframe_return.tpl', $data));
         } else {
             $this->response->setOutput($this->load->view('default/template/payment/pp_payflow_iframe_return.tpl', $data));
         }
     }
 
-    public function paymentError() {
+    public function paymentError()
+    {
         $data['url'] = $this->url->link('checkout/checkout');
 
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/pp_payflow_iframe_return.tpl')) {
-            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/payment/pp_payflow_iframe_return.tpl', $data));
+        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/payment/pp_payflow_iframe_return.tpl')) {
+            $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/payment/pp_payflow_iframe_return.tpl', $data));
         } else {
             $this->response->setOutput($this->load->view('default/template/payment/pp_payflow_iframe_return.tpl', $data));
         }
     }
 
-    public function paymentIpn() {
+    public function paymentIpn()
+    {
         $this->load->model('payment/pp_payflow_iframe');
         $this->load->model('checkout/order');
 
-        $this->model_payment_pp_payflow_iframe->log('POST: ' . print_r($this->request->post, 1));
+        $this->model_payment_pp_payflow_iframe->log('POST: '.print_r($this->request->post, 1));
 
         $order_id = $this->model_payment_pp_payflow_iframe->getOrderId($this->request->post['SECURETOKENID']);
 
         if ($order_id) {
             $order_info = $this->model_checkout_order->getOrder($order_id);
 
-            $url_params = array(
+            $url_params = [
                 'TENDER' => 'C',
                 'TRXTYPE' => 'I',
                 'ORIGID' => $this->request->post['PNREF'],
-            );
+            ];
 
             $response_params = $this->model_payment_pp_payflow_iframe->call($url_params);
 
-            if ($order_info['order_status_id'] == 0 && $response_params['RESULT'] == '0' && $this->request->post['RESULT'] == 0) {
+            if (0 == $order_info['order_status_id'] && '0' == $response_params['RESULT'] && 0 == $this->request->post['RESULT']) {
                 $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('pp_payflow_iframe_order_status_id'));
 
-                if ($this->request->post['TYPE'] == 'S') {
+                if ('S' == $this->request->post['TYPE']) {
                     $complete = 1;
                 } else {
                     $complete = 0;
                 }
 
-                $data = array(
+                $data = [
                     'secure_token_id' => $this->request->post['SECURETOKENID'],
                     'transaction_reference' => $this->request->post['PNREF'],
                     'transaction_type' => $this->request->post['TYPE'],
                     'complete' => $complete,
-                );
+                ];
 
                 $this->model_payment_pp_payflow_iframe->updateOrder($data);
 
-                $data = array(
+                $data = [
                     'order_id' => $order_id,
                     'type' => $this->request->post['TYPE'],
                     'transaction_reference' => $this->request->post['PNREF'],
                     'amount' => $this->request->post['AMT'],
-                );
+                ];
 
                 $this->model_payment_pp_payflow_iframe->addTransaction($data);
             }

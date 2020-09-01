@@ -1,16 +1,18 @@
 <?php
 
-class ControllerApiLogin extends Controller {
-    public function index() {
+class ControllerApiLogin extends Controller
+{
+    public function index()
+    {
         $this->load->language('api/login');
 
         // Delete old login so not to cause any issues if there is an error
         unset($this->session->data['api_id']);
 
-        $keys = array(
+        $keys = [
             'username',
-            'password'
-        );
+            'password',
+        ];
 
         foreach ($keys as $key) {
             if (!isset($this->request->post[$key])) {
@@ -18,7 +20,7 @@ class ControllerApiLogin extends Controller {
             }
         }
 
-        $json = array();
+        $json = [];
 
         $this->load->model('account/api');
 

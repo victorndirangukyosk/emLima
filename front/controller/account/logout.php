@@ -1,10 +1,10 @@
 <?php
 
-class ControllerAccountLogout extends Controller {
-
-    public function index() {
-
-        $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_login.css');
+class ControllerAccountLogout extends Controller
+{
+    public function index()
+    {
+        $this->document->addStyle('front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_login.css');
 
         if ($this->customer->isLogged()) {
             $this->trigger->fire('pre.customer.logout');
@@ -31,8 +31,7 @@ class ControllerAccountLogout extends Controller {
             unset($this->session->data['email_sub_user_id']);
             unset($this->session->data['email_parent_user_id']);
 
-
-            setcookie('zipcode', null, time() - 3600, "/");
+            setcookie('zipcode', null, time() - 3600, '/');
 
             unset($this->session->data['config_store_id']);
             $this->trigger->fire('post.customer.logout');
@@ -43,7 +42,6 @@ class ControllerAccountLogout extends Controller {
                 $server = $this->config->get('config_url');
             }
 
-
             /* For Default Page new login */
             unset($this->session->data['customer_id']);
             if (isset($this->session->data['customer_id'])) {
@@ -53,27 +51,26 @@ class ControllerAccountLogout extends Controller {
             $this->response->redirect($server);
         }
 
-
         $this->load->language('account/logout');
 
         $this->document->setTitle($this->language->get('heading_title'));
 
-        $data['breadcrumbs'] = array();
+        $data['breadcrumbs'] = [];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home')
-        );
+            'href' => $this->url->link('common/home'),
+        ];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_account'),
-            'href' => $this->url->link('account/account', '', 'SSL')
-        );
+            'href' => $this->url->link('account/account', '', 'SSL'),
+        ];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_logout'),
-            'href' => $this->url->link('account/logout', '', 'SSL')
-        );
+            'href' => $this->url->link('account/logout', '', 'SSL'),
+        ];
 
         $data['heading_title'] = $this->language->get('heading_title');
 
@@ -92,16 +89,16 @@ class ControllerAccountLogout extends Controller {
 
         //REDIRECTING TO HOME PAGE AFTER LOGOUT
         $this->response->redirect('/');
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/success.tpl')) {
-            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/success.tpl', $data));
+        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/common/success.tpl')) {
+            $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/common/success.tpl', $data));
         } else {
             $this->response->setOutput($this->load->view('default/template/common/success.tpl', $data));
         }
     }
 
-    public function checkoutLogout() {
-
-        $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_login.css');
+    public function checkoutLogout()
+    {
+        $this->document->addStyle('front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_login.css');
 
         $json['status'] = true;
 
@@ -124,9 +121,8 @@ class ControllerAccountLogout extends Controller {
             //unset($this->session->data['reward']);
             //unset($this->session->data['voucher']);
             //unset($this->session->data['vouchers']);
-            //unset($this->session->data['config_store_id']); 
+            //unset($this->session->data['config_store_id']);
             //$this->trigger->fire('post.customer.logout');
-
 
             $this->response->addHeader('Content-Type: application/json');
             $this->response->setOutput(json_encode($json));
@@ -135,5 +131,4 @@ class ControllerAccountLogout extends Controller {
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
-
 }

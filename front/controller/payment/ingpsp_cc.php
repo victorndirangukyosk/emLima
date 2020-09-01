@@ -1,17 +1,17 @@
 <?php
 
 /**
- * Class ControllerPaymentIngpspCc
+ * Class ControllerPaymentIngpspCc.
  */
 class ControllerPaymentIngpspCc extends Controller
 {
     /**
-     * Default currency for Order
+     * Default currency for Order.
      */
     const DEFAULT_CURRENCY = 'EUR';
 
     /**
-     * Payments module name
+     * Payments module name.
      */
     const MODULE_NAME = 'ingpsp_cc';
 
@@ -44,7 +44,8 @@ class ControllerPaymentIngpspCc extends Controller
     }
 
     /**
-     * Index Action
+     * Index Action.
+     *
      * @return mixed
      */
     public function index()
@@ -52,7 +53,7 @@ class ControllerPaymentIngpspCc extends Controller
         $this->language->load('payment/'.static::MODULE_NAME);
 
         $data['button_confirm'] = $this->language->get('button_confirm');
-        
+
         $data['continue'] = $this->url->link('checkout/success');
         $data['action'] = $this->url->link('payment/'.static::MODULE_NAME.'/confirm');
 
@@ -62,7 +63,7 @@ class ControllerPaymentIngpspCc extends Controller
     }
 
     /**
-     * Order Confirm Action
+     * Order Confirm Action.
      */
     // public function confirm()
     // {
@@ -84,7 +85,6 @@ class ControllerPaymentIngpspCc extends Controller
 
     public function confirm()
     {
-
         $log = new Log('error.log');
 
         $log->write('confirm ingpsp');
@@ -97,15 +97,13 @@ class ControllerPaymentIngpspCc extends Controller
             foreach ($this->session->data['order_id'] as $order_id) {
                 $orderInfo = $this->model_checkout_order->getOrder($order_id);
 
-                $log->write('orderid'+$order_id);
+                $log->write('orderid' + $order_id);
                 //$log->write($orderInfo);
-                
 
                 //$log->write($this);
                 if ($orderInfo) {
                     $ingOrderData = $this->ingHelper->getOrderData($orderInfo, $this);
 
-                    
                     $log->write('ingOrderData');
                     //$log->write($ingOrderData);
 
@@ -127,14 +125,10 @@ class ControllerPaymentIngpspCc extends Controller
 
                     $log->write($checkoutUrl);
                     $log->write('checkoutUrl');
-                    
 
                     $this->response->redirect($checkoutUrl);
                 }
             }
-            
-
-            
         } catch (\Exception $e) {
             $this->session->data['error'] = $e->getMessage();
 
@@ -145,9 +139,8 @@ class ControllerPaymentIngpspCc extends Controller
         }
     }
 
-
     /**
-     * Callback Action
+     * Callback Action.
      */
     public function callback()
     {
@@ -155,7 +148,7 @@ class ControllerPaymentIngpspCc extends Controller
     }
 
     /**
-     * Pending order processing page
+     * Pending order processing page.
      *
      * @return mixed
      */
@@ -165,7 +158,7 @@ class ControllerPaymentIngpspCc extends Controller
     }
 
     /**
-     * Pending order processing page
+     * Pending order processing page.
      *
      * @return mixed
      */
@@ -180,6 +173,7 @@ class ControllerPaymentIngpspCc extends Controller
      * Generate ING PSP order.
      *
      * @param array
+     *
      * @return \GingerPayments\Payment\Order
      */
     protected function createOrder(array $orderData)
@@ -198,7 +192,7 @@ class ControllerPaymentIngpspCc extends Controller
     }
 
     /**
-     * Webhook action is called by API when transaction status is updated
+     * Webhook action is called by API when transaction status is updated.
      *
      * @return void
      */

@@ -1,18 +1,17 @@
 <?php
 
-class ControllerInformationShopper extends Controller {
+class ControllerInformationShopper extends Controller
+{
+    private $error = [];
 
-    private $error = array();
-
-    public function index() {
-        
+    public function index()
+    {
         $this->load->language('information/shopper');
 
         $this->document->setTitle($this->language->get('heading_title'));
         $this->document->addStyle('front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_checkout.css');
 
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validate()) {
             $subject = $this->emailtemplate->getSubject('Contact', 'contact_1', $this->request->post);
             $message = $this->emailtemplate->getMessage('Contact', 'contact_1', $this->request->post);
 
@@ -20,7 +19,7 @@ class ControllerInformationShopper extends Controller {
             $mail->setTo($this->config->get('config_email'));
             //$mail->setFrom($this->request->post['email']);
             $mail->setFrom($this->config->get('config_from_email'));
-            
+
             $mail->setSender($this->request->post['firstname'].' '.$this->request->post['lastname']);
             $mail->setSubject(html_entity_decode($subject, ENT_QUOTES, 'UTF-8'));
             $mail->setHtml(html_entity_decode(strip_tags($message), ENT_QUOTES, 'UTF-8'));
@@ -28,21 +27,21 @@ class ControllerInformationShopper extends Controller {
 
             $this->load->model('information/shopper');
             $this->model_information_shopper->save($this->request->post);
-            
+
             $this->response->redirect($this->url->link('information/shopper/success'));
         }
 
-        $data['breadcrumbs'] = array();
+        $data['breadcrumbs'] = [];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home')
-        );
+            'href' => $this->url->link('common/home'),
+        ];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('information/contact')
-        );
+            'href' => $this->url->link('information/contact'),
+        ];
 
         $data['heading_title'] = $this->language->get('heading_title');
 
@@ -76,68 +75,68 @@ class ControllerInformationShopper extends Controller {
 
         $data['button_map'] = $this->language->get('button_map');
         $data['button_submit'] = $this->language->get('button_submit');
-       
+
         if (isset($this->error['firstname'])) {
             $data['error_firstname'] = $this->error['firstname'];
         } else {
             $data['error_firstname'] = '';
         }
-        
+
         if (isset($this->error['lastname'])) {
             $data['error_lastname'] = $this->error['lastname'];
         } else {
             $data['error_lastname'] = '';
         }
-        
+
         if (isset($this->error['username'])) {
             $data['error_username'] = $this->error['username'];
         } else {
             $data['error_username'] = '';
         }
-        
+
         if (isset($this->error['agree'])) {
             $data['error_agree'] = $this->error['agree'];
         } else {
             $data['error_agree'] = '';
         }
-        
+
         if (isset($this->error['password'])) {
             $data['error_password'] = $this->error['password'];
         } else {
             $data['error_password'] = '';
         }
-        
+
         if (isset($this->error['email'])) {
             $data['error_email'] = $this->error['email'];
         } else {
             $data['error_email'] = '';
         }
         /*
-        business 
+        business
         type
         mobile
-        telephone 
-        city_id 
-        address 
-        store_name 
+        telephone
+        city_id
+        address
+        store_name
         */
 
         if (isset($this->error['mobile'])) {
             $data['error_mobile'] = $this->error['mobile'];
         } else {
-            $data['error_mobile'] = '';            
+            $data['error_mobile'] = '';
         }
-                
+
         if (isset($this->error['city_id'])) {
             $data['error_city_id'] = $this->error['city_id'];
         } else {
-            $data['error_city_id'] = '';            
+            $data['error_city_id'] = '';
         }
-        
+
         if (isset($this->error['address'])) {
             $data['error_address'] = $this->error['address'];
         } else {
-            $data['error_address'] = '';            
+            $data['error_address'] = '';
         }
 
         if (isset($this->error['captcha'])) {
@@ -166,7 +165,7 @@ class ControllerInformationShopper extends Controller {
         $data['open'] = nl2br($this->config->get('config_open'));
         $data['comment'] = $this->config->get('config_comment');
 
-        $data['locations'] = array();
+        $data['locations'] = [];
 
         $this->load->model('localisation/location');
 
@@ -180,7 +179,7 @@ class ControllerInformationShopper extends Controller {
                     $image = false;
                 }
 
-                $data['locations'][] = array(
+                $data['locations'][] = [
                     'location_id' => $location_info['location_id'],
                     'name' => $location_info['name'],
                     'address' => nl2br($location_info['address']),
@@ -189,12 +188,11 @@ class ControllerInformationShopper extends Controller {
                     'fax' => $location_info['fax'],
                     'image' => $image,
                     'open' => nl2br($location_info['open']),
-                    'comment' => $location_info['comment']
-                );
+                    'comment' => $location_info['comment'],
+                ];
             }
         }
 
-      
         if (isset($this->request->post['firstname'])) {
             $data['firstname'] = $this->request->post['firstname'];
         } else {
@@ -206,13 +204,13 @@ class ControllerInformationShopper extends Controller {
         } else {
             $data['lastname'] = $this->customer->getLastName();
         }
-        
+
         if (isset($this->request->post['username'])) {
             $data['username'] = $this->request->post['username'];
         } else {
             $data['username'] = '';
         }
-        
+
         if (isset($this->request->post['password'])) {
             $data['password'] = $this->request->post['password'];
         } else {
@@ -224,46 +222,46 @@ class ControllerInformationShopper extends Controller {
         } else {
             $data['email'] = $this->customer->getEmail();
         }
-                
+
         $this->load->model('assets/category');
         $data['categories'] = $this->model_assets_category->getCategories(0);
-                  
+
         $data['cities'] = $this->model_assets_category->getCities();
 
         /*
-        business 
+        business
         type
         mobile
-        telephone 
-        city_id 
-        address 
-        store_name 
+        telephone
+        city_id
+        address
+        store_name
         */
-           
+
         if (isset($this->request->post['mobile'])) {
             $data['mobile'] = $this->request->post['mobile'];
         } else {
             $data['mobile'] = '';
         }
-        
+
         if (isset($this->request->post['telephone'])) {
             $data['telephone'] = $this->request->post['telephone'];
         } else {
             $data['telephone'] = '';
         }
-                
+
         if (isset($this->request->post['city_id'])) {
             $data['city_id'] = $this->request->post['city_id'];
         } else {
             $data['city_id'] = '';
-        } 
-        
+        }
+
         if (isset($this->request->post['address'])) {
             $data['address'] = $this->request->post['address'];
         } else {
             $data['address'] = '';
         }
-        
+
         if (isset($this->request->post['captcha'])) {
             $data['captcha'] = $this->request->post['captcha'];
         } else {
@@ -277,30 +275,31 @@ class ControllerInformationShopper extends Controller {
         $data['footer'] = $this->load->controller('common/footer');
         $data['header'] = $this->load->controller('common/header/information');
 
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/information/shopper.tpl')) {
-            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/information/shopper.tpl', $data));
+        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/information/shopper.tpl')) {
+            $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/information/shopper.tpl', $data));
         } else {
             $this->response->setOutput($this->load->view('default/template/information/shopper.tpl', $data));
         }
     }
 
-    public function success() {
+    public function success()
+    {
         $this->load->language('information/shopper');
 
         $this->document->setTitle($this->language->get('heading_title'));
         $this->document->addStyle('front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_checkout.css');
-        
-        $data['breadcrumbs'] = array();
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'] = [];
+
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home')
-        );
+            'href' => $this->url->link('common/home'),
+        ];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('information/contact')
-        );
+            'href' => $this->url->link('information/contact'),
+        ];
 
         $data['heading_title'] = $this->language->get('heading_title');
 
@@ -317,62 +316,63 @@ class ControllerInformationShopper extends Controller {
         $data['footer'] = $this->load->controller('common/footer');
         $data['header'] = $this->load->controller('common/header/information');
 
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/success.tpl')) {
-            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/success.tpl', $data));
+        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/common/success.tpl')) {
+            $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/common/success.tpl', $data));
         } else {
             $this->response->setOutput($this->load->view('default/template/common/success.tpl', $data));
         }
     }
 
-    protected function validate() {
-         if ((utf8_strlen($this->request->post['firstname']) < 3) || (utf8_strlen($this->request->post['firstname']) > 32)) {
+    protected function validate()
+    {
+        if ((utf8_strlen($this->request->post['firstname']) < 3) || (utf8_strlen($this->request->post['firstname']) > 32)) {
             $this->error['firstname'] = $this->language->get('error_firstname');
         }
 
         if ((utf8_strlen($this->request->post['lastname']) < 3) || (utf8_strlen($this->request->post['lastname']) > 32)) {
             $this->error['lastname'] = $this->language->get('error_lastname');
         }
-        
+
         if ((utf8_strlen($this->request->post['username']) < 3) || (utf8_strlen($this->request->post['username']) > 32)) {
             $this->error['username'] = $this->language->get('error_username');
         }
-        
+
         $this->load->model('assets/category');
         $row = $this->model_assets_category->getUser($this->request->post['username']);
 
         if ($row) {
             $this->error['username'] = $this->language->get('error_username_exists');
         }
-        
+
         if ((utf8_strlen($this->request->post['password']) < 3) || (utf8_strlen($this->request->post['password']) > 32)) {
             $this->error['password'] = $this->language->get('error_password');
         }
-        
+
         if (!filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL)) {
             $this->error['email'] = $this->language->get('error_email');
         }
-        
+
         /*
-        business 
+        business
         type
         mobile
-        telephone 
-        city_id 
-        address 
-        store_name 
+        telephone
+        city_id
+        address
+        store_name
         */
-        if (empty($this->request->post['mobile'])){
-            $this->error['mobile'] =  $this->language->get('error_mobile');
-        }   
-                
-        if (empty($this->request->post['city_id'])){
-            $this->error['city_id'] =  $this->language->get('error_city_id');
-        }   
-        
-        if (empty($this->request->post['address'])){
-            $this->error['address'] =  $this->language->get('error_address');
-        }   
-        
+        if (empty($this->request->post['mobile'])) {
+            $this->error['mobile'] = $this->language->get('error_mobile');
+        }
+
+        if (empty($this->request->post['city_id'])) {
+            $this->error['city_id'] = $this->language->get('error_city_id');
+        }
+
+        if (empty($this->request->post['address'])) {
+            $this->error['address'] = $this->language->get('error_address');
+        }
+
         if (!$this->error) {
             return true;
         } else {

@@ -20,7 +20,6 @@ final class Issuers implements \Iterator
     }
 
     /**
-     * @param array $issuers
      * @return Issuers
      */
     public static function fromArray(array $issuers)
@@ -70,12 +69,13 @@ final class Issuers implements \Iterator
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function valid()
     {
         $key = key($this->issuers);
-        return ($key !== null && $key !== false);
+
+        return null !== $key && false !== $key;
     }
 
     public function rewind()

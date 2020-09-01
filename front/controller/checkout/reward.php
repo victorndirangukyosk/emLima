@@ -1,8 +1,9 @@
 <?php
 
-class ControllerCheckoutReward extends Controller {
-
-    public function index() {
+class ControllerCheckoutReward extends Controller
+{
+    public function index()
+    {
         $points = $this->customer->getRewardPoints();
 
         $points_total = 0;
@@ -30,18 +31,19 @@ class ControllerCheckoutReward extends Controller {
                 $data['reward'] = '';
             }
 
-            if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/checkout/reward.tpl')) {
-                return $this->load->view($this->config->get('config_template') . '/template/checkout/reward.tpl', $data);
+            if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/checkout/reward.tpl')) {
+                return $this->load->view($this->config->get('config_template').'/template/checkout/reward.tpl', $data);
             } else {
                 return $this->load->view('default/template/checkout/reward.tpl', $data);
             }
         }
     }
 
-    public function reward() {
+    public function reward()
+    {
         $this->load->language('checkout/reward');
 
-        $json = array();
+        $json = [];
 
         $points = $this->customer->getRewardPoints();
 
@@ -54,12 +56,10 @@ class ControllerCheckoutReward extends Controller {
         }
 
         if (!$json) {
-
             $total = 0;
 
-            $total = $this->load->controller( 'checkout/totals/totalData');
+            $total = $this->load->controller('checkout/totals/totalData');
             $this->load->language('checkout/reward');
-            
 
             /*foreach ($order_total['totals'] as $key => $value) {
                 if (strpos($value['title'], 'Reward') !== false) {
@@ -70,15 +70,14 @@ class ControllerCheckoutReward extends Controller {
             }*/
             //echo "<pre>";print_r($order_total);die;
             //echo "<pre>";print_r($total);die;
-            if($total && abs($this->request->post['reward']) > $total) {
+            if ($total && abs($this->request->post['reward']) > $total) {
                 $this->session->data['reward'] = $total;
                 $this->request->post['reward'] = $total;
             }
 
             $this->session->data['reward'] = abs($this->request->post['reward']);
 
-            
-            $json['success'] = sprintf($this->language->get('text_success'), $this->request->post['reward'],$this->customer->getRewardPoints());
+            $json['success'] = sprintf($this->language->get('text_success'), $this->request->post['reward'], $this->customer->getRewardPoints());
         }
 
         $this->response->addHeader('Content-Type: application/json');

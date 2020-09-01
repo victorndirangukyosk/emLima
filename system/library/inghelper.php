@@ -1,12 +1,12 @@
 <?php
 
 /**
- * Class IngHelper
+ * Class IngHelper.
  */
 class IngHelper
 {
     /**
-     * Default currency for Order
+     * Default currency for Order.
      */
     const DEFAULT_CURRENCY = 'EUR';
 
@@ -16,7 +16,7 @@ class IngHelper
     protected $paymentMethod;
 
     /**
-     * ING PSP Order statuses
+     * ING PSP Order statuses.
      */
     const ING_STATUS_EXPIRED = 'expired';
     const ING_STATUS_NEW = 'new';
@@ -35,11 +35,12 @@ class IngHelper
 
     /**
      * @param object $config
+     *
      * @return \GingerPayments\Payment\Client
      */
     public function getClient($config)
     {
-        require_once(DIR_SYSTEM.'library/ingpsp/ing-php/vendor/autoload.php');
+        require_once DIR_SYSTEM.'library/ingpsp/ing-php/vendor/autoload.php';
 
         $ing = \GingerPayments\Payment\Ginger::createClient(
             $config->get($this->getPaymentSettingsFieldName('api_key')),
@@ -54,9 +55,10 @@ class IngHelper
     }
 
     /**
-     * Method maps ING PSP order status to OpenCart specific
+     * Method maps ING PSP order status to OpenCart specific.
      *
      * @param string $ingOrderStatus
+     *
      * @return string
      */
     public function getOrderStatus($ingOrderStatus, $config)
@@ -89,12 +91,10 @@ class IngHelper
     }
 
     /**
-     * @param array $orderInfo
      * @return array
      */
     public function getCustomerInformation(array $orderInfo)
     {
-
         // $data['payer']['address']['street'] = $order_info['shipping_address'];
         // $data['payer']['address']['number'] = isset($order_info['payment_custom_field'][$this->config->get('iugu_custom_field_number')]) ? $order_info['payment_custom_field'][$this->config->get('iugu_custom_field_number')] : 0;
         // $data['payer']['address']['city'] = $order_info['shipping_city'];
@@ -102,8 +102,7 @@ class IngHelper
         // $data['payer']['address']['country'] = $order_info['payment_country'];*/
         // $data['payer']['address']['zip_code'] = $order_info['shipping_zipcode'];
 
-
-        $customer = array(
+        $customer = [
             'address_type' => 'customer',
             //'country' => $orderInfo['payment_iso_code_2'],
             'email_address' => $orderInfo['email'],
@@ -111,7 +110,7 @@ class IngHelper
             'last_name' => $orderInfo['lastname'],
             'merchant_customer_id' => $orderInfo['customer_id'],
             'phone_numbers' => [$orderInfo['telephone']],
-            'address' => implode("\n", array_filter(array(
+            'address' => implode("\n", array_filter([
                 /*$orderInfo['payment_company'],
                 $orderInfo['payment_address_1'],
                 $orderInfo['payment_address_2'],
@@ -120,20 +119,19 @@ class IngHelper
                 $orderInfo['shipping_address'],
                 /*$orderInfo['shipping_address'],
                 $orderInfo['shipping_address'],*/
-                $orderInfo['firstname']." ".$orderInfo['lastname'],
-                $orderInfo['shipping_city']
+                $orderInfo['firstname'].' '.$orderInfo['lastname'],
+                $orderInfo['shipping_city'],
+            ])),
 
-            ))),
-
-            'locale' => self::formatLocale($orderInfo['language_code'])
-        );
+            'locale' => self::formatLocale($orderInfo['language_code']),
+        ];
 
         return $customer;
     }
 
     /**
-     * @param array $orderInfo
      * @param object $language
+     *
      * @return string
      */
     public function getOrderDescription(array $orderInfo, $language)
@@ -144,8 +142,9 @@ class IngHelper
     }
 
     /**
-     * @param array $orderInfo
+     * @param array  $orderInfo
      * @param object $currency
+     *
      * @return int
      */
     public function getAmountInCents($orderInfo, $currency)
@@ -162,6 +161,7 @@ class IngHelper
 
     /**
      * @param string $fieldName
+     *
      * @return string
      */
     public function getPaymentSettingsFieldName($fieldName)
@@ -179,6 +179,7 @@ class IngHelper
 
     /**
      * @param string $locale
+     *
      * @return mixed
      */
     public function formatLocale($locale)
@@ -187,8 +188,8 @@ class IngHelper
     }
 
     /**
-     * @param array $orderInfo
      * @param object $paymentMethod
+     *
      * @return array
      */
     public function getOrderData(array $orderInfo, $paymentMethod)
@@ -208,20 +209,20 @@ class IngHelper
             'customer' => $this->getCustomerInformation($orderInfo),
             'issuer_id' => $issuerId,
             'webhook_url' => $webhookUrl,
-            'payment_info' => []
+            'payment_info' => [],
         ];
     }
 
     /**
-     * Method processes calls to webhook url
+     * Method processes calls to webhook url.
      *
      * @param object $paymentMethod
-     * @param array $webhookData
+     *
      * @return void
      */
     public function processWebhook($paymentMethod, array $webhookData)
     {
-        if ($webhookData['event'] == 'status_changed') {
+        if ('status_changed' == $webhookData['event']) {
             $ingOrder = $paymentMethod->ing->getOrder($webhookData['order_id']);
             $orderInfo = $paymentMethod->model_checkout_order->getOrder($ingOrder->getMerchantOrderId());
             if ($orderInfo) {
@@ -236,7 +237,7 @@ class IngHelper
     }
 
     /**
-     * Method prepares Ajax response for processing page
+     * Method prepares Ajax response for processing page.
      *
      * @param object $paymentMethod
      */
@@ -249,11 +250,11 @@ class IngHelper
             || $ingOrder->status()->isNew()
         ) {
             $response = [
-                'redirect' => false
+                'redirect' => false,
             ];
         } else {
             $response = [
-                'redirect' => true
+                'redirect' => true,
             ];
         }
 
@@ -262,6 +263,7 @@ class IngHelper
 
     /**
      * @param object $paymentMethod
+     *
      * @return mixed
      */
     public function loadProcessingPage($paymentMethod)
@@ -280,6 +282,7 @@ class IngHelper
 
     /**
      * @param object $paymentMethod
+     *
      * @return mixed
      */
     public function loadPendingPage($paymentMethod)
@@ -294,6 +297,7 @@ class IngHelper
 
     /**
      * @param $paymentMethod
+     *
      * @return array
      */
     public function getPageData($paymentMethod)
@@ -351,6 +355,7 @@ class IngHelper
 
     /**
      * @param $paymentMethod
+     *
      * @return array
      */
     public function getBreadcrumbs($paymentMethod)
@@ -358,21 +363,22 @@ class IngHelper
         return [
             [
                 'text' => $paymentMethod->language->get('text_home'),
-                'href' => $paymentMethod->url->link('common/home')
+                'href' => $paymentMethod->url->link('common/home'),
             ],
             [
                 'text' => $paymentMethod->language->get('text_basket'),
-                'href' => $paymentMethod->url->link('checkout/cart')
+                'href' => $paymentMethod->url->link('checkout/cart'),
             ],
             [
                 'text' => $paymentMethod->language->get('text_checkout'),
-                'href' => $paymentMethod->url->link('checkout/checkout', '', true)
-            ]
+                'href' => $paymentMethod->url->link('checkout/checkout', '', true),
+            ],
         ];
     }
 
     /**
      * @param $paymentMethod
+     *
      * @return string
      */
     public function getCallbackUrl($paymentMethod)
@@ -387,6 +393,7 @@ class IngHelper
 
     /**
      * @param $paymentMethod
+     *
      * @return string
      */
     public function getProcessingUrl($paymentMethod)
@@ -401,6 +408,7 @@ class IngHelper
 
     /**
      * @param $paymentMethod
+     *
      * @return string
      */
     public function getPendingUrl($paymentMethod)

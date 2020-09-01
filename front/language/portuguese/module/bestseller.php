@@ -1,1 +1,7 @@
-<?php// Heading$_['heading_title'] = 'Mais Vendidos';// Text$_['text_tax']      = 'Ex Taxa:';?>
+<?php
+
+// Heading
+$_['heading_title'] = 'Mais Vendidos';
+
+// Text
+$_['text_tax'] = 'Ex Taxa:';

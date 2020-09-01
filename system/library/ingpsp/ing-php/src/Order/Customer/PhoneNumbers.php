@@ -20,7 +20,6 @@ final class PhoneNumbers implements \Iterator
     }
 
     /**
-     * @param array $phoneNumbers
      * @return PhoneNumbers
      */
     public static function fromArray(array $phoneNumbers)
@@ -70,12 +69,13 @@ final class PhoneNumbers implements \Iterator
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function valid()
     {
         $key = key($this->phoneNumbers);
-        return ($key !== null && $key !== false);
+
+        return null !== $key && false !== $key;
     }
 
     public function rewind()
@@ -83,9 +83,6 @@ final class PhoneNumbers implements \Iterator
         reset($this->phoneNumbers);
     }
 
-    /**
-     * @param array $phoneNumbers
-     */
     private function __construct(array $phoneNumbers = [])
     {
         Guard::allIsInstanceOf($phoneNumbers, 'GingerPayments\Payment\Order\Customer\PhoneNumber');

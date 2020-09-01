@@ -1,8 +1,9 @@
 <?php
 
-class ControllerCommonUpdate extends Controller {
-
-    public function index() {
+class ControllerCommonUpdate extends Controller
+{
+    public function index()
+    {
         $this->language->load('common/update');
 
         $data = $this->language->all();
@@ -33,8 +34,8 @@ class ControllerCommonUpdate extends Controller {
 
         $data['token'] = $this->session->data['token'];
 
-        $data['check'] = $this->url->link('common/update/check', 'token=' . $this->session->data['token'], 'SSL');
-        $data['update'] = $this->url->link('common/update/update', 'token=' . $this->session->data['token'], 'SSL');
+        $data['check'] = $this->url->link('common/update/check', 'token='.$this->session->data['token'], 'SSL');
+        $data['update'] = $this->url->link('common/update/update', 'token='.$this->session->data['token'], 'SSL');
 
         $addon = new Addon($this->registry);
         $data['addons'] = $addon->getAddons();
@@ -48,24 +49,25 @@ class ControllerCommonUpdate extends Controller {
         $this->response->setOutput($this->load->view('common/update.tpl', $data));
     }
 
-    public function check() {
+    public function check()
+    {
         if ($this->validate('modify')) {
             $this->load->model('common/update');
 
             // Check
             if (!$this->model_common_update->check()) {
                 $this->session->data['msg_error'] = $this->language->get('text_check_error');
-            }
-            else {
+            } else {
                 $this->session->data['msg_success'] = $this->language->get('text_check_success');
             }
         }
 
         // Return
-        $this->response->redirect($this->url->link('common/update', 'token=' . $this->session->data['token'] , 'SSL'));
+        $this->response->redirect($this->url->link('common/update', 'token='.$this->session->data['token'], 'SSL'));
     }
 
-    public function update() {
+    public function update()
+    {
         $this->language->load('common/update');
 
         if ($this->validate('modify') and !empty($this->request->get['product_id'])) {
@@ -74,8 +76,7 @@ class ControllerCommonUpdate extends Controller {
             // Update
             if (!$this->model_common_update->update()) {
                 $this->session->data['msg_error'] = $this->language->get('text_update_error');
-            }
-            else {
+            } else {
                 $this->session->data['msg_success'] = $this->language->get('text_update_success');
 
                 $this->model_common_update->check();
@@ -83,10 +84,11 @@ class ControllerCommonUpdate extends Controller {
         }
 
         // Return
-        $this->response->redirect($this->url->link('common/update', 'token=' . $this->session->data['token'] , 'SSL'));
+        $this->response->redirect($this->url->link('common/update', 'token='.$this->session->data['token'], 'SSL'));
     }
 
-    protected function validate($type) {
+    protected function validate($type)
+    {
         if (!$this->user->hasPermission($type, 'common/update')) {
             $error['warning'] = $this->language->get('error_permission');
             echo json_encode($error);

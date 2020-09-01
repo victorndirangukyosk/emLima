@@ -2,8 +2,7 @@
 
 class ControllerApiReturns extends Controller
 {
-
-    public function getReturns($args = array())
+    public function getReturns($args = [])
     {
         $this->load->language('api/orders');
         $this->load->model('api/return');
@@ -16,7 +15,6 @@ class ControllerApiReturns extends Controller
         if (!isset($this->session->data['api_id'])) {
             $json['error'] = $this->language->get('error_permission');
         } else {
-
             if (isset($this->request->get['filter_return_id'])) {
                 $filter_return_id = $this->request->get['filter_return_id'];
             } else {
@@ -34,8 +32,6 @@ class ControllerApiReturns extends Controller
             } else {
                 $filter_store_id = null;
             }
-
-            
 
             if (isset($this->request->get['filter_customer'])) {
                 $filter_customer = $this->request->get['filter_customer'];
@@ -97,8 +93,6 @@ class ControllerApiReturns extends Controller
                 $date_to = null;
             }
 
-
-
             if (isset($this->request->get['sort'])) {
                 $sort = $this->request->get['sort'];
             } else {
@@ -117,29 +111,27 @@ class ControllerApiReturns extends Controller
                 $page = 1;
             }
 
-            
-            $data['returns'] = array();
+            $data['returns'] = [];
 
-            $filter_data = array(
-                'filter_return_id'        => $filter_return_id,
-                'filter_order_id'         => $filter_order_id,
-                'filter_store_id'         => $filter_store_id,
-                'filter_customer'         => $filter_customer,
-                'filter_product'          => $filter_product,
-                'filter_unit'          => $filter_unit,
-                'filter_model'            => $filter_model,
-                'filter_store'            => $filter_store_id,
+            $filter_data = [
+                'filter_return_id' => $filter_return_id,
+                'filter_order_id' => $filter_order_id,
+                'filter_store_id' => $filter_store_id,
+                'filter_customer' => $filter_customer,
+                'filter_product' => $filter_product,
+                'filter_unit' => $filter_unit,
+                'filter_model' => $filter_model,
+                'filter_store' => $filter_store_id,
                 'filter_return_status_id' => $filter_return_status_id,
-                'filter_date_added'       => $filter_date_added,
-                'filter_date_modified'    => $filter_date_modified,
-                'date_from'    => $date_from,
-                'date_to'    => $date_to,
-                'sort'                    => $sort,
-                'order'                   => $order,
-                'start'                   => ($page - 1) * $this->config->get('config_limit_admin'),
-                'limit'                   => $this->config->get('config_limit_admin')
-            );
-
+                'filter_date_added' => $filter_date_added,
+                'filter_date_modified' => $filter_date_modified,
+                'date_from' => $date_from,
+                'date_to' => $date_to,
+                'sort' => $sort,
+                'order' => $order,
+                'start' => ($page - 1) * $this->config->get('config_limit_admin'),
+                'limit' => $this->config->get('config_limit_admin'),
+            ];
 
             //echo "<pre>";print_r($filter_data);die;
             $return_total = $this->model_api_return->getTotalReturns($filter_data);
@@ -149,28 +141,26 @@ class ControllerApiReturns extends Controller
             //echo "<pre>";print_r($results);die;
 
             foreach ($results as $result) {
-
-                if($result['store_id'] != $filter_store_id) {
+                if ($result['store_id'] != $filter_store_id) {
                     continue;
                 }
 
-                $data['returns'][] = array(
-                    'return_id'     => $result['return_id'],
-                    'order_id'      => $result['order_id'],
-                    'customer'      => $result['customer'],
-                    'product'       => html_entity_decode($result['product'], ENT_QUOTES, 'UTF-8'),
-                    'unit'       => $result['unit'],
-                    'quantity'       => $result['quantity'],
-                    'price'       => $result['price'],
-                    'total_price'       => ($result['price'] * $result['quantity']),
-                    'model'         => $result['model'],
-                    'store_id'         => $result['store_id'],
-                    'store_name'         => $this->model_api_return->getStore($result['store_id']),
-                    'status'        => $result['status'],
-                    'date_added'    => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
-                    'date_modified' => date($this->language->get('date_format_short'), strtotime($result['date_modified']))
-                   
-                );
+                $data['returns'][] = [
+                    'return_id' => $result['return_id'],
+                    'order_id' => $result['order_id'],
+                    'customer' => $result['customer'],
+                    'product' => html_entity_decode($result['product'], ENT_QUOTES, 'UTF-8'),
+                    'unit' => $result['unit'],
+                    'quantity' => $result['quantity'],
+                    'price' => $result['price'],
+                    'total_price' => ($result['price'] * $result['quantity']),
+                    'model' => $result['model'],
+                    'store_id' => $result['store_id'],
+                    'store_name' => $this->model_api_return->getStore($result['store_id']),
+                    'status' => $result['status'],
+                    'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
+                    'date_modified' => date($this->language->get('date_format_short'), strtotime($result['date_modified'])),
+                ];
             }
 
             //echo "<pre>";print_r($data['returns']);die;
@@ -179,11 +169,10 @@ class ControllerApiReturns extends Controller
             $pagination->total = $return_total;
             $pagination->page = $page;
             $pagination->limit = $this->config->get('config_limit_admin');
-            
+
             $data['pagination'] = $pagination->render();
 
             $data['results'] = sprintf($this->language->get('text_pagination'), ($return_total) ? (($page - 1) * $this->config->get('config_limit_admin')) + 1 : 0, ((($page - 1) * $this->config->get('config_limit_admin')) > ($return_total - $this->config->get('config_limit_admin'))) ? $return_total : ((($page - 1) * $this->config->get('config_limit_admin')) + $this->config->get('config_limit_admin')), $return_total, ceil($return_total / $this->config->get('config_limit_admin')));
-
 
             $data['return_total'] = $return_total;
             $data['return_statuses'] = $this->model_api_return->getReturnStatuses();
@@ -195,13 +184,13 @@ class ControllerApiReturns extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getReturnDetails($args = array())
+    public function getReturnDetails($args = [])
     {
         //echo "<pre>";print_r("getReturnDetails");die;
 
         $log = new Log('error.log');
 
-        $log->write("inside getReturnDetails");
+        $log->write('inside getReturnDetails');
 
         $this->load->language('api/orders');
         $this->load->model('api/return');
@@ -215,10 +204,9 @@ class ControllerApiReturns extends Controller
         if (!isset($this->session->data['api_id']) && isset($this->request->get['return_id'])) {
             $json['error'] = $this->language->get('error_permission');
         } else {
-
             $return_info = [];
 
-            if (isset($this->request->get['return_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+            if (isset($this->request->get['return_id']) && ('POST' != $this->request->server['REQUEST_METHOD'])) {
                 $return_info = $this->model_api_return->getReturn($this->request->get['return_id']);
             }
 
@@ -233,18 +221,13 @@ class ControllerApiReturns extends Controller
                 $data['store'] = '';
             }
 
-            
-
             if (isset($data['price'])) {
                 $data['total_price'] = $this->currency->format(($data['price'] * $data['quantity']), $this->config->get('config_currency'), false);
 
                 $data['price'] = $this->currency->format($data['price'], $this->config->get('config_currency'), false);
-
             } else {
                 $data['total_price'] = '';
             }
-
-
 
             if (isset($data['date_ordered'])) {
                 $data['date_ordered'] = date($this->language->get('date_format_short'), strtotime($data['date_ordered']));
@@ -257,8 +240,6 @@ class ControllerApiReturns extends Controller
             if (isset($data['date_modified'])) {
                 $data['date_modified'] = date($this->language->get('date_format_short'), strtotime($data['date_modified']));
             }
-            
-
 
             $data['return_reasons'] = $this->model_api_return->getReturnReasons();
 
@@ -266,41 +247,37 @@ class ControllerApiReturns extends Controller
 
             $data['return_statuses'] = $this->model_api_return->getReturnStatuses();
 
-            $data['histories'] = array();
+            $data['histories'] = [];
 
             $results = $this->model_api_return->getReturnHistories($this->request->get['return_id'], 0, 10);
 
             foreach ($results as $result) {
-                $data['histories'][] = array(
-                    'notify'     => $result['notify'] ? 'Yes' : 'No',
-                    'status'     => $result['status'],
-                    'comment'    => nl2br($result['comment']),
-                    'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added']))
-                );
+                $data['histories'][] = [
+                    'notify' => $result['notify'] ? 'Yes' : 'No',
+                    'status' => $result['status'],
+                    'comment' => nl2br($result['comment']),
+                    'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
+                ];
             }
 
             $data['history_total'] = $this->model_api_return->getTotalReturnHistories($this->request->get['return_id']);
 
-            $this->load->model( 'assets/product' );
-            $this->load->model( 'tool/image' );
+            $this->load->model('assets/product');
+            $this->load->model('tool/image');
 
-            $log->write($data['store_id']."p_id".$data['product_id']);
+            $log->write($data['store_id'].'p_id'.$data['product_id']);
 
-            $product = $this->model_assets_product->getProductForPopupByApi( $data['store_id'],$data['product_id']);
+            $product = $this->model_assets_product->getProductForPopupByApi($data['store_id'], $data['product_id']);
 
             $log->write($product);
 
-            
             //echo ("product");
-            if($product) {
-
-                $product['model'] =  $product['model'];
+            if ($product) {
+                $product['model'] = $product['model'];
 
                 $product['name'] = html_entity_decode($product['name'], ENT_QUOTES, 'UTF-8');
 
                 $product['description'] = html_entity_decode($product['description'], ENT_QUOTES, 'UTF-8');
-
-                
 
                 $currency_value = false;
 
@@ -312,8 +289,7 @@ class ControllerApiReturns extends Controller
 
                 $product['nice_price'] = $this->currency->format($product['price'], $currency_code, $currency_value);
 
-                if($product['special_price'] == 0 || $product['special_price'] == 0.00 || is_null($product['special_price'])) {
-
+                if (0 == $product['special_price'] || 0.00 == $product['special_price'] || is_null($product['special_price'])) {
                     $product['special_price'] = $product['price'];
                     $product['nice_special_price'] = $this->currency->format($product['special_price'], $currency_code, $currency_value);
                 } else {
@@ -327,29 +303,24 @@ class ControllerApiReturns extends Controller
                 $thumb_zoomheight = $this->config->get('config_zoomimage_thumb_height', 600);
                 $tmpImg = $product['image'];
 
-
                 if (!empty($product['image'])) {
                     $product['images'] = $this->model_tool_image->resize($product['image'], $thumb_width, $thumb_height);
 
                     $product['zoom_images'] = $this->model_tool_image->resize($tmpImg, $thumb_zoomwidth, $thumb_zoomheight);
-
                 } else {
                     $product['images'] = $this->model_tool_image->resize('placeholder.png', $thumb_width, $thumb_height);
 
                     $product['zoom_images'] = $this->model_tool_image->resize('placeholder.png', $thumb_zoomwidth, $thumb_zoomheight);
                 }
-                
+
                 //unset($product['image']);
             }
-
-
 
             //$log->write($product);
 
             $data['product'] = html_entity_decode($data['product'], ENT_QUOTES, 'UTF-8');
 
             $data['product_details'] = $product;
-
 
             $json['data'] = $data;
         }
@@ -358,7 +329,7 @@ class ControllerApiReturns extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function editReturn($args = array())
+    public function editReturn($args = [])
     {
         //echo "<pre>";print_r("editReturn");die;
         $this->load->language('api/general');
@@ -369,7 +340,7 @@ class ControllerApiReturns extends Controller
         $json['message'] = [];
 
         $args['notify'] = 0;
-        
+
         $this->request->post = $args;
 
         //echo "<pre>";print_r($this->session->data['api_id']);die;
@@ -383,7 +354,6 @@ class ControllerApiReturns extends Controller
             $this->model_api_return->addReturnHistory($this->request->get['return_id'], $this->request->post);
 
             $json['message'] = $this->language->get('text_edited_successfully');
-
         }
 
         $this->response->addHeader('Content-Type: application/json');

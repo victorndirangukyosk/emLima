@@ -9,7 +9,7 @@ final class Currency
     use ChoiceBasedValueObject;
 
     /**
-     * Possible currencies
+     * Possible currencies.
      */
     const EUR = 'EUR';
 

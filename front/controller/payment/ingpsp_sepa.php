@@ -1,22 +1,22 @@
 <?php
 
 /**
- * Class ControllerPaymentIngpspSepa
+ * Class ControllerPaymentIngpspSepa.
  */
 class ControllerPaymentIngpspSepa extends Controller
 {
     /**
-     * Default currency for Order
+     * Default currency for Order.
      */
     const DEFAULT_CURRENCY = 'EUR';
 
     /**
-     * Payments module name
+     * Payments module name.
      */
     const MODULE_NAME = 'ingpsp_sepa';
 
     /**
-     *  ING PSP bank transfer details
+     *  ING PSP bank transfer details.
      */
     const ING_BIC = 'INGBNL2A';
     const ING_IBAN = 'NL13INGB0005300060';
@@ -45,7 +45,8 @@ class ControllerPaymentIngpspSepa extends Controller
     }
 
     /**
-     * Index Action
+     * Index Action.
+     *
      * @return mixed
      */
     // public function index()
@@ -103,9 +104,8 @@ class ControllerPaymentIngpspSepa extends Controller
         $log->write('ingpsp_sepa');
 
         foreach ($this->session->data['order_id'] as $order_id) {
-
             //$ret = $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('cod_order_status_id'));
-            
+
             $log->write('order_id'.$order_id);
             try {
                 $orderInfo = $this->model_checkout_order->getOrder($order_id);
@@ -151,11 +151,11 @@ class ControllerPaymentIngpspSepa extends Controller
         return $this->load->view('mvgv2/template/extension/payment/ingpsp_sepa.tpl', $data);
     }
 
-    
     /**
      * Generate ING PSP Payments order.
      *
      * @param array
+     *
      * @return \GingerPayments\Payment\Order
      */
     protected function createOrder(array $orderData)
@@ -177,7 +177,6 @@ class ControllerPaymentIngpspSepa extends Controller
     /**
      * Method gets payment reference from order.
      *
-     * @param \GingerPayments\Payment\Order $ingOrder
      * @return mixed
      */
     protected function getBankPaymentReference(\GingerPayments\Payment\Order $ingOrder)
@@ -188,7 +187,7 @@ class ControllerPaymentIngpspSepa extends Controller
     }
 
     /**
-     * Webhook action is called by API when transaction status is updated
+     * Webhook action is called by API when transaction status is updated.
      *
      * @return void
      */

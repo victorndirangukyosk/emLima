@@ -1,17 +1,17 @@
 <?php
 
 /**
- * Class ControllerPaymentIngpspBancontact
+ * Class ControllerPaymentIngpspBancontact.
  */
 class ControllerPaymentIngpspBancontact extends Controller
 {
     /**
-     * Default currency for ING PSP Order
+     * Default currency for ING PSP Order.
      */
     const DEFAULT_CURRENCY = 'EUR';
 
     /**
-     * Payments module name
+     * Payments module name.
      */
     const MODULE_NAME = 'ingpsp_bancontact';
 
@@ -37,7 +37,8 @@ class ControllerPaymentIngpspBancontact extends Controller
     }
 
     /**
-     * Index Action
+     * Index Action.
+     *
      * @return mixed
      */
     public function index()
@@ -51,7 +52,7 @@ class ControllerPaymentIngpspBancontact extends Controller
     }
 
     /**
-     * Order Confirm Action
+     * Order Confirm Action.
      */
     public function confirm()
     {
@@ -72,7 +73,7 @@ class ControllerPaymentIngpspBancontact extends Controller
     }
 
     /**
-     * Callback Action
+     * Callback Action.
      */
     public function callback()
     {
@@ -80,7 +81,7 @@ class ControllerPaymentIngpspBancontact extends Controller
     }
 
     /**
-     * Pending order processing page
+     * Pending order processing page.
      *
      * @return mixed
      */
@@ -90,7 +91,7 @@ class ControllerPaymentIngpspBancontact extends Controller
     }
 
     /**
-     * Pending order processing page
+     * Pending order processing page.
      *
      * @return mixed
      */
@@ -105,6 +106,7 @@ class ControllerPaymentIngpspBancontact extends Controller
      * Generate order.
      *
      * @param array
+     *
      * @return \GingerPayments\Payment\Order
      */
     protected function createOrder(array $orderData)
@@ -123,7 +125,7 @@ class ControllerPaymentIngpspBancontact extends Controller
     }
 
     /**
-     * Webhook action is called by API when transaction status is updated
+     * Webhook action is called by API when transaction status is updated.
      *
      * @return void
      */

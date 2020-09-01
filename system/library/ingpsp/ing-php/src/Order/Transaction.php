@@ -88,7 +88,6 @@ final class Transaction
     private $paymentUrl;
 
     /**
-     * @param array $transaction
      * @return Transaction
      */
     public static function fromArray(array $transaction)
@@ -96,6 +95,7 @@ final class Transaction
         Guard::keyExists($transaction, 'payment_method');
 
         $paymentMethod = PaymentMethod::fromString($transaction['payment_method']);
+
         return new static(
             $paymentMethod,
             PaymentMethodDetails\PaymentMethodDetailsFactory::createFromArray(
@@ -145,16 +145,16 @@ final class Transaction
             'expiration_period' => $this->getExpirationPeriod(),
             'description' => $this->getDescription(),
             'balance' => $this->getBalance(),
-            'payment_url' => $this->getPaymentUrl()
+            'payment_url' => $this->getPaymentUrl(),
         ];
     }
-    
+
     /**
      * @return TransactionStatus|null
      */
     public function getStatus()
     {
-        return ($this->status() !== null) ? $this->status()->toString() : null;
+        return (null !== $this->status()) ? $this->status()->toString() : null;
     }
 
     /**
@@ -162,7 +162,7 @@ final class Transaction
      */
     public function getReason()
     {
-        return ($this->reason() !== null) ? $this->reason()->toString() : null;
+        return (null !== $this->reason()) ? $this->reason()->toString() : null;
     }
 
     /**
@@ -170,7 +170,7 @@ final class Transaction
      */
     public function getPaymentUrl()
     {
-        return ($this->paymentUrl() !== null) ? $this->paymentUrl()->toString() : null;
+        return (null !== $this->paymentUrl()) ? $this->paymentUrl()->toString() : null;
     }
 
     /**
@@ -194,15 +194,15 @@ final class Transaction
      */
     public function getModified()
     {
-        return ($this->modified() !== null) ? $this->modified()->toIso8601String() : null;
+        return (null !== $this->modified()) ? $this->modified()->toIso8601String() : null;
     }
 
     /**
-     * @return null|Uuid
+     * @return Uuid|null
      */
     public function getId()
     {
-        return ($this->id() !== null) ? $this->id()->toString() : null;
+        return (null !== $this->id()) ? $this->id()->toString() : null;
     }
 
     /**
@@ -210,7 +210,7 @@ final class Transaction
      */
     public function getExpirationPeriod()
     {
-        return ($this->expirationPeriod() !== null)
+        return (null !== $this->expirationPeriod())
             ? $this->expirationPeriod()->format('P%yY%mM%dDT%hH%iM%sS')
             : null;
     }
@@ -220,7 +220,7 @@ final class Transaction
      */
     public function getDescription()
     {
-        return ($this->description() !== null) ? $this->description()->toString() : null;
+        return (null !== $this->description()) ? $this->description()->toString() : null;
     }
 
     /**
@@ -228,7 +228,7 @@ final class Transaction
      */
     public function getAmount()
     {
-        return ($this->amount() !== null) ? $this->amount()->toInteger() : null;
+        return (null !== $this->amount()) ? $this->amount()->toInteger() : null;
     }
 
     /**
@@ -236,7 +236,7 @@ final class Transaction
      */
     public function getBalance()
     {
-        return ($this->balance() !== null) ? $this->balance()->toString() : null;
+        return (null !== $this->balance()) ? $this->balance()->toString() : null;
     }
 
     /**
@@ -244,7 +244,7 @@ final class Transaction
      */
     public function getCompleted()
     {
-        return  ($this->completed() !== null) ? $this->completed()->toIso8601String() : null;
+        return  (null !== $this->completed()) ? $this->completed()->toIso8601String() : null;
     }
 
     /**
@@ -252,7 +252,7 @@ final class Transaction
      */
     public function getCreated()
     {
-        return ($this->created() !== null) ? $this->created()->toIso8601String() : null;
+        return (null !== $this->created()) ? $this->created()->toIso8601String() : null;
     }
 
     /**
@@ -260,7 +260,7 @@ final class Transaction
      */
     public function getCurrency()
     {
-        return ($this->currency() !== null) ? $this->currency()->toString() : null;
+        return (null !== $this->currency()) ? $this->currency()->toString() : null;
     }
 
     /**
@@ -376,20 +376,18 @@ final class Transaction
     }
 
     /**
-     * @param PaymentMethod $paymentMethod
-     * @param PaymentMethodDetails $paymentMethodDetails
-     * @param Uuid $id
-     * @param Carbon $created
-     * @param Carbon $modified
-     * @param Carbon $completed
-     * @param TransactionStatus $status
-     * @param Reason $reason
-     * @param Currency $currency
-     * @param TransactionAmount $amount
-     * @param \DateInterval $expirationPeriod
+     * @param Uuid                   $id
+     * @param Carbon                 $created
+     * @param Carbon                 $modified
+     * @param Carbon                 $completed
+     * @param TransactionStatus      $status
+     * @param Reason                 $reason
+     * @param Currency               $currency
+     * @param TransactionAmount      $amount
+     * @param \DateInterval          $expirationPeriod
      * @param TransactionDescription $description
-     * @param Balance $balance
-     * @param Url $paymentUrl
+     * @param Balance                $balance
+     * @param Url                    $paymentUrl
      */
     private function __construct(
         PaymentMethod $paymentMethod,

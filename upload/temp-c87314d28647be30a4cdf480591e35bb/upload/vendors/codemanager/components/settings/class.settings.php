@@ -6,14 +6,14 @@
 *  [root]/license.txt for more. This information must remain intact.
 */
 
-class Settings {
-
+class Settings
+{
     //////////////////////////////////////////////////////////////////
     // PROPERTIES
     //////////////////////////////////////////////////////////////////
 
-    public $username    = '';
-    public $settings    = '';
+    public $username = '';
+    public $settings = '';
 
     //////////////////////////////////////////////////////////////////
     // METHODS
@@ -25,34 +25,37 @@ class Settings {
     // Construct
     //////////////////////////////////////////////////////////////////
 
-    public function __construct(){}
+    public function __construct()
+    {
+    }
 
     //////////////////////////////////////////////////////////////////
     // Save User Settings
     //////////////////////////////////////////////////////////////////
 
-    public function Save(){
-        if (!file_exists(DATA . "/settings.php")) {
-            saveJSON('settings.php', array($this->username => array('codiad.username' => $this->username)));
+    public function Save()
+    {
+        if (!file_exists(DATA.'/settings.php')) {
+            saveJSON('settings.php', [$this->username => ['codiad.username' => $this->username]]);
         }
         $settings = getJSON('settings.php');
         // Security: prevent user side overwritten value
         $this->settings['username'] = $this->username;
         $settings[$this->username] = $this->settings;
         saveJSON('settings.php', $settings);
-        echo formatJSEND("success", null);
+        echo formatJSEND('success', null);
     }
 
     //////////////////////////////////////////////////////////////////
     // Load User Settings
     //////////////////////////////////////////////////////////////////
 
-    public function Load(){
-        if (!file_exists(DATA . "/settings.php")) {
-            saveJSON('settings.php', array($this->username => array('codiad.username' => $this->username)));
+    public function Load()
+    {
+        if (!file_exists(DATA.'/settings.php')) {
+            saveJSON('settings.php', [$this->username => ['codiad.username' => $this->username]]);
         }
         $settings = getJSON('settings.php');
-        echo formatJSEND("success", $settings[$this->username]);
+        echo formatJSEND('success', $settings[$this->username]);
     }
-
 }

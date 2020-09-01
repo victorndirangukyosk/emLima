@@ -1,13 +1,13 @@
 <?php
 
-
 use Symfony\Component\Finder\Finder;
 
-class ModelSystemLanguageoverride extends Model {
-
-    public function getLanguages($filter_data = array()) {
-        if (isset($filter_data['filter_client']) and ( $filter_data['filter_client'] != 'admin')) {
-            $lang_dir = DIR_CATALOG . 'language/';
+class ModelSystemLanguageoverride extends Model
+{
+    public function getLanguages($filter_data = [])
+    {
+        if (isset($filter_data['filter_client']) and ('admin' != $filter_data['filter_client'])) {
+            $lang_dir = DIR_CATALOG.'language/';
         } else {
             $lang_dir = DIR_LANGUAGE;
         }
@@ -15,7 +15,7 @@ class ModelSystemLanguageoverride extends Model {
         $languages = new Finder();
         $languages->directories()->in($lang_dir)->exclude('override')->depth('== 0');
 
-        $data = array();
+        $data = [];
 
         foreach ($languages as $language) {
             $data[] = $language->getRelativePathname();
@@ -24,17 +24,18 @@ class ModelSystemLanguageoverride extends Model {
         return $data;
     }
 
-    public function getStrings($filter_data = array()) {
-        $temp_data = array();
+    public function getStrings($filter_data = [])
+    {
+        $temp_data = [];
 
-        if (isset($filter_data['filter_client']) and ( $filter_data['filter_client'] != 'admin')) {
-            $lang_dir = DIR_CATALOG . 'language/';
+        if (isset($filter_data['filter_client']) and ('admin' != $filter_data['filter_client'])) {
+            $lang_dir = DIR_CATALOG.'language/';
         } else {
             $lang_dir = DIR_LANGUAGE;
         }
 
         $files = new Finder();
-        
+
         $files->files()->in($lang_dir)->exclude('override');
 
         foreach ($files as $file) {
@@ -43,24 +44,24 @@ class ModelSystemLanguageoverride extends Model {
 
             $temp = explode('/', $path_name);
 
-            if (isset($filter_data['filter_language']) and isset($temp[0]) and ( $filter_data['filter_language'] != $temp[0])) {
+            if (isset($filter_data['filter_language']) and isset($temp[0]) and ($filter_data['filter_language'] != $temp[0])) {
                 continue;
             }
 
-            if (isset($filter_data['filter_folder']) and isset($temp[1]) and ( $filter_data['filter_folder'] != $temp[1])) {
+            if (isset($filter_data['filter_folder']) and isset($temp[1]) and ($filter_data['filter_folder'] != $temp[1])) {
                 continue;
             }
 
-            if (isset($filter_data['filter_path']) and isset($temp[1]) and isset($temp[2]) and ( $filter_data['filter_path'] != $temp[1] . '/' . $temp[2])) {
+            if (isset($filter_data['filter_path']) and isset($temp[1]) and isset($temp[2]) and ($temp[1].'/'.$temp[2] != $filter_data['filter_path'])) {
                 continue;
             }
 
-            require($lang_dir . $path_name);
+            require $lang_dir.$path_name;
 
-            $override_file = $lang_dir . 'override/' . $path_name;
-            
+            $override_file = $lang_dir.'override/'.$path_name;
+
             if (file_exists($override_file)) {
-                require($override_file);
+                require $override_file;
             }
 
             if (empty($_)) {
@@ -72,7 +73,7 @@ class ModelSystemLanguageoverride extends Model {
             $key = str_replace('.php', '', $key);
 
             if (isset($filter_data['filter_text'])) {
-                $_temp = array();
+                $_temp = [];
 
                 foreach ($_ as $var => $val) {
                     if (!stristr($val, $filter_data['filter_text'])) {
@@ -97,14 +98,14 @@ class ModelSystemLanguageoverride extends Model {
         // Substract the first dimension count
         $total = count($temp_data, COUNT_RECURSIVE) - count($temp_data);
 
-        $data = array();
+        $data = [];
 
         $counter = 0;
         foreach ($temp_data as $key => $strings) {
-            $data[$key] = array();
+            $data[$key] = [];
 
             foreach ($strings as $var => $val) {
-                $counter++;
+                ++$counter;
 
                 if ($counter < $filter_data['start']) {
                     continue;
@@ -118,16 +119,17 @@ class ModelSystemLanguageoverride extends Model {
             }
         }
 
-        return array($data, $total);
+        return [$data, $total];
     }
 
-    public function saveStrings($files) {
+    public function saveStrings($files)
+    {
         if (empty($files)) {
             return;
         }
 
-        if (isset($this->request->get['filter_client']) and ( $this->request->get['filter_client'] != 'admin')) {
-            $lang_dir = DIR_CATALOG . 'language/';
+        if (isset($this->request->get['filter_client']) and ('admin' != $this->request->get['filter_client'])) {
+            $lang_dir = DIR_CATALOG.'language/';
         } else {
             $lang_dir = DIR_LANGUAGE;
         }
@@ -140,39 +142,39 @@ class ModelSystemLanguageoverride extends Model {
 
             // Lets build the path
             $temp = explode('_', $file);
-            $path = $temp[0] . '/' . $temp[1] . '/' . $temp[2];
+            $path = $temp[0].'/'.$temp[1].'/'.$temp[2];
 
             if (!empty($temp[3])) {
-                $path .= '_' . $temp[3];
+                $path .= '_'.$temp[3];
             }
 
             if (!empty($temp[4])) {
-                $path .= '_' . $temp[4];
+                $path .= '_'.$temp[4];
             }
 
             $path .= '.php';
 
             // Make sure the original file exists
-            $org_file = $lang_dir . $path;
+            $org_file = $lang_dir.$path;
             if (!file_exists($org_file)) {
                 continue;
             }
 
-            require($org_file);
+            require $org_file;
 
             $org_strings = $_;
             unset($_);
 
             // Load the override if available, to allow return back to the original
-            $ovr_file = $lang_dir . 'override/' . $path;
+            $ovr_file = $lang_dir.'override/'.$path;
             if (file_exists($ovr_file)) {
-                require($ovr_file);
+                require $ovr_file;
 
                 $ovr_strings = $_;
                 unset($_);
             }
 
-            $new_strings = array();
+            $new_strings = [];
 
             foreach ($strings as $key => $value) {
                 if (!isset($org_strings[$key])) {
@@ -206,14 +208,13 @@ class ModelSystemLanguageoverride extends Model {
             }
 
             // Prepare the content
-            $content = '<?php' . "\n";
+            $content = '<?php'."\n";
             foreach ($new_strings as $key => $value) {
-                $content .= '$_[\'' . $key . '\'] = \'' . $value . '\';' . "\n";
+                $content .= '$_[\''.$key.'\'] = \''.$value.'\';'."\n";
             }
 
             // Write into the file
             $this->filesystem->dumpFile($ovr_file, $content, 0644);
         }
     }
-
 }

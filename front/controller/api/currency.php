@@ -6,18 +6,18 @@ class ControllerApiCurrency extends Controller
     {
         $this->load->language('api/currency');
 
-        $json = array();
+        $json = [];
 
         if (!isset($this->session->data['api_id'])) {
             $json['error'] = $this->language->get('error_permission');
         } else {
             $this->load->model('localisation/currency');
-            
+
             $currency_info = $this->model_localisation_currency->getCurrencyByCode($this->request->post['currency']);
-            
+
             if ($currency_info) {
                 $this->currency->set($this->request->post['currency']);
-    
+
                 unset($this->session->data['shipping_method']);
                 unset($this->session->data['shipping_methods']);
 

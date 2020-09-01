@@ -6,13 +6,13 @@
     *  [root]/license.txt for more. This information must remain intact.
     */
 
-    require_once('../../common.php');
-    require_once('class.settings.php');
+    require_once '../../common.php';
+    require_once 'class.settings.php';
 
-    if(!isset($_GET['action'])){
-        die(formatJSEND("error","Missing parameter"));
+    if (!isset($_GET['action'])) {
+        die(formatJSEND('error', 'Missing parameter'));
     }
-    
+
     //////////////////////////////////////////////////////////////////
     // Verify Session or Key
     //////////////////////////////////////////////////////////////////
@@ -25,9 +25,9 @@
     // Save User Settings
     //////////////////////////////////////////////////////////////////
 
-    if($_GET['action']=='save'){
-        if(!isset($_POST['settings'])){
-            die(formatJSEND("error","Missing settings"));
+    if ('save' == $_GET['action']) {
+        if (!isset($_POST['settings'])) {
+            die(formatJSEND('error', 'Missing settings'));
         }
 
         $Settings->username = $_SESSION['user'];
@@ -39,9 +39,7 @@
     // Load User Settings
     //////////////////////////////////////////////////////////////////
 
-    if($_GET['action']=='load'){
+    if ('load' == $_GET['action']) {
         $Settings->username = $_SESSION['user'];
         $Settings->Load();
     }
-
-?>

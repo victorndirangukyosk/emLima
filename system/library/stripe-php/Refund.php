@@ -3,27 +3,24 @@
 namespace Stripe;
 
 /**
- * Class Refund
+ * Class Refund.
  *
  * @property string $id
  * @property string $object
- * @property int $amount
- * @property mixed $balance_transaction
+ * @property int    $amount
+ * @property mixed  $balance_transaction
  * @property string $charge
- * @property int $created
+ * @property int    $created
  * @property string $currency
- * @property mixed $metadata
- * @property mixed $reason
- * @property mixed $receipt_number
+ * @property mixed  $metadata
+ * @property mixed  $reason
+ * @property mixed  $receipt_number
  * @property string $status
- *
- * @package Stripe
  */
 class Refund extends ApiResource
 {
-
     /**
-     * @param string $id The ID of the refund to retrieve.
+     * @param string            $id      the ID of the refund to retrieve
      * @param array|string|null $options
      *
      * @return Refund
@@ -34,11 +31,11 @@ class Refund extends ApiResource
     }
 
     /**
-     * @param string $id The ID of the refund to update.
-     * @param array|null $params
+     * @param string            $id      the ID of the refund to update
+     * @param array|null        $params
      * @param array|string|null $options
      *
-     * @return Refund The updated refund.
+     * @return Refund the updated refund
      */
     public static function update($id, $params = null, $options = null)
     {
@@ -46,7 +43,7 @@ class Refund extends ApiResource
     }
 
     /**
-     * @param array|null $params
+     * @param array|null        $params
      * @param array|string|null $options
      *
      * @return Collection of Refunds
@@ -57,10 +54,10 @@ class Refund extends ApiResource
     }
 
     /**
-     * @param array|null $params
+     * @param array|null        $params
      * @param array|string|null $options
      *
-     * @return Refund The created refund.
+     * @return Refund the created refund
      */
     public static function create($params = null, $options = null)
     {
@@ -70,7 +67,7 @@ class Refund extends ApiResource
     /**
      * @param array|string|null $opts
      *
-     * @return Refund The saved refund.
+     * @return Refund the saved refund
      */
     public function save($opts = null)
     {

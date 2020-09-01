@@ -1,10 +1,11 @@
 <?php
 
-class ControllerSaleVendorOrder extends Controller {
+class ControllerSaleVendorOrder extends Controller
+{
+    private $error = [];
 
-    private $error = array();
-
-    public function index() {
+    public function index()
+    {
         $this->load->language('sale/vendor_order');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -15,14 +16,14 @@ class ControllerSaleVendorOrder extends Controller {
         $this->getList();
     }
 
-    protected function getList() {
-        
+    protected function getList()
+    {
         if (isset($this->request->get['filter_city'])) {
             $filter_city = $this->request->get['filter_city'];
         } else {
             $filter_city = null;
         }
-        
+
         if (isset($this->request->get['filter_order_id'])) {
             $filter_order_id = $this->request->get['filter_order_id'];
         } else {
@@ -92,65 +93,65 @@ class ControllerSaleVendorOrder extends Controller {
         $url = '';
 
         if (isset($this->request->get['filter_city'])) {
-            $url .= '&filter_city=' . $this->request->get['filter_city'];
+            $url .= '&filter_city='.$this->request->get['filter_city'];
         }
-        
+
         if (isset($this->request->get['filter_order_id'])) {
-            $url .= '&filter_order_id=' . $this->request->get['filter_order_id'];
+            $url .= '&filter_order_id='.$this->request->get['filter_order_id'];
         }
 
         if (isset($this->request->get['filter_customer'])) {
-            $url .= '&filter_customer=' . urlencode(html_entity_decode($this->request->get['filter_customer'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&filter_customer='.urlencode(html_entity_decode($this->request->get['filter_customer'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_order_status'])) {
-            $url .= '&filter_order_status=' . $this->request->get['filter_order_status'];
+            $url .= '&filter_order_status='.$this->request->get['filter_order_status'];
         }
 
         if (isset($this->request->get['filter_total'])) {
-            $url .= '&filter_total=' . $this->request->get['filter_total'];
+            $url .= '&filter_total='.$this->request->get['filter_total'];
         }
 
         if (isset($this->request->get['filter_date_added'])) {
-            $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
+            $url .= '&filter_date_added='.$this->request->get['filter_date_added'];
         }
 
         if (isset($this->request->get['filter_date_modified'])) {
-            $url .= '&filter_date_modified=' . $this->request->get['filter_date_modified'];
+            $url .= '&filter_date_modified='.$this->request->get['filter_date_modified'];
         }
 
         if (isset($this->request->get['sort'])) {
-            $url .= '&sort=' . $this->request->get['sort'];
+            $url .= '&sort='.$this->request->get['sort'];
         }
 
         if (isset($this->request->get['order'])) {
-            $url .= '&order=' . $this->request->get['order'];
+            $url .= '&order='.$this->request->get['order'];
         }
 
         if (isset($this->request->get['page'])) {
-            $url .= '&page=' . $this->request->get['page'];
+            $url .= '&page='.$this->request->get['page'];
         }
 
-        $data['breadcrumbs'] = array();
+        $data['breadcrumbs'] = [];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
-            'separator' => false
-        );
+            'href' => $this->url->link('common/home', 'token='.$this->session->data['token'], 'SSL'),
+            'separator' => false,
+        ];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('sale/vendor_order', 'token=' . $this->session->data['token'] . $url, 'SSL'),
-            'separator' => ' :: '
-        );
+            'href' => $this->url->link('sale/vendor_order', 'token='.$this->session->data['token'].$url, 'SSL'),
+            'separator' => ' :: ',
+        ];
 
-        $data['invoice'] = $this->url->link('sale/vendor_order/invoice', 'token=' . $this->session->data['token'], 'SSL');
-        $data['shipping'] = $this->url->link('sale/vendor_order/shipping', 'token=' . $this->session->data['token'], 'SSL');
+        $data['invoice'] = $this->url->link('sale/vendor_order/invoice', 'token='.$this->session->data['token'], 'SSL');
+        $data['shipping'] = $this->url->link('sale/vendor_order/shipping', 'token='.$this->session->data['token'], 'SSL');
 
-        $data['orders'] = array();
+        $data['orders'] = [];
 
-        $filter_data = array(
+        $filter_data = [
             'filter_vendor_order_id' => $filter_vendor_order_id,
             'filter_payment_status' => $filter_payment_status,
             'filter_order_id' => $filter_order_id,
@@ -163,8 +164,8 @@ class ControllerSaleVendorOrder extends Controller {
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin')
-        );
+            'limit' => $this->config->get('config_limit_admin'),
+        ];
 
         $order_total = $this->model_sale_order->getVendorTotalOrders($filter_data);
 
@@ -173,18 +174,17 @@ class ControllerSaleVendorOrder extends Controller {
         $data['config_shipped_status'] = $this->config->get('config_shipped_status');
         $data['config_processing_status'] = $this->config->get('config_processing_status');
         $data['config_complete_status'] = $this->config->get('config_complete_status');
-        
-        $data['orders'] = array();
+
+        $data['orders'] = [];
 
         foreach ($results as $result) {
-
-            if($result['shopper_id']) {
+            if ($result['shopper_id']) {
                 $shopper = $this->model_sale_vendor_order->getShopper($result['shopper_id']);
-            }else{
+            } else {
                 $shopper = '';
             }
-            
-            $data['orders'][] = array(
+
+            $data['orders'][] = [
                 'vendor_order_id' => $result['vendor_order_id'],
                 'order_id' => $result['order_id'],
                 'customer' => $result['customer'],
@@ -198,10 +198,10 @@ class ControllerSaleVendorOrder extends Controller {
                 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
                 //'date_modified'    => date($this->language->get('date_format_short'), strtotime($result['date_modified'])),
                 'selected' => isset($this->request->post['selected']) && in_array($result['order_id'], $this->request->post['selected']),
-                'view' => $this->url->link('sale/vendor_order/info', 'token=' . $this->session->data['token'] . '&store_id=' . $result['store_id'] . '&order_id=' . $result['order_id'] . $url, 'SSL'),
-                'edit' => $this->url->link('sale/vendor_order/update', 'token=' . $this->session->data['token'] . '&store_id=' . $result['store_id'] . '&order_id=' . $result['order_id'] . $url, 'SSL'),
-                'delete' => $this->url->link('sale/vendor_order/delete', 'token=' . $this->session->data['token'] . '&store_id=' . $result['store_id'] . '&order_id=' . $result['order_id'] . $url, 'SSL'),
-            );
+                'view' => $this->url->link('sale/vendor_order/info', 'token='.$this->session->data['token'].'&store_id='.$result['store_id'].'&order_id='.$result['order_id'].$url, 'SSL'),
+                'edit' => $this->url->link('sale/vendor_order/update', 'token='.$this->session->data['token'].'&store_id='.$result['store_id'].'&order_id='.$result['order_id'].$url, 'SSL'),
+                'delete' => $this->url->link('sale/vendor_order/delete', 'token='.$this->session->data['token'].'&store_id='.$result['store_id'].'&order_id='.$result['order_id'].$url, 'SSL'),
+            ];
         }
 
         $data['heading_title'] = $this->language->get('heading_title');
@@ -215,7 +215,7 @@ class ControllerSaleVendorOrder extends Controller {
         $data['text_heading'] = $this->language->get('text_heading');
         $data['text_assign_shopper'] = $this->language->get('text_assign_shopper');
         $data['text_find_shopper'] = $this->language->get('text_find_shopper');
-        
+
         $data['column_order_id'] = $this->language->get('column_order_id');
         $data['column_vendor_order_id'] = $this->language->get('column_vendor_order_id');
         $data['column_customer'] = $this->language->get('column_customer');
@@ -249,7 +249,7 @@ class ControllerSaleVendorOrder extends Controller {
         if (isset($this->request->post['selected'])) {
             $data['selected'] = $this->request->post['selected'];
         } else {
-            $data['selected'] = array();
+            $data['selected'] = [];
         }
 
         if (isset($this->error['warning'])) {
@@ -269,96 +269,96 @@ class ControllerSaleVendorOrder extends Controller {
         $url = '';
 
         if (isset($this->request->get['filter_city'])) {
-            $url .= '&filter_city=' . $this->request->get['filter_city'];
+            $url .= '&filter_city='.$this->request->get['filter_city'];
         }
-        
+
         if (isset($this->request->get['filter_order_id'])) {
-            $url .= '&filter_order_id=' . $this->request->get['filter_order_id'];
+            $url .= '&filter_order_id='.$this->request->get['filter_order_id'];
         }
 
         if (isset($this->request->get['filter_vendor_order_id'])) {
-            $url .= '&filter_vendor_order_id=' . $this->request->get['filter_vendor_order_id'];
+            $url .= '&filter_vendor_order_id='.$this->request->get['filter_vendor_order_id'];
         }
 
         if (isset($this->request->get['filter_payment_status'])) {
-            $url .= '&filter_payment_status=' . $this->request->get['filter_payment_status'];
+            $url .= '&filter_payment_status='.$this->request->get['filter_payment_status'];
         }
 
         if (isset($this->request->get['filter_customer'])) {
-            $url .= '&filter_customer=' . urlencode(html_entity_decode($this->request->get['filter_customer'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&filter_customer='.urlencode(html_entity_decode($this->request->get['filter_customer'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_order_status'])) {
-            $url .= '&filter_order_status=' . $this->request->get['filter_order_status'];
+            $url .= '&filter_order_status='.$this->request->get['filter_order_status'];
         }
 
         if (isset($this->request->get['filter_total'])) {
-            $url .= '&filter_total=' . $this->request->get['filter_total'];
+            $url .= '&filter_total='.$this->request->get['filter_total'];
         }
 
         if (isset($this->request->get['filter_date_added'])) {
-            $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
+            $url .= '&filter_date_added='.$this->request->get['filter_date_added'];
         }
 
         if (isset($this->request->get['filter_date_modified'])) {
-            $url .= '&filter_date_modified=' . $this->request->get['filter_date_modified'];
+            $url .= '&filter_date_modified='.$this->request->get['filter_date_modified'];
         }
 
-        if ($order == 'ASC') {
+        if ('ASC' == $order) {
             $url .= '&order=DESC';
         } else {
             $url .= '&order=ASC';
         }
 
         if (isset($this->request->get['page'])) {
-            $url .= '&page=' . $this->request->get['page'];
+            $url .= '&page='.$this->request->get['page'];
         }
 
-        $data['sort_vendor_order'] = $this->url->link('sale/vendor_order', 'token=' . $this->session->data['token'] . '&sort=vo.vendor_order_id' . $url, 'SSL');
-        $data['sort_order'] = $this->url->link('sale/vendor_order', 'token=' . $this->session->data['token'] . '&sort=o.order_id' . $url, 'SSL');
-        $data['sort_customer'] = $this->url->link('sale/vendor_order', 'token=' . $this->session->data['token'] . '&sort=customer' . $url, 'SSL');
-        $data['sort_city'] = $this->url->link('sale/vendor_order', 'token=' . $this->session->data['token'] . '&sort=c.name' . $url, 'SSL');
-        $data['sort_status'] = $this->url->link('sale/vendor_order', 'token=' . $this->session->data['token'] . '&sort=status' . $url, 'SSL');
-        $data['sort_total'] = $this->url->link('sale/vendor_order', 'token=' . $this->session->data['token'] . '&sort=vo.total' . $url, 'SSL');
-        $data['sort_date_added'] = $this->url->link('sale/vendor_order', 'token=' . $this->session->data['token'] . '&sort=o.date_added' . $url, 'SSL');
-        $data['sort_date_modified'] = $this->url->link('sale/vendor_order', 'token=' . $this->session->data['token'] . '&sort=o.date_modified' . $url, 'SSL');
+        $data['sort_vendor_order'] = $this->url->link('sale/vendor_order', 'token='.$this->session->data['token'].'&sort=vo.vendor_order_id'.$url, 'SSL');
+        $data['sort_order'] = $this->url->link('sale/vendor_order', 'token='.$this->session->data['token'].'&sort=o.order_id'.$url, 'SSL');
+        $data['sort_customer'] = $this->url->link('sale/vendor_order', 'token='.$this->session->data['token'].'&sort=customer'.$url, 'SSL');
+        $data['sort_city'] = $this->url->link('sale/vendor_order', 'token='.$this->session->data['token'].'&sort=c.name'.$url, 'SSL');
+        $data['sort_status'] = $this->url->link('sale/vendor_order', 'token='.$this->session->data['token'].'&sort=status'.$url, 'SSL');
+        $data['sort_total'] = $this->url->link('sale/vendor_order', 'token='.$this->session->data['token'].'&sort=vo.total'.$url, 'SSL');
+        $data['sort_date_added'] = $this->url->link('sale/vendor_order', 'token='.$this->session->data['token'].'&sort=o.date_added'.$url, 'SSL');
+        $data['sort_date_modified'] = $this->url->link('sale/vendor_order', 'token='.$this->session->data['token'].'&sort=o.date_modified'.$url, 'SSL');
 
         $url = '';
 
         if (isset($this->request->get['filter_city'])) {
-            $url .= '&filter_city=' . $this->request->get['filter_city'];
+            $url .= '&filter_city='.$this->request->get['filter_city'];
         }
-        
+
         if (isset($this->request->get['filter_order_id'])) {
-            $url .= '&filter_order_id=' . $this->request->get['filter_order_id'];
+            $url .= '&filter_order_id='.$this->request->get['filter_order_id'];
         }
 
         if (isset($this->request->get['filter_customer'])) {
-            $url .= '&filter_customer=' . urlencode(html_entity_decode($this->request->get['filter_customer'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&filter_customer='.urlencode(html_entity_decode($this->request->get['filter_customer'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_order_status'])) {
-            $url .= '&filter_order_status=' . $this->request->get['filter_order_status'];
+            $url .= '&filter_order_status='.$this->request->get['filter_order_status'];
         }
 
         if (isset($this->request->get['filter_total'])) {
-            $url .= '&filter_total=' . $this->request->get['filter_total'];
+            $url .= '&filter_total='.$this->request->get['filter_total'];
         }
 
         if (isset($this->request->get['filter_date_added'])) {
-            $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
+            $url .= '&filter_date_added='.$this->request->get['filter_date_added'];
         }
 
         if (isset($this->request->get['filter_date_modified'])) {
-            $url .= '&filter_date_modified=' . $this->request->get['filter_date_modified'];
+            $url .= '&filter_date_modified='.$this->request->get['filter_date_modified'];
         }
 
         if (isset($this->request->get['sort'])) {
-            $url .= '&sort=' . $this->request->get['sort'];
+            $url .= '&sort='.$this->request->get['sort'];
         }
 
         if (isset($this->request->get['order'])) {
-            $url .= '&order=' . $this->request->get['order'];
+            $url .= '&order='.$this->request->get['order'];
         }
 
         $pagination = new Pagination();
@@ -366,7 +366,7 @@ class ControllerSaleVendorOrder extends Controller {
         $pagination->page = $page;
         $pagination->limit = $this->config->get('config_limit_admin');
         $pagination->text = $this->language->get('text_pagination');
-        $pagination->url = $this->url->link('sale/vendor_order', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+        $pagination->url = $this->url->link('sale/vendor_order', 'token='.$this->session->data['token'].$url.'&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
@@ -395,9 +395,9 @@ class ControllerSaleVendorOrder extends Controller {
 
         $this->response->setOutput($this->load->view('sale/vendor_order_list.tpl', $data));
     }
-    
-    public function invoice() {
-        
+
+    public function invoice()
+    {
         $this->load->language('sale/order');
 
         $data['title'] = $this->language->get('text_invoice');
@@ -435,12 +435,12 @@ class ControllerSaleVendorOrder extends Controller {
 
         $this->load->model('sale/order');
         $this->load->model('sale/vendor_order');
-        
+
         $this->load->model('setting/setting');
 
-        $data['orders'] = array();
+        $data['orders'] = [];
 
-        $orders = array();
+        $orders = [];
 
         if (isset($this->request->post['selected'])) {
             $orders = $this->request->post['selected'];
@@ -449,11 +449,9 @@ class ControllerSaleVendorOrder extends Controller {
         }
 
         foreach ($orders as $order_id) {
-            
             $order_info = $this->model_sale_vendor_order->getVendorOrder($order_id);
 
             if ($order_info) {
-
                 $store_info = $this->model_setting_setting->getSetting('config', $order_info['store_id']);
 
                 if ($store_info) {
@@ -469,25 +467,24 @@ class ControllerSaleVendorOrder extends Controller {
                 }
 
                 if ($order_info['invoice_no']) {
-                    $invoice_no = $order_info['invoice_prefix'] . $order_info['invoice_no'];
+                    $invoice_no = $order_info['invoice_prefix'].$order_info['invoice_no'];
                 } else {
                     $invoice_no = '';
                 }
 
                 $this->load->model('tool/upload');
 
-                $product_data = array();
+                $product_data = [];
 
                 $products = $this->model_sale_order->getOrderProducts($order_info['order_id'], $order_info['store_id']);
 
                 foreach ($products as $product) {
-
-                    $option_data = array();
+                    $option_data = [];
 
                     $options = $this->model_sale_order->getOrderOptions($order_info['order_id'], $product['order_product_id']);
 
                     foreach ($options as $option) {
-                        if ($option['type'] != 'file') {
+                        if ('file' != $option['type']) {
                             $value = $option['value'];
                         } else {
                             $upload_info = $this->model_tool_upload->getUploadByCode($option['value']);
@@ -499,34 +496,34 @@ class ControllerSaleVendorOrder extends Controller {
                             }
                         }
 
-                        $option_data[] = array(
+                        $option_data[] = [
                             'name' => $option['name'],
-                            'value' => $value
-                        );
+                            'value' => $value,
+                        ];
                     }
 
-                    $product_data[] = array(
+                    $product_data[] = [
                         'name' => $product['name'],
                         'model' => $product['model'],
                         'option' => $option_data,
                         'quantity' => $product['quantity'],
                         'price' => $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
-                        'total' => $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value'])
-                    );
+                        'total' => $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
+                    ];
                 }
 
-                $total_data = array();
+                $total_data = [];
 
                 $totals = $this->model_sale_order->getVendorOrderTotals($order_info['order_id'], $order_info['store_id']);
-                
+
                 foreach ($totals as $total) {
-                    $total_data[] = array(
+                    $total_data[] = [
                         'title' => $total['title'],
                         'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
-                    );
+                    ];
                 }
 
-                $data['orders'][] = array(
+                $data['orders'][] = [
                     'order_id' => $order_id,
                     'invoice_no' => $invoice_no,
                     'date_added' => date($this->language->get('date_format_short'), strtotime($order_info['date_added'])),
@@ -545,15 +542,16 @@ class ControllerSaleVendorOrder extends Controller {
                     'payment_method' => $order_info['payment_method'],
                     'product' => $product_data,
                     'total' => $total_data,
-                    'comment' => nl2br($order_info['comment'])
-                );
+                    'comment' => nl2br($order_info['comment']),
+                ];
             }
         }
 
         $this->response->setOutput($this->load->view('sale/vendor_order_invoice.tpl', $data));
     }
 
-    public function shipping() {
+    public function shipping()
+    {
         $this->load->language('sale/order');
 
         $data['title'] = $this->language->get('text_shipping');
@@ -602,9 +600,9 @@ class ControllerSaleVendorOrder extends Controller {
         $this->load->model('catalog/product');
         $this->load->model('setting/setting');
 
-        $data['orders'] = array();
+        $data['orders'] = [];
 
-        $orders = array();
+        $orders = [];
 
         if (isset($this->request->post['selected'])) {
             $orders = $this->request->post['selected'];
@@ -613,12 +611,10 @@ class ControllerSaleVendorOrder extends Controller {
         }
 
         foreach ($orders as $order_id) {
-            
             $order_info = $this->model_sale_vendor_order->getVendorOrder($order_id);
 
             // Make sure there is a shipping method
             if ($order_info && $order_info['shipping_code']) {
-
                 $store_info = $this->model_setting_setting->getStore($order_info['store_id']);
 
                 if ($store_info) {
@@ -634,27 +630,26 @@ class ControllerSaleVendorOrder extends Controller {
                 $store_fax = $this->config->get('config_fax');
 
                 if ($order_info['invoice_no']) {
-                    $invoice_no = $order_info['invoice_prefix'] . $order_info['invoice_no'];
+                    $invoice_no = $order_info['invoice_prefix'].$order_info['invoice_no'];
                 } else {
                     $invoice_no = '';
                 }
 
                 $this->load->model('tool/upload');
 
-                $product_data = array();
+                $product_data = [];
 
                 $products = $this->model_sale_order->getOrderProducts($order_info['order_id'], $order_info['store_id']);
 
                 foreach ($products as $product) {
-
                     $product_info = $this->model_catalog_product->getProduct($product['product_id']);
 
-                    $option_data = array();
+                    $option_data = [];
 
                     $options = $this->model_sale_order->getOrderOptions($order_info['order_id'], $product['order_product_id']);
 
                     foreach ($options as $option) {
-                        if ($option['type'] != 'file') {
+                        if ('file' != $option['type']) {
                             $value = $option['value'];
                         } else {
                             $upload_info = $this->model_tool_upload->getUploadByCode($option['value']);
@@ -666,13 +661,13 @@ class ControllerSaleVendorOrder extends Controller {
                             }
                         }
 
-                        $option_data[] = array(
+                        $option_data[] = [
                             'name' => $option['name'],
-                            'value' => $value
-                        );
+                            'value' => $value,
+                        ];
                     }
 
-                    $product_data[] = array(
+                    $product_data[] = [
                         'name' => $product_info['name'],
                         'model' => $product_info['model'],
                         'option' => $option_data,
@@ -684,11 +679,11 @@ class ControllerSaleVendorOrder extends Controller {
                         'jan' => $product_info['jan'],
                         'isbn' => $product_info['isbn'],
                         'mpn' => $product_info['mpn'],
-                        'weight' => $this->weight->format($product_info['weight'], $this->config->get('config_weight_class_id'), $this->language->get('decimal_point'), $this->language->get('thousand_point'))
-                    );
+                        'weight' => $this->weight->format($product_info['weight'], $this->config->get('config_weight_class_id'), $this->language->get('decimal_point'), $this->language->get('thousand_point')),
+                    ];
                 }
 
-                $data['orders'][] = array(
+                $data['orders'][] = [
                     'order_id' => $order_id,
                     'invoice_no' => $invoice_no,
                     'date_added' => date($this->language->get('date_format_short'), strtotime($order_info['date_added'])),
@@ -705,19 +700,19 @@ class ControllerSaleVendorOrder extends Controller {
                     'shipping_name' => $order_info['shipping_name'],
                     'shipping_city' => $order_info['shipping_city'],
                     'product' => $product_data,
-                    'comment' => nl2br($order_info['comment'])
-                );
+                    'comment' => nl2br($order_info['comment']),
+                ];
             }
         }
 
         $this->response->setOutput($this->load->view('sale/vendor_order_shipping.tpl', $data));
     }
 
-    public function info() {
-        
+    public function info()
+    {
         $this->load->model('sale/order');
         $this->load->model('sale/vendor_order');
-        
+
         if (isset($this->request->get['order_id'])) {
             $order_id = $this->request->get['order_id'];
         } else {
@@ -730,7 +725,7 @@ class ControllerSaleVendorOrder extends Controller {
             $store_id = 0;
         }
 
-        //check vendor order 
+        //check vendor order
         if ($this->user->isVendor() && !$this->isMyOrder($order_id, $store_id)) {
             $this->response->redirect($this->url->link('error/not_found'));
         }
@@ -926,81 +921,80 @@ class ControllerSaleVendorOrder extends Controller {
             $url = '';
 
             if (isset($this->request->get['filter_city'])) {
-                $url .= '&filter_city=' . $this->request->get['filter_city'];
+                $url .= '&filter_city='.$this->request->get['filter_city'];
             }
-            
+
             if (isset($this->request->get['filter_order_id'])) {
-                $url .= '&filter_order_id=' . $this->request->get['filter_order_id'];
+                $url .= '&filter_order_id='.$this->request->get['filter_order_id'];
             }
 
             if (isset($this->request->get['filter_customer'])) {
-                $url .= '&filter_customer=' . urlencode(html_entity_decode($this->request->get['filter_customer'], ENT_QUOTES, 'UTF-8'));
+                $url .= '&filter_customer='.urlencode(html_entity_decode($this->request->get['filter_customer'], ENT_QUOTES, 'UTF-8'));
             }
 
             if (isset($this->request->get['filter_order_status'])) {
-                $url .= '&filter_order_status=' . $this->request->get['filter_order_status'];
+                $url .= '&filter_order_status='.$this->request->get['filter_order_status'];
             }
 
             if (isset($this->request->get['filter_total'])) {
-                $url .= '&filter_total=' . $this->request->get['filter_total'];
+                $url .= '&filter_total='.$this->request->get['filter_total'];
             }
 
             if (isset($this->request->get['filter_date_added'])) {
-                $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
+                $url .= '&filter_date_added='.$this->request->get['filter_date_added'];
             }
 
             if (isset($this->request->get['filter_date_modified'])) {
-                $url .= '&filter_date_modified=' . $this->request->get['filter_date_modified'];
+                $url .= '&filter_date_modified='.$this->request->get['filter_date_modified'];
             }
 
             if (isset($this->request->get['sort'])) {
-                $url .= '&sort=' . $this->request->get['sort'];
+                $url .= '&sort='.$this->request->get['sort'];
             }
 
             if (isset($this->request->get['order'])) {
-                $url .= '&order=' . $this->request->get['order'];
+                $url .= '&order='.$this->request->get['order'];
             }
 
             if (isset($this->request->get['page'])) {
-                $url .= '&page=' . $this->request->get['page'];
+                $url .= '&page='.$this->request->get['page'];
             }
 
-            $data['breadcrumbs'] = array();
+            $data['breadcrumbs'] = [];
 
-            $data['breadcrumbs'][] = array(
+            $data['breadcrumbs'][] = [
                 'text' => $this->language->get('text_home'),
-                'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL')
-            );
+                'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
+            ];
 
-            $data['breadcrumbs'][] = array(
+            $data['breadcrumbs'][] = [
                 'text' => $this->language->get('heading_title'),
-                'href' => $this->url->link('sale/vendor_order', 'token=' . $this->session->data['token'] . $url, 'SSL')
-            );
+                'href' => $this->url->link('sale/vendor_order', 'token='.$this->session->data['token'].$url, 'SSL'),
+            ];
 
             if (isset($this->request->get['store_id'])) {
                 $store_id = $this->request->get['store_id'];
-                $data['shipping'] = $this->url->link('sale/vendor_order/shipping', 'store_id=' . $store_id . '&token=' . $this->session->data['token'] . '&order_id=' . (int) $this->request->get['order_id'], 'SSL');
-                $data['invoice'] = $this->url->link('sale/vendor_order/invoice', 'store_id=' . $store_id . '&token=' . $this->session->data['token'] . '&order_id=' . (int) $this->request->get['order_id'], 'SSL');
+                $data['shipping'] = $this->url->link('sale/vendor_order/shipping', 'store_id='.$store_id.'&token='.$this->session->data['token'].'&order_id='.(int) $this->request->get['order_id'], 'SSL');
+                $data['invoice'] = $this->url->link('sale/vendor_order/invoice', 'store_id='.$store_id.'&token='.$this->session->data['token'].'&order_id='.(int) $this->request->get['order_id'], 'SSL');
             } else {
-                $data['shipping'] = $this->url->link('sale/vendor_order/shipping', 'token=' . $this->session->data['token'] . '&order_id=' . (int) $this->request->get['order_id'], 'SSL');
-                $data['invoice'] = $this->url->link('sale/vendor_order/invoice', 'token=' . $this->session->data['token'] . '&order_id=' . (int) $this->request->get['order_id'], 'SSL');
+                $data['shipping'] = $this->url->link('sale/vendor_order/shipping', 'token='.$this->session->data['token'].'&order_id='.(int) $this->request->get['order_id'], 'SSL');
+                $data['invoice'] = $this->url->link('sale/vendor_order/invoice', 'token='.$this->session->data['token'].'&order_id='.(int) $this->request->get['order_id'], 'SSL');
             }
 
-            $data['edit'] = $this->url->link('sale/vendor_order/edit', 'token=' . $this->session->data['token'] . '&order_id=' . (int) $this->request->get['order_id'], 'SSL');
-            $data['cancel'] = $this->url->link('sale/vendor_order', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $data['edit'] = $this->url->link('sale/vendor_order/edit', 'token='.$this->session->data['token'].'&order_id='.(int) $this->request->get['order_id'], 'SSL');
+            $data['cancel'] = $this->url->link('sale/vendor_order', 'token='.$this->session->data['token'].$url, 'SSL');
 
             $data['order_id'] = $this->request->get['order_id'];
 
             if ($order_info['invoice_no']) {
-                $data['invoice_no'] = $order_info['invoice_prefix'] . $order_info['invoice_no'];
+                $data['invoice_no'] = $order_info['invoice_prefix'].$order_info['invoice_no'];
             } else {
                 $data['invoice_no'] = '';
             }
 
-            $data['filter_stores'] = array();
+            $data['filter_stores'] = [];
 
             if ($this->user->isVendor()) {
-
                 $rows = $this->model_sale_order->getStoreIdByVendorId($this->user->getId());
 
                 foreach ($rows as $row) {
@@ -1014,7 +1008,7 @@ class ControllerSaleVendorOrder extends Controller {
             $data['lastname'] = $order_info['lastname'];
 
             if ($order_info['customer_id']) {
-                $data['customer'] = $this->url->link('sale/customer/edit', 'token=' . $this->session->data['token'] . '&customer_id=' . $order_info['customer_id'], 'SSL');
+                $data['customer'] = $this->url->link('sale/customer/edit', 'token='.$this->session->data['token'].'&customer_id='.$order_info['customer_id'], 'SSL');
             } else {
                 $data['customer'] = '';
             }
@@ -1035,57 +1029,57 @@ class ControllerSaleVendorOrder extends Controller {
 
             $data['account_custom_field'] = $order_info['custom_field'];
 
-            // Uploaded files			
+            // Uploaded files
             $this->load->model('tool/upload');
 
             // Custom Fields
             $this->load->model('sale/custom_field');
 
-            $data['account_custom_fields'] = array();
+            $data['account_custom_fields'] = [];
 
             $custom_fields = $this->model_sale_custom_field->getCustomFields();
 
             foreach ($custom_fields as $custom_field) {
-                if ($custom_field['location'] == 'account' && isset($order_info['custom_field'][$custom_field['custom_field_id']])) {
-                    if ($custom_field['type'] == 'select' || $custom_field['type'] == 'radio') {
+                if ('account' == $custom_field['location'] && isset($order_info['custom_field'][$custom_field['custom_field_id']])) {
+                    if ('select' == $custom_field['type'] || 'radio' == $custom_field['type']) {
                         $custom_field_value_info = $this->model_sale_custom_field->getCustomFieldValue($order_info['custom_field'][$custom_field['custom_field_id']]);
 
                         if ($custom_field_value_info) {
-                            $data['account_custom_fields'][] = array(
+                            $data['account_custom_fields'][] = [
                                 'name' => $custom_field['name'],
-                                'value' => $custom_field_value_info['name']
-                            );
+                                'value' => $custom_field_value_info['name'],
+                            ];
                         }
                     }
 
-                    if ($custom_field['type'] == 'checkbox' && is_array($order_info['custom_field'][$custom_field['custom_field_id']])) {
+                    if ('checkbox' == $custom_field['type'] && is_array($order_info['custom_field'][$custom_field['custom_field_id']])) {
                         foreach ($order_info['custom_field'][$custom_field['custom_field_id']] as $custom_field_value_id) {
                             $custom_field_value_info = $this->model_sale_custom_field->getCustomFieldValue($custom_field_value_id);
 
                             if ($custom_field_value_info) {
-                                $data['account_custom_fields'][] = array(
+                                $data['account_custom_fields'][] = [
                                     'name' => $custom_field['name'],
-                                    'value' => $custom_field_value_info['name']
-                                );
+                                    'value' => $custom_field_value_info['name'],
+                                ];
                             }
                         }
                     }
 
-                    if ($custom_field['type'] == 'text' || $custom_field['type'] == 'textarea' || $custom_field['type'] == 'file' || $custom_field['type'] == 'date' || $custom_field['type'] == 'datetime' || $custom_field['type'] == 'time') {
-                        $data['account_custom_fields'][] = array(
+                    if ('text' == $custom_field['type'] || 'textarea' == $custom_field['type'] || 'file' == $custom_field['type'] || 'date' == $custom_field['type'] || 'datetime' == $custom_field['type'] || 'time' == $custom_field['type']) {
+                        $data['account_custom_fields'][] = [
                             'name' => $custom_field['name'],
-                            'value' => $order_info['custom_field'][$custom_field['custom_field_id']]
-                        );
+                            'value' => $order_info['custom_field'][$custom_field['custom_field_id']],
+                        ];
                     }
 
-                    if ($custom_field['type'] == 'file') {
+                    if ('file' == $custom_field['type']) {
                         $upload_info = $this->model_tool_upload->getUploadByCode($order_info['custom_field'][$custom_field['custom_field_id']]);
 
                         if ($upload_info) {
-                            $data['account_custom_fields'][] = array(
+                            $data['account_custom_fields'][] = [
                                 'name' => $custom_field['name'],
-                                'value' => $upload_info['name']
-                            );
+                                'value' => $upload_info['name'],
+                            ];
                         }
                     }
                 }
@@ -1106,7 +1100,7 @@ class ControllerSaleVendorOrder extends Controller {
             $data['affiliate_lastname'] = $order_info['affiliate_lastname'];
 
             if ($order_info['affiliate_id']) {
-                $data['affiliate'] = $this->url->link('marketing/affiliate/edit', 'token=' . $this->session->data['token'] . '&affiliate_id=' . $order_info['affiliate_id'], 'SSL');
+                $data['affiliate'] = $this->url->link('marketing/affiliate/edit', 'token='.$this->session->data['token'].'&affiliate_id='.$order_info['affiliate_id'], 'SSL');
             } else {
                 $data['affiliate'] = '';
             }
@@ -1135,49 +1129,49 @@ class ControllerSaleVendorOrder extends Controller {
             $data['date_modified'] = date($this->language->get('date_format_short'), strtotime($order_info['date_modified']));
 
             // Custom fields
-            $data['payment_custom_fields'] = array();
+            $data['payment_custom_fields'] = [];
 
             foreach ($custom_fields as $custom_field) {
-                if ($custom_field['location'] == 'address' && isset($order_info['payment_custom_field'][$custom_field['custom_field_id']])) {
-                    if ($custom_field['type'] == 'select' || $custom_field['type'] == 'radio') {
+                if ('address' == $custom_field['location'] && isset($order_info['payment_custom_field'][$custom_field['custom_field_id']])) {
+                    if ('select' == $custom_field['type'] || 'radio' == $custom_field['type']) {
                         $custom_field_value_info = $this->model_sale_custom_field->getCustomFieldValue($order_info['payment_custom_field'][$custom_field['custom_field_id']]);
 
                         if ($custom_field_value_info) {
-                            $data['payment_custom_fields'][] = array(
+                            $data['payment_custom_fields'][] = [
                                 'name' => $custom_field['name'],
-                                'value' => $custom_field_value_info['name']
-                            );
+                                'value' => $custom_field_value_info['name'],
+                            ];
                         }
                     }
 
-                    if ($custom_field['type'] == 'checkbox' && is_array($order_info['payment_custom_field'][$custom_field['custom_field_id']])) {
+                    if ('checkbox' == $custom_field['type'] && is_array($order_info['payment_custom_field'][$custom_field['custom_field_id']])) {
                         foreach ($order_info['payment_custom_field'][$custom_field['custom_field_id']] as $custom_field_value_id) {
                             $custom_field_value_info = $this->model_sale_custom_field->getCustomFieldValue($custom_field_value_id);
 
                             if ($custom_field_value_info) {
-                                $data['payment_custom_fields'][] = array(
+                                $data['payment_custom_fields'][] = [
                                     'name' => $custom_field['name'],
-                                    'value' => $custom_field_value_info['name']
-                                );
+                                    'value' => $custom_field_value_info['name'],
+                                ];
                             }
                         }
                     }
 
-                    if ($custom_field['type'] == 'text' || $custom_field['type'] == 'textarea' || $custom_field['type'] == 'file' || $custom_field['type'] == 'date' || $custom_field['type'] == 'datetime' || $custom_field['type'] == 'time') {
-                        $data['payment_custom_fields'][] = array(
+                    if ('text' == $custom_field['type'] || 'textarea' == $custom_field['type'] || 'file' == $custom_field['type'] || 'date' == $custom_field['type'] || 'datetime' == $custom_field['type'] || 'time' == $custom_field['type']) {
+                        $data['payment_custom_fields'][] = [
                             'name' => $custom_field['name'],
-                            'value' => $order_info['payment_custom_field'][$custom_field['custom_field_id']]
-                        );
+                            'value' => $order_info['payment_custom_field'][$custom_field['custom_field_id']],
+                        ];
                     }
 
-                    if ($custom_field['type'] == 'file') {
+                    if ('file' == $custom_field['type']) {
                         $upload_info = $this->model_tool_upload->getUploadByCode($order_info['payment_custom_field'][$custom_field['custom_field_id']]);
 
                         if ($upload_info) {
-                            $data['payment_custom_fields'][] = array(
+                            $data['payment_custom_fields'][] = [
                                 'name' => $custom_field['name'],
-                                'value' => $upload_info['name']
-                            );
+                                'value' => $upload_info['name'],
+                            ];
                         }
                     }
                 }
@@ -1189,85 +1183,85 @@ class ControllerSaleVendorOrder extends Controller {
             $data['shipping_contact_no'] = $order_info['shipping_contact_no'];
             $data['shipping_address'] = $order_info['shipping_address'];
 
-            $data['shipping_custom_fields'] = array();
+            $data['shipping_custom_fields'] = [];
 
             foreach ($custom_fields as $custom_field) {
-                if ($custom_field['location'] == 'address' && isset($order_info['shipping_custom_field'][$custom_field['custom_field_id']])) {
-                    if ($custom_field['type'] == 'select' || $custom_field['type'] == 'radio') {
+                if ('address' == $custom_field['location'] && isset($order_info['shipping_custom_field'][$custom_field['custom_field_id']])) {
+                    if ('select' == $custom_field['type'] || 'radio' == $custom_field['type']) {
                         $custom_field_value_info = $this->model_sale_custom_field->getCustomFieldValue($order_info['shipping_custom_field'][$custom_field['custom_field_id']]);
 
                         if ($custom_field_value_info) {
-                            $data['shipping_custom_fields'][] = array(
+                            $data['shipping_custom_fields'][] = [
                                 'name' => $custom_field['name'],
-                                'value' => $custom_field_value_info['name']
-                            );
+                                'value' => $custom_field_value_info['name'],
+                            ];
                         }
                     }
 
-                    if ($custom_field['type'] == 'checkbox' && is_array($order_info['shipping_custom_field'][$custom_field['custom_field_id']])) {
+                    if ('checkbox' == $custom_field['type'] && is_array($order_info['shipping_custom_field'][$custom_field['custom_field_id']])) {
                         foreach ($order_info['shipping_custom_field'][$custom_field['custom_field_id']] as $custom_field_value_id) {
                             $custom_field_value_info = $this->model_sale_custom_field->getCustomFieldValue($custom_field_value_id);
 
                             if ($custom_field_value_info) {
-                                $data['shipping_custom_fields'][] = array(
+                                $data['shipping_custom_fields'][] = [
                                     'name' => $custom_field['name'],
-                                    'value' => $custom_field_value_info['name']
-                                );
+                                    'value' => $custom_field_value_info['name'],
+                                ];
                             }
                         }
                     }
 
-                    if ($custom_field['type'] == 'text' || $custom_field['type'] == 'textarea' || $custom_field['type'] == 'file' || $custom_field['type'] == 'date' || $custom_field['type'] == 'datetime' || $custom_field['type'] == 'time') {
-                        $data['shipping_custom_fields'][] = array(
+                    if ('text' == $custom_field['type'] || 'textarea' == $custom_field['type'] || 'file' == $custom_field['type'] || 'date' == $custom_field['type'] || 'datetime' == $custom_field['type'] || 'time' == $custom_field['type']) {
+                        $data['shipping_custom_fields'][] = [
                             'name' => $custom_field['name'],
-                            'value' => $order_info['shipping_custom_field'][$custom_field['custom_field_id']]
-                        );
+                            'value' => $order_info['shipping_custom_field'][$custom_field['custom_field_id']],
+                        ];
                     }
 
-                    if ($custom_field['type'] == 'file') {
+                    if ('file' == $custom_field['type']) {
                         $upload_info = $this->model_tool_upload->getUploadByCode($order_info['shipping_custom_field'][$custom_field['custom_field_id']]);
 
                         if ($upload_info) {
-                            $data['shipping_custom_fields'][] = array(
+                            $data['shipping_custom_fields'][] = [
                                 'name' => $custom_field['name'],
-                                'value' => $upload_info['name']
-                            );
+                                'value' => $upload_info['name'],
+                            ];
                         }
                     }
                 }
             }
 
-            $data['products'] = array();
+            $data['products'] = [];
 
             $products = $this->model_sale_order->getOrderProducts($this->request->get['order_id']);
 
             foreach ($products as $product) {
-                $option_data = array();
+                $option_data = [];
 
                 $options = $this->model_sale_order->getOrderOptions($this->request->get['order_id'], $product['order_product_id']);
 
                 foreach ($options as $option) {
-                    if ($option['type'] != 'file') {
-                        $option_data[] = array(
+                    if ('file' != $option['type']) {
+                        $option_data[] = [
                             'name' => $option['name'],
                             'value' => $option['value'],
-                            'type' => $option['type']
-                        );
+                            'type' => $option['type'],
+                        ];
                     } else {
                         $upload_info = $this->model_tool_upload->getUploadByCode($option['value']);
 
                         if ($upload_info) {
-                            $option_data[] = array(
+                            $option_data[] = [
                                 'name' => $option['name'],
                                 'value' => $upload_info['name'],
                                 'type' => $option['type'],
-                                'href' => $this->url->link('tool/upload/download', 'token=' . $this->session->data['token'] . '&code=' . $upload_info['code'], 'SSL')
-                            );
+                                'href' => $this->url->link('tool/upload/download', 'token='.$this->session->data['token'].'&code='.$upload_info['code'], 'SSL'),
+                            ];
                         }
                     }
                 }
 
-                $data['products'][] = array(
+                $data['products'][] = [
                     'order_product_id' => $product['order_product_id'],
                     'product_id' => $product['product_id'],
                     'vendor_id' => $product['vendor_id'],
@@ -1278,29 +1272,29 @@ class ControllerSaleVendorOrder extends Controller {
                     'quantity' => $product['quantity'],
                     'price' => $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
                     'total' => $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
-                    'href' => $this->url->link('catalog/product/edit', 'token=' . $this->session->data['token'] . '&product_id=' . $product['product_id'], 'SSL')
-                );
+                    'href' => $this->url->link('catalog/product/edit', 'token='.$this->session->data['token'].'&product_id='.$product['product_id'], 'SSL'),
+                ];
             }
 
-            $data['vouchers'] = array();
+            $data['vouchers'] = [];
 
             $vouchers = $this->model_sale_order->getOrderVouchers($this->request->get['order_id']);
 
             foreach ($vouchers as $voucher) {
-                $data['vouchers'][] = array(
+                $data['vouchers'][] = [
                     'description' => $voucher['description'],
                     'amount' => $this->currency->format($voucher['amount'], $order_info['currency_code'], $order_info['currency_value']),
-                    'href' => $this->url->link('sale/voucher/edit', 'token=' . $this->session->data['token'] . '&voucher_id=' . $voucher['voucher_id'], 'SSL')
-                );
+                    'href' => $this->url->link('sale/voucher/edit', 'token='.$this->session->data['token'].'&voucher_id='.$voucher['voucher_id'], 'SSL'),
+                ];
             }
 
             $totals = $this->model_sale_order->getOrderTotals($this->request->get['order_id']);
 
             foreach ($totals as $total) {
-                $data['totals'][] = array(
+                $data['totals'][] = [
                     'title' => $total['title'],
                     'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
-                );
+                ];
             }
 
             $data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
@@ -1320,7 +1314,7 @@ class ControllerSaleVendorOrder extends Controller {
                     $curl = curl_init();
 
                     // Set SSL if required
-                    if (substr(HTTPS_CATALOG, 0, 5) == 'https') {
+                    if ('https' == substr(HTTPS_CATALOG, 0, 5)) {
                         curl_setopt($curl, CURLOPT_PORT, 443);
                     }
 
@@ -1331,7 +1325,7 @@ class ControllerSaleVendorOrder extends Controller {
                     curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
                     curl_setopt($curl, CURLOPT_FORBID_REUSE, false);
                     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                    curl_setopt($curl, CURLOPT_URL, HTTPS_CATALOG . 'index.php?path=api/login');
+                    curl_setopt($curl, CURLOPT_URL, HTTPS_CATALOG.'index.php?path=api/login');
                     curl_setopt($curl, CURLOPT_POST, true);
                     curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($api_info));
 
@@ -1562,14 +1556,13 @@ class ControllerSaleVendorOrder extends Controller {
                 $data['maxmind_id'] = '';
             }
 
-            $data['payment_action'] = $this->load->controller('payment/' . $order_info['payment_code'] . '/orderAction', '');
+            $data['payment_action'] = $this->load->controller('payment/'.$order_info['payment_code'].'/orderAction', '');
 
             $data['header'] = $this->load->controller('common/header');
             $data['column_left'] = $this->load->controller('common/column_left');
             $data['footer'] = $this->load->controller('common/footer');
 
             $this->response->setOutput($this->load->view('sale/vendor_order_info.tpl', $data));
-            
         } else {
             $this->load->language('error/not_found');
 
@@ -1579,17 +1572,17 @@ class ControllerSaleVendorOrder extends Controller {
 
             $data['text_not_found'] = $this->language->get('text_not_found');
 
-            $data['breadcrumbs'] = array();
+            $data['breadcrumbs'] = [];
 
-            $data['breadcrumbs'][] = array(
+            $data['breadcrumbs'][] = [
                 'text' => $this->language->get('text_home'),
-                'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL')
-            );
+                'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
+            ];
 
-            $data['breadcrumbs'][] = array(
+            $data['breadcrumbs'][] = [
                 'text' => $this->language->get('heading_title'),
-                'href' => $this->url->link('error/not_found', 'token=' . $this->session->data['token'], 'SSL')
-            );
+                'href' => $this->url->link('error/not_found', 'token='.$this->session->data['token'], 'SSL'),
+            ];
 
             $data['header'] = $this->load->controller('common/header');
             $data['column_left'] = $this->load->controller('common/column_left');
@@ -1599,20 +1592,20 @@ class ControllerSaleVendorOrder extends Controller {
         }
     }
 
-    public function isMyOrder($order_id, $store_id) {
-
+    public function isMyOrder($order_id, $store_id)
+    {
         $this->load->model('sale/order');
-        $row = $this->model_sale_order->getVendorOrder($order_id,$store_id);
+        $row = $this->model_sale_order->getVendorOrder($order_id, $store_id);
         if ($row) {
             return true;
         } else {
-            return FALSE;
+            return false;
         }
     }
-    
-    public function customer_autocomplete() {
-        
-        $json = array();
+
+    public function customer_autocomplete()
+    {
+        $json = [];
 
         if (!empty($this->request->get['filter_name']) || isset($this->request->get['filter_email'])) {
             if (isset($this->request->get['filter_name'])) {
@@ -1629,17 +1622,17 @@ class ControllerSaleVendorOrder extends Controller {
 
             $this->load->model('sale/customer');
 
-            $filter_data = array(
+            $filter_data = [
                 'filter_name' => $filter_name,
                 'filter_email' => $filter_email,
                 'start' => 0,
-                'limit' => 5
-            );
+                'limit' => 5,
+            ];
 
             $results = $this->model_sale_customer->getCustomers($filter_data);
 
             foreach ($results as $result) {
-                $json[] = array(
+                $json[] = [
                     'customer_id' => $result['customer_id'],
                     'customer_group_id' => $result['customer_group_id'],
                     'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')),
@@ -1650,12 +1643,12 @@ class ControllerSaleVendorOrder extends Controller {
                     'telephone' => $result['telephone'],
                     'fax' => $result['fax'],
                     'custom_field' => unserialize($result['custom_field']),
-                    'address' => $this->model_sale_customer->getAddresses($result['customer_id'])
-                );
+                    'address' => $this->model_sale_customer->getAddresses($result['customer_id']),
+                ];
             }
         }
 
-        $sort_order = array();
+        $sort_order = [];
 
         foreach ($json as $key => $value) {
             $sort_order[$key] = $value['name'];
@@ -1667,73 +1660,72 @@ class ControllerSaleVendorOrder extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-    
     /*
-     * Assign shopper to vendor order 
+     * Assign shopper to vendor order
      */
-    public function assign_shopper() {
+    public function assign_shopper()
+    {
         $this->load->model('sale/vendor_order');
         $this->model_sale_vendor_order->assign_shopper();
     }
-    
-    public function shopper_info() {
-        
+
+    public function shopper_info()
+    {
         $this->load->model('sale/vendor_order');
-                
-        if(isset($this->request->get['shopper_id'])){
+
+        if (isset($this->request->get['shopper_id'])) {
             $shopper_id = $this->request->get['shopper_id'];
-        }else{
+        } else {
             $shopper_id = '';
         }
-        
-        $data = $this->model_sale_vendor_order->getShopperInfo($shopper_id);
-        
-        if($data) {
-            $this->response->setOutput($this->load->view('sale/shopper_info.tpl', $data));
-        }else{            
-            echo '<div class="alert alert-danger">Shopper data not available!</div>';
-        }        
-    }
-    
-    //save timeslot in data 
-    public function save_timeslots() {
 
+        $data = $this->model_sale_vendor_order->getShopperInfo($shopper_id);
+
+        if ($data) {
+            $this->response->setOutput($this->load->view('sale/shopper_info.tpl', $data));
+        } else {
+            echo '<div class="alert alert-danger">Shopper data not available!</div>';
+        }
+    }
+
+    //save timeslot in data
+    public function save_timeslots()
+    {
         $order_id = $this->request->get['order_id'];
 
         $delivery_date = $this->request->post['delivery_date'];
 
         $delivery_time = $this->request->post['delivery_time'];
         $this->load->model('sale/order');
-        
-        //update delivery date 
-        foreach ($delivery_date as $key => $value) {
 
-            $this->model_sale_order->updateVendorOrderDeliveryDate($value,$key,$order_id);
+        //update delivery date
+        foreach ($delivery_date as $key => $value) {
+            $this->model_sale_order->updateVendorOrderDeliveryDate($value, $key, $order_id);
         }
 
         foreach ($delivery_time as $key => $value) {
-
-            $this->model_sale_order->updateVendorOrderDeliveryTime($value,$key,$order_id);
+            $this->model_sale_order->updateVendorOrderDeliveryTime($value, $key, $order_id);
         }
     }
-    
-    //change vendor order status 
-    public function status() {
 
+    //change vendor order status
+    public function status()
+    {
         $order_id = $this->request->post['order_id'];
         $store_id = $this->request->post['store_id'];
         $status = $this->request->post['status'];
 
-        //check vendor order 
+        //check vendor order
         if ($this->user->isVendor() && !$this->isMyOrder($order_id, $store_id)) {
             die('illegal access!');
         }
 
         $this->load->model('sale/order');
-        $this->model_sale_order->updateVendorOrderStatus($status,$store_id,$order_id);
+        $this->model_sale_order->updateVendorOrderStatus($status, $store_id, $order_id);
     }
-    
-    public function history() {
+
+    public function history()
+    {
         $this->load->language('sale/order');
 
         $data['text_no_results'] = $this->language->get('text_no_results');
@@ -1749,19 +1741,19 @@ class ControllerSaleVendorOrder extends Controller {
             $page = 1;
         }
 
-        $data['histories'] = array();
+        $data['histories'] = [];
 
         $this->load->model('sale/order');
 
         $results = $this->model_sale_order->getOrderHistories($this->request->get['order_id'], ($page - 1) * 10, 10);
 
         foreach ($results as $result) {
-            $data['histories'][] = array(
+            $data['histories'][] = [
                 'notify' => $result['notify'] ? $this->language->get('text_yes') : $this->language->get('text_no'),
                 'status' => $result['status'],
                 'comment' => nl2br($result['comment']),
-                'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added']))
-            );
+                'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
+            ];
         }
 
         $history_total = $this->model_sale_order->getTotalOrderHistories($this->request->get['order_id']);
@@ -1770,7 +1762,7 @@ class ControllerSaleVendorOrder extends Controller {
         $pagination->total = $history_total;
         $pagination->page = $page;
         $pagination->limit = 10;
-        $pagination->url = $this->url->link('sale/vendor_order/history', 'token=' . $this->session->data['token'] . '&order_id=' . $this->request->get['order_id'] . '&page={page}', 'SSL');
+        $pagination->url = $this->url->link('sale/vendor_order/history', 'token='.$this->session->data['token'].'&order_id='.$this->request->get['order_id'].'&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
@@ -1778,12 +1770,12 @@ class ControllerSaleVendorOrder extends Controller {
 
         $this->response->setOutput($this->load->view('sale/order_history.tpl', $data));
     }
-    
-    public function payment_status() {
-        if (!$this->user->isVendor()) {
 
+    public function payment_status()
+    {
+        if (!$this->user->isVendor()) {
             $this->load->model('sale/vendor_order');
-            
+
             $order_id = $this->request->post['order_id'];
             $status = $this->request->post['status'];
             $store_id = $this->request->post['store_id'];
@@ -1791,27 +1783,27 @@ class ControllerSaleVendorOrder extends Controller {
             $this->model_sale_vendor_order->payment_status($order_id, $status, $store_id);
         }
     }
-    
-    public function get_home_ts() {
 
+    public function get_home_ts()
+    {
         $date = isset($this->request->post['date']) ? $this->request->post['date'] : date('d/m/Y');
 
-        //get store pick up time slots 
+        //get store pick up time slots
         $this->load->model('sale/order');
-        $store =  $this->model_sale_order->selectDeliverySlotsFromStore($this->request->post['store_id']);
+        $store = $this->model_sale_order->selectDeliverySlotsFromStore($this->request->post['store_id']);
 
         if ($store) {
             $timeslots = explode(',', trim($store['home_delivery_timeslots']));
             $timepicker_time_diff = $store['delivery_time_diff'];
 
-            //is today selected 
+            //is today selected
             if (date('d/m/Y') == $date) {
                 $is_today = 1;
             } else {
                 $is_today = 0;
             }
 
-            //generate option html 
+            //generate option html
             $html = '<option value="">Select Slot</option>';
             foreach ($timeslots as $timeslot) {
                 if ($is_today) {
@@ -1820,20 +1812,20 @@ class ControllerSaleVendorOrder extends Controller {
                     $is_enabled = $this->timeIsBetween($temp[0], $temp[1], date('h:ma'), $timepicker_time_diff);
 
                     if ($is_enabled) {
-                        $html .= '<option>' . $timeslot . '</option>';
+                        $html .= '<option>'.$timeslot.'</option>';
                     } else {
-                        $html .= '<option disabled>' . $timeslot . '</option>';
+                        $html .= '<option disabled>'.$timeslot.'</option>';
                     }
                 } else {
-                    $html .= '<option>' . $timeslot . '</option>';
+                    $html .= '<option>'.$timeslot.'</option>';
                 }
             }
             echo $html;
         }
     }
 
-    public function shopper_autocomplete() {
-
+    public function shopper_autocomplete()
+    {
         if (isset($this->request->get['filter_name'])) {
             $filter_name = $this->request->get['filter_name'];
         } else {
@@ -1841,17 +1833,17 @@ class ControllerSaleVendorOrder extends Controller {
         }
 
         $this->load->model('sale/order');
-        $json = $this->model_sale_order->shopper_autocomplete( $this->config->get('config_shopper_group_ids'),$filter_name);
+        $json = $this->model_sale_order->shopper_autocomplete($this->config->get('config_shopper_group_ids'), $filter_name);
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
-    } 
-    
-    public function city_autocomplete(){
-        
+    }
+
+    public function city_autocomplete()
+    {
         $this->load->model('sale/order');
 
-        $json =  $this->model_sale_order->getCities();
+        $json = $this->model_sale_order->getCities();
         header('Content-type: text/json');
         echo json_encode($json);
     }

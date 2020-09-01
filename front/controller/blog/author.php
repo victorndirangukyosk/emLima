@@ -1,8 +1,9 @@
 <?php
 
-class ControllerBlogAuthor extends Controller {
-
-    public function index() {
+class ControllerBlogAuthor extends Controller
+{
+    public function index()
+    {
         $this->language->load('simple_blog/article');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -21,22 +22,21 @@ class ControllerBlogAuthor extends Controller {
         }
 
         if ($simple_blog_author_id) {
+            $data['breadcrumbs'] = [];
 
-            $data['breadcrumbs'] = array();
-
-            $data['breadcrumbs'][] = array(
+            $data['breadcrumbs'][] = [
                 'text' => $this->language->get('text_home'),
                 'href' => $this->url->link('common/home'),
-                'separator' => false
-            );
+                'separator' => false,
+            ];
 
-            $data['breadcrumbs'][] = array(
+            $data['breadcrumbs'][] = [
                 'text' => $this->language->get('heading_title'),
                 'href' => $this->url->link('blog/article'),
-                'separator' => $this->language->get('text_separator')
-            );
+                'separator' => $this->language->get('text_separator'),
+            ];
 
-            $data['articles'] = array();
+            $data['articles'] = [];
 
             if (isset($this->request->get['page'])) {
                 $page = $this->request->get['page'];
@@ -50,11 +50,11 @@ class ControllerBlogAuthor extends Controller {
                 $limit = 10;
             }
 
-            $filter_data = array(
+            $filter_data = [
                 'simple_blog_author_id' => $simple_blog_author_id,
                 'start' => ($page - 1) * $limit,
-                'limit' => $limit
-            );
+                'limit' => $limit,
+            ];
 
             $author_total = $this->model_simple_blog_article->getTotalArticleAuthorWise($simple_blog_author_id);
 
@@ -67,37 +67,35 @@ class ControllerBlogAuthor extends Controller {
             }
 
             foreach ($results as $result) {
-
                 $data['heading_title'] = $result['author_name'];
 
                 $this->document->setTitle($result['author_name']);
 
-                $description = utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, 300) . '...';
+                $description = utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, 300).'...';
 
                 if ($result['featured_image']) {
-                    $image = $server . 'image/' . $result['featured_image'];
+                    $image = $server.'image/'.$result['featured_image'];
                     $featured_found = 1;
-                    //$image = $this->model_tool_image->resize($result['featured_image'], 873, 585);
-                } else if ($result['image']) {
-                    $image = $server . 'image/' . $result['image'];
+                //$image = $this->model_tool_image->resize($result['featured_image'], 873, 585);
+                } elseif ($result['image']) {
+                    $image = $server.'image/'.$result['image'];
                     $featured_found = '';
-                    //$image = $this->model_tool_image->resize($result['image'], 873, 585);
+                //$image = $this->model_tool_image->resize($result['image'], 873, 585);
                 } else {
                     $image = '';
                     $featured_found = '';
                 }
 
-
                 // get total comments
                 $total_comments = $this->model_simple_blog_article->getTotalComments($result['simple_blog_article_id']);
 
-                if ($total_comments != 1) {
+                if (1 != $total_comments) {
                     $total_comments .= $this->language->get('text_comments');
                 } else {
                     $total_comments .= $this->language->get('text_comment');
                 }
 
-                $data['articles'][] = array(
+                $data['articles'][] = [
                     'simple_blog_article_id' => $result['simple_blog_article_id'],
                     'article_title' => $result['article_title'],
                     'author_name' => $result['author_name'],
@@ -107,12 +105,11 @@ class ControllerBlogAuthor extends Controller {
                     'description' => $description,
                     'allow_comment' => $result['allow_comment'],
                     'total_comment' => $total_comments,
-                    'href' => $this->url->link('blog/article/view', 'simple_blog_article_id=' . $result['simple_blog_article_id'], 'SSL'),
-                    'author_href' => $this->url->link('blog/author', 'simple_blog_author_id=' . $result['simple_blog_author_id'], 'SSL'),
-                    'comment_href' => $this->url->link('blog/article/view', 'simple_blog_article_id=' . $result['simple_blog_article_id'], 'SSL')
-                );
+                    'href' => $this->url->link('blog/article/view', 'simple_blog_article_id='.$result['simple_blog_article_id'], 'SSL'),
+                    'author_href' => $this->url->link('blog/author', 'simple_blog_author_id='.$result['simple_blog_author_id'], 'SSL'),
+                    'comment_href' => $this->url->link('blog/article/view', 'simple_blog_article_id='.$result['simple_blog_article_id'], 'SSL'),
+                ];
             }
-
 
             if ($data['articles']) {
                 // author related information
@@ -121,7 +118,6 @@ class ControllerBlogAuthor extends Controller {
                 //print "<pre>"; print_r($author_info); exit;
 
                 if ($author_info) {
-
                     $data['author_information_found'] = 1;
 
                     $data['author_name'] = $author_info['name'];
@@ -150,7 +146,7 @@ class ControllerBlogAuthor extends Controller {
             $pagination->page = $page;
             $pagination->limit = $limit;
             $pagination->text = $this->language->get('text_pagination');
-            $pagination->url = $this->url->link('blog/author', 'simple_blog_author_id=' . $this->request->get['simple_blog_author_id'] . '&page={page}');
+            $pagination->url = $this->url->link('blog/author', 'simple_blog_author_id='.$this->request->get['simple_blog_author_id'].'&page={page}');
 
             $data['pagination'] = $pagination->render();
 
@@ -163,8 +159,8 @@ class ControllerBlogAuthor extends Controller {
             $data['footer'] = $this->load->controller('common/footer');
             $data['header'] = $this->load->controller('common/header/information');
 
-            if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/simple_blog/article.tpl')) {
-                $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/simple_blog/article.tpl', $data));
+            if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/simple_blog/article.tpl')) {
+                $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/simple_blog/article.tpl', $data));
             } else {
                 $this->response->setOutput($this->load->view('default/template/simple_blog/article.tpl', $data));
             }
@@ -172,36 +168,36 @@ class ControllerBlogAuthor extends Controller {
             $url = '';
 
             if (isset($this->request->get['simple_blog_author_id'])) {
-                $url .= '&simple_blog_author_id=' . $this->request->get['simple_blog_author_id'];
+                $url .= '&simple_blog_author_id='.$this->request->get['simple_blog_author_id'];
             }
 
             if (isset($this->request->get['page'])) {
-                $url .= '&page=' . $this->request->get['page'];
+                $url .= '&page='.$this->request->get['page'];
             }
 
             if (isset($this->request->get['limit'])) {
-                $url .= '&limit=' . $this->request->get['limit'];
+                $url .= '&limit='.$this->request->get['limit'];
             }
 
-            $data['breadcrumbs'] = array();
+            $data['breadcrumbs'] = [];
 
-            $data['breadcrumbs'][] = array(
+            $data['breadcrumbs'][] = [
                 'text' => $this->language->get('text_home'),
                 'href' => $this->url->link('common/home'),
-                'separator' => false
-            );
+                'separator' => false,
+            ];
 
-            $data['breadcrumbs'][] = array(
+            $data['breadcrumbs'][] = [
                 'text' => $this->language->get('heading_title'),
                 'href' => $this->url->link('blog/article'),
-                'separator' => $this->language->get('text_separator')
-            );
+                'separator' => $this->language->get('text_separator'),
+            ];
 
-            $data['breadcrumbs'][] = array(
+            $data['breadcrumbs'][] = [
                 'text' => $this->language->get('text_author_error'),
                 'href' => $this->url->link('blog/author', $url),
-                'separator' => $this->language->get('text_separator')
-            );
+                'separator' => $this->language->get('text_separator'),
+            ];
 
             $this->document->setTitle($this->language->get('text_author_error'));
 
@@ -213,7 +209,7 @@ class ControllerBlogAuthor extends Controller {
 
             $data['continue'] = $this->url->link('common/home');
 
-            $this->response->addHeader($this->request->server['SERVER_PROTOCOL'] . '/1.1 404 Not Found');
+            $this->response->addHeader($this->request->server['SERVER_PROTOCOL'].'/1.1 404 Not Found');
 
             $data['column_left'] = $this->load->controller('common/column_left');
             $data['column_right'] = $this->load->controller('common/column_right');
@@ -222,14 +218,11 @@ class ControllerBlogAuthor extends Controller {
             $data['footer'] = $this->load->controller('common/footer');
             $data['header'] = $this->load->controller('common/header/information');
 
-            if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/error/not_found.tpl')) {
-                $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/error/not_found.tpl', $data));
+            if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/error/not_found.tpl')) {
+                $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/error/not_found.tpl', $data));
             } else {
                 $this->response->setOutput($this->load->view('default/template/error/not_found.tpl', $data));
             }
         }
     }
-
 }
-
-?>

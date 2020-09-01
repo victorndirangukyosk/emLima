@@ -1,20 +1,21 @@
 <?php
 
-class ControllerApiApproval extends Controller {
-    public function getVendorApprovals($args = []) {
-
+class ControllerApiApproval extends Controller
+{
+    public function getVendorApprovals($args = [])
+    {
         $this->load->language('api/approvals');
 
         //echo "getVendorApprovals";
-        
-        $json = array();
+
+        $json = [];
 
         if (!isset($this->session->data['api_id'])) {
             $json['error'] = $this->language->get('error_permission');
         } else {
             $this->load->model('tool/image');
             $this->load->model('api/approval');
-            
+
             if (isset($args['limit'])) {
                 $limit = $args['limit'];
             } else {
@@ -26,7 +27,6 @@ class ControllerApiApproval extends Controller {
             } else {
                 $start = 0;
             }
-
 
             if (isset($args['sort'])) {
                 $sort = $args['sort'];
@@ -40,21 +40,21 @@ class ControllerApiApproval extends Controller {
                 $order = 'DESC';
             }
 
-           $data = array(
+            $data = [
                 'sort' => $sort,
                 'order' => $order,
                 'start' => $start,
-                'limit' => $limit
-            );
+                'limit' => $limit,
+            ];
 
             $total = $this->model_api_approval->getVendorApprovalTotal();
 
-            $response['seller_approvals'] = array();
-                
+            $response['seller_approvals'] = [];
+
             $response['count'] = $total;
             $results = $this->model_api_approval->getAllVendorApproval($data);
-            
-            foreach($results as $row){
+
+            foreach ($results as $row) {
                 //$row['view'] = $this->url->link('approvals/enquiries/view','enquiry_id='.$row['enquiry_id'].'&token='.$this->session->data['token']);
                 //$row['approve'] = $this->url->link('approvals/enquiries/approve','enquiry_id='.$row['enquiry_id'].'&token='.$this->session->data['token']);
                 $response['seller_approvals'][] = $row;
@@ -66,30 +66,28 @@ class ControllerApiApproval extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-    public function addVendorApprove($args = []){
-
+    public function addVendorApprove($args = [])
+    {
         $this->language->load('api/approvals');
-        
-       
+
         $this->load->model('api/approval');
 
         $args['user_group_id'] = 11;
 
         //echo "<pre>";print_r($args);die;
-        if (!isset($this->session->data['api_id']) || !isset($args['enquiry_id']) || !isset($args['commision']) || !isset($args['user_group_id']) ) {
+        if (!isset($this->session->data['api_id']) || !isset($args['enquiry_id']) || !isset($args['commision']) || !isset($args['user_group_id'])) {
             $json['error'] = $this->language->get('error_permission');
         } else {
             $vendorData = $this->model_api_approval->getEnquiry($args['enquiry_id']);
 
-            if(count($vendorData) > 0 ) {
+            if (count($vendorData) > 0) {
                 //echo "addVendorApprove";die;
                 $args = $args + $vendorData;
                 // echo "<pre>";print_r($vendorData);
                 // echo "<pre>";print_r($args);die;
-                if(isset($vendorData['email'])) {
-
+                if (isset($vendorData['email'])) {
                     //$vendorData = HTTPS_ADMIN ;
-                    
+
                     // 4 merchant mail and 5 admin mail
 
                     $subject = $this->emailtemplate->getSubject('Contact', 'contact_4', $vendorData);
@@ -115,37 +113,33 @@ class ControllerApiApproval extends Controller {
                     $mail->setSubject(html_entity_decode($subject, ENT_QUOTES, 'UTF-8'));
                     $mail->setHtml(html_entity_decode(strip_tags($message), ENT_QUOTES, 'UTF-8'));
                     $mail->send();
-
                 }
-                
+
                 $json['success'] = 'Success: Enquiry Moved To Vendor List Successfully!';
 
                 $this->model_api_approval->moveVendorEndquiry($args);
             } else {
                 $json['error'] = 'Error: Enquiry Not found';
             }
-            
         }
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
-
     }
 
-    public function getVendorEnquiryView($args = []) {
-        
+    public function getVendorEnquiryView($args = [])
+    {
         //echo "getVendorEnquiryView";
         if (!isset($this->session->data['api_id']) || !isset($args['enquiry_id'])) {
             $json['error'] = $this->language->get('error_permission');
         } else {
-
             $this->language->load('api/enquiries_view');
             $this->load->model('api/approval');
 
             $json = $this->model_api_approval->getEnquiry($args['enquiry_id']);
 
-            if(count($json) > 0 ) {
-                $json['heading_title']= $this->language->get('heading_title');
+            if (count($json) > 0) {
+                $json['heading_title'] = $this->language->get('heading_title');
 
                 $json['column_password'] = $this->language->get('column_password');
                 $json['column_username'] = $this->language->get('column_username');
@@ -163,35 +157,30 @@ class ControllerApiApproval extends Controller {
                 $json['column_about_us'] = $this->language->get('column_about_us');
                 $json['column_store_name'] = $this->language->get('column_store_name');
             } else {
-               $json['error'] = "Not Found"; 
+                $json['error'] = 'Not Found';
             }
-            
-            
         }
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
-        
     }
-    
-    public function deleteApproval($args = []) {
 
+    public function deleteApproval($args = [])
+    {
         //echo "getVendorEnquiryDelete";print_r($args); die;
         $this->language->load('api/approvals');
         $this->document->setTitle($this->language->get('heading_title'));
         $this->load->model('api/approval');
 
         if (isset($args['id']) || isset($this->session->data['api_id'])) {
-
             $this->model_api_approval->vendorApprovalDelete($args['id']);
 
-            $json['success'] = "Successfully: Deleted Enquiry ";
+            $json['success'] = 'Successfully: Deleted Enquiry ';
         } else {
-            $json['error'] = $this->language->get('error_permission'); 
-        }   
+            $json['error'] = $this->language->get('error_permission');
+        }
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
-
     }
 }

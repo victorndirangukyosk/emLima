@@ -17,13 +17,11 @@ $_['column_status'] = 'Status';
 $_['column_priority'] = 'Priority';
 $_['column_date'] = 'Date added';
 
-
 //entry
 $_['entry_name'] = 'Name';
 $_['entry_amount'] = 'Amount';
 $_['entry_free_month'] = 'Free month';
 $_['entry_priority'] = 'Priority';
-$_['entry_status']    = 'Status';
-
+$_['entry_status'] = 'Status';
 
 $_['error_name'] = 'Name field required!';

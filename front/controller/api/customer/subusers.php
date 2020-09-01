@@ -2,41 +2,36 @@
 
 require_once DIR_SYSTEM.'/vendor/konduto/vendor/autoload.php';
 
-use \Konduto\Core\Konduto;
-use \Konduto\Models;
-use paragraph1\phpFCM\Client;
-use paragraph1\phpFCM\Client as FCMClient;
+use Konduto\Core\Konduto;
 use paragraph1\phpFCM\Message;
-use paragraph1\phpFCM\Recipient\Device;
-use paragraph1\phpFCM\Notification;
+
 require_once DIR_SYSTEM.'/vendor/fcp-php/autoload.php';
 
 require DIR_SYSTEM.'vendor/Facebook/autoload.php';
 
 require_once DIR_APPLICATION.'/controller/api/settings.php';
 
-class ControllerApiCustomerSubusers extends Controller {
+class ControllerApiCustomerSubusers extends Controller
+{
+    private $error = [];
 
-    private $error = array();
-
-
-    public function index($args = []) {  
-
-        $json = array();
+    public function index($args = [])
+    {
+        $json = [];
 
         $json['status'] = 200;
         $json['data'] = [];
         $json['message'] = [];
-         
-        if(!empty($this->session->data['parent'])){
+
+        if (!empty($this->session->data['parent'])) {
             // $this->response->redirect($this->url->link('account/account'));
             $json['status'] = 10014;
         }
-        // $data['kondutoStatus'] = $this->config->get('config_konduto_status');        
-        // $data['konduto_public_key'] = $this->config->get('config_konduto_public_key');        
+        // $data['kondutoStatus'] = $this->config->get('config_konduto_status');
+        // $data['konduto_public_key'] = $this->config->get('config_konduto_public_key');
         // $data['redirect_coming'] = false;
         //$this->document->addStyle('/front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_login.css');
-        
+
         if (!$this->customer->isLogged()) {
             // $this->session->data['redirect'] = $this->url->link('account/profileinfo', '', 'SSL');
             // $this->response->redirect($this->url->link('account/login', '', 'SSL'));
@@ -44,33 +39,28 @@ class ControllerApiCustomerSubusers extends Controller {
         }
 
         $this->load->language('account/edit');
-        $this->load->language('account/account');       
+        $this->load->language('account/account');
 
         $this->document->setTitle('Add User');
         $this->load->model('account/customer');
 
-   
-        
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_account_customer->addEditCustomerInfo($this->customer->getId(),$this->request->post);
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validate()) {
+            $this->model_account_customer->addEditCustomerInfo($this->customer->getId(), $this->request->post);
             $this->session->data['success'] = $this->language->get('text_success');
-            
-            
-            
+
             // Add to activity log
             $this->load->model('account/activity');
 
-            $activity_data = array(
+            $activity_data = [
                 'customer_id' => $this->customer->getId(),
-                'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName()
-            );
+                'name' => $this->customer->getFirstName().' '.$this->customer->getLastName(),
+            ];
             $log = new Log('error.log');
             $log->write('account profileinfo');
 
             $this->model_account_activity->addActivity('profileinfo', $activity_data);
 
             $log->write('account profileinfo');
-            
 
             // $this->response->redirect($this->url->link('account/profileinfo', '', 'SSL'));
         }
@@ -87,29 +77,24 @@ class ControllerApiCustomerSubusers extends Controller {
         //     'href' => $this->url->link('account/account', '', 'SSL')
         // );
 
-       
-
         $data['heading_title'] = $this->language->get('heading_title');
-        
+
         $data['text_your_details'] = $this->language->get('text_your_details');
         $data['text_additional'] = $this->language->get('text_additional');
         $data['text_select'] = $this->language->get('text_select');
         $data['text_loading'] = $this->language->get('text_loading');
-        
 
         $data['text_male'] = $this->language->get('text_male');
         $data['text_female'] = $this->language->get('text_female');
         $data['text_other'] = $this->language->get('text_other');
         $data['entry_dob'] = $this->language->get('entry_dob');
-        
+
         $data['entry_password'] = $this->language->get('entry_password');
         $data['entry_confirmpassword'] = $this->language->get('entry_confirmpassword');
-        
 
         $data['entry_location'] = $this->language->get('entry_location');
         $data['entry_requirement'] = $this->language->get('entry_requirement');
         $data['entry_mandatory_products'] = $this->language->get('entry_mandatory_products');
-
 
         $data['button_continue'] = $this->language->get('button_continue');
         $data['button_back'] = $this->language->get('button_back');
@@ -153,10 +138,10 @@ class ControllerApiCustomerSubusers extends Controller {
         $data['newsletter'] = $this->url->link('account/newsletter', '', 'SSL');
         $data['logout'] = $this->url->link('account/logout', '', 'SSL');
         $data['recurring'] = $this->url->link('account/recurring', '', 'SSL');
-        
-        if ($this->request->server['REQUEST_METHOD'] != 'POST') {
+
+        if ('POST' != $this->request->server['REQUEST_METHOD']) {
             $customer_info = $this->model_account_customer->getCustomerOtherInfo($this->customer->getId());
-             // echo '<pre>';print_r($customer_info);exit;
+            // echo '<pre>';print_r($customer_info);exit;
         }
 
         if (isset($this->error['warning'])) {
@@ -185,32 +170,31 @@ class ControllerApiCustomerSubusers extends Controller {
 
         if (isset($this->request->post['location'])) {
             $data['location'] = $this->request->post['location'];
-        }else{
-            $data['location'] = $customer_info['location'];;
+        } else {
+            $data['location'] = $customer_info['location'];
         }
 
         if (isset($this->request->post['requirement'])) {
             $data['requirement'] = $this->request->post['requirement'];
-        }else{
-            $data['requirement'] = $customer_info['requirement_per_week'];;
+        } else {
+            $data['requirement'] = $customer_info['requirement_per_week'];
         }
         if (isset($this->request->post['mandatory_products'])) {
             $data['mandatory_products'] = $this->request->post['mandatory_products'];
-        }else{
-            $data['mandatory_products'] = $customer_info['mandatory_veg_fruits'];;
+        } else {
+            $data['mandatory_products'] = $customer_info['mandatory_veg_fruits'];
         }
-    
+
         if ($this->request->server['HTTPS']) {
             $server = $this->config->get('config_ssl');
         } else {
             $server = $this->config->get('config_url');
         }
 
-        
         $data['base'] = $server;
 
         $data['action'] = $this->url->link('account/profileinfo', '', 'SSL');
-        
+
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['column_right'] = $this->load->controller('common/column_right');
         $data['content_top'] = $this->load->controller('common/content_top');
@@ -220,10 +204,10 @@ class ControllerApiCustomerSubusers extends Controller {
         $data['header'] = $this->load->controller('common/header/information');
 
         $data['account_edit'] = $this->load->controller('account/edit');
-        $data['pay'] = $this->url->link('account/transactions','pay=online');
+        $data['pay'] = $this->url->link('account/transactions', 'pay=online');
         $data['home'] = $this->url->link('common/home/toHome');
         //$data['telephone'] =  $this->formatTelephone($this->customer->getTelephone());
-        /** Added new params */
+        /* Added new params */
         $data['is_login'] = $this->customer->isLogged();
         $data['full_name'] = $this->customer->getFirstName();
         $data['text_my_cash'] = $this->language->get('text_my_cash');
@@ -231,36 +215,34 @@ class ControllerApiCustomerSubusers extends Controller {
         $data['label_my_address'] = $this->language->get('label_my_address');
         $data['contactus'] = $this->language->get('contactus');
         $data['text_cash'] = $this->language->get('text_cash');
-        
-        $data['orders'] = array();
-        $filter_data = array(
+
+        $data['orders'] = [];
+        $filter_data = [
            'filter_parent' => $_SESSION['customer_id'],
             'order' => 'DESC',
             'start' => 0,
-            'limit' =>1000
-        );
+            'limit' => 1000,
+        ];
         $this->load->model('sale/order');
         $customer_total = $this->model_sale_order->getTotalCustomers($filter_data);
         $result_customers = $this->model_sale_order->getCustomers($filter_data);
 
         $data['heading_title'] = $this->language->get('heading_title');
-        
+
         //echo "<pre>";print_r($data['title']);die;
 
         $data['text_your_details'] = $this->language->get('text_your_details');
         $data['text_additional'] = $this->language->get('text_additional');
         $data['text_select'] = $this->language->get('text_select');
         $data['text_loading'] = $this->language->get('text_loading');
-        
 
         $data['text_male'] = $this->language->get('text_male');
         $data['text_female'] = $this->language->get('text_female');
         $data['text_other'] = $this->language->get('text_other');
         $data['entry_dob'] = $this->language->get('entry_dob');
-        
+
         $data['entry_password'] = $this->language->get('entry_password');
         $data['entry_confirmpassword'] = $this->language->get('entry_confirmpassword');
-        
 
         $data['entry_firstname'] = $this->language->get('entry_firstname');
         $data['entry_lastname'] = $this->language->get('entry_lastname');
@@ -270,7 +252,6 @@ class ControllerApiCustomerSubusers extends Controller {
         $data['entry_fax'] = $this->language->get('entry_fax');
         $data['entry_companyname'] = $this->language->get('entry_companyname');
         $data['entry_companyaddress'] = $this->language->get('entry_companyaddress');
-
 
         $data['button_continue'] = $this->language->get('button_continue');
         $data['button_back'] = $this->language->get('button_back');
@@ -316,8 +297,8 @@ class ControllerApiCustomerSubusers extends Controller {
         $data['newsletter'] = $this->url->link('account/newsletter', '', 'SSL');
         $data['logout'] = $this->url->link('account/logout', '', 'SSL');
         $data['recurring'] = $this->url->link('account/recurring', '', 'SSL');
-        
-        if ($this->request->server['REQUEST_METHOD'] != 'POST') {
+
+        if ('POST' != $this->request->server['REQUEST_METHOD']) {
             $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
         }
 
@@ -332,7 +313,6 @@ class ControllerApiCustomerSubusers extends Controller {
         } else {
             $data['error_firstname'] = '';
         }
-
 
         if (isset($this->error['companyname'])) {
             $data['error_companyname'] = $this->error['companyname'];
@@ -363,7 +343,6 @@ class ControllerApiCustomerSubusers extends Controller {
         } else {
             $data['error_confirmpassword'] = '';
         }
-        
 
         if (isset($this->error['email'])) {
             $data['error_email'] = $this->error['email'];
@@ -383,8 +362,6 @@ class ControllerApiCustomerSubusers extends Controller {
             $data['error_tax'] = '';
         }
 
-        
-
         if (isset($this->error['dob'])) {
             $data['error_dob'] = $this->error['dob'];
         } else {
@@ -394,7 +371,7 @@ class ControllerApiCustomerSubusers extends Controller {
         if (isset($this->error['custom_field'])) {
             $data['error_custom_field'] = $this->error['custom_field'];
         } else {
-            $data['error_custom_field'] = array();
+            $data['error_custom_field'] = [];
         }
 
         if ($this->config->get('reward_status')) {
@@ -406,24 +383,22 @@ class ControllerApiCustomerSubusers extends Controller {
         if (isset($this->request->post['gender'])) {
             $data['gender'] = $this->request->post['gender'];
         } elseif (!empty($customer_info)) {
-            if(empty($customer_info['gender'])) {
+            if (empty($customer_info['gender'])) {
                 $data['gender'] = 'male';
             } else {
-                $data['gender'] = $customer_info['gender'];    
+                $data['gender'] = $customer_info['gender'];
             }
-            
         } else {
             $data['gender'] = 'male';
         }
 
-        if (isset($this->request->post['dob']) && "" != trim($this->request->post['dob'])) {
-            $data['dob'] = date("d/m/Y", strtotime($this->request->post['dob']));
+        if (isset($this->request->post['dob']) && '' != trim($this->request->post['dob'])) {
+            $data['dob'] = date('d/m/Y', strtotime($this->request->post['dob']));
         } elseif (!empty($customer_info['dob'])) {
-            $data['dob'] = date("d/m/Y", strtotime($customer_info['dob']));
+            $data['dob'] = date('d/m/Y', strtotime($customer_info['dob']));
         } else {
             $data['dob'] = '01/01/1990';
         }
-
 
         if (isset($this->request->post['firstname'])) {
             $data['firstname'] = $this->request->post['firstname'];
@@ -433,7 +408,6 @@ class ControllerApiCustomerSubusers extends Controller {
             $data['firstname'] = '';
         }
 
-
         if (isset($this->request->post['companyname'])) {
             $data['companyname'] = $this->request->post['companyname'];
         } elseif (!empty($customer_info)) {
@@ -441,8 +415,6 @@ class ControllerApiCustomerSubusers extends Controller {
         } else {
             $data['companyname'] = '';
         }
-
-
 
         if (isset($this->request->post['companyaddress'])) {
             $data['companyaddress'] = $this->request->post['companyaddress'];
@@ -452,7 +424,6 @@ class ControllerApiCustomerSubusers extends Controller {
             $data['companyaddress'] = '';
         }
 
-
         if (isset($this->request->post['fax'])) {
             $data['fax'] = $this->request->post['fax'];
         } elseif (!empty($customer_info)) {
@@ -460,7 +431,6 @@ class ControllerApiCustomerSubusers extends Controller {
         } else {
             $data['fax'] = '';
         }
-
 
         if (isset($this->request->post['lastname'])) {
             $data['lastname'] = $this->request->post['lastname'];
@@ -492,13 +462,13 @@ class ControllerApiCustomerSubusers extends Controller {
 
         if ($this->config->get('config_google_captcha_status')) {
             $this->document->addScript('https://www.google.com/recaptcha/api.js');
-            
+
             $data['site_key'] = $this->config->get('config_google_captcha_public');
         } else {
             $data['site_key'] = '';
         }
 
-        //for membership 
+        //for membership
         // $member_group_id = $this->config->get('config_member_group_id');
         // $customer_group_id = $this->customer->getGroupId();
         if ($this->request->server['HTTPS']) {
@@ -509,20 +479,20 @@ class ControllerApiCustomerSubusers extends Controller {
 
         $data['telephone_mask'] = $this->config->get('config_telephone_mask');
 
-        if(isset($data['telephone_mask'])) {
-            $data['telephone_mask_number'] = str_replace('#', '9', $this->config->get('config_telephone_mask'));    
+        if (isset($data['telephone_mask'])) {
+            $data['telephone_mask_number'] = str_replace('#', '9', $this->config->get('config_telephone_mask'));
         }
 
         $data['taxnumber_mask'] = $this->config->get('config_taxnumber_mask');
 
-        if(isset($data['taxnumber_mask'])) {
-            $data['taxnumber_mask_number'] = str_replace('#', '*', $this->config->get('config_taxnumber_mask'));    
+        if (isset($data['taxnumber_mask'])) {
+            $data['taxnumber_mask_number'] = str_replace('#', '*', $this->config->get('config_taxnumber_mask'));
         }
-        
+
         $data['base'] = $server;
 
         $data['action'] = $this->url->link('account/account/adduser', '', 'SSL');
-        
+
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['column_right'] = $this->load->controller('common/column_right');
         $data['content_top'] = $this->load->controller('common/content_top');
@@ -534,8 +504,8 @@ class ControllerApiCustomerSubusers extends Controller {
         $data['account_edit'] = $this->load->controller('account/edit');
 
         $data['home'] = $this->url->link('common/home/toHome');
-        $data['telephone'] =  $this->customer->getTelephone();
-        /** Added new params */
+        $data['telephone'] = $this->customer->getTelephone();
+        /* Added new params */
         $data['is_login'] = $this->customer->isLogged();
         $data['full_name'] = $this->customer->getFirstName();
         $data['text_my_cash'] = $this->language->get('text_my_cash');
@@ -544,8 +514,8 @@ class ControllerApiCustomerSubusers extends Controller {
         $data['contactus'] = $this->language->get('contactus');
         $data['text_cash'] = $this->language->get('text_cash');
         //echo '<pre>'; print_r($result_customers);exit;
-		/*$this->load->model('account/order');
-		$order_total = $this->model_account_order->getTotalOrders();
+        /*$this->load->model('account/order');
+        $order_total = $this->model_account_order->getTotalOrders();
 
         $results_orders = $this->model_account_order->getOrders(($page - 1) * 10, 10,$NoLimit=true);
         $PaymentFilter = array('mPesa On Delivery','Cash On Delivery','mPesa Online');
@@ -563,7 +533,7 @@ class ControllerApiCustomerSubusers extends Controller {
         if(count($results_orders)>0){
             foreach($results_orders as $order){
                 $this->load->model('sale/order');
-			    $order['transcation_id'] = $this->model_sale_order->getOrderTransactionId($order['order_id']);
+                $order['transcation_id'] = $this->model_sale_order->getOrderTransactionId($order['order_id']);
                 //echo "<pre>";print_r($order);die;
                 if(in_array($order['payment_method'],$PaymentFilter)){
                  if(!empty($order['transcation_id'])){
@@ -585,24 +555,21 @@ class ControllerApiCustomerSubusers extends Controller {
         $data['pending_order_id'] = implode('--',$data['pending_order_id']);*/
         $data['sub_users'] = $result_customers;
 
-
         $json['success'] = $this->language->get('text_success');
-       
+
         $json['status'] = true;
-        
+
         $json['data'] = $data;
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
 
-
-    protected function validate($args) { 
-
+    protected function validate($args)
+    {
         $this->load->language('account/edit');
 
-        if ((utf8_strlen(trim($args['location'])) < 1) || (utf8_strlen(trim($args['location'])) > 32)) {           
-
+        if ((utf8_strlen(trim($args['location'])) < 1) || (utf8_strlen(trim($args['location'])) > 32)) {
             $this->error['location'] = $this->language->get('error_location');
         }
 
@@ -613,16 +580,17 @@ class ControllerApiCustomerSubusers extends Controller {
         if ((utf8_strlen(trim($args['mandatory_products'])) < 1)) {
             $this->error['mandatory_products'] = $this->language->get('error_mandatory_products');
         }
-       
+
         return !$this->error;
     }
 
-    public function ActivateSubUsers($args = array()) {
+    public function ActivateSubUsers($args = [])
+    {
         $log = new Log('error.log');
-        $log->write($args);         
+        $log->write($args);
         $user_id = $args['user_id'];
         $log->write($user_id.'USER ID');
-        $json = array();
+        $json = [];
         $json['status'] = 200;
         $json['data'] = [];
         $json['message'] = [];
@@ -630,18 +598,16 @@ class ControllerApiCustomerSubusers extends Controller {
         $this->load->model('account/customer');
         $this->model_account_customer->approvecustom($user_id, $args['active_status']);
 
-        $json['message'][] = ['type' =>  '' , 'body' =>  'User activated!' ];
-        
+        $json['message'][] = ['type' => '', 'body' => 'User activated!'];
+
         $json['success'] = 'User activated!';
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
- 
     }
-    
 
-    public function addSubusers($args = []){
-
-        $json = array();
+    public function addSubusers($args = [])
+    {
+        $json = [];
 
         $json['status'] = 200;
         $json['data'] = [];
@@ -652,107 +618,98 @@ class ControllerApiCustomerSubusers extends Controller {
 
         $log = new Log('error.log');
 
-        $this->load->model( 'account/customer' );
+        $this->load->model('account/customer');
         //echo "<pre>";print_r($args);die;
-        if ( !$this->validate() ) {
-
+        if (!$this->validate()) {
             $json['status'] = 10014;
 
             foreach ($this->error as $key => $value) {
-                $json['message'][] = ['type' =>  '' , 'body' =>  $value ];
+                $json['message'][] = ['type' => '', 'body' => $value];
             }
             http_response_code(400);
         } else {
             $date = $this->request->post['dob'];
-            
-            if(isset($date)) {
 
+            if (isset($date)) {
                 $date = DateTime::createFromFormat('d/m/Y', $date);
-                
+
                 $this->request->post['dob'] = $date->format('Y-m-d');
             } else {
                 $this->request->post['dob'] = null;
             }
 
-            
-            $customer_id = $this->model_account_customer->addCustomer( $this->request->post );
-            
+            $customer_id = $this->model_account_customer->addCustomer($this->request->post);
+
             //$this->createCustomer($customer_id);
 
             // Clear any previous login attempts for unregistered accounts.
-            $this->model_account_customer->deleteLoginAttempts( $this->request->post['email'] );
+            $this->model_account_customer->deleteLoginAttempts($this->request->post['email']);
 
-            $logged_in = $this->customer->login( $this->request->post['email'], $this->request->post['password'] );
+            $logged_in = $this->customer->login($this->request->post['email'], $this->request->post['password']);
 
-            unset( $this->session->data['guest'] );
+            unset($this->session->data['guest']);
 
             // Add to activity log
-            $this->load->model( 'account/activity' );
+            $this->load->model('account/activity');
 
-            $activity_data = array(
+            $activity_data = [
                 'customer_id' => $customer_id,
-                'name'        => $this->request->post['firstname'] . ' ' . $this->request->post['lastname']
-            );
+                'name' => $this->request->post['firstname'].' '.$this->request->post['lastname'],
+            ];
 
-            $this->model_account_activity->addActivity( 'register', $activity_data );
+            $this->model_account_activity->addActivity('register', $activity_data);
 
             /* If not able to login*/
             $data['status'] = true;
 
-            if(!$logged_in) {
+            if (!$logged_in) {
                 $data['status'] = false;
             }
-            $data['text_new_signup_reward'] = $this->language->get( 'text_new_signup_reward' );
-            $data['text_new_signup_credit'] = $this->language->get( 'text_new_signup_credit' );
+            $data['text_new_signup_reward'] = $this->language->get('text_new_signup_reward');
+            $data['text_new_signup_credit'] = $this->language->get('text_new_signup_credit');
 
             //$data['message'] = $this->language->get( 'verify_mail_sent' );
-            
-            $json['message'][] = ['type' =>  $this->language->get('text_success_registered') , 'body' =>  $this->language->get('verify_mail_sent') ];
 
-            if(isset($referee_user_id)) {
+            $json['message'][] = ['type' => $this->language->get('text_success_registered'), 'body' => $this->language->get('verify_mail_sent')];
 
+            if (isset($referee_user_id)) {
                 $config_reward_enabled = $this->config->get('config_reward_enabled');
 
                 $config_credit_enabled = $this->config->get('config_credit_enabled');
-                
+
                 $config_refer_type = $this->config->get('config_refer_type');
 
                 $config_refered_points = $this->config->get('config_refered_points');
                 $config_referee_points = $this->config->get('config_referee_points');
-                
+
                 /*
-                $log->write($customer_id);  
+                $log->write($customer_id);
                 $log->write($config_refer_type);
-                $log->write($referee_user_id. " referee_user_id");  
+                $log->write($referee_user_id. " referee_user_id");
 
                 $log->write($config_referee_points);
                 $log->write($config_refered_points);*/
-                if($config_refer_type == 'reward') {
-
+                if ('reward' == $config_refer_type) {
                     $log->write($config_reward_enabled);
-                    
+
                     if ($config_reward_enabled && $config_refered_points && $config_referee_points) {
-                        $log->write("if");
+                        $log->write('if');
 
                         //referred points below
-                        $this->model_account_activity->addCustomerReward( $customer_id,$config_refered_points ,$data['referral_description']);
+                        $this->model_account_activity->addCustomerReward($customer_id, $config_refered_points, $data['referral_description']);
 
                         //referee points below
-                        $this->model_account_activity->addCustomerReward( $referee_user_id,$config_referee_points,$data['referral_description'] );
-
+                        $this->model_account_activity->addCustomerReward($referee_user_id, $config_referee_points, $data['referral_description']);
                     }
-
-                } elseif($config_refer_type == 'credit') {
-
+                } elseif ('credit' == $config_refer_type) {
                     $log->write('credit if');
 
                     if ($config_credit_enabled && $config_refered_points && $config_referee_points) {
-
                         //referred points below
                         $this->model_account_activity->addCredit($customer_id, $data['referral_description'], $config_refered_points);
 
                         //referee points below
-                        $this->model_account_activity->addCredit($referee_user_id, $data['referral_description'] , $config_referee_points);
+                        $this->model_account_activity->addCredit($referee_user_id, $data['referral_description'], $config_referee_points);
                     }
                 }
             } else {
@@ -762,28 +719,26 @@ class ControllerApiCustomerSubusers extends Controller {
 
                 $config_reward_enabled = $this->config->get('config_reward_enabled');
 
-                if ($config_reward_enabled ) {
-                    $log->write("if");
-
+                if ($config_reward_enabled) {
+                    $log->write('if');
 
                     $points = $this->config->get('config_reward_onsignup');
 
-                    if($points) {
-                        $this->model_account_activity->addCustomerReward( $customer_id,$points,$data['text_new_signup_reward']);
+                    if ($points) {
+                        $this->model_account_activity->addCustomerReward($customer_id, $points, $data['text_new_signup_reward']);
                     }
-                    
                 }
 
                 //below was used for signup credit
 
                 $config_credit_enabled = $this->config->get('config_credit_enabled');
 
-                if ($config_credit_enabled ) {
-                    $log->write("credit enabled if");
+                if ($config_credit_enabled) {
+                    $log->write('credit enabled if');
                     $points = $this->config->get('config_credit_onsignup');
 
-                    if($points) {
-                        $this->model_account_activity->addCredit($customer_id,$data['text_new_signup_credit'],$points);
+                    if ($points) {
+                        $this->model_account_activity->addCredit($customer_id, $data['text_new_signup_credit'], $points);
                     }
                 }
             }
@@ -791,13 +746,13 @@ class ControllerApiCustomerSubusers extends Controller {
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
-
     }
 
-    public function EmailUnique($args = array()) {
+    public function EmailUnique($args = [])
+    {
         $log = new Log('error.log');
         $log->write($args['email']);
-        $json = array();
+        $json = [];
         $json['status'] = 300;
         $json['data'] = [];
         $json['message'] = [];
@@ -805,11 +760,12 @@ class ControllerApiCustomerSubusers extends Controller {
         $this->load->model('account/customer');
         $count = $this->model_account_customer->getTotalCustomersByEmail($args['email']);
         $log->write($count.'Email Count');
-        if($count == 0 || $count == NULL)
-        $json['message'][] = ['type' =>  '' , 'body' =>  'TRUE' ];
-        else
-        $json['message'][] = ['type' =>  '' , 'body' =>  'FALSE' ];
-          
+        if (0 == $count || null == $count) {
+            $json['message'][] = ['type' => '', 'body' => 'TRUE'];
+        } else {
+            $json['message'][] = ['type' => '', 'body' => 'FALSE'];
+        }
+
         //  $json['success'] = $count == 0 || $count == NULL ? TRUE : FALSE;
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));

@@ -1,4 +1,3 @@
 <?php
 
-$_['heading_title']     = 'Today report';
-
+$_['heading_title'] = 'Today report';

@@ -4,13 +4,13 @@ namespace GingerPayments\Payment\Order\Transaction\PaymentMethodDetails;
 
 use Assert\Assertion as Guard;
 use GingerPayments\Payment\Iban;
-use GingerPayments\Payment\SwiftBic;
 use GingerPayments\Payment\Order\Transaction\PaymentMethodDetails;
+use GingerPayments\Payment\Order\Transaction\PaymentMethodDetails\IdealPaymentMethodDetails\ConsumerAddress;
 use GingerPayments\Payment\Order\Transaction\PaymentMethodDetails\IdealPaymentMethodDetails\ConsumerCity;
+use GingerPayments\Payment\Order\Transaction\PaymentMethodDetails\IdealPaymentMethodDetails\ConsumerCountry;
 use GingerPayments\Payment\Order\Transaction\PaymentMethodDetails\IdealPaymentMethodDetails\Status;
 use GingerPayments\Payment\Order\Transaction\PaymentMethodDetails\IdealPaymentMethodDetails\TransactionId;
-use GingerPayments\Payment\Order\Transaction\PaymentMethodDetails\IdealPaymentMethodDetails\ConsumerCountry;
-use GingerPayments\Payment\Order\Transaction\PaymentMethodDetails\IdealPaymentMethodDetails\ConsumerAddress;
+use GingerPayments\Payment\SwiftBic;
 
 class IdealPaymentMethodDetails implements PaymentMethodDetails
 {
@@ -60,7 +60,6 @@ class IdealPaymentMethodDetails implements PaymentMethodDetails
     private $consumerBic;
 
     /**
-     * @param array $details
      * @return IdealPaymentMethodDetails
      */
     public static function fromArray(array $details)
@@ -95,14 +94,14 @@ class IdealPaymentMethodDetails implements PaymentMethodDetails
     {
         return [
             'issuer_id' => $this->issuerId()->toString(),
-            'transaction_id' => ($this->transactionId() !== null) ? $this->transactionId()->toString() : null,
-            'status' => ($this->status() !== null) ? $this->status()->toString() : null,
-            'consumer_name' => ($this->consumerName() !== null) ? $this->consumerName()->toString() : null,
-            'consumer_address' => ($this->consumerAddress() !== null) ? $this->consumerAddress()->toString() : null,
-            'consumer_city' => ($this->consumerCity() !== null) ? $this->consumerCity()->toString() : null,
-            'consumer_country' => ($this->consumerCountry() !== null) ? $this->consumerCountry()->toString() : null,
-            'consumer_iban' => ($this->consumerIban() !== null) ? $this->consumerIban()->toString() : null,
-            'consumer_bic' => ($this->consumerBic() !== null) ? $this->consumerBic()->toString() : null
+            'transaction_id' => (null !== $this->transactionId()) ? $this->transactionId()->toString() : null,
+            'status' => (null !== $this->status()) ? $this->status()->toString() : null,
+            'consumer_name' => (null !== $this->consumerName()) ? $this->consumerName()->toString() : null,
+            'consumer_address' => (null !== $this->consumerAddress()) ? $this->consumerAddress()->toString() : null,
+            'consumer_city' => (null !== $this->consumerCity()) ? $this->consumerCity()->toString() : null,
+            'consumer_country' => (null !== $this->consumerCountry()) ? $this->consumerCountry()->toString() : null,
+            'consumer_iban' => (null !== $this->consumerIban()) ? $this->consumerIban()->toString() : null,
+            'consumer_bic' => (null !== $this->consumerBic()) ? $this->consumerBic()->toString() : null,
         ];
     }
 
@@ -179,15 +178,14 @@ class IdealPaymentMethodDetails implements PaymentMethodDetails
     }
 
     /**
-     * @param SwiftBic $issuerId
-     * @param Status $status
-     * @param TransactionId $transactionId
-     * @param ConsumerName $consumerName
+     * @param Status          $status
+     * @param TransactionId   $transactionId
+     * @param ConsumerName    $consumerName
      * @param ConsumerAddress $consumerAddress
-     * @param ConsumerCity $consumerCity
+     * @param ConsumerCity    $consumerCity
      * @param ConsumerCountry $consumerCountry
-     * @param Iban $consumerIban
-     * @param SwiftBic $consumerBic
+     * @param Iban            $consumerIban
+     * @param SwiftBic        $consumerBic
      */
     private function __construct(
         SwiftBic $issuerId,

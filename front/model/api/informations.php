@@ -2,8 +2,7 @@
 
 class ModelApiInformations extends Model
 {
-
-    public function getInformation($data = array())
+    public function getInformation($data = [])
     {
         /*$sql = "SELECT * FROM " . DB_PREFIX . "information i LEFT JOIN " . DB_PREFIX . "information_description id ON (i.information_id = id.information_id) LEFT JOIN " . DB_PREFIX . "information_to_store i2s ON (i.information_id = i2s.information_id)";
 
@@ -14,19 +13,16 @@ class ModelApiInformations extends Model
         return $query->row;*/
 
         //echo "<pre>";print_r($data);die;
-        $query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "information i LEFT JOIN " . DB_PREFIX . "information_description id ON (i.information_id = id.information_id) LEFT JOIN " . DB_PREFIX . "information_to_store i2s ON (i.information_id = i2s.information_id) WHERE i.information_id = '" . (int)$data['id'] . "' AND id.language_id = '" . (int)$this->config->get('config_language_id') . "' AND i2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND i.status = '1'");
-
+        $query = $this->db->query('SELECT DISTINCT * FROM '.DB_PREFIX.'information i LEFT JOIN '.DB_PREFIX.'information_description id ON (i.information_id = id.information_id) LEFT JOIN '.DB_PREFIX."information_to_store i2s ON (i.information_id = i2s.information_id) WHERE i.information_id = '".(int) $data['id']."' AND id.language_id = '".(int) $this->config->get('config_language_id')."' AND i2s.store_id = '".(int) $this->config->get('config_store_id')."' AND i.status = '1'");
 
         // echo "SELECT DISTINCT * FROM " . DB_PREFIX . "information i LEFT JOIN " . DB_PREFIX . "information_description id ON (i.information_id = id.information_id) LEFT JOIN " . DB_PREFIX . "information_to_store i2s ON (i.information_id = i2s.information_id) WHERE i.information_id = '" . (int)$data['id'] . "' AND id.language_id = '" . (int)$this->config->get('config_language_id') . "' AND i2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND i.status = '1'";
 
         return $query->row;
-
     }
 
-    public function getInformations($data = array())
-    {   
-
-        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "information i LEFT JOIN " . DB_PREFIX . "information_description id ON (i.information_id = id.information_id) WHERE id.language_id = '" . (int)$this->config->get('config_language_id') . "' AND i.status = '1' ORDER BY i.sort_order, LCASE(id.title) ASC");
+    public function getInformations($data = [])
+    {
+        $query = $this->db->query('SELECT * FROM '.DB_PREFIX.'information i LEFT JOIN '.DB_PREFIX."information_description id ON (i.information_id = id.information_id) WHERE id.language_id = '".(int) $this->config->get('config_language_id')."' AND i.status = '1' ORDER BY i.sort_order, LCASE(id.title) ASC");
 
         return $query->rows;
 
@@ -70,9 +66,9 @@ class ModelApiInformations extends Model
         return $query->rows;*/
     }
 
-    public function getTotals($data = array())
+    public function getTotals($data = [])
     {
-        $sql = "SELECT COUNT(DISTINCT i.information_id) AS number FROM " . DB_PREFIX . "information i LEFT JOIN " . DB_PREFIX . "information_description id ON (i.information_id = id.information_id) LEFT JOIN " . DB_PREFIX . "information_to_store i2s ON (i.information_id = i2s.information_id)";
+        $sql = 'SELECT COUNT(DISTINCT i.information_id) AS number FROM '.DB_PREFIX.'information i LEFT JOIN '.DB_PREFIX.'information_description id ON (i.information_id = id.information_id) LEFT JOIN '.DB_PREFIX.'information_to_store i2s ON (i.information_id = i2s.information_id)';
 
         $sql .= $this->getExtraConditions($data);
 
@@ -85,26 +81,26 @@ class ModelApiInformations extends Model
     {
         $sql = '';
 
-        $implode = array();
+        $implode = [];
 
         if (!empty($data['id'])) {
-            $implode[] = "i.information_id = '" . (int)$data['id'] . "'";
+            $implode[] = "i.information_id = '".(int) $data['id']."'";
         }
 
         if (!empty($data['search'])) {
-            $implode[] = "(id.title LIKE '%" . $this->db->escape($data['search']) . "%' OR id.description LIKE '%" . $this->db->escape($data['search']) . "%')";
+            $implode[] = "(id.title LIKE '%".$this->db->escape($data['search'])."%' OR id.description LIKE '%".$this->db->escape($data['search'])."%')";
         }
 
         if (!empty($data['status'])) {
-            $implode[] = "i.status = '" . (int)$data['status'] . "'";
+            $implode[] = "i.status = '".(int) $data['status']."'";
         }
 
-        $implode[] = "id.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+        $implode[] = "id.language_id = '".(int) $this->config->get('config_language_id')."'";
 
-        $implode[] = "i2s.store_id = '" . (int)$this->config->get('config_store_id') . "'";
+        $implode[] = "i2s.store_id = '".(int) $this->config->get('config_store_id')."'";
 
         if ($implode) {
-            $sql .= " WHERE " . implode(" AND ", $implode);
+            $sql .= ' WHERE '.implode(' AND ', $implode);
         }
 
         return $sql;

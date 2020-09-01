@@ -1,8 +1,9 @@
 <?php
 
-class EventAppDemo extends Event {
-
-    public function preLoadView(&$args) {
+class EventAppDemo extends Event
+{
+    public function preLoadView(&$args)
+    {
         /*$template = &$args[0];
         $data = &$args[1];
 

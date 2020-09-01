@@ -1,12 +1,12 @@
 <?php
 
-
 use Symfony\Component\Debug\ErrorHandler;
 use Symfony\Component\Debug\ExceptionHandler;
 
-class Admin extends App {
-
-    public function initialise() {
+class Admin extends App
+{
+    public function initialise()
+    {
         // File System
         $this->registry->set('filesystem', new Filesystem());
 
@@ -17,16 +17,15 @@ class Admin extends App {
         $this->registry->set('db', new DB(DB_DRIVER, DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE));
 
         // Store
-       $this->config->set('config_store_id', 0);
-       
+        $this->config->set('config_store_id', 0);
+
         // Settings
-        $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "setting` WHERE store_id = '0' OR store_id = '" . (int)$this->config->get('config_store_id') . "' ORDER BY store_id ASC");
+        $query = $this->db->query('SELECT * FROM `'.DB_PREFIX."setting` WHERE store_id = '0' OR store_id = '".(int) $this->config->get('config_store_id')."' ORDER BY store_id ASC");
 
         foreach ($query->rows as $setting) {
             if (!$setting['serialized']) {
                 $this->config->set($setting['key'], $setting['value']);
-            }
-            else {
+            } else {
                 $this->config->set($setting['key'], unserialize($setting['value']));
             }
         }
@@ -47,12 +46,11 @@ class Admin extends App {
         $this->registry->set('log', new Log($this->config->get('config_error_filename')));
 
         // Error Handler
-        if ($this->config->get('config_error_display', 0) == 2) {
+        if (2 == $this->config->get('config_error_display', 0)) {
             ErrorHandler::register();
             ExceptionHandler::register();
-        }
-        else {
-            set_error_handler(array($this, 'errorHandler'));
+        } else {
+            set_error_handler([$this, 'errorHandler']);
         }
 
         // Security
@@ -74,9 +72,9 @@ class Admin extends App {
         $this->registry->set('session', new Session());
 
         // Language
-        $languages = array();
+        $languages = [];
 
-        $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "language`");
+        $query = $this->db->query('SELECT * FROM `'.DB_PREFIX.'language`');
 
         foreach ($query->rows as $result) {
             $languages[$result['code']] = $result;
@@ -84,8 +82,7 @@ class Admin extends App {
 
         if (isset($this->session->data['language']) && array_key_exists($this->session->data['language'], $languages) && $languages[$this->session->data['language']]['status']) {
             $code = $this->session->data['language'];
-        }
-        else {
+        } else {
             $detect = '';
 
             if (isset($this->request->server['HTTP_ACCEPT_LANGUAGE']) && $this->request->server['HTTP_ACCEPT_LANGUAGE']) {
@@ -129,19 +126,18 @@ class Admin extends App {
 
         // Update
         $this->registry->set('update', new Update($this->registry));
-		
+
         $this->trigger->fire('post.app.initialise');
     }
 
-    public function ecommerce() {
+    public function ecommerce()
+    {
         // Cart
         $this->registry->set('cart', new Cart($this->registry));
 
-       
-        
         // Currency
         $this->registry->set('currency', new Currency($this->registry));
-        
+
         // Email Template
         $this->registry->set('emailtemplate', new Emailtemplate($this->registry));
 
@@ -160,9 +156,10 @@ class Admin extends App {
         $this->trigger->fire('post.app.ecommerce');
     }
 
-    public function dispatch() {
-		# B/C start
-		global $registry;
+    public function dispatch()
+    {
+        // B/C start
+        global $registry;
         $registry = $this->registry;
 
         global $config;
@@ -173,8 +170,8 @@ class Admin extends App {
 
         global $log;
         $log = $this->registry->get('log');
-		# B/C end
-		
+        // B/C end
+
         // Front Controller
         $controller = new Front($this->registry);
 

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Frontend translations
+ * Frontend translations.
  */
 $_['text_title'] = 'Credit Card';
 $_['text_payment_terms'] = '';

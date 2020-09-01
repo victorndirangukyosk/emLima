@@ -1,8 +1,9 @@
 <?php
 
-class ControllerBlogArticle extends Controller {
-
-    public function index() {
+class ControllerBlogArticle extends Controller
+{
+    public function index()
+    {
         $this->language->load('simple_blog/article');
 
         if ($this->config->has('blog_heading')) {
@@ -24,7 +25,7 @@ class ControllerBlogArticle extends Controller {
             $data['heading_title'] = $this->language->get('heading_title');
         }
 
-        $data['articles'] = array();
+        $data['articles'] = [];
 
         if (isset($this->request->get['blog_search'])) {
             $blog_search = $this->request->get['blog_search'];
@@ -44,18 +45,18 @@ class ControllerBlogArticle extends Controller {
             $limit = 10;
         }
 
-            $limit = 1;
-            
-        $filter_data = array(
+        $limit = 1;
+
+        $filter_data = [
             'blog_search' => $blog_search,
             'start' => ($page - 1) * $limit,
-            'limit' => $limit
-        );
+            'limit' => $limit,
+        ];
 
         $blog_total = $this->model_simple_blog_article->getTotalArticle($filter_data);
 
         $results = $this->model_simple_blog_article->getArticles($filter_data);
-        
+
         //print "<pre>"; print_r($results); exit;
         if ($this->request->server['HTTPS']) {
             $server = $this->config->get('config_ssl');
@@ -64,17 +65,16 @@ class ControllerBlogArticle extends Controller {
         }
 
         foreach ($results as $result) {
-
-            $description = utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, 300) . '...';
+            $description = utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, 300).'...';
 
             if ($result['featured_image']) {
-                $image = $server . 'image/' . $result['featured_image'];
+                $image = $server.'image/'.$result['featured_image'];
                 $featured_found = 1;
-                //$image = $this->model_tool_image->resize($result['featured_image'], 873, 585);
-            } else if ($result['image']) {
-                $image = $server . 'image/' . $result['image'];
+            //$image = $this->model_tool_image->resize($result['featured_image'], 873, 585);
+            } elseif ($result['image']) {
+                $image = $server.'image/'.$result['image'];
                 $featured_found = '';
-                //$image = $this->model_tool_image->resize($result['image'], 873, 585);
+            //$image = $this->model_tool_image->resize($result['image'], 873, 585);
             } else {
                 $image = '';
                 $featured_found = '';
@@ -83,13 +83,13 @@ class ControllerBlogArticle extends Controller {
             // get total comments
             $total_comments = $this->model_simple_blog_article->getTotalComments($result['simple_blog_article_id']);
 
-            if ($total_comments != 1) {
+            if (1 != $total_comments) {
                 $total_comments .= $this->language->get('text_comments');
             } else {
                 $total_comments .= $this->language->get('text_comment');
             }
 
-            $data['articles'][] = array(
+            $data['articles'][] = [
                 'simple_blog_article_id' => $result['simple_blog_article_id'],
                 'article_title' => $result['article_title'],
                 'author_name' => $result['author_name'],
@@ -99,31 +99,31 @@ class ControllerBlogArticle extends Controller {
                 'description' => $description,
                 'allow_comment' => $result['allow_comment'],
                 'total_comment' => $total_comments,
-                'href' => $this->url->link('blog/article/view', 'simple_blog_article_id=' . $result['simple_blog_article_id'], 'SSL'),
-                'author_href' => $this->url->link('blog/author', 'simple_blog_author_id=' . $result['simple_blog_author_id'], 'SSL'),
-                'comment_href' => $this->url->link('blog/article/view', 'simple_blog_article_id=' . $result['simple_blog_article_id'], 'SSL')
-            );
+                'href' => $this->url->link('blog/article/view', 'simple_blog_article_id='.$result['simple_blog_article_id'], 'SSL'),
+                'author_href' => $this->url->link('blog/author', 'simple_blog_author_id='.$result['simple_blog_author_id'], 'SSL'),
+                'comment_href' => $this->url->link('blog/article/view', 'simple_blog_article_id='.$result['simple_blog_article_id'], 'SSL'),
+            ];
         }
-                
+
         //print "<pre>"; print_r($data['articles']); exit;
 
         $data['button_continue_reading'] = $this->language->get('button_continue_reading');
         $data['text_no_found'] = $this->language->get('text_no_found');
         $data['text_read_more'] = $this->language->get('text_read_more');
 
-        $data['breadcrumbs'] = array();
+        $data['breadcrumbs'] = [];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
             'href' => $this->url->link('common/home'),
-            'separator' => false
-        );
+            'separator' => false,
+        ];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
             'href' => $this->url->link('blog/article'),
-            'separator' => ' :: '
-        );
+            'separator' => ' :: ',
+        ];
 
         $pagination = new Pagination();
         $pagination->total = $blog_total;
@@ -141,14 +141,15 @@ class ControllerBlogArticle extends Controller {
         $data['footer'] = $this->load->controller('common/footer');
         $data['header'] = $this->load->controller('common/header/information');
 
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/simple_blog/article.tpl')) {
-            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/simple_blog/article.tpl', $data));
+        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/simple_blog/article.tpl')) {
+            $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/simple_blog/article.tpl', $data));
         } else {
             $this->response->setOutput($this->load->view('default/template/simple_blog/article.tpl', $data));
         }
     }
 
-    public function view() {
+    public function view()
+    {
         $this->language->load('simple_blog/article');
 
         //$this->document->setTitle($this->language->get('heading_title'));
@@ -169,11 +170,10 @@ class ControllerBlogArticle extends Controller {
         $this->load->model('tool/image');
 
         $this->load->model('assets/product');
-        
+
         $this->document->addStyle('front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_checkout.css');
         $this->document->addStyle('front/ui/theme/default/stylesheet/blog_custom.css');
 
-        
         if (isset($this->request->get['simple_blog_article_id'])) {
             $simple_blog_article_id = $this->request->get['simple_blog_article_id'];
         } else {
@@ -181,7 +181,6 @@ class ControllerBlogArticle extends Controller {
         }
 
         if ($simple_blog_article_id) {
-
             $data['simple_blog_article_id'] = $simple_blog_article_id;
 
             if ($this->config->has('simple_blog_product_related_heading')) {
@@ -197,8 +196,6 @@ class ControllerBlogArticle extends Controller {
             } else {
                 $data['text_related_comment'] = $this->language->get('text_related_comment');
             }
-
-
 
             $data['text_write_comment'] = $this->language->get('text_write_comment');
 
@@ -216,7 +213,6 @@ class ControllerBlogArticle extends Controller {
             $article_info = $this->model_simple_blog_article->getArticle($simple_blog_article_id);
 
             if ($article_info) {
-
                 $this->document->setTitle($article_info['article_title']);
                 $this->document->setDescription($article_info['meta_description']);
                 $this->document->setKeywords($article_info['meta_keyword']);
@@ -229,27 +225,27 @@ class ControllerBlogArticle extends Controller {
 
                 if ($article_info['featured_image']) {
                     $data['featured_found'] = 1;
-                    $data['image'] = $server . 'image/' . $article_info['featured_image'];
-                    //$image = $this->model_tool_image->resize($result['featured_image'], 873, 585);
-                } else if ($article_info['image']) {
-                    $data['image'] = $server . 'image/' . $article_info['image'];
+                    $data['image'] = $server.'image/'.$article_info['featured_image'];
+                //$image = $this->model_tool_image->resize($result['featured_image'], 873, 585);
+                } elseif ($article_info['image']) {
+                    $data['image'] = $server.'image/'.$article_info['image'];
                     $featured_found = '';
-                    //$image = $this->model_tool_image->resize($result['image'], 873, 585);
+                //$image = $this->model_tool_image->resize($result['image'], 873, 585);
                 } else {
                     $data['image'] = '';
                     $featured_found = '';
                 }
 
                 // author url
-                $data['author_url'] = $this->url->link('blog/author', 'simple_blog_author_id=' . $article_info['simple_blog_author_id'], 'SSL');
+                $data['author_url'] = $this->url->link('blog/author', 'simple_blog_author_id='.$article_info['simple_blog_author_id'], 'SSL');
 
                 // get total comments
                 $total_comments = $this->model_simple_blog_article->getTotalComments($simple_blog_article_id);
 
-                if ($total_comments != 1) {
-                    $data['total_comment'] = $total_comments . " " . $this->language->get('text_comments');
+                if (1 != $total_comments) {
+                    $data['total_comment'] = $total_comments.' '.$this->language->get('text_comments');
                 } else {
-                    $data['total_comment'] = $total_comments . " " . $this->language->get('text_comment');
+                    $data['total_comment'] = $total_comments.' '.$this->language->get('text_comment');
                 }
 
                 $data['article_info'] = $article_info;
@@ -261,10 +257,9 @@ class ControllerBlogArticle extends Controller {
                 // related product
                 $related_product = $this->model_simple_blog_article->getArticleProductRelated($simple_blog_article_id);
 
-                $data['products'] = array();
+                $data['products'] = [];
 
                 foreach ($related_product as $product) {
-
                     $product_info = $this->model_assets_product->getProduct($product['product_id']);
 
                     $image = ($product_info['image']) ? $this->model_tool_image->resize($product_info['image'], $this->config->get('config_image_related_width'), $this->config->get('config_image_related_height')) : false;
@@ -275,7 +270,7 @@ class ControllerBlogArticle extends Controller {
 
                     $rating = ($this->config->get('config_review_status')) ? (int) $product_info['rating'] : false;
 
-                    $data['products'][] = array(
+                    $data['products'][] = [
                         'product_id' => $product_info['product_id'],
                         'thumb' => $image,
                         'name' => $product_info['name'],
@@ -283,8 +278,8 @@ class ControllerBlogArticle extends Controller {
                         'special' => $special,
                         'rating' => $rating,
                         'reviews' => sprintf($this->language->get('text_reviews'), (int) $product_info['reviews']),
-                        'href' => $this->url->link('product/product', 'product_id=' . $product_info['product_id']),
-                    );
+                        'href' => $this->url->link('product/product', 'product_id='.$product_info['product_id']),
+                    ];
                 }
 
                 // author related information
@@ -293,7 +288,6 @@ class ControllerBlogArticle extends Controller {
                 //print "<pre>"; print_r($author_info); exit;
 
                 if ($author_info) {
-
                     $data['author_name'] = $author_info['name'];
 
                     if ($author_info['image']) {
@@ -318,10 +312,10 @@ class ControllerBlogArticle extends Controller {
                 $data['button_continue_reading'] = $this->language->get('button_continue_reading');
 
                 $related_articles = $this->model_simple_blog_article->getRelatedArticles($article_info['simple_blog_article_id']);
-                $data['related_articles'] = array();
+                $data['related_articles'] = [];
 
                 foreach ($related_articles as $article) {
-                    $data['related_articles'][] = array(
+                    $data['related_articles'][] = [
                         'simple_blog_article_id' => $article['simple_blog_article_id'],
                         'article_title' => $article['article_title'],
                         'simple_blog_author_id' => $article['simple_blog_author_id'],
@@ -331,9 +325,9 @@ class ControllerBlogArticle extends Controller {
                         'date_added' => date('F jS, Y', strtotime($article['date_added'])),
                         'date_modified' => date('F jS, Y', strtotime($article['date_modified'])),
                         'total_comment' => $article['total_comment'],
-                        'article_href' => $this->url->link('blog/article/view', 'simple_blog_article_id=' . $article['simple_blog_article_id'], 'SSL'),
-                        'author_href' => $this->url->link('blog/author', 'simple_blog_author_id=' . $article['simple_blog_author_id'], 'SSL')
-                    );
+                        'article_href' => $this->url->link('blog/article/view', 'simple_blog_article_id='.$article['simple_blog_article_id'], 'SSL'),
+                        'author_href' => $this->url->link('blog/author', 'simple_blog_author_id='.$article['simple_blog_author_id'], 'SSL'),
+                    ];
                 }
 
                 //print "<pre>"; print_r($data['related_articles']); die;
@@ -350,19 +344,19 @@ class ControllerBlogArticle extends Controller {
                 }
             }
 
-            $data['breadcrumbs'] = array();
+            $data['breadcrumbs'] = [];
 
-            $data['breadcrumbs'][] = array(
+            $data['breadcrumbs'][] = [
                 'text' => $this->language->get('text_home'),
                 'href' => $this->url->link('common/home'),
-                'separator' => false
-            );
+                'separator' => false,
+            ];
 
-            $data['breadcrumbs'][] = array(
+            $data['breadcrumbs'][] = [
                 'text' => $this->language->get('heading_title'),
                 'href' => $this->url->link('blog/article'),
-                'separator' => ' :: '
-            );
+                'separator' => ' :: ',
+            ];
 
             $data['column_left'] = $this->load->controller('common/column_left');
             $data['column_right'] = $this->load->controller('common/column_right');
@@ -371,44 +365,43 @@ class ControllerBlogArticle extends Controller {
             $data['footer'] = $this->load->controller('common/footer');
             $data['header'] = $this->load->controller('common/header/information');
 
-            if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/simple_blog/article_info.tpl')) {
-                $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/simple_blog/article_info.tpl', $data));
+            if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/simple_blog/article_info.tpl')) {
+                $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/simple_blog/article_info.tpl', $data));
             } else {
                 $this->response->setOutput($this->load->view('default/template/simple_blog/article_info.tpl', $data));
             }
         } else {
-
             $url = '';
 
             if (isset($this->request->get['article_id'])) {
-                $url .= '&article_id=' . $this->request->get['article_id'];
+                $url .= '&article_id='.$this->request->get['article_id'];
             }
 
             if (isset($this->request->get['page'])) {
-                $url .= '&page=' . $this->request->get['page'];
+                $url .= '&page='.$this->request->get['page'];
             }
 
             if (isset($this->request->get['limit'])) {
-                $url .= '&limit=' . $this->request->get['limit'];
+                $url .= '&limit='.$this->request->get['limit'];
             }
 
-            $data['breadcrumbs'][] = array(
+            $data['breadcrumbs'][] = [
                 'text' => $this->language->get('text_home'),
                 'href' => $this->url->link('common/home'),
-                'separator' => false
-            );
+                'separator' => false,
+            ];
 
-            $data['breadcrumbs'][] = array(
+            $data['breadcrumbs'][] = [
                 'text' => $this->language->get('heading_title'),
                 'href' => $this->url->link('blog/article'),
-                'separator' => $this->language->get('text_separator')
-            );
+                'separator' => $this->language->get('text_separator'),
+            ];
 
-            $data['breadcrumbs'][] = array(
+            $data['breadcrumbs'][] = [
                 'text' => $this->language->get('text_category_error'),
                 'href' => $this->url->link('blog/author', $url),
-                'separator' => $this->language->get('text_separator')
-            );
+                'separator' => $this->language->get('text_separator'),
+            ];
 
             $this->document->setTitle($this->language->get('text_article_error'));
 
@@ -420,7 +413,7 @@ class ControllerBlogArticle extends Controller {
 
             $data['continue'] = $this->url->link('common/home');
 
-            $this->response->addHeader($this->request->server['SERVER_PROTOCOL'] . '/1.1 404 Not Found');
+            $this->response->addHeader($this->request->server['SERVER_PROTOCOL'].'/1.1 404 Not Found');
 
             $data['column_left'] = $this->load->controller('common/column_left');
             $data['column_right'] = $this->load->controller('common/column_right');
@@ -429,15 +422,16 @@ class ControllerBlogArticle extends Controller {
             $data['footer'] = $this->load->controller('common/footer');
             $data['header'] = $this->load->controller('common/header/information');
 
-            if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/simple_blog/not_found.tpl')) {
-                $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/simple_blog/not_found.tpl', $data));
+            if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/simple_blog/not_found.tpl')) {
+                $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/simple_blog/not_found.tpl', $data));
             } else {
                 $this->response->setOutput($this->load->view('default/template/simple_blog/article_info.tpl', $data));
             }
         }
     }
 
-    public function comment() {
+    public function comment()
+    {
         $this->language->load('simple_blog/article');
 
         $this->load->model('simple_blog/article');
@@ -454,7 +448,7 @@ class ControllerBlogArticle extends Controller {
 
         $data['text_reply_comment'] = $this->language->get('text_reply_comment');
 
-        $data['comments'] = array();
+        $data['comments'] = [];
 
         $comment_total = $this->model_simple_blog_article->getTotalCommentsByArticleId($this->request->get['simple_blog_article_id']);
 
@@ -463,27 +457,26 @@ class ControllerBlogArticle extends Controller {
         //print "<pre>"; print_r($results); exit;
 
         foreach ($results as $result) {
-
             $comment_reply = '';
-            $comment_replies = array();
+            $comment_replies = [];
             $comment_reply = $this->model_simple_blog_article->getCommentsByArticle($this->request->get['simple_blog_article_id'], 0, 1000, $result['simple_blog_comment_id']);
 
             foreach ($comment_reply as $comment) {
-                $comment_replies[] = array(
+                $comment_replies[] = [
                     'author' => $comment['author'],
                     'date_added' => date($this->language->get('text_date_format_long'), strtotime($comment['date_added'])),
-                    'comment' => $comment['comment']
-                );
+                    'comment' => $comment['comment'],
+                ];
             }
 
-            $data['comments'][] = array(
+            $data['comments'][] = [
                 'simple_blog_article_id' => $result['simple_blog_article_id'],
                 'simple_blog_comment_id' => $result['simple_blog_comment_id'],
                 'comment_reply' => $comment_replies,
                 'author' => ucwords($result['author']),
                 'comment' => $result['comment'],
-                'date_added' => date($this->language->get('text_date_format_long'), strtotime($result['date_added']))
-            );
+                'date_added' => date($this->language->get('text_date_format_long'), strtotime($result['date_added'])),
+            ];
         }
 
         //print "<pre>"; print_r($data['comments']); exit;
@@ -493,30 +486,28 @@ class ControllerBlogArticle extends Controller {
         $pagination->page = $page;
         $pagination->limit = 5;
         $pagination->text = $this->language->get('text_pagination');
-        $pagination->url = $this->url->link('blog/article/comment', 'simple_blog_article_id=' . $this->request->get['simple_blog_article_id'] . '&page={page}');
+        $pagination->url = $this->url->link('blog/article/comment', 'simple_blog_article_id='.$this->request->get['simple_blog_article_id'].'&page={page}');
 
         $data['pagination'] = $pagination->render();
 
         $data['results'] = sprintf($this->language->get('text_pagination'), ($comment_total) ? (($page - 1) * 5) + 1 : 0, ((($page - 1) * 5) > ($comment_total - 5)) ? $comment_total : ((($page - 1) * 5) + 5), $comment_total, ceil($comment_total / 5));
 
-
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/simple_blog/article_comment.tpl')) {
-            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/simple_blog/article_comment.tpl', $data));
+        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/simple_blog/article_comment.tpl')) {
+            $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/simple_blog/article_comment.tpl', $data));
         } else {
             $this->response->setOutput($this->load->view('default/template/simple_blog/article_comment.tpl', $data));
         }
     }
 
-    public function writeComment() {
-
+    public function writeComment()
+    {
         $this->load->model('simple_blog/article');
 
         $this->language->load('simple_blog/article');
 
-        $json = array();
+        $json = [];
 
-        if ($this->request->server['REQUEST_METHOD'] == 'POST') {
-
+        if ('POST' == $this->request->server['REQUEST_METHOD']) {
             if ((utf8_strlen($this->request->post['name']) < 3) || (utf8_strlen($this->request->post['name']) > 25)) {
                 $json['error'] = $this->language->get('error_name');
             }
@@ -539,7 +530,4 @@ class ControllerBlogArticle extends Controller {
 
         $this->response->setOutput(json_encode($json));
     }
-
 }
-
-?>

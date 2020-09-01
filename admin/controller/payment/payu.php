@@ -1,22 +1,23 @@
 <?php
 
-class ControllerPaymentPayu extends Controller {
+class ControllerPaymentPayu extends Controller
+{
+    private $error = [];
 
-    private $error = array();
-
-    public function index() {
+    public function index()
+    {
         $this->load->language('payment/payu');
 
         $this->document->setTitle($this->language->get('heading_title'));
 
         $this->load->model('setting/setting');
 
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validate()) {
             $this->model_setting_setting->editSetting('payu', $this->request->post);
 
             $this->session->data['success'] = $this->language->get('text_success');
 
-            $this->response->redirect($this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'));
+            $this->response->redirect($this->url->link('extension/payment', 'token='.$this->session->data['token'], 'SSL'));
         }
 
         $data['heading_title'] = $this->language->get('heading_title');
@@ -47,12 +48,12 @@ class ControllerPaymentPayu extends Controller {
         } else {
             $data['error_warning'] = '';
         }
-        
+
         if (isset($this->session->data['success'])) {
-                $data['success'] = $this->session->data['success'];
-                unset($this->session->data['success']);
+            $data['success'] = $this->session->data['success'];
+            unset($this->session->data['success']);
         } else {
-                $data['success'] = '';
+            $data['success'] = '';
         }
 
         if (isset($this->error['merchant'])) {
@@ -61,37 +62,35 @@ class ControllerPaymentPayu extends Controller {
             $data['error_merchant'] = '';
         }
 
-
-
         if (isset($this->error['salt'])) {
             $data['error_salt'] = $this->error['salt'];
         } else {
             $data['error_salt'] = '';
         }
 
-        $data['breadcrumbs'] = array();
+        $data['breadcrumbs'] = [];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
-            'separator' => false
-        );
+            'href' => $this->url->link('common/home', 'token='.$this->session->data['token'], 'SSL'),
+            'separator' => false,
+        ];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_payment'),
-            'href' => $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'),
-            'separator' => ' :: '
-        );
+            'href' => $this->url->link('extension/payment', 'token='.$this->session->data['token'], 'SSL'),
+            'separator' => ' :: ',
+        ];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('payment/payu', 'token=' . $this->session->data['token'], 'SSL'),
-            'separator' => ' :: '
-        );
+            'href' => $this->url->link('payment/payu', 'token='.$this->session->data['token'], 'SSL'),
+            'separator' => ' :: ',
+        ];
 
-        $data['action'] = $this->url->link('payment/payu', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = $this->url->link('payment/payu', 'token='.$this->session->data['token'], 'SSL');
 
-        $data['cancel'] = $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL');
+        $data['cancel'] = $this->url->link('extension/payment', 'token='.$this->session->data['token'], 'SSL');
 
         if (isset($this->request->post['payu_merchant'])) {
             $data['payu_merchant'] = $this->request->post['payu_merchant'];
@@ -110,7 +109,7 @@ class ControllerPaymentPayu extends Controller {
         } else {
             $data['payu_order_prefix'] = $this->config->get('payu_order_prefix');
         }
-        
+
         if (isset($this->request->post['payu_test'])) {
             $data['payu_test'] = $this->request->post['payu_test'];
         } else {
@@ -152,7 +151,8 @@ class ControllerPaymentPayu extends Controller {
         $this->response->setOutput($this->load->view('payment/payu.tpl', $data));
     }
 
-    private function validate() {
+    private function validate()
+    {
         if (!$this->user->hasPermission('modify', 'payment/payu')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
@@ -165,14 +165,10 @@ class ControllerPaymentPayu extends Controller {
             $this->error['salt'] = $this->language->get('error_salt');
         }
 
-
         if (!$this->error) {
             return true;
         } else {
             return false;
         }
     }
-
 }
-
-?>

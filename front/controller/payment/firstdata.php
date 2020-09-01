@@ -1,8 +1,9 @@
 <?php
 
-class ControllerPaymentFirstdata extends Controller {
-
-    public function index() {
+class ControllerPaymentFirstdata extends Controller
+{
+    public function index()
+    {
         $this->load->language('payment/firstdata');
 
         $data['button_confirm'] = $this->language->get('button_confirm');
@@ -14,7 +15,7 @@ class ControllerPaymentFirstdata extends Controller {
 
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
 
-        if ($this->config->get('firstdata_live_demo') == 1) {
+        if (1 == $this->config->get('firstdata_live_demo')) {
             $data['action'] = $this->config->get('firstdata_live_url');
         } else {
             $data['action'] = $this->config->get('firstdata_demo_url');
@@ -30,52 +31,52 @@ class ControllerPaymentFirstdata extends Controller {
         $data['currency'] = $this->model_payment_firstdata->mapCurrency($order_info['currency_code']);
         $data['merchant_id'] = $this->config->get('firstdata_merchant_id');
         $data['timestamp'] = date('Y:m:d-H:i:s');
-        $data['order_id'] = 'CON-' . $this->session->data['order_id'] . 'T' . $data['timestamp'] . mt_rand(1, 999);
-        $data['url_success'] = $server.'checkout-success';//$this->url->link('checkout/success', '', 'SSL');
+        $data['order_id'] = 'CON-'.$this->session->data['order_id'].'T'.$data['timestamp'].mt_rand(1, 999);
+        $data['url_success'] = $server.'checkout-success'; //$this->url->link('checkout/success', '', 'SSL');
         $data['url_fail'] = $this->url->link('payment/firstdata/fail', '', 'SSL');
         $data['url_notify'] = $this->url->link('payment/firstdata/notify', '', 'SSL');
 
-        if (preg_match("/Mobile|Android|BlackBerry|iPhone|Windows Phone/", $this->request->server['HTTP_USER_AGENT'])) {
+        if (preg_match('/Mobile|Android|BlackBerry|iPhone|Windows Phone/', $this->request->server['HTTP_USER_AGENT'])) {
             $data['mobile'] = true;
         } else {
             $data['mobile'] = false;
         }
 
-        if ($this->config->get('firstdata_auto_settle') == 1) {
+        if (1 == $this->config->get('firstdata_auto_settle')) {
             $data['txntype'] = 'sale';
         } else {
             $data['txntype'] = 'preauth';
         }
 
-        $tmp = $data['merchant_id'] . $data['timestamp'] . $data['amount'] . $data['currency'] . $this->config->get('firstdata_secret');
+        $tmp = $data['merchant_id'].$data['timestamp'].$data['amount'].$data['currency'].$this->config->get('firstdata_secret');
         $ascii = bin2hex($tmp);
         $data['hash'] = sha1($ascii);
 
-        $data['version'] = 'OPENCART-C-' . VERSION;
-        
+        $data['version'] = 'OPENCART-C-'.VERSION;
+
         $this->load->model('account/address');
         $this->load->model('account/customer');
 
         $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
 
-        if($customer_info) {
+        if ($customer_info) {
             $address_id = $customer_info['address_id'];
-        }else{
+        } else {
             $address_id = 0;
         }
 
         $address_info = $this->model_account_address->getAddress($address_id);
 
-        if($address_info) {
+        if ($address_info) {
             $city = $address_info['city'];
-            $address = $address_info['address'] . ', ' . $address_info['city'];
-        }else{
+            $address = $address_info['address'].', '.$address_info['city'];
+        } else {
             $city = '';
             $address = '';
         }
 
         $data['bcompany'] = '';
-        $data['bname'] = $order_info['firstname'] . ' ' . $order_info['lastname'];
+        $data['bname'] = $order_info['firstname'].' '.$order_info['lastname'];
         $data['baddr1'] = substr($address, 0, 30);
         $data['baddr2'] = '';
         $data['bcity'] = substr($city, 0, 30);
@@ -88,9 +89,8 @@ class ControllerPaymentFirstdata extends Controller {
             $data['saddr1'] = substr($order_info['shipping_address'], 0, 30);
             $data['saddr2'] = '';
             $data['scity'] = '';
-           
         } else {
-            $data['sname'] = $order_info['firstname'] . ' ' . $order_info['lastname'];
+            $data['sname'] = $order_info['firstname'].' '.$order_info['lastname'];
             $data['saddr1'] = substr($order_info['shipping_address'], 0, 30);
             $data['saddr2'] = '';
             $data['scity'] = '';
@@ -100,23 +100,24 @@ class ControllerPaymentFirstdata extends Controller {
         $data['scountry'] = $this->config->get('config_country_code');
         $data['szip'] = '';
 
-        if ($this->config->get('firstdata_card_storage') == 1 && $this->customer->isLogged()) {
+        if (1 == $this->config->get('firstdata_card_storage') && $this->customer->isLogged()) {
             $data['card_storage'] = 1;
             $data['stored_cards'] = $this->model_payment_firstdata->getStoredCards();
-            $data['new_hosted_id'] = sha1($this->customer->getId() . '-' . date("Y-m-d-H-i-s") . rand(10, 500));
+            $data['new_hosted_id'] = sha1($this->customer->getId().'-'.date('Y-m-d-H-i-s').rand(10, 500));
         } else {
             $data['card_storage'] = 0;
-            $data['stored_cards'] = array();
+            $data['stored_cards'] = [];
         }
 
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/firstdata.tpl')) {
-            return $this->load->view($this->config->get('config_template') . '/template/payment/firstdata.tpl', $data);
+        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/payment/firstdata.tpl')) {
+            return $this->load->view($this->config->get('config_template').'/template/payment/firstdata.tpl', $data);
         } else {
             return $this->load->view('default/template/payment/firstdata.tpl', $data);
         }
     }
 
-    public function notify() {
+    public function notify()
+    {
         $this->load->model('payment/firstdata');
 
         $this->load->model('checkout/order');
@@ -125,7 +126,7 @@ class ControllerPaymentFirstdata extends Controller {
 
         $message = '';
 
-        if ($this->config->get('firstdata_debug') == 1) {
+        if (1 == $this->config->get('firstdata_debug')) {
             $this->model_payment_firstdata->logger(print_r($this->request->post, 1));
         }
 
@@ -139,11 +140,11 @@ class ControllerPaymentFirstdata extends Controller {
 
                 $order_info = $this->model_checkout_order->getOrder($order_id);
 
-                if ($this->request->post['txntype'] == 'preauth' || $this->request->post['txntype'] == 'sale') {
+                if ('preauth' == $this->request->post['txntype'] || 'sale' == $this->request->post['txntype']) {
                     if (isset($this->request->post['approval_code'])) {
                         $response_parts = explode(':', $this->request->post['approval_code']);
 
-                        $address_codes = array(
+                        $address_codes = [
                             'PPX' => $this->language->get('text_address_ppx'),
                             'YYY' => $this->language->get('text_address_yyy'),
                             'YNA' => $this->language->get('text_address_yna'),
@@ -151,31 +152,31 @@ class ControllerPaymentFirstdata extends Controller {
                             'NNN' => $this->language->get('text_address_nnn'),
                             'YPX' => $this->language->get('text_address_ypx'),
                             'PYX' => $this->language->get('text_address_pyx'),
-                            'XXU' => $this->language->get('text_address_xxu')
-                        );
+                            'XXU' => $this->language->get('text_address_xxu'),
+                        ];
 
-                        $cvv_codes = array(
+                        $cvv_codes = [
                             'M' => $this->language->get('text_card_code_m'),
                             'N' => $this->language->get('text_card_code_n'),
                             'P' => $this->language->get('text_card_code_p'),
                             'S' => $this->language->get('text_card_code_s'),
                             'U' => $this->language->get('text_card_code_u'),
                             'X' => $this->language->get('text_card_code_x'),
-                            'NONE' => $this->language->get('text_card_code_blank')
-                        );
+                            'NONE' => $this->language->get('text_card_code_blank'),
+                        ];
 
-                        $card_types = array(
+                        $card_types = [
                             'M' => $this->language->get('text_card_type_m'),
                             'V' => $this->language->get('text_card_type_v'),
                             'C' => $this->language->get('text_card_type_c'),
                             'A' => $this->language->get('text_card_type_a'),
                             'MA' => $this->language->get('text_card_type_ma'),
-                            'MAESTROUK' => $this->language->get('text_card_type_mauk')
-                        );
+                            'MAESTROUK' => $this->language->get('text_card_type_mauk'),
+                        ];
 
-                        if ($response_parts[0] == 'Y') {
+                        if ('Y' == $response_parts[0]) {
                             if (isset($response_parts[3])) {
-                                if (strlen($response_parts[3]) == 4) {
+                                if (4 == strlen($response_parts[3])) {
                                     $address_pass = strtoupper(substr($response_parts[3], 0, 3));
                                     $cvv_pass = strtoupper(substr($response_parts[3], -1));
 
@@ -187,35 +188,35 @@ class ControllerPaymentFirstdata extends Controller {
                                     $cvv_pass = 'NONE';
                                 }
 
-                                $message .= $this->language->get('text_address_response') . $address_codes[$address_pass] . '<br />';
-                                $message .= $this->language->get('text_card_code_verify') . $cvv_codes[$cvv_pass] . '<br />';
-                                $message .= $this->language->get('text_response_code_full') . $this->request->post['approval_code'] . '<br />';
-                                $message .= $this->language->get('text_response_code') . $response_parts[1] . '<br />';
+                                $message .= $this->language->get('text_address_response').$address_codes[$address_pass].'<br />';
+                                $message .= $this->language->get('text_card_code_verify').$cvv_codes[$cvv_pass].'<br />';
+                                $message .= $this->language->get('text_response_code_full').$this->request->post['approval_code'].'<br />';
+                                $message .= $this->language->get('text_response_code').$response_parts[1].'<br />';
 
                                 if (isset($this->request->post['cardnumber'])) {
-                                    $message .= $this->language->get('text_response_card') . $this->request->post['cardnumber'] . '<br />';
+                                    $message .= $this->language->get('text_response_card').$this->request->post['cardnumber'].'<br />';
                                 }
 
                                 if (isset($this->request->post['processor_response_code'])) {
-                                    $message .= $this->language->get('text_response_proc_code') . $this->request->post['processor_response_code'] . '<br />';
+                                    $message .= $this->language->get('text_response_proc_code').$this->request->post['processor_response_code'].'<br />';
                                 }
 
                                 if (isset($this->request->post['refnumber'])) {
-                                    $message .= $this->language->get('text_response_ref') . $this->request->post['refnumber'] . '<br />';
+                                    $message .= $this->language->get('text_response_ref').$this->request->post['refnumber'].'<br />';
                                 }
 
                                 if (isset($this->request->post['paymentMethod'])) {
-                                    $message .= $this->language->get('text_response_card_type') . $card_types[strtoupper($this->request->post['paymentMethod'])] . '<br />';
+                                    $message .= $this->language->get('text_response_card_type').$card_types[strtoupper($this->request->post['paymentMethod'])].'<br />';
                                 }
                             }
 
-                            if (isset($this->request->post['hosteddataid']) && $order_info['customer_id'] != 0) {
+                            if (isset($this->request->post['hosteddataid']) && 0 != $order_info['customer_id']) {
                                 $this->model_payment_firstdata->storeCard($this->request->post['hosteddataid'], $order_info['customer_id'], $this->request->post['expmonth'], $this->request->post['expyear'], $this->request->post['cardnumber']);
                             }
 
                             $fd_order_id = $this->model_payment_firstdata->addOrder($order_info, $this->request->post['oid'], $this->request->post['tdate']);
 
-                            if ($this->config->get('firstdata_auto_settle') == 1) {
+                            if (1 == $this->config->get('firstdata_auto_settle')) {
                                 $this->model_payment_firstdata->addTransaction($fd_order_id, 'payment', $order_info);
 
                                 $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('firstdata_order_status_success_settled_id'), $message, false);
@@ -225,16 +226,16 @@ class ControllerPaymentFirstdata extends Controller {
                                 $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('firstdata_order_status_success_unsettled_id'), $message, false);
                             }
                         } else {
-                            $message = $this->request->post['fail_reason'] . '<br />';
-                            $message .= $this->language->get('text_response_code_full') . $this->request->post['approval_code'];
+                            $message = $this->request->post['fail_reason'].'<br />';
+                            $message .= $this->language->get('text_response_code_full').$this->request->post['approval_code'];
 
                             $this->model_payment_firstdata->addOrderHistory($order_id, $this->config->get('firstdata_order_status_decline_id'), $message);
                         }
                     }
                 }
 
-                if ($this->request->post['txntype'] == 'void') {
-                    if ($this->request->post['status'] == 'DECLINED') {
+                if ('void' == $this->request->post['txntype']) {
+                    if ('DECLINED' == $this->request->post['status']) {
                         $fd_order = $this->model_payment_firstdata->getOrder($order_id);
 
                         $this->model_payment_firstdata->updateVoidStatus($order_id, 1);
@@ -245,8 +246,8 @@ class ControllerPaymentFirstdata extends Controller {
                     }
                 }
 
-                if ($this->request->post['txntype'] == 'postauth') {
-                    if ($this->request->post['status'] == 'APPROVED') {
+                if ('postauth' == $this->request->post['txntype']) {
+                    if ('APPROVED' == $this->request->post['status']) {
                         $fd_order = $this->model_payment_firstdata->getOrder($order_id);
 
                         $this->model_payment_firstdata->updateCaptureStatus($order_id, 1);
@@ -257,14 +258,15 @@ class ControllerPaymentFirstdata extends Controller {
                     }
                 }
             } else {
-                $this->model_payment_firstdata->logger('Hash does not match! Received: ' . $this->request->post['notification_hash'] . ', calculated: ' . $local_hash);
+                $this->model_payment_firstdata->logger('Hash does not match! Received: '.$this->request->post['notification_hash'].', calculated: '.$local_hash);
             }
         } else {
             $this->model_payment_firstdata->logger('Data is missing from request . ');
         }
     }
 
-    public function fail() {
+    public function fail()
+    {
         $this->load->language('payment/firstdata');
 
         if (isset($this->request->post['fail_reason']) && !empty($this->request->post['fail_reason'])) {
@@ -275,5 +277,4 @@ class ControllerPaymentFirstdata extends Controller {
 
         $this->response->redirect($this->url->link('checkout/checkout', '', 'SSL'));
     }
-
 }

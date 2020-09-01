@@ -2,8 +2,7 @@
 
 class ControllerApiOrders extends Controller
 {
-
-    public function getOrder($args = array())
+    public function getOrder($args = [])
     {
         $this->load->language('api/orders');
 
@@ -12,7 +11,7 @@ class ControllerApiOrders extends Controller
         $log->write($args);
 
         //echo "cvrg";die;
-        $json = array();
+        $json = [];
 
         if (!isset($this->session->data['api_id'])) {
             $json['error'] = $this->language->get('error_permission');
@@ -21,15 +20,14 @@ class ControllerApiOrders extends Controller
             $this->load->model('account/order');
 
             $this->load->model('api/orders');
-            
 
             $order = $this->model_checkout_order->getOrder($args['id']);
 
-            if(isset($order)) {
+            if (isset($order)) {
                 $order['store_details'] = $this->model_account_order->getStoreById($order['store_id']);
 
                 /* totals */
-                $data['totals'] = array();
+                $data['totals'] = [];
 
                 $totals = $this->model_account_order->getOrderTotals($args['id']);
 
@@ -40,15 +38,12 @@ class ControllerApiOrders extends Controller
                 $order['nice_subtotal'] = 0;
                 //echo "<pre>";print_r($totals);die;
                 foreach ($totals as $total) {
-                    
-
-                    if($total['code'] == 'sub_total') {
+                    if ('sub_total' == $total['code']) {
                         $order['subtotal'] = $total['value'];
                         $order['nice_subtotal'] = $this->currency->format($order['subtotal'], $order['currency_code'], $order['currency_value']);
                     }
 
-
-                    if($total['code'] == 'total') {
+                    if ('total' == $total['code']) {
                         $temptotal = $total['value'];
                         $data['total'] = $total['value'];
                     }
@@ -57,7 +52,7 @@ class ControllerApiOrders extends Controller
 
                     $data['totals'][] = [
                             $total['code'] => $val];
-                    
+
 
 
                     $data['plain_settlement_amount'] = $order_info['settlement_amount'];
@@ -66,27 +61,23 @@ class ControllerApiOrders extends Controller
                         $data['newTotal'] = $this->currency->format($temptotal - $data['subtotal'] + $order_info['settlement_amount']);
                     }*/
                 }
-
             }
-            
-            
+
             //echo "<pre>";print_r();die;
 
             $order['nice_total'] = $this->currency->format($order['total'], $order['currency_code'], $order['currency_value']);
 
-            $order['products'] = array();
-
+            $order['products'] = [];
 
             //$products = $this->model_api_orders->getOrderProducts($args['id']);
 
             $realproducts = $this->model_account_order->hasRealOrderProducts($args['id']);
 
-            if($realproducts) {
-                $products = $this->model_account_order->getRealOrderProducts($args['id']);  
+            if ($realproducts) {
+                $products = $this->model_account_order->getRealOrderProducts($args['id']);
             } else {
                 $products = $this->model_account_order->getOrderProducts($args['id']);
             }
-
 
             //echo "<pre>";print_r($products);die;
 
@@ -96,28 +87,26 @@ class ControllerApiOrders extends Controller
 
                     $product['nice_price'] = $this->currency->format($product['price'], $order['currency_code'], $order['currency_value']);
 
-
                     $order['products'][] = $product;
                 }
             }
 
-            $order['histories'] = array();
+            $order['histories'] = [];
 
             $this->load->model('sale/order');
 
             $results = $this->model_sale_order->getFullOrderHistoriesByOrderId($args['id']);
 
             foreach ($results as $result) {
-                $order['histories'][] = array(
+                $order['histories'][] = [
                     'notify' => $result['notify'] ? $this->language->get('text_yes') : $this->language->get('text_no'),
                     'status' => $result['status'],
                     'comment' => nl2br($result['comment']),
-                    'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added']))
-                );
+                    'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
+                ];
             }
 
             //echo "<pre>";print_r($order);die;
-            
 
             $json = $order;
             $log->write($json);
@@ -127,11 +116,11 @@ class ControllerApiOrders extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function addOrder($args = array())
+    public function addOrder($args = [])
     {
         $this->load->language('api/orders');
 
-        $json = array();
+        $json = [];
 
         if (!isset($this->session->data['api_id'])) {
             $json['error'] = $this->language->get('error_permission');
@@ -145,11 +134,11 @@ class ControllerApiOrders extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function editOrder($args = array())
+    public function editOrder($args = [])
     {
         $this->load->language('api/orders');
 
-        $json = array();
+        $json = [];
 
         if (!isset($this->session->data['api_id'])) {
             $json['error'] = $this->language->get('error_permission');
@@ -164,12 +153,12 @@ class ControllerApiOrders extends Controller
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
-    
-    public function deleteOrder($args = array())
+
+    public function deleteOrder($args = [])
     {
         $this->load->language('api/orders');
 
-        $json = array();
+        $json = [];
 
         if (!isset($this->session->data['api_id'])) {
             $json['error'] = $this->language->get('error_permission');
@@ -191,11 +180,11 @@ class ControllerApiOrders extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getOrders($args = array())
+    public function getOrders($args = [])
     {
         $this->load->language('api/orders');
 
-        $json = array();
+        $json = [];
 
         if (!isset($this->session->data['api_id'])) {
             $json['error'] = $this->language->get('error_permission');
@@ -203,11 +192,11 @@ class ControllerApiOrders extends Controller
             $this->load->model('api/orders');
             $this->load->model('account/order');
 
-            $order_data = array();
+            $order_data = [];
 
             //$args['sort'] = 'o.delivery_date';
 
-            if(isset($args['page'])) {
+            if (isset($args['page'])) {
                 $args['start'] = ($args['page'] - 1) * $this->config->get('config_limit_admin');
                 $args['limit'] = $this->config->get('config_limit_admin');
             }
@@ -219,18 +208,14 @@ class ControllerApiOrders extends Controller
 
             $log = new Log('error.log');
             $log->write('getOrders');
-            
 
             $orderCount = count($orderCountData);
 
             foreach ($orderCountData as $da) {
-
                 $totals = $this->model_account_order->getOrderTotals($da['order_id']);
 
                 foreach ($totals as $total) {
-                    
-
-                    if($total['code'] == 'sub_total') {
+                    if ('sub_total' == $total['code']) {
                         $orderValue += $total['value'];
                     }
                 }
@@ -249,16 +234,16 @@ class ControllerApiOrders extends Controller
             $inPmfirstTimeslot = [];
 
             foreach ($temp as $temp1) {
-                
+
                 $temp2 = explode('-', $temp1['delivery_timeslot']);
-                
-                
+
+
                 if (strpos($temp2[0], 'am') !== false) {
                     array_push($amTimeslot, $temp1);
-                } else {      
+                } else {
 
                     if(substr($temp2[0], 0,2) == '12') {
-                        
+
                         array_push($inPmfirstTimeslot, $temp1);
                     } else {
                         array_push($pmTimeslot, $temp1);
@@ -267,17 +252,17 @@ class ControllerApiOrders extends Controller
 
             }
             foreach ($inPmfirstTimeslot as $te) {
-                
-                array_push($amTimeslot, $te);    
+
+                array_push($amTimeslot, $te);
             }
 
             foreach ($pmTimeslot as $te) {
-                
-                array_push($amTimeslot, $te);    
+
+                array_push($amTimeslot, $te);
             }
 
             $results = $amTimeslot;
-            
+
             $log->write($results);*/
 
             //echo "<pre>";print_r($results);die;
@@ -290,29 +275,24 @@ class ControllerApiOrders extends Controller
                     $order['subtotal'] = 0;
                     $order['nice_subtotal'] = 0;
 
-                    if(isset($order)) {
-                       
+                    if (isset($order)) {
                         /* totals */
-                        $data['totals'] = array();
+                        $data['totals'] = [];
 
                         $totals = $this->model_account_order->getOrderTotals($result['order_id']);
 
                         //echo "<pre>";print_r($totals);die;
                         foreach ($totals as $total) {
-                            
-
-                            if($total['code'] == 'sub_total') {
+                            if ('sub_total' == $total['code']) {
                                 $order['subtotal'] = $total['value'];
                                 $order['nice_subtotal'] = $this->currency->format($order['subtotal'], $order['currency_code'], $order['currency_value']);
                             }
                         }
-
                     }
-
 
                     $order['nice_total'] = $this->currency->format($order['total'], $order['currency_code'], $order['currency_value']);
 
-                    $order['products'] = array();
+                    $order['products'] = [];
 
                     $products = $this->model_account_order->getOrderProducts($result['order_id']);
 
@@ -323,7 +303,7 @@ class ControllerApiOrders extends Controller
                             $product['nice_total'] = $this->currency->format($product['total'], $order['currency_code'], $order['currency_value']);
 
                             $order['products_quantity'] += $product['quantity'];
-                            
+
                             $order['products'][] = $product;
                         }
                     }
@@ -331,9 +311,6 @@ class ControllerApiOrders extends Controller
                     $order_data[] = $order;
                 }
             }
-
-            
-
 
             $json['orders'] = $order_data;
             $json['orders_count'] = $orderCount;
@@ -346,11 +323,11 @@ class ControllerApiOrders extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getTotals($args = array())
+    public function getTotals($args = [])
     {
         $this->load->language('api/orders');
 
-        $json = array();
+        $json = [];
 
         if (!isset($this->session->data['api_id'])) {
             $json['error'] = $this->language->get('error_permission');
@@ -358,11 +335,11 @@ class ControllerApiOrders extends Controller
             $this->load->model('api/orders');
 
             $total = $this->model_api_orders->getTotals($args);
-             
-            $total['price'] = isset($total['price'])?$total['price']:"0";
+
+            $total['price'] = isset($total['price']) ? $total['price'] : '0';
             $total['nice_price'] = $this->currency->format($total['price']);
-            $total['number'] = isset($total['number'])?$total['number']:"0";
-            
+            $total['number'] = isset($total['number']) ? $total['number'] : '0';
+
             $json = $total;
         }
 
@@ -370,25 +347,25 @@ class ControllerApiOrders extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getStatuses($args = array())
+    public function getStatuses($args = [])
     {
         $this->load->language('api/orders');
 
-        $json = array();
+        $json = [];
 
         if (!isset($this->session->data['api_id'])) {
             $json['error'] = $this->language->get('error_permission');
         } else {
             $this->load->model('api/orders');
 
-            $statuses = array();
-            $statuses[] = array('order_status_id' => '0', 'name' => $this->language->get('text_missing'));
+            $statuses = [];
+            $statuses[] = ['order_status_id' => '0', 'name' => $this->language->get('text_missing')];
 
             $rows = $this->model_api_orders->getStatuses();
 
             if (!empty($rows)) {
-                foreach($rows as $row) {
-                    $statuses[] = array('order_status_id' => $row['order_status_id'], 'name' => $row['name']);
+                foreach ($rows as $row) {
+                    $statuses[] = ['order_status_id' => $row['order_status_id'], 'name' => $row['name']];
                 }
             }
 
@@ -399,18 +376,18 @@ class ControllerApiOrders extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getReadyToPikcupStatuses($args = array())
+    public function getReadyToPikcupStatuses($args = [])
     {
         $this->load->language('api/orders');
 
-        $json = array();
+        $json = [];
 
         if (!isset($this->session->data['api_id'])) {
             $json['error'] = $this->language->get('error_permission');
         } else {
             $this->load->model('api/orders');
 
-            $statuses = array();
+            $statuses = [];
 
             $ready_for_pickup_status_ids = $this->config->get('config_ready_for_pickup_status');
 
@@ -418,12 +395,11 @@ class ControllerApiOrders extends Controller
 
             //$statuses[] = array('order_status_id' => '0', 'name' => $this->language->get('text_missing'));
 
-            $rows = $this->model_api_orders->getOrderStatusesById(implode(",", $ready_for_pickup_status_ids));
-
+            $rows = $this->model_api_orders->getOrderStatusesById(implode(',', $ready_for_pickup_status_ids));
 
             if (!empty($rows)) {
-                foreach($rows as $row) {
-                    $statuses[] = array('order_status_id' => $row['order_status_id'], 'name' => $row['name']);
+                foreach ($rows as $row) {
+                    $statuses[] = ['order_status_id' => $row['order_status_id'], 'name' => $row['name']];
                 }
             }
 
@@ -434,12 +410,11 @@ class ControllerApiOrders extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-
-    public function getProducts($args = array())
+    public function getProducts($args = [])
     {
         $this->load->language('api/orders');
 
-        $json = array();
+        $json = [];
 
         //echo "<pre>";print_r($args);die;
         if (!isset($this->session->data['api_id'])) {
@@ -452,14 +427,14 @@ class ControllerApiOrders extends Controller
 
             $realproducts = $this->model_account_order->hasRealOrderProducts($args['id']);
 
-            if($realproducts) {
-                $rows = $this->model_account_order->getRealOrderProducts($args['id']);  
+            if ($realproducts) {
+                $rows = $this->model_account_order->getRealOrderProducts($args['id']);
             } else {
                 $rows = $this->model_account_order->getOrderProducts($args['id']);
             }
 
             //echo "<pre>";print_r($rows);die;
-            $order_products = array();
+            $order_products = [];
 
             if ($rows) {
                 $this->load->model('tool/image');
@@ -488,9 +463,9 @@ class ControllerApiOrders extends Controller
 
                     $order_product_options = $this->model_account_order->getOrderOptions($args['id'], $row['order_product_id']);
 
-                    $option_data = array();
+                    $option_data = [];
                     foreach ($order_product_options as $option) {
-                        if ($option['type'] != 'file') {
+                        if ('file' != $option['type']) {
                             $value = $option['value'];
                         } else {
                             $upload_info = $this->model_tool_upload->getUploadByCode($option['value']);
@@ -501,7 +476,7 @@ class ControllerApiOrders extends Controller
                             }
                         }
 
-                        $option_data[] = array($option['name'] => (utf8_strlen($value) > 20 ? utf8_substr($value, 0, 26) . '..' : $value));
+                        $option_data[] = [$option['name'] => (utf8_strlen($value) > 20 ? utf8_substr($value, 0, 26).'..' : $value)];
                     }
 
                     $row['options'] = $option_data;
@@ -518,15 +493,11 @@ class ControllerApiOrders extends Controller
                             $row['image'] = $this->model_tool_image->resize($row['image'], $thumb_width, $thumb_height);
 
                             $row['zoom_image'] = $this->model_tool_image->resize($tmpImg, $thumb_zoomwidth, $thumb_zoomheight);
-
                         } else {
                             $row['image'] = $this->model_tool_image->resize('placeholder.png', $thumb_width, $thumb_height);
 
                             $row['zoom_image'] = $this->model_tool_image->resize('placeholder.png', $thumb_zoomwidth, $thumb_zoomheight);
                         }
-
-                        
-
 
                         if ($this->request->server['HTTPS']) {
                             $row['image'] = str_replace($this->config->get('config_ssl'), '', $row['image']);
@@ -549,11 +520,11 @@ class ControllerApiOrders extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getHistories($args = array())
+    public function getHistories($args = [])
     {
         $this->load->language('api/orders');
 
-        $json = array();
+        $json = [];
 
         if (!isset($this->session->data['api_id'])) {
             $json['error'] = $this->language->get('error_permission');
@@ -567,11 +538,11 @@ class ControllerApiOrders extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function addHistory($args = array())
+    public function addHistory($args = [])
     {
         $this->load->language('api/orders');
 
-        $json = array();
+        $json = [];
 
         if (!isset($this->session->data['api_id'])) {
             $json['error'] = $this->language->get('error_permission');
@@ -579,10 +550,10 @@ class ControllerApiOrders extends Controller
             $this->load->model('checkout/order');
 
             // Add keys for missing post vars
-            $keys = array(
+            $keys = [
                 'notify',
-                'comment'
-            );
+                'comment',
+            ];
 
             foreach ($keys as $key) {
                 if (!isset($args[$key])) {
@@ -606,11 +577,11 @@ class ControllerApiOrders extends Controller
     }
 
     /*** API for third party delivery system to get [Ready to Pickup] Orders **/
-    public function getOrdersForDelivery($args = array())
+    public function getOrdersForDelivery($args = [])
     {
         $this->load->language('api/orders');
 
-        $json = array();
+        $json = [];
 
         if (!isset($this->session->data['api_id'])) {
             $json['error'] = $this->language->get('error_permission');
@@ -618,9 +589,9 @@ class ControllerApiOrders extends Controller
             $this->load->model('api/orders');
             $this->load->model('account/order');
 
-            $order_data = array();
+            $order_data = [];
 
-            if(isset($args['page'])) {
+            if (isset($args['page'])) {
                 $args['start'] = ($args['page'] - 1) * $this->config->get('config_limit_admin');
                 $args['limit'] = $this->config->get('config_limit_admin');
             }
@@ -632,28 +603,24 @@ class ControllerApiOrders extends Controller
 
             $log = new Log('error.log');
             $log->write('getOrders');
-            
 
             $orderCount = count($orderCountData);
 
             foreach ($orderCountData as $da) {
-
                 $totals = $this->model_account_order->getOrderTotals($da['order_id']);
 
                 foreach ($totals as $total) {
-                    
-
-                    if($total['code'] == 'sub_total') {
+                    if ('sub_total' == $total['code']) {
                         $orderValue += $total['value'];
                     }
                 }
                 //$orderValue += $da['total'];
             }
-            
+
             $args['status'] = DELEVERY_GENERATE_STATUS;
             $args['filter_pickup'] = 1;
             $results = $this->model_api_orders->getOrders($args);
-           
+
             if (!empty($results)) {
                 $this->load->model('checkout/order');
 
@@ -663,29 +630,24 @@ class ControllerApiOrders extends Controller
                     $order['subtotal'] = 0;
                     $order['nice_subtotal'] = 0;
 
-                    if(isset($order)) {
-                       
+                    if (isset($order)) {
                         /* totals */
-                        $data['totals'] = array();
+                        $data['totals'] = [];
 
                         $totals = $this->model_account_order->getOrderTotals($result['order_id']);
 
                         //echo "<pre>";print_r($totals);die;
                         foreach ($totals as $total) {
-                            
-
-                            if($total['code'] == 'sub_total') {
+                            if ('sub_total' == $total['code']) {
                                 $order['subtotal'] = $total['value'];
                                 $order['nice_subtotal'] = $this->currency->format($order['subtotal'], $order['currency_code'], $order['currency_value']);
                             }
                         }
-
                     }
-
 
                     $order['nice_total'] = $this->currency->format($order['total'], $order['currency_code'], $order['currency_value']);
 
-                    $order['products'] = array();
+                    $order['products'] = [];
 
                     $products = $this->model_account_order->getOrderProducts($result['order_id']);
 
@@ -696,7 +658,7 @@ class ControllerApiOrders extends Controller
                             $product['nice_total'] = $this->currency->format($product['total'], $order['currency_code'], $order['currency_value']);
 
                             $order['products_quantity'] += $product['quantity'];
-                            
+
                             $order['products'][] = $product;
                         }
                     }
@@ -705,10 +667,9 @@ class ControllerApiOrders extends Controller
                 }
             }
 
-                $json['orders'] = $order_data;
-                $json['msg'] = 'Orders List fetched!';
-                $json['status'] = 200;
-            
+            $json['orders'] = $order_data;
+            $json['msg'] = 'Orders List fetched!';
+            $json['status'] = 200;
         }
 
         $this->response->addHeader('Content-Type: application/json');
