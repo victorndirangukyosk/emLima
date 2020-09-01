@@ -330,7 +330,7 @@ class ControllerAccountDashboard extends Controller
 
         $range = $this->getRange($diff);
 
-          $customer_id = $this->customer->getId();
+        $customer_id = $this->customer->getId();
 
         //   echo "<pre>";print_r($json);die;
 
