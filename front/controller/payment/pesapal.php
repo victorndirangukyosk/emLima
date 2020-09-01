@@ -931,8 +931,15 @@ class ControllerPaymentPesapal extends Controller {
         $merchant_reference = $this->request->get['pesapal_merchant_reference'];
         $customer_id = $customer_info['customer_id'];
         $this->model_payment_pesapal->insertOrderTransactionIdPesapal($order_id, $transaction_tracking_id, $merchant_reference, $customer_id);
-        $this->ipinlistenercustom('CHANGE', $transaction_tracking_id, $merchant_reference, $order_id);
-        $this->response->redirect($this->url->link('checkout/success'));
+        $status = $this->ipinlistenercustom('CHANGE', $transaction_tracking_id, $merchant_reference, $order_id);
+
+        if ($status == 'COMPLETED') {
+            $this->response->redirect($this->url->link('checkout/success'));
+        }
+
+        if ($status != 'COMPLETED' || $status == NULL) {
+            $this->response->redirect($this->url->link('checkout/success/orderfailed'));
+        }
     }
 
     public function ipinlistenercustom($pesapalNotification, $pesapalTrackingId, $pesapal_merchant_reference, $order_id) {
@@ -1019,6 +1026,7 @@ class ControllerPaymentPesapal extends Controller {
                 $this->model_payment_pesapal->updateorderstatusipn($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
             }
         }
+        echo $status;
     }
 
     public function ipinlistener() {
