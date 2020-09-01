@@ -16,7 +16,7 @@ class ControllerCatalogHelpCategory extends Controller
                 'sort' => 'name',
                 'order' => 'ASC',
                 'start' => 0,
-                'limit' => 5
+                'limit' => 5,
             ];
 
             $json = $this->model_catalog_help_category->getCategories($filter_data);
@@ -232,12 +232,12 @@ class ControllerCatalogHelpCategory extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('catalog/help_category', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('catalog/help_category', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         $data['add'] = $this->url->link('catalog/help_category/add', 'token='.$this->session->data['token'].$url, 'SSL');
@@ -251,7 +251,7 @@ class ControllerCatalogHelpCategory extends Controller
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin')
+            'limit' => $this->config->get('config_limit_admin'),
         ];
 
         if (!empty($filter_name) || !empty($filter_status)) {
@@ -268,7 +268,7 @@ class ControllerCatalogHelpCategory extends Controller
                 'name' => $result['name'],
                 'sort_order' => $result['sort_order'],
                 'edit' => $this->url->link('catalog/help_category/edit', 'token='.$this->session->data['token'].'&category_id='.$result['category_id'].$url, 'SSL'),
-                'delete' => $this->url->link('catalog/help_category/delete', 'token='.$this->session->data['token'].'&category_id='.$result['category_id'].$url, 'SSL')
+                'delete' => $this->url->link('catalog/help_category/delete', 'token='.$this->session->data['token'].'&category_id='.$result['category_id'].$url, 'SSL'),
             ];
         }
 
@@ -452,12 +452,12 @@ class ControllerCatalogHelpCategory extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('catalog/help_category', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('catalog/help_category', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         if (!isset($this->request->get['category_id'])) {

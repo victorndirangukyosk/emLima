@@ -279,7 +279,7 @@ if (extension_loaded('mbstring')) {
                 0x00C9 => 0x00E9,
                 0x00D0 => 0x00F0,
                 0x0407 => 0x0457,
-                0x0122 => 0x0123
+                0x0122 => 0x0123,
             ];
         }
 
@@ -516,7 +516,7 @@ if (extension_loaded('mbstring')) {
                 0x00E9 => 0x00C9,
                 0x00F0 => 0x00D0,
                 0x0457 => 0x0407,
-                0x0123 => 0x0122
+                0x0123 => 0x0122,
             ];
         }
 

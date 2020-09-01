@@ -230,12 +230,12 @@ class ControllerUserUser extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('user/user', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('user/user', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         $data['add'] = $this->url->link('user/user/add', 'token='.$this->session->data['token'].$url, 'SSL');
@@ -253,7 +253,7 @@ class ControllerUserUser extends Controller
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin')
+            'limit' => $this->config->get('config_limit_admin'),
         ];
 
         if (!empty($filter_user_name) || !empty($filter_user_group) || !empty($filter_first_name) || !empty($filter_last_name) || !empty($filter_email) || !empty($filter_status)) {
@@ -270,7 +270,7 @@ class ControllerUserUser extends Controller
                 'username' => $result['username'],
                 'status' => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
                 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
-                'edit' => $this->url->link('user/user/edit', 'token='.$this->session->data['token'].'&user_id='.$result['user_id'].$url, 'SSL')
+                'edit' => $this->url->link('user/user/edit', 'token='.$this->session->data['token'].'&user_id='.$result['user_id'].$url, 'SSL'),
             ];
         }
 
@@ -463,12 +463,12 @@ class ControllerUserUser extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('user/user', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('user/user', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         if (!isset($this->request->get['user_id'])) {
@@ -689,7 +689,7 @@ class ControllerUserUser extends Controller
                 'filter_last_name' => $filter_last_name,
                 'filter_email' => $filter_email,
                 'start' => 0,
-                'limit' => $limit
+                'limit' => $limit,
             ];
 
             if (empty($filter_user_group)) {
@@ -707,14 +707,14 @@ class ControllerUserUser extends Controller
                         'username' => $result['username'],
                         'firstname' => $result['firstname'],
                         'lastname' => $result['lastname'],
-                        'email' => $result['email']
+                        'email' => $result['email'],
                     ];
                 }
             } elseif (!empty($_results)) {
                 foreach ($_results as $result) {
                     $json[] = [
                         'user_group_id' => $result['user_group_id'],
-                        'user_group' => $result['name']
+                        'user_group' => $result['name'],
                     ];
                 }
             }

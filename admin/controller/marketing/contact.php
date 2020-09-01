@@ -47,12 +47,12 @@ class ControllerMarketingContact extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('marketing/contact', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('marketing/contact', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['cancel'] = $this->url->link('marketing/contact', 'token='.$this->session->data['token'], 'SSL');
@@ -138,7 +138,7 @@ class ControllerMarketingContact extends Controller
                         $customer_data = [
                             'filter_newsletter' => 1,
                             'start' => ($page - 1) * 10,
-                            'limit' => 10
+                            'limit' => 10,
                         ];
 
                         $email_total = $this->model_sale_customer->getTotalCustomers($customer_data);
@@ -152,7 +152,7 @@ class ControllerMarketingContact extends Controller
                     case 'customer_all':
                         $customer_data = [
                             'start' => ($page - 1) * 10,
-                            'limit' => 10
+                            'limit' => 10,
                         ];
 
                         $email_total = $this->model_sale_customer->getTotalCustomers($customer_data);
@@ -167,7 +167,7 @@ class ControllerMarketingContact extends Controller
                         $customer_data = [
                             'filter_customer_group_id' => $this->request->post['customer_group_id'],
                             'start' => ($page - 1) * 10,
-                            'limit' => 10
+                            'limit' => 10,
                         ];
 
                         $email_total = $this->model_sale_customer->getTotalCustomers($customer_data);
@@ -192,7 +192,7 @@ class ControllerMarketingContact extends Controller
                     case 'affiliate_all':
                         $affiliate_data = [
                             'start' => ($page - 1) * 10,
-                            'limit' => 10
+                            'limit' => 10,
                         ];
 
                         $email_total = $this->model_marketing_affiliate->getTotalAffiliates($affiliate_data);

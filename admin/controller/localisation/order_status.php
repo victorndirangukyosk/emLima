@@ -170,12 +170,12 @@ class ControllerLocalisationOrderStatus extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('localisation/order_status', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('localisation/order_status', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         $data['add'] = $this->url->link('localisation/order_status/add', 'token='.$this->session->data['token'].$url, 'SSL');
@@ -187,7 +187,7 @@ class ControllerLocalisationOrderStatus extends Controller
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin')
+            'limit' => $this->config->get('config_limit_admin'),
         ];
 
         $order_status_total = $this->model_localisation_order_status->getTotalOrderStatuses();
@@ -200,7 +200,7 @@ class ControllerLocalisationOrderStatus extends Controller
                 'name' => $result['name'].(($result['order_status_id'] == $this->config->get('config_order_status_id')) ? $this->language->get('text_default') : null),
                 'sort_order' => $result['sort_order'],
 
-                'edit' => $this->url->link('localisation/order_status/edit', 'token='.$this->session->data['token'].'&order_status_id='.$result['order_status_id'].$url, 'SSL')
+                'edit' => $this->url->link('localisation/order_status/edit', 'token='.$this->session->data['token'].'&order_status_id='.$result['order_status_id'].$url, 'SSL'),
             ];
         }
 
@@ -339,12 +339,12 @@ class ControllerLocalisationOrderStatus extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('localisation/order_status', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('localisation/order_status', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         if (!isset($this->request->get['order_status_id'])) {

@@ -62,17 +62,17 @@ class ControllerTotalReward extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_total'),
-            'href' => $this->url->link('extension/total', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('extension/total', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('total/reward', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('total/reward', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['action'] = $this->url->link('total/reward', 'token='.$this->session->data['token'], 'SSL');

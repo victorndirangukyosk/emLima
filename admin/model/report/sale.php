@@ -44,7 +44,7 @@ class ModelReportSale extends Model
             'at',
             'mat',
             'pt',
-            'c.name'
+            'c.name',
         ];
 
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
@@ -306,7 +306,7 @@ class ModelReportSale extends Model
             'orders',
             'products',
             'total',
-            'subtotal'
+            'subtotal',
         ];
 
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
@@ -751,7 +751,7 @@ class ModelReportSale extends Model
             'orders',
             'products',
             'total',
-            'subtotal'
+            'subtotal',
         ];
 
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
@@ -945,7 +945,7 @@ class ModelReportSale extends Model
         for ($i = 0; $i < 24; ++$i) {
             $order_data[$i] = [
                 'hour' => $i,
-                'total' => 0
+                'total' => 0,
             ];
         }
 
@@ -954,7 +954,7 @@ class ModelReportSale extends Model
         foreach ($query->rows as $result) {
             $order_data[$result['hour']] = [
                 'hour' => $result['hour'],
-                'total' => $result['total']
+                'total' => $result['total'],
             ];
         }
 
@@ -978,7 +978,7 @@ class ModelReportSale extends Model
 
             $order_data[date('w', strtotime($date))] = [
                 'day' => date('D', strtotime($date)),
-                'total' => 0
+                'total' => 0,
             ];
         }
 
@@ -987,7 +987,7 @@ class ModelReportSale extends Model
         foreach ($query->rows as $result) {
             $order_data[date('w', strtotime($result['date_added']))] = [
                 'day' => date('D', strtotime($result['date_added'])),
-                'total' => $result['total']
+                'total' => $result['total'],
             ];
         }
 
@@ -1009,7 +1009,7 @@ class ModelReportSale extends Model
 
             $order_data[date('j', strtotime($date))] = [
                 'day' => date('d', strtotime($date)),
-                'total' => 0
+                'total' => 0,
             ];
         }
 
@@ -1018,7 +1018,7 @@ class ModelReportSale extends Model
         foreach ($query->rows as $result) {
             $order_data[date('j', strtotime($result['date_added']))] = [
                 'day' => date('d', strtotime($result['date_added'])),
-                'total' => $result['total']
+                'total' => $result['total'],
             ];
         }
 
@@ -1038,7 +1038,7 @@ class ModelReportSale extends Model
         for ($i = 1; $i <= 12; ++$i) {
             $order_data[$i] = [
                 'month' => date('M', mktime(0, 0, 0, $i)),
-                'total' => 0
+                'total' => 0,
             ];
         }
 
@@ -1047,7 +1047,7 @@ class ModelReportSale extends Model
         foreach ($query->rows as $result) {
             $order_data[date('n', strtotime($result['date_added']))] = [
                 'month' => date('M', strtotime($result['date_added'])),
-                'total' => $result['total']
+                'total' => $result['total'],
             ];
         }
 
@@ -1171,7 +1171,7 @@ class ModelReportSale extends Model
             'o.date_added',
             'o.date_modified',
             'o.total',
-            'c.name'
+            'c.name',
         ];
 
         $sql .= ' GROUP BY o.order_id';
@@ -1250,7 +1250,7 @@ class ModelReportSale extends Model
             'o.date_added',
             'o.date_modified',
             'o.total',
-            'c.name'
+            'c.name',
         ];
 
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
@@ -1338,7 +1338,7 @@ class ModelReportSale extends Model
             'o.date_added',
             'o.date_modified',
             'o.total',
-            'c.name'
+            'c.name',
         ];
 
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {

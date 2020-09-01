@@ -70,7 +70,7 @@ class ModelLocalisationZone extends Model
         $sort_data = [
             'c.name',
             'z.name',
-            'z.code'
+            'z.code',
         ];
 
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {

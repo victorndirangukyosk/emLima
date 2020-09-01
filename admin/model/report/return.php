@@ -113,8 +113,8 @@ class ModelReportReturn extends Model
         }
 
         /*if (!empty($data['filter_store'])) {
-			$implode[] = "r.store_id = '" . $data['filter_store'] . "'";
-		}*/
+            $implode[] = "r.store_id = '" . $data['filter_store'] . "'";
+        }*/
 
         if ($implode) {
             $sql .= ' WHERE '.implode(' AND ', $implode);
@@ -147,7 +147,7 @@ class ModelReportReturn extends Model
 
         /*'SELECT *,customer, store_id, status FROM ('.
 
-		"SELECT *, CONCAT(r.firstname, ' ', r.lastname) AS customer, (SELECT o.store_id FROM ". DB_PREFIX ."order o WHERE o.order_id = r.order_id) AS store_id  , (SELECT rs.name FROM " . DB_PREFIX . "return_status rs WHERE rs.return_status_id = r.return_status_id AND rs.language_id = '" . (int)$this->config->get('config_language_id') . "') AS status FROM `" . DB_PREFIX . "return` r ) ";*/
+        "SELECT *, CONCAT(r.firstname, ' ', r.lastname) AS customer, (SELECT o.store_id FROM ". DB_PREFIX ."order o WHERE o.order_id = r.order_id) AS store_id  , (SELECT rs.name FROM " . DB_PREFIX . "return_status rs WHERE rs.return_status_id = r.return_status_id AND rs.language_id = '" . (int)$this->config->get('config_language_id') . "') AS status FROM `" . DB_PREFIX . "return` r ) ";*/
 
         //echo "<pre>";print_r($sql);die;
         $implode = [];
@@ -185,8 +185,8 @@ class ModelReportReturn extends Model
         }
 
         /*if (!empty($data['filter_store'])) {
-			$implode[] = "r.store_id = '" . $data['filter_store'] . "'";
-		}*/
+            $implode[] = "r.store_id = '" . $data['filter_store'] . "'";
+        }*/
 
         if ($implode) {
             $sql .= ' WHERE '.implode(' AND ', $implode);
@@ -300,8 +300,8 @@ class ModelReportReturn extends Model
         }
 
         /*if (!empty($data['filter_store'])) {
-			$implode[] = "r.store_id = '" . $data['filter_store'] . "'";
-		}*/
+            $implode[] = "r.store_id = '" . $data['filter_store'] . "'";
+        }*/
 
         if ($implode) {
             $sql .= ' WHERE '.implode(' AND ', $implode);
@@ -368,8 +368,8 @@ class ModelReportReturn extends Model
         }
 
         /*if (!empty($data['filter_store'])) {
-			$implode[] = "r.store_id = '" . $data['filter_store'] . "'";
-		}*/
+            $implode[] = "r.store_id = '" . $data['filter_store'] . "'";
+        }*/
 
         if ($implode) {
             $sql .= ' WHERE '.implode(' AND ', $implode);

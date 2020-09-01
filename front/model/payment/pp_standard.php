@@ -36,7 +36,7 @@ class ModelPaymentPPStandard extends Model
             'PHP',
             'TWD',
             'THB',
-            'TRY'
+            'TRY',
         ];
 
         if (!in_array(strtoupper($this->currency->getCode()), $currencies)) {
@@ -50,7 +50,7 @@ class ModelPaymentPPStandard extends Model
                 'code' => 'pp_standard',
                 'title' => $this->language->get('text_title'),
                 'terms' => '',
-                'sort_order' => $this->config->get('pp_standard_sort_order')
+                'sort_order' => $this->config->get('pp_standard_sort_order'),
             ];
         }
 

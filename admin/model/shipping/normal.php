@@ -48,7 +48,7 @@ class ModelShippingNormal extends Model
             if(strtotime($member_upto) > time() && $member_group_id==$customer_group_id){
                 $cost = 0;
             }
-			*/
+            */
             // if on use delivery system shipping cost
             $settings = $this->getSettings('normal', 0);
 
@@ -58,12 +58,12 @@ class ModelShippingNormal extends Model
                 $log->write('useDeliverySystem');
 
                 /*$data['dropoff_lat'] = 12.916188;
-		        $data['dropoff_lng'] = 77.605405;
+                $data['dropoff_lng'] = 77.605405;
 
-		        $data['latitude'] = 12.918329;
-		        $data['longitude'] = 77.601821;
+                $data['latitude'] = 12.918329;
+                $data['longitude'] = 77.601821;
 
-		        $data['city'] = 'Brussels'; */
+                $data['city'] = 'Brussels'; */
                 $data['delivery_priority'] = 'normal';
 
                 if (isset($this->session->data['shipping_address_id']) && isset($store_id) && $store_id) {
@@ -117,7 +117,7 @@ class ModelShippingNormal extends Model
                 'cost' => $cost,
                 'actual_cost' => $actual_cost,
                 'tax_class_id' => 0,
-                'text' => $this->currency->format($cost)
+                'text' => $this->currency->format($cost),
             ];
 
             $method_data = [
@@ -125,7 +125,7 @@ class ModelShippingNormal extends Model
                 'title' => $this->language->get('text_title'),
                 'quote' => $quote_data,
                 'sort_order' => $this->config->get('normal_sort_order'),
-                'error' => false
+                'error' => false,
             ];
         }
 
@@ -168,9 +168,9 @@ class ModelShippingNormal extends Model
 
             /*$p = '';
 
-			if($name != '') {
-				$p ='-'.$name;
-			}*/
+            if($name != '') {
+                $p ='-'.$name;
+            }*/
 
             $quote_data['normal'] = [
                 'code' => 'normal.normal',
@@ -179,7 +179,7 @@ class ModelShippingNormal extends Model
                 'cost' => $cost,
                 'actual_cost' => $cost,
                 'tax_class_id' => 0,
-                'text' => $this->currency->format($cost)
+                'text' => $this->currency->format($cost),
             ];
 
             $method_data = [
@@ -187,7 +187,7 @@ class ModelShippingNormal extends Model
                 'title' => $this->language->get('text_title'),
                 'quote' => $quote_data,
                 'sort_order' => $this->config->get('normal_sort_order'),
-                'error' => false
+                'error' => false,
             ];
         }
 
@@ -212,8 +212,8 @@ class ModelShippingNormal extends Model
         $status = true;
 
         /*if ($subtotal < $this->config->get('normal_total')) {
-			$status = false;
-		}*/
+            $status = false;
+        }*/
 
         $method_data = [];
         $actual_cost = 0;

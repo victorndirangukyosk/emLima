@@ -95,7 +95,7 @@ class ModelCatalogOption extends Model
         $sort_data = [
             'od.name',
             'o.type',
-            'o.sort_order'
+            'o.sort_order',
         ];
 
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
@@ -158,7 +158,7 @@ class ModelCatalogOption extends Model
                 'option_value_id' => $option_value['option_value_id'],
                 'name' => $option_value['name'],
                 'image' => $option_value['image'],
-                'sort_order' => $option_value['sort_order']
+                'sort_order' => $option_value['sort_order'],
             ];
         }
 
@@ -184,7 +184,7 @@ class ModelCatalogOption extends Model
                 'option_value_id' => $option_value['option_value_id'],
                 'option_value_description' => $option_value_description_data,
                 'image' => $option_value['image'],
-                'sort_order' => $option_value['sort_order']
+                'sort_order' => $option_value['sort_order'],
             ];
         }
 

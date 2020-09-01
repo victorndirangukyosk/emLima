@@ -25,7 +25,7 @@ class ControllerAccountVoucher extends Controller
                 'from_email' => $this->request->post['from_email'],
                 'voucher_theme_id' => $this->request->post['voucher_theme_id'],
                 'message' => $this->request->post['message'],
-                'amount' => $this->currency->convert($this->request->post['amount'], $this->currency->getCode(), $this->config->get('config_currency'))
+                'amount' => $this->currency->convert($this->request->post['amount'], $this->currency->getCode(), $this->config->get('config_currency')),
             ];
 
             $this->response->redirect($this->url->link('account/voucher/success'));
@@ -35,17 +35,17 @@ class ControllerAccountVoucher extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home')
+            'href' => $this->url->link('common/home'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_account'),
-            'href' => $this->url->link('account/account', '', 'SSL')
+            'href' => $this->url->link('account/account', '', 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_voucher'),
-            'href' => $this->url->link('account/voucher', '', 'SSL')
+            'href' => $this->url->link('account/voucher', '', 'SSL'),
         ];
 
         $data['heading_title'] = $this->language->get('heading_title');
@@ -190,12 +190,12 @@ class ControllerAccountVoucher extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home')
+            'href' => $this->url->link('common/home'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('account/voucher')
+            'href' => $this->url->link('account/voucher'),
         ];
 
         $data['heading_title'] = $this->language->get('heading_title');

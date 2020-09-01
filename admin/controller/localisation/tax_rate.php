@@ -170,12 +170,12 @@ class ControllerLocalisationTaxRate extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('localisation/tax_rate', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('localisation/tax_rate', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         $data['add'] = $this->url->link('localisation/tax_rate/add', 'token='.$this->session->data['token'].$url, 'SSL');
@@ -187,7 +187,7 @@ class ControllerLocalisationTaxRate extends Controller
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin')
+            'limit' => $this->config->get('config_limit_admin'),
         ];
 
         $tax_rate_total = $this->model_localisation_tax_rate->getTotalTaxRates();
@@ -203,7 +203,7 @@ class ControllerLocalisationTaxRate extends Controller
                 'city' => $result['city'],
                 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
                 'date_modified' => date($this->language->get('date_format_short'), strtotime($result['date_modified'])),
-                'edit' => $this->url->link('localisation/tax_rate/edit', 'token='.$this->session->data['token'].'&tax_rate_id='.$result['tax_rate_id'].$url, 'SSL')
+                'edit' => $this->url->link('localisation/tax_rate/edit', 'token='.$this->session->data['token'].'&tax_rate_id='.$result['tax_rate_id'].$url, 'SSL'),
             ];
         }
 
@@ -356,12 +356,12 @@ class ControllerLocalisationTaxRate extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('localisation/tax_rate', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('localisation/tax_rate', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         if (!isset($this->request->get['tax_rate_id'])) {

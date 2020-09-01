@@ -267,7 +267,7 @@ class ModelCatalogProduct extends Model
             'p2c.category_id',
             'p.quantity',
             'p.status',
-            'p.sort_order'
+            'p.sort_order',
         ];
 
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
@@ -325,7 +325,7 @@ class ModelCatalogProduct extends Model
                 'meta_title' => $result['meta_title'],
                 'meta_description' => $result['meta_description'],
                 'meta_keyword' => $result['meta_keyword'],
-                'tag' => $result['tag']
+                'tag' => $result['tag'],
             ];
         }
 
@@ -375,7 +375,7 @@ class ModelCatalogProduct extends Model
 
             $product_attribute_data[] = [
                 'attribute_id' => $product_attribute['attribute_id'],
-                'product_attribute_description' => $product_attribute_description_data
+                'product_attribute_description' => $product_attribute_description_data,
             ];
         }
 
@@ -404,7 +404,7 @@ class ModelCatalogProduct extends Model
                     'points' => $product_option_value['points'],
                     'points_prefix' => $product_option_value['points_prefix'],
                     'weight' => $product_option_value['weight'],
-                    'weight_prefix' => $product_option_value['weight_prefix']
+                    'weight_prefix' => $product_option_value['weight_prefix'],
                 ];
             }
 
@@ -415,7 +415,7 @@ class ModelCatalogProduct extends Model
                 'name' => $product_option['name'],
                 'type' => $product_option['type'],
                 'value' => $product_option['value'],
-                'required' => $product_option['required']
+                'required' => $product_option['required'],
             ];
         }
 

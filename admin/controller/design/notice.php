@@ -156,7 +156,7 @@ class ControllerDesignNotice extends Controller
                     $ch = curl_init();
                     curl_setopt($ch, CURLOPT_URL, $url);
                     $headers = [
-                                 'Cache-Control: no-cache'];
+                                 'Cache-Control: no-cache', ];
                     curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
                     curl_setopt($ch, CURLOPT_FRESH_CONNECT, 1);
 
@@ -231,12 +231,12 @@ class ControllerDesignNotice extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_notice'),
-            'href' => $this->url->link('design/notice', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('design/notice', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         $data['add'] = $this->url->link('design/notice/add', 'token='.$this->session->data['token'].$url, 'SSL');
@@ -248,7 +248,7 @@ class ControllerDesignNotice extends Controller
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin')
+            'limit' => $this->config->get('config_limit_admin'),
         ];
 
         $notice_total = $this->model_design_notice->getTotalNotices();
@@ -269,7 +269,7 @@ class ControllerDesignNotice extends Controller
                 'notice' => $result['notice'],
                 'zipcode' => $loc,
                 'status' => $result['status'],
-                'edit' => $this->url->link('design/notice/edit', 'token='.$this->session->data['token'].'&notice_id='.$result['notice_id'].$url, 'SSL')
+                'edit' => $this->url->link('design/notice/edit', 'token='.$this->session->data['token'].'&notice_id='.$result['notice_id'].$url, 'SSL'),
             ];
         }
 
@@ -432,12 +432,12 @@ class ControllerDesignNotice extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_notice'),
-            'href' => $this->url->link('design/notice', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('design/notice', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         if (!isset($this->request->get['notice_id'])) {

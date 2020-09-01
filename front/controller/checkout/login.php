@@ -37,7 +37,7 @@ class ControllerCheckoutLogin extends Controller
 
             $activity_data = [
                 'customer_id' => $this->customer->getId(),
-                'name' => $this->customer->getFirstName().' '.$this->customer->getLastName()
+                'name' => $this->customer->getFirstName().' '.$this->customer->getLastName(),
             ];
 
             $this->model_account_activity->addActivity('login', $activity_data);
@@ -49,17 +49,17 @@ class ControllerCheckoutLogin extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home')
+            'href' => $this->url->link('common/home'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_account'),
-            'href' => $this->url->link('account/account', '', 'SSL')
+            'href' => $this->url->link('account/account', '', 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_login'),
-            'href' => $this->url->link('account/login', '', 'SSL')
+            'href' => $this->url->link('account/login', '', 'SSL'),
         ];
 
         $data['heading_title'] = $this->language->get('heading_title');
@@ -98,7 +98,7 @@ class ControllerCheckoutLogin extends Controller
         $fb = new Facebook\Facebook([
             'app_id' => !empty($this->config->get('config_fb_app_id')) ? $this->config->get('config_fb_app_id') : 'randomstringforappid',
             'app_secret' => !empty($this->config->get('config_fb_secret')) ? $this->config->get('config_fb_secret') : 'randomstringforappsecret',
-            'default_graph_version' => 'v2.5'//'default_access_token' => $this->request->get['code']//'5ce6c3df96acc19c6215f2ac62d3480e', // optional
+            'default_graph_version' => 'v2.5', //'default_access_token' => $this->request->get['code']//'5ce6c3df96acc19c6215f2ac62d3480e', // optional
         ]);
 
         if ($this->request->server['HTTPS']) {
@@ -238,7 +238,7 @@ class ControllerCheckoutLogin extends Controller
 
             $activity_data = [
                 'customer_id' => $this->customer->getId(),
-                'name' => $this->customer->getFirstName().' '.$this->customer->getLastName()
+                'name' => $this->customer->getFirstName().' '.$this->customer->getLastName(),
             ];
 
             $this->model_account_activity->addActivity('login', $activity_data);
@@ -281,7 +281,7 @@ class ControllerCheckoutLogin extends Controller
 
             $activity_data = [
                 'customer_id' => $this->customer->getId(),
-                'name' => $this->customer->getFirstName().' '.$this->customer->getLastName()
+                'name' => $this->customer->getFirstName().' '.$this->customer->getLastName(),
             ];
 
             $this->model_account_activity->addActivity('login', $activity_data);
@@ -293,17 +293,17 @@ class ControllerCheckoutLogin extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home')
+            'href' => $this->url->link('common/home'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_account'),
-            'href' => $this->url->link('account/account', '', 'SSL')
+            'href' => $this->url->link('account/account', '', 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_login'),
-            'href' => $this->url->link('account/login', '', 'SSL')
+            'href' => $this->url->link('account/login', '', 'SSL'),
         ];
 
         $data['heading_title'] = $this->language->get('heading_title');
@@ -342,7 +342,7 @@ class ControllerCheckoutLogin extends Controller
         $fb = new Facebook\Facebook([
             'app_id' => !empty($this->config->get('config_fb_app_id')) ? $this->config->get('config_fb_app_id') : 'randomstringforappid',
             'app_secret' => !empty($this->config->get('config_fb_secret')) ? $this->config->get('config_fb_secret') : 'randomstringforappsecret',
-            'default_graph_version' => 'v2.5'//'default_access_token' => $this->request->get['code']//'5ce6c3df96acc19c6215f2ac62d3480e', // optional
+            'default_graph_version' => 'v2.5', //'default_access_token' => $this->request->get['code']//'5ce6c3df96acc19c6215f2ac62d3480e', // optional
         ]);
 
         $helper = $fb->getRedirectLoginHelper();

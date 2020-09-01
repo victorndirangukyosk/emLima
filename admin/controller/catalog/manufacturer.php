@@ -192,12 +192,12 @@ class ControllerCatalogManufacturer extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('catalog/manufacturer', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('catalog/manufacturer', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         $data['add'] = $this->url->link('catalog/manufacturer/add', 'token='.$this->session->data['token'].$url, 'SSL');
@@ -211,7 +211,7 @@ class ControllerCatalogManufacturer extends Controller
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin')
+            'limit' => $this->config->get('config_limit_admin'),
         ];
 
         if (!empty($filter_name) || !empty($filter_status)) {
@@ -228,7 +228,7 @@ class ControllerCatalogManufacturer extends Controller
                 'name' => $result['name'],
                 'sort_order' => $result['sort_order'],
                 'status' => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
-                'edit' => $this->url->link('catalog/manufacturer/edit', 'token='.$this->session->data['token'].'&manufacturer_id='.$result['manufacturer_id'].$url, 'SSL')
+                'edit' => $this->url->link('catalog/manufacturer/edit', 'token='.$this->session->data['token'].'&manufacturer_id='.$result['manufacturer_id'].$url, 'SSL'),
             ];
         }
 
@@ -365,12 +365,12 @@ class ControllerCatalogManufacturer extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('catalog/manufacturer', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('catalog/manufacturer', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         if (!isset($this->request->get['manufacturer_id'])) {
@@ -527,7 +527,7 @@ class ControllerCatalogManufacturer extends Controller
             $filter_data = [
                 'filter_name' => $this->request->get['filter_name'],
                 'start' => 0,
-                'limit' => 5
+                'limit' => 5,
             ];
 
             $results = $this->model_catalog_manufacturer->getManufacturers($filter_data);
@@ -535,7 +535,7 @@ class ControllerCatalogManufacturer extends Controller
             foreach ($results as $result) {
                 $json[] = [
                     'manufacturer_id' => $result['manufacturer_id'],
-                    'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8'))
+                    'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')),
                 ];
             }
         }

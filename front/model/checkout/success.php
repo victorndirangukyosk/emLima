@@ -166,7 +166,7 @@ class ModelCheckoutSuccess extends Model
 
                 $option_data[] = [
                     'name' => $option['name'],
-                    'value' => $value
+                    'value' => $value,
                 ];
             }
 
@@ -177,7 +177,7 @@ class ModelCheckoutSuccess extends Model
                 'option' => $option_data,
                 'quantity' => $product['quantity'],
                 'price' => $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
-                'total' => $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value'])
+                'total' => $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
             ];
         }
 
@@ -188,7 +188,7 @@ class ModelCheckoutSuccess extends Model
         foreach ($totals as $total) {
             $total_data[] = [
                 'title' => $total['title'],
-                'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value'])];
+                'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']), ];
         }
 
         $result = [
@@ -215,7 +215,7 @@ class ModelCheckoutSuccess extends Model
             'shipping_code' => $order_info['shipping_code'],
             'products' => $product_data,
             'comment' => $order_info['comment'],
-            'total' => $total_data];
+            'total' => $total_data, ];
 
         return $result;
     }

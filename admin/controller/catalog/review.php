@@ -259,12 +259,12 @@ class ControllerCatalogReview extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('catalog/review', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('catalog/review', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         $data['add'] = $this->url->link('catalog/review/add', 'token='.$this->session->data['token'].$url, 'SSL');
@@ -280,7 +280,7 @@ class ControllerCatalogReview extends Controller
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin')
+            'limit' => $this->config->get('config_limit_admin'),
         ];
 
         $review_total = $this->model_catalog_review->getTotalReviews($filter_data);
@@ -295,7 +295,7 @@ class ControllerCatalogReview extends Controller
                 'rating' => $result['rating'],
                 'status' => ($result['status']) ? $this->language->get('text_enabled') : $this->language->get('text_disabled'),
                 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
-                'edit' => $this->url->link('catalog/review/edit', 'token='.$this->session->data['token'].'&review_id='.$result['review_id'].$url, 'SSL')
+                'edit' => $this->url->link('catalog/review/edit', 'token='.$this->session->data['token'].'&review_id='.$result['review_id'].$url, 'SSL'),
             ];
         }
 
@@ -507,12 +507,12 @@ class ControllerCatalogReview extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('catalog/review', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('catalog/review', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         if (!isset($this->request->get['review_id'])) {

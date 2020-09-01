@@ -58,19 +58,19 @@ class ControllerModuleFilter extends Controller
                     foreach ($filter_group['filter'] as $filter) {
                         $filter_data = [
                             'filter_category_id' => $category_id,
-                            'filter_filter' => $filter['filter_id']
+                            'filter_filter' => $filter['filter_id'],
                         ];
 
                         $childen_data[] = [
                             'filter_id' => $filter['filter_id'],
-                            'name' => $filter['name'].($this->config->get('config_product_count') ? ' ('.$this->model_assets_product->getTotalProducts($filter_data).')' : '')
+                            'name' => $filter['name'].($this->config->get('config_product_count') ? ' ('.$this->model_assets_product->getTotalProducts($filter_data).')' : ''),
                         ];
                     }
 
                     $data['filter_groups'][] = [
                         'filter_group_id' => $filter_group['filter_group_id'],
                         'name' => $filter_group['name'],
-                        'filter' => $childen_data
+                        'filter' => $childen_data,
                     ];
                 }
 

@@ -240,12 +240,12 @@ class ControllerShopperShopper extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('shopper/shopper', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('shopper/shopper', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         $data['add'] = $this->url->link('shopper/shopper/add', 'token='.$this->session->data['token'].$url, 'SSL');
@@ -264,7 +264,7 @@ class ControllerShopperShopper extends Controller
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin')
+            'limit' => $this->config->get('config_limit_admin'),
         ];
 
         $shopper_total = $this->model_shopper_shopper->getTotalUsersFilter($filter_data);
@@ -280,7 +280,7 @@ class ControllerShopperShopper extends Controller
                 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
                 'timeslots' => $this->url->link('shopper/shopper/timeslots', 'token='.$this->session->data['token'].'&user_id='.$result['user_id'].$url, 'SSL'),
                 'edit' => $this->url->link('shopper/shopper/edit', 'token='.$this->session->data['token'].'&user_id='.$result['user_id'].$url, 'SSL'),
-                'today' => $this->url->link('shopper/shopper/today', 'token='.$this->session->data['token'].'&shopper_id='.$result['user_id'].$url, 'SSL')
+                'today' => $this->url->link('shopper/shopper/today', 'token='.$this->session->data['token'].'&shopper_id='.$result['user_id'].$url, 'SSL'),
             ];
         }
 
@@ -523,12 +523,12 @@ class ControllerShopperShopper extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('shopper/shopper', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('shopper/shopper', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         $data['token'] = $this->session->data['token'];
@@ -808,7 +808,7 @@ class ControllerShopperShopper extends Controller
                 'filter_last_name' => $filter_last_name,
                 'filter_email' => $filter_email,
                 'start' => 0,
-                'limit' => $limit
+                'limit' => $limit,
             ];
 
             if (empty($filter_user_group)) {
@@ -826,14 +826,14 @@ class ControllerShopperShopper extends Controller
                         'username' => $result['username'],
                         'firstname' => $result['firstname'],
                         'lastname' => $result['lastname'],
-                        'email' => $result['email']
+                        'email' => $result['email'],
                     ];
                 }
             } elseif (!empty($_results)) {
                 foreach ($_results as $result) {
                     $json[] = [
                         'user_group_id' => $result['user_group_id'],
-                        'shopper_group' => $result['name']
+                        'shopper_group' => $result['name'],
                     ];
                 }
             }
@@ -967,7 +967,7 @@ class ControllerShopperShopper extends Controller
                 'amount' => $this->currency->format($result['amount'], $this->config->get('config_currency')),
                 'description' => $result['description'],
                 'order_id' => $result['order_id'],
-                'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added']))
+                'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
             ];
         }
 
@@ -1017,13 +1017,13 @@ class ControllerShopperShopper extends Controller
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
             'href' => $this->url->link('common/home', 'token='.$this->session->data['token'], 'SSL'),
-            'separator' => false
+            'separator' => false,
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
             'href' => $this->url->link('vendor/vendor', 'token='.$this->session->data['token'], 'SSL'),
-            'separator' => ' :: '
+            'separator' => ' :: ',
         ];
 
         $data['heading_title'] = $this->language->get('heading_title');
@@ -1049,7 +1049,7 @@ class ControllerShopperShopper extends Controller
             'order' => 'DESC',
             'start' => ($page - 1) * 10,
             'limit' => 10,
-            'vendor_id' => $vendor_id
+            'vendor_id' => $vendor_id,
         ];
 
         $results = $this->model_vendor_vendor->getVendorOrders($filter_data);
@@ -1063,7 +1063,7 @@ class ControllerShopperShopper extends Controller
                 'status' => $this->model_sale_order->getStatus($result['order_status_id']),
                 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
                 'total' => $this->currency->format($result['total'], $result['currency_code'], $result['currency_value']),
-                'info' => $this->url->link('sale/order/info', 'token='.$this->session->data['token'].'&store_id='.$result['store_id'].'&order_id='.$result['order_id'], 'SSL')
+                'info' => $this->url->link('sale/order/info', 'token='.$this->session->data['token'].'&store_id='.$result['store_id'].'&order_id='.$result['order_id'], 'SSL'),
             ];
         }
 
@@ -1095,7 +1095,7 @@ class ControllerShopperShopper extends Controller
         $data['statistics'] = [
             'orders' => $this->model_sale_order->getTotalOrdersByVendor($vendor_id),
             'selling' => $this->model_sale_order->getTotalSellingByVendor($vendor_id),
-            'commision' => $this->model_sale_order->getTotalCommisionByVendor($vendor_id)];
+            'commision' => $this->model_sale_order->getTotalCommisionByVendor($vendor_id), ];
 
         $data['token'] = $this->session->data['token'];
 
@@ -1147,19 +1147,19 @@ class ControllerShopperShopper extends Controller
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
             'href' => $this->url->link('common/home', 'token='.$this->session->data['token'], 'SSL'),
-            'separator' => false
+            'separator' => false,
         ];
 
         $data['breadcrumbs'][] = [
             'text' => 'Shoppers',
             'href' => $this->url->link('shopper/shopper', 'token='.$this->session->data['token'], 'SSL'),
-            'separator' => ' :: '
+            'separator' => ' :: ',
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
             'href' => $this->url->link('shopper/shopper/today', 'token='.$this->session->data['token'].'&shopper_id='.$shopper_id, 'SSL'),
-            'separator' => ' :: '
+            'separator' => ' :: ',
         ];
 
         //total commision
@@ -1175,7 +1175,7 @@ class ControllerShopperShopper extends Controller
                 'store_name' => $order['store_name'],
                 'order_id' => $order['order_id'],
                 'vendor_order_id' => $order['vendor_order_id'],
-                'shopper_commision' => $this->currency->format($order['shopper_commision'], $order['currency_code'], $order['currency_value'])
+                'shopper_commision' => $this->currency->format($order['shopper_commision'], $order['currency_code'], $order['currency_value']),
             ];
         }
 

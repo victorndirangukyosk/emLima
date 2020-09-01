@@ -109,7 +109,7 @@ class ControllerCheckoutShipping extends Controller
                 'address_format' => $country_info['address_format'],
                 'postcode_required' => $country_info['postcode_required'],
                 'zone' => $this->model_localisation_zone->getZonesByCountryId($this->request->get['country_id']),
-                'status' => $country_info['status']
+                'status' => $country_info['status'],
             ];
         }
 

@@ -64,12 +64,12 @@ class ControllerReportCustomerActivity extends Controller
 
         $data['breadcrumbs'][] = [
             'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
-            'text' => $this->language->get('text_home')
+            'text' => $this->language->get('text_home'),
         ];
 
         $data['breadcrumbs'][] = [
             'href' => $this->url->link('report/customer_activity', 'token='.$this->session->data['token'].$url, 'SSL'),
-            'text' => $this->language->get('heading_title')
+            'text' => $this->language->get('heading_title'),
         ];
 
         $this->load->model('report/customer');
@@ -82,7 +82,7 @@ class ControllerReportCustomerActivity extends Controller
             'filter_date_start' => $filter_date_start,
             'filter_date_end' => $filter_date_end,
             'start' => ($page - 1) * 20,
-            'limit' => 20
+            'limit' => 20,
         ];
 
         $activity_total = $this->model_report_customer->getTotalCustomerActivities($filter_data);
@@ -94,18 +94,18 @@ class ControllerReportCustomerActivity extends Controller
 
             $find = [
                 'customer_id=',
-                'order_id='
+                'order_id=',
             ];
 
             $replace = [
                 $this->url->link('sale/customer/edit', 'token='.$this->session->data['token'].'&customer_id=', 'SSL'),
-                $this->url->link('sale/order/info', 'token='.$this->session->data['token'].'&order_id=', 'SSL')
+                $this->url->link('sale/order/info', 'token='.$this->session->data['token'].'&order_id=', 'SSL'),
             ];
 
             $data['activities'][] = [
                 'comment' => str_replace($find, $replace, $comment),
                 'ip' => $result['ip'],
-                'date_added' => date($this->language->get('datetime_format'), strtotime($result['date_added']))
+                'date_added' => date($this->language->get('datetime_format'), strtotime($result['date_added'])),
             ];
         }
 

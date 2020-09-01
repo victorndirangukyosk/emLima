@@ -20,7 +20,7 @@ class ModelTotalSubTotal extends Model
             'code' => 'sub_total',
             'title' => $this->language->get('text_sub_total'),
             'value' => $sub_total,
-            'sort_order' => $this->config->get('sub_total_sort_order')
+            'sort_order' => $this->config->get('sub_total_sort_order'),
         ];
 
         $total += $sub_total;
@@ -35,7 +35,7 @@ class ModelTotalSubTotal extends Model
                 'code' => 'sub_total',
                 'title' => $this->language->get('text_sub_total'),
                 'value' => $args['stores'][$store_id]['total'],
-                'sort_order' => $this->config->get('sub_total_sort_order')
+                'sort_order' => $this->config->get('sub_total_sort_order'),
             ];
 
             $total += $args['stores'][$store_id]['total'];

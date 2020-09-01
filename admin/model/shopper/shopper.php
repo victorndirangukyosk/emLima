@@ -242,7 +242,7 @@ class ModelShopperShopper extends Model
             'u.username',
             'u.status',
             'u.date_added',
-            'c.name'
+            'c.name',
         ];
 
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
@@ -355,7 +355,7 @@ class ModelShopperShopper extends Model
             3 => $this->db->query('select * from `'.DB_PREFIX.'shopper_timeslot` WHERE shopper_id="'.$user_id.'" AND weekday="3"')->rows,
             4 => $this->db->query('select * from `'.DB_PREFIX.'shopper_timeslot` WHERE shopper_id="'.$user_id.'" AND weekday="4"')->rows,
             5 => $this->db->query('select * from `'.DB_PREFIX.'shopper_timeslot` WHERE shopper_id="'.$user_id.'" AND weekday="5"')->rows,
-            6 => $this->db->query('select * from `'.DB_PREFIX.'shopper_timeslot` WHERE shopper_id="'.$user_id.'" AND weekday="6"')->rows];
+            6 => $this->db->query('select * from `'.DB_PREFIX.'shopper_timeslot` WHERE shopper_id="'.$user_id.'" AND weekday="6"')->rows, ];
 
         return $result;
     }

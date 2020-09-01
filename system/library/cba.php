@@ -237,7 +237,7 @@ class CBA
     {
         $headers = [
             'Content-Type: text/xml',
-            'Content-MD5: '.base64_encode(md5($flat_file, true))];
+            'Content-MD5: '.base64_encode(md5($flat_file, true)), ];
 
         $args = $this->getCommonParameters();
         $args['Merchant'] = $this->getMerchantId();
@@ -266,7 +266,7 @@ class CBA
 
         $headers = [
             'Content-Type: text/xml',
-            'Content-MD5: '.base64_encode(md5($flat, true))];
+            'Content-MD5: '.base64_encode(md5($flat, true)), ];
 
         $args = $this->getCommonParameters();
         $args['Merchant'] = $this->getMerchantId();
@@ -294,7 +294,7 @@ class CBA
 
         $headers = [
             'Content-Type: text/xml',
-            'Content-MD5: '.base64_encode(md5($xml, true))];
+            'Content-MD5: '.base64_encode(md5($xml, true)), ];
 
         $args = $this->getCommonParameters();
         $args['Merchant'] = $this->getMerchantId();
@@ -440,7 +440,7 @@ class CBA
             CURLOPT_SSL_VERIFYPEER => 0,
             CURLOPT_SSL_VERIFYHOST => 0,
             CURLOPT_BINARYTRANSFER => 1,
-            CURLOPT_POSTFIELDS => $post_data];
+            CURLOPT_POSTFIELDS => $post_data, ];
 
         $ch = curl_init();
 
@@ -500,7 +500,7 @@ class CBA
             CURLOPT_TIMEOUT => 0,
             CURLOPT_SSL_VERIFYPEER => 0,
             CURLOPT_SSL_VERIFYHOST => 0,
-            CURLOPT_POST => 'POST' == $http_method ? 1 : 0];
+            CURLOPT_POST => 'POST' == $http_method ? 1 : 0, ];
 
         $ch = curl_init();
         curl_setopt_array($ch, $curl_options);
@@ -533,7 +533,7 @@ class CBA
             'AWSAccessKeyId' => $this->getAccessKey(),
             'SignatureVersion' => '2',
             'Timestamp' => date('c'),
-            'Version' => '2010-08-31'];
+            'Version' => '2010-08-31', ];
     }
 
     public function getAccessKey()

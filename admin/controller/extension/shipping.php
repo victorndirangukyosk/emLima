@@ -74,12 +74,12 @@ class ControllerExtensionShipping extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('extension/shipping', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('extension/shipping', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['heading_title'] = $this->language->get('heading_title');
@@ -144,7 +144,7 @@ class ControllerExtensionShipping extends Controller
                     'install' => $this->url->link('extension/shipping/install', 'token='.$this->session->data['token'].'&extension='.$extension, 'SSL'),
                     'uninstall' => $this->url->link('extension/shipping/uninstall', 'token='.$this->session->data['token'].'&extension='.$extension, 'SSL'),
                     'installed' => in_array($extension, $extensions),
-                    'edit' => $this->url->link('shipping/'.$extension.'', 'token='.$this->session->data['token'], 'SSL')
+                    'edit' => $this->url->link('shipping/'.$extension.'', 'token='.$this->session->data['token'], 'SSL'),
                 ];
             }
         }

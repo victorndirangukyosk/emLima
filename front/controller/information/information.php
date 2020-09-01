@@ -12,7 +12,7 @@ class ControllerInformationInformation extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home')
+            'href' => $this->url->link('common/home'),
         ];
 
         if (isset($this->request->get['information_id'])) {
@@ -34,7 +34,7 @@ class ControllerInformationInformation extends Controller
 
             $data['breadcrumbs'][] = [
                 'text' => $information_info['title'],
-                'href' => $this->url->link('information/information', 'information_id='.$information_id)
+                'href' => $this->url->link('information/information', 'information_id='.$information_id),
             ];
 
             $data['heading_title'] = $information_info['title'];
@@ -60,7 +60,7 @@ class ControllerInformationInformation extends Controller
         } else {
             $data['breadcrumbs'][] = [
                 'text' => $this->language->get('text_error'),
-                'href' => $this->url->link('information/information', 'information_id='.$information_id)
+                'href' => $this->url->link('information/information', 'information_id='.$information_id),
             ];
 
             $this->document->setTitle($this->language->get('text_error'));

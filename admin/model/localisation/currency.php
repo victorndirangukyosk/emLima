@@ -52,7 +52,7 @@ class ModelLocalisationCurrency extends Model
                 'title',
                 'code',
                 'value',
-                'date_modified'
+                'date_modified',
             ];
 
             if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
@@ -100,7 +100,7 @@ class ModelLocalisationCurrency extends Model
                         'decimal_place' => $result['decimal_place'],
                         'value' => $result['value'],
                         'status' => $result['status'],
-                        'date_modified' => $result['date_modified']
+                        'date_modified' => $result['date_modified'],
                     ];
                 }
 

@@ -20,17 +20,17 @@ class ControllerAccountReward extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home')
+            'href' => $this->url->link('common/home'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_account'),
-            'href' => $this->url->link('account/account', '', 'SSL')
+            'href' => $this->url->link('account/account', '', 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_reward'),
-            'href' => $this->url->link('account/reward', '', 'SSL')
+            'href' => $this->url->link('account/reward', '', 'SSL'),
         ];
 
         if ($this->request->server['HTTPS']) {
@@ -81,7 +81,7 @@ class ControllerAccountReward extends Controller
             'sort' => 'date_added',
             'order' => 'DESC',
             'start' => ($page - 1) * 10,
-            'limit' => 10
+            'limit' => 10,
         ];
 
         $reward_total = $this->model_account_reward->getTotalRewards();
@@ -95,7 +95,7 @@ class ControllerAccountReward extends Controller
                 'points' => $result['points'],
                 'description' => $result['description'],
                 'date_added' => date($this->language->get('date_format_medium'), strtotime($result['date_added'])),
-                'href' => $this->url->link('account/order/info', 'order_id='.$result['order_id'], 'SSL')
+                'href' => $this->url->link('account/order/info', 'order_id='.$result['order_id'], 'SSL'),
             ];
         }
 

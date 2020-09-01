@@ -9,7 +9,7 @@ class ModelAccountCredit extends Model
         $sort_data = [
             'amount',
             'description',
-            'date_added'
+            'date_added',
         ];
 
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {

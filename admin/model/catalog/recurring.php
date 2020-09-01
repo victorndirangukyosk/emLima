@@ -89,7 +89,7 @@ class ModelCatalogRecurring extends Model
 
         $sort_data = [
             'rd.name',
-            'r.sort_order'
+            'r.sort_order',
         ];
 
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {

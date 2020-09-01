@@ -24,7 +24,7 @@ class ControllerCommonCurrency extends Controller
                     'title' => $result['title'],
                     'code' => $result['code'],
                     'symbol_left' => $result['symbol_left'],
-                    'symbol_right' => $result['symbol_right']
+                    'symbol_right' => $result['symbol_right'],
                 ];
             }
         }

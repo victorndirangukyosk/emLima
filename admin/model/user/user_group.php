@@ -25,7 +25,7 @@ class ModelUserUserGroup extends Model
 
         $user_group = [
             'name' => $query->row['name'],
-            'permission' => unserialize($query->row['permission'])
+            'permission' => unserialize($query->row['permission']),
         ];
 
         return $user_group;

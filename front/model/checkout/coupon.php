@@ -116,7 +116,7 @@ class ModelCheckoutCoupon extends Model
                 'uses_customer' => $coupon_query->row['uses_customer'],
                 'status' => $coupon_query->row['status'],
                 'date_added' => $coupon_query->row['date_added'],
-                'coupon_type' => $coupon_query->row['coupon_type']
+                'coupon_type' => $coupon_query->row['coupon_type'],
             ];
         }
     }
@@ -236,7 +236,7 @@ class ModelCheckoutCoupon extends Model
                 'uses_customer' => $coupon_query->row['uses_customer'],
                 'status' => $coupon_query->row['status'],
                 'date_added' => $coupon_query->row['date_added'],
-                'coupon_type' => $coupon_query->row['coupon_type']
+                'coupon_type' => $coupon_query->row['coupon_type'],
             ];
         }
     }
@@ -251,9 +251,9 @@ class ModelCheckoutCoupon extends Model
 
         if ($coupon_query->num_rows) {
             /*if ($coupon_query->row['total'] > $this->cart->getSubTotal()) {
-				$log->write('PayPal Express debug codes 1');
-				$status = false;
-			}*/
+                $log->write('PayPal Express debug codes 1');
+                $status = false;
+            }*/
 
             $coupon_history_query = $this->db->query('SELECT COUNT(*) AS total FROM `'.DB_PREFIX."coupon_history` ch WHERE ch.coupon_id = '".(int) $coupon_query->row['coupon_id']."'");
 
@@ -338,7 +338,7 @@ class ModelCheckoutCoupon extends Model
                 'uses_customer' => $coupon_query->row['uses_customer'],
                 'status' => $coupon_query->row['status'],
                 'date_added' => $coupon_query->row['date_added'],
-                'coupon_type' => $coupon_query->row['coupon_type']
+                'coupon_type' => $coupon_query->row['coupon_type'],
             ];
         }
     }

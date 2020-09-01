@@ -24,7 +24,7 @@ class ControllerModuleLatest extends Controller
             'sort' => 'p.date_added',
             'order' => 'DESC',
             'start' => 0,
-            'limit' => $setting['limit']
+            'limit' => $setting['limit'],
         ];
 
         $results = $this->model_assets_product->getProducts($filter_data);
@@ -70,7 +70,7 @@ class ControllerModuleLatest extends Controller
                     'special' => $special,
                     'tax' => $tax,
                     'rating' => $rating,
-                    'href' => $this->url->link('product/product', 'product_id='.$result['product_id'])];
+                    'href' => $this->url->link('product/product', 'product_id='.$result['product_id']), ];
             }
 
             if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/module/latest.tpl')) {

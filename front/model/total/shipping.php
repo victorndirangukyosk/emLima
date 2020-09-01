@@ -22,7 +22,7 @@ class ModelTotalShipping extends Model
                                     'title' => $data['shipping_method']['title'],
                                     //'title' => $data['shipping_method']['title_with_store'],
                                     'value' => $data['shipping_method']['cost'],
-                                    'sort_order' => $this->config->get('shipping_sort_order')
+                                    'sort_order' => $this->config->get('shipping_sort_order'),
                                 ];
                             }
                         }
@@ -59,7 +59,7 @@ class ModelTotalShipping extends Model
                             'title' => $value['shipping_method']['title'],
                             //'title' => $value['shipping_method']['title_with_store'],
                             'value' => $value['shipping_method']['cost'],
-                            'sort_order' => $this->config->get('shipping_sort_order')
+                            'sort_order' => $this->config->get('shipping_sort_order'),
                         ];
                     }
                 }
@@ -147,7 +147,7 @@ class ModelTotalShipping extends Model
                         'title' => $quote['quote'][$shipping_method_name]['title'],
                         //'title' => $quote['quote'][$shipping_method_name]['title_with_store'],
                         'value' => $quote['quote'][$shipping_method_name]['cost'],
-                        'sort_order' => $this->config->get('shipping_sort_order')
+                        'sort_order' => $this->config->get('shipping_sort_order'),
                     ];
 
                     $totalcost = 0;

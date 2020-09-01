@@ -481,8 +481,8 @@ class elFinderVolumeS3 extends elFinderVolumeDriver
     /**
      * Create file and return it's path or false on failed.
      *
-     * @param  string  $path  parent dir path
-     * @param string  $name  new file name
+     * @param string $path parent dir path
+     * @param string $name new file name
      *
      * @return string|bool
      *
@@ -510,9 +510,9 @@ class elFinderVolumeS3 extends elFinderVolumeDriver
     /**
      * Create symlink.
      *
-     * @param  string  $source     file to link to
-     * @param  string  $targetDir  folder to create link in
-     * @param  string  $name       symlink name
+     * @param string $source    file to link to
+     * @param string $targetDir folder to create link in
+     * @param string $name      symlink name
      *
      * @return bool
      *
@@ -526,9 +526,9 @@ class elFinderVolumeS3 extends elFinderVolumeDriver
     /**
      * Copy file into another file (only inside one volume).
      *
-     * @param  string  $source  source file path
-     * @param  string  $targetDir  target dir path
-     * @param  string  $name    file name
+     * @param string $source    source file path
+     * @param string $targetDir target dir path
+     * @param string $name      file name
      *
      * @return bool
      *
@@ -660,8 +660,8 @@ class elFinderVolumeS3 extends elFinderVolumeDriver
     /**
      * Extract files from archive.
      *
-     * @param  string  $path file path
-     * @param  array   $arc  archiver options
+     * @param string $path file path
+     * @param array  $arc  archiver options
      *
      * @return bool
      *

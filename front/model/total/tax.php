@@ -10,7 +10,7 @@ class ModelTotalTax extends Model
                     'code' => 'tax',
                     'title' => $this->tax->getRateName($key),
                     'value' => $value,
-                    'sort_order' => $this->config->get('tax_sort_order')
+                    'sort_order' => $this->config->get('tax_sort_order'),
                 ];
 
                 $total += $value;
@@ -26,7 +26,7 @@ class ModelTotalTax extends Model
                     'code' => 'tax',
                     'title' => $this->tax->getRateName($key),
                     'value' => $value,
-                    'sort_order' => $this->config->get('tax_sort_order')
+                    'sort_order' => $this->config->get('tax_sort_order'),
                 ];
 
                 $total += $value;

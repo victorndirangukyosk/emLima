@@ -35,7 +35,7 @@ class ControllerAffiliateForgotten extends Controller
 
                 $activity_data = [
                     'affiliate_id' => $affiliate_info['affiliate_id'],
-                    'name' => $affiliate_info['firstname'].' '.$affiliate_info['lastname']
+                    'name' => $affiliate_info['firstname'].' '.$affiliate_info['lastname'],
                 ];
 
                 $this->model_affiliate_activity->addActivity('forgotten', $activity_data);
@@ -48,17 +48,17 @@ class ControllerAffiliateForgotten extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home')
+            'href' => $this->url->link('common/home'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_account'),
-            'href' => $this->url->link('affiliate/account', '', 'SSL')
+            'href' => $this->url->link('affiliate/account', '', 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_forgotten'),
-            'href' => $this->url->link('affiliate/forgotten', '', 'SSL')
+            'href' => $this->url->link('affiliate/forgotten', '', 'SSL'),
         ];
 
         $data['heading_title'] = $this->language->get('heading_title');

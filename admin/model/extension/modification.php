@@ -38,7 +38,7 @@ class ModelExtensionModification extends Model
             'author',
             'version',
             'status',
-            'date_added'
+            'date_added',
         ];
 
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {

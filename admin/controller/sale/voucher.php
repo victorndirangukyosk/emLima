@@ -154,12 +154,12 @@ class ControllerSaleVoucher extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('sale/voucher', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('sale/voucher', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         $data['add'] = $this->url->link('sale/voucher/add', 'token='.$this->session->data['token'].$url, 'SSL');
@@ -171,7 +171,7 @@ class ControllerSaleVoucher extends Controller
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin')
+            'limit' => $this->config->get('config_limit_admin'),
         ];
 
         $voucher_total = $this->model_sale_voucher->getTotalVouchers();
@@ -188,7 +188,7 @@ class ControllerSaleVoucher extends Controller
                 'amount' => $this->currency->format($result['amount'], $this->config->get('config_currency')),
                 'status' => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
                 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
-                'edit' => $this->url->link('sale/voucher/edit', 'token='.$this->session->data['token'].'&voucher_id='.$result['voucher_id'].$url, 'SSL')
+                'edit' => $this->url->link('sale/voucher/edit', 'token='.$this->session->data['token'].'&voucher_id='.$result['voucher_id'].$url, 'SSL'),
             ];
         }
 
@@ -377,12 +377,12 @@ class ControllerSaleVoucher extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('sale/voucher', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('sale/voucher', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         if (!isset($this->request->get['voucher_id'])) {
@@ -574,7 +574,7 @@ class ControllerSaleVoucher extends Controller
                 'order_id' => $result['order_id'],
                 'customer' => $result['customer'],
                 'amount' => $this->currency->format($result['amount'], $this->config->get('config_currency')),
-                'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added']))
+                'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
             ];
         }
 

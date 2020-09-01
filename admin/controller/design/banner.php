@@ -172,12 +172,12 @@ class ControllerDesignBanner extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('design/banner', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('design/banner', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         $data['add'] = $this->url->link('design/banner/add', 'token='.$this->session->data['token'].$url, 'SSL');
@@ -189,7 +189,7 @@ class ControllerDesignBanner extends Controller
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin')
+            'limit' => $this->config->get('config_limit_admin'),
         ];
 
         $banner_total = $this->model_design_banner->getTotalBanners();
@@ -201,7 +201,7 @@ class ControllerDesignBanner extends Controller
                 'banner_id' => $result['banner_id'],
                 'name' => $result['name'],
                 'status' => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
-                'edit' => $this->url->link('design/banner/edit', 'token='.$this->session->data['token'].'&banner_id='.$result['banner_id'].$url, 'SSL')
+                'edit' => $this->url->link('design/banner/edit', 'token='.$this->session->data['token'].'&banner_id='.$result['banner_id'].$url, 'SSL'),
             ];
         }
 
@@ -343,12 +343,12 @@ class ControllerDesignBanner extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('design/banner', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('design/banner', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         if (!isset($this->request->get['banner_id'])) {
@@ -411,7 +411,7 @@ class ControllerDesignBanner extends Controller
                 'link' => $banner_image['link'],
                 'image' => $image,
                 'thumb' => $this->model_tool_image->resize($thumb, 100, 100),
-                'sort_order' => $banner_image['sort_order']
+                'sort_order' => $banner_image['sort_order'],
             ];
         }
 

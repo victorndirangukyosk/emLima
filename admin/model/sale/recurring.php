@@ -69,7 +69,7 @@ class ModelSaleRecurring extends Model
             'or.reference',
             'customer',
             'or.status',
-            'or.date_added'
+            'or.date_added',
         ];
 
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
@@ -107,7 +107,7 @@ class ModelSaleRecurring extends Model
                 'reference' => $result['reference'],
                 'customer' => $result['customer'],
                 'status' => $this->getStatus($result['status']),
-                'date_added' => $result['date_added']
+                'date_added' => $result['date_added'],
             ];
         }
 
@@ -131,7 +131,7 @@ class ModelSaleRecurring extends Model
                 'product_name' => $query->row['product_name'],
                 'product_quantity' => $query->row['product_quantity'],
                 'status' => $this->getStatus($query->row['status']),
-                'status_id' => $query->row['status']
+                'status_id' => $query->row['status'],
             ];
         }
 
@@ -184,7 +184,7 @@ class ModelSaleRecurring extends Model
             $transactions[] = [
                 'date_added' => $result['date_added'],
                 'amount' => $result['amount'],
-                'type' => $type
+                'type' => $type,
             ];
         }
 

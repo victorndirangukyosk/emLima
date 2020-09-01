@@ -30,17 +30,17 @@ class ControllerAccountNewsletter extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home')
+            'href' => $this->url->link('common/home'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_account'),
-            'href' => $this->url->link('account/account', '', 'SSL')
+            'href' => $this->url->link('account/account', '', 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_newsletter'),
-            'href' => $this->url->link('account/newsletter', '', 'SSL')
+            'href' => $this->url->link('account/newsletter', '', 'SSL'),
         ];
 
         $data['heading_title'] = $this->language->get('heading_title');

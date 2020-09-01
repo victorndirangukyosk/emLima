@@ -30,7 +30,7 @@ class ControllerAccountPassword extends Controller
 
             $activity_data = [
                 'customer_id' => $this->customer->getId(),
-                'name' => $this->customer->getFirstName().' '.$this->customer->getLastName()
+                'name' => $this->customer->getFirstName().' '.$this->customer->getLastName(),
             ];
 
             $this->model_account_activity->addActivity('password', $activity_data);
@@ -42,17 +42,17 @@ class ControllerAccountPassword extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home')
+            'href' => $this->url->link('common/home'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_account'),
-            'href' => $this->url->link('account/account', '', 'SSL')
+            'href' => $this->url->link('account/account', '', 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('account/password', '', 'SSL')
+            'href' => $this->url->link('account/password', '', 'SSL'),
         ];
 
         $data['heading_title'] = $this->language->get('heading_title');

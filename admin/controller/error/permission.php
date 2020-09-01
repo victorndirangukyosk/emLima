@@ -16,12 +16,12 @@ class ControllerErrorPermission extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('error/permission', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('error/permission', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $shopper_group_ids = explode(',', $this->config->get('config_shopper_group_ids'));
@@ -72,7 +72,7 @@ class ControllerErrorPermission extends Controller
                 'dashboard/order',
                 'dashboard/recent',
                 'dashboard/recenttabs',
-                'dashboard/sale'
+                'dashboard/sale',
             ];
 
             if (!in_array($path, $ignore) && !$this->user->hasPermission('access', $path)) {

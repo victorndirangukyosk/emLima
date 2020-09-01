@@ -190,12 +190,12 @@ class ControllerCatalogAttribute extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('catalog/attribute', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('catalog/attribute', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         $data['add'] = $this->url->link('catalog/attribute/add', 'token='.$this->session->data['token'].$url, 'SSL');
@@ -209,7 +209,7 @@ class ControllerCatalogAttribute extends Controller
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin')
+            'limit' => $this->config->get('config_limit_admin'),
         ];
 
         if (!empty($filter_name) || !empty($filter_group)) {
@@ -225,7 +225,7 @@ class ControllerCatalogAttribute extends Controller
                 'name' => $result['name'],
                 'attribute_group' => $result['attribute_group'],
                 'sort_order' => $result['sort_order'],
-                'edit' => $this->url->link('catalog/attribute/edit', 'token='.$this->session->data['token'].'&attribute_id='.$result['attribute_id'].$url, 'SSL')
+                'edit' => $this->url->link('catalog/attribute/edit', 'token='.$this->session->data['token'].'&attribute_id='.$result['attribute_id'].$url, 'SSL'),
             ];
         }
 
@@ -363,12 +363,12 @@ class ControllerCatalogAttribute extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('catalog/attribute', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('catalog/attribute', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         if (!isset($this->request->get['attribute_id'])) {
@@ -466,7 +466,7 @@ class ControllerCatalogAttribute extends Controller
             $filter_data = [
                 'filter_name' => $this->request->get['filter_name'],
                 'start' => 0,
-                'limit' => 5
+                'limit' => 5,
             ];
 
             $results = $this->model_catalog_attribute->getAttributes($filter_data);
@@ -475,7 +475,7 @@ class ControllerCatalogAttribute extends Controller
                 $json[] = [
                     'attribute_id' => $result['attribute_id'],
                     'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')),
-                    'attribute_group' => $result['attribute_group']
+                    'attribute_group' => $result['attribute_group'],
                 ];
             }
         }
@@ -486,7 +486,7 @@ class ControllerCatalogAttribute extends Controller
             $filter_data = [
                 'filter_group' => $this->request->get['filter_group'],
                 'start' => 0,
-                'limit' => 5
+                'limit' => 5,
             ];
 
             $results = $this->model_catalog_attribute_group->getAttributeGroups($filter_data);
@@ -494,7 +494,7 @@ class ControllerCatalogAttribute extends Controller
             foreach ($results as $result) {
                 $json[] = [
                     'attribute_group_id' => $result['attribute_group_id'],
-                    'name' => $result['name']
+                    'name' => $result['name'],
                 ];
             }
         }

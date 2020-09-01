@@ -209,12 +209,12 @@ class ControllerCatalogCategory extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('catalog/category', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('catalog/category', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         $data['add'] = $this->url->link('catalog/category/add', 'token='.$this->session->data['token'].$url, 'SSL');
@@ -229,7 +229,7 @@ class ControllerCatalogCategory extends Controller
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin')
+            'limit' => $this->config->get('config_limit_admin'),
         ];
 
         if (!empty($filter_name) || !empty($filter_status)) {
@@ -247,7 +247,7 @@ class ControllerCatalogCategory extends Controller
                 'sort_order' => $result['sort_order'],
                 'status' => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
                 'edit' => $this->url->link('catalog/category/edit', 'token='.$this->session->data['token'].'&category_id='.$result['category_id'].$url, 'SSL'),
-                'delete' => $this->url->link('catalog/category/delete', 'token='.$this->session->data['token'].'&category_id='.$result['category_id'].$url, 'SSL')
+                'delete' => $this->url->link('catalog/category/delete', 'token='.$this->session->data['token'].'&category_id='.$result['category_id'].$url, 'SSL'),
             ];
         }
 
@@ -430,12 +430,12 @@ class ControllerCatalogCategory extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('catalog/category', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('catalog/category', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         if (!isset($this->request->get['category_id'])) {
@@ -506,7 +506,7 @@ class ControllerCatalogCategory extends Controller
             if ($filter_info) {
                 $data['category_filters'][] = [
                     'filter_id' => $filter_info['filter_id'],
-                    'name' => $filter_info['group'].' &gt; '.$filter_info['name']
+                    'name' => $filter_info['group'].' &gt; '.$filter_info['name'],
                 ];
             }
         }
@@ -654,7 +654,7 @@ class ControllerCatalogCategory extends Controller
                 'sort' => 'name',
                 'order' => 'ASC',
                 'start' => 0,
-                'limit' => 5
+                'limit' => 5,
             ];
 
             $results = $this->model_catalog_category->getCategories($filter_data);
@@ -669,7 +669,7 @@ class ControllerCatalogCategory extends Controller
                 $json[] = [
                     'category_id' => $result['category_id'],
                     'index' => $result['index'],
-                    'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8'))
+                    'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')),
                 ];
             }
         }

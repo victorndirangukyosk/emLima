@@ -28,7 +28,7 @@ class ControllerAffiliateEdit extends Controller
 
             $activity_data = [
                 'affiliate_id' => $this->affiliate->getId(),
-                'name' => $this->affiliate->getFirstName().' '.$this->affiliate->getLastName()
+                'name' => $this->affiliate->getFirstName().' '.$this->affiliate->getLastName(),
             ];
 
             $this->model_affiliate_activity->addActivity('edit', $activity_data);
@@ -40,17 +40,17 @@ class ControllerAffiliateEdit extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home')
+            'href' => $this->url->link('common/home'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_account'),
-            'href' => $this->url->link('affiliate/account', '', 'SSL')
+            'href' => $this->url->link('affiliate/account', '', 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_edit'),
-            'href' => $this->url->link('affiliate/edit', '', 'SSL')
+            'href' => $this->url->link('affiliate/edit', '', 'SSL'),
         ];
 
         $data['heading_title'] = $this->language->get('heading_title');
@@ -333,7 +333,7 @@ class ControllerAffiliateEdit extends Controller
                 'address_format' => $country_info['address_format'],
                 'postcode_required' => $country_info['postcode_required'],
                 'zone' => $this->model_localisation_zone->getZonesByCountryId($this->request->get['country_id']),
-                'status' => $country_info['status']
+                'status' => $country_info['status'],
             ];
         }
 

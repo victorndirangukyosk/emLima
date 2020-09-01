@@ -114,7 +114,7 @@ class ModelSaleCustomField extends Model
             'cf.type',
             'cf.location',
             'cf.status',
-            'cf.sort_order'
+            'cf.sort_order',
         ];
 
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
@@ -175,7 +175,7 @@ class ModelSaleCustomField extends Model
         foreach ($custom_field_value_query->rows as $custom_field_value) {
             $custom_field_value_data[$custom_field_value['custom_field_value_id']] = [
                 'custom_field_value_id' => $custom_field_value['custom_field_value_id'],
-                'name' => $custom_field_value['name']
+                'name' => $custom_field_value['name'],
             ];
         }
 
@@ -207,7 +207,7 @@ class ModelSaleCustomField extends Model
             $custom_field_value_data[] = [
                 'custom_field_value_id' => $custom_field_value['custom_field_value_id'],
                 'custom_field_value_description' => $custom_field_value_description_data,
-                'sort_order' => $custom_field_value['sort_order']
+                'sort_order' => $custom_field_value['sort_order'],
             ];
         }
 

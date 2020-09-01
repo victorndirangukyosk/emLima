@@ -425,7 +425,7 @@ class Openid
     /**
      * Performs Yadis and HTML discovery. Normally not used.
      *
-     * @param $url Identity URL.
+     * @param $url identity URL
      *
      * @return string OP Endpoint (i.e. OpenID provider address).
      *
@@ -450,7 +450,7 @@ class Openid
         $yadis = true;
 
         // We'll jump a maximum of 5 times, to avoid endless redirections.
-        for ($i = 0; $i < 5; ++$i ) {
+        for ($i = 0; $i < 5; ++$i) {
             if ($yadis) {
                 $headers = $this->request($url, 'HEAD', [], true);
 
@@ -717,7 +717,7 @@ class Openid
     /**
      * Returns authentication url. Usually, you want to redirect your user to it.
      *
-     * @return string The authentication url.
+     * @return string the authentication url
      *
      * @param string $select_identifier Whether to request OP to select identity for an user in OpenID 2. Does not affect OpenID 1.
      *
@@ -742,7 +742,7 @@ class Openid
     /**
      * Performs OpenID verification with the OP.
      *
-     * @return bool Whether the verification was successful.
+     * @return bool whether the verification was successful
      *
      * @throws ErrorException
      */

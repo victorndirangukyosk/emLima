@@ -71,7 +71,7 @@ class ModelCatalogReview extends Model
             'r.author',
             'r.rating',
             'r.status',
-            'r.date_added'
+            'r.date_added',
         ];
 
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {

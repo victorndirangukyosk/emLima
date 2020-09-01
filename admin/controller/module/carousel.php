@@ -80,23 +80,23 @@ class ControllerModuleCarousel extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_module'),
-            'href' => $this->url->link('extension/module', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('extension/module', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         if (!isset($this->request->get['module_id'])) {
             $data['breadcrumbs'][] = [
                 'text' => $this->language->get('heading_title'),
-                'href' => $this->url->link('module/carousel', 'token='.$this->session->data['token'], 'SSL')
+                'href' => $this->url->link('module/carousel', 'token='.$this->session->data['token'], 'SSL'),
             ];
         } else {
             $data['breadcrumbs'][] = [
                 'text' => $this->language->get('heading_title'),
-                'href' => $this->url->link('module/carousel', 'token='.$this->session->data['token'].'&module_id='.$this->request->get['module_id'], 'SSL')
+                'href' => $this->url->link('module/carousel', 'token='.$this->session->data['token'].'&module_id='.$this->request->get['module_id'], 'SSL'),
             ];
         }
 

@@ -54,17 +54,17 @@ class ControllerModuleInformation extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_module'),
-            'href' => $this->url->link('extension/module', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('extension/module', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('module/information', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('module/information', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['action'] = $this->url->link('module/information', 'token='.$this->session->data['token'], 'SSL');

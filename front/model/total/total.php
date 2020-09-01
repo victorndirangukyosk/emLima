@@ -10,7 +10,7 @@ class ModelTotalTotal extends Model
             'code' => 'total',
             'title' => $this->language->get('text_total'),
             'value' => max(0, $total),
-            'sort_order' => $this->config->get('total_sort_order')
+            'sort_order' => $this->config->get('total_sort_order'),
         ];
     }
 
@@ -22,7 +22,7 @@ class ModelTotalTotal extends Model
             'code' => 'total',
             'title' => $this->language->get('text_total'),
             'value' => max(0, $total),
-            'sort_order' => $this->config->get('total_sort_order')
+            'sort_order' => $this->config->get('total_sort_order'),
         ];
     }
 }

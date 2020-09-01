@@ -115,7 +115,7 @@ class ModelApprovalsProduct extends Model
             'p.price',
             'p2c.category_id',
             'p.quantity',
-            'ps.status'];
+            'ps.status', ];
         $sql .= ' GROUP BY ps.product_store_id';
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
             $sql .= ' ORDER BY '.$data['sort'];
@@ -192,7 +192,7 @@ class ModelApprovalsProduct extends Model
             'p.price',
             'p2c.category_id',
             'p.quantity',
-            'ps.status'];
+            'ps.status', ];
         $sql .= ' GROUP BY ps.product_store_id';
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
             $sql .= ' ORDER BY '.$data['sort'];

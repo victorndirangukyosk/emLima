@@ -45,10 +45,10 @@ class Trigger extends SmartObject
      * Triggers an event by dispatching arguments to all listeners/observers that handle
      * the event and returning their return values.
      *
-     * @param string $event The event to trigger.
-     * @param array  $args  An array of arguments.
+     * @param string $event the event to trigger
+     * @param array  $args  an array of arguments
      *
-     * @return array An array of results from each function call.
+     * @return array an array of results from each function call
      *
      * @since   1.0
      */

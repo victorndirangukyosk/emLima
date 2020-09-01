@@ -28,7 +28,7 @@ class ModelAccountCustomField extends Model
                 foreach ($custom_field_value_query->rows as $custom_field_value) {
                     $custom_field_value_data[] = [
                         'custom_field_value_id' => $custom_field_value['custom_field_value_id'],
-                        'name' => $custom_field_value['name']
+                        'name' => $custom_field_value['name'],
                     ];
                 }
             }
@@ -41,7 +41,7 @@ class ModelAccountCustomField extends Model
                 'value' => $custom_field['value'],
                 'location' => $custom_field['location'],
                 'required' => empty($custom_field['required']) || 0 == $custom_field['required'] ? false : true,
-                'sort_order' => $custom_field['sort_order']
+                'sort_order' => $custom_field['sort_order'],
             ];
         }
 

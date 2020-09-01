@@ -288,7 +288,7 @@ class ModelLocalisationLanguage extends Model
             $sort_data = [
                 'name',
                 'code',
-                'sort_order'
+                'sort_order',
             ];
 
             if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
@@ -335,7 +335,7 @@ class ModelLocalisationLanguage extends Model
                         'image' => $result['image'],
                         'directory' => $result['directory'],
                         'sort_order' => $result['sort_order'],
-                        'status' => $result['status']
+                        'status' => $result['status'],
                     ];
                 }
 

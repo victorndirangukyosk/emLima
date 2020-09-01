@@ -170,12 +170,12 @@ class ControllerLocalisationLanguage extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('localisation/language', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('localisation/language', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         $data['add'] = $this->url->link('localisation/language/add', 'token='.$this->session->data['token'].$url, 'SSL');
@@ -187,7 +187,7 @@ class ControllerLocalisationLanguage extends Controller
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin')
+            'limit' => $this->config->get('config_limit_admin'),
         ];
 
         $language_total = $this->model_localisation_language->getTotalLanguages();
@@ -200,7 +200,7 @@ class ControllerLocalisationLanguage extends Controller
                 'name' => $result['name'].(($result['code'] == $this->config->get('config_language')) ? $this->language->get('text_default') : null),
                 'code' => $result['code'],
                 'sort_order' => $result['sort_order'],
-                'edit' => $this->url->link('localisation/language/edit', 'token='.$this->session->data['token'].'&language_id='.$result['language_id'].$url, 'SSL')
+                'edit' => $this->url->link('localisation/language/edit', 'token='.$this->session->data['token'].'&language_id='.$result['language_id'].$url, 'SSL'),
             ];
         }
 
@@ -378,12 +378,12 @@ class ControllerLocalisationLanguage extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('localisation/language', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('localisation/language', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         if (!isset($this->request->get['language_id'])) {

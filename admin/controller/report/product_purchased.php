@@ -45,7 +45,7 @@ class ControllerReportProductPurchased extends Controller
         $data = [
             'filter_city' => $filter_city,
             'filter_date_start' => $filter_date_start,
-            'filter_date_end' => $filter_date_end];
+            'filter_date_end' => $filter_date_end, ];
 
         $this->load->model('report/excel');
         $this->model_report_excel->download_product_purchased_excel($data);
@@ -113,12 +113,12 @@ class ControllerReportProductPurchased extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('report/product_purchased', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('report/product_purchased', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         $this->load->model('report/product');
@@ -131,7 +131,7 @@ class ControllerReportProductPurchased extends Controller
             'filter_date_end' => $filter_date_end,
             'filter_order_status_id' => $filter_order_status_id,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin')
+            'limit' => $this->config->get('config_limit_admin'),
         ];
 
         $product_total = $this->model_report_product->getTotalPurchased($filter_data);
@@ -144,7 +144,7 @@ class ControllerReportProductPurchased extends Controller
                 'unit' => $result['unit'],
                 'model' => $result['model'],
                 'quantity' => $result['quantity'],
-                'total' => $this->currency->format($result['total'], $this->config->get('config_currency'))
+                'total' => $this->currency->format($result['total'], $this->config->get('config_currency')),
             ];
         }
 

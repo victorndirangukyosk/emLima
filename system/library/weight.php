@@ -16,7 +16,7 @@ class Weight
                 'weight_class_id' => $result['weight_class_id'],
                 'title' => $result['title'],
                 'unit' => $result['unit'],
-                'value' => $result['value']
+                'value' => $result['value'],
             ];
         }
     }

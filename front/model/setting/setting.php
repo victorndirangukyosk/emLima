@@ -85,7 +85,7 @@ class ModelSettingSetting extends Model
 
         $sort_data = [
             's.name',
-            's.status'
+            's.status',
         ];
 
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {

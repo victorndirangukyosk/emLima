@@ -44,12 +44,12 @@ class ControllerReportCustomerOnline extends Controller
 
         $data['breadcrumbs'][] = [
             'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
-            'text' => $this->language->get('text_home')
+            'text' => $this->language->get('text_home'),
         ];
 
         $data['breadcrumbs'][] = [
             'href' => $this->url->link('report/customer_online', 'token='.$this->session->data['token'].$url, 'SSL'),
-            'text' => $this->language->get('heading_title')
+            'text' => $this->language->get('heading_title'),
         ];
 
         $this->load->model('report/customer');
@@ -61,7 +61,7 @@ class ControllerReportCustomerOnline extends Controller
             'filter_ip' => $filter_ip,
             'filter_customer' => $filter_customer,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin')
+            'limit' => $this->config->get('config_limit_admin'),
         ];
 
         $customer_total = $this->model_report_customer->getTotalCustomersOnline($filter_data);
@@ -84,7 +84,7 @@ class ControllerReportCustomerOnline extends Controller
                 'url' => $result['url'],
                 'referer' => $result['referer'],
                 'date_added' => date($this->language->get('datetime_format'), strtotime($result['date_added'])),
-                'edit' => $this->url->link('sale/customer/edit', 'token='.$this->session->data['token'].'&customer_id='.$result['customer_id'], 'SSL')
+                'edit' => $this->url->link('sale/customer/edit', 'token='.$this->session->data['token'].'&customer_id='.$result['customer_id'], 'SSL'),
             ];
         }
 

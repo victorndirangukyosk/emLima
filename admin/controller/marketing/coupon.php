@@ -230,12 +230,12 @@ class ControllerMarketingCoupon extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('marketing/coupon', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('marketing/coupon', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         $data['add'] = $this->url->link('marketing/coupon/add', 'token='.$this->session->data['token'].$url, 'SSL');
@@ -253,7 +253,7 @@ class ControllerMarketingCoupon extends Controller
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin')
+            'limit' => $this->config->get('config_limit_admin'),
         ];
 
         if (!empty($filter_name) || !empty($filter_code) || !empty($filter_date_start) || !empty($filter_date_end) || !empty($filter_discount) || !empty($filter_status)) {
@@ -273,7 +273,7 @@ class ControllerMarketingCoupon extends Controller
                 'date_start' => date($this->language->get('date_format_short'), strtotime($result['date_start'])),
                 'date_end' => date($this->language->get('date_format_short'), strtotime($result['date_end'])),
                 'status' => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
-                'edit' => $this->url->link('marketing/coupon/edit', 'token='.$this->session->data['token'].'&coupon_id='.$result['coupon_id'].$url, 'SSL')
+                'edit' => $this->url->link('marketing/coupon/edit', 'token='.$this->session->data['token'].'&coupon_id='.$result['coupon_id'].$url, 'SSL'),
             ];
         }
 
@@ -492,12 +492,12 @@ class ControllerMarketingCoupon extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('marketing/coupon', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('marketing/coupon', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         if (!isset($this->request->get['coupon_id'])) {
@@ -594,7 +594,7 @@ class ControllerMarketingCoupon extends Controller
             if ($product_info) {
                 $data['coupon_product'][] = [
                     'product_id' => $product_info['product_id'],
-                    'name' => $product_info['name']
+                    'name' => $product_info['name'],
                 ];
             }
         }
@@ -617,7 +617,7 @@ class ControllerMarketingCoupon extends Controller
             if ($category_info) {
                 $data['coupon_category'][] = [
                     'category_id' => $category_info['category_id'],
-                    'name' => ($category_info['path'] ? $category_info['path'].' &gt; ' : '').$category_info['name']
+                    'name' => ($category_info['path'] ? $category_info['path'].' &gt; ' : '').$category_info['name'],
                 ];
             }
         }
@@ -733,7 +733,7 @@ class ControllerMarketingCoupon extends Controller
                 'order_id' => $result['order_id'],
                 'customer' => $result['customer'],
                 'amount' => $result['amount'],
-                'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added']))
+                'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
             ];
         }
 
@@ -763,7 +763,7 @@ class ControllerMarketingCoupon extends Controller
                 'filter_name' => empty($this->request->get['filter_name']) ? '' : $this->request->get['filter_name'],
                 'filter_code' => empty($this->request->get['filter_code']) ? '' : $this->request->get['filter_code'],
                 'start' => 0,
-                'limit' => 5
+                'limit' => 5,
             ];
 
             $results = $this->model_marketing_coupon->getCoupons($filter_data);
@@ -772,7 +772,7 @@ class ControllerMarketingCoupon extends Controller
                 $json[] = [
                     'coupon_id' => $result['coupon_id'],
                     'name' => $result['name'],
-                    'code' => $result['code']
+                    'code' => $result['code'],
                 ];
             }
         }

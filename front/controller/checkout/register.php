@@ -36,7 +36,7 @@ class ControllerCheckoutRegister extends Controller
 
             $activity_data = [
                 'customer_id' => $customer_id,
-                'name' => $this->request->post['firstname'].' '.$this->request->post['lastname']
+                'name' => $this->request->post['firstname'].' '.$this->request->post['lastname'],
             ];
 
             $this->model_account_activity->addActivity('register', $activity_data);
@@ -48,17 +48,17 @@ class ControllerCheckoutRegister extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home')
+            'href' => $this->url->link('common/home'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_account'),
-            'href' => $this->url->link('account/account', '', 'SSL')
+            'href' => $this->url->link('account/account', '', 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_register'),
-            'href' => $this->url->link('checkout/register', '', 'SSL')
+            'href' => $this->url->link('checkout/register', '', 'SSL'),
         ];
 
         $data['heading_title'] = $this->language->get('heading_title');
@@ -269,7 +269,7 @@ class ControllerCheckoutRegister extends Controller
         $fb = new Facebook\Facebook([
             'app_id' => !empty($this->config->get('config_fb_app_id')) ? $this->config->get('config_fb_app_id') : 'randomstringforappid',
             'app_secret' => !empty($this->config->get('config_fb_secret')) ? $this->config->get('config_fb_secret') : 'randomstringforappsecret',
-            'default_graph_version' => 'v2.5'//'default_access_token' => $this->request->get['code']//'5ce6c3df96acc19c6215f2ac62d3480e', // optional
+            'default_graph_version' => 'v2.5', //'default_access_token' => $this->request->get['code']//'5ce6c3df96acc19c6215f2ac62d3480e', // optional
         ]);
 
         $helper = $fb->getRedirectLoginHelper();
@@ -443,7 +443,7 @@ class ControllerCheckoutRegister extends Controller
 
             $activity_data = [
                 'customer_id' => $customer_id,
-                'name' => $this->request->post['firstname'].' '.$this->request->post['lastname']
+                'name' => $this->request->post['firstname'].' '.$this->request->post['lastname'],
             ];
 
             $this->model_account_activity->addActivity('register', $activity_data);

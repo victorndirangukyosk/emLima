@@ -34,7 +34,7 @@ class ModelLocalisationLocation extends Model
 
         $sort_data = [
             'name',
-            'address'];
+            'address', ];
 
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
             $sql .= ' ORDER BY '.$data['sort'];

@@ -16,7 +16,7 @@ class ControllerErrorNotFound extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home')
+            'href' => $this->url->link('common/home'),
         ];
 
         if (isset($this->request->get['path'])) {
@@ -36,7 +36,7 @@ class ControllerErrorNotFound extends Controller
 
             $data['breadcrumbs'][] = [
                 'text' => $this->language->get('heading_title'),
-                'href' => $this->url->link($path, $url, $this->request->server['HTTPS'])
+                'href' => $this->url->link($path, $url, $this->request->server['HTTPS']),
             ];
         }
 

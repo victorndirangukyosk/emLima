@@ -7,8 +7,8 @@ class ControllerCommonReset extends Controller
     public function index()
     {
         /*if ($this->user->isLogged() && isset($this->request->get['token']) && ($this->request->get['token'] == $this->session->data['token'])) {
-			$this->response->redirect($this->url->link('common/dashboard', '', 'SSL'));
-		}*/
+            $this->response->redirect($this->url->link('common/dashboard', '', 'SSL'));
+        }*/
 
         if (!$this->config->get('config_password')) {
             $this->response->redirect($this->url->link('common/login', '', 'SSL'));
@@ -25,7 +25,7 @@ class ControllerCommonReset extends Controller
         $user_info = $this->model_user_user->getUserByCode($code);
 
         /*echo "<pre>";print_r($user_info);
-			die;*/
+            die;*/
 
         if ($user_info) {
             $this->load->language('common/reset');
@@ -36,7 +36,7 @@ class ControllerCommonReset extends Controller
 
             if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validate()) {
                 /*echo "<pre>";print_r($this->request->post);
-			die;*/
+            die;*/
                 $this->model_user_user->editPassword($user_info['user_id'], trim($this->request->post['password']));
 
                 $this->session->data['success'] = $this->language->get('text_success');
@@ -45,7 +45,7 @@ class ControllerCommonReset extends Controller
             }
 
             /*echo "<pre>";print_r($user_info);
-			die;*/
+            die;*/
 
             $data['heading_title'] = $this->language->get('heading_title');
 
@@ -61,12 +61,12 @@ class ControllerCommonReset extends Controller
 
             $data['breadcrumbs'][] = [
                 'text' => $this->language->get('text_home'),
-                'href' => $this->url->link('common/dashboard', '', 'SSL')
+                'href' => $this->url->link('common/dashboard', '', 'SSL'),
             ];
 
             $data['breadcrumbs'][] = [
                 'text' => $this->language->get('heading_title'),
-                'href' => $this->url->link('common/reset', '', 'SSL')
+                'href' => $this->url->link('common/reset', '', 'SSL'),
             ];
 
             if (isset($this->error['password'])) {

@@ -170,12 +170,12 @@ class ControllerSaleCustomerBanIp extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('sale/customer_ban_ip', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('sale/customer_ban_ip', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         $data['add'] = $this->url->link('sale/customer_ban_ip/add', 'token='.$this->session->data['token'].$url, 'SSL');
@@ -187,7 +187,7 @@ class ControllerSaleCustomerBanIp extends Controller
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin')
+            'limit' => $this->config->get('config_limit_admin'),
         ];
 
         $customer_ban_ip_total = $this->model_sale_customer_ban_ip->getTotalCustomerBanIps($filter_data);
@@ -200,7 +200,7 @@ class ControllerSaleCustomerBanIp extends Controller
                 'ip' => $result['ip'],
                 'total' => $result['total'],
                 'customer' => $this->url->link('sale/customer', 'token='.$this->session->data['token'].'&filter_ip='.$result['ip'], 'SSL'),
-                'edit' => $this->url->link('sale/customer_ban_ip/edit', 'token='.$this->session->data['token'].'&customer_ban_ip_id='.$result['customer_ban_ip_id'].$url, 'SSL')
+                'edit' => $this->url->link('sale/customer_ban_ip/edit', 'token='.$this->session->data['token'].'&customer_ban_ip_id='.$result['customer_ban_ip_id'].$url, 'SSL'),
             ];
         }
 
@@ -332,12 +332,12 @@ class ControllerSaleCustomerBanIp extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('sale/customer_ban_ip', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('sale/customer_ban_ip', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         if (!isset($this->request->get['customer_ban_ip_id'])) {

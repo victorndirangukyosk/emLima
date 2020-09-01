@@ -52,17 +52,17 @@ class ControllerAccountCredit extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home')
+            'href' => $this->url->link('common/home'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_account'),
-            'href' => $this->url->link('account/account', '', 'SSL')
+            'href' => $this->url->link('account/account', '', 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_credit'),
-            'href' => $this->url->link('account/credit', '', 'SSL')
+            'href' => $this->url->link('account/credit', '', 'SSL'),
         ];
 
         $this->load->model('account/credit');
@@ -98,7 +98,7 @@ class ControllerAccountCredit extends Controller
             'sort' => 'date_added',
             'order' => 'DESC',
             'start' => ($page - 1) * 10,
-            'limit' => 10
+            'limit' => 10,
         ];
 
         $data['telephone'] = $this->customer->getTelephone();
@@ -112,7 +112,7 @@ class ControllerAccountCredit extends Controller
                 'amount' => $this->currency->format($result['amount'], $this->config->get('config_currency')),
                 'plain_amount' => $result['amount'],
                 'description' => $result['description'],
-                'date_added' => date($this->language->get('date_format_medium'), strtotime($result['date_added']))
+                'date_added' => date($this->language->get('date_format_medium'), strtotime($result['date_added'])),
             ];
         }
 

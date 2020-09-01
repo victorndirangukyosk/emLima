@@ -87,7 +87,7 @@ class ModelTotalCoupon extends Model
                         'code' => 'coupon',
                         'title' => sprintf($this->language->get('text_coupon'), $this->session->data['coupon']),
                         'value' => -$discount_total,
-                        'sort_order' => $this->config->get('coupon_sort_order')
+                        'sort_order' => $this->config->get('coupon_sort_order'),
                     ];
 
                     $total -= $discount_total;
@@ -202,7 +202,7 @@ class ModelTotalCoupon extends Model
                     'code' => 'coupon',
                     'title' => sprintf($this->language->get('text_coupon'), $this->session->data['coupon']),
                     'value' => -$discount_total,
-                    'sort_order' => $this->config->get('coupon_sort_order')
+                    'sort_order' => $this->config->get('coupon_sort_order'),
                 ];
 
                     $total -= $discount_total;
@@ -303,7 +303,7 @@ class ModelTotalCoupon extends Model
                         'code' => 'coupon',
                         'title' => sprintf($this->language->get('text_coupon'), $args['coupon']),
                         'value' => -$discount_total,
-                        'sort_order' => $this->config->get('coupon_sort_order')
+                        'sort_order' => $this->config->get('coupon_sort_order'),
                     ];
 
                     $total -= $discount_total;

@@ -35,7 +35,7 @@ class ModelDesignNotice extends Model
         $sql = 'SELECT * FROM '.DB_PREFIX.'notice';
 
         $sort_data = [
-            'notice'];
+            'notice', ];
 
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
             $sql .= ' ORDER BY '.$data['sort'];

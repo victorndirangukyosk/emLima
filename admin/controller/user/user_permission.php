@@ -170,12 +170,12 @@ class ControllerUserUserPermission extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('user/user_permission', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('user/user_permission', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         $data['add'] = $this->url->link('user/user_permission/add', 'token='.$this->session->data['token'].$url, 'SSL');
@@ -187,7 +187,7 @@ class ControllerUserUserPermission extends Controller
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin')
+            'limit' => $this->config->get('config_limit_admin'),
         ];
 
         $user_group_total = $this->model_user_user_group->getTotalUserGroups();
@@ -198,7 +198,7 @@ class ControllerUserUserPermission extends Controller
             $data['user_groups'][] = [
                 'user_group_id' => $result['user_group_id'],
                 'name' => $result['name'],
-                'edit' => $this->url->link('user/user_permission/edit', 'token='.$this->session->data['token'].'&user_group_id='.$result['user_group_id'].$url, 'SSL')
+                'edit' => $this->url->link('user/user_permission/edit', 'token='.$this->session->data['token'].'&user_group_id='.$result['user_group_id'].$url, 'SSL'),
             ];
         }
 
@@ -334,12 +334,12 @@ class ControllerUserUserPermission extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('user/user_permission', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('user/user_permission', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         if (!isset($this->request->get['user_group_id'])) {
@@ -382,7 +382,7 @@ class ControllerUserUserPermission extends Controller
             'dashboard/order',
             'dashboard/recent',
             'dashboard/recenttabs',
-            'dashboard/sale'
+            'dashboard/sale',
         ];
 
         $data['permissions'] = [];

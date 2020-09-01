@@ -36,7 +36,7 @@ class ControllerCommonSearch extends Controller
             }
 
             $filter_data = [
-                'filter_name' => $filter_name];
+                'filter_name' => $filter_name, ];
 
             $results = $this->model_assets_product->getProducts($filter_data);
 
@@ -49,7 +49,7 @@ class ControllerCommonSearch extends Controller
                     'href' => $this->url->link('product/product', '&product_id='.$result['product_id']),
                     'searchall' => $this->url->link('product/search', '&search='.$filter_name),
                     'price' => $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax'))),
-                    'image' => $this->model_tool_image->resize($result['image'], '45', '45')
+                    'image' => $this->model_tool_image->resize($result['image'], '45', '45'),
                 ];
             }
         }

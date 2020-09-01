@@ -71,7 +71,7 @@ class ModelLocalisationCountry extends Model
             $sort_data = [
                 'name',
                 'iso_code_2',
-                'iso_code_3'
+                'iso_code_3',
             ];
 
             if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {

@@ -32,12 +32,12 @@ class ControllerProductCompare extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home')
+            'href' => $this->url->link('common/home'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('product/compare')
+            'href' => $this->url->link('product/compare'),
         ];
 
         $data['heading_title'] = $this->language->get('heading_title');
@@ -132,7 +132,7 @@ class ControllerProductCompare extends Controller
                     'height' => $this->length->format($product_info['height'], $product_info['length_class_id']),
                     'attribute' => $attribute_data,
                     'href' => $this->url->link('product/product', 'product_id='.$product_id),
-                    'remove' => $this->url->link('product/compare', 'remove='.$product_id)
+                    'remove' => $this->url->link('product/compare', 'remove='.$product_id),
                 ];
 
                 foreach ($attribute_groups as $attribute_group) {

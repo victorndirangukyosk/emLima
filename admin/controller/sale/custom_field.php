@@ -170,12 +170,12 @@ class ControllerSaleCustomField extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('sale/custom_field', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('sale/custom_field', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         $data['add'] = $this->url->link('sale/custom_field/add', 'token='.$this->session->data['token'].$url, 'SSL');
@@ -187,7 +187,7 @@ class ControllerSaleCustomField extends Controller
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin')
+            'limit' => $this->config->get('config_limit_admin'),
         ];
 
         $custom_field_total = $this->model_sale_custom_field->getTotalCustomFields();
@@ -237,7 +237,7 @@ class ControllerSaleCustomField extends Controller
                 'type' => $type,
                 'status' => $result['status'],
                 'sort_order' => $result['sort_order'],
-                'edit' => $this->url->link('sale/custom_field/edit', 'token='.$this->session->data['token'].'&custom_field_id='.$result['custom_field_id'].$url, 'SSL')
+                'edit' => $this->url->link('sale/custom_field/edit', 'token='.$this->session->data['token'].'&custom_field_id='.$result['custom_field_id'].$url, 'SSL'),
             ];
         }
 
@@ -402,12 +402,12 @@ class ControllerSaleCustomField extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('sale/custom_field', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('sale/custom_field', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         if (!isset($this->request->get['custom_field_id'])) {
@@ -490,7 +490,7 @@ class ControllerSaleCustomField extends Controller
             $data['custom_field_values'][] = [
                 'custom_field_value_id' => $custom_field_value['custom_field_value_id'],
                 'custom_field_value_description' => $custom_field_value['custom_field_value_description'],
-                'sort_order' => $custom_field_value['sort_order']
+                'sort_order' => $custom_field_value['sort_order'],
             ];
         }
 

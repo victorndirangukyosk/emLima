@@ -24,19 +24,19 @@ class ControllerReportProductViewed extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('report/product_viewed', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('report/product_viewed', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         $this->load->model('report/product');
 
         $filter_data = [
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin')
+            'limit' => $this->config->get('config_limit_admin'),
         ];
 
         $data['products'] = [];
@@ -58,7 +58,7 @@ class ControllerReportProductViewed extends Controller
                 'name' => $result['name'],
                 'model' => $result['model'],
                 'viewed' => $result['viewed'],
-                'percent' => $percent.'%'
+                'percent' => $percent.'%',
             ];
         }
 

@@ -53,7 +53,7 @@ class ModelLocalisationTaxRate extends Model
             'tr.type',
             'c.name',
             'tr.date_added',
-            'tr.date_modified'
+            'tr.date_modified',
         ];
 
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {

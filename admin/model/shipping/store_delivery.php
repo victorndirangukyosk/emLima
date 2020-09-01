@@ -95,7 +95,7 @@ class ModelShippingStoreDelivery extends Model
             'cost' => $cost,
             'actual_cost' => $actual_cost,
             'tax_class_id' => $this->config->get('store_delivery_tax_class_id'),
-            'text' => $this->currency->format($this->tax->calculate($cost, $this->config->get('store_delivery_tax_class_id'), $this->config->get('config_tax')))
+            'text' => $this->currency->format($this->tax->calculate($cost, $this->config->get('store_delivery_tax_class_id'), $this->config->get('config_tax'))),
         ];
 
         $method_data = [
@@ -103,7 +103,7 @@ class ModelShippingStoreDelivery extends Model
             'title' => $this->language->get('text_title'),
             'quote' => $quote_data,
             'sort_order' => $this->config->get('store_delivery_sort_order'),
-            'error' => false
+            'error' => false,
         ];
 
         return $method_data;
@@ -136,7 +136,7 @@ class ModelShippingStoreDelivery extends Model
             'cost' => $cost,
             'actual_cost' => $cost,
             'tax_class_id' => $this->config->get('store_delivery_tax_class_id'),
-            'text' => $this->currency->format($this->tax->calculate($cost, $this->config->get('store_delivery_tax_class_id'), $this->config->get('config_tax')))
+            'text' => $this->currency->format($this->tax->calculate($cost, $this->config->get('store_delivery_tax_class_id'), $this->config->get('config_tax'))),
         ];
 
         $method_data = [
@@ -144,7 +144,7 @@ class ModelShippingStoreDelivery extends Model
             'title' => $this->language->get('text_title'),
             'quote' => $quote_data,
             'sort_order' => $this->config->get('store_delivery_sort_order'),
-            'error' => false
+            'error' => false,
         ];
 
         return $method_data;
@@ -240,7 +240,7 @@ class ModelShippingStoreDelivery extends Model
             'cost' => $cost,
             'actual_cost' => $actual_cost,
             'tax_class_id' => $this->config->get('store_delivery_tax_class_id'),
-            'text' => $this->currency->format($this->tax->calculate($cost, $this->config->get('store_delivery_tax_class_id'), $this->config->get('config_tax')))
+            'text' => $this->currency->format($this->tax->calculate($cost, $this->config->get('store_delivery_tax_class_id'), $this->config->get('config_tax'))),
         ];
 
         $method_data = [
@@ -248,7 +248,7 @@ class ModelShippingStoreDelivery extends Model
             'title' => $this->language->get('text_title'),
             'quote' => $quote_data,
             'sort_order' => $this->config->get('store_delivery_sort_order'),
-            'error' => false
+            'error' => false,
         ];
 
         return $method_data;

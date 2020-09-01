@@ -39,12 +39,12 @@ class ControllerToolErrorLog extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('tool/error_log', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('tool/error_log', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['clear'] = $this->url->link('tool/error_log/clear', 'token='.$this->session->data['token'], 'SSL');
@@ -66,7 +66,7 @@ class ControllerToolErrorLog extends Controller
                     'PB',
                     'EB',
                     'ZB',
-                    'YB'
+                    'YB',
                 ];
 
                 $i = 0;

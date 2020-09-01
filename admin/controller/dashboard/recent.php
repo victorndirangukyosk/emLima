@@ -28,7 +28,7 @@ class ControllerDashboardRecent extends Controller
             'sort' => 'o.date_added',
             'order' => 'DESC',
             'start' => 0,
-            'limit' => 5
+            'limit' => 5,
         ];
 
         $results = $this->model_sale_order->getOrders($filter_data);
@@ -40,7 +40,7 @@ class ControllerDashboardRecent extends Controller
                 'status' => $result['status'],
                 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
                 'total' => $this->currency->format($result['total'], $result['currency_code'], $result['currency_value']),
-                'view' => $this->url->link('sale/order/info', 'token='.$this->session->data['token'].'&order_id='.$result['order_id'], 'SSL')];
+                'view' => $this->url->link('sale/order/info', 'token='.$this->session->data['token'].'&order_id='.$result['order_id'], 'SSL'), ];
         }
 
         return $this->load->view('dashboard/recent.tpl', $data);

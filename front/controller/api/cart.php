@@ -142,7 +142,7 @@ class ControllerApiCart extends Controller
                         'width' => 0,
                         'height' => 0,
                         'length_class_id' => 0,
-                        'recurring' => false
+                        'recurring' => false,
                     ];
                 } else {
                     $this->remove($keys);
@@ -326,7 +326,7 @@ class ControllerApiCart extends Controller
                         'product_option_value_id' => $option['product_option_value_id'],
                         'name' => $option['name'],
                         'value' => $option['value'],
-                        'type' => $option['type']
+                        'type' => $option['type'],
                     ];
                 }
 
@@ -343,7 +343,7 @@ class ControllerApiCart extends Controller
                     'shipping' => true,
                     'price' => $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax'))),
                     'total' => $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')) * $product['quantity']),
-                    'reward' => $product['reward']
+                    'reward' => $product['reward'],
                 ];
             }
 
@@ -385,7 +385,7 @@ class ControllerApiCart extends Controller
             foreach ($total_data as $total) {
                 $json['totals'][] = [
                     'title' => $total['title'],
-                    'text' => $this->currency->format($total['value'])
+                    'text' => $this->currency->format($total['value']),
                 ];
             }
         }

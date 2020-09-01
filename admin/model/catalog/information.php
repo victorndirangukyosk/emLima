@@ -104,7 +104,7 @@ class ModelCatalogInformation extends Model
 
             $sort_data = [
                 'i.status',
-                'i.sort_order'
+                'i.sort_order',
             ];
 
             if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
@@ -161,7 +161,7 @@ class ModelCatalogInformation extends Model
                 'description' => $result['description'],
                 'meta_title' => $result['meta_title'],
                 'meta_description' => $result['meta_description'],
-                'meta_keyword' => $result['meta_keyword']
+                'meta_keyword' => $result['meta_keyword'],
             ];
         }
 

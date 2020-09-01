@@ -103,12 +103,12 @@ class ControllerExtensionModule extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('extension/module', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('extension/module', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['heading_title'] = $this->language->get('heading_title');
@@ -173,7 +173,7 @@ class ControllerExtensionModule extends Controller
                         'module_id' => $module['module_id'],
                         'name' => $this->language->get('heading_title').' &gt; '.$module['name'],
                         'edit' => $this->url->link('module/'.$extension, 'token='.$this->session->data['token'].'&module_id='.$module['module_id'], 'SSL'),
-                        'delete' => $this->url->link('extension/module/delete', 'token='.$this->session->data['token'].'&module_id='.$module['module_id'], 'SSL')
+                        'delete' => $this->url->link('extension/module/delete', 'token='.$this->session->data['token'].'&module_id='.$module['module_id'], 'SSL'),
                     ];
                 }
 
@@ -183,7 +183,7 @@ class ControllerExtensionModule extends Controller
                     'install' => $this->url->link('extension/module/install', 'token='.$this->session->data['token'].'&extension='.$extension, 'SSL'),
                     'uninstall' => $this->url->link('extension/module/uninstall', 'token='.$this->session->data['token'].'&extension='.$extension, 'SSL'),
                     'installed' => in_array($extension, $extensions),
-                    'edit' => $this->url->link('module/'.$extension, 'token='.$this->session->data['token'], 'SSL')
+                    'edit' => $this->url->link('module/'.$extension, 'token='.$this->session->data['token'], 'SSL'),
                 ];
             }
         }

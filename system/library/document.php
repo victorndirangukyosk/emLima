@@ -44,7 +44,7 @@ class Document
     {
         $this->metas[$name] = [
             'name' => $name,
-            'content' => $content
+            'content' => $content,
         ];
     }
 
@@ -57,7 +57,7 @@ class Document
     {
         $this->links[$href] = [
             'href' => $href,
-            'rel' => $rel
+            'rel' => $rel,
         ];
     }
 
@@ -71,7 +71,7 @@ class Document
         $this->styles[$href] = [
             'href' => $href,
             'rel' => $rel,
-            'media' => $media
+            'media' => $media,
         ];
     }
 

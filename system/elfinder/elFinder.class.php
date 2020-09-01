@@ -1322,11 +1322,11 @@ class elFinder
     /**
      * Get remote contents with cURL.
      *
-     * @param  string   $url     target url
-     * @param  int      $timeout timeout (sec)
-     * @param  int      $redirect_max redirect max count
-     * @param  string   $ua
-     * @param  resource $outfp
+     * @param string   $url          target url
+     * @param int      $timeout      timeout (sec)
+     * @param int      $redirect_max redirect max count
+     * @param string   $ua
+     * @param resource $outfp
      *
      * @return string or bool(false)
      * @retval string contents

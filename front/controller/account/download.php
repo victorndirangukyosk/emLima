@@ -20,17 +20,17 @@ class ControllerAccountDownload extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home')
+            'href' => $this->url->link('common/home'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_account'),
-            'href' => $this->url->link('account/account', '', 'SSL')
+            'href' => $this->url->link('account/account', '', 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_downloads'),
-            'href' => $this->url->link('account/download', '', 'SSL')
+            'href' => $this->url->link('account/download', '', 'SSL'),
         ];
 
         $this->load->model('account/download');
@@ -74,7 +74,7 @@ class ControllerAccountDownload extends Controller
                     'PB',
                     'EB',
                     'ZB',
-                    'YB'
+                    'YB',
                 ];
 
                 while (($size / 1024) > 1) {
@@ -87,7 +87,7 @@ class ControllerAccountDownload extends Controller
                     'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
                     'name' => $result['name'],
                     'size' => round(substr($size, 0, strpos($size, '.') + 4), 2).$suffix[$i],
-                    'href' => $this->url->link('account/download/download', 'download_id='.$result['download_id'], 'SSL')
+                    'href' => $this->url->link('account/download/download', 'download_id='.$result['download_id'], 'SSL'),
                 ];
             }
         }

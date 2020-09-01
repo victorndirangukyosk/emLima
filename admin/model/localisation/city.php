@@ -51,7 +51,7 @@ class ModelLocalisationCity extends Model
         $sort_data = [
             'name',
             'sort_order',
-            'status'];
+            'status', ];
 
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
             $sql .= ' ORDER BY '.$data['sort'];

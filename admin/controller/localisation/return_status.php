@@ -170,12 +170,12 @@ class ControllerLocalisationReturnStatus extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('localisation/return_status', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('localisation/return_status', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         $data['add'] = $this->url->link('localisation/return_status/add', 'token='.$this->session->data['token'].$url, 'SSL');
@@ -187,7 +187,7 @@ class ControllerLocalisationReturnStatus extends Controller
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin')
+            'limit' => $this->config->get('config_limit_admin'),
         ];
 
         $return_status_total = $this->model_localisation_return_status->getTotalReturnStatuses();
@@ -198,7 +198,7 @@ class ControllerLocalisationReturnStatus extends Controller
             $data['return_statuses'][] = [
                 'return_status_id' => $result['return_status_id'],
                 'name' => $result['name'].(($result['return_status_id'] == $this->config->get('config_return_status_id')) ? $this->language->get('text_default') : null),
-                'edit' => $this->url->link('localisation/return_status/edit', 'token='.$this->session->data['token'].'&return_status_id='.$result['return_status_id'].$url, 'SSL')
+                'edit' => $this->url->link('localisation/return_status/edit', 'token='.$this->session->data['token'].'&return_status_id='.$result['return_status_id'].$url, 'SSL'),
             ];
         }
 
@@ -329,12 +329,12 @@ class ControllerLocalisationReturnStatus extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('localisation/return_status', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('localisation/return_status', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         if (!isset($this->request->get['return_status_id'])) {

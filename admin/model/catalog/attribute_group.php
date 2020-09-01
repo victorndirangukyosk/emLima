@@ -61,7 +61,7 @@ class ModelCatalogAttributeGroup extends Model
 
         $sort_data = [
             'agd.name',
-            'ag.sort_order'
+            'ag.sort_order',
         ];
 
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {

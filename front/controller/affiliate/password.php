@@ -28,7 +28,7 @@ class ControllerAffiliatePassword extends Controller
 
             $activity_data = [
                 'affiliate_id' => $this->affiliate->getId(),
-                'name' => $this->affiliate->getFirstName().' '.$this->affiliate->getLastName()
+                'name' => $this->affiliate->getFirstName().' '.$this->affiliate->getLastName(),
             ];
 
             $this->model_affiliate_activity->addActivity('password', $activity_data);
@@ -40,17 +40,17 @@ class ControllerAffiliatePassword extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home')
+            'href' => $this->url->link('common/home'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_account'),
-            'href' => $this->url->link('affiliate/account', '', 'SSL')
+            'href' => $this->url->link('affiliate/account', '', 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('affiliate/password', '', 'SSL')
+            'href' => $this->url->link('affiliate/password', '', 'SSL'),
         ];
 
         $data['heading_title'] = $this->language->get('heading_title');

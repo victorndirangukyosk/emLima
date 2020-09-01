@@ -28,15 +28,15 @@ class ControllerAccountRecurring extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home')];
+            'href' => $this->url->link('common/home'), ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_account'),
-            'href' => $this->url->link('account/account', '', 'SSL')];
+            'href' => $this->url->link('account/account', '', 'SSL'), ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('account/recurring', $url, 'SSL')];
+            'href' => $this->url->link('account/recurring', $url, 'SSL'), ];
 
         $data['heading_title'] = $this->language->get('heading_title');
 
@@ -72,7 +72,7 @@ class ControllerAccountRecurring extends Controller
                     'name' => $result['product_name'],
                     'status' => $result['status'],
                     'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
-                    'href' => $this->url->link('account/recurring/info', 'recurring_id='.$result['order_recurring_id'], 'SSL')];
+                    'href' => $this->url->link('account/recurring/info', 'recurring_id='.$result['order_recurring_id'], 'SSL'), ];
             }
         }
 
@@ -82,7 +82,7 @@ class ControllerAccountRecurring extends Controller
             3 => $this->language->get('text_status_suspended'),
             4 => $this->language->get('text_status_cancelled'),
             5 => $this->language->get('text_status_expired'),
-            6 => $this->language->get('text_status_pending')];
+            6 => $this->language->get('text_status_pending'), ];
 
         $pagination = new Pagination();
         $pagination->total = $recurring_total;
@@ -148,7 +148,7 @@ class ControllerAccountRecurring extends Controller
             3 => $this->language->get('text_status_suspended'),
             4 => $this->language->get('text_status_cancelled'),
             5 => $this->language->get('text_status_expired'),
-            6 => $this->language->get('text_status_pending')];
+            6 => $this->language->get('text_status_pending'), ];
 
         $data['transaction_types'] = [
             0 => $this->language->get('text_transaction_date_added'),
@@ -160,7 +160,7 @@ class ControllerAccountRecurring extends Controller
             6 => $this->language->get('text_transaction_suspended'),
             7 => $this->language->get('text_transaction_suspended_failed'),
             8 => $this->language->get('text_transaction_outstanding_failed'),
-            9 => $this->language->get('text_transaction_expired')];
+            9 => $this->language->get('text_transaction_expired'), ];
 
         if ($recurring) {
             $recurring['transactions'] = $this->model_account_recurring->getProfileTransactions($this->request->get['recurring_id']);
@@ -175,11 +175,11 @@ class ControllerAccountRecurring extends Controller
 
             $data['breadcrumbs'][] = [
                 'text' => $this->language->get('text_home'),
-                'href' => $this->url->link('common/home')];
+                'href' => $this->url->link('common/home'), ];
 
             $data['breadcrumbs'][] = [
                 'text' => $this->language->get('text_account'),
-                'href' => $this->url->link('account/account', '', 'SSL')];
+                'href' => $this->url->link('account/account', '', 'SSL'), ];
 
             $url = '';
 
@@ -189,11 +189,11 @@ class ControllerAccountRecurring extends Controller
 
             $data['breadcrumbs'][] = [
                 'text' => $this->language->get('heading_title'),
-                'href' => $this->url->link('account/recurring', $url, 'SSL')];
+                'href' => $this->url->link('account/recurring', $url, 'SSL'), ];
 
             $data['breadcrumbs'][] = [
                 'text' => $this->language->get('text_recurring'),
-                'href' => $this->url->link('account/recurring/info', 'recurring_id='.$this->request->get['recurring_id'].$url, 'SSL')];
+                'href' => $this->url->link('account/recurring/info', 'recurring_id='.$this->request->get['recurring_id'].$url, 'SSL'), ];
 
             $data['heading_title'] = $this->language->get('text_recurring');
 

@@ -18,17 +18,17 @@ class ControllerAffiliateCommission extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home')
+            'href' => $this->url->link('common/home'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_account'),
-            'href' => $this->url->link('affiliate/account', '', 'SSL')
+            'href' => $this->url->link('affiliate/account', '', 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_commission'),
-            'href' => $this->url->link('affiliate/commission', '', 'SSL')
+            'href' => $this->url->link('affiliate/commission', '', 'SSL'),
         ];
 
         $this->load->model('affiliate/commission');
@@ -56,7 +56,7 @@ class ControllerAffiliateCommission extends Controller
             'sort' => 't.date_added',
             'order' => 'DESC',
             'start' => ($page - 1) * 10,
-            'limit' => 10
+            'limit' => 10,
         ];
 
         $commission_total = $this->model_affiliate_commission->getTotalCommissions();
@@ -67,7 +67,7 @@ class ControllerAffiliateCommission extends Controller
             $data['commissions'][] = [
                 'amount' => $this->currency->format($result['amount'], $this->config->get('config_currency')),
                 'description' => $result['description'],
-                'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added']))
+                'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
             ];
         }
 

@@ -161,7 +161,7 @@ class ControllerAccountAddress extends Controller
                 'zipcode' => $result['zipcode'],
                 'address_type' => $result['address_type'],
                 'update' => $this->url->link('account/address/edit', 'address_id='.$result['address_id'], 'SSL'),
-                'delete' => $this->url->link('account/address/delete', 'address_id='.$result['address_id'], 'SSL')
+                'delete' => $this->url->link('account/address/delete', 'address_id='.$result['address_id'], 'SSL'),
             ];
         }
         if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/checkout/account-address-panel.tpl')) {
@@ -205,7 +205,7 @@ class ControllerAccountAddress extends Controller
 
             $activity_data = [
                 'customer_id' => $this->customer->getId(),
-                'name' => $this->customer->getFirstName().' '.$this->customer->getLastName()
+                'name' => $this->customer->getFirstName().' '.$this->customer->getLastName(),
             ];
 
             $this->model_account_activity->addActivity('address_add', $activity_data);
@@ -261,7 +261,7 @@ class ControllerAccountAddress extends Controller
 
             $activity_data = [
                 'customer_id' => $this->customer->getId(),
-                'name' => $this->customer->getFirstName().' '.$this->customer->getLastName()
+                'name' => $this->customer->getFirstName().' '.$this->customer->getLastName(),
             ];
 
             $this->model_account_activity->addActivity('address_edit', $activity_data);
@@ -303,7 +303,7 @@ class ControllerAccountAddress extends Controller
 
             $activity_data = [
                 'customer_id' => $this->customer->getId(),
-                'name' => $this->customer->getFirstName().' '.$this->customer->getLastName()
+                'name' => $this->customer->getFirstName().' '.$this->customer->getLastName(),
             ];
 
             $this->model_account_activity->addActivity('address_delete', $activity_data);
@@ -318,18 +318,18 @@ class ControllerAccountAddress extends Controller
     {
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home')
+            'href' => $this->url->link('common/home'),
         ];
         $data['konduto_public_key'] = $this->config->get('config_konduto_public_key');
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_account'),
-            'href' => $this->url->link('account/account', '', 'SSL')
+            'href' => $this->url->link('account/account', '', 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('account/address', '', 'SSL')
+            'href' => $this->url->link('account/address', '', 'SSL'),
         ];
 
         $data['heading_title'] = $this->language->get('heading_title');
@@ -410,7 +410,7 @@ class ControllerAccountAddress extends Controller
                 'zipcode' => $result['zipcode'],
                 'address_type' => $result['address_type'],
                 'update' => $this->url->link('account/address/edit', 'address_id='.$result['address_id'], 'SSL'),
-                'delete' => $this->url->link('account/address/delete', 'address_id='.$result['address_id'], 'SSL')
+                'delete' => $this->url->link('account/address/delete', 'address_id='.$result['address_id'], 'SSL'),
             ];
         }
 
@@ -463,28 +463,28 @@ class ControllerAccountAddress extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home')
+            'href' => $this->url->link('common/home'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_account'),
-            'href' => $this->url->link('account/account', '', 'SSL')
+            'href' => $this->url->link('account/account', '', 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('account/address', '', 'SSL')
+            'href' => $this->url->link('account/address', '', 'SSL'),
         ];
 
         if (!isset($this->request->get['address_id'])) {
             $data['breadcrumbs'][] = [
                 'text' => $this->language->get('text_edit_address'),
-                'href' => $this->url->link('account/address/add', '', 'SSL')
+                'href' => $this->url->link('account/address/add', '', 'SSL'),
             ];
         } else {
             $data['breadcrumbs'][] = [
                 'text' => $this->language->get('text_edit_address'),
-                'href' => $this->url->link('account/address/edit', 'address_id='.$this->request->get['address_id'], 'SSL')
+                'href' => $this->url->link('account/address/edit', 'address_id='.$this->request->get['address_id'], 'SSL'),
             ];
         }
 
@@ -984,7 +984,7 @@ class ControllerAccountAddress extends Controller
                 'zipcode' => $result['zipcode'],
                 'address_type' => $result['address_type'],
                 'update' => $this->url->link('account/address/edit', 'address_id='.$result['address_id'], 'SSL'),
-                'delete' => $this->url->link('account/address/delete', 'address_id='.$result['address_id'], 'SSL')
+                'delete' => $this->url->link('account/address/delete', 'address_id='.$result['address_id'], 'SSL'),
             ];
         }
 
@@ -1015,7 +1015,7 @@ class ControllerAccountAddress extends Controller
             curl_setopt($ch, CURLOPT_URL, $url);
 
             $headers = [
-                     'Cache-Control: no-cache'];
+                     'Cache-Control: no-cache', ];
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
             curl_setopt($ch, CURLOPT_FRESH_CONNECT, 1);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -1036,7 +1036,7 @@ class ControllerAccountAddress extends Controller
             curl_setopt($ch, CURLOPT_URL, $url);
 
             $headers = [
-                     'Cache-Control: no-cache'];
+                     'Cache-Control: no-cache', ];
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
             curl_setopt($ch, CURLOPT_FRESH_CONNECT, 1);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

@@ -12,12 +12,12 @@ class ModelCheckoutFraud extends Model
             $risk_score = $fraud_info['risk_score'];
         } else {
             /*
-			maxmind api
-			http://www.maxmind.com/app/ccv
+            maxmind api
+            http://www.maxmind.com/app/ccv
 
-			paypal api
-			https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/e_howto_html_IPNandPDTVariables
-			*/
+            paypal api
+            https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/e_howto_html_IPNandPDTVariables
+            */
 
             $request = 'i='.urlencode($data['ip']);
             $request .= '&city='.urlencode($data['payment_city']);

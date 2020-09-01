@@ -34,12 +34,12 @@ class ControllerAccountMember extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home')
+            'href' => $this->url->link('common/home'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_account'),
-            'href' => $this->url->link('account/member', '', 'SSL')
+            'href' => $this->url->link('account/member', '', 'SSL'),
         ];
 
         if (isset($this->session->data['success'])) {

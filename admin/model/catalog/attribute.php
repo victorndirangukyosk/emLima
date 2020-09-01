@@ -66,7 +66,7 @@ class ModelCatalogAttribute extends Model
         $sort_data = [
             'ad.name',
             'attribute_group',
-            'a.sort_order'
+            'a.sort_order',
         ];
 
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
@@ -126,7 +126,7 @@ class ModelCatalogAttribute extends Model
         $sort_data = [
             'ad.name',
             'attribute_group',
-            'a.sort_order'
+            'a.sort_order',
         ];
 
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {

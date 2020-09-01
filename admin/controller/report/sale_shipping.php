@@ -51,7 +51,7 @@ class ControllerReportSaleShipping extends Controller
             'filter_date_start' => $filter_date_start,
             'filter_date_end' => $filter_date_end,
             'filter_group' => $filter_group,
-            'filter_order_status_id' => $filter_order_status_id];
+            'filter_order_status_id' => $filter_order_status_id, ];
 
         $this->load->model('report/excel');
         $this->model_report_excel->download_sale_shipping_excel($filter_data);
@@ -139,12 +139,12 @@ class ControllerReportSaleShipping extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('report/sale_shipping', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('report/sale_shipping', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         $this->load->model('report/sale');
@@ -159,7 +159,7 @@ class ControllerReportSaleShipping extends Controller
             'filter_group' => $filter_group,
             'filter_order_status_id' => $filter_order_status_id,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin')
+            'limit' => $this->config->get('config_limit_admin'),
         ];
 
         $order_total = $this->model_report_sale->getTotalShipping($filter_data);
@@ -172,7 +172,7 @@ class ControllerReportSaleShipping extends Controller
                 'date_end' => date($this->language->get('date_format_short'), strtotime($result['date_end'])),
                 'title' => $result['title'],
                 'orders' => $result['orders'],
-                'total' => $this->currency->format($result['total'], $this->config->get('config_currency'))
+                'total' => $this->currency->format($result['total'], $this->config->get('config_currency')),
             ];
         }
 
@@ -211,19 +211,19 @@ class ControllerReportSaleShipping extends Controller
 
         $data['groups'][] = [
             'text' => $this->language->get('text_year'),
-            'value' => 'year'];
+            'value' => 'year', ];
 
         $data['groups'][] = [
             'text' => $this->language->get('text_month'),
-            'value' => 'month'];
+            'value' => 'month', ];
 
         $data['groups'][] = [
             'text' => $this->language->get('text_week'),
-            'value' => 'week'];
+            'value' => 'week', ];
 
         $data['groups'][] = [
             'text' => $this->language->get('text_day'),
-            'value' => 'day'];
+            'value' => 'day', ];
 
         $url = '';
 

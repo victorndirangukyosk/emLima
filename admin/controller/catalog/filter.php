@@ -170,12 +170,12 @@ class ControllerCatalogFilter extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('catalog/filter', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('catalog/filter', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         $data['add'] = $this->url->link('catalog/filter/add', 'token='.$this->session->data['token'].$url, 'SSL');
@@ -187,7 +187,7 @@ class ControllerCatalogFilter extends Controller
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin')
+            'limit' => $this->config->get('config_limit_admin'),
         ];
 
         $filter_total = $this->model_catalog_filter->getTotalFilterGroups();
@@ -199,7 +199,7 @@ class ControllerCatalogFilter extends Controller
                 'filter_group_id' => $result['filter_group_id'],
                 'name' => $result['name'],
                 'sort_order' => $result['sort_order'],
-                'edit' => $this->url->link('catalog/filter/edit', 'token='.$this->session->data['token'].'&filter_group_id='.$result['filter_group_id'].$url, 'SSL')
+                'edit' => $this->url->link('catalog/filter/edit', 'token='.$this->session->data['token'].'&filter_group_id='.$result['filter_group_id'].$url, 'SSL'),
             ];
         }
 
@@ -335,12 +335,12 @@ class ControllerCatalogFilter extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('catalog/filter', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('catalog/filter', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         if (!isset($this->request->get['filter_group_id'])) {
@@ -436,7 +436,7 @@ class ControllerCatalogFilter extends Controller
             $filter_data = [
                 'filter_name' => $this->request->get['filter_name'],
                 'start' => 0,
-                'limit' => 5
+                'limit' => 5,
             ];
 
             $filters = $this->model_catalog_filter->getFilters($filter_data);
@@ -444,7 +444,7 @@ class ControllerCatalogFilter extends Controller
             foreach ($filters as $filter) {
                 $json[] = [
                     'filter_id' => $filter['filter_id'],
-                    'name' => strip_tags(html_entity_decode($filter['group'].' &gt; '.$filter['name'], ENT_QUOTES, 'UTF-8'))
+                    'name' => strip_tags(html_entity_decode($filter['group'].' &gt; '.$filter['name'], ENT_QUOTES, 'UTF-8')),
                 ];
             }
         }

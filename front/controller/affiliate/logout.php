@@ -18,17 +18,17 @@ class ControllerAffiliateLogout extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home')
+            'href' => $this->url->link('common/home'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_account'),
-            'href' => $this->url->link('affiliate/account', '', 'SSL')
+            'href' => $this->url->link('affiliate/account', '', 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_logout'),
-            'href' => $this->url->link('affiliate/logout', '', 'SSL')
+            'href' => $this->url->link('affiliate/logout', '', 'SSL'),
         ];
 
         $data['heading_title'] = $this->language->get('heading_title');

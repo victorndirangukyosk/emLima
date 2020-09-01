@@ -206,12 +206,12 @@ class ControllerSettingSeo extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('setting/seo', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('setting/seo', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         $data['add'] = $this->url->link('setting/seo/add', 'token='.$this->session->data['token'].$url, 'SSL');
@@ -225,7 +225,7 @@ class ControllerSettingSeo extends Controller
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin')
+            'limit' => $this->config->get('config_limit_admin'),
         ];
 
         if (!empty($filter_query) || !empty($filter_keyword)) {
@@ -242,7 +242,7 @@ class ControllerSettingSeo extends Controller
                 'url_alias_id' => $result['url_alias_id'],
                 'query' => $result['query'],
                             'keyword' => $result['keyword'],
-                'edit' => $this->url->link('setting/seo/edit', 'token='.$this->session->data['token'].'&url_alias_id='.$result['url_alias_id'].$url, 'SSL')
+                'edit' => $this->url->link('setting/seo/edit', 'token='.$this->session->data['token'].'&url_alias_id='.$result['url_alias_id'].$url, 'SSL'),
             ];
         }
 
@@ -417,12 +417,12 @@ class ControllerSettingSeo extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('setting/seo', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('setting/seo', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         if (!isset($this->request->get['url_alias_id'])) {
@@ -553,7 +553,7 @@ class ControllerSettingSeo extends Controller
                 'filter_last_name' => $filter_last_name,
                 'filter_email' => $filter_email,
                 'start' => 0,
-                'limit' => $limit
+                'limit' => $limit,
             ];
 
             if (empty($filter_keyword)) {
@@ -571,14 +571,14 @@ class ControllerSettingSeo extends Controller
                             'username' => $result['username'],
                             'firstname' => $result['firstname'],
                             'lastname' => $result['lastname'],
-                            'email' => $result['email']
+                            'email' => $result['email'],
                         ];
                 }
             } elseif (!empty($_results)) {
                 foreach ($_results as $result) {
                     $json[] = [
                             'user_group_id' => $result['user_group_id'],
-                            'user_group' => $result['name']
+                            'user_group' => $result['name'],
                         ];
                 }
             }

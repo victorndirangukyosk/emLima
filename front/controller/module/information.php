@@ -18,7 +18,7 @@ class ControllerModuleInformation extends Controller
         foreach ($this->model_assets_information->getInformations() as $result) {
             $data['informations'][] = [
                 'title' => $result['title'],
-                'href' => $this->url->link('information/information', 'information_id='.$result['information_id'])
+                'href' => $this->url->link('information/information', 'information_id='.$result['information_id']),
             ];
         }
 

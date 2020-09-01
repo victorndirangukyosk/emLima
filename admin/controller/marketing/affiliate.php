@@ -386,12 +386,12 @@ class ControllerMarketingAffiliate extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('marketing/affiliate', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('marketing/affiliate', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         $data['approve'] = $this->url->link('marketing/affiliate/approve', 'token='.$this->session->data['token'].$url, 'SSL');
@@ -409,7 +409,7 @@ class ControllerMarketingAffiliate extends Controller
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin')
+            'limit' => $this->config->get('config_limit_admin'),
         ];
 
         $affiliate_total = $this->model_marketing_affiliate->getTotalAffiliates($filter_data);
@@ -440,7 +440,7 @@ class ControllerMarketingAffiliate extends Controller
                 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
                 'approve' => $approve,
                 'unlock' => $unlock,
-                'edit' => $this->url->link('marketing/affiliate/edit', 'token='.$this->session->data['token'].'&affiliate_id='.$result['affiliate_id'].$url, 'SSL')
+                'edit' => $this->url->link('marketing/affiliate/edit', 'token='.$this->session->data['token'].'&affiliate_id='.$result['affiliate_id'].$url, 'SSL'),
             ];
         }
 
@@ -790,12 +790,12 @@ class ControllerMarketingAffiliate extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('marketing/affiliate', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('marketing/affiliate', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         if (!isset($this->request->get['affiliate_id'])) {
@@ -1036,18 +1036,18 @@ class ControllerMarketingAffiliate extends Controller
 
         /*
         if (isset($this->request->post['send_email'])) {
-			$data['send_email'] = $this->request->post['send_email'];
+            $data['send_email'] = $this->request->post['send_email'];
         } elseif (!empty($affiliate_info)) {
             $data['send_email'] = $affiliate_info['send_email'];
         } else {
-			$data['send_email'] = '';
-		}
+            $data['send_email'] = '';
+        }
 
         $data['show_send_email'] = '';
         if (!isset($this->request->get['affiliate_id'])) {
             $data['show_send_email'] = true;
         }
-		*/
+        */
 
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
@@ -1199,7 +1199,7 @@ class ControllerMarketingAffiliate extends Controller
                 'address_format' => $country_info['address_format'],
                 'postcode_required' => $country_info['postcode_required'],
                 'zone' => $this->model_localisation_zone->getZonesByCountryId($this->request->get['country_id']),
-                'status' => $country_info['status']
+                'status' => $country_info['status'],
             ];
         }
 
@@ -1248,7 +1248,7 @@ class ControllerMarketingAffiliate extends Controller
             $data['commissions'][] = [
                 'amount' => $this->currency->format($result['amount'], $this->config->get('config_currency')),
                 'description' => $result['description'],
-                'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added']))
+                'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
             ];
         }
 
@@ -1292,7 +1292,7 @@ class ControllerMarketingAffiliate extends Controller
                 'filter_name' => $filter_name,
                 'filter_email' => $filter_email,
                 'start' => 0,
-                'limit' => 5
+                'limit' => 5,
             ];
 
             $results = $this->model_marketing_affiliate->getAffiliates($filter_data);
@@ -1301,7 +1301,7 @@ class ControllerMarketingAffiliate extends Controller
                 $affiliate_data[] = [
                     'affiliate_id' => $result['affiliate_id'],
                     'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')),
-                    'email' => $result['email']
+                    'email' => $result['email'],
                 ];
             }
         }

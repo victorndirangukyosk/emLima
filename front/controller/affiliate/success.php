@@ -12,17 +12,17 @@ class ControllerAffiliateSuccess extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home')
+            'href' => $this->url->link('common/home'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_account'),
-            'href' => $this->url->link('affiliate/account', '', 'SSL')
+            'href' => $this->url->link('affiliate/account', '', 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_success'),
-            'href' => $this->url->link('affiliate/success')
+            'href' => $this->url->link('affiliate/success'),
         ];
 
         $data['heading_title'] = $this->language->get('heading_title');

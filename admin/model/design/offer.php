@@ -35,7 +35,7 @@ class ModelDesignOffer extends Model
         $sql = 'SELECT * FROM '.DB_PREFIX.'offer';
 
         $sort_data = [
-            'title'];
+            'title', ];
 
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
             $sql .= ' ORDER BY '.$data['sort'];

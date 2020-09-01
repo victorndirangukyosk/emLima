@@ -171,12 +171,12 @@ class ControllerLocalisationTaxClass extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('localisation/tax_class', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('localisation/tax_class', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         $data['add'] = $this->url->link('localisation/tax_class/add', 'token='.$this->session->data['token'].$url, 'SSL');
@@ -188,7 +188,7 @@ class ControllerLocalisationTaxClass extends Controller
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin')
+            'limit' => $this->config->get('config_limit_admin'),
         ];
 
         $tax_class_total = $this->model_localisation_tax_class->getTotalTaxClasses();
@@ -199,7 +199,7 @@ class ControllerLocalisationTaxClass extends Controller
             $data['tax_classes'][] = [
                 'tax_class_id' => $result['tax_class_id'],
                 'title' => $result['title'],
-                'edit' => $this->url->link('localisation/tax_class/edit', 'token='.$this->session->data['token'].'&tax_class_id='.$result['tax_class_id'].$url, 'SSL')
+                'edit' => $this->url->link('localisation/tax_class/edit', 'token='.$this->session->data['token'].'&tax_class_id='.$result['tax_class_id'].$url, 'SSL'),
             ];
         }
 
@@ -345,12 +345,12 @@ class ControllerLocalisationTaxClass extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('localisation/tax_class', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('localisation/tax_class', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         if (!isset($this->request->get['tax_class_id'])) {

@@ -170,12 +170,12 @@ class ControllerCatalogRecipe extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('catalog/recipe', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('catalog/recipe', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         $data['add'] = $this->url->link('catalog/recipe/add', 'token='.$this->session->data['token'].$url, 'SSL');
@@ -187,7 +187,7 @@ class ControllerCatalogRecipe extends Controller
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin')
+            'limit' => $this->config->get('config_limit_admin'),
         ];
 
         $recipe_total = $this->model_catalog_recipe->getTotalRecipes();
@@ -200,7 +200,7 @@ class ControllerCatalogRecipe extends Controller
                 'title' => $result['title'],
                 'author' => $result['author'],
                 'sort_order' => $result['sort_order'],
-                'edit' => $this->url->link('catalog/recipe/edit', 'token='.$this->session->data['token'].'&recipe_id='.$result['recipe_id'].$url, 'SSL')
+                'edit' => $this->url->link('catalog/recipe/edit', 'token='.$this->session->data['token'].'&recipe_id='.$result['recipe_id'].$url, 'SSL'),
             ];
         }
 
@@ -376,12 +376,12 @@ class ControllerCatalogRecipe extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('catalog/recipe', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('catalog/recipe', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         if (!isset($this->request->get['recipe_id'])) {
@@ -480,7 +480,7 @@ class ControllerCatalogRecipe extends Controller
                 'model' => $product['model'],
                 'quantity' => $product['quantity'],
                 'image' => $product['image'],
-                'thumb' => $thumb
+                'thumb' => $thumb,
             ];
         }
 
@@ -550,7 +550,7 @@ class ControllerCatalogRecipe extends Controller
             $filter_data = [
                 'filter_name' => $this->request->get['filter_name'],
                 'start' => 0,
-                'limit' => 5
+                'limit' => 5,
             ];
 
             $recipes = $this->model_catalog_recipe->getRecipes($filter_data);
@@ -571,7 +571,7 @@ class ControllerCatalogRecipe extends Controller
                         $recipe_value_data[] = [
                             'recipe_value_id' => $recipe_value['recipe_value_id'],
                             'name' => strip_tags(html_entity_decode($recipe_value['name'], ENT_QUOTES, 'UTF-8')),
-                            'image' => $image
+                            'image' => $image,
                         ];
                     }
 
@@ -607,7 +607,7 @@ class ControllerCatalogRecipe extends Controller
                     'name' => strip_tags(html_entity_decode($recipe['name'], ENT_QUOTES, 'UTF-8')),
                     'category' => $type,
                     'type' => $recipe['type'],
-                    'recipe_value' => $recipe_value_data
+                    'recipe_value' => $recipe_value_data,
                 ];
             }
         }

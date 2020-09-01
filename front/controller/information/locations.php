@@ -10,7 +10,7 @@ class ControllerInformationLocations extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home')
+            'href' => $this->url->link('common/home'),
         ];
 
         $data['kondutoStatus'] = $this->config->get('config_konduto_status');
@@ -486,7 +486,7 @@ class ControllerInformationLocations extends Controller
                     $method_data[] = [
                         'title' => $quote['title'],
                         'sort_order' => $quote['sort_order'],
-                        'code' => $result['code']];
+                        'code' => $result['code'], ];
                 }
             }
         }
@@ -590,7 +590,7 @@ class ControllerInformationLocations extends Controller
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
                 $headers = [
-                             'Cache-Control: no-cache'];
+                             'Cache-Control: no-cache', ];
                 curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
                 curl_setopt($ch, CURLOPT_FRESH_CONNECT, 1);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -628,7 +628,7 @@ class ControllerInformationLocations extends Controller
             curl_setopt($ch, CURLOPT_URL, $url);
 
             $headers = [
-                         'Cache-Control: no-cache'];
+                         'Cache-Control: no-cache', ];
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
             curl_setopt($ch, CURLOPT_FRESH_CONNECT, 1);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -701,7 +701,7 @@ class ControllerInformationLocations extends Controller
                         $ch = curl_init();
                         curl_setopt($ch, CURLOPT_URL, $url);
                         $headers = [
-                                     'Cache-Control: no-cache'];
+                                     'Cache-Control: no-cache', ];
                         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
                         curl_setopt($ch, CURLOPT_FRESH_CONNECT, 1);
 
@@ -764,7 +764,7 @@ class ControllerInformationLocations extends Controller
                     $ch = curl_init();
                     curl_setopt($ch, CURLOPT_URL, $url);
                     $headers = [
-                                 'Cache-Control: no-cache'];
+                                 'Cache-Control: no-cache', ];
                     curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
                     curl_setopt($ch, CURLOPT_FRESH_CONNECT, 1);
 

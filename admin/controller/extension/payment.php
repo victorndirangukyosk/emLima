@@ -72,12 +72,12 @@ class ControllerExtensionPayment extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('extension/payment', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('extension/payment', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['heading_title'] = $this->language->get('heading_title');
@@ -151,7 +151,7 @@ class ControllerExtensionPayment extends Controller
                     'install' => $this->url->link('extension/payment/install', 'token='.$this->session->data['token'].'&extension='.$extension, 'SSL'),
                     'uninstall' => $this->url->link('extension/payment/uninstall', 'token='.$this->session->data['token'].'&extension='.$extension, 'SSL'),
                     'installed' => in_array($extension, $extensions),
-                    'edit' => $this->url->link('payment/'.$extension.'', 'token='.$this->session->data['token'], 'SSL')
+                    'edit' => $this->url->link('payment/'.$extension.'', 'token='.$this->session->data['token'], 'SSL'),
                 ];
             }
         }

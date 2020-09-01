@@ -107,7 +107,7 @@ class ControllerApiShipping extends Controller
                                         'title' => $quote['title'],
                                         'quote' => $quote['quote'],
                                         'sort_order' => $quote['sort_order'],
-                                        'error' => $quote['error']
+                                        'error' => $quote['error'],
                                     ];
                                 }
                             }
@@ -120,7 +120,7 @@ class ControllerApiShipping extends Controller
                                 'title' => $quote['title'],
                                 'quote' => $quote['quote'],
                                 'sort_order' => $quote['sort_order'],
-                                'error' => $quote['error']
+                                'error' => $quote['error'],
                             ];
                             }
                         }

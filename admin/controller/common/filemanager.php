@@ -84,7 +84,7 @@ class ControllerCommonFileManager extends Controller
                     'name' => implode(' ', $name),
                     'type' => 'directory',
                     'path' => utf8_substr($image, utf8_strlen(DIR_IMAGE)),
-                    'href' => $this->url->link('common/filemanager', 'token='.$this->session->data['token'].'&directory='.urlencode(utf8_substr($image, utf8_strlen(DIR_IMAGE.'data/'))).$url, 'SSL')
+                    'href' => $this->url->link('common/filemanager', 'token='.$this->session->data['token'].'&directory='.urlencode(utf8_substr($image, utf8_strlen(DIR_IMAGE.'data/'))).$url, 'SSL'),
                 ];
             } elseif (is_file($image)) {
                 // Find which protocol to use to pass the full image link back
@@ -99,7 +99,7 @@ class ControllerCommonFileManager extends Controller
                     'name' => implode(' ', $name),
                     'type' => 'image',
                     'path' => utf8_substr($image, utf8_strlen(DIR_IMAGE)),
-                    'href' => $server.'image/'.utf8_substr($image, utf8_strlen(DIR_IMAGE))
+                    'href' => $server.'image/'.utf8_substr($image, utf8_strlen(DIR_IMAGE)),
                 ];
             }
         }
@@ -273,7 +273,7 @@ class ControllerCommonFileManager extends Controller
                     'jpg',
                     'jpeg',
                     'gif',
-                    'png'
+                    'png',
                 ];
 
                 if (!in_array(utf8_strtolower(utf8_substr(strrchr($filename, '.'), 1)), $allowed)) {
@@ -286,7 +286,7 @@ class ControllerCommonFileManager extends Controller
                     'image/pjpeg',
                     'image/png',
                     'image/x-png',
-                    'image/gif'
+                    'image/gif',
                 ];
 
                 if (!in_array($this->request->files['file']['type'], $allowed)) {

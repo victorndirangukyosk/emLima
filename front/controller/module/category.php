@@ -46,21 +46,21 @@ class ControllerModuleCategory extends Controller
                     $children_data[] = [
                         'category_id' => $child['category_id'],
                         'name' => $child['name'].($this->config->get('config_product_count') ? ' ('.$this->model_assets_product->getTotalProducts($filter_data).')' : ''),
-                        'href' => $this->url->link('product/category', 'category='.$category['category_id'].'_'.$child['category_id'])
+                        'href' => $this->url->link('product/category', 'category='.$category['category_id'].'_'.$child['category_id']),
                     ];
                 }
             }
 
             $filter_data = [
                 'filter_category_id' => $category['category_id'],
-                'filter_sub_category' => true
+                'filter_sub_category' => true,
             ];
 
             $data['categories'][] = [
                 'category_id' => $category['category_id'],
                 'name' => $category['name'].($this->config->get('config_product_count') ? ' ('.$this->model_assets_product->getTotalProducts($filter_data).')' : ''),
                 'children' => $children_data,
-                'href' => $this->url->link('product/category', 'category='.$category['category_id'])
+                'href' => $this->url->link('product/category', 'category='.$category['category_id']),
             ];
         }
 

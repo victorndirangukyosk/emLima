@@ -12,22 +12,22 @@ class ControllerCheckoutFailure extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home')
+            'href' => $this->url->link('common/home'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_basket'),
-            'href' => $this->url->link('checkout/cart')
+            'href' => $this->url->link('checkout/cart'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_checkout'),
-            'href' => $this->url->link('checkout/checkout', '', 'SSL')
+            'href' => $this->url->link('checkout/checkout', '', 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_failure'),
-            'href' => $this->url->link('checkout/failure')
+            'href' => $this->url->link('checkout/failure'),
         ];
 
         $data['heading_title'] = $this->language->get('heading_title');

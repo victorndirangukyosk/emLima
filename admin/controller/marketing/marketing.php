@@ -240,12 +240,12 @@ class ControllerMarketingMarketing extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('marketing/marketing', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('marketing/marketing', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         $data['add'] = $this->url->link('marketing/marketing/add', 'token='.$this->session->data['token'].$url, 'SSL');
@@ -260,7 +260,7 @@ class ControllerMarketingMarketing extends Controller
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin')
+            'limit' => $this->config->get('config_limit_admin'),
         ];
 
         $marketing_total = $this->model_marketing_marketing->getTotalMarketings($filter_data);
@@ -275,7 +275,7 @@ class ControllerMarketingMarketing extends Controller
                 'clicks' => $result['clicks'],
                 'orders' => $result['orders'],
                 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
-                'edit' => $this->url->link('marketing/marketing/edit', 'token='.$this->session->data['token'].'&marketing_id='.$result['marketing_id'].$url, 'SSL')
+                'edit' => $this->url->link('marketing/marketing/edit', 'token='.$this->session->data['token'].'&marketing_id='.$result['marketing_id'].$url, 'SSL'),
             ];
         }
 
@@ -473,12 +473,12 @@ class ControllerMarketingMarketing extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('marketing/marketing', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('marketing/marketing', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         if (!isset($this->request->get['marketing_id'])) {

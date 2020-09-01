@@ -33,7 +33,7 @@ class ControllerCommonLanguage extends Controller
                 $data['languages'][] = [
                     'name' => $result['name'],
                     'code' => $result['code'],
-                    'image' => $result['image']
+                    'image' => $result['image'],
                 ];
             }
         }
@@ -106,7 +106,7 @@ class ControllerCommonLanguage extends Controller
                 $data['languages'][] = [
                     'name' => $result['name'],
                     'code' => $result['code'],
-                    'image' => $result['image']
+                    'image' => $result['image'],
                 ];
             }
         }
@@ -179,7 +179,7 @@ class ControllerCommonLanguage extends Controller
                 $data['languages'][] = [
                     'name' => $result['name'],
                     'code' => $result['code'],
-                    'image' => $result['image']
+                    'image' => $result['image'],
                 ];
             }
         }

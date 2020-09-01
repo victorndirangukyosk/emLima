@@ -100,7 +100,7 @@ class ModelSaleReturn extends Model
             'r.store',
             'status',
             'r.date_added',
-            'r.date_modified'
+            'r.date_modified',
         ];
 
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
@@ -249,7 +249,7 @@ class ModelSaleReturn extends Model
             'r.store',
             'status',
             'r.date_added',
-            'r.date_modified'
+            'r.date_modified',
         ];
 
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {

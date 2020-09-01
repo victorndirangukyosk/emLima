@@ -54,7 +54,7 @@ class ControllerApiVoucher extends Controller
                 'to_email',
                 'voucher_theme_id',
                 'message',
-                'amount'
+                'amount',
             ];
 
             foreach ($keys as $key) {
@@ -77,7 +77,7 @@ class ControllerApiVoucher extends Controller
                             'from_email' => $voucher['from_email'],
                             'voucher_theme_id' => $voucher['voucher_theme_id'],
                             'message' => $voucher['message'],
-                            'amount' => $this->currency->convert($voucher['amount'], $this->currency->getCode(), $this->config->get('config_currency'))
+                            'amount' => $this->currency->convert($voucher['amount'], $this->currency->getCode(), $this->config->get('config_currency')),
                         ];
                     }
                 }
@@ -116,7 +116,7 @@ class ControllerApiVoucher extends Controller
                     'from_email' => $this->request->post['from_email'],
                     'voucher_theme_id' => $this->request->post['voucher_theme_id'],
                     'message' => $this->request->post['message'],
-                    'amount' => $this->currency->convert($this->request->post['amount'], $this->currency->getCode(), $this->config->get('config_currency'))
+                    'amount' => $this->currency->convert($this->request->post['amount'], $this->currency->getCode(), $this->config->get('config_currency')),
                 ];
 
                 $json['success'] = $this->language->get('text_cart');

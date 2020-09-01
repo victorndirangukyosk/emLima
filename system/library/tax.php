@@ -63,7 +63,7 @@ final class Tax
                 'name' => $result['name'],
                 'rate' => $result['rate'],
                 'type' => $result['type'],
-                'priority' => $result['priority']
+                'priority' => $result['priority'],
             ];
         }
     }
@@ -136,7 +136,7 @@ final class Tax
                     'name' => $tax_rate['name'],
                     'rate' => $tax_rate['rate'],
                     'type' => $tax_rate['type'],
-                    'amount' => $amount
+                    'amount' => $amount,
                 ];
             }
         }

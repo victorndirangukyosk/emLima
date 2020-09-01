@@ -170,12 +170,12 @@ class ControllerCatalogInformation extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('catalog/information', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('catalog/information', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         $data['add'] = $this->url->link('catalog/information/add', 'token='.$this->session->data['token'].$url, 'SSL');
@@ -187,7 +187,7 @@ class ControllerCatalogInformation extends Controller
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin')
+            'limit' => $this->config->get('config_limit_admin'),
         ];
 
         $information_total = $this->model_catalog_information->getTotalInformations();
@@ -200,7 +200,7 @@ class ControllerCatalogInformation extends Controller
                 'title' => $result['title'],
                 'sort_order' => $result['sort_order'],
                 'status' => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
-                'edit' => $this->url->link('catalog/information/edit', 'token='.$this->session->data['token'].'&information_id='.$result['information_id'].$url, 'SSL')
+                'edit' => $this->url->link('catalog/information/edit', 'token='.$this->session->data['token'].'&information_id='.$result['information_id'].$url, 'SSL'),
             ];
         }
 
@@ -361,12 +361,12 @@ class ControllerCatalogInformation extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('catalog/information', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('catalog/information', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         if (!isset($this->request->get['information_id'])) {

@@ -73,7 +73,7 @@ class ControllerInformationHelp extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home')
+            'href' => $this->url->link('common/home'),
         ];
 
         $title = $this->language->get('heading_title');
@@ -82,7 +82,7 @@ class ControllerInformationHelp extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $title,
-            'href' => $this->url->link('information/help')
+            'href' => $this->url->link('information/help'),
         ];
 
         $data['heading_title'] = $title;
@@ -128,7 +128,7 @@ class ControllerInformationHelp extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home')
+            'href' => $this->url->link('common/home'),
         ];
 
         $title = empty($category_info['name']) ? $category_info['name'] : $category_info['name'];
@@ -151,7 +151,7 @@ class ControllerInformationHelp extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $category_info['name'],
-            'href' => $this->url->link('information/help', 'category_id='.$category_info['category_id'])
+            'href' => $this->url->link('information/help', 'category_id='.$category_info['category_id']),
         ];
 
         $data['heading_title'] = $category_info['name'];

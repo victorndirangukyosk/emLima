@@ -52,7 +52,7 @@ class ControllerCheckoutTotals extends Controller
         foreach ($total_data as $total) {
             $data['totals'][] = [
                 'title' => $total['title'],
-                'text' => $this->currency->format($total['value'])
+                'text' => $this->currency->format($total['value']),
             ];
         }
 
@@ -102,7 +102,7 @@ class ControllerCheckoutTotals extends Controller
         foreach ($total_data as $total) {
             $data['totals'][] = [
                 'title' => $total['title'],
-                'text' => $this->currency->format($total['value'])
+                'text' => $this->currency->format($total['value']),
             ];
         }
 
@@ -195,7 +195,7 @@ class ControllerCheckoutTotals extends Controller
             $data['totals'][] = [
                 'title' => $total['title'],
                 'text' => $this->currency->format($total['value']),
-                'value' => $total['value']
+                'value' => $total['value'],
             ];
         }
 

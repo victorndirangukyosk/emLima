@@ -180,12 +180,12 @@ class ControllerCatalogDownload extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('catalog/download', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('catalog/download', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         $data['add'] = $this->url->link('catalog/download/add', 'token='.$this->session->data['token'].$url, 'SSL');
@@ -198,7 +198,7 @@ class ControllerCatalogDownload extends Controller
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin')
+            'limit' => $this->config->get('config_limit_admin'),
         ];
 
         $download_total = $this->model_catalog_download->getTotalDownloads();
@@ -210,7 +210,7 @@ class ControllerCatalogDownload extends Controller
                 'download_id' => $result['download_id'],
                 'name' => $result['name'],
                 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
-                'edit' => $this->url->link('catalog/download/edit', 'token='.$this->session->data['token'].'&download_id='.$result['download_id'].$url, 'SSL')
+                'edit' => $this->url->link('catalog/download/edit', 'token='.$this->session->data['token'].'&download_id='.$result['download_id'].$url, 'SSL'),
             ];
         }
 
@@ -362,12 +362,12 @@ class ControllerCatalogDownload extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('catalog/download', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('catalog/download', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         if (!isset($this->request->get['download_id'])) {
@@ -563,7 +563,7 @@ class ControllerCatalogDownload extends Controller
             $filter_data = [
                 'filter_name' => $this->request->get['filter_name'],
                 'start' => 0,
-                'limit' => 5
+                'limit' => 5,
             ];
 
             $results = $this->model_catalog_download->getDownloads($filter_data);
@@ -571,7 +571,7 @@ class ControllerCatalogDownload extends Controller
             foreach ($results as $result) {
                 $json[] = [
                     'download_id' => $result['download_id'],
-                    'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8'))
+                    'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')),
                 ];
             }
         }

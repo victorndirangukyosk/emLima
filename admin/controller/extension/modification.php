@@ -690,12 +690,12 @@ class ControllerExtensionModification extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('extension/modification', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('extension/modification', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['refresh'] = $this->url->link('extension/modification/refresh', 'token='.$this->session->data['token'].$url, 'SSL');
@@ -708,7 +708,7 @@ class ControllerExtensionModification extends Controller
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin')
+            'limit' => $this->config->get('config_limit_admin'),
         ];
 
         $files_enable = glob(DIR_SYSTEM.'xml/*.xml');
@@ -789,7 +789,7 @@ class ControllerExtensionModification extends Controller
                         'date_added' => '',
                         'enable' => $this->url->link('extension/modification/enable', 'token='.$this->session->data['token'].'&modification_id='.$modification_id, 'SSL'),
                         'disable' => $this->url->link('extension/modification/disable', 'token='.$this->session->data['token'].'&modification_id='.$modification_id, 'SSL'),
-                        'enabled' => $status];
+                        'enabled' => $status, ];
                 } catch (Exception $exception) {
                     $json['error'] = sprintf($this->language->get('error_exception'), $exception->getCode(), $exception->getMessage(), $exception->getFile(), $exception->getLine());
                 }
@@ -1018,7 +1018,7 @@ class ControllerExtensionModification extends Controller
                             'date_added' => '',
                             'enable' => $this->url->link('extension/modification/enable', 'token='.$this->session->data['token'].'&modification_id='.$vqmod_id, 'SSL'),
                             'disable' => $this->url->link('extension/modification/disable', 'token='.$this->session->data['token'].'&modification_id='.$vqmod_id, 'SSL'),
-                            'enabled' => $status];
+                            'enabled' => $status, ];
                     } catch (Exception $exception) {
                         $json['error'] = sprintf($this->language->get('error_exception'), $exception->getCode(), $exception->getMessage(), $exception->getFile(), $exception->getLine());
                     }

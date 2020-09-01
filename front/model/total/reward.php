@@ -74,7 +74,7 @@ class ModelTotalReward extends Model
                         'title' => sprintf($this->language->get('text_reward'), $give_reward),
 
                         'value' => -$give_reward,
-                        'sort_order' => $this->config->get('reward_sort_order')
+                        'sort_order' => $this->config->get('reward_sort_order'),
                     ];
                     $total -= $give_reward;
                 } else {
@@ -84,7 +84,7 @@ class ModelTotalReward extends Model
                         'code' => 'reward',
                         'title' => sprintf($this->language->get('text_reward'), $this->session->data['reward']),
                         'value' => -$discount_total,
-                        'sort_order' => $this->config->get('reward_sort_order')
+                        'sort_order' => $this->config->get('reward_sort_order'),
                     ];
                     $total -= $discount_total;
                 }
@@ -147,7 +147,7 @@ class ModelTotalReward extends Model
                     'code' => 'reward',
                     'title' => sprintf($this->language->get('text_reward'), $give_reward),
                     'value' => -$give_reward,
-                    'sort_order' => $this->config->get('reward_sort_order')
+                    'sort_order' => $this->config->get('reward_sort_order'),
                 ];
 
                 $total -= $give_reward;

@@ -18,17 +18,17 @@ class ControllerAffiliateTracking extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home')
+            'href' => $this->url->link('common/home'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_account'),
-            'href' => $this->url->link('affiliate/account', '', 'SSL')
+            'href' => $this->url->link('affiliate/account', '', 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('affiliate/tracking', '', 'SSL')
+            'href' => $this->url->link('affiliate/tracking', '', 'SSL'),
         ];
 
         $data['heading_title'] = $this->language->get('heading_title');
@@ -71,7 +71,7 @@ class ControllerAffiliateTracking extends Controller
             $filter_data = [
                 'filter_name' => $this->request->get['filter_name'],
                 'start' => 0,
-                'limit' => 5
+                'limit' => 5,
             ];
 
             $results = $this->model_assets_product->getProducts($filter_data);
@@ -79,7 +79,7 @@ class ControllerAffiliateTracking extends Controller
             foreach ($results as $result) {
                 $json[] = [
                     'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')),
-                    'link' => str_replace('&amp;', '&', $this->url->link('product/product', 'product_id='.$result['product_id'].'&tracking='.$this->affiliate->getCode()))
+                    'link' => str_replace('&amp;', '&', $this->url->link('product/product', 'product_id='.$result['product_id'].'&tracking='.$this->affiliate->getCode())),
                 ];
             }
         }

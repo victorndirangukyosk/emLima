@@ -44,12 +44,12 @@ class ControllerReportCustomerReward extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('report/customer_reward', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('report/customer_reward', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         $this->load->model('report/customer');
@@ -60,7 +60,7 @@ class ControllerReportCustomerReward extends Controller
             'filter_date_start' => $filter_date_start,
             'filter_date_end' => $filter_date_end,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin')
+            'limit' => $this->config->get('config_limit_admin'),
         ];
 
         $customer_total = $this->model_report_customer->getTotalRewardPoints($filter_data);
@@ -76,7 +76,7 @@ class ControllerReportCustomerReward extends Controller
                 'points' => $result['points'],
                 'orders' => $result['orders'],
                 'total' => $this->currency->format($result['total'], $this->config->get('config_currency')),
-                'edit' => $this->url->link('sale/customer/edit', 'token='.$this->session->data['token'].'&customer_id='.$result['customer_id'].$url, 'SSL')
+                'edit' => $this->url->link('sale/customer/edit', 'token='.$this->session->data['token'].'&customer_id='.$result['customer_id'].$url, 'SSL'),
             ];
         }
 

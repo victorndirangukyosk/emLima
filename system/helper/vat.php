@@ -30,7 +30,7 @@ function vat_validation($prefix, $number)
         'RO' => 'RO', //Romania
         'SK' => 'SK', //Slovakia
         'CZ' => 'CZ', //Czech Republic
-        'SI' => 'SI'  //Slovania
+        'SI' => 'SI',  //Slovania
     ];
 
     if (array_search(substr($number, 0, 2), $iso_code_2_data)) {

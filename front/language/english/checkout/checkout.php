@@ -1,4 +1,5 @@
 <?php
+
 // Heading
 $_['heading_title'] = 'Checkout';
 $_['heading_text'] = 'Place Order';

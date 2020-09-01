@@ -33,13 +33,13 @@ class ControllerProductRecipe extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home')
+            'href' => $this->url->link('common/home'),
         ];
 
         // Set the last category breadcrumb
         $data['breadcrumbs'][] = [
             'text' => $title,
-            'href' => $this->url->link('product/recipe')
+            'href' => $this->url->link('product/recipe'),
         ];
 
         $data['recipes'] = [];
@@ -53,7 +53,7 @@ class ControllerProductRecipe extends Controller
         $filter_data = [
             'filter_category' => $data['category_id'],
             'start' => ($page - 1) * $limit,
-            'limit' => $limit
+            'limit' => $limit,
         ];
 
         $data['categories'] = $this->model_assets_recipe->getCategories();
@@ -77,7 +77,7 @@ class ControllerProductRecipe extends Controller
                 'author' => $result['author'],
                 'video' => $result['video'],
                 //'thumb' => 'image/' . $result['image'],
-                'thumb' => $thumb];
+                'thumb' => $thumb, ];
         }
 
         $total = $this->model_assets_recipe->getTotalRecipes($filter_data);
@@ -157,7 +157,7 @@ class ControllerProductRecipe extends Controller
                    'filter_name' => $product['model'],
                    'filter_tag' => $product['model'],
                    'start' => 0,
-                   'limit' => 5
+                   'limit' => 5,
                 ];
 
                 $temp = $this->model_assets_product->getProducts($dataFilter);
@@ -192,7 +192,7 @@ class ControllerProductRecipe extends Controller
                 'name' => $product['name'],
                 'model' => $product['model'],
                 'quantity' => $product['quantity'],
-                'items' => $items];
+                'items' => $items, ];
         }
 
         //echo "<pre>";print_r($data);die;

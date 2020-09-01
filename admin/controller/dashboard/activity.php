@@ -25,19 +25,19 @@ class ControllerDashboardActivity extends Controller
                 'customer_id=',
                 'order_id=',
                 //'affiliate_id=',
-                'return_id='
+                'return_id=',
             ];
 
             $replace = [
                 $this->url->link('sale/customer/edit', 'token='.$this->session->data['token'].'&customer_id=', 'SSL'),
                 $this->url->link('sale/order/info', 'token='.$this->session->data['token'].'&order_id=', 'SSL'),
                 //$this->url->link('marketing/affiliate/edit', 'token=' . $this->session->data['token'] . '&affiliate_id=', 'SSL'),
-                $this->url->link('sale/return/edit', 'token='.$this->session->data['token'].'&return_id=', 'SSL')
+                $this->url->link('sale/return/edit', 'token='.$this->session->data['token'].'&return_id=', 'SSL'),
             ];
 
             $data['activities'][] = [
                 'comment' => str_replace($find, $replace, $comment),
-                'date_added' => date($this->language->get('datetime_format'), strtotime($result['date_added']))
+                'date_added' => date($this->language->get('datetime_format'), strtotime($result['date_added'])),
             ];
         }
 

@@ -230,7 +230,7 @@ class ControllerApiOrder extends Controller
                                     'price' => $product['price'],
                                     'total' => $product['total'],
                                     'tax' => $this->tax->getTax($product['price'], $product['tax_class_id']),
-                                    'reward' => $product['reward']
+                                    'reward' => $product['reward'],
                                 ];
                         }
                     }
@@ -515,7 +515,7 @@ class ControllerApiOrder extends Controller
                             'price' => $product['price'],
                             'total' => $product['total'],
                             'tax' => $this->tax->getTax($product['price'], $product['tax_class_id']),
-                            'reward' => $product['reward']
+                            'reward' => $product['reward'],
                         ];
                     }
 
@@ -645,7 +645,7 @@ class ControllerApiOrder extends Controller
                 'order_status_id',
                 'notify',
                 'append',
-                'comment'
+                'comment',
             ];
 
             $log->write('1');
@@ -714,7 +714,7 @@ class ControllerApiOrder extends Controller
                 'order_status_id',
                 'notify',
                 'append',
-                'comment'
+                'comment',
             ];
 
             $log->write('1');

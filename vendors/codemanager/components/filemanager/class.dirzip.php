@@ -12,7 +12,7 @@ class DirZip
      *
      * @param string     $folder
      * @param ZipArchive $zipFile
-     * @param int        $exclusiveLength Number of text to be exclusived from the file path.
+     * @param int        $exclusiveLength number of text to be exclusived from the file path
      */
     private static function folderToZip($folder, &$zipFile, $exclusiveLength)
     {
@@ -39,8 +39,8 @@ class DirZip
      * Usage:
      *   DirZip::zipDir('/path/to/sourceDir', '/path/to/out.zip');.
      *
-     * @param string $sourcePath Path of directory to be zip.
-     * @param string $outZipPath Path of output zip file.
+     * @param string $sourcePath path of directory to be zip
+     * @param string $outZipPath path of output zip file
      */
     public static function zipDir($sourcePath, $outZipPath)
     {

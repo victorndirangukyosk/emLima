@@ -75,7 +75,7 @@ class ModelLocalisationGeoZone extends Model
 
             $sort_data = [
                 'name',
-                'description'
+                'description',
             ];
 
             if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {

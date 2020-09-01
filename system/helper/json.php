@@ -118,7 +118,7 @@ if (!function_exists('json_decode')) {
             '[' => 'array(',
             '{' => "{$a}array(",
             ']' => ')',
-            '}' => ')'
+            '}' => ')',
         ];
 
         $json = strtr($json, $data);

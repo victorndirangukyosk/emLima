@@ -34,7 +34,7 @@ class ModelUserApi extends Model
             'username',
             'status',
             'date_added',
-            'date_modified'
+            'date_modified',
         ];
 
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {

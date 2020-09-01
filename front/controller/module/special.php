@@ -24,7 +24,7 @@ class ControllerModuleSpecial extends Controller
             'sort' => 'pd.name',
             'order' => 'ASC',
             'start' => 0,
-            'limit' => $setting['limit']
+            'limit' => $setting['limit'],
         ];
 
         $results = $this->model_assets_product->getProductSpecials($filter_data);
@@ -70,7 +70,7 @@ class ControllerModuleSpecial extends Controller
                     'special' => $special,
                     'tax' => $tax,
                     'rating' => $rating,
-                    'href' => $this->url->link('product/product', 'product_id='.$result['product_id'])
+                    'href' => $this->url->link('product/product', 'product_id='.$result['product_id']),
                 ];
             }
 

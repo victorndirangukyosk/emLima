@@ -170,12 +170,12 @@ class ControllerDesignOffer extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('design/offer', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('design/offer', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         $data['add'] = $this->url->link('design/offer/add', 'token='.$this->session->data['token'].$url, 'SSL');
@@ -187,7 +187,7 @@ class ControllerDesignOffer extends Controller
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin')
+            'limit' => $this->config->get('config_limit_admin'),
         ];
 
         $offer_total = $this->model_design_offer->getTotalOffers();
@@ -198,7 +198,7 @@ class ControllerDesignOffer extends Controller
             $data['offers'][] = [
                 'offer_id' => $result['offer_id'],
                 'title' => $result['title'],
-                'edit' => $this->url->link('design/offer/edit', 'token='.$this->session->data['token'].'&offer_id='.$result['offer_id'].$url, 'SSL')
+                'edit' => $this->url->link('design/offer/edit', 'token='.$this->session->data['token'].'&offer_id='.$result['offer_id'].$url, 'SSL'),
             ];
         }
 
@@ -346,12 +346,12 @@ class ControllerDesignOffer extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('design/offer', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('design/offer', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         if (!isset($this->request->get['offer_id'])) {

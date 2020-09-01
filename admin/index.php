@@ -1,4 +1,5 @@
 <?php
+
 /*ini_set('date.timezone','UTC');*/
 
 if (version_compare(PHP_VERSION, '5.3.10', '<')) {
@@ -25,14 +26,14 @@ $registry->set('db', $db);
 
 if (!ini_get('date.timezone') || true) {
 
-	$timezone = $db->query( "SELECT value FROM " . DB_PREFIX . "setting where `key`='config_timezone'");
+    $timezone = $db->query( "SELECT value FROM " . DB_PREFIX . "setting where `key`='config_timezone'");
 
-	if($timezone->num_rows) {
-		$timezone = $timezone->row['value'];
-		date_default_timezone_set($timezone);
-	} else {
-		date_default_timezone_set('Asia/Kolkata');
-	}
+    if($timezone->num_rows) {
+        $timezone = $timezone->row['value'];
+        date_default_timezone_set($timezone);
+    } else {
+        date_default_timezone_set('Asia/Kolkata');
+    }
 }
 
 echo "<pre>";print_r("vf");die;*/

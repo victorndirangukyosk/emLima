@@ -170,12 +170,12 @@ class ControllerCatalogOption extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('catalog/option', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('catalog/option', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         $data['add'] = $this->url->link('catalog/option/add', 'token='.$this->session->data['token'].$url, 'SSL');
@@ -187,7 +187,7 @@ class ControllerCatalogOption extends Controller
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin')
+            'limit' => $this->config->get('config_limit_admin'),
         ];
 
         $option_total = $this->model_catalog_option->getTotalOptions();
@@ -199,7 +199,7 @@ class ControllerCatalogOption extends Controller
                 'option_id' => $result['option_id'],
                 'name' => $result['name'],
                 'sort_order' => $result['sort_order'],
-                'edit' => $this->url->link('catalog/option/edit', 'token='.$this->session->data['token'].'&option_id='.$result['option_id'].$url, 'SSL')
+                'edit' => $this->url->link('catalog/option/edit', 'token='.$this->session->data['token'].'&option_id='.$result['option_id'].$url, 'SSL'),
             ];
         }
 
@@ -349,12 +349,12 @@ class ControllerCatalogOption extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('catalog/option', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('catalog/option', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         if (!isset($this->request->get['option_id'])) {
@@ -425,7 +425,7 @@ class ControllerCatalogOption extends Controller
                 'option_value_description' => $option_value['option_value_description'],
                 'image' => $image,
                 'thumb' => $this->model_tool_image->resize($thumb, 100, 100),
-                'sort_order' => $option_value['sort_order']
+                'sort_order' => $option_value['sort_order'],
             ];
         }
 
@@ -500,7 +500,7 @@ class ControllerCatalogOption extends Controller
             $filter_data = [
                 'filter_name' => $this->request->get['filter_name'],
                 'start' => 0,
-                'limit' => 5
+                'limit' => 5,
             ];
 
             $options = $this->model_catalog_option->getOptions($filter_data);
@@ -521,7 +521,7 @@ class ControllerCatalogOption extends Controller
                         $option_value_data[] = [
                             'option_value_id' => $option_value['option_value_id'],
                             'name' => strip_tags(html_entity_decode($option_value['name'], ENT_QUOTES, 'UTF-8')),
-                            'image' => $image
+                            'image' => $image,
                         ];
                     }
 
@@ -557,7 +557,7 @@ class ControllerCatalogOption extends Controller
                     'name' => strip_tags(html_entity_decode($option['name'], ENT_QUOTES, 'UTF-8')),
                     'category' => $type,
                     'type' => $option['type'],
-                    'option_value' => $option_value_data
+                    'option_value' => $option_value_data,
                 ];
             }
         }

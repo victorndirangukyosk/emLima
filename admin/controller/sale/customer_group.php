@@ -170,12 +170,12 @@ class ControllerSaleCustomerGroup extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('sale/customer_group', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('sale/customer_group', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         $data['add'] = $this->url->link('sale/customer_group/add', 'token='.$this->session->data['token'].$url, 'SSL');
@@ -187,7 +187,7 @@ class ControllerSaleCustomerGroup extends Controller
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin')
+            'limit' => $this->config->get('config_limit_admin'),
         ];
 
         $customer_group_total = $this->model_sale_customer_group->getTotalCustomerGroups();
@@ -199,7 +199,7 @@ class ControllerSaleCustomerGroup extends Controller
                 'customer_group_id' => $result['customer_group_id'],
                 'name' => $result['name'].(($result['customer_group_id'] == $this->config->get('config_customer_group_id')) ? $this->language->get('text_default') : null),
                 'sort_order' => $result['sort_order'],
-                'edit' => $this->url->link('sale/customer_group/edit', 'token='.$this->session->data['token'].'&customer_group_id='.$result['customer_group_id'].$url, 'SSL')
+                'edit' => $this->url->link('sale/customer_group/edit', 'token='.$this->session->data['token'].'&customer_group_id='.$result['customer_group_id'].$url, 'SSL'),
             ];
         }
 
@@ -339,12 +339,12 @@ class ControllerSaleCustomerGroup extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('sale/customer_group', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('sale/customer_group', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         if (!isset($this->request->get['customer_group_id'])) {

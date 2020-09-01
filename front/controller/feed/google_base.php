@@ -61,7 +61,7 @@ class ControllerFeedGoogleBase extends Controller
                     $currencies = [
                         'USD',
                         'EUR',
-                        'GBP'
+                        'GBP',
                     ];
 
                     if (in_array($this->currency->getCode(), $currencies)) {

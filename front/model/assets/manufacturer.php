@@ -24,7 +24,7 @@ class ModelAssetsManufacturer extends Model
 
             $sort_data = [
                 'm.status',
-                'm.sort_order'
+                'm.sort_order',
             ];
 
             if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {

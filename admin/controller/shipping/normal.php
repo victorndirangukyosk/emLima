@@ -47,7 +47,7 @@ class ControllerShippingNormal extends Controller
                         3 => $this->request->post['delivery_timeslots'][3][$timeslot],
                         4 => $this->request->post['delivery_timeslots'][4][$timeslot],
                         5 => $this->request->post['delivery_timeslots'][5][$timeslot],
-                        6 => $this->request->post['delivery_timeslots'][6][$timeslot]
+                        6 => $this->request->post['delivery_timeslots'][6][$timeslot],
                     ];
                 }
             }
@@ -101,7 +101,7 @@ class ControllerShippingNormal extends Controller
                     3 => $this->model_setting_setting->getDeliveryStatus($timeslot['timeslot'], 3, $code),
                     4 => $this->model_setting_setting->getDeliveryStatus($timeslot['timeslot'], 4, $code),
                     5 => $this->model_setting_setting->getDeliveryStatus($timeslot['timeslot'], 5, $code),
-                    6 => $this->model_setting_setting->getDeliveryStatus($timeslot['timeslot'], 6, $code)];
+                    6 => $this->model_setting_setting->getDeliveryStatus($timeslot['timeslot'], 6, $code), ];
             }
         }
 
@@ -172,17 +172,17 @@ class ControllerShippingNormal extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_shipping'),
-            'href' => $this->url->link('extension/shipping', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('extension/shipping', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('shipping/normal', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('shipping/normal', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['action'] = $this->url->link('shipping/normal', 'token='.$this->session->data['token'], 'SSL');

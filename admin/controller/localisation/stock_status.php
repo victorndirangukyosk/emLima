@@ -170,12 +170,12 @@ class ControllerLocalisationStockStatus extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('localisation/stock_status', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('localisation/stock_status', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         $data['add'] = $this->url->link('localisation/stock_status/add', 'token='.$this->session->data['token'].$url, 'SSL');
@@ -187,7 +187,7 @@ class ControllerLocalisationStockStatus extends Controller
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin')
+            'limit' => $this->config->get('config_limit_admin'),
         ];
 
         $stock_status_total = $this->model_localisation_stock_status->getTotalStockStatuses();
@@ -198,7 +198,7 @@ class ControllerLocalisationStockStatus extends Controller
             $data['stock_statuses'][] = [
                 'stock_status_id' => $result['stock_status_id'],
                 'name' => $result['name'],
-                'edit' => $this->url->link('localisation/stock_status/edit', 'token='.$this->session->data['token'].'&stock_status_id='.$result['stock_status_id'].$url, 'SSL')
+                'edit' => $this->url->link('localisation/stock_status/edit', 'token='.$this->session->data['token'].'&stock_status_id='.$result['stock_status_id'].$url, 'SSL'),
             ];
         }
 
@@ -330,12 +330,12 @@ class ControllerLocalisationStockStatus extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('localisation/stock_status', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('localisation/stock_status', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         if (!isset($this->request->get['stock_status_id'])) {

@@ -66,17 +66,17 @@ class ControllerPaymentCod extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_payment'),
-            'href' => $this->url->link('extension/payment', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('extension/payment', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('payment/cod', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('payment/cod', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['action'] = $this->url->link('payment/cod', 'token='.$this->session->data['token'], 'SSL');

@@ -70,7 +70,7 @@ class ModelCatalogRecipe extends Model
         $sort_data = [
             'r.title',
             'r.author',
-            'r.sort_order'
+            'r.sort_order',
         ];
 
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {

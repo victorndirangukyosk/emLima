@@ -46,7 +46,7 @@ class ModelLocalisationLengthClass extends Model
             $sort_data = [
                 'title',
                 'unit',
-                'value'
+                'value',
             ];
 
             if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
@@ -114,7 +114,7 @@ class ModelLocalisationLengthClass extends Model
         foreach ($query->rows as $result) {
             $length_class_data[$result['language_id']] = [
                 'title' => $result['title'],
-                'unit' => $result['unit']
+                'unit' => $result['unit'],
             ];
         }
 

@@ -123,12 +123,12 @@ class ControllerToolUpload extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('tool/upload', 'token='.$this->session->data['token'].$url, 'SSL')
+            'href' => $this->url->link('tool/upload', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         $data['delete'] = $this->url->link('tool/upload/delete', 'token='.$this->session->data['token'].$url, 'SSL');
@@ -141,7 +141,7 @@ class ControllerToolUpload extends Controller
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin')
+            'limit' => $this->config->get('config_limit_admin'),
         ];
 
         $upload_total = $this->model_tool_upload->getTotalUploads($filter_data);
@@ -154,7 +154,7 @@ class ControllerToolUpload extends Controller
                 'name' => $result['name'],
                 'filename' => $result['filename'],
                 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
-                'download' => $this->url->link('tool/upload/download', 'token='.$this->session->data['token'].'&code='.$result['code'].$url, 'SSL')
+                'download' => $this->url->link('tool/upload/download', 'token='.$this->session->data['token'].'&code='.$result['code'].$url, 'SSL'),
             ];
         }
 
@@ -314,12 +314,12 @@ class ControllerToolUpload extends Controller
 
             $data['breadcrumbs'][] = [
                 'text' => $this->language->get('text_home'),
-                'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL')
+                'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
             ];
 
             $data['breadcrumbs'][] = [
                 'text' => $this->language->get('heading_title'),
-                'href' => $this->url->link('error/not_found', 'token='.$this->session->data['token'], 'SSL')
+                'href' => $this->url->link('error/not_found', 'token='.$this->session->data['token'], 'SSL'),
             ];
 
             $data['header'] = $this->load->controller('common/header');

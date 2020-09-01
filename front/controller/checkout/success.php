@@ -28,22 +28,22 @@ class ControllerCheckoutSuccess extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home')
+            'href' => $this->url->link('common/home'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_basket'),
-            'href' => $this->url->link('checkout/cart')
+            'href' => $this->url->link('checkout/cart'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_checkout'),
-            'href' => $this->url->link('checkout/checkout', '', 'SSL')
+            'href' => $this->url->link('checkout/checkout', '', 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_success'),
-            'href' => $this->url->link('checkout/success')
+            'href' => $this->url->link('checkout/success'),
         ];
 
         $data['referral_description'] = $this->language->get('referral_description');
@@ -106,14 +106,14 @@ class ControllerCheckoutSuccess extends Controller
                     $activity_data = [
                         'customer_id' => $this->customer->getId(),
                         'name' => $this->customer->getFirstName().' '.$this->customer->getLastName(),
-                        'order_id' => $order_id
+                        'order_id' => $order_id,
                     ];
 
                     $this->model_account_activity->addActivity('order_account', $activity_data);
                 } else {
                     $activity_data = [
                         'name' => $this->session->data['guest']['firstname'].' '.$this->session->data['guest']['lastname'],
-                        'order_id' => $order_id
+                        'order_id' => $order_id,
                     ];
 
                     $this->model_account_activity->addActivity('order_guest', $activity_data);
@@ -206,22 +206,22 @@ class ControllerCheckoutSuccess extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home')
+            'href' => $this->url->link('common/home'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_basket'),
-            'href' => $this->url->link('checkout/cart')
+            'href' => $this->url->link('checkout/cart'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_checkout'),
-            'href' => $this->url->link('checkout/checkout', '', 'SSL')
+            'href' => $this->url->link('checkout/checkout', '', 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_success'),
-            'href' => $this->url->link('checkout/success')
+            'href' => $this->url->link('checkout/success'),
         ];
 
         $data['referral_description'] = $this->language->get('referral_description');
@@ -271,14 +271,14 @@ class ControllerCheckoutSuccess extends Controller
                     $activity_data = [
                         'customer_id' => $this->customer->getId(),
                         'name' => $this->customer->getFirstName().' '.$this->customer->getLastName(),
-                        'order_id' => $order_id
+                        'order_id' => $order_id,
                     ];
 
                     $this->model_account_activity->addActivity('order_account', $activity_data);
                 } else {
                     $activity_data = [
                         'name' => $this->session->data['guest']['firstname'].' '.$this->session->data['guest']['lastname'],
-                        'order_id' => $order_id
+                        'order_id' => $order_id,
                     ];
 
                     $this->model_account_activity->addActivity('order_guest', $activity_data);
@@ -487,14 +487,14 @@ class ControllerCheckoutSuccess extends Controller
                         'dob' => $dob,
                         'phone1' => $telephone,
                         'email' => $customerEmail, //(required)
-                        'created_at' => $customerAdded],
+                        'created_at' => $customerAdded, ],
                     'shipping' => [
                         'name' => $customerName, //(required)
                         'address1' => $order_info['shipping_address'],
                         'city' => $order_info['shipping_city'],
-                        'zip' => $order_info['shipping_zipcode']
+                        'zip' => $order_info['shipping_zipcode'],
                     ],
-                    'shopping_cart' => $present//(required) ,
+                    'shopping_cart' => $present, //(required) ,
                         //'payment' => array('type' => 'credit','status' => 'approved, declined or pending' )//(required) //(required)
 //Payment type used by the customer. We support credit, boleto, debit, transfer and voucher.
                 ]);
@@ -632,7 +632,7 @@ class ControllerCheckoutSuccess extends Controller
                     'product_weight' => ($product['weight'] * $product['quantity']),
                     'product_image' => $image, //"http:\/\/\/product-images\/camera.jpg",
                     'product_price' => $product['price'], //"1500.00",//product price unit price?? or total
-                    'product_replaceable' => $replacable//"no"
+                    'product_replaceable' => $replacable, //"no"
                 ];
 
                 array_push($data['products']['products'], $var);
@@ -727,7 +727,7 @@ class ControllerCheckoutSuccess extends Controller
                 'payment_code' => $order_info['payment_code'],
                 'total_price' => (int) round($new_total),
                 'get_amount' => (int) round($getPayment),
-                'total_type' => $total_type];
+                'total_type' => $total_type, ];
 
             $log->write($data['body']);
 
@@ -828,7 +828,7 @@ class ControllerCheckoutSuccess extends Controller
                 'date_modified' => $order_query->row['date_modified'],
                 'date_added' => $order_query->row['date_added'],
                 'delivery_date' => $order_query->row['delivery_date'],
-                'delivery_timeslot' => $order_query->row['delivery_timeslot']
+                'delivery_timeslot' => $order_query->row['delivery_timeslot'],
                     /* 'date_modified' => $order_query->row['date_modified'],
                       'date_added' => $order_query->row['date_added'] */
             ];
@@ -903,7 +903,7 @@ class ControllerCheckoutSuccess extends Controller
 
                 $option_data[] = [
                     'name' => $option['name'],
-                    'value' => (utf8_strlen($value) > 20 ? utf8_substr($value, 0, 20).'..' : $value)
+                    'value' => (utf8_strlen($value) > 20 ? utf8_substr($value, 0, 20).'..' : $value),
                 ];
             }
 
@@ -926,7 +926,7 @@ class ControllerCheckoutSuccess extends Controller
             $data['products'][] = [
                 'name' => $product['name'],
                 'quantity' => (int) $product['quantity'],
-                'unit_cost' => (int) $product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0)
+                'unit_cost' => (int) $product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0),
             ];
         }
 

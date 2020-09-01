@@ -77,7 +77,7 @@ class ModelDesignBanner extends Model
 
         $sort_data = [
             'name',
-            'status'
+            'status',
         ];
 
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
@@ -128,7 +128,7 @@ class ModelDesignBanner extends Model
                 'banner_image_description' => $banner_image_description_data,
                 'link' => $banner_image['link'],
                 'image' => $banner_image['image'],
-                'sort_order' => $banner_image['sort_order']
+                'sort_order' => $banner_image['sort_order'],
             ];
         }
 
