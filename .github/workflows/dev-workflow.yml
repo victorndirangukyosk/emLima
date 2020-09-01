@@ -8,8 +8,8 @@ jobs:
     name: PHP-CS-Fixer
     runs-on: ubuntu-latest
     steps:
-      -name: Applying PHP codestyle fixes
       -uses: actions/checkout@v2
+      -name: Applying PHP codestyle fixes
       uses: docker://oskarstark/php-cs-fixer-ga
 
   deployment:
