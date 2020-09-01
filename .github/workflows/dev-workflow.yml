@@ -4,15 +4,13 @@ on:
     branches: [ develop ]
 
 jobs:
-  php-cs-fixer:
-    name: PHP-CS-Fixer
+  codestyle:
+    name: Codestyle
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
-      - name: PHP-CS-Fixer
+      - name: Fixing PHP Codestyle
         uses: docker://oskarstark/php-cs-fixer-ga
-        with:
-          args: --diff --dry-run
 
   deployment:
     name: Deployment
