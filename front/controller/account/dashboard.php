@@ -475,7 +475,7 @@ $customer_SubUser_info=array_merge($newdata,$customer_SubUser_info);
     {
         $this->load->model('account/dashboard');
 
-        $json = [];
+        $json = array();
 
         if (isset($this->request->get['start'])) {
             $start = $this->request->get['start'];
@@ -1148,5 +1148,5 @@ $customer_SubUser_info=array_merge($newdata,$customer_SubUser_info);
         $months[] = $str_mese . " " . date('Y', $time2);
         return $months;
     }
-    
+
 }
