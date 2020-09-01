@@ -142,27 +142,25 @@ class ControllerAccountDashboard extends Controller
                 // 'avg_value' => $this->currency->format($avg_value, $this->config->get('config_currency')),
                 // 'First_order_date' => $first_order_Date,
                 // 'frequency' => $frequency,
-                 'most_purhased' => $most_purchased
+                 'most_purhased' => $most_purchased,
             ];
 
-        $customer_SubUser_info = $this->model_account_dashboard->getCustomerSubUsers($this->customer->getId());
-if(count($customer_SubUser_info)>1)
-{ 
-$newdata =  array (
-    array(
+            $customer_SubUser_info = $this->model_account_dashboard->getCustomerSubUsers($this->customer->getId());
+            if (count($customer_SubUser_info) > 1) {
+                $newdata = [
+    [
     'company_name' => 'All Branches',
-    'customer_id' => '-1' 
-    )
-  );
-// $customer_SubUser_info[-1]['company_name']='All Branches';
-// $customer_SubUser_info[-1]['customer_id']='0';
+    'customer_id' => '-1',
+    ],
+  ];
+                // $customer_SubUser_info[-1]['company_name']='All Branches';
+                // $customer_SubUser_info[-1]['customer_id']='0';
 
-// $customer_SubUser_info=ksort($customer_SubUser_info,1);
-$customer_SubUser_info=array_merge($newdata,$customer_SubUser_info);
+                // $customer_SubUser_info=ksort($customer_SubUser_info,1);
+                $customer_SubUser_info = array_merge($newdata, $customer_SubUser_info);
+            }
 
-}
-
-    // echo "<pre>";print_r($customer_SubUser_info);die;
+            // echo "<pre>";print_r($customer_SubUser_info);die;
 
             $data['DashboardData']['companyname'] = $customer_SubUser_info;
 
@@ -364,7 +362,7 @@ $customer_SubUser_info=array_merge($newdata,$customer_SubUser_info);
             //     break;
             // default:
             case 'day':
-                $results = $this->model_account_dashboard->{$modelFunction}( $selectedcustomer_id,$date_start, $date_end, 'DAY',$this->customer->getId());
+                $results = $this->model_account_dashboard->{$modelFunction}($selectedcustomer_id, $date_start, $date_end, 'DAY', $this->customer->getId());
                 $str_date = substr($date_start, 0, 10);
                 $order_data = [];
 
@@ -400,7 +398,7 @@ $customer_SubUser_info=array_merge($newdata,$customer_SubUser_info);
 
                 break;
             case 'month':
-                $results = $this->model_account_dashboard->{$modelFunction}( $selectedcustomer_id,$date_start, $date_end, 'MONTH',$this->customer->getId());
+                $results = $this->model_account_dashboard->{$modelFunction}($selectedcustomer_id, $date_start, $date_end, 'MONTH', $this->customer->getId());
                 $months = $this->getMonths($date_start, $date_end);
                 $order_data = [];
 
@@ -426,7 +424,7 @@ $customer_SubUser_info=array_merge($newdata,$customer_SubUser_info);
                 }
                 break;
             case 'year':
-                $results = $this->model_account_dashboard->{$modelFunction}( $selectedcustomer_id,$date_start, $date_end, 'YEAR',$this->customer->getId());
+                $results = $this->model_account_dashboard->{$modelFunction}($selectedcustomer_id, $date_start, $date_end, 'YEAR', $this->customer->getId());
                 $str_date = substr($date_start, 0, 10);
                 $order_data = [];
                 $diff = floor($diff / 365) + 1;
@@ -457,7 +455,7 @@ $customer_SubUser_info=array_merge($newdata,$customer_SubUser_info);
         }
 
         $modelFunction = str_replace('get', 'getTotal', $modelFunction);
-        $result = $this->model_account_dashboard->{$modelFunction}($selectedcustomer_id, $customer_id,$date_start, $date_end);
+        $result = $this->model_account_dashboard->{$modelFunction}($selectedcustomer_id, $customer_id, $date_start, $date_end);
 
         // echo "<pre>";print_r($result);die;
 
@@ -502,12 +500,11 @@ $customer_SubUser_info=array_merge($newdata,$customer_SubUser_info);
         $total_orders = $orders = 0;
         // if (!empty($customer_info)) {
         // $data['token'] = $this->session->data['token'];
-        $customer_id  = $this->customer->getId();
+        $customer_id = $this->customer->getId();
 
-          
-        $total_orders = $this->model_account_dashboard->getTotalOrders($customer_id,$selectedCustomer_id,$date_start,$date_end);
-        $orders = $this->model_account_dashboard->getOrders($customer_id,$selectedCustomer_id,$date_start,$date_end);
-      // $most_purchased = $this->model_account_dashboard->getMostPurchased($customer_id,$selectedCustomer_id,$date_start,$date_end);
+        $total_orders = $this->model_account_dashboard->getTotalOrders($customer_id, $selectedCustomer_id, $date_start, $date_end);
+        $orders = $this->model_account_dashboard->getOrders($customer_id, $selectedCustomer_id, $date_start, $date_end);
+        // $most_purchased = $this->model_account_dashboard->getMostPurchased($customer_id,$selectedCustomer_id,$date_start,$date_end);
 
         $this->load->model('sale/order');
         $total_spent = 0;
@@ -576,8 +573,8 @@ $customer_SubUser_info=array_merge($newdata,$customer_SubUser_info);
     public function getChartData($modelFunction, $currency_format = false)
     {
         $this->load->model('account/dashboard');
-        $json = array();
-        
+        $json = [];
+
         $json = [];
 
         $results = $this->model_account_dashboard->getBuyingPattern($this->customer->getId());
@@ -1122,15 +1119,15 @@ $customer_SubUser_info=array_merge($newdata,$customer_SubUser_info);
         return true;
     }
 
-
-    function getMonths($date1, $date2) {
+    public function getMonths($date1, $date2)
+    {
         $time1 = strtotime($date1);
         $time2 = strtotime($date2);
         $my = date('n-Y', $time2);
-        $mesi = array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
+        $mesi = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
         //$mesi = array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec');
 
-        $months = array();
+        $months = [];
         $f = '';
 
         while ($time1 < $time2) {
@@ -1138,15 +1135,15 @@ $customer_SubUser_info=array_merge($newdata,$customer_SubUser_info);
                 $f = date('n-Y', $time1);
                 if (date('n-Y', $time1) != $my && ($time1 < $time2)) {
                     $str_mese = $mesi[(date('n', $time1) - 1)];
-                    $months[] = $str_mese . " " . date('Y', $time1);
+                    $months[] = $str_mese.' '.date('Y', $time1);
                 }
             }
-            $time1 = strtotime((date('Y-n-d', $time1) . ' +15days'));
+            $time1 = strtotime((date('Y-n-d', $time1).' +15days'));
         }
 
         $str_mese = $mesi[(date('n', $time2) - 1)];
-        $months[] = $str_mese . " " . date('Y', $time2);
+        $months[] = $str_mese.' '.date('Y', $time2);
+
         return $months;
     }
-    
 }
