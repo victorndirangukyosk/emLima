@@ -283,9 +283,9 @@ class ControllerAccountDashboard extends Controller
             $range = 'month';
         }
 
-        if ($diff < 28) {
-            $range = 'day';
-        }
+        // if ($diff < 31) {
+        //     $range = 'day';
+        // }
 
         // if ($diff == 1) {
         //     $range = 'hour';
@@ -330,7 +330,7 @@ class ControllerAccountDashboard extends Controller
 
         $range = $this->getRange($diff);
 
-        // $customer_id = $this->customer->getId();
+          $customer_id = $this->customer->getId();
 
         //   echo "<pre>";print_r($json);die;
 
@@ -455,7 +455,7 @@ class ControllerAccountDashboard extends Controller
         }
 
         $modelFunction = str_replace('get', 'getTotal', $modelFunction);
-        $result = $this->model_account_dashboard->{$modelFunction}($selectedcustomer_id, $customer_id, $date_start, $date_end);
+        $result = $this->model_account_dashboard->{$modelFunction}($selectedcustomer_id, $date_start, $date_end, $customer_id);
 
         // echo "<pre>";print_r($result);die;
 
