@@ -70,10 +70,34 @@ class ControllerAccountDashboard extends Controller {
 
         $total_orders = $orders = 0;
         if (!empty($customer_info)) {
+
+            
+        if (isset($this->request->get['start'])) {
+            $start = $this->request->get['start'];
+        } else {
+            $start = '';
+        }
+
+        if (!empty($this->request->get['end'])) {
+            $end = $this->request->get['end'];
+        } else {
+            $end = '';
+        }
+
+
+        if (!empty($this->request->get['customer_id'])) {
+            $customer_id = $this->request->get['customer_id'];
+        } else {
+            $customer_id = '';
+        }
+        
+        $date_start = date_create($start)->format('Y-m-d H:i:s');
+        $date_end = date_create($end)->format('Y-m-d H:i:s'); 
+
             $data['token'] = $this->session->data['token'];
             $data['customer_id'] = $this->customer->getId();
-            $total_orders = $this->model_account_dashboard->getTotalOrders($this->customer->getId());
-            $orders = $this->model_account_dashboard->getOrders($this->customer->getId());
+           // $total_orders = $this->model_account_dashboard->getTotalOrders($this->customer->getId(),$start, $end);
+            //$orders = $this->model_account_dashboard->getOrders($this->customer->getId(),$start, $end);
             $most_purchased = $this->model_account_dashboard->getMostPurchased($this->customer->getId());
 
             $this->load->model('sale/order');
@@ -133,6 +157,10 @@ class ControllerAccountDashboard extends Controller {
                 'most_purhased' => $most_purchased
             );
 
+        $customer_SubUser_info = $this->model_account_dashboard->getCustomerSubUsers($this->customer->getId());
+
+        $data['DashboardData']['companyname'] = $customer_SubUser_info;
+
             $recent_orders = $this->model_account_dashboard->getRecentOrders($this->customer->getId());
             foreach ($recent_orders as $ro) {
                 $user_recent_orders[] = array('order_id' => $ro['order_id'],
@@ -143,19 +171,68 @@ class ControllerAccountDashboard extends Controller {
                     'real_href' => $this->url->link('account/order/realinfo', 'order_id=' . $ro['order_id'], 'SSL'),);
             }
             $data['DashboardData']['recent_orders'] = $user_recent_orders;
+           $user_recent_activity = $this->model_account_dashboard->getRecentActivity($this->customer->getId());
+            //   $user_recent_activity = $this->model_account_dashboard->getCustomerActivities($this->customer->getId());
+ 
+          
+         foreach ($user_recent_activity as $ra) {
 
-            $user_recent_activity = $this->model_account_dashboard->getRecentActivity($this->customer->getId());
+            if($ra['order_status_id']==15)
+            {
+                $comment1="Placed Order";
+                $comment2=" and Approval is Required";
+            }
+            else if($ra['order_status_id']==14)
+            {
+                $comment1="Placed Order";
+                $comment2=" ";
+            }
 
+            else  
+            {
+                $comment1="Placed Order";
+                $comment2=" and the order is  ".$ra['name'];
+            }
 
-            foreach ($user_recent_activity as $ra) {
                 $recent_activity[] = array('store_name' => $ra['store_name'],
                     'firstname' => $ra['firstname'],
                     'lastname' => $ra['lastname'],
                     'order_id' => $ra['order_id'],
+                    'comment1' => $comment1,
+                    'comment2' => $comment2,
                     'href' => $this->url->link('account/order/info', 'order_id=' . $ra['order_id'], 'SSL'),
                     'total' => $this->currency->format($ra['total'], $this->config->get('config_currency')),
                     'date_added' => $ra['date_added']);
             }
+
+
+		// foreach ($user_recent_activity as $result) {
+		// 	$comment =  vsprintf($this->language->get('text_' . $result['key']), unserialize($result['data']));
+
+		// 	$find = array(
+		// 		'customer_id=',
+		// 		'order_id=',
+		// 		//'affiliate_id=',
+		// 		'return_id='
+		// 	);
+
+		// 	$replace = array(
+		// 		$this->url->link('sale/customer/edit', 'token=' . $this->session->data['token'] . '&customer_id=', 'SSL'),
+		// 		$this->url->link('sale/order/info', 'token=' . $this->session->data['token'] . '&order_id=', 'SSL'),
+		// 		//$this->url->link('marketing/affiliate/edit', 'token=' . $this->session->data['token'] . '&affiliate_id=', 'SSL'),
+		// 		$this->url->link('sale/return/edit', 'token=' . $this->session->data['token'] . '&return_id=', 'SSL')
+		// 	);
+
+		// 	$recent_activity[] = array(
+		// 		'comment'    =>  str_replace($find, $replace, $comment) ,
+		// 		'ip'         => $result['ip'],
+		// 		'date_added' => date($this->language->get('datetime_format'), strtotime($result['date_added']))
+		// 	);
+        // }
+        
+
+
+           
 
             $data['DashboardData']['recent_activity'] = $recent_activity;
             // $recent_buying_pattern = $this->model_account_dashboard->getBuyingPattern($this->customer->getId());
@@ -169,7 +246,7 @@ class ControllerAccountDashboard extends Controller {
         }
 
 
-        //echo "<pre>";print_r($data['DashboardData']);die;
+        //  echo "<pre>";print_r($data['DashboardData']);die;
         if ($this->request->server['HTTPS']) {
             $server = $this->config->get('config_ssl');
         } else {
@@ -194,6 +271,320 @@ class ControllerAccountDashboard extends Controller {
         // echo "<pre>";print_r($data);die;
         $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/dashboard.tpl', $data));
     }
+
+    public function valueofbasket() {
+
+       
+        $json = $this->getChartsData('getValueOfBasket', true);
+
+         
+
+        $json['order']['label'] = "Basket Value Per Day";
+  
+        $this->response->setOutput(json_encode($json));
+    }
+
+
+    public function getRange($diff) {
+        // if (isset($this->request->get['range']) and ! empty($this->request->get['range']) and $this->request->get['range'] != 'undefined') {
+        //     $range = $this->request->get['range'];
+        // } else {
+        //     $range = 'day';
+        // }
+
+        $range = 'day';
+
+        if ($diff < 365 and $range == 'year') {
+            $range = 'month';
+        }
+
+        if ($diff < 28) {
+            $range = 'day';
+        }
+
+        // if ($diff == 1) {
+        //     $range = 'hour';
+        // }
+
+        if ($diff >30 and $range == 'day') {
+            $range = 'month';
+        }
+       
+        return $range;
+    }
+
+
+    public function getChartsData($modelFunction, $currency_format = false) {
+
+        
+        $this->load->model('account/dashboard');
+
+        $json = array();
+
+        if (isset($this->request->get['start'])) {
+            $start = $this->request->get['start'];
+        } else {
+            $start = '';
+        }
+
+        if (!empty($this->request->get['end'])) {
+            $end = $this->request->get['end'];
+        } else {
+            $end = '';
+        }
+
+        if (!empty($this->request->get['customer_id'])) {
+            $customer_id = $this->request->get['customer_id'];
+        } else {
+            $customer_id = '';
+        }
+
+
+        $date_start = date_create($start)->format('Y-m-d H:i:s');
+        $date_end = date_create($end)->format('Y-m-d H:i:s');
+
+        $diff_str = strtotime($end) - strtotime($start);
+        $diff = floor($diff_str / 3600 / 24) + 1;
+
+        $range = $this->getRange($diff);
+
+        // $customer_id = $this->customer->getId();
+
+
+        //   echo "<pre>";print_r($json);die;
+
+        switch ($range) {
+            // case 'hour':
+            //     $results = $this->model_dashboard_charts->{$modelFunction}($date_start, $date_end, 'HOUR');
+            //     $order_data = array();
+
+            //     for ($i = 0; $i < 24; $i++) {
+            //         $order_data[$i] = array(
+            //             'hour' => $i,
+            //             'total' => 0
+            //         );
+
+            //         $json['xaxis'][] = array($i, $i . ':00');
+            //     }
+
+            //     foreach ($results->rows as $result) {
+            //         $order_data[$result['hour']] = array(
+            //             'hour' => $result['hour'],
+            //             'total' => $result['total']
+            //         );
+            //     }
+
+            //     foreach ($order_data as $key => $value) {
+            //         $json['order']['data'][] = array($key, $value['total']);
+            //     }
+
+            //     break;
+            // default:
+            case 'day':
+                $results = $this->model_account_dashboard->{$modelFunction}( $customer_id,$date_start, $date_end, 'DAY');
+                $str_date = substr($date_start, 0, 10);
+                $order_data = array();
+
+                for ($i = 0; $i < $diff; $i++) {
+                    $date = date_create($str_date)->modify('+' . $i . ' day')->format('Y-m-d');
+
+                    //setting default values 
+                    $order_data[$date] = array(
+                        'day' => $date,
+                        'total' => 0
+                    );
+
+                    $json['xaxis'][] = array($i, $date);
+                }
+
+                foreach ($results->rows as $result) {
+                    
+                    $total = $result['total'];
+                    
+                    if ($currency_format) {
+                        $total = $this->currency->format($result['total'], $this->config->get('config_currency'), '', false);
+                    }
+
+                    $order_data[$result['date']] = array(
+                        'day' => $result['date'],
+                        'total' => $total
+                    );
+                }
+
+                $i = 0;
+                foreach ($order_data as $key => $value) {
+                    $json['order']['data'][] = array($i++, $value['total']);
+                }
+
+                break;
+            case 'month':
+                $results = $this->model_account_dashboard->{$modelFunction}( $customer_id,$date_start, $date_end, 'MONTH');
+                $months = $this->getMonths($date_start, $date_end);
+                $order_data = array();
+
+                for ($i = 0; $i < count($months); $i++) {
+                    $order_data[$months[$i]] = array(
+                        'month' => $months[$i],
+                        'total' => 0
+                    );
+
+                    $json['xaxis'][] = array($i, $months[$i]);
+                }
+
+                foreach ($results->rows as $result) {
+                    $order_data[$result['month']] = array(
+                        'month' => $result['month'],
+                        'total' => $result['total']
+                    );
+                }
+
+                $i = 0;
+                foreach ($order_data as $key => $value) {
+                    $json['order']['data'][] = array($i++, $value['total']);
+                }
+                break;
+            case 'year':
+                $results = $this->model_account_dashboard->{$modelFunction}( $customer_id,$date_start, $date_end, 'YEAR');
+                $str_date = substr($date_start, 0, 10);
+                $order_data = array();
+                $diff = floor($diff / 365) + 1;
+
+                for ($i = 0; $i < $diff; $i++) {
+                    $date = date_create($str_date)->modify('+' . $i . ' year')->format('Y');
+
+                    $order_data[$date] = array(
+                        'year' => $date,
+                        'total' => 0
+                    );
+
+                    $json['xaxis'][] = array($i, $date);
+                }
+
+                foreach ($results->rows as $result) {
+                    $order_data[$result['year']] = array(
+                        'year' => $result['year'],
+                        'total' => $result['total']
+                    );
+                }
+
+                $i = 0;
+                foreach ($order_data as $key => $value) {
+                    $json['order']['data'][] = array($i++, $value['total']);
+                }
+                break;
+        }
+
+        $modelFunction = str_replace('get', 'getTotal', $modelFunction);
+        $result = $this->model_account_dashboard->{$modelFunction}( $customer_id,$date_start, $date_end);
+
+        // echo "<pre>";print_r($result);die;
+
+        $total = $result['total'];
+        if ($currency_format) {
+            $total = $this->currency->format($result['total'], $this->config->get('config_currency'));
+        }
+
+        $json['order']['total'] = $total;
+
+        return $json;
+    }
+     
+
+    public function getDashboardData() {
+        $this->load->model('account/dashboard');
+
+        $json = array();
+
+        if (isset($this->request->get['start'])) {
+            $start = $this->request->get['start'];
+        } else {
+            $start = '';
+        }
+
+        if (!empty($this->request->get['end'])) {
+            $end = $this->request->get['end'];
+        } else {
+            $end = '';
+        }
+
+        if (!empty($this->request->get['customer_id'])) {
+            $customer_id = $this->request->get['customer_id'];
+        } else {
+            $customer_id = '';
+        }
+
+        $date_start = date_create($start)->format('Y-m-d H:i:s');
+        $date_end = date_create($end)->format('Y-m-d H:i:s'); 
+        //$customer_info = $this->model_account_dashboard->getCustomerDashboardData($this->customer->getId(),$date_start, $date_end);
+
+        
+        $total_orders = $orders = 0;
+       // if (!empty($customer_info)) {
+            // $data['token'] = $this->session->data['token'];
+            // $data['customer_id'] = $this->customer->getId();
+             
+            $total_orders = $this->model_account_dashboard->getTotalOrders($customer_id,$date_start,$date_end);
+            $orders = $this->model_account_dashboard->getOrders($customer_id,$date_start,$date_end);
+            //$most_purchased = $this->model_account_dashboard->getMostPurchased($this->customer->getId());
+
+            $this->load->model('sale/order');
+            $total_spent = 0;
+            $products_qty = 0;
+            $todaydate = $todaydate = date('Y-m-d');
+            if (!empty($orders))
+                $first_order_Date = $orders[0]['date_added'];
+            foreach ($orders as $result) {
+
+                if ($this->model_sale_order->hasRealOrderProducts($result['order_id'])) {
+                    $products_qty = $products_qty + $this->model_sale_order->getRealOrderProductsItems($result['order_id']);
+                } else {
+                    $products_qty = $products_qty + $this->model_sale_order->getOrderProductsItems($result['order_id']);
+                }
+                $sub_total = 0;
+                $totals = $this->model_sale_order->getOrderTotals($result['order_id']);
+                // echo "<pre>";print_r($orders);die;
+                foreach ($totals as $total) {
+                    if ($total['code'] == 'sub_total') {
+                        $sub_total = $total['value'];
+                        $total_spent = $total_spent + $sub_total;
+                        break;
+                    }
+                }
+ 
+            }
+            if ($total_orders) {
+                $avg_value = ($total_spent / $total_orders);
+            } else {
+                $avg_value = 0;
+            }
+
+
+            // $months = 0;
+
+            // while (($date1 = strtotime('+1 MONTH', $date1)) <= $date2)
+            //     $months++;
+            // if ($months == 0)
+            //     $frequency = ($total_orders);
+            // else
+            //     $frequency = ($total_orders / $months);
+
+            
+           // $data['DashboardNewData'] = array(
+                
+                $json['total_orders'] =  $total_orders;
+                $json['total_spent'] = $this->currency->format($total_spent, $this->config->get('config_currency'));
+                $json['avg_value'] = $this->currency->format($avg_value, $this->config->get('config_currency'));                
+                //'frequency' => $frequency 
+           // );
+ 
+             
+        // }
+
+        // $json['order']['total'] = $total;
+       // return $json;
+       $this->response->setOutput(json_encode($json));
+    }
+
 
 
     public function recentbuyingpattern() {
@@ -771,5 +1162,41 @@ class ControllerAccountDashboard extends Controller {
         $this->model_account_dashboard->download_mostpurchased_products_excel($data);
     }
 
+
+    public function getPurchaseHistory()
+    {
+
+        $this->load->model('account/dashboard');
+        //echo 'date.timezone ' ;;
+        $data = $this->request->post;
+
+
+       /// echo '<pre>';print_r($this->request->post);exit; 
+
+        if ($this->request->server['REQUEST_METHOD'] == 'POST') {
+
+            $data= $this->model_account_dashboard->getPurchaseHistory($this->request->post['product_id'],$this->customer->getId());
+
+            $data['status'] = true;
+
+            $data['totalvalue'] = $this->currency->format($data['totalvalue'], $this->config->get('config_currency'));
+
+            if ($this->request->isAjax()) {
+                $this->response->addHeader('Content-Type: application/json');
+                $this->response->setOutput(json_encode($data));
+            }
+        } else {
+
+            $data['status'] = false;
+
+            if ($this->request->isAjax()) {
+                $this->response->addHeader('Content-Type: application/json');
+                $this->response->setOutput(json_encode($data));
+            }
+        }
+        //  echo '<pre>';print_r($data);exit;
+
+        return true;
+    }
 
 }
