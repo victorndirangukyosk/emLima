@@ -11,8 +11,6 @@ jobs:
       - uses: actions/checkout@master
       - name: Fixing PHP Codestyle
         uses: docker://oskarstark/php-cs-fixer-ga
-        with:
-          args: --diff --dry-run
 
   deployment:
     name: Deployment
