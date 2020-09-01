@@ -92,20 +92,35 @@
       </div>
     </div>
 
-    <div class="row"  >
-      <div class="col-lg-6 col-md-12 col-sx-12 col-sm-12 form-group">
+ 
+
+<div class="row">
+
+     <div id="valueofbasketcharts" class="panel panel-default">
+      <div class="panel-heading">
+            <h3 class="panel-title"><i class="fa fa-th-list fa-lg"></i> Basket Value
+            </h3>
+      </div>
+          
+          <div id="chart-valueofbasket" class="chart chart_active "></div>
+          </div>
+     </div>
+ </div>
+
+    <div class="row"  style="width: 1207px;margin-left: 243px;">
+     <!-- <div class="col-lg-6 col-md-12 col-sx-12 col-sm-12 form-group">
         <div id="recenttabs" class="panel panel-default">
           <div class="panel-heading">
-            <h3 class="panel-title"><i class="fa fa-th-list fa-lg"></i> Recent Buying Pattern
+            <h3 class="panel-title"><i class="fa fa-th-list fa-lg"></i> Buying Pattern
             </h3>
           </div>
           <div id="charts" class="panel-body">
             <div id="chart-recentbuyingpattern" class="chart chart_active"></div>
           </div>
         </div>
-      </div>
+      </div>-->
 
-      <div class="col-lg-6 col-md-12 col-sx-12 col-sm-12 form-group">
+      <div class="col-lg-12 col-md-12 col-sx-12 col-sm-12 form-group">
         <div id="recenttabs" class="panel panel-default">
           <div class="panel-heading">
             <h3 class="panel-title"><i class="fa fa-th-list fa-lg"></i> Most bought Products (Last 30 days)
@@ -119,11 +134,11 @@
 
 
           </div>
-          <div class="panel-body" width="50%">
+          <div class="panel-body" width="100%">
 
-            <div class="tab-content panel" width="50%">
+            <div class="tab-content panel" width="100%">
 
-              <div class="table-responsive" width="50%">
+              <div class="table-responsive" width="100%">
                 <table class="table table-bordered">
                   <thead>
                   <tr>
@@ -168,19 +183,6 @@
     </div>
 
 
-
-<div class="row">
-
-     <div id="valueofbasketcharts" class="panel panel-default">
-      <div class="panel-heading">
-            <h3 class="panel-title"><i class="fa fa-th-list fa-lg"></i> Basket Value
-            </h3>
-      </div>
-          
-          <div id="chart-valueofbasket" class="chart chart_active "></div>
-          </div>
-     </div>
- </div>
 
 
     <div class="row" style="width: 1207px;margin-left: 243px;">
@@ -404,6 +406,8 @@
 <script type="text/javascript" src="admin/ui/javascript/jquery/flot/jquery.flot.js"></script>
 <script type="text/javascript" src="admin/ui/javascript/jquery/flot/jquery.flot.resize.js"></script>
 <script type="text/javascript" src="admin/ui/javascript/jquery/flot/jquery.flot.tickrotor.js"></script>
+  <script type="text/javascript" src="//cdn.jsdelivr.net/jquery.flot/0.8.3/jquery.flot.min.js"></script>
+
 <script type="text/javascript">
 var start_date = '';
 var end_date = '';
@@ -502,6 +506,7 @@ function getNewData() {
     });
 
 valueofbasket($optionvalue);
+ //recentPattern($optionvalue);
 }
 
 
@@ -552,38 +557,24 @@ valueofbasket($optionvalue);
 </script>
 
 
-  <script type="text/javascript" src="//cdn.jsdelivr.net/jquery.flot/0.8.3/jquery.flot.min.js"></script>
-  <script type="text/javascript" src="admin/ui/javascript/jquery/daterangepicker/moment.js"></script>
-  <script type="text/javascript" src="admin/ui/javascript/jquery/daterangepicker/daterangepicker.js"></script>
-  <script type="text/javascript" src="admin/ui/javascript/jquery/flot/jquery.flot.resize.js"></script>
-  <script type="text/javascript" src="admin/ui/javascript/jquery/flot/jquery.flot.tickrotor.js"></script>
+ 
 
-  <script type="text/javascript">
-
-
-
-    $(document).ready(function () {
-      recentPattern();
-
-
-    });
-
-
-    
+  <script type="text/javascript"> 
 
 $(function() {
 
    
     $("select.company-name").prop('disabled', function() {
         return $('option', this).length < 2;
+        
     });
     
 });
 
-    function recentPattern() {
+    function recentPattern(optionvalue) {
       $.ajax({
         type: 'get',
-        url: 'index.php?path=account/dashboard/recentbuyingpattern',
+        url: 'index.php?path=account/dashboard/recentbuyingpattern&start='+ start_date +'&end='+ end_date +'&selectedcustomer_id='+optionvalue,
         dataType: 'json',
         success: function (json) {
 
@@ -728,7 +719,7 @@ function valueofbasket(optionvalue) {
 
     $.ajax({
         type: 'get',        
-        url: 'index.php?path=account/dashboard/valueofbasket&start='+ start_date +'&end='+ end_date +'&customer_id='+optionvalue,
+        url: 'index.php?path=account/dashboard/valueofbasket&start='+ start_date +'&end='+ end_date +'&selectedcustomer_id='+optionvalue,
          
         dataType: 'json',
         success: function(json) {

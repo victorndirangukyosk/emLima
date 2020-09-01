@@ -149,15 +149,32 @@ class ControllerAccountDashboard extends Controller {
                 'customer_name' => $customer_name,
                 'email' => $customer_info['email'],
                 'telephone' => $customer_info['telephone'],
-                'total_orders' => $total_orders,
-                'total_spent' => $this->currency->format($total_spent, $this->config->get('config_currency')),
-                'avg_value' => $this->currency->format($avg_value, $this->config->get('config_currency')),
-                'First_order_date' => $first_order_Date,
-                'frequency' => $frequency,
-                'most_purhased' => $most_purchased
+                // 'total_orders' => $total_orders,
+                // 'total_spent' => $this->currency->format($total_spent, $this->config->get('config_currency')),
+                // 'avg_value' => $this->currency->format($avg_value, $this->config->get('config_currency')),
+                // 'First_order_date' => $first_order_Date,
+                // 'frequency' => $frequency,
+                 'most_purhased' => $most_purchased
             );
 
         $customer_SubUser_info = $this->model_account_dashboard->getCustomerSubUsers($this->customer->getId());
+if(count($customer_SubUser_info)>1)
+{ 
+$newdata =  array (
+    array(
+    'company_name' => 'All Branches',
+    'customer_id' => '-1' 
+    )
+  );
+// $customer_SubUser_info[-1]['company_name']='All Branches';
+// $customer_SubUser_info[-1]['customer_id']='0';
+
+// $customer_SubUser_info=ksort($customer_SubUser_info,1);
+$customer_SubUser_info=array_merge($newdata,$customer_SubUser_info);
+
+}
+
+    // echo "<pre>";print_r($customer_SubUser_info);die;
 
         $data['DashboardData']['companyname'] = $customer_SubUser_info;
 
@@ -270,7 +287,7 @@ class ControllerAccountDashboard extends Controller {
 
         // echo "<pre>";print_r($data);die;
         $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/dashboard.tpl', $data));
-    }
+    } 
 
     public function valueofbasket() {
 
@@ -306,7 +323,7 @@ class ControllerAccountDashboard extends Controller {
         //     $range = 'hour';
         // }
 
-        if ($diff >30 and $range == 'day') {
+        if ($diff >31 and $range == 'day') {
             $range = 'month';
         }
        
@@ -333,10 +350,10 @@ class ControllerAccountDashboard extends Controller {
             $end = '';
         }
 
-        if (!empty($this->request->get['customer_id'])) {
-            $customer_id = $this->request->get['customer_id'];
+        if (!empty($this->request->get['selectedcustomer_id'])) {
+            $selectedcustomer_id = $this->request->get['selectedcustomer_id'];
         } else {
-            $customer_id = '';
+            $selectedcustomer_id = '';
         }
 
 
@@ -348,9 +365,7 @@ class ControllerAccountDashboard extends Controller {
 
         $range = $this->getRange($diff);
 
-        // $customer_id = $this->customer->getId();
-
-
+         
         //   echo "<pre>";print_r($json);die;
 
         switch ($range) {
@@ -381,7 +396,7 @@ class ControllerAccountDashboard extends Controller {
             //     break;
             // default:
             case 'day':
-                $results = $this->model_account_dashboard->{$modelFunction}( $customer_id,$date_start, $date_end, 'DAY');
+                $results = $this->model_account_dashboard->{$modelFunction}( $selectedcustomer_id,$date_start, $date_end, 'DAY',$this->customer->getId());
                 $str_date = substr($date_start, 0, 10);
                 $order_data = array();
 
@@ -418,7 +433,7 @@ class ControllerAccountDashboard extends Controller {
 
                 break;
             case 'month':
-                $results = $this->model_account_dashboard->{$modelFunction}( $customer_id,$date_start, $date_end, 'MONTH');
+                $results = $this->model_account_dashboard->{$modelFunction}( $selectedcustomer_id,$date_start, $date_end, 'MONTH',$this->customer->getId());
                 $months = $this->getMonths($date_start, $date_end);
                 $order_data = array();
 
@@ -444,7 +459,7 @@ class ControllerAccountDashboard extends Controller {
                 }
                 break;
             case 'year':
-                $results = $this->model_account_dashboard->{$modelFunction}( $customer_id,$date_start, $date_end, 'YEAR');
+                $results = $this->model_account_dashboard->{$modelFunction}( $selectedcustomer_id,$date_start, $date_end, 'YEAR',$this->customer->getId());
                 $str_date = substr($date_start, 0, 10);
                 $order_data = array();
                 $diff = floor($diff / 365) + 1;
@@ -475,7 +490,7 @@ class ControllerAccountDashboard extends Controller {
         }
 
         $modelFunction = str_replace('get', 'getTotal', $modelFunction);
-        $result = $this->model_account_dashboard->{$modelFunction}( $customer_id,$date_start, $date_end);
+        $result = $this->model_account_dashboard->{$modelFunction}($selectedcustomer_id, $customer_id,$date_start, $date_end);
 
         // echo "<pre>";print_r($result);die;
 
@@ -508,9 +523,9 @@ class ControllerAccountDashboard extends Controller {
         }
 
         if (!empty($this->request->get['customer_id'])) {
-            $customer_id = $this->request->get['customer_id'];
+            $selectedCustomer_id = $this->request->get['customer_id'];
         } else {
-            $customer_id = '';
+            $selectedCustomer_id = '';
         }
 
         $date_start = date_create($start)->format('Y-m-d H:i:s');
@@ -521,11 +536,11 @@ class ControllerAccountDashboard extends Controller {
         $total_orders = $orders = 0;
        // if (!empty($customer_info)) {
             // $data['token'] = $this->session->data['token'];
-            // $data['customer_id'] = $this->customer->getId();
+            $customer_id  = $this->customer->getId();
              
-            $total_orders = $this->model_account_dashboard->getTotalOrders($customer_id,$date_start,$date_end);
-            $orders = $this->model_account_dashboard->getOrders($customer_id,$date_start,$date_end);
-            //$most_purchased = $this->model_account_dashboard->getMostPurchased($this->customer->getId());
+            $total_orders = $this->model_account_dashboard->getTotalOrders($customer_id,$selectedCustomer_id,$date_start,$date_end);
+            $orders = $this->model_account_dashboard->getOrders($customer_id,$selectedCustomer_id,$date_start,$date_end);
+          // $most_purchased = $this->model_account_dashboard->getMostPurchased($customer_id,$selectedCustomer_id,$date_start,$date_end);
 
             $this->load->model('sale/order');
             $total_spent = 0;
@@ -574,6 +589,7 @@ class ControllerAccountDashboard extends Controller {
                 $json['total_orders'] =  $total_orders;
                 $json['total_spent'] = $this->currency->format($total_spent, $this->config->get('config_currency'));
                 $json['avg_value'] = $this->currency->format($avg_value, $this->config->get('config_currency'));                
+                $json['most_purchased'] =  $most_purchased;
                 //'frequency' => $frequency 
            // );
  
@@ -585,7 +601,31 @@ class ControllerAccountDashboard extends Controller {
        $this->response->setOutput(json_encode($json));
     }
 
+    function getMonths($date1, $date2) {
+        $time1 = strtotime($date1);
+        $time2 = strtotime($date2);
+        $my = date('n-Y', $time2);
+        $mesi = array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
+        //$mesi = array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec');
 
+        $months = array();
+        $f = '';
+
+        while ($time1 < $time2) {
+            if (date('n-Y', $time1) != $f) {
+                $f = date('n-Y', $time1);
+                if (date('n-Y', $time1) != $my && ($time1 < $time2)) {
+                    $str_mese = $mesi[(date('n', $time1) - 1)];
+                    $months[] = $str_mese . " " . date('Y', $time1);
+                }
+            }
+            $time1 = strtotime((date('Y-n-d', $time1) . ' +15days'));
+        }
+
+        $str_mese = $mesi[(date('n', $time2) - 1)];
+        $months[] = $str_mese . " " . date('Y', $time2);
+        return $months;
+    }
 
     public function recentbuyingpattern() {
 
@@ -602,6 +642,7 @@ class ControllerAccountDashboard extends Controller {
     public function getChartData($modelFunction, $currency_format = false) {
         $this->load->model('account/dashboard');
         $json = array();
+        
 
            $results = $this->model_account_dashboard->getBuyingPattern($this->customer->getId());
                 //echo  count($results->rows);die;
