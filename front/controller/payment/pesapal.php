@@ -1000,6 +1000,9 @@ class ControllerPaymentPesapal extends Controller {
             //transaction status
             $elements = preg_split("/=/", substr($response, $header_size));
             $status = $elements[1];
+            $log->write('ORDER STATUS');
+            $log->write($status);
+            $log->write('ORDER STATUS');
 
             curl_close($ch);
 
