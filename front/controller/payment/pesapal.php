@@ -1009,12 +1009,12 @@ class ControllerPaymentPesapal extends Controller {
             curl_close($ch);
 
             if ($status != 'COMPLETED') {
-                $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('pesapal_failed_order_status_id'));
+                $this->model_payment_pesapal->addOrderHistory($order_id, $this->config->get('pesapal_failed_order_status_id'));
                 $this->model_payment_pesapal->updateorderstatusipn($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
             }
 
             if ($status == 'COMPLETED') {
-                $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('pesapal_order_status_id'));
+                $this->model_payment_pesapal->addOrderHistory($order_id, $this->config->get('pesapal_order_status_id'));
                 $this->model_payment_pesapal->updateorderstatusipn($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
             }
 
