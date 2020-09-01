@@ -119,4 +119,8 @@ class ModelPaymentPesapal extends Model {
         $this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', order_status_id = '" . (int) $order_status_id . "', notify = '" . (int) $notify . "', comment = '" . $this->db->escape($comment) . "', date_added = NOW()");
     }
 
+    public function OrderTransaction($order_id, $transaction_id) {
+        $this->db->query("INSERT INTO " . DB_PREFIX . "order_transaction_id SET order_id = '" . (int) $order_id . "', transaction_id = '" . $transaction_id . "'");
+    }
+
 }

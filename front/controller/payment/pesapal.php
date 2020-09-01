@@ -931,6 +931,7 @@ class ControllerPaymentPesapal extends Controller {
         $merchant_reference = $this->request->get['pesapal_merchant_reference'];
         $customer_id = $customer_info['customer_id'];
         $this->model_payment_pesapal->insertOrderTransactionIdPesapal($order_id, $transaction_tracking_id, $merchant_reference, $customer_id);
+        $this->model_payment_pesapal->OrderTransaction($order_id, $transaction_tracking_id);
         $status = $this->ipinlistenercustom('CHANGE', $transaction_tracking_id, $merchant_reference, $order_id);
 
         if ($status == 'COMPLETED') {
