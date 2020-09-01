@@ -473,7 +473,7 @@ class ControllerAccountDashboard extends Controller
     {
         $this->load->model('account/dashboard');
 
-        $json = array();
+        $json = [];
 
         if (isset($this->request->get['start'])) {
             $start = $this->request->get['start'];
