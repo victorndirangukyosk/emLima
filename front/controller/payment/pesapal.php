@@ -931,11 +931,11 @@ class ControllerPaymentPesapal extends Controller {
         $merchant_reference = $this->request->get['pesapal_merchant_reference'];
         $customer_id = $customer_info['customer_id'];
         $this->model_payment_pesapal->insertOrderTransactionIdPesapal($order_id, $transaction_tracking_id, $merchant_reference, $customer_id);
-        $this->ipinlistenercustom('CHANGE', $transaction_tracking_id, $merchant_reference);
+        $this->ipinlistenercustom('CHANGE', $transaction_tracking_id, $merchant_reference, $order_id);
         $this->response->redirect($this->url->link('checkout/success'));
     }
 
-    public function ipinlistenercustom($pesapalNotification, $pesapalTrackingId, $pesapal_merchant_reference) {
+    public function ipinlistenercustom($pesapalNotification, $pesapalTrackingId, $pesapal_merchant_reference, $order_id) {
 
         $log = new Log('error.log');
         $log->write('ipinlistener');
@@ -1003,8 +1003,19 @@ class ControllerPaymentPesapal extends Controller {
             $log->write('ORDER STATUS');
             $log->write($status);
             $log->write('ORDER STATUS');
-
             curl_close($ch);
+
+            if ($status != 'COMPLETED') {
+                foreach ($this->session->data['order_id'] as $order_id) {
+                    $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('pesapal_failed_order_status_id'));
+                }
+            }
+
+            if ($status == 'COMPLETED') {
+                foreach ($this->session->data['order_id'] as $order_id) {
+                    $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('pesapal_order_status_id'));
+                }
+            }
 
 //UPDATE YOUR DB TABLE WITH NEW STATUS FOR TRANSACTION WITH pesapal_transaction_tracking_id $pesapalTrackingId
         }
