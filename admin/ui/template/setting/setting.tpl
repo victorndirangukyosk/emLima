@@ -2424,13 +2424,31 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="input-smtp-encryption"><span data-toggle="tooltip" title="Africa's Talking username">Africa's Talking Username</span></label>
                                 <div class="col-sm-10">
-                                    <input type="text" name="config_africastalking_sms_username" value="<?php echo $config_africastalking_sms_username; ?>" id="input-smtp-port" class="form-control" <?php echo ($config_sms_protocol == 'africastalking') ? '' : 'readonly="readonly"' ?> />
+                                    <input type="text" name="config_africastalking_sms_username" value="<?php echo $config_africastalking_sms_username; ?>" id="config_africastalking_sms_username" class="form-control" <?php echo ($config_sms_protocol == 'africastalking') ? '' : 'readonly="readonly"' ?> />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-smtp-encryption"><span data-toggle="tooltip" title="Africa's Talking Environment, use 'sandbox' username for sandbox">Africa's Talking Environment</span></label>
+                                <div class="col-sm-10">
+                                    <select name="config_africastalking_sms_environment" id="input-sms-protocol" class="form-control" <?php echo ($config_sms_protocol == 'africastalking') ? '' : 'disabled' ?>>
+                                        <?php if ($config_africastalking_sms_environment == 'sandbox') { ?>
+                                        <option value="sandbox" selected="selected">Sandbox</option>
+                                        <?php } else {?>
+                                        <option value="sanbox">Sandbox</option>
+                                        <?php } ?>
+    
+                                        <?php if ($config_africastalking_sms_environment == 'live') { ?>
+                                        <option value="live" selected="selected">Live</option>
+                                        <?php } else { ?>
+                                        <option value="live">Live</option>
+                                        <?php } ?>
+                            </select>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="input-smtp-encryption"><span data-toggle="tooltip" title="Africa's Talking API Key">Africa's Talking API Key</span></label>
                                 <div class="col-sm-10">
-                                     <input type="text" name="config_africastalking_sms_api_key" value="<?php echo $config_africastalking_sms_api_key; ?>" id="input-smtp-port" class="form-control" <?php echo ($config_sms_protocol == 'africastalking') ? '' : 'readonly="readonly"' ?> />
+                                     <input type="text" name="config_africastalking_sms_api_key" value="<?php echo $config_africastalking_sms_api_key; ?>" id="config_africastalking_sms_api_key" class="form-control" <?php echo ($config_sms_protocol == 'africastalking') ? '' : 'readonly="readonly"' ?> />
                                 </div>
                             </div>
                         
