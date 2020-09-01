@@ -143,7 +143,7 @@ class ControllerAccountDashboard extends Controller
                 // 'First_order_date' => $first_order_Date,
                 // 'frequency' => $frequency,
                  'most_purhased' => $most_purchased
-            );
+            ];
 
         $customer_SubUser_info = $this->model_account_dashboard->getCustomerSubUsers($this->customer->getId());
 if(count($customer_SubUser_info)>1)
@@ -259,8 +259,8 @@ $customer_SubUser_info=array_merge($newdata,$customer_SubUser_info);
         $data['home'] = $this->url->link('common/home/toHome');
 
         // echo "<pre>";print_r($data);die;
-        $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/dashboard.tpl', $data));
-    } 
+        $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/account/dashboard.tpl', $data));
+    }
 
     public function valueofbasket()
     {
@@ -293,7 +293,7 @@ $customer_SubUser_info=array_merge($newdata,$customer_SubUser_info);
         //     $range = 'hour';
         // }
 
-        if ($diff >31 and $range == 'day') {
+        if ($diff > 31 and 'day' == $range) {
             $range = 'month';
         }
 
@@ -332,7 +332,8 @@ $customer_SubUser_info=array_merge($newdata,$customer_SubUser_info);
 
         $range = $this->getRange($diff);
 
-         
+        // $customer_id = $this->customer->getId();
+
         //   echo "<pre>";print_r($json);die;
 
         switch ($range) {
@@ -499,41 +500,25 @@ $customer_SubUser_info=array_merge($newdata,$customer_SubUser_info);
         //$customer_info = $this->model_account_dashboard->getCustomerDashboardData($this->customer->getId(),$date_start, $date_end);
 
         $total_orders = $orders = 0;
-       // if (!empty($customer_info)) {
-            // $data['token'] = $this->session->data['token'];
-            $customer_id  = $this->customer->getId();
-             
-            $total_orders = $this->model_account_dashboard->getTotalOrders($customer_id,$selectedCustomer_id,$date_start,$date_end);
-            $orders = $this->model_account_dashboard->getOrders($customer_id,$selectedCustomer_id,$date_start,$date_end);
-          // $most_purchased = $this->model_account_dashboard->getMostPurchased($customer_id,$selectedCustomer_id,$date_start,$date_end);
+        // if (!empty($customer_info)) {
+        // $data['token'] = $this->session->data['token'];
+        $customer_id  = $this->customer->getId();
 
-            $this->load->model('sale/order');
-            $total_spent = 0;
-            $products_qty = 0;
-            $todaydate = $todaydate = date('Y-m-d');
-            if (!empty($orders))
-                $first_order_Date = $orders[0]['date_added'];
-            foreach ($orders as $result) {
+          
+        $total_orders = $this->model_account_dashboard->getTotalOrders($customer_id,$selectedCustomer_id,$date_start,$date_end);
+        $orders = $this->model_account_dashboard->getOrders($customer_id,$selectedCustomer_id,$date_start,$date_end);
+      // $most_purchased = $this->model_account_dashboard->getMostPurchased($customer_id,$selectedCustomer_id,$date_start,$date_end);
 
-                if ($this->model_sale_order->hasRealOrderProducts($result['order_id'])) {
-                    $products_qty = $products_qty + $this->model_sale_order->getRealOrderProductsItems($result['order_id']);
-                } else {
-                    $products_qty = $products_qty + $this->model_sale_order->getOrderProductsItems($result['order_id']);
-                }
-                $sub_total = 0;
-                $totals = $this->model_sale_order->getOrderTotals($result['order_id']);
-                // echo "<pre>";print_r($orders);die;
-                foreach ($totals as $total) {
-                    if ($total['code'] == 'sub_total') {
-                        $sub_total = $total['value'];
-                        $total_spent = $total_spent + $sub_total;
-                        break;
-                    }
-                }
- 
-            }
-            if ($total_orders) {
-                $avg_value = ($total_spent / $total_orders);
+        $this->load->model('sale/order');
+        $total_spent = 0;
+        $products_qty = 0;
+        $todaydate = $todaydate = date('Y-m-d');
+        if (!empty($orders)) {
+            $first_order_Date = $orders[0]['date_added'];
+        }
+        foreach ($orders as $result) {
+            if ($this->model_sale_order->hasRealOrderProducts($result['order_id'])) {
+                $products_qty = $products_qty + $this->model_sale_order->getRealOrderProductsItems($result['order_id']);
             } else {
                 $products_qty = $products_qty + $this->model_sale_order->getOrderProductsItems($result['order_id']);
             }
@@ -556,58 +541,20 @@ $customer_SubUser_info=array_merge($newdata,$customer_SubUser_info);
 
         // $months = 0;
 
-            // $months = 0;
+        // while (($date1 = strtotime('+1 MONTH', $date1)) <= $date2)
+        //     $months++;
+        // if ($months == 0)
+        //     $frequency = ($total_orders);
+        // else
+        //     $frequency = ($total_orders / $months);
 
-            // while (($date1 = strtotime('+1 MONTH', $date1)) <= $date2)
-            //     $months++;
-            // if ($months == 0)
-            //     $frequency = ($total_orders);
-            // else
-            //     $frequency = ($total_orders / $months);
+        // $data['DashboardNewData'] = array(
 
-            
-           // $data['DashboardNewData'] = array(
-                
-                $json['total_orders'] =  $total_orders;
-                $json['total_spent'] = $this->currency->format($total_spent, $this->config->get('config_currency'));
-                $json['avg_value'] = $this->currency->format($avg_value, $this->config->get('config_currency'));                
-                $json['most_purchased'] =  $most_purchased;
-                //'frequency' => $frequency 
-           // );
- 
-             
-        // }
-
-        // $json['order']['total'] = $total;
-       // return $json;
-       $this->response->setOutput(json_encode($json));
-    }
-
-    function getMonths($date1, $date2) {
-        $time1 = strtotime($date1);
-        $time2 = strtotime($date2);
-        $my = date('n-Y', $time2);
-        $mesi = array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
-        //$mesi = array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec');
-
-        $months = array();
-        $f = '';
-
-        while ($time1 < $time2) {
-            if (date('n-Y', $time1) != $f) {
-                $f = date('n-Y', $time1);
-                if (date('n-Y', $time1) != $my && ($time1 < $time2)) {
-                    $str_mese = $mesi[(date('n', $time1) - 1)];
-                    $months[] = $str_mese . " " . date('Y', $time1);
-                }
-            }
-            $time1 = strtotime((date('Y-n-d', $time1) . ' +15days'));
-        }
-
-        $str_mese = $mesi[(date('n', $time2) - 1)];
-        $months[] = $str_mese . " " . date('Y', $time2);
-        return $months;
-    }
+        $json['total_orders'] = $total_orders;
+        $json['total_spent'] = $this->currency->format($total_spent, $this->config->get('config_currency'));
+        $json['avg_value'] = $this->currency->format($avg_value, $this->config->get('config_currency'));
+        //'frequency' => $frequency
+        // );
 
         // }
 
@@ -631,6 +578,7 @@ $customer_SubUser_info=array_merge($newdata,$customer_SubUser_info);
         $this->load->model('account/dashboard');
         $json = array();
         
+        $json = [];
 
         $results = $this->model_account_dashboard->getBuyingPattern($this->customer->getId());
         //echo  count($results->rows);die;
@@ -673,7 +621,7 @@ $customer_SubUser_info=array_merge($newdata,$customer_SubUser_info);
     public function getOrderProducts()
     {
         $order_id = $this->request->post['order_id'];
-        $order_query = $this->db->query('SELECT product_id,general_product_id,quantity,unit,name,order_id  FROM `'.DB_PREFIX."order_product` o WHERE o.order_id = '".(int) $order_id."'");
+        $order_query = $this->db->query('SELECT product_id,general_product_id,quantity,unit,name,order_id  FROM '.DB_PREFIX."order_product o WHERE o.order_id = '".(int) $order_id."'");
 
         if ($order_query->num_rows) {
             foreach ($order_query->rows   as $ra) {
@@ -1173,4 +1121,32 @@ $customer_SubUser_info=array_merge($newdata,$customer_SubUser_info);
 
         return true;
     }
+
+
+    function getMonths($date1, $date2) {
+        $time1 = strtotime($date1);
+        $time2 = strtotime($date2);
+        $my = date('n-Y', $time2);
+        $mesi = array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
+        //$mesi = array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec');
+
+        $months = array();
+        $f = '';
+
+        while ($time1 < $time2) {
+            if (date('n-Y', $time1) != $f) {
+                $f = date('n-Y', $time1);
+                if (date('n-Y', $time1) != $my && ($time1 < $time2)) {
+                    $str_mese = $mesi[(date('n', $time1) - 1)];
+                    $months[] = $str_mese . " " . date('Y', $time1);
+                }
+            }
+            $time1 = strtotime((date('Y-n-d', $time1) . ' +15days'));
+        }
+
+        $str_mese = $mesi[(date('n', $time2) - 1)];
+        $months[] = $str_mese . " " . date('Y', $time2);
+        return $months;
+    }
+    
 }
