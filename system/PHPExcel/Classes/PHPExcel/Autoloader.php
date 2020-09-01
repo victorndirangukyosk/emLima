@@ -1,6 +1,6 @@
 <?php
 /**
- * PHPExcel
+ * PHPExcel.
  *
  * Copyright (c) 2006 - 2014 PHPExcel
  *
@@ -19,12 +19,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  *
  * @category   PHPExcel
- * @package    PHPExcel
+ *
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt    LGPL
+ *
  * @version    1.8.0, 2014-03-02
  */
-
 PHPExcel_Autoloader::Register();
 //    As we always try to run the autoloader before anything else, we can use it to do a few
 //        simple checks and initialisations
@@ -35,51 +35,53 @@ if (ini_get('mbstring.func_overload') & 2) {
 }
 PHPExcel_Shared_String::buildCharacterSets();
 
-
 /**
- * PHPExcel_Autoloader
+ * PHPExcel_Autoloader.
  *
  * @category    PHPExcel
- * @package     PHPExcel
+ *
  * @copyright   Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  */
 class PHPExcel_Autoloader
 {
     /**
-     * Register the Autoloader with SPL
-     *
+     * Register the Autoloader with SPL.
      */
-    public static function Register() {
+    public static function Register()
+    {
         if (function_exists('__autoload')) {
             //    Register any existing autoloader function with SPL, so we don't get any clashes
             spl_autoload_register('__autoload');
         }
         //    Register ourselves with SPL
-        return spl_autoload_register(array('PHPExcel_Autoloader', 'Load'));
-    }   //    function Register()
+        return spl_autoload_register(['PHPExcel_Autoloader', 'Load']);
+    }
 
+    //    function Register()
 
     /**
-     * Autoload a class identified by name
+     * Autoload a class identified by name.
      *
-     * @param    string    $pClassName        Name of the object to load
+     * @param string $pClassName Name of the object to load
      */
-    public static function Load($pClassName){
-        if ((class_exists($pClassName,FALSE)) || (strpos($pClassName, 'PHPExcel') !== 0)) {
+    public static function Load($pClassName)
+    {
+        if ((class_exists($pClassName, false)) || (0 !== strpos($pClassName, 'PHPExcel'))) {
             //    Either already loaded, or not a PHPExcel class request
-            return FALSE;
+            return false;
         }
 
-        $pClassFilePath = PHPEXCEL_ROOT .
-                          str_replace('_',DIRECTORY_SEPARATOR,$pClassName) .
+        $pClassFilePath = PHPEXCEL_ROOT.
+                          str_replace('_', DIRECTORY_SEPARATOR, $pClassName).
                           '.php';
 
-        if ((file_exists($pClassFilePath) === FALSE) || (is_readable($pClassFilePath) === FALSE)) {
+        if ((false === file_exists($pClassFilePath)) || (false === is_readable($pClassFilePath))) {
             //    Can't load
-            return FALSE;
+            return false;
         }
 
-        require($pClassFilePath);
-    }   //    function Load()
+        require $pClassFilePath;
+    }
 
+    //    function Load()
 }

@@ -1,26 +1,20 @@
 <?php
 
-use paragraph1\phpFCM\Client;
-use paragraph1\phpFCM\Message;
-use paragraph1\phpFCM\Recipient\Device;
-use paragraph1\phpFCM\Notification;
+class ControllerAccountActivate extends Controller
+{
+    private $error = [];
 
-class ControllerAccountActivate extends Controller {
-
-    private $error = array();
-
-    public function index() {  
-
+    public function index()
+    {
         $this->load->model('account/customer');
         $this->load->language('account/activate');
-        
+
         if ($this->customer->isLogged()) {
             $this->response->redirect($this->url->link('account/account', '', 'SSL'));
         }
 
         $data['success'] = false;
         if (!empty($this->request->get['token'])) {
-           
             unset($this->session->data['wishlist']);
             unset($this->session->data['payment_address']);
             unset($this->session->data['payment_method']);
@@ -38,7 +32,6 @@ class ControllerAccountActivate extends Controller {
             $customer_info = $this->model_account_customer->getCustomerByToken($this->request->get['token']);
 
             if ($customer_info) {
-
                 $this->model_account_customer->approve($customer_info['customer_id']);
                 //success
                 $data['success'] = true;
@@ -46,7 +39,7 @@ class ControllerAccountActivate extends Controller {
         }
 
         $this->document->addStyle('front/ui/theme/instacart/stylesheet/layout_checkout.css');
-       
+
         $this->document->setTitle($this->language->get('heading_title'));
 
         $data['heading_title'] = $this->language->get('heading_title');
@@ -59,18 +52,16 @@ class ControllerAccountActivate extends Controller {
         $data['header'] = $this->load->controller('common/header/onlyHeader');
         $data['login_modal'] = $this->load->controller('common/login_modal');
 
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/activate.tpl')) {
-            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/activate.tpl', $data));
+        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/account/activate.tpl')) {
+            $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/account/activate.tpl', $data));
         } else {
             $this->response->setOutput($this->load->view('default/template/account/activate.tpl', $data));
         }
     }
 
-
     public function resendEmail()
     {
-
-        $data = array();
+        $data = [];
         $data['status'] = false;
 
         if ($this->customer->isLogged()) {
@@ -82,22 +73,19 @@ class ControllerAccountActivate extends Controller {
         $this->load->model('account/customer');
 
         if ($this->request->isAjax() && !empty($this->request->post['email'])) {
-
             $this->load->language('mail/forgotten');
 
             $customer_info = $this->model_account_customer->getCustomerByEmail($this->request->post['email']);
-            
-            if ($customer_info) {
 
-                $result = $this->model_account_customer->resendVerificationEmail($customer_info,$customer_info['customer_id']);
+            if ($customer_info) {
+                $result = $this->model_account_customer->resendVerificationEmail($customer_info, $customer_info['customer_id']);
 
                 $data['status'] = true;
-            
+
                 $data['success_message'] = $this->language->get('text_mail_sent');
             } else {
                 $data['error_warning'] = $this->language->get('text_mail_not_found');
             }
-
         } else {
             $data['error_warning'] = $this->language->get('text_mail_id_missing');
         }

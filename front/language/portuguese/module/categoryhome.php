@@ -1,7 +1,4 @@
 <?php
 
-
-// Heading 
+// Heading
 $_['heading_title'] = 'Categorias';
-
-?>

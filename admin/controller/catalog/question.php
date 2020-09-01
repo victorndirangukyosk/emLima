@@ -1,9 +1,11 @@
 <?php
 
-class ControllerCatalogQuestion extends Controller {
-    private $error = array();
+class ControllerCatalogQuestion extends Controller
+{
+    private $error = [];
 
-    public function index() {
+    public function index()
+    {
         $this->load->language('catalog/question');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -13,16 +15,16 @@ class ControllerCatalogQuestion extends Controller {
         $this->getList();
     }
 
-    public function add() {
+    public function add()
+    {
         $this->load->language('catalog/question');
 
         $this->document->setTitle($this->language->get('heading_title'));
 
         $this->load->model('catalog/question');
 
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-
-           //echo "<pre>";print_r($this->request->post);die;
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
+            //echo "<pre>";print_r($this->request->post);die;
             $checkout_question_id = $this->model_catalog_question->addCheckoutQuestion($this->request->post);
             //echo "<pre>";print_r($this->request->post);die;
             $this->session->data['success'] = $this->language->get('text_success');
@@ -30,42 +32,40 @@ class ControllerCatalogQuestion extends Controller {
             $url = '';
 
             if (isset($this->request->get['sort'])) {
-                $url .= '&sort=' . $this->request->get['sort'];
+                $url .= '&sort='.$this->request->get['sort'];
             }
 
             if (isset($this->request->get['order'])) {
-                $url .= '&order=' . $this->request->get['order'];
+                $url .= '&order='.$this->request->get['order'];
             }
 
             if (isset($this->request->get['question'])) {
-                $url .= '&question=' . $this->request->get['question'];
-            }
-            
-            if (isset($this->request->post['button']) and $this->request->post['button'] == 'save') {
-                $this->response->redirect($this->url->link('catalog/question/edit', 'checkout_question_id='.$checkout_question_id.'&token=' . $this->session->data['token'] . $url, 'SSL'));
+                $url .= '&question='.$this->request->get['question'];
             }
 
-            if (isset($this->request->post['button']) and $this->request->post['button'] == 'new') {
-                $this->response->redirect($this->url->link('catalog/question/add', 'token=' . $this->session->data['token'] . $url, 'SSL'));
-            }           
+            if (isset($this->request->post['button']) and 'save' == $this->request->post['button']) {
+                $this->response->redirect($this->url->link('catalog/question/edit', 'checkout_question_id='.$checkout_question_id.'&token='.$this->session->data['token'].$url, 'SSL'));
+            }
 
-            $this->response->redirect($this->url->link('catalog/question', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            if (isset($this->request->post['button']) and 'new' == $this->request->post['button']) {
+                $this->response->redirect($this->url->link('catalog/question/add', 'token='.$this->session->data['token'].$url, 'SSL'));
+            }
+
+            $this->response->redirect($this->url->link('catalog/question', 'token='.$this->session->data['token'].$url, 'SSL'));
         }
 
         $this->getForm();
     }
 
-    public function edit() {
+    public function edit()
+    {
         $this->load->language('catalog/question');
 
         $this->document->setTitle($this->language->get('heading_title'));
 
         $this->load->model('catalog/question');
 
-        
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-
-            //
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
             $this->model_catalog_question->editCheckoutQuestion($this->request->get['checkout_question_id'], $this->request->post);
 
             //echo "<pre>";print_r($this->request->post);die;
@@ -74,32 +74,33 @@ class ControllerCatalogQuestion extends Controller {
             $url = '';
 
             if (isset($this->request->get['sort'])) {
-                $url .= '&sort=' . $this->request->get['sort'];
+                $url .= '&sort='.$this->request->get['sort'];
             }
 
             if (isset($this->request->get['order'])) {
-                $url .= '&order=' . $this->request->get['order'];
+                $url .= '&order='.$this->request->get['order'];
             }
 
             if (isset($this->request->get['question'])) {
-                $url .= '&question=' . $this->request->get['question'];
+                $url .= '&question='.$this->request->get['question'];
             }
 
-            if (isset($this->request->post['button']) and $this->request->post['button'] == 'save') {
-                $this->response->redirect($this->url->link('catalog/question/edit', 'checkout_question_id='.$this->request->get['checkout_question_id'].'&token=' . $this->session->data['token'] . $url, 'SSL'));
+            if (isset($this->request->post['button']) and 'save' == $this->request->post['button']) {
+                $this->response->redirect($this->url->link('catalog/question/edit', 'checkout_question_id='.$this->request->get['checkout_question_id'].'&token='.$this->session->data['token'].$url, 'SSL'));
             }
 
-            if (isset($this->request->post['button']) and $this->request->post['button'] == 'new') {
-                $this->response->redirect($this->url->link('catalog/question/add', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            if (isset($this->request->post['button']) and 'new' == $this->request->post['button']) {
+                $this->response->redirect($this->url->link('catalog/question/add', 'token='.$this->session->data['token'].$url, 'SSL'));
             }
-            
-            $this->response->redirect($this->url->link('catalog/question', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+
+            $this->response->redirect($this->url->link('catalog/question', 'token='.$this->session->data['token'].$url, 'SSL'));
         }
 
         $this->getForm();
     }
 
-    public function delete() {
+    public function delete()
+    {
         $this->load->language('catalog/question');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -116,48 +117,49 @@ class ControllerCatalogQuestion extends Controller {
             $url = '';
 
             if (isset($this->request->get['sort'])) {
-                $url .= '&sort=' . $this->request->get['sort'];
+                $url .= '&sort='.$this->request->get['sort'];
             }
 
             if (isset($this->request->get['order'])) {
-                $url .= '&order=' . $this->request->get['order'];
+                $url .= '&order='.$this->request->get['order'];
             }
 
             if (isset($this->request->get['question'])) {
-                $url .= '&question=' . $this->request->get['question'];
+                $url .= '&question='.$this->request->get['question'];
             }
 
-            $this->response->redirect($this->url->link('catalog/question', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            $this->response->redirect($this->url->link('catalog/question', 'token='.$this->session->data['token'].$url, 'SSL'));
         }
 
         $this->getList();
     }
 
-    protected function getList() {
+    protected function getList()
+    {
         if (isset($this->request->get['filter_question'])) {
             $filter_question = $this->request->get['filter_question'];
         } else {
             $filter_question = null;
         }
-        
+
         if (isset($this->request->get['filter_date_start'])) {
             $filter_date_start = $this->request->get['filter_date_start'];
         } else {
             $filter_date_start = null;
         }
-                
+
         if (isset($this->request->get['filter_date_end'])) {
             $filter_date_end = $this->request->get['filter_date_end'];
         } else {
             $filter_date_end = null;
         }
-                
+
         if (isset($this->request->get['filter_store'])) {
             $filter_store = $this->request->get['filter_store'];
         } else {
             $filter_store = null;
         }
-        
+
         if (isset($this->request->get['filter_store_id'])) {
             $filter_store_id = $this->request->get['filter_store_id'];
         } else {
@@ -169,7 +171,7 @@ class ControllerCatalogQuestion extends Controller {
         } else {
             $filter_status = null;
         }
-        
+
         if (isset($this->request->get['sort'])) {
             $sort = $this->request->get['sort'];
         } else {
@@ -189,100 +191,100 @@ class ControllerCatalogQuestion extends Controller {
         }
 
         $url = '';
-        
+
         if (isset($this->request->post['filter_store_id'])) {
             $data['filter_store_id'] = $this->request->post['filter_store_id'];
         } elseif (!empty($product_collection_info)) {
-            $data['filter_store_id'] = $product_collection_info['filter_store_id'];//get filter_store_idquestion by id
+            $data['filter_store_id'] = $product_collection_info['filter_store_id']; //get filter_store_idquestion by id
         } else {
             $data['filter_store_id'] = '';
         }
 
         if (isset($this->request->get['filter_question'])) {
-            $url .= '&filter_question=' . urlencode(html_entity_decode($this->request->get['filter_question'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&filter_question='.urlencode(html_entity_decode($this->request->get['filter_question'], ENT_QUOTES, 'UTF-8'));
         }
-        
+
         if (isset($this->request->get['filter_date_start'])) {
-            $url .= '&filter_date_start=' . $this->request->get['filter_date_start'];
+            $url .= '&filter_date_start='.$this->request->get['filter_date_start'];
         }
-                
+
         if (isset($this->request->get['filter_date_end'])) {
-            $url .= '&filter_date_end=' . $this->request->get['filter_date_end'];
+            $url .= '&filter_date_end='.$this->request->get['filter_date_end'];
         }
-                
+
         if (isset($this->request->get['filter_store'])) {
-            $url .= '&filter_store=' . $this->request->get['filter_store'];
+            $url .= '&filter_store='.$this->request->get['filter_store'];
         }
 
         if (isset($this->request->get['filter_store_id'])) {
-            $url .= '&filter_store_id=' . $this->request->get['filter_store_id'];
+            $url .= '&filter_store_id='.$this->request->get['filter_store_id'];
         }
-                
+
         if (isset($this->request->get['filter_status'])) {
-            $url .= '&filter_status=' . $this->request->get['filter_status'];
+            $url .= '&filter_status='.$this->request->get['filter_status'];
         }
-        
+
         if (isset($this->request->get['sort'])) {
-            $url .= '&sort=' . $this->request->get['sort'];
+            $url .= '&sort='.$this->request->get['sort'];
         }
 
         if (isset($this->request->get['order'])) {
-            $url .= '&order=' . $this->request->get['order'];
+            $url .= '&order='.$this->request->get['order'];
         }
 
         if (isset($this->request->get['question'])) {
-            $url .= '&question=' . $this->request->get['question'];
+            $url .= '&question='.$this->request->get['question'];
         }
 
-        $data['breadcrumbs'] = array();
+        $data['breadcrumbs'] = [];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL')
-        );
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
+        ];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('catalog/question', 'token=' . $this->session->data['token'] . $url, 'SSL')
-        );
+            'href' => $this->url->link('catalog/question', 'token='.$this->session->data['token'].$url, 'SSL'),
+        ];
 
-        $data['add'] = $this->url->link('catalog/question/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['delete'] = $this->url->link('catalog/question/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['add'] = $this->url->link('catalog/question/add', 'token='.$this->session->data['token'].$url, 'SSL');
+        $data['delete'] = $this->url->link('catalog/question/delete', 'token='.$this->session->data['token'].$url, 'SSL');
 
-        $data['coupons'] = array();
+        $data['coupons'] = [];
 
-        $filter_data = array(
-            'filter_question'       => $filter_question,
+        $filter_data = [
+            'filter_question' => $filter_question,
             'filter_date_start' => $filter_date_start,
-            'filter_date_end'   => $filter_date_end,
-            'filter_store'  => $filter_store_id,
-            'filter_status'     => $filter_status,
-            'sort'  => $sort,
+            'filter_date_end' => $filter_date_end,
+            'filter_store' => $filter_store_id,
+            'filter_status' => $filter_status,
+            'sort' => $sort,
             'order' => $order,
             'start' => ($question - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin')
-        );
+            'limit' => $this->config->get('config_limit_admin'),
+        ];
 
-        if(!empty($filter_question)  || !empty($filter_date_start) || !empty($filter_date_end) || !empty($filter_store) || !empty($filter_status)) {
+        if (!empty($filter_question) || !empty($filter_date_start) || !empty($filter_date_end) || !empty($filter_store) || !empty($filter_status)) {
             $product_collection_total = $this->model_catalog_question->getTotalCheckoutQuestionFilter($filter_data);
         } else {
             $product_collection_total = $this->model_catalog_question->getTotalCheckoutQuestion();
         }
-        
+
         $results = $this->model_catalog_question->getCheckoutQuestion($filter_data);
 
         //echo "<pre>";print_r($results);die;
         foreach ($results as $result) {
-            $data['checkout_questions'][] = array(
-                'checkout_question_id'  => $result['checkout_question_id'],
-                'question'       => $result['question'],
-                'status'     => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
-                'edit'       => $this->url->link('catalog/question/edit', 'token=' . $this->session->data['token'] . '&checkout_question_id=' . $result['checkout_question_id'] . $url, 'SSL')
-            );
+            $data['checkout_questions'][] = [
+                'checkout_question_id' => $result['checkout_question_id'],
+                'question' => $result['question'],
+                'status' => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
+                'edit' => $this->url->link('catalog/question/edit', 'token='.$this->session->data['token'].'&checkout_question_id='.$result['checkout_question_id'].$url, 'SSL'),
+            ];
         }
 
         $data['heading_title'] = $this->language->get('heading_title');
-        
+
         $data['text_enabled'] = $this->language->get('text_enabled');
         $data['text_disabled'] = $this->language->get('text_disabled');
         $data['text_list'] = $this->language->get('text_list');
@@ -321,44 +323,44 @@ class ControllerCatalogQuestion extends Controller {
         }
 
         if (isset($this->request->post['selected'])) {
-            $data['selected'] = (array)$this->request->post['selected'];
+            $data['selected'] = (array) $this->request->post['selected'];
         } else {
-            $data['selected'] = array();
+            $data['selected'] = [];
         }
 
         $url = '';
 
-        if ($order == 'ASC') {
+        if ('ASC' == $order) {
             $url .= '&order=DESC';
         } else {
             $url .= '&order=ASC';
         }
 
         if (isset($this->request->get['question'])) {
-            $url .= '&question=' . $this->request->get['question'];
+            $url .= '&question='.$this->request->get['question'];
         }
 
-        $data['sort_question'] = $this->url->link('catalog/question', 'token=' . $this->session->data['token'] . '&sort=question' . $url, 'SSL');
-        $data['sort_discount'] = $this->url->link('catalog/question', 'token=' . $this->session->data['token'] . '&sort=discount' . $url, 'SSL');
-        $data['sort_date_start'] = $this->url->link('catalog/question', 'token=' . $this->session->data['token'] . '&sort=date_start' . $url, 'SSL');
-        $data['sort_date_end'] = $this->url->link('catalog/question', 'token=' . $this->session->data['token'] . '&sort=date_end' . $url, 'SSL');
-        $data['sort_status'] = $this->url->link('catalog/question', 'token=' . $this->session->data['token'] . '&sort=status' . $url, 'SSL');
+        $data['sort_question'] = $this->url->link('catalog/question', 'token='.$this->session->data['token'].'&sort=question'.$url, 'SSL');
+        $data['sort_discount'] = $this->url->link('catalog/question', 'token='.$this->session->data['token'].'&sort=discount'.$url, 'SSL');
+        $data['sort_date_start'] = $this->url->link('catalog/question', 'token='.$this->session->data['token'].'&sort=date_start'.$url, 'SSL');
+        $data['sort_date_end'] = $this->url->link('catalog/question', 'token='.$this->session->data['token'].'&sort=date_end'.$url, 'SSL');
+        $data['sort_status'] = $this->url->link('catalog/question', 'token='.$this->session->data['token'].'&sort=status'.$url, 'SSL');
 
         $url = '';
 
         if (isset($this->request->get['sort'])) {
-            $url .= '&sort=' . $this->request->get['sort'];
+            $url .= '&sort='.$this->request->get['sort'];
         }
 
         if (isset($this->request->get['order'])) {
-            $url .= '&order=' . $this->request->get['order'];
+            $url .= '&order='.$this->request->get['order'];
         }
 
         $pagination = new Pagination();
         $pagination->total = $product_collection_total;
         $pagination->question = $question;
         $pagination->limit = $this->config->get('config_limit_admin');
-        $pagination->url = $this->url->link('catalog/question', 'token=' . $this->session->data['token'] . $url . '&question={question}', 'SSL');
+        $pagination->url = $this->url->link('catalog/question', 'token='.$this->session->data['token'].$url.'&question={question}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
@@ -369,11 +371,11 @@ class ControllerCatalogQuestion extends Controller {
         $data['filter_date_end'] = $filter_date_end;
         $data['filter_store'] = $filter_store;
         $data['filter_status'] = $filter_status;
-        
+
         $data['sort'] = $sort;
         $data['order'] = $order;
-        
-        $data ['token'] = $this->session->data['token'];
+
+        $data['token'] = $this->session->data['token'];
 
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
@@ -382,12 +384,12 @@ class ControllerCatalogQuestion extends Controller {
         $this->response->setOutput($this->load->view('catalog/question_list.tpl', $data));
     }
 
-    protected function getForm() {
-
+    protected function getForm()
+    {
         $data = $this->language->all();
 
         $data['heading_title'] = $this->language->get('heading_title');
-        
+
         $data['text_form'] = !isset($this->request->get['checkout_question_id']) ? 'Add' : 'Edit';
         $data['text_enabled'] = $this->language->get('text_enabled');
         $data['text_disabled'] = $this->language->get('text_disabled');
@@ -424,7 +426,7 @@ class ControllerCatalogQuestion extends Controller {
 
         $data['button_save'] = $this->language->get('button_save');
         $data['button_savenew'] = $this->language->get('button_savenew');
-                $data['button_saveclose'] = $this->language->get('button_saveclose');       
+        $data['button_saveclose'] = $this->language->get('button_saveclose');
         $data['button_cancel'] = $this->language->get('button_cancel');
 
         $data['tab_general'] = $this->language->get('tab_general');
@@ -440,11 +442,11 @@ class ControllerCatalogQuestion extends Controller {
 
         if (isset($this->session->data['success'])) {
             $data['success'] = $this->session->data['success'];
-                        unset($this->session->data['success']);
+            unset($this->session->data['success']);
         } else {
             $data['success'] = '';
         }
-                
+
         if (isset($this->error['warning'])) {
             $data['error_warning'] = $this->error['warning'];
         } else {
@@ -460,51 +462,51 @@ class ControllerCatalogQuestion extends Controller {
         $url = '';
 
         if (isset($this->request->get['question'])) {
-            $url .= '&question=' . $this->request->get['question'];
+            $url .= '&question='.$this->request->get['question'];
         }
 
         if (isset($this->request->get['sort'])) {
-            $url .= '&sort=' . $this->request->get['sort'];
+            $url .= '&sort='.$this->request->get['sort'];
         }
 
         if (isset($this->request->get['order'])) {
-            $url .= '&order=' . $this->request->get['order'];
+            $url .= '&order='.$this->request->get['order'];
         }
 
-        $data['breadcrumbs'] = array();
+        $data['breadcrumbs'] = [];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL')
-        );
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
+        ];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('catalog/question', 'token=' . $this->session->data['token'] . $url, 'SSL')
-        );
+            'href' => $this->url->link('catalog/question', 'token='.$this->session->data['token'].$url, 'SSL'),
+        ];
 
         if (!isset($this->request->get['checkout_question_id'])) {
-            $data['action'] = $this->url->link('catalog/question/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $data['action'] = $this->url->link('catalog/question/add', 'token='.$this->session->data['token'].$url, 'SSL');
         } else {
-            $data['action'] = $this->url->link('catalog/question/edit', 'token=' . $this->session->data['token'] . '&checkout_question_id=' . $this->request->get['checkout_question_id'] . $url, 'SSL');
+            $data['action'] = $this->url->link('catalog/question/edit', 'token='.$this->session->data['token'].'&checkout_question_id='.$this->request->get['checkout_question_id'].$url, 'SSL');
         }
 
-        $data['cancel'] = $this->url->link('catalog/question', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['cancel'] = $this->url->link('catalog/question', 'token='.$this->session->data['token'].$url, 'SSL');
 
-        if (isset($this->request->get['checkout_question_id']) && (!$this->request->server['REQUEST_METHOD'] != 'POST')) {
+        if (isset($this->request->get['checkout_question_id']) && ('POST' != !$this->request->server['REQUEST_METHOD'])) {
             $product_collection_info = $this->model_catalog_question->getCheckoutQuestionDetails($this->request->get['checkout_question_id']);
         }
 
-        $this->load->model( 'localisation/language' );
+        $this->load->model('localisation/language');
 
         $data['languages'] = $this->model_localisation_language->getLanguages();
 
-        if ( isset( $this->request->post['checkout_question_description'] ) ) {
+        if (isset($this->request->post['checkout_question_description'])) {
             $data['checkout_question_description'] = $this->request->post['checkout_question_description'];
-        } elseif ( isset( $this->request->get['checkout_question_id'] ) ) {
-            $data['checkout_question_description'] = $this->model_catalog_question->getCheckoutQuestionDescriptions( $this->request->get['checkout_question_id'] );
+        } elseif (isset($this->request->get['checkout_question_id'])) {
+            $data['checkout_question_description'] = $this->model_catalog_question->getCheckoutQuestionDescriptions($this->request->get['checkout_question_id']);
         } else {
-            $data['checkout_question_description'] = array();
+            $data['checkout_question_description'] = [];
         }
 
         //echo "<pre>";print_r($products);die;
@@ -512,10 +514,9 @@ class ControllerCatalogQuestion extends Controller {
 
         //echo "<pre>";print_r($data['product_collection_product']);die;
 
-
         $this->load->model('catalog/category');
 
-        $data['product_collection_store'] = array();
+        $data['product_collection_store'] = [];
 
         //echo "<pre>";print_r($data);die;
 
@@ -534,12 +535,13 @@ class ControllerCatalogQuestion extends Controller {
         $this->response->setOutput($this->load->view('catalog/question_form.tpl', $data));
     }
 
-    protected function validateForm() {
+    protected function validateForm()
+    {
         if (!$this->user->hasPermission('modify', 'catalog/question')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
 
-        $this->load->model( 'catalog/url_alias' );
+        $this->load->model('catalog/url_alias');
 
         foreach ($this->request->post['checkout_question_description'] as $language_id => $value) {
             if ((utf8_strlen($value['question']) < 3) || (utf8_strlen($value['question']) > 362)) {
@@ -547,14 +549,15 @@ class ControllerCatalogQuestion extends Controller {
             }
         }
 
-        if ( $this->error && !isset( $this->error['warning'] ) ) {
-            $this->error['warning'] = $this->language->get( 'error_warning' );
+        if ($this->error && !isset($this->error['warning'])) {
+            $this->error['warning'] = $this->language->get('error_warning');
         }
 
         return !$this->error;
     }
 
-    protected function validateDelete() {
+    protected function validateDelete()
+    {
         if (!$this->user->hasPermission('modify', 'catalog/question')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
@@ -562,7 +565,8 @@ class ControllerCatalogQuestion extends Controller {
         return !$this->error;
     }
 
-    public function history() {
+    public function history()
+    {
         $this->load->language('catalog/question');
 
         $this->load->model('catalog/question');
@@ -580,17 +584,17 @@ class ControllerCatalogQuestion extends Controller {
             $question = 1;
         }
 
-        $data['histories'] = array();
+        $data['histories'] = [];
 
         $results = $this->model_catalog_question->getCouponHistories($this->request->get['checkout_question_id'], ($question - 1) * 10, 10);
 
         foreach ($results as $result) {
-            $data['histories'][] = array(
-                'order_id'   => $result['order_id'],
-                'customer'   => $result['customer'],
-                'amount'     => $result['amount'],
-                'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added']))
-            );
+            $data['histories'][] = [
+                'order_id' => $result['order_id'],
+                'customer' => $result['customer'],
+                'amount' => $result['amount'],
+                'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
+            ];
         }
 
         $history_total = $this->model_catalog_question->getTotalCouponHistories($this->request->get['checkout_question_id']);
@@ -599,7 +603,7 @@ class ControllerCatalogQuestion extends Controller {
         $pagination->total = $history_total;
         $pagination->question = $question;
         $pagination->limit = 10;
-        $pagination->url = $this->url->link('catalog/question/history', 'token=' . $this->session->data['token'] . '&checkout_question_id=' . $this->request->get['checkout_question_id'] . '&question={question}', 'SSL');
+        $pagination->url = $this->url->link('catalog/question/history', 'token='.$this->session->data['token'].'&checkout_question_id='.$this->request->get['checkout_question_id'].'&question={question}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
@@ -607,5 +611,4 @@ class ControllerCatalogQuestion extends Controller {
 
         $this->response->setOutput($this->load->view('catalog/question_history.tpl', $data));
     }
-    
 }

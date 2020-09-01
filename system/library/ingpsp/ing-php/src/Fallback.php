@@ -1,10 +1,11 @@
 <?php
 
 /**
- * http://php.net/manual/en/function.bcmod.php
+ * http://php.net/manual/en/function.bcmod.php.
  *
  * @param string $x
  * @param string $y
+ *
  * @return string modulus
  */
 function my_bcmod($x, $y)
@@ -21,7 +22,7 @@ function my_bcmod($x, $y)
     return (string) $mod;
 }
 
-/**
+/*
  * Declare bcmod function in case when BCMath extension is not installed
  */
 if (!function_exists('bcmod')) {

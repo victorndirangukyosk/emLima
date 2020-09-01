@@ -2,17 +2,17 @@
 
 namespace GingerPayments\Payment\Order;
 
-use GingerPayments\Payment\Order\Customer\MerchantCustomerId;
+use GingerPayments\Payment\Order\Customer\Address;
+use GingerPayments\Payment\Order\Customer\AddressType;
+use GingerPayments\Payment\Order\Customer\Country;
 use GingerPayments\Payment\Order\Customer\EmailAddress;
 use GingerPayments\Payment\Order\Customer\FirstName;
-use GingerPayments\Payment\Order\Customer\LastName;
-use GingerPayments\Payment\Order\Customer\AddressType;
-use GingerPayments\Payment\Order\Customer\Address;
-use GingerPayments\Payment\Order\Customer\PostalCode;
 use GingerPayments\Payment\Order\Customer\Housenumber;
-use GingerPayments\Payment\Order\Customer\Country;
-use GingerPayments\Payment\Order\Customer\PhoneNumbers;
+use GingerPayments\Payment\Order\Customer\LastName;
 use GingerPayments\Payment\Order\Customer\Locale;
+use GingerPayments\Payment\Order\Customer\MerchantCustomerId;
+use GingerPayments\Payment\Order\Customer\PhoneNumbers;
+use GingerPayments\Payment\Order\Customer\PostalCode;
 
 final class Customer
 {
@@ -72,7 +72,6 @@ final class Customer
     private $locale;
 
     /**
-     * @param array $details
      * @return Customer
      */
     public static function fromArray(array $details)
@@ -99,18 +98,18 @@ final class Customer
     public function toArray()
     {
         return [
-            'merchant_customer_id' => ($this->merchantCustomerId() !== null)
+            'merchant_customer_id' => (null !== $this->merchantCustomerId())
                 ? $this->merchantCustomerId()->toString() : null,
-            'email_address' => ($this->emailAddress() !== null) ? $this->emailAddress()->toString() : null,
-            'first_name' => ($this->firstName() !== null) ? $this->firstName()->toString() : null,
-            'last_name' => ($this->lastName() !== null) ? $this->lastName()->toString() : null,
-            'address_type' => ($this->addressType() !== null) ? $this->addressType()->toString() : null,
-            'address' => ($this->address() !== null) ? $this->address()->toString() : null,
-            'postal_code' => ($this->postalCode() !== null) ? $this->postalCode()->toString() : null,
-            'housenumber' => ($this->housenumber() !== null) ? $this->housenumber()->toString() : null,
-            'country' => ($this->country() !== null) ? $this->country()->toString() : null,
-            'phone_numbers' => ($this->phoneNumbers() !== null) ? $this->phoneNumbers()->toArray() : [],
-            'locale' => ($this->locale() !== null) ? $this->locale()->toString() : null
+            'email_address' => (null !== $this->emailAddress()) ? $this->emailAddress()->toString() : null,
+            'first_name' => (null !== $this->firstName()) ? $this->firstName()->toString() : null,
+            'last_name' => (null !== $this->lastName()) ? $this->lastName()->toString() : null,
+            'address_type' => (null !== $this->addressType()) ? $this->addressType()->toString() : null,
+            'address' => (null !== $this->address()) ? $this->address()->toString() : null,
+            'postal_code' => (null !== $this->postalCode()) ? $this->postalCode()->toString() : null,
+            'housenumber' => (null !== $this->housenumber()) ? $this->housenumber()->toString() : null,
+            'country' => (null !== $this->country()) ? $this->country()->toString() : null,
+            'phone_numbers' => (null !== $this->phoneNumbers()) ? $this->phoneNumbers()->toArray() : [],
+            'locale' => (null !== $this->locale()) ? $this->locale()->toString() : null,
         ];
     }
 
@@ -204,16 +203,16 @@ final class Customer
 
     /**
      * @param MerchantCustomerId $merchantCustomerId
-     * @param EmailAddress $emailAddress
-     * @param FirstName $firstName
-     * @param LastName $lastName
-     * @param AddressType $addressType
-     * @param Address $address
-     * @param PostalCode $postalCode
-     * @param Housenumber $housenumber
-     * @param Country $country
-     * @param PhoneNumbers $phoneNumbers
-     * @param Locale $locale
+     * @param EmailAddress       $emailAddress
+     * @param FirstName          $firstName
+     * @param LastName           $lastName
+     * @param AddressType        $addressType
+     * @param Address            $address
+     * @param PostalCode         $postalCode
+     * @param Housenumber        $housenumber
+     * @param Country            $country
+     * @param PhoneNumbers       $phoneNumbers
+     * @param Locale             $locale
      */
     private function __construct(
         MerchantCustomerId $merchantCustomerId = null,

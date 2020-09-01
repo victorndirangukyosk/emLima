@@ -3,9 +3,7 @@
 namespace Stripe;
 
 /**
- * Class ApplicationFee
- *
- * @package Stripe
+ * Class ApplicationFee.
  */
 class ApplicationFee extends ApiResource
 {
@@ -13,7 +11,7 @@ class ApplicationFee extends ApiResource
      * This is a special case because the application fee endpoint has an
      *    underscore in it. The parent `className` function strips underscores.
      *
-     * @return string The name of the class.
+     * @return string the name of the class
      */
     public static function className()
     {
@@ -21,7 +19,7 @@ class ApplicationFee extends ApiResource
     }
 
     /**
-     * @param string $id The ID of the application fee to retrieve.
+     * @param string            $id   the ID of the application fee to retrieve
      * @param array|string|null $opts
      *
      * @return ApplicationFee
@@ -32,11 +30,11 @@ class ApplicationFee extends ApiResource
     }
 
     /**
-     * @param string $id The ID of the application fee to update.
-     * @param array|null $params
+     * @param string            $id      the ID of the application fee to update
+     * @param array|null        $params
      * @param array|string|null $options
      *
-     * @return ApplicationFee The updated application fee.
+     * @return ApplicationFee the updated application fee
      */
     public static function update($id, $params = null, $options = null)
     {
@@ -44,7 +42,7 @@ class ApplicationFee extends ApiResource
     }
 
     /**
-     * @param array|null $params
+     * @param array|null        $params
      * @param array|string|null $opts
      *
      * @return Collection of ApplicationFees
@@ -55,15 +53,16 @@ class ApplicationFee extends ApiResource
     }
 
     /**
-     * @param array|null $params
+     * @param array|null        $params
      * @param array|string|null $opts
      *
-     * @return ApplicationFee The refunded application fee.
+     * @return ApplicationFee the refunded application fee
      */
     public function refund($params = null, $opts = null)
     {
         $this->refunds->create($params, $opts);
         $this->refresh();
+
         return $this;
     }
 }

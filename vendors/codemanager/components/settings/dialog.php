@@ -6,7 +6,7 @@
     *  [root]/license.txt for more. This information must remain intact.
     */
 
-    require_once('../../common.php');
+    require_once '../../common.php';
 
     //////////////////////////////////////////////////////////////////
     // Verify Session or Key
@@ -15,28 +15,28 @@
     checkSession();
 
     if (!isset($_GET['action'])) {
-        $_GET['action'] = "settings";
+        $_GET['action'] = 'settings';
     }
 
-    switch($_GET['action']) {
-        case "settings":
+    switch ($_GET['action']) {
+        case 'settings':
 ?>
             <div class="settings-view">
                 <div class="config-menu">
-                    <label><?php i18n("Settings"); ?></label>
+                    <label><?php i18n('Settings'); ?></label>
                     <div class="panels-components">
                         <ul>
                             <li name="editor-settings" data-file="components/settings/settings.editor.php" data-name="editor" class="active">
-                                <a><span class="icon-home bigger-icon"></span><?php i18n("Editor"); ?></a>
+                                <a><span class="icon-home bigger-icon"></span><?php i18n('Editor'); ?></a>
                             </li>
                             <li name="system-settings" data-file="components/settings/settings.system.php" data-name="system">
-                                <a><span class="icon-doc-text bigger-icon"></span><?php i18n("System"); ?></a>
+                                <a><span class="icon-doc-text bigger-icon"></span><?php i18n('System'); ?></a>
                             </li>
                             <?php
                                 if (COMMON::checkAccess()) {
                                     ?>
                                     <li name="extension-settings" data-file="components/fileext_textmode/dialog.php?action=fileextension_textmode_form" data-name="fileext_textmode">
-                                        <a><span class="icon-pencil bigger-icon"></span><?php i18n("Extensions"); ?></a>
+                                        <a><span class="icon-pencil bigger-icon"></span><?php i18n('Extensions'); ?></a>
                                     </li>
                                     <?php
                                 }
@@ -47,16 +47,16 @@
                     <div class="panels-plugins">
                         <?php
                             $plugins = Common::readDirectory(PLUGINS);
-                            
-                            foreach($plugins as $plugin){
-                                if(file_exists(PLUGINS . "/" . $plugin . "/plugin.json")){
-                                    $datas = json_decode(file_get_contents(PLUGINS . "/" . $plugin . "/plugin.json"), true);
-                                    foreach($datas as $data) {
+
+                            foreach ($plugins as $plugin) {
+                                if (file_exists(PLUGINS.'/'.$plugin.'/plugin.json')) {
+                                    $datas = json_decode(file_get_contents(PLUGINS.'/'.$plugin.'/plugin.json'), true);
+                                    foreach ($datas as $data) {
                                         if (isset($data['config'])) {
-                                            foreach($data['config'] as $config) {
-                                                if(isset($config['file']) && isset($config['icon']) && isset($config['title'])) {
-                                                    echo('<li data-file="plugins/' . $plugin . '/' .$config['file'].'" data-name="'. $data['name'] .'">
-                                                        <a><span class="' . $config['icon'] . ' bigger-icon"></span>' . $config['title'] . '</a></li>');
+                                            foreach ($data['config'] as $config) {
+                                                if (isset($config['file']) && isset($config['icon']) && isset($config['title'])) {
+                                                    echo '<li data-file="plugins/'.$plugin.'/'.$config['file'].'" data-name="'.$data['name'].'">
+                                                        <a><span class="'.$config['icon'].' bigger-icon"></span>'.$config['title'].'</a></li>';
                                                 }
                                             }
                                         }
@@ -68,12 +68,12 @@
                 </div>
                 <div class="panels">
                     <div class="panel active" data-file="components/settings/settings.editor.php">
-                        <?php include('settings.editor.php'); ?>
+                        <?php include 'settings.editor.php'; ?>
                     </div>
                 </div>
             </div>
-            <button class="btn-right" onclick="save(); return false;"><?php i18n("Save"); ?></button>
-            <button class="btn-right" onclick="codiad.modal.unload(); return false;"><?php i18n("Close"); ?></button>
+            <button class="btn-right" onclick="save(); return false;"><?php i18n('Save'); ?></button>
+            <button class="btn-right" onclick="codiad.modal.unload(); return false;"><?php i18n('Close'); ?></button>
             <script>
                 $('.settings-view .config-menu li').click(function(){
                     codiad.settings._showTab($(this).attr('data-file'));
@@ -141,7 +141,7 @@
             </script>
 <?php
             break;
-        case "iframe":
+        case 'iframe':
 ?>
             <script>
                 /*

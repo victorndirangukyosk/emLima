@@ -1,17 +1,17 @@
 <?php
 
-class ControllerSimpleBlogArticle extends Controller {
+class ControllerSimpleBlogArticle extends Controller
+{
+    private $error = [];
 
-    private $error = array();
-
-    public function index() {
+    public function index()
+    {
         if ($this->checkDatabase()) {
-
             $this->language->load('simple_blog/install');
 
             $this->document->setTitle($this->language->get('error_database'));
 
-            $data['install_database'] = $this->url->link('simple_blog/install/installDatabase', 'token=' . $this->session->data['token'], 'SSL');
+            $data['install_database'] = $this->url->link('simple_blog/install/installDatabase', 'token='.$this->session->data['token'], 'SSL');
 
             $data['text_install_message'] = $this->language->get('text_install_message');
 
@@ -19,13 +19,13 @@ class ControllerSimpleBlogArticle extends Controller {
 
             $data['error_database'] = $this->language->get('error_database');
 
-            $data['breadcrumbs'] = array();
+            $data['breadcrumbs'] = [];
 
-            $data['breadcrumbs'][] = array(
+            $data['breadcrumbs'][] = [
                 'text' => $this->language->get('text_home'),
-                'href' => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
-                'separator' => false
-            );
+                'href' => $this->url->link('common/home', 'token='.$this->session->data['token'], 'SSL'),
+                'separator' => false,
+            ];
 
             $data['header'] = $this->load->controller('common/header');
             $data['column_left'] = $this->load->controller('common/column_left');
@@ -37,7 +37,8 @@ class ControllerSimpleBlogArticle extends Controller {
         }
     }
 
-    public function checkDatabase() {
+    public function checkDatabase()
+    {
         $database_not_found = $this->load->controller('simple_blog/install/validateTable');
 
         if (!$database_not_found) {
@@ -47,7 +48,8 @@ class ControllerSimpleBlogArticle extends Controller {
         return false;
     }
 
-    public function getData() {
+    public function getData()
+    {
         $this->language->load('simple_blog/article');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -57,14 +59,15 @@ class ControllerSimpleBlogArticle extends Controller {
         $this->getList();
     }
 
-    public function insert() {
+    public function insert()
+    {
         $this->language->load('simple_blog/article');
 
         $this->document->setTitle($this->language->get('heading_title'));
 
         $this->load->model('simple_blog/article');
 
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && ($this->validateForm())) {
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && ($this->validateForm())) {
             //print "<pre>"; print_r($this->request->post); exit;
             $this->model_simple_blog_article->addArticle($this->request->post);
 
@@ -73,31 +76,32 @@ class ControllerSimpleBlogArticle extends Controller {
             $url = '';
 
             if (isset($this->request->get['page'])) {
-                $url .= '&page=' . $this->request->get['page'];
+                $url .= '&page='.$this->request->get['page'];
             }
 
             if (isset($this->request->get['sort'])) {
-                $url .= '&sort=' . $this->request->get['sort'];
+                $url .= '&sort='.$this->request->get['sort'];
             }
 
             if (isset($this->request->get['order'])) {
-                $url .= '&order=' . $this->request->get['order'];
+                $url .= '&order='.$this->request->get['order'];
             }
 
-            $this->response->redirect($this->url->link('simple_blog/article', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            $this->response->redirect($this->url->link('simple_blog/article', 'token='.$this->session->data['token'].$url, 'SSL'));
         }
 
         $this->getForm();
     }
 
-    public function update() {
+    public function update()
+    {
         $this->language->load('simple_blog/article');
 
         $this->document->setTitle($this->language->get('heading_title'));
 
         $this->load->model('simple_blog/article');
 
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && ($this->validateForm())) {
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && ($this->validateForm())) {
             //print "<pre>"; print_r($this->request->post); exit;
             $this->model_simple_blog_article->editArticle($this->request->get['simple_blog_article_id'], $this->request->post);
 
@@ -106,24 +110,25 @@ class ControllerSimpleBlogArticle extends Controller {
             $url = '';
 
             if (isset($this->request->get['page'])) {
-                $url .= '&page=' . $this->request->get['page'];
+                $url .= '&page='.$this->request->get['page'];
             }
 
             if (isset($this->request->get['sort'])) {
-                $url .= '&sort=' . $this->request->get['sort'];
+                $url .= '&sort='.$this->request->get['sort'];
             }
 
             if (isset($this->request->get['order'])) {
-                $url .= '&order=' . $this->request->get['order'];
+                $url .= '&order='.$this->request->get['order'];
             }
 
-            $this->response->redirect($this->url->link('simple_blog/article', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            $this->response->redirect($this->url->link('simple_blog/article', 'token='.$this->session->data['token'].$url, 'SSL'));
         }
 
         $this->getForm();
     }
 
-    public function delete() {
+    public function delete()
+    {
         $this->language->load('simple_blog/article');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -131,7 +136,6 @@ class ControllerSimpleBlogArticle extends Controller {
         $this->load->model('simple_blog/article');
 
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
-
             foreach ($this->request->post['selected'] as $simple_blog_article_id) {
                 $this->model_simple_blog_article->deleteArticle($simple_blog_article_id);
             }
@@ -141,25 +145,25 @@ class ControllerSimpleBlogArticle extends Controller {
             $url = '';
 
             if (isset($this->request->get['page'])) {
-                $url .= '&page=' . $this->request->get['page'];
+                $url .= '&page='.$this->request->get['page'];
             }
 
             if (isset($this->request->get['sort'])) {
-                $url .= '&sort=' . $this->request->get['sort'];
+                $url .= '&sort='.$this->request->get['sort'];
             }
 
             if (isset($this->request->get['order'])) {
-                $url .= '&order=' . $this->request->get['order'];
+                $url .= '&order='.$this->request->get['order'];
             }
 
-            $this->response->redirect($this->url->link('simple_blog/article', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            $this->response->redirect($this->url->link('simple_blog/article', 'token='.$this->session->data['token'].$url, 'SSL'));
         }
 
         $this->getList();
     }
 
-    public function getList() {
-
+    public function getList()
+    {
         if (isset($this->request->get['page'])) {
             $page = $this->request->get['page'];
         } else {
@@ -181,55 +185,55 @@ class ControllerSimpleBlogArticle extends Controller {
         if (isset($this->request->post['selected'])) {
             $data['selected'] = (array) $this->request->post['selected'];
         } else {
-            $data['selected'] = array();
+            $data['selected'] = [];
         }
 
         $url = '';
 
         if (isset($this->request->get['page'])) {
-            $url .= '&page=' . $this->request->get['page'];
+            $url .= '&page='.$this->request->get['page'];
         }
 
         if (isset($this->request->get['sort'])) {
-            $url .= '&sort=' . $this->request->get['sort'];
+            $url .= '&sort='.$this->request->get['sort'];
         }
 
         if (isset($this->request->get['order'])) {
-            $url .= '&order=' . $this->request->get['order'];
+            $url .= '&order='.$this->request->get['order'];
         }
 
-        $data['breadcrumbs'] = array();
+        $data['breadcrumbs'] = [];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
-            'separator' => false
-        );
+            'href' => $this->url->link('common/home', 'token='.$this->session->data['token'], 'SSL'),
+            'separator' => false,
+        ];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('simple_blog/article', 'token=' . $this->session->data['token'] . $url, 'SSL'),
-            'separator' => ' :: '
-        );
+            'href' => $this->url->link('simple_blog/article', 'token='.$this->session->data['token'].$url, 'SSL'),
+            'separator' => ' :: ',
+        ];
 
-        $data['insert'] = $this->url->link('simple_blog/article/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['delete'] = $this->url->link('simple_blog/article/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['insert'] = $this->url->link('simple_blog/article/insert', 'token='.$this->session->data['token'].$url, 'SSL');
+        $data['delete'] = $this->url->link('simple_blog/article/delete', 'token='.$this->session->data['token'].$url, 'SSL');
 
-        $data['articles'] = array();
+        $data['articles'] = [];
 
-        $filter_data = array(
+        $filter_data = [
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_admin_limit'),
-            'limit' => $this->config->get('config_admin_limit')
-        );
+            'limit' => $this->config->get('config_admin_limit'),
+        ];
 
         $article_limit = $this->model_simple_blog_article->getTotalArticle($filter_data);
 
         $results = $this->model_simple_blog_article->getArticles($filter_data);
 
         foreach ($results as $result) {
-            $data['articles'][] = array(
+            $data['articles'][] = [
                 'simple_blog_article_id' => $result['simple_blog_article_id'],
                 'article_title' => $result['article_title'],
                 'author_name' => $result['author_name'],
@@ -237,8 +241,8 @@ class ControllerSimpleBlogArticle extends Controller {
                 'status' => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
                 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
                 'selected' => isset($this->request->post['selected']) && in_array($result['simple_blog_article_id'], $this->request->post['selected']),
-                'edit' => $this->url->link('simple_blog/article/update', 'token=' . $this->session->data['token'] . '&simple_blog_article_id=' . $result['simple_blog_article_id'] . $url, 'SSL')
-            );
+                'edit' => $this->url->link('simple_blog/article/update', 'token='.$this->session->data['token'].'&simple_blog_article_id='.$result['simple_blog_article_id'].$url, 'SSL'),
+            ];
         }
 
         $data['heading_title'] = $this->language->get('heading_title');
@@ -275,30 +279,30 @@ class ControllerSimpleBlogArticle extends Controller {
 
         $url = '';
 
-        if ($order == 'ASC') {
+        if ('ASC' == $order) {
             $url .= '&order=DESC';
         } else {
             $url .= '&order=ASC';
         }
 
         if (isset($this->request->get['page'])) {
-            $url .= '&page=' . $this->request->get['page'];
+            $url .= '&page='.$this->request->get['page'];
         }
 
-        $data['sort_article_title'] = $this->url->link('simple_blog/article', 'token=' . $this->session->data['token'] . '&sort=sbad.article_title' . $url, 'SSL');
-        $data['sort_author_name'] = $this->url->link('simple_blog/article', 'token=' . $this->session->data['token'] . '&sort=sbau.name' . $url, 'SSL');
-        $data['sort_sortorder'] = $this->url->link('simple_blog/article', 'token=' . $this->session->data['token'] . '&sort=sba.sort_order' . $url, 'SSL');
-        $data['sort_status'] = $this->url->link('simple_blog/article', 'token=' . $this->session->data['token'] . '&sort=sba.status' . $url, 'SSL');
-        $data['sort_date_added'] = $this->url->link('simple_blog/article', 'token=' . $this->session->data['token'] . '&sort=sba.date_added' . $url, 'SSL');
+        $data['sort_article_title'] = $this->url->link('simple_blog/article', 'token='.$this->session->data['token'].'&sort=sbad.article_title'.$url, 'SSL');
+        $data['sort_author_name'] = $this->url->link('simple_blog/article', 'token='.$this->session->data['token'].'&sort=sbau.name'.$url, 'SSL');
+        $data['sort_sortorder'] = $this->url->link('simple_blog/article', 'token='.$this->session->data['token'].'&sort=sba.sort_order'.$url, 'SSL');
+        $data['sort_status'] = $this->url->link('simple_blog/article', 'token='.$this->session->data['token'].'&sort=sba.status'.$url, 'SSL');
+        $data['sort_date_added'] = $this->url->link('simple_blog/article', 'token='.$this->session->data['token'].'&sort=sba.date_added'.$url, 'SSL');
 
         $url = '';
 
         if (isset($this->request->get['sort'])) {
-            $url .= '&sort=' . $this->request->get['sort'];
+            $url .= '&sort='.$this->request->get['sort'];
         }
 
         if (isset($this->request->get['order'])) {
-            $url .= '&order=' . $this->request->get['order'];
+            $url .= '&order='.$this->request->get['order'];
         }
 
         $pagination = new Pagination();
@@ -306,7 +310,7 @@ class ControllerSimpleBlogArticle extends Controller {
         $pagination->page = $page;
         $pagination->limit = $this->config->get('config_admin_limit');
         $pagination->text = $this->language->get('text_pagination');
-        $pagination->url = $this->url->link('simple_blog/article', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+        $pagination->url = $this->url->link('simple_blog/article', 'token='.$this->session->data['token'].$url.'&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
@@ -322,7 +326,8 @@ class ControllerSimpleBlogArticle extends Controller {
         $this->response->setOutput($this->load->view('simple_blog/article_list.tpl', $data));
     }
 
-    public function getForm() {
+    public function getForm()
+    {
         $data['heading_title'] = $this->language->get('heading_title');
 
         $data['text_form'] = !isset($this->request->get['simple_blog_article_id']) ? $this->language->get('text_add') : $this->language->get('text_edit');
@@ -400,13 +405,13 @@ class ControllerSimpleBlogArticle extends Controller {
         if (isset($this->error['article_title'])) {
             $data['error_article_title'] = $this->error['article_title'];
         } else {
-            $data['error_article_title'] = array();
+            $data['error_article_title'] = [];
         }
 
         if (isset($this->error['description'])) {
             $data['error_description'] = $this->error['description'];
         } else {
-            $data['error_description'] = array();
+            $data['error_description'] = [];
         }
 
         if (isset($this->error['author_name'])) {
@@ -424,43 +429,43 @@ class ControllerSimpleBlogArticle extends Controller {
         $url = '';
 
         if (isset($this->request->get['page'])) {
-            $url .= '&page=' . $this->request->get['page'];
+            $url .= '&page='.$this->request->get['page'];
         }
         if (isset($this->request->get['sort'])) {
-            $url .= '&sort=' . $this->request->get['sort'];
+            $url .= '&sort='.$this->request->get['sort'];
         }
         if (isset($this->request->get['order'])) {
-            $url .= '&order=' . $this->request->get['order'];
+            $url .= '&order='.$this->request->get['order'];
         }
 
-        $data['breadcrumbs'] = array();
+        $data['breadcrumbs'] = [];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
-            'separator' => false
-        );
+            'href' => $this->url->link('common/home', 'token='.$this->session->data['token'], 'SSL'),
+            'separator' => false,
+        ];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('simple_blog/article', 'token=' . $this->session->data['token'] . $url, 'SSL'),
-            'separator' => ' :: '
-        );
+            'href' => $this->url->link('simple_blog/article', 'token='.$this->session->data['token'].$url, 'SSL'),
+            'separator' => ' :: ',
+        ];
 
         if (!isset($this->request->get['simple_blog_article_id'])) {
-            $data['action'] = $this->url->link('simple_blog/article/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $data['action'] = $this->url->link('simple_blog/article/insert', 'token='.$this->session->data['token'].$url, 'SSL');
         } else {
-            $data['action'] = $this->url->link('simple_blog/article/update', 'token=' . $this->session->data['token'] . '&simple_blog_article_id=' . $this->request->get['simple_blog_article_id'] . $url, 'SSL');
+            $data['action'] = $this->url->link('simple_blog/article/update', 'token='.$this->session->data['token'].'&simple_blog_article_id='.$this->request->get['simple_blog_article_id'].$url, 'SSL');
         }
 
-        $data['cancel'] = $this->url->link('simple_blog/article', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['cancel'] = $this->url->link('simple_blog/article', 'token='.$this->session->data['token'].$url, 'SSL');
 
-        if ((isset($this->request->get['simple_blog_article_id'])) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+        if ((isset($this->request->get['simple_blog_article_id'])) && ('POST' != $this->request->server['REQUEST_METHOD'])) {
             $article_info = $this->model_simple_blog_article->getArticle($this->request->get['simple_blog_article_id']);
         }
 
         $this->load->model('simple_blog/author');
-        $data['authors'] = array();
+        $data['authors'] = [];
         $data['authors'] = $this->model_simple_blog_author->getAuthors();
 
         $this->load->model('localisation/language');
@@ -471,7 +476,7 @@ class ControllerSimpleBlogArticle extends Controller {
         } elseif (isset($this->request->get['simple_blog_article_id'])) {
             $data['article_description'] = $this->model_simple_blog_article->getArticleDescriptions($this->request->get['simple_blog_article_id']);
         } else {
-            $data['article_description'] = array();
+            $data['article_description'] = [];
         }
 
         if (isset($this->request->post['article_addition_description'])) {
@@ -479,7 +484,7 @@ class ControllerSimpleBlogArticle extends Controller {
         } elseif (isset($this->request->get['simple_blog_article_id'])) {
             $data['article_addition_description'] = $this->model_simple_blog_article->getArticleAdditionalDescriptions($this->request->get['simple_blog_article_id']);
         } else {
-            $data['article_addition_description'] = array();
+            $data['article_addition_description'] = [];
         }
 
         //print "<pre>"; print_r($data['article_addition_description']); exit;
@@ -539,7 +544,7 @@ class ControllerSimpleBlogArticle extends Controller {
 
         $data['no_image'] = $this->model_tool_image->resize('no_image.png', 100, 100);
 
-        if (!empty($article_info) && $article_info['image'] && file_exists(DIR_IMAGE . $article_info['image'])) {
+        if (!empty($article_info) && $article_info['image'] && file_exists(DIR_IMAGE.$article_info['image'])) {
             $data['thumb'] = $this->model_tool_image->resize($article_info['image'], 100, 100);
         } else {
             $data['thumb'] = $this->model_tool_image->resize('no_image.png', 100, 100);
@@ -551,7 +556,6 @@ class ControllerSimpleBlogArticle extends Controller {
           $data['thumb2'] = $this->model_tool_image->resize('no_image.png', 100, 100);
           } */
 
-
         if (isset($this->request->post['featured_image'])) {
             $data['featured_image'] = $this->request->post['featured_image'];
         } elseif (!empty($article_info)) {
@@ -562,16 +566,15 @@ class ControllerSimpleBlogArticle extends Controller {
 
         $this->load->model('tool/image');
 
-        if (isset($this->request->post['featured_image']) && is_file(DIR_IMAGE . $this->request->post['featured_image'])) {
+        if (isset($this->request->post['featured_image']) && is_file(DIR_IMAGE.$this->request->post['featured_image'])) {
             $data['thumb2'] = $this->model_tool_image->resize($this->request->post['featured_image'], 100, 100);
-        } elseif (!empty($article_info) && $article_info['featured_image'] && is_file(DIR_IMAGE . $article_info['featured_image'])) {
+        } elseif (!empty($article_info) && $article_info['featured_image'] && is_file(DIR_IMAGE.$article_info['featured_image'])) {
             $data['thumb2'] = $this->model_tool_image->resize($article_info['featured_image'], 100, 100);
         } else {
             $data['thumb2'] = $this->model_tool_image->resize('no_image.png', 100, 100);
         }
 
         $data['placeholder'] = $this->model_tool_image->resize('no_image.png', 100, 100);
-
 
         $this->load->model('setting/store');
 
@@ -582,10 +585,10 @@ class ControllerSimpleBlogArticle extends Controller {
         } elseif (isset($this->request->get['simple_blog_article_id'])) {
             $data['article_store'] = $this->model_simple_blog_article->getArticleStore($this->request->get['simple_blog_article_id']);
         } else {
-            $data['article_store'] = array(0);
+            $data['article_store'] = [0];
         }
 
-        $data['categories'] = array();
+        $data['categories'] = [];
 
         $this->load->model('simple_blog/category');
 
@@ -596,7 +599,7 @@ class ControllerSimpleBlogArticle extends Controller {
         } elseif (isset($this->request->get['simple_blog_article_id'])) {
             $data['article_category'] = $this->model_simple_blog_article->getArticleCategories($this->request->get['simple_blog_article_id']);
         } else {
-            $data['article_category'] = array();
+            $data['article_category'] = [];
         }
 
         // skip here for the related product & related article portion, complete after.
@@ -614,19 +617,19 @@ class ControllerSimpleBlogArticle extends Controller {
 
             if (isset($this->request->post['category_wise'])) {
                 $data['category_ids'] = $this->request->post['category_wise'];
-            } else if (isset($this->request->post['manufacturer_wise'])) {
+            } elseif (isset($this->request->post['manufacturer_wise'])) {
                 $data['manufacturer_ids'] = $this->request->post['manufacturer_wise'];
             } else {
                 if (isset($this->request->post['product_wise'])) {
-                    $data['products'] = array();
+                    $data['products'] = [];
 
                     foreach ($this->request->post['product_wise'] as $product_id) {
                         $product_info = $this->model_catalog_product->getProduct($product_id);
 
-                        $data['products'][] = array(
+                        $data['products'][] = [
                             'product_id' => $product_info['product_id'],
-                            'name' => $product_info['name']
-                        );
+                            'name' => $product_info['name'],
+                        ];
                     }
                 }
             }
@@ -636,11 +639,11 @@ class ControllerSimpleBlogArticle extends Controller {
                 //echo $data['related_article']; exit;
                 $options = unserialize($article_info['article_related_option']);
 
-                if ($data['related_article'] == 'category_wise' && $options) {
+                if ('category_wise' == $data['related_article'] && $options) {
                     foreach ($options['category_wise'] as $option) {
                         $data['category_ids'][] = $option;
                     }
-                } else if ($data['related_article'] == 'manufacturer_wise' && $options) {
+                } elseif ('manufacturer_wise' == $data['related_article'] && $options) {
                     foreach ($options['manufacturer_wise'] as $option) {
                         $data['manufacturer_ids'][] = $option;
                     }
@@ -650,10 +653,10 @@ class ControllerSimpleBlogArticle extends Controller {
                     foreach ($products as $product) {
                         $product_info = $this->model_catalog_product->getProduct($product['product_id']);
 
-                        $data['products'][] = array(
+                        $data['products'][] = [
                             'product_id' => $product_info['product_id'],
-                            'name' => $product_info['name']
-                        );
+                            'name' => $product_info['name'],
+                        ];
                     }
                 }
             } else {
@@ -668,7 +671,7 @@ class ControllerSimpleBlogArticle extends Controller {
         } elseif (isset($this->request->get['simple_blog_article_id'])) {
             $data['blog_related_articles'] = $this->model_simple_blog_article->getRelatedArticles($this->request->get['simple_blog_article_id']);
         } else {
-            $data['blog_related_articles'] = array();
+            $data['blog_related_articles'] = [];
         }
 
         if (isset($this->request->post['status'])) {
@@ -684,7 +687,7 @@ class ControllerSimpleBlogArticle extends Controller {
         } elseif (isset($this->request->get['simple_blog_article_id'])) {
             $data['article_layout'] = $this->model_simple_blog_article->getArticleLayouts($this->request->get['simple_blog_article_id']);
         } else {
-            $data['article_layout'] = array();
+            $data['article_layout'] = [];
         }
 
         $data['header'] = $this->load->controller('common/header');
@@ -694,11 +697,11 @@ class ControllerSimpleBlogArticle extends Controller {
         $this->response->setOutput($this->load->view('simple_blog/article_form.tpl', $data));
     }
 
-    public function autocomplete() {
-        $json = array();
+    public function autocomplete()
+    {
+        $json = [];
 
         if (isset($this->request->get['article_name'])) {
-
             if (isset($this->request->get['article_name'])) {
                 $article_name = $this->request->get['article_name'];
             } else {
@@ -707,17 +710,16 @@ class ControllerSimpleBlogArticle extends Controller {
 
             if ($article_name) {
                 $this->load->model('simple_blog/article');
-                $filter_data = array(
-                    'filter_article' => $article_name
-                );
+                $filter_data = [
+                    'filter_article' => $article_name,
+                ];
                 $results = $this->model_simple_blog_article->getArticles($filter_data);
 
                 foreach ($results as $result) {
-
-                    $json[] = array(
+                    $json[] = [
                         'simple_blog_article_id' => $result['simple_blog_article_id'],
-                        'name' => strip_tags(html_entity_decode($result['article_title'], ENT_QUOTES, 'UTF-8'))
-                    );
+                        'name' => strip_tags(html_entity_decode($result['article_title'], ENT_QUOTES, 'UTF-8')),
+                    ];
                 }
             }
         }
@@ -726,7 +728,8 @@ class ControllerSimpleBlogArticle extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-    private function validateForm() {
+    private function validateForm()
+    {
         if (!$this->user->hasPermission('modify', 'simple_blog/article')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
@@ -787,7 +790,8 @@ class ControllerSimpleBlogArticle extends Controller {
         }
     }
 
-    private function validateDelete() {
+    private function validateDelete()
+    {
         if (!$this->user->hasPermission('modify', 'simple_blog/article')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
@@ -808,11 +812,11 @@ class ControllerSimpleBlogArticle extends Controller {
         }
     }
 
-    public function autocomplete_article() {
-        $json = array();
+    public function autocomplete_article()
+    {
+        $json = [];
 
         if (isset($this->request->get['simple_blog_article_id'])) {
-
             $this->load->model('simple_blog/article');
 
             if (isset($this->request->get['filter_name'])) {
@@ -822,17 +826,17 @@ class ControllerSimpleBlogArticle extends Controller {
             }
 
             if ($filter_name) {
-                $filter_data = array(
-                    'filter_name' => $filter_name
-                );
+                $filter_data = [
+                    'filter_name' => $filter_name,
+                ];
 
                 $results = $this->model_simple_blog_article->getArticlesRelated($filter_data, $this->request->get['simple_blog_article_id']);
 
                 foreach ($results as $result) {
-                    $json[] = array(
+                    $json[] = [
                         'simple_blog_article_id' => $result['simple_blog_article_id'],
-                        'article_title' => strip_tags(html_entity_decode($result['article_title'], ENT_QUOTES, 'UTF-8'))
-                    );
+                        'article_title' => strip_tags(html_entity_decode($result['article_title'], ENT_QUOTES, 'UTF-8')),
+                    ];
                 }
             }
         }
@@ -840,7 +844,4 @@ class ControllerSimpleBlogArticle extends Controller {
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
-
 }
-
-?>

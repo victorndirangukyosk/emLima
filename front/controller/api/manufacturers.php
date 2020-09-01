@@ -2,12 +2,11 @@
 
 class ControllerApiManufacturers extends Controller
 {
-
-    public function getManufacturer($args = array())
+    public function getManufacturer($args = [])
     {
         $this->load->language('api/manufacturers');
 
-        $json = array();
+        $json = [];
 
         if (!isset($this->session->data['api_id'])) {
             $json['error'] = $this->language->get('error_permission');
@@ -31,19 +30,19 @@ class ControllerApiManufacturers extends Controller
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
-    
-    public function getManufacturers($args = array())
+
+    public function getManufacturers($args = [])
     {
         $this->load->language('api/manufacturers');
 
-        $json = array();
+        $json = [];
 
         if (!isset($this->session->data['api_id'])) {
             $json['error'] = $this->language->get('error_permission');
         } else {
             $this->load->model('api/manufacturers');
 
-            $manufacturer_data = array();
+            $manufacturer_data = [];
 
             $results = $this->model_api_manufacturers->getManufacturers($args);
 
@@ -69,11 +68,11 @@ class ControllerApiManufacturers extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getTotals($args = array())
+    public function getTotals($args = [])
     {
         $this->load->language('api/manufacturers');
 
-        $json = array();
+        $json = [];
 
         if (!isset($this->session->data['api_id'])) {
             $json['error'] = $this->language->get('error_permission');
@@ -87,9 +86,9 @@ class ControllerApiManufacturers extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getProducts($args = array())
+    public function getProducts($args = [])
     {
-        $vars = array();
+        $vars = [];
         $vars['manufacturer'] = $args['id'];
 
         $this->load->controller('api/products/getproducts', $vars);

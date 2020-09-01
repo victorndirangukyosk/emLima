@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /******************************************************
  * @package Pav blog module for Opencart 1.5.x
@@ -9,56 +9,61 @@
 *******************************************************/
 
 /**
- * class ModelPavbloginstall 
+ * class ModelPavbloginstall.
  */
-class ModelPavbloginstall extends Model { 
-	public function checkInstall(){
-		
-		$sql = " SHOW TABLES LIKE '".DB_PREFIX."pavblog_blog'";
-		$query = $this->db->query( $sql );
-		
-		if( count($query->rows) <=0 ){ 
-			$file = (DIR_APPLICATION).'model/sample/module.php';
-			
-			if( file_exists($file) ){
-				require_once( $file );
-		 		$sample = new ModelSampleModule( $this->registry );
-		 	    $result = $sample->installSampleQuery( $this->config->get('config_template'),'pavblog', true );
-				$result = $sample->installSample( $this->config->get('config_template'),'pavblogcategory', true );
-				$result = $sample->installSample( $this->config->get('config_template'),'pavblogcomment', true );
-				$result = $sample->installSample( $this->config->get('config_template'),'pavbloglatest', true );
-			}
-		}	
+class ModelPavbloginstall extends Model
+{
+    public function checkInstall()
+    {
+        $sql = " SHOW TABLES LIKE '".DB_PREFIX."pavblog_blog'";
+        $query = $this->db->query($sql);
 
-		$sql = " SHOW TABLES LIKE '".DB_PREFIX."pavblog_blog'";
-		$query = $this->db->query( $sql );
-		if( count($query->rows) <=0 ){ 
-			$this->createTables();
-			$this->createDataSample();
-			$this->createDefaultConfig();
-		}
-		$sql = " SELECT * FROM ".DB_PREFIX."extension WHERE `code` IN('pavblogcategory','pavblogcomment','pavbloglatest')";
-		$query = $this->db->query( $sql );
-		if($query->num_rows <= 0){
-			$this->installModules();
-		}
-	}
-	public function installModules(){
-		$sql1 = "DELETE FROM ".DB_PREFIX."extension WHERE `code` IN('pavblogcategory','pavblogcomment','pavbloglatest')";
-		$this->db->query($sql1);
-		$sql = array();
-		$sql[] = "INSERT INTO `".DB_PREFIX."extension` SET `type`='module', `code`='pavblogcategory'";
-		$sql[] = "INSERT INTO `".DB_PREFIX."extension` SET `type`='module', `code`='pavblogcomment'";
-		$sql[] = "INSERT INTO `".DB_PREFIX."extension` SET `type`='module', `code`='pavbloglatest'";
-		foreach( $sql as $q ){
-			$query = $this->db->query( $q );
-		}
-	}
-	public function createTables(){
-		$sql =array();
-		$sql[] = "
+        if (count($query->rows) <= 0) {
+            $file = (DIR_APPLICATION).'model/sample/module.php';
+
+            if (file_exists($file)) {
+                require_once $file;
+                $sample = new ModelSampleModule($this->registry);
+                $result = $sample->installSampleQuery($this->config->get('config_template'), 'pavblog', true);
+                $result = $sample->installSample($this->config->get('config_template'), 'pavblogcategory', true);
+                $result = $sample->installSample($this->config->get('config_template'), 'pavblogcomment', true);
+                $result = $sample->installSample($this->config->get('config_template'), 'pavbloglatest', true);
+            }
+        }
+
+        $sql = " SHOW TABLES LIKE '".DB_PREFIX."pavblog_blog'";
+        $query = $this->db->query($sql);
+        if (count($query->rows) <= 0) {
+            $this->createTables();
+            $this->createDataSample();
+            $this->createDefaultConfig();
+        }
+        $sql = ' SELECT * FROM '.DB_PREFIX."extension WHERE `code` IN('pavblogcategory','pavblogcomment','pavbloglatest')";
+        $query = $this->db->query($sql);
+        if ($query->num_rows <= 0) {
+            $this->installModules();
+        }
+    }
+
+    public function installModules()
+    {
+        $sql1 = 'DELETE FROM '.DB_PREFIX."extension WHERE `code` IN('pavblogcategory','pavblogcomment','pavbloglatest')";
+        $this->db->query($sql1);
+        $sql = [];
+        $sql[] = 'INSERT INTO `'.DB_PREFIX."extension` SET `type`='module', `code`='pavblogcategory'";
+        $sql[] = 'INSERT INTO `'.DB_PREFIX."extension` SET `type`='module', `code`='pavblogcomment'";
+        $sql[] = 'INSERT INTO `'.DB_PREFIX."extension` SET `type`='module', `code`='pavbloglatest'";
+        foreach ($sql as $q) {
+            $query = $this->db->query($q);
+        }
+    }
+
+    public function createTables()
+    {
+        $sql = [];
+        $sql[] = '
 			
-			CREATE TABLE IF NOT EXISTS `".DB_PREFIX."pavblog_blog` (
+			CREATE TABLE IF NOT EXISTS `'.DB_PREFIX.'pavblog_blog` (
 			   `blog_id` int(11) NOT NULL AUTO_INCREMENT,
 			   `category_id` int(11) NOT NULL,
 			   `position` int(11) NOT NULL,
@@ -79,12 +84,12 @@ class ModelPavbloginstall extends Model {
 			  PRIMARY KEY (`blog_id`)
 			) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=12 ;
 		
-		";
-		
-		$sql[] = "
+		';
+
+        $sql[] = '
 		
 			
-			CREATE TABLE IF NOT EXISTS `".DB_PREFIX."pavblog_blog_description` (
+			CREATE TABLE IF NOT EXISTS `'.DB_PREFIX.'pavblog_blog_description` (
 			  `blog_id` int(11) NOT NULL,
 			  `language_id` int(11) NOT NULL,
 			  `title` varchar(255) NOT NULL,
@@ -92,11 +97,11 @@ class ModelPavbloginstall extends Model {
 			  `content` text NOT NULL
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-		";
-		
-		$sql[] = "
+		';
+
+        $sql[] = '
 						
-			CREATE TABLE IF NOT EXISTS `".DB_PREFIX."pavblog_category` (
+			CREATE TABLE IF NOT EXISTS `'.DB_PREFIX."pavblog_category` (
 			   `category_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
 			  `image` varchar(255) NOT NULL DEFAULT '',
 			  `parent_id` int(11) NOT NULL DEFAULT '0',
@@ -132,10 +137,10 @@ class ModelPavbloginstall extends Model {
 			) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=25 ;
 
 		";
-		$sql[] = "
+        $sql[] = '
 		
 			
-				CREATE TABLE IF NOT EXISTS `".DB_PREFIX."pavblog_category_description` (
+				CREATE TABLE IF NOT EXISTS `'.DB_PREFIX.'pavblog_category_description` (
 				  `category_id` int(11) NOT NULL,
 				  `language_id` int(11) NOT NULL,
 				  `title` varchar(255) NOT NULL,
@@ -144,11 +149,11 @@ class ModelPavbloginstall extends Model {
 				  KEY `name` (`title`)
 				) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-		";
-		
-		$sql[] = "
+		';
+
+        $sql[] = '
 			
-					CREATE TABLE IF NOT EXISTS `".DB_PREFIX."pavblog_comment` (
+					CREATE TABLE IF NOT EXISTS `'.DB_PREFIX."pavblog_comment` (
 					  `comment_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
 					  `blog_id` int(11) unsigned NOT NULL,
 					  `comment` text NOT NULL,
@@ -160,18 +165,20 @@ class ModelPavbloginstall extends Model {
 					  KEY `FK_blog_comment` (`blog_id`)
 					) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9 ;
 		";
-		foreach( $sql as $q ){
-			$query = $this->db->query( $q );
-		}
-		return ;
-	}
-	
-	public function createDataSample(){
-		$sql = array();
+        foreach ($sql as $q) {
+            $query = $this->db->query($q);
+        }
+
+        return;
+    }
+
+    public function createDataSample()
+    {
+        $sql = [];
+
+        $sql[] = '
 		
-		$sql[] = "
-		
-INSERT INTO `".DB_PREFIX."pavblog_blog` (`blog_id`, `category_id`, `position`, `created`, `status`, `user_id`, `hits`, `image`, `meta_keyword`, `meta_description`, `meta_title`, `date_modified`, `video_code`, `params`, `tags`, `featured`, `keyword`) VALUES
+INSERT INTO `'.DB_PREFIX."pavblog_blog` (`blog_id`, `category_id`, `position`, `created`, `status`, `user_id`, `hits`, `image`, `meta_keyword`, `meta_description`, `meta_title`, `date_modified`, `video_code`, `params`, `tags`, `featured`, `keyword`) VALUES
 (7, 21, 2, '2013-03-09', 1, 1, 47, 'data/pavblog/pav-i1.jpg', '', '', '', '2013-04-04', '', '', 'joomla, prestashop, magento', 1, ''),
 (9, 21, 0, '2013-03-09', 1, 1, 74, 'data/pavblog/pav-i1.jpg', '', '', '', '2013-04-04', '', '', 'prestashop, magento', 0, ''),
 (10, 21, 0, '2013-03-09', 1, 1, 227, 'data/pavblog/pav-i1.jpg', 'test test', '', 'Custom SEO Titlte', '2013-04-04', '&lt;iframe width=&quot;560&quot; height=&quot;315&quot; src=&quot;http://www.youtube.com/embed/-ZsFrs2O8pI&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;', '', 'prestashop', 0, ''),
@@ -179,10 +186,10 @@ INSERT INTO `".DB_PREFIX."pavblog_blog` (`blog_id`, `category_id`, `position`, `
  
 
 		";
-		$sql[] = "
+        $sql[] = '
 
 
-INSERT INTO  `".DB_PREFIX."pavblog_blog_description`  (`blog_id`, `language_id`, `title`, `description`, `content`) VALUES
+INSERT INTO  `'.DB_PREFIX."pavblog_blog_description`  (`blog_id`, `language_id`, `title`, `description`, `content`) VALUES
 (7, 1, 'Ac tincidunt Suspendisse malesuada', '&lt;p&gt;Ac tincidunt Suspendisse malesuada velit in Nullam elit magnis netus Vestibulum. Praesent Nam adipiscing Aliquam elit accumsan wisi sit semper scelerisque convallis. Sed quisque cum velit&lt;/p&gt;\r\n', '&lt;div class=&quot;itemFullText&quot;&gt;\r\n&lt;p&gt;Commodo laoreet semper tincidunt lorem Vestibulum nunc at In Curabitur magna. Euismod euismod Suspendisse tortor ante adipiscing risus Aenean Lorem vitae id. Odio ut pretium ligula quam Vestibulum consequat convallis fringilla Vestibulum nulla. Accumsan morbi tristique auctor Aenean nulla lacinia Nullam elit vel vel. At risus pretium urna tortor metus fringilla interdum mauris tempor congue.&lt;/p&gt;\r\n\r\n&lt;p&gt;Donec tellus Nulla lorem Nullam elit id ut elit feugiat lacus. Congue eget dapibus congue tincidunt senectus nibh risus Phasellus tristique justo. Justo Pellentesque Donec lobortis faucibus Vestibulum Praesent mauris volutpat vitae metus. Ipsum cursus vestibulum at interdum Vivamus nunc fringilla Curabitur ac quis. Nam lacinia wisi tortor orci quis vitae.&lt;/p&gt;\r\n\r\n&lt;p&gt;Sed mauris Pellentesque elit Aliquam at lacus interdum nascetur elit ipsum. Enim ipsum hendrerit Suspendisse turpis laoreet fames tempus ligula pede ac. Et Lorem penatibus orci eu ultrices egestas Nam quam Vivamus nibh. Morbi condimentum molestie Nam enim odio sodales pretium eros sem pellentesque. Sit tellus Integer elit egestas lacus turpis id auctor nascetur ut. Ac elit vitae.&lt;/p&gt;\r\n\r\n&lt;p&gt;Mi vitae magnis Fusce laoreet nibh felis porttitor laoreet Vestibulum faucibus. At Nulla id tincidunt ut sed semper vel Lorem condimentum ornare. Laoreet Vestibulum lacinia massa a commodo habitasse velit Vestibulum tincidunt In. Turpis at eleifend leo mi elit Aenean porta ac sed faucibus. Nunc urna Morbi fringilla vitae orci convallis condimentum auctor sit dui. Urna pretium elit mauris cursus Curabitur at elit Vestibulum.&lt;/p&gt;\r\n&lt;/div&gt;\r\n'),
 (7, 2, '', '', ''),
 (7, 3, '', '', ''),
@@ -197,9 +204,9 @@ INSERT INTO  `".DB_PREFIX."pavblog_blog_description`  (`blog_id`, `language_id`,
 (11, 3, '', '', '');
 		
 		";
-		$sql[] = "
+        $sql[] = '
 	
-INSERT INTO `".DB_PREFIX."pavblog_category`(`category_id`, `image`, `parent_id`, `is_group`, `width`, `submenu_width`, `colum_width`, `submenu_colum_width`, `item`, `colums`, `type`, `is_content`, `show_title`, `meta_keyword`, `level_depth`, `published`, `store_id`, `position`, `show_sub`, `url`, `target`, `privacy`, `position_type`, `menu_class`, `description`, `meta_description`, `meta_title`, `level`, `left`, `right`, `keyword`) VALUES
+INSERT INTO `'.DB_PREFIX."pavblog_category`(`category_id`, `image`, `parent_id`, `is_group`, `width`, `submenu_width`, `colum_width`, `submenu_colum_width`, `item`, `colums`, `type`, `is_content`, `show_title`, `meta_keyword`, `level_depth`, `published`, `store_id`, `position`, `show_sub`, `url`, `target`, `privacy`, `position_type`, `menu_class`, `description`, `meta_description`, `meta_title`, `level`, `left`, `right`, `keyword`) VALUES
 (1, '', 0, 2, NULL, NULL, NULL, NULL, NULL, '1', '', 2, 1, '1', 0, 1, 0, 0, 0, NULL, NULL, 0, 'top', NULL, NULL, NULL, NULL, -5, 34, 47, ''),
 (20, 'data/pavblog/pav-c3.jpg', 22, 2, NULL, NULL, NULL, NULL, NULL, '1', '', 2, 1, '1', 0, 1, 0, 3, 0, NULL, NULL, 0, 'top', 'test test', NULL, NULL, NULL, 0, 0, 0, ''),
 (21, 'data/pavblog/pav-c1.jpg', 22, 2, NULL, NULL, NULL, NULL, NULL, '1', '', 2, 1, '1', 0, 1, 0, 1, 0, NULL, NULL, 0, 'top', '', NULL, NULL, NULL, 0, 0, 0, ''),
@@ -209,9 +216,9 @@ INSERT INTO `".DB_PREFIX."pavblog_category`(`category_id`, `image`, `parent_id`,
 
 	
 		";
-		$sql[] = "
+        $sql[] = '
 
-INSERT INTO  `".DB_PREFIX."pavblog_category_description`  (`category_id`, `language_id`, `title`, `description`) VALUES
+INSERT INTO  `'.DB_PREFIX."pavblog_category_description`  (`category_id`, `language_id`, `title`, `description`) VALUES
 (1, 1, 'ROOT', 'Menu Root'),
 (22, 1, 'Demo Category 1', '&lt;p&gt;Enter your Category 1 Description Here&lt;/p&gt;\r\n'),
 (24, 1, 'Demo Category 2', '&lt;p&gt;Description Here&lt;/p&gt;\r\n'),
@@ -226,26 +233,26 @@ INSERT INTO  `".DB_PREFIX."pavblog_category_description`  (`category_id`, `langu
 (20, 3, '', '');		
 		
 		";
+
+        $sql[] = '
 		
-		$sql[] = "
-		
-INSERT INTO `".DB_PREFIX."pavblog_comment` (`comment_id`, `blog_id`, `comment`, `status`, `created`, `user`, `email`) VALUES
+INSERT INTO `'.DB_PREFIX."pavblog_comment` (`comment_id`, `blog_id`, `comment`, `status`, `created`, `user`, `email`) VALUES
 (6, 10, 'Commodo laoreet semper tincidunt lorem Vestibulum nunc at In Curabitur mag Commodo laoreet semper tincidunt lorem Vestibulum nunc at In Curabitur mag', 1, '2013-03-12 14:23:09', 'ha cong tien', 'hatuhn@gmail.com'),
 (7, 10, 'Commodo laoreet semper tincidunt lorem Vestibulum nunc at In Curabitur mag', 1, '2013-03-12 14:25:19', 'ha cong tien', 'hatuhn@gmail.com'),
 (8, 10, 'Commodo laoreet semper tincidunt lorem Vestibulum nunc at In Curabitur mag Commodo laoreet semper tincidunt lorem Vestibulum nunc at In Curabitur mag', 1, '2013-03-12 14:30:17', 'Test Test ', 'ngoisao@aa.com');
 		";
-		
-		foreach( $sql as $q ){
-			$query = $this->db->query( $q );
-		}
-		
-		return ;
-	}
-	
-	public function createDefaultConfig(){
-	 
-		$sql  = "
-			INSERT INTO  `".DB_PREFIX."layout` (
+
+        foreach ($sql as $q) {
+            $query = $this->db->query($q);
+        }
+
+        return;
+    }
+
+    public function createDefaultConfig()
+    {
+        $sql = '
+			INSERT INTO  `'.DB_PREFIX."layout` (
 					`layout_id` ,
 					`name`
 					)
@@ -254,12 +261,12 @@ INSERT INTO `".DB_PREFIX."pavblog_comment` (`comment_id`, `blog_id`, `comment`, 
 					);
 		
 		";
-		$query = $this->db->query( $sql );
-		
-		$id = $this->db->getLastId();
-		
-		$sql = "
-			INSERT INTO `".DB_PREFIX."layout_route` (
+        $query = $this->db->query($sql);
+
+        $id = $this->db->getLastId();
+
+        $sql = '
+			INSERT INTO `'.DB_PREFIX."layout_route` (
 				`layout_route_id` ,
 				`layout_id` ,
 				`store_id` ,
@@ -269,64 +276,59 @@ INSERT INTO `".DB_PREFIX."pavblog_comment` (`comment_id`, `blog_id`, `comment`, 
 				NULL , '".$id."', '0', 'pavblog/');
 		
 		";
-		$query = $this->db->query( $sql );
-		
-		
-		
-		///
-		$d['pavblog'] = array(
-			'children_columns' => '3',
-			'general_cwidth' => '250',
-			'general_cheight' => '250',
-			'general_lwidth'=> '620',
-			'general_lheight'=> '300',
-			'general_sheight'=> '250',
-			'general_swidth'=> '250',
-			'general_xwidth' => '80',
-			'general_xheight' => '80',
-			'cat_show_hits' => '1',
-			'cat_limit_leading_blog'=> '1',
-			'cat_limit_secondary_blog'=> '5',
-			'cat_leading_image_type'=> 'l',
-			'cat_secondary_image_type'=> 's',
-			'cat_show_title'=> '1',
-			'cat_show_image'=> '1',
-			'cat_show_author'=> '1',
-			'cat_show_category'=> '1',
-			'cat_show_created'=> '1',
-			'cat_show_readmore' => 1,
-			'cat_show_description' => '1',
-			'cat_show_comment_counter'=> '1',
-			
-			'blog_image_type'=> 'l',
-			'blog_show_title'=> '1',
-			'blog_show_image'=> '1',
-			'blog_show_author'=> '1',
-			'blog_show_category'=> '1',
-			'blog_show_created'=> '1',
-			'blog_show_comment_counter'=> '1',
-			'blog_show_comment_form'=>'1',
-			'blog_show_hits' => 1,
-			'cat_columns_leading_blogs'=> 1,
-			'cat_columns_secondary_blogs' => 2,
-			'comment_engine' => 'local',
-			'diquis_account' => 'pavothemes',
-			'facebook_appid' => '100858303516',
-			'facebook_width'=> '600',
-			'comment_limit'=> '10',
-			'auto_publish_comment'=>0,
-			'enable_recaptcha' => 1,
-			'recaptcha_public_key'=>'6LcoLd4SAAAAADoaLy7OEmzwjrf4w7bf-SnE_Hvj',
-			'recaptcha_private_key'=>'6LcoLd4SAAAAAE18DL_BUDi0vmL_aM0vkLPaE9Ob',
-			'rss_limit_item' => 12,
-			'keyword_listing_blogs_page'=>'blogs'
-	
-		);
-		$this->load->model('setting/setting');
-		$this->model_setting_setting->editSetting('pavblog', $d );	
-		
-		return ;
-	}
-}
+        $query = $this->db->query($sql);
 
-?>
+        ///
+        $d['pavblog'] = [
+            'children_columns' => '3',
+            'general_cwidth' => '250',
+            'general_cheight' => '250',
+            'general_lwidth' => '620',
+            'general_lheight' => '300',
+            'general_sheight' => '250',
+            'general_swidth' => '250',
+            'general_xwidth' => '80',
+            'general_xheight' => '80',
+            'cat_show_hits' => '1',
+            'cat_limit_leading_blog' => '1',
+            'cat_limit_secondary_blog' => '5',
+            'cat_leading_image_type' => 'l',
+            'cat_secondary_image_type' => 's',
+            'cat_show_title' => '1',
+            'cat_show_image' => '1',
+            'cat_show_author' => '1',
+            'cat_show_category' => '1',
+            'cat_show_created' => '1',
+            'cat_show_readmore' => 1,
+            'cat_show_description' => '1',
+            'cat_show_comment_counter' => '1',
+
+            'blog_image_type' => 'l',
+            'blog_show_title' => '1',
+            'blog_show_image' => '1',
+            'blog_show_author' => '1',
+            'blog_show_category' => '1',
+            'blog_show_created' => '1',
+            'blog_show_comment_counter' => '1',
+            'blog_show_comment_form' => '1',
+            'blog_show_hits' => 1,
+            'cat_columns_leading_blogs' => 1,
+            'cat_columns_secondary_blogs' => 2,
+            'comment_engine' => 'local',
+            'diquis_account' => 'pavothemes',
+            'facebook_appid' => '100858303516',
+            'facebook_width' => '600',
+            'comment_limit' => '10',
+            'auto_publish_comment' => 0,
+            'enable_recaptcha' => 1,
+            'recaptcha_public_key' => '6LcoLd4SAAAAADoaLy7OEmzwjrf4w7bf-SnE_Hvj',
+            'recaptcha_private_key' => '6LcoLd4SAAAAAE18DL_BUDi0vmL_aM0vkLPaE9Ob',
+            'rss_limit_item' => 12,
+            'keyword_listing_blogs_page' => 'blogs',
+        ];
+        $this->load->model('setting/setting');
+        $this->model_setting_setting->editSetting('pavblog', $d);
+
+        return;
+    }
+}

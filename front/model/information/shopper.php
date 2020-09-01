@@ -1,8 +1,9 @@
 <?php
 
-class ModelInformationShopper extends Model {
-    
-    public function save($data){
+class ModelInformationShopper extends Model
+{
+    public function save($data)
+    {
         $this->db->query('insert into `'.DB_PREFIX.'shopper` SET 
             mobile = "'.$data['mobile'].'",
             telephone = "'.$data['telephone'].'",
@@ -14,6 +15,6 @@ class ModelInformationShopper extends Model {
             password = "'.$data['password'].'",
             email = "'.$data['email'].'",
             date_added =  "'.date('Y-m-d').'"'
-        );    
+        );
     }
 }

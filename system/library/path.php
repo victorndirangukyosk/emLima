@@ -1,30 +1,32 @@
 <?php
 
-
-class Path extends Object {
-
+class Path extends Object
+{
     protected $registry;
 
-    public function __construct($registry) {
+    public function __construct($registry)
+    {
         $this->registry = $registry;
     }
 
-    public function __get($key) {
+    public function __get($key)
+    {
         return $this->registry->get($key);
     }
 
-    public function __set($key, $value) {
+    public function __set($key, $value)
+    {
         $this->registry->set($key, $value);
     }
 
-    public function parse() {
-        
+    public function parse()
+    {
         //echo "21";die;
         // Stop if SEO is disabled
         if (!$this->config->get('config_seo_url')) {
             return;
         }
- 
+
         // Attach the URL builder
         $this->url->addRewrite($this);
 
@@ -66,14 +68,15 @@ class Path extends Object {
         }
 
         $seo_url = str_replace('index.php/', '', $path);
-        
-        $temp = explode('_',$seo_url);
-        
-        if(isset($temp[0]) && $temp[0]=='product'){
+
+        $temp = explode('_', $seo_url);
+
+        if (isset($temp[0]) && 'product' == $temp[0]) {
             $this->request->get['path'] = 'product/category&category='.$temp[1];
+
             return;
-        }                        
-                                
+        }
+
         // Add language code to URL
         $is_lang_home = false;
         if ($this->config->get('config_seo_lang_code')) {
@@ -91,18 +94,17 @@ class Path extends Object {
         if ($this->config->get('config_seo_suffix')) {
             $seo_url = rtrim($seo_url, '.html');
         }
-        
+
         $parts = explode('/', $seo_url);
 
         // remove any empty arrays from trailing
-        if (utf8_strlen(end($parts)) == 0) {
+        if (0 == utf8_strlen(end($parts))) {
             array_pop($parts);
         }
 
         $seo = new Seo($this->registry);
-	
+
         foreach ($parts as $part) {
-            
             $query = $seo->getAliasQuery($part);
 
             if (!empty($query)) {
@@ -113,7 +115,7 @@ class Path extends Object {
                         $this->request->get['product_id'] = $url[1];
 
                         if (!$this->config->get('config_seo_category')) {
-                            $categories = array();
+                            $categories = [];
 
                             $category_id = $seo->getCategoryIdBySortOrder($url[1]);
 
@@ -129,7 +131,7 @@ class Path extends Object {
                         }
                         break;
                     case 'category_id':
-                        if ($this->config->get('config_seo_category') == 'last') {
+                        if ('last' == $this->config->get('config_seo_category')) {
                             $categories = $seo->getParentCategoriesIds($url[1]);
 
                             $categories[] = $url[1];
@@ -137,12 +139,11 @@ class Path extends Object {
                             if (!empty($categories)) {
                                 $this->request->get['category'] = implode('_', $categories);
                             }
-                        }
-                        else {
+                        } else {
                             if (!isset($this->request->get['category'])) {
                                 $this->request->get['category'] = $url[1];
                             } else {
-                                $this->request->get['category'] .= '_' . $url[1];
+                                $this->request->get['category'] .= '_'.$url[1];
                             }
                         }
                         break;
@@ -152,22 +153,19 @@ class Path extends Object {
                     case 'information_id':
                         $this->request->get['information_id'] = $url[1];
                         break;
-                    default:                        
+                    default:
                         $this->request->get['path'] = $query;
                         break;
                 }
-            }
-            else if ($is_lang_home) {
+            } elseif ($is_lang_home) {
                 $this->request->get['path'] = 'common/home';
 
                 break;
-            }
-            else if (in_array($seo_url, $this->getSeoPathList())) {
+            } elseif (in_array($seo_url, $this->getSeoPathList())) {
                 $this->request->get['path'] = $seo_url;
 
                 break;
-            }
-            else {
+            } else {
                 $this->request->get['path'] = 'error/not_found';
 
                 break;
@@ -177,14 +175,11 @@ class Path extends Object {
         if (!isset($this->request->get['path'])) {
             if (isset($this->request->get['product_id'])) {
                 $this->request->get['path'] = 'product/product';
-            }
-            elseif (isset($this->request->get['category'])) {
+            } elseif (isset($this->request->get['category'])) {
                 $this->request->get['path'] = 'product/category';
-            }
-            elseif (isset($this->request->get['manufacturer_id'])) {
+            } elseif (isset($this->request->get['manufacturer_id'])) {
                 $this->request->get['path'] = 'product/manufacturer/info';
-            }
-            elseif (isset($this->request->get['information_id'])) {
+            } elseif (isset($this->request->get['information_id'])) {
                 $this->request->get['path'] = 'information/information';
             }
         }
@@ -192,30 +187,29 @@ class Path extends Object {
         unset($this->request->get['_path_']); // For B/C purpose
     }
 
-    public function rewrite($link) {
-
+    public function rewrite($link)
+    {
         //echo "ref";
         $url = '';
         $is_home = false;
 
         $uri = new Uri($link);
-        
+
         if ($uri->getVar('path')) {
             $seo = new Seo($this->registry);
-            
+
             switch ($uri->getVar('path')) {
                 case 'common/home':
                     $is_home = true;
                     break;
                 case 'product/product':
                     if ($this->config->get('config_seo_category')) {
-                        if ($uri->getVar('path') and ($this->config->get('config_seo_category') == 'last')) {
+                        if ($uri->getVar('path') and ('last' == $this->config->get('config_seo_category'))) {
                             $categories = explode('_', $uri->getVar('path'));
 
-                            $categories = array(end($categories));
-                        }
-                        else {
-                            $categories = array();
+                            $categories = [end($categories)];
+                        } else {
+                            $categories = [];
 
                             $category_id = $seo->getCategoryIdBySortOrder($uri->getVar('product_id'));
 
@@ -224,8 +218,8 @@ class Path extends Object {
 
                                 $categories[] = $category_id;
 
-                                if ($this->config->get('config_seo_category') == 'last') {
-                                    $categories = array(end($categories));
+                                if ('last' == $this->config->get('config_seo_category')) {
+                                    $categories = [end($categories)];
                                 }
                             }
                         }
@@ -234,7 +228,7 @@ class Path extends Object {
                             $alias = $seo->getAlias($category, 'category');
 
                             if ($alias) {
-                                $url .= '/' . $alias;
+                                $url .= '/'.$alias;
                             }
                         }
 
@@ -245,7 +239,7 @@ class Path extends Object {
                         $alias = $seo->getAlias($uri->getVar('product_id'), 'product');
 
                         if ($alias) {
-                            $url .= '/' . $alias;
+                            $url .= '/'.$alias;
                         }
 
                         $uri->delVar('product_id');
@@ -262,20 +256,20 @@ class Path extends Object {
                             $alias = $seo->getAlias($category, 'category');
 
                             if ($alias) {
-                                $url .= '/' . $alias;
+                                $url .= '/'.$alias;
                             }
                         }
 
                         $uri->delVar('path');
                     }
-                
+
                     break;
                 case 'information/information':
                     if ($uri->getVar('information_id')) {
                         $alias = $seo->getAlias($uri->getVar('information_id'), 'information');
 
                         if ($alias) {
-                            $url .= '/' . $alias;
+                            $url .= '/'.$alias;
                         }
 
                         $uri->delVar('information_id');
@@ -286,7 +280,7 @@ class Path extends Object {
                         $alias = $seo->getAlias($uri->getVar('manufacturer_id'), 'manufacturer');
 
                         if ($alias) {
-                            $url .= '/' . $alias;
+                            $url .= '/'.$alias;
                         }
 
                         $uri->delVar('manufacturer_id');
@@ -298,14 +292,14 @@ class Path extends Object {
                    //     $url = '/' . $uri->getVar('path');
                    // }else{
                         $row = $this->db->query('select * from `'.DB_PREFIX.'url_alias` WHERE query="'.$uri->getVar('path').'"')->row;
-                     
-                        if($row){
+
+                        if ($row) {
                             $url = '/'.$row['keyword'];
-                        }else{
-                            $url = '/' . $uri->getVar('path');
+                        } else {
+                            $url = '/'.$uri->getVar('path');
                         }
                   //  }
-                    
+
                     break;
             }
 
@@ -337,12 +331,12 @@ class Path extends Object {
 
             return $uri->toString();
         } else {
-            
             return $link;
         }
     }
 
-    public function checkNonseoRedirection($path) {
+    public function checkNonseoRedirection($path)
+    {
         if ($this->seoDisabled($path)) {
             return;
         }
@@ -350,12 +344,11 @@ class Path extends Object {
         $domain = $this->url->getDomain();
 
         // Home page, redirect to domain with empty query
-        if ($path == 'common/home') {
+        if ('common/home' == $path) {
             $url = $this->rewrite($domain);
 
             $this->response->redirect($url, 301);
-        }
-        else {
+        } else {
             $url_data = $this->request->get;
             unset($url_data['lang']);
             unset($url_data['_path_']); // For B/C purpose
@@ -377,29 +370,30 @@ class Path extends Object {
         }
     }
 
-    public function checkWwwRedirection() {
+    public function checkWwwRedirection()
+    {
         $redirect = false;
 
         $host = $this->uri->getHost();
 
         $www_red = $this->config->get('config_seo_www_red');
-        if (($www_red == 'with') and (strpos($host, 'www') !== 0)) {
+        if (('with' == $www_red) and (0 !== strpos($host, 'www'))) {
             $redirect = true;
             $this->uri->setHost('www.'.$host);
-        }
-        elseif (($www_red == 'non') and strpos($host, 'www') === 0) {
+        } elseif (('non' == $www_red) and 0 === strpos($host, 'www')) {
             $redirect = true;
             $this->uri->setHost(substr($host, 4, strlen($host)));
         }
 
-        if ($redirect === false) {
+        if (false === $redirect) {
             return;
         }
 
         $this->response->redirect($this->uri->toString(), 301);
     }
 
-    public function parseNonSeoVariables($query) {
+    public function parseNonSeoVariables($query)
+    {
         if (empty($query)) {
             return;
         }
@@ -407,8 +401,7 @@ class Path extends Object {
         foreach ($query as $variable => $value) {
             if (is_array($value)) {
                 $this->parseNonSeoVariables($value);
-            }
-            else {
+            } else {
                 $value = urlencode($value);
 
                 $this->request->get[$variable] = $value;
@@ -416,23 +409,24 @@ class Path extends Object {
         }
     }
 
-    public function seoDisabled($path = '') {
-                
+    public function seoDisabled($path = '')
+    {
         $status = false;
 
         if (!in_array($path, $this->getSeoPathList())) {
             $status = true;
         }
 
-        if (($status == false) and $this->request->isAjax()) {
+        if ((false == $status) and $this->request->isAjax()) {
             $status = true;
         }
 
         return $status;
     }
 
-    public function getSeoPathList() {
-        static $path = array();
+    public function getSeoPathList()
+    {
+        static $path = [];
 
         if (empty($path)) {
             $path[] = 'account/account';

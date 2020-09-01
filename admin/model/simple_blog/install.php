@@ -1,8 +1,11 @@
-<?php 
-    class ModelSimpleBlogInstall extends Model {
-        public function addExtensionTables() {
+<?php
+
+    class ModelSimpleBlogInstall extends Model
+    {
+        public function addExtensionTables()
+        {
             $this->db->query(
-                "CREATE TABLE IF NOT EXISTS ". DB_PREFIX . "simple_blog_article (
+                'CREATE TABLE IF NOT EXISTS '.DB_PREFIX.'simple_blog_article (
                     `simple_blog_article_id` int(16) NOT NULL AUTO_INCREMENT,
                     `simple_blog_author_id` int(16) NOT NULL,
                     `allow_comment` tinyint(1) NOT NULL,
@@ -15,11 +18,11 @@
                     `date_added` datetime NOT NULL,
                     `date_modified` datetime NOT NULL,
                     PRIMARY KEY (`simple_blog_article_id`)
-                ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1"
+                ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1'
             );
-            
+
             $this->db->query(
-                "CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "simple_blog_article_description (
+                'CREATE TABLE IF NOT EXISTS '.DB_PREFIX.'simple_blog_article_description (
                   `simple_blog_article_description_id` int(16) NOT NULL AUTO_INCREMENT,
                   `simple_blog_article_id` int(16) NOT NULL,
                   `language_id` int(16) NOT NULL,
@@ -28,48 +31,48 @@
                   `meta_description` varchar(256) NOT NULL,
                   `meta_keyword` varchar(256) NOT NULL,
                   PRIMARY KEY (`simple_blog_article_description_id`)
-                ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1"
+                ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1'
             );
-            
+
             $this->db->query(
-                "CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "simple_blog_article_description_additional (
+                'CREATE TABLE IF NOT EXISTS '.DB_PREFIX.'simple_blog_article_description_additional (
                   `simple_blog_article_id` int(16) NOT NULL,
                   `language_id` int(16) NOT NULL,
                   `additional_description` text NOT NULL
-                ) ENGINE=InnoDB DEFAULT CHARSET=latin1"
+                ) ENGINE=InnoDB DEFAULT CHARSET=latin1'
             );
-            
+
             $this->db->query(
-                "CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "simple_blog_article_product_related (
+                'CREATE TABLE IF NOT EXISTS '.DB_PREFIX.'simple_blog_article_product_related (
                   `simple_blog_article_id` int(16) NOT NULL,
                   `product_id` int(16) NOT NULL
-                ) ENGINE=InnoDB DEFAULT CHARSET=latin1"
+                ) ENGINE=InnoDB DEFAULT CHARSET=latin1'
             );
-            
+
             $this->db->query(
-                "CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "simple_blog_article_to_category (
+                'CREATE TABLE IF NOT EXISTS '.DB_PREFIX.'simple_blog_article_to_category (
                   `simple_blog_article_id` int(16) NOT NULL,
                   `simple_blog_category_id` int(16) NOT NULL
-                ) ENGINE=InnoDB DEFAULT CHARSET=latin1"
+                ) ENGINE=InnoDB DEFAULT CHARSET=latin1'
             );
-            
+
             $this->db->query(
-                "CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "simple_blog_article_to_layout (
+                'CREATE TABLE IF NOT EXISTS '.DB_PREFIX.'simple_blog_article_to_layout (
                   `simple_blog_article_id` int(16) NOT NULL,
                   `store_id` int(16) NOT NULL,
                   `layout_id` int(16) NOT NULL
-                ) ENGINE=InnoDB DEFAULT CHARSET=latin1"
+                ) ENGINE=InnoDB DEFAULT CHARSET=latin1'
             );
-            
+
             $this->db->query(
-                "CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "simple_blog_article_to_store (
+                'CREATE TABLE IF NOT EXISTS '.DB_PREFIX.'simple_blog_article_to_store (
                   `simple_blog_article_id` int(16) NOT NULL,
                   `store_id` int(16) NOT NULL
-                ) ENGINE=InnoDB DEFAULT CHARSET=latin1"
+                ) ENGINE=InnoDB DEFAULT CHARSET=latin1'
             );
-            
-             $this->db->query(
-                "CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "simple_blog_author (
+
+            $this->db->query(
+                'CREATE TABLE IF NOT EXISTS '.DB_PREFIX.'simple_blog_author (
                   `simple_blog_author_id` int(16) NOT NULL AUTO_INCREMENT,
                   `name` varchar(256) NOT NULL,
                   `image` text NOT NULL,
@@ -77,11 +80,11 @@
                   `date_added` datetime NOT NULL,
                   `date_modified` datetime NOT NULL,
                   PRIMARY KEY (`simple_blog_author_id`)
-                ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1"
+                ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1'
             );
-            
+
             $this->db->query(
-                "CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "simple_blog_author_description (
+                'CREATE TABLE IF NOT EXISTS '.DB_PREFIX.'simple_blog_author_description (
                   `simple_blog_author_description_id` int(16) NOT NULL AUTO_INCREMENT,
                   `simple_blog_author_id` int(16) NOT NULL,
                   `language_id` int(16) NOT NULL,
@@ -90,11 +93,11 @@
                   `meta_keyword` varchar(256) NOT NULL,
                   `date_added` datetime NOT NULL,
                   PRIMARY KEY (`simple_blog_author_description_id`)
-                ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1"
+                ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1'
             );
-            
-             $this->db->query(
-                "CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "simple_blog_category (
+
+            $this->db->query(
+                'CREATE TABLE IF NOT EXISTS '.DB_PREFIX.'simple_blog_category (
                   `simple_blog_category_id` int(16) NOT NULL AUTO_INCREMENT,
                   `image` text NOT NULL,
                   `parent_id` int(16) NOT NULL,
@@ -106,11 +109,11 @@
                   `date_added` datetime NOT NULL,
                   `date_modified` datetime NOT NULL,
                   PRIMARY KEY (`simple_blog_category_id`)
-                ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1"
+                ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1'
             );
-            
+
             $this->db->query(
-                "CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "simple_blog_category_description (
+                'CREATE TABLE IF NOT EXISTS '.DB_PREFIX.'simple_blog_category_description (
                   `simple_blog_category_description_id` int(16) NOT NULL AUTO_INCREMENT,
                   `simple_blog_category_id` int(16) NOT NULL,
                   `language_id` int(16) NOT NULL,
@@ -119,26 +122,26 @@
                   `meta_description` varchar(256) NOT NULL,
                   `meta_keyword` varchar(256) NOT NULL,
                   PRIMARY KEY (`simple_blog_category_description_id`)
-                ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1"
+                ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1'
             );
-            
+
             $this->db->query(
-                "CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "simple_blog_category_to_layout (
+                'CREATE TABLE IF NOT EXISTS '.DB_PREFIX.'simple_blog_category_to_layout (
                   `simple_blog_category_id` int(16) NOT NULL,
                   `store_id` int(16) NOT NULL,
                   `layout_id` int(16) NOT NULL
-                ) ENGINE=InnoDB DEFAULT CHARSET=latin1"
+                ) ENGINE=InnoDB DEFAULT CHARSET=latin1'
             );
-            
+
             $this->db->query(
-                "CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "simple_blog_category_to_store (
+                'CREATE TABLE IF NOT EXISTS '.DB_PREFIX.'simple_blog_category_to_store (
                   `simple_blog_category_id` int(16) NOT NULL,
                   `store_id` int(16) NOT NULL
-                ) ENGINE=InnoDB DEFAULT CHARSET=latin1"
+                ) ENGINE=InnoDB DEFAULT CHARSET=latin1'
             );
-            
+
             $this->db->query(
-                "CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "simple_blog_comment (
+                'CREATE TABLE IF NOT EXISTS '.DB_PREFIX.'simple_blog_comment (
                   `simple_blog_comment_id` int(16) NOT NULL AUTO_INCREMENT,
                   `simple_blog_article_id` int(16) NOT NULL,
                   `simple_blog_article_reply_id` int(16) NOT NULL,
@@ -148,11 +151,11 @@
                   `date_added` datetime NOT NULL,
                   `date_modified` datetime NOT NULL,
                   PRIMARY KEY (`simple_blog_comment_id`)
-                ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1"
+                ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1'
             );
-            
+
             $this->db->query(
-                "CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "simple_blog_related_article (
+                'CREATE TABLE IF NOT EXISTS '.DB_PREFIX.'simple_blog_related_article (
                   `simple_blog_related_article_id` int(16) NOT NULL AUTO_INCREMENT,
                   `simple_blog_article_id` int(16) NOT NULL,
                   `simple_blog_article_related_id` int(16) NOT NULL,
@@ -160,19 +163,18 @@
                   `status` tinyint(1) NOT NULL,
                   `date_added` datetime NOT NULL,
                   PRIMARY KEY (`simple_blog_related_article_id`)
-                ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1"
+                ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1'
             );
-            
+
             $this->db->query(
-                "CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "simple_blog_view (
+                'CREATE TABLE IF NOT EXISTS '.DB_PREFIX.'simple_blog_view (
                   `simple_blog_view_id` int(16) NOT NULL AUTO_INCREMENT,
                   `simple_blog_article_id` int(16) NOT NULL,
                   `view` int(16) NOT NULL,
                   `date_added` datetime NOT NULL,
                   `date_modified` datetime NOT NULL,
                   PRIMARY KEY (`simple_blog_view_id`)
-                ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1"
+                ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1'
             );
         }
     }
-?>

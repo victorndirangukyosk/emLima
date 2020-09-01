@@ -1,9 +1,9 @@
 <?php
 
-class ControllerCheckoutCheckoutItems extends Controller {
-
-    public function index() {
-
+class ControllerCheckoutCheckoutItems extends Controller
+{
+    public function index()
+    {
         //echo "<pre>";print_r($this->session->data);die;
         $this->language->load('checkout/checkout');
         //check login
@@ -14,7 +14,6 @@ class ControllerCheckoutCheckoutItems extends Controller {
             $data['loginform'] = $this->load->controller('checkout/login/login');
             $data['loggedin'] = false;
         } else {
-
             $data['profile_complete'] = true;
             $user_telephone = $this->formatTelephone($this->customer->getTelephone());
 
@@ -25,7 +24,7 @@ class ControllerCheckoutCheckoutItems extends Controller {
 
             $data['text_logged_in_as'] = $this->language->get('text_logged_in_as');
             //$data['loginform'] = $data['text_logged_in_as'].' ' . $this->customer->getFirstName(). ". <a id='". "checkoutLogout' style='cursor: pointer; cursor: hand;color: #f86e01;background-color: white;border-color: #f86e01;' type='button' class='btn btn-primary'> Logout </a>";
-            $data['loginform'] = $data['text_logged_in_as'] . ' ' . $this->customer->getFirstName();
+            $data['loginform'] = $data['text_logged_in_as'].' '.$this->customer->getFirstName();
             $data['loggedin'] = true;
             $data['redirectopen2tab'] = $this->url->link('checkout/checkout#collapseTwo');
         }
@@ -37,9 +36,7 @@ class ControllerCheckoutCheckoutItems extends Controller {
         $data['continue'] = $this->url->link('common/home');
         $data['button_continue'] = $this->language->get('button_continue');
 
-
-
-        $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_checkout.css');
+        $this->document->addStyle('front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_checkout.css');
 
         // Validate cart has products and has stock.
         if ((!$this->cart->hasProducts() && empty($this->session->data['vouchers'])) /* || ( !$this->cart->hasStock() && !$this->config->get( 'config_stock_checkout' ) ) */) {
@@ -52,10 +49,8 @@ class ControllerCheckoutCheckoutItems extends Controller {
         // Validate minimum quantity requirements.
         $products = $this->cart->getProducts();
 
-        $productsID=  array_column($products, 'product_id');
+        $productsID = array_column($products, 'product_id');
         // echo "<pre>";print_r($productsID);die;
-
-
 
         $product_total_count = 0;
         $product_total_amount = 0;
@@ -71,12 +66,10 @@ class ControllerCheckoutCheckoutItems extends Controller {
                     $product_total += $product_2['quantity'];
                 }
             }
-            if (file_exists(DIR_IMAGE . $product['image'])) {
-
+            if (file_exists(DIR_IMAGE.$product['image'])) {
                 $image = $this->model_tool_image->resize($product['image'], $this->config->get('config_image_cart_width'), $this->config->get('config_image_cart_height'));
             } else {
                 $image = $this->model_tool_image->resize('placeholder.png', $this->config->get('config_image_cart_width'), $this->config->get('config_image_cart_height'));
-                ;
             }
 
             if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
@@ -94,7 +87,7 @@ class ControllerCheckoutCheckoutItems extends Controller {
             $product_total_count += $product['quantity'];
             $product_total_amount += $product['total'];
 
-            $data['products_details'][] = array(
+            $data['products_details'][] = [
                 'key' => $product['key'],
                 'product_store_id' => $product['product_store_id'],
                 'thumb' => $image,
@@ -110,8 +103,8 @@ class ControllerCheckoutCheckoutItems extends Controller {
                 'price' => $price,
                 'total' => $total,
                 'store_id' => $product['store_id'],
-                'href' => $this->url->link('product/product', 'product_store_id=' . $product['product_store_id'])
-            );
+                'href' => $this->url->link('product/product', 'product_store_id='.$product['product_store_id']),
+            ];
 
             /* if ( $product['minimum'] > $product_total ) {
               $this->response->redirect( $this->url->link( 'checkout/cart' ) );
@@ -119,7 +112,7 @@ class ControllerCheckoutCheckoutItems extends Controller {
         }
         //echo "<pre>";print_r($data['products_details']);die;
 
-        $data['arrs'] = array();
+        $data['arrs'] = [];
 
         foreach ($data['products_details'] as $key => $item) {
             $data['arrs'][$item['store_id']][$key] = $item;
@@ -133,16 +126,14 @@ class ControllerCheckoutCheckoutItems extends Controller {
 
         $order_stores = $this->cart->getStores();
 
-        $min_order_or_not = array();
-        $store_data = array();
+        $min_order_or_not = [];
+        $store_data = [];
 
         foreach ($order_stores as $os) {
-
             $store_info = $this->model_account_address->getStoreData($os);
             $store_total = $this->cart->getSubTotal($os);
             $store_info['servicable_zipcodes'] = $this->model_account_address->getZipList($os);
             $store_data[] = $store_info;
-
 
             if ($this->cart->getTotalProductsByStore($os) && $store_info['min_order_amount'] > $store_total) {
                 $this->response->redirect($this->url->link('checkout/cart'));
@@ -153,7 +144,6 @@ class ControllerCheckoutCheckoutItems extends Controller {
         $data['kondutoStatus'] = $this->config->get('config_konduto_status');
 
         $data['konduto_public_key'] = $this->config->get('config_konduto_public_key');
-
 
         $data['telephone_mask'] = $this->config->get('config_telephone_mask');
 
@@ -167,9 +157,6 @@ class ControllerCheckoutCheckoutItems extends Controller {
             $data['taxnumber_mask_number'] = str_replace('#', '*', $this->config->get('config_taxnumber_mask'));
         }
 
-
-
-
         $data['latitude'] = null;
         $data['longitude'] = null;
 
@@ -181,23 +168,19 @@ class ControllerCheckoutCheckoutItems extends Controller {
 
         $data['check_address'] = false;
 
-
         if ($this->config->get('config_address_check')) {
             $data['check_address'] = true;
         }
 
         $data['checkout_question_enabled'] = false;
 
-
         if ($this->config->get('config_checkout_question_enabled')) {
             $data['checkout_question_enabled'] = true;
         }
 
-
         $data['text_yes'] = $this->language->get('text_yes');
         $data['text_no'] = $this->language->get('text_no');
         $data['text_question'] = $this->language->get('text_question');
-
 
         $data['title'] = $this->language->get('heading_title');
         $data['text_or'] = $this->language->get('text_or');
@@ -227,9 +210,6 @@ class ControllerCheckoutCheckoutItems extends Controller {
         $data['text_view'] = $this->language->get('text_view');
         $data['text_office'] = $this->language->get('text_office');
 
-
-
-
         $data['text_flat_house_office'] = $this->language->get('text_flat_house_office');
         $data['text_stree_society_office'] = $this->language->get('text_stree_society_office');
         $data['text_locality'] = $this->language->get('text_locality');
@@ -237,7 +217,6 @@ class ControllerCheckoutCheckoutItems extends Controller {
         $data['text_home_address'] = $this->language->get('text_home_address');
         $data['text_other'] = $this->language->get('text_other');
         $data['text_office'] = $this->language->get('text_office');
-
 
         $data['text_cart'] = $this->language->get('text_cart');
         $data['text_signin'] = $this->language->get('text_signin');
@@ -262,8 +241,6 @@ class ControllerCheckoutCheckoutItems extends Controller {
         $data['entry_landmark'] = $this->language->get('entry_landmark');
         $data['entry_type'] = $this->language->get('entry_type');
 
-
-
         //echo "<pre>";print_r($data['entry_reward_points']);die;
         //echo "<pre>";print_r($this->customer->getRewardPoints());die;
 
@@ -279,7 +256,6 @@ class ControllerCheckoutCheckoutItems extends Controller {
         $data['button_confirm'] = $this->language->get('button_confirm');
         $data['save_address'] = $this->language->get('save_address');
 
-
         $data['error_name'] = $this->language->get('error_name');
         $data['error_phone'] = $this->language->get('error_phone');
         $data['error_address'] = $this->language->get('error_addresss');
@@ -293,26 +269,26 @@ class ControllerCheckoutCheckoutItems extends Controller {
             $this->document->addScript('http://cdn.klarna.com/public/kitt/toc/v1.0/js/klarna.terms.min.js');
         }
 
-        $data['breadcrumbs'] = array();
+        $data['breadcrumbs'] = [];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home')
-        );
+            'href' => $this->url->link('common/home'),
+        ];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_cart'),
-            'href' => $this->url->link('checkout/cart')
-        );
+            'href' => $this->url->link('checkout/cart'),
+        ];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('checkout/checkout', '', 'SSL')
-        );
+            'href' => $this->url->link('checkout/checkout', '', 'SSL'),
+        ];
 
-        $data = $this->language->all($data, array('error_agree'));
+        $data = $this->language->all($data, ['error_agree']);
 
-        $data['entry_reward_points'] = sprintf($this->language->get('entry_reward_points'), '' . $this->customer->getRewardPoints() . '');
+        $data['entry_reward_points'] = sprintf($this->language->get('entry_reward_points'), ''.$this->customer->getRewardPoints().'');
 
         if ($this->config->get('config_checkout_id')) {
             $this->load->model('assets/information');
@@ -411,7 +387,7 @@ class ControllerCheckoutCheckoutItems extends Controller {
 
         $data['config'] = $this->config;
 
-        $data['name'] = $this->customer->getFirstname() . ' ' . $this->customer->getLastname();
+        $data['name'] = $this->customer->getFirstname().' '.$this->customer->getLastname();
         $data['city_id'] = $store_info['city_id'];
 
         $data['store_name'] = $store_info['name'];
@@ -429,10 +405,9 @@ class ControllerCheckoutCheckoutItems extends Controller {
         if (count($_COOKIE) > 0 && isset($_COOKIE['zipcode'])) {
             $data['zipcode'] = $_COOKIE['zipcode'];
         } elseif (count($_COOKIE) > 0 && isset($_COOKIE['location'])) {
-
             //echo "<pre>";print_r($_COOKIE['location']);die;
 
-            $tmpD = explode(",", $_COOKIE['location']);
+            $tmpD = explode(',', $_COOKIE['location']);
 
             if (count($tmpD) >= 2) {
                 $data['latitude'] = $tmpD[0];
@@ -442,7 +417,6 @@ class ControllerCheckoutCheckoutItems extends Controller {
             //echo "<pre>";print_r($data);die;
 
             $addressTmp = $this->getZipcode($_COOKIE['location']);
-
 
             $addressLocality = $this->getPlace($_COOKIE['location']);
 
@@ -460,18 +434,14 @@ class ControllerCheckoutCheckoutItems extends Controller {
             $allAddresses = [];
 
             foreach ($data['addresses'] as $addre) {
-
                 $addre['show_enabled'] = true;
 
                 foreach ($order_stores as $os) {
-
                     $store_info = $this->model_account_address->getStoreData($os);
 
                     //echo "<pre>";print_r($store_info);die;
                     if (!empty($addre['latitude']) || !empty($addre['longitude']) || !empty($store_info['serviceable_radius'])) {
-
                         $res = $this->getDistance($addre['latitude'], $addre['longitude'], $data['latitude'], $data['longitude'], $store_info['serviceable_radius']);
-
 
                         if (!$res) {
                             $addre['show_enabled'] = false;
@@ -485,18 +455,13 @@ class ControllerCheckoutCheckoutItems extends Controller {
 
             $data['addresses'] = $allAddresses;
 
-
-
-
-
-            //echo "<pre>";print_r($data);die;
+        //echo "<pre>";print_r($data);die;
         } else {
-
             $data['zipcode'] = '';
             /* New Code added */
             $data['latitude'] = $store_info['latitude'];
             $data['longitude'] = $store_info['longitude'];
-            $location = $store_info['latitude'] . ',' . $store_info['longitude'];
+            $location = $store_info['latitude'].','.$store_info['longitude'];
             $addressTmp = $this->getZipcode($location);
             $addressLocality = $this->getPlace($location);
             $data['zipcode'] = $addressTmp ? $addressTmp : '';
@@ -509,18 +474,14 @@ class ControllerCheckoutCheckoutItems extends Controller {
             $allAddresses = [];
 
             foreach ($data['addresses'] as $addre) {
-
                 $addre['show_enabled'] = true;
 
                 foreach ($order_stores as $os) {
-
                     $store_info = $this->model_account_address->getStoreData($os);
 
                     //echo "<pre>";print_r($store_info);die;
                     if (!empty($addre['latitude']) || !empty($addre['longitude']) || !empty($store_info['serviceable_radius'])) {
-
                         $res = $this->getDistance($addre['latitude'], $addre['longitude'], $data['latitude'], $data['longitude'], $store_info['serviceable_radius']);
-
 
                         if (!$res) {
                             $addre['show_enabled'] = false;
@@ -545,7 +506,6 @@ class ControllerCheckoutCheckoutItems extends Controller {
             $data['servicable_zipcodes'] = explode(',', $store_info['zipcode']);
         }
 
-
         if ($this->request->server['HTTPS']) {
             $server = $this->config->get('config_ssl');
         } else {
@@ -559,7 +519,6 @@ class ControllerCheckoutCheckoutItems extends Controller {
 
         $data['address_id'] = $this->customer->getAddressId();
 
-
         //echo "<pre>";print_r($data['questions']);die;
         //get cities
         $data['cities'] = $this->model_account_address->getCities();
@@ -568,13 +527,12 @@ class ControllerCheckoutCheckoutItems extends Controller {
 
         $data['products'] = $products;
 
-
-        $data['mostboughtproducts'] = $this->make_slides( $this->getMostBoughtProducts($productsID));
+        $data['mostboughtproducts'] = $this->make_slides($this->getMostBoughtProducts($productsID));
 //    echo "<pre>";print_r($data['mostboughtproducts']);die;
 
         // if($this->config->get('config_multi_store')) {
         // if ( file_exists( DIR_TEMPLATE . $this->config->get( 'config_template' ) . '/template/checkout/multi_store_checkoutitems.tpl' ) ) {
-        $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/checkout/multi_store_checkoutitems.tpl', $data));
+        $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/checkout/multi_store_checkoutitems.tpl', $data));
         // } else {
         //     $this->response->setOutput( $this->load->view( 'default/template/checkout/multi_store_checkout.tpl', $data ) );
         // }
@@ -594,35 +552,31 @@ class ControllerCheckoutCheckoutItems extends Controller {
           } */
     }
 
-
-    
-    public function getMostBoughtProducts($productsID) {
-
+    public function getMostBoughtProducts($productsID)
+    {
         $this->load->model('assets/product');
         $this->load->model('tool/image');
 
         $cachePrice_data = $this->cache->get('category_price_data');
-         //echo '<pre>';print_r(ACTIVE_STORE_ID);exit;
-        $results = $this->model_assets_product->getMostBoughtProducts(ACTIVE_STORE_ID, $this->customer->getId(),$productsID);
+        //echo '<pre>';print_r(ACTIVE_STORE_ID);exit;
+        $results = $this->model_assets_product->getMostBoughtProducts(ACTIVE_STORE_ID, $this->customer->getId(), $productsID);
 
-        $data['products'] = array();
+        $data['products'] = [];
 
         //  echo "<pre>";print_r($results);die;
         foreach ($results as $result) {
-
             // if qty less then 1 dont show product
-            if ($result['quantity'] <= 0)
+            if ($result['quantity'] <= 0) {
                 continue;
+            }
 
-            if (file_exists(DIR_IMAGE . $result['image'])) {
+            if (file_exists(DIR_IMAGE.$result['image'])) {
                 $image = $this->model_tool_image->resize($result['image'], $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
             } else {
                 $image = $this->model_tool_image->resize('placeholder.png', $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
             }
 
-
             //if category discount define override special price
-
 
             $discount = '';
 
@@ -658,33 +612,30 @@ class ControllerCheckoutCheckoutItems extends Controller {
                     $special_price = $result['special_price'];
                 }
 
-
                 $s_price = $result['special_price'];
                 $o_price = $result['price'];
 
                 //echo $s_price.'===>'.$o_price.'==>'.$special_price.'===>'.$price;//exit;
 
-                if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$result['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $filter_data['store_id']])) {
-                    $s_price = $cachePrice_data[$result['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $filter_data['store_id']];
-                    $o_price = $cachePrice_data[$result['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $filter_data['store_id']];
+                if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$result['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$filter_data['store_id']])) {
+                    $s_price = $cachePrice_data[$result['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$filter_data['store_id']];
+                    $o_price = $cachePrice_data[$result['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$filter_data['store_id']];
                     $special_price = $this->currency->format($s_price);
                     $price = $this->currency->format($o_price);
                 }
             }
 
-
             //get qty in cart
             if (!empty($this->session->data['config_store_id'])) {
-                $key = base64_encode(serialize(array('product_store_id' => (int) $result['product_store_id'], 'store_id' => $this->session->data['config_store_id'])));
+                $key = base64_encode(serialize(['product_store_id' => (int) $result['product_store_id'], 'store_id' => $this->session->data['config_store_id']]));
             } else {
-                $key = base64_encode(serialize(array('product_store_id' => (int) $result['product_store_id'], 'store_id' => $filter_data['store_id'])));
+                $key = base64_encode(serialize(['product_store_id' => (int) $result['product_store_id'], 'store_id' => $filter_data['store_id']]));
             }
             if (isset($this->session->data['cart'][$key])) {
                 $qty_in_cart = $this->session->data['cart'][$key]['quantity'];
             } else {
                 $qty_in_cart = 0;
             }
-
 
             //$result['name'] = strlen($result['name']) > 27 ? substr($result['name'],0,27)."..." : $result['name'];
             $name = $result['name'];
@@ -694,29 +645,28 @@ class ControllerCheckoutCheckoutItems extends Controller {
 
             //$name .= str_repeat('&nbsp;',30 - strlen($result['name']));
 
-
             $percent_off = null;
-            if (isset($s_price) && isset($o_price) && $o_price != 0 && $s_price != 0) {
+            if (isset($s_price) && isset($o_price) && 0 != $o_price && 0 != $s_price) {
                 $percent_off = (($o_price - $s_price) / $o_price) * 100;
             }
 
             // Avoid adding duplicates for similar products with different variations
 
             $productNames = array_column($data['products'], 'name');
-            if (array_search($result['name'], $productNames) !== false) {
+            if (false !== array_search($result['name'], $productNames)) {
                 // Add variation to existing product
                 $productIndex = array_search($result['name'], $productNames);
                 // TODO: Check for product variation duplicates
-                $data['products'][$productIndex][variations][] = array(
+                $data['products'][$productIndex][variations][] = [
                     'variation_id' => $result['product_store_id'],
                     'unit' => $result['unit'],
                     'weight' => floatval($result['weight']),
                     'price' => $price,
-                    'special' => $special_price
-                );
+                    'special' => $special_price,
+                ];
             } else {
                 // Add as new product
-                $data['products'][] = array(
+                $data['products'][] = [
                     'key' => $key,
                     'qty_in_cart' => $qty_in_cart,
                     'variations' => $this->model_assets_product->getVariations($result['product_store_id']),
@@ -726,32 +676,32 @@ class ControllerCheckoutCheckoutItems extends Controller {
                     'default_variation_name' => $result['default_variation_name'],
                     'thumb' => $image,
                     'name' => $name,
-                    'variations' => array(
-                        array(
+                    'variations' => [
+                        [
                             'variation_id' => $result['product_store_id'],
                             'unit' => $result['unit'],
                             'weight' => floatval($result['weight']),
                             'price' => $price,
-                            'special' => $special_price
-                        )
-                    ),
-                    'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('config_product_description_length')) . '..',
+                            'special' => $special_price,
+                        ],
+                    ],
+                    'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('config_product_description_length')).'..',
                     'percent_off' => number_format($percent_off, 0),
                     'tax' => $result['tax_percentage'],
                     'minimum' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity'],
                     'rating' => 0,
-                    'href' => $this->url->link('product/product', '&product_store_id=' . $result['product_store_id'])
-                );
+                    'href' => $this->url->link('product/product', '&product_store_id='.$result['product_store_id']),
+                ];
             }
         }
-         //echo "<pre>";print_r($data['products']);die;
+        //echo "<pre>";print_r($data['products']);die;
 
         return $data['products'];
     }
-    
 
-    public function country() {
-        $json = array();
+    public function country()
+    {
+        $json = [];
 
         $this->load->model('localisation/country');
 
@@ -760,7 +710,7 @@ class ControllerCheckoutCheckoutItems extends Controller {
         if ($country_info) {
             $this->load->model('localisation/zone');
 
-            $json = array(
+            $json = [
                 'country_id' => $country_info['country_id'],
                 'name' => $country_info['name'],
                 'iso_code_2' => $country_info['iso_code_2'],
@@ -768,16 +718,17 @@ class ControllerCheckoutCheckoutItems extends Controller {
                 'address_format' => $country_info['address_format'],
                 'postcode_required' => $country_info['postcode_required'],
                 'zone' => $this->model_localisation_zone->getZonesByCountryId($this->request->get['country_id']),
-                'status' => $country_info['status']
-            );
+                'status' => $country_info['status'],
+            ];
         }
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
 
-    public function customfield() {
-        $json = array();
+    public function customfield()
+    {
+        $json = [];
 
         $this->load->model('account/custom_field');
 
@@ -791,24 +742,25 @@ class ControllerCheckoutCheckoutItems extends Controller {
         $custom_fields = $this->model_account_custom_field->getCustomFields($customer_group_id);
 
         foreach ($custom_fields as $custom_field) {
-            $json[] = array(
+            $json[] = [
                 'custom_field_id' => $custom_field['custom_field_id'],
-                'required' => $custom_field['required']
-            );
+                'required' => $custom_field['required'],
+            ];
         }
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getAddressFromPost($args) {
+    public function getAddressFromPost($args)
+    {
         $type = $args[0];
         $is_guest = $args[1];
 
         $this->load->model('localisation/country');
         $this->load->model('localisation/zone');
 
-        $address = array();
+        $address = [];
 
         $address['country_id'] = !empty($this->request->post['address_country_id']) ? $this->request->post['address_country_id'] : 0;
         $address['zone_id'] = !empty($this->request->post['address_zone_id']) ? $this->request->post['address_zone_id'] : 0;
@@ -839,32 +791,33 @@ class ControllerCheckoutCheckoutItems extends Controller {
             $address['zone_code'] = '';
         }
 
-        $this->session->data[$type . '_address']['country_id'] = $address['country_id'];
-        $this->session->data[$type . '_address']['zone_id'] = $address['zone_id'];
-        $this->session->data[$type . '_address']['city'] = $address['city'];
-        $this->session->data[$type . '_address']['postcode'] = $address['postcode'];
+        $this->session->data[$type.'_address']['country_id'] = $address['country_id'];
+        $this->session->data[$type.'_address']['zone_id'] = $address['zone_id'];
+        $this->session->data[$type.'_address']['city'] = $address['city'];
+        $this->session->data[$type.'_address']['postcode'] = $address['postcode'];
 
-        if ($is_guest == true) {
-            $this->session->data[$type . '_address']['country'] = $address['country'];
-            $this->session->data[$type . '_address']['iso_code_2'] = $address['iso_code_2'];
-            $this->session->data[$type . '_address']['iso_code_3'] = $address['iso_code_3'];
-            $this->session->data[$type . '_address']['address_format'] = $address['address_format'];
-            $this->session->data[$type . '_address']['zone'] = $address['zone'];
-            $this->session->data[$type . '_address']['zone_code'] = $address['zone_code'];
+        if (true == $is_guest) {
+            $this->session->data[$type.'_address']['country'] = $address['country'];
+            $this->session->data[$type.'_address']['iso_code_2'] = $address['iso_code_2'];
+            $this->session->data[$type.'_address']['iso_code_3'] = $address['iso_code_3'];
+            $this->session->data[$type.'_address']['address_format'] = $address['address_format'];
+            $this->session->data[$type.'_address']['zone'] = $address['zone'];
+            $this->session->data[$type.'_address']['zone_code'] = $address['zone_code'];
         }
 
         return $address;
     }
 
-    public function checksession() {
-        echo "<pre>";
+    public function checksession()
+    {
+        echo '<pre>';
         //unset($this->session->data['shipping_method']);die;
         print_r($this->session->data);
         exit;
     }
 
-    public function formatTelephone($telephone) {
-
+    public function formatTelephone($telephone)
+    {
         /* if(strlen($telephone) == 11 ) {
           //(21) 42353-5255
 
@@ -886,7 +839,8 @@ class ControllerCheckoutCheckoutItems extends Controller {
         return $telephone;
     }
 
-    public function saveQuestionResponse() {
+    public function saveQuestionResponse()
+    {
         $this->load->language('checkout/checkout');
 
         //echo "saveQuestionResponse";
@@ -904,24 +858,24 @@ class ControllerCheckoutCheckoutItems extends Controller {
             $json['status'] = true;
         }
 
-
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getZipcode($address) {
+    public function getZipcode($address)
+    {
         if (!empty($address)) {
             //Formatted address
             $formattedAddr = str_replace(' ', '+', $address);
             //Send request and receive json data by address
 
-            $url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' . $formattedAddr . '&sensor=false&key=' . $this->config->get('config_google_server_api_key');
+            $url = 'https://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false&key='.$this->config->get('config_google_server_api_key');
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
 
-            $headers = array(
-                "Cache-Control: no-cache",
-            );
+            $headers = [
+                'Cache-Control: no-cache',
+            ];
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
             curl_setopt($ch, CURLOPT_FRESH_CONNECT, 1);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -937,15 +891,13 @@ class ControllerCheckoutCheckoutItems extends Controller {
             $latitude = $output1->results[0]->geometry->location->lat;
             $longitude = $output1->results[0]->geometry->location->lng;
 
-
-
-            $url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' . $latitude . ',' . $longitude . '&sensor=false&key=' . $this->config->get('config_google_server_api_key');
+            $url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='.$latitude.','.$longitude.'&sensor=false&key='.$this->config->get('config_google_server_api_key');
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
 
-            $headers = array(
-                "Cache-Control: no-cache",
-            );
+            $headers = [
+                'Cache-Control: no-cache',
+            ];
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
             curl_setopt($ch, CURLOPT_FRESH_CONNECT, 1);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -957,17 +909,15 @@ class ControllerCheckoutCheckoutItems extends Controller {
             curl_close($ch);
             $output2 = json_decode($response);
 
-
-
-
             if (!empty($output2)) {
                 $addressComponents = $output2->results[0]->address_components;
                 foreach ($addressComponents as $addrComp) {
-                    if ($addrComp->types[0] == 'postal_code') {
+                    if ('postal_code' == $addrComp->types[0]) {
                         //Return the zipcode
                         return $addrComp->long_name;
                     }
                 }
+
                 return false;
             } else {
                 return false;
@@ -977,12 +927,11 @@ class ControllerCheckoutCheckoutItems extends Controller {
         }
     }
 
-    public function getPlace($location) {
-
-
+    public function getPlace($location)
+    {
         $p = '';
 
-        $userSearch = explode(",", $location);
+        $userSearch = explode(',', $location);
 
         if (count($userSearch) >= 2) {
             $validateLat = is_numeric($userSearch[0]);
@@ -992,18 +941,16 @@ class ControllerCheckoutCheckoutItems extends Controller {
             $validateLat4 = strpos($userSearch[1], '.');
 
             if ($validateLat && $validateLat2 && $validateLat3 && $validateLat4) {
-
-                $url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' . $location . '&sensor=false&key=' . $this->config->get('config_google_server_api_key');
-
+                $url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='.$location.'&sensor=false&key='.$this->config->get('config_google_server_api_key');
 
                 //echo "<pre>";print_r($url);die;
                 $ch = curl_init();
                 curl_setopt($ch, CURLOPT_URL, $url);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
-                $headers = array(
-                    "Cache-Control: no-cache",
-                );
+                $headers = [
+                    'Cache-Control: no-cache',
+                ];
                 curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
                 curl_setopt($ch, CURLOPT_FRESH_CONNECT, 1);
 
@@ -1018,9 +965,7 @@ class ControllerCheckoutCheckoutItems extends Controller {
                 curl_close($ch);
                 $output = json_decode($response);
 
-
                 //print_r($output);die;
-
 
                 if (isset($output)) {
                     $p = $output->results[0]->formatted_address;
@@ -1031,8 +976,8 @@ class ControllerCheckoutCheckoutItems extends Controller {
         return $p;
     }
 
-    public function getDistance($latitude1, $longitude1, $latitude2, $longitude2, $storeRadius) {
-
+    public function getDistance($latitude1, $longitude1, $latitude2, $longitude2, $storeRadius)
+    {
         //$storeRadius = 2;
         $earth_radius = 6371;
 
@@ -1053,10 +998,10 @@ class ControllerCheckoutCheckoutItems extends Controller {
         }
     }
 
-    public function UpdateCartQuantity() {
-
-        $product_note = NULL;
-        $produce_type = NULL;
+    public function UpdateCartQuantity()
+    {
+        $product_note = null;
+        $produce_type = null;
         $key = $this->request->post['key'];
         $qty = $this->request->post['qty'];
         $log = new Log('error.log');
@@ -1069,103 +1014,81 @@ class ControllerCheckoutCheckoutItems extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+    public function make_slide_indicators($result)
+    {
+        $output = '';
+        $count = 0;
 
-    
-function make_slide_indicators($result)
-{
- $output = ''; 
- $count = 0;
- 
- while($row = mysqli_fetch_array($result))
- {
-  if($count == 0)
-  {
-   $output .= '
+        while ($row = mysqli_fetch_array($result)) {
+            if (0 == $count) {
+                $output .= '
    <li data-target="#dynamic_slide_show" data-slide-to="'.$count.'" class="active"></li>
    ';
-  }
-  else
-  {
-   $output .= '
+            } else {
+                $output .= '
    <li data-target="#dynamic_slide_show" data-slide-to="'.$count.'"></li>
    ';
-  }
-  $count = $count + 1;
- }
- return $output;
-}
+            }
+            $count = $count + 1;
+        }
 
-function make_slides($result)
-{
- $output = '';
- $itemsperslide=4;
- $totalcount=count($result);
- console.log($totalcount);
- $count = 0; $i=0;
- if( $totalcount==0)
- $noofslides=0;
- else if($totalcount<=$itemsperslide && $totalcount>0) 
- {
- $noofslides=1;
- $itemsperslide=$totalcount;
- }
- else
- $noofslides= ceil($totalcount/$itemsperslide);
+        return $output;
+    }
 
-
-
- for ($slide=1;$slide<=$noofslides;$slide++ )
- {
-
-//  echo "<pre>";print_r($totalcount);die;
-
-    if($slide == 1 )
+    public function make_slides($result)
     {
-     $output .= '<div class="item active"> 	<div class="row">';
-     for($i;$i<$itemsperslide;$i++)
-     {   
+        $output = '';
+        $itemsperslide = 4;
+        $totalcount = count($result);
+        console.log($totalcount);
+        $count = 0;
+        $i = 0;
+        if (0 == $totalcount) {
+            $noofslides = 0;
+        } elseif ($totalcount <= $itemsperslide && $totalcount > 0) {
+            $noofslides = 1;
+            $itemsperslide = $totalcount;
+        } else {
+            $noofslides = ceil($totalcount / $itemsperslide);
+        }
 
-$output .= '<div> <a class="product-detail-bnt open-popup" role="button" data-store='. ACTIVE_STORE_ID  ;
-    $output .= '    data-id="'.$result[$i]["product_store_id"].'" target="_blank" aria-label="'.$result[$i]["name"].'"> ';
-         $output .= ' <div class="col-sm-3"> <div class="thumb-wrapper">  <div class="img-box">';
-         
-      $output .= '<img class="_1xvs1" src="'.$result[$i]["thumb"].'" title="'.$result[$i]["name"].'" alt="'.$result[$i]["name"].'" style="left: 0%;"> ';
-          $output .= '  </div>           <div class="thumb-content">           <h4>'.$result[$i]["name"].'</h4>';
-         $output .= '     <p class="item-price"><span>' .$result[$i]["variations"][0]['special'].' / Per'.$result[$i]["variations"][0]['unit'].'  </span></p>';
-                 
-        $output .= '     </div>  </div> </div></a></div>';   
-     }
-      $output .= ' </div> </div>';
+        for ($slide = 1; $slide <= $noofslides; ++$slide) {
+            //  echo "<pre>";print_r($totalcount);die;
 
-     
+            if (1 == $slide) {
+                $output .= '<div class="item active"> 	<div class="row">';
+                for ($i; $i < $itemsperslide; ++$i) {
+                    $output .= '<div> <a class="product-detail-bnt open-popup" role="button" data-store='.ACTIVE_STORE_ID;
+                    $output .= '    data-id="'.$result[$i]['product_store_id'].'" target="_blank" aria-label="'.$result[$i]['name'].'"> ';
+                    $output .= ' <div class="col-sm-3"> <div class="thumb-wrapper">  <div class="img-box">';
+
+                    $output .= '<img class="_1xvs1" src="'.$result[$i]['thumb'].'" title="'.$result[$i]['name'].'" alt="'.$result[$i]['name'].'" style="left: 0%;"> ';
+                    $output .= '  </div>           <div class="thumb-content">           <h4>'.$result[$i]['name'].'</h4>';
+                    $output .= '     <p class="item-price"><span>'.$result[$i]['variations'][0]['special'].' / Per'.$result[$i]['variations'][0]['unit'].'  </span></p>';
+
+                    $output .= '     </div>  </div> </div></a></div>';
+                }
+                $output .= ' </div> </div>';
+            } else {
+                $output .= '<div class="item"> 	<div class="row">';
+                $itemspernewslide = $itemsperslide + $i;
+                for ($i; $i < $itemspernewslide; ++$i) {
+                    if ($i < $totalcount) {
+                        $output .= '<div> <a class="product-detail-bnt open-popup" role="button" data-store='.ACTIVE_STORE_ID;
+                        $output .= '    data-id="'.$result[$i]['product_store_id'].'" target="_blank" aria-label="'.$result[$i]['name'].'"> ';
+                        $output .= ' <div class="col-sm-3"> <div class="thumb-wrapper">  <div class="img-box">';
+
+                        $output .= '<img class="_1xvs1" src="'.$result[$i]['thumb'].'" title="'.$result[$i]['name'].'" alt="'.$result[$i]['name'].'" style="left: 0%;"> ';
+                        $output .= '  </div>           <div class="thumb-content">           <h4>'.$result[$i]['name'].'</h4>';
+                        $output .= '     <p class="item-price"><span>'.$result[$i]['variations'][0]['special'].' / Per'.$result[$i]['variations'][0]['unit'].'  </span></p>';
+
+                        $output .= '     </div>  </div> </div></a></div>';
+                    }
+                }
+                $output .= '</div></div>';
+            }
+        }
+        //  echo "<pre>";print_r($output);die;
+        return $output;
     }
-    else{
-        $output .= '<div class="item"> 	<div class="row">';
-        $itemspernewslide=$itemsperslide+$i;
-        for($i;$i<$itemspernewslide;$i++)
-     { 
-         if($i<$totalcount)
-         {
-        $output .= '<div> <a class="product-detail-bnt open-popup" role="button" data-store='. ACTIVE_STORE_ID  ;
-        $output .= '    data-id="'.$result[$i]["product_store_id"].'" target="_blank" aria-label="'.$result[$i]["name"].'"> ';
-             $output .= ' <div class="col-sm-3"> <div class="thumb-wrapper">  <div class="img-box">';
-             
-          $output .= '<img class="_1xvs1" src="'.$result[$i]["thumb"].'" title="'.$result[$i]["name"].'" alt="'.$result[$i]["name"].'" style="left: 0%;"> ';
-              $output .= '  </div>           <div class="thumb-content">           <h4>'.$result[$i]["name"].'</h4>';
-             $output .= '     <p class="item-price"><span>' .$result[$i]["variations"][0]['special'].' / Per'.$result[$i]["variations"][0]['unit'].'  </span></p>';
-                     
-            $output .= '     </div>  </div> </div></a></div>'; 
-         }  
-
-     }
-     $output .= '</div></div>';
-    }
-     
- }
-//  echo "<pre>";print_r($output);die;
- return $output;
-}
-
-
-
 }

@@ -3,9 +3,7 @@
 namespace Stripe;
 
 /**
- * Class CountrySpec
- *
- * @package Stripe
+ * Class CountrySpec.
  */
 class CountrySpec extends ApiResource
 {
@@ -13,7 +11,7 @@ class CountrySpec extends ApiResource
      * This is a special case because the country specs endpoint has an
      *    underscore in it. The parent `className` function strips underscores.
      *
-     * @return string The name of the class.
+     * @return string the name of the class
      */
     public static function className()
     {
@@ -21,7 +19,7 @@ class CountrySpec extends ApiResource
     }
 
     /**
-     * @param string $country The ISO country code of the country we retrieve the CountrySpec for.
+     * @param string            $country the ISO country code of the country we retrieve the CountrySpec for
      * @param array|string|null $opts
      *
      * @return CountrySpec
@@ -32,7 +30,7 @@ class CountrySpec extends ApiResource
     }
 
     /**
-     * @param array|null $params
+     * @param array|null        $params
      * @param array|string|null $opts
      *
      * @return Collection of CountrySpecs

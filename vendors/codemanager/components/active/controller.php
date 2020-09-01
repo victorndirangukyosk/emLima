@@ -6,8 +6,8 @@
     *  [root]/license.txt for more. This information must remain intact.
     */
 
-    require_once('../../common.php');
-    require_once('class.active.php');
+    require_once '../../common.php';
+    require_once 'class.active.php';
 
     $Active = new Active();
 
@@ -21,7 +21,7 @@
     // Get user's active files
     //////////////////////////////////////////////////////////////////
 
-    if($_GET['action']=='list'){
+    if ('list' == $_GET['action']) {
         $Active->username = $_SESSION['user'];
         $Active->ListActive();
     }
@@ -30,7 +30,7 @@
     // Add active record
     //////////////////////////////////////////////////////////////////
 
-    if($_GET['action']=='add'){
+    if ('add' == $_GET['action']) {
         $Active->username = $_SESSION['user'];
         $Active->path = $_GET['path'];
         $Active->Add();
@@ -40,7 +40,7 @@
     // Rename
     //////////////////////////////////////////////////////////////////
 
-    if($_GET['action']=='rename'){
+    if ('rename' == $_GET['action']) {
         $Active->username = $_SESSION['user'];
         $Active->path = $_GET['old_path'];
         $Active->new_path = $_GET['new_path'];
@@ -51,7 +51,7 @@
     // Check if file is active
     //////////////////////////////////////////////////////////////////
 
-    if($_GET['action']=='check'){
+    if ('check' == $_GET['action']) {
         $Active->username = $_SESSION['user'];
         $Active->path = $_GET['path'];
         $Active->Check();
@@ -61,29 +61,27 @@
     // Remove active record
     //////////////////////////////////////////////////////////////////
 
-    if($_GET['action']=='remove'){
+    if ('remove' == $_GET['action']) {
         $Active->username = $_SESSION['user'];
         $Active->path = $_GET['path'];
         $Active->Remove();
     }
-    
+
     //////////////////////////////////////////////////////////////////
     // Remove all active record
     //////////////////////////////////////////////////////////////////
 
-    if($_GET['action']=='removeall'){
+    if ('removeall' == $_GET['action']) {
         $Active->username = $_SESSION['user'];
         $Active->RemoveAll();
     }
-    
+
     //////////////////////////////////////////////////////////////////
     // Mark file as focused
     //////////////////////////////////////////////////////////////////
 
-    if($_GET['action']=='focused'){
+    if ('focused' == $_GET['action']) {
         $Active->username = $_SESSION['user'];
         $Active->path = $_GET['path'];
         $Active->MarkFileAsFocused();
     }
-
-?>

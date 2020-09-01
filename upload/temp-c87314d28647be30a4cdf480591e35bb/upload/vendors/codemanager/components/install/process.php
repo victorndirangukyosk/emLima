@@ -14,47 +14,53 @@
 
     $rel = str_replace('/components/install/process.php', '', $_SERVER['REQUEST_URI']);
 
-    $workspace = $path . "/workspace";
-    $users = $path . "/data/users.php";
-    $projects = $path . "/data/projects.php";
-    $active = $path . "/data/active.php";
-    $config = $path . "/config.php";
+    $workspace = $path.'/workspace';
+    $users = $path.'/data/users.php';
+    $projects = $path.'/data/projects.php';
+    $active = $path.'/data/active.php';
+    $config = $path.'/config.php';
 
 //////////////////////////////////////////////////////////////////////
 // Functions
 //////////////////////////////////////////////////////////////////////
 
-    function saveFile($file,$data){
+    function saveFile($file, $data)
+    {
         $write = fopen($file, 'w') or die("can't open file");
         fwrite($write, $data);
         fclose($write);
     }
 
-    function saveJSON($file,$data){
-        $data = "<?php/*|" . json_encode($data) . "|*/?>";
-        saveFile($file,$data);
+    function saveJSON($file, $data)
+    {
+        $data = '<?php/*|'.json_encode($data).'|*/?>';
+        saveFile($file, $data);
     }
 
-    function encryptPassword($p){
+    function encryptPassword($p)
+    {
         return sha1(md5($p));
     }
 
-    function cleanUsername($username){
-        return preg_replace('#[^A-Za-z0-9'.preg_quote('-_@. ').']#','', $username);
+    function cleanUsername($username)
+    {
+        return preg_replace('#[^A-Za-z0-9'.preg_quote('-_@. ').']#', '', $username);
     }
 
-    function isAbsPath( $path ) {
-        return $path[0] === '/';
+    function isAbsPath($path)
+    {
+        return '/' === $path[0];
     }
 
-    function cleanPath( $path ){
-
+    function cleanPath($path)
+    {
         // prevent Poison Null Byte injections
-        $path = str_replace(chr(0), '', $path );
+        $path = str_replace(chr(0), '', $path);
 
         // prevent go out of the workspace
-        while (strpos($path , '../') !== false)
-            $path = str_replace( '../', '', $path );
+        while (false !== strpos($path, '../')) {
+            $path = str_replace('../', '', $path);
+        }
 
         return $path;
     }
@@ -63,8 +69,7 @@
 // Verify no overwrites
 //////////////////////////////////////////////////////////////////////
 
-if(!file_exists($users) && !file_exists($projects) && !file_exists($active)){
-
+if (!file_exists($users) && !file_exists($projects) && !file_exists($active)) {
     //////////////////////////////////////////////////////////////////
     // Get POST responses
     //////////////////////////////////////////////////////////////////
@@ -72,7 +77,7 @@ if(!file_exists($users) && !file_exists($projects) && !file_exists($active)){
     $username = cleanUsername($_POST['username']);
     $password = encryptPassword($_POST['password']);
     $project_name = $_POST['project_name'];
-    if(isset($_POST['project_path'])) {
+    if (isset($_POST['project_path'])) {
         $project_path = $_POST['project_path'];
     } else {
         $project_path = $project_name;
@@ -85,46 +90,45 @@ if(!file_exists($users) && !file_exists($projects) && !file_exists($active)){
 
     $project_path = cleanPath($project_path);
 
-    if(!isAbsPath($project_path)) {
-        $project_path = str_replace(" ","_",preg_replace('/[^\w-\.]/', '', $project_path));
-        mkdir($workspace . "/" . $project_path);
+    if (!isAbsPath($project_path)) {
+        $project_path = str_replace(' ', '_', preg_replace('/[^\w-\.]/', '', $project_path));
+        mkdir($workspace.'/'.$project_path);
     } else {
         $project_path = cleanPath($project_path);
-        if(substr($project_path, -1) == '/') {
-            $project_path = substr($project_path,0, strlen($project_path)-1);
+        if ('/' == substr($project_path, -1)) {
+            $project_path = substr($project_path, 0, strlen($project_path) - 1);
         }
-        if(!file_exists($project_path)) {
-            if(!mkdir($project_path.'/', 0755, true)) {
-                die("Unable to create Absolute Path");
+        if (!file_exists($project_path)) {
+            if (!mkdir($project_path.'/', 0755, true)) {
+                die('Unable to create Absolute Path');
             }
         } else {
-            if(!is_writable($project_path) || !is_readable($project_path)) {
-                die("No Read/Write Permission");
+            if (!is_writable($project_path) || !is_readable($project_path)) {
+                die('No Read/Write Permission');
             }
         }
     }
-    $project_data = array("name"=>$project_name,"path"=>$project_path);
+    $project_data = ['name' => $project_name, 'path' => $project_path];
 
-    saveJSON($projects,array($project_data));
+    saveJSON($projects, [$project_data]);
 
     //////////////////////////////////////////////////////////////////
     // Create Users file
     //////////////////////////////////////////////////////////////////
 
-    $user_data = array("username"=>$username,"password"=>$password,"project"=>$project_path);
+    $user_data = ['username' => $username, 'password' => $password, 'project' => $project_path];
 
-    saveJSON($users,array($user_data));
+    saveJSON($users, [$user_data]);
 
     //////////////////////////////////////////////////////////////////
     // Create Active file
     //////////////////////////////////////////////////////////////////
 
-    saveJSON($active,array(''));
-    
+    saveJSON($active, ['']);
+
     //////////////////////////////////////////////////////////////////
     // Create Config
     //////////////////////////////////////////////////////////////////
-
 
     $config_data = '<?php
 
@@ -139,10 +143,10 @@ if(!file_exists($users) && !file_exists($projects) && !file_exists($active)){
 //////////////////////////////////////////////////////////////////
 
 // PATH TO CODIAD
-define("BASE_PATH", "' . $path . '");
+define("BASE_PATH", "'.$path.'");
 
 // BASE URL TO CODIAD (without trailing slash)
-define("BASE_URL", "' . $_SERVER["HTTP_HOST"] . $rel . '");
+define("BASE_URL", "'.$_SERVER['HTTP_HOST'].$rel.'");
 
 // THEME : default, modern or clear (look at /themes)
 define("THEME", "default");
@@ -154,7 +158,7 @@ define("WHITEPATHS", BASE_PATH . ",/home");
 $cookie_lifetime = "0";
 
 // TIMEZONE
-date_default_timezone_set("' . $_POST['timezone'] . '");
+date_default_timezone_set("'.$_POST['timezone'].'");
 
 // External Authentification
 //define("AUTH_PATH", "/path/to/customauth.php");
@@ -182,10 +186,7 @@ define("WSURL", BASE_URL . "/workspace");
 //define("COMMITURL", "https://api.github.com/repos/Codiad/Codiad/commits");
 ';
 
-    saveFile($config,$config_data);
+    saveFile($config, $config_data);
 
-    echo("success");
-
+    echo 'success';
 }
-
-?>

@@ -1,14 +1,13 @@
 <?php
 
-class ControllerReportCustomerStatement extends Controller {
-
-
+class ControllerReportCustomerStatement extends Controller
+{
     public function index()
     {
-        
     }
 
-    public function indexeqweqweqwe() {
+    public function indexeqweqweqwe()
+    {
         $this->load->language('report/customer_order');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -40,51 +39,51 @@ class ControllerReportCustomerStatement extends Controller {
         $url = '';
 
         if (isset($this->request->get['filter_date_start'])) {
-            $url .= '&filter_date_start=' . $this->request->get['filter_date_start'];
+            $url .= '&filter_date_start='.$this->request->get['filter_date_start'];
         }
 
         if (isset($this->request->get['filter_date_end'])) {
-            $url .= '&filter_date_end=' . $this->request->get['filter_date_end'];
+            $url .= '&filter_date_end='.$this->request->get['filter_date_end'];
         }
 
         if (isset($this->request->get['filter_order_status_id'])) {
-            $url .= '&filter_order_status_id=' . $this->request->get['filter_order_status_id'];
+            $url .= '&filter_order_status_id='.$this->request->get['filter_order_status_id'];
         }
 
         if (isset($this->request->get['page'])) {
-            $url .= '&page=' . $this->request->get['page'];
+            $url .= '&page='.$this->request->get['page'];
         }
 
-        $data['breadcrumbs'] = array();
+        $data['breadcrumbs'] = [];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL')
-        );
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
+        ];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('report/customer_statement', 'token=' . $this->session->data['token'] . $url, 'SSL')
-        );
+            'href' => $this->url->link('report/customer_statement', 'token='.$this->session->data['token'].$url, 'SSL'),
+        ];
 
         $this->load->model('report/customer');
 
-        $data['customers'] = array();
+        $data['customers'] = [];
 
-        $filter_data = array(
+        $filter_data = [
             'filter_date_start' => $filter_date_start,
             'filter_date_end' => $filter_date_end,
             'filter_order_status_id' => $filter_order_status_id,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin')
-        );
+            'limit' => $this->config->get('config_limit_admin'),
+        ];
 
         $customer_total = $this->model_report_customer->getTotalOrders($filter_data);
 
         $results = $this->model_report_customer->getOrders($filter_data);
 
         foreach ($results as $result) {
-            $data['customers'][] = array(
+            $data['customers'][] = [
                 'customer' => $result['customer'],
                 'email' => $result['email'],
                 'customer_group' => $result['customer_group'],
@@ -92,8 +91,8 @@ class ControllerReportCustomerStatement extends Controller {
                 'orders' => $result['orders'],
                 'products' => $result['products'],
                 'total' => $this->currency->format($result['total'], $this->config->get('config_currency')),
-                'edit' => $this->url->link('sale/customer/edit', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'] . $url, 'SSL')
-            );
+                'edit' => $this->url->link('sale/customer/edit', 'token='.$this->session->data['token'].'&customer_id='.$result['customer_id'].$url, 'SSL'),
+            ];
         }
 
         $data['heading_title'] = $this->language->get('heading_title');
@@ -130,22 +129,22 @@ class ControllerReportCustomerStatement extends Controller {
         $url = '';
 
         if (isset($this->request->get['filter_date_start'])) {
-            $url .= '&filter_date_start=' . $this->request->get['filter_date_start'];
+            $url .= '&filter_date_start='.$this->request->get['filter_date_start'];
         }
 
         if (isset($this->request->get['filter_date_end'])) {
-            $url .= '&filter_date_end=' . $this->request->get['filter_date_end'];
+            $url .= '&filter_date_end='.$this->request->get['filter_date_end'];
         }
 
         if (isset($this->request->get['filter_order_status_id'])) {
-            $url .= '&filter_order_status_id=' . $this->request->get['filter_order_status_id'];
+            $url .= '&filter_order_status_id='.$this->request->get['filter_order_status_id'];
         }
 
         $pagination = new Pagination();
         $pagination->total = $customer_total;
         $pagination->page = $page;
         $pagination->limit = $this->config->get('config_limit_admin');
-        $pagination->url = $this->url->link('report/customer_order', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+        $pagination->url = $this->url->link('report/customer_order', 'token='.$this->session->data['token'].$url.'&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
@@ -161,5 +160,4 @@ class ControllerReportCustomerStatement extends Controller {
 
         $this->response->setOutput($this->load->view('report/customer_statement.tpl', $data));
     }
-
 }

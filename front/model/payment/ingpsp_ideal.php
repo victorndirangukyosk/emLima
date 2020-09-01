@@ -6,8 +6,8 @@ class ModelPaymentIngpspIdeal extends Model
     {
         $this->load->language('payment/ingpsp_ideal');
 
-        $query = $this->db->query("SELECT * 
-            FROM ".DB_PREFIX."zone_to_geo_zone 
+        $query = $this->db->query('SELECT * 
+            FROM '.DB_PREFIX."zone_to_geo_zone 
             WHERE geo_zone_id = '".(int) $this->config->get('ing_ideal_geo_zone_id')."' 
             AND country_id = '".(int) $address['country_id']."' 
             AND (zone_id = '".(int) $address['zone_id']."' 
@@ -31,7 +31,7 @@ class ModelPaymentIngpspIdeal extends Model
                 'code' => 'ingpsp_ideal',
                 'title' => $this->language->get('text_title'),
                 'terms' => $this->language->get('text_payment_terms'),
-                'sort_order' => $this->config->get('ing_ideal_sort_order')
+                'sort_order' => $this->config->get('ing_ideal_sort_order'),
             ];
         }
 

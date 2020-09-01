@@ -1,13 +1,14 @@
 <?php
 
-class Url extends SmartObject {
-
+class Url extends SmartObject
+{
     protected $domain;
     protected $ssl;
-    protected $rewrite = array();
+    protected $rewrite = [];
     protected $config;
 
-    public function __construct($domain, $ssl = '', $registry = '') {
+    public function __construct($domain, $ssl = '', $registry = '')
+    {
         $this->domain = $domain;
         $this->ssl = $ssl;
 
@@ -16,35 +17,31 @@ class Url extends SmartObject {
         }
     }
 
-    public function addRewrite($rewrite) {
+    public function addRewrite($rewrite)
+    {
         $this->rewrite[] = $rewrite;
     }
 
-    public function link($route, $args = '', $secure = false) {
-        
+    public function link($route, $args = '', $secure = false)
+    {
         //print_r($route);
         if (empty($this->ssl)) {
             $this->ssl = str_replace('http://', 'https://', $this->domain);
         }
 
         if (is_object($this->config)) { // keep B/C alive
-
-
             $config_secure = $this->config->get('config_secure');
 
-        
-            if ($config_secure == 3) { // everywhere
+            if (3 == $config_secure) { // everywhere
                 $url = $this->ssl;
-            } else if (($config_secure == 2) and ( IS_ADMIN == false)) { // catalog
+            } elseif ((2 == $config_secure) and (IS_ADMIN == false)) { // catalog
                 $url = $this->ssl;
-            } else if (($config_secure == 1) and ( IS_ADMIN == false) and ( $secure == true)) { // checkout
+            } elseif ((1 == $config_secure) and (IS_ADMIN == false) and (true == $secure)) { // checkout
                 $url = $this->ssl;
             } else {
                 $url = $this->domain;
             }
         } else {
-            
-
             if ($secure) {
                 $url = $this->ssl;
             } else {
@@ -52,39 +49,37 @@ class Url extends SmartObject {
             }
         }
 
-
-        
         // fix if admin forgot the trailing slash
-        if (substr($url, -1) != '/') {
-           //$url .= '/mvggrocery/';
+        if ('/' != substr($url, -1)) {
+            //$url .= '/mvggrocery/';
         }
-        
 
-        if($route == 'common/home') {
+        if ('common/home' == $route) {
             return $url;
         }
-        
-        $url .= 'index.php?path=' . $route;
-       
-       /*echo "url 1";
-        echo $args;*/
-        
+
+        $url .= 'index.php?path='.$route;
+
+        /*echo "url 1";
+         echo $args;*/
+
         if ($args) {
-            $url .= str_replace('&', '&amp;', '&' . ltrim($args, '&'));
+            $url .= str_replace('&', '&amp;', '&'.ltrim($args, '&'));
         }
 
-         // echo "url final";
-         // echo $url;
+        // echo "url final";
+        // echo $url;
         // echo "end@";
         foreach ($this->rewrite as $rewrite) {
-            $url = $rewrite->rewrite($url);     
+            $url = $rewrite->rewrite($url);
         }
         /*echo "final@@";
         echo $url;die;*/
         return $url;
     }
 
-    public function getDomain($secure = false) {
+    public function getDomain($secure = false)
+    {
         if (!$secure) {
             $domain = $this->get('domain');
         } else {
@@ -98,15 +93,17 @@ class Url extends SmartObject {
         return $domain;
     }
 
-    public function getSubdomain() {
+    public function getSubdomain()
+    {
         return $this->getFullUrl(true);
     }
 
-    public function getFullUrl($path_only = false, $host_only = false) {
+    public function getFullUrl($path_only = false, $host_only = false)
+    {
         $url = '';
 
-        if ($host_only == false) {
-            if (strpos(php_sapi_name(), 'cgi') !== false && !ini_get('cgi.fix_pathinfo') && !empty($_SERVER['REQUEST_URI'])) {
+        if (false == $host_only) {
+            if (false !== strpos(php_sapi_name(), 'cgi') && !ini_get('cgi.fix_pathinfo') && !empty($_SERVER['REQUEST_URI'])) {
                 $script_name = $_SERVER['PHP_SELF'];
             } else {
                 $script_name = $_SERVER['SCRIPT_NAME'];
@@ -115,57 +112,55 @@ class Url extends SmartObject {
             $url = rtrim(dirname($script_name), '/.\\');
         }
 
-        if ($path_only == false) {
+        if (false == $path_only) {
             $port = 'http://';
-            if (isset($_SERVER['HTTPS']) && (($_SERVER['HTTPS'] == 'on') || ($_SERVER['HTTPS'] == '1'))) {
+            if (isset($_SERVER['HTTPS']) && (('on' == $_SERVER['HTTPS']) || ('1' == $_SERVER['HTTPS']))) {
                 $port = 'https://';
             }
 
-            $url = $port . $_SERVER['HTTP_HOST'] . $url;
+            $url = $port.$_SERVER['HTTP_HOST'].$url;
         }
 
-        if (substr($url, -1) != '/') {
-           // $url .= '/mvggrocery/';
+        if ('/' != substr($url, -1)) {
+            // $url .= '/mvggrocery/';
         }
 
         return $url;
     }
 
-    public function adminLink($route, $args = '', $secure = false) {
-        
+    public function adminLink($route, $args = '', $secure = false)
+    {
         //print_r($route);
         $url = HTTPS_CATALOG;
 
         //echo "<pre>";print_r($url);die;
-        
-        // fix if admin forgot the trailing slash
-        if (substr($url, -1) != '/') {
-           //$url .= '/mvggrocery/';
-        }
-        
 
-        if($route == 'common/home') {
+        // fix if admin forgot the trailing slash
+        if ('/' != substr($url, -1)) {
+            //$url .= '/mvggrocery/';
+        }
+
+        if ('common/home' == $route) {
             return $url;
         }
-        
-        $url .= 'index.php?path=' . $route;
-       
-       /*echo "url 1";
-        echo $args;*/
-        
+
+        $url .= 'index.php?path='.$route;
+
+        /*echo "url 1";
+         echo $args;*/
+
         if ($args) {
-            $url .= str_replace('&', '&amp;', '&' . ltrim($args, '&'));
+            $url .= str_replace('&', '&amp;', '&'.ltrim($args, '&'));
         }
 
         // echo "url final";
         // echo $url;
         // echo "end@";
         foreach ($this->rewrite as $rewrite) {
-            $url = $rewrite->rewrite($url);     
+            $url = $rewrite->rewrite($url);
         }
         /*echo "final@@";
         echo $url;die;*/
         return $url;
     }
-    
 }

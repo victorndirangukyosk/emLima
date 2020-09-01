@@ -1,14 +1,14 @@
 <?php
 
-class ControllerProductStore extends Controller {
-
-    public function index() {
-
+class ControllerProductStore extends Controller
+{
+    public function index()
+    {
         //echo "cer";die;
         //echo "<pre>";
         //print_r($_COOKIE);die;
         if (!isset($this->session->data['customer_id'])) {
-            if (isset($_REQUEST['action']) && ($_REQUEST['action'] == 'shop')) {
+            if (isset($_REQUEST['action']) && ('shop' == $_REQUEST['action'])) {
                 $this->response->redirect($this->url->link('account/login/customer'));
             } else {
                 /* REMOVED FOR HOME PAGE ON DOMINE NAME
@@ -29,7 +29,7 @@ class ControllerProductStore extends Controller {
                 $data['wishlist'] = $this->url->link('account/wishlist', '', 'SSL');
                 $data['logged'] = $this->customer->isLogged();
                 $data['account'] = $this->url->link('account/account', '', 'SSL');
-        $data['dashboard'] = $this->url->link('account/dashboard', '', 'SSL');
+                $data['dashboard'] = $this->url->link('account/dashboard', '', 'SSL');
 
                 $data['register'] = $this->url->link('account/register', '', 'SSL');
                 $data['login'] = $this->url->link('account/login', '', 'SSL');
@@ -54,11 +54,9 @@ class ControllerProductStore extends Controller {
 
 //    echo "<pre>";print_r($data);die;
 
-                $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/index.tpl', $data));
+                $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/landing_page/index.tpl', $data));
             }
         }
-
-
 
         if (isset($this->request->get['store_id'])) {
             $this->session->data['config_store_id'] = $this->request->get['store_id'];
@@ -77,9 +75,7 @@ class ControllerProductStore extends Controller {
 
         $this->load->model('assets/product');
 
-
-
-        $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_categories.css');
+        $this->document->addStyle('front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_categories.css');
 
         $this->load->model('tool/image');
 
@@ -113,13 +109,12 @@ class ControllerProductStore extends Controller {
             $limit = $this->config->get('config_product_limit');
         }
 
-        $data['breadcrumbs'] = array();
+        $data['breadcrumbs'] = [];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home')
-        );
-
+            'href' => $this->url->link('common/home'),
+        ];
 
         if (isset($this->session->data['config_store_id'])) {
             $store_id = $this->session->data['config_store_id'];
@@ -166,9 +161,6 @@ class ControllerProductStore extends Controller {
               } */
         }
 
-
-
-
         $data['text_refine'] = $this->language->get('text_refine');
         $data['text_change_locality_warning'] = $this->language->get('text_change_locality_warning');
         $data['text_change_location_name'] = $this->language->get('text_change_location_name');
@@ -180,7 +172,7 @@ class ControllerProductStore extends Controller {
         $data['text_price'] = $this->language->get('text_price');
         $data['text_tax'] = $this->language->get('text_tax');
         $data['text_points'] = $this->language->get('text_points');
-        $data['text_compare'] = sprintf($this->language->get('text_compare'), ( isset($this->session->data['compare']) ? count($this->session->data['compare']) : 0));
+        $data['text_compare'] = sprintf($this->language->get('text_compare'), (isset($this->session->data['compare']) ? count($this->session->data['compare']) : 0));
         $data['text_sort'] = $this->language->get('text_sort');
         $data['text_limit'] = $this->language->get('text_limit');
         $data['text_incart'] = $this->language->get('text_incart');
@@ -214,7 +206,6 @@ class ControllerProductStore extends Controller {
         if (!$this->customer->isLogged()) {
             $data['checkout_link'] = $this->url->link('checkout/checkout');
         } else {
-
             //get listes
             $data['lists'] = $this->model_assets_category->getUserLists();
             $data['checkout_link'] = $this->url->link('checkout/checkout#collapseTwo');
@@ -233,18 +224,15 @@ class ControllerProductStore extends Controller {
             $data['banner_logo'] = $this->model_tool_image->resize('placeholder.png', 800, 450);
         }
 
-
         //echo "<pre>";print_r($store_info);die;
         if ($store_info['banner_logo_status']) {
             //echo "<pre>";print_r("Ce");die;
             if (isset($this->session->data['show_banner']) && !$this->session->data['show_banner']) {
-                
             } else {
                 $this->session->data['show_banner'] = false;
                 $data['show_banner'] = true;
             }
         }
-
 
         $data['description'] = '';
         //html_entity_decode($store_info['description'], ENT_QUOTES, 'UTF-8');
@@ -253,134 +241,130 @@ class ControllerProductStore extends Controller {
         $url = '';
 
         if (isset($this->request->get['filter'])) {
-            $url .= '&filter=' . $this->request->get['filter'];
+            $url .= '&filter='.$this->request->get['filter'];
         }
 
         if (isset($this->request->get['sort'])) {
-            $url .= '&sort=' . $this->request->get['sort'];
+            $url .= '&sort='.$this->request->get['sort'];
         }
 
         if (isset($this->request->get['order'])) {
-            $url .= '&order=' . $this->request->get['order'];
+            $url .= '&order='.$this->request->get['order'];
         }
 
         if (isset($this->request->get['limit'])) {
-            $url .= '&limit=' . $this->request->get['limit'];
+            $url .= '&limit='.$this->request->get['limit'];
         }
 
-        $data['categories'] = array();
-
-
+        $data['categories'] = [];
 
         //$results = $this->model_assets_category->getCategoryByStore(0);
         $results = $this->model_assets_category->getCategoryByStoreId($store_id, 0);
 
         //echo "<pre>";print_r($results);die;
         foreach ($results as $result) {
-            $filter_data = array(
+            $filter_data = [
                 'filter_category_id' => $result['category_id'],
                 'filter_sub_category' => true,
                 'start' => 0,
                 'limit' => 500,
-                'store_id' => $store_id
-            );
+                'store_id' => $store_id,
+            ];
 
             $image = $this->model_tool_image->resize($result['image'], $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height'));
 
-            $data['categories'][] = array(
+            $data['categories'][] = [
                 'name' => $result['name'],
                 'products' => $this->getProducts($filter_data),
-                'href' => $this->url->link('product/category', 'category=' . $result['category_id'] . $url),
-                'thumb' => $image
-            );
+                'href' => $this->url->link('product/category', 'category='.$result['category_id'].$url),
+                'thumb' => $image,
+            ];
 
 //            echo "<pre>";print_r($data['categories']);die;
         }
-
 
         $template = 'top_category.tpl';
 
         $url = '';
 
         if (isset($this->request->get['filter'])) {
-            $url .= '&filter=' . $this->request->get['filter'];
+            $url .= '&filter='.$this->request->get['filter'];
         }
 
         if (isset($this->request->get['limit'])) {
-            $url .= '&limit=' . $this->request->get['limit'];
+            $url .= '&limit='.$this->request->get['limit'];
         }
 
-        $data['sorts'] = array();
+        $data['sorts'] = [];
 
-        $data['sorts'][] = array(
+        $data['sorts'][] = [
             'text' => $this->language->get('text_default'),
             'value' => 'p.sort_order-ASC',
-            'href' => $this->url->link('product/store', 'sort=p.sort_order&order=ASC' . $url)
-        );
+            'href' => $this->url->link('product/store', 'sort=p.sort_order&order=ASC'.$url),
+        ];
 
-        $data['sorts'][] = array(
+        $data['sorts'][] = [
             'text' => $this->language->get('text_name_asc'),
             'value' => 'pd.name-ASC',
-            'href' => $this->url->link('product/store', 'sort=pd.name&order=ASC' . $url)
-        );
+            'href' => $this->url->link('product/store', 'sort=pd.name&order=ASC'.$url),
+        ];
 
-        $data['sorts'][] = array(
+        $data['sorts'][] = [
             'text' => $this->language->get('text_name_desc'),
             'value' => 'pd.name-DESC',
-            'href' => $this->url->link('product/store', 'sort=pd.name&order=DESC' . $url)
-        );
+            'href' => $this->url->link('product/store', 'sort=pd.name&order=DESC'.$url),
+        ];
 
-        $data['sorts'][] = array(
+        $data['sorts'][] = [
             'text' => $this->language->get('text_price_asc'),
             'value' => 'p.price-ASC',
-            'href' => $this->url->link('product/store', 'sort=p.price&order=ASC' . $url)
-        );
+            'href' => $this->url->link('product/store', 'sort=p.price&order=ASC'.$url),
+        ];
 
-        $data['sorts'][] = array(
+        $data['sorts'][] = [
             'text' => $this->language->get('text_price_desc'),
             'value' => 'p.price-DESC',
-            'href' => $this->url->link('product/store', 'sort=p.price&order=DESC' . $url)
-        );
+            'href' => $this->url->link('product/store', 'sort=p.price&order=DESC'.$url),
+        ];
 
-
-        $data['sorts'][] = array(
+        $data['sorts'][] = [
             'text' => $this->language->get('text_model_asc'),
             'value' => 'p.model-ASC',
-            'href' => $this->url->link('product/store', 'sort=p.model&order=ASC' . $url)
-        );
+            'href' => $this->url->link('product/store', 'sort=p.model&order=ASC'.$url),
+        ];
 
-        $data['sorts'][] = array(
+        $data['sorts'][] = [
             'text' => $this->language->get('text_model_desc'),
             'value' => 'p.model-DESC',
-            'href' => $this->url->link('product/store', 'sort=p.model&order=DESC' . $url)
-        );
+            'href' => $this->url->link('product/store', 'sort=p.model&order=DESC'.$url),
+        ];
 
         $url = '';
 
         if (isset($this->request->get['filter'])) {
-            $url .= '&filter=' . $this->request->get['filter'];
+            $url .= '&filter='.$this->request->get['filter'];
         }
 
         if (isset($this->request->get['sort'])) {
-            $url .= '&sort=' . $this->request->get['sort'];
+            $url .= '&sort='.$this->request->get['sort'];
         }
 
         if (isset($this->request->get['order'])) {
-            $url .= '&order=' . $this->request->get['order'];
+            $url .= '&order='.$this->request->get['order'];
         }
 
-        $data['limits'] = array();
+        $data['limits'] = [];
 
-        $limits = array_unique(array($this->config->get('config_product_limit'), 25, 50, 75, 100));
+        $limits = array_unique([$this->config->get('config_product_limit'), 25, 50, 75, 100]);
 
         sort($limits);
 
         foreach ($limits as $value) {
-            $data['limits'][] = array(
+            $data['limits'][] = [
                 'text' => $value,
                 'value' => $value,
-                'href' => $this->url->link('product/store', $url . '&limit=' . $value)
-            );
+                'href' => $this->url->link('product/store', $url.'&limit='.$value),
+            ];
         }
 
         $data['sort'] = $sort;
@@ -440,16 +424,16 @@ class ControllerProductStore extends Controller {
 
         //$data['offer_products'] = $this->model_assets_product->getOffersByStore($store_id);
 
-        $filter_data = array(
+        $filter_data = [
             'filter_store_id' => $store_id,
             'start' => 0,
             'limit' => 6,
-        );
+        ];
 
-        $data['offer_products'] = array(
+        $data['offer_products'] = [
             //'products' => $this->getOfferProducts( $filter_data )
-            'products' => $this->getOfferProductsBySpecialPrice($filter_data)
-        );
+            'products' => $this->getOfferProductsBySpecialPrice($filter_data),
+        ];
 
         //echo "<pre>";print_r($data['offer_products']);die;
 
@@ -464,18 +448,18 @@ class ControllerProductStore extends Controller {
         $data['not_delivery'] = $not_delivery;
         $data['change_store'] = $this->url->link('common/home/show_home', '', 'SSL');
         //echo "<pre>";print_r($data);die;
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/product/' . $template)) {
+        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/product/'.$template)) {
             //mvgv2/template/product/top_category.tpl
             // echo "<pre>";print_r($this->config->get( 'config_template' ) . '/template/product/'.$template);die;
-            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/product/' . $template, $data));
+            $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/product/'.$template, $data));
         } else {
-            $this->response->setOutput($this->load->view('default/template/product/' . $template, $data));
+            $this->response->setOutput($this->load->view('default/template/product/'.$template, $data));
         }
     }
 
     //get variation html
-    public function getVariation() {
-
+    public function getVariation()
+    {
         $product_store_id = $this->request->get['product_id'];
         $store_product_variation_id = $this->request->get['variation_id'];
 
@@ -488,7 +472,6 @@ class ControllerProductStore extends Controller {
         $variation = $this->model_assets_product->getVariation($store_product_variation_id);
         //get product
 
-
         $data['product'] = $this->model_assets_product->getProduct($product_store_id);
 
         $s_price = 0;
@@ -496,13 +479,11 @@ class ControllerProductStore extends Controller {
         $percent_off = null;
         $json['percent_off'] = null;
 
-        $json = array();
+        $json = [];
         if ($variation) {
-            //get image  
+            //get image
 
-
-
-            $data['images'] = array();
+            $data['images'] = [];
 
             if ($variation['image']) {
                 $thumb = $this->model_tool_image->resize($product_info['image'], 362, 317);
@@ -510,10 +491,10 @@ class ControllerProductStore extends Controller {
                 $thumb = $this->model_tool_image->resize('placeholder.png', 362, 317);
             }
 
-            $data['images'][] = array(
+            $data['images'][] = [
                 'popup' => $thumb,
-                'thumb' => $thumb
-            );
+                'thumb' => $thumb,
+            ];
 
             if ($variation['image']) {
                 $json['image'] = $this->model_tool_image->resize($variation['image'], $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
@@ -522,7 +503,6 @@ class ControllerProductStore extends Controller {
             }
 
             if ($variation['name']) {
-
                 $json['product_unit'] = $variation['unit'] ? $variation['unit'] : false;
 
                 $json['product_name'] = $variation['name'];
@@ -535,10 +515,10 @@ class ControllerProductStore extends Controller {
 
             //get qty in cart
 
-            $data['product']['key'] = $key = base64_encode(serialize(array('product_store_id' => (int) $data['product']['product_store_id'], 'store_product_variation_id' => (int) $store_product_variation_id, 'store_id' => $this->session->data['config_store_id'])));
+            $data['product']['key'] = $key = base64_encode(serialize(['product_store_id' => (int) $data['product']['product_store_id'], 'store_product_variation_id' => (int) $store_product_variation_id, 'store_id' => $this->session->data['config_store_id']]));
 
             //get price html
-            if (( $this->config->get('config_customer_price') && $this->customer->isLogged() ) || !$this->config->get('config_customer_price')) {
+            if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
                 $price = $this->currency->format($this->tax->calculate($variation['price'], $data['product']['tax_class_id'], $this->config->get('config_tax')));
 
                 $o_price = $this->tax->calculate($variation['price'], $data['product']['tax_class_id'], $this->config->get('config_tax'));
@@ -554,8 +534,7 @@ class ControllerProductStore extends Controller {
                 $special = false;
             }
 
-
-            $tax = $this->currency->format((float) $variation['special_price'] ? $variation['special_price'] : $variation['price'] );
+            $tax = $this->currency->format((float) $variation['special_price'] ? $variation['special_price'] : $variation['price']);
 
             $json['price_html'] = '';
 
@@ -573,13 +552,11 @@ class ControllerProductStore extends Controller {
             }
 
             $percent_off = null;
-            if (isset($s_price) && isset($o_price) && $o_price != 0 && $s_price != 0) {
+            if (isset($s_price) && isset($o_price) && 0 != $o_price && 0 != $s_price) {
                 $percent_off = (($o_price - $s_price) / $o_price) * 100;
 
                 $json['percent_off'] = number_format($percent_off, 0);
             }
-
-
 
             /* if ( $tax ) {
               $json['price_html'] .= '<span class="price-tax">';
@@ -589,7 +566,7 @@ class ControllerProductStore extends Controller {
               } */
         } else {
             //get image
-            $data['images'] = array();
+            $data['images'] = [];
 
             if (isset($data['product']['image'])) {
                 $json['image'] = $this->model_tool_image->resize($data['product']['image'], $this->config->get('config_image_thumb_width'), $this->config->get('config_image_thumb_height'));
@@ -601,27 +578,24 @@ class ControllerProductStore extends Controller {
                 $json['zoom_image'] = $this->model_tool_image->resize('placeholder.png', $this->config->get('config_zoomimage_thumb_width'), $this->config->get('config_zoomimage_thumb_height'));
             }
 
-            $data['images'][] = array(
+            $data['images'][] = [
                 'popup' => $json['image'],
                 'thumb' => $json['image'],
                 'zoom_thumb' => $json['zoom_image'],
-                'zoom_popup' => $json['zoom_image']
-            );
+                'zoom_popup' => $json['zoom_image'],
+            ];
 
             $results = $this->model_assets_product->getProductImages($data['product']['product_id']);
             foreach ($results as $result) {
-                $data['images'][] = array(
+                $data['images'][] = [
                     'popup' => $this->model_tool_image->resize($result['image'], $this->config->get('config_image_thumb_width'), $this->config->get('config_image_thumb_height')),
                     'thumb' => $this->model_tool_image->resize($result['image'], $this->config->get('config_image_thumb_width'), $this->config->get('config_image_thumb_height')),
                     'zoom_thumb' => $this->model_tool_image->resize($result['image'], $this->config->get('config_zoomimage_thumb_width'), $this->config->get('config_zoomimage_thumb_height')),
-                    'zoom_popup' => $this->model_tool_image->resize($result['image'], $this->config->get('config_zoomimage_thumb_width'), $this->config->get('config_zoomimage_thumb_height'))
-                );
+                    'zoom_popup' => $this->model_tool_image->resize($result['image'], $this->config->get('config_zoomimage_thumb_width'), $this->config->get('config_zoomimage_thumb_height')),
+                ];
             }
 
-
-
             if (isset($data['product']['name'])) {
-
                 $json['product_unit'] = $data['product']['unit'] ? $data['product']['unit'] : false;
 
                 $json['product_name'] = $data['product']['name'];
@@ -637,12 +611,11 @@ class ControllerProductStore extends Controller {
 
             $data['product']['minimum'] = $data['product']['min_quantity'] > 0 ? $data['product']['min_quantity'] : $data['product']['quantity'];
 
-
             //get qty in cart
-            $data['product']['key'] = $key = base64_encode(serialize(array('product_store_id' => (int) $data['product']['product_store_id'], 'store_id' => $this->session->data['config_store_id'])));
+            $data['product']['key'] = $key = base64_encode(serialize(['product_store_id' => (int) $data['product']['product_store_id'], 'store_id' => $this->session->data['config_store_id']]));
 
             //get price html
-            if (( $this->config->get('config_customer_price') && $this->customer->isLogged() ) || !$this->config->get('config_customer_price')) {
+            if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
                 $price = $this->currency->format($data['product']['price']);
 
                 $o_price = $data['product']['price'];
@@ -667,7 +640,7 @@ class ControllerProductStore extends Controller {
             }
 
             if ($this->config->get('config_tax')) {
-                $tax = $this->currency->format((float) $data['product']['special_price'] ? $data['product']['special_price'] : $data['product']['price'] );
+                $tax = $this->currency->format((float) $data['product']['special_price'] ? $data['product']['special_price'] : $data['product']['price']);
             } else {
                 $tax = 0;
             }
@@ -688,7 +661,7 @@ class ControllerProductStore extends Controller {
             }
 
             $percent_off = null;
-            if (isset($s_price) && isset($o_price) && $o_price != 0 && $s_price != 0) {
+            if (isset($s_price) && isset($o_price) && 0 != $o_price && 0 != $s_price) {
                 $percent_off = (($o_price - $s_price) / $o_price) * 100;
 
                 $json['percent_off'] = number_format($percent_off, 0);
@@ -697,10 +670,9 @@ class ControllerProductStore extends Controller {
 
         $json['image_html'] = '';
         foreach ($data['images'] as $images) {
-
             $json['image_html'] .= '<div class="easyzoom easyzoom--overlay">
-                                        <a href="' . $images['zoom_popup'] . '">
-                                            <img src="' . $images['popup'] . '" alt="" />
+                                        <a href="'.$images['zoom_popup'].'">
+                                            <img src="'.$images['popup'].'" alt="" />
                                         </a>
                                     </div>';
         }
@@ -713,30 +685,30 @@ class ControllerProductStore extends Controller {
 
         //echo "<pre>";print_r($json);die;
         //get action html
-        $json['action_html'] = $this->load->view($this->config->get('config_template') . '/template/product/popup_unit_action.tpl', $data);
+        $json['action_html'] = $this->load->view($this->config->get('config_template').'/template/product/popup_unit_action.tpl', $data);
 
         echo json_encode($json);
     }
 
-    public function getProducts($filter_data) {
+    public function getProducts($filter_data)
+    {
         $cachePrice_data = $this->cache->get('category_price_data');
         $this->load->model('assets/product');
         $this->load->model('tool/image');
-
 
         $results = $this->model_assets_product->getProducts($filter_data);
 
 //        echo '<pre>';print_r($results); die;
 
-        $data['products'] = array();
+        $data['products'] = [];
 
         foreach ($results as $result) {
-
-            // if qty less then 1 dont show product 
-            if ($result['quantity'] <= 0)
+            // if qty less then 1 dont show product
+            if ($result['quantity'] <= 0) {
                 continue;
+            }
 
-            if (file_exists(DIR_IMAGE . $result['image'])) {
+            if (file_exists(DIR_IMAGE.$result['image'])) {
                 $image = $this->model_tool_image->resize($result['image'], $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
             } else {
                 $image = $this->model_tool_image->resize('placeholder.png', $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
@@ -750,7 +722,7 @@ class ControllerProductStore extends Controller {
 
             if (!$this->config->get('config_inclusiv_tax')) {
                 //get price html
-                if (( $this->config->get('config_customer_price') && $this->customer->isLogged() ) || !$this->config->get('config_customer_price')) {
+                if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
                     $price = $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')));
 
                     $o_price = $this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax'));
@@ -765,7 +737,7 @@ class ControllerProductStore extends Controller {
                     $special_price = false;
                 }
             } else {
-                if (( $this->config->get('config_customer_price') && $this->customer->isLogged() ) || !$this->config->get('config_customer_price')) {
+                if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
                     $price = $this->currency->format($result['price']);
                 } else {
                     $price = $result['price'];
@@ -777,31 +749,28 @@ class ControllerProductStore extends Controller {
                     $special_price = $result['special_price'];
                 }
 
-
                 $s_price = $result['special_price'];
                 $o_price = $result['price'];
 
-                if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$result['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $filter_data['store_id']])) {
-                    $s_price = $cachePrice_data[$result['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $filter_data['store_id']];
-                    $o_price = $cachePrice_data[$result['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $filter_data['store_id']];
+                if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$result['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$filter_data['store_id']])) {
+                    $s_price = $cachePrice_data[$result['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$filter_data['store_id']];
+                    $o_price = $cachePrice_data[$result['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$filter_data['store_id']];
                     $special_price = $this->currency->format($s_price);
                     $price = $this->currency->format($o_price);
                 }
             }
 
-
             //get qty in cart
             if (!empty($this->session->data['config_store_id'])) {
-                $key = base64_encode(serialize(array('product_store_id' => (int) $result['product_store_id'], 'store_id' => $this->session->data['config_store_id'])));
+                $key = base64_encode(serialize(['product_store_id' => (int) $result['product_store_id'], 'store_id' => $this->session->data['config_store_id']]));
             } else {
-                $key = base64_encode(serialize(array('product_store_id' => (int) $result['product_store_id'], 'store_id' => $filter_data['store_id'])));
+                $key = base64_encode(serialize(['product_store_id' => (int) $result['product_store_id'], 'store_id' => $filter_data['store_id']]));
             }
             if (isset($this->session->data['cart'][$key])) {
                 $qty_in_cart = $this->session->data['cart'][$key]['quantity'];
             } else {
                 $qty_in_cart = 0;
             }
-
 
             //$result['name'] = strlen($result['name']) > 27 ? substr($result['name'],0,27)."..." : $result['name'];
             $name = $result['name'];
@@ -811,30 +780,28 @@ class ControllerProductStore extends Controller {
 
             //$name .= str_repeat('&nbsp;',30 - strlen($result['name']));
 
-
-
             $percent_off = null;
-            if (isset($s_price) && isset($o_price) && $o_price != 0 && $s_price != 0) {
+            if (isset($s_price) && isset($o_price) && 0 != $o_price && 0 != $s_price) {
                 $percent_off = (($o_price - $s_price) / $o_price) * 100;
             }
 
             // Avoid adding duplicates for similar products with different variations
 
             $productNames = array_column($data['products'], 'name');
-            if (array_search($result['name'], $productNames) !== false) {
+            if (false !== array_search($result['name'], $productNames)) {
                 // Add variation to existing product
                 $productIndex = array_search($result['name'], $productNames);
                 // TODO: Check for product variation duplicates
-                $data['products'][$productIndex][variations][] = array(
+                $data['products'][$productIndex][variations][] = [
                     'variation_id' => $result['product_store_id'],
                     'unit' => $result['unit'],
                     'weight' => floatval($result['weight']),
                     'price' => $price,
-                    'special' => $special_price
-                );
+                    'special' => $special_price,
+                ];
             } else {
                 // Add as new product
-                $data['products'][] = array(
+                $data['products'][] = [
                     'key' => $key,
                     'qty_in_cart' => $qty_in_cart,
                     'variations' => $this->model_assets_product->getVariations($result['product_store_id']),
@@ -844,44 +811,44 @@ class ControllerProductStore extends Controller {
                     'default_variation_name' => $result['default_variation_name'],
                     'thumb' => $image,
                     'name' => $name,
-                    'variations' => array(
-                        array(
+                    'variations' => [
+                        [
                             'variation_id' => $result['product_store_id'],
                             'unit' => $result['unit'],
                             'weight' => floatval($result['weight']),
                             'price' => $price,
-                            'special' => $special_price
-                        )
-                    ),
-                    'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('config_product_description_length')) . '..',
+                            'special' => $special_price,
+                        ],
+                    ],
+                    'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('config_product_description_length')).'..',
                     'percent_off' => number_format($percent_off, 0),
                     'tax' => $result['tax_percentage'],
                     'minimum' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity'],
                     'rating' => 0,
-                    'href' => $this->url->link('product/product', '&product_store_id=' . $result['product_store_id'])
-                );
+                    'href' => $this->url->link('product/product', '&product_store_id='.$result['product_store_id']),
+                ];
             }
         }
+
         return $data['products'];
     }
 
-    public function getOfferProductsBySpecialPrice($filter_data) {
+    public function getOfferProductsBySpecialPrice($filter_data)
+    {
         $this->load->model('assets/product');
         $this->load->model('tool/image');
-
 
         $results = $this->model_assets_product->getOfferProductsBySpecialPrice($filter_data);
 
-
         //echo "<pre>";print_r($results);die;
-        $data['products'] = array();
+        $data['products'] = [];
 
         foreach ($results as $result) {
-
-            if ($result['quantity'] <= 0)
+            if ($result['quantity'] <= 0) {
                 continue;
+            }
 
-            if (file_exists(DIR_IMAGE . $result['image'])) {
+            if (file_exists(DIR_IMAGE.$result['image'])) {
                 $image = $this->model_tool_image->resize($result['image'], $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
             } else {
                 $image = $this->model_tool_image->resize('placeholder.png', $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
@@ -895,7 +862,7 @@ class ControllerProductStore extends Controller {
 
             if (!$this->config->get('config_inclusiv_tax')) {
                 //get price html
-                if (( $this->config->get('config_customer_price') && $this->customer->isLogged() ) || !$this->config->get('config_customer_price')) {
+                if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
                     $price = $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')));
 
                     $o_price = $this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax'));
@@ -910,7 +877,7 @@ class ControllerProductStore extends Controller {
                     $special_price = false;
                 }
             } else {
-                if (( $this->config->get('config_customer_price') && $this->customer->isLogged() ) || !$this->config->get('config_customer_price')) {
+                if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
                     $price = $this->currency->format($result['price']);
                 } else {
                     $price = $result['price'];
@@ -926,16 +893,14 @@ class ControllerProductStore extends Controller {
                 $o_price = $result['price'];
             }
 
-
             //get qty in cart
-            $key = base64_encode(serialize(array('product_store_id' => (int) $result['product_store_id'], 'store_id' => $this->session->data['config_store_id'])));
+            $key = base64_encode(serialize(['product_store_id' => (int) $result['product_store_id'], 'store_id' => $this->session->data['config_store_id']]));
 
             if (isset($this->session->data['cart'][$key])) {
                 $qty_in_cart = $this->session->data['cart'][$key]['quantity'];
             } else {
                 $qty_in_cart = 0;
             }
-
 
             //$result['name'] = strlen($result['name']) > 27 ? substr($result['name'],0,27)."..." : $result['name'];
             $name = $result['name'];
@@ -947,11 +912,11 @@ class ControllerProductStore extends Controller {
             //$name .= str_repeat('&nbsp;',30 - strlen($result['name']));
 
             $percent_off = null;
-            if (isset($s_price) && isset($o_price) && $o_price != 0 && $s_price != 0) {
+            if (isset($s_price) && isset($o_price) && 0 != $o_price && 0 != $s_price) {
                 $percent_off = (($o_price - $s_price) / $o_price) * 100;
             }
 
-            $data['products'][] = array(
+            $data['products'][] = [
                 'key' => $key,
                 'qty_in_cart' => $qty_in_cart,
                 'variations' => $this->model_assets_product->getVariations($result['product_store_id']),
@@ -962,37 +927,36 @@ class ControllerProductStore extends Controller {
                 'thumb' => $image,
                 'name' => $name,
                 'unit' => $result['unit'],
-                'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('config_product_description_length')) . '..',
+                'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('config_product_description_length')).'..',
                 'price' => $price,
                 'special' => $special_price,
                 'percent_off' => number_format($percent_off, 0),
                 'tax' => $result['tax_percentage'],
                 'minimum' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity'],
                 'rating' => 0,
-                'href' => $this->url->link('product/product', '&product_store_id=' . $result['product_store_id'])
-            );
+                'href' => $this->url->link('product/product', '&product_store_id='.$result['product_store_id']),
+            ];
         }
 
         return $data['products'];
     }
 
-    public function getOfferProducts($filter_data) {
+    public function getOfferProducts($filter_data)
+    {
         $this->load->model('assets/product');
         $this->load->model('tool/image');
 
-
         $results = $this->model_assets_product->getOfferProducts($filter_data);
 
-
         //echo "<pre>";print_r($results);die;
-        $data['products'] = array();
+        $data['products'] = [];
 
         foreach ($results as $result) {
-
-            if ($result['quantity'] <= 0)
+            if ($result['quantity'] <= 0) {
                 continue;
+            }
 
-            if (file_exists(DIR_IMAGE . $result['image'])) {
+            if (file_exists(DIR_IMAGE.$result['image'])) {
                 $image = $this->model_tool_image->resize($result['image'], $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
             } else {
                 $image = $this->model_tool_image->resize('placeholder.png', $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
@@ -1006,7 +970,7 @@ class ControllerProductStore extends Controller {
 
             if (!$this->config->get('config_inclusiv_tax')) {
                 //get price html
-                if (( $this->config->get('config_customer_price') && $this->customer->isLogged() ) || !$this->config->get('config_customer_price')) {
+                if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
                     $price = $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')));
 
                     $o_price = $this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax'));
@@ -1021,7 +985,7 @@ class ControllerProductStore extends Controller {
                     $special_price = false;
                 }
             } else {
-                if (( $this->config->get('config_customer_price') && $this->customer->isLogged() ) || !$this->config->get('config_customer_price')) {
+                if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
                     $price = $this->currency->format($result['price']);
                 } else {
                     $price = $result['price'];
@@ -1037,16 +1001,14 @@ class ControllerProductStore extends Controller {
                 $o_price = $result['price'];
             }
 
-
             //get qty in cart
-            $key = base64_encode(serialize(array('product_store_id' => (int) $result['product_store_id'], 'store_id' => $this->session->data['config_store_id'])));
+            $key = base64_encode(serialize(['product_store_id' => (int) $result['product_store_id'], 'store_id' => $this->session->data['config_store_id']]));
 
             if (isset($this->session->data['cart'][$key])) {
                 $qty_in_cart = $this->session->data['cart'][$key]['quantity'];
             } else {
                 $qty_in_cart = 0;
             }
-
 
             //$result['name'] = strlen($result['name']) > 27 ? substr($result['name'],0,27)."..." : $result['name'];
             $name = $result['name'];
@@ -1058,11 +1020,11 @@ class ControllerProductStore extends Controller {
             //$name .= str_repeat('&nbsp;',30 - strlen($result['name']));
 
             $percent_off = null;
-            if (isset($s_price) && isset($o_price) && $o_price != 0 && $s_price != 0) {
+            if (isset($s_price) && isset($o_price) && 0 != $o_price && 0 != $s_price) {
                 $percent_off = (($o_price - $s_price) / $o_price) * 100;
             }
 
-            $data['products'][] = array(
+            $data['products'][] = [
                 'key' => $key,
                 'qty_in_cart' => $qty_in_cart,
                 'variations' => $this->model_assets_product->getVariations($result['product_store_id']),
@@ -1073,38 +1035,34 @@ class ControllerProductStore extends Controller {
                 'thumb' => $image,
                 'name' => $name,
                 'unit' => $result['unit'],
-                'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('config_product_description_length')) . '..',
+                'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('config_product_description_length')).'..',
                 'price' => $price,
                 'special' => $special_price,
                 'percent_off' => number_format($percent_off, 0),
                 'tax' => $result['tax_percentage'],
                 'minimum' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity'],
                 'rating' => 0,
-                'href' => $this->url->link('product/product', '&product_store_id=' . $result['product_store_id'])
-            );
+                'href' => $this->url->link('product/product', '&product_store_id='.$result['product_store_id']),
+            ];
         }
 
         return $data['products'];
     }
 
-    public function toStoreList() {
+    public function toStoreList()
+    {
         unset($this->session->data['config_store_id']);
         $this->response->redirect($this->url->link('common/home/show_home'));
     }
 
-    public function getHeaderPlace($location) {
-
+    public function getHeaderPlace($location)
+    {
         if (isset($_COOKIE['location_name']) && !empty($_COOKIE['location_name'])) {
             $p = $_COOKIE['location_name'];
         } else {
-
-
-
-
             $p = '';
 
-            $userSearch = explode(",", $location);
-
+            $userSearch = explode(',', $location);
 
             if (count($userSearch) >= 2) {
                 $validateLat = is_numeric($userSearch[0]);
@@ -1114,19 +1072,16 @@ class ControllerProductStore extends Controller {
                 $validateLat4 = strpos($userSearch[1], '.');
 
                 if ($validateLat && $validateLat2 && $validateLat3 && $validateLat4) {
-
                     //echo "<pre>";print_r("er");die;
                     try {
-
-                        $url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' . urlencode($location) . '&sensor=false&key=' . $this->config->get('config_google_server_api_key');
-
+                        $url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='.urlencode($location).'&sensor=false&key='.$this->config->get('config_google_server_api_key');
 
                         //echo "<pre>";print_r($url);
                         $ch = curl_init();
                         curl_setopt($ch, CURLOPT_URL, $url);
-                        $headers = array(
-                            "Cache-Control: no-cache",
-                        );
+                        $headers = [
+                            'Cache-Control: no-cache',
+                        ];
                         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
                         curl_setopt($ch, CURLOPT_FRESH_CONNECT, 1);
 
@@ -1143,7 +1098,6 @@ class ControllerProductStore extends Controller {
                         //echo "<pre>";print_r($output);die;
                         if (isset($output)) {
                             foreach ($output->results[0]->address_components as $addres) {
-
                                 if (isset($addres->types)) {
                                     if (in_array('sublocality_level_1', $addres->types)) {
                                         //echo "<pre>";print_r($addres);die;
@@ -1157,10 +1111,9 @@ class ControllerProductStore extends Controller {
                             }
 
                             $_COOKIE['location_name'] = $p;
-                            setcookie('location_name', $p, time() + (86400 * 30 * 30 * 30 * 3), "/");
+                            setcookie('location_name', $p, time() + (86400 * 30 * 30 * 30 * 3), '/');
                         }
                     } catch (Exception $e) {
-                        
                     }
                 }
             }
@@ -1168,5 +1121,4 @@ class ControllerProductStore extends Controller {
 
         return $p;
     }
-
 }

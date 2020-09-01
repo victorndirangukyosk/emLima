@@ -6,9 +6,8 @@
     *  [root]/license.txt for more. This information must remain intact.
     */
 
-
-    require_once('../../common.php');
-    require_once('class.project.php');
+    require_once '../../common.php';
+    require_once 'class.project.php';
 
     //////////////////////////////////////////////////////////////////
     // Verify Session or Key
@@ -23,18 +22,24 @@
     //////////////////////////////////////////////////////////////////
 
     $no_return = false;
-    if(isset($_GET['no_return'])){ $no_return = true; }
+    if (isset($_GET['no_return'])) {
+        $no_return = true;
+    }
 
-    if($_GET['action']=='get_current'){
-        if(!isset($_SESSION['project'])){
+    if ('get_current' == $_GET['action']) {
+        if (!isset($_SESSION['project'])) {
             // Load default/first project
-            if($no_return){ $Project->no_return = true; }
+            if ($no_return) {
+                $Project->no_return = true;
+            }
             $Project->GetFirst();
-        }else{
+        } else {
             // Load current
             $Project->path = $_SESSION['project'];
             $project_name = $Project->GetName();
-            if(!$no_return){ echo formatJSEND("success",array("name"=>$project_name,"path"=>$_SESSION['project'])); }
+            if (!$no_return) {
+                echo formatJSEND('success', ['name' => $project_name, 'path' => $_SESSION['project']]);
+            }
         }
     }
 
@@ -42,9 +47,9 @@
     // Open Project
     //////////////////////////////////////////////////////////////////
 
-    if($_GET['action']=='open'){
+    if ('open' == $_GET['action']) {
         if (!checkPath($_GET['path'])) {
-            die(formatJSEND("error","No Access"));
+            die(formatJSEND('error', 'No Access'));
         }
         $Project->path = $_GET['path'];
         $Project->Open();
@@ -54,30 +59,30 @@
     // Create Project
     //////////////////////////////////////////////////////////////////
 
-    if($_GET['action']=='create'){
-        if(checkAccess()) {
+    if ('create' == $_GET['action']) {
+        if (checkAccess()) {
             $Project->name = $_GET['project_name'];
-            if($_GET['project_path'] != '') {
+            if ('' != $_GET['project_path']) {
                 $Project->path = $_GET['project_path'];
             } else {
                 $Project->path = $_GET['project_name'];
             }
             // Git Clone?
-            if(!empty($_GET['git_repo'])){
+            if (!empty($_GET['git_repo'])) {
                 $Project->gitrepo = $_GET['git_repo'];
                 $Project->gitbranch = $_GET['git_branch'];
             }
             $Project->Create();
         }
     }
-    
+
     //////////////////////////////////////////////////////////////////
     // Rename Project
     //////////////////////////////////////////////////////////////////
 
-    if($_GET['action']=='rename'){
+    if ('rename' == $_GET['action']) {
         if (!checkPath($_GET['project_path'])) {
-            die(formatJSEND("error","No Access"));
+            die(formatJSEND('error', 'No Access'));
         }
         $Project->path = $_GET['project_path'];
         $Project->Rename();
@@ -87,8 +92,8 @@
     // Delete Project
     //////////////////////////////////////////////////////////////////
 
-    if($_GET['action']=='delete'){
-        if(checkAccess()) {
+    if ('delete' == $_GET['action']) {
+        if (checkAccess()) {
             $Project->path = $_GET['project_path'];
             $Project->Delete();
         }
@@ -98,12 +103,10 @@
     // Return Current
     //////////////////////////////////////////////////////////////////
 
-    if($_GET['action']=='current'){
-        if(isset($_SESSION['project'])){
-            echo formatJSEND("success",$_SESSION['project']);
-        }else{
-            echo formatJSEND("error","No Project Returned");
+    if ('current' == $_GET['action']) {
+        if (isset($_SESSION['project'])) {
+            echo formatJSEND('success', $_SESSION['project']);
+        } else {
+            echo formatJSEND('error', 'No Project Returned');
         }
     }
-
-?>

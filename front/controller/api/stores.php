@@ -1,37 +1,33 @@
 <?php
 
-
 class ControllerApiStores extends Controller
 {
-     public function addNewstore($args = array()){
-           $this->load->model('api/stores');
+    public function addNewstore($args = [])
+    {
+        $this->load->model('api/stores');
 
-     
-            $store_id = $this->model_api_stores->addStore($args);
-            if($store_id){
+        $store_id = $this->model_api_stores->addStore($args);
+        if ($store_id) {
             $json['success'] = 'Store created successfully';
-			$json['status'] = 200;
-			$json['data'] = $args;
-       
-			
-			}else{
-				$json['status'] = 400;
-			}
-			$this->response->addHeader('Content-Type: application/json');
-			$this->response->setOutput(json_encode($json));
+            $json['status'] = 200;
+            $json['data'] = $args;
+        } else {
+            $json['status'] = 400;
+        }
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
 
-		
-	}
-    public function getStore($args = array())
+    public function getStore($args = [])
     {
         $this->load->language('api/products');
 
-        $json = array();
+        $json = [];
 
         //echo "api/product";
 
         //echo $args['id'];
-        if (!isset($this->session->data['api_id']) || !isset($args['id']) ) {
+        if (!isset($this->session->data['api_id']) || !isset($args['id'])) {
             $json['error'] = $this->language->get('error_permission');
         } else {
             $this->load->model('tool/image');
@@ -39,53 +35,51 @@ class ControllerApiStores extends Controller
             $this->load->model('setting/store');
 
             $json = $this->model_tool_image->getStore($args['id']);
-            $tempstoreCategories =  $this->model_setting_store->getStoreCategories($args['id']);
-            if(count($tempstoreCategories) > 0) {
+            $tempstoreCategories = $this->model_setting_store->getStoreCategories($args['id']);
+            if (count($tempstoreCategories) > 0) {
                 $temp_cat_stories = [];
                 foreach ($tempstoreCategories as $temp) {
                     $temp['thumb'] = $this->model_tool_image->resize($temp['image'], 300, 300);
-                    if($temp['parent_id'] == 0){
-                    array_push($temp_cat_stories, $temp);
+                    if (0 == $temp['parent_id']) {
+                        array_push($temp_cat_stories, $temp);
                     }
                 }
             }
-            
-            $json['categories'] = $temp_cat_stories;
 
+            $json['categories'] = $temp_cat_stories;
         }
-        
+
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
-    
-    public function getStores($args = array())
+
+    public function getStores($args = [])
     {
         $this->load->language('api/products');
 
-        $json = array();
+        $json = [];
 
         //echo "getStores";
         $this->load->model('api/stores');
 
         //echo $args['id'];
-        if (!isset($this->session->data['api_id']) ) {
+        if (!isset($this->session->data['api_id'])) {
             $json['error'] = $this->language->get('error_permission');
         } else {
-
             $this->load->model('setting/setting');
 
-            if(isset($this->request->get['filter_city'])) {
+            if (isset($this->request->get['filter_city'])) {
                 $filter_city = $this->request->get['filter_city'];
-            }else{
+            } else {
                 $filter_city = '';
             }
-        
-            if(isset($this->request->get['filter_name'])) {
+
+            if (isset($this->request->get['filter_name'])) {
                 $filter_name = $this->request->get['filter_name'];
-            }else{
+            } else {
                 $filter_name = '';
             }
-                
+
             if (isset($args['limit'])) {
                 $limit = $args['limit'];
             } else {
@@ -98,27 +92,27 @@ class ControllerApiStores extends Controller
                 $start = 0;
             }
 
-            if(isset($this->request->get['filter_status'])) {
+            if (isset($this->request->get['filter_status'])) {
                 $filter_status = $this->request->get['filter_status'];
-            }else{
+            } else {
                 $filter_status = null;
             }
-            
-            if(isset($this->request->get['filter_date_added'])) {
+
+            if (isset($this->request->get['filter_date_added'])) {
                 $filter_date_added = $this->request->get['filter_date_added'];
-            }else{
+            } else {
                 $filter_date_added = '';
             }
-            
-            if(isset($this->request->get['filter_vendor'])) {
+
+            if (isset($this->request->get['filter_vendor'])) {
                 $filter_vendor = $this->request->get['filter_vendor'];
-            }else{
+            } else {
                 $filter_vendor = '';
             }
-        
-            if(isset($this->request->get['filter_vendor_id'])) {
+
+            if (isset($this->request->get['filter_vendor_id'])) {
                 $filter_vendor_id = $this->request->get['filter_vendor_id'];
-            }else{
+            } else {
                 $filter_vendor_id = '';
             }
 
@@ -140,10 +134,9 @@ class ControllerApiStores extends Controller
                 $page = 1;
             }
 
-           
-            $data['stores'] = array();
+            $data['stores'] = [];
 
-            $filter_data = array(
+            $filter_data = [
                 'filter_name' => $filter_name,
                 'filter_vendor_id' => $filter_vendor_id,
                 'filter_city' => $filter_city,
@@ -153,40 +146,39 @@ class ControllerApiStores extends Controller
                 'sort' => $sort,
                 'order' => $order,
                 'start' => $start,
-                'limit' => $limit
-            );
-            
+                'limit' => $limit,
+            ];
+
             $results = $this->model_api_stores->getStores($filter_data);
             $total = $this->model_api_stores->getTotalStores($filter_data);
-            
+
             $json['stores_count'] = $total;
             foreach ($results as $result) {
-                $json['stores'][] = array(
+                $json['stores'][] = [
                     'store_id' => $result['store_id'],
                     'name' => $result['name'],
                     'city' => $result['city'],
-                    'address'     => $result['address'],  
-                    'zipcode'     => $result['zipcode'],      
-                    'status'     => $result['status']
-                );
+                    'address' => $result['address'],
+                    'zipcode' => $result['zipcode'],
+                    'status' => $result['status'],
+                ];
             }
-
         }
 
         //echo "<pre>";print_r($json);die;
-        
+
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
 
-    public function editStore($args = array())
+    public function editStore($args = [])
     {
         $this->load->language('api/products');
 
         /*echo "editStore";
 
         echo "<pre>";print_r($args);die;*/
-        $json = array();
+        $json = [];
 
         if (!isset($this->session->data['api_id'])) {
             $json['error'] = $this->language->get('error_permission');
@@ -195,7 +187,6 @@ class ControllerApiStores extends Controller
             // $args['id'] this should be store product id
 
             //echo "<pre>";print_r($args);die;
-            
 
             $this->model_api_stores->editStore($args['id'], $args);
 
@@ -206,12 +197,12 @@ class ControllerApiStores extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function deleteStores($args = []) {
-
-        echo "delete";
+    public function deleteStores($args = [])
+    {
+        echo 'delete';
         $this->load->model('api/stores');
 
-        if (!isset($this->session->data['api_id']) || !isset($args['id']) || !$this->validateDelete($args['id']) ) {
+        if (!isset($this->session->data['api_id']) || !isset($args['id']) || !$this->validateDelete($args['id'])) {
             $json['error'] = $this->language->get('error_permission');
         } else {
             $this->model_api_stores->deleteStore($args['id']);
@@ -221,11 +212,10 @@ class ControllerApiStores extends Controller
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
-
     }
 
-    protected function validateDelete($store_id) {
-
+    protected function validateDelete($store_id)
+    {
         $this->load->model('api/stores');
 
         $store_total = $this->model_api_stores->getTotalOrdersByStoreId($store_id);
@@ -236,6 +226,5 @@ class ControllerApiStores extends Controller
         }
 
         return true;
-        
     }
 }

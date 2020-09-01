@@ -2,9 +2,9 @@
 
 namespace GingerPayments\Payment\Order\Customer;
 
-use GingerPayments\Payment\Common\StringBasedValueObject;
-use GingerPayments\Payment\Common\ISO3166;
 use Assert\Assertion as Guard;
+use GingerPayments\Payment\Common\ISO3166;
+use GingerPayments\Payment\Common\StringBasedValueObject;
 
 final class Country
 {

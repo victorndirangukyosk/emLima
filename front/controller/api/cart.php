@@ -1,1 +1,396 @@
-<?phpclass ControllerApiCart extends Controller {	private $config;    private $db;    private $data = array();	// added getCart fn 	public function getCart() {		echo "getCart";        $totalQuantity = 0;        $log = new Log('error.log');        $log->write("cwen");        //$log->write($product_query);               if (!$this->data) {            $log->write("pro 1");            	            echo "if";            foreach($this->session->data['cart'] as $keys => $data) {                $product = unserialize(base64_decode($keys));                                $product_store_id = $product['product_store_id'];                $stock = true;                                // Options                if (!empty($product['option'])) {                    $options = $product['option'];                } else {                    $options = array();                }                                // Profile                if (!empty($product['recurring_id'])) {                    $recurring_id = $product['recurring_id'];                } else {                    $recurring_id = 0;                }                if (!empty($data['product_type'])) {                    $product_type = $data['product_type'];                } else {                    $product_type = 'replacable';                }                //$product_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id)    WHERE p.product_id = '" . (int) $product_id . "' AND p.status = '1'");                $this->db->join('product', 'product.product_id = product_to_store.product_id', 'left');                // $this->db->join('product_description', 'product_description.product_id = product_to_store.product_id', 'left');                $this->db->where('product.status',1);                $this->db->where('product_to_store.product_store_id',$product_store_id);                                $product_query = $this->db->get('product_to_store');                $log->write("pro 2");                $log->write($product_query);                if ($product_query->num_rows) {                                        //override if cateogry discount defined                    // $sql  = 'select c.discount from `'.DB_PREFIX.'product_to_category` pc';                    // $sql .= ' INNER JOIN `'.DB_PREFIX.'category` c on c.category_id = pc.category_id';                    // $sql .= ' WHERE pc.product_id = "'.$product_id.'"';                    // $sql .= ' GROUP BY pc.category_id';                    // $rows = $this->db->query($sql)->rows;                    // Stock                    if (!$product_query->row['quantity'] || ($product_query->row['quantity'] < $data['quantity'])) {                        $stock = false;                    }                    //override for variation                      if (!empty($product['store_product_variation_id'])) {                        //$row = $this->db->query('select * from `'.DB_PREFIX.'product_variation` WHERE id="'.$product['variation_id'].'"')->row;                                                    $this->db->join('product', 'product.product_id = variation_to_product_store.variation_id', 'left');                        $this->db->where('product_variation_store_id', $product['store_product_variation_id'], FALSE);                        $row = $this->db->get('variation_to_product_store')->row;                        //override price, image                          if ($row['special_price']) {                            $price = $row['special_price'];                            $special_price = $price;                        }else{                            $price = $row['price'];                            $special_price = null;                        }                                                $image = $row['image'];                                 $store_product_variation_id = $product['store_product_variation_id'];                        //old below                        //$variation = ' - '.$row['name'];                         $variation = ' - '.$row['unit'];                     } else {                        $price = $product_query->row['price'];                        $special_price = null;                        // Product Specials                        //print_r($product_query);                        if ($product_query->row['special_price'] > 0) {                            $price = $product_query->row['special_price'];                        }                        $store_product_variation_id = 0;                        $variation = $product_query->row['unit']?' - '.$product_query->row['unit']:'';                        $image = $product_query->row['image'];                    }                    $this->data[$keys] = array(                        'key' => $keys,                        'product_store_id' => $product_query->row['product_store_id'],                        'store_product_variation_id' => $store_product_variation_id,                        'store_id' => $product['store_id'],                        'product_type' => $product_type,                        'name' => $product_query->row['name'].$variation,                        'model' => $product_query->row['model'],                        'shipping' => 0,                        'image' => $image,                        'option' => array(),                        'download' => array(),                        'quantity' => $data['quantity'],                        'minimum' => $product_query->row['min_quantity'],                        'subtract' => $product_query->row['subtract_quantity'],                        'stock' => $stock,                        'price' => $price,                        'special_price' => $special_price,                        'total' => $price * $data['quantity'],                        'reward' => 0,                        'points' => 0,                        'tax_class_id' => $product_query->row['tax_class_id'],                        'weight' => 0,                        'weight_class_id' => 0,                        'length' => 0,                        'width' => 0,                        'height' => 0,                        'length_class_id' => 0,                        'recurring' => false                    );                } else {                    $this->remove($keys);                }            }        }        $log->write($this->data);        $res['products'] = $this->data;        $res['quantity'] = $totalQuantity;        return $res;    }	public function addCart() { //add to addCart				echo "cart/add";        		$this->load->language('api/cart');		$json = array();		if (!isset($this->session->data['api_id'])) {			$json['error']['warning'] = $this->language->get('error_permission');		} else {		if (isset($this->request->post['product'])) {						$this->cart->clear();			foreach ($this->request->post['product'] as $product) {				$option = array();				$this->cart->add($product['product_store_id'], $product['quantity'], $option, false, $product['store_id'], $product['store_product_variation_id']);				if ( $product['store_id']) {					$this->session->data['config_store_id'] = $product['store_id'];				}			}		}		if (isset($this->request->post['product_store_id']) && isset($this->session->data['config_store_id'])) {						if ($this->session->data['config_store_id']!= $this->request->post['store_id'] ) {				$json['error']['warning'] = $this->language->get('error_allow_one_store');			}		}		if (isset($this->request->post['product_store_id']) && !isset($json['error']['warning'])) {				$this->load->model('assets/product');				if (isset($this->request->post['store_id'])) {					$store_id = $this->request->post['store_id'];					$this->session->data['config_store_id'] = $store_id;				}else {					 $store_id = 0;					//$this->session->data['config_store_id'] = $store_id;				}				$product_info = $this->model_assets_product->getProduct($this->request->post['product_store_id'], true);				if ($product_info) {					                                                            if (isset($this->request->post['quantity'])) {						$quantity = $this->request->post['quantity'];					} else {						$quantity = 1;					}					if (isset($this->request->post['option'])) {						$option = array_filter($this->request->post['option']);					} else {						$option = array();					}					$product_options = $this->model_assets_product->getProductOptions($this->request->post['product_store_id']);					foreach ($product_options as $product_option) {						if ($product_option['required'] && empty($option[$product_option['product_option_id']])) {							$json['error']['option'][$product_option['product_option_id']] = sprintf($this->language->get('error_required'), $product_option['name']);						}					}					if (!isset($json['error']['option'])) {                                            						$this->cart->add($this->request->post['product_store_id'], $quantity, $option, false, $store_id, $this->request->post['store_product_variation_id']);						$json['success'] = $this->language->get('text_success');						unset($this->session->data['shipping_method']);						unset($this->session->data['shipping_methods']);						unset($this->session->data['payment_method']);						unset($this->session->data['payment_methods']);					}				} else {					$json['error']['store'] = $this->language->get('error_store');				}			}		}		$this->response->addHeader('Content-Type: application/json');		$this->response->setOutput(json_encode($json));	}	public function putEdit() { //edit to putEdit		$this->load->language('api/cart');		$json = array();		if (!isset($this->session->data['api_id'])) {			$json['error'] = $this->language->get('error_permission');		} else {			$this->cart->update($this->request->post['key'], $this->request->post['quantity']);			$json['success'] = $this->language->get('text_success');			unset($this->session->data['shipping_method']);			unset($this->session->data['shipping_methods']);			unset($this->session->data['payment_method']);			unset($this->session->data['payment_methods']);			unset($this->session->data['reward']);		}		$this->response->addHeader('Content-Type: application/json');		$this->response->setOutput(json_encode($json));	}	public function remove() {		$this->load->language('api/cart');		$json = array();		if (!isset($this->session->data['api_id'])) {			$json['error'] = $this->language->get('error_permission');		} else {			// Remove			if (isset($this->request->post['key'])) {				$this->cart->remove($this->request->post['key']);				unset($this->session->data['vouchers'][$this->request->post['key']]);				$json['success'] = $this->language->get('text_success');				unset($this->session->data['shipping_method']);				unset($this->session->data['shipping_methods']);				unset($this->session->data['payment_method']);				unset($this->session->data['payment_methods']);				unset($this->session->data['reward']);			}		}		$this->response->addHeader('Content-Type: application/json');		$this->response->setOutput(json_encode($json));	}	public function getProducts() {//renamed function products to getProducts		echo "cart/products";		$this->load->language('api/cart');		$json = array();		if (!isset($this->session->data['api_id'])) {			$json['error']['warning'] = $this->language->get('error_permission');		} else {			// Stock			if (!$this->cart->hasStock() && (!$this->config->get('config_stock_checkout') || $this->config->get('config_stock_warning'))) {				$json['error']['stock'] = $this->language->get('error_stock');			}			// Products			$json['products'] = array();			$products = $this->cart->getProducts();			foreach ($products as $product) {				$product_total = 0;				foreach ($products as $product_2) {					if ($product_2['product_store_id'] == $product['product_store_id']) {						$product_total += $product_2['quantity'];					}				}				if ($product['minimum'] > $product_total) {					$json['error']['minimum'][] = sprintf($this->language->get('error_minimum'), $product['name'], $product['minimum']);				}				$option_data = array();				foreach ($product['option'] as $option) {					$option_data[] = array(						'product_option_id'       => $option['product_option_id'],						'product_option_value_id' => $option['product_option_value_id'],						'name'                    => $option['name'],						'value'                   => $option['value'],						'type'                    => $option['type']					);				}                                				$json['products'][] = array(					'key'        => $product['key'],                    'store_id' => $product['store_id'],    					'product_store_id' => $product['product_store_id'],                    'store_product_variation_id' => $product['store_product_variation_id'],    					'name'       => $product['name'],					'model'      => $product['model'],					'option'     => $option_data,					'quantity'   => $product['quantity'],					'stock'      => $product['stock'] ? true : !(!$this->config->get('config_stock_checkout') || $this->config->get('config_stock_warning')),					'shipping'   => true,					'price'      => $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax'))),					'total'      => $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')) * $product['quantity']),					'reward'     => $product['reward']				);			}						// Totals			$this->load->model('extension/extension');			$total_data = array();			$total = 0;			$taxes = $this->cart->getTaxes();			$sort_order = array();			$results = $this->model_extension_extension->getExtensions('total');			foreach ($results as $key => $value) {				$sort_order[$key] = $this->config->get($value['code'] . '_sort_order');			}			array_multisort($sort_order, SORT_ASC, $results);			foreach ($results as $result) {				if ($this->config->get($result['code'] . '_status')) {					$this->load->model('total/' . $result['code']);					$this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);				}			}			$sort_order = array();			foreach ($total_data as $key => $value) {				$sort_order[$key] = $value['sort_order'];			}			array_multisort($sort_order, SORT_ASC, $total_data);			$json['totals'] = array();			foreach ($total_data as $total) {				$json['totals'][] = array(					'title' => $total['title'],					'text'  => $this->currency->format($total['value'])				);			}		}		$this->response->addHeader('Content-Type: application/json');		$this->response->setOutput(json_encode($json));	}}
+<?php
+
+class ControllerApiCart extends Controller
+{
+    private $config;
+    private $db;
+    private $data = [];
+
+    // added getCart fn
+
+    public function getCart()
+    {
+        echo 'getCart';
+
+        $totalQuantity = 0;
+        $log = new Log('error.log');
+        $log->write('cwen');
+        //$log->write($product_query);
+
+        if (!$this->data) {
+            $log->write('pro 1');
+
+            echo 'if';
+
+            foreach ($this->session->data['cart'] as $keys => $data) {
+                $product = unserialize(base64_decode($keys));
+
+                $product_store_id = $product['product_store_id'];
+
+                $stock = true;
+
+                // Options
+                if (!empty($product['option'])) {
+                    $options = $product['option'];
+                } else {
+                    $options = [];
+                }
+
+                // Profile
+                if (!empty($product['recurring_id'])) {
+                    $recurring_id = $product['recurring_id'];
+                } else {
+                    $recurring_id = 0;
+                }
+
+                if (!empty($data['product_type'])) {
+                    $product_type = $data['product_type'];
+                } else {
+                    $product_type = 'replacable';
+                }
+
+                //$product_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id)    WHERE p.product_id = '" . (int) $product_id . "' AND p.status = '1'");
+
+                $this->db->join('product', 'product.product_id = product_to_store.product_id', 'left');
+                // $this->db->join('product_description', 'product_description.product_id = product_to_store.product_id', 'left');
+                $this->db->where('product.status', 1);
+                $this->db->where('product_to_store.product_store_id', $product_store_id);
+
+                $product_query = $this->db->get('product_to_store');
+
+                $log->write('pro 2');
+                $log->write($product_query);
+
+                if ($product_query->num_rows) {
+                    //override if cateogry discount defined
+                    // $sql  = 'select c.discount from `'.DB_PREFIX.'product_to_category` pc';
+                    // $sql .= ' INNER JOIN `'.DB_PREFIX.'category` c on c.category_id = pc.category_id';
+                    // $sql .= ' WHERE pc.product_id = "'.$product_id.'"';
+                    // $sql .= ' GROUP BY pc.category_id';
+
+                    // $rows = $this->db->query($sql)->rows;
+
+                    // Stock
+                    if (!$product_query->row['quantity'] || ($product_query->row['quantity'] < $data['quantity'])) {
+                        $stock = false;
+                    }
+
+                    //override for variation
+
+                    if (!empty($product['store_product_variation_id'])) {
+                        //$row = $this->db->query('select * from `'.DB_PREFIX.'product_variation` WHERE id="'.$product['variation_id'].'"')->row;
+
+                        $this->db->join('product', 'product.product_id = variation_to_product_store.variation_id', 'left');
+                        $this->db->where('product_variation_store_id', $product['store_product_variation_id'], false);
+                        $row = $this->db->get('variation_to_product_store')->row;
+
+                        //override price, image
+                        if ($row['special_price']) {
+                            $price = $row['special_price'];
+                            $special_price = $price;
+                        } else {
+                            $price = $row['price'];
+                            $special_price = null;
+                        }
+
+                        $image = $row['image'];
+                        $store_product_variation_id = $product['store_product_variation_id'];
+
+                        //old below
+                        //$variation = ' - '.$row['name'];
+
+                        $variation = ' - '.$row['unit'];
+                    } else {
+                        $price = $product_query->row['price'];
+                        $special_price = null;
+                        // Product Specials
+                        //print_r($product_query);
+                        if ($product_query->row['special_price'] > 0) {
+                            $price = $product_query->row['special_price'];
+                        }
+
+                        $store_product_variation_id = 0;
+                        $variation = $product_query->row['unit'] ? ' - '.$product_query->row['unit'] : '';
+                        $image = $product_query->row['image'];
+                    }
+
+                    $this->data[$keys] = [
+                        'key' => $keys,
+                        'product_store_id' => $product_query->row['product_store_id'],
+                        'store_product_variation_id' => $store_product_variation_id,
+                        'store_id' => $product['store_id'],
+                        'product_type' => $product_type,
+                        'name' => $product_query->row['name'].$variation,
+                        'model' => $product_query->row['model'],
+                        'shipping' => 0,
+                        'image' => $image,
+                        'option' => [],
+                        'download' => [],
+                        'quantity' => $data['quantity'],
+                        'minimum' => $product_query->row['min_quantity'],
+                        'subtract' => $product_query->row['subtract_quantity'],
+                        'stock' => $stock,
+                        'price' => $price,
+                        'special_price' => $special_price,
+                        'total' => $price * $data['quantity'],
+                        'reward' => 0,
+                        'points' => 0,
+                        'tax_class_id' => $product_query->row['tax_class_id'],
+                        'weight' => 0,
+                        'weight_class_id' => 0,
+                        'length' => 0,
+                        'width' => 0,
+                        'height' => 0,
+                        'length_class_id' => 0,
+                        'recurring' => false
+                    ];
+                } else {
+                    $this->remove($keys);
+                }
+            }
+        }
+        $log->write($this->data);
+        $res['products'] = $this->data;
+        $res['quantity'] = $totalQuantity;
+
+        return $res;
+    }
+
+    public function addCart()
+    { //add to addCart
+        echo 'cart/add';
+
+        $this->load->language('api/cart');
+        $json = [];
+        if (!isset($this->session->data['api_id'])) {
+            $json['error']['warning'] = $this->language->get('error_permission');
+        } else {
+            if (isset($this->request->post['product'])) {
+                $this->cart->clear();
+                foreach ($this->request->post['product'] as $product) {
+                    $option = [];
+                    $this->cart->add($product['product_store_id'], $product['quantity'], $option, false, $product['store_id'], $product['store_product_variation_id']);
+                    if ($product['store_id']) {
+                        $this->session->data['config_store_id'] = $product['store_id'];
+                    }
+                }
+            }
+            if (isset($this->request->post['product_store_id']) && isset($this->session->data['config_store_id'])) {
+                if ($this->session->data['config_store_id'] != $this->request->post['store_id']) {
+                    $json['error']['warning'] = $this->language->get('error_allow_one_store');
+                }
+            }
+            if (isset($this->request->post['product_store_id']) && !isset($json['error']['warning'])) {
+                $this->load->model('assets/product');
+                if (isset($this->request->post['store_id'])) {
+                    $store_id = $this->request->post['store_id'];
+                    $this->session->data['config_store_id'] = $store_id;
+                } else {
+                    $store_id = 0;
+                    //$this->session->data['config_store_id'] = $store_id;
+                }
+                $product_info = $this->model_assets_product->getProduct($this->request->post['product_store_id'], true);
+
+                if ($product_info) {
+                    if (isset($this->request->post['quantity'])) {
+                        $quantity = $this->request->post['quantity'];
+                    } else {
+                        $quantity = 1;
+                    }
+
+                    if (isset($this->request->post['option'])) {
+                        $option = array_filter($this->request->post['option']);
+                    } else {
+                        $option = [];
+                    }
+
+                    $product_options = $this->model_assets_product->getProductOptions($this->request->post['product_store_id']);
+
+                    foreach ($product_options as $product_option) {
+                        if ($product_option['required'] && empty($option[$product_option['product_option_id']])) {
+                            $json['error']['option'][$product_option['product_option_id']] = sprintf($this->language->get('error_required'), $product_option['name']);
+                        }
+                    }
+
+                    if (!isset($json['error']['option'])) {
+                        $this->cart->add($this->request->post['product_store_id'], $quantity, $option, false, $store_id, $this->request->post['store_product_variation_id']);
+
+                        $json['success'] = $this->language->get('text_success');
+
+                        unset($this->session->data['shipping_method']);
+                        unset($this->session->data['shipping_methods']);
+                        unset($this->session->data['payment_method']);
+                        unset($this->session->data['payment_methods']);
+                    }
+                } else {
+                    $json['error']['store'] = $this->language->get('error_store');
+                }
+            }
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function putEdit()
+    { //edit to putEdit
+        $this->load->language('api/cart');
+
+        $json = [];
+
+        if (!isset($this->session->data['api_id'])) {
+            $json['error'] = $this->language->get('error_permission');
+        } else {
+            $this->cart->update($this->request->post['key'], $this->request->post['quantity']);
+
+            $json['success'] = $this->language->get('text_success');
+
+            unset($this->session->data['shipping_method']);
+            unset($this->session->data['shipping_methods']);
+            unset($this->session->data['payment_method']);
+            unset($this->session->data['payment_methods']);
+            unset($this->session->data['reward']);
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function remove()
+    {
+        $this->load->language('api/cart');
+
+        $json = [];
+
+        if (!isset($this->session->data['api_id'])) {
+            $json['error'] = $this->language->get('error_permission');
+        } else {
+            // Remove
+            if (isset($this->request->post['key'])) {
+                $this->cart->remove($this->request->post['key']);
+
+                unset($this->session->data['vouchers'][$this->request->post['key']]);
+
+                $json['success'] = $this->language->get('text_success');
+
+                unset($this->session->data['shipping_method']);
+                unset($this->session->data['shipping_methods']);
+                unset($this->session->data['payment_method']);
+                unset($this->session->data['payment_methods']);
+                unset($this->session->data['reward']);
+            }
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function getProducts()
+    {//renamed function products to getProducts
+        echo 'cart/products';
+        $this->load->language('api/cart');
+
+        $json = [];
+
+        if (!isset($this->session->data['api_id'])) {
+            $json['error']['warning'] = $this->language->get('error_permission');
+        } else {
+            // Stock
+            if (!$this->cart->hasStock() && (!$this->config->get('config_stock_checkout') || $this->config->get('config_stock_warning'))) {
+                $json['error']['stock'] = $this->language->get('error_stock');
+            }
+
+            // Products
+            $json['products'] = [];
+
+            $products = $this->cart->getProducts();
+
+            foreach ($products as $product) {
+                $product_total = 0;
+
+                foreach ($products as $product_2) {
+                    if ($product_2['product_store_id'] == $product['product_store_id']) {
+                        $product_total += $product_2['quantity'];
+                    }
+                }
+
+                if ($product['minimum'] > $product_total) {
+                    $json['error']['minimum'][] = sprintf($this->language->get('error_minimum'), $product['name'], $product['minimum']);
+                }
+
+                $option_data = [];
+
+                foreach ($product['option'] as $option) {
+                    $option_data[] = [
+                        'product_option_id' => $option['product_option_id'],
+                        'product_option_value_id' => $option['product_option_value_id'],
+                        'name' => $option['name'],
+                        'value' => $option['value'],
+                        'type' => $option['type']
+                    ];
+                }
+
+                $json['products'][] = [
+                    'key' => $product['key'],
+                    'store_id' => $product['store_id'],
+                    'product_store_id' => $product['product_store_id'],
+                    'store_product_variation_id' => $product['store_product_variation_id'],
+                    'name' => $product['name'],
+                    'model' => $product['model'],
+                    'option' => $option_data,
+                    'quantity' => $product['quantity'],
+                    'stock' => $product['stock'] ? true : !(!$this->config->get('config_stock_checkout') || $this->config->get('config_stock_warning')),
+                    'shipping' => true,
+                    'price' => $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax'))),
+                    'total' => $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')) * $product['quantity']),
+                    'reward' => $product['reward']
+                ];
+            }
+
+            // Totals
+            $this->load->model('extension/extension');
+
+            $total_data = [];
+            $total = 0;
+            $taxes = $this->cart->getTaxes();
+
+            $sort_order = [];
+
+            $results = $this->model_extension_extension->getExtensions('total');
+
+            foreach ($results as $key => $value) {
+                $sort_order[$key] = $this->config->get($value['code'].'_sort_order');
+            }
+
+            array_multisort($sort_order, SORT_ASC, $results);
+
+            foreach ($results as $result) {
+                if ($this->config->get($result['code'].'_status')) {
+                    $this->load->model('total/'.$result['code']);
+
+                    $this->{'model_total_'.$result['code']}->getTotal($total_data, $total, $taxes);
+                }
+            }
+
+            $sort_order = [];
+
+            foreach ($total_data as $key => $value) {
+                $sort_order[$key] = $value['sort_order'];
+            }
+
+            array_multisort($sort_order, SORT_ASC, $total_data);
+
+            $json['totals'] = [];
+
+            foreach ($total_data as $total) {
+                $json['totals'][] = [
+                    'title' => $total['title'],
+                    'text' => $this->currency->format($total['value'])
+                ];
+            }
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+}

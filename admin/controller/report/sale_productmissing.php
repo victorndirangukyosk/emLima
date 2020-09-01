@@ -1,9 +1,9 @@
 <?php
 
-class ControllerReportSaleProductMissing extends Controller {
-
-    public function excel(){
-
+class ControllerReportSaleProductMissing extends Controller
+{
+    public function excel()
+    {
         //echo "<pre>";print_r($this->request->get);die;
         if (isset($this->request->get['filter_order_status_id'])) {
             $filter_order_status_id = $this->request->get['filter_order_status_id'];
@@ -11,32 +11,30 @@ class ControllerReportSaleProductMissing extends Controller {
             $filter_order_status_id = 0;
         }
 
-        
         if (isset($this->request->get['filter_store'])) {
-                $filter_store = $this->request->get['filter_store'];
+            $filter_store = $this->request->get['filter_store'];
         } else {
-                $filter_store = '';
+            $filter_store = '';
         }
 
         if (isset($this->request->get['filter_store_id'])) {
-                $filter_store_id = $this->request->get['filter_store_id'];
+            $filter_store_id = $this->request->get['filter_store_id'];
         } else {
-                $filter_store_id = '';
+            $filter_store_id = '';
         }
 
         if (isset($this->request->get['filter_date_start'])) {
-                $filter_date_start = $this->request->get['filter_date_start'];
+            $filter_date_start = $this->request->get['filter_date_start'];
         } else {
-                $filter_date_start = date('Y-m-d', strtotime(date('Y') . '-' . date('m') . '-01'));
+            $filter_date_start = date('Y-m-d', strtotime(date('Y').'-'.date('m').'-01'));
         }
 
         if (isset($this->request->get['filter_date_end'])) {
-                $filter_date_end = $this->request->get['filter_date_end'];
+            $filter_date_end = $this->request->get['filter_date_end'];
         } else {
-                $filter_date_end = date('Y-m-d');
+            $filter_date_end = date('Y-m-d');
         }
 
-        
         $data['filter_store'] = $filter_store_id;
         $data['filter_store_name'] = $filter_store;
 
@@ -44,7 +42,6 @@ class ControllerReportSaleProductMissing extends Controller {
         $data['filter_date_start'] = $filter_date_start;
         $data['filter_date_end'] = $filter_date_end;
         $data['filter_order_status_id'] = $filter_order_status_id;
- 
 
         //echo "<pre>";print_r($data);die;
 
@@ -52,8 +49,8 @@ class ControllerReportSaleProductMissing extends Controller {
         $this->model_report_excel->download_saleorderproductmissing($data);
     }
 
-    public function index() {
-
+    public function index()
+    {
         //echo "<pre>";print_r(date('d-M-y', strtotime('2018-12-26')));die;
         $this->load->language('report/sale_productmissing');
 
@@ -64,24 +61,23 @@ class ControllerReportSaleProductMissing extends Controller {
         } else {
             $filter_city = '';
         }
-        
+
         if (isset($this->request->get['filter_store'])) {
-                $filter_store = $this->request->get['filter_store'];
+            $filter_store = $this->request->get['filter_store'];
         } else {
-                $filter_store = '';
+            $filter_store = '';
         }
 
         if (isset($this->request->get['filter_store_id'])) {
-                $filter_store_id = $this->request->get['filter_store_id'];
+            $filter_store_id = $this->request->get['filter_store_id'];
         } else {
-                $filter_store_id = '';
+            $filter_store_id = '';
         }
-
 
         if (isset($this->request->get['filter_date_start'])) {
             $filter_date_start = $this->request->get['filter_date_start'];
         } else {
-            $filter_date_start = date('Y-m-d', strtotime(date('Y') . '-' . date('m') . '-01'));
+            $filter_date_start = date('Y-m-d', strtotime(date('Y').'-'.date('m').'-01'));
         }
 
         if (isset($this->request->get['filter_date_end'])) {
@@ -111,70 +107,66 @@ class ControllerReportSaleProductMissing extends Controller {
         $url = '';
 
         if (isset($this->request->get['filter_city'])) {
-            $url .= '&filter_city=' . $this->request->get['filter_city'];
+            $url .= '&filter_city='.$this->request->get['filter_city'];
         }
-        
+
         if (isset($this->request->get['filter_date_start'])) {
-            $url .= '&filter_date_start=' . $this->request->get['filter_date_start'];
+            $url .= '&filter_date_start='.$this->request->get['filter_date_start'];
         }
 
         if (isset($this->request->get['filter_date_end'])) {
-            $url .= '&filter_date_end=' . $this->request->get['filter_date_end'];
+            $url .= '&filter_date_end='.$this->request->get['filter_date_end'];
         }
 
         if (isset($this->request->get['filter_group'])) {
-            $url .= '&filter_group=' . $this->request->get['filter_group'];
+            $url .= '&filter_group='.$this->request->get['filter_group'];
         }
 
         if (isset($this->request->get['filter_order_status_id'])) {
-            $url .= '&filter_order_status_id=' . $this->request->get['filter_order_status_id'];
+            $url .= '&filter_order_status_id='.$this->request->get['filter_order_status_id'];
         }
 
         if (isset($this->request->get['filter_store'])) {
-            $url .= '&filter_store=' . $this->request->get['filter_store'];
+            $url .= '&filter_store='.$this->request->get['filter_store'];
         }
 
         if (isset($this->request->get['filter_store_id'])) {
-            $url .= '&filter_store_id=' . $this->request->get['filter_store_id'];
+            $url .= '&filter_store_id='.$this->request->get['filter_store_id'];
         }
 
         if (isset($this->request->get['page'])) {
-            $url .= '&page=' . $this->request->get['page'];
+            $url .= '&page='.$this->request->get['page'];
         }
 
-        $data['breadcrumbs'] = array();
+        $data['breadcrumbs'] = [];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL')
-        );
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
+        ];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('report/sale_productmissing', 'token=' . $this->session->data['token'] . $url, 'SSL')
-        );
+            'href' => $this->url->link('report/sale_productmissing', 'token='.$this->session->data['token'].$url, 'SSL'),
+        ];
 
         $this->load->model('report/sale');
         $this->load->model('sale/order');
         $this->load->model('account/order');
 
+        $data['orders'] = [];
+        $data['torders'] = [];
 
-        $data['orders'] = array();
-        $data['torders'] = array();
-
-
-        $filter_data = array(
+        $filter_data = [
             'filter_date_start' => $filter_date_start,
             'filter_date_end' => $filter_date_end,
             'filter_order_status_id' => $filter_order_status_id,
             'filter_store' => $filter_store_id,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin')
-        );
+            'limit' => $this->config->get('config_limit_admin'),
+        ];
 
-       // echo "<pre>";print_r($filter_data);die;
-
-      
+        // echo "<pre>";print_r($filter_data);die;
 
         //$order_total = $this->model_report_sale->getTotalproductmissingOrders($filter_data);
 
@@ -182,21 +174,15 @@ class ControllerReportSaleProductMissing extends Controller {
 
         $results = $this->model_report_sale->getproductmissingOrders($filter_data);
 
-//echo "<pre>";print_r($results);die;
+        //echo "<pre>";print_r($results);die;
         foreach ($results as $result) {
-
-           
-
             $is_edited = $this->model_sale_order->hasRealOrderProducts($result['order_id']);
 
-            if(!$is_edited) {
+            if (!$is_edited) {
                 //continue;
-                $OrignalProducts=  $EditedProducts = $this->model_sale_order->getRealOrderProducts($result['order_id']);
-            }
-
-            else{
-
-            $OrignalProducts = $this->model_sale_order->getOrderProducts($result['order_id']);
+                $OrignalProducts = $EditedProducts = $this->model_sale_order->getRealOrderProducts($result['order_id']);
+            } else {
+                $OrignalProducts = $this->model_sale_order->getOrderProducts($result['order_id']);
             }
 
             /*echo "<pre>";print_r($OrignalProducts);
@@ -204,7 +190,6 @@ class ControllerReportSaleProductMissing extends Controller {
             //as per the today discussion, stock out means total stock ordered or out after deliverty
 
             foreach ($OrignalProducts as $OrignalProduct) {
-
                 // $present = false;
 
                 // foreach ($EditedProducts as $EditedProduct) {
@@ -213,62 +198,51 @@ class ControllerReportSaleProductMissing extends Controller {
                 //     }
                 // }
 
-                if(!$present && !empty($OrignalProduct['name'])) {
-
-                    $data['torders'][] = array(
+                if (!$present && !empty($OrignalProduct['name'])) {
+                    $data['torders'][] = [
                         'store' => $result['store_name'],
                         'model' => $OrignalProduct['model'],
 
                         'product_name' => $OrignalProduct['name'],
                         'unit' => $OrignalProduct['unit'],
-                        'product_qty' =>(float) $OrignalProduct['quantity'],
-                    );
-
+                        'product_qty' => (float) $OrignalProduct['quantity'],
+                    ];
                 }
             }
         }
 
-         // echo "<pre>";print_r($data['torders']);die;
+        // echo "<pre>";print_r($data['torders']);die;
         foreach ($data['torders'] as $torders1) {
-                
             $ex = false;
 
             foreach ($data['orders'] as $value1) {
-
-                if($value1['product_name'] == $torders1['product_name'] && $value1['store'] == $torders1['store']) {
-
+                if ($value1['product_name'] == $torders1['product_name'] && $value1['store'] == $torders1['store']) {
                     $ex = true;
-
                 }
-
             }
 
-            if(!$ex) {
-                $sum =(float) 0.0;
+            if (!$ex) {
+                $sum = (float) 0.0;
 
                 foreach ($data['torders'] as $key => $torders2) {
-                    
-                    if($torders1['product_name'] == $torders2['product_name'] && $torders1['store'] == $torders2['store']) {
-
-                        $sum +=(float) $torders2['product_qty'];
+                    if ($torders1['product_name'] == $torders2['product_name'] && $torders1['store'] == $torders2['store']) {
+                        $sum += (float) $torders2['product_qty'];
 
                         unset($data['torders'][$key]);
-
                     }
-
                 }
 
-                $torders1['product_qty'] =(float) $sum;
+                $torders1['product_qty'] = (float) $sum;
 
-                $order_total++;
+                ++$order_total;
 
                 array_push($data['orders'], $torders1);
             }
         }
-       
-        if(isset($this->request->get['download_excel']) && ($this->request->get['download_excel'] == true)){
-        $this->load->model('report/excel');
-        $this->model_report_excel->download_saleorderproductmissingNew($data);
+
+        if (isset($this->request->get['download_excel']) && (true == $this->request->get['download_excel'])) {
+            $this->load->model('report/excel');
+            $this->model_report_excel->download_saleorderproductmissingNew($data);
         }
         //echo "<pre>";print_r($data['orders']);die;
         $data['heading_title'] = $this->language->get('heading_title');
@@ -291,8 +265,6 @@ class ControllerReportSaleProductMissing extends Controller {
         $data['column_ordered_qty'] = $this->language->get('column_ordered_qty');
         $data['column_store'] = $this->language->get('column_store');
 
-
-
         $data['entry_date_start'] = $this->language->get('entry_date_start');
         $data['entry_date_end'] = $this->language->get('entry_date_end');
         $data['entry_group'] = $this->language->get('entry_group');
@@ -314,7 +286,6 @@ class ControllerReportSaleProductMissing extends Controller {
         $data['column_paymentmethod'] = $this->language->get('column_paymentmethod');
         $data['column_transaction_ID'] = $this->language->get('column_transaction_ID');
 
-
         $data['button_filter'] = $this->language->get('button_filter');
         $data['button_show_filter'] = $this->language->get('button_show_filter');
         $data['button_hide_filter'] = $this->language->get('button_hide_filter');
@@ -325,63 +296,63 @@ class ControllerReportSaleProductMissing extends Controller {
 
         $data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
 
-        $data['groups'] = array();
+        $data['groups'] = [];
 
-        $data['groups'][] = array(
+        $data['groups'][] = [
             'text' => $this->language->get('text_year'),
             'value' => 'year',
-        );
+        ];
 
-        $data['groups'][] = array(
+        $data['groups'][] = [
             'text' => $this->language->get('text_month'),
             'value' => 'month',
-        );
+        ];
 
-        $data['groups'][] = array(
+        $data['groups'][] = [
             'text' => $this->language->get('text_week'),
             'value' => 'week',
-        );
+        ];
 
-        $data['groups'][] = array(
+        $data['groups'][] = [
             'text' => $this->language->get('text_day'),
             'value' => 'day',
-        );
+        ];
 
         $url = '';
 
         if (isset($this->request->get['filter_city'])) {
-            $url .= '&filter_city=' . $this->request->get['filter_city'];
+            $url .= '&filter_city='.$this->request->get['filter_city'];
         }
 
         if (isset($this->request->get['filter_store'])) {
-            $url .= '&filter_store=' . $this->request->get['filter_store'];
+            $url .= '&filter_store='.$this->request->get['filter_store'];
         }
 
         if (isset($this->request->get['filter_store_id'])) {
-            $url .= '&filter_store_id=' . $this->request->get['filter_store_id'];
+            $url .= '&filter_store_id='.$this->request->get['filter_store_id'];
         }
-        
+
         if (isset($this->request->get['filter_date_start'])) {
-            $url .= '&filter_date_start=' . $this->request->get['filter_date_start'];
+            $url .= '&filter_date_start='.$this->request->get['filter_date_start'];
         }
 
         if (isset($this->request->get['filter_date_end'])) {
-            $url .= '&filter_date_end=' . $this->request->get['filter_date_end'];
+            $url .= '&filter_date_end='.$this->request->get['filter_date_end'];
         }
 
         if (isset($this->request->get['filter_group'])) {
-            $url .= '&filter_group=' . $this->request->get['filter_group'];
+            $url .= '&filter_group='.$this->request->get['filter_group'];
         }
 
         if (isset($this->request->get['filter_order_status_id'])) {
-            $url .= '&filter_order_status_id=' . $this->request->get['filter_order_status_id'];
+            $url .= '&filter_order_status_id='.$this->request->get['filter_order_status_id'];
         }
 
         $pagination = new Pagination();
         $pagination->total = $order_total;
         $pagination->page = $page;
         $pagination->limit = $this->config->get('config_limit_admin');
-        $pagination->url = $this->url->link('report/sale_productmissing', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+        $pagination->url = $this->url->link('report/sale_productmissing', 'token='.$this->session->data['token'].$url.'&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
@@ -399,20 +370,20 @@ class ControllerReportSaleProductMissing extends Controller {
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
 
-//as the dynamic pagination will not work for this calculation , applied pagination on array
-        $start= ($page - 1) * $this->config->get('config_limit_admin');
-       $limit= $this->config->get('config_limit_admin');
+        //as the dynamic pagination will not work for this calculation , applied pagination on array
+        $start = ($page - 1) * $this->config->get('config_limit_admin');
+        $limit = $this->config->get('config_limit_admin');
 
-        $data['orders'] = array_slice( $data['orders'],  $start, $limit ); 
+        $data['orders'] = array_slice($data['orders'], $start, $limit);
         //echo "<pre>";print_r($data['orders']);die;
         $this->response->setOutput($this->load->view('report/sale_productmissing.tpl', $data));
     }
-    
-    public function city_autocomplete(){
-        
+
+    public function city_autocomplete()
+    {
         $this->load->model('sale/order');
 
-        $json =  $this->model_sale_productmissing->getCitiesLike($this->request->get['filter_name']);
+        $json = $this->model_sale_productmissing->getCitiesLike($this->request->get['filter_name']);
 
         header('Content-type: text/json');
         echo json_encode($json);

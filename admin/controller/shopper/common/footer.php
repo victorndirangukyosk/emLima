@@ -1,12 +1,13 @@
 <?php
 
-class ControllerShopperCommonFooter extends Controller {
-
-    public function index() {
+class ControllerShopperCommonFooter extends Controller
+{
+    public function index()
+    {
         $this->load->language('common/footer');
 
         $data['token'] = $this->session->data['token'];
-        
+
         $data['text_yes'] = $this->language->get('text_yes');
         $data['text_no'] = $this->language->get('text_no');
 

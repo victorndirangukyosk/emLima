@@ -7,8 +7,8 @@ class ModelPaymentIngpspSepa extends Model
     {
         $this->load->language('payment/ingpsp_sepa');
 
-        $query = $this->db->query("SELECT * 
-            FROM ".DB_PREFIX."zone_to_geo_zone 
+        $query = $this->db->query('SELECT * 
+            FROM '.DB_PREFIX."zone_to_geo_zone 
             WHERE geo_zone_id = '".(int) $this->config->get('ing_sepa_geo_zone_id')."' 
             OR zone_id = '0';"
         );
@@ -30,7 +30,7 @@ class ModelPaymentIngpspSepa extends Model
                 'code' => 'ingpsp_sepa',
                 'title' => $this->language->get('text_title'),
                 'terms' => $this->language->get('text_payment_terms'),
-                'sort_order' => $this->config->get('ing_sepa_sort_order')
+                'sort_order' => $this->config->get('ing_sepa_sort_order'),
             ];
         }
 

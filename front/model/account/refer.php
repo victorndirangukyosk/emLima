@@ -1,9 +1,9 @@
 <?php
 
-class ModelAccountRefer extends Model {
-
-    public function send($data) {
-
+class ModelAccountRefer extends Model
+{
+    public function send($data)
+    {
         // Create the mail transport configuration
         /*   $transport = Swift_MailTransport::newInstance();
 
@@ -21,5 +21,4 @@ class ModelAccountRefer extends Model {
           $mailer = Swift_Mailer::newInstance($transport);
           $mailer->send($message); */
     }
-
 }

@@ -1,17 +1,17 @@
 <?php
 
+class ControllerApiCustomerAddress extends Controller
+{
+    private $error = [];
 
-class ControllerApiCustomerAddress extends Controller {
-	private $error = array();
-
-	public function getAllAddress() {
-		$json = array();
+    public function getAllAddress()
+    {
+        $json = [];
 
         $log = new Log('error.log');
         $log->write('getAllAddress');
 
         $log->write($this->request->get);
-
 
         $this->load->language('information/locations');
 
@@ -19,103 +19,90 @@ class ControllerApiCustomerAddress extends Controller {
         $json['data'] = [];
         $json['message'] = [];
 
-		$this->load->language('api/general');
+        $this->load->language('api/general');
 
-		$this->load->model('assets/category');
+        $this->load->model('assets/category');
 
-		$this->load->model('assets/product');
+        $this->load->model('assets/product');
 
-		$this->load->model('tool/image');
+        $this->load->model('tool/image');
 
-
-		//if( $this->customer->isLogged() ) {
-        if( !empty($this->request->get['zipcode'])) {
-	        
-
+        //if( $this->customer->isLogged() ) {
+        if (!empty($this->request->get['zipcode'])) {
             $stores = array_keys($this->request->get['stores']);
 
-	        //echo "<pre>";print_r($this->customer);die;
-	        $this->load->model('account/address');
+            //echo "<pre>";print_r($this->customer);die;
+            $this->load->model('account/address');
 
             $data['delivery_addresses'] = [];
             $data['non_delivery_addresses'] = [];
 
             $zipcodeToSort = $this->request->get['zipcode'];
             //echo "<pre>";print_r($zipcodeToSort);die;
-            
+
             $default_address_id = $this->customer->getAddressId();
             //$default_address_id = 1;
 
             $results = $this->model_account_address->getAddresses();
-            if (strpos($zipcodeToSort, '.') !== false) {
+            if (false !== strpos($zipcodeToSort, '.')) {
                 //lat lang based
 
                 $log->write('getAllAddress if');
 
-                $tmpD = explode(",",$zipcodeToSort); 
+                $tmpD = explode(',', $zipcodeToSort);
 
-                if(count($tmpD) >=2 ) {
+                if (count($tmpD) >= 2) {
                     $data['latitude'] = $tmpD[0];
-                    $data['longitude'] = $tmpD[1];    
+                    $data['longitude'] = $tmpD[1];
 
                     /*echo "<pre>";print_r($store_info);
                     echo "<pre>";print_r($data['addresses']);die;*/
 
                     $serviceable_radius = 100;
 
-                    
-
-                    if(array_key_exists($default_address_id, $results)) {
-
+                    if (array_key_exists($default_address_id, $results)) {
                         $dafaultEnable = true;
 
-                        foreach ( $stores as $store_id ) {
-
+                        foreach ($stores as $store_id) {
                             $store_info = $this->model_account_address->getStoreData($store_id);
-                            
+
                             //echo "<pre>";print_r($store_info);die;
-                            if(!empty($store_info['serviceable_radius']))  {
+                            if (!empty($store_info['serviceable_radius'])) {
+                                $res1 = $this->getDistance($results[$default_address_id]['latitude'], $results[$default_address_id]['longitude'], $data['latitude'], $data['longitude'], $store_info['serviceable_radius']);
 
-                                $res1 = $this->getDistance( $results[$default_address_id]['latitude'], $results[$default_address_id]['longitude'], $data['latitude'], $data['longitude'] ,$store_info['serviceable_radius']);
-
-                                if(!$res1) {
-                                    $dafaultEnable = false;break;
-                                    
+                                if (!$res1) {
+                                    $dafaultEnable = false;
+                                    break;
                                 }
                             }
                         }
 
-                        if($dafaultEnable) {
+                        if ($dafaultEnable) {
                             $data['delivery_addresses'][] = $results[$default_address_id];
                             unset($results[$default_address_id]);
                         }
                     }
 
-                    /**/
-
                     foreach ($results as $result) {
-
-                        if(!empty($result['latitude']) || !empty($result['longitude']) || !empty($data['latitude']) || !empty($data['longitude']) )  {
-
+                        if (!empty($result['latitude']) || !empty($result['longitude']) || !empty($data['latitude']) || !empty($data['longitude'])) {
                             $res = true;
 
-                            foreach ( $stores as $store_id ) {
-
+                            foreach ($stores as $store_id) {
                                 $store_info = $this->model_account_address->getStoreData($store_id);
-                                
-                                //echo "<pre>";print_r($store_info);die;
-                                if(!empty($store_info['serviceable_radius']))  {
-                                    $res = $this->getDistance( $result['latitude'], $result['longitude'], $data['latitude'], $data['longitude'],$store_info['serviceable_radius']);
 
-                                    if(!$res1) {
-                                        $res = false;break;
+                                //echo "<pre>";print_r($store_info);die;
+                                if (!empty($store_info['serviceable_radius'])) {
+                                    $res = $this->getDistance($result['latitude'], $result['longitude'], $data['latitude'], $data['longitude'], $store_info['serviceable_radius']);
+
+                                    if (!$res1) {
+                                        $res = false;
+                                        break;
                                     }
                                 }
                             }
 
-
-                            if($res) {
-                                $data['delivery_addresses'][] = array(
+                            if ($res) {
+                                $data['delivery_addresses'][] = [
                                     'address_id' => $result['address_id'],
                                     'name' => $result['name'],
                                     'contact_no' => $result['contact_no'],
@@ -129,11 +116,11 @@ class ControllerApiCustomerAddress extends Controller {
                                     'city' => $result['city'],
                                     'zipcode' => $result['zipcode'],
                                     'address_type' => $result['address_type'],
-                                    'update' => $this->url->link('account/address/edit', 'address_id=' . $result['address_id'], 'SSL'),
-                                    'delete' => $this->url->link('account/address/delete', 'address_id=' . $result['address_id'], 'SSL')
-                                ); 
+                                    'update' => $this->url->link('account/address/edit', 'address_id='.$result['address_id'], 'SSL'),
+                                    'delete' => $this->url->link('account/address/delete', 'address_id='.$result['address_id'], 'SSL'),
+                                ];
                             } else {
-                                $data['non_delivery_addresses'][] = array(
+                                $data['non_delivery_addresses'][] = [
                                     'address_id' => $result['address_id'],
                                     'name' => $result['name'],
                                     'contact_no' => $result['contact_no'],
@@ -147,9 +134,9 @@ class ControllerApiCustomerAddress extends Controller {
                                     'city' => $result['city'],
                                     'zipcode' => $result['zipcode'],
                                     'address_type' => $result['address_type'],
-                                    'update' => $this->url->link('account/address/edit', 'address_id=' . $result['address_id'], 'SSL'),
-                                    'delete' => $this->url->link('account/address/delete', 'address_id=' . $result['address_id'], 'SSL')
-                                ); 
+                                    'update' => $this->url->link('account/address/edit', 'address_id='.$result['address_id'], 'SSL'),
+                                    'delete' => $this->url->link('account/address/delete', 'address_id='.$result['address_id'], 'SSL'),
+                                ];
                             }
                         }
                     }
@@ -159,20 +146,17 @@ class ControllerApiCustomerAddress extends Controller {
                 }
             } else {
                 //zipcode based
-                if(array_key_exists($default_address_id, $results)) {
-
+                if (array_key_exists($default_address_id, $results)) {
                     //echo "yes";
-                    if($results[$default_address_id]['zipcode'] == $zipcodeToSort) {
+                    if ($results[$default_address_id]['zipcode'] == $zipcodeToSort) {
                         $data['delivery_addresses'][] = $results[$default_address_id];
                         unset($results[$default_address_id]);
                     }
                 }
-                
 
                 foreach ($results as $result) {
-
-                    if($zipcodeToSort ==  $result['zipcode']) {
-                        $data['delivery_addresses'][] = array(
+                    if ($zipcodeToSort == $result['zipcode']) {
+                        $data['delivery_addresses'][] = [
                             'address_id' => $result['address_id'],
                             'name' => $result['name'],
                             'contact_no' => $result['contact_no'],
@@ -184,11 +168,11 @@ class ControllerApiCustomerAddress extends Controller {
                             'city' => $result['city'],
                             'zipcode' => $result['zipcode'],
                             'address_type' => $result['address_type'],
-                            'update' => $this->url->link('account/address/edit', 'address_id=' . $result['address_id'], 'SSL'),
-                            'delete' => $this->url->link('account/address/delete', 'address_id=' . $result['address_id'], 'SSL')
-                        ); 
+                            'update' => $this->url->link('account/address/edit', 'address_id='.$result['address_id'], 'SSL'),
+                            'delete' => $this->url->link('account/address/delete', 'address_id='.$result['address_id'], 'SSL'),
+                        ];
                     } else {
-                        $data['non_delivery_addresses'][] = array(
+                        $data['non_delivery_addresses'][] = [
                             'address_id' => $result['address_id'],
                             'name' => $result['name'],
                             'contact_no' => $result['contact_no'],
@@ -200,30 +184,25 @@ class ControllerApiCustomerAddress extends Controller {
                             'city' => $result['city'],
                             'zipcode' => $result['zipcode'],
                             'address_type' => $result['address_type'],
-                            'update' => $this->url->link('account/address/edit', 'address_id=' . $result['address_id'], 'SSL'),
-                            'delete' => $this->url->link('account/address/delete', 'address_id=' . $result['address_id'], 'SSL')
-                        ); 
+                            'update' => $this->url->link('account/address/edit', 'address_id='.$result['address_id'], 'SSL'),
+                            'delete' => $this->url->link('account/address/delete', 'address_id='.$result['address_id'], 'SSL'),
+                        ];
                     }
                 }
-
             }
 
-            
-	       
-	        $data['check_address'] = false;
+            $data['check_address'] = false;
 
+            if ($this->config->get('config_address_check')) {
+                $data['check_address'] = true;
+            }
 
-	        if($this->config->get('config_address_check')) {
-	            $data['check_address'] = true;
-	        }
-
-	        $json['data'] = $data;
-        
-		} else {
+            $json['data'] = $data;
+        } else {
             $this->load->model('account/address');
             $results = $this->model_account_address->getAddresses();
-            foreach($results as $result){
-            $data['delivery_addresses'][] = array(
+            foreach ($results as $result) {
+                $data['delivery_addresses'][] = [
                 'address_id' => $result['address_id'],
                 'name' => $result['name'],
                 'contact_no' => $result['contact_no'],
@@ -237,27 +216,27 @@ class ControllerApiCustomerAddress extends Controller {
                 'city' => $result['city'],
                 'zipcode' => $result['zipcode'],
                 'address_type' => $result['address_type'],
-                'update' => $this->url->link('account/address/edit', 'address_id=' . $result['address_id'], 'SSL'),
-                'delete' => $this->url->link('account/address/delete', 'address_id=' . $result['address_id'], 'SSL')
-            ); 
-           }
+                'update' => $this->url->link('account/address/edit', 'address_id='.$result['address_id'], 'SSL'),
+                'delete' => $this->url->link('account/address/delete', 'address_id='.$result['address_id'], 'SSL'),
+            ];
+            }
 
             $json['data'] = $data;
-			/*$json['status'] = 10013;
+            /*$json['status'] = 10013;
 
             $json['message'][] = ['type' =>  '' , 'body' =>  $this->language->get('text_not_loggedin') ];
 
             http_response_code(400);
             */
-		}
-		
+        }
 
-		$this->response->addHeader('Content-Type: application/json');
+        $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
-	}
+    }
 
-	public function deleteAddress() {
-        $json = array();
+    public function deleteAddress()
+    {
+        $json = [];
 
         //echo "<pre>";print_r("deleteAddress");die;
         //echo "<pre>";print_r("deleteAddress");die;
@@ -266,56 +245,48 @@ class ControllerApiCustomerAddress extends Controller {
         $json['data'] = [];
         $json['message'] = [];
 
-		$this->load->language('api/general');
-		$this->load->model('account/address');
+        $this->load->language('api/general');
+        $this->load->model('account/address');
 
         $log = new Log('error.log');
         $log->write('deleteAddress');
 
+        if (isset($this->request->get['address_id']) && $this->validateDelete()) {
+            $log->write('deleteAddress if');
+            $this->model_account_address->deleteAddress($this->request->get['address_id']);
 
-		if( isset($this->request->get['address_id']) && $this->validateDelete()) {
-	           
-               $log->write('deleteAddress if');
-	        $this->model_account_address->deleteAddress($this->request->get['address_id']);
-
-          
             $json['status'] = 10020;
 
-            $json['message'][] = ['type' =>  '' , 'body' =>  $this->language->get('text_address_deleted') ];
-
+            $json['message'][] = ['type' => '', 'body' => $this->language->get('text_address_deleted')];
 
             // Add to activity log
             $this->load->model('account/activity');
 
-            $activity_data = array(
+            $activity_data = [
                 'customer_id' => $this->customer->getId(),
-                'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName()
-            );
+                'name' => $this->customer->getFirstName().' '.$this->customer->getLastName(),
+            ];
 
             $this->model_account_activity->addActivity('address_delete', $activity_data);
-        
-		} else {
+        } else {
+            $json['status'] = 10013;
 
-			$json['status'] = 10013;
-
-            $json['message'][] = ['type' =>  '' , 'body' =>  $this->language->get('text_not_loggedin') ];
+            $json['message'][] = ['type' => '', 'body' => $this->language->get('text_not_loggedin')];
 
             http_response_code(400);
+        }
 
-		}
-		
-
-		$this->response->addHeader('Content-Type: application/json');
+        $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
 
-    public function addAddress() {
-
+    public function addAddress()
+    {
         $log = new Log('error.log');
         $log->write('addAddress fn');
         $log->write($this->request->post);
-        
-    	$json = array();
+
+        $json = [];
 
         $this->load->language('information/locations');
 
@@ -323,98 +294,88 @@ class ControllerApiCustomerAddress extends Controller {
         $json['data'] = [];
         $json['message'] = [];
 
-		$this->load->language('api/general');
+        $this->load->language('api/general');
 
-		$this->load->model('assets/category');
+        $this->load->model('assets/category');
 
-		$this->load->model('assets/product');
+        $this->load->model('assets/product');
 
-		$this->load->model('tool/image');
+        $this->load->model('tool/image');
 
-		$this->load->model('account/address');
+        $this->load->model('account/address');
 
         //echo "<pre>";print_r("th");die;
-		if( $this->validateForm()) {
-	        
+        if ($this->validateForm()) {
             $log->write('addAddress fn if');
             //echo "<pre>";print_r("if");die;
-	        $data = $this->request->post;
-	        
-	        $this->load->model('account/address');
+            $data = $this->request->post;
 
-	        $save = false;
+            $this->load->model('account/address');
 
-            
+            $save = false;
+
             $zipcode_exists = $this->model_account_address->zipcodeExists($data['zipcode']);
             /*
                 get city_id from zipcode
             */
-            if(count($zipcode_exists) > 0) {
+            if (count($zipcode_exists) > 0) {
                 //$data['city_id'] = $data['shipping_city_id'];
                 $data['city_id'] = 0;
 
-                if($data['city_id'] == 0) {
+                if (0 == $data['city_id']) {
                     $data['city_id'] = $zipcode_exists['city_id'];
                 }
 
-                $data['name'] = isset($data['name_title'])?$data['name_title']." ".$data['name']:$data['name'];
+                $data['name'] = isset($data['name_title']) ? $data['name_title'].' '.$data['name'] : $data['name'];
 
-                $data['contact_no'] = isset($data['contact_no'])?$data['contact_no']:'';
-                $data['flat_number'] = isset($data['flat_number'])?$data['flat_number']:'';
-                $data['building_name'] = isset($data['address_street'])?$data['address_street']:'';
+                $data['contact_no'] = isset($data['contact_no']) ? $data['contact_no'] : '';
+                $data['flat_number'] = isset($data['flat_number']) ? $data['flat_number'] : '';
+                $data['building_name'] = isset($data['address_street']) ? $data['address_street'] : '';
 
-                $data['address_type'] = isset($data['address_type'])?$data['address_type']:'home';
+                $data['address_type'] = isset($data['address_type']) ? $data['address_type'] : 'home';
 
-                $data['landmark'] = isset($data['landmark'])?$data['landmark']:'';
+                $data['landmark'] = isset($data['landmark']) ? $data['landmark'] : '';
 
-
-                if(empty($data['building_name'])) {
+                if (empty($data['building_name'])) {
                     $data['building_name'] = $data['landmark'];
                 }
                 //$data['address'] = $data['flat_number'].", ".$data['building_name'].", ".$data['landmark'];
-                $data['address'] = $data['flat_number'].", ".$data['landmark'];
+                $data['address'] = $data['flat_number'].', '.$data['landmark'];
 
-                $mapAddress = $data['building_name']." ".$data['zipcode'];
-
+                $mapAddress = $data['building_name'].' '.$data['zipcode'];
 
                 //echo "<pre>";print_r($this->request->post);die;
                 //echo "<pre>";print_r($data);die;
 
-                if($this->config->get('config_address_check') || true) {
-
-                    $correctAddress['lat'] = isset($data['latitude'])?$data['latitude']:null;
-                    $correctAddress['lng'] = isset($data['longitude'])?$data['longitude']:null;
+                if ($this->config->get('config_address_check') || true) {
+                    $correctAddress['lat'] = isset($data['latitude']) ? $data['latitude'] : null;
+                    $correctAddress['lng'] = isset($data['longitude']) ? $data['longitude'] : null;
 
                     $correctAddress['status'] = true;
 
-                    if(is_null($correctAddress['lat']) || is_null($correctAddress['lng']) || !$correctAddress['lng'] || !$correctAddress['lat'] ) {
+                    if (is_null($correctAddress['lat']) || is_null($correctAddress['lng']) || !$correctAddress['lng'] || !$correctAddress['lat']) {
                         $correctAddress['status'] = false;
                     }
 
                     //echo "<pre>";print_r($correctAddress);die;
-                    if($correctAddress['status'])
-                    {
+                    if ($correctAddress['status']) {
                         $data['lat'] = $correctAddress['lat'];
                         $data['lng'] = $correctAddress['lng'];
 
-                        $respData = $this->getAddressFromLatLng($data['lat'].",".$data['lng']);
+                        $respData = $this->getAddressFromLatLng($data['lat'].','.$data['lng']);
 
-
-                        if(count($respData) > 0 && !empty(trim($respData['full_address'])) ) {
-
+                        if (count($respData) > 0 && !empty(trim($respData['full_address']))) {
                             $city_id = $this->model_account_address->getCityByName($respData['city']);
 
-                            if($city_id) {
-                                $data['city_id'] = $city_id;    
+                            if ($city_id) {
+                                $data['city_id'] = $city_id;
                             }
                         }
-                        
 
                         $save = true;
                         $address_id = $this->model_account_address->addAddress($data);
                     } else {
-
-                        $json['message'][] = ['type' =>  '' , 'body' =>  $this->language->get('text_addree_not_found') ];
+                        $json['message'][] = ['type' => '', 'body' => $this->language->get('text_addree_not_found')];
                     }
                 } else {
                     $data['lat'] = '';
@@ -424,43 +385,40 @@ class ControllerApiCustomerAddress extends Controller {
                     $address_id = $this->model_account_address->addAddress($data);
                 }
 
-                if($save){
-                	// saved address
-		            //$json['status'] = 10015;
+                if ($save) {
+                    // saved address
+                    //$json['status'] = 10015;
 
                     $json['data']['address_id'] = $address_id;
 
-                    $json['message'][] = ['type' =>  '' , 'body' =>  $this->language->get('text_added_successfully') ];
+                    $json['message'][] = ['type' => '', 'body' => $this->language->get('text_added_successfully')];
+                } else {
+                    $json['status'] = 10016;
 
-		        } else {
-
-		            $json['status'] = 10016;
-
-                    $json['message'][] = ['type' =>  '' , 'body' =>  $this->language->get('text_could_not_save') ];
-		        }
+                    $json['message'][] = ['type' => '', 'body' => $this->language->get('text_could_not_save')];
+                }
             } else {
-            	$json['status'] = 10017;
+                $json['status'] = 10017;
 
-                $json['message'][] = ['type' =>  '' , 'body' =>  $this->language->get('text_zipcode_not_exists') ];
+                $json['message'][] = ['type' => '', 'body' => $this->language->get('text_zipcode_not_exists')];
             }
-		} else {
-
+        } else {
             $log->write('addAddress fn else');
 
-			$json['status'] = 10014;
+            $json['status'] = 10014;
 
-            $json['message'][] = ['type' =>  '' , 'body' =>  $this->language->get('text_missing_form_data') ];
+            $json['message'][] = ['type' => '', 'body' => $this->language->get('text_missing_form_data')];
 
             http_response_code(400);
-		}
-		
-		$this->response->addHeader('Content-Type: application/json');
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getAddress($args = []){
-        
-        $json = array();
+    public function getAddress($args = [])
+    {
+        $json = [];
         //echo "<pre>";print_r($args);die;
         //echo "<pre>";print_r("getaddress");die;
         $this->load->language('information/locations');
@@ -469,61 +427,57 @@ class ControllerApiCustomerAddress extends Controller {
         $json['data'] = [];
         $json['message'] = [];
 
-		$this->load->language('api/general');
-		$this->load->model('account/address');
+        $this->load->language('api/general');
+        $this->load->model('account/address');
 
+        if ($args['address_id']) {
+            $address_name = '';
 
-		if( $args['address_id']) {
-
-	        $address_name = '';
-
-	        $data = $this->model_account_address->getAddress($args['address_id']);
+            $data = $this->model_account_address->getAddress($args['address_id']);
 
             //echo "<pre>";print_r($data);die;
-	        if(!empty($data)) {
-
+            if (!empty($data)) {
                 $data['name_title'] = null;
 
-                $name_title_mr = substr($data['name'], 0,4);
-                $name_title_mrs = substr($data['name'], 0,5);
-                $name_title_miss = substr($data['name'], 0,6);
+                $name_title_mr = substr($data['name'], 0, 4);
+                $name_title_mrs = substr($data['name'], 0, 5);
+                $name_title_miss = substr($data['name'], 0, 6);
 
                 //send me name title as full with dot also
-                if(strtolower($name_title_mr) == 'mr. ') {
+                if ('mr. ' == strtolower($name_title_mr)) {
                     $data['name_title'] = $name_title_mr;
-                } elseif(strtolower($name_title_mrs) == 'mrs. ') {
+                } elseif ('mrs. ' == strtolower($name_title_mrs)) {
                     $data['name_title'] = $name_title_mrs;
-                } elseif(strtolower($name_title_miss) == 'miss. ') {
+                } elseif ('miss. ' == strtolower($name_title_miss)) {
                     $data['name_title'] = $name_title_miss;
                 }
 
-	            $json['data'] = $data;
-	        } else {
+                $json['data'] = $data;
+            } else {
                 //address not found
-                
+
                 $json['status'] = 10019;
 
-                $json['message'][] = ['type' =>  '' , 'body' =>  $this->language->get('text_address_not_found') ];
+                $json['message'][] = ['type' => '', 'body' => $this->language->get('text_address_not_found')];
             }
-		} else {
+        } else {
+            $json['status'] = 10013;
 
-			$json['status'] = 10013;
-
-            $json['message'][] = ['type' =>  '' , 'body' =>  $this->language->get('text_not_loggedin') ];
+            $json['message'][] = ['type' => '', 'body' => $this->language->get('text_not_loggedin')];
 
             http_response_code(400);
-		}
-		
-		$this->response->addHeader('Content-Type: application/json');
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
 
-    public function editAddress($args = array()) {
-
+    public function editAddress($args = [])
+    {
         $log = new Log('error.log');
         $log->write('editAddress');
 
-    	$json = array();
+        $json = [];
         //echo "<pre>";print_r($args);die;
         //echo "<pre>";print_r("getaddress");die;
 
@@ -533,141 +487,127 @@ class ControllerApiCustomerAddress extends Controller {
         $json['data'] = [];
         $json['message'] = [];
 
-		$this->load->language('api/general');
+        $this->load->language('api/general');
 
-		$this->load->model('assets/category');
+        $this->load->model('assets/category');
 
-		$this->load->model('assets/product');
+        $this->load->model('assets/product');
 
-		$this->load->model('tool/image');
+        $this->load->model('tool/image');
 
-		$this->load->model('account/address');
+        $this->load->model('account/address');
 
+        if ($this->editvalidateForm($args) && isset($args['address_id'])) {
+            $data = $args;
 
-		if( $this->editvalidateForm($args) && isset($args['address_id'])) {
-			$data = $args;
-	        
-	        $this->load->model('account/address');
+            $this->load->model('account/address');
 
             $save = false;
 
-            
             $zipcode_exists = $this->model_account_address->zipcodeExists($data['zipcode']);
             /*
                 get city_id from zipcode
             */
-            if(count($zipcode_exists) > 0) {
+            if (count($zipcode_exists) > 0) {
                 //$data['city_id'] = $data['shipping_city_id'];
                 $data['address_id'] = $data['address_id'];
                 $data['zipcode'] = $data['zipcode'];
                 //$data['city_id'] = $data['city_id'];
                 $data['city_id'] = 0;
 
-                if($data['city_id'] == 0) {
+                if (0 == $data['city_id']) {
                     $data['city_id'] = $zipcode_exists['city_id'];
                 }
-                
 
+                $data['name'] = isset($data['name_title']) ? $data['name_title'].' '.$data['name'] : $data['name'];
 
-                $data['name'] = isset($data['name_title'])?$data['name_title']." ".$data['name']:$data['name'];
-                
-                $data['flat_number'] = isset($data['flat_number'])?$data['flat_number']:'';
+                $data['flat_number'] = isset($data['flat_number']) ? $data['flat_number'] : '';
 
-                $data['contact_no'] = isset($data['contact_no'])?$data['contact_no']:'';
+                $data['contact_no'] = isset($data['contact_no']) ? $data['contact_no'] : '';
 
-                $data['building_name'] = isset($data['address_street'])?$data['address_street']:'';
+                $data['building_name'] = isset($data['address_street']) ? $data['address_street'] : '';
 
-                $data['address_type'] = isset($data['address_type'])?$data['address_type']:'home';
+                $data['address_type'] = isset($data['address_type']) ? $data['address_type'] : 'home';
 
-                $data['landmark'] = isset($data['landmark'])?$data['landmark']:'';
+                $data['landmark'] = isset($data['landmark']) ? $data['landmark'] : '';
 
                 //$data['address'] = $data['flat_number'].", ".$data['building_name'].", ".$data['landmark'];
-                $data['address'] = $data['flat_number'].", ".$data['landmark'];
+                $data['address'] = $data['flat_number'].', '.$data['landmark'];
 
-                $mapAddress = $data['building_name']." ".$data['zipcode'];
-
+                $mapAddress = $data['building_name'].' '.$data['zipcode'];
 
                 //echo "<pre>";print_r($args);die;
                 //echo "<pre>";print_r($data);die;
 
-                if($this->config->get('config_address_check')) {
-
-                    $correctAddress['lat'] = isset($data['latitude'])?$data['latitude']:null;
-                    $correctAddress['lng'] = isset($data['longitude'])?$data['longitude']:null;
+                if ($this->config->get('config_address_check')) {
+                    $correctAddress['lat'] = isset($data['latitude']) ? $data['latitude'] : null;
+                    $correctAddress['lng'] = isset($data['longitude']) ? $data['longitude'] : null;
 
                     $correctAddress['status'] = true;
 
-                    if(is_null($correctAddress['lat']) || is_null($correctAddress['lng']) || !$correctAddress['lng'] || !$correctAddress['lat'] ) {
+                    if (is_null($correctAddress['lat']) || is_null($correctAddress['lng']) || !$correctAddress['lng'] || !$correctAddress['lat']) {
                         $correctAddress['status'] = false;
                     }
 
                     //echo "<pre>";print_r($correctAddress);die;
-                    if($correctAddress['status'])
-                    {
+                    if ($correctAddress['status']) {
                         $data['lat'] = $correctAddress['lat'];
                         $data['lng'] = $correctAddress['lng'];
 
                         $save = true;
 
-                        $respData = $this->getAddressFromLatLng($data['lat'].",".$data['lng']);
+                        $respData = $this->getAddressFromLatLng($data['lat'].','.$data['lng']);
 
-
-                        if(count($respData) > 0 && !empty(trim($respData['full_address'])) ) {
-
+                        if (count($respData) > 0 && !empty(trim($respData['full_address']))) {
                             $log->write($respData);
                             $city_id = $this->model_account_address->getCityByName($respData['city']);
 
-                            if(!empty($city_id)) {
-                                $data['city_id'] = $city_id;    
+                            if (!empty($city_id)) {
+                                $data['city_id'] = $city_id;
                             }
                         }
 
-                        $address_id = $this->model_account_address->editAddress($data['address_id'],$data);
+                        $address_id = $this->model_account_address->editAddress($data['address_id'], $data);
                     } else {
-                        $json['message'][] = ['type' =>  '' , 'body' =>  $this->language->get('text_addree_not_found') ];
+                        $json['message'][] = ['type' => '', 'body' => $this->language->get('text_addree_not_found')];
                     }
                 } else {
                     $data['lat'] = '';
                     $data['lng'] = '';
 
                     $save = true;
-                    $address_id = $this->model_account_address->editAddress($data['address_id'],$data);
+                    $address_id = $this->model_account_address->editAddress($data['address_id'], $data);
                 }
 
-                if($save){
+                if ($save) {
                     // saved address
                     //$json['status'] = 10018;
 
-                    $json['message'][] = ['type' =>  '' , 'body' =>  $this->language->get('text_edited_successfully') ];
-
+                    $json['message'][] = ['type' => '', 'body' => $this->language->get('text_edited_successfully')];
                 } else {
-
                     $json['status'] = 10016;
 
-                    $json['message'][] = ['type' =>  '' , 'body' =>  $this->language->get('text_could_not_save') ];
+                    $json['message'][] = ['type' => '', 'body' => $this->language->get('text_could_not_save')];
                 }
             } else {
                 $json['status'] = 10017;
 
-                $json['message'][] = ['type' =>  '' , 'body' =>  $this->language->get('text_zipcode_not_exists') ];
+                $json['message'][] = ['type' => '', 'body' => $this->language->get('text_zipcode_not_exists')];
             }
-	        
-		} else {
+        } else {
+            $json['status'] = 10013;
 
-			$json['status'] = 10013;
-
-            $json['message'][] = ['type' =>  '' , 'body' =>  $this->language->get('text_not_loggedin') ];
+            $json['message'][] = ['type' => '', 'body' => $this->language->get('text_not_loggedin')];
 
             http_response_code(400);
-		}
-		
-		$this->response->addHeader('Content-Type: application/json');
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
 
-
-    protected function validateForm() {
-
+    protected function validateForm()
+    {
         $log = new Log('error.log');
 
         if ((utf8_strlen(trim($this->request->post['name'])) < 1) || (utf8_strlen(trim($this->request->post['name'])) > 32)) {
@@ -682,7 +622,6 @@ class ControllerApiCustomerAddress extends Controller {
             $this->error['address_street'] = $this->language->get('error_address_street');
         }*/
 
-        
         if (empty($this->request->post['latitude'])) {
             $this->error['latitude'] = $this->language->get('error_latitude');
         }
@@ -710,7 +649,8 @@ class ControllerApiCustomerAddress extends Controller {
         return !$this->error;
     }
 
-    protected function editvalidateForm($args) {
+    protected function editvalidateForm($args)
+    {
         if ((utf8_strlen(trim($args['name'])) < 1) || (utf8_strlen(trim($args['name'])) > 32)) {
             $this->error['name'] = $this->language->get('error_name');
         }
@@ -723,7 +663,6 @@ class ControllerApiCustomerAddress extends Controller {
             $this->error['address_street'] = $this->language->get('error_address_street');
         }
 
-        
         if (empty($args['latitude'])) {
             $this->error['latitude'] = $this->language->get('error_latitude');
         }
@@ -752,8 +691,8 @@ class ControllerApiCustomerAddress extends Controller {
         return !$this->error;
     }
 
-    protected function validateDelete() {
-        
+    protected function validateDelete()
+    {
         /*if ($this->customer->getAddressId() == $this->request->get['address_id']) {
             $this->error['warning'] = $this->language->get('error_default');
         }*/
@@ -761,9 +700,9 @@ class ControllerApiCustomerAddress extends Controller {
         return !$this->error;
     }
 
-    public function addMakedefaultaddress() {
-
-        $json = array();
+    public function addMakedefaultaddress()
+    {
+        $json = [];
 
         $this->load->language('information/locations');
 
@@ -790,40 +729,38 @@ class ControllerApiCustomerAddress extends Controller {
         $log->write($this->model_account_address->getAddress($this->request->post['address_id']));
 
         //if( !empty($this->request->post['address_id']) && $this->model_account_address->getAddress($this->request->post['address_id'])) {
-        if( !empty($this->request->post['address_id'])) {
-        
+        if (!empty($this->request->post['address_id'])) {
             $customer_id = $this->request->post['customer_id'];
 
-            $this->model_account_address->editMakeDefaultAddressApi($this->request->post['address_id'],$customer_id);
-            
+            $this->model_account_address->editMakeDefaultAddressApi($this->request->post['address_id'], $customer_id);
+
             //$json['status'] = 10018;
 
-            $json['message'][] = ['type' =>  '' , 'body' =>  $this->language->get('text_edited_successfully') ];
-
+            $json['message'][] = ['type' => '', 'body' => $this->language->get('text_edited_successfully')];
         } else {
-
             $json['status'] = 10014;
 
-            $json['message'][] = ['type' =>  '' , 'body' =>  $this->language->get('text_missing_form_data') ];
+            $json['message'][] = ['type' => '', 'body' => $this->language->get('text_missing_form_data')];
 
             http_response_code(400);
         }
-        
+
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getDistance( $latitude1, $longitude1, $latitude2, $longitude2 ,$storeRadius) {
+    public function getDistance($latitude1, $longitude1, $latitude2, $longitude2, $storeRadius)
+    {
         $earth_radius = 6371;
 
-        $dLat = deg2rad( $latitude2 - $latitude1 );  
-        $dLon = deg2rad( $longitude2 - $longitude1 );  
+        $dLat = deg2rad($latitude2 - $latitude1);
+        $dLon = deg2rad($longitude2 - $longitude1);
 
-        $a = sin($dLat/2) * sin($dLat/2) + cos(deg2rad($latitude1)) * cos(deg2rad($latitude2)) * sin($dLon/2) * sin($dLon/2);  
-        $c = 2 * asin(sqrt($a));  
-        $d = $earth_radius * $c;  
+        $a = sin($dLat / 2) * sin($dLat / 2) + cos(deg2rad($latitude1)) * cos(deg2rad($latitude2)) * sin($dLon / 2) * sin($dLon / 2);
+        $c = 2 * asin(sqrt($a));
+        $d = $earth_radius * $c;
 
-        if( $d < $storeRadius ) {
+        if ($d < $storeRadius) {
             //echo "Within 100 kilometer radius";
             return true;
         } else {
@@ -832,84 +769,76 @@ class ControllerApiCustomerAddress extends Controller {
         }
     }
 
-    public function getAddressFromLatLng($location) {
-
-        
-
+    public function getAddressFromLatLng($location)
+    {
         $data['full_address'] = '';
         $data['street_number'] = '';
         $data['short_address'] = '';
         $data['city'] = '';
 
-        $userSearch = explode(",", $location);
+        $userSearch = explode(',', $location);
 
         //echo "<pre>";print_r($location);die;
 
-        if(count($userSearch) >= 2) {
+        if (count($userSearch) >= 2) {
             $validateLat = is_numeric($userSearch[0]);
             $validateLat2 = is_numeric($userSearch[1]);
 
-            $validateLat3 = strpos( $userSearch[0], '.');
-            $validateLat4 = strpos( $userSearch[1], '.');
+            $validateLat3 = strpos($userSearch[0], '.');
+            $validateLat4 = strpos($userSearch[1], '.');
 
-
-            if($validateLat && $validateLat2 && $validateLat3 && $validateLat4 ) {
+            if ($validateLat && $validateLat2 && $validateLat3 && $validateLat4) {
                 try {
-
                     $url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='.$location.'&sensor=false&key='.$this->config->get('config_google_server_api_key');
 
                     //echo "<pre>";print_r($url);die;
                     $ch = curl_init();
                     curl_setopt($ch, CURLOPT_URL, $url);
-                    
-                    $headers = array( 
-                             "Cache-Control: no-cache", 
-                            ); 
+
+                    $headers = [
+                             'Cache-Control: no-cache',
+                            ];
                     curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
                     curl_setopt($ch, CURLOPT_FRESH_CONNECT, 1);
                     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
                     //curl_setopt($ch, CURLOPT_REFERER, '52.178.112.211');
 
                     curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_WHATEVER);
-            
+
                     $response = curl_exec($ch);
                     curl_close($ch);
                     $output = json_decode($response);
 
                     //echo "<pre>";print_r($output);die;
-                    if(isset($output) && isset($output->results) && isset($output->results[0]) ) {
+                    if (isset($output) && isset($output->results) && isset($output->results[0])) {
                         foreach ($output->results[0]->address_components as $addres) {
-
-                            if(isset($addres->types)) {
-                                if(in_array('street_number', $addres->types)) {
+                            if (isset($addres->types)) {
+                                if (in_array('street_number', $addres->types)) {
                                     //echo "<pre>";print_r($addres);die;
                                     $data['street_number'] = $addres->long_name;
                                 }
 
-                                if(in_array('route', $addres->types)) {
+                                if (in_array('route', $addres->types)) {
                                     //echo "<pre>";print_r($addres);die;
                                     $data['short_address'] = $addres->short_name;
                                 }
 
-                                if(in_array('locality', $addres->types)) {
+                                if (in_array('locality', $addres->types)) {
                                     //echo "<pre>";print_r($addres);die;
                                     $data['city'] = $addres->short_name;
                                 }
-
                             }
-                        } 
+                        }
 
-                        if(isset($output->results[0]->formatted_address)) {
+                        if (isset($output->results[0]->formatted_address)) {
                             $data['full_address'] = $output->results[0]->formatted_address;
-                        }   
+                        }
                     }
-                    
                 } catch (Exception $e) {
-                    
                 }
             }
         }
-            
+
         //echo "<pre>";print_r($data['street_number']."ss".$data['short_address']."fd".$data['full_address']);die;
         return $data;
     }

@@ -3,24 +3,22 @@
 namespace Stripe;
 
 /**
- * Class Token
+ * Class Token.
  *
  * @property string $id
  * @property string $object
- * @property mixed $bank_account
- * @property mixed $card
- * @property mixed $client_ip
- * @property int $created
- * @property bool $livemode
+ * @property mixed  $bank_account
+ * @property mixed  $card
+ * @property mixed  $client_ip
+ * @property int    $created
+ * @property bool   $livemode
  * @property string $type
- * @property bool $used
- *
- * @package Stripe
+ * @property bool   $used
  */
 class Token extends ApiResource
 {
     /**
-     * @param string $id The ID of the token to retrieve.
+     * @param string            $id   the ID of the token to retrieve
      * @param array|string|null $opts
      *
      * @return Token
@@ -31,10 +29,10 @@ class Token extends ApiResource
     }
 
     /**
-     * @param array|null $params
+     * @param array|null        $params
      * @param array|string|null $opts
      *
-     * @return Token The created token.
+     * @return Token the created token
      */
     public static function create($params = null, $opts = null)
     {

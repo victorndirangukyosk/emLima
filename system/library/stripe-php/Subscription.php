@@ -3,16 +3,14 @@
 namespace Stripe;
 
 /**
- * Class Subscription
- *
- * @package Stripe
+ * Class Subscription.
  */
 class Subscription extends ApiResource
 {
     /**
      * These constants are possible representations of the status field.
      *
-     * @link https://stripe.com/docs/api#subscription_object-status
+     * @see https://stripe.com/docs/api#subscription_object-status
      */
     const STATUS_ACTIVE = 'active';
     const STATUS_CANCELED = 'canceled';
@@ -21,7 +19,7 @@ class Subscription extends ApiResource
     const STATUS_UNPAID = 'unpaid';
 
     /**
-     * @param string $id The ID of the subscription to retrieve.
+     * @param string            $id   the ID of the subscription to retrieve
      * @param array|string|null $opts
      *
      * @return Subscription
@@ -32,7 +30,7 @@ class Subscription extends ApiResource
     }
 
     /**
-     * @param array|null $params
+     * @param array|null        $params
      * @param array|string|null $opts
      *
      * @return Collection of Subscriptions
@@ -43,10 +41,10 @@ class Subscription extends ApiResource
     }
 
     /**
-     * @param array|null $params
+     * @param array|null        $params
      * @param array|string|null $opts
      *
-     * @return Subscription The created subscription.
+     * @return Subscription the created subscription
      */
     public static function create($params = null, $opts = null)
     {
@@ -54,11 +52,11 @@ class Subscription extends ApiResource
     }
 
     /**
-     * @param string $id The ID of the subscription to retrieve.
-     * @param array|null $params
+     * @param string            $id      the ID of the subscription to retrieve
+     * @param array|null        $params
      * @param array|string|null $options
      *
-     * @return Subscription The updated subscription.
+     * @return Subscription the updated subscription
      */
     public static function update($id, $params = null, $options = null)
     {
@@ -68,7 +66,7 @@ class Subscription extends ApiResource
     /**
      * @param array|null $params
      *
-     * @return Subscription The deleted subscription.
+     * @return Subscription the deleted subscription
      */
     public function cancel($params = null, $opts = null)
     {
@@ -78,7 +76,7 @@ class Subscription extends ApiResource
     /**
      * @param array|string|null $opts
      *
-     * @return Subscription The saved subscription.
+     * @return Subscription the saved subscription
      */
     public function save($opts = null)
     {
@@ -86,12 +84,12 @@ class Subscription extends ApiResource
     }
 
     /**
-     * @return Subscription The updated subscription.
+     * @return Subscription the updated subscription
      */
     public function deleteDiscount()
     {
-        $url = $this->instanceUrl() . '/discount';
+        $url = $this->instanceUrl().'/discount';
         list($response, $opts) = $this->_request('delete', $url);
-        $this->refreshFrom(array('discount' => null), $opts, true);
+        $this->refreshFrom(['discount' => null], $opts, true);
     }
 }

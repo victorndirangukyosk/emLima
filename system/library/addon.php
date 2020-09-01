@@ -1,33 +1,34 @@
 <?php
 
-
 use Symfony\Component\Finder\Finder;
 
-class Addon extends SmartObject {
-
-    public function __construct($registry) {
+class Addon extends SmartObject
+{
+    public function __construct($registry)
+    {
         $this->db = $registry->get('db');
         $this->cache = $registry->get('cache');
         $this->config = $registry->get('config');
         $this->utility = $registry->get('utility');
     }
 
-    public function getAddons() {
+    public function getAddons()
+    {
         $data = $this->cache->get('addon');
 
         if (empty($data)) {
-            $data = array();
+            $data = [];
 
-            $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "addon ORDER BY product_type, addon_id");
+            $query = $this->db->query('SELECT * FROM '.DB_PREFIX.'addon ORDER BY product_type, addon_id');
 
             foreach ($query->rows as $result) {
-                $data[$result['product_id']] = array(
-                    'product_id'          => $result['product_id'],
-                    'product_name'        => $result['product_name'],
-                    'product_type'        => $result['product_type'],
-                    'product_version'     => $result['product_version'],
-                    'addon_files'         => $result['addon_files']
-                );
+                $data[$result['product_id']] = [
+                    'product_id' => $result['product_id'],
+                    'product_name' => $result['product_name'],
+                    'product_type' => $result['product_type'],
+                    'product_version' => $result['product_version'],
+                    'addon_files' => $result['addon_files'],
+                ];
             }
 
             $this->cache->set('addon', $data);
@@ -36,13 +37,15 @@ class Addon extends SmartObject {
         return $data;
     }
 
-    public function getAddon($id) {
-        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "addon WHERE `product_id` = " . $id);
+    public function getAddon($id)
+    {
+        $query = $this->db->query('SELECT * FROM '.DB_PREFIX.'addon WHERE `product_id` = '.$id);
 
         return $query->row;
     }
 
-    public function addAddon($data) {
+    public function addAddon($data)
+    {
         // Get files the zip includes
         $files = json_encode($this->indexFiles($data['dir']));
 
@@ -50,43 +53,45 @@ class Addon extends SmartObject {
         $host = explode('/', $data['install_url']);
         $type = $host[3];
 
-        $this->db->query("INSERT INTO ". DB_PREFIX . "addon SET `product_id` = " . (int)$data['product_id'] . ", `product_name` = '" . $this->db->escape($data['product_name']) . "', `product_type` = '" . $this->db->escape($type) . "', `product_version` = '" . $this->db->escape($data['product_version']) . "', `addon_files` = '" . $this->db->escape($files) . "'");
+        $this->db->query('INSERT INTO '.DB_PREFIX.'addon SET `product_id` = '.(int) $data['product_id'].", `product_name` = '".$this->db->escape($data['product_name'])."', `product_type` = '".$this->db->escape($type)."', `product_version` = '".$this->db->escape($data['product_version'])."', `addon_files` = '".$this->db->escape($files)."'");
     }
 
-    public function removeAddon($id, $codes = array()) {
-        $this->db->query("DELETE FROM ". DB_PREFIX . "addon WHERE `product_id` = " . $id);
+    public function removeAddon($id, $codes = [])
+    {
+        $this->db->query('DELETE FROM '.DB_PREFIX.'addon WHERE `product_id` = '.$id);
 
         if (count($codes)) {
             foreach ($codes as $code) {
-                $this->db->query("DELETE FROM ". DB_PREFIX . "modification WHERE `code` = '" . $code . "'");
+                $this->db->query('DELETE FROM '.DB_PREFIX."modification WHERE `code` = '".$code."'");
             }
         }
     }
 
-    public function indexFiles($path) {
+    public function indexFiles($path)
+    {
         $upload_path = $path;
-        if (file_exists($path . '/upload')) {
-            $upload_path = $path . '/upload';
+        if (file_exists($path.'/upload')) {
+            $upload_path = $path.'/upload';
         }
 
         $finder = new Finder();
         $finder->files()->in($upload_path);
 
-        $data = array();
+        $data = [];
 
         foreach ($finder as $file) {
             $data[] = $file->getRelativePathname();
         }
 
-        if (file_exists($path . '/install.xml')) {
+        if (file_exists($path.'/install.xml')) {
             $dom = new DOMDocument('1.0', 'UTF-8');
-            $xml = file_get_contents($path . '/install.xml');
+            $xml = file_get_contents($path.'/install.xml');
             $dom->loadXml($xml);
 
             $code = $dom->getElementsByTagName('code')->item(0);
             $code = $code->nodeValue;
 
-            $data[] = 'system/xml/' . $code . '.xml';
+            $data[] = 'system/xml/'.$code.'.xml';
         }
 
         return $data;

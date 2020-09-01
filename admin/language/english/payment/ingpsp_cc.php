@@ -1,13 +1,13 @@
 <?php
 
 /**
- * General Admin Settings Page
+ * General Admin Settings Page.
  */
 $_['heading_title'] = 'ING PSP: Credit Card';
 $_['text_ingpsp_cc'] = '<img src="ui/image/payment/ingpsp.png" alt="ING PSP" title="ING PSP" />';
 $_['text_extension'] = 'Extensions';
 
-/**
+/*
  * Entry points
  */
 $_['entry_status'] = 'Status:';
@@ -24,7 +24,7 @@ $_['entry_ing_product'] = 'ING PSP Product:';
 $_['entry_cacert'] = 'Bundle cURL ca.cert:';
 $_['entry_send_webhook'] = 'Generate webhook URL:';
 
-/**
+/*
  * Text strings
  */
 $_['text_button_save'] = 'Save';
@@ -38,12 +38,12 @@ $_['text_edit_ing'] = 'Edit ING PSP: Credit Card Settings';
 $_['text_yes'] = 'Yes';
 $_['text_no'] = 'No';
 
-/**
+/*
  * Error messages
  */
 $_['error_missing_api_key'] = 'ING PSP API Key is required!';
 
-/**
+/*
  * Information text
  */
 $_['info_help_api_key'] = 'Get you ING PSP API key from Payments merchant portal.';

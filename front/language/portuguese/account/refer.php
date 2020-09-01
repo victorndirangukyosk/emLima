@@ -1,27 +1,27 @@
 <?php
 
-/* 
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 
 //Heading
-$_['heading_title'] = "Conte para seus amigos";
-$_['heading_text'] = "Envie uma menssagem ";
+$_['heading_title'] = 'Conte para seus amigos';
+$_['heading_text'] = 'Envie uma menssagem ';
 
 $_['subject'] = 'Hey, olha o que eu achei!';
 $_['mail_message'] = 'Mensagem do seu amigo: <br /> %s <br /><br /> para <a href="%s">%s</a>';
-        
+
 //Field Nmaes
-$_['entry_refral'] = "Seu nome:";
-$_['entry_refral_link'] = "Link de referência:";
-$_['entry_refered'] = "Email do seu amigo:(Separados por vírgulas)";
-$_['entry_email'] = "Código do email:";
-$_['entry_message']= "Mensagem";
+$_['entry_refral'] = 'Seu nome:';
+$_['entry_refral_link'] = 'Link de referência:';
+$_['entry_refered'] = 'Email do seu amigo:(Separados por vírgulas)';
+$_['entry_email'] = 'Código do email:';
+$_['entry_message'] = 'Mensagem';
 
 //Text
-$_['text_success'] = "A sua referência foi enviada com sucesso para o seu amigo";
+$_['text_success'] = 'A sua referência foi enviada com sucesso para o seu amigo';
 
 // Error
 $_['error_exists'] = 'Atenção: O endereço de email já está registrado!';

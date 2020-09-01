@@ -1,1 +1,3 @@
-<?php$_['text_sub_total'] = 'Sub-Total';?>
+<?php
+
+$_['text_sub_total'] = 'Sub-Total';

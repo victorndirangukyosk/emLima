@@ -1,48 +1,55 @@
 <?php
 
-
 use Joomla\Profiler\Profiler;
 
-class App extends SmartObject {
-
+class App extends SmartObject
+{
     protected $registry;
 
-	public function __construct() {
-		$this->registry = new Registry();
+    public function __construct()
+    {
+        $this->registry = new Registry();
 
         // Config
-        if (file_exists(DIR_ROOT . 'config.php')) {
-            require_once(DIR_ROOT . 'config.php');
+        if (file_exists(DIR_ROOT.'config.php')) {
+            require_once DIR_ROOT.'config.php';
         }
 
         $this->registry->set('profiler', new Profiler('Trigger'));
-	}
+    }
 
-    public function __get($key) {
+    public function __get($key)
+    {
         return $this->registry->get($key);
     }
 
-    public function __set($key, $value) {
+    public function __set($key, $value)
+    {
         $this->registry->set($key, $value);
     }
 
-    public function initialise() {
+    public function initialise()
+    {
         $this->trigger->fire('post.app.initialise');
     }
 
-    public function ecommerce() {
+    public function ecommerce()
+    {
         $this->trigger->fire('post.app.ecommerce');
     }
 
-    public function route() {
+    public function route()
+    {
         $this->trigger->fire('post.app.route');
     }
 
-    public function dispatch() {
+    public function dispatch()
+    {
         $this->trigger->fire('post.app.dispatch');
     }
 
-    public function render() {
+    public function render()
+    {
         // Render
         $this->response->output();
 
@@ -53,9 +60,10 @@ class App extends SmartObject {
         }
     }
 
-    public function errorHandler($errno, $errstr, $errfile, $errline) {
+    public function errorHandler($errno, $errstr, $errfile, $errline)
+    {
         // error suppressed with @
-        if (error_reporting() === 0) {
+        if (0 === error_reporting()) {
             return false;
         }
 
@@ -78,11 +86,11 @@ class App extends SmartObject {
         }
 
         if ($this->config->get('config_error_display')) {
-            echo '<b>' . $error . '</b>: ' . $errstr . ' in <b>' . $errfile . '</b> on line <b>' . $errline . '</b>';
+            echo '<b>'.$error.'</b>: '.$errstr.' in <b>'.$errfile.'</b> on line <b>'.$errline.'</b>';
         }
 
         if ($this->config->get('config_error_log')) {
-            $this->log->write('PHP ' . $error . ':  ' . $errstr . ' in ' . $errfile . ' on line ' . $errline);
+            $this->log->write('PHP '.$error.':  '.$errstr.' in '.$errfile.' on line '.$errline);
         }
 
         return true;

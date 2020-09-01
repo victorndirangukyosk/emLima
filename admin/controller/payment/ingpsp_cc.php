@@ -1,7 +1,7 @@
 <?php
 
-class ControllerPaymentIngpspCc extends Controller {
-
+class ControllerPaymentIngpspCc extends Controller
+{
     const ING_MODULE = 'ingpsp_cc';
 
     public function index()
@@ -9,7 +9,7 @@ class ControllerPaymentIngpspCc extends Controller {
         $this->load->controller('payment/ingpsp_ideal', static::getModuleName());
     }
 
-    static function getModuleName()
+    public static function getModuleName()
     {
         return static::ING_MODULE;
     }

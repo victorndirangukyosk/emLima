@@ -1,11 +1,11 @@
 <?php
 
-class Controllerwalletscustomerwallet extends Controller {
+class Controllerwalletscustomerwallet extends Controller
+{
+    private $error = [];
 
-    private $error = array();
-
-    public function index() {
-
+    public function index()
+    {
         $this->load->language('wallets/customer_wallet');
         $this->document->setTitle($this->language->get('heading_title'));
 
@@ -14,8 +14,8 @@ class Controllerwalletscustomerwallet extends Controller {
         $this->getList();
     }
 
-    protected function getList() {
-
+    protected function getList()
+    {
         $this->load->language('wallets/customer_wallet');
 
         if (isset($this->request->get['filter_name'])) {
@@ -69,54 +69,52 @@ class Controllerwalletscustomerwallet extends Controller {
         $url = '';
 
         if (isset($this->request->get['filter_name'])) {
-            $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&filter_name='.urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_email'])) {
-            $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&filter_email='.urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_type'])) {
-            $url .= '&filter_type=' . urlencode(html_entity_decode($this->request->get['filter_type'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&filter_type='.urlencode(html_entity_decode($this->request->get['filter_type'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_order_id'])) {
-            $url .= '&filter_order_id=' . urlencode(html_entity_decode($this->request->get['filter_order_id'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&filter_order_id='.urlencode(html_entity_decode($this->request->get['filter_order_id'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_date_added'])) {
-            $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
+            $url .= '&filter_date_added='.$this->request->get['filter_date_added'];
         }
 
         if (isset($this->request->get['sort'])) {
-            $url .= '&sort=' . $this->request->get['sort'];
+            $url .= '&sort='.$this->request->get['sort'];
         }
 
         if (isset($this->request->get['order'])) {
-            $url .= '&order=' . $this->request->get['order'];
+            $url .= '&order='.$this->request->get['order'];
         }
 
         if (isset($this->request->get['page'])) {
-            $url .= '&page=' . $this->request->get['page'];
+            $url .= '&page='.$this->request->get['page'];
         }
 
-        $data['breadcrumbs'] = array();
+        $data['breadcrumbs'] = [];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL')
-        );
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
+        ];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('wallets/customer_wallet', 'token=' . $this->session->data['token'] . $url, 'SSL')
-        );
+            'href' => $this->url->link('wallets/customer_wallet', 'token='.$this->session->data['token'].$url, 'SSL'),
+        ];
 
-        
+        $data['customers'] = [];
 
-        $data['customers'] = array();
-
-        $filter_data = array(
+        $filter_data = [
             'filter_name' => $filter_name,
             'filter_email' => $filter_email,
             'filter_type' => $filter_type,
@@ -125,13 +123,12 @@ class Controllerwalletscustomerwallet extends Controller {
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin')
-        );
+            'limit' => $this->config->get('config_limit_admin'),
+        ];
 
         //echo "<pre>";print_r($filter_data);die;
         $customer_total = $this->model_sale_customer->getTotalWallet($filter_data);
 
-        
         //$results = $this->model_sale_customer->getCustomers($filter_data);
 
         $results = $this->model_sale_customer->getAllCredits($filter_data);
@@ -140,9 +137,7 @@ class Controllerwalletscustomerwallet extends Controller {
         //  echo "<pre>";print_r($results);die;
         //echo "<pre>";print_r($customer_total);die;
         foreach ($results as $result) {
-            
-
-            $data['customers'][] = array(
+            $data['customers'][] = [
                 'customer_id' => $result['customer_id'],
                 'name' => $result['name'],
                 'email' => $result['email'],
@@ -151,7 +146,7 @@ class Controllerwalletscustomerwallet extends Controller {
                 'order_id' => $result['order_id'],
                 'customer_credit_id' => $result['customer_credit_id'],
                 'date_added' => date($this->language->get('datetime_format'), strtotime($result['date_added'])),
-            );
+            ];
         }
 
         $data['filter_order'] = $this->language->get('filter_order');
@@ -220,84 +215,84 @@ class Controllerwalletscustomerwallet extends Controller {
         if (isset($this->request->post['selected'])) {
             $data['selected'] = (array) $this->request->post['selected'];
         } else {
-            $data['selected'] = array();
+            $data['selected'] = [];
         }
 
         $url = '';
 
         if (isset($this->request->get['filter_name'])) {
-            $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&filter_name='.urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_email'])) {
-            $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&filter_email='.urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_order_id'])) {
-            $url .= '&filter_order_id=' . urlencode(html_entity_decode($this->request->get['filter_order_id'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&filter_order_id='.urlencode(html_entity_decode($this->request->get['filter_order_id'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_type'])) {
-            $url .= '&filter_type=' . urlencode(html_entity_decode($this->request->get['filter_type'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&filter_type='.urlencode(html_entity_decode($this->request->get['filter_type'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_date_added'])) {
-            $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
+            $url .= '&filter_date_added='.$this->request->get['filter_date_added'];
         }
 
-        if ($order == 'ASC') {
+        if ('ASC' == $order) {
             $url .= '&order=DESC';
         } else {
             $url .= '&order=ASC';
         }
 
         if (isset($this->request->get['page'])) {
-            $url .= '&page=' . $this->request->get['page'];
+            $url .= '&page='.$this->request->get['page'];
         }
 
-        $data['sort_name'] = $this->url->link('wallets/customer_wallet', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
-        $data['sort_email'] = $this->url->link('wallets/customer_wallet', 'token=' . $this->session->data['token'] . '&sort=c.email' . $url, 'SSL');
-        $data['sort_date_added'] = $this->url->link('wallets/customer_wallet', 'token=' . $this->session->data['token'] . '&sort=date_added' . $url, 'SSL');
+        $data['sort_name'] = $this->url->link('wallets/customer_wallet', 'token='.$this->session->data['token'].'&sort=name'.$url, 'SSL');
+        $data['sort_email'] = $this->url->link('wallets/customer_wallet', 'token='.$this->session->data['token'].'&sort=c.email'.$url, 'SSL');
+        $data['sort_date_added'] = $this->url->link('wallets/customer_wallet', 'token='.$this->session->data['token'].'&sort=date_added'.$url, 'SSL');
 
-        $data['link_order_id'] = $this->url->link('sale/order/info', 'token=' . $this->session->data['token'] . '&sort=date_added' . $url, 'SSL');
+        $data['link_order_id'] = $this->url->link('sale/order/info', 'token='.$this->session->data['token'].'&sort=date_added'.$url, 'SSL');
 
-        $data['link_customer'] = $this->url->link('sale/customer/edit', 'token=' . $this->session->data['token'] . '&sort=date_added' . $url, 'SSL');
+        $data['link_customer'] = $this->url->link('sale/customer/edit', 'token='.$this->session->data['token'].'&sort=date_added'.$url, 'SSL');
 
         $url = '';
 
         if (isset($this->request->get['filter_name'])) {
-            $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&filter_name='.urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_email'])) {
-            $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&filter_email='.urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_order_id'])) {
-            $url .= '&filter_order_id=' . urlencode(html_entity_decode($this->request->get['filter_order_id'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&filter_order_id='.urlencode(html_entity_decode($this->request->get['filter_order_id'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_type'])) {
-            $url .= '&filter_type=' . urlencode(html_entity_decode($this->request->get['filter_type'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&filter_type='.urlencode(html_entity_decode($this->request->get['filter_type'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_date_added'])) {
-            $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
+            $url .= '&filter_date_added='.$this->request->get['filter_date_added'];
         }
 
         if (isset($this->request->get['sort'])) {
-            $url .= '&sort=' . $this->request->get['sort'];
+            $url .= '&sort='.$this->request->get['sort'];
         }
 
         if (isset($this->request->get['order'])) {
-            $url .= '&order=' . $this->request->get['order'];
+            $url .= '&order='.$this->request->get['order'];
         }
 
         $pagination = new Pagination();
         $pagination->total = $customer_total;
         $pagination->page = $page;
         $pagination->limit = $this->config->get('config_limit_admin');
-        $pagination->url = $this->url->link('wallets/customer_wallet', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+        $pagination->url = $this->url->link('wallets/customer_wallet', 'token='.$this->session->data['token'].$url.'&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
@@ -309,7 +304,6 @@ class Controllerwalletscustomerwallet extends Controller {
         $data['filter_type'] = $filter_type;
         $data['filter_date_added'] = $filter_date_added;
 
-
         $data['sort'] = $sort;
         $data['order'] = $order;
 
@@ -320,8 +314,9 @@ class Controllerwalletscustomerwallet extends Controller {
         $this->response->setOutput($this->load->view('wallets/customer_wallet.tpl', $data));
     }
 
-    public function autocomplete() {
-        $json = array();
+    public function autocomplete()
+    {
+        $json = [];
 
         if (isset($this->request->get['filter_name']) || isset($this->request->get['filter_email'])) {
             if (isset($this->request->get['filter_name'])) {
@@ -350,19 +345,19 @@ class Controllerwalletscustomerwallet extends Controller {
 
             $this->load->model('sale/customer');
 
-            $filter_data = array(
+            $filter_data = [
                 'filter_name' => $filter_name,
                 'filter_email' => $filter_email,
                 'filter_order_id' => $filter_order_id,
                 'filter_type' => $filter_type,
                 'start' => 0,
-                'limit' => 5
-            );
+                'limit' => 5,
+            ];
 
             $results = $this->model_sale_customer->getCustomers($filter_data);
 
             foreach ($results as $result) {
-                $json[] = array(
+                $json[] = [
                     'customer_id' => $result['customer_id'],
                     'customer_group_id' => $result['customer_group_id'],
                     'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')),
@@ -373,12 +368,12 @@ class Controllerwalletscustomerwallet extends Controller {
                     'telephone' => $result['telephone'],
                     'fax' => $result['fax'],
                     'custom_field' => unserialize($result['custom_field']),
-                    'address' => $this->model_sale_customer->getAddresses($result['customer_id'])
-                );
+                    'address' => $this->model_sale_customer->getAddresses($result['customer_id']),
+                ];
             }
         }
 
-        $sort_order = array();
+        $sort_order = [];
 
         foreach ($json as $key => $value) {
             $sort_order[$key] = $value['name'];
@@ -389,5 +384,4 @@ class Controllerwalletscustomerwallet extends Controller {
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
-
 }

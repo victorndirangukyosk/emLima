@@ -6,16 +6,16 @@
 <form id="permissions_dialog">
     <?php
         error_reporting(0);
-        
-        require_once('class.util.php');
-        require_once('../../common.php');
+
+        require_once 'class.util.php';
+        require_once '../../common.php';
         checkSession();
-        
+
         $path = util::getWorkspacePath($_GET['path']);
         if (is_dir($path)) {
-            $perm = substr(decoct(fileperms($path)),2);
+            $perm = substr(decoct(fileperms($path)), 2);
         } else {
-            $perm = substr(decoct(fileperms($path)),3);
+            $perm = substr(decoct(fileperms($path)), 3);
         }
         echo '
             <p>Change permissions</p>

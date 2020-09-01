@@ -1,27 +1,27 @@
 <?php
 
-class ControllerCommonLogin extends Controller {
+class ControllerCommonLogin extends Controller
+{
+    private $error = [];
 
-    private $error = array();
-
-    public function index() {
+    public function index()
+    {
         $this->load->language('common/login');
 
         $this->document->setTitle($this->language->get('heading_title'));
 
         $shopper_group_id = $this->config->get('config_shopper_group_ids');
-        
+
         if ($this->user->isLogged() && isset($this->request->get['token']) && ($this->request->get['token'] == $this->session->data['token'])) {
-            if($shopper_group_id == $this->user->getGroupId()) {
-                $this->response->redirect($this->url->link('shopper/request', 'token=' . $this->session->data['token'], 'SSL'));
+            if ($shopper_group_id == $this->user->getGroupId()) {
+                $this->response->redirect($this->url->link('shopper/request', 'token='.$this->session->data['token'], 'SSL'));
             } else {
-                $this->response->redirect($this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL'));
+                $this->response->redirect($this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'));
             }
         }
 
         //echo "<pre>";print_r($this->request->post);die;
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validate()) {
             //echo "<pre>";print_r($this->request->post);die;
 
             $this->session->data['token'] = md5(mt_rand());
@@ -31,37 +31,33 @@ class ControllerCommonLogin extends Controller {
             }
 
             if ($this->config->get('config_sec_admin_login')) {
-
-                $mailData = array(
+                $mailData = [
                     'username' => $this->request->post['username'],
                     'store_name' => $this->config->get('config_name'),
                     'ip_address' => $this->request->server['REMOTE_ADDR'],
-                );
+                ];
 
                 $subject = $this->emailtemplate->getSubject('Login', 'admin_1', $mailData);
                 $message = $this->emailtemplate->getMessage('Login', 'admin_1', $mailData);
 
                 try {
-
                     $mail = new Mail($this->config->get('config_mail'));
                     $mail->setTo($this->config->get('config_sec_admin_login'));
                     $mail->setFrom($this->config->get('config_from_email'));
                     $mail->setSender($this->config->get('config_name'));
                     $mail->setSubject($subject);
                     $mail->setHtml($message);
-                    $mail->send();  
-                    
+                    $mail->send();
                 } catch (Exception $e) {
-                    
                 }
             }
 
-            if($shopper_group_id == $this->user->getGroupId()) {
-                $this->response->redirect($this->url->link('shopper/request', 'token=' . $this->session->data['token'], 'SSL'));
-            } elseif (isset($this->request->post['redirect']) && (strpos($this->request->post['redirect'], HTTP_SERVER) === 0 || strpos($this->request->post['redirect'], HTTPS_SERVER) === 0 )) {
-                $this->response->redirect($this->request->post['redirect'] . '&token=' . $this->session->data['token']);
+            if ($shopper_group_id == $this->user->getGroupId()) {
+                $this->response->redirect($this->url->link('shopper/request', 'token='.$this->session->data['token'], 'SSL'));
+            } elseif (isset($this->request->post['redirect']) && (0 === strpos($this->request->post['redirect'], HTTP_SERVER) || 0 === strpos($this->request->post['redirect'], HTTPS_SERVER))) {
+                $this->response->redirect($this->request->post['redirect'].'&token='.$this->session->data['token']);
             } else {
-                $this->response->redirect($this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL'));
+                $this->response->redirect($this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'));
             }
         }
 
@@ -133,16 +129,16 @@ class ControllerCommonLogin extends Controller {
 
         $this->load->model('tool/image');
 
-        if ($this->config->get('config_image') && is_file(DIR_IMAGE . $this->config->get('config_image'))) {
+        if ($this->config->get('config_image') && is_file(DIR_IMAGE.$this->config->get('config_image'))) {
             $data['thumb'] = $this->model_tool_image->resize($this->config->get('config_image'), 200, 110);
         } else {
             $data['thumb'] = $this->model_tool_image->resize('no_image.png', 200, 110);
         }
 
-        $data['store'] = array(
+        $data['store'] = [
             'name' => $this->config->get('config_name'),
-            'href' => HTTP_CATALOG
-        );
+            'href' => HTTP_CATALOG,
+        ];
 
         // Language list
         $this->load->model('localisation/language');
@@ -159,11 +155,12 @@ class ControllerCommonLogin extends Controller {
 
         $data['header'] = $this->load->controller('common/header');
         $data['footer'] = $this->load->controller('common/footer');
-                
+
         $this->response->setOutput($this->load->view('common/login.tpl', $data));
     }
 
-    protected function validate() {
+    protected function validate()
+    {
         if (!isset($this->request->post['username']) || !isset($this->request->post['password']) || !$this->user->login($this->request->post['username'], $this->request->post['password'])) {
             $this->error['warning'] = $this->language->get('error_login');
         }
@@ -171,7 +168,8 @@ class ControllerCommonLogin extends Controller {
         return !$this->error;
     }
 
-    public function check() {
+    public function check()
+    {
         $path = '';
 
         if (isset($this->request->get['path'])) {
@@ -182,29 +180,29 @@ class ControllerCommonLogin extends Controller {
             }
 
             if (isset($part[1])) {
-                $path .= '/' . $part[1];
+                $path .= '/'.$part[1];
             }
         }
 
-        $ignore = array(
+        $ignore = [
             'common/login',
             'common/forgotten',
-            'common/reset'
-        );
+            'common/reset',
+        ];
 
         if (!$this->user->isLogged() && !in_array($path, $ignore)) {
             return new Action('common/login');
         }
 
         if (isset($this->request->get['path'])) {
-            $ignore = array(
+            $ignore = [
                 'common/login',
                 'common/logout',
                 'common/forgotten',
                 'common/reset',
                 'error/not_found',
-                'error/permission'
-            );
+                'error/permission',
+            ];
 
             if (!in_array($path, $ignore) && (!isset($this->request->get['token']) || !isset($this->session->data['token']) || ($this->request->get['token'] != $this->session->data['token']))) {
                 return new Action('common/login');

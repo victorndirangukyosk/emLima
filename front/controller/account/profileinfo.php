@@ -4,34 +4,26 @@ require_once DIR_SYSTEM.'/vendor/konduto/vendor/autoload.php';
 
 //require_once DIR_SYSTEM.'/vendor/mpesa-php-sdk-master/vendor/autoload.php';
 
-use \Konduto\Core\Konduto;
-use \Konduto\Models;
-use paragraph1\phpFCM\Client;
-use paragraph1\phpFCM\Client as FCMClient;
-use paragraph1\phpFCM\Message;
-use paragraph1\phpFCM\Recipient\Device;
-use paragraph1\phpFCM\Notification;
 require_once DIR_SYSTEM.'/vendor/fcp-php/autoload.php';
 
 require DIR_SYSTEM.'vendor/Facebook/autoload.php';
 
 require_once DIR_APPLICATION.'/controller/api/settings.php';
 
-class ControllerAccountProfileInfo extends Controller {
+class ControllerAccountProfileInfo extends Controller
+{
+    private $error = [];
 
-    private $error = array();
-
-
-    public function index() {  
-
+    public function index()
+    {
         $data['kondutoStatus'] = $this->config->get('config_konduto_status');
-        
+
         $data['konduto_public_key'] = $this->config->get('config_konduto_public_key');
-        
+
         $data['redirect_coming'] = false;
 
         $this->document->addStyle('/front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_login.css');
-        
+
         if (!$this->customer->isLogged()) {
             $this->session->data['redirect'] = $this->url->link('account/profileinfo', '', 'SSL');
 
@@ -40,72 +32,61 @@ class ControllerAccountProfileInfo extends Controller {
 
         $this->load->language('account/edit');
         $this->load->language('account/account');
-        
 
         $this->document->setTitle($this->language->get('heading_title'));
         $this->load->model('account/customer');
 
-   
-        
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_account_customer->addEditCustomerInfo($this->customer->getId(),$this->request->post);
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validate()) {
+            $this->model_account_customer->addEditCustomerInfo($this->customer->getId(), $this->request->post);
             $this->session->data['success'] = $this->language->get('text_success');
-            
-            
-            
+
             // Add to activity log
             $this->load->model('account/activity');
 
-            $activity_data = array(
+            $activity_data = [
                 'customer_id' => $this->customer->getId(),
-                'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName()
-            );
+                'name' => $this->customer->getFirstName().' '.$this->customer->getLastName(),
+            ];
             $log = new Log('error.log');
             $log->write('account profileinfo');
 
             $this->model_account_activity->addActivity('profileinfo', $activity_data);
 
             $log->write('account profileinfo');
-            
 
             $this->response->redirect($this->url->link('account/profileinfo', '', 'SSL'));
         }
 
-        $data['breadcrumbs'] = array();
+        $data['breadcrumbs'] = [];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home')
-        );
+            'href' => $this->url->link('common/home'),
+        ];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_account'),
-            'href' => $this->url->link('account/account', '', 'SSL')
-        );
-
-       
+            'href' => $this->url->link('account/account', '', 'SSL'),
+        ];
 
         $data['heading_title'] = $this->language->get('heading_title');
-        
+
         $data['text_your_details'] = $this->language->get('text_your_details');
         $data['text_additional'] = $this->language->get('text_additional');
         $data['text_select'] = $this->language->get('text_select');
         $data['text_loading'] = $this->language->get('text_loading');
-        
 
         $data['text_male'] = $this->language->get('text_male');
         $data['text_female'] = $this->language->get('text_female');
         $data['text_other'] = $this->language->get('text_other');
         $data['entry_dob'] = $this->language->get('entry_dob');
-        
+
         $data['entry_password'] = $this->language->get('entry_password');
         $data['entry_confirmpassword'] = $this->language->get('entry_confirmpassword');
-        
 
         $data['entry_location'] = $this->language->get('entry_location');
         $data['entry_requirement'] = $this->language->get('entry_requirement');
         $data['entry_mandatory_products'] = $this->language->get('entry_mandatory_products');
-
 
         $data['button_continue'] = $this->language->get('button_continue');
         $data['button_back'] = $this->language->get('button_back');
@@ -149,10 +130,10 @@ class ControllerAccountProfileInfo extends Controller {
         $data['newsletter'] = $this->url->link('account/newsletter', '', 'SSL');
         $data['logout'] = $this->url->link('account/logout', '', 'SSL');
         $data['recurring'] = $this->url->link('account/recurring', '', 'SSL');
-        
-        if ($this->request->server['REQUEST_METHOD'] != 'POST') {
+
+        if ('POST' != $this->request->server['REQUEST_METHOD']) {
             $customer_info = $this->model_account_customer->getCustomerOtherInfo($this->customer->getId());
-             // echo '<pre>';print_r($customer_info);exit;
+            // echo '<pre>';print_r($customer_info);exit;
         }
 
         if (isset($this->error['warning'])) {
@@ -181,32 +162,31 @@ class ControllerAccountProfileInfo extends Controller {
 
         if (isset($this->request->post['location'])) {
             $data['location'] = $this->request->post['location'];
-        }else{
-            $data['location'] = $customer_info['location'];;
+        } else {
+            $data['location'] = $customer_info['location'];
         }
 
         if (isset($this->request->post['requirement'])) {
             $data['requirement'] = $this->request->post['requirement'];
-        }else{
-            $data['requirement'] = $customer_info['requirement_per_week'];;
+        } else {
+            $data['requirement'] = $customer_info['requirement_per_week'];
         }
         if (isset($this->request->post['mandatory_products'])) {
             $data['mandatory_products'] = $this->request->post['mandatory_products'];
-        }else{
-            $data['mandatory_products'] = $customer_info['mandatory_veg_fruits'];;
+        } else {
+            $data['mandatory_products'] = $customer_info['mandatory_veg_fruits'];
         }
-    
+
         if ($this->request->server['HTTPS']) {
             $server = $this->config->get('config_ssl');
         } else {
             $server = $this->config->get('config_url');
         }
 
-        
         $data['base'] = $server;
 
         $data['action'] = $this->url->link('account/profileinfo', '', 'SSL');
-        
+
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['column_right'] = $this->load->controller('common/column_right');
         $data['content_top'] = $this->load->controller('common/content_top');
@@ -219,7 +199,7 @@ class ControllerAccountProfileInfo extends Controller {
 
         $data['home'] = $this->url->link('common/home/toHome');
         //$data['telephone'] =  $this->formatTelephone($this->customer->getTelephone());
-        /** Added new params */
+        /* Added new params */
         $data['is_login'] = $this->customer->isLogged();
         $data['full_name'] = $this->customer->getFirstName();
         $data['text_my_cash'] = $this->language->get('text_my_cash');
@@ -227,17 +207,17 @@ class ControllerAccountProfileInfo extends Controller {
         $data['label_my_address'] = $this->language->get('label_my_address');
         $data['contactus'] = $this->language->get('contactus');
         $data['text_cash'] = $this->language->get('text_cash');
-        
+
         //echo "<pre>";print_r($data['telephone'] );die;
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/profileinfo.tpl')) {
-            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/profileinfo.tpl', $data));
+        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/account/profileinfo.tpl')) {
+            $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/account/profileinfo.tpl', $data));
         } else {
             $this->response->setOutput($this->load->view('default/template/account/profileinfo.tpl', $data));
         }
     }
 
-
-    protected function validate() {
+    protected function validate()
+    {
         //print_r($this->request->post);die;
         $this->load->language('account/edit');
 
@@ -252,9 +232,7 @@ class ControllerAccountProfileInfo extends Controller {
         if ((utf8_strlen(trim($this->request->post['mandatory_products'])) < 1)) {
             $this->error['mandatory_products'] = $this->language->get('error_mandatory_products');
         }
-       
+
         return !$this->error;
     }
-
-        
 }

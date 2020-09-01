@@ -2,12 +2,11 @@
 
 class ControllerApiAdminProducts extends Controller
 {
-
-    public function getAdminProduct($args = array())
+    public function getAdminProduct($args = [])
     {
         $this->load->language('api/products');
 
-        $json = array();
+        $json = [];
 
         //echo "api/adminproduct";die;
 
@@ -18,7 +17,6 @@ class ControllerApiAdminProducts extends Controller
             $this->load->model('tool/image');
             $this->load->model('api/products');
             //$this->load->model('catalog/product');
-            
 
             //$product = $this->model_catalog_product->getProduct($args['id']);
             //echo $args['id'];
@@ -31,17 +29,16 @@ class ControllerApiAdminProducts extends Controller
 
             $product['product_description'] = $this->model_api_products->getProductDescriptions($args['id']);
 
-
             //$product['categories'] = $this->model_api_products->getCategories( 0 );
 
-            $category = $this->model_api_products->getProductCategories( $args['id'] );
+            $category = $this->model_api_products->getProductCategories($args['id']);
 
             $product['category'] = $category;
 
             //echo "<pre>";print_r($product);die;
-            $images = array();
+            $images = [];
 
-            $product['images'] = array();
+            $product['images'] = [];
 
             $thumb_width = $this->config->get('config_image_thumb_width', 300);
             $thumb_height = $this->config->get('config_image_thumb_height', 300);
@@ -53,7 +50,6 @@ class ControllerApiAdminProducts extends Controller
             }
             unset($product['image']);
 
-
             //$extra_images = $this->model_catalog_product->getProductImages($product['product_id']);
             $extra_images = $this->model_api_products->getProductImages($product['product_id']);
             if (!empty($extra_images)) {
@@ -64,36 +60,32 @@ class ControllerApiAdminProducts extends Controller
 
             //echo "<pre>";print_r($images);die;
             foreach ($images as $image) {
-
                 $product['images'][] = $images;
             }
 
             $json = $product;
         }
 
-        
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
-    
-    public function getAdminProducts($args = array())
-    {
 
+    public function getAdminProducts($args = [])
+    {
         //echo "admin product";die;
         $this->load->language('api/products');
 
         //echo "api/products";
-        
-        
+
         //echo "<pre>";print_r($args);die;
-        $json = array();
+        $json = [];
 
         if (!isset($this->session->data['api_id'])) {
             $json['error'] = $this->language->get('error_permission');
         } else {
             $this->load->model('api/products');
 
-            $product_data = array();
+            $product_data = [];
 
             $results = $this->model_api_products->getAdminProducts($args);
 
@@ -103,10 +95,7 @@ class ControllerApiAdminProducts extends Controller
 
             //$product_data['categories'] = $this->model_api_products->getCategories( 0 );
 
-                
-
             $product_data['product_total'] = $product_total;
-            
 
             //echo "<pre>";print_r($product_data);die;
             if (!empty($results)) {
@@ -114,22 +103,20 @@ class ControllerApiAdminProducts extends Controller
                 //$this->load->model('catalog/product');
 
                 foreach ($results as $result) {
-
                     //echo $result['product_id'];
                     //$product = $this->model_catalog_product->getProduct($result['product_id']);
                     $product = $this->model_api_products->getAdminProduct($result['product_id']);
-                    
-                    $category = $this->model_api_products->getProductCategories( $result['product_id'] );
 
-                    if(is_array($product) && count($product) > 0) {
+                    $category = $this->model_api_products->getProductCategories($result['product_id']);
 
-                            //echo "<pre>";print_r($product);die;
+                    if (is_array($product) && count($product) > 0) {
+                        //echo "<pre>";print_r($product);die;
                         $product['name'] = html_entity_decode($product['name'], ENT_QUOTES, 'UTF-8');
                         $product['category'] = $category;
                         $product['description'] = html_entity_decode($product['description'], ENT_QUOTES, 'UTF-8');
 
-                        $images = array();
-                        $product['images'] = array();
+                        $images = [];
+                        $product['images'] = [];
 
                         $thumb_width = $this->config->get('config_image_thumb_width', 300);
                         $thumb_height = $this->config->get('config_image_thumb_height', 300);
@@ -143,7 +130,7 @@ class ControllerApiAdminProducts extends Controller
 
                         //$extra_images = $this->model_catalog_product->getProductImages($result['product_id']);
                         $extra_images = $this->model_api_products->getProductImages($result['product_id']);
-                        
+
                         if (!empty($extra_images)) {
                             foreach ($extra_images as $extra_image) {
                                 $images[] = $this->model_tool_image->resize($extra_image['image'], $thumb_width, $thumb_height);
@@ -161,7 +148,6 @@ class ControllerApiAdminProducts extends Controller
 
                         $product_data['products'][] = $product;
                     }
-                    
                 }
             } else {
                 $product_data['products'] = [];
@@ -174,15 +160,13 @@ class ControllerApiAdminProducts extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getAdminTotals($args = array())
+    public function getAdminTotals($args = [])
     {
-
         //echo "getAdminTotals";
-        
 
         $this->load->language('api/products');
 
-        $json = array();
+        $json = [];
 
         if (!isset($this->session->data['api_id'])) {
             $json['error'] = $this->language->get('error_permission');
@@ -196,16 +180,15 @@ class ControllerApiAdminProducts extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function editAdminProduct($args = array())
+    public function editAdminProduct($args = [])
     {
-
         $log = new Log('error.log');
         $log->write('editAdminProduct');
 
         $this->load->language('api/products');
 
         //echo "editAdminProduct";
-        $json = array();
+        $json = [];
 
         if (!isset($this->session->data['api_id'])) {
             $json['error'] = $this->language->get('error_permission');
@@ -213,11 +196,9 @@ class ControllerApiAdminProducts extends Controller
             $this->load->model('api/products');
             // $args['id'] this should be store product id
 
-            
             $log->write($args);
 
             //echo "<pre>";print_r($args);die;
-            
 
             $this->model_api_products->editAdminProduct($args['id'], $args);
 
@@ -228,13 +209,13 @@ class ControllerApiAdminProducts extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function deleteAdminProduct($args = array())
+    public function deleteAdminProduct($args = [])
     {
         //echo "DeleteProduct";
         $this->load->language('api/products');
 
         //echo "<pre>";print_r($args['id']);die;
-        $json = array();
+        $json = [];
 
         if (!isset($this->session->data['api_id'])) {
             $json['error'] = $this->language->get('error_permission');

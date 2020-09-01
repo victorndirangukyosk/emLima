@@ -3,29 +3,27 @@
 namespace Stripe;
 
 /**
- * Class Dispute
+ * Class Dispute.
  *
  * @property string $id
  * @property string $object
- * @property int $amount
- * @property mixed $balance_transactions
+ * @property int    $amount
+ * @property mixed  $balance_transactions
  * @property string $charge
- * @property int $created
+ * @property int    $created
  * @property string $currency
- * @property mixed $evidence
- * @property mixed $evidence_details
- * @property bool $is_charge_refundable
- * @property bool $livemode
- * @property mixed $metadata
+ * @property mixed  $evidence
+ * @property mixed  $evidence_details
+ * @property bool   $is_charge_refundable
+ * @property bool   $livemode
+ * @property mixed  $metadata
  * @property string $reason
  * @property string $status
- *
- * @package Stripe
  */
 class Dispute extends ApiResource
 {
     /**
-     * @param string $id The ID of the dispute to retrieve.
+     * @param string            $id      the ID of the dispute to retrieve
      * @param array|string|null $options
      *
      * @return Dispute
@@ -36,10 +34,10 @@ class Dispute extends ApiResource
     }
 
     /**
-     * @param array|null $params
+     * @param array|null        $params
      * @param array|string|null $options
      *
-     * @return array An array of Disputes.
+     * @return array an array of Disputes
      */
     public static function all($params = null, $options = null)
     {
@@ -47,11 +45,11 @@ class Dispute extends ApiResource
     }
 
     /**
-     * @param string $id The ID of the dispute to update.
-     * @param array|null $params
+     * @param string            $id      the ID of the dispute to update
+     * @param array|null        $params
      * @param array|string|null $options
      *
-     * @return Dispute The updated dispute.
+     * @return Dispute the updated dispute
      */
     public static function update($id, $params = null, $options = null)
     {
@@ -61,7 +59,7 @@ class Dispute extends ApiResource
     /**
      * @param array|string|null $options
      *
-     * @return Dispute The saved charge.
+     * @return Dispute the saved charge
      */
     public function save($options = null)
     {
@@ -71,13 +69,14 @@ class Dispute extends ApiResource
     /**
      * @param array|string|null $options
      *
-     * @return Dispute The closed dispute.
+     * @return Dispute the closed dispute
      */
     public function close($options = null)
     {
-        $url = $this->instanceUrl() . '/close';
+        $url = $this->instanceUrl().'/close';
         list($response, $opts) = $this->_request('post', $url, null, $options);
         $this->refreshFrom($response, $opts);
+
         return $this;
     }
 }

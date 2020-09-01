@@ -1,17 +1,19 @@
 <?php
 
-class Utility extends SmartObject {
-
-	public function __construct($registry) {
-		$this->db = $registry->get('db');
+class Utility extends SmartObject
+{
+    public function __construct($registry)
+    {
+        $this->db = $registry->get('db');
         $this->url = $registry->get('url');
         $this->config = $registry->get('config');
-		$this->request = $registry->get('request');
-		$this->cache = $registry->get('cache');	
-	}
+        $this->request = $registry->get('request');
+        $this->cache = $registry->get('cache');
+    }
 
-    public function getRemoteData($url, $options = array()) {
-        $user_agent = "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36";
+    public function getRemoteData($url, $options = [])
+    {
+        $user_agent = 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36';
         $data = false;
 
         // cURL
@@ -50,12 +52,12 @@ class Utility extends SmartObject {
             $errstr = '';
 
             $url_info = parse_url($url);
-            if($url_info['host'] == 'localhost')  {
+            if ('localhost' == $url_info['host']) {
                 $url_info['host'] = '127.0.0.1';
             }
 
             // Open socket connection
-            if ($url_info['scheme'] == 'http') {
+            if ('http' == $url_info['scheme']) {
                 $fsock = @fsockopen($url_info['scheme'].'://'.$url_info['host'], 80, $errno, $errstr, 5);
             } else {
                 $fsock = @fsockopen('ssl://'.$url_info['host'], 443, $errno, $errstr, 5);
@@ -64,7 +66,7 @@ class Utility extends SmartObject {
             if ($fsock) {
                 @fputs($fsock, 'GET '.$url_info['path'].(!empty($url_info['query']) ? '?'.$url_info['query'] : '').' HTTP/1.1'."\r\n");
                 @fputs($fsock, 'HOST: '.$url_info['host']."\r\n");
-                @fputs($fsock, "User-Agent: ".$user_agent."\n");
+                @fputs($fsock, 'User-Agent: '.$user_agent."\n");
                 @fputs($fsock, 'Connection: close'."\r\n\r\n");
 
                 // Set timeout
@@ -77,7 +79,7 @@ class Utility extends SmartObject {
                     if ($passed_header) {
                         $data .= @fread($fsock, 1024);
                     } else {
-                        if (@fgets($fsock, 1024) == "\r\n") {
+                        if ("\r\n" == @fgets($fsock, 1024)) {
                             $passed_header = true;
                         }
                     }
@@ -100,7 +102,7 @@ class Utility extends SmartObject {
 
             @stream_set_blocking($handle, 1);
             @stream_set_timeout($handle, 5);
-            @ini_set('user_agent',$user_agent);
+            @ini_set('user_agent', $user_agent);
 
             $url = str_replace('://localhost', '://127.0.0.1', $url);
 
@@ -123,7 +125,7 @@ class Utility extends SmartObject {
         // file_get_contents
         if (function_exists('file_get_contents') && ini_get('allow_url_fopen')) {
             $url = str_replace('://localhost', '://127.0.0.1', $url);
-            @ini_set('user_agent',$user_agent);
+            @ini_set('user_agent', $user_agent);
             $data = @file_get_contents($url);
 
             // Return data
@@ -133,8 +135,9 @@ class Utility extends SmartObject {
         return $data;
     }
 
-    public function getInfo() {
-        $info = array();
+    public function getInfo()
+    {
+        $info = [];
 
         $info['arastta'] = VERSION;
 
@@ -146,7 +149,7 @@ class Utility extends SmartObject {
             $info['mysql'] = 'N/A';
         }
 
-        $langs = array();
+        $langs = [];
         $languages = $this->getLanguages();
         foreach ($languages as $language) {
             $langs[] = $language['code'];
@@ -159,25 +162,26 @@ class Utility extends SmartObject {
         return $info;
     }
 
-    public function getLanguages() {
+    public function getLanguages()
+    {
         $language_data = $this->cache->get('language');
 
         if (!$language_data) {
-            $language_data = array();
+            $language_data = [];
 
-            $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "language ORDER BY sort_order, name");
+            $query = $this->db->query('SELECT * FROM '.DB_PREFIX.'language ORDER BY sort_order, name');
 
             foreach ($query->rows as $result) {
-                $language_data[$result['code']] = array(
+                $language_data[$result['code']] = [
                     'language_id' => $result['language_id'],
-                    'name'        => $result['name'],
-                    'code'        => $result['code'],
-                    'locale'      => $result['locale'],
-                    'image'       => $result['image'],
-                    'directory'   => $result['directory'],
-                    'sort_order'  => $result['sort_order'],
-                    'status'      => $result['status']
-                );
+                    'name' => $result['name'],
+                    'code' => $result['code'],
+                    'locale' => $result['locale'],
+                    'image' => $result['image'],
+                    'directory' => $result['directory'],
+                    'sort_order' => $result['sort_order'],
+                    'status' => $result['status'],
+                ];
             }
 
             $this->cache->set('language', $language_data);
@@ -186,8 +190,9 @@ class Utility extends SmartObject {
         return $language_data;
     }
 
-    public function getTotalStores() {
-        $query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "store");
+    public function getTotalStores()
+    {
+        $query = $this->db->query('SELECT COUNT(*) AS total FROM '.DB_PREFIX.'store');
 
         return $query->row['total'];
     }
