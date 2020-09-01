@@ -23,59 +23,49 @@ class ModelAccountDashboard extends Model
         return $query->row;
     }
 
-    public function getTotalOrders($customer_id,$selectedCustomer_id, $date_start=null,$date_end=null) {
-        if($date_start==null && $date_end==null)
-        $query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "order` o WHERE customer_id = '" . (int) $customer_id . "' AND o.order_status_id > '0' ");
-        else
-        {
-        if($selectedCustomer_id==-1)
-{
-        $s_users = array();
-        $sub_users_query = $this->db->query("SELECT c.customer_id FROM " . DB_PREFIX . "customer c WHERE parent = '" . (int) $customer_id . "'");
-        $sub_users = $sub_users_query->rows;
-        $s_users = array_column($sub_users, 'customer_id');
-        
-        array_push($s_users, $customer_id);
-        $sub_users_od = implode(",", $s_users);
+    public function getTotalOrders($customer_id, $selectedCustomer_id, $date_start = null, $date_end = null)
+    {
+        if (null == $date_start && null == $date_end) {
+            $query = $this->db->query('SELECT COUNT(*) AS total FROM `'.DB_PREFIX."order` o WHERE customer_id = '".(int) $customer_id."' AND o.order_status_id > '0' ");
+        } else {
+            if (-1 == $selectedCustomer_id) {
+                $s_users = [];
+                $sub_users_query = $this->db->query('SELECT c.customer_id FROM '.DB_PREFIX."customer c WHERE parent = '".(int) $customer_id."'");
+                $sub_users = $sub_users_query->rows;
+                $s_users = array_column($sub_users, 'customer_id');
 
-        $query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "order` o WHERE customer_id IN (".$sub_users_od.") AND o.order_status_id > '0' AND o.date_added >='". $date_start."'AND o.date_added < '".$date_end."' ");
-        }
-            else
-            {
-                $query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "order` o WHERE customer_id = '" . (int) $selectedCustomer_id . "' AND o.order_status_id > '0' AND o.date_added >='". $date_start."'AND o.date_added < '".$date_end."' ");
+                array_push($s_users, $customer_id);
+                $sub_users_od = implode(',', $s_users);
 
+                $query = $this->db->query('SELECT COUNT(*) AS total FROM `'.DB_PREFIX.'order` o WHERE customer_id IN ('.$sub_users_od.") AND o.order_status_id > '0' AND o.date_added >='".$date_start."'AND o.date_added < '".$date_end."' ");
+            } else {
+                $query = $this->db->query('SELECT COUNT(*) AS total FROM `'.DB_PREFIX."order` o WHERE customer_id = '".(int) $selectedCustomer_id."' AND o.order_status_id > '0' AND o.date_added >='".$date_start."'AND o.date_added < '".$date_end."' ");
             }
-    }
+        }
 
         // echo "SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "order` o WHERE customer_id = '" . (int) $customer_id . "' AND o.order_status_id > '0'AND o.date_added >='". $date_start."'AND o.date_added < '".$date_end."' ";
         //return $query;
         return $query->row['total'];
     }
 
-    public function getOrders($customer_id,$selectedCustomer_id, $date_start=null,$date_end=null) {
-        if($date_start==null && $date_end==null)
-        $query = $this->db->query("SELECT order_id, date_added   FROM `" . DB_PREFIX . "order` o WHERE customer_id = '" . (int) $customer_id . "' AND o.order_status_id > '0'  order by date_added ASC");
-        else
-
-        {
-            if($selectedCustomer_id==-1)
+    public function getOrders($customer_id, $selectedCustomer_id, $date_start = null, $date_end = null)
     {
-            $s_users = array();
-            $sub_users_query = $this->db->query("SELECT c.customer_id FROM " . DB_PREFIX . "customer c WHERE parent = '" . (int) $customer_id . "'");
-            $sub_users = $sub_users_query->rows;
-            $s_users = array_column($sub_users, 'customer_id');
-            
-            array_push($s_users, $customer_id);
-            $sub_users_od = implode(",", $s_users);
-            $query = $this->db->query("SELECT order_id, date_added   FROM `" . DB_PREFIX . "order` o WHERE customer_id IN (".$sub_users_od.") AND o.order_status_id > '0'  AND o.date_added >='". $date_start."'AND o.date_added < '".$date_end."'  order by date_added ASC");
-    
+        if (null == $date_start && null == $date_end) {
+            $query = $this->db->query('SELECT order_id, date_added   FROM `'.DB_PREFIX."order` o WHERE customer_id = '".(int) $customer_id."' AND o.order_status_id > '0'  order by date_added ASC");
+        } else {
+            if (-1 == $selectedCustomer_id) {
+                $s_users = [];
+                $sub_users_query = $this->db->query('SELECT c.customer_id FROM '.DB_PREFIX."customer c WHERE parent = '".(int) $customer_id."'");
+                $sub_users = $sub_users_query->rows;
+                $s_users = array_column($sub_users, 'customer_id');
+
+                array_push($s_users, $customer_id);
+                $sub_users_od = implode(',', $s_users);
+                $query = $this->db->query('SELECT order_id, date_added   FROM `'.DB_PREFIX.'order` o WHERE customer_id IN ('.$sub_users_od.") AND o.order_status_id > '0'  AND o.date_added >='".$date_start."'AND o.date_added < '".$date_end."'  order by date_added ASC");
+            } else {
+                $query = $this->db->query('SELECT order_id, date_added   FROM `'.DB_PREFIX."order` o WHERE customer_id = '".(int) $selectedCustomer_id."' AND o.order_status_id > '0'  AND o.date_added >='".$date_start."'AND o.date_added < '".$date_end."'  order by date_added ASC");
             }
-                else
-                {
-                    $query = $this->db->query("SELECT order_id, date_added   FROM `" . DB_PREFIX . "order` o WHERE customer_id = '" . (int) $selectedCustomer_id . "' AND o.order_status_id > '0'  AND o.date_added >='". $date_start."'AND o.date_added < '".$date_end."'  order by date_added ASC");
-    
-                }
-            }
+        }
 
         //return $query;
         return $query->rows;
@@ -540,9 +530,19 @@ class ModelAccountDashboard extends Model
         }
     }
 
-     
+    public function getValueOfBasket($Selectedcustomer_id, $date_start, $date_end, $group, $customer_id)
+    {
+        if (-1 == $Selectedcustomer_id) {
+            $s_users = [];
+            $sub_users_query = $this->db->query('SELECT c.customer_id FROM '.DB_PREFIX."customer c WHERE parent = '".(int) $customer_id."'");
+            $sub_users = $sub_users_query->rows;
+            $s_users = array_column($sub_users, 'customer_id');
 
-public function getValueOfBasket($Selectedcustomer_id,$date_start, $date_end, $group,$customer_id){ 
+            array_push($s_users, $customer_id);
+            $sub_users_od = implode(',', $s_users);
+            $query = $this->db->query('SELECT SUM(value) AS total,  CONCAT(MONTHNAME('.DB_PREFIX."order.date_added), ' ', YEAR(".DB_PREFIX.'order.date_added)) AS month, YEAR('.DB_PREFIX.'order.date_added) AS year, DATE('.DB_PREFIX.'order.date_added) AS date  FROM `'.DB_PREFIX.'order` LEFT JOIN '.DB_PREFIX.'order_total on('.DB_PREFIX.'order.order_id = '.DB_PREFIX.'order_total.order_id)    WHERE   DATE('.DB_PREFIX."order.date_added) BETWEEN '".$this->db->escape($date_start)."' AND '".$this->db->escape($date_end)."'AND ".DB_PREFIX."order_total.code='sub_total'  AND  ".DB_PREFIX.'order.customer_id IN ('.$sub_users_od.') GROUP BY '.$group.'('.DB_PREFIX.'order.date_added) ORDER BY '.DB_PREFIX.'order.date_added DESC');
+        } else {
+            //HOUR(".DB_PREFIX."order.date_added) AS hour,
 
     if($Selectedcustomer_id==-1)
     {
@@ -556,9 +556,13 @@ public function getValueOfBasket($Selectedcustomer_id,$date_start, $date_end, $g
     $query = $this->db->query("SELECT SUM(value) AS total,  CONCAT(MONTHNAME(".DB_PREFIX."order.date_added), ' ', YEAR(".DB_PREFIX."order.date_added)) AS month, YEAR(".DB_PREFIX."order.date_added) AS year, DATE(".DB_PREFIX."order.date_added) AS date  FROM `" . DB_PREFIX . "order` LEFT JOIN ".DB_PREFIX."order_total on(".DB_PREFIX."order.order_id = ".DB_PREFIX."order_total.order_id)    WHERE   DATE(".DB_PREFIX."order.date_added) BETWEEN '" . $this->db->escape($date_start) . "' AND '" . $this->db->escape($date_end) . "'AND ".DB_PREFIX."order_total.code='sub_total'  AND  ".DB_PREFIX."order.customer_id IN (".$sub_users_od.") GROUP BY ". $group ."(".DB_PREFIX."order.date_added) ORDER BY ".DB_PREFIX."order.date_added DESC");
 // echo "SELECT SUM(value) AS total,  CONCAT(MONTHNAME(".DB_PREFIX."order.date_added), ' ', YEAR(".DB_PREFIX."order.date_added)) AS month, YEAR(".DB_PREFIX."order.date_added) AS year, DATE(".DB_PREFIX."order.date_added) AS date  FROM `" . DB_PREFIX . "order` LEFT JOIN ".DB_PREFIX."order_total on(".DB_PREFIX."order.order_id = ".DB_PREFIX."order_total.order_id)    WHERE   DATE(".DB_PREFIX."order.date_added) BETWEEN '" . $this->db->escape($date_start) . "' AND '" . $this->db->escape($date_end) . "'AND ".DB_PREFIX."order_total.code='sub_total'  AND  ".DB_PREFIX."order.customer_id IN (".$sub_users_od.") GROUP BY ". $group ."(".DB_PREFIX."order.date_added) ORDER BY ".DB_PREFIX."order.date_added DESC";
     }
-    else
+
+    public function getTotalValueOfBasket($Selectedcustomer_id, $date_start, $date_end, $customer_id)
     {
-    //HOUR(".DB_PREFIX."order.date_added) AS hour,
+        // $s_users = array();
+        // $sub_users_query = $this->db->query("SELECT c.customer_id FROM " . DB_PREFIX . "customer c WHERE parent = '" . (int) $customer_id . "'");
+        // $sub_users = $sub_users_query->rows;
+        // $s_users = array_column($sub_users, 'customer_id');
 
     $query = $this->db->query("SELECT SUM(value) AS total,  CONCAT(MONTHNAME(".DB_PREFIX."order.date_added), ' ', YEAR(".DB_PREFIX."order.date_added)) AS month, YEAR(".DB_PREFIX."order.date_added) AS year, DATE(".DB_PREFIX."order.date_added) AS date  FROM `" . DB_PREFIX . "order` LEFT JOIN ".DB_PREFIX."order_total on(".DB_PREFIX."order.order_id = ".DB_PREFIX."order_total.order_id)    WHERE   DATE(".DB_PREFIX."order.date_added) BETWEEN '" . $this->db->escape($date_start) . "' AND '" . $this->db->escape($date_end) . "'AND ".DB_PREFIX."order_total.code='sub_total'  AND  ".DB_PREFIX."order.customer_id='" . $this->db->escape($Selectedcustomer_id) . "' GROUP BY ". $group ."(".DB_PREFIX."order.date_added) ORDER BY ".DB_PREFIX."order.date_added DESC");
     // echo "SELECT SUM(value) AS total,  CONCAT(MONTHNAME(".DB_PREFIX."order.date_added), ' ', YEAR(".DB_PREFIX."order.date_added)) AS month, YEAR(".DB_PREFIX."order.date_added) AS year, DATE(".DB_PREFIX."order.date_added) AS date  FROM `" . DB_PREFIX . "order` LEFT JOIN ".DB_PREFIX."order_total on(".DB_PREFIX."order.order_id = ".DB_PREFIX."order_total.order_id)    WHERE   DATE(".DB_PREFIX."order.date_added) BETWEEN '" . $this->db->escape($date_start) . "' AND '" . $this->db->escape($date_end) . "'AND ".DB_PREFIX."order_total.code='sub_total'  AND  ".DB_PREFIX."order.customer_id='" . $this->db->escape($Selectedcustomer_id) . "' GROUP BY ". $group ."(".DB_PREFIX."order.date_added) ORDER BY ".DB_PREFIX."order.date_added DESC";
