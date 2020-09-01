@@ -1,6 +1,6 @@
 <?php
 // Text
-$_['text_title']				= 'PesalPal';
+$_['text_title']				= 'PesaPal';
 $_['text_instruction']			= 'PesaPal';
 $_['text_payable']				= 'Make Payable To: ';
 $_['text_address']				= 'Send To: ';
