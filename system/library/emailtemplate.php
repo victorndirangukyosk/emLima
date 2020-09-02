@@ -2122,8 +2122,20 @@ class Emailtemplate
         $country_prefix = $this->config->get('config_telephone_code');
 
         $to = $country_prefix.''.$to;
+        
+        if ('africastalking' == $this->config->get('config_sms_protocol')) {
+            $username = $this->config->get('config_africastalking_sms_username');
+            $apiKey = $this->config->get('config_africastalking_sms_api_key');
+            $AT = new \AfricasTalking\SDK\AfricasTalking($username, $apiKey);
+            $sms = $AT->sms();
 
-        if ('twilio' == $this->config->get('config_sms_protocol')) {
+            $sms->send([
+                'to' => $this->formatPhoneNumber($to),
+                'message' => $message,
+            ]);
+
+            $log->write("Africa's Talking Sending SMS ".$message.' to '.$to);
+        } elseif ('twilio' == $this->config->get('config_sms_protocol')) {
             $sid = $this->config->get('config_sms_sender_id');
             $token = $this->config->get('config_sms_token');
             $from = $this->config->get('config_sms_number');
@@ -2279,6 +2291,18 @@ class Emailtemplate
         }
 
         return true;
+    }
+
+    public function formatPhoneNumber($phoneNumber)
+    {
+        $phoneUtil = \libphonenumber\PhoneNumberUtil::getInstance();
+        try {
+            $numberPrototype = $phoneUtil->parse($phoneNumber, 'KE');
+
+            return $phoneUtil->format($numberPrototype, \libphonenumber\PhoneNumberFormat::E164);
+        } catch (\libphonenumber\NumberParseException $e) {
+            var_dump($e);
+        }
     }
 
     public function sendPushNotification($to, $deviceId, $order_id, $store_id, $message, $title, $app_action = 'com.instagolocal.showorder')
