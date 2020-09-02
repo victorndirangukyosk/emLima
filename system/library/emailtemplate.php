@@ -3,8 +3,8 @@
 require_once DIR_SYSTEM.'/vendor/autoload.php'; // Loads the library
 require DIR_SYSTEM.'/vendor/twilio-php-master/Twilio/autoload.php';
 
-use paragraph1\phpFCM\Client as FCMClient;
 use AfricasTalking\SDK\AfricasTalking;
+use paragraph1\phpFCM\Client as FCMClient;
 
 require DIR_SYSTEM.'/vendor/zenvia/human_gateway_client_api/HumanClientMain.php';
 
