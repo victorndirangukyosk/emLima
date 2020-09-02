@@ -68,6 +68,7 @@ class ControllerPaymentPesapal extends Controller
         $iframelink = 'https://www.pesapal.com/api/PostPesapalDirectOrderV4'; //change to
         //https://www.pesapal.com/API/PostPesapalDirectOrderV4 when you are ready to go live!
         //get form details
+        $amount = str_replace(',', '', $amount);
         $log->write($amount);
         //$amount = 100;
         $amount = number_format($amount, 2); //format amount to 2 decimal places
