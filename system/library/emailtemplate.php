@@ -2123,7 +2123,7 @@ class Emailtemplate
         $country_prefix = $this->config->get('config_telephone_code');
 
         $to = $country_prefix.''.$to;
-        
+
         if ('africastalking' == $this->config->get('config_sms_protocol')) {
             $username = $this->config->get('config_africastalking_sms_username');
             $apiKey = $this->config->get('config_africastalking_sms_api_key');

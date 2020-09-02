@@ -251,9 +251,9 @@ class ControllerReportCustomerOrder extends Controller
             'limit' => $this->config->get('config_limit_admin'),
         ];
         if ('' != $filter_customer || '' != $filter_company) {
-            $customer_total = $this->model_report_customer->getTotalCustomerOrders($filter_data);
+            $customer_total = $this->model_report_customer->getTotalValidCustomerOrders($filter_data);
 
-            $results = $this->model_report_customer->getCustomerOrders($filter_data);
+            $results = $this->model_report_customer->getValidCustomerOrders($filter_data);
         } else {
             $customer_total = 0;
             $results = null;
@@ -327,7 +327,7 @@ class ControllerReportCustomerOrder extends Controller
 
         $this->load->model('localisation/order_status');
 
-        $data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
+        $data['order_statuses'] = $this->model_localisation_order_status->getValidOrderStatuses();
 
         $this->load->model('sale/customer');
 

@@ -3785,7 +3785,7 @@ class ModelReportExcel extends Model
         $this->load->model('report/customer');
         //$customer_total = $this->model_report_customer->getTotalCustomerOrders($filter_data);
 
-        $results = $this->model_report_customer->getCustomerOrders($data);
+        $results = $this->model_report_customer->getValidCustomerOrders($data);
 
         $this->load->model('sale/order');
 

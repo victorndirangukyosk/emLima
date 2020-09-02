@@ -174,4 +174,13 @@ class ModelLocalisationOrderStatus extends Model
 
         return $query->row['total'];
     }
+
+    public function getValidOrderStatuses()//Cancelled order status will not come under valid
+    {
+        $query = $this->db->query('SELECT order_status_id, name FROM '.DB_PREFIX."order_status WHERE order_status_id!=6 and language_id = '".(int) $this->config->get('config_language_id')."' ORDER BY name");
+
+        $order_status_data = $query->rows;
+
+        return $order_status_data;
+    }
 }
