@@ -4,6 +4,7 @@ require_once DIR_SYSTEM.'/vendor/autoload.php'; // Loads the library
 require DIR_SYSTEM.'/vendor/twilio-php-master/Twilio/autoload.php';
 
 use paragraph1\phpFCM\Client as FCMClient;
+use AfricasTalking\SDK\AfricasTalking;
 
 require DIR_SYSTEM.'/vendor/zenvia/human_gateway_client_api/HumanClientMain.php';
 
@@ -2126,7 +2127,7 @@ class Emailtemplate
         if ('africastalking' == $this->config->get('config_sms_protocol')) {
             $username = $this->config->get('config_africastalking_sms_username');
             $apiKey = $this->config->get('config_africastalking_sms_api_key');
-            $AT = new \AfricasTalking\SDK\AfricasTalking($username, $apiKey);
+            $AT = new AfricasTalking($username, $apiKey);
             $sms = $AT->sms();
 
             $sms->send([
