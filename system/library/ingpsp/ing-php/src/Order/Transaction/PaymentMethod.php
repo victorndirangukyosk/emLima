@@ -9,7 +9,7 @@ final class PaymentMethod
     use ChoiceBasedValueObject;
 
     /**
-     * Possible payment methods
+     * Possible payment methods.
      */
     const IDEAL = 'ideal';
     const CREDIT_CARD = 'credit-card';
@@ -29,7 +29,7 @@ final class PaymentMethod
             self::BANK_TRANSFER,
             self::SOFORT,
             self::BANCONTACT,
-            self::COD
+            self::COD,
         ];
     }
 
@@ -38,7 +38,7 @@ final class PaymentMethod
      */
     public function isIdeal()
     {
-        return $this->value === self::IDEAL;
+        return self::IDEAL === $this->value;
     }
 
     /**
@@ -46,7 +46,7 @@ final class PaymentMethod
      */
     public function isCreditCard()
     {
-        return $this->value === self::CREDIT_CARD;
+        return self::CREDIT_CARD === $this->value;
     }
 
     /**
@@ -54,7 +54,7 @@ final class PaymentMethod
      */
     public function isBankTransfer()
     {
-        return $this->value === self::BANK_TRANSFER;
+        return self::BANK_TRANSFER === $this->value;
     }
 
     /**
@@ -62,7 +62,7 @@ final class PaymentMethod
      */
     public function isSofort()
     {
-        return $this->value === self::SOFORT;
+        return self::SOFORT === $this->value;
     }
 
     /**
@@ -70,7 +70,7 @@ final class PaymentMethod
      */
     public function isBancontact()
     {
-        return $this->value === self::BANCONTACT;
+        return self::BANCONTACT === $this->value;
     }
 
     /**
@@ -78,6 +78,6 @@ final class PaymentMethod
      */
     public function isCashOnDelivery()
     {
-        return $this->value === self::COD;
+        return self::COD === $this->value;
     }
 }

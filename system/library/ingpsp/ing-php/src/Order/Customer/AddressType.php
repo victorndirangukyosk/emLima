@@ -9,7 +9,7 @@ final class AddressType
     use ChoiceBasedValueObject;
 
     /**
-     * Possible Address Types
+     * Possible Address Types.
      */
     const CUSTOMER = 'customer';
     const DELIVERY = 'delivery';
@@ -23,7 +23,7 @@ final class AddressType
         return [
             self::CUSTOMER,
             self::DELIVERY,
-            self::BILLING
+            self::BILLING,
         ];
     }
 
@@ -32,7 +32,7 @@ final class AddressType
      */
     public function isCustomer()
     {
-        return $this->value === self::CUSTOMER;
+        return self::CUSTOMER === $this->value;
     }
 
     /**
@@ -40,7 +40,7 @@ final class AddressType
      */
     public function isDelivery()
     {
-        return $this->value === self::DELIVERY;
+        return self::DELIVERY === $this->value;
     }
 
     /**
@@ -48,6 +48,6 @@ final class AddressType
      */
     public function isBilling()
     {
-        return $this->value === self::BILLING;
+        return self::BILLING === $this->value;
     }
 }

@@ -4,13 +4,12 @@ use Symfony\Component\Finder\Finder;
 
 class Trigger extends SmartObject
 {
-
     protected $registry;
     protected $stop = false;
-    protected $folders = array('app', 'menu', 'editor', 'analytics');
-    protected $listeners = array();
-    protected $add_listeners = array();
-    protected $skip_listeners = array();
+    protected $folders = ['app', 'menu', 'editor', 'analytics'];
+    protected $listeners = [];
+    protected $add_listeners = [];
+    protected $skip_listeners = [];
 
     public function __construct($registry)
     {
@@ -46,16 +45,16 @@ class Trigger extends SmartObject
      * Triggers an event by dispatching arguments to all listeners/observers that handle
      * the event and returning their return values.
      *
-     * @param   string  $event      The event to trigger.
-     * @param   array   $args       An array of arguments.
+     * @param string $event the event to trigger
+     * @param array  $args  an array of arguments
      *
-     * @return  array  An array of results from each function call.
+     * @return array an array of results from each function call
      *
      * @since   1.0
      */
-    public function fire($event, $args = array())
+    public function fire($event, $args = [])
     {
-        $result = array();
+        $result = [];
 
         $this->set('stop', false);
         $this->loadListeners($event);
@@ -66,16 +65,16 @@ class Trigger extends SmartObject
         echo "<pre>";print_r($method);*/
         //echo "<pre>";print_r($this->listeners[$event]);die;
         foreach ($this->listeners[$event] as $listener) {
-            if (is_callable(array($listener, $method))) {
+            if (is_callable([$listener, $method])) {
                 $args = (array) $args;
-                $value = call_user_func_array(array($listener, $method), $args);
+                $value = call_user_func_array([$listener, $method], $args);
             }
 
             if (!empty($value)) {
                 $result[] = $value;
             }
 
-            if ($this->get('stop', false) == true) {
+            if (true == $this->get('stop', false)) {
                 break;
             }
         }
@@ -93,9 +92,9 @@ class Trigger extends SmartObject
             return;
         }
 
-        $this->listeners[$event] = array();
+        $this->listeners[$event] = [];
 
-        $add_listeners = array();
+        $add_listeners = [];
         if (!empty($this->add_listeners[$event])) {
             $add_listeners = $this->add_listeners[$event];
         }
@@ -108,15 +107,15 @@ class Trigger extends SmartObject
                 continue;
             }
 
-            $file = DIR_APPLICATION . 'event/' . $path . '.php';
+            $file = DIR_APPLICATION.'event/'.$path.'.php';
 
             if (!file_exists($file)) {
                 continue;
             }
 
-            require_once($file);
+            require_once $file;
 
-            $class = 'Event' . preg_replace('/[^a-zA-Z0-9]/', '', $path);
+            $class = 'Event'.preg_replace('/[^a-zA-Z0-9]/', '', $path);
 
             $this->listeners[$event][] = new $class($this->registry);
         }
@@ -124,7 +123,7 @@ class Trigger extends SmartObject
 
     public function getFolderListeners()
     {
-        $listeners = array();
+        $listeners = [];
 
         if (empty($this->folders)) {
             return $listeners;
@@ -146,7 +145,6 @@ class Trigger extends SmartObject
 
                 $listeners[] = $folder.'/'.$file_name;
             }
-
         }
 
         return $listeners;
@@ -154,7 +152,7 @@ class Trigger extends SmartObject
 
     public function getCallbackListeners()
     {
-        $listeners = array();
+        $listeners = [];
 
         $folder = $this->getCallbackFolder();
         if (empty($folder) or !file_exists(DIR_APPLICATION.'event/'.$folder.'/')) {
@@ -186,7 +184,7 @@ class Trigger extends SmartObject
         $trace_class = (isset($trace[4]['class']) ? $trace[4]['class'] : null);
 
         // +4 to i cos we have to account for calling this function
-        for ($i = 4; $i < count($trace); $i++) {
+        for ($i = 4; $i < count($trace); ++$i) {
             // is it set?
             if (!isset($trace[$i]) || !isset($trace[$i]['class'])) {
                 continue;
@@ -197,9 +195,9 @@ class Trigger extends SmartObject
                 continue;
             }
 
-            $split = preg_split("/(?<=[a-z])(?![a-z])/", $trace[$i]['class'], -1, PREG_SPLIT_NO_EMPTY);
+            $split = preg_split('/(?<=[a-z])(?![a-z])/', $trace[$i]['class'], -1, PREG_SPLIT_NO_EMPTY);
 
-            if (empty($split[1]) || empty($split[0]) || (($split[0] != 'Controller') && ($split[0] != 'Model'))) {
+            if (empty($split[1]) || empty($split[0]) || (('Controller' != $split[0]) && ('Model' != $split[0]))) {
                 continue;
             }
 
@@ -217,12 +215,12 @@ class Trigger extends SmartObject
 
         $tmp = explode('.', $event);
 
-        for ($i = 0; $i < count($tmp); $i++) {
+        for ($i = 0; $i < count($tmp); ++$i) {
             if (empty($tmp[$i])) {
                 continue;
             }
 
-            if ($i == 0) {
+            if (0 == $i) {
                 $method .= $tmp[$i];
             } else {
                 $method .= ucfirst($tmp[$i]);

@@ -3,14 +3,12 @@
 namespace Stripe;
 
 /**
- * Class InvoiceItem
- *
- * @package Stripe
+ * Class InvoiceItem.
  */
 class InvoiceItem extends ApiResource
 {
     /**
-     * @param string $id The ID of the invoice item to retrieve.
+     * @param string            $id   the ID of the invoice item to retrieve
      * @param array|string|null $opts
      *
      * @return InvoiceItem
@@ -21,7 +19,7 @@ class InvoiceItem extends ApiResource
     }
 
     /**
-     * @param array|null $params
+     * @param array|null        $params
      * @param array|string|null $opts
      *
      * @return Collection of InvoiceItems
@@ -32,10 +30,10 @@ class InvoiceItem extends ApiResource
     }
 
     /**
-     * @param array|null $params
+     * @param array|null        $params
      * @param array|string|null $opts
      *
-     * @return InvoiceItem The created invoice item.
+     * @return InvoiceItem the created invoice item
      */
     public static function create($params = null, $opts = null)
     {
@@ -43,11 +41,11 @@ class InvoiceItem extends ApiResource
     }
 
     /**
-     * @param string $id The ID of the invoice item to update.
-     * @param array|null $params
+     * @param string            $id      the ID of the invoice item to update
+     * @param array|null        $params
      * @param array|string|null $options
      *
-     * @return InvoiceItem The updated invoice item.
+     * @return InvoiceItem the updated invoice item
      */
     public static function update($id, $params = null, $options = null)
     {
@@ -57,7 +55,7 @@ class InvoiceItem extends ApiResource
     /**
      * @param array|string|null $opts
      *
-     * @return InvoiceItem The saved invoice item.
+     * @return InvoiceItem the saved invoice item
      */
     public function save($opts = null)
     {
@@ -65,10 +63,10 @@ class InvoiceItem extends ApiResource
     }
 
     /**
-     * @param array|null $params
+     * @param array|null        $params
      * @param array|string|null $opts
      *
-     * @return InvoiceItem The deleted invoice item.
+     * @return InvoiceItem the deleted invoice item
      */
     public function delete($params = null, $opts = null)
     {

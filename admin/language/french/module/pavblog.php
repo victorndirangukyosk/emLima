@@ -82,19 +82,16 @@ $_['text_browse'] = 'browser';
 $_['text_clear'] = 'Effacer';
 $_['entry_publish'] = 'est publié';
 
-
 $_['button_save_edit'] = 'Enregistrer et modifier';
 $_['button_save_new'] = 'Enregistrer et créer de nouveaux';
 
-
-//
 $_['message_delete'] = 'Etes- vous sûr de vouloir supprimer ce';
 // Error
 $_['error_permission'] = 'Attention: Vous n\'avez pas la permission de modifier le module catégorie';
 $_['error_dimension'] = 'largeur et hauteur dimensions requises !';
 $_['error_missing_title'] = 'S\'il vous plaît Entrer dans le menu titre dans chacun des onglets de la langue';
 $_['text_explain_drapanddrop'] = 'Pour des ordres de tri ou mettre à jour parent- enfant , vous Drap et menu prévu, puis cliquez pour bouton pour enregistrer les mises à jour';
-/***/
+
 $_['menu_dashboard'] = 'tableau de bord';
 $_['menu_manage_categories'] = 'Gérer les catégories';
 $_['menu_manage_blogs'] = 'Gérer les blogs';
@@ -121,7 +118,7 @@ $_['databroad_add_blog'] = 'Ajouter Blog';
 $_['databroad_comment'] = 'Commentaire';
 $_['databroad_modules_setting'] = 'Modules réglage';
 
-/** Page de catégorie**/
+/* Page de catégorie**/
 $_['category_page_heading_title'] = 'Gestion des catégories';
 $_['text_tree_category_menu'] = 'Menu Tree Catégories';
 $_['text_category_information'] = 'Information';
@@ -137,7 +134,7 @@ $_['text_hits'] = 'hits';
 $_['entry_tags'] = 'Tags';
 $_['text_explain_tags'] = 'exemple : la mode , intelligent , drôle';
 $_['text_facebook_id_explain'] = 'Enregistrer un commentaire fort, puis obtenir ID d\'application dans Script ou créer un compte Facebook ID d\'application à modérer les commentaires';
-/** Page de blog **/
+/* Page de blog **/
 $_['blog_page_heading_title'] = 'Blog Modifier / Créer Nouveau';
 $_['text_general'] = 'Général';
 $_['text_gallery'] = 'Images - Galerie';
@@ -152,7 +149,7 @@ $_['entry_video_code'] = 'le code vidéo ( Youtube Code, Vimeo Code)';
 $_['entry_meta_title'] = 'Meta Title';
 $_['entry_meta_keyword'] = 'Meta Mot-clé';
 $_['entry_meta_description'] = 'Meta Description';
-/** COMMENTAIRES PAGE**/
+/* COMMENTAIRES PAGE**/
 $_['comments_page_heading_title'] = 'Commentaires gestion';
 $_['text_comment'] = 'Commentaire';
 $_['text_blog_title'] = 'Titre du blog';
@@ -166,8 +163,7 @@ $_['text_confirm_delete'] = 'Êtes-vous sûr de vouloir supprimer ce ?';
 $_['text_disable'] = 'Désactiver';
 $_['text_enable'] = 'Activer';
 
-
-/** CADRE GENERAL**/
+/* CADRE GENERAL**/
 $_['entry_children_columns'] = 'Enfants Colonnes';
 $_['entry_category_image_demension'] = 'Catégorie Demension l\'image (largeur x hauteur)';
 $_['modules_page_heading_title'] = 'General & Modules réglage';
@@ -214,7 +210,6 @@ $_['entry_columns_secondary_blogs'] = 'Colonnes de blogs secondaire';
 $_['entry_columns_leading_blogs'] = 'column Blogs principal';
 $_['entry_columns_secondary_blogs'] = 'column Blogs secondaire';
 
-
 $_['entry_comment_engine'] = 'Commentaire Moteur';
 $_['entry_diquis_account'] = 'Diquis nom d\'écran';
 $_['text_signup_diquis'] = 'Rejoins-nous Disquis';
@@ -232,6 +227,3 @@ $_['tab_pavblogcomment'] = 'Dernières commentaire module de réglage';
 $_['tab_pavbloglatest'] = 'Dernière module de réglage';
 $_['text_showcase'] = 'Showcase';
 $_['menu_frontend_module_setting'] = 'modules frontaux';
-
-
-?>

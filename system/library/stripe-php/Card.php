@@ -3,11 +3,8 @@
 namespace Stripe;
 
 /**
- * Class Card
- *
- * @package Stripe
+ * Class Card.
  */
 class Card extends ExternalAccount
 {
-
 }

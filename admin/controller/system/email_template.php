@@ -1,10 +1,11 @@
 <?php
 
-class ControllerSystemEmailtemplate extends Controller {
+class ControllerSystemEmailtemplate extends Controller
+{
+    private $error = [];
 
-    private $error = array();
-
-    public function index() {
+    public function index()
+    {
         $this->load->language('system/email_template');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -14,7 +15,8 @@ class ControllerSystemEmailtemplate extends Controller {
         $this->getList();
     }
 
-    public function edit() {
+    public function edit()
+    {
         $this->load->language('system/email_template');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -23,9 +25,7 @@ class ControllerSystemEmailtemplate extends Controller {
 
         // echo "<pre>";print_r($this->request->post);
         //     echo "<pre>";print_r($this->request->get);die;
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-
-            
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
             $this->model_system_email_template->editEmailTemplate($this->request->get['email_template'], $this->request->post);
 
             //echo "<pre>";print_r($this->request->get['email_template']);die;
@@ -34,28 +34,29 @@ class ControllerSystemEmailtemplate extends Controller {
             $url = '';
 
             if (isset($this->request->get['sort'])) {
-                $url .= '&sort=' . $this->request->get['sort'];
+                $url .= '&sort='.$this->request->get['sort'];
             }
 
             if (isset($this->request->get['order'])) {
-                $url .= '&order=' . $this->request->get['order'];
+                $url .= '&order='.$this->request->get['order'];
             }
 
             if (isset($this->request->get['page'])) {
-                $url .= '&page=' . $this->request->get['page'];
+                $url .= '&page='.$this->request->get['page'];
             }
 
-            if (isset($this->request->post['button']) and $this->request->post['button'] == 'save') {
-                $this->response->redirect($this->url->link('system/email_template/edit', 'email_template=' . $this->request->get['email_template'] . '&token=' . $this->session->data['token'] . $url, 'SSL'));
+            if (isset($this->request->post['button']) and 'save' == $this->request->post['button']) {
+                $this->response->redirect($this->url->link('system/email_template/edit', 'email_template='.$this->request->get['email_template'].'&token='.$this->session->data['token'].$url, 'SSL'));
             }
 
-            $this->response->redirect($this->url->link('system/email_template', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            $this->response->redirect($this->url->link('system/email_template', 'token='.$this->session->data['token'].$url, 'SSL'));
         }
 
         $this->getForm();
     }
 
-    protected function getList() {
+    protected function getList()
+    {
         if (isset($this->request->get['filter_text'])) {
             $filter_text = $this->request->get['filter_text'];
         } else {
@@ -107,52 +108,52 @@ class ControllerSystemEmailtemplate extends Controller {
         $url = '';
 
         if (isset($this->request->get['filter_text'])) {
-            $url .= '&filter_text=' . $this->request->get['filter_text'];
+            $url .= '&filter_text='.$this->request->get['filter_text'];
         }
 
         if (isset($this->request->get['filter_context'])) {
-            $url .= '&filter_context=' . $this->request->get['filter_context'];
+            $url .= '&filter_context='.$this->request->get['filter_context'];
         }
 
         if (isset($this->request->get['filter_name'])) {
-            $url .= '&filter_name=' . $this->request->get['filter_name'];
+            $url .= '&filter_name='.$this->request->get['filter_name'];
         }
 
         if (isset($this->request->get['filter_type'])) {
-            $url .= '&filter_type=' . $this->request->get['filter_type'];
+            $url .= '&filter_type='.$this->request->get['filter_type'];
         }
 
         if (isset($this->request->get['filter_status'])) {
-            $url .= '&filter_status=' . $this->request->get['filter_status'];
+            $url .= '&filter_status='.$this->request->get['filter_status'];
         }
 
         if (isset($this->request->get['sort'])) {
-            $url .= '&sort=' . $this->request->get['sort'];
+            $url .= '&sort='.$this->request->get['sort'];
         }
 
         if (isset($this->request->get['order'])) {
-            $url .= '&order=' . $this->request->get['order'];
+            $url .= '&order='.$this->request->get['order'];
         }
 
         if (isset($this->request->get['page'])) {
-            $url .= '&page=' . $this->request->get['page'];
+            $url .= '&page='.$this->request->get['page'];
         }
 
-        $data['breadcrumbs'] = array();
+        $data['breadcrumbs'] = [];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL')
-        );
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
+        ];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('system/email_template', 'token=' . $this->session->data['token'] . $url, 'SSL')
-        );
+            'href' => $this->url->link('system/email_template', 'token='.$this->session->data['token'].$url, 'SSL'),
+        ];
 
-        $data['emailTemplates'] = array();
+        $data['emailTemplates'] = [];
 
-        $filter_data = array(
+        $filter_data = [
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
@@ -161,42 +162,42 @@ class ControllerSystemEmailtemplate extends Controller {
             'filter_context' => $filter_context,
             'filter_name' => $filter_name,
             'filter_type' => $filter_type,
-            'filter_status' => $filter_status
-        );
+            'filter_status' => $filter_status,
+        ];
 
         $email_template_total = $this->model_system_email_template->getTotalEmailTempaltes($filter_data);
 
         $results = $this->model_system_email_template->getEmailTempaltes($filter_data);
 
         foreach ($results as $result) {
-            $data['emailTemplates'][] = array(
+            $data['emailTemplates'][] = [
                 'id' => $result['id'],
                 'text' => $result['text'],
                 'textOriginal' => $result['textOriginal'],
                 'type' => $result['type'],
                 'context' => $result['context'],
                 'status' => $result['status'],
-                'edit' => $this->url->link('system/email_template/edit', 'token=' . $this->session->data['token'] . '&email_template=' . $result['type'] . '_' . $result['text_id'] . '_' . $result['textOriginal']. $url, 'SSL')
-            );
+                'edit' => $this->url->link('system/email_template/edit', 'token='.$this->session->data['token'].'&email_template='.$result['type'].'_'.$result['text_id'].'_'.$result['textOriginal'].$url, 'SSL'),
+            ];
         }
 
         $data['heading_title'] = $this->language->get('heading_title');
 
-        #Text
+        //Text
         $data['text_list'] = $this->language->get('text_list');
         $data['text_no_results'] = $this->language->get('text_no_results');
         $data['text_confirm'] = $this->language->get('text_confirm');
         $data['text_enabled'] = $this->language->get('text_enabled');
         $data['text_disabled'] = $this->language->get('text_disabled');
 
-        #Column
+        //Column
         $data['column_text'] = $this->language->get('column_text');
         $data['column_type'] = $this->language->get('column_type');
         $data['column_context'] = $this->language->get('column_context');
         $data['column_status'] = $this->language->get('column_status');
         $data['column_action'] = $this->language->get('column_action');
 
-        #Button
+        //Button
         $data['button_add'] = $this->language->get('button_add');
         $data['button_edit'] = $this->language->get('button_edit');
         $data['button_delete'] = $this->language->get('button_delete');
@@ -204,13 +205,12 @@ class ControllerSystemEmailtemplate extends Controller {
         $data['button_show_filter'] = $this->language->get('button_show_filter');
         $data['button_hide_filter'] = $this->language->get('button_hide_filter');
 
-        #Filter
+        //Filter
         $data['entry_text'] = $this->language->get('entry_text');
         $data['entry_context'] = $this->language->get('entry_context');
         $data['entry_name'] = $this->language->get('entry_name');
         $data['entry_type'] = $this->language->get('entry_type');
         $data['entry_status'] = $this->language->get('entry_status');
-
 
         if (isset($this->error['warning'])) {
             $data['error_warning'] = $this->error['warning'];
@@ -229,40 +229,40 @@ class ControllerSystemEmailtemplate extends Controller {
         if (isset($this->request->post['selected'])) {
             $data['selected'] = (array) $this->request->post['selected'];
         } else {
-            $data['selected'] = array();
+            $data['selected'] = [];
         }
 
         $url = '';
 
-        if ($order == 'ASC') {
+        if ('ASC' == $order) {
             $url .= '&order=DESC';
         } else {
             $url .= '&order=ASC';
         }
 
         if (isset($this->request->get['page'])) {
-            $url .= '&page=' . $this->request->get['page'];
+            $url .= '&page='.$this->request->get['page'];
         }
 
-        $data['sort_text'] = $this->url->link('system/email_template', 'token=' . $this->session->data['token'] . '&sort=sort_text' . $url, 'SSL');
-        $data['sort_context'] = $this->url->link('system/email_template', 'token=' . $this->session->data['token'] . '&sort=sort_context' . $url, 'SSL');
-        $data['sort_type'] = $this->url->link('system/email_template', 'token=' . $this->session->data['token'] . '&sort=sort_type' . $url, 'SSL');
+        $data['sort_text'] = $this->url->link('system/email_template', 'token='.$this->session->data['token'].'&sort=sort_text'.$url, 'SSL');
+        $data['sort_context'] = $this->url->link('system/email_template', 'token='.$this->session->data['token'].'&sort=sort_context'.$url, 'SSL');
+        $data['sort_type'] = $this->url->link('system/email_template', 'token='.$this->session->data['token'].'&sort=sort_type'.$url, 'SSL');
 
         $url = '';
 
         if (isset($this->request->get['sort'])) {
-            $url .= '&sort=' . $this->request->get['sort'];
+            $url .= '&sort='.$this->request->get['sort'];
         }
 
         if (isset($this->request->get['order'])) {
-            $url .= '&order=' . $this->request->get['order'];
+            $url .= '&order='.$this->request->get['order'];
         }
 
         $pagination = new Pagination();
         $pagination->total = $email_template_total;
         $pagination->page = $page;
         $pagination->limit = $this->config->get('config_limit_admin');
-        $pagination->url = $this->url->link('system/email_template', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+        $pagination->url = $this->url->link('system/email_template', 'token='.$this->session->data['token'].$url.'&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
@@ -290,12 +290,11 @@ class ControllerSystemEmailtemplate extends Controller {
         $this->response->setOutput($this->load->view('system/email_template_list.tpl', $data));
     }
 
-    protected function getForm() {
-
+    protected function getForm()
+    {
         $data['entry_mobile_notification_status'] = $this->language->get('entry_mobile_notification_status');
         $data['entry_mobile_notification_template'] = $this->language->get('entry_mobile_notification_template');
         $data['entry_mobile_notification_title'] = $this->language->get('entry_mobile_notification_title');
-        
 
         $data['heading_title'] = $this->language->get('heading_title');
 
@@ -339,40 +338,40 @@ class ControllerSystemEmailtemplate extends Controller {
         $url = '';
 
         if (isset($this->request->get['sort'])) {
-            $url .= '&sort=' . $this->request->get['sort'];
+            $url .= '&sort='.$this->request->get['sort'];
         }
 
         if (isset($this->request->get['order'])) {
-            $url .= '&order=' . $this->request->get['order'];
+            $url .= '&order='.$this->request->get['order'];
         }
 
         if (isset($this->request->get['page'])) {
-            $url .= '&page=' . $this->request->get['page'];
+            $url .= '&page='.$this->request->get['page'];
         }
 
-        $data['breadcrumbs'] = array();
+        $data['breadcrumbs'] = [];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL')
-        );
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
+        ];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('system/email_template', 'token=' . $this->session->data['token'] . $url, 'SSL')
-        );
+            'href' => $this->url->link('system/email_template', 'token='.$this->session->data['token'].$url, 'SSL'),
+        ];
 
         if (!isset($this->request->get['email_template'])) {
-            $this->response->redirect($this->url->link('system/email_template', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            $this->response->redirect($this->url->link('system/email_template', 'token='.$this->session->data['token'].$url, 'SSL'));
         } else {
-            $data['action'] = $this->url->link('system/email_template/edit', 'token=' . $this->session->data['token'] . '&email_template=' . $this->request->get['email_template'] . $url, 'SSL');
+            $data['action'] = $this->url->link('system/email_template/edit', 'token='.$this->session->data['token'].'&email_template='.$this->request->get['email_template'].$url, 'SSL');
         }
 
-        $data['html_preview'] = $this->url->link('system/email_template/html', 'token=' . $this->session->data['token'] . '&email_template=' . $this->request->get['email_template'] . $url, 'SSL');
+        $data['html_preview'] = $this->url->link('system/email_template/html', 'token='.$this->session->data['token'].'&email_template='.$this->request->get['email_template'].$url, 'SSL');
 
-        $data['cancel'] = $this->url->link('system/email_template', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['cancel'] = $this->url->link('system/email_template', 'token='.$this->session->data['token'].$url, 'SSL');
 
-        if (isset($this->request->get['email_template']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+        if (isset($this->request->get['email_template']) && ('POST' != $this->request->server['REQUEST_METHOD'])) {
             $email_template_info = $this->model_system_email_template->getEmailTempalte($this->request->get['email_template']);
         }
 
@@ -404,7 +403,7 @@ class ControllerSystemEmailtemplate extends Controller {
         } else {
             $data['email_template_description'] = '';
         }
-        
+
         if (isset($this->request->post['sms'])) {
             $data['email_template_description'] = $this->request->post['sms'];
         } elseif (!empty($email_template_info)) {
@@ -428,8 +427,6 @@ class ControllerSystemEmailtemplate extends Controller {
         } else {
             $data['email_template_description'] = '';
         }
-
-        
 
         if (isset($this->request->post['mobile_notification'])) {
             $data['email_template_description'] = $this->request->post['mobile_notification'];
@@ -474,7 +471,8 @@ class ControllerSystemEmailtemplate extends Controller {
         $this->response->setOutput($this->load->view('system/email_template_form.tpl', $data));
     }
 
-    protected function validateForm() {
+    protected function validateForm()
+    {
         if (!$this->user->hasPermission('modify', 'system/email_template')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
@@ -482,41 +480,44 @@ class ControllerSystemEmailtemplate extends Controller {
         return !$this->error;
     }
 
-    protected function _getEmailTypes() {
-        $result = array('Order Status', 'Customer', 'Affiliate', 'Contact', 'Reviews', 'Cron', 'Mail');
+    protected function _getEmailTypes()
+    {
+        $result = ['Order Status', 'Customer', 'Affiliate', 'Contact', 'Reviews', 'Cron', 'Mail'];
 
-        for ($i = 0; $i <= 6; $i++) {
-            $types[] = array(
+        for ($i = 0; $i <= 6; ++$i) {
+            $types[] = [
                 'id' => $i + 1,
-                'value' => $result[$i]
-            );
+                'value' => $result[$i],
+            ];
         }
+
         return $types;
     }
 
-    public function autocomplete() {
-        $json = array();
+    public function autocomplete()
+    {
+        $json = [];
 
         if (isset($this->request->get['filter_name'])) {
             $this->load->model('system/email_template');
 
-            $filter_data = array(
+            $filter_data = [
                 'filter_name' => $this->request->get['filter_name'],
                 'start' => 0,
-                'limit' => 5
-            );
+                'limit' => 5,
+            ];
 
             $results = $this->model_system_email_template->getEmailTempaltes($filter_data);
 
             foreach ($results as $result) {
-                $json[] = array(
+                $json[] = [
                     'manufacturer_id' => $result['manufacturer_id'],
-                    'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8'))
-                );
+                    'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')),
+                ];
             }
         }
 
-        $sort_order = array();
+        $sort_order = [];
 
         foreach ($json as $key => $value) {
             $sort_order[$key] = $value['name'];
@@ -540,7 +541,7 @@ class ControllerSystemEmailtemplate extends Controller {
 
         foreach ($codes as $code) {
             $find[] = $code['code'];
-            $replace[] = $this->language->get('demo_' . preg_replace('~\{([\w]*)\}~', '$1', $code['code']));
+            $replace[] = $this->language->get('demo_'.preg_replace('~\{([\w]*)\}~', '$1', $code['code']));
         }
 
         preg_match('/{comment:start}(.*){comment:stop}/Uis', $message[$this->request->get['language_id']]['description'], $template_comment);
@@ -564,7 +565,7 @@ class ControllerSystemEmailtemplate extends Controller {
 
         foreach ($find_products as $product_code) {
             $find_product[] = $product_code;
-            $replace_product[] = $this->language->get('demo_' . preg_replace('~\{([\w]*)\}~', '$1', $product_code));
+            $replace_product[] = $this->language->get('demo_'.preg_replace('~\{([\w]*)\}~', '$1', $product_code));
         }
 
         if (!empty($template_product)) {
@@ -582,7 +583,7 @@ class ControllerSystemEmailtemplate extends Controller {
 
         foreach ($find_totals as $total_code) {
             $find_total[] = $total_code;
-            $replace_total[] = $this->language->get('demo_' . preg_replace('~\{([\w]*)\}~', '$1', $total_code));
+            $replace_total[] = $this->language->get('demo_'.preg_replace('~\{([\w]*)\}~', '$1', $total_code));
         }
 
         if (!empty($template_total)) {
@@ -603,6 +604,4 @@ class ControllerSystemEmailtemplate extends Controller {
 
         $this->response->setOutput($this->load->view('system/email_template_html.tpl', $data));
     }
-    
-
 }

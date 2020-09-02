@@ -1,8 +1,9 @@
 <?php
 
-
-class ControllerModuleManufacturer extends Controller {
-    public function index() {
+class ControllerModuleManufacturer extends Controller
+{
+    public function index()
+    {
         $this->load->language('module/manufacturer');
 
         $data['heading_title'] = $this->language->get('heading_title');
@@ -15,22 +16,21 @@ class ControllerModuleManufacturer extends Controller {
         }
 
         $this->load->model('assets/manufacturer');
-				
-        $data['manufacturers'] = array();
+
+        $data['manufacturers'] = [];
 
         $results = $this->model_assets_manufacturer->getManufacturers();
 
         foreach ($results as $result) {
-						
-			$data['manufacturers'][] = array(
+            $data['manufacturers'][] = [
                 'manufacturer_id' => $result['manufacturer_id'],
-                'name'       	  => $result['name'],
-				'href' => $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $result['manufacturer_id'])
-            );
+                'name' => $result['name'],
+                'href' => $this->url->link('product/manufacturer/info', 'manufacturer_id='.$result['manufacturer_id']),
+            ];
         }
 
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/manufacturer.tpl')) {
-            return $this->load->view($this->config->get('config_template') . '/template/module/manufacturer.tpl', $data);
+        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/module/manufacturer.tpl')) {
+            return $this->load->view($this->config->get('config_template').'/template/module/manufacturer.tpl', $data);
         } else {
             return $this->load->view('default/template/module/manufacturer.tpl', $data);
         }

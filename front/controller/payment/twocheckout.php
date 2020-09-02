@@ -1,15 +1,16 @@
 <?php
 
-class ControllerPaymentTwoCheckout extends Controller {
-
-    public function index() {
+class ControllerPaymentTwoCheckout extends Controller
+{
+    public function index()
+    {
         $data['button_confirm'] = $this->language->get('button_confirm');
 
         $this->load->model('checkout/order');
 
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
 
-        //get address 
+        //get address
         $this->load->model('account/address');
         $this->load->model('account/customer');
 
@@ -25,7 +26,7 @@ class ControllerPaymentTwoCheckout extends Controller {
 
         if ($address_info) {
             $city = $address_info['city'];
-            $address = $address_info['address'] . ', ' . $address_info['city'];
+            $address = $address_info['address'].', '.$address_info['city'];
         } else {
             $city = '';
             $address = '';
@@ -37,11 +38,11 @@ class ControllerPaymentTwoCheckout extends Controller {
         $data['currency_code'] = $order_info['currency_code'];
         $data['total'] = $this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value'], false);
         $data['cart_order_id'] = $this->session->data['order_id'];
-        $data['card_holder_name'] = $order_info['firstname'] . ' ' . $order_info['lastname'];
+        $data['card_holder_name'] = $order_info['firstname'].' '.$order_info['lastname'];
         $data['street_address'] = $address;
         $data['city'] = $city;
 
-        if ($order_info['payment_iso_code_2'] == 'US' || $order_info['payment_iso_code_2'] == 'CA') {
+        if ('US' == $order_info['payment_iso_code_2'] || 'CA' == $order_info['payment_iso_code_2']) {
             $data['state'] = $order_info['payment_zone'];
         } else {
             $data['state'] = 'XX';
@@ -58,18 +59,18 @@ class ControllerPaymentTwoCheckout extends Controller {
         $data['ship_zip'] = '';
         $data['ship_country'] = $this->config->get('config_country_code');
 
-        $data['products'] = array();
+        $data['products'] = [];
 
         $products = $this->cart->getProducts();
 
         foreach ($products as $product) {
-            $data['products'][] = array(
+            $data['products'][] = [
                 'product_id' => $product['product_id'],
                 'name' => $product['name'],
                 'description' => $product['name'],
                 'quantity' => $product['quantity'],
-                'price' => $this->currency->format($product['price'], $order_info['currency_code'], $order_info['currency_value'], false)
-            );
+                'price' => $this->currency->format($product['price'], $order_info['currency_code'], $order_info['currency_value'], false),
+            ];
         }
 
         if ($this->config->get('twocheckout_test')) {
@@ -88,14 +89,15 @@ class ControllerPaymentTwoCheckout extends Controller {
 
         $data['return_url'] = $this->url->link('payment/twocheckout/callback', '', 'SSL');
 
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/twocheckout.tpl')) {
-            return $this->load->view($this->config->get('config_template') . '/template/payment/twocheckout.tpl', $data);
+        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/payment/twocheckout.tpl')) {
+            return $this->load->view($this->config->get('config_template').'/template/payment/twocheckout.tpl', $data);
         } else {
             return $this->load->view('default/template/payment/twocheckout.tpl', $data);
         }
     }
 
-    public function callback() {
+    public function callback()
+    {
         $this->load->model('checkout/order');
 
         $order_info = $this->model_checkout_order->getOrder($this->request->post['cart_order_id']);
@@ -106,7 +108,7 @@ class ControllerPaymentTwoCheckout extends Controller {
             $order_number = '1';
         }
 
-        if (strtoupper(md5($this->config->get('twocheckout_secret') . $this->config->get('twocheckout_account') . $order_number . $this->request->post['total'])) == $this->request->post['key']) {
+        if (strtoupper(md5($this->config->get('twocheckout_secret').$this->config->get('twocheckout_account').$order_number.$this->request->post['total'])) == $this->request->post['key']) {
             if ($this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value'], false) == $this->request->post['total']) {
                 $this->model_checkout_order->addOrderHistory($this->request->post['cart_order_id'], $this->config->get('twocheckout_order_status_id'));
             } else {
@@ -123,14 +125,14 @@ class ControllerPaymentTwoCheckout extends Controller {
                 $server = $this->config->get('config_url');
             }
 
-            echo '<html>' . "\n";
-            echo '<head>' . "\n";
-            echo '  <meta http-equiv="Refresh" content="0; url=' . $server.'checkout-success' . '">' . "\n";
-            echo '</head>' . "\n";
-            echo '<body>' . "\n";
-            echo '  <p>Please follow <a href="' . $server.'checkout-success' . '">link</a>!</p>' . "\n";
-            echo '</body>' . "\n";
-            echo '</html>' . "\n";
+            echo '<html>'."\n";
+            echo '<head>'."\n";
+            echo '  <meta http-equiv="Refresh" content="0; url='.$server.'checkout-success'.'">'."\n";
+            echo '</head>'."\n";
+            echo '<body>'."\n";
+            echo '  <p>Please follow <a href="'.$server.'checkout-success'.'">link</a>!</p>'."\n";
+            echo '</body>'."\n";
+            echo '</html>'."\n";
             exit();
         } else {
             echo 'The response from 2checkout.com can\'t be parsed. Contact site administrator, please!';

@@ -1,8 +1,9 @@
 <?php
 
-class ControllerModuleSimpleBlogCategory extends Controller {
-
-    public function index($setting) {
+class ControllerModuleSimpleBlogCategory extends Controller
+{
+    public function index($setting)
+    {
         $this->language->load('module/simple_blog_category');
 
         $data['heading_title'] = $this->language->get('heading_title');
@@ -15,7 +16,7 @@ class ControllerModuleSimpleBlogCategory extends Controller {
         if (isset($this->request->get['simple_blog_category_id'])) {
             $parts = explode('_', (string) $this->request->get['simple_blog_category_id']);
         } else {
-            $parts = array();
+            $parts = [];
         }
 
         if (isset($parts[0])) {
@@ -32,33 +33,31 @@ class ControllerModuleSimpleBlogCategory extends Controller {
 
         $this->load->model('simple_blog/article');
 
-        $data['categories'] = array();
+        $data['categories'] = [];
 
         $categories = $this->model_simple_blog_article->getCategories(0);
 
         foreach ($categories as $category) {
-
-            $children_data = array();
+            $children_data = [];
 
             $children = $this->model_simple_blog_article->getCategories($category['simple_blog_category_id']);
 
             foreach ($children as $child) {
-
                 $article_total = $this->model_simple_blog_article->getTotalArticles($child['simple_blog_category_id']);
 
-                $children_data[] = array(
+                $children_data[] = [
                     'category_id' => $child['simple_blog_category_id'],
                     'name' => $child['name'],
-                    'href' => $this->url->link('blog/category', 'simple_blog_category_id=' . $category['simple_blog_category_id'] . '_' . $child['simple_blog_category_id'])
-                );
+                    'href' => $this->url->link('blog/category', 'simple_blog_category_id='.$category['simple_blog_category_id'].'_'.$child['simple_blog_category_id']),
+                ];
             }
 
-            $data['categories'][] = array(
+            $data['categories'][] = [
                 'simple_blog_category_id' => $category['simple_blog_category_id'],
                 'name' => $category['name'],
                 'children' => $children_data,
-                'href' => $this->url->link('blog/category', 'simple_blog_category_id=' . $category['simple_blog_category_id'])
-            );
+                'href' => $this->url->link('blog/category', 'simple_blog_category_id='.$category['simple_blog_category_id']),
+            ];
         }
 
         //print "<pre>"; print_r($data['categories']); die;
@@ -74,13 +73,10 @@ class ControllerModuleSimpleBlogCategory extends Controller {
             $data['blog_search'] = '';
         }
 
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/simple_blog_category.tpl')) {
-            return $this->load->view($this->config->get('config_template') . '/template/module/simple_blog_category.tpl', $data);
+        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/module/simple_blog_category.tpl')) {
+            return $this->load->view($this->config->get('config_template').'/template/module/simple_blog_category.tpl', $data);
         } else {
             return $this->load->view('default/template/module/simple_blog_category.tpl', $data);
         }
     }
-
 }
-
-?>

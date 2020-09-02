@@ -1,25 +1,28 @@
 <?php
-class ModelPaymentPPPayflow extends Model {
-	public function getMethod($total) {
-		$this->load->language('payment/pp_payflow');
 
-		if ($this->config->get('pp_payflow_total') > $total) {
-			$status = false;
-		} else {
-			$status = true;
-		}
+class ModelPaymentPPPayflow extends Model
+{
+    public function getMethod($total)
+    {
+        $this->load->language('payment/pp_payflow');
 
-		$method_data = array();
+        if ($this->config->get('pp_payflow_total') > $total) {
+            $status = false;
+        } else {
+            $status = true;
+        }
 
-		if ($status) {
-			$method_data = array(
-				'code'       => 'pp_payflow',
-				'title'      => $this->language->get('text_title'),
-				'terms'      => '',
-				'sort_order' => $this->config->get('pp_payflow_sort_order')
-			);
-		}
+        $method_data = [];
 
-		return $method_data;
-	}
+        if ($status) {
+            $method_data = [
+                'code' => 'pp_payflow',
+                'title' => $this->language->get('text_title'),
+                'terms' => '',
+                'sort_order' => $this->config->get('pp_payflow_sort_order'),
+            ];
+        }
+
+        return $method_data;
+    }
 }

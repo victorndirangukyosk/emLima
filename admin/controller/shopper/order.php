@@ -1,10 +1,11 @@
 <?php
 
-class ControllerShopperOrder extends Controller {
+class ControllerShopperOrder extends Controller
+{
+    private $error = [];
 
-    private $error = array();
-
-    public function index() {
+    public function index()
+    {
         $this->load->language('shopper/order');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -13,21 +14,21 @@ class ControllerShopperOrder extends Controller {
 
         $this->getList();
     }
-    
-    protected function getList() {
-        
+
+    protected function getList()
+    {
         if (isset($this->request->get['filter_store_name'])) {
             $filter_store_name = $this->request->get['filter_store_name'];
         } else {
             $filter_store_name = null;
         }
-        
+
         if (isset($this->request->get['filter_delivery_date'])) {
             $filter_delivery_date = $this->request->get['filter_delivery_date'];
         } else {
             $filter_delivery_date = null;
         }
-        
+
         if (isset($this->request->get['filter_vendor_order_id'])) {
             $filter_vendor_order_id = $this->request->get['filter_vendor_order_id'];
         } else {
@@ -85,52 +86,52 @@ class ControllerShopperOrder extends Controller {
         $url = '';
 
         if (isset($this->request->get['filter_order_id'])) {
-            $url .= '&filter_order_id=' . $this->request->get['filter_order_id'];
+            $url .= '&filter_order_id='.$this->request->get['filter_order_id'];
         }
-        
+
         if (isset($this->request->get['filter_vendor_order_id'])) {
-            $url .= '&filter_vendor_order_id=' . $this->request->get['filter_vendor_order_id'];
+            $url .= '&filter_vendor_order_id='.$this->request->get['filter_vendor_order_id'];
         }
 
         if (isset($this->request->get['filter_customer'])) {
-            $url .= '&filter_customer=' . urlencode(html_entity_decode($this->request->get['filter_customer'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&filter_customer='.urlencode(html_entity_decode($this->request->get['filter_customer'], ENT_QUOTES, 'UTF-8'));
         }
-        
+
         if (isset($this->request->get['filter_store_name'])) {
-            $url .= '&filter_store_name=' . urlencode(html_entity_decode($this->request->get['filter_store_name'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&filter_store_name='.urlencode(html_entity_decode($this->request->get['filter_store_name'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_delivery_date'])) {
-            $url .= '&filter_delivery_date=' . $this->request->get['filter_delivery_date'];
+            $url .= '&filter_delivery_date='.$this->request->get['filter_delivery_date'];
         }
-        
+
         if (isset($this->request->get['filter_order_status'])) {
-            $url .= '&filter_order_status=' . $this->request->get['filter_order_status'];
+            $url .= '&filter_order_status='.$this->request->get['filter_order_status'];
         }
 
         if (isset($this->request->get['filter_total'])) {
-            $url .= '&filter_total=' . $this->request->get['filter_total'];
+            $url .= '&filter_total='.$this->request->get['filter_total'];
         }
 
         if (isset($this->request->get['filter_date_added'])) {
-            $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
+            $url .= '&filter_date_added='.$this->request->get['filter_date_added'];
         }
 
         if (isset($this->request->get['sort'])) {
-            $url .= '&sort=' . $this->request->get['sort'];
+            $url .= '&sort='.$this->request->get['sort'];
         }
 
         if (isset($this->request->get['order'])) {
-            $url .= '&order=' . $this->request->get['order'];
+            $url .= '&order='.$this->request->get['order'];
         }
 
         if (isset($this->request->get['page'])) {
-            $url .= '&page=' . $this->request->get['page'];
+            $url .= '&page='.$this->request->get['page'];
         }
-        
-        $data['orders'] = array();
 
-        $filter_data = array(
+        $data['orders'] = [];
+
+        $filter_data = [
             'filter_order_id' => $filter_order_id,
             'filter_vendor_order_id' => $filter_vendor_order_id,
             'filter_customer' => $filter_customer,
@@ -142,15 +143,15 @@ class ControllerShopperOrder extends Controller {
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin')
-        );
+            'limit' => $this->config->get('config_limit_admin'),
+        ];
 
         $order_total = $this->model_shopper_order->getTotalOrders($filter_data);
 
         $results = $this->model_shopper_order->getOrders($filter_data);
-        
+
         foreach ($results as $result) {
-            $data['orders'][] = array(
+            $data['orders'][] = [
                 'order_id' => $result['order_id'],
                 'order_status_id' => $result['order_status_id'],
                 'vendor_order_id' => $result['vendor_order_id'],
@@ -159,15 +160,15 @@ class ControllerShopperOrder extends Controller {
                 'delivery_timeslot' => $result['delivery_timeslot'],
                 'status' => $result['status'],
                 'shopper_commision' => $result['shopper_commision'],
-                'track_info' => $this->url->link('shopper/order/track_info','vendor_order_id='.$result['vendor_order_id'].'&token='.$this->session->data['token'], 'SSL'),
-                'track' => $this->url->link('shopper/order/track','vendor_order_id='.$result['vendor_order_id'].'&token='.$this->session->data['token'], 'SSL'),
+                'track_info' => $this->url->link('shopper/order/track_info', 'vendor_order_id='.$result['vendor_order_id'].'&token='.$this->session->data['token'], 'SSL'),
+                'track' => $this->url->link('shopper/order/track', 'vendor_order_id='.$result['vendor_order_id'].'&token='.$this->session->data['token'], 'SSL'),
                 'total' => $this->currency->format($result['total'], $result['currency_code'], $result['currency_value']),
                 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
-            );
+            ];
         }
 
-        $data['invoice'] = $this->url->link('shopper/order/invoice', 'token=' . $this->session->data['token'], 'SSL');
-        
+        $data['invoice'] = $this->url->link('shopper/order/invoice', 'token='.$this->session->data['token'], 'SSL');
+
         $data['heading_title'] = $this->language->get('heading_title');
 
         $data['text_list'] = $this->language->get('text_list');
@@ -176,7 +177,6 @@ class ControllerShopperOrder extends Controller {
         $data['text_missing'] = $this->language->get('text_missing');
         $data['text_heading'] = $this->language->get('text_heading');
         $data['text_details'] = $this->language->get('text_details');
-
 
         $data['column_vendor_order_id'] = $this->language->get('column_vendor_order_id');
         $data['column_store'] = $this->language->get('column_store');
@@ -222,8 +222,6 @@ class ControllerShopperOrder extends Controller {
         $data['column_address'] = $this->language->get('column_address');
         $data['column_delivery_date'] = $this->language->get('column_delivery_date');
         $data['text_store_info'] = $this->language->get('text_store_info');
-        
-
 
         $data['token'] = $this->session->data['token'];
 
@@ -244,101 +242,101 @@ class ControllerShopperOrder extends Controller {
         if (isset($this->request->post['selected'])) {
             $data['selected'] = (array) $this->request->post['selected'];
         } else {
-            $data['selected'] = array();
+            $data['selected'] = [];
         }
 
         $url = '';
-        
+
         if (isset($this->request->get['filter_store_name'])) {
-            $url .= '&filter_store_name=' . urlencode(html_entity_decode($this->request->get['filter_store_name'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&filter_store_name='.urlencode(html_entity_decode($this->request->get['filter_store_name'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_delivery_date'])) {
-            $url .= '&filter_delivery_date=' . $this->request->get['filter_delivery_date'];
+            $url .= '&filter_delivery_date='.$this->request->get['filter_delivery_date'];
         }
-        
+
         if (isset($this->request->get['filter_order_id'])) {
-            $url .= '&filter_order_id=' . $this->request->get['filter_order_id'];
+            $url .= '&filter_order_id='.$this->request->get['filter_order_id'];
         }
 
         if (isset($this->request->get['filter_customer'])) {
-            $url .= '&filter_customer=' . urlencode(html_entity_decode($this->request->get['filter_customer'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&filter_customer='.urlencode(html_entity_decode($this->request->get['filter_customer'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_order_status'])) {
-            $url .= '&filter_order_status=' . $this->request->get['filter_order_status'];
+            $url .= '&filter_order_status='.$this->request->get['filter_order_status'];
         }
 
         if (isset($this->request->get['filter_total'])) {
-            $url .= '&filter_total=' . $this->request->get['filter_total'];
+            $url .= '&filter_total='.$this->request->get['filter_total'];
         }
 
         if (isset($this->request->get['filter_date_added'])) {
-            $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
+            $url .= '&filter_date_added='.$this->request->get['filter_date_added'];
         }
 
-        if ($order == 'ASC') {
+        if ('ASC' == $order) {
             $url .= '&order=DESC';
         } else {
             $url .= '&order=ASC';
         }
 
         if (isset($this->request->get['page'])) {
-            $url .= '&page=' . $this->request->get['page'];
+            $url .= '&page='.$this->request->get['page'];
         }
 
-        $data['sort_order'] = $this->url->link('shopper/order', 'token=' . $this->session->data['token'] . '&sort=o.order_id' . $url, 'SSL');
-        $data['sort_vendor_order_id'] = $this->url->link('shopper/order', 'token=' . $this->session->data['token'] . '&sort=o.vendor_order_id' . $url, 'SSL');
-        $data['sort_store_name'] = $this->url->link('shopper/order', 'token=' . $this->session->data['token'] . '&sort=o.store_name' . $url, 'SSL');
-        $data['sort_delivery_date'] = $this->url->link('shopper/order', 'token=' . $this->session->data['token'] . '&sort=o.delivery_date' . $url, 'SSL');
-        $data['sort_customer'] = $this->url->link('shopper/order', 'token=' . $this->session->data['token'] . '&sort=customer' . $url, 'SSL');
-        $data['sort_status'] = $this->url->link('shopper/order', 'token=' . $this->session->data['token'] . '&sort=status' . $url, 'SSL');
-        $data['sort_total'] = $this->url->link('shopper/order', 'token=' . $this->session->data['token'] . '&sort=o.total' . $url, 'SSL');
-        $data['sort_date_added'] = $this->url->link('shopper/order', 'token=' . $this->session->data['token'] . '&sort=o.date_added' . $url, 'SSL');
+        $data['sort_order'] = $this->url->link('shopper/order', 'token='.$this->session->data['token'].'&sort=o.order_id'.$url, 'SSL');
+        $data['sort_vendor_order_id'] = $this->url->link('shopper/order', 'token='.$this->session->data['token'].'&sort=o.vendor_order_id'.$url, 'SSL');
+        $data['sort_store_name'] = $this->url->link('shopper/order', 'token='.$this->session->data['token'].'&sort=o.store_name'.$url, 'SSL');
+        $data['sort_delivery_date'] = $this->url->link('shopper/order', 'token='.$this->session->data['token'].'&sort=o.delivery_date'.$url, 'SSL');
+        $data['sort_customer'] = $this->url->link('shopper/order', 'token='.$this->session->data['token'].'&sort=customer'.$url, 'SSL');
+        $data['sort_status'] = $this->url->link('shopper/order', 'token='.$this->session->data['token'].'&sort=status'.$url, 'SSL');
+        $data['sort_total'] = $this->url->link('shopper/order', 'token='.$this->session->data['token'].'&sort=o.total'.$url, 'SSL');
+        $data['sort_date_added'] = $this->url->link('shopper/order', 'token='.$this->session->data['token'].'&sort=o.date_added'.$url, 'SSL');
 
         $url = '';
 
         if (isset($this->request->get['filter_store_name'])) {
-            $url .= '&filter_store_name=' . urlencode(html_entity_decode($this->request->get['filter_store_name'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&filter_store_name='.urlencode(html_entity_decode($this->request->get['filter_store_name'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_delivery_date'])) {
-            $url .= '&filter_delivery_date=' . $this->request->get['filter_delivery_date'];
+            $url .= '&filter_delivery_date='.$this->request->get['filter_delivery_date'];
         }
-        
+
         if (isset($this->request->get['filter_order_id'])) {
-            $url .= '&filter_order_id=' . $this->request->get['filter_order_id'];
+            $url .= '&filter_order_id='.$this->request->get['filter_order_id'];
         }
 
         if (isset($this->request->get['filter_customer'])) {
-            $url .= '&filter_customer=' . urlencode(html_entity_decode($this->request->get['filter_customer'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&filter_customer='.urlencode(html_entity_decode($this->request->get['filter_customer'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_order_status'])) {
-            $url .= '&filter_order_status=' . $this->request->get['filter_order_status'];
+            $url .= '&filter_order_status='.$this->request->get['filter_order_status'];
         }
 
         if (isset($this->request->get['filter_total'])) {
-            $url .= '&filter_total=' . $this->request->get['filter_total'];
+            $url .= '&filter_total='.$this->request->get['filter_total'];
         }
 
         if (isset($this->request->get['filter_date_added'])) {
-            $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
+            $url .= '&filter_date_added='.$this->request->get['filter_date_added'];
         }
 
         if (isset($this->request->get['sort'])) {
-            $url .= '&sort=' . $this->request->get['sort'];
+            $url .= '&sort='.$this->request->get['sort'];
         }
 
         if (isset($this->request->get['order'])) {
-            $url .= '&order=' . $this->request->get['order'];
+            $url .= '&order='.$this->request->get['order'];
         }
 
         $pagination = new Pagination();
         $pagination->total = $order_total;
         $pagination->page = $page;
         $pagination->limit = $this->config->get('config_limit_admin');
-        $pagination->url = $this->url->link('shopper/order', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+        $pagination->url = $this->url->link('shopper/order', 'token='.$this->session->data['token'].$url.'&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
@@ -357,18 +355,18 @@ class ControllerShopperOrder extends Controller {
         $data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
 
         $data['config_processing_status'] = $this->config->get('config_processing_status');
-        
+
         $data['sort'] = $sort;
         $data['order'] = $order;
-        
+
         $data['header'] = $this->load->controller('shopper/common/header');
         $data['footer'] = $this->load->controller('shopper/common/footer');
-        
+
         $this->response->setOutput($this->load->view('shopper/order_list.tpl', $data));
     }
 
-    public function invoice() {
-        
+    public function invoice()
+    {
         $this->load->language('sale/order');
         $this->load->model('shopper/order');
         $this->load->model('shopper/request');
@@ -412,9 +410,9 @@ class ControllerShopperOrder extends Controller {
 
         $this->load->model('setting/setting');
 
-        $data['orders'] = array();
+        $data['orders'] = [];
 
-        $orders = array();
+        $orders = [];
 
         if (isset($this->request->post['selected'])) {
             $orders = $this->request->post['selected'];
@@ -423,11 +421,9 @@ class ControllerShopperOrder extends Controller {
         }
 
         foreach ($orders as $order_id) {
-            
             $order_info = $this->model_shopper_order->getOrder($order_id);
 
             if ($order_info) {
-                
                 $store_id = $order_info['store_id'];
 
                 $store_info = $this->model_shopper_request->getStoreDatas($order_info['store_id']);
@@ -445,36 +441,35 @@ class ControllerShopperOrder extends Controller {
                 }
 
                 $invoice_no = '';
-                
+
                 $this->load->model('tool/upload');
 
-                $product_data = array();
+                $product_data = [];
 
-                $products = $this->model_tool_upload->getOrderProducts($store_id,$order_info['order_id']);
+                $products = $this->model_tool_upload->getOrderProducts($store_id, $order_info['order_id']);
                 foreach ($products as $product) {
-                   
-                    $product_data[] = array(
+                    $product_data[] = [
                         'name' => $product['name'],
                         'model' => $product['model'],
-                        'option' => array(),
+                        'option' => [],
                         'quantity' => $product['quantity'],
                         'price' => $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
-                        'total' => $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value'])
-                    );
+                        'total' => $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
+                    ];
                 }
 
-                $total_data = array();
-                
-                $totals = $this->model_tool_upload->getVendorOrderTotal($store_id,$order_info['order_id']);
+                $total_data = [];
+
+                $totals = $this->model_tool_upload->getVendorOrderTotal($store_id, $order_info['order_id']);
 
                 foreach ($totals as $total) {
-                    $total_data[] = array(
+                    $total_data[] = [
                         'title' => $total['title'],
                         'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
-                    );
+                    ];
                 }
 
-                $data['orders'][] = array(
+                $data['orders'][] = [
                     'order_id' => $order_info['vendor_order_id'],
                     'invoice_no' => $invoice_no,
                     'date_added' => date($this->language->get('date_format_short'), strtotime($order_info['date_added'])),
@@ -493,140 +488,140 @@ class ControllerShopperOrder extends Controller {
                     'payment_method' => $order_info['payment_method'],
                     'product' => $product_data,
                     'total' => $total_data,
-                    'comment' => nl2br($order_info['comment'])
-                );
+                    'comment' => nl2br($order_info['comment']),
+                ];
             }
         }
-        
+
         $this->response->setOutput($this->load->view('shopper/order_invoice.tpl', $data));
     }
-    
-    //save shopper position 
-    public function saveLatLong(){
-        
-        if(isset($this->request->post['latitude'])) {
+
+    //save shopper position
+    public function saveLatLong()
+    {
+        if (isset($this->request->post['latitude'])) {
             $latitude = $this->request->post['latitude'];
-        }else{
+        } else {
             $latitude = 0;
         }
-        
-        if(isset($this->request->post['longitude'])) {
+
+        if (isset($this->request->post['longitude'])) {
             $longitude = $this->request->post['longitude'];
-        }else{
+        } else {
             $longitude = 0;
         }
-        
-        if($latitude && $longitude) {
 
+        if ($latitude && $longitude) {
             $this->load->model('shopper/shopper');
 
-            $this->model_shopper_shopper->updatePosition($latitude,$longitude,$this->user->getId());
+            $this->model_shopper_shopper->updatePosition($latitude, $longitude, $this->user->getId());
         }
     }
-    
-    //save shopper position, order_id for order tracking 
-    //return total commision, total distance 
-    public function savePosition(){
-        
+
+    //save shopper position, order_id for order tracking
+    //return total commision, total distance
+    public function savePosition()
+    {
         $this->load->model('shopper/shopper');
-        
-        $json = array();
-        
-        if(isset($this->request->post['order_id'])) {
+
+        $json = [];
+
+        if (isset($this->request->post['order_id'])) {
             $order_id = $this->request->post['order_id'];
-        }else{
+        } else {
             $order_id = 0;
         }
-        
-        if(isset($this->request->post['latitude'])) {
+
+        if (isset($this->request->post['latitude'])) {
             $latitude = $this->request->post['latitude'];
-        }else{
+        } else {
             $latitude = 0;
         }
-        
-        if(isset($this->request->post['longitude'])) {
+
+        if (isset($this->request->post['longitude'])) {
             $longitude = $this->request->post['longitude'];
-        }else{
+        } else {
             $longitude = 0;
         }
-        
-        //get last data 
+
+        //get last data
         $last_track_info = $this->model_shopper_shopper->lastPosition($order_id);
-        
-        if($last_track_info) {
-            $new_distance = $this->model_shopper_shopper->distance($last_track_info['latitude'], $last_track_info['longitude'], $latitude, $longitude);             
-            $total_distance = $new_distance + $last_track_info['distance'];        
-        }else{            
-            $total_distance = 0;            
+
+        if ($last_track_info) {
+            $new_distance = $this->model_shopper_shopper->distance($last_track_info['latitude'], $last_track_info['longitude'], $latitude, $longitude);
+            $total_distance = $new_distance + $last_track_info['distance'];
+        } else {
+            $total_distance = 0;
         }
-        
+
         $this->model_shopper_shopper->savePosition($order_id, $latitude, $longitude, $total_distance);
-                
+
         $json['total_distance'] = round($total_distance, 2);
-        
-        //total commision 
+
+        //total commision
         $json['total_commision'] = round($total_distance * $this->config->get('config_dri_charge'), 2);
-        
+
         echo json_encode($json);
     }
-    
-    //start tracking latitude, longitude 
-    public function track() {
-        
+
+    //start tracking latitude, longitude
+    public function track()
+    {
         $this->load->model('shopper/shopper');
-                
-        if(isset($this->request->get['vendor_order_id'])) {
+
+        if (isset($this->request->get['vendor_order_id'])) {
             $data['vendor_order_id'] = $this->request->get['vendor_order_id'];
-        }else{
+        } else {
             $data['vendor_order_id'] = 0;
         }
-        
-        $data = $this->model_shopper_shopper->getOrder($data['vendor_order_id']);   
-        
+
+        $data = $this->model_shopper_shopper->getOrder($data['vendor_order_id']);
+
         $data['token'] = $this->session->data['token'];
-                
+
         $data['header'] = $this->load->controller('shopper/common/header');
         $data['footer'] = $this->load->controller('shopper/common/footer');
-        
-        $this->response->setOutput($this->load->view('shopper/track.tpl', $data));        
+
+        $this->response->setOutput($this->load->view('shopper/track.tpl', $data));
     }
-    
-    //display order track info by order_id 
-    public function track_info(){
-        
+
+    //display order track info by order_id
+    public function track_info()
+    {
         $this->load->model('shopper/shopper');
-        
-        if(isset($this->request->get['vendor_order_id'])) {
+
+        if (isset($this->request->get['vendor_order_id'])) {
             $order_id = $this->request->get['vendor_order_id'];
-        }else{
+        } else {
             $order_id = 0;
         }
-        
+
         $data = $this->model_shopper_shopper->getTrackInfo($order_id);
-        
-        $data['total'] = $this->currency->format($data['total'], $data['currency_code'], $data['currency_value']);        
-        
+
+        $data['total'] = $this->currency->format($data['total'], $data['currency_code'], $data['currency_value']);
+
         $data['header'] = $this->load->controller('shopper/common/header');
         $data['footer'] = $this->load->controller('shopper/common/footer');
-        
-        $this->response->setOutput($this->load->view('shopper/track_info.tpl', $data));        
+
+        $this->response->setOutput($this->load->view('shopper/track_info.tpl', $data));
     }
-    
-    //after order shipped 
-    public function orderShipped(){
-        
+
+    //after order shipped
+    public function orderShipped()
+    {
         $this->load->model('shopper/shopper');
-        
-        if(isset($this->request->post['order_id'])) {
+
+        if (isset($this->request->post['order_id'])) {
             $order_id = $this->request->post['order_id'];
-        }else{
+        } else {
             $order_id = 0;
         }
-        
+
         $this->model_shopper_shopper->orderShipped($order_id);
     }
-    
-    protected function validateDelete() {
+
+    protected function validateDelete()
+    {
         if (!$this->user->hasPermission('modify', 'shopper/request')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }

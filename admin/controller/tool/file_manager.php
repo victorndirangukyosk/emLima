@@ -1,43 +1,44 @@
 <?php
 
-require_once( DIR_SYSTEM . 'elfinder/elFinderConnector.class.php' );
-require_once( DIR_SYSTEM . 'elfinder/elFinder.class.php' );
-require_once( DIR_SYSTEM . 'elfinder/elFinderVolumeDriver.class.php' );
-require_once( DIR_SYSTEM . 'elfinder/elFinderVolumeLocalFileSystem.class.php' );
+require_once DIR_SYSTEM.'elfinder/elFinderConnector.class.php';
+require_once DIR_SYSTEM.'elfinder/elFinder.class.php';
+require_once DIR_SYSTEM.'elfinder/elFinderVolumeDriver.class.php';
+require_once DIR_SYSTEM.'elfinder/elFinderVolumeLocalFileSystem.class.php';
 
-class ControllerToolFilemanager extends Controller {
+class ControllerToolFilemanager extends Controller
+{
+    private $error = [];
 
-    private $error = array();
-
-    public function index() {
+    public function index()
+    {
         $this->load->language('tool/file_manager');
 
         $this->document->setTitle($this->language->get('heading_title'));
 
         $data['heading_title'] = $this->language->get('heading_title');
 
-        $this->document->breadcrumbs = array();
+        $this->document->breadcrumbs = [];
 
         $this->validate();
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL'),
-            'separator' => false
-        );
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
+            'separator' => false,
+        ];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('tool/file_manager', 'token=' . $this->session->data['token'], 'SSL'),
-            'separator' => ' :: '
-        );
+            'href' => $this->url->link('tool/file_manager', 'token='.$this->session->data['token'], 'SSL'),
+            'separator' => ' :: ',
+        ];
 
-        $data['fileSystem'] = $this->url->link('tool/file_manager/runFileSystem', 'token=' . $this->session->data['token'], 'SSL');
+        $data['fileSystem'] = $this->url->link('tool/file_manager/runFileSystem', 'token='.$this->session->data['token'], 'SSL');
 
         $this->document->addStyle('http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css', 'stylesheet', '');
-            
+
         $this->document->addStyle('ui/stylesheet/elfinder.min.css', 'stylesheet', '');
-       // $this->document->addStyle('ui/stylesheet/theme.css', 'stylesheet', '');
+        // $this->document->addStyle('ui/stylesheet/theme.css', 'stylesheet', '');
 
         $this->document->addScript('ui/javascript/jquery/layout/jquery-ui.js');
         $this->document->addScript('ui/javascript/elfinder/jquery.browser.js');
@@ -64,50 +65,51 @@ class ControllerToolFilemanager extends Controller {
         $this->response->setOutput($this->load->view('tool/file_manager.tpl', $data));
     }
 
-    public function runFileSystem() {
-
+    public function runFileSystem()
+    {
         if ($this->user->isVendor()) {
-
             $oldmask = umask(0);
             mkdir(DIR_ROOT.'image/vendor/'.$this->user->getId(), 0777);
             umask($oldmask);
 
-            $opts = array(
+            $opts = [
                 'debug' => true,
-                'roots' => array(
-                    array(
+                'roots' => [
+                    [
                         'driver' => 'LocalFileSystem',
                         'path' => DIR_ROOT.'image/vendor/'.$this->user->getId(),
                         'URL' => HTTP_CATALOG.'image/vendor/'.$this->user->getId(),
-                        'accessControl' => 'access'//disable and hide dot starting files (OPTIONAL)
-                    )
-                )
-            );
+                        'accessControl' => 'access', //disable and hide dot starting files (OPTIONAL)
+                    ],
+                ],
+            ];
         } else {
-            $opts = array(
+            $opts = [
                 // 'debug' => true,
-                'roots' => array(
-                    array(
+                'roots' => [
+                    [
                         'driver' => 'LocalFileSystem',
                         'path' => DIR_ROOT,
                         'URL' => HTTP_CATALOG,
-                        'accessControl' => 'access'      //disable and hide dot starting files (OPTIONAL)
-                    )
-                )
-            );    
+                        'accessControl' => 'access',      //disable and hide dot starting files (OPTIONAL)
+                    ],
+                ],
+            ];
         }
-        
+
         $connector = new elFinderConnector(new elFinder($opts));
         $connector->run();
     }
 
-    public function access($attr, $path, $data, $volume) {
-        return strpos(basename($path), '.') === 0       // if file/folder begins with '.' (dot)
-                ? !($attr == 'read' || $attr == 'write')    // set read+write to false, other (locked+hidden) set to true
+    public function access($attr, $path, $data, $volume)
+    {
+        return 0 === strpos(basename($path), '.')       // if file/folder begins with '.' (dot)
+                ? !('read' == $attr || 'write' == $attr)    // set read+write to false, other (locked+hidden) set to true
                 : null;                                    // else elFinder decide it itself
     }
 
-    protected function validate() {
+    protected function validate()
+    {
         if (!$this->user->hasPermission('modify', 'tool/file_manager')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
@@ -118,5 +120,4 @@ class ControllerToolFilemanager extends Controller {
 
         return !$this->error;
     }
-
 }

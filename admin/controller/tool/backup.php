@@ -1,18 +1,18 @@
 <?php
 
-class ControllerToolBackup extends Controller {
+class ControllerToolBackup extends Controller
+{
+    private $error = [];
 
-    private $error = array();
-
-    public function index() {
-               
+    public function index()
+    {
         $this->load->language('tool/backup');
 
         $this->document->setTitle($this->language->get('heading_title'));
 
         $this->load->model('tool/backup');
 
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->user->hasPermission('modify', 'tool/backup')) {
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->user->hasPermission('modify', 'tool/backup')) {
             if (is_uploaded_file($this->request->files['import']['tmp_name'])) {
                 $content = file_get_contents($this->request->files['import']['tmp_name']);
             } else {
@@ -24,7 +24,7 @@ class ControllerToolBackup extends Controller {
 
                 $this->session->data['success'] = $this->language->get('text_success');
 
-                $this->response->redirect($this->url->link('tool/backup', 'token=' . $this->session->data['token'], 'SSL'));
+                $this->response->redirect($this->url->link('tool/backup', 'token='.$this->session->data['token'], 'SSL'));
             } else {
                 $this->error['warning'] = $this->language->get('error_empty');
             }
@@ -59,21 +59,21 @@ class ControllerToolBackup extends Controller {
             $data['success'] = '';
         }
 
-        $data['breadcrumbs'] = array();
+        $data['breadcrumbs'] = [];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL')
-        );
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
+        ];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('tool/backup', 'token=' . $this->session->data['token'], 'SSL')
-        );
+            'href' => $this->url->link('tool/backup', 'token='.$this->session->data['token'], 'SSL'),
+        ];
 
-        $data['restore'] = $this->url->link('tool/backup', 'token=' . $this->session->data['token'], 'SSL');
+        $data['restore'] = $this->url->link('tool/backup', 'token='.$this->session->data['token'], 'SSL');
 
-        $data['backup'] = $this->url->link('tool/backup/backup', 'token=' . $this->session->data['token'], 'SSL');
+        $data['backup'] = $this->url->link('tool/backup/backup', 'token='.$this->session->data['token'], 'SSL');
 
         $data['tables'] = $this->model_tool_backup->getTables();
 
@@ -84,23 +84,23 @@ class ControllerToolBackup extends Controller {
         $this->response->setOutput($this->load->view('tool/backup.tpl', $data));
     }
 
-    public function backup() {
-        
+    public function backup()
+    {
         ini_set('max_execution_time', 0);
-        ini_set('memory_limit','512M');
+        ini_set('memory_limit', '512M');
 
         $this->load->language('tool/backup');
 
         if (!isset($this->request->post['backup'])) {
             $this->session->data['error'] = $this->language->get('error_backup');
 
-            $this->response->redirect($this->url->link('tool/backup', 'token=' . $this->session->data['token'], 'SSL'));
+            $this->response->redirect($this->url->link('tool/backup', 'token='.$this->session->data['token'], 'SSL'));
         } elseif ($this->user->hasPermission('modify', 'tool/backup')) {
             $this->response->addheader('Pragma: public');
             $this->response->addheader('Expires: 0');
             $this->response->addheader('Content-Description: File Transfer');
             $this->response->addheader('Content-Type: application/octet-stream');
-            $this->response->addheader('Content-Disposition: attachment; filename=' . DB_DATABASE . '_' . date('Y-m-d_H-i-s', time()) . '_backup.sql');
+            $this->response->addheader('Content-Disposition: attachment; filename='.DB_DATABASE.'_'.date('Y-m-d_H-i-s', time()).'_backup.sql');
             $this->response->addheader('Content-Transfer-Encoding: binary');
 
             $this->load->model('tool/backup');
@@ -109,8 +109,7 @@ class ControllerToolBackup extends Controller {
         } else {
             $this->session->data['error'] = $this->language->get('error_permission');
 
-            $this->response->redirect($this->url->link('tool/backup', 'token=' . $this->session->data['token'], 'SSL'));
+            $this->response->redirect($this->url->link('tool/backup', 'token='.$this->session->data['token'], 'SSL'));
         }
     }
-
 }

@@ -1,17 +1,18 @@
 <?php
 
-
-class SmartObject {
-
-	public function get($property, $default = null) {
+class SmartObject
+{
+    public function get($property, $default = null)
+    {
         if (isset($this->$property)) {
             return $this->$property;
         }
 
         return $default;
-	}
+    }
 
-    public function getProperties($public = true) {
+    public function getProperties($public = true)
+    {
         $vars = get_object_vars($this);
 
         if ($public) {
@@ -25,11 +26,13 @@ class SmartObject {
         return $vars;
     }
 
-    public function has($property) {
+    public function has($property)
+    {
         return isset($this->$property);
     }
 
-    public function set($property, $value = null) {
+    public function set($property, $value = null)
+    {
         $previous = isset($this->$property) ? $this->$property : null;
 
         $this->$property = $value;
@@ -37,7 +40,8 @@ class SmartObject {
         return $previous;
     }
 
-    public function setProperties($properties) {
+    public function setProperties($properties)
+    {
         if (is_array($properties) || is_object($properties)) {
             foreach ((array) $properties as $k => $v) {
                 // Use the set function which might be overridden.

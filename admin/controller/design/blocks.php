@@ -1,10 +1,11 @@
 <?php
 
-class ControllerDesignBlocks extends Controller {
+class ControllerDesignBlocks extends Controller
+{
+    private $error = [];
 
-    private $error = array();
-
-    public function index() {
+    public function index()
+    {
         $this->load->language('design/blocks');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -14,7 +15,8 @@ class ControllerDesignBlocks extends Controller {
         $this->getList();
     }
 
-    public function add() {
+    public function add()
+    {
         $this->load->language('design/blocks');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -22,7 +24,7 @@ class ControllerDesignBlocks extends Controller {
         $this->load->model('design/blocks');
 
         //echo "<pre>";print_r($this->request->post);die;
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
             $block_id = $this->model_design_blocks->addBlock($this->request->post);
 
             $this->session->data['success'] = $this->language->get('text_success');
@@ -30,32 +32,33 @@ class ControllerDesignBlocks extends Controller {
             $url = '';
 
             if (isset($this->request->get['sort'])) {
-                $url .= '&sort=' . $this->request->get['sort'];
+                $url .= '&sort='.$this->request->get['sort'];
             }
 
             if (isset($this->request->get['order'])) {
-                $url .= '&order=' . $this->request->get['order'];
+                $url .= '&order='.$this->request->get['order'];
             }
 
             if (isset($this->request->get['page'])) {
-                $url .= '&page=' . $this->request->get['page'];
+                $url .= '&page='.$this->request->get['page'];
             }
 
-            if (isset($this->request->post['button']) and $this->request->post['button'] == 'save') {
-                $this->response->redirect($this->url->link('design/blocks/edit', 'block_id=' . $block_id . '&token=' . $this->session->data['token'] . $url, 'SSL'));
+            if (isset($this->request->post['button']) and 'save' == $this->request->post['button']) {
+                $this->response->redirect($this->url->link('design/blocks/edit', 'block_id='.$block_id.'&token='.$this->session->data['token'].$url, 'SSL'));
             }
 
-            if (isset($this->request->post['button']) and $this->request->post['button'] == 'new') {
-                $this->response->redirect($this->url->link('design/blocks/add', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            if (isset($this->request->post['button']) and 'new' == $this->request->post['button']) {
+                $this->response->redirect($this->url->link('design/blocks/add', 'token='.$this->session->data['token'].$url, 'SSL'));
             }
 
-            $this->response->redirect($this->url->link('design/blocks', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            $this->response->redirect($this->url->link('design/blocks', 'token='.$this->session->data['token'].$url, 'SSL'));
         }
 
         $this->getForm();
     }
 
-    public function edit() {
+    public function edit()
+    {
         $this->load->language('design/blocks');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -63,7 +66,7 @@ class ControllerDesignBlocks extends Controller {
         $this->load->model('design/blocks');
 
         //echo "<pre>";print_r($this->request->post);die;
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
             $this->model_design_blocks->editBlock($this->request->get['block_id'], $this->request->post);
 
             $this->session->data['success'] = $this->language->get('text_success');
@@ -71,24 +74,25 @@ class ControllerDesignBlocks extends Controller {
             $url = '';
 
             if (isset($this->request->get['sort'])) {
-                $url .= '&sort=' . $this->request->get['sort'];
+                $url .= '&sort='.$this->request->get['sort'];
             }
 
-            if (isset($this->request->post['button']) and $this->request->post['button'] == 'save') {
-                $this->response->redirect($this->url->link('design/blocks/edit', 'block_id=' . $this->request->get['block_id'] . '&token=' . $this->session->data['token'] . $url, 'SSL'));
+            if (isset($this->request->post['button']) and 'save' == $this->request->post['button']) {
+                $this->response->redirect($this->url->link('design/blocks/edit', 'block_id='.$this->request->get['block_id'].'&token='.$this->session->data['token'].$url, 'SSL'));
             }
 
-            if (isset($this->request->post['button']) and $this->request->post['button'] == 'new') {
-                $this->response->redirect($this->url->link('design/blocks/add', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            if (isset($this->request->post['button']) and 'new' == $this->request->post['button']) {
+                $this->response->redirect($this->url->link('design/blocks/add', 'token='.$this->session->data['token'].$url, 'SSL'));
             }
 
-            $this->response->redirect($this->url->link('design/blocks', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            $this->response->redirect($this->url->link('design/blocks', 'token='.$this->session->data['token'].$url, 'SSL'));
         }
 
         $this->getForm();
     }
 
-    public function delete() {
+    public function delete()
+    {
         $this->load->language('design/blocks');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -105,24 +109,25 @@ class ControllerDesignBlocks extends Controller {
             $url = '';
 
             if (isset($this->request->get['sort'])) {
-                $url .= '&sort=' . $this->request->get['sort'];
+                $url .= '&sort='.$this->request->get['sort'];
             }
 
             if (isset($this->request->get['order'])) {
-                $url .= '&order=' . $this->request->get['order'];
+                $url .= '&order='.$this->request->get['order'];
             }
 
             if (isset($this->request->get['page'])) {
-                $url .= '&page=' . $this->request->get['page'];
+                $url .= '&page='.$this->request->get['page'];
             }
 
-            $this->response->redirect($this->url->link('design/blocks', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            $this->response->redirect($this->url->link('design/blocks', 'token='.$this->session->data['token'].$url, 'SSL'));
         }
 
         $this->getList();
     }
 
-    protected function getList() {
+    protected function getList()
+    {
         if (isset($this->request->get['sort'])) {
             $sort = $this->request->get['sort'];
         } else {
@@ -144,40 +149,40 @@ class ControllerDesignBlocks extends Controller {
         $url = '';
 
         if (isset($this->request->get['sort'])) {
-            $url .= '&sort=' . $this->request->get['sort'];
+            $url .= '&sort='.$this->request->get['sort'];
         }
 
         if (isset($this->request->get['order'])) {
-            $url .= '&order=' . $this->request->get['order'];
+            $url .= '&order='.$this->request->get['order'];
         }
 
         if (isset($this->request->get['page'])) {
-            $url .= '&page=' . $this->request->get['page'];
+            $url .= '&page='.$this->request->get['page'];
         }
 
-        $data['breadcrumbs'] = array();
+        $data['breadcrumbs'] = [];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL')
-        );
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
+        ];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('design/blocks', 'token=' . $this->session->data['token'] . $url, 'SSL')
-        );
+            'href' => $this->url->link('design/blocks', 'token='.$this->session->data['token'].$url, 'SSL'),
+        ];
 
-        $data['add'] = $this->url->link('design/blocks/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['delete'] = $this->url->link('design/blocks/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['add'] = $this->url->link('design/blocks/add', 'token='.$this->session->data['token'].$url, 'SSL');
+        $data['delete'] = $this->url->link('design/blocks/delete', 'token='.$this->session->data['token'].$url, 'SSL');
 
-        $data['blocks'] = array();
+        $data['blocks'] = [];
 
-        $filter_data = array(
+        $filter_data = [
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin')
-        );
+            'limit' => $this->config->get('config_limit_admin'),
+        ];
 
         $this->load->model('localisation/language');
 
@@ -189,15 +194,15 @@ class ControllerDesignBlocks extends Controller {
 
         //echo "<pre>";print_r($results);die;
         foreach ($results as $result) {
-            $data['blocks'][] = array(
+            $data['blocks'][] = [
                 'block_id' => $result['block_id'],
                 'sort_order' => $result['sort_order'],
-                'title' => $result['title'] . (($result['block_id'] == $this->config->get('config_block_id')) ? $this->language->get('text_default') : null),
-                'edit' => $this->url->link('design/blocks/edit', 'token=' . $this->session->data['token'] . '&block_id=' . $result['block_id'] . $url, 'SSL')
-            );
+                'title' => $result['title'].(($result['block_id'] == $this->config->get('config_block_id')) ? $this->language->get('text_default') : null),
+                'edit' => $this->url->link('design/blocks/edit', 'token='.$this->session->data['token'].'&block_id='.$result['block_id'].$url, 'SSL'),
+            ];
         }
 
-        $data['action'] = $this->url->link('design/blocks/saveheading', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['action'] = $this->url->link('design/blocks/saveheading', 'token='.$this->session->data['token'].$url, 'SSL');
 
         $data['entry_tagline'] = $this->language->get('entry_tagline');
 
@@ -206,7 +211,7 @@ class ControllerDesignBlocks extends Controller {
         $data['heading_title'] = $this->language->get('heading_title');
         $data['column_sort_order'] = $this->language->get('column_sort_order');
         $data['entry_sort_order'] = $this->language->get('entry_sort_order');
-        
+
         $data['text_list'] = $this->language->get('text_list');
         $data['text_no_results'] = $this->language->get('text_no_results');
         $data['text_confirm'] = $this->language->get('text_confirm');
@@ -235,38 +240,38 @@ class ControllerDesignBlocks extends Controller {
         if (isset($this->request->post['selected'])) {
             $data['selected'] = (array) $this->request->post['selected'];
         } else {
-            $data['selected'] = array();
+            $data['selected'] = [];
         }
 
         $url = '';
 
-        if ($order == 'ASC') {
+        if ('ASC' == $order) {
             $url .= '&order=DESC';
         } else {
             $url .= '&order=ASC';
         }
 
         if (isset($this->request->get['page'])) {
-            $url .= '&page=' . $this->request->get['page'];
+            $url .= '&page='.$this->request->get['page'];
         }
 
-        $data['sort_name'] = $this->url->link('design/blocks', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
+        $data['sort_name'] = $this->url->link('design/blocks', 'token='.$this->session->data['token'].'&sort=name'.$url, 'SSL');
 
         $url = '';
 
         if (isset($this->request->get['sort'])) {
-            $url .= '&sort=' . $this->request->get['sort'];
+            $url .= '&sort='.$this->request->get['sort'];
         }
 
         if (isset($this->request->get['order'])) {
-            $url .= '&order=' . $this->request->get['order'];
+            $url .= '&order='.$this->request->get['order'];
         }
 
         $pagination = new Pagination();
         $pagination->total = $block_total;
         $pagination->page = $page;
         $pagination->limit = $this->config->get('config_limit_admin');
-        $pagination->url = $this->url->link('design/blocks', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+        $pagination->url = $this->url->link('design/blocks', 'token='.$this->session->data['token'].$url.'&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
@@ -282,7 +287,8 @@ class ControllerDesignBlocks extends Controller {
         $this->response->setOutput($this->load->view('design/block_list.tpl', $data));
     }
 
-    protected function getForm() {
+    protected function getForm()
+    {
         $data['heading_title'] = $this->language->get('heading_title');
 
         $data['text_form'] = !isset($this->request->get['block_id']) ? $this->language->get('text_add') : $this->language->get('text_edit');
@@ -291,7 +297,7 @@ class ControllerDesignBlocks extends Controller {
 
         $data['entry_description'] = $this->language->get('entry_description');
         $data['entry_image'] = $this->language->get('entry_image');
-        
+
         $data['column_sort_order'] = $this->language->get('column_sort_order');
         $data['entry_sort_order'] = $this->language->get('entry_sort_order');
         $data['button_save'] = $this->language->get('button_save');
@@ -304,24 +310,24 @@ class ControllerDesignBlocks extends Controller {
         } else {
             $data['error_warning'] = '';
         }
-        
+
         if (isset($this->session->data['success'])) {
             $data['success'] = $this->session->data['success'];
             unset($this->session->data['success']);
         } else {
             $data['success'] = '';
         }
-        
+
         if (isset($this->error['name'])) {
             $data['error_name'] = $this->error['name'];
         } else {
-            $data['error_name'] = array();
+            $data['error_name'] = [];
         }
 
         if (isset($this->error['message'])) {
             $data['error_message'] = $this->error['message'];
         } else {
-            $data['error_message'] = array();
+            $data['error_message'] = [];
         }
 
         $url = '';
@@ -332,37 +338,36 @@ class ControllerDesignBlocks extends Controller {
             $image = $offer_info['image'];
         } else {
             $image = '';
-        }        
-        
+        }
+
         $this->load->model('tool/image');
-                
-        if (is_file(DIR_IMAGE . $image)) {
+
+        if (is_file(DIR_IMAGE.$image)) {
             $data['image'] = $image;
             $data['thumb'] = $this->model_tool_image->resize($image, 100, 100);
         } else {
             $data['image'] = $data['thumb'] = $this->model_tool_image->resize('no_image.png', 100, 100);
         }
 
+        $data['breadcrumbs'] = [];
 
-        $data['breadcrumbs'] = array();
-
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL')
-        );
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
+        ];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('design/blocks', 'token=' . $this->session->data['token'] . $url, 'SSL')
-        );
+            'href' => $this->url->link('design/blocks', 'token='.$this->session->data['token'].$url, 'SSL'),
+        ];
 
         if (!isset($this->request->get['block_id'])) {
-            $data['action'] = $this->url->link('design/blocks/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $data['action'] = $this->url->link('design/blocks/add', 'token='.$this->session->data['token'].$url, 'SSL');
         } else {
-            $data['action'] = $this->url->link('design/blocks/edit', 'token=' . $this->session->data['token'] . '&block_id=' . $this->request->get['block_id'] . $url, 'SSL');
+            $data['action'] = $this->url->link('design/blocks/edit', 'token='.$this->session->data['token'].'&block_id='.$this->request->get['block_id'].$url, 'SSL');
         }
 
-        $data['cancel'] = $this->url->link('design/blocks', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['cancel'] = $this->url->link('design/blocks', 'token='.$this->session->data['token'].$url, 'SSL');
 
         $this->load->model('localisation/language');
 
@@ -373,7 +378,7 @@ class ControllerDesignBlocks extends Controller {
         } elseif (isset($this->request->get['block_id'])) {
             $data['block'] = $this->model_design_blocks->getBlock($this->request->get['block_id']);
         } else {
-            $data['block'] = array();
+            $data['block'] = [];
         }
 
         //echo "<pre>";print_r($data['block']);print_r($data['thumb']);die;
@@ -392,7 +397,8 @@ class ControllerDesignBlocks extends Controller {
         $this->response->setOutput($this->load->view('design/block_form.tpl', $data));
     }
 
-    protected function validateForm() {
+    protected function validateForm()
+    {
         if (!$this->user->hasPermission('modify', 'design/blocks')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
@@ -413,7 +419,8 @@ class ControllerDesignBlocks extends Controller {
         return !$this->error;
     }
 
-    protected function validateDelete() {
+    protected function validateDelete()
+    {
         if (!$this->user->hasPermission('modify', 'design/blocks')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
@@ -446,8 +453,8 @@ class ControllerDesignBlocks extends Controller {
         return !$this->error;
     }
 
-    protected function saveheading() {
-
+    protected function saveheading()
+    {
         if (!$this->user->hasPermission('modify', 'design/blocks')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
@@ -479,5 +486,4 @@ class ControllerDesignBlocks extends Controller {
 
         return !$this->error;
     }
-    
 }

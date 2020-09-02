@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Frontend translations
+ * Frontend translations.
  */
 $_['text_title'] = 'Cash On Delivery';
 $_['text_payment_terms'] = '';

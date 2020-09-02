@@ -1,16 +1,16 @@
 <?php
 
-class Controllerlocalisationapporderstatusmapping extends Controller {
+class Controllerlocalisationapporderstatusmapping extends Controller
+{
+    private $error = [];
 
-    private $error = array();
-
-    public function index() {
-
+    public function index()
+    {
         $this->load->language('localisation/app_order_status_mapping');
 
         $this->document->setTitle($this->language->get('heading_title'));
 
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
             $this->model_localisation_tax_class->editTaxClass($this->request->get['tax_class_id'], $this->request->post);
 
             $this->session->data['success'] = $this->language->get('text_success');
@@ -18,40 +18,39 @@ class Controllerlocalisationapporderstatusmapping extends Controller {
             $url = '';
 
             if (isset($this->request->get['sort'])) {
-                $url .= '&sort=' . $this->request->get['sort'];
+                $url .= '&sort='.$this->request->get['sort'];
             }
 
             if (isset($this->request->get['order'])) {
-                $url .= '&order=' . $this->request->get['order'];
+                $url .= '&order='.$this->request->get['order'];
             }
 
             if (isset($this->request->get['page'])) {
-                $url .= '&page=' . $this->request->get['page'];
+                $url .= '&page='.$this->request->get['page'];
             }
 
-            if (isset($this->request->post['button']) and $this->request->post['button'] == 'save') {
-                $this->response->redirect($this->url->link('localisation/tax_class/edit', 'tax_class_id=' . $this->request->get['tax_class_id'] . '&token=' . $this->session->data['token'] . $url, 'SSL'));
+            if (isset($this->request->post['button']) and 'save' == $this->request->post['button']) {
+                $this->response->redirect($this->url->link('localisation/tax_class/edit', 'tax_class_id='.$this->request->get['tax_class_id'].'&token='.$this->session->data['token'].$url, 'SSL'));
             }
 
-            if (isset($this->request->post['button']) and $this->request->post['button'] == 'new') {
-                $this->response->redirect($this->url->link('localisation/tax_class/add', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            if (isset($this->request->post['button']) and 'new' == $this->request->post['button']) {
+                $this->response->redirect($this->url->link('localisation/tax_class/add', 'token='.$this->session->data['token'].$url, 'SSL'));
             }
 
-            $this->response->redirect($this->url->link('localisation/tax_class', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            $this->response->redirect($this->url->link('localisation/tax_class', 'token='.$this->session->data['token'].$url, 'SSL'));
         }
 
         $this->getForm();
     }
 
-    public function add() {
+    public function add()
+    {
         $this->load->language('localisation/app_order_status_mapping');
 
         $this->document->setTitle($this->language->get('heading_title'));
 
-        
         //echo "<pre>";print_r($this->request->post);die;
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
             $this->load->model('localisation/order_status');
 
             $saveDeliveryStatuses = $this->model_localisation_order_status->saveAppOrderStatusMapping($this->request->post['app_delivery_status']);
@@ -60,13 +59,14 @@ class Controllerlocalisationapporderstatusmapping extends Controller {
 
             $url = '';
 
-            $this->response->redirect($this->url->link('localisation/app_order_status_mapping', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            $this->response->redirect($this->url->link('localisation/app_order_status_mapping', 'token='.$this->session->data['token'].$url, 'SSL'));
         }
 
         $this->getForm();
     }
 
-    protected function getForm() {
+    protected function getForm()
+    {
         $data['heading_title'] = $this->language->get('heading_title');
 
         $data['text_form'] = !isset($this->request->get['tax_class_id']) ? $this->language->get('text_add') : $this->language->get('text_edit');
@@ -88,7 +88,7 @@ class Controllerlocalisationapporderstatusmapping extends Controller {
         $data['button_cancel'] = $this->language->get('button_cancel');
         $data['button_rule_add'] = $this->language->get('button_rule_add');
         $data['button_remove'] = $this->language->get('button_remove');
-        
+
         if (isset($this->session->data['success'])) {
             $data['success'] = $this->session->data['success'];
             unset($this->session->data['success']);
@@ -117,38 +117,38 @@ class Controllerlocalisationapporderstatusmapping extends Controller {
         $url = '';
 
         if (isset($this->request->get['sort'])) {
-            $url .= '&sort=' . $this->request->get['sort'];
+            $url .= '&sort='.$this->request->get['sort'];
         }
 
         if (isset($this->request->get['order'])) {
-            $url .= '&order=' . $this->request->get['order'];
+            $url .= '&order='.$this->request->get['order'];
         }
 
         if (isset($this->request->get['page'])) {
-            $url .= '&page=' . $this->request->get['page'];
+            $url .= '&page='.$this->request->get['page'];
         }
 
-        $data['breadcrumbs'] = array();
+        $data['breadcrumbs'] = [];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL')
-        );
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
+        ];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('localisation/tax_class', 'token=' . $this->session->data['token'] . $url, 'SSL')
-        );
+            'href' => $this->url->link('localisation/tax_class', 'token='.$this->session->data['token'].$url, 'SSL'),
+        ];
 
         if (!isset($this->request->get['tax_class_id'])) {
-            $data['action'] = $this->url->link('localisation/app_order_status_mapping/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $data['action'] = $this->url->link('localisation/app_order_status_mapping/add', 'token='.$this->session->data['token'].$url, 'SSL');
         } else {
-            $data['action'] = $this->url->link('localisation/app_order_status_mapping/edit', 'token=' . $this->session->data['token'] . '&tax_class_id=' . $this->request->get['tax_class_id'] . $url, 'SSL');
+            $data['action'] = $this->url->link('localisation/app_order_status_mapping/edit', 'token='.$this->session->data['token'].'&tax_class_id='.$this->request->get['tax_class_id'].$url, 'SSL');
         }
 
-        $data['cancel'] = $this->url->link('localisation/app_order_status_mapping', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['cancel'] = $this->url->link('localisation/app_order_status_mapping', 'token='.$this->session->data['token'].$url, 'SSL');
 
-        if (isset($this->request->get['tax_class_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+        if (isset($this->request->get['tax_class_id']) && ('POST' != $this->request->server['REQUEST_METHOD'])) {
             $tax_class_info = $this->model_localisation_tax_class->getTaxClass($this->request->get['tax_class_id']);
         }
 
@@ -175,11 +175,10 @@ class Controllerlocalisationapporderstatusmapping extends Controller {
 
         $data['app_order_statuses'] = $this->model_localisation_app_order_status->getOrderStatuses();
 
-
         $data['db_delviery_statuses'] = $this->model_localisation_order_status->getAppOrderStatusMapping();
-            
+
         //echo "<pre>";print_r($data);die;
-        
+
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
@@ -187,7 +186,8 @@ class Controllerlocalisationapporderstatusmapping extends Controller {
         $this->response->setOutput($this->load->view('localisation/app_order_status_mapping_form.tpl', $data));
     }
 
-    protected function validateForm() {
+    protected function validateForm()
+    {
         if (!$this->user->hasPermission('modify', 'localisation/app_order_status_mapping')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }

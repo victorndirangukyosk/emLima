@@ -1,25 +1,27 @@
 <?php
 
-
-final class Loader {
-
+final class Loader
+{
     private $registry;
 
-    public function __construct($registry) {
+    public function __construct($registry)
+    {
         $this->registry = $registry;
     }
 
-    public function __get($key) {
+    public function __get($key)
+    {
         return $this->registry->get($key);
     }
 
-    public function __set($key, $value) {
+    public function __set($key, $value)
+    {
         $this->registry->set($key, $value);
     }
 
-    public function controller($route, $args = array()) {
-        
-        $event_args = array(&$route, &$args);
+    public function controller($route, $args = [])
+    {
+        $event_args = [&$route, &$args];
         $this->trigger->fire('pre.load.controller', $event_args);
 
         $action = new Action($route, $args);
@@ -31,39 +33,41 @@ final class Loader {
         return $ret;
     }
 
-    public function model($model) {
-        $file = DIR_APPLICATION . 'model/' . $model . '.php';
-                
-        $class = 'Model' . preg_replace('/[^a-zA-Z0-9]/', '', $model);
+    public function model($model)
+    {
+        $file = DIR_APPLICATION.'model/'.$model.'.php';
+
+        $class = 'Model'.preg_replace('/[^a-zA-Z0-9]/', '', $model);
 
         if (file_exists($file)) {
             $this->trigger->fire('pre.load.model', $model);
 
-            include_once($file);
+            include_once $file;
 
             $model_class = new $class($this->registry);
 
-            $this->registry->set('model_' . str_replace('/', '_', $model), $model_class);
+            $this->registry->set('model_'.str_replace('/', '_', $model), $model_class);
 
             $this->trigger->fire('post.load.model', $model_class);
         } else {
-            trigger_error('Error: Could not load model ' . $file . '!');
+            trigger_error('Error: Could not load model '.$file.'!');
             exit();
         }
     }
 
-    public function view($template, $data = array()) {
-        $file = DIR_TEMPLATE . $template;
+    public function view($template, $data = [])
+    {
+        $file = DIR_TEMPLATE.$template;
 
         if (file_exists($file)) {
-            $event_args = array(&$template, &$data);
+            $event_args = [&$template, &$data];
             $this->trigger->fire('pre.load.view', $event_args);
 
             extract($data);
 
             ob_start();
 
-            require($file);
+            require $file;
 
             $output = ob_get_contents();
 
@@ -73,42 +77,45 @@ final class Loader {
 
             return $output;
         } else {
-            trigger_error('Error: Could not load template ' . $file . '!');
+            trigger_error('Error: Could not load template '.$file.'!');
             exit();
         }
     }
 
-    public function library($library) {
-        $file = DIR_SYSTEM . 'library/' . $library . '.php';
+    public function library($library)
+    {
+        $file = DIR_SYSTEM.'library/'.$library.'.php';
 
         if (file_exists($file)) {
             $this->trigger->fire('pre.load.library', $library);
 
-            include_once($file);
+            include_once $file;
 
             $this->trigger->fire('post.load.library', $library);
         } else {
-            trigger_error('Error: Could not load library ' . $file . '!');
+            trigger_error('Error: Could not load library '.$file.'!');
             exit();
         }
     }
 
-    public function helper($helper) {
-        $file = DIR_SYSTEM . 'helper/' . $helper . '.php';
+    public function helper($helper)
+    {
+        $file = DIR_SYSTEM.'helper/'.$helper.'.php';
 
         if (file_exists($file)) {
             $this->trigger->fire('pre.load.helper', $helper);
 
-            include_once($file);
+            include_once $file;
 
             $this->trigger->fire('post.load.helper', $helper);
         } else {
-            trigger_error('Error: Could not load helper ' . $file . '!');
+            trigger_error('Error: Could not load helper '.$file.'!');
             exit();
         }
     }
 
-    public function config($config) {
+    public function config($config)
+    {
         $this->trigger->fire('pre.load.config', $config);
 
         $this->registry->get('config')->load($config);
@@ -116,7 +123,8 @@ final class Loader {
         $this->trigger->fire('post.load.config', $config);
     }
 
-    public function language($language) {
+    public function language($language)
+    {
         $this->trigger->fire('pre.load.language', $language);
 
         $lang = $this->registry->get('language')->load($language);
@@ -125,5 +133,4 @@ final class Loader {
 
         return $lang;
     }
-
 }

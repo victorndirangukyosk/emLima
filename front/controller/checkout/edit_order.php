@@ -1,12 +1,14 @@
 <?php
 
-class ControllerCheckoutEditOrder extends Controller {
-
-    public function formatTelephone ($telephone) {
+class ControllerCheckoutEditOrder extends Controller
+{
+    public function formatTelephone($telephone)
+    {
         return $telephone;
     }
 
-    public function payment_method_button() {
+    public function payment_method_button()
+    {
         $log = new Log('error.log');
         $log->write('Log 1.cs');
 
@@ -16,138 +18,121 @@ class ControllerCheckoutEditOrder extends Controller {
         $redirect = '';
         //$this->session->data['payment_method']['code']
         //if(isset($this->request->post['payment_method'])) {
-        if(isset($this->session->data['payment_method']['code'])) {
+        if (isset($this->session->data['payment_method']['code'])) {
             $payment_method = $this->session->data['payment_method']['code'];
-            $data['payment'] = $this->load->controller( 'payment/' . $payment_method.'/edit_order_index' );
-        
+            $data['payment'] = $this->load->controller('payment/'.$payment_method.'/edit_order_index');
 
-
-        
-
-            if ( file_exists( DIR_TEMPLATE . $this->config->get( 'config_template' ) . '/template/checkout/confirm.tpl' ) ) {
-                $this->response->setOutput( $this->load->view( $this->config->get( 'config_template' ) . '/template/checkout/confirm.tpl', $data ) );
+            if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/checkout/confirm.tpl')) {
+                $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/checkout/confirm.tpl', $data));
             } else {
-                $this->response->setOutput( $this->load->view( 'default/template/checkout/confirm.tpl', $data ) );
+                $this->response->setOutput($this->load->view('default/template/checkout/confirm.tpl', $data));
             }
         }
     }
 
+    public function index()
+    {
+        $this->load->model('sale/order');
 
-    public function index() {
-
-        $this->load->model( 'sale/order' );
-
-        if(isset($this->session->data['edit_order']) && $this->config->get('config_edit_order')) {
+        if (isset($this->session->data['edit_order']) && $this->config->get('config_edit_order')) {
             //unset($this->session->data['edit_order']);
-            
         } else {
-            $this->response->redirect( $this->url->link( 'account/account' ) );
-        }   
+            $this->response->redirect($this->url->link('account/account'));
+        }
 
         $this->language->load('checkout/checkout');
 
-        $data['update_order'] = $this->url->link( 'checkout/edit_order/updateOrder' );
+        $data['update_order'] = $this->url->link('checkout/edit_order/updateOrder');
         $data['require_payment'] = false;
 
         $order_id = $this->session->data['edit_order'];
 
-        if(!isset($this->session->data['order_id'])) {
+        if (!isset($this->session->data['order_id'])) {
             $this->session->data['order_id'][] = $order_id;
-            
         }
-        
 
         //echo "<pre>";print_r($order_id);die;
         $order_info = $this->model_sale_order->getOrder($this->session->data['edit_order']);
-        
+
         //echo "<pre>";print_r($order_info);die;
         $store_id = 0;
         $shipping_code = 'normal.normal';
         $stripe_total = 0;
         if (!empty($order_info)) {
-            $store_id =  $order_info['store_id'];
-            $shipping_code =  $order_info['shipping_code'];
+            $store_id = $order_info['store_id'];
+            $shipping_code = $order_info['shipping_code'];
 
-            if($order_info['payment_code'] == 'stripe') {
-                $stripe_total =  $order_info['stripe_total'];
+            if ('stripe' == $order_info['payment_code']) {
+                $stripe_total = $order_info['stripe_total'];
             } else {
-                $stripe_total =  $order_info['total'];
+                $stripe_total = $order_info['total'];
             }
-            
         }
 
         $data['store_id'] = $store_id;
         $data['shipping_code'] = $shipping_code;
 
-
         $other_charges = 0;
 
         $totals = $this->model_sale_order->getOrderTotals($order_id);
 
-        if(isset($this->session->data['shipping_method'])) {
+        if (isset($this->session->data['shipping_method'])) {
             foreach ($this->session->data['shipping_method'] as $key => $value) {
                 $other_charges += $value['shipping_method']['cost'];
-
             }
         }
 
         /*foreach ($totals as $total) {
-           
+
             if($total['code'] != 'total' && $total['code'] != 'sub_total') {
                 $other_charges += $total['value'];
             }
 
         }*/
 
-
         $final_amount = $this->cart->getSubTotal() + $other_charges;
 
         //echo "<pre>";print_r($stripe_total);print_r($final_amount);die;
 
-        if($final_amount > $stripe_total) {
+        if ($final_amount > $stripe_total) {
             $data['require_payment'] = true;
         }
 
-        
         //check login
 
-        $this->document->setTitle( $this->language->get( 'heading_title' ) );
+        $this->document->setTitle($this->language->get('heading_title'));
 
         //check login
-        if ( !$this->customer->isLogged() ) {
-            $this->response->redirect( $this->url->link( 'common/home' ) );
-
+        if (!$this->customer->isLogged()) {
+            $this->response->redirect($this->url->link('common/home'));
         } else {
-
             $data['profile_complete'] = true;
-            $user_telephone =  $this->formatTelephone($this->customer->getTelephone());
+            $user_telephone = $this->formatTelephone($this->customer->getTelephone());
 
-            if(empty($user_telephone)) {
+            if (empty($user_telephone)) {
                 $data['profile_complete'] = false;
             }
             $data['logout'] = $this->url->link('account/logout', '', 'SSL');
 
             $data['text_logged_in_as'] = $this->language->get('text_logged_in_as');
             //$data['loginform'] = $data['text_logged_in_as'].' ' . $this->customer->getFirstName(). ". <a id='". "checkoutLogout' style='cursor: pointer; cursor: hand;color: #f86e01;background-color: white;border-color: #f86e01;' type='button' class='btn btn-primary'> Logout </a>";
-            $data['loginform'] = $data['text_logged_in_as'].' ' . $this->customer->getFirstName();
+            $data['loginform'] = $data['text_logged_in_as'].' '.$this->customer->getFirstName();
             $data['loggedin'] = true;
-            $data['redirectopen2tab'] = $this->url->link( 'checkout/checkout#collapseTwo');
+            $data['redirectopen2tab'] = $this->url->link('checkout/checkout#collapseTwo');
         }
 
         //echo "<pre>";print_r($this->language->get( 'heading_title' ));die;
 
-        $this->load->model( 'account/address' );
+        $this->load->model('account/address');
 
         $data['continue'] = $this->url->link('common/home');
         $data['button_continue'] = $this->language->get('button_continue');
-        
-        
 
-        $this->document->addStyle( 'front/ui/theme/'.$this->config->get( 'config_template' ).'/stylesheet/layout_checkout.css' );
+        $this->document->addStyle('front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_checkout.css');
 
         // Validate cart has products and has stock.
-        if ( ( !$this->cart->hasProducts() && empty( $this->session->data['vouchers'] ) ) /*|| ( !$this->cart->hasStock() && !$this->config->get( 'config_stock_checkout' ) )*/ ) {
-            $this->response->redirect( $this->url->link( 'checkout/cart' ) );
+        if ((!$this->cart->hasProducts() && empty($this->session->data['vouchers'])) /*|| ( !$this->cart->hasStock() && !$this->config->get( 'config_stock_checkout' ) )*/) {
+            $this->response->redirect($this->url->link('checkout/cart'));
         }
 
         $data['total_quantity'] = 0;
@@ -159,23 +144,22 @@ class ControllerCheckoutEditOrder extends Controller {
         //echo "<pre>";print_r($products);die;
         $product_total_count = 0;
         $product_total_amount = 0;
-        
+
         $data['products_details'] = [];
 
         $this->load->model('tool/image');
-        foreach ( $products as $product ) {
+        foreach ($products as $product) {
             $product_total = 0;
 
-            foreach ( $products as $product_2 ) {
-                if ( $product_2['product_store_id'] == $product['product_store_id'] ) {
+            foreach ($products as $product_2) {
+                if ($product_2['product_store_id'] == $product['product_store_id']) {
                     $product_total += $product_2['quantity'];
                 }
             }
-            if (!empty($product['image']) && file_exists( DIR_IMAGE .$product['image'] )) {
-
+            if (!empty($product['image']) && file_exists(DIR_IMAGE.$product['image'])) {
                 $image = $this->model_tool_image->resize($product['image'], $this->config->get('config_image_cart_width'), $this->config->get('config_image_cart_height'));
             } else {
-                $image = $this->model_tool_image->resize('no_image.png', $this->config->get('config_image_cart_width'), $this->config->get('config_image_cart_height'));;
+                $image = $this->model_tool_image->resize('no_image.png', $this->config->get('config_image_cart_width'), $this->config->get('config_image_cart_height'));
             }
 
             if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
@@ -193,38 +177,37 @@ class ControllerCheckoutEditOrder extends Controller {
             $product_total_count += $product['quantity'];
             $product_total_amount += $product['total'];
 
-            $data['products_details'][] = array(
+            $data['products_details'][] = [
                 'key' => $product['key'],
                 'product_store_id' => $product['product_store_id'],
                 'thumb' => $image,
                 'name' => $product['name'],
                 'product_type' => $product['product_type'],
-                'unit' => $product['unit'],                    
+                'unit' => $product['unit'],
                 'model' => $product['model'],
                 'quantity' => $product['quantity'],
                 'stock' => $product['stock'] ? true : !(!$this->config->get('config_stock_checkout') || $this->config->get('config_stock_warning')),
                 'reward' => ($product['reward'] ? sprintf($this->language->get('text_points'), $product['reward']) : ''),
                 'price' => $price,
                 'total' => $total,
-                'store_id'     => $product['store_id'],
-                'href' => $this->url->link('product/product', 'product_store_id=' . $product['product_store_id'])
-            );
+                'store_id' => $product['store_id'],
+                'href' => $this->url->link('product/product', 'product_store_id='.$product['product_store_id']),
+            ];
 
             /*if ( $product['minimum'] > $product_total ) {
                 $this->response->redirect( $this->url->link( 'checkout/cart' ) );
             }*/
         }
         //echo "<pre>";print_r($data['products_details']);die;
-        
-        $data['arrs'] = array();
 
-        foreach($data['products_details'] as $key => $item)
-        {
-           $data['arrs'][$item['store_id']][$key] = $item;
+        $data['arrs'] = [];
+
+        foreach ($data['products_details'] as $key => $item) {
+            $data['arrs'][$item['store_id']][$key] = $item;
         }
 
         //echo "<pre>";print_r($data['arrs']);die;
-        
+
         // echo "<pre>";print_r($data['products_details']);die;
         $data['total_quantity'] = $product_total_count;
 
@@ -232,44 +215,40 @@ class ControllerCheckoutEditOrder extends Controller {
 
         $order_stores = $this->cart->getStores();
 
-        $min_order_or_not = array();
-        $store_data= array();
+        $min_order_or_not = [];
+        $store_data = [];
 
         foreach ($order_stores as $os) {
-
             $store_info = $this->model_account_address->getStoreData($os);
-            $store_total  = $this->cart->getSubTotal($os);
+            $store_total = $this->cart->getSubTotal($os);
             $store_info['servicable_zipcodes'] = $this->model_account_address->getZipList($os);
             $store_data[] = $store_info;
-            
-            
-            if ($this->cart->getTotalProductsByStore($os) &&  $store_info['min_order_amount'] > $store_total ) {
-                $this->response->redirect( $this->url->link( 'checkout/cart' ) );
+
+            if ($this->cart->getTotalProductsByStore($os) && $store_info['min_order_amount'] > $store_total) {
+                $this->response->redirect($this->url->link('checkout/cart'));
             }
         }
 
         //echo "<pre>";print_r($store_data);die;
         $data['kondutoStatus'] = $this->config->get('config_konduto_status');
-        
+
         $data['konduto_public_key'] = $this->config->get('config_konduto_public_key');
 
-        
         $data['telephone_mask'] = $this->config->get('config_telephone_mask');
 
-        if(isset($data['telephone_mask'])) {
-            $data['telephone_mask_number'] = str_replace('#', '9', $this->config->get('config_telephone_mask'));    
+        if (isset($data['telephone_mask'])) {
+            $data['telephone_mask_number'] = str_replace('#', '9', $this->config->get('config_telephone_mask'));
         }
 
         $data['taxnumber_mask'] = $this->config->get('config_taxnumber_mask');
 
-        if(isset($data['taxnumber_mask'])) {
-            $data['taxnumber_mask_number'] = str_replace('#', '*', $this->config->get('config_taxnumber_mask'));    
+        if (isset($data['taxnumber_mask'])) {
+            $data['taxnumber_mask_number'] = str_replace('#', '*', $this->config->get('config_taxnumber_mask'));
         }
-        
 
         $data['latitude'] = null;
         $data['longitude'] = null;
-        
+
         $data['detect_location'] = $this->language->get('detect_location');
         $data['text_locating'] = $this->language->get('text_locating');
         $data['locate_me'] = $this->language->get('locate_me');
@@ -278,25 +257,21 @@ class ControllerCheckoutEditOrder extends Controller {
 
         $data['check_address'] = false;
 
-
-        if($this->config->get('config_address_check')) {
+        if ($this->config->get('config_address_check')) {
             $data['check_address'] = true;
         }
 
         $data['checkout_question_enabled'] = false;
 
-
-        if($this->config->get('config_checkout_question_enabled')) {
+        if ($this->config->get('config_checkout_question_enabled')) {
             $data['checkout_question_enabled'] = true;
         }
 
-        
         $data['text_yes'] = $this->language->get('text_yes');
         $data['text_no'] = $this->language->get('text_no');
         $data['text_question'] = $this->language->get('text_question');
 
-
-        $data['title'] = $this->language->get( 'heading_title' );
+        $data['title'] = $this->language->get('heading_title');
         $data['text_or'] = $this->language->get('text_or');
         $data['text_promo_code'] = $this->language->get('text_promo_code');
         $data['text_dropoff_notes'] = $this->language->get('text_dropoff_notes');
@@ -323,9 +298,6 @@ class ControllerCheckoutEditOrder extends Controller {
         $data['text_name'] = $this->language->get('text_name');
         $data['text_view'] = $this->language->get('text_view');
         $data['text_office'] = $this->language->get('text_office');
-        
-
-        
 
         $data['text_flat_house_office'] = $this->language->get('text_flat_house_office');
         $data['text_stree_society_office'] = $this->language->get('text_stree_society_office');
@@ -334,7 +306,6 @@ class ControllerCheckoutEditOrder extends Controller {
         $data['text_home_address'] = $this->language->get('text_home_address');
         $data['text_other'] = $this->language->get('text_other');
         $data['text_office'] = $this->language->get('text_office');
-
 
         $data['text_cart'] = $this->language->get('text_cart');
         $data['text_signin'] = $this->language->get('text_signin');
@@ -349,7 +320,7 @@ class ControllerCheckoutEditOrder extends Controller {
         $data['title_price'] = $this->language->get('title_price');
         $data['title_text1'] = $this->language->get('title_text1');
         $data['title_text2'] = $this->language->get('title_text2');
-            
+
         $data['text_office'] = $this->language->get('text_office');
         $data['text_home_address'] = $this->language->get('text_home_address');
 
@@ -372,71 +343,70 @@ class ControllerCheckoutEditOrder extends Controller {
         $data['button_add'] = $this->language->get('button_add');
         $data['button_confirm'] = $this->language->get('button_confirm');
         $data['save_address'] = $this->language->get('save_address');
-        
 
         $data['error_name'] = $this->language->get('error_name');
         $data['error_phone'] = $this->language->get('error_phone');
         $data['error_address'] = $this->language->get('error_addresss');
 
-        $this->document->addScript( 'front/ui/javascript/jquery/datetimepicker/moment.js' );
-        $this->document->addScript( 'front/ui/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.js' );
-        $this->document->addStyle( 'front/ui/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.css' );
+        $this->document->addScript('front/ui/javascript/jquery/datetimepicker/moment.js');
+        $this->document->addScript('front/ui/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.js');
+        $this->document->addStyle('front/ui/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.css');
 
         // Required by klarna
-        if ( $this->config->get( 'klarna_account' ) || $this->config->get( 'klarna_invoice' ) ) {
-            $this->document->addScript( 'http://cdn.klarna.com/public/kitt/toc/v1.0/js/klarna.terms.min.js' );
+        if ($this->config->get('klarna_account') || $this->config->get('klarna_invoice')) {
+            $this->document->addScript('http://cdn.klarna.com/public/kitt/toc/v1.0/js/klarna.terms.min.js');
         }
 
-        $data['breadcrumbs'] = array();
+        $data['breadcrumbs'] = [];
 
-        $data['breadcrumbs'][] = array(
-            'text' => $this->language->get( 'text_home' ),
-            'href' => $this->url->link( 'common/home' )
-        );
+        $data['breadcrumbs'][] = [
+            'text' => $this->language->get('text_home'),
+            'href' => $this->url->link('common/home'),
+        ];
 
-        $data['breadcrumbs'][] = array(
-            'text' => $this->language->get( 'text_cart' ),
-            'href' => $this->url->link( 'checkout/cart' )
-        );
+        $data['breadcrumbs'][] = [
+            'text' => $this->language->get('text_cart'),
+            'href' => $this->url->link('checkout/cart'),
+        ];
 
-        $data['breadcrumbs'][] = array(
-            'text' => $this->language->get( 'heading_title' ),
-            'href' => $this->url->link( 'checkout/checkout', '', 'SSL' )
-        );
+        $data['breadcrumbs'][] = [
+            'text' => $this->language->get('heading_title'),
+            'href' => $this->url->link('checkout/checkout', '', 'SSL'),
+        ];
 
-        $data = $this->language->all( $data, array( 'error_agree' ) );
+        $data = $this->language->all($data, ['error_agree']);
 
-        if ( $this->config->get( 'config_checkout_id' ) ) {
-            $this->load->model( 'assets/information' );
+        if ($this->config->get('config_checkout_id')) {
+            $this->load->model('assets/information');
 
-            $information_info = $this->model_assets_information->getInformation( $this->config->get( 'config_checkout_id' ) );
+            $information_info = $this->model_assets_information->getInformation($this->config->get('config_checkout_id'));
 
-            if ( $information_info ) {
-                $data['error_agree'] = sprintf( $this->language->get( 'error_agree' ), $information_info['title'] );
+            if ($information_info) {
+                $data['error_agree'] = sprintf($this->language->get('error_agree'), $information_info['title']);
             }
         }
 
-        if ( isset( $this->session->data['error'] ) ) {
+        if (isset($this->session->data['error'])) {
             $data['error_warning'] = $this->session->data['error'];
-            unset( $this->session->data['error'] );
+            unset($this->session->data['error']);
         } else {
             $data['error_warning'] = '';
         }
 
         $data['logged'] = $this->customer->isLogged();
 
-        if ( isset( $this->session->data['account'] ) ) {
+        if (isset($this->session->data['account'])) {
             $data['account'] = $this->session->data['account'];
         } else {
             $data['account'] = '';
         }
 
         if (isset($this->request->post['address_type'])) {
-                $data['address_type'] = $this->request->post['address_type'];
+            $data['address_type'] = $this->request->post['address_type'];
         } elseif (!empty($address_info)) {
-                $data['address_type'] = $address_info['address_type'];
+            $data['address_type'] = $address_info['address_type'];
         } else {
-                $data['address_type'] = false;
+            $data['address_type'] = false;
         }
 
         if (isset($this->error['error_flat_number'])) {
@@ -485,7 +455,7 @@ class ControllerCheckoutEditOrder extends Controller {
         } else {
             $data['landmark'] = '';
         }
-        
+
         $data['coupon_apply'] = $this->url->link('checkout/coupon/coupon');
         $data['shipping_required'] = $this->cart->hasShipping();
 
@@ -493,13 +463,13 @@ class ControllerCheckoutEditOrder extends Controller {
         $data['login_modal'] = $this->load->controller('common/login_modal');
         $data['signup_modal'] = $this->load->controller('common/signup_modal');
         $data['forget_modal'] = $this->load->controller('common/forget_modal');
-        
-        $data['column_left'] = $this->load->controller( 'common/column_left' );
-        $data['column_right'] = $this->load->controller( 'common/column_right' );
-        $data['content_top'] = $this->load->controller( 'common/content_top' );
-        $data['content_bottom'] = $this->load->controller( 'common/content_bottom' );
-        $data['footer'] = $this->load->controller( 'common/footer' );
-        $data['header'] = $this->load->controller( 'common/header/onlyHeader');
+
+        $data['column_left'] = $this->load->controller('common/column_left');
+        $data['column_right'] = $this->load->controller('common/column_right');
+        $data['content_top'] = $this->load->controller('common/content_top');
+        $data['content_bottom'] = $this->load->controller('common/content_bottom');
+        $data['footer'] = $this->load->controller('common/footer');
+        $data['header'] = $this->load->controller('common/header/onlyHeader');
 
         $data['config'] = $this->config;
 
@@ -514,29 +484,27 @@ class ControllerCheckoutEditOrder extends Controller {
 
         $data['questions'] = $this->model_account_address->getCheckoutQuestion();
 
-        if(count($_COOKIE) > 0 && isset($_COOKIE['zipcode'])) {
+        if (count($_COOKIE) > 0 && isset($_COOKIE['zipcode'])) {
             $data['zipcode'] = $_COOKIE['zipcode'];
-        } elseif(count($_COOKIE) > 0 && isset($_COOKIE['location'])) {
-
+        } elseif (count($_COOKIE) > 0 && isset($_COOKIE['location'])) {
             //echo "<pre>";print_r($_COOKIE['location']);die;
 
-            $tmpD = explode(",",$_COOKIE['location']); 
+            $tmpD = explode(',', $_COOKIE['location']);
 
-            if(count($tmpD) >=2 ) {
+            if (count($tmpD) >= 2) {
                 $data['latitude'] = $tmpD[0];
-                $data['longitude'] = $tmpD[1];    
+                $data['longitude'] = $tmpD[1];
             }
-            
+
             //echo "<pre>";print_r($data);die;
 
             $addressTmp = $this->getZipcode($_COOKIE['location']);
 
-
             $addressLocality = $this->getPlace($_COOKIE['location']);
-            
-            $data['zipcode'] = $addressTmp?$addressTmp:'';
 
-            $data['address_locality'] = $addressLocality?$addressLocality:'';
+            $data['zipcode'] = $addressTmp ? $addressTmp : '';
+
+            $data['address_locality'] = $addressLocality ? $addressLocality : '';
 
             /*echo "<pre>";print_r($store_info);
             echo "<pre>";print_r($data['addresses']);die;*/
@@ -544,24 +512,22 @@ class ControllerCheckoutEditOrder extends Controller {
             $allAddresses = [];
 
             foreach ($data['addresses'] as $addre) {
-
                 $addre['show_enabled'] = false;
 
-                if(!empty($addre['latitude']) || !empty($addre['longitude']) || !empty($store_info['serviceable_radius']))  {
-                    $res = $this->getDistance( $addre['latitude'], $addre['longitude'], $data['latitude'], $data['longitude'],$store_info['serviceable_radius']);
+                if (!empty($addre['latitude']) || !empty($addre['longitude']) || !empty($store_info['serviceable_radius'])) {
+                    $res = $this->getDistance($addre['latitude'], $addre['longitude'], $data['latitude'], $data['longitude'], $store_info['serviceable_radius']);
 
-                    if($res) 
+                    if ($res) {
                         $addre['show_enabled'] = true;
+                    }
                 }
-                
 
                 $allAddresses[] = $addre;
             }
 
             $data['addresses'] = $allAddresses;
 
-            //echo "<pre>";print_r($data['addresses']);die;
-
+        //echo "<pre>";print_r($data['addresses']);die;
 
             //echo "<pre>";print_r($data);die;
         } else {
@@ -570,11 +536,10 @@ class ControllerCheckoutEditOrder extends Controller {
 
         $data['servicable_zipcodes'] = [];
 
-        if(isset($store_info['zipcode'])) {
-            $data['servicable_zipcodes'] = explode(',',$store_info['zipcode']);    
+        if (isset($store_info['zipcode'])) {
+            $data['servicable_zipcodes'] = explode(',', $store_info['zipcode']);
         }
 
-       
         if ($this->request->server['HTTPS']) {
             $server = $this->config->get('config_ssl');
         } else {
@@ -582,13 +547,12 @@ class ControllerCheckoutEditOrder extends Controller {
         }
 
         $data['base'] = $server;
-        
+
         $data['contact_no'] = $this->customer->getTelephone();
-        $data['address'] = '';        
+        $data['address'] = '';
 
         $data['address_id'] = $this->customer->getAddressId();
 
-        
         //echo "<pre>";print_r($data['questions']);die;
         //get cities
         $data['cities'] = $this->model_account_address->getCities();
@@ -597,22 +561,18 @@ class ControllerCheckoutEditOrder extends Controller {
 
         $data['products'] = $products;
 
-
         //echo "<pre>";print_r($data['arrs']);die;
-        if($this->config->get('config_multi_store')) {
-
-            if ( file_exists( DIR_TEMPLATE . $this->config->get( 'config_template' ) . '/template/checkout/edit_order.tpl' ) ) {
-                $this->response->setOutput( $this->load->view( $this->config->get( 'config_template' ) . '/template/checkout/edit_order.tpl', $data ) );
+        if ($this->config->get('config_multi_store')) {
+            if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/checkout/edit_order.tpl')) {
+                $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/checkout/edit_order.tpl', $data));
             } else {
-                $this->response->setOutput( $this->load->view( 'default/template/checkout/edit_order.tpl', $data ) );
+                $this->response->setOutput($this->load->view('default/template/checkout/edit_order.tpl', $data));
             }
-
         } else {
-
-            if ( file_exists( DIR_TEMPLATE . $this->config->get( 'config_template' ) . '/template/checkout/checkout.tpl' ) ) {
-                $this->response->setOutput( $this->load->view( $this->config->get( 'config_template' ) . '/template/checkout/checkout.tpl', $data ) );
+            if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/checkout/checkout.tpl')) {
+                $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/checkout/checkout.tpl', $data));
             } else {
-                $this->response->setOutput( $this->load->view( 'default/template/checkout/checkout.tpl', $data ) );
+                $this->response->setOutput($this->load->view('default/template/checkout/checkout.tpl', $data));
             }
         }
 
@@ -624,9 +584,9 @@ class ControllerCheckoutEditOrder extends Controller {
         }*/
     }
 
-    public function updateOrder() {
-
-        $json = array();
+    public function updateOrder()
+    {
+        $json = [];
 
         //echo "<pre>";print_r($this->session->data);die;
         $this->load->language('sale/order');
@@ -638,39 +598,35 @@ class ControllerCheckoutEditOrder extends Controller {
 
         $order_id = $this->session->data['edit_order'];
 
-        if(isset($this->session->data['edit_order']) && $this->config->get('config_edit_order')) {
-            
-
+        if (isset($this->session->data['edit_order']) && $this->config->get('config_edit_order')) {
         } else {
-            $this->response->redirect( $this->url->link( 'account/account' ) );
-        }  
+            $this->response->redirect($this->url->link('account/account'));
+        }
 
         $order_info = $this->model_sale_order->getOrder($order_id);
-        
+
         $order_number = 0;
-        
+
         if (!empty($order_info)) {
-            $order_number =  $order_info['order_number'];
+            $order_number = $order_info['order_number'];
         }
 
         $totals = $this->model_sale_order->getOrderTotals($order_id);
 
         $shipping_total = [];
 
-        if(isset($this->session->data['shipping_method'])) {
+        if (isset($this->session->data['shipping_method'])) {
             foreach ($this->session->data['shipping_method'] as $key => $value) {
-
                 $tmpData['code'] = $value['shipping_method']['code'];
                 $tmpData['title'] = $value['shipping_method']['title_with_store'];
                 $tmpData['value'] = $value['shipping_method']['cost'];
                 $tmpData['actual_value'] = $value['shipping_method']['actual_cost'];
                 $shipping_total = $tmpData;
-
             }
         }
 
         /*foreach ($totals as $total) {
-          
+
 
             if($total['code'] == 'shipping') {
                 $shipping_total = $total;
@@ -681,24 +637,21 @@ class ControllerCheckoutEditOrder extends Controller {
 
         $sendData['codes'] = 'shipping';
         $sendData['totals']['shipping'] = $shipping_total;
-        
-        foreach ($this->cart->getProducts() as $key => $value) {
 
+        foreach ($this->cart->getProducts() as $key => $value) {
             $rn = $this->getRandomString();
             $sendData['products'][$rn] = $value;
             $sendData['products'][$rn]['product_id'] = $value['product_store_id'];
         }
-      
 
-        $url_data = array();
-        $log->write("if");
-        
+        $url_data = [];
+        $log->write('if');
 
         $curl = curl_init();
-        $url = HTTPS_ADMIN . 'index.php?path=sale/order/EditOrder&order_id='.$order_id;
+        $url = HTTPS_ADMIN.'index.php?path=sale/order/EditOrder&order_id='.$order_id;
 
         $log->write($url);
-        
+
         curl_setopt($curl, CURLOPT_HEADER, false);
         curl_setopt($curl, CURLINFO_HEADER_OUT, true);
         curl_setopt($curl, CURLOPT_USERAGENT, $this->request->server['HTTP_USER_AGENT']);
@@ -721,25 +674,22 @@ class ControllerCheckoutEditOrder extends Controller {
         $res['status'] = false;
         $res['message'] = '';
 
-        if(isset($json->status) && $json->status) {
-
+        if (isset($json->status) && $json->status) {
             $res['status'] = $json->status;
 
-            $this->session->data['success'] = "Updated Order Successfully";
-            if(isset($this->session->data['edit_order'])) {
+            $this->session->data['success'] = 'Updated Order Successfully';
+            if (isset($this->session->data['edit_order'])) {
                 unset($this->session->data['edit_order']);
                 unset($this->session->data['order_id']);
-
             }
         } else {
-
             $res['message'] = $json->message;
 
-            $this->session->data['error'] = "Editing Order Failed";
+            $this->session->data['error'] = 'Editing Order Failed';
         }
 
-       /* $res['redirect'] = $this->url->link( 'account/order/realinfo','order_id='.$order_number );
-        $res['status'] = false;*/
+        /* $res['redirect'] = $this->url->link( 'account/order/realinfo','order_id='.$order_number );
+         $res['status'] = false;*/
 
         $res = json_encode($res);
 
@@ -747,9 +697,9 @@ class ControllerCheckoutEditOrder extends Controller {
         $this->response->setOutput($res);
     }
 
-    public function updateOrderAfterPayment() {
-
-        $json = array();
+    public function updateOrderAfterPayment()
+    {
+        $json = [];
 
         $this->load->language('sale/order');
         $log = new Log('error.log');
@@ -760,41 +710,35 @@ class ControllerCheckoutEditOrder extends Controller {
 
         $order_id = $this->session->data['edit_order'];
 
-        if(isset($this->session->data['edit_order']) && $this->config->get('config_edit_order')) {
-            
-
+        if (isset($this->session->data['edit_order']) && $this->config->get('config_edit_order')) {
         } else {
-            $this->response->redirect( $this->url->link( 'account/account' ) );
-        }  
-
-        $order_info = $this->model_sale_order->getOrder($order_id);
-        
-        $order_number = 0;
-        
-        if (!empty($order_info)) {
-            $order_number =  $order_info['order_number'];
+            $this->response->redirect($this->url->link('account/account'));
         }
 
-        
+        $order_info = $this->model_sale_order->getOrder($order_id);
+
+        $order_number = 0;
+
+        if (!empty($order_info)) {
+            $order_number = $order_info['order_number'];
+        }
 
         $totals = $this->model_sale_order->getOrderTotals($order_id);
 
         $shipping_total = [];
 
-        if(isset($this->session->data['shipping_method'])) {
+        if (isset($this->session->data['shipping_method'])) {
             foreach ($this->session->data['shipping_method'] as $key => $value) {
-
                 $tmpData['code'] = $value['shipping_method']['code'];
                 $tmpData['title'] = $value['shipping_method']['title_with_store'];
                 $tmpData['value'] = $value['shipping_method']['cost'];
                 $tmpData['actual_value'] = $value['shipping_method']['actual_cost'];
                 $shipping_total = $tmpData;
-
             }
         }
 
         /*foreach ($totals as $total) {
-          
+
 
             if($total['code'] == 'shipping') {
                 $shipping_total = $total;
@@ -805,24 +749,21 @@ class ControllerCheckoutEditOrder extends Controller {
 
         $sendData['codes'] = 'shipping';
         $sendData['totals']['shipping'] = $shipping_total;
-        
-        foreach ($this->cart->getProducts() as $key => $value) {
 
+        foreach ($this->cart->getProducts() as $key => $value) {
             $rn = $this->getRandomString();
             $sendData['products'][$rn] = $value;
             $sendData['products'][$rn]['product_id'] = $value['product_store_id'];
         }
-      
 
-        $url_data = array();
-        $log->write("if");
-        
+        $url_data = [];
+        $log->write('if');
 
         $curl = curl_init();
-        $url = HTTPS_ADMIN . 'index.php?path=sale/order/EditOrderNoPayment&order_id='.$order_id;
+        $url = HTTPS_ADMIN.'index.php?path=sale/order/EditOrderNoPayment&order_id='.$order_id;
 
         $log->write($url);
-        
+
         curl_setopt($curl, CURLOPT_HEADER, false);
         curl_setopt($curl, CURLINFO_HEADER_OUT, true);
         curl_setopt($curl, CURLOPT_USERAGENT, $this->request->server['HTTP_USER_AGENT']);
@@ -841,39 +782,36 @@ class ControllerCheckoutEditOrder extends Controller {
 
         $json = json_decode($json);
 
-        $res['redirect'] = $this->url->link( 'account/order/realinfo','order_id='.$order_number );
+        $res['redirect'] = $this->url->link('account/order/realinfo', 'order_id='.$order_number);
         $res['status'] = false;
 
-        if(isset($json->status) && $json->status) {
-
+        if (isset($json->status) && $json->status) {
             $res['status'] = $json->status;
 
-            $this->session->data['success'] = "Updated Order Successfully";
-            if(isset($this->session->data['edit_order'])) {
+            $this->session->data['success'] = 'Updated Order Successfully';
+            if (isset($this->session->data['edit_order'])) {
                 unset($this->session->data['edit_order']);
                 unset($this->session->data['order_id']);
-
             }
         } else {
-            $this->session->data['error'] = "Editing Order Failed";
+            $this->session->data['error'] = 'Editing Order Failed';
         }
 
-        $log->write("response EditOrderNoPayment");
+        $log->write('response EditOrderNoPayment');
         $log->write($res);
+
         return $res;
     }
 
-
-    public function updateOrderOld() {
-
-        $json = array();
+    public function updateOrderOld()
+    {
+        $json = [];
 
         $this->load->language('sale/order');
 
         $json['status'] = true;
         $log = new Log('error.log');
         $log->write('api/updateInvoice');
-        
 
         $this->load->model('sale/order');
 
@@ -888,67 +826,57 @@ class ControllerCheckoutEditOrder extends Controller {
         $order_id = $this->request->get['order_id'];
 
         $order_info = $this->model_sale_order->getOrder($order_id);
-        
 
         $store_id = 0;
 
-        
         if (!empty($order_info)) {
-            $store_id =  $order_info['store_id'];
+            $store_id = $order_info['store_id'];
         }
 
         $shipping_city_id = 0;
-        
+
         if (!empty($order_info)) {
-            $shipping_city_id =  $order_info['shipping_city_id'];
+            $shipping_city_id = $order_info['shipping_city_id'];
         }
 
         $stripe_total = 0;
 
-
         //echo "<pre>";print_r($datas);die;
         if (true) {
             // Store
-            
 
             if (isset($order_info['total'])) {
-                $old_total =  $order_info['total'];
+                $old_total = $order_info['total'];
             }
 
             if (isset($order_info['stripe_total'])) {
-                $stripe_total =  $order_info['stripe_total'];
+                $stripe_total = $order_info['stripe_total'];
             }
 
             $old_sub_total = 0;
 
-
-            $old_sub_total = $this->model_sale_order->getOrderProductsSum($order_id,$store_id);
+            $old_sub_total = $this->model_sale_order->getOrderProductsSum($order_id, $store_id);
 
             $totals = $this->model_sale_order->getOrderTotals($order_id);
             foreach ($totals as $total) {
-               /* if($total['code'] == 'sub_total') {
-                    $old_sub_total = $total['value'];
-                }*/
+                /* if($total['code'] == 'sub_total') {
+                     $old_sub_total = $total['value'];
+                 }*/
 
-                if($total['code'] == 'total') {
+                if ('total' == $total['code']) {
                     $old_total = $total['value'];
                 }
-
             }
-
 
             $allProductIds = $this->model_sale_order->getOrderProductsIds($order_id);
             foreach ($allProductIds as $deletePro) {
-
-                if(! isset($datas['products'][$deletePro['product_id']])) {
-                    
-                    $products = $this->model_sale_order->deleteOrderProduct($order_id,$deletePro['product_id']);
+                if (!isset($datas['products'][$deletePro['product_id']])) {
+                    $products = $this->model_sale_order->deleteOrderProduct($order_id, $deletePro['product_id']);
                 } else {
                     //$log->write("set");
                 }
-                
             }
-            
+
             $sumTotal = 0;
 
             $tempProds['products'] = [];
@@ -959,14 +887,12 @@ class ControllerCheckoutEditOrder extends Controller {
 
             //echo "<pre>";print_r($datas['products']);die;
             foreach ($datas['products'] as $p_id_key => $updateProduct) {
-               
                 $updateProduct['store_id'] = $store_id;
                 $updateProduct['vendor_id'] = $vendor_id;
-                
 
-                if(is_numeric($p_id_key)) {
+                if (is_numeric($p_id_key)) {
                     //echo "<pre>";print_r($datas['products']);die;
-                    $products = $this->model_sale_order->updateOrderProduct($order_id,$p_id_key,$updateProduct);
+                    $products = $this->model_sale_order->updateOrderProduct($order_id, $p_id_key, $updateProduct);
                 } else {
                     //echo "<pre>";print_r($updateProduct);die;
 
@@ -977,38 +903,32 @@ class ControllerCheckoutEditOrder extends Controller {
                     if($new_product_id) {
                         $updateProduct['product_id'] = $new_product_id;
                     }
-                    
+
 
                     $products = $this->model_sale_order->updateOrderNewProduct($order_id,$updateProduct['product_id'],$updateProduct);*/
                 }
-                
+
                 $sumTotal += ($updateProduct['price'] * $updateProduct['quantity']);
 
                 array_push($tempProds['products'], $updateProduct);
             }
 
-
-            
-            
             $subTotal = $sumTotal;
 
-           
             //$log->write("tax_total start ");
             //$tax_total= $this->model_tool_image->getTaxTotal($tempProds,$store_id);
-            $tax_total= $this->model_sale_order->getTaxTotal($tempProds,$store_id);
+            $tax_total = $this->model_sale_order->getTaxTotal($tempProds, $store_id);
 
             //echo "<pre>";print_r($tax_total);die;
 
-            if(count($tax_total) > 0 ) {
-
+            if (count($tax_total) > 0) {
                 foreach ($tax_total as $x => $tmpV) {
-                    array_push($datas['totals'],$tmpV);     
+                    array_push($datas['totals'], $tmpV);
                 }
-                
             }
 
             //unset totals coming from web
-            if(isset($datas['totals']['tax'])) {
+            if (isset($datas['totals']['tax'])) {
                 unset($datas['totals']['tax']);
             }
 
@@ -1016,132 +936,105 @@ class ControllerCheckoutEditOrder extends Controller {
 
             $this->model_sale_order->deleteOrderTotal($order_id);
 
-
             foreach ($datas['totals'] as $p_id_code => $tot) {
                 $sumTotal += $tot['value'];
             }
-
 
             $orderTotal = $sumTotal;
 
             //get shipping method and get price
 
             //echo "<pre>";print_r($order_info);die;
-            $tmp = explode(".",$order_info['shipping_code']);
+            $tmp = explode('.', $order_info['shipping_code']);
 
-            $shipping_price =[];
+            $shipping_price = [];
 
-            if($tmp[0] == 'express' || $tmp[0] == 'normal') {
-
+            if ('express' == $tmp[0] || 'normal' == $tmp[0]) {
                 $p = $tmp[0].'_free_delivery_amount';
                 $free_delivery_amount = $this->config->get($p);
 
-                if(isset($store_id) && $store_id) {
+                if (isset($store_id) && $store_id) {
+                    $store_info = $this->model_sale_order->getStore($store_id);
 
-                    $store_info =  $this->model_sale_order->getStore($store_id);
-
-                    if($store_info) {
-                        $free_delivery_amount =$store_info['min_order_cod'];    
+                    if ($store_info) {
+                        $free_delivery_amount = $store_info['min_order_cod'];
                     }
-                    
                 }
 
-                if($old_sub_total < $free_delivery_amount ) {
-
-
-                    $this->load->model('shipping/' . $tmp[0]);
-                    $shipping_price = $this->{'model_shipping_' . $tmp[0]}->getPrice($store_id,$subTotal,$orderTotal,$order_info['latitude'],$order_info['longitude'],$shipping_city_id);
+                if ($old_sub_total < $free_delivery_amount) {
+                    $this->load->model('shipping/'.$tmp[0]);
+                    $shipping_price = $this->{'model_shipping_'.$tmp[0]}->getPrice($store_id, $subTotal, $orderTotal, $order_info['latitude'], $order_info['longitude'], $shipping_city_id);
 
                     $log->write($shipping_price);
-
                 }
-
-                
             }
-            
-            
+
             $p = 2;
 
             //$log->write("datas_totals");
 
-            
-
             foreach ($datas['totals'] as $p_id_code => $tot) {
-                
                 /*$log->write("updatetotals");
                 $log->write($tot);*/
                 $tot['sort'] = $p;
-                $this->model_sale_order->insertOrderTotal($order_id,$tot,$shipping_price);
+                $this->model_sale_order->insertOrderTotal($order_id, $tot, $shipping_price);
 
-                if($tot['code'] == 'shipping' && count($shipping_price) > 0 && isset($shipping_price['cost']) && isset($shipping_price['actual_cost'])) {
+                if ('shipping' == $tot['code'] && count($shipping_price) > 0 && isset($shipping_price['cost']) && isset($shipping_price['actual_cost'])) {
                     $orderTotal -= $tot['value'];
                     $orderTotal += $shipping_price['cost'];
                 }
 
-                $p++;
+                ++$p;
             }
 
-            
-        
-            $orderTotal = round($orderTotal,2);
-            $subTotal = round($subTotal,2);
+            $orderTotal = round($orderTotal, 2);
+            $subTotal = round($subTotal, 2);
 
-            $this->model_sale_order->insertOrderSubTotalAndTotal($order_id,$subTotal,$orderTotal,$p);
-            
+            $this->model_sale_order->insertOrderSubTotalAndTotal($order_id, $subTotal, $orderTotal, $p);
+
             //echo "<pre>";print_r($shipping_price);die;
 
             // editDeliveryRequest
-            
 
-            if(true) {
+            if (true) {
                 //settle and  update
-                $log->write("if settle");
+                $log->write('if settle');
                 $customer_id = $this->customer->getId();
                 $final_amount = $orderTotal;
 
                 $log->write($final_amount);
                 $log->write($old_total);
-                
-                if($final_amount !=  $old_total) {
 
-                    if($order_info['payment_code'] == 'stripe') {
-
+                if ($final_amount != $old_total) {
+                    if ('stripe' == $order_info['payment_code']) {
                         $iuguData = true;
 
-                        //if($final_amount > $old_total + $this->config->get('stripe_order_buffer_amount')) {//25 is buffer amount charged 
-                        if($final_amount > $stripe_total) {//25 is buffer amount charged 
+                        //if($final_amount > $old_total + $this->config->get('stripe_order_buffer_amount')) {//25 is buffer amount charged
+                        if ($final_amount > $stripe_total) {//25 is buffer amount charged
                             $iuguData = false;
-                            $iuguData = $this->refundAndChargeNewTotalStripe($order_id,$customer_id,$final_amount);
+                            $iuguData = $this->refundAndChargeNewTotalStripe($order_id, $customer_id, $final_amount);
                         }
-                        
 
-                        if(!$iuguData) {
+                        if (!$iuguData) {
                             $json['status'] = false;
 
                             $data['order_id'] = $order_id;
                             $this->cancelOrder($data);
-                            //mark order failed and cancel DS request
-
-
+                        //mark order failed and cancel DS request
                         } else {
                             $this->editDeliveryRequest($order_id);
                         }
                     } else {
-
                         // for payment type other than stripe
                         $json['status'] = true;
                         $this->editDeliveryRequest($order_id);
                     }
-                    
-                    
                 } else {
-                    $log->write("same amount settle");
+                    $log->write('same amount settle');
                 }
-             
             } else {
-                
             }
-            
+
             //$this->sendNewInvoice($order_id);
         } else {
             $json['status'] = false;
@@ -1153,40 +1046,40 @@ class ControllerCheckoutEditOrder extends Controller {
         $this->response->setOutput($json);
     }
 
-    function getRandomString($length = 5) {
+    public function getRandomString($length = 5)
+    {
         $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $string = '';
 
-        for ($i = 0; $i < $length; $i++) {
+        for ($i = 0; $i < $length; ++$i) {
             $string .= $characters[mt_rand(0, strlen($characters) - 1)];
         }
 
         return $string;
     }
 
-    public function updateNewShippingAddressFromAdmin() {
+    public function updateNewShippingAddressFromAdmin()
+    {
         $log = new Log('error.log');
         $log->write('updateNewShippingAddressFromAdmin');
         $log->write($this->request->post);
-        $json['message'] = "<center style='color:green'>".$this->language->get('text_edited_success')."</center>";
+        $json['message'] = "<center style='color:green'>".$this->language->get('text_edited_success').'</center>';
 
         $this->load->model('account/order');
 
-        $this->load->model( 'api/checkout' );
+        $this->load->model('api/checkout');
 
         $order_id = $this->request->post['order_id'];
         $order_info = $this->model_api_checkout->getOrder($order_id);
-        
-        if($order_info) {
 
-            $edited = $this->model_account_order->updateNewShippingAddress($order_id,$this->request->post); 
+        if ($order_info) {
+            $edited = $this->model_account_order->updateNewShippingAddress($order_id, $this->request->post);
 
             $log->write($edited);
 
             $order_info = $this->model_api_checkout->getOrder($order_id);
 
-            if($edited && $order_info) {
-
+            if ($edited && $order_info) {
                 //echo "<pre>";print_r($order_info);die;
                 $deliveryAlreadyCreated = $this->model_account_order->getOrderDSDeliveryId($order_id);
 
@@ -1194,70 +1087,63 @@ class ControllerCheckoutEditOrder extends Controller {
 
                 $log->write($deliveryAlreadyCreated);
 
-                if($deliveryAlreadyCreated) {
-
-                    $deliverAddress = $order_info['shipping_flat_number'].", ". $order_info['shipping_building_name'].", ".$order_info['shipping_landmark'];
+                if ($deliveryAlreadyCreated) {
+                    $deliverAddress = $order_info['shipping_flat_number'].', '.$order_info['shipping_building_name'].', '.$order_info['shipping_landmark'];
 
                     $data['body'] = [
-                        'manifest_id' => $deliveryAlreadyCreated,//order_id,
+                        'manifest_id' => $deliveryAlreadyCreated, //order_id,
                         'dropoff_address' => $deliverAddress,
                         'to_lat' => $order_info['latitude'],
                         'to_lng' => $order_info['longitude'],
-                        'dropoff_zipcode' => $order_info['shipping_zipcode'],// from $order_info['city_id'],
-
+                        'dropoff_zipcode' => $order_info['shipping_zipcode'], // from $order_info['city_id'],
                     ];
-                   
+
                     $log->write($data['body']);
 
-                    $data['email'] = $this->config->get('config_delivery_username'); 
+                    $data['email'] = $this->config->get('config_delivery_username');
                     $data['password'] = $this->config->get('config_delivery_secret');
-                    $response = $this->load->controller('deliversystem/deliversystem/getToken',$data);
+                    $response = $this->load->controller('deliversystem/deliversystem/getToken', $data);
 
-                    $log->write("token");
+                    $log->write('token');
                     $log->write($response);
-                    if($response['status']) {
-                        $data['tokens'] = $response['token']; 
-                        $res = $this->load->controller('deliversystem/deliversystem/updateDeliveryAddress',$data);
-                        $log->write("reeponse");
+                    if ($response['status']) {
+                        $data['tokens'] = $response['token'];
+                        $res = $this->load->controller('deliversystem/deliversystem/updateDeliveryAddress', $data);
+                        $log->write('reeponse');
                         $log->write($res);
                     }
                 }
-
             }
-
         }
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
-
     }
 
-    public function updateOnlyFlatNumberShippingAddressFromAdmin() {
+    public function updateOnlyFlatNumberShippingAddressFromAdmin()
+    {
         $log = new Log('error.log');
         $log->write('updateOnlyFlatNumberShippingAddressFromAdmin');
         $log->write($this->request->post);
-        $json['message'] = "<center style='color:green'>".$this->language->get('text_edited_success')."</center>";
+        $json['message'] = "<center style='color:green'>".$this->language->get('text_edited_success').'</center>';
 
         $this->load->model('account/order');
 
-        $this->load->model( 'api/checkout' );
+        $this->load->model('api/checkout');
 
         $order_id = $this->request->post['order_id'];
         $order_info = $this->model_api_checkout->getOrder($order_id);
-        
-        if($order_info) {
 
-
+        if ($order_info) {
             $order_info_old = $this->model_api_checkout->getOrder($order_id);
 
-            $edited = $this->model_account_order->updateOnlyFlatNumber($order_id,$this->request->post,$order_info_old); 
+            $edited = $this->model_account_order->updateOnlyFlatNumber($order_id, $this->request->post, $order_info_old);
 
             $log->write($edited);
 
             $order_info = $this->model_api_checkout->getOrder($order_id);
 
-            if($edited && $order_info) {
-
+            if ($edited && $order_info) {
                 //echo "<pre>";print_r($order_info);die;
                 $deliveryAlreadyCreated = $this->model_account_order->getOrderDSDeliveryId($order_id);
 
@@ -1265,42 +1151,36 @@ class ControllerCheckoutEditOrder extends Controller {
 
                 $log->write($deliveryAlreadyCreated);
 
-                if($deliveryAlreadyCreated) {
-
-                    $deliverAddress = $order_info['shipping_flat_number'].", ". $order_info['shipping_building_name'].", ".$order_info['shipping_landmark'];
+                if ($deliveryAlreadyCreated) {
+                    $deliverAddress = $order_info['shipping_flat_number'].', '.$order_info['shipping_building_name'].', '.$order_info['shipping_landmark'];
 
                     $data['body'] = [
-                        'manifest_id' => $deliveryAlreadyCreated,//order_id,
+                        'manifest_id' => $deliveryAlreadyCreated, //order_id,
                         'dropoff_address' => $deliverAddress,
                         'to_lat' => $order_info['latitude'],
                         'to_lng' => $order_info['longitude'],
-                        'dropoff_zipcode' => $order_info['shipping_zipcode'],// from $order_info['city_id'],
-
+                        'dropoff_zipcode' => $order_info['shipping_zipcode'], // from $order_info['city_id'],
                     ];
-                   
+
                     $log->write($data['body']);
 
-                    $data['email'] = $this->config->get('config_delivery_username'); 
+                    $data['email'] = $this->config->get('config_delivery_username');
                     $data['password'] = $this->config->get('config_delivery_secret');
-                    $response = $this->load->controller('deliversystem/deliversystem/getToken',$data);
+                    $response = $this->load->controller('deliversystem/deliversystem/getToken', $data);
 
-                    $log->write("token");
+                    $log->write('token');
                     $log->write($response);
-                    if($response['status']) {
-                        $data['tokens'] = $response['token']; 
-                        $res = $this->load->controller('deliversystem/deliversystem/updateDeliveryAddress',$data);
-                        $log->write("reeponse");
+                    if ($response['status']) {
+                        $data['tokens'] = $response['token'];
+                        $res = $this->load->controller('deliversystem/deliversystem/updateDeliveryAddress', $data);
+                        $log->write('reeponse');
                         $log->write($res);
                     }
                 }
-
             }
-
         }
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
-
     }
-
 }

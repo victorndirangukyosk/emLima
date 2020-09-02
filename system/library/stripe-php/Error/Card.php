@@ -21,7 +21,7 @@ class Card extends Base
         // trying to do our best not to change the public interface of this class'
         // constructor. We should consider changing its implementation on the
         // next major version bump of this library.
-        $this->declineCode = isset($jsonBody["error"]["decline_code"]) ? $jsonBody["error"]["decline_code"] : null;
+        $this->declineCode = isset($jsonBody['error']['decline_code']) ? $jsonBody['error']['decline_code'] : null;
     }
 
     public function getDeclineCode()

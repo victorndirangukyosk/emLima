@@ -3,11 +3,8 @@
 namespace Stripe;
 
 /**
- * Class BitcoinTransaction
- *
- * @package Stripe
+ * Class BitcoinTransaction.
  */
 class BitcoinTransaction extends ApiResource
 {
-
 }

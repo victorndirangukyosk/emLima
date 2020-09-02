@@ -1,8 +1,9 @@
 <?php
 
-class ControllerCommonForgetModal extends Controller {
-
-    public function index() {
+class ControllerCommonForgetModal extends Controller
+{
+    public function index()
+    {
         $this->load->language('common/forget_modal');
 
         $data['text_find_account'] = $this->language->get('text_find_account');
@@ -18,16 +19,12 @@ class ControllerCommonForgetModal extends Controller {
         $data['text_have_account'] = $this->language->get('text_have_account');
         $data['text_forget_password'] = $this->language->get('text_forget_password');
 
-        
-        
         $data['forget_link'] = $this->url->link('account/forgotten');
-        
 
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/forget_modal.tpl')) {
-            return $this->load->view($this->config->get('config_template') . '/template/common/forget_modal.tpl', $data);
+        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/common/forget_modal.tpl')) {
+            return $this->load->view($this->config->get('config_template').'/template/common/forget_modal.tpl', $data);
         } else {
             return $this->load->view('default/template/common/forget_modal.tpl', $data);
         }
     }
-
 }

@@ -2,8 +2,8 @@
 
 namespace Stripe\HttpClient;
 
-use Stripe\Stripe;
 use Stripe\Error;
+use Stripe\Stripe;
 use Stripe\Util;
 
 class CurlClient implements ClientInterface
@@ -15,6 +15,7 @@ class CurlClient implements ClientInterface
         if (!self::$instance) {
             self::$instance = new self();
         }
+
         return self::$instance;
     }
 
@@ -54,12 +55,14 @@ class CurlClient implements ClientInterface
     public function setTimeout($seconds)
     {
         $this->timeout = (int) max($seconds, 0);
+
         return $this;
     }
 
     public function setConnectTimeout($seconds)
     {
         $this->connectTimeout = (int) max($seconds, 0);
+
         return $this;
     }
 
@@ -80,31 +83,29 @@ class CurlClient implements ClientInterface
         $curl = curl_init();
         $method = strtolower($method);
 
-        $opts = array();
+        $opts = [];
         if (is_callable($this->defaultOptions)) { // call defaultOptions callback, set options to return value
             $opts = call_user_func_array($this->defaultOptions, func_get_args());
             if (!is_array($opts)) {
-                throw new Error\Api("Non-array value returned by defaultOptions CurlClient callback");
+                throw new Error\Api('Non-array value returned by defaultOptions CurlClient callback');
             }
         } elseif (is_array($this->defaultOptions)) { // set default curlopts from array
             $opts = $this->defaultOptions;
         }
 
-        if ($method == 'get') {
+        if ('get' == $method) {
             if ($hasFile) {
-                throw new Error\Api(
-                    "Issuing a GET request with a file parameter"
-                );
+                throw new Error\Api('Issuing a GET request with a file parameter');
             }
             $opts[CURLOPT_HTTPGET] = 1;
             if (count($params) > 0) {
                 $encoded = self::encode($params);
                 $absUrl = "$absUrl?$encoded";
             }
-        } elseif ($method == 'post') {
+        } elseif ('post' == $method) {
             $opts[CURLOPT_POST] = 1;
             $opts[CURLOPT_POSTFIELDS] = $hasFile ? $params : self::encode($params);
-        } elseif ($method == 'delete') {
+        } elseif ('delete' == $method) {
             $opts[CURLOPT_CUSTOMREQUEST] = 'DELETE';
             if (count($params) > 0) {
                 $encoded = self::encode($params);
@@ -115,14 +116,15 @@ class CurlClient implements ClientInterface
         }
 
         // Create a callback to capture HTTP headers for the response
-        $rheaders = array();
+        $rheaders = [];
         $headerCallback = function ($curl, $header_line) use (&$rheaders) {
             // Ignore the HTTP request line (HTTP/1.1 200 OK)
-            if (strpos($header_line, ":") === false) {
+            if (false === strpos($header_line, ':')) {
                 return strlen($header_line);
             }
-            list($key, $value) = explode(":", trim($header_line), 2);
+            list($key, $value) = explode(':', trim($header_line), 2);
             $rheaders[trim($key)] = trim($value);
+
             return strlen($header_line);
         };
 
@@ -191,9 +193,9 @@ class CurlClient implements ClientInterface
         }
 
         $errno = curl_errno($curl);
-        if ($errno == CURLE_SSL_CACERT ||
-            $errno == CURLE_SSL_PEER_CERTIFICATE ||
-            $errno == CURLE_SSL_CACERT_BADFILE
+        if (CURLE_SSL_CACERT == $errno ||
+            CURLE_SSL_PEER_CERTIFICATE == $errno ||
+            CURLE_SSL_CACERT_BADFILE == $errno
         ) {
             array_push(
                 $headers,
@@ -205,7 +207,7 @@ class CurlClient implements ClientInterface
             $rbody = curl_exec($curl);
         }
 
-        if ($rbody === false) {
+        if (false === $rbody) {
             $errno = curl_errno($curl);
             $message = curl_error($curl);
             curl_close($curl);
@@ -214,12 +216,14 @@ class CurlClient implements ClientInterface
 
         $rcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);
-        return array($rbody, $rcode, $rheaders);
+
+        return [$rbody, $rcode, $rheaders];
     }
 
     /**
      * @param number $errno
      * @param string $message
+     *
      * @throws Error\ApiConnection
      */
     private function handleCurlError($url, $errno, $message)
@@ -229,22 +233,22 @@ class CurlClient implements ClientInterface
             case CURLE_COULDNT_RESOLVE_HOST:
             case CURLE_OPERATION_TIMEOUTED:
                 $msg = "Could not connect to Stripe ($url).  Please check your "
-                 . "internet connection and try again.  If this problem persists, "
-                 . "you should check Stripe's service status at "
-                 . "https://twitter.com/stripestatus, or";
+                 .'internet connection and try again.  If this problem persists, '
+                 ."you should check Stripe's service status at "
+                 .'https://twitter.com/stripestatus, or';
                 break;
             case CURLE_SSL_CACERT:
             case CURLE_SSL_PEER_CERTIFICATE:
                 $msg = "Could not verify Stripe's SSL certificate.  Please make sure "
-                 . "that your network is not intercepting certificates.  "
-                 . "(Try going to $url in your browser.)  "
-                 . "If this problem persists,";
+                 .'that your network is not intercepting certificates.  '
+                 ."(Try going to $url in your browser.)  "
+                 .'If this problem persists,';
                 break;
             default:
-                $msg = "Unexpected error communicating with Stripe.  "
-                 . "If this problem persists,";
+                $msg = 'Unexpected error communicating with Stripe.  '
+                 .'If this problem persists,';
         }
-        $msg .= " let us know at support@stripe.com.";
+        $msg .= ' let us know at support@stripe.com.';
 
         $msg .= "\n\n(Network error [errno $errno]: $message)";
         throw new Error\ApiConnection($msg);
@@ -252,16 +256,16 @@ class CurlClient implements ClientInterface
 
     private static function caBundle()
     {
-        return dirname(__FILE__) . '/../../data/ca-certificates.crt';
+        return dirname(__FILE__).'/../../data/ca-certificates.crt';
     }
 
     /**
-     * @param array $arr An map of param keys to values.
+     * @param array       $arr    an map of param keys to values
      * @param string|null $prefix
      *
      * Only public for testability, should not be called outside of CurlClient
      *
-     * @return string A querystring, essentially.
+     * @return string a querystring, essentially
      */
     public static function encode($arr, $prefix = null)
     {
@@ -269,17 +273,17 @@ class CurlClient implements ClientInterface
             return $arr;
         }
 
-        $r = array();
+        $r = [];
         foreach ($arr as $k => $v) {
             if (is_null($v)) {
                 continue;
             }
 
             if ($prefix) {
-                if ($k !== null && (!is_int($k) || is_array($v))) {
-                    $k = $prefix."[".$k."]";
+                if (null !== $k && (!is_int($k) || is_array($v))) {
+                    $k = $prefix.'['.$k.']';
                 } else {
-                    $k = $prefix."[]";
+                    $k = $prefix.'[]';
                 }
             }
 
@@ -289,10 +293,10 @@ class CurlClient implements ClientInterface
                     $r[] = $enc;
                 }
             } else {
-                $r[] = urlencode($k)."=".urlencode($v);
+                $r[] = urlencode($k).'='.urlencode($v);
             }
         }
 
-        return implode("&", $r);
+        return implode('&', $r);
     }
 }

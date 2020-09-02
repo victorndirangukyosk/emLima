@@ -1,75 +1,15 @@
 <?php
 
-class ControllerReportCommission extends Controller {
-
-    public function excel(){
-
-        if (isset($this->request->get['filter_vendor_name'])) {
-                $filter_vendor_name = $this->request->get['filter_vendor_name'];
-        } else {
-                $filter_vendor_name = '';
-        }
-        
-        if (isset($this->request->get['filter_store'])) {
-                $filter_store = $this->request->get['filter_store'];
-        } else {
-                $filter_store = '';
-        }
-
-        if (isset($this->request->get['filter_store_id'])) {
-                $filter_store_id = $this->request->get['filter_store_id'];
-        } else {
-                $filter_store_id = '';
-        }
-
-        if (isset($this->request->get['filter_date_start'])) {
-                $filter_date_start = $this->request->get['filter_date_start'];
-        } else {
-                $filter_date_start = date('Y-m-d', strtotime(date('Y') . '-' . date('m') . '-01'));
-        }
-
-        if (isset($this->request->get['filter_date_end'])) {
-                $filter_date_end = $this->request->get['filter_date_end'];
-        } else {
-                $filter_date_end = date('Y-m-d');
-        }
-        if (isset($this->request->get['filter_group'])) {
-            $filter_group = $this->request->get['filter_group'];
-        } else {
-            $filter_group = 'week';
-        }
-        
-        $data['filter_vendor_name'] = $filter_vendor_name;
-        $data['filter_store'] = $filter_store;
-        $data['filter_store_id'] = $filter_store_id;
-        $data['filter_date_start'] = $filter_date_start;
-        $data['filter_date_end'] = $filter_date_end;
-            
-        $data = array(
-            'filter_vendor_name' => $filter_vendor_name,
-            'filter_store' => $filter_store_id,
-            'filter_date_start' => $filter_date_start,
-            'filter_date_end' => $filter_date_end,
-            'filter_group' => $filter_group,
-        );
-
-        $this->load->model('report/excel');
-        $this->model_report_excel->download_vendor_commission($data);
-    }
-
-
-    public function index() {
-
-        $this->load->language('report/commission');
-
-        $this->document->setTitle($this->language->get('heading_title'));
-
+class ControllerReportCommission extends Controller
+{
+    public function excel()
+    {
         if (isset($this->request->get['filter_vendor_name'])) {
             $filter_vendor_name = $this->request->get['filter_vendor_name'];
         } else {
             $filter_vendor_name = '';
         }
-        
+
         if (isset($this->request->get['filter_store'])) {
             $filter_store = $this->request->get['filter_store'];
         } else {
@@ -82,11 +22,69 @@ class ControllerReportCommission extends Controller {
             $filter_store_id = '';
         }
 
+        if (isset($this->request->get['filter_date_start'])) {
+            $filter_date_start = $this->request->get['filter_date_start'];
+        } else {
+            $filter_date_start = date('Y-m-d', strtotime(date('Y').'-'.date('m').'-01'));
+        }
+
+        if (isset($this->request->get['filter_date_end'])) {
+            $filter_date_end = $this->request->get['filter_date_end'];
+        } else {
+            $filter_date_end = date('Y-m-d');
+        }
+        if (isset($this->request->get['filter_group'])) {
+            $filter_group = $this->request->get['filter_group'];
+        } else {
+            $filter_group = 'week';
+        }
+
+        $data['filter_vendor_name'] = $filter_vendor_name;
+        $data['filter_store'] = $filter_store;
+        $data['filter_store_id'] = $filter_store_id;
+        $data['filter_date_start'] = $filter_date_start;
+        $data['filter_date_end'] = $filter_date_end;
+
+        $data = [
+            'filter_vendor_name' => $filter_vendor_name,
+            'filter_store' => $filter_store_id,
+            'filter_date_start' => $filter_date_start,
+            'filter_date_end' => $filter_date_end,
+            'filter_group' => $filter_group,
+        ];
+
+        $this->load->model('report/excel');
+        $this->model_report_excel->download_vendor_commission($data);
+    }
+
+    public function index()
+    {
+        $this->load->language('report/commission');
+
+        $this->document->setTitle($this->language->get('heading_title'));
+
+        if (isset($this->request->get['filter_vendor_name'])) {
+            $filter_vendor_name = $this->request->get['filter_vendor_name'];
+        } else {
+            $filter_vendor_name = '';
+        }
+
+        if (isset($this->request->get['filter_store'])) {
+            $filter_store = $this->request->get['filter_store'];
+        } else {
+            $filter_store = '';
+        }
+
+        if (isset($this->request->get['filter_store_id'])) {
+            $filter_store_id = $this->request->get['filter_store_id'];
+        } else {
+            $filter_store_id = '';
+        }
 
         if (isset($this->request->get['filter_date_start'])) {
             $filter_date_start = $this->request->get['filter_date_start'];
         } else {
-            $filter_date_start = date('Y-m-d', strtotime(date('Y') . '-' . date('m') . '-01'));
+            $filter_date_start = date('Y-m-d', strtotime(date('Y').'-'.date('m').'-01'));
         }
 
         if (isset($this->request->get['filter_date_end'])) {
@@ -115,56 +113,54 @@ class ControllerReportCommission extends Controller {
 
         $url = '';
 
-        
-        
         if (isset($this->request->get['filter_date_start'])) {
-            $url .= '&filter_date_start=' . $this->request->get['filter_date_start'];
+            $url .= '&filter_date_start='.$this->request->get['filter_date_start'];
         }
 
         if (isset($this->request->get['filter_date_end'])) {
-            $url .= '&filter_date_end=' . $this->request->get['filter_date_end'];
+            $url .= '&filter_date_end='.$this->request->get['filter_date_end'];
         }
 
         if (isset($this->request->get['filter_group'])) {
-            $url .= '&filter_group=' . $this->request->get['filter_group'];
+            $url .= '&filter_group='.$this->request->get['filter_group'];
         }
 
         if (isset($this->request->get['filter_order_status_id'])) {
-            $url .= '&filter_order_status_id=' . $this->request->get['filter_order_status_id'];
+            $url .= '&filter_order_status_id='.$this->request->get['filter_order_status_id'];
         }
         if (isset($this->request->get['filter_vendor_name'])) {
-            $url .= '&filter_vendor_name=' . $this->request->get['filter_vendor_name'];
+            $url .= '&filter_vendor_name='.$this->request->get['filter_vendor_name'];
         }
 
         if (isset($this->request->get['filter_store'])) {
-            $url .= '&filter_store=' . $this->request->get['filter_store'];
+            $url .= '&filter_store='.$this->request->get['filter_store'];
         }
 
         if (isset($this->request->get['filter_store_id'])) {
-            $url .= '&filter_store_id=' . $this->request->get['filter_store_id'];
+            $url .= '&filter_store_id='.$this->request->get['filter_store_id'];
         }
 
         if (isset($this->request->get['page'])) {
-            $url .= '&page=' . $this->request->get['page'];
+            $url .= '&page='.$this->request->get['page'];
         }
 
-        $data['breadcrumbs'] = array();
+        $data['breadcrumbs'] = [];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL')
-        );
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
+        ];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('report/commission', 'token=' . $this->session->data['token'] . $url, 'SSL')
-        );
+            'href' => $this->url->link('report/commission', 'token='.$this->session->data['token'].$url, 'SSL'),
+        ];
 
         $this->load->model('report/sale');
 
-        $data['orders'] = array();
+        $data['orders'] = [];
 
-        $filter_data = array(
+        $filter_data = [
             'filter_date_start' => $filter_date_start,
             'filter_date_end' => $filter_date_end,
             'filter_group' => $filter_group,
@@ -172,27 +168,25 @@ class ControllerReportCommission extends Controller {
             'filter_store' => $filter_store_id,
 
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin')
-        );
+            'limit' => $this->config->get('config_limit_admin'),
+        ];
 
         $order_total = $this->model_report_sale->getTotalOrdersCommission($filter_data);
 
-        
         $results = $this->model_report_sale->getOrdersCommission($filter_data);
 
         //echo "<pre>";print_r($results);die;
 
-
         foreach ($results as $result) {
-            $data['orders'][] = array(
+            $data['orders'][] = [
                 'date_start' => date($this->language->get('date_format_short'), strtotime($result['date_start'])),
                 'date_end' => date($this->language->get('date_format_short'), strtotime($result['date_end'])),
                 'orders' => $result['orders'],
                 'store' => $result['store'],
-                'commission'=>$this->currency->format(($result['total'] * $result['commission'] )/100,$this->config->get('config_currency')),
-                'user' =>$result['username'],
-                'total' => $this->currency->format($result['total'], $this->config->get('config_currency'))
-            );
+                'commission' => $this->currency->format(($result['total'] * $result['commission']) / 100, $this->config->get('config_currency')),
+                'user' => $result['username'],
+                'total' => $this->currency->format($result['total'], $this->config->get('config_currency')),
+            ];
         }
 
         $data['heading_title'] = $this->language->get('heading_title');
@@ -228,67 +222,63 @@ class ControllerReportCommission extends Controller {
 
         $this->load->model('localisation/order_status');
 
-        
+        $data['groups'] = [];
 
-        $data['groups'] = array();
-
-        $data['groups'][] = array(
+        $data['groups'][] = [
             'text' => $this->language->get('text_year'),
             'value' => 'year',
-        );
+        ];
 
-        $data['groups'][] = array(
+        $data['groups'][] = [
             'text' => $this->language->get('text_month'),
             'value' => 'month',
-        );
+        ];
 
-        $data['groups'][] = array(
+        $data['groups'][] = [
             'text' => $this->language->get('text_week'),
             'value' => 'week',
-        );
+        ];
 
-        $data['groups'][] = array(
+        $data['groups'][] = [
             'text' => $this->language->get('text_day'),
             'value' => 'day',
-        );
+        ];
 
         $url = '';
 
-       
-        
         if (isset($this->request->get['filter_date_start'])) {
-            $url .= '&filter_date_start=' . $this->request->get['filter_date_start'];
+            $url .= '&filter_date_start='.$this->request->get['filter_date_start'];
         }
 
         if (isset($this->request->get['filter_date_end'])) {
-            $url .= '&filter_date_end=' . $this->request->get['filter_date_end'];
+            $url .= '&filter_date_end='.$this->request->get['filter_date_end'];
         }
 
         if (isset($this->request->get['filter_group'])) {
-            $url .= '&filter_group=' . $this->request->get['filter_group'];
+            $url .= '&filter_group='.$this->request->get['filter_group'];
         }
 
         if (isset($this->request->get['filter_order_status_id'])) {
-            $url .= '&filter_order_status_id=' . $this->request->get['filter_order_status_id'];
+            $url .= '&filter_order_status_id='.$this->request->get['filter_order_status_id'];
         }
 
         if (isset($this->request->get['filter_vendor_name'])) {
-            $url .= '&filter_vendor_name=' . $this->request->get['filter_vendor_name'];
+            $url .= '&filter_vendor_name='.$this->request->get['filter_vendor_name'];
         }
 
         if (isset($this->request->get['filter_store'])) {
-            $url .= '&filter_store=' . $this->request->get['filter_store'];
+            $url .= '&filter_store='.$this->request->get['filter_store'];
         }
 
         if (isset($this->request->get['filter_store_id'])) {
-            $url .= '&filter_store_id=' . $this->request->get['filter_store_id'];
+            $url .= '&filter_store_id='.$this->request->get['filter_store_id'];
         }
 
         $pagination = new Pagination();
         $pagination->total = $order_total;
         $pagination->page = $page;
         $pagination->limit = $this->config->get('config_limit_admin');
-        $pagination->url = $this->url->link('report/commission', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+        $pagination->url = $this->url->link('report/commission', 'token='.$this->session->data['token'].$url.'&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
@@ -308,18 +298,18 @@ class ControllerReportCommission extends Controller {
 
         $this->response->setOutput($this->load->view('report/commission.tpl', $data));
     }
-    
-    public function autocomplete(){
-        
-        if(isset($this->request->get['filter_name'])){
+
+    public function autocomplete()
+    {
+        if (isset($this->request->get['filter_name'])) {
             $filter_name = $this->request->get['filter_name'];
-        }else{
+        } else {
             $filter_name = '';
         }
-        
+
         $this->load->model('sale/order');
 
-        $json =  $this->model_sale_order->getVendorUserDataOnlyFirstName($filter_name);
+        $json = $this->model_sale_order->getVendorUserDataOnlyFirstName($filter_name);
 
         echo json_encode($json);
     }

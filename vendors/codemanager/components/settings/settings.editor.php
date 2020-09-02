@@ -1,13 +1,13 @@
 <?php
-    require_once('../../common.php');
+    require_once '../../common.php';
 ?>
-<label><span class="icon-home big-icon"></span><?php i18n("Editor Settings"); ?></label>
+<label><span class="icon-home big-icon"></span><?php i18n('Editor Settings'); ?></label>
 <hr>
 <table class="settings">
     
     <tr>
     
-        <td width="50%"><?php i18n("Theme"); ?></td>
+        <td width="50%"><?php i18n('Theme'); ?></td>
         <td>
         
         <select class="setting" data-setting="codiad.editor.theme">
@@ -46,7 +46,7 @@
     </tr>
     <tr>
     
-        <td><?php i18n("Font Size"); ?></td>
+        <td><?php i18n('Font Size'); ?></td>
         <td>
         
         <select class="setting" data-setting="codiad.editor.fontSize">
@@ -66,12 +66,12 @@
     </tr>
     <tr>
     
-        <td><?php i18n("Highlight Active Line"); ?></td>
+        <td><?php i18n('Highlight Active Line'); ?></td>
         <td>
         
             <select class="setting" data-setting="codiad.editor.highlightLine">
-                <option value="true" selected><?php i18n("Yes"); ?></option>
-                <option value="false"><?php i18n("No"); ?></option>
+                <option value="true" selected><?php i18n('Yes'); ?></option>
+                <option value="false"><?php i18n('No'); ?></option>
             </select>
             
         </td>
@@ -79,12 +79,12 @@
     </tr>
     <tr>
     
-        <td><?php i18n("Indent Guides"); ?></td>
+        <td><?php i18n('Indent Guides'); ?></td>
         <td>
         
         <select class="setting" data-setting="codiad.editor.indentGuides">
-            <option value="true" selected><?php i18n("On"); ?></option>
-            <option value="false"><?php i18n("Off"); ?></option>
+            <option value="true" selected><?php i18n('On'); ?></option>
+            <option value="false"><?php i18n('Off'); ?></option>
         </select>
         
         </td>
@@ -92,12 +92,12 @@
     </tr>
     <tr>
     
-        <td><?php i18n("Print Margin"); ?></td>
+        <td><?php i18n('Print Margin'); ?></td>
         <td>
         
         <select class="setting" data-setting="codiad.editor.printMargin">
-            <option value="true"><?php i18n("Show"); ?></option>
-            <option value="false" selected><?php i18n("Hide"); ?></option>
+            <option value="true"><?php i18n('Show'); ?></option>
+            <option value="false" selected><?php i18n('Hide'); ?></option>
         </select>
         
         </td>
@@ -105,12 +105,12 @@
     </tr>
     <tr>
     
-        <td><?php i18n("Wrap Lines"); ?></td>
+        <td><?php i18n('Wrap Lines'); ?></td>
         <td>
         
         <select class="setting" data-setting="codiad.editor.wrapMode">
-            <option value="false" selected><?php i18n("No wrap"); ?></option>
-            <option value="true"><?php i18n("Wrap Lines"); ?></option>
+            <option value="false" selected><?php i18n('No wrap'); ?></option>
+            <option value="true"><?php i18n('Wrap Lines'); ?></option>
         </select>
         
         </td>
@@ -118,7 +118,7 @@
     </tr>
     <tr>
     
-        <td><?php i18n("Tab Size"); ?></td>
+        <td><?php i18n('Tab Size'); ?></td>
         <td>
         
         <select class="setting" data-setting="codiad.editor.tabSize">
@@ -136,12 +136,12 @@
     </tr>
     <tr>
     
-        <td><?php i18n("Soft Tabs"); ?></td>
+        <td><?php i18n('Soft Tabs'); ?></td>
         <td>
         
         <select class="setting" data-setting="codiad.editor.softTabs">
-            <option value="false" selected><?php i18n("No"); ?></option>
-            <option value="true"><?php i18n("Yes"); ?></option>
+            <option value="false" selected><?php i18n('No'); ?></option>
+            <option value="true"><?php i18n('Yes'); ?></option>
         </select>
         
         </td>

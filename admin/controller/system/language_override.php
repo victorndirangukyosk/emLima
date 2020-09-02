@@ -1,22 +1,24 @@
 <?php
 
-class ControllerSystemLanguageoverride extends Controller {
+class ControllerSystemLanguageoverride extends Controller
+{
+    private $error = [];
 
-    private $error = array();
-
-    public function index() {
+    public function index()
+    {
         $this->load->model('system/language_override');
 
         $this->document->setTitle($this->language->get('heading_title'));
 
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
             $this->saveList();
         }
 
         $this->getList();
     }
 
-    public function saveList() {
+    public function saveList()
+    {
         $this->load->model('system/language_override');
 
         if (isset($this->request->post['lstrings']) && $this->validateForm()) {
@@ -27,36 +29,37 @@ class ControllerSystemLanguageoverride extends Controller {
             $url = '';
 
             if (isset($this->request->get['filter_text'])) {
-                $url .= '&filter_text=' . urlencode(html_entity_decode($this->request->get['filter_text']));
+                $url .= '&filter_text='.urlencode(html_entity_decode($this->request->get['filter_text']));
             }
 
             if (isset($this->request->get['filter_client'])) {
-                $url .= '&filter_client=' . $this->request->get['filter_client'];
+                $url .= '&filter_client='.$this->request->get['filter_client'];
             }
 
             if (isset($this->request->get['filter_language'])) {
-                $url .= '&filter_language=' . $this->request->get['filter_language'];
+                $url .= '&filter_language='.$this->request->get['filter_language'];
             }
 
             if (isset($this->request->get['filter_folder'])) {
-                $url .= '&filter_folder=' . urlencode(html_entity_decode($this->request->get['filter_folder'], ENT_QUOTES, 'UTF-8'));
+                $url .= '&filter_folder='.urlencode(html_entity_decode($this->request->get['filter_folder'], ENT_QUOTES, 'UTF-8'));
             }
 
             if (isset($this->request->get['filter_path'])) {
-                $url .= '&filter_path=' . urlencode(html_entity_decode($this->request->get['filter_path'], ENT_QUOTES, 'UTF-8'));
+                $url .= '&filter_path='.urlencode(html_entity_decode($this->request->get['filter_path'], ENT_QUOTES, 'UTF-8'));
             }
 
             if (isset($this->request->get['page'])) {
-                $url .= '&page=' . $this->request->get['page'];
+                $url .= '&page='.$this->request->get['page'];
             }
 
-            $this->response->redirect($this->url->link('system/language_override', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            $this->response->redirect($this->url->link('system/language_override', 'token='.$this->session->data['token'].$url, 'SSL'));
         }
 
         $this->getList();
     }
 
-    protected function getList() {
+    protected function getList()
+    {
         $data = $this->language->all();
 
         if (isset($this->request->get['filter_text'])) {
@@ -98,52 +101,52 @@ class ControllerSystemLanguageoverride extends Controller {
         $url = '';
 
         if (isset($this->request->get['filter_text'])) {
-            $url .= '&filter_text=' . urlencode(html_entity_decode($this->request->get['filter_text'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&filter_text='.urlencode(html_entity_decode($this->request->get['filter_text'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_client'])) {
-            $url .= '&filter_client=' . $this->request->get['filter_client'];
+            $url .= '&filter_client='.$this->request->get['filter_client'];
         }
 
         if (isset($this->request->get['filter_language'])) {
-            $url .= '&filter_language=' . $this->request->get['filter_language'];
+            $url .= '&filter_language='.$this->request->get['filter_language'];
         }
 
         if (isset($this->request->get['filter_folder'])) {
-            $url .= '&filter_folder=' . urlencode(html_entity_decode($this->request->get['filter_folder'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&filter_folder='.urlencode(html_entity_decode($this->request->get['filter_folder'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_path'])) {
-            $url .= '&filter_path=' . urlencode(html_entity_decode($this->request->get['filter_path'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&filter_path='.urlencode(html_entity_decode($this->request->get['filter_path'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['page'])) {
-            $url .= '&page=' . $this->request->get['page'];
+            $url .= '&page='.$this->request->get['page'];
         }
 
-        $data['breadcrumbs'] = array();
+        $data['breadcrumbs'] = [];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $data['text_home'],
-            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL')
-        );
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
+        ];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $data['heading_title'],
-            'href' => $this->url->link('system/language_override', 'token=' . $this->session->data['token'] . $url, 'SSL')
-        );
+            'href' => $this->url->link('system/language_override', 'token='.$this->session->data['token'].$url, 'SSL'),
+        ];
 
-        $data['action'] = $this->url->link('system/language_override/savelist', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['action'] = $this->url->link('system/language_override/savelist', 'token='.$this->session->data['token'].$url, 'SSL');
 
-        $filter_data = array(
+        $filter_data = [
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
             'filter_text' => $filter_text,
             'filter_client' => $filter_client,
             'filter_language' => $filter_language,
             'filter_folder' => $filter_folder,
             'filter_path' => $filter_path,
-            'limit' => $this->config->get('config_limit_admin')
-        );
+            'limit' => $this->config->get('config_limit_admin'),
+        ];
 
         $data['languages'] = $this->model_system_language_override->getLanguages($filter_data);
 
@@ -166,30 +169,30 @@ class ControllerSystemLanguageoverride extends Controller {
         $url = '';
 
         if (isset($this->request->get['filter_text'])) {
-            $url .= '&filter_text=' . urlencode(html_entity_decode($this->request->get['filter_text'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&filter_text='.urlencode(html_entity_decode($this->request->get['filter_text'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_client'])) {
-            $url .= '&filter_client=' . $this->request->get['filter_client'];
+            $url .= '&filter_client='.$this->request->get['filter_client'];
         }
 
         if (isset($this->request->get['filter_language'])) {
-            $url .= '&filter_language=' . $this->request->get['filter_language'];
+            $url .= '&filter_language='.$this->request->get['filter_language'];
         }
 
         if (isset($this->request->get['filter_folder'])) {
-            $url .= '&filter_folder=' . urlencode(html_entity_decode($this->request->get['filter_folder'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&filter_folder='.urlencode(html_entity_decode($this->request->get['filter_folder'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_path'])) {
-            $url .= '&filter_path=' . urlencode(html_entity_decode($this->request->get['filter_path'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&filter_path='.urlencode(html_entity_decode($this->request->get['filter_path'], ENT_QUOTES, 'UTF-8'));
         }
 
         $pagination = new Pagination();
         $pagination->total = $total;
         $pagination->page = $page;
         $pagination->limit = $this->config->get('config_limit_admin');
-        $pagination->url = $this->url->link('system/language_override', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+        $pagination->url = $this->url->link('system/language_override', 'token='.$this->session->data['token'].$url.'&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
@@ -209,12 +212,12 @@ class ControllerSystemLanguageoverride extends Controller {
         $this->response->setOutput($this->load->view('system/language_override.tpl', $data));
     }
 
-    protected function validateForm() {
+    protected function validateForm()
+    {
         if (!$this->user->hasPermission('modify', 'system/language_override')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
 
         return !$this->error;
     }
-
 }

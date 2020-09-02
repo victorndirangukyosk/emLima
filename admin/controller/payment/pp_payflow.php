@@ -1,178 +1,182 @@
 <?php
-class ControllerPaymentPPPayflow extends Controller {
-	private $error = array();
 
-	public function index() {
-		$this->load->language('payment/pp_payflow');
+class ControllerPaymentPPPayflow extends Controller
+{
+    private $error = [];
 
-		$this->document->setTitle($this->language->get('heading_title'));
+    public function index()
+    {
+        $this->load->language('payment/pp_payflow');
 
-		$this->load->model('setting/setting');
+        $this->document->setTitle($this->language->get('heading_title'));
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-			$this->model_setting_setting->editSetting('pp_payflow', $this->request->post);
+        $this->load->model('setting/setting');
 
-			$this->session->data['success'] = $this->language->get('text_success');
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validate()) {
+            $this->model_setting_setting->editSetting('pp_payflow', $this->request->post);
 
-			$this->response->redirect($this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'));
-		} else {
-			$data['error'] = @$this->error;
-		}
-                
-                if (isset($this->session->data['success'])) {
-			$data['success'] = $this->session->data['success'];
-                        unset($this->session->data['success']);
-		} else {
-			$data['success'] = '';
-		}
-                
-		$data['heading_title'] = $this->language->get('heading_title');
-		
-		$data['text_edit'] = $this->language->get('text_edit');
-		$data['text_enabled'] = $this->language->get('text_enabled');
-		$data['text_disabled'] = $this->language->get('text_disabled');
-		$data['text_yes'] = $this->language->get('text_yes');
-		$data['text_no'] = $this->language->get('text_no');
-		$data['text_authorization'] = $this->language->get('text_authorization');
-		$data['text_sale'] = $this->language->get('text_sale');
+            $this->session->data['success'] = $this->language->get('text_success');
 
-		$data['entry_vendor'] = $this->language->get('entry_vendor');
-		$data['entry_user'] = $this->language->get('entry_user');
-		$data['entry_password'] = $this->language->get('entry_password');
-		$data['entry_partner'] = $this->language->get('entry_partner');
-		$data['entry_test'] = $this->language->get('entry_test');
-		$data['entry_transaction'] = $this->language->get('entry_transaction');
-		$data['entry_total'] = $this->language->get('entry_total');
+            $this->response->redirect($this->url->link('extension/payment', 'token='.$this->session->data['token'], 'SSL'));
+        } else {
+            $data['error'] = @$this->error;
+        }
 
-		$data['entry_order_status'] = $this->language->get('entry_order_status');
-		$data['entry_status'] = $this->language->get('entry_status');
-		$data['entry_sort_order'] = $this->language->get('entry_sort_order');
+        if (isset($this->session->data['success'])) {
+            $data['success'] = $this->session->data['success'];
+            unset($this->session->data['success']);
+        } else {
+            $data['success'] = '';
+        }
 
-		$data['help_test'] = $this->language->get('help_test');
-		$data['help_total'] = $this->language->get('help_total');
-		$data['help_vendor'] = $this->language->get('help_vendor');
-		$data['help_partner'] = $this->language->get('help_partner');
-		$data['help_user'] = $this->language->get('help_user');
-		$data['help_password'] = $this->language->get('help_password');
+        $data['heading_title'] = $this->language->get('heading_title');
 
-		$data['button_save'] = $this->language->get('button_save');
-		$data['button_cancel'] = $this->language->get('button_cancel');
+        $data['text_edit'] = $this->language->get('text_edit');
+        $data['text_enabled'] = $this->language->get('text_enabled');
+        $data['text_disabled'] = $this->language->get('text_disabled');
+        $data['text_yes'] = $this->language->get('text_yes');
+        $data['text_no'] = $this->language->get('text_no');
+        $data['text_authorization'] = $this->language->get('text_authorization');
+        $data['text_sale'] = $this->language->get('text_sale');
 
-		$data['breadcrumbs'] = array();
+        $data['entry_vendor'] = $this->language->get('entry_vendor');
+        $data['entry_user'] = $this->language->get('entry_user');
+        $data['entry_password'] = $this->language->get('entry_password');
+        $data['entry_partner'] = $this->language->get('entry_partner');
+        $data['entry_test'] = $this->language->get('entry_test');
+        $data['entry_transaction'] = $this->language->get('entry_transaction');
+        $data['entry_total'] = $this->language->get('entry_total');
 
-		$data['breadcrumbs'][] = array(
-			'text' => $this->language->get('text_home'),
-			'href' => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
-		);
+        $data['entry_order_status'] = $this->language->get('entry_order_status');
+        $data['entry_status'] = $this->language->get('entry_status');
+        $data['entry_sort_order'] = $this->language->get('entry_sort_order');
 
-		$data['breadcrumbs'][] = array(
-			'text' => $this->language->get('text_pp_express'),
-			'href' => $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'),
-		);
+        $data['help_test'] = $this->language->get('help_test');
+        $data['help_total'] = $this->language->get('help_total');
+        $data['help_vendor'] = $this->language->get('help_vendor');
+        $data['help_partner'] = $this->language->get('help_partner');
+        $data['help_user'] = $this->language->get('help_user');
+        $data['help_password'] = $this->language->get('help_password');
 
-		$data['breadcrumbs'][] = array(
-			'text' => $this->language->get('heading_title'),
-			'href' => $this->url->link('payment/pp_payflow', 'token=' . $this->session->data['token'], 'SSL'),
-		);
-		
-		$data['action'] = $this->url->link('payment/pp_payflow', 'token=' . $this->session->data['token'], 'SSL');
+        $data['button_save'] = $this->language->get('button_save');
+        $data['button_cancel'] = $this->language->get('button_cancel');
 
-		$data['cancel'] = $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL');
+        $data['breadcrumbs'] = [];
 
-		if (isset($this->request->post['pp_payflow_vendor'])) {
-			$data['pp_payflow_vendor'] = $this->request->post['pp_payflow_vendor'];
-		} else {
-			$data['pp_payflow_vendor'] = $this->config->get('pp_payflow_vendor');
-		}
+        $data['breadcrumbs'][] = [
+            'text' => $this->language->get('text_home'),
+            'href' => $this->url->link('common/home', 'token='.$this->session->data['token'], 'SSL'),
+        ];
 
-		if (isset($this->request->post['pp_payflow_user'])) {
-			$data['pp_payflow_user'] = $this->request->post['pp_payflow_user'];
-		} else {
-			$data['pp_payflow_user'] = $this->config->get('pp_payflow_user');
-		}
+        $data['breadcrumbs'][] = [
+            'text' => $this->language->get('text_pp_express'),
+            'href' => $this->url->link('extension/payment', 'token='.$this->session->data['token'], 'SSL'),
+        ];
 
-		if (isset($this->request->post['pp_payflow_password'])) {
-			$data['pp_payflow_password'] = $this->request->post['pp_payflow_password'];
-		} else {
-			$data['pp_payflow_password'] = $this->config->get('pp_payflow_password');
-		}
+        $data['breadcrumbs'][] = [
+            'text' => $this->language->get('heading_title'),
+            'href' => $this->url->link('payment/pp_payflow', 'token='.$this->session->data['token'], 'SSL'),
+        ];
 
-		if (isset($this->request->post['pp_payflow_partner'])) {
-			$data['pp_payflow_partner'] = $this->request->post['pp_payflow_partner'];
-		} elseif ($this->config->has('pp_payflow_partner')) {
-			$data['pp_payflow_partner'] = $this->config->get('pp_payflow_partner');
-		} else {
-			$data['pp_payflow_partner'] = 'PayPal';
-		}
+        $data['action'] = $this->url->link('payment/pp_payflow', 'token='.$this->session->data['token'], 'SSL');
 
-		if (isset($this->request->post['pp_payflow_test'])) {
-			$data['pp_payflow_test'] = $this->request->post['pp_payflow_test'];
-		} else {
-			$data['pp_payflow_test'] = $this->config->get('pp_payflow_test');
-		}
+        $data['cancel'] = $this->url->link('extension/payment', 'token='.$this->session->data['token'], 'SSL');
 
-		if (isset($this->request->post['pp_payflow_method'])) {
-			$data['pp_payflow_transaction'] = $this->request->post['pp_payflow_transaction'];
-		} else {
-			$data['pp_payflow_transaction'] = $this->config->get('pp_payflow_transaction');
-		}
+        if (isset($this->request->post['pp_payflow_vendor'])) {
+            $data['pp_payflow_vendor'] = $this->request->post['pp_payflow_vendor'];
+        } else {
+            $data['pp_payflow_vendor'] = $this->config->get('pp_payflow_vendor');
+        }
 
-		if (isset($this->request->post['pp_payflow_total'])) {
-			$data['pp_payflow_total'] = $this->request->post['pp_payflow_total'];
-		} else {
-			$data['pp_payflow_total'] = $this->config->get('pp_payflow_total');
-		}
+        if (isset($this->request->post['pp_payflow_user'])) {
+            $data['pp_payflow_user'] = $this->request->post['pp_payflow_user'];
+        } else {
+            $data['pp_payflow_user'] = $this->config->get('pp_payflow_user');
+        }
 
-		if (isset($this->request->post['pp_payflow_order_status_id'])) {
-			$data['pp_payflow_order_status_id'] = $this->request->post['pp_payflow_order_status_id'];
-		} else {
-			$data['pp_payflow_order_status_id'] = $this->config->get('pp_payflow_order_status_id');
-		}
+        if (isset($this->request->post['pp_payflow_password'])) {
+            $data['pp_payflow_password'] = $this->request->post['pp_payflow_password'];
+        } else {
+            $data['pp_payflow_password'] = $this->config->get('pp_payflow_password');
+        }
 
-		$this->load->model('localisation/order_status');
+        if (isset($this->request->post['pp_payflow_partner'])) {
+            $data['pp_payflow_partner'] = $this->request->post['pp_payflow_partner'];
+        } elseif ($this->config->has('pp_payflow_partner')) {
+            $data['pp_payflow_partner'] = $this->config->get('pp_payflow_partner');
+        } else {
+            $data['pp_payflow_partner'] = 'PayPal';
+        }
 
-		$data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
+        if (isset($this->request->post['pp_payflow_test'])) {
+            $data['pp_payflow_test'] = $this->request->post['pp_payflow_test'];
+        } else {
+            $data['pp_payflow_test'] = $this->config->get('pp_payflow_test');
+        }
 
-		if (isset($this->request->post['pp_payflow_status'])) {
-			$data['pp_payflow_status'] = $this->request->post['pp_payflow_status'];
-		} else {
-			$data['pp_payflow_status'] = $this->config->get('pp_payflow_status');
-		}
+        if (isset($this->request->post['pp_payflow_method'])) {
+            $data['pp_payflow_transaction'] = $this->request->post['pp_payflow_transaction'];
+        } else {
+            $data['pp_payflow_transaction'] = $this->config->get('pp_payflow_transaction');
+        }
 
-		if (isset($this->request->post['pp_payflow_sort_order'])) {
-			$data['pp_payflow_sort_order'] = $this->request->post['pp_payflow_sort_order'];
-		} else {
-			$data['pp_payflow_sort_order'] = $this->config->get('pp_payflow_sort_order');
-		}
+        if (isset($this->request->post['pp_payflow_total'])) {
+            $data['pp_payflow_total'] = $this->request->post['pp_payflow_total'];
+        } else {
+            $data['pp_payflow_total'] = $this->config->get('pp_payflow_total');
+        }
 
-		$data['header'] = $this->load->controller('common/header');
-		$data['column_left'] = $this->load->controller('common/column_left');
-		$data['footer'] = $this->load->controller('common/footer');
+        if (isset($this->request->post['pp_payflow_order_status_id'])) {
+            $data['pp_payflow_order_status_id'] = $this->request->post['pp_payflow_order_status_id'];
+        } else {
+            $data['pp_payflow_order_status_id'] = $this->config->get('pp_payflow_order_status_id');
+        }
 
-		$this->response->setOutput($this->load->view('payment/pp_payflow.tpl', $data));
-	}
+        $this->load->model('localisation/order_status');
 
-	private function validate() {
-		if (!$this->user->hasPermission('modify', 'payment/pp_payflow')) {
-			$this->error['warning'] = $this->language->get('error_permission');
-		}
+        $data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
 
-		if (!$this->request->post['pp_payflow_vendor']) {
-			$this->error['vendor'] = $this->language->get('error_vendor');
-		}
+        if (isset($this->request->post['pp_payflow_status'])) {
+            $data['pp_payflow_status'] = $this->request->post['pp_payflow_status'];
+        } else {
+            $data['pp_payflow_status'] = $this->config->get('pp_payflow_status');
+        }
 
-		if (!$this->request->post['pp_payflow_user']) {
-			$this->error['user'] = $this->language->get('error_user');
-		}
+        if (isset($this->request->post['pp_payflow_sort_order'])) {
+            $data['pp_payflow_sort_order'] = $this->request->post['pp_payflow_sort_order'];
+        } else {
+            $data['pp_payflow_sort_order'] = $this->config->get('pp_payflow_sort_order');
+        }
 
-		if (!$this->request->post['pp_payflow_password']) {
-			$this->error['password'] = $this->language->get('error_password');
-		}
+        $data['header'] = $this->load->controller('common/header');
+        $data['column_left'] = $this->load->controller('common/column_left');
+        $data['footer'] = $this->load->controller('common/footer');
 
-		if (!$this->request->post['pp_payflow_partner']) {
-			$this->error['partner'] = $this->language->get('error_partner');
-		}
+        $this->response->setOutput($this->load->view('payment/pp_payflow.tpl', $data));
+    }
 
-		return !$this->error;
-	}
+    private function validate()
+    {
+        if (!$this->user->hasPermission('modify', 'payment/pp_payflow')) {
+            $this->error['warning'] = $this->language->get('error_permission');
+        }
+
+        if (!$this->request->post['pp_payflow_vendor']) {
+            $this->error['vendor'] = $this->language->get('error_vendor');
+        }
+
+        if (!$this->request->post['pp_payflow_user']) {
+            $this->error['user'] = $this->language->get('error_user');
+        }
+
+        if (!$this->request->post['pp_payflow_password']) {
+            $this->error['password'] = $this->language->get('error_password');
+        }
+
+        if (!$this->request->post['pp_payflow_partner']) {
+            $this->error['partner'] = $this->language->get('error_partner');
+        }
+
+        return !$this->error;
+    }
 }

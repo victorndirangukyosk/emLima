@@ -1,15 +1,15 @@
 
     <!--Added CSS Style -->
 
-	<link rel="stylesheet" type="text/css" href="<?= $base ?>front/ui/theme/organic/stylesheet/bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="<?= $base ?>front/ui/theme/organic/stylesheet/font-awesome.css" media="all">
-	<link rel="stylesheet" type="text/css" href="<?= $base ?>front/ui/theme/organic/stylesheet/revslider.css" >
-	<link rel="stylesheet" type="text/css" href="<?= $base ?>front/ui/theme/organic/stylesheet/owl.carousel.css">
-	<link rel="stylesheet" type="text/css" href="<?= $base ?>front/ui/theme/organic/stylesheet/owl.theme.css">
-	<link rel="stylesheet" type="text/css" href="<?= $base ?>front/ui/theme/organic/stylesheet/jquery.bxslider.css">
-	<link rel="stylesheet" type="text/css" href="<?= $base ?>front/ui/theme/organic/stylesheet/jquery.mobile-menu.css">
-	<link rel="stylesheet" type="text/css" href="<?= $base ?>front/ui/theme/organic/stylesheet/style.css" media="all">
-	<link rel="stylesheet" type="text/css" href="<?= $base ?>front/ui/theme/organic/stylesheet/responsive.css" media="all">
+	<link rel="stylesheet" type="text/css" href="<?= $base; ?>front/ui/theme/organic/stylesheet/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="<?= $base; ?>front/ui/theme/organic/stylesheet/font-awesome.css" media="all">
+	<link rel="stylesheet" type="text/css" href="<?= $base; ?>front/ui/theme/organic/stylesheet/revslider.css" >
+	<link rel="stylesheet" type="text/css" href="<?= $base; ?>front/ui/theme/organic/stylesheet/owl.carousel.css">
+	<link rel="stylesheet" type="text/css" href="<?= $base; ?>front/ui/theme/organic/stylesheet/owl.theme.css">
+	<link rel="stylesheet" type="text/css" href="<?= $base; ?>front/ui/theme/organic/stylesheet/jquery.bxslider.css">
+	<link rel="stylesheet" type="text/css" href="<?= $base; ?>front/ui/theme/organic/stylesheet/jquery.mobile-menu.css">
+	<link rel="stylesheet" type="text/css" href="<?= $base; ?>front/ui/theme/organic/stylesheet/style.css" media="all">
+	<link rel="stylesheet" type="text/css" href="<?= $base; ?>front/ui/theme/organic/stylesheet/responsive.css" media="all">
 	<link href="https://fonts.googleapis.com/css?family=Merriweather:300,300i,400,400i,700" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Oswald:300,400,500,600,700" rel="stylesheet">
 	<link href='https://fonts.googleapis.com/css?family=Open+Sans:700,600,800,400' rel='stylesheet' type='text/css'>
@@ -17,17 +17,17 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
  
 			<!-- JavaScript start --> 
-		<!--<script src="<?= $base ?>front/ui/theme/organic/js/jquery.min.js"></script>-->
+		<!--<script src="<?= $base; ?>front/ui/theme/organic/js/jquery.min.js"></script>-->
 		 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
 		<!-- Include all compiled plugins (below), or include individual files as needed -->
-		<script src="<?= $base ?>front/ui/theme/organic/js/bootstrap.min.js"></script>
-		<script src="<?= $base ?>front/ui/theme/organic/js/parallax.js"></script> 
-		<script src="<?= $base ?>front/ui/theme/organic/js/revslider.js"></script> 
-		<script src="<?= $base ?>front/ui/theme/organic/js/common.js"></script>
-		<script src="<?= $base ?>front/ui/theme/organic/js/jquery.bxslider.min.js"></script>
-		<script src="<?= $base ?>front/ui/theme/organic/js/owl.carousel.min.js"></script> 
-		<script src="<?= $base ?>front/ui/theme/organic/js/jquery.mobile-menu.min.js"></script> 
-		<script src="<?= $base ?>front/ui/theme/organic/js/countdown.js"></script> 
+		<script src="<?= $base; ?>front/ui/theme/organic/js/bootstrap.min.js"></script>
+		<script src="<?= $base; ?>front/ui/theme/organic/js/parallax.js"></script> 
+		<script src="<?= $base; ?>front/ui/theme/organic/js/revslider.js"></script> 
+		<script src="<?= $base; ?>front/ui/theme/organic/js/common.js"></script>
+		<script src="<?= $base; ?>front/ui/theme/organic/js/jquery.bxslider.min.js"></script>
+		<script src="<?= $base; ?>front/ui/theme/organic/js/owl.carousel.min.js"></script> 
+		<script src="<?= $base; ?>front/ui/theme/organic/js/jquery.mobile-menu.min.js"></script> 
+		<script src="<?= $base; ?>front/ui/theme/organic/js/countdown.js"></script> 
 		
 		<!-- JavaScript Emd --> 
 		

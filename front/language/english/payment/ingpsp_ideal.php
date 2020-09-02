@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Frontend translations
+ * Frontend translations.
  */
 $_['text_title'] = 'iDEAL';
 $_['text_payment_terms'] = '';

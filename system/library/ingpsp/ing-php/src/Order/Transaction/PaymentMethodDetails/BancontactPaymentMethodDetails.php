@@ -2,10 +2,10 @@
 
 namespace GingerPayments\Payment\Order\Transaction\PaymentMethodDetails;
 
+use Carbon\Carbon;
 use GingerPayments\Payment\Order\Transaction\PaymentMethodDetails;
 use GingerPayments\Payment\Order\Transaction\PaymentMethodDetails\BancontactPaymentMethodDetails\SetupToken;
 use GingerPayments\Payment\Order\Transaction\PaymentMethodDetails\BancontactPaymentMethodDetails\VaultToken;
-use Carbon\Carbon;
 
 final class BancontactPaymentMethodDetails implements PaymentMethodDetails
 {
@@ -25,7 +25,6 @@ final class BancontactPaymentMethodDetails implements PaymentMethodDetails
     private $vaultToken;
 
     /**
-     * @param array $details
      * @return BancontactPaymentMethodDetails
      */
     public static function fromArray(array $details)
@@ -43,9 +42,9 @@ final class BancontactPaymentMethodDetails implements PaymentMethodDetails
     public function toArray()
     {
         return [
-            'datetime_local' => ($this->datetimeLocal() !== null) ? $this->datetimeLocal()->toIso8601String() : null,
-            'setup_token' => ($this->setupToken() !== null) ? $this->setupToken()->toString() : null,
-            'vault_token' => ($this->vaultToken() !== null) ? $this->vaultToken()->toString() : null
+            'datetime_local' => (null !== $this->datetimeLocal()) ? $this->datetimeLocal()->toIso8601String() : null,
+            'setup_token' => (null !== $this->setupToken()) ? $this->setupToken()->toString() : null,
+            'vault_token' => (null !== $this->vaultToken()) ? $this->vaultToken()->toString() : null,
         ];
     }
 
@@ -74,7 +73,7 @@ final class BancontactPaymentMethodDetails implements PaymentMethodDetails
     }
 
     /**
-     * @param Carbon $datetimeLocal
+     * @param Carbon     $datetimeLocal
      * @param SetupToken $setupToken
      * @param VaultToken $vaultToken
      */

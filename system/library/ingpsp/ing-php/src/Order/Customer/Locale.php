@@ -2,8 +2,8 @@
 
 namespace GingerPayments\Payment\Order\Customer;
 
-use GingerPayments\Payment\Common\StringBasedValueObject;
 use Assert\Assertion as Guard;
+use GingerPayments\Payment\Common\StringBasedValueObject;
 
 final class Locale
 {
@@ -15,7 +15,7 @@ final class Locale
     private function __construct($value)
     {
         if (!empty($value)) {
-            Guard::regex($value, '/^[a-z]{2}(_[A-Z]{2})?$/', "Locale is invalid: ".$value);
+            Guard::regex($value, '/^[a-z]{2}(_[A-Z]{2})?$/', 'Locale is invalid: '.$value);
         }
 
         $this->value = $value;

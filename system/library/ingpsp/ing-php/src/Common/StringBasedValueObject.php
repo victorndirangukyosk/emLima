@@ -13,6 +13,7 @@ trait StringBasedValueObject
      * Factory method. Returns a new instance from a string.
      *
      * @param string $value
+     *
      * @return static
      */
     public static function fromString($value)

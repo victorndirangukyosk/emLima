@@ -1,9 +1,9 @@
 <?php
 
-class ControllerReportSaleAdvanced extends Controller {
-
-    public function excel(){
-
+class ControllerReportSaleAdvanced extends Controller
+{
+    public function excel()
+    {
         //echo "<pre>";print_r($this->request->get);die;
         if (isset($this->request->get['filter_order_status_id'])) {
             $filter_order_status_id = $this->request->get['filter_order_status_id'];
@@ -11,32 +11,30 @@ class ControllerReportSaleAdvanced extends Controller {
             $filter_order_status_id = 0;
         }
 
-        
         if (isset($this->request->get['filter_store'])) {
-                $filter_store = $this->request->get['filter_store'];
+            $filter_store = $this->request->get['filter_store'];
         } else {
-                $filter_store = '';
+            $filter_store = '';
         }
 
         if (isset($this->request->get['filter_store_id'])) {
-                $filter_store_id = $this->request->get['filter_store_id'];
+            $filter_store_id = $this->request->get['filter_store_id'];
         } else {
-                $filter_store_id = '';
+            $filter_store_id = '';
         }
 
         if (isset($this->request->get['filter_date_start'])) {
-                $filter_date_start = $this->request->get['filter_date_start'];
+            $filter_date_start = $this->request->get['filter_date_start'];
         } else {
-                $filter_date_start = date('Y-m-d', strtotime(date('Y') . '-' . date('m') . '-01'));
+            $filter_date_start = date('Y-m-d', strtotime(date('Y').'-'.date('m').'-01'));
         }
 
         if (isset($this->request->get['filter_date_end'])) {
-                $filter_date_end = $this->request->get['filter_date_end'];
+            $filter_date_end = $this->request->get['filter_date_end'];
         } else {
-                $filter_date_end = date('Y-m-d');
+            $filter_date_end = date('Y-m-d');
         }
 
-        
         $data['filter_store'] = $filter_store_id;
         $data['filter_store_name'] = $filter_store;
 
@@ -44,15 +42,15 @@ class ControllerReportSaleAdvanced extends Controller {
         $data['filter_date_start'] = $filter_date_start;
         $data['filter_date_end'] = $filter_date_end;
         $data['filter_order_status_id'] = $filter_order_status_id;
-        
+
         //echo "<pre>";print_r($data);die;
 
         $this->load->model('report/excel');
         $this->model_report_excel->download_saleorderadvanced($data);
     }
 
-    public function index() {
-
+    public function index()
+    {
         //echo "<pre>";print_r(date('d-M-y', strtotime('2018-12-26')));die;
         $this->load->language('report/sale_advanced');
 
@@ -63,24 +61,23 @@ class ControllerReportSaleAdvanced extends Controller {
         } else {
             $filter_city = '';
         }
-        
+
         if (isset($this->request->get['filter_store'])) {
-                $filter_store = $this->request->get['filter_store'];
+            $filter_store = $this->request->get['filter_store'];
         } else {
-                $filter_store = '';
+            $filter_store = '';
         }
 
         if (isset($this->request->get['filter_store_id'])) {
-                $filter_store_id = $this->request->get['filter_store_id'];
+            $filter_store_id = $this->request->get['filter_store_id'];
         } else {
-                $filter_store_id = '';
+            $filter_store_id = '';
         }
-
 
         if (isset($this->request->get['filter_date_start'])) {
             $filter_date_start = $this->request->get['filter_date_start'];
         } else {
-            $filter_date_start = date('Y-m-d', strtotime(date('Y') . '-' . date('m') . '-01'));
+            $filter_date_start = date('Y-m-d', strtotime(date('Y').'-'.date('m').'-01'));
         }
 
         if (isset($this->request->get['filter_date_end'])) {
@@ -110,64 +107,63 @@ class ControllerReportSaleAdvanced extends Controller {
         $url = '';
 
         if (isset($this->request->get['filter_city'])) {
-            $url .= '&filter_city=' . $this->request->get['filter_city'];
+            $url .= '&filter_city='.$this->request->get['filter_city'];
         }
-        
+
         if (isset($this->request->get['filter_date_start'])) {
-            $url .= '&filter_date_start=' . $this->request->get['filter_date_start'];
+            $url .= '&filter_date_start='.$this->request->get['filter_date_start'];
         }
 
         if (isset($this->request->get['filter_date_end'])) {
-            $url .= '&filter_date_end=' . $this->request->get['filter_date_end'];
+            $url .= '&filter_date_end='.$this->request->get['filter_date_end'];
         }
 
         if (isset($this->request->get['filter_group'])) {
-            $url .= '&filter_group=' . $this->request->get['filter_group'];
+            $url .= '&filter_group='.$this->request->get['filter_group'];
         }
 
         if (isset($this->request->get['filter_order_status_id'])) {
-            $url .= '&filter_order_status_id=' . $this->request->get['filter_order_status_id'];
+            $url .= '&filter_order_status_id='.$this->request->get['filter_order_status_id'];
         }
 
         if (isset($this->request->get['filter_store'])) {
-            $url .= '&filter_store=' . $this->request->get['filter_store'];
+            $url .= '&filter_store='.$this->request->get['filter_store'];
         }
 
         if (isset($this->request->get['filter_store_id'])) {
-            $url .= '&filter_store_id=' . $this->request->get['filter_store_id'];
+            $url .= '&filter_store_id='.$this->request->get['filter_store_id'];
         }
 
         if (isset($this->request->get['page'])) {
-            $url .= '&page=' . $this->request->get['page'];
+            $url .= '&page='.$this->request->get['page'];
         }
 
-        $data['breadcrumbs'] = array();
+        $data['breadcrumbs'] = [];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL')
-        );
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
+        ];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('report/sale_advanced', 'token=' . $this->session->data['token'] . $url, 'SSL')
-        );
+            'href' => $this->url->link('report/sale_advanced', 'token='.$this->session->data['token'].$url, 'SSL'),
+        ];
 
         $this->load->model('report/sale');
         $this->load->model('sale/order');
         $this->load->model('account/order');
 
+        $data['orders'] = [];
 
-        $data['orders'] = array();
-
-        $filter_data = array(
+        $filter_data = [
             'filter_date_start' => $filter_date_start,
             'filter_date_end' => $filter_date_end,
             'filter_order_status_id' => $filter_order_status_id,
             'filter_store' => $filter_store_id,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin')
-        );
+            'limit' => $this->config->get('config_limit_admin'),
+        ];
 
         //echo "<pre>";print_r($filter_data);die;
         $order_total = $this->model_report_sale->getTotalAdvancedOrders($filter_data);
@@ -176,7 +172,6 @@ class ControllerReportSaleAdvanced extends Controller {
 
         //echo "<pre>";print_r($results);die;
         foreach ($results as $result) {
-
             $sub_total = 0;
             $total = 0;
             $delivery_charge = 0;
@@ -184,39 +179,37 @@ class ControllerReportSaleAdvanced extends Controller {
             $coupon_used = 0;
             $reward_points_used = 0;
 
-
-
             $totals = $this->model_sale_order->getOrderTotals($result['order_id']);
 
             $walletCredited = $this->model_sale_order->getTotalCreditsByOrderId($result['order_id']);
 
             //echo "<pre>";print_r($walletCredited);die;
-            
+
             $wallet_used = 0;
 
             //echo "<pre>";print_r($totals);die;
             foreach ($totals as $tmptotal) {
-                if($tmptotal['code'] == 'sub_total') {
+                if ('sub_total' == $tmptotal['code']) {
                     $sub_total = $tmptotal['value'];
                 }
 
-                if($tmptotal['code'] == 'total') {
+                if ('total' == $tmptotal['code']) {
                     $total = $tmptotal['value'];
                 }
 
-                if( $tmptotal['code'] == 'shipping') {
+                if ('shipping' == $tmptotal['code']) {
                     $delivery_charge = $tmptotal['value'];
                 }
 
-                if($tmptotal['code'] == 'credit') {
+                if ('credit' == $tmptotal['code']) {
                     $wallet_used = $tmptotal['value'];
                 }
 
-                if($tmptotal['code'] == 'coupon') {
+                if ('coupon' == $tmptotal['code']) {
                     $coupon_used = $tmptotal['value'];
                 }
 
-                if( $tmptotal['code'] == 'reward') {
+                if ('reward' == $tmptotal['code']) {
                     $reward_points_used = $tmptotal['value'];
                 }
             }
@@ -225,7 +218,7 @@ class ControllerReportSaleAdvanced extends Controller {
 
             $real_product_total = $this->model_account_order->getTotalRealOrderProductsByOrderId($result['order_id']);
 
-            if($real_product_total) {
+            if ($real_product_total) {
                 $product_total = $real_product_total;
             }
 
@@ -237,10 +230,7 @@ class ControllerReportSaleAdvanced extends Controller {
                 $data['order_transaction_id'] = trim($order_transaction_data['transaction_id']);
             }
 
-
-
-
-            $data['orders'][] = array(
+            $data['orders'][] = [
                 'delivery_date' => date($this->language->get('date_format_short'), strtotime($result['delivery_date'])),
                 'order_id' => $result['order_id'],
 
@@ -254,8 +244,8 @@ class ControllerReportSaleAdvanced extends Controller {
                 'coupon_used' => $this->currency->format($coupon_used, $this->config->get('config_currency')),
                 'reward_points_used' => $this->currency->format($reward_points_used, $this->config->get('config_currency')),
                 'delivery_charge' => $this->currency->format($delivery_charge, $this->config->get('config_currency')),
-                'total' => $this->currency->format($total, $this->config->get('config_currency'))
-            );
+                'total' => $this->currency->format($total, $this->config->get('config_currency')),
+            ];
         }
 
         $data['heading_title'] = $this->language->get('heading_title');
@@ -293,7 +283,6 @@ class ControllerReportSaleAdvanced extends Controller {
         $data['column_paymentmethod'] = $this->language->get('column_paymentmethod');
         $data['column_transaction_ID'] = $this->language->get('column_transaction_ID');
 
-
         $data['button_filter'] = $this->language->get('button_filter');
         $data['button_show_filter'] = $this->language->get('button_show_filter');
         $data['button_hide_filter'] = $this->language->get('button_hide_filter');
@@ -304,63 +293,63 @@ class ControllerReportSaleAdvanced extends Controller {
 
         $data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
 
-        $data['groups'] = array();
+        $data['groups'] = [];
 
-        $data['groups'][] = array(
+        $data['groups'][] = [
             'text' => $this->language->get('text_year'),
             'value' => 'year',
-        );
+        ];
 
-        $data['groups'][] = array(
+        $data['groups'][] = [
             'text' => $this->language->get('text_month'),
             'value' => 'month',
-        );
+        ];
 
-        $data['groups'][] = array(
+        $data['groups'][] = [
             'text' => $this->language->get('text_week'),
             'value' => 'week',
-        );
+        ];
 
-        $data['groups'][] = array(
+        $data['groups'][] = [
             'text' => $this->language->get('text_day'),
             'value' => 'day',
-        );
+        ];
 
         $url = '';
 
         if (isset($this->request->get['filter_city'])) {
-            $url .= '&filter_city=' . $this->request->get['filter_city'];
+            $url .= '&filter_city='.$this->request->get['filter_city'];
         }
 
         if (isset($this->request->get['filter_store'])) {
-            $url .= '&filter_store=' . $this->request->get['filter_store'];
+            $url .= '&filter_store='.$this->request->get['filter_store'];
         }
 
         if (isset($this->request->get['filter_store_id'])) {
-            $url .= '&filter_store_id=' . $this->request->get['filter_store_id'];
+            $url .= '&filter_store_id='.$this->request->get['filter_store_id'];
         }
-        
+
         if (isset($this->request->get['filter_date_start'])) {
-            $url .= '&filter_date_start=' . $this->request->get['filter_date_start'];
+            $url .= '&filter_date_start='.$this->request->get['filter_date_start'];
         }
 
         if (isset($this->request->get['filter_date_end'])) {
-            $url .= '&filter_date_end=' . $this->request->get['filter_date_end'];
+            $url .= '&filter_date_end='.$this->request->get['filter_date_end'];
         }
 
         if (isset($this->request->get['filter_group'])) {
-            $url .= '&filter_group=' . $this->request->get['filter_group'];
+            $url .= '&filter_group='.$this->request->get['filter_group'];
         }
 
         if (isset($this->request->get['filter_order_status_id'])) {
-            $url .= '&filter_order_status_id=' . $this->request->get['filter_order_status_id'];
+            $url .= '&filter_order_status_id='.$this->request->get['filter_order_status_id'];
         }
 
         $pagination = new Pagination();
         $pagination->total = $order_total;
         $pagination->page = $page;
         $pagination->limit = $this->config->get('config_limit_admin');
-        $pagination->url = $this->url->link('report/sale_advanced', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+        $pagination->url = $this->url->link('report/sale_advanced', 'token='.$this->session->data['token'].$url.'&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
@@ -380,12 +369,12 @@ class ControllerReportSaleAdvanced extends Controller {
 
         $this->response->setOutput($this->load->view('report/sale_advanced.tpl', $data));
     }
-    
-    public function city_autocomplete(){
-        
+
+    public function city_autocomplete()
+    {
         $this->load->model('sale/order');
 
-        $json =  $this->model_sale_advanced->getCitiesLike($this->request->get['filter_name']);
+        $json = $this->model_sale_advanced->getCitiesLike($this->request->get['filter_name']);
 
         header('Content-type: text/json');
         echo json_encode($json);

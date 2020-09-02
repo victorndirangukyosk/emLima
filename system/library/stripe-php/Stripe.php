@@ -3,9 +3,7 @@
 namespace Stripe;
 
 /**
- * Class Stripe
- *
- * @package Stripe
+ * Class Stripe.
  */
 class Stripe
 {
@@ -30,7 +28,7 @@ class Stripe
     const VERSION = '3.21.0';
 
     /**
-     * @return string The API key used for requests.
+     * @return string the API key used for requests
      */
     public static function getApiKey()
     {
@@ -49,7 +47,7 @@ class Stripe
 
     /**
      * @return string The API version used for requests. null if we're using the
-     *    latest version.
+     *                latest version.
      */
     public static function getApiVersion()
     {
@@ -57,7 +55,7 @@ class Stripe
     }
 
     /**
-     * @param string $apiVersion The API version to use for requests.
+     * @param string $apiVersion the API version to use for requests
      */
     public static function setApiVersion($apiVersion)
     {
@@ -65,7 +63,7 @@ class Stripe
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public static function getVerifySslCerts()
     {
@@ -73,7 +71,7 @@ class Stripe
     }
 
     /**
-     * @param boolean $verify
+     * @param bool $verify
      */
     public static function setVerifySslCerts($verify)
     {
@@ -82,7 +80,7 @@ class Stripe
 
     /**
      * @return string | null The Stripe account ID for connected account
-     *   requests.
+     *                requests
      */
     public static function getAccountId()
     {
@@ -90,8 +88,8 @@ class Stripe
     }
 
     /**
-     * @param string $accountId The Stripe account ID to set for connected
-     *   account requests.
+     * @param string $accountId the Stripe account ID to set for connected
+     *                          account requests
      */
     public static function setAccountId($accountId)
     {

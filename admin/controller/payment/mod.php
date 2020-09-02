@@ -1,33 +1,34 @@
 <?php
 
-class ControllerPaymentMod extends Controller {
+class ControllerPaymentMod extends Controller
+{
+    private $error = [];
 
-    private $error = array();
-
-    public function index() {
+    public function index()
+    {
         $this->load->language('payment/mod');
 
         $this->document->setTitle($this->language->get('heading_title'));
 
         $this->load->model('setting/setting');
 
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validate()) {
             $this->model_setting_setting->editSetting('mod', $this->request->post);
 
             $this->session->data['success'] = $this->language->get('text_success');
 
-            if (isset($this->request->post['button']) and $this->request->post['button'] == 'save') {
+            if (isset($this->request->post['button']) and 'save' == $this->request->post['button']) {
                 $path = $this->request->get['path'];
                 $module_id = '';
                 if (isset($this->request->get['module_id'])) {
-                    $module_id = '&module_id=' . $this->request->get['module_id'];
+                    $module_id = '&module_id='.$this->request->get['module_id'];
                 } elseif ($this->db->getLastId()) {
-                    $module_id = '&module_id=' . $this->db->getLastId();
+                    $module_id = '&module_id='.$this->db->getLastId();
                 }
-                $this->response->redirect($this->url->link($path, 'token=' . $this->session->data['token'] . $module_id, 'SSL'));
+                $this->response->redirect($this->url->link($path, 'token='.$this->session->data['token'].$module_id, 'SSL'));
             }
 
-            $this->response->redirect($this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'));
+            $this->response->redirect($this->url->link('extension/payment', 'token='.$this->session->data['token'], 'SSL'));
         }
 
         $data['heading_title'] = $this->language->get('heading_title');
@@ -61,26 +62,26 @@ class ControllerPaymentMod extends Controller {
             $data['success'] = '';
         }
 
-        $data['breadcrumbs'] = array();
+        $data['breadcrumbs'] = [];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL')
-        );
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
+        ];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_payment'),
-            'href' => $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL')
-        );
+            'href' => $this->url->link('extension/payment', 'token='.$this->session->data['token'], 'SSL'),
+        ];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('payment/mod', 'token=' . $this->session->data['token'], 'SSL')
-        );
+            'href' => $this->url->link('payment/mod', 'token='.$this->session->data['token'], 'SSL'),
+        ];
 
-        $data['action'] = $this->url->link('payment/mod', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = $this->url->link('payment/mod', 'token='.$this->session->data['token'], 'SSL');
 
-        $data['cancel'] = $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL');
+        $data['cancel'] = $this->url->link('extension/payment', 'token='.$this->session->data['token'], 'SSL');
 
         if (isset($this->request->post['mod_total'])) {
             $data['mod_total'] = $this->request->post['mod_total'];
@@ -117,12 +118,12 @@ class ControllerPaymentMod extends Controller {
         $this->response->setOutput($this->load->view('payment/mod.tpl', $data));
     }
 
-    protected function validate() {
+    protected function validate()
+    {
         if (!$this->user->hasPermission('modify', 'payment/mod')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
 
         return !$this->error;
     }
-
 }

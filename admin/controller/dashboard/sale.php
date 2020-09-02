@@ -1,130 +1,134 @@
 <?php
 
-class ControllerDashboardSale extends Controller {
-	public function index() {
-		$this->load->language('dashboard/sale');
+class ControllerDashboardSale extends Controller
+{
+    public function index()
+    {
+        $this->load->language('dashboard/sale');
 
-		$data['heading_title'] = $this->language->get('heading_title');
+        $data['heading_title'] = $this->language->get('heading_title');
 
-		$data['text_view'] = $this->language->get('text_view');
+        $data['text_view'] = $this->language->get('text_view');
 
-		$data['token'] = $this->session->data['token'];
+        $data['token'] = $this->session->data['token'];
 
-		$this->load->model('report/sale');
+        $this->load->model('report/sale');
 
-		$today = $this->model_report_sale->getTotalSales(array('filter_date_added' => date('Y-m-d', strtotime('-1 day'))));
+        $today = $this->model_report_sale->getTotalSales(['filter_date_added' => date('Y-m-d', strtotime('-1 day'))]);
 
-		$yesterday = $this->model_report_sale->getTotalSales(array('filter_date_added' => date('Y-m-d', strtotime('-2 day'))));
+        $yesterday = $this->model_report_sale->getTotalSales(['filter_date_added' => date('Y-m-d', strtotime('-2 day'))]);
 
-		$difference = $today - $yesterday;
+        $difference = $today - $yesterday;
 
-		if ($difference && $today > 0) {
-			$data['percentage'] = round(($difference / $today) * 100);
-		} else {
-			$data['percentage'] = 0;
-		}
+        if ($difference && $today > 0) {
+            $data['percentage'] = round(($difference / $today) * 100);
+        } else {
+            $data['percentage'] = 0;
+        }
 
-		$sale_total = $this->model_report_sale->getTotalSales();
-		$data['total'] = 'KSh  ' .number_format($sale_total,2);
-		
-		/*if ($sale_total > 1000000000000) {
-			$data['total'] = round($sale_total / 1000000000000, 1) . 'T';
-		} elseif ($sale_total > 1000000000) {
-			$data['total'] = round($sale_total / 1000000000, 1) . 'B';
-		} elseif ($sale_total > 1000000) {
-			$data['total'] = round($sale_total / 1000000, 1) . 'M';
-		} elseif ($sale_total > 1000) {
-			$data['total'] = round($sale_total / 1000, 1) . 'K';
-		} else {
-			$data['total'] = round($sale_total);
-		}*/
+        $sale_total = $this->model_report_sale->getTotalSales();
+        $data['total'] = 'KSh  '.number_format($sale_total, 2);
 
-		$data['sale'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'], 'SSL');
+        /*if ($sale_total > 1000000000000) {
+            $data['total'] = round($sale_total / 1000000000000, 1) . 'T';
+        } elseif ($sale_total > 1000000000) {
+            $data['total'] = round($sale_total / 1000000000, 1) . 'B';
+        } elseif ($sale_total > 1000000) {
+            $data['total'] = round($sale_total / 1000000, 1) . 'M';
+        } elseif ($sale_total > 1000) {
+            $data['total'] = round($sale_total / 1000, 1) . 'K';
+        } else {
+            $data['total'] = round($sale_total);
+        }*/
 
-		return $this->load->view('dashboard/sale.tpl', $data);
-	}
-        
-    public function vendor() {
-		$this->load->language('dashboard/sale');
+        $data['sale'] = $this->url->link('sale/order', 'token='.$this->session->data['token'], 'SSL');
 
-		$data['heading_title'] = $this->language->get('heading_title');
+        return $this->load->view('dashboard/sale.tpl', $data);
+    }
 
-		$data['text_view'] = $this->language->get('text_view');
+    public function vendor()
+    {
+        $this->load->language('dashboard/sale');
 
-		$data['token'] = $this->session->data['token'];
+        $data['heading_title'] = $this->language->get('heading_title');
 
-		$this->load->model('report/sale');
+        $data['text_view'] = $this->language->get('text_view');
 
-		$today = $this->model_report_sale->getVendorTotalSales(array('filter_date_added' => date('Y-m-d', strtotime('-1 day'))));
+        $data['token'] = $this->session->data['token'];
 
-		$yesterday = $this->model_report_sale->getVendorTotalSales(array('filter_date_added' => date('Y-m-d', strtotime('-2 day'))));
+        $this->load->model('report/sale');
 
-		$difference = $today - $yesterday;
+        $today = $this->model_report_sale->getVendorTotalSales(['filter_date_added' => date('Y-m-d', strtotime('-1 day'))]);
 
-		if ($difference && $today) {
-			$data['percentage'] = round(($difference / $today) * 100);
-		} else {
-			$data['percentage'] = 0;
-		}
+        $yesterday = $this->model_report_sale->getVendorTotalSales(['filter_date_added' => date('Y-m-d', strtotime('-2 day'))]);
 
-		$sale_total = $this->model_report_sale->getVendorTotalSales();
+        $difference = $today - $yesterday;
 
-		if ($sale_total > 1000000000000) {
-			$data['total'] = round($sale_total / 1000000000000, 1) . 'T';
-		} elseif ($sale_total > 1000000000) {
-			$data['total'] = round($sale_total / 1000000000, 1) . 'B';
-		} elseif ($sale_total > 1000000) {
-			$data['total'] = round($sale_total / 1000000, 1) . 'M';
-		} elseif ($sale_total > 1000) {
-			$data['total'] = round($sale_total / 1000, 1) . 'K';
-		} else {
-			$data['total'] = round($sale_total);
-		}
+        if ($difference && $today) {
+            $data['percentage'] = round(($difference / $today) * 100);
+        } else {
+            $data['percentage'] = 0;
+        }
 
-		$data['sale'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'], 'SSL');
+        $sale_total = $this->model_report_sale->getVendorTotalSales();
 
-		return $this->load->view('dashboard/sale.tpl', $data);
-	}
+        if ($sale_total > 1000000000000) {
+            $data['total'] = round($sale_total / 1000000000000, 1).'T';
+        } elseif ($sale_total > 1000000000) {
+            $data['total'] = round($sale_total / 1000000000, 1).'B';
+        } elseif ($sale_total > 1000000) {
+            $data['total'] = round($sale_total / 1000000, 1).'M';
+        } elseif ($sale_total > 1000) {
+            $data['total'] = round($sale_total / 1000, 1).'K';
+        } else {
+            $data['total'] = round($sale_total);
+        }
 
-	public function vendorActualSales() {
-		$this->load->language('dashboard/sale');
+        $data['sale'] = $this->url->link('sale/order', 'token='.$this->session->data['token'], 'SSL');
 
-		$data['heading_title'] = $this->language->get('actual_heading_title');
+        return $this->load->view('dashboard/sale.tpl', $data);
+    }
 
-		$data['text_view'] = $this->language->get('text_view');
+    public function vendorActualSales()
+    {
+        $this->load->language('dashboard/sale');
 
-		$data['token'] = $this->session->data['token'];
+        $data['heading_title'] = $this->language->get('actual_heading_title');
 
-		$this->load->model('report/sale');
+        $data['text_view'] = $this->language->get('text_view');
 
-		// $today = $this->model_report_sale->getVendorTotalSales(array('filter_date_added' => date('Y-m-d', strtotime('-1 day'))));
+        $data['token'] = $this->session->data['token'];
 
-		// $yesterday = $this->model_report_sale->getVendorTotalSales(array('filter_date_added' => date('Y-m-d', strtotime('-2 day'))));
+        $this->load->model('report/sale');
 
-		// $difference = $today - $yesterday;
+        // $today = $this->model_report_sale->getVendorTotalSales(array('filter_date_added' => date('Y-m-d', strtotime('-1 day'))));
 
-		// if ($difference && $today) {
-		// 	$data['percentage'] = round(($difference / $today) * 100);
-		// } else {
-		// 	$data['percentage'] = 0;
-		// }
+        // $yesterday = $this->model_report_sale->getVendorTotalSales(array('filter_date_added' => date('Y-m-d', strtotime('-2 day'))));
 
-		$sale_total = $this->model_report_sale->getActualVendorSales();
+        // $difference = $today - $yesterday;
 
-		if ($sale_total > 1000000000000) {
-			$data['total'] = round($sale_total / 1000000000000, 1) . 'T';
-		} elseif ($sale_total > 1000000000) {
-			$data['total'] = round($sale_total / 1000000000, 1) . 'B';
-		} elseif ($sale_total > 1000000) {
-			$data['total'] = round($sale_total / 1000000, 1) . 'M';
-		} elseif ($sale_total > 1000) {
-			$data['total'] = round($sale_total / 1000, 1) . 'K';
-		} else {
-			$data['total'] = round($sale_total);
-		}
+        // if ($difference && $today) {
+        // 	$data['percentage'] = round(($difference / $today) * 100);
+        // } else {
+        // 	$data['percentage'] = 0;
+        // }
 
-		$data['sale'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'], 'SSL');
+        $sale_total = $this->model_report_sale->getActualVendorSales();
 
-		return $this->load->view('dashboard/sale.tpl', $data);
-	}
+        if ($sale_total > 1000000000000) {
+            $data['total'] = round($sale_total / 1000000000000, 1).'T';
+        } elseif ($sale_total > 1000000000) {
+            $data['total'] = round($sale_total / 1000000000, 1).'B';
+        } elseif ($sale_total > 1000000) {
+            $data['total'] = round($sale_total / 1000000, 1).'M';
+        } elseif ($sale_total > 1000) {
+            $data['total'] = round($sale_total / 1000, 1).'K';
+        } else {
+            $data['total'] = round($sale_total);
+        }
+
+        $data['sale'] = $this->url->link('sale/order', 'token='.$this->session->data['token'], 'SSL');
+
+        return $this->load->view('dashboard/sale.tpl', $data);
+    }
 }

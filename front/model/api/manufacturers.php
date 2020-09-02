@@ -2,10 +2,9 @@
 
 class ModelApiManufacturers extends Model
 {
-
-    public function getManufacturer($data = array())
+    public function getManufacturer($data = [])
     {
-        $sql = "SELECT * FROM " . DB_PREFIX . "manufacturer m LEFT JOIN " . DB_PREFIX . "manufacturer_description md ON (m.manufacturer_id = md.manufacturer_id) LEFT JOIN " . DB_PREFIX . "manufacturer_to_store m2s ON (m.manufacturer_id = m2s.manufacturer_id)";
+        $sql = 'SELECT * FROM '.DB_PREFIX.'manufacturer m LEFT JOIN '.DB_PREFIX.'manufacturer_description md ON (m.manufacturer_id = md.manufacturer_id) LEFT JOIN '.DB_PREFIX.'manufacturer_to_store m2s ON (m.manufacturer_id = m2s.manufacturer_id)';
 
         $sql .= $this->getExtraConditions($data);
 
@@ -14,29 +13,29 @@ class ModelApiManufacturers extends Model
         return $query->row;
     }
 
-    public function getManufacturers($data = array())
+    public function getManufacturers($data = [])
     {
-        $sql = "SELECT * FROM " . DB_PREFIX . "manufacturer m LEFT JOIN " . DB_PREFIX . "manufacturer_description md ON (m.manufacturer_id = md.manufacturer_id) LEFT JOIN " . DB_PREFIX . "manufacturer_to_store m2s ON (m.manufacturer_id = m2s.manufacturer_id)";
+        $sql = 'SELECT * FROM '.DB_PREFIX.'manufacturer m LEFT JOIN '.DB_PREFIX.'manufacturer_description md ON (m.manufacturer_id = md.manufacturer_id) LEFT JOIN '.DB_PREFIX.'manufacturer_to_store m2s ON (m.manufacturer_id = m2s.manufacturer_id)';
 
         $sql .= $this->getExtraConditions($data);
 
-        $sort_data = array(
+        $sort_data = [
             'md.name',
             'm.status',
             'm.sort_order',
-            'm.date_added'
-        );
+            'm.date_added',
+        ];
 
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
-            $sql .= " ORDER BY " . $data['sort'];
+            $sql .= ' ORDER BY '.$data['sort'];
         } else {
-            $sql .= " ORDER BY md.name";
+            $sql .= ' ORDER BY md.name';
         }
 
-        if (isset($data['order']) && ($data['order'] == 'DESC')) {
-            $sql .= " DESC";
+        if (isset($data['order']) && ('DESC' == $data['order'])) {
+            $sql .= ' DESC';
         } else {
-            $sql .= " ASC";
+            $sql .= ' ASC';
         }
 
         if (isset($data['start']) || isset($data['limit'])) {
@@ -48,7 +47,7 @@ class ModelApiManufacturers extends Model
                 $data['limit'] = 20;
             }
 
-            $sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
+            $sql .= ' LIMIT '.(int) $data['start'].','.(int) $data['limit'];
         }
 
         $query = $this->db->query($sql);
@@ -56,9 +55,9 @@ class ModelApiManufacturers extends Model
         return $query->rows;
     }
 
-    public function getTotals($data = array())
+    public function getTotals($data = [])
     {
-        $sql = "SELECT COUNT(DISTINCT m.manufacturer_id) AS number FROM " . DB_PREFIX . "manufacturer m LEFT JOIN " . DB_PREFIX . "manufacturer_description md ON (m.manufacturer_id = md.manufacturer_id) LEFT JOIN " . DB_PREFIX . "manufacturer_to_store m2s ON (m.manufacturer_id = m2s.manufacturer_id)";
+        $sql = 'SELECT COUNT(DISTINCT m.manufacturer_id) AS number FROM '.DB_PREFIX.'manufacturer m LEFT JOIN '.DB_PREFIX.'manufacturer_description md ON (m.manufacturer_id = md.manufacturer_id) LEFT JOIN '.DB_PREFIX.'manufacturer_to_store m2s ON (m.manufacturer_id = m2s.manufacturer_id)';
 
         $sql .= $this->getExtraConditions($data);
 
@@ -71,26 +70,26 @@ class ModelApiManufacturers extends Model
     {
         $sql = '';
 
-        $implode = array();
+        $implode = [];
 
         if (!empty($data['id'])) {
-            $implode[] = "m.manufacturer_id = '" . (int)$data['id'] . "'";
+            $implode[] = "m.manufacturer_id = '".(int) $data['id']."'";
         }
 
         if (!empty($data['search'])) {
-            $implode[] = "(md.name LIKE '%" . $this->db->escape($data['search']) . "%' OR md.description LIKE '%" . $this->db->escape($data['search']) . "%')";
+            $implode[] = "(md.name LIKE '%".$this->db->escape($data['search'])."%' OR md.description LIKE '%".$this->db->escape($data['search'])."%')";
         }
 
         if (!empty($data['status'])) {
-            $implode[] = "m.status = '" . (int)$data['status'] . "'";
+            $implode[] = "m.status = '".(int) $data['status']."'";
         }
 
-        $implode[] = "md.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+        $implode[] = "md.language_id = '".(int) $this->config->get('config_language_id')."'";
 
-        $implode[] = "m2s.store_id = '" . (int)$this->config->get('config_store_id') . "'";
+        $implode[] = "m2s.store_id = '".(int) $this->config->get('config_store_id')."'";
 
         if ($implode) {
-            $sql .= " WHERE " . implode(" AND ", $implode);
+            $sql .= ' WHERE '.implode(' AND ', $implode);
         }
 
         return $sql;

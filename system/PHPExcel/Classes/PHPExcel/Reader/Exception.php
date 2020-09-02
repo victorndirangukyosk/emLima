@@ -1,6 +1,6 @@
 <?php
 /**
- * PHPExcel
+ * PHPExcel.
  *
  * Copyright (c) 2006 - 2014 PHPExcel
  *
@@ -19,34 +19,36 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  *
  * @category   PHPExcel
- * @package    PHPExcel_Reader
+ *
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license	http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
+ *
  * @version	1.8.0, 2014-03-02
  */
 
-
 /**
- * PHPExcel_Reader_Exception
+ * PHPExcel_Reader_Exception.
  *
  * @category   PHPExcel
- * @package    PHPExcel_Reader
+ *
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  */
-class PHPExcel_Reader_Exception extends PHPExcel_Exception {
-	/**
-	 * Error handler callback
-	 *
-	 * @param mixed $code
-	 * @param mixed $string
-	 * @param mixed $file
-	 * @param mixed $line
-	 * @param mixed $context
-	 */
-	public static function errorHandlerCallback($code, $string, $file, $line, $context) {
-		$e = new self($string, $code);
-		$e->line = $line;
-		$e->file = $file;
-		throw $e;
-	}
+class PHPExcel_Reader_Exception extends PHPExcel_Exception
+{
+    /**
+     * Error handler callback.
+     *
+     * @param mixed $code
+     * @param mixed $string
+     * @param mixed $file
+     * @param mixed $line
+     * @param mixed $context
+     */
+    public static function errorHandlerCallback($code, $string, $file, $line, $context)
+    {
+        $e = new self($string, $code);
+        $e->line = $line;
+        $e->file = $file;
+        throw $e;
+    }
 }

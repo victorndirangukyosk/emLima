@@ -25,7 +25,6 @@ final class Issuer
     private $listType;
 
     /**
-     * @param array $array
      * @return Issuer
      */
     public static function fromArray(array $array)
@@ -49,7 +48,7 @@ final class Issuer
         return [
             'id' => $this->id()->toString(),
             'name' => $this->name()->toString(),
-            'list_type' => $this->listType()->toString()
+            'list_type' => $this->listType()->toString(),
         ];
     }
 
@@ -77,11 +76,6 @@ final class Issuer
         return $this->listType;
     }
 
-    /**
-     * @param SwiftBic $id
-     * @param Name $name
-     * @param ListType $listType
-     */
     private function __construct(SwiftBic $id, Name $name, ListType $listType)
     {
         $this->id = $id;

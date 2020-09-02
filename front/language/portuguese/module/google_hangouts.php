@@ -1,1 +1,4 @@
-<?php// Heading$_['heading_title']  = 'Chat Online';?>
+<?php
+
+// Heading
+$_['heading_title'] = 'Chat Online';

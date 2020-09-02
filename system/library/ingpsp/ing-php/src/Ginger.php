@@ -2,8 +2,8 @@
 
 namespace GingerPayments\Payment;
 
-use GuzzleHttp\Client as HttpClient;
 use Assert\Assertion as Guard;
+use GuzzleHttp\Client as HttpClient;
 
 final class Ginger
 {
@@ -18,30 +18,31 @@ final class Ginger
     const API_VERSION = 'v1';
 
     /**
-     * API endpoint Ginger Payments
+     * API endpoint Ginger Payments.
      */
     const ENDPOINT_GINGER = 'https://api.gingerpayments.com/{version}/';
 
     /**
-     * API Kassa Compleet endpoint
+     * API Kassa Compleet endpoint.
      */
     const ENDPOINT_KASSA = 'https://api.kassacompleet.nl/{version}/';
 
     /**
-     * API endpoint ING
+     * API endpoint ING.
      */
     const ENDPOINT_ING = 'https://api.ing-checkout.com/{version}/';
 
     /**
-     * API endpoint EPAY
+     * API endpoint EPAY.
      */
     const ENDPOINT_EPAY = 'https://api.epay.ing.be/{version}/';
 
     /**
      * Create a new API client.
      *
-     * @param string $apiKey Your API key.
+     * @param string $apiKey  your API key
      * @param string $product
+     *
      * @return Client
      */
     public static function createClient($apiKey, $product = null)
@@ -56,24 +57,25 @@ final class Ginger
                 [
                     'base_url' => [
                         static::getEndpoint($product),
-                        ['version' => self::API_VERSION]
+                        ['version' => self::API_VERSION],
                     ],
                     'defaults' => [
                         'headers' => [
                             'User-Agent' => 'ing-php/'.self::CLIENT_VERSION,
-                            'X-PHP-Version' => PHP_VERSION
+                            'X-PHP-Version' => PHP_VERSION,
                         ],
-                        'auth' => [$apiKey, '']
-                    ]
+                        'auth' => [$apiKey, ''],
+                    ],
                 ]
             )
         );
     }
 
     /**
-     * Get API endpoint based on product
+     * Get API endpoint based on product.
      *
      * @param string $product
+     *
      * @return string
      */
     public static function getEndpoint($product)
@@ -92,6 +94,7 @@ final class Ginger
                 $endpoint = self::ENDPOINT_GINGER;
                 break;
         }
+
         return $endpoint;
     }
 
@@ -99,6 +102,7 @@ final class Ginger
      * Method restores dashes in Ginger API key in order to validate UUID.
      *
      * @param string $apiKey
+     *
      * @return string UUID
      */
     public static function apiKeyToUuid($apiKey)

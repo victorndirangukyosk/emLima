@@ -1,12 +1,11 @@
 <?php
 
-// Heading 
+// Heading
 $_['heading_title'] = 'Blogs';
 
 // Buttons
 $_['button_continue_reading'] = 'Continue Reading';
 $_['button_submit'] = 'Submit';
-
 
 $_['text_date_format'] = 'F jS, Y';
 $_['text_date_format_long'] = 'F jS, Y  g:i A';
@@ -49,5 +48,3 @@ $_['text_article_error'] = 'Blog Not Found!';
 $_['error_name'] = 'Warning: Author Name must be between 3 and 25 characters!';
 $_['error_text'] = 'Warning: Comment Text must be between 3 and 1000 characters!';
 $_['error_captcha'] = 'Warning: Verification code does not match the image!';
-
-?>

@@ -10,7 +10,6 @@ final class Extra
     private $extra;
 
     /**
-     * @param array $details
      * @return Extra
      */
     public static function fromArray(array $details)

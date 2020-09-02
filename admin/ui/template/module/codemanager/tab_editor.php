@@ -1,27 +1,26 @@
 <?php
 $path = (dirname(DIR_APPLICATION)).'/vendors/'.$moduleNameSmall;
-$workspace = is_writable( $path . "/workspace");
-$data = is_writable($path . "/data");
-$plugins = is_writable($path . "/plugins");
-$themes = is_writable($path . "/themes");
-$workspace = is_writable( $path . "/workspace");
+$workspace = is_writable($path.'/workspace');
+$data = is_writable($path.'/data');
+$plugins = is_writable($path.'/plugins');
+$themes = is_writable($path.'/themes');
+$workspace = is_writable($path.'/workspace');
 $project_path = is_writable(dirname(DIR_APPLICATION));
 $path_writable = is_writable((dirname(DIR_APPLICATION)).'/vendors/'.$moduleNameSmall);
 
-$conf = $path . '/config.php';
+$conf = $path.'/config.php';
 
 $config = is_writable(file_exists($conf) ? $conf : $path);
 
 // Check if the module is installed
-$users = file_exists($path . "/data/users.php");
-$projects = file_exists($path . "/data/projects.php");
-$active = file_exists($path . "/data/active.php");	
+$users = file_exists($path.'/data/users.php');
+$projects = file_exists($path.'/data/projects.php');
+$active = file_exists($path.'/data/active.php');
 // Check end
 ?>
 
-<?php if(!$users && !$projects && !$active) {
-	
-?>
+<?php if (!$users && !$projects && !$active) {
+    ?>
 <div style="padding:10px;">
     <div class="row">
         <div class="col-xs-12">    
@@ -32,17 +31,45 @@ $active = file_exists($path . "/data/active.php");
                 <div class="panel-body">
                     <p>Please make sure the following exist and are writeable:</p>
                     <ul>
-						<li><?php echo dirname(DIR_APPLICATION); ?> - <?php if($project_path) { echo '<font style="color:green">PASSED</font>'; } else { echo '<font style="color:red">ERROR</font>'; } ?></li>
-                        <li><?php echo $path; ?> - <?php if($path_writable) { echo '<font style="color:green">PASSED</font>'; } else { echo '<font style="color:red">ERROR</font>'; } ?></li>
-                        <li><?php echo $path; ?>/config.php - <?php if($config) { echo '<font style="color:green">PASSED</font>'; } else { echo '<font style="color:red">ERROR</font>'; } ?></li>
-                        <li><?php echo $path; ?>/workspace - <?php if($workspace) { echo '<font style="color:green">PASSED</font>'; } else { echo '<font style="color:red">ERROR</font>'; } ?></li>
-                        <li><?php echo $path; ?>/plugins - <?php if($plugins) { echo '<font style="color:green">PASSED</font>'; } else { echo '<font style="color:red">ERROR</font>'; } ?></li>
-                        <li><?php echo $path; ?>/themes - <?php if($themes) { echo '<font style="color:green">PASSED</font>'; } else { echo '<font style="color:red">ERROR</font>'; } ?></li>
-                        <li><?php echo $path; ?>/data - <?php if($data) { echo '<font style="color:green">PASSED</font>'; } else { echo '<font style="color:red">ERROR</font>'; } ?></li>						
+						<li><?php echo dirname(DIR_APPLICATION); ?> - <?php if ($project_path) {
+        echo '<font style="color:green">PASSED</font>';
+    } else {
+        echo '<font style="color:red">ERROR</font>';
+    } ?></li>
+                        <li><?php echo $path; ?> - <?php if ($path_writable) {
+        echo '<font style="color:green">PASSED</font>';
+    } else {
+        echo '<font style="color:red">ERROR</font>';
+    } ?></li>
+                        <li><?php echo $path; ?>/config.php - <?php if ($config) {
+        echo '<font style="color:green">PASSED</font>';
+    } else {
+        echo '<font style="color:red">ERROR</font>';
+    } ?></li>
+                        <li><?php echo $path; ?>/workspace - <?php if ($workspace) {
+        echo '<font style="color:green">PASSED</font>';
+    } else {
+        echo '<font style="color:red">ERROR</font>';
+    } ?></li>
+                        <li><?php echo $path; ?>/plugins - <?php if ($plugins) {
+        echo '<font style="color:green">PASSED</font>';
+    } else {
+        echo '<font style="color:red">ERROR</font>';
+    } ?></li>
+                        <li><?php echo $path; ?>/themes - <?php if ($themes) {
+        echo '<font style="color:green">PASSED</font>';
+    } else {
+        echo '<font style="color:red">ERROR</font>';
+    } ?></li>
+                        <li><?php echo $path; ?>/data - <?php if ($data) {
+        echo '<font style="color:green">PASSED</font>';
+    } else {
+        echo '<font style="color:red">ERROR</font>';
+    } ?></li>						
 
                     </ul>
                     <br />
-                    <?php if(!$workspace || !$data || !$config || !$project_path || !$path_writable){ ?>
+                    <?php if (!$workspace || !$data || !$config || !$project_path || !$path_writable) { ?>
                         <p><a class="btn btn-warning btn-lg" onclick="window.location.reload();" role="button">Check again</a></p>
                     <?php } else { ?>
                         <p><a class="btn btn-primary btn-lg" id="install" role="button">Finish installing</a></p>	
@@ -56,7 +83,7 @@ $active = file_exists($path . "/data/active.php");
 $('#install').on('click', function(e){
 	 var array = {
 		 project_name : '<?php echo htmlentities($store['name'], ENT_QUOTES); ?>',
-		// project_path : '<?php echo (dirname(DIR_APPLICATION)); ?>',
+		// project_path : '<?php echo dirname(DIR_APPLICATION); ?>',
                  //<?php echo $path; ?>
                  
                //  project_path : 'D:\xampp\htdocs\instacart',
@@ -80,7 +107,8 @@ $('#install').on('click', function(e){
 	});
 });
 </script>
-<?php } else { ?>
+<?php
+} else { ?>
 	<a class="fullscrbtn" onClick="fullscreen()"><i class="fa fa-expand"></i></a>
     <a class="bigscrbtn" onClick="bigscreen();"><i class="fa fa-arrows-alt"></i></a>
 

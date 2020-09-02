@@ -11,7 +11,7 @@ trait ChoiceBasedValueObject
     /**
      * @return array
      */
-    public abstract function possibleValues();
+    abstract public function possibleValues();
 
     /**
      * @param string $value

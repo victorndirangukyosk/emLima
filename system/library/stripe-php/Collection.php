@@ -3,18 +3,16 @@
 namespace Stripe;
 
 /**
- * Class Collection
+ * Class Collection.
  *
  * @param string $object
  * @param string $url
- * @param bool $has_more
- * @param mixed $data
- *
- * @package Stripe
+ * @param bool   $has_more
+ * @param mixed  $data
  */
 class Collection extends ApiResource
 {
-    protected $_requestParams = array();
+    protected $_requestParams = [];
 
     public function setRequestParams($params)
     {
@@ -27,6 +25,7 @@ class Collection extends ApiResource
 
         list($response, $opts) = $this->_request('get', $url, $params, $opts);
         $this->_requestParams = $params;
+
         return Util\Util::convertToStripeObject($response, $opts);
     }
 
@@ -36,6 +35,7 @@ class Collection extends ApiResource
 
         list($response, $opts) = $this->_request('post', $url, $params, $opts);
         $this->_requestParams = $params;
+
         return Util\Util::convertToStripeObject($response, $opts);
     }
 
@@ -52,14 +52,15 @@ class Collection extends ApiResource
             $opts
         );
         $this->_requestParams = $params;
+
         return Util\Util::convertToStripeObject($response, $opts);
     }
 
     /**
      * @return AutoPagingIterator An iterator that can be used to iterate
-     *    across all objects across all pages. As page boundaries are
-     *    encountered, the next page will be fetched automatically for
-     *    continued iteration.
+     *                            across all objects across all pages. As page boundaries are
+     *                            encountered, the next page will be fetched automatically for
+     *                            continued iteration.
      */
     public function autoPagingIterator()
     {
@@ -76,12 +77,12 @@ class Collection extends ApiResource
         if (isset($url['query'])) {
             // If the URL contains a query param, parse it out into $params so they
             // don't interact weirdly with each other.
-            $query = array();
+            $query = [];
             parse_str($url['query'], $query);
             // PHP 5.2 doesn't support the ?: operator :(
-            $params = array_merge($params ? $params : array(), $query);
+            $params = array_merge($params ? $params : [], $query);
         }
 
-        return array($url['path'], $params);
+        return [$url['path'], $params];
     }
 }

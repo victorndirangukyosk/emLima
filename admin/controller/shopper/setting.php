@@ -1,18 +1,18 @@
 <?php
 
-class ControllerShopperSetting extends Controller {
+class ControllerShopperSetting extends Controller
+{
+    private $error = [];
 
-    private $error = array();
-
-    public function index() {
-
+    public function index()
+    {
         $this->load->model('account/settings');
 
         $this->getForm();
     }
 
-    protected function getForm() {
-
+    protected function getForm()
+    {
         $this->language->load('account/settings');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -70,10 +70,10 @@ class ControllerShopperSetting extends Controller {
             $data['error_lastname'] = '';
         }
 
-        $data['action'] = $this->url->link('shopper/setting/update', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = $this->url->link('shopper/setting/update', 'token='.$this->session->data['token'], 'SSL');
 
         $vendor_info = $this->model_account_settings->getUser($this->user->getId());
-        
+
         if (isset($this->request->post['username'])) {
             $data['username'] = $this->request->post['username'];
         } else {
@@ -107,7 +107,6 @@ class ControllerShopperSetting extends Controller {
         if (isset($this->request->post['city'])) {
             $data['city'] = $this->request->post['city'];
         } else {
-
             $city = $this->model_account_settings->getCity($vendor_info['city_id']);
             $data['city'] = $city['city'];
         }
@@ -154,36 +153,35 @@ class ControllerShopperSetting extends Controller {
         } else {
             $data['email'] = $vendor_info['email'];
         }
-        
+
         $data['header'] = $this->load->controller('shopper/common/header');
         $data['footer'] = $this->load->controller('shopper/common/footer');
 
         $this->response->setOutput($this->load->view('shopper/common/settings.tpl', $data));
     }
 
-    public function password() {
-
+    public function password()
+    {
         $this->language->load('account/settings');
 
         $this->document->setTitle($this->language->get('heading_title'));
 
         $this->load->model('account/settings');
 
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validatePassword()) {
-
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validatePassword()) {
             $this->model_account_settings->password($this->request->post);
 
             $this->session->data['success'] = 'Success: Password updated successfully!';
 
-            $this->response->redirect($this->url->link('shopper/setting/password', 'token=' . $this->session->data['token'], 'SSL'));
+            $this->response->redirect($this->url->link('shopper/setting/password', 'token='.$this->session->data['token'], 'SSL'));
         }
 
         $this->getPasswordForm();
     }
 
-    public function getPasswordForm() {
-
-        $data['action'] = $this->url->link('shopper/setting/password', 'token=' . $this->session->data['token'], 'SSL');
+    public function getPasswordForm()
+    {
+        $data['action'] = $this->url->link('shopper/setting/password', 'token='.$this->session->data['token'], 'SSL');
 
         if (isset($this->session->data['success'])) {
             $data['success'] = $this->session->data['success'];
@@ -236,26 +234,25 @@ class ControllerShopperSetting extends Controller {
         $this->response->setOutput($this->load->view('shopper/common/password.tpl', $data));
     }
 
-    public function update() {
-
+    public function update()
+    {
         $this->load->model('account/settings');
 
         $this->language->load('account/settings');
 
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
             $this->model_account_settings->update($this->request->post);
 
             $this->session->data['success'] = 'Success: Account updated successfully!';
 
-            $this->response->redirect($this->url->link('shopper/setting', 'token=' . $this->session->data['token'], 'SSL'));
+            $this->response->redirect($this->url->link('shopper/setting', 'token='.$this->session->data['token'], 'SSL'));
         }
 
         $this->getForm();
     }
 
-    public function validatePassword() {
-
+    public function validatePassword()
+    {
         if ($this->request->post['password'] || (!isset($this->request->get['user_id']))) {
             if ((utf8_strlen($this->request->post['password']) < 4) || (utf8_strlen($this->request->post['password']) > 20)) {
                 $this->error['password'] = $this->language->get('error_password');
@@ -273,8 +270,8 @@ class ControllerShopperSetting extends Controller {
         }
     }
 
-    public function validateForm() {
-        
+    public function validateForm()
+    {
         if (!$this->user->hasPermission('modify', 'shopper/setting')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }

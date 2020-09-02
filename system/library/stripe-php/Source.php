@@ -3,14 +3,12 @@
 namespace Stripe;
 
 /**
- * Class Source
- *
- * @package Stripe
+ * Class Source.
  */
 class Source extends ApiResource
 {
     /**
-     * @param string $id The ID of the Source to retrieve.
+     * @param string            $id   the ID of the Source to retrieve
      * @param array|string|null $opts
      *
      * @return Source
@@ -21,7 +19,7 @@ class Source extends ApiResource
     }
 
     /**
-     * @param array|null $params
+     * @param array|null        $params
      * @param array|string|null $opts
      *
      * @return Collection of Sources
@@ -32,10 +30,10 @@ class Source extends ApiResource
     }
 
     /**
-     * @param array|null $params
+     * @param array|null        $params
      * @param array|string|null $opts
      *
-     * @return Source The created Source.
+     * @return Source the created Source
      */
     public static function create($params = null, $opts = null)
     {

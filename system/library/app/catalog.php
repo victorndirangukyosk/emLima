@@ -1,12 +1,12 @@
 <?php
 
-
 use Symfony\Component\Debug\ErrorHandler;
 use Symfony\Component\Debug\ExceptionHandler;
 
-class Catalog extends App {
-
-    public function initialise() {
+class Catalog extends App
+{
+    public function initialise()
+    {
         // File System
         $this->registry->set('filesystem', new Filesystem());
 
@@ -18,27 +18,23 @@ class Catalog extends App {
 
         if (isset($this->session->data['store_id'])) {
             $this->config->set('config_store_id', $this->session->data['store_id']);
-        }
-        else {
+        } else {
             $this->config->set('config_store_id', 0);
         }
 
         // Settings
-        $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "setting` WHERE store_id = '0' OR store_id = '" . (int)$this->config->get('config_store_id') . "' ORDER BY store_id ASC");
+        $query = $this->db->query('SELECT * FROM `'.DB_PREFIX."setting` WHERE store_id = '0' OR store_id = '".(int) $this->config->get('config_store_id')."' ORDER BY store_id ASC");
 
         foreach ($query->rows as $result) {
             if (!$result['serialized']) {
                 $this->config->set($result['key'], $result['value']);
-            }
-            else {
+            } else {
                 $this->config->set($result['key'], unserialize($result['value']));
             }
         }
-        
 
         $this->config->set('config_url', HTTP_SERVER);
         $this->config->set('config_ssl', HTTPS_SERVER);
-    
 
         // Loader
         $this->registry->set('load', new Loader($this->registry));
@@ -56,12 +52,11 @@ class Catalog extends App {
         $this->registry->set('log', new Log($this->config->get('config_error_filename')));
 
         // Error Handler
-        if ($this->config->get('config_error_display', 0) == 2) {
+        if (2 == $this->config->get('config_error_display', 0)) {
             ErrorHandler::register();
             ExceptionHandler::register();
-        }
-        else {
-            set_error_handler(array($this, 'errorHandler'));
+        } else {
+            set_error_handler([$this, 'errorHandler']);
         }
 
         // Security
@@ -84,9 +79,9 @@ class Catalog extends App {
         $this->registry->set('session', new Session());
 
         // Language Detection
-        $languages = array();
+        $languages = [];
 
-        $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "language` WHERE status = '1'");
+        $query = $this->db->query('SELECT * FROM `'.DB_PREFIX."language` WHERE status = '1'");
 
         foreach ($query->rows as $result) {
             $languages[$result['code']] = $result;
@@ -94,16 +89,12 @@ class Catalog extends App {
 
         if (isset($this->request->get['lang']) && array_key_exists($this->request->get['lang'], $languages) && $languages[$this->request->get['lang']]['status']) {
             $code = $this->request->get['lang'];
-        }
-        elseif (isset($this->session->data['language']) && array_key_exists($this->session->data['language'], $languages) && $languages[$this->session->data['language']]['status']) {
+        } elseif (isset($this->session->data['language']) && array_key_exists($this->session->data['language'], $languages) && $languages[$this->session->data['language']]['status']) {
             $code = $this->session->data['language'];
-        }
-        elseif (isset($this->request->cookie['language']) && array_key_exists($this->request->cookie['language'], $languages) && $languages[$this->request->cookie['language']]['status']) {
+        } elseif (isset($this->request->cookie['language']) && array_key_exists($this->request->cookie['language'], $languages) && $languages[$this->request->cookie['language']]['status']) {
             $code = $this->request->cookie['language'];
-        }
-        else {
+        } else {
             $detect = '';
-
 
             if (isset($this->request->server['HTTP_ACCEPT_LANGUAGE']) && $this->request->server['HTTP_ACCEPT_LANGUAGE']) {
                 $browser_languages = explode(',', $this->request->server['HTTP_ACCEPT_LANGUAGE']);
@@ -161,30 +152,29 @@ class Catalog extends App {
         $this->trigger->fire('post.app.initialise');
     }
 
-    public function ecommerce() {
+    public function ecommerce()
+    {
         // Customer
         $this->registry->set('customer', new Customer($this->registry));
 
         // Customer Group
         if ($this->customer->isLogged()) {
             $this->config->set('config_customer_group_id', $this->customer->getGroupId());
-        }
-        elseif (isset($this->session->data['customer']) && isset($this->session->data['customer']['customer_group_id'])) {
+        } elseif (isset($this->session->data['customer']) && isset($this->session->data['customer']['customer_group_id'])) {
             // For API calls
             $this->config->set('config_customer_group_id', $this->session->data['customer']['customer_group_id']);
-        }
-        elseif (isset($this->session->data['guest']) && isset($this->session->data['guest']['customer_group_id'])) {
+        } elseif (isset($this->session->data['guest']) && isset($this->session->data['guest']['customer_group_id'])) {
             $this->config->set('config_customer_group_id', $this->session->data['guest']['customer_group_id']);
         }
-		
-		// Email Template
+
+        // Email Template
         $this->registry->set('emailtemplate', new Emailtemplate($this->registry));
 
         // Tracking Code
         if (isset($this->request->get['tracking'])) {
             setcookie('tracking', $this->request->get['tracking'], time() + 3600 * 24 * 1000, '/');
 
-            $this->db->query("UPDATE `" . DB_PREFIX . "marketing` SET clicks = (clicks + 1) WHERE code = '" . $this->db->escape($this->request->get['tracking']) . "'");
+            $this->db->query('UPDATE `'.DB_PREFIX."marketing` SET clicks = (clicks + 1) WHERE code = '".$this->db->escape($this->request->get['tracking'])."'");
         }
 
         // Affiliate
@@ -211,7 +201,8 @@ class Catalog extends App {
         $this->trigger->fire('post.app.ecommerce');
     }
 
-    public function route() {
+    public function route()
+    {
         // Route
         $route = new Route($this->registry);
 
@@ -224,9 +215,10 @@ class Catalog extends App {
         $this->trigger->fire('post.app.route');
     }
 
-    public function dispatch() {
-		# B/C start
-		global $registry;
+    public function dispatch()
+    {
+        // B/C start
+        global $registry;
         $registry = $this->registry;
 
         global $config;
@@ -237,8 +229,8 @@ class Catalog extends App {
 
         global $log;
         $log = $this->registry->get('log');
-		# B/C end
-		
+        // B/C end
+
         // Front Controller
         $controller = new Front($this->registry);
 

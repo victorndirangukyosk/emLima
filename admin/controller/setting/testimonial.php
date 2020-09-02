@@ -1,10 +1,11 @@
 <?php
 
-class ControllerSettingTestimonial extends Controller {
+class ControllerSettingTestimonial extends Controller
+{
+    private $error = [];
 
-    private $error = array();
-
-    public function index() {
+    public function index()
+    {
         $this->load->language('setting/testimonial');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -14,72 +15,74 @@ class ControllerSettingTestimonial extends Controller {
         $this->getList();
     }
 
-    public function add() {
+    public function add()
+    {
         $this->load->language('setting/testimonial');
 
         $this->document->setTitle($this->language->get('heading_title'));
 
         $this->load->model('setting/testimonial');
 
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
             $testimonial_id = $this->model_setting_testimonial->addTestimonial($this->request->post);
 
             $this->load->model('setting/setting');
 
-           // !empty($this->request->post['date_added']) ? : $this->request->post['date_added'] = $this->request->post['config_name'];
+            // !empty($this->request->post['date_added']) ? : $this->request->post['date_added'] = $this->request->post['config_name'];
 
             //$this->model_setting_setting->editSetting('config', $this->request->post, $testimonial_id);
 
             $this->session->data['success'] = $this->language->get('text_success');
 
-            $this->response->redirect($this->url->link('setting/testimonial', 'token=' . $this->session->data['token'], 'SSL'));
+            $this->response->redirect($this->url->link('setting/testimonial', 'token='.$this->session->data['token'], 'SSL'));
         }
 
         $this->getForm();
     }
 
-    public function edit() {
+    public function edit()
+    {
         $this->load->language('setting/testimonial');
 
         $this->document->setTitle($this->language->get('heading_title'));
 
         $this->load->model('setting/testimonial');
 
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
             $this->model_setting_testimonial->editTestimonial($this->request->get['testimonial_id'], $this->request->post);
 
             $this->load->model('setting/setting');
 
-            !empty($this->request->post['date_added']) ? : $this->request->post['date_added'] = $this->request->post['config_name'];
+            !empty($this->request->post['date_added']) ?: $this->request->post['date_added'] = $this->request->post['config_name'];
 
-           // $this->model_setting_setting->editSetting('config', $this->request->post, $this->request->get['testimonial_id']);
+            // $this->model_setting_setting->editSetting('config', $this->request->post, $this->request->get['testimonial_id']);
 
             $this->session->data['success'] = $this->language->get('text_success');
 
-            if (isset($this->request->post['button']) and $this->request->post['button'] == 'save') {
-                $this->response->redirect($this->url->link('setting/testimonial/edit', 'testimonial_id=' . $this->request->get['testimonial_id'] . '&token=' . $this->session->data['token'] . $url, 'SSL'));
+            if (isset($this->request->post['button']) and 'save' == $this->request->post['button']) {
+                $this->response->redirect($this->url->link('setting/testimonial/edit', 'testimonial_id='.$this->request->get['testimonial_id'].'&token='.$this->session->data['token'].$url, 'SSL'));
             }
 
-            if (isset($this->request->post['button']) and $this->request->post['button'] == 'new') {
-                $this->response->redirect($this->url->link('setting/testimonial/add', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            if (isset($this->request->post['button']) and 'new' == $this->request->post['button']) {
+                $this->response->redirect($this->url->link('setting/testimonial/add', 'token='.$this->session->data['token'].$url, 'SSL'));
             }
 
-            if (isset($this->request->post['button']) and $this->request->post['button'] == 'save') {
-                $this->response->redirect($this->url->link('setting/testimonial/edit', 'testimonial_id=' . $this->request->get['testimonial_id'] . '&token=' . $this->session->data['token'] . $url, 'SSL'));
+            if (isset($this->request->post['button']) and 'save' == $this->request->post['button']) {
+                $this->response->redirect($this->url->link('setting/testimonial/edit', 'testimonial_id='.$this->request->get['testimonial_id'].'&token='.$this->session->data['token'].$url, 'SSL'));
             }
 
-            if (isset($this->request->post['button']) and $this->request->post['button'] == 'new') {
-                $this->response->redirect($this->url->link('setting/testimonial/add', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            if (isset($this->request->post['button']) and 'new' == $this->request->post['button']) {
+                $this->response->redirect($this->url->link('setting/testimonial/add', 'token='.$this->session->data['token'].$url, 'SSL'));
             }
 
-            $this->response->redirect($this->url->link('setting/testimonial', 'token=' . $this->session->data['token'] . '&testimonial_id=' . $this->request->get['testimonial_id'], 'SSL'));
+            $this->response->redirect($this->url->link('setting/testimonial', 'token='.$this->session->data['token'].'&testimonial_id='.$this->request->get['testimonial_id'], 'SSL'));
         }
 
         $this->getForm();
     }
 
-    public function delete() {
+    public function delete()
+    {
         $this->load->language('setting/testimonial');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -92,55 +95,55 @@ class ControllerSettingTestimonial extends Controller {
             foreach ($this->request->post['selected'] as $testimonial_id) {
                 $this->model_setting_testimonial->deleteTestimonial($testimonial_id);
 
-              //  $this->model_setting_setting->deleteSetting('config', $testimonial_id);
+                //  $this->model_setting_setting->deleteSetting('config', $testimonial_id);
             }
 
             $this->session->data['success'] = $this->language->get('text_success');
 
-            $this->response->redirect($this->url->link('setting/testimonial', 'token=' . $this->session->data['token'], 'SSL'));
+            $this->response->redirect($this->url->link('setting/testimonial', 'token='.$this->session->data['token'], 'SSL'));
         }
 
         $this->getList();
     }
 
-    protected function getList() {
-        
+    protected function getList()
+    {
         $url = '';
 
         if (isset($this->request->get['page'])) {
-            $url .= '&page=' . $this->request->get['page'];
+            $url .= '&page='.$this->request->get['page'];
         }
 
-        $data['breadcrumbs'] = array();
+        $data['breadcrumbs'] = [];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL')
-        );
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
+        ];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('setting/testimonial', 'token=' . $this->session->data['token'], 'SSL')
-        );
+            'href' => $this->url->link('setting/testimonial', 'token='.$this->session->data['token'], 'SSL'),
+        ];
 
-        $data['add'] = $this->url->link('setting/testimonial/add', 'token=' . $this->session->data['token'], 'SSL');
-        $data['delete'] = $this->url->link('setting/testimonial/delete', 'token=' . $this->session->data['token'], 'SSL');
+        $data['add'] = $this->url->link('setting/testimonial/add', 'token='.$this->session->data['token'], 'SSL');
+        $data['delete'] = $this->url->link('setting/testimonial/delete', 'token='.$this->session->data['token'], 'SSL');
 
-        $data['testimonials'] = array();
+        $data['testimonials'] = [];
 
         $testimonial_total = $this->model_setting_testimonial->getTotalTestimonials();
 
         $results = $this->model_setting_testimonial->getTestimonials();
 
         foreach ($results as $result) {
-            $data['testimonials'][] = array(
+            $data['testimonials'][] = [
                 'testimonial_id' => $result['testimonial_id'],
                 'name' => $result['name'],
-                'message'     => $result['message'],  
-                'sort_order'     => $result['sort_order'],      
-                'status'     => $result['status'],                    
-                'edit' => $this->url->link('setting/testimonial/edit', 'token=' . $this->session->data['token'] . '&testimonial_id=' . $result['testimonial_id'], 'SSL')
-            );
+                'message' => $result['message'],
+                'sort_order' => $result['sort_order'],
+                'status' => $result['status'],
+                'edit' => $this->url->link('setting/testimonial/edit', 'token='.$this->session->data['token'].'&testimonial_id='.$result['testimonial_id'], 'SSL'),
+            ];
         }
 
         $data['heading_title'] = $this->language->get('heading_title');
@@ -179,7 +182,7 @@ class ControllerSettingTestimonial extends Controller {
         if (isset($this->request->post['selected'])) {
             $data['selected'] = (array) $this->request->post['selected'];
         } else {
-            $data['selected'] = array();
+            $data['selected'] = [];
         }
 
         $data['header'] = $this->load->controller('common/header');
@@ -189,14 +192,14 @@ class ControllerSettingTestimonial extends Controller {
         $this->response->setOutput($this->load->view('setting/testimonial_list.tpl', $data));
     }
 
-    public function getForm() {
-        
+    public function getForm()
+    {
         $data['heading_title'] = $this->language->get('heading_title');
 
         $data['text_testimonials'] = $this->language->get('text_testimonials');
         $data['text_no_results'] = $this->language->get('text_no_results');
         $data['text_confirm'] = $this->language->get('text_confirm');
-        
+
         $data['entry_name'] = $this->language->get('entry_name');
         $data['entry_image'] = $this->language->get('entry_image');
         $data['entry_message'] = $this->language->get('entry_message');
@@ -205,8 +208,6 @@ class ControllerSettingTestimonial extends Controller {
 
         $data['text_enable'] = $this->language->get('text_enable');
         $data['text_disable'] = $this->language->get('text_disable');
-
-
 
         if (isset($this->error['warning'])) {
             $data['error_warning'] = $this->error['warning'];
@@ -225,35 +226,35 @@ class ControllerSettingTestimonial extends Controller {
         } else {
             $data['error_message'] = '';
         }
-        
+
         if (isset($this->error['image'])) {
             $data['error_image'] = $this->error['image'];
         } else {
             $data['error_image'] = '';
         }
 
-        $data['breadcrumbs'] = array();
+        $data['breadcrumbs'] = [];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL')
-        );
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
+        ];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('setting/testimonial', 'token=' . $this->session->data['token'], 'SSL')
-        );
+            'href' => $this->url->link('setting/testimonial', 'token='.$this->session->data['token'], 'SSL'),
+        ];
 
         if (!isset($this->request->get['testimonial_id'])) {
-            $data['breadcrumbs'][] = array(
+            $data['breadcrumbs'][] = [
                 'text' => $this->language->get('text_settings'),
-                'href' => $this->url->link('setting/testimonial/add', 'token=' . $this->session->data['token'], 'SSL')
-            );
+                'href' => $this->url->link('setting/testimonial/add', 'token='.$this->session->data['token'], 'SSL'),
+            ];
         } else {
-            $data['breadcrumbs'][] = array(
+            $data['breadcrumbs'][] = [
                 'text' => $this->language->get('text_settings'),
-                'href' => $this->url->link('setting/testimonial/edit', 'token=' . $this->session->data['token'] . '&testimonial_id=' . $this->request->get['testimonial_id'], 'SSL')
-            );
+                'href' => $this->url->link('setting/testimonial/edit', 'token='.$this->session->data['token'].'&testimonial_id='.$this->request->get['testimonial_id'], 'SSL'),
+            ];
         }
 
         if (isset($this->session->data['success'])) {
@@ -265,14 +266,14 @@ class ControllerSettingTestimonial extends Controller {
         }
 
         if (!isset($this->request->get['testimonial_id'])) {
-            $data['action'] = $this->url->link('setting/testimonial/add', 'token=' . $this->session->data['token'], 'SSL');
+            $data['action'] = $this->url->link('setting/testimonial/add', 'token='.$this->session->data['token'], 'SSL');
         } else {
-            $data['action'] = $this->url->link('setting/testimonial/edit', 'token=' . $this->session->data['token'] . '&testimonial_id=' . $this->request->get['testimonial_id'], 'SSL');
+            $data['action'] = $this->url->link('setting/testimonial/edit', 'token='.$this->session->data['token'].'&testimonial_id='.$this->request->get['testimonial_id'], 'SSL');
         }
 
-        $data['cancel'] = $this->url->link('setting/testimonial', 'token=' . $this->session->data['token'], 'SSL');
+        $data['cancel'] = $this->url->link('setting/testimonial', 'token='.$this->session->data['token'], 'SSL');
 
-        if (isset($this->request->get['testimonial_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+        if (isset($this->request->get['testimonial_id']) && ('POST' != $this->request->server['REQUEST_METHOD'])) {
             $this->load->model('setting/testimonial');
 
             $testimonial_info = $this->model_setting_testimonial->getTestimonial($this->request->get['testimonial_id']);
@@ -322,16 +323,16 @@ class ControllerSettingTestimonial extends Controller {
 
         $this->load->model('tool/image');
 
-        if (isset($this->request->post['image']) && is_file(DIR_IMAGE . $this->request->post['image'])) {
+        if (isset($this->request->post['image']) && is_file(DIR_IMAGE.$this->request->post['image'])) {
             $data['thumb'] = $this->model_tool_image->resize($this->request->post['image'], 100, 100);
-        } elseif (isset($testimonial_info['image']) && is_file(DIR_IMAGE . $testimonial_info['image'])) {
+        } elseif (isset($testimonial_info['image']) && is_file(DIR_IMAGE.$testimonial_info['image'])) {
             $data['thumb'] = $this->model_tool_image->resize($testimonial_info['image'], 100, 100);
         } else {
             $data['thumb'] = $this->model_tool_image->resize('no_image.png', 100, 100);
         }
 
         $data['placeholder'] = $this->model_tool_image->resize('no_image.png', 100, 100);
-        
+
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
@@ -339,7 +340,8 @@ class ControllerSettingTestimonial extends Controller {
         $this->response->setOutput($this->load->view('setting/testimonial_form.tpl', $data));
     }
 
-    protected function validateForm() {
+    protected function validateForm()
+    {
         if (!$this->user->hasPermission('modify', 'setting/testimonial')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
@@ -351,7 +353,7 @@ class ControllerSettingTestimonial extends Controller {
         if ((utf8_strlen($this->request->post['message']) < 3) || (utf8_strlen($this->request->post['message']) > 256)) {
             $this->error['message'] = $this->language->get('error_message');
         }
-        
+
         if (!$this->request->post['image']) {
             $this->error['image'] = $this->language->get('error_image');
         }
@@ -363,7 +365,8 @@ class ControllerSettingTestimonial extends Controller {
         return !$this->error;
     }
 
-    protected function validateDelete() {
+    protected function validateDelete()
+    {
         if (!$this->user->hasPermission('modify', 'setting/testimonial')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }

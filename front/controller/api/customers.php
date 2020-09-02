@@ -2,19 +2,18 @@
 
 class ControllerApiCustomers extends Controller
 {
-    
-    public function getCustomer($args = array())
+    public function getCustomer($args = [])
     {
         $this->load->language('api/customers');
 
-        $json = array();
+        $json = [];
 
         if (!isset($this->session->data['api_id'])) {
             $json['error'] = $this->language->get('error_permission');
         } else {
             $this->load->model('api/customers');
 
-            $customer_data = array();
+            $customer_data = [];
 
             $customer = $this->model_api_customers->getCustomer($args['id']);
 
@@ -52,11 +51,11 @@ class ControllerApiCustomers extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function addCustomer($args = array())
+    public function addCustomer($args = [])
     {
         $this->load->language('api/customers');
 
-        $json = array();
+        $json = [];
 
         if (!isset($this->session->data['api_id'])) {
             $json['error'] = $this->language->get('error_permission');
@@ -70,11 +69,11 @@ class ControllerApiCustomers extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function editCustomer($args = array())
+    public function editCustomer($args = [])
     {
         $this->load->language('api/customers');
 
-        $json = array();
+        $json = [];
 
         if (!isset($this->session->data['api_id'])) {
             $json['error'] = $this->language->get('error_permission');
@@ -88,11 +87,11 @@ class ControllerApiCustomers extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function deleteCustomer($args = array())
+    public function deleteCustomer($args = [])
     {
         $this->load->language('api/customers');
 
-        $json = array();
+        $json = [];
 
         if (!isset($this->session->data['api_id'])) {
             $json['error'] = $this->language->get('error_permission');
@@ -108,18 +107,18 @@ class ControllerApiCustomers extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getCustomers($args = array())
+    public function getCustomers($args = [])
     {
         $this->load->language('api/customers');
 
-        $json = array();
+        $json = [];
 
         if (!isset($this->session->data['api_id'])) {
             $json['error'] = $this->language->get('error_permission');
         } else {
             $this->load->model('api/customers');
 
-            $customer_data = array();
+            $customer_data = [];
 
             $customers = $this->model_api_customers->getCustomers($args);
 
@@ -158,11 +157,11 @@ class ControllerApiCustomers extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getTotals($args = array())
+    public function getTotals($args = [])
     {
         $this->load->language('api/customers');
 
-        $json = array();
+        $json = [];
 
         if (!isset($this->session->data['api_id'])) {
             $json['error'] = $this->language->get('error_permission');
@@ -176,11 +175,11 @@ class ControllerApiCustomers extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getAddresses($args = array())
+    public function getAddresses($args = [])
     {
         $this->load->language('api/customers');
 
-        $json = array();
+        $json = [];
 
         if (!isset($this->session->data['api_id'])) {
             $json['error'] = $this->language->get('error_permission');
@@ -194,18 +193,18 @@ class ControllerApiCustomers extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getOrders($args = array())
+    public function getOrders($args = [])
     {
         $this->load->language('api/customers');
 
-        $json = array();
+        $json = [];
 
         if (!isset($this->session->data['api_id'])) {
             $json['error'] = $this->language->get('error_permission');
         } else {
             $this->load->model('api/orders');
 
-            $order_data = array();
+            $order_data = [];
 
             $args['customer'] = $args['id'];
             unset($args['id']);
@@ -233,9 +232,9 @@ class ControllerApiCustomers extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getCustomerGroups(){
-  
-        $this->load->model( 'account/customer_group' );
+    public function getCustomerGroups()
+    {
+        $this->load->model('account/customer_group');
         $json['status'] = 200;
         $json['data'] = $this->model_account_customer_group->getCustomerGroups();
         $json['msg'] = 'Customer Groups fetched successfully';

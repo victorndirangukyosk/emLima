@@ -1,8 +1,9 @@
 <?php
 
-class ModelPaymentPayu extends Model {
-
-    public function getMethod($total) {
+class ModelPaymentPayu extends Model
+{
+    public function getMethod($total)
+    {
         $this->load->language('payment/payu');
 
         if ($this->config->get('payu_total') > $total) {
@@ -11,17 +12,16 @@ class ModelPaymentPayu extends Model {
             $status = true;
         }
 
-        $method_data = array();
+        $method_data = [];
 
         if ($status) {
-            $method_data = array(
+            $method_data = [
                 'code' => 'payu',
                 'title' => $this->language->get('text_title'),
-                'sort_order' => $this->config->get('payu_sort_order')
-            );
+                'sort_order' => $this->config->get('payu_sort_order'),
+            ];
         }
 
         return $method_data;
     }
-
 }

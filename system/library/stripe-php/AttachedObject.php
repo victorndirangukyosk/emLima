@@ -3,18 +3,16 @@
 namespace Stripe;
 
 /**
- * Class AttachedObject
+ * Class AttachedObject.
  *
  * e.g. metadata on Stripe objects.
- *
- * @package Stripe
  */
 class AttachedObject extends StripeObject
 {
     /**
      * Updates this object.
      *
-     * @param array $properties A mapping of properties to update on this object.
+     * @param array $properties a mapping of properties to update on this object
      */
     public function replaceWith($properties)
     {

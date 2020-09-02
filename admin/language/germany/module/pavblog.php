@@ -8,39 +8,38 @@
 *******************************************************/
 
 // Heading
-$_['heading_title']       = '<b style="color:#E1653B;font-size:110%">Pav Blog Verwaltung</b>';
+$_['heading_title'] = '<b style="color:#E1653B;font-size:110%">Pav Blog Verwaltung</b>';
 
 // Text
-$_['text_treemenu']     = 'Baum Kategorie Verwaltung';
+$_['text_treemenu'] = 'Baum Kategorie Verwaltung';
 $_['text_menu_assignment'] = 'Modulzuordnung';
-$_['text_module']         = 'Modul';
-$_['text_success']        = 'Erfolg: Sie haben Modul Kategorie geandert!';
-$_['text_content_top']    = 'Inhalt Um';
+$_['text_module'] = 'Modul';
+$_['text_success'] = 'Erfolg: Sie haben Modul Kategorie geandert!';
+$_['text_content_top'] = 'Inhalt Um';
 $_['text_content_bottom'] = 'Inhalt Unterseite';
-$_['text_column_left']    = 'Spalte links';
-$_['text_column_right']   = 'Spalte rechts';
-$_['text_mainmenu']   = 'Hauptmenu';
-$_['text_slideshow']   = 'Slideshow';
-$_['text_promotion']   = 'Werbung';
+$_['text_column_left'] = 'Spalte links';
+$_['text_column_right'] = 'Spalte rechts';
+$_['text_mainmenu'] = 'Hauptmenu';
+$_['text_slideshow'] = 'Slideshow';
+$_['text_promotion'] = 'Werbung';
 $_['text_mass_bottom'] = 'Messe Unterseite';
-$_['text_bottom1']   = 'Unterseite 1';
-$_['text_bottom2']   = 'Unterseite 2';
-$_['text_bottom3']   = 'Unterseite 3';
-$_['text_footer_top']   = 'Fußzeile Spitze';
-$_['text_footer_center']   = 'Fußzeile Zentrum';
-$_['text_footer_bottom']   = 'Fußzeile Unterseite';
+$_['text_bottom1'] = 'Unterseite 1';
+$_['text_bottom2'] = 'Unterseite 2';
+$_['text_bottom3'] = 'Unterseite 3';
+$_['text_footer_top'] = 'Fußzeile Spitze';
+$_['text_footer_center'] = 'Fußzeile Zentrum';
+$_['text_footer_bottom'] = 'Fußzeile Unterseite';
 $_['text_create_new'] = 'Neue Kategorie erstellen';
 $_['text_edit_menu'] = 'Bearbeiten: %s  (ID:%s)';
-$_['all_page']   = 'Alle Seite';
+$_['all_page'] = 'Alle Seite';
 $_['text_seo_data'] = 'SEO Daten';
 $_['entry_keyword'] = '<b>SEO Stichwort</b><p><i>*Verwenden Sie keine Leerzeichen statt ersetzen Raume mit - und stellen Sie sicher, das Schlusselwort ist weltweit einzigartig.</i></p>';
 $_['text_keyword_listing_blogs_page'] = 'Stichwort - Listing Blog Seite<p><i>Stichwort Verwendung fur die Auflistung von Blog-Tag oder vom Anwender</i>:<br> Beispiel: http://www.domain.com/blogs?tag=opencart</p>';
 
-$_['text_image_manager']   = 'Images Verwaltung';
+$_['text_image_manager'] = 'Images Verwaltung';
 $_['text_front_page'] = 'Vorderseite Seite';
 $_['text_category_page'] = 'Kategorie Seite';
 $_['text_item_page'] = 'StuckSeite';
-
 
 $_['text_filter_blog'] = 'Filtern Blogs';
 $_['text_normal'] = 'Normale';
@@ -51,24 +50,24 @@ $_['text_guide_category'] = 'Kategorie verwalten';
 $_['text_guide_blog'] = 'Verwalten Blog';
 $_['text_guide_module_setting'] = 'Module Einstellen';
 // Entry
-$_['entry_banner']        = 'Banner:';
-$_['entry_dimension']     = 'Abmessungen (B x H) und Resize Type:';
-$_['entry_layout']        = 'Layout:';
-$_['entry_position']      = 'Position:';
-$_['entry_status']        = 'Status:';
-$_['entry_sort_order']    = 'Sortieren Bestellen:';
-$_['entry_description']    = 'Beschreibung:';
-$_['entry_type']    = 'Type:';
-$_['entry_url']    = 'URL:';
-$_['entry_category']    = 'Kategorie:';
-$_['entry_product']    = 'Product:';
-$_['entry_manufacturer']    = 'Manufacturer:';
-$_['entry_information']    = 'Informationen:';
-$_['entry_html']    = 'HTML:';
-$_['entry_parent_id']    = 'Parent ID:';
-$_['entry_menuclass']    = 'Menu-Klasse:';
-$_['entry_showtitle']    = 'Titel anzeigen:';
-$_['entry_isgroup']    = 'Ist Gruppe:';
+$_['entry_banner'] = 'Banner:';
+$_['entry_dimension'] = 'Abmessungen (B x H) und Resize Type:';
+$_['entry_layout'] = 'Layout:';
+$_['entry_position'] = 'Position:';
+$_['entry_status'] = 'Status:';
+$_['entry_sort_order'] = 'Sortieren Bestellen:';
+$_['entry_description'] = 'Beschreibung:';
+$_['entry_type'] = 'Type:';
+$_['entry_url'] = 'URL:';
+$_['entry_category'] = 'Kategorie:';
+$_['entry_product'] = 'Product:';
+$_['entry_manufacturer'] = 'Manufacturer:';
+$_['entry_information'] = 'Informationen:';
+$_['entry_html'] = 'HTML:';
+$_['entry_parent_id'] = 'Parent ID:';
+$_['entry_menuclass'] = 'Menu-Klasse:';
+$_['entry_showtitle'] = 'Titel anzeigen:';
+$_['entry_isgroup'] = 'Ist Gruppe:';
 
 //edit
 $_['entry_iscontent'] = 'Ist Inhalt: ';
@@ -86,27 +85,24 @@ $_['text_browse'] = 'Browser ';
 $_['text_clear'] = 'LÃ¶schen ';
 $_['entry_publish'] = 'verÃ¶ffentlicht ';
 
-
-$_['button_save_edit'] = "Speichern und bearbeiten ";
+$_['button_save_edit'] = 'Speichern und bearbeiten ';
 $_['button_save_new'] = 'Speichern und Neu erstellen';
 
-
-//
-$_['message_delete'] = "Sind Sie sicher, dass dies wirklich lÃ¶schen ";
+$_['message_delete'] = 'Sind Sie sicher, dass dies wirklich lÃ¶schen ';
 // Fehler
 $_['error_permission'] = 'Achtung: Sie haben keine Berechtigung zum Modul Kategorie Ã¤ndern ';
 $_['error_dimension'] = 'Breite und HÃ¶he Abmessungen erforderlich! ';
 $_['error_missing_title'] = 'Bitte geben Sie MenÃ¼ Titel in jeder Sprache Registerkarten ';
 $_['text_explain_drapanddrop'] = 'Um Sortierungen oder Update- Eltern-Kind- , drap Sie & Drop erwartet MenÃ¼ und klicken dann auf die SchaltflÃ¤che Speichern aktualisieren';
 
-$_['menu_dashboard'] = "Armaturenbrett ";
+$_['menu_dashboard'] = 'Armaturenbrett ';
 
-$_['menu_manage_categories'] = "Kategorien verwalten ";
-$_['menu_manage_blogs'] = "Blogs verwalten ";
-$_['menu_addblog'] = "In Blog ";
-$_['menu_comment'] = "Kommentare ";
-$_['menu_module_setting'] = "Allgemeine Einstellungen ";
-$_['menu_information'] = "Informationen";
+$_['menu_manage_categories'] = 'Kategorien verwalten ';
+$_['menu_manage_blogs'] = 'Blogs verwalten ';
+$_['menu_addblog'] = 'In Blog ';
+$_['menu_comment'] = 'Kommentare ';
+$_['menu_module_setting'] = 'Allgemeine Einstellungen ';
+$_['menu_information'] = 'Informationen';
 /* Dashboard-Seite **/
 $_['panel_page_heading_title'] = 'Ãœbersicht ';
 $_['text_quickicons'] = 'Schnell Icons';
@@ -119,7 +115,6 @@ $_['latest_blog'] = 'Letzte Blog';
 $_['most_read'] = 'Meist gelesen';
 $_['latest_comment'] = 'Neueste Kommentare';
 
-
 $_['databroad_categories'] = 'Kategorien';
 $_['databroad_add_category'] = 'Kategorie hinzufÃ¼gen';
 $_['databroad_blogs'] = 'Verwalten Blogs';
@@ -127,27 +122,27 @@ $_['databroad_add_blog'] = 'HinzufÃ¼gen Blog';
 $_['databroad_comment'] = 'Kommentar';
 $_['databroad_modules_setting'] = 'Module einstellen';
 
-/** Kategorie-Seite **/
-$_['category_page_heading_title'] = "Kategorien Verwaltung";
-$_['text_tree_category_menu'] = "Kategorien Baum Menu ";
-$_['text_category_information'] = "Informationen";
+/* Kategorie-Seite **/
+$_['category_page_heading_title'] = 'Kategorien Verwaltung';
+$_['text_tree_category_menu'] = 'Kategorien Baum Menu ';
+$_['text_category_information'] = 'Informationen';
 $_['text_filter_title'] = 'Filter Titel ';
 $_['text_reset'] = 'Reset';
 $_['text_position'] = 'Position';
-/** BLOGS PAGE **/
+/* BLOGS PAGE **/
 $_['blogs_page_heading_title'] = 'Blogs Verwaltungs ';
-$_['entry_title'] = "Titel ";
+$_['entry_title'] = 'Titel ';
 $_['button_create_blog'] = 'Neues Blog ';
 $_['text_created'] = 'Erstellungsdatum ';
 $_['text_hits'] = 'Treffer ';
 $_['entry_tags'] = 'Tags';
 $_['text_explain_tags'] = 'Beispiel: Mode, intelligent, lustig ';
 $_['text_facebook_id_explain'] = 'Registrieren einen Kommentar Box , dann erhalten Sie Anwendungs-ID in Skript oder Registrieren Facebook Application ID zu moderaten Kommentare ';
-/** BLOG PAGE **/
-$_['blog_page_heading_title'] = "Blog Bearbeiten / Neu erstellen ";
-$_['text_general'] = "General ";
-$_['text_gallery'] = "Bilder - Galerie ";
-$_['text_meta'] = "Meta - SEO ";
+/* BLOG PAGE **/
+$_['blog_page_heading_title'] = 'Blog Bearbeiten / Neu erstellen ';
+$_['text_general'] = 'General ';
+$_['text_gallery'] = 'Bilder - Galerie ';
+$_['text_meta'] = 'Meta - SEO ';
 $_['entry_category_id'] = 'Kategorie ';
 $_['entry_hits'] = 'Treffer ';
 $_['entry_created'] = 'Erstellungsdatum ';
@@ -158,7 +153,7 @@ $_['entry_video_code'] = 'Video Code ( Youtube-Code , Vimeo-Code )';
 $_['entry_meta_title'] = 'Meta Titel ';
 $_['entry_meta_keyword'] = 'Meta Stichwort ';
 $_['entry_meta_description'] = 'Meta Beschreibung ';
-/** KOMMENTARE PAGE **/
+/* KOMMENTARE PAGE **/
 $_['comments_page_heading_title'] = 'Kommentare Verwaltung Adminstration ';
 $_['text_comment'] = 'Kommentar';
 $_['text_blog_title'] = 'Blog Titel ';
@@ -172,8 +167,7 @@ $_['text_confirm_delete'] = 'Sind Sie sicher, dass dies wirklich lÃ¶schen? ';
 $_['text_disable'] = 'Deaktivieren ';
 $_['text_enable'] = 'Aktivieren';
 
-
-/** ALLGEMEINE EINSTELLUNG **/
+/* ALLGEMEINE EINSTELLUNG **/
 $_['entry_children_columns'] = 'Kinder Columns ';
 $_['entry_category_image_demension'] = 'Category Image Demension ( Breite x HÃ¶he )';
 $_['modules_page_heading_title'] = 'Allgemeine & Module einstellen ';
@@ -220,7 +214,6 @@ $_['entry_columns_secondary_blogs'] = 'Spalten Secondary Blogs ';
 $_['entry_columns_leading_blogs'] = 'Column Leading Blogs ';
 $_['entry_columns_secondary_blogs'] = 'Column Secondary Blogs ';
 
-
 $_['entry_comment_engine'] = 'Kommentar Motor ';
 $_['entry_diquis_account'] = 'Diquis -Name ';
 $_['text_signup_diquis'] = 'Anmelden Disquis ';
@@ -238,5 +231,3 @@ $_['tab_pavblogcomment'] = 'Letzte Kommentar Modul Setting';
 $_['tab_pavbloglatest'] = 'Letzte Modul Setting';
 $_['text_showcase'] = 'Showcase ';
 $_['menu_frontend_module_setting'] = 'Frontend-Module ';
-
-?>

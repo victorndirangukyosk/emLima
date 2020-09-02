@@ -9,6 +9,7 @@ access.log
 config.php
 define.php
 robots.txt
+.php_cs.cache
 
 ## Node.js
 lib-cov

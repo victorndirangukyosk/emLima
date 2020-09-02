@@ -3,10 +3,9 @@
 namespace GingerPayments\Payment\Order\Transaction\PaymentMethodDetails;
 
 use GingerPayments\Payment\Iban;
-use GingerPayments\Payment\SwiftBic;
 use GingerPayments\Payment\Order\Transaction\PaymentMethodDetails;
-use GingerPayments\Payment\Order\Transaction\PaymentMethodDetails\ConsumerName;
 use GingerPayments\Payment\Order\Transaction\PaymentMethodDetails\SofortPaymentMethodDetails\TransactionId;
+use GingerPayments\Payment\SwiftBic;
 
 final class CashOnDeliveryPaymentMethodDetails implements PaymentMethodDetails
 {
@@ -31,7 +30,6 @@ final class CashOnDeliveryPaymentMethodDetails implements PaymentMethodDetails
     private $consumerName;
 
     /**
-     * @param array $details
      * @return CashOnDeliveryPaymentMethodDetails
      */
     public static function fromArray(array $details)
@@ -50,10 +48,10 @@ final class CashOnDeliveryPaymentMethodDetails implements PaymentMethodDetails
     public function toArray()
     {
         return [
-            'transaction_id' => ($this->transactionId() !== null) ? $this->transactionId()->toString() : null,
-            'consumer_name' => ($this->consumerName() !== null) ? $this->consumerName()->toString() : null,
-            'consumer_iban' => ($this->consumerIban() !== null) ? $this->consumerIban()->toString() : null,
-            'consumer_bic' => ($this->consumerBic() !== null) ? $this->consumerBic()->toString() : null
+            'transaction_id' => (null !== $this->transactionId()) ? $this->transactionId()->toString() : null,
+            'consumer_name' => (null !== $this->consumerName()) ? $this->consumerName()->toString() : null,
+            'consumer_iban' => (null !== $this->consumerIban()) ? $this->consumerIban()->toString() : null,
+            'consumer_bic' => (null !== $this->consumerBic()) ? $this->consumerBic()->toString() : null,
         ];
     }
 
@@ -91,9 +89,9 @@ final class CashOnDeliveryPaymentMethodDetails implements PaymentMethodDetails
 
     /**
      * @param TransactionId $transactionId
-     * @param ConsumerName $consumerName
-     * @param Iban $consumerIban
-     * @param SwiftBic $consumerBic
+     * @param ConsumerName  $consumerName
+     * @param Iban          $consumerIban
+     * @param SwiftBic      $consumerBic
      */
     private function __construct(
         TransactionId $transactionId = null,

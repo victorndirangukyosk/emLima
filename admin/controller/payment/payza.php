@@ -1,150 +1,154 @@
 <?php
-class ControllerPaymentPayza extends Controller {
-	private $error = array();
 
-	public function index() {
-		$this->load->language('payment/payza');
+class ControllerPaymentPayza extends Controller
+{
+    private $error = [];
 
-		$this->document->setTitle($this->language->get('heading_title'));
+    public function index()
+    {
+        $this->load->language('payment/payza');
 
-		$this->load->model('setting/setting');
+        $this->document->setTitle($this->language->get('heading_title'));
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-			$this->model_setting_setting->editSetting('payza', $this->request->post);
+        $this->load->model('setting/setting');
 
-			$this->session->data['success'] = $this->language->get('text_success');
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validate()) {
+            $this->model_setting_setting->editSetting('payza', $this->request->post);
 
-			$this->response->redirect($this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'));
-		}
+            $this->session->data['success'] = $this->language->get('text_success');
 
-		$data['heading_title'] = $this->language->get('heading_title');
-		
-		$data['text_edit'] = $this->language->get('text_edit');
-		$data['text_enabled'] = $this->language->get('text_enabled');
-		$data['text_disabled'] = $this->language->get('text_disabled');
+            $this->response->redirect($this->url->link('extension/payment', 'token='.$this->session->data['token'], 'SSL'));
+        }
 
-		$data['entry_merchant'] = $this->language->get('entry_merchant');
-		$data['entry_security'] = $this->language->get('entry_security');
-		$data['entry_callback'] = $this->language->get('entry_callback');
-		$data['entry_total'] = $this->language->get('entry_total');
-		$data['entry_order_status'] = $this->language->get('entry_order_status');
-		$data['entry_status'] = $this->language->get('entry_status');
-		$data['entry_sort_order'] = $this->language->get('entry_sort_order');
+        $data['heading_title'] = $this->language->get('heading_title');
 
-		$data['help_callback'] = $this->language->get('help_callback');
-		$data['help_total'] = $this->language->get('help_total');
+        $data['text_edit'] = $this->language->get('text_edit');
+        $data['text_enabled'] = $this->language->get('text_enabled');
+        $data['text_disabled'] = $this->language->get('text_disabled');
 
-		$data['button_save'] = $this->language->get('button_save');
-		$data['button_cancel'] = $this->language->get('button_cancel');
+        $data['entry_merchant'] = $this->language->get('entry_merchant');
+        $data['entry_security'] = $this->language->get('entry_security');
+        $data['entry_callback'] = $this->language->get('entry_callback');
+        $data['entry_total'] = $this->language->get('entry_total');
+        $data['entry_order_status'] = $this->language->get('entry_order_status');
+        $data['entry_status'] = $this->language->get('entry_status');
+        $data['entry_sort_order'] = $this->language->get('entry_sort_order');
 
-		if (isset($this->error['warning'])) {
-			$data['error_warning'] = $this->error['warning'];
-		} else {
-			$data['error_warning'] = '';
-		}
-                
-                if (isset($this->session->data['success'])) {
-			$data['success'] = $this->session->data['success'];
-                        unset($this->session->data['success']);
-		} else {
-			$data['success'] = '';
-		}
+        $data['help_callback'] = $this->language->get('help_callback');
+        $data['help_total'] = $this->language->get('help_total');
 
-		if (isset($this->error['merchant'])) {
-			$data['error_merchant'] = $this->error['merchant'];
-		} else {
-			$data['error_merchant'] = '';
-		}
+        $data['button_save'] = $this->language->get('button_save');
+        $data['button_cancel'] = $this->language->get('button_cancel');
 
-		if (isset($this->error['security'])) {
-			$data['error_security'] = $this->error['security'];
-		} else {
-			$data['error_security'] = '';
-		}
+        if (isset($this->error['warning'])) {
+            $data['error_warning'] = $this->error['warning'];
+        } else {
+            $data['error_warning'] = '';
+        }
 
-		$data['breadcrumbs'] = array();
+        if (isset($this->session->data['success'])) {
+            $data['success'] = $this->session->data['success'];
+            unset($this->session->data['success']);
+        } else {
+            $data['success'] = '';
+        }
 
-		$data['breadcrumbs'][] = array(
-			'text' => $this->language->get('text_home'),
-			'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL')
-		);
+        if (isset($this->error['merchant'])) {
+            $data['error_merchant'] = $this->error['merchant'];
+        } else {
+            $data['error_merchant'] = '';
+        }
 
-		$data['breadcrumbs'][] = array(
-			'text' => $this->language->get('text_payment'),
-			'href' => $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL')
-		);
+        if (isset($this->error['security'])) {
+            $data['error_security'] = $this->error['security'];
+        } else {
+            $data['error_security'] = '';
+        }
 
-		$data['breadcrumbs'][] = array(
-			'text' => $this->language->get('heading_title'),
-			'href' => $this->url->link('payment/payza', 'token=' . $this->session->data['token'], 'SSL')
-		);
+        $data['breadcrumbs'] = [];
 
-		$data['action'] = $this->url->link('payment/payza', 'token=' . $this->session->data['token'], 'SSL');
+        $data['breadcrumbs'][] = [
+            'text' => $this->language->get('text_home'),
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
+        ];
 
-		$data['cancel'] = $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL');
+        $data['breadcrumbs'][] = [
+            'text' => $this->language->get('text_payment'),
+            'href' => $this->url->link('extension/payment', 'token='.$this->session->data['token'], 'SSL'),
+        ];
 
-		if (isset($this->request->post['payza_merchant'])) {
-			$data['payza_merchant'] = $this->request->post['payza_merchant'];
-		} else {
-			$data['payza_merchant'] = $this->config->get('payza_merchant');
-		}
+        $data['breadcrumbs'][] = [
+            'text' => $this->language->get('heading_title'),
+            'href' => $this->url->link('payment/payza', 'token='.$this->session->data['token'], 'SSL'),
+        ];
 
-		if (isset($this->request->post['payza_security'])) {
-			$data['payza_security'] = $this->request->post['payza_security'];
-		} else {
-			$data['payza_security'] = $this->config->get('payza_security');
-		}
+        $data['action'] = $this->url->link('payment/payza', 'token='.$this->session->data['token'], 'SSL');
 
-		$data['callback'] = HTTP_CATALOG . 'index.php?path=payment/payza/callback';
+        $data['cancel'] = $this->url->link('extension/payment', 'token='.$this->session->data['token'], 'SSL');
 
-		if (isset($this->request->post['payza_total'])) {
-			$data['payza_total'] = $this->request->post['payza_total'];
-		} else {
-			$data['payza_total'] = $this->config->get('payza_total');
-		}
+        if (isset($this->request->post['payza_merchant'])) {
+            $data['payza_merchant'] = $this->request->post['payza_merchant'];
+        } else {
+            $data['payza_merchant'] = $this->config->get('payza_merchant');
+        }
 
-		if (isset($this->request->post['payza_order_status_id'])) {
-			$data['payza_order_status_id'] = $this->request->post['payza_order_status_id'];
-		} else {
-			$data['payza_order_status_id'] = $this->config->get('payza_order_status_id');
-		}
+        if (isset($this->request->post['payza_security'])) {
+            $data['payza_security'] = $this->request->post['payza_security'];
+        } else {
+            $data['payza_security'] = $this->config->get('payza_security');
+        }
 
-		$this->load->model('localisation/order_status');
+        $data['callback'] = HTTP_CATALOG.'index.php?path=payment/payza/callback';
 
-		$data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
+        if (isset($this->request->post['payza_total'])) {
+            $data['payza_total'] = $this->request->post['payza_total'];
+        } else {
+            $data['payza_total'] = $this->config->get('payza_total');
+        }
 
-		if (isset($this->request->post['payza_status'])) {
-			$data['payza_status'] = $this->request->post['payza_status'];
-		} else {
-			$data['payza_status'] = $this->config->get('payza_status');
-		}
+        if (isset($this->request->post['payza_order_status_id'])) {
+            $data['payza_order_status_id'] = $this->request->post['payza_order_status_id'];
+        } else {
+            $data['payza_order_status_id'] = $this->config->get('payza_order_status_id');
+        }
 
-		if (isset($this->request->post['payza_sort_order'])) {
-			$data['payza_sort_order'] = $this->request->post['payza_sort_order'];
-		} else {
-			$data['payza_sort_order'] = $this->config->get('payza_sort_order');
-		}
+        $this->load->model('localisation/order_status');
 
-		$data['header'] = $this->load->controller('common/header');
-		$data['column_left'] = $this->load->controller('common/column_left');
-		$data['footer'] = $this->load->controller('common/footer');
+        $data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
 
-		$this->response->setOutput($this->load->view('payment/payza.tpl', $data));
-	}
+        if (isset($this->request->post['payza_status'])) {
+            $data['payza_status'] = $this->request->post['payza_status'];
+        } else {
+            $data['payza_status'] = $this->config->get('payza_status');
+        }
 
-	protected function validate() {
-		if (!$this->user->hasPermission('modify', 'payment/payza')) {
-			$this->error['warning'] = $this->language->get('error_permission');
-		}
+        if (isset($this->request->post['payza_sort_order'])) {
+            $data['payza_sort_order'] = $this->request->post['payza_sort_order'];
+        } else {
+            $data['payza_sort_order'] = $this->config->get('payza_sort_order');
+        }
 
-		if (!$this->request->post['payza_merchant']) {
-			$this->error['merchant'] = $this->language->get('error_merchant');
-		}
+        $data['header'] = $this->load->controller('common/header');
+        $data['column_left'] = $this->load->controller('common/column_left');
+        $data['footer'] = $this->load->controller('common/footer');
 
-		if (!$this->request->post['payza_security']) {
-			$this->error['security'] = $this->language->get('error_security');
-		}
+        $this->response->setOutput($this->load->view('payment/payza.tpl', $data));
+    }
 
-		return !$this->error;
-	}
+    protected function validate()
+    {
+        if (!$this->user->hasPermission('modify', 'payment/payza')) {
+            $this->error['warning'] = $this->language->get('error_permission');
+        }
+
+        if (!$this->request->post['payza_merchant']) {
+            $this->error['merchant'] = $this->language->get('error_merchant');
+        }
+
+        if (!$this->request->post['payza_security']) {
+            $this->error['security'] = $this->language->get('error_security');
+        }
+
+        return !$this->error;
+    }
 }

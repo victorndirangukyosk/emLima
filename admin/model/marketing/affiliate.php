@@ -1,6 +1,5 @@
 <?php
 
-
-class ModelMarketingAffiliate extends Model {
-	
+class ModelMarketingAffiliate extends Model
+{
 }

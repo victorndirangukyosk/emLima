@@ -1,11 +1,11 @@
 <?php
 
-class ControllerLocalisationState extends Controller {
+class ControllerLocalisationState extends Controller
+{
+    private $error = [];
 
-    private $error = array();
-
-    public function index() {
-
+    public function index()
+    {
         $this->load->language('localisation/state');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -17,7 +17,8 @@ class ControllerLocalisationState extends Controller {
         $this->getList();
     }
 
-    public function add() {
+    public function add()
+    {
         $this->load->language('localisation/state');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -26,22 +27,20 @@ class ControllerLocalisationState extends Controller {
 
         $this->load->model('tool/export_import');
 
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
             $state_id = $this->model_localisation_state->addState($this->request->post);
 
-            if ((isset( $this->request->files['upload'] )) && (is_uploaded_file($this->request->files['upload']['tmp_name']))) {
+            if ((isset($this->request->files['upload'])) && (is_uploaded_file($this->request->files['upload']['tmp_name']))) {
                 $file = $this->request->files['upload']['tmp_name'];
-                
-                if (!$this->user->isVendor()) {
 
-                    if ($this->model_tool_export_import->uploadGeneralstateZipcode($file,$state_id) ) {
+                if (!$this->user->isVendor()) {
+                    if ($this->model_tool_export_import->uploadGeneralstateZipcode($file, $state_id)) {
                         $this->session->data['success'] = $this->language->get('text_success');
-                        /*$this->response->redirect($this->url->link('tool/export_import', 'token=' . $this->session->data['token'], 'SSL'));*/
+                    /*$this->response->redirect($this->url->link('tool/export_import', 'token=' . $this->session->data['token'], 'SSL'));*/
                     } else {
                         $this->error['warning'] = $this->language->get('error_upload');
-                        $this->error['warning'] .= "<br />\n".$this->language->get( 'text_log_details' );
+                        $this->error['warning'] .= "<br />\n".$this->language->get('text_log_details');
                     }
-
                 }
             }
 
@@ -50,32 +49,33 @@ class ControllerLocalisationState extends Controller {
             $url = '';
 
             if (isset($this->request->get['sort'])) {
-                $url .= '&sort=' . $this->request->get['sort'];
+                $url .= '&sort='.$this->request->get['sort'];
             }
 
             if (isset($this->request->get['order'])) {
-                $url .= '&order=' . $this->request->get['order'];
+                $url .= '&order='.$this->request->get['order'];
             }
 
             if (isset($this->request->get['page'])) {
-                $url .= '&page=' . $this->request->get['page'];
+                $url .= '&page='.$this->request->get['page'];
             }
 
-            if (isset($this->request->post['button']) and $this->request->post['button'] == 'save') {
-                $this->response->redirect($this->url->link('localisation/state/edit', 'state_id=' . $state_id . '&token=' . $this->session->data['token'] . $url, 'SSL'));
+            if (isset($this->request->post['button']) and 'save' == $this->request->post['button']) {
+                $this->response->redirect($this->url->link('localisation/state/edit', 'state_id='.$state_id.'&token='.$this->session->data['token'].$url, 'SSL'));
             }
 
-            if (isset($this->request->post['button']) and $this->request->post['button'] == 'new') {
-                $this->response->redirect($this->url->link('localisation/state/add', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            if (isset($this->request->post['button']) and 'new' == $this->request->post['button']) {
+                $this->response->redirect($this->url->link('localisation/state/add', 'token='.$this->session->data['token'].$url, 'SSL'));
             }
 
-            $this->response->redirect($this->url->link('localisation/state', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            $this->response->redirect($this->url->link('localisation/state', 'token='.$this->session->data['token'].$url, 'SSL'));
         }
 
         $this->getForm();
     }
 
-    public function edit() {
+    public function edit()
+    {
         $this->load->language('localisation/state');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -83,24 +83,22 @@ class ControllerLocalisationState extends Controller {
         $this->load->model('localisation/state');
 
         $this->load->model('tool/export_import');
-        
+
         //echo "<pre>";print_r($this->request->post);die;
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
             $this->model_localisation_state->editstate($this->request->get['state_id'], $this->request->post);
 
-            if ((isset( $this->request->files['upload'] )) && (is_uploaded_file($this->request->files['upload']['tmp_name']))) {
+            if ((isset($this->request->files['upload'])) && (is_uploaded_file($this->request->files['upload']['tmp_name']))) {
                 $file = $this->request->files['upload']['tmp_name'];
-                
-                if (!$this->user->isVendor()) {
 
-                    if ($this->model_tool_export_import->uploadGeneralstateZipcode($file,$this->request->get['state_id']) ) {
+                if (!$this->user->isVendor()) {
+                    if ($this->model_tool_export_import->uploadGeneralstateZipcode($file, $this->request->get['state_id'])) {
                         $this->session->data['success'] = $this->language->get('text_success');
-                        /*$this->response->redirect($this->url->link('tool/export_import', 'token=' . $this->session->data['token'], 'SSL'));*/
+                    /*$this->response->redirect($this->url->link('tool/export_import', 'token=' . $this->session->data['token'], 'SSL'));*/
                     } else {
                         $this->error['warning'] = $this->language->get('error_upload');
-                        $this->error['warning'] .= "<br />\n".$this->language->get( 'text_log_details' );
+                        $this->error['warning'] .= "<br />\n".$this->language->get('text_log_details');
                     }
-
                 }
             }
 
@@ -109,32 +107,33 @@ class ControllerLocalisationState extends Controller {
             $url = '';
 
             if (isset($this->request->get['sort'])) {
-                $url .= '&sort=' . $this->request->get['sort'];
+                $url .= '&sort='.$this->request->get['sort'];
             }
 
             if (isset($this->request->get['order'])) {
-                $url .= '&order=' . $this->request->get['order'];
+                $url .= '&order='.$this->request->get['order'];
             }
 
             if (isset($this->request->get['page'])) {
-                $url .= '&page=' . $this->request->get['page'];
+                $url .= '&page='.$this->request->get['page'];
             }
 
-            if (isset($this->request->post['button']) and $this->request->post['button'] == 'save') {
-                $this->response->redirect($this->url->link('localisation/state/edit', 'state_id=' . $this->request->get['state_id'] . '&token=' . $this->session->data['token'] . $url, 'SSL'));
+            if (isset($this->request->post['button']) and 'save' == $this->request->post['button']) {
+                $this->response->redirect($this->url->link('localisation/state/edit', 'state_id='.$this->request->get['state_id'].'&token='.$this->session->data['token'].$url, 'SSL'));
             }
 
-            if (isset($this->request->post['button']) and $this->request->post['button'] == 'new') {
-                $this->response->redirect($this->url->link('localisation/state/add', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            if (isset($this->request->post['button']) and 'new' == $this->request->post['button']) {
+                $this->response->redirect($this->url->link('localisation/state/add', 'token='.$this->session->data['token'].$url, 'SSL'));
             }
 
-            $this->response->redirect($this->url->link('localisation/state', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            $this->response->redirect($this->url->link('localisation/state', 'token='.$this->session->data['token'].$url, 'SSL'));
         }
 
         $this->getForm();
     }
 
-    public function delete() {
+    public function delete()
+    {
         $this->load->language('localisation/state');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -151,24 +150,25 @@ class ControllerLocalisationState extends Controller {
             $url = '';
 
             if (isset($this->request->get['sort'])) {
-                $url .= '&sort=' . $this->request->get['sort'];
+                $url .= '&sort='.$this->request->get['sort'];
             }
 
             if (isset($this->request->get['order'])) {
-                $url .= '&order=' . $this->request->get['order'];
+                $url .= '&order='.$this->request->get['order'];
             }
 
             if (isset($this->request->get['page'])) {
-                $url .= '&page=' . $this->request->get['page'];
+                $url .= '&page='.$this->request->get['page'];
             }
 
-            $this->response->redirect($this->url->link('localisation/state', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            $this->response->redirect($this->url->link('localisation/state', 'token='.$this->session->data['token'].$url, 'SSL'));
         }
 
         $this->getList();
     }
 
-    protected function getList() {
+    protected function getList()
+    {
         if (isset($this->request->get['sort'])) {
             $sort = $this->request->get['sort'];
         } else {
@@ -190,53 +190,53 @@ class ControllerLocalisationState extends Controller {
         $url = '';
 
         if (isset($this->request->get['sort'])) {
-            $url .= '&sort=' . $this->request->get['sort'];
+            $url .= '&sort='.$this->request->get['sort'];
         }
 
         if (isset($this->request->get['order'])) {
-            $url .= '&order=' . $this->request->get['order'];
+            $url .= '&order='.$this->request->get['order'];
         }
 
         if (isset($this->request->get['page'])) {
-            $url .= '&page=' . $this->request->get['page'];
+            $url .= '&page='.$this->request->get['page'];
         }
 
-        $data['breadcrumbs'] = array();
+        $data['breadcrumbs'] = [];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL')
-        );
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
+        ];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('localisation/state', 'token=' . $this->session->data['token'] . $url, 'SSL')
-        );
+            'href' => $this->url->link('localisation/state', 'token='.$this->session->data['token'].$url, 'SSL'),
+        ];
 
-        $data['add'] = $this->url->link('localisation/state/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['delete'] = $this->url->link('localisation/state/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['add'] = $this->url->link('localisation/state/add', 'token='.$this->session->data['token'].$url, 'SSL');
+        $data['delete'] = $this->url->link('localisation/state/delete', 'token='.$this->session->data['token'].$url, 'SSL');
 
-        $data['cities'] = array();
+        $data['cities'] = [];
 
-        $filter_data = array(
+        $filter_data = [
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin')
-        );
+            'limit' => $this->config->get('config_limit_admin'),
+        ];
 
         $state_total = $this->model_localisation_state->getTotalCities();
 
         $results = $this->model_localisation_state->getCities($filter_data);
 
         foreach ($results as $result) {
-            $data['cities'][] = array(
+            $data['cities'][] = [
                 'state_id' => $result['state_id'],
                 'name' => $result['name'],
                 'status' => $result['status'],
                 'sort_order' => $result['sort_order'],
-                'edit' => $this->url->link('localisation/state/edit', 'token=' . $this->session->data['token'] . '&state_id=' . $result['state_id'] . $url, 'SSL')
-            );
+                'edit' => $this->url->link('localisation/state/edit', 'token='.$this->session->data['token'].'&state_id='.$result['state_id'].$url, 'SSL'),
+            ];
         }
 
         $data['heading_title'] = $this->language->get('heading_title');
@@ -271,40 +271,40 @@ class ControllerLocalisationState extends Controller {
         if (isset($this->request->post['selected'])) {
             $data['selected'] = (array) $this->request->post['selected'];
         } else {
-            $data['selected'] = array();
+            $data['selected'] = [];
         }
 
         $url = '';
 
-        if ($order == 'ASC') {
+        if ('ASC' == $order) {
             $url .= '&order=DESC';
         } else {
             $url .= '&order=ASC';
         }
 
         if (isset($this->request->get['page'])) {
-            $url .= '&page=' . $this->request->get['page'];
+            $url .= '&page='.$this->request->get['page'];
         }
 
-        $data['sort_name'] = $this->url->link('localisation/state', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
-        $data['sort_status'] = $this->url->link('localisation/state', 'token=' . $this->session->data['token'] . '&sort=status' . $url, 'SSL');
-        $data['sort_sort_order'] = $this->url->link('localisation/state', 'token=' . $this->session->data['token'] . '&sort=sort_order' . $url, 'SSL');
+        $data['sort_name'] = $this->url->link('localisation/state', 'token='.$this->session->data['token'].'&sort=name'.$url, 'SSL');
+        $data['sort_status'] = $this->url->link('localisation/state', 'token='.$this->session->data['token'].'&sort=status'.$url, 'SSL');
+        $data['sort_sort_order'] = $this->url->link('localisation/state', 'token='.$this->session->data['token'].'&sort=sort_order'.$url, 'SSL');
 
         $url = '';
 
         if (isset($this->request->get['sort'])) {
-            $url .= '&sort=' . $this->request->get['sort'];
+            $url .= '&sort='.$this->request->get['sort'];
         }
 
         if (isset($this->request->get['order'])) {
-            $url .= '&order=' . $this->request->get['order'];
+            $url .= '&order='.$this->request->get['order'];
         }
 
         $pagination = new Pagination();
         $pagination->total = $state_total;
         $pagination->page = $page;
         $pagination->limit = $this->config->get('config_limit_admin');
-        $pagination->url = $this->url->link('localisation/state', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+        $pagination->url = $this->url->link('localisation/state', 'token='.$this->session->data['token'].$url.'&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
@@ -320,7 +320,8 @@ class ControllerLocalisationState extends Controller {
         $this->response->setOutput($this->load->view('localisation/state_list.tpl', $data));
     }
 
-    protected function getForm() {
+    protected function getForm()
+    {
         $data['heading_title'] = $this->language->get('heading_title');
 
         $data['text_form'] = !isset($this->request->get['state_id']) ? $this->language->get('text_add') : $this->language->get('text_edit');
@@ -332,7 +333,7 @@ class ControllerLocalisationState extends Controller {
         $data['entry_name'] = $this->language->get('entry_name');
         $data['entry_address'] = $this->language->get('entry_address');
         $data['entry_zipcode'] = $this->language->get('entry_zipcode');
-        
+
         $data['entry_geocode'] = $this->language->get('entry_geocode');
         $data['entry_telephone'] = $this->language->get('entry_telephone');
         $data['entry_fax'] = $this->language->get('entry_fax');
@@ -344,22 +345,21 @@ class ControllerLocalisationState extends Controller {
         $data['help_geocode'] = $this->language->get('help_geocode');
         $data['help_open'] = $this->language->get('help_open');
         $data['help_comment'] = $this->language->get('help_comment');
-        
+
         $data['text_import_zipcode'] = $this->language->get('text_import_zipcode');
         $data['text_export_zipcode'] = $this->language->get('text_export_zipcode');
-
 
         $data['button_save'] = $this->language->get('button_save');
         $data['button_savenew'] = $this->language->get('button_savenew');
         $data['button_saveclose'] = $this->language->get('button_saveclose');
         $data['button_cancel'] = $this->language->get('button_cancel');
 
-        if(isset($this->session->data['success'])){
+        if (isset($this->session->data['success'])) {
             $data['success'] = $this->session->data['success'];
-        }else{
+        } else {
             $data['success'] = '';
         }
-        
+
         if (isset($this->error['warning'])) {
             $data['error_warning'] = $this->error['warning'];
         } else {
@@ -375,45 +375,43 @@ class ControllerLocalisationState extends Controller {
         $url = '';
 
         if (isset($this->request->get['sort'])) {
-            $url .= '&sort=' . $this->request->get['sort'];
+            $url .= '&sort='.$this->request->get['sort'];
         }
 
         if (isset($this->request->get['order'])) {
-            $url .= '&order=' . $this->request->get['order'];
+            $url .= '&order='.$this->request->get['order'];
         }
 
         if (isset($this->request->get['page'])) {
-            $url .= '&page=' . $this->request->get['page'];
+            $url .= '&page='.$this->request->get['page'];
         }
 
-        $data['breadcrumbs'] = array();
+        $data['breadcrumbs'] = [];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL')
-        );
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
+        ];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('localisation/state', 'token=' . $this->session->data['token'] . $url, 'SSL')
-        );
+            'href' => $this->url->link('localisation/state', 'token='.$this->session->data['token'].$url, 'SSL'),
+        ];
 
         if (!isset($this->request->get['state_id'])) {
-            $data['action'] = $this->url->link('localisation/state/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $data['action'] = $this->url->link('localisation/state/add', 'token='.$this->session->data['token'].$url, 'SSL');
         } else {
-            $data['action'] = $this->url->link('localisation/state/edit', 'token=' . $this->session->data['token'] . '&state_id=' . $this->request->get['state_id'] . $url, 'SSL');
+            $data['action'] = $this->url->link('localisation/state/edit', 'token='.$this->session->data['token'].'&state_id='.$this->request->get['state_id'].$url, 'SSL');
         }
 
-        $data['cancel'] = $this->url->link('localisation/state', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['cancel'] = $this->url->link('localisation/state', 'token='.$this->session->data['token'].$url, 'SSL');
 
-        $data['state_zipcodes'] = array();
-        
-        if (isset($this->request->get['state_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+        $data['state_zipcodes'] = [];
+
+        if (isset($this->request->get['state_id']) && ('POST' != $this->request->server['REQUEST_METHOD'])) {
             $state_info = $this->model_localisation_state->getstate($this->request->get['state_id']);
 
             $this->load->model('localisation/state');
-
-            
 
             //$stateZipcodes = $this->model_localisation_state->getAllZipcodeBystate($this->request->get['state_id']);
 
@@ -450,8 +448,6 @@ class ControllerLocalisationState extends Controller {
             $data['sort_order'] = '';
         }
 
-        
-            
         //echo "<pre>";print_r($stateZipcodes);die;
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
@@ -460,7 +456,8 @@ class ControllerLocalisationState extends Controller {
         $this->response->setOutput($this->load->view('localisation/state_form.tpl', $data));
     }
 
-    protected function validateForm() {
+    protected function validateForm()
+    {
         if (!$this->user->hasPermission('modify', 'localisation/state')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
@@ -472,40 +469,41 @@ class ControllerLocalisationState extends Controller {
         return !$this->error;
     }
 
-    protected function validateDelete() {
+    protected function validateDelete()
+    {
         if (!$this->user->hasPermission('modify', 'localisation/state')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
-        
+
         $this->load->model('sale/order');
 
         foreach ($this->request->post['selected'] as $state_id) {
-                        
             //check order
-            
+
             $order_count = $this->model_sale_order->getTotalFromOrder($state_id);
 
-            if($order_count > 0){
+            if ($order_count > 0) {
                 $this->error['warning'] = sprintf($this->language->get('error_order_exist'), $order_count);
             }
-            
-            //customer address 
-            
+
+            //customer address
+
             $address_count = $this->model_sale_order->getTotalFromAddress($state_id);
 
-            if($address_count > 0){
+            if ($address_count > 0) {
                 $this->error['warning'] = sprintf($this->language->get('error_address_exist'), $address_count);
             }
         }
-        
+
         return !$this->error;
     }
 
-    public function export_state_zipcodes() {
-        $data = array();
-        if(isset($this->request->get['state_id'])){
+    public function export_state_zipcodes()
+    {
+        $data = [];
+        if (isset($this->request->get['state_id'])) {
             $data['state_id'] = $this->request->get['state_id'];
-        }else{
+        } else {
             $data['state_id'] = '';
         }
         $this->load->model('report/excel');
@@ -516,5 +514,4 @@ class ControllerLocalisationState extends Controller {
 
         $this->model_report_excel->download_cityzipcode_excel($data);
     }
-
 }
