@@ -1,8 +1,9 @@
 <?php
 
-class ControllerDashboardRecenttabs extends Controller {
-
-    public function index() {
+class ControllerDashboardRecenttabs extends Controller
+{
+    public function index()
+    {
         $this->load->language('dashboard/recenttabs');
 
         $data['heading_title'] = $this->language->get('heading_title');
@@ -31,7 +32,6 @@ class ControllerDashboardRecenttabs extends Controller {
 
         $data['token'] = $this->session->data['token'];
 
-
         $this->load->model('dashboard/recenttabs');
 
         // 5 best seller product
@@ -40,16 +40,14 @@ class ControllerDashboardRecenttabs extends Controller {
         } else {
             $results = $this->model_dashboard_recenttabs->getBestSellers();
         }
-        
+
         //echo "<pre>";print_r($results);die;
-        $bestseller = array();
+        $bestseller = [];
         foreach ($results as $product) {
-
             if ($this->user->isVendor()) {
-
                 /*$p_store_id = $this->getProductStoreId($product['product_id'],$product['store_id']);
 
-                if(count($p_store_id) > 0) {    
+                if(count($p_store_id) > 0) {
                     $editLink = $this->url->link('catalog/general/edit', 'token=' . $this->session->data['token'] . '&product_id=' . $p_store_id['product_store_id'], 'SSL');
                 } else {
 
@@ -58,21 +56,19 @@ class ControllerDashboardRecenttabs extends Controller {
 
                 $p_id = $product['product_id'];
 
-                $editLink = $this->url->link('catalog/vendor_product/edit', 'token=' . $this->session->data['token'] . '&store_product_id=' . $product['product_id'], 'SSL');
-                
+                $editLink = $this->url->link('catalog/vendor_product/edit', 'token='.$this->session->data['token'].'&store_product_id='.$product['product_id'], 'SSL');
             } else {
-
                 $p_id = $product['general_product_id'];
 
-                $editLink = $this->url->link('catalog/general/edit', 'token=' . $this->session->data['token'] . '&product_id=' . $product['general_product_id'], 'SSL');
+                $editLink = $this->url->link('catalog/general/edit', 'token='.$this->session->data['token'].'&product_id='.$product['general_product_id'], 'SSL');
             }
 
-            $bestseller[] = array(
+            $bestseller[] = [
                 'product_id' => $p_id,
                 'name' => $product['name'],
                 'total' => $product['total'],
-                'edit' => $editLink
-            );
+                'edit' => $editLink,
+            ];
         }
 
         $data['bestseller'] = $bestseller;
@@ -83,15 +79,13 @@ class ControllerDashboardRecenttabs extends Controller {
         } else {
             $results = $this->model_dashboard_recenttabs->getLessSellers();
         }
-        
-        $lessseller = array();
+
+        $lessseller = [];
         foreach ($results as $product) {
-
             if ($this->user->isVendor()) {
-
                 /*$p_store_id = $this->getProductStoreId($product['product_id'],$product['store_id']);
 
-                if(count($p_store_id) > 0) {    
+                if(count($p_store_id) > 0) {
                     $editLink = $this->url->link('catalog/general/edit', 'token=' . $this->session->data['token'] . '&product_id=' . $p_store_id['product_store_id'], 'SSL');
                 } else {
 
@@ -100,21 +94,19 @@ class ControllerDashboardRecenttabs extends Controller {
 
                 $p_id = $product['product_id'];
 
-                $editLink = $this->url->link('catalog/vendor_product/edit', 'token=' . $this->session->data['token'] . '&store_product_id=' . $product['product_id'], 'SSL');
-
+                $editLink = $this->url->link('catalog/vendor_product/edit', 'token='.$this->session->data['token'].'&store_product_id='.$product['product_id'], 'SSL');
             } else {
                 $p_id = $product['general_product_id'];
 
-                $editLink = $this->url->link('catalog/general/edit', 'token=' . $this->session->data['token'] . '&product_id=' . $product['general_product_id'], 'SSL');
-                
+                $editLink = $this->url->link('catalog/general/edit', 'token='.$this->session->data['token'].'&product_id='.$product['general_product_id'], 'SSL');
             }
 
-            $lessseller[] = array(
+            $lessseller[] = [
                 'product_id' => $p_id,
                 'name' => $product['name'],
                 'total' => $product['total'],
-                'edit' => $editLink
-            );
+                'edit' => $editLink,
+            ];
         }
 
         $data['lessseller'] = $lessseller;
@@ -125,53 +117,50 @@ class ControllerDashboardRecenttabs extends Controller {
         } else {
             $results = $this->model_dashboard_recenttabs->getMostViewed();
         }
-        
-        $viewed = array();
+
+        $viewed = [];
         foreach ($results as $product) {
+            $editLink = $this->url->link('catalog/general/edit', 'token='.$this->session->data['token'].'&product_id='.$product['product_id'], 'SSL');
 
-            
-            $editLink = $this->url->link('catalog/general/edit', 'token=' . $this->session->data['token'] . '&product_id=' . $product['product_id'], 'SSL');
-
-            $viewed[] = array(
+            $viewed[] = [
                 'product_id' => $product['product_id'],
                 'name' => $product['name'],
                 'total' => $product['viewed'],
-                'edit' => $editLink
-            );
+                'edit' => $editLink,
+            ];
         }
 
         $data['viewed'] = $viewed;
 
         // Last 5 Orders
-        $filter_data = array(
+        $filter_data = [
             'sort' => 'o.date_added',
             'order' => 'DESC',
             'start' => 0,
-            'limit' => 10
-        );
+            'limit' => 10,
+        ];
 
         $this->load->model('sale/order');
         $results = $this->model_sale_order->getOrders($filter_data);
-        $data['orders'] = array();
+        $data['orders'] = [];
         foreach ($results as $result) {
-            $data['orders'][] = array(
+            $data['orders'][] = [
                 'order_id' => $result['order_id'],
                 'customer' => $result['customer'],
                 'status' => $result['status'],
                 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
                 'total' => $this->currency->format($result['total'], $result['currency_code'], $result['currency_value']),
-                'view' => $this->url->link('sale/order/info', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'], 'SSL'),
-            );
+                'view' => $this->url->link('sale/order/info', 'token='.$this->session->data['token'].'&order_id='.$result['order_id'], 'SSL'),
+            ];
         }
 
         return $this->load->view('dashboard/recenttabs.tpl', $data);
     }
 
-    public function getProductStoreId( $product_id,$store_id) {
-        
-        $query = $this->db->query("SELECT * from  " . DB_PREFIX . "product_to_store where store_id = " . (int) $store_id." and product_id = " .$product_id);
-        
+    public function getProductStoreId($product_id, $store_id)
+    {
+        $query = $this->db->query('SELECT * from  '.DB_PREFIX.'product_to_store where store_id = '.(int) $store_id.' and product_id = '.$product_id);
+
         return $query->row;
     }
-
 }

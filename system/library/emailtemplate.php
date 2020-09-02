@@ -1,22 +1,24 @@
 <?php
 
-require_once DIR_SYSTEM . '/vendor/autoload.php'; // Loads the library
-require DIR_SYSTEM . '/vendor/twilio-php-master/Twilio/autoload.php';
+require_once DIR_SYSTEM.'/vendor/autoload.php'; // Loads the library
+require DIR_SYSTEM.'/vendor/twilio-php-master/Twilio/autoload.php';
 
+use AfricasTalking\SDK\AfricasTalking;
+use paragraph1\phpFCM\Client as FCMClient;
+
+require DIR_SYSTEM.'/vendor/zenvia/human_gateway_client_api/HumanClientMain.php';
+
+use paragraph1\phpFCM\Message;
+use paragraph1\phpFCM\Notification;
+use paragraph1\phpFCM\Recipient\Device;
 use Twilio\Rest\Client;
 
-require DIR_SYSTEM . '/vendor/zenvia/human_gateway_client_api/HumanClientMain.php';
+require_once DIR_SYSTEM.'/vendor/fcp-php/autoload.php';
 
-use paragraph1\phpFCM\Client as FCMClient;
-use paragraph1\phpFCM\Message;
-use paragraph1\phpFCM\Recipient\Device;
-use paragraph1\phpFCM\Notification;
-
-require_once DIR_SYSTEM . '/vendor/fcp-php/autoload.php';
-
-class Emailtemplate {
-
-    public function __construct($registry) {
+class Emailtemplate
+{
+    public function __construct($registry)
+    {
         $this->config = $registry->get('config');
         $this->url = $registry->get('url');
         $this->language = $registry->get('language');
@@ -26,12 +28,13 @@ class Emailtemplate {
     }
 
     // Mail Subject
-    public function getSubject($type, $template_id, $data) {
+    public function getSubject($type, $template_id, $data)
+    {
         $template = $this->getEmailTemplate($template_id);
 
         //echo "<pre>";print_r($template);die;
-        $findFunctionName = 'get' . ucwords($type) . 'Find';
-        $replaceFunctionName = 'get' . ucwords($type) . 'Replace';
+        $findFunctionName = 'get'.ucwords($type).'Find';
+        $replaceFunctionName = 'get'.ucwords($type).'Replace';
 
         $find = $this->$findFunctionName();
         $replace = $this->$replaceFunctionName($data);
@@ -46,7 +49,8 @@ class Emailtemplate {
     }
 
     // Mail Message
-    public function getMessage($type, $template_id, $data) {
+    public function getMessage($type, $template_id, $data)
+    {
         $template = $this->getEmailTemplate($template_id);
 
         $log = new Log('error.log');
@@ -54,21 +58,17 @@ class Emailtemplate {
         /* $log->write('in fes rhis constant');
           $log->write($data);
           $log->write($template); */
-        $findFunctionName = 'get' . ucwords($type) . 'Find';
-        $replaceFunctionName = 'get' . ucwords($type) . 'Replace';
+        $findFunctionName = 'get'.ucwords($type).'Find';
+        $replaceFunctionName = 'get'.ucwords($type).'Replace';
 
         //$log->write($findFunctionName);
         //$log->write($replaceFunctionName);
 
-
-
         $find = $this->$findFunctionName();
         $replace = $this->$replaceFunctionName($data);
 
-
         if (!empty($template['description'])) {
-            if (ucwords($type) == 'OrderAll' || ucwords($type) == 'VendorOrder') {
-
+            if ('OrderAll' == ucwords($type) || 'VendorOrder' == ucwords($type)) {
                 preg_match('/{product:start}(.*){product:stop}/Uis', $template['description'], $template_product);
                 if (!empty($template_product[1])) {
                     $template['description'] = str_replace($template_product[1], '', $template['description']);
@@ -102,7 +102,7 @@ class Emailtemplate {
               $log->write($replace);
               $log->write($find); */
             $message = trim(str_replace($find, $replace, $template['description']));
-            //$log->write($message);
+        //$log->write($message);
         } else {
             $message = $this->getDefaultMessage($type, $template_id, $data);
         }
@@ -110,11 +110,12 @@ class Emailtemplate {
         return $message;
     }
 
-    public function getSmsMessage($type, $template_id, $data) {
+    public function getSmsMessage($type, $template_id, $data)
+    {
         $template = $this->getEmailTemplate($template_id);
 
-        $findFunctionName = 'get' . ucwords($type) . 'Find';
-        $replaceFunctionName = 'get' . ucwords($type) . 'Replace';
+        $findFunctionName = 'get'.ucwords($type).'Find';
+        $replaceFunctionName = 'get'.ucwords($type).'Replace';
 
         $find = $this->$findFunctionName();
         $replace = $this->$replaceFunctionName($data);
@@ -128,7 +129,8 @@ class Emailtemplate {
         return $message;
     }
 
-    public function getSmsEnabled($type, $template_id) {
+    public function getSmsEnabled($type, $template_id)
+    {
         $template = $this->getEmailTemplate($template_id);
         if ($template['sms_status']) {
             return true;
@@ -137,7 +139,8 @@ class Emailtemplate {
         }
     }
 
-    public function getEmailEnabled($type, $template_id) {
+    public function getEmailEnabled($type, $template_id)
+    {
         $template = $this->getEmailTemplate($template_id);
         if ($template['email_status']) {
             return true;
@@ -146,7 +149,8 @@ class Emailtemplate {
         }
     }
 
-    public function getNotificationEnabled($type, $template_id) {
+    public function getNotificationEnabled($type, $template_id)
+    {
         $template = $this->getEmailTemplate($template_id);
         if ($template['mobile_notification']) {
             return true;
@@ -155,9 +159,8 @@ class Emailtemplate {
         }
     }
 
-    public function sendDynamicPushNotification($to, $deviceId, $message, $title, $sendData, $app_action = 'com.instagolocal.show_wallet') {
-
-
+    public function sendDynamicPushNotification($to, $deviceId, $message, $title, $sendData, $app_action = 'com.instagolocal.show_wallet')
+    {
         $log = new Log('error.log');
         $log->write('sendDynamicPushNotification');
 
@@ -169,8 +172,7 @@ class Emailtemplate {
 
         if (isset($to)) {
             if (isset($deviceId) && isset($to)) {
-
-                $log->write("api key");
+                $log->write('api key');
 
                 $apiKey = $this->config->get('config_seller_api_key');
                 $log->write($apiKey);
@@ -206,15 +208,17 @@ class Emailtemplate {
             $json['error'] = 'no user_id';
         }
 
-        $log->write("retruen");
+        $log->write('retruen');
+
         return true;
     }
 
-    public function getNotificationMessage($type, $template_id, $data) {
+    public function getNotificationMessage($type, $template_id, $data)
+    {
         $template = $this->getEmailTemplate($template_id);
 
-        $findFunctionName = 'get' . ucwords($type) . 'Find';
-        $replaceFunctionName = 'get' . ucwords($type) . 'Replace';
+        $findFunctionName = 'get'.ucwords($type).'Find';
+        $replaceFunctionName = 'get'.ucwords($type).'Replace';
 
         $find = $this->$findFunctionName();
         $replace = $this->$replaceFunctionName($data);
@@ -228,11 +232,12 @@ class Emailtemplate {
         return $message;
     }
 
-    public function getNotificationTitle($type, $template_id, $data) {
+    public function getNotificationTitle($type, $template_id, $data)
+    {
         $template = $this->getEmailTemplate($template_id);
 
-        $findFunctionName = 'get' . ucwords($type) . 'Find';
-        $replaceFunctionName = 'get' . ucwords($type) . 'Replace';
+        $findFunctionName = 'get'.ucwords($type).'Find';
+        $replaceFunctionName = 'get'.ucwords($type).'Replace';
 
         $find = $this->$findFunctionName();
         $replace = $this->$replaceFunctionName($data);
@@ -247,20 +252,21 @@ class Emailtemplate {
     }
 
     //Mail Text
-    public function getText($type, $template_id, $data) {
-        $findName = 'get' . ucwords($type) . 'Text';
+    public function getText($type, $template_id, $data)
+    {
+        $findName = 'get'.ucwords($type).'Text';
 
         return $this->$findName($template_id, $data);
     }
 
     // Mail Template
-    public function getEmailTemplate($email_template) {
-
+    public function getEmailTemplate($email_template)
+    {
         //$email_template_data = [];
-        $item = explode("_", $email_template);
+        $item = explode('_', $email_template);
         //  echo "<pre>";print_r($item);die;
-        if ($item[0] == "order") {
-            if ($item[1] == 0) {
+        if ('order' == $item[0]) {
+            if (0 == $item[1]) {
                 $item[1] = 1;
             }
         }
@@ -268,17 +274,17 @@ class Emailtemplate {
         $log = new Log($email_template);
 
         $log->write('email template');
-        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "email AS e LEFT JOIN " . DB_PREFIX . "email_description AS ed ON ed.email_id = e.id WHERE e.type = '{$item[0]}' AND e.text_id = '{$item[1]}' AND ed.language_id = '{$this->config->get('config_language_id')}'");
+        $query = $this->db->query('SELECT * FROM '.DB_PREFIX.'email AS e LEFT JOIN '.DB_PREFIX."email_description AS ed ON ed.email_id = e.id WHERE e.type = '{$item[0]}' AND e.text_id = '{$item[1]}' AND ed.language_id = '{$this->config->get('config_language_id')}'");
 
         if (!$query->num_rows) {
-            $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "email AS e LEFT JOIN " . DB_PREFIX . "email_description AS ed ON ed.email_id = e.id WHERE e.type = '{$item[0]}' AND e.text_id = '{$item[1]}'");
+            $query = $this->db->query('SELECT * FROM '.DB_PREFIX.'email AS e LEFT JOIN '.DB_PREFIX."email_description AS ed ON ed.email_id = e.id WHERE e.type = '{$item[0]}' AND e.text_id = '{$item[1]}'");
         }
         /*
           $log->write($query->rows); */
         // echo "<pre>";print_r("SELECT * FROM " . DB_PREFIX . "email AS e LEFT JOIN " . DB_PREFIX . "email_description AS ed ON ed.email_id = e.id WHERE e.type = '{$item[0]}' AND e.text_id = '{$item[1]}' AND ed.language_id = '{$this->config->get('config_language_id')}'");die;
 
         foreach ($query->rows as $result) {
-            $email_template_data = array(
+            $email_template_data = [
                 'text' => $result['text'],
                 'text_id' => $result['text_id'],
                 'type' => $result['type'],
@@ -292,22 +298,23 @@ class Emailtemplate {
                 'mobile_notification' => $result['mobile_notification'],
                 'mobile_notification_template' => $result['mobile_notification_template'],
                 'mobile_notification_title' => $result['mobile_notification_title'],
-            );
+            ];
         }
 
         return $email_template_data;
     }
 
     // Customer Login OTP
-    public function getLoginOTPFind() {
-        $result = array('{username}', '{otp}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}');
+    public function getLoginOTPFind()
+    {
+        $result = ['{username}', '{otp}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}'];
+
         return $result;
     }
 
-    public function getLoginOTPReplace($data) {
-
-
-        $result = array(
+    public function getLoginOTPReplace($data)
+    {
+        $result = [
             'username' => $data['username'],
             'otp' => $data['otp'],
             //common replace
@@ -320,23 +327,26 @@ class Emailtemplate {
             'help_center' => $this->url->adminLink('information/help'),
             //'white_logo'=> HTTPS_CATALOG.'image/'. $this->config->get('config_white_logo'),
             'white_logo' => $this->resize($this->config->get('config_white_logo'), 197, 34),
-            'terms' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_account_id'), 'SSL'),
-            'privacy_policy' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_privacy_policy_id'), 'SSL'),
+            'terms' => $this->url->adminLink('information/information', 'information_id='.$this->config->get('config_account_id'), 'SSL'),
+            'privacy_policy' => $this->url->adminLink('information/information', 'information_id='.$this->config->get('config_privacy_policy_id'), 'SSL'),
             'system_email' => $this->config->get('config_email'),
-            'system_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $this->config->get('config_telephone'),
-        );
+            'system_phone' => '+'.$this->config->get('config_telephone_code').' '.$this->config->get('config_telephone'),
+        ];
 
         return $result;
     }
 
     // Customer Regsiter OTP
-    public function getRegisterOTPFind() {
-        $result = array('{username}', '{otp}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}');
+    public function getRegisterOTPFind()
+    {
+        $result = ['{username}', '{otp}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}'];
+
         return $result;
     }
 
-    public function getRegisterOTPReplace($data) {
-        $result = array(
+    public function getRegisterOTPReplace($data)
+    {
+        $result = [
             'username' => $data['username'],
             'otp' => $data['otp'],
             //common replace
@@ -349,24 +359,26 @@ class Emailtemplate {
             'help_center' => $this->url->adminLink('information/help'),
             //'white_logo'=> HTTPS_CATALOG.'image/'. $this->config->get('config_white_logo'),
             'white_logo' => $this->resize($this->config->get('config_white_logo'), 197, 34),
-            'terms' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_account_id'), 'SSL'),
-            'privacy_policy' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_privacy_policy_id'), 'SSL'),
+            'terms' => $this->url->adminLink('information/information', 'information_id='.$this->config->get('config_account_id'), 'SSL'),
+            'privacy_policy' => $this->url->adminLink('information/information', 'information_id='.$this->config->get('config_privacy_policy_id'), 'SSL'),
             'system_email' => $this->config->get('config_email'),
-            'system_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $this->config->get('config_telephone'),
-        );
+            'system_phone' => '+'.$this->config->get('config_telephone_code').' '.$this->config->get('config_telephone'),
+        ];
 
         return $result;
     }
 
-    // Admin Login 
-    public function getLoginFind() {
-        $result = array('{username}', '{store_name}', '{ip_address}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}');
+    // Admin Login
+    public function getLoginFind()
+    {
+        $result = ['{username}', '{store_name}', '{ip_address}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}'];
+
         return $result;
     }
 
-    public function getLoginReplace($data) {
-
-        $result = array(
+    public function getLoginReplace($data)
+    {
+        $result = [
             'username' => $data['username'],
             'store_name' => $data['store_name'],
             'ip_address' => $data['ip_address'],
@@ -380,27 +392,30 @@ class Emailtemplate {
             'help_center' => $this->url->adminLink('information/help'),
             //'white_logo'=> HTTPS_CATALOG.'image/'. $this->config->get('config_white_logo'),
             'white_logo' => $this->resize($this->config->get('config_white_logo'), 197, 34),
-            'terms' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_account_id'), 'SSL'),
-            'privacy_policy' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_privacy_policy_id'), 'SSL'),
+            'terms' => $this->url->adminLink('information/information', 'information_id='.$this->config->get('config_account_id'), 'SSL'),
+            'privacy_policy' => $this->url->adminLink('information/information', 'information_id='.$this->config->get('config_privacy_policy_id'), 'SSL'),
             'system_email' => $this->config->get('config_email'),
-            'system_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $this->config->get('config_telephone'),
-        );
+            'system_phone' => '+'.$this->config->get('config_telephone_code').' '.$this->config->get('config_telephone'),
+        ];
         //echo "<pre>";print_r($result);die;
 
         return $result;
     }
 
     // Affilate
-    public function getAffiliateFind() {
-        $result = array('{firstname}', '{lastname}', '{date}', '{store_name}', '{description}', '{order_id}', '{amount}', '{total}', '{email}', '{password}', '{affiliate_code}', '{account_href}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}');
+    public function getAffiliateFind()
+    {
+        $result = ['{firstname}', '{lastname}', '{date}', '{store_name}', '{description}', '{order_id}', '{amount}', '{total}', '{email}', '{password}', '{affiliate_code}', '{account_href}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}'];
+
         return $result;
     }
 
-    public function getAffiliateReplace($data) {
-        $result = array(
+    public function getAffiliateReplace($data)
+    {
+        $result = [
             'firstname' => (!empty($data['firstname'])) ? $data['firstname'] : '',
             'lastname' => (!empty($data['lastname'])) ? $data['lastname'] : '',
-            'date' => date($this->language->get('date_format_short'), strtotime(date("Y-m-d H:i:s"))),
+            'date' => date($this->language->get('date_format_short'), strtotime(date('Y-m-d H:i:s'))),
             'store_name' => $this->config->get('config_name'),
             'description' => (!empty($data['description'])) ? nl2br($data['description']) : '',
             'order_id' => (!empty($data['order_id'])) ? $data['order_id'] : '',
@@ -420,34 +435,37 @@ class Emailtemplate {
             'help_center' => $this->url->adminLink('information/help'),
             //'white_logo'=> HTTPS_CATALOG.'image/'. $this->config->get('config_white_logo'),
             'white_logo' => $this->resize($this->config->get('config_white_logo'), 197, 34),
-            'terms' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_account_id'), 'SSL'),
-            'privacy_policy' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_privacy_policy_id'), 'SSL'),
+            'terms' => $this->url->adminLink('information/information', 'information_id='.$this->config->get('config_account_id'), 'SSL'),
+            'privacy_policy' => $this->url->adminLink('information/information', 'information_id='.$this->config->get('config_privacy_policy_id'), 'SSL'),
             'system_email' => $this->config->get('config_email'),
-            'system_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $this->config->get('config_telephone'),
-        );
+            'system_phone' => '+'.$this->config->get('config_telephone_code').' '.$this->config->get('config_telephone'),
+        ];
 
         return $result;
     }
 
     // Customer
-    public function getCustomerFind() {
-        $result = array('{firstname}', '{lastname}', '{branchname}', '{subuserfirstname}', '{subuserlastname}', '{date}', '{store_name}', '{email}', '{password}', '{account_href}', '{activate_href}', '{order_link}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}', '{amount}', '{transfer_type}', '{ip_address}',);
+    public function getCustomerFind()
+    {
+        $result = ['{firstname}', '{lastname}', '{branchname}', '{subuserfirstname}', '{subuserlastname}', '{date}', '{store_name}', '{email}', '{password}', '{account_href}', '{activate_href}', '{order_link}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}', '{amount}', '{transfer_type}', '{ip_address}'];
+
         return $result;
     }
 
-    public function getCustomerReplace($data) {
-        $result = array(
+    public function getCustomerReplace($data)
+    {
+        $result = [
             'firstname' => $data['firstname'],
             'lastname' => $data['lastname'],
             'branchname' => $data['branchname'],
             'subuserfirstname' => $data['subuserfirstname'],
             'subuserlastname' => $data['subuserlastname'],
-            'date' => date($this->language->get('date_format_short'), strtotime(date("Y-m-d H:i:s"))),
+            'date' => date($this->language->get('date_format_short'), strtotime(date('Y-m-d H:i:s'))),
             'store_name' => $this->config->get('config_name'),
             'email' => $data['email'],
             'password' => $data['password'],
-            'account_href' => HTTP_CATALOG . 'index.php?path=account/login',
-            'activate_href' => (!empty($data['confirm_code'])) ? $this->url->link('account/activate', 'token=' . $data['confirm_code'], 'SSL') : '',
+            'account_href' => HTTP_CATALOG.'index.php?path=account/login',
+            'activate_href' => (!empty($data['confirm_code'])) ? $this->url->link('account/activate', 'token='.$data['confirm_code'], 'SSL') : '',
             'order_link' => $data['order_link'],
             //common replace
             'site_url' => HTTPS_CATALOG,
@@ -459,26 +477,29 @@ class Emailtemplate {
             'help_center' => $this->url->adminLink('information/help'),
             //'white_logo'=> HTTPS_CATALOG.'image/'. $this->config->get('config_white_logo'),
             'white_logo' => $this->resize($this->config->get('config_white_logo'), 197, 34),
-            'terms' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_account_id'), 'SSL'),
-            'privacy_policy' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_privacy_policy_id'), 'SSL'),
+            'terms' => $this->url->adminLink('information/information', 'information_id='.$this->config->get('config_account_id'), 'SSL'),
+            'privacy_policy' => $this->url->adminLink('information/information', 'information_id='.$this->config->get('config_privacy_policy_id'), 'SSL'),
             'system_email' => $this->config->get('config_email'),
-            'system_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $this->config->get('config_telephone'),
+            'system_phone' => '+'.$this->config->get('config_telephone_code').' '.$this->config->get('config_telephone'),
             'amount' => isset($data['amount']) ? $data['amount'] : '',
             'transfer_type' => isset($data['transfer_type']) ? $data['transfer_type'] : '',
             'ip_address' => $data['ip_address'],
-        );
+        ];
 
         return $result;
     }
 
     // Referral
-    public function getReferralFind() {
-        $result = array('{site_name}', '{name}', '{reward_text}', '{refer_link}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}');
+    public function getReferralFind()
+    {
+        $result = ['{site_name}', '{name}', '{reward_text}', '{refer_link}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}'];
+
         return $result;
     }
 
-    public function getReferralReplace($data) {
-        $result = array(
+    public function getReferralReplace($data)
+    {
+        $result = [
             'site_name' => $data['site_name'],
             'name' => $data['name'],
             'reward_text' => $data['reward_text'],
@@ -493,24 +514,26 @@ class Emailtemplate {
             'help_center' => $this->url->adminLink('information/help'),
             //'white_logo'=> HTTPS_CATALOG.'image/'. $this->config->get('config_white_logo'),
             'white_logo' => $this->resize($this->config->get('config_white_logo'), 197, 34),
-            'terms' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_account_id'), 'SSL'),
-            'privacy_policy' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_privacy_policy_id'), 'SSL'),
+            'terms' => $this->url->adminLink('information/information', 'information_id='.$this->config->get('config_account_id'), 'SSL'),
+            'privacy_policy' => $this->url->adminLink('information/information', 'information_id='.$this->config->get('config_privacy_policy_id'), 'SSL'),
             'system_email' => $this->config->get('config_email'),
-            'system_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $this->config->get('config_telephone'),
-        );
+            'system_phone' => '+'.$this->config->get('config_telephone_code').' '.$this->config->get('config_telephone'),
+        ];
 
         return $result;
     }
 
     // Coming soon
-    public function getComingSoonFind() {
-        $result = array('{website_link}', '{email_address}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}');
+    public function getComingSoonFind()
+    {
+        $result = ['{website_link}', '{email_address}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}'];
+
         return $result;
     }
 
-    public function getComingSoonReplace($data) {
-
-        $result = array(
+    public function getComingSoonReplace($data)
+    {
+        $result = [
             'website_link' => $data['website_link'],
             'email_address' => $data['email_address'],
             //common replace
@@ -523,24 +546,26 @@ class Emailtemplate {
             'help_center' => $this->url->adminLink('information/help'),
             //'white_logo'=> HTTPS_CATALOG.'image/'. $this->config->get('config_white_logo'),
             'white_logo' => $this->resize($this->config->get('config_white_logo'), 197, 34),
-            'terms' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_account_id'), 'SSL'),
-            'privacy_policy' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_privacy_policy_id'), 'SSL'),
+            'terms' => $this->url->adminLink('information/information', 'information_id='.$this->config->get('config_account_id'), 'SSL'),
+            'privacy_policy' => $this->url->adminLink('information/information', 'information_id='.$this->config->get('config_privacy_policy_id'), 'SSL'),
             'system_email' => $this->config->get('config_email'),
-            'system_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $this->config->get('config_telephone'),
-        );
+            'system_phone' => '+'.$this->config->get('config_telephone_code').' '.$this->config->get('config_telephone'),
+        ];
 
         return $result;
     }
 
     // Return
-    public function getVendorReturnFind() {
-        $result = array('{return_id}', '{product_name}', '{unit}', '{order_id}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}');
+    public function getVendorReturnFind()
+    {
+        $result = ['{return_id}', '{product_name}', '{unit}', '{order_id}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}'];
+
         return $result;
     }
 
-    public function getVendorReturnReplace($data) {
-
-        $result = array(
+    public function getVendorReturnReplace($data)
+    {
+        $result = [
             'return_id' => $data['return_id'],
             'product_name' => $data['product_name'],
             'unit' => $data['unit'],
@@ -555,26 +580,27 @@ class Emailtemplate {
             'help_center' => $this->url->adminLink('information/help'),
             //'white_logo'=> HTTPS_CATALOG.'image/'. $this->config->get('config_white_logo'),
             'white_logo' => $this->resize($this->config->get('config_white_logo'), 197, 34),
-            'terms' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_account_id'), 'SSL'),
-            'privacy_policy' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_privacy_policy_id'), 'SSL'),
+            'terms' => $this->url->adminLink('information/information', 'information_id='.$this->config->get('config_account_id'), 'SSL'),
+            'privacy_policy' => $this->url->adminLink('information/information', 'information_id='.$this->config->get('config_privacy_policy_id'), 'SSL'),
             'system_email' => $this->config->get('config_email'),
-            'system_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $this->config->get('config_telephone'),
-        );
-
+            'system_phone' => '+'.$this->config->get('config_telephone_code').' '.$this->config->get('config_telephone'),
+        ];
 
         //echo "<pre>";print_r($result);die;
         return $result;
     }
 
     // Return
-    public function getReturnFind() {
-        $result = array('{return_id}', '{product_name}', '{unit}', '{order_id}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}');
+    public function getReturnFind()
+    {
+        $result = ['{return_id}', '{product_name}', '{unit}', '{order_id}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}'];
+
         return $result;
     }
 
-    public function getReturnReplace($data) {
-
-        $result = array(
+    public function getReturnReplace($data)
+    {
+        $result = [
             'return_id' => $data['return_id'],
             'product_name' => $data['product_name'],
             'unit' => $data['unit'],
@@ -589,11 +615,11 @@ class Emailtemplate {
             'help_center' => $this->url->adminLink('information/help'),
             //'white_logo'=> HTTPS_CATALOG.'image/'. $this->config->get('config_white_logo'),
             'white_logo' => $this->resize($this->config->get('config_white_logo'), 197, 34),
-            'terms' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_account_id'), 'SSL'),
-            'privacy_policy' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_privacy_policy_id'), 'SSL'),
+            'terms' => $this->url->adminLink('information/information', 'information_id='.$this->config->get('config_account_id'), 'SSL'),
+            'privacy_policy' => $this->url->adminLink('information/information', 'information_id='.$this->config->get('config_privacy_policy_id'), 'SSL'),
             'system_email' => $this->config->get('config_email'),
-            'system_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $this->config->get('config_telephone'),
-        );
+            'system_phone' => '+'.$this->config->get('config_telephone_code').' '.$this->config->get('config_telephone'),
+        ];
 
         return $result;
     }
@@ -644,47 +670,43 @@ class Emailtemplate {
       } */
 
     // Order
-    public function getVendorOrderFind() {
-
-        $result = array(
+    public function getVendorOrderFind()
+    {
+        $result = [
             '{firstname}', '{lastname}', '{delivery_address}', '{shipping_address}', '{payment_address}', '{order_date}', '{product:start}', '{product:stop}',
             '{total:start}', '{total:stop}', '{voucher:start}', '{voucher:stop}', '{special}', '{date}', '{payment}', '{shipment}', '{order_id}', '{total}', '{invoice_number}',
             '{order_href}', '{store_url}', '{status_name}', '{store_name}', '{ip}', '{comment:start}', '{comment:stop}', '{sub_total}', '{shipping_cost}',
-            '{client_comment}', '{tax:start}', '{tax:stop}', '{tax_amount}', '{email}', '{telephone}', '{order_pdf_href}', '{delivery_date}', '{delivery_time}', '{customer_notes}', '{site_url}', '{customer_cpf}', '{store_address}', '{store_telephone}', '{store_tax_number}', '{shipping_contact_number}', '{shipping_flat_number}', '{shipping_street_address}', '{shipping_landmark}', '{shipping_zipcode}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}'
-        );
+            '{client_comment}', '{tax:start}', '{tax:stop}', '{tax_amount}', '{email}', '{telephone}', '{order_pdf_href}', '{delivery_date}', '{delivery_time}', '{customer_notes}', '{site_url}', '{customer_cpf}', '{store_address}', '{store_telephone}', '{store_tax_number}', '{shipping_contact_number}', '{shipping_flat_number}', '{shipping_street_address}', '{shipping_landmark}', '{shipping_zipcode}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}',
+        ];
 
         return $result;
     }
 
-    public function getVendorOrderReplace($data) {
+    public function getVendorOrderReplace($data)
+    {
         $emailTemplate = $this->getEmailTemplate($data['template_id']);
         $data['order_href'] = $this->maskingOrderDetailUrl($data['order_href']);
         $log = new Log('error.log');
 
         $log->write('in getVendorOrderReplace');
 
-
-
         foreach ($data as $dataKey => $dataValue) {
             $dataKey = $dataValue;
         }
 
         // Special
-        $special = array();
+        $special = [];
 
         // if (sizeof($email_template['special']) <> 0) {
         // //   $special = $this->_prepareProductSpecial((int)$order_info['customer_group_id'], $email_template['special']);
         // }
 
-
         $order_info = $data['order_info'];
-
 
         // Products
         preg_match('/{product:start}(.*){product:stop}/Uis', $emailTemplate['description'], $template_product);
 
         if (sizeof($template_product) > 0) {
-
             if (isset($data['new_invoice'])) {
                 //call for new invoice
                 $getProducts = $this->getRealOrderProducts($order_info['order_id']);
@@ -696,10 +718,8 @@ class Emailtemplate {
 
             $emailTemplate['description'] = str_replace($template_product[1], '', $emailTemplate['description']);
         } else {
-            $products = array();
+            $products = [];
         }
-
-
 
         // Comment
         preg_match('/{comment:start}(.*){comment:stop}/Uis', $emailTemplate['description'], $template_comment);
@@ -720,23 +740,23 @@ class Emailtemplate {
 
         if (sizeof($template_tax) > 0) {
             // $taxes = $this->getTaxTemplate($totals, $template_tax);
-            $taxes = array();
+            $taxes = [];
             $emailTemplate['description'] = str_replace($template_tax[1], '', $emailTemplate['description']);
         } else {
-            $taxes = array();
+            $taxes = [];
         }
 
         // Total
         preg_match('/{total:start}(.*){total:stop}/Uis', $emailTemplate['description'], $template_total);
 
-        $order_total = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order_total` WHERE order_id = '" . (int) $order_info['order_id'] . "' and code = 'sub_total' order by sort_order");
+        $order_total = $this->db->query('SELECT * FROM `'.DB_PREFIX."order_total` WHERE order_id = '".(int) $order_info['order_id']."' and code = 'sub_total' order by sort_order");
         $getTotal = $order_total->rows;
 
         if (sizeof($template_total) > 0) {
             $tempTotals = $this->getTotalTemplate($getTotal, $template_total, $order_info);
             $emailTemplate['description'] = str_replace($template_total[1], '', $emailTemplate['description']);
         } else {
-            $tempTotals = array();
+            $tempTotals = [];
         }
         //$log->write($emailTemplate);
         $address = $data['address'];
@@ -750,51 +770,51 @@ class Emailtemplate {
         $store_info = $this->getStore($order_info['store_id']);
         //$customer_info = $this->getCustomer($order_info['customer_id']);
 
-        $result = array(
+        $result = [
             'firstname' => $order_info['firstname'],
             'lastname' => $order_info['lastname'],
             'delivery_address' => $address,
             'shipping_address' => $order_info['shipping_address'],
             'payment_address' => $payment_address,
             'order_date' => date($this->language->get('date_format_short'), strtotime($order_info['date_added'])),
-            'product:start' => implode("", $products),
+            'product:start' => implode('', $products),
             'product:stop' => '',
-            'total:start' => implode("", $tempTotals),
+            'total:start' => implode('', $tempTotals),
             'total:stop' => '',
             'voucher:start' => '',
             'voucher:stop' => '',
-            'special' => (sizeof($special) <> 0) ? implode("<br />", $special) : '',
-            'date' => date($this->language->get('full_datetime_format'), strtotime(date("Y-m-d H:i:s"))),
+            'special' => (0 != sizeof($special)) ? implode('<br />', $special) : '',
+            'date' => date($this->language->get('full_datetime_format'), strtotime(date('Y-m-d H:i:s'))),
             'payment' => $order_info['payment_method'],
             'shipment' => $order_info['shipping_method'],
             'order_id' => $order_info['order_id'],
             'total' => $this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value']),
-            'invoice_number' => $order_info['invoice_prefix'] . $invoice_no,
+            'invoice_number' => $order_info['invoice_prefix'].$invoice_no,
             'order_href' => $data['order_href'],
             'store_url' => $order_info['store_url'],
             'status_name' => $data['order_status'],
             'store_name' => $order_info['store_name'],
             'ip' => $order_info['ip'],
-            'comment:start' => implode("", $comment),
+            'comment:start' => implode('', $comment),
             'comment:stop' => '',
             'sub_total' => $totals['sub_total'][0]['text'],
             'shipping_cost' => (isset($totals['shipping'][0]['text'])) ? $totals['shipping'][0]['text'] : '',
             'client_comment' => $order_info['comment'],
-            'tax:start' => implode("", $taxes),
+            'tax:start' => implode('', $taxes),
             'tax:stop' => '',
             'tax_amount' => $this->currency->format($tax_amount, $order_info['currency_code'], $order_info['currency_value']),
             'email_id' => $order_info['email'],
-            'telephone' => '+' . $this->config->get('config_telephone_code') . ' ' . $order_info['telephone'],
+            'telephone' => '+'.$this->config->get('config_telephone_code').' '.$order_info['telephone'],
             'order_pdf_href' => $data['order_pdf_href'],
             'delivery_date' => $order_info['delivery_date'],
             'delivery_time' => $order_info['delivery_timeslot'],
             'customer_notes' => $order_info['comment'],
             'customer_cpf' => $order_info['fax'],
             'store_address' => $store_info['address'],
-            'store_telephone' => '+' . $this->config->get('config_telephone_code') . ' ' . $store_info['telephone'],
+            'store_telephone' => '+'.$this->config->get('config_telephone_code').' '.$store_info['telephone'],
             'store_tax_number' => $store_info['tax'],
             'shipping_contact_number' => $order_info['shipping_contact_no'],
-            'shipping_flat_number' => $order_info['shipping_name'] . " <br /> " . $order_info['shipping_flat_number'],
+            'shipping_flat_number' => $order_info['shipping_name'].' <br /> '.$order_info['shipping_flat_number'],
             'shipping_street_address' => $order_info['shipping_landmark'],
             'shipping_landmark' => $order_info['shipping_landmark'],
             'shipping_zipcode' => $order_info['shipping_zipcode'],
@@ -808,18 +828,18 @@ class Emailtemplate {
             'help_center' => $this->url->adminLink('information/help'),
             //'white_logo'=> HTTPS_CATALOG.'image/'. $this->config->get('config_white_logo'),
             'white_logo' => $this->resize($this->config->get('config_white_logo'), 197, 34),
-            'terms' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_account_id'), 'SSL'),
-            'privacy_policy' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_privacy_policy_id'), 'SSL'),
+            'terms' => $this->url->adminLink('information/information', 'information_id='.$this->config->get('config_account_id'), 'SSL'),
+            'privacy_policy' => $this->url->adminLink('information/information', 'information_id='.$this->config->get('config_privacy_policy_id'), 'SSL'),
             'system_email' => $this->config->get('config_email'),
-            'system_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $this->config->get('config_telephone'),
-        );
+            'system_phone' => '+'.$this->config->get('config_telephone_code').' '.$this->config->get('config_telephone'),
+        ];
 
         return $result;
     }
 
     // Vendor Text
-    public function getVendorOrderText($template_id, $data) {
-
+    public function getVendorOrderText($template_id, $data)
+    {
         foreach ($data as $dataKey => $dataValue) {
             $$dataKey = $dataValue;
         }
@@ -829,26 +849,26 @@ class Emailtemplate {
         $language->load('english');
         $language->load('mail/order');
 
-        $text = sprintf($language->get('text_new_greeting'), html_entity_decode($order_info['store_name'], ENT_QUOTES, 'UTF-8')) . "\n\n";
-        $text .= $language->get('text_new_order_id') . ' ' . $order_id . "\n";
-        $text .= $language->get('text_new_date_added') . ' ' . date($language->get('date_format_short'), strtotime($order_info['date_added'])) . "\n";
-        $text .= $language->get('text_new_order_status') . ' ' . $order_status . "\n\n";
+        $text = sprintf($language->get('text_new_greeting'), html_entity_decode($order_info['store_name'], ENT_QUOTES, 'UTF-8'))."\n\n";
+        $text .= $language->get('text_new_order_id').' '.$order_id."\n";
+        $text .= $language->get('text_new_date_added').' '.date($language->get('date_format_short'), strtotime($order_info['date_added']))."\n";
+        $text .= $language->get('text_new_order_status').' '.$order_status."\n\n";
 
         if ($comment && $notify) {
-            $text .= $language->get('text_new_instruction') . "\n\n";
-            $text .= $comment . "\n\n";
+            $text .= $language->get('text_new_instruction')."\n\n";
+            $text .= $comment."\n\n";
         }
 
         // Products
-        $text .= $language->get('text_new_products') . "\n";
+        $text .= $language->get('text_new_products')."\n";
 
         foreach ($getProdcuts as $product) {
-            $text .= $product['quantity'] . 'x ' . $product['name'] . ' (' . $product['model'] . ') ' . html_entity_decode($this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']), ENT_NOQUOTES, 'UTF-8') . "\n";
+            $text .= $product['quantity'].'x '.$product['name'].' ('.$product['model'].') '.html_entity_decode($this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']), ENT_NOQUOTES, 'UTF-8')."\n";
 
-            $order_option_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_option WHERE order_id = '" . (int) $order_id . "' AND order_product_id = '" . $product['order_product_id'] . "'");
+            $order_option_query = $this->db->query('SELECT * FROM '.DB_PREFIX."order_option WHERE order_id = '".(int) $order_id."' AND order_product_id = '".$product['order_product_id']."'");
 
             foreach ($order_option_query->rows as $option) {
-                if ($option['type'] != 'file') {
+                if ('file' != $option['type']) {
                     $value = $option['value'];
                 } else {
                     $upload_info = $this->getUploadByCode($option['value']);
@@ -860,27 +880,27 @@ class Emailtemplate {
                     }
                 }
 
-                $text .= chr(9) . '-' . $option['name'] . ' ' . (utf8_strlen($value) > 20 ? utf8_substr($value, 0, 20) . '..' : $value) . "\n";
+                $text .= chr(9).'-'.$option['name'].' '.(utf8_strlen($value) > 20 ? utf8_substr($value, 0, 20).'..' : $value)."\n";
             }
         }
 
         foreach ($getVouchers as $voucher) {
-            $text .= '1x ' . $voucher['description'] . ' ' . $this->currency->format($voucher['amount'], $order_info['currency_code'], $order_info['currency_value']);
+            $text .= '1x '.$voucher['description'].' '.$this->currency->format($voucher['amount'], $order_info['currency_code'], $order_info['currency_value']);
         }
 
         $text .= "\n";
 
-        $text .= $language->get('text_new_order_total') . "\n";
+        $text .= $language->get('text_new_order_total')."\n";
 
         foreach ($getTotal as $total) {
-            $text .= $total['title'] . ': ' . html_entity_decode($this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']), ENT_NOQUOTES, 'UTF-8') . "\n";
+            $text .= $total['title'].': '.html_entity_decode($this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']), ENT_NOQUOTES, 'UTF-8')."\n";
         }
 
         $text .= "\n";
 
         if ($order_info['customer_id']) {
-            $text .= $language->get('text_new_link') . "\n";
-            $text .= $order_info['store_url'] . 'index.php?path=account/order/info&order_id=' . $order_id . "\n\n";
+            $text .= $language->get('text_new_link')."\n";
+            $text .= $order_info['store_url'].'index.php?path=account/order/info&order_id='.$order_id."\n\n";
         }
 
         /*
@@ -891,24 +911,27 @@ class Emailtemplate {
          */
         // Comment
         if ($order_info['comment']) {
-            $text .= $language->get('text_new_comment') . "\n\n";
-            $text .= $order_info['comment'] . "\n\n";
+            $text .= $language->get('text_new_comment')."\n\n";
+            $text .= $order_info['comment']."\n\n";
         }
 
-        $text .= $language->get('text_new_footer') . "\n\n";
+        $text .= $language->get('text_new_footer')."\n\n";
 
         return $text;
     }
 
     // vendor order mails end
     // Contact ( Information )
-    public function getContactFind() {
-        $result = array('{name}', '{email}', '{store_name}', '{enquiry}', '{firstname}', '{lastname}', '{mobile}', '{approve_link}', '{login_link}', '{amount}', '{order_id}', '{order_link}', '{transaction_type}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}');
+    public function getContactFind()
+    {
+        $result = ['{name}', '{email}', '{store_name}', '{enquiry}', '{firstname}', '{lastname}', '{mobile}', '{approve_link}', '{login_link}', '{amount}', '{order_id}', '{order_link}', '{transaction_type}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}'];
+
         return $result;
     }
 
-    public function getContactReplace($data) {
-        $result = array(
+    public function getContactReplace($data)
+    {
+        $result = [
             'name' => (!empty($data['name'])) ? $data['name'] : '',
             'email' => (!empty($data['email'])) ? $data['email'] : '',
             'store_name' => $this->config->get('config_name'),
@@ -932,22 +955,25 @@ class Emailtemplate {
             'help_center' => $this->url->adminLink('information/help'),
             //'white_logo'=> HTTPS_CATALOG.'image/'. $this->config->get('config_white_logo'),
             'white_logo' => $this->resize($this->config->get('config_white_logo'), 197, 34),
-            'terms' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_account_id'), 'SSL'),
-            'privacy_policy' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_privacy_policy_id'), 'SSL'),
+            'terms' => $this->url->adminLink('information/information', 'information_id='.$this->config->get('config_account_id'), 'SSL'),
+            'privacy_policy' => $this->url->adminLink('information/information', 'information_id='.$this->config->get('config_privacy_policy_id'), 'SSL'),
             'system_email' => $this->config->get('config_email'),
-            'system_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $this->config->get('config_telephone'),
-        );
+            'system_phone' => '+'.$this->config->get('config_telephone_code').' '.$this->config->get('config_telephone'),
+        ];
 
         return $result;
     }
 
-    public function getSellerFind() {
-        $result = array('{email}', '{firstname}', '{lastname}', '{login_link}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}');
+    public function getSellerFind()
+    {
+        $result = ['{email}', '{firstname}', '{lastname}', '{login_link}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}'];
+
         return $result;
     }
 
-    public function getSellerReplace($data) {
-        $result = array(
+    public function getSellerReplace($data)
+    {
+        $result = [
             'email' => (!empty($data['email'])) ? $data['email'] : '',
             'firstname' => (!empty($data['firstname'])) ? $data['firstname'] : '',
             'lastname' => (!empty($data['lastname'])) ? $data['lastname'] : '',
@@ -962,30 +988,30 @@ class Emailtemplate {
             'help_center' => $this->url->adminLink('information/help'),
             //'white_logo'=> HTTPS_CATALOG.'image/'. $this->config->get('config_white_logo'),
             'white_logo' => $this->resize($this->config->get('config_white_logo'), 197, 34),
-            'terms' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_account_id'), 'SSL'),
-            'privacy_policy' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_privacy_policy_id'), 'SSL'),
+            'terms' => $this->url->adminLink('information/information', 'information_id='.$this->config->get('config_account_id'), 'SSL'),
+            'privacy_policy' => $this->url->adminLink('information/information', 'information_id='.$this->config->get('config_privacy_policy_id'), 'SSL'),
             'system_email' => $this->config->get('config_email'),
-            'system_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $this->config->get('config_telephone'),
-        );
+            'system_phone' => '+'.$this->config->get('config_telephone_code').' '.$this->config->get('config_telephone'),
+        ];
 
         return $result;
     }
 
     // Order
-    public function getOrderAllFind() {
-
-        $result = array(
+    public function getOrderAllFind()
+    {
+        $result = [
             '{firstname}', '{lastname}', '{delivery_address}', '{shipping_address}', '{payment_address}', '{order_date}', '{product:start}', '{product:stop}',
             '{total:start}', '{total:stop}', '{voucher:start}', '{voucher:stop}', '{special}', '{date}', '{payment}', '{shipment}', '{order_id}', '{total}', '{invoice_number}',
             '{order_href}', '{store_url}', '{status_name}', '{store_name}', '{ip}', '{comment:start}', '{comment:stop}', '{sub_total}', '{shipping_cost}',
-            '{client_comment}', '{tax:start}', '{tax:stop}', '{tax_amount}', '{email}', '{telephone}', '{order_pdf_href}', '{delivery_date}', '{delivery_time}', '{customer_notes}', '{customer_cpf}', '{store_address}', '{store_telephone}', '{store_tax_number}', '{shipping_contact_number}', '{shipping_flat_number}', '{shipping_street_address}', '{shipping_landmark}', '{shipping_zipcode}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}', '{customer_company_name}'
-        );
+            '{client_comment}', '{tax:start}', '{tax:stop}', '{tax_amount}', '{email}', '{telephone}', '{order_pdf_href}', '{delivery_date}', '{delivery_time}', '{customer_notes}', '{customer_cpf}', '{store_address}', '{store_telephone}', '{store_tax_number}', '{shipping_contact_number}', '{shipping_flat_number}', '{shipping_street_address}', '{shipping_landmark}', '{shipping_zipcode}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}', '{customer_company_name}',
+        ];
 
         return $result;
     }
 
-    public function getOrderAllReplace($data) {
-
+    public function getOrderAllReplace($data)
+    {
         $emailTemplate = $this->getEmailTemplate($data['template_id']);
         $data['order_href'] = $this->maskingOrderDetailUrl($data['order_href']);
         $log = new Log('error.log');
@@ -994,27 +1020,23 @@ class Emailtemplate {
         //$log->write('in $dathref'.$data['order_href']);
         //die;
 
-
         foreach ($data as $dataKey => $dataValue) {
             $dataKey = $dataValue;
         }
 
         // Special
-        $special = array();
+        $special = [];
 
         // if (sizeof($email_template['special']) <> 0) {
         // //   $special = $this->_prepareProductSpecial((int)$order_info['customer_group_id'], $email_template['special']);
         // }
 
-
         $order_info = $data['order_info'];
-
 
         // Products
         preg_match('/{product:start}(.*){product:stop}/Uis', $emailTemplate['description'], $template_product);
 
         if (sizeof($template_product) > 0) {
-
             if (isset($data['new_invoice'])) {
                 //call for new invoice
                 $getProducts = $this->getRealOrderProducts($order_info['order_id']);
@@ -1026,10 +1048,8 @@ class Emailtemplate {
 
             $emailTemplate['description'] = str_replace($template_product[1], '', $emailTemplate['description']);
         } else {
-            $products = array();
+            $products = [];
         }
-
-
 
         // Comment
         preg_match('/{comment:start}(.*){comment:stop}/Uis', $emailTemplate['description'], $template_comment);
@@ -1050,22 +1070,22 @@ class Emailtemplate {
 
         if (sizeof($template_tax) > 0) {
             // $taxes = $this->getTaxTemplate($totals, $template_tax);
-            $taxes = array();
+            $taxes = [];
             $emailTemplate['description'] = str_replace($template_tax[1], '', $emailTemplate['description']);
         } else {
-            $taxes = array();
+            $taxes = [];
         }
 
         // Total
         preg_match('/{total:start}(.*){total:stop}/Uis', $emailTemplate['description'], $template_total);
 
-        $order_total = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order_total` WHERE order_id = '" . (int) $order_info['order_id'] . "' order by sort_order");
+        $order_total = $this->db->query('SELECT * FROM `'.DB_PREFIX."order_total` WHERE order_id = '".(int) $order_info['order_id']."' order by sort_order");
         $getTotal = $order_total->rows;
 
         $order_grandtotal = 0;
 
         foreach ($getTotal as $tmpvalue) {
-            if ($tmpvalue['code'] == 'total') {
+            if ('total' == $tmpvalue['code']) {
                 $order_grandtotal = $tmpvalue['value'];
             }
         }
@@ -1074,7 +1094,7 @@ class Emailtemplate {
             $tempTotals = $this->getTotalTemplate($getTotal, $template_total, $order_info);
             $emailTemplate['description'] = str_replace($template_total[1], '', $emailTemplate['description']);
         } else {
-            $tempTotals = array();
+            $tempTotals = [];
         }
         //$log->write($emailTemplate);
         $address = $data['address'];
@@ -1088,41 +1108,41 @@ class Emailtemplate {
         $store_info = $this->getStore($order_info['store_id']);
         $customer_info = $this->getCustomer($order_info['customer_id']);
 
-        $result = array(
+        $result = [
             'firstname' => $order_info['firstname'],
             'lastname' => $order_info['lastname'],
             'delivery_address' => $address,
             'shipping_address' => $order_info['shipping_address'],
             'payment_address' => $payment_address,
             'order_date' => date($this->language->get('date_format_short'), strtotime($order_info['date_added'])),
-            'product:start' => implode("", $products),
+            'product:start' => implode('', $products),
             'product:stop' => '',
-            'total:start' => implode("", $tempTotals),
+            'total:start' => implode('', $tempTotals),
             'total:stop' => '',
             'voucher:start' => '',
             'voucher:stop' => '',
-            'special' => (sizeof($special) <> 0) ? implode("<br />", $special) : '',
-            'date' => date('d M Y h:i A', strtotime(date("Y-m-d H:i:s"))),
+            'special' => (0 != sizeof($special)) ? implode('<br />', $special) : '',
+            'date' => date('d M Y h:i A', strtotime(date('Y-m-d H:i:s'))),
             'payment' => $order_info['payment_method'],
             'shipment' => $order_info['shipping_method'],
             'order_id' => $order_info['order_id'],
             'total' => $this->currency->format($order_grandtotal, $order_info['currency_code'], $order_info['currency_value']),
-            'invoice_number' => $order_info['invoice_prefix'] . $invoice_no,
+            'invoice_number' => $order_info['invoice_prefix'].$invoice_no,
             'order_href' => $data['order_href'],
             'store_url' => $order_info['store_url'],
             'status_name' => $data['order_status'],
             'store_name' => $order_info['store_name'],
             'ip' => $order_info['ip'],
-            'comment:start' => implode("", $comment),
+            'comment:start' => implode('', $comment),
             'comment:stop' => '',
             'sub_total' => $totals['sub_total'][0]['text'],
             'shipping_cost' => (isset($totals['shipping'][0]['text'])) ? $totals['shipping'][0]['text'] : '',
             'client_comment' => $order_info['comment'],
-            'tax:start' => implode("", $taxes),
+            'tax:start' => implode('', $taxes),
             'tax:stop' => '',
             'tax_amount' => $this->currency->format($tax_amount, $order_info['currency_code'], $order_info['currency_value']),
             'email' => $order_info['email'],
-            'telephone' => '+' . $this->config->get('config_telephone_code') . ' ' . $order_info['telephone'],
+            'telephone' => '+'.$this->config->get('config_telephone_code').' '.$order_info['telephone'],
             'order_pdf_href' => $data['order_pdf_href'],
             'delivery_date' => $order_info['delivery_date'],
             'delivery_time' => $order_info['delivery_timeslot'],
@@ -1130,10 +1150,10 @@ class Emailtemplate {
             'customer_cpf' => $order_info['fax'],
             'customer_company_name' => $customer_info['company_name'],
             'store_address' => $store_info['address'],
-            'store_telephone' => '+' . $this->config->get('config_telephone_code') . ' ' . $store_info['telephone'],
+            'store_telephone' => '+'.$this->config->get('config_telephone_code').' '.$store_info['telephone'],
             'store_tax_number' => $store_info['tax'],
             'shipping_contact_number' => $order_info['shipping_contact_no'],
-            'shipping_flat_number' => $order_info['shipping_name'] . " <br /> " . $order_info['shipping_flat_number'],
+            'shipping_flat_number' => $order_info['shipping_name'].' <br /> '.$order_info['shipping_flat_number'],
             'shipping_street_address' => $order_info['shipping_landmark'],
             'shipping_landmark' => $order_info['shipping_landmark'],
             'shipping_zipcode' => $order_info['shipping_zipcode'],
@@ -1147,11 +1167,11 @@ class Emailtemplate {
             'help_center' => $this->url->adminLink('information/help'),
             //'white_logo'=> HTTPS_CATALOG.'image/'. $this->config->get('config_white_logo'),
             'white_logo' => $this->resize($this->config->get('config_white_logo'), 197, 34),
-            'terms' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_account_id'), 'SSL'),
-            'privacy_policy' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_privacy_policy_id'), 'SSL'),
+            'terms' => $this->url->adminLink('information/information', 'information_id='.$this->config->get('config_account_id'), 'SSL'),
+            'privacy_policy' => $this->url->adminLink('information/information', 'information_id='.$this->config->get('config_privacy_policy_id'), 'SSL'),
             'system_email' => $this->config->get('config_email'),
-            'system_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $this->config->get('config_telephone'),
-        );
+            'system_phone' => '+'.$this->config->get('config_telephone_code').' '.$this->config->get('config_telephone'),
+        ];
 
         /* $log->write($result);
           $log->write($this->language->get('full_datetime_format')); */
@@ -1160,13 +1180,16 @@ class Emailtemplate {
     }
 
     // Review
-    public function getReviewFind() {
-        $result = array('{author}', '{review}', '{date}', '{rating}', '{product}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}');
+    public function getReviewFind()
+    {
+        $result = ['{author}', '{review}', '{date}', '{rating}', '{product}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}'];
+
         return $result;
     }
 
-    public function getReviewReplace($data) {
-        $result = array(
+    public function getReviewReplace($data)
+    {
+        $result = [
             'author' => $data['name'],
             'review' => $data['text'],
             'date' => date($this->language->get('date_format_short'), time()),
@@ -1182,32 +1205,35 @@ class Emailtemplate {
             'help_center' => $this->url->adminLink('information/help'),
             //'white_logo'=> HTTPS_CATALOG.'image/'. $this->config->get('config_white_logo'),
             'white_logo' => $this->resize($this->config->get('config_white_logo'), 197, 34),
-            'terms' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_account_id'), 'SSL'),
-            'privacy_policy' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_privacy_policy_id'), 'SSL'),
+            'terms' => $this->url->adminLink('information/information', 'information_id='.$this->config->get('config_account_id'), 'SSL'),
+            'privacy_policy' => $this->url->adminLink('information/information', 'information_id='.$this->config->get('config_privacy_policy_id'), 'SSL'),
             'system_email' => $this->config->get('config_email'),
-            'system_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $this->config->get('config_telephone'),
-        );
+            'system_phone' => '+'.$this->config->get('config_telephone_code').' '.$this->config->get('config_telephone'),
+        ];
 
         return $result;
     }
 
     // Voucher
-    public function getVoucherFind() {
-        $result = array('{recip_name}', '{recip_email}', '{date}', '{store_name}', '{name}', '{amount}', '{message}', '{store_href}', '{image}', '{code}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}');
+    public function getVoucherFind()
+    {
+        $result = ['{recip_name}', '{recip_email}', '{date}', '{store_name}', '{name}', '{amount}', '{message}', '{store_href}', '{image}', '{code}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}'];
+
         return $result;
     }
 
-    public function getVoucherReplace($data) {
-        $result = array(
+    public function getVoucherReplace($data)
+    {
+        $result = [
             'recip_name' => $data['recip_name'],
             'recip_email' => $data['recip_email'],
-            'date' => date($this->language->get('date_format_short'), strtotime(date("Y-m-d H:i:s"))),
+            'date' => date($this->language->get('date_format_short'), strtotime(date('Y-m-d H:i:s'))),
             'store_name' => $data['store_name'],
             'name' => $data['name'],
             'amount' => $data['amount'],
             'message' => $data['message'],
             'store_href' => $data['store_href'],
-            'image' => (file_exists(DIR_IMAGE . $data['image'])) ? 'cid:' . md5(basename($data['image'])) : '', 'code' => $data['code'],
+            'image' => (file_exists(DIR_IMAGE.$data['image'])) ? 'cid:'.md5(basename($data['image'])) : '', 'code' => $data['code'],
             //common replace
             'site_url' => HTTPS_CATALOG,
             //'logo'=> HTTPS_CATALOG.'image/' . $this->config->get('config_logo'),
@@ -1218,22 +1244,26 @@ class Emailtemplate {
             'help_center' => $this->url->adminLink('information/help'),
             //'white_logo'=> HTTPS_CATALOG.'image/'. $this->config->get('config_white_logo'),
             'white_logo' => $this->resize($this->config->get('config_white_logo'), 197, 34),
-            'terms' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_account_id'), 'SSL'),
-            'privacy_policy' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_privacy_policy_id'), 'SSL'),
+            'terms' => $this->url->adminLink('information/information', 'information_id='.$this->config->get('config_account_id'), 'SSL'),
+            'privacy_policy' => $this->url->adminLink('information/information', 'information_id='.$this->config->get('config_privacy_policy_id'), 'SSL'),
             'system_email' => $this->config->get('config_email'),
-            'system_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $this->config->get('config_telephone'),
-        );
+            'system_phone' => '+'.$this->config->get('config_telephone_code').' '.$this->config->get('config_telephone'),
+        ];
+
         return $result;
     }
 
     // invoice
-    public function getInvoiceFind() {
-        $result = array('{order_id}', '{total}', '{subtotal}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}');
+    public function getInvoiceFind()
+    {
+        $result = ['{order_id}', '{total}', '{subtotal}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}'];
+
         return $result;
     }
 
-    public function getInvoiceReplace($data) {
-        $result = array(
+    public function getInvoiceReplace($data)
+    {
+        $result = [
             'order_id' => $data['order_id'],
             'total' => $data['total'],
             'subtotal' => $data['subtotal'],
@@ -1247,18 +1277,18 @@ class Emailtemplate {
             'help_center' => $this->url->adminLink('information/help'),
             //'white_logo'=> HTTPS_CATALOG.'image/'. $this->config->get('config_white_logo'),
             'white_logo' => $this->resize($this->config->get('config_white_logo'), 197, 34),
-            'terms' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_account_id'), 'SSL'),
-            'privacy_policy' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_privacy_policy_id'), 'SSL'),
+            'terms' => $this->url->adminLink('information/information', 'information_id='.$this->config->get('config_account_id'), 'SSL'),
+            'privacy_policy' => $this->url->adminLink('information/information', 'information_id='.$this->config->get('config_privacy_policy_id'), 'SSL'),
             'system_email' => $this->config->get('config_email'),
-            'system_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $this->config->get('config_telephone'),
-        );
+            'system_phone' => '+'.$this->config->get('config_telephone_code').' '.$this->config->get('config_telephone'),
+        ];
 
         return $result;
     }
 
     // Order Text
-    public function getOrderText($template_id, $data) {
-
+    public function getOrderText($template_id, $data)
+    {
         foreach ($data as $dataKey => $dataValue) {
             $$dataKey = $dataValue;
         }
@@ -1268,26 +1298,26 @@ class Emailtemplate {
         $language->load('english');
         $language->load('mail/order');
 
-        $text = sprintf($language->get('text_new_greeting'), html_entity_decode($order_info['store_name'], ENT_QUOTES, 'UTF-8')) . "\n\n";
-        $text .= $language->get('text_new_order_id') . ' ' . $order_id . "\n";
-        $text .= $language->get('text_new_date_added') . ' ' . date($language->get('date_format_short'), strtotime($order_info['date_added'])) . "\n";
-        $text .= $language->get('text_new_order_status') . ' ' . $order_status . "\n\n";
+        $text = sprintf($language->get('text_new_greeting'), html_entity_decode($order_info['store_name'], ENT_QUOTES, 'UTF-8'))."\n\n";
+        $text .= $language->get('text_new_order_id').' '.$order_id."\n";
+        $text .= $language->get('text_new_date_added').' '.date($language->get('date_format_short'), strtotime($order_info['date_added']))."\n";
+        $text .= $language->get('text_new_order_status').' '.$order_status."\n\n";
 
         if ($comment && $notify) {
-            $text .= $language->get('text_new_instruction') . "\n\n";
-            $text .= $comment . "\n\n";
+            $text .= $language->get('text_new_instruction')."\n\n";
+            $text .= $comment."\n\n";
         }
 
         // Products
-        $text .= $language->get('text_new_products') . "\n";
+        $text .= $language->get('text_new_products')."\n";
 
         foreach ($getProdcuts as $product) {
-            $text .= $product['quantity'] . 'x ' . $product['name'] . ' (' . $product['model'] . ') ' . html_entity_decode($this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']), ENT_NOQUOTES, 'UTF-8') . "\n";
+            $text .= $product['quantity'].'x '.$product['name'].' ('.$product['model'].') '.html_entity_decode($this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']), ENT_NOQUOTES, 'UTF-8')."\n";
 
-            $order_option_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_option WHERE order_id = '" . (int) $order_id . "' AND order_product_id = '" . $product['order_product_id'] . "'");
+            $order_option_query = $this->db->query('SELECT * FROM '.DB_PREFIX."order_option WHERE order_id = '".(int) $order_id."' AND order_product_id = '".$product['order_product_id']."'");
 
             foreach ($order_option_query->rows as $option) {
-                if ($option['type'] != 'file') {
+                if ('file' != $option['type']) {
                     $value = $option['value'];
                 } else {
                     $upload_info = $this->getUploadByCode($option['value']);
@@ -1299,27 +1329,27 @@ class Emailtemplate {
                     }
                 }
 
-                $text .= chr(9) . '-' . $option['name'] . ' ' . (utf8_strlen($value) > 20 ? utf8_substr($value, 0, 20) . '..' : $value) . "\n";
+                $text .= chr(9).'-'.$option['name'].' '.(utf8_strlen($value) > 20 ? utf8_substr($value, 0, 20).'..' : $value)."\n";
             }
         }
 
         foreach ($getVouchers as $voucher) {
-            $text .= '1x ' . $voucher['description'] . ' ' . $this->currency->format($voucher['amount'], $order_info['currency_code'], $order_info['currency_value']);
+            $text .= '1x '.$voucher['description'].' '.$this->currency->format($voucher['amount'], $order_info['currency_code'], $order_info['currency_value']);
         }
 
         $text .= "\n";
 
-        $text .= $language->get('text_new_order_total') . "\n";
+        $text .= $language->get('text_new_order_total')."\n";
 
         foreach ($getTotal as $total) {
-            $text .= $total['title'] . ': ' . html_entity_decode($this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']), ENT_NOQUOTES, 'UTF-8') . "\n";
+            $text .= $total['title'].': '.html_entity_decode($this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']), ENT_NOQUOTES, 'UTF-8')."\n";
         }
 
         $text .= "\n";
 
         if ($order_info['customer_id']) {
-            $text .= $language->get('text_new_link') . "\n";
-            $text .= $order_info['store_url'] . 'index.php?path=account/order/info&order_id=' . $order_id . "\n\n";
+            $text .= $language->get('text_new_link')."\n";
+            $text .= $order_info['store_url'].'index.php?path=account/order/info&order_id='.$order_id."\n\n";
         }
 
         /*
@@ -1330,18 +1360,19 @@ class Emailtemplate {
          */
         // Comment
         if ($order_info['comment']) {
-            $text .= $language->get('text_new_comment') . "\n\n";
-            $text .= $order_info['comment'] . "\n\n";
+            $text .= $language->get('text_new_comment')."\n\n";
+            $text .= $order_info['comment']."\n\n";
         }
 
-        $text .= $language->get('text_new_footer') . "\n\n";
+        $text .= $language->get('text_new_footer')."\n\n";
 
         return $text;
     }
 
     // Language
-    public function getLanguage() {
-        $sql = "SELECT * FROM " . DB_PREFIX . "language WHERE language_id = '" . $this->config->get('config_language_id') . "'";
+    public function getLanguage()
+    {
+        $sql = 'SELECT * FROM '.DB_PREFIX."language WHERE language_id = '".$this->config->get('config_language_id')."'";
         $query = $this->db->query($sql);
 
         return $query->row;
@@ -1349,45 +1380,47 @@ class Emailtemplate {
 
     // Order Special
     // Order Product
-    public function getOrderProducts($order_id) {
-        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int) $order_id . "'");
+    public function getOrderProducts($order_id)
+    {
+        $query = $this->db->query('SELECT * FROM '.DB_PREFIX."order_product WHERE order_id = '".(int) $order_id."'");
 
         return $query->rows;
     }
 
-    public function getProductsTemplate($order_info, $getProducts, $template_product) {
-        $result = array();
+    public function getProductsTemplate($order_info, $getProducts, $template_product)
+    {
+        $result = [];
 
         foreach ($getProducts as $product) {
-            $option = array();
-            $attribute = array();
+            $option = [];
+            $attribute = [];
 
             // Product Option Order
-            if (stripos($template_product[1], '{product_option}') !== false) {
+            if (false !== stripos($template_product[1], '{product_option}')) {
                 $product_option = $this->getOrderOptions($order_info['order_id'], $product['product_id']);
 
                 foreach ($product_option as $option) {
-                    if ($option['type'] != 'file') {
-                        $option[] = '<i>' . $option['name'] . '</i>: ' . $option['value'];
+                    if ('file' != $option['type']) {
+                        $option[] = '<i>'.$option['name'].'</i>: '.$option['value'];
                     } else {
                         $filename = utf8_substr($option['value'], 0, utf8_strrpos($option['value'], '.'));
-                        $option[] = '<i>' . $option['name'] . '</i>: ' . (utf8_strlen($filename) > 20 ? utf8_substr($filename, 0, 20) . '..' : $filename);
+                        $option[] = '<i>'.$option['name'].'</i>: '.(utf8_strlen($filename) > 20 ? utf8_substr($filename, 0, 20).'..' : $filename);
                     }
                 }
             }
 
             // Product Attribute Order
-            if (stripos($template_product[1], '{product_attribute}') !== false) {
+            if (false !== stripos($template_product[1], '{product_attribute}')) {
                 $product_attributes = $this->getProductAttributes($product['product_id'], $order_info['language_id']);
 
                 foreach ($product_attributes as $attribute_group) {
                     $attribute_sub_data = '';
 
                     foreach ($attribute_group['attribute'] as $attribute) {
-                        $attribute_sub_data .= '<br />' . $attribute['name'] . ': ' . $attribute['text'];
+                        $attribute_sub_data .= '<br />'.$attribute['name'].': '.$attribute['text'];
                     }
 
-                    $attribute[] = '<u>' . $attribute_group['name'] . '</u>' . $attribute_sub_data;
+                    $attribute[] = '<u>'.$attribute_group['name'].'</u>'.$attribute_sub_data;
                 }
             }
 
@@ -1404,7 +1437,7 @@ class Emailtemplate {
                 $image = '';
             }
 
-            #Replace Product Short Code to Values
+            //Replace Product Short Code to Values
             $product_replace = $this->getProductReplace($image, $product, $order_info, $attribute, $option);
 
             $product_find = $this->getProductFind();
@@ -1415,21 +1448,21 @@ class Emailtemplate {
         return $result;
     }
 
-    public function getProductFind() {
-        $result = array(
+    public function getProductFind()
+    {
+        $result = [
             '{product_image}', '{product_name}', '{product_unit}', '{product_model}', '{product_quantity}', '{product_price}', '{product_price_gross}', '{product_attribute}',
-            '{product_option}', '{product_tax}', '{product_total}', '{product_total_gross}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}'
-        );
+            '{product_option}', '{product_tax}', '{product_total}', '{product_total_gross}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}',
+        ];
 
         return $result;
     }
 
-    public function getProductReplace($image, $product, $order_info, $attribute, $option) {
-
+    public function getProductReplace($image, $product, $order_info, $attribute, $option)
+    {
         $getProduct = $this->getProduct($product['product_id']);
 
-
-        $result = array(
+        $result = [
             'product_image' => $image,
             'product_name' => $product['name'],
             'product_unit' => $product['unit'],
@@ -1452,59 +1485,62 @@ class Emailtemplate {
             'help_center' => $this->url->adminLink('information/help'),
             //'white_logo'=> HTTPS_CATALOG.'image/'. $this->config->get('config_white_logo'),
             'white_logo' => $this->resize($this->config->get('config_white_logo'), 197, 34),
-            'terms' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_account_id'), 'SSL'),
-            'privacy_policy' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_privacy_policy_id'), 'SSL'),
+            'terms' => $this->url->adminLink('information/information', 'information_id='.$this->config->get('config_account_id'), 'SSL'),
+            'privacy_policy' => $this->url->adminLink('information/information', 'information_id='.$this->config->get('config_privacy_policy_id'), 'SSL'),
             'system_email' => $this->config->get('config_email'),
-            'system_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $this->config->get('config_telephone'),
-        );
+            'system_phone' => '+'.$this->config->get('config_telephone_code').' '.$this->config->get('config_telephone'),
+        ];
 
         return $result;
     }
 
-    public function getOrderOptions($order_id, $order_product_id) {
-        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_option WHERE order_id = '" . (int) $order_id . "' AND order_product_id = '" . (int) $order_product_id . "'");
+    public function getOrderOptions($order_id, $order_product_id)
+    {
+        $query = $this->db->query('SELECT * FROM '.DB_PREFIX."order_option WHERE order_id = '".(int) $order_id."' AND order_product_id = '".(int) $order_product_id."'");
 
         return $query->rows;
     }
 
-    public function getProductAttributes($product_id, $language_id) {
-        $product_attribute_group_data = array();
+    public function getProductAttributes($product_id, $language_id)
+    {
+        $product_attribute_group_data = [];
 
-        $product_attribute_group_query = $this->db->query("SELECT ag.attribute_group_id, agd.name FROM " . DB_PREFIX . "product_attribute pa LEFT JOIN " . DB_PREFIX . "attribute a ON (pa.attribute_id = a.attribute_id) LEFT JOIN " . DB_PREFIX . "attribute_group ag ON (a.attribute_group_id = ag.attribute_group_id) LEFT JOIN " . DB_PREFIX . "attribute_group_description agd ON (ag.attribute_group_id = agd.attribute_group_id) WHERE pa.product_id = '" . (int) $product_id . "' AND agd.language_id = '" . (int) $language_id . "' GROUP BY ag.attribute_group_id ORDER BY ag.sort_order, agd.name");
+        $product_attribute_group_query = $this->db->query('SELECT ag.attribute_group_id, agd.name FROM '.DB_PREFIX.'product_attribute pa LEFT JOIN '.DB_PREFIX.'attribute a ON (pa.attribute_id = a.attribute_id) LEFT JOIN '.DB_PREFIX.'attribute_group ag ON (a.attribute_group_id = ag.attribute_group_id) LEFT JOIN '.DB_PREFIX."attribute_group_description agd ON (ag.attribute_group_id = agd.attribute_group_id) WHERE pa.product_id = '".(int) $product_id."' AND agd.language_id = '".(int) $language_id."' GROUP BY ag.attribute_group_id ORDER BY ag.sort_order, agd.name");
 
         foreach ($product_attribute_group_query->rows as $product_attribute_group) {
-            $product_attribute_data = array();
+            $product_attribute_data = [];
 
-            $product_attribute_query = $this->db->query("SELECT a.attribute_id, ad.name, pa.text FROM " . DB_PREFIX . "product_attribute pa LEFT JOIN " . DB_PREFIX . "attribute a ON (pa.attribute_id = a.attribute_id) LEFT JOIN " . DB_PREFIX . "attribute_description ad ON (a.attribute_id = ad.attribute_id) WHERE pa.product_id = '" . (int) $product_id . "' AND a.attribute_group_id = '" . (int) $product_attribute_group['attribute_group_id'] . "' AND ad.language_id = '" . (int) $language_id . "' AND pa.language_id = '" . (int) $language_id . "' ORDER BY a.sort_order, ad.name");
+            $product_attribute_query = $this->db->query('SELECT a.attribute_id, ad.name, pa.text FROM '.DB_PREFIX.'product_attribute pa LEFT JOIN '.DB_PREFIX.'attribute a ON (pa.attribute_id = a.attribute_id) LEFT JOIN '.DB_PREFIX."attribute_description ad ON (a.attribute_id = ad.attribute_id) WHERE pa.product_id = '".(int) $product_id."' AND a.attribute_group_id = '".(int) $product_attribute_group['attribute_group_id']."' AND ad.language_id = '".(int) $language_id."' AND pa.language_id = '".(int) $language_id."' ORDER BY a.sort_order, ad.name");
 
             foreach ($product_attribute_query->rows as $product_attribute) {
-                $product_attribute_data[] = array(
+                $product_attribute_data[] = [
                     'attribute_id' => $product_attribute['attribute_id'],
                     'name' => $product_attribute['name'],
-                    'text' => $product_attribute['text']
-                );
+                    'text' => $product_attribute['text'],
+                ];
             }
 
-            $product_attribute_group_data[] = array(
+            $product_attribute_group_data[] = [
                 'attribute_group_id' => $product_attribute_group['attribute_group_id'],
                 'name' => $product_attribute_group['name'],
-                'attribute' => $product_attribute_data
-            );
+                'attribute' => $product_attribute_data,
+            ];
         }
 
         return $product_attribute_group_data;
     }
 
     // Order Voucher
-    public function getOrderVouchers($order_id) {
-        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_voucher WHERE order_id = '" . (int) $order_id . "'");
+    public function getOrderVouchers($order_id)
+    {
+        $query = $this->db->query('SELECT * FROM '.DB_PREFIX."order_voucher WHERE order_id = '".(int) $order_id."'");
 
         return $query->rows;
     }
 
-    public function getVoucherTemplate($order_info, $getVouchers, $template_voucher) {
-
-        $result = array();
+    public function getVoucherTemplate($order_info, $getVouchers, $template_voucher)
+    {
+        $result = [];
 
         foreach ($getVouchers as $voucher) {
             // Replace Product Short Code to Values
@@ -1517,14 +1553,16 @@ class Emailtemplate {
         return $result;
     }
 
-    public function getOrderVoucherFind() {
-        $result = array('{voucher_description}', '{voucher_amount}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}');
+    public function getOrderVoucherFind()
+    {
+        $result = ['{voucher_description}', '{voucher_amount}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}'];
 
         return $result;
     }
 
-    public function getOrderVoucherReplace($voucher, $order_info) {
-        $result = array(
+    public function getOrderVoucherReplace($voucher, $order_info)
+    {
+        $result = [
             'voucher_description' => $voucher['description'],
             'voucher_amount' => $this->currency->format($voucher['amount'], $order_info['currency_code'], $order_info['currency_value']),
             //common replace
@@ -1537,19 +1575,19 @@ class Emailtemplate {
             'help_center' => $this->url->adminLink('information/help'),
             //'white_logo'=> HTTPS_CATALOG.'image/'. $this->config->get('config_white_logo'),
             'white_logo' => $this->resize($this->config->get('config_white_logo'), 197, 34),
-            'terms' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_account_id'), 'SSL'),
-            'privacy_policy' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_privacy_policy_id'), 'SSL'),
+            'terms' => $this->url->adminLink('information/information', 'information_id='.$this->config->get('config_account_id'), 'SSL'),
+            'privacy_policy' => $this->url->adminLink('information/information', 'information_id='.$this->config->get('config_privacy_policy_id'), 'SSL'),
             'system_email' => $this->config->get('config_email'),
-            'system_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $this->config->get('config_telephone'),
-        );
+            'system_phone' => '+'.$this->config->get('config_telephone_code').' '.$this->config->get('config_telephone'),
+        ];
 
         return $result;
     }
 
     // Order Comment
-    public function getCommentTemplate($comment, $template_comment) {
-
-        $result = array();
+    public function getCommentTemplate($comment, $template_comment)
+    {
+        $result = [];
 
         // Replace Product Short Code to Values
         $comment_find = $this->getCommentFind();
@@ -1560,14 +1598,16 @@ class Emailtemplate {
         return $result;
     }
 
-    public function getCommentFind() {
-        $result = array('{comment}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}');
+    public function getCommentFind()
+    {
+        $result = ['{comment}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}'];
 
         return $result;
     }
 
-    public function getCommentReplace($comment) {
-        $result = array(
+    public function getCommentReplace($comment)
+    {
+        $result = [
             'comment' => $comment,
             //common replace
             'site_url' => HTTPS_CATALOG,
@@ -1579,19 +1619,19 @@ class Emailtemplate {
             'help_center' => $this->url->adminLink('information/help'),
             //'white_logo'=> HTTPS_CATALOG.'image/'. $this->config->get('config_white_logo'),
             'white_logo' => $this->resize($this->config->get('config_white_logo'), 197, 34),
-            'terms' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_account_id'), 'SSL'),
-            'privacy_policy' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_privacy_policy_id'), 'SSL'),
+            'terms' => $this->url->adminLink('information/information', 'information_id='.$this->config->get('config_account_id'), 'SSL'),
+            'privacy_policy' => $this->url->adminLink('information/information', 'information_id='.$this->config->get('config_privacy_policy_id'), 'SSL'),
             'system_email' => $this->config->get('config_email'),
-            'system_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $this->config->get('config_telephone'),
-        );
+            'system_phone' => '+'.$this->config->get('config_telephone_code').' '.$this->config->get('config_telephone'),
+        ];
 
         return $result;
     }
 
     // Order Tax
-    public function getTaxTemplate($totals, $template_tax) {
-
-        $result = array();
+    public function getTaxTemplate($totals, $template_tax)
+    {
+        $result = [];
 
         if (isset($totals['tax'])) {
             foreach ($totals['tax'] as $tax) {
@@ -1606,14 +1646,16 @@ class Emailtemplate {
         return $result;
     }
 
-    public function getTaxFind() {
-        $result = array('{tax_title}', '{tax_value}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}');
+    public function getTaxFind()
+    {
+        $result = ['{tax_title}', '{tax_value}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}'];
 
         return $result;
     }
 
-    public function getTaxReplace($tax) {
-        $result = array(
+    public function getTaxReplace($tax)
+    {
+        $result = [
             'tax_title' => $tax['title'],
             'tax_value' => $tax['text'],
             //common replace
@@ -1626,19 +1668,19 @@ class Emailtemplate {
             'help_center' => $this->url->adminLink('information/help'),
             //'white_logo'=> HTTPS_CATALOG.'image/'. $this->config->get('config_white_logo'),
             'white_logo' => $this->resize($this->config->get('config_white_logo'), 197, 34),
-            'terms' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_account_id'), 'SSL'),
-            'privacy_policy' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_privacy_policy_id'), 'SSL'),
+            'terms' => $this->url->adminLink('information/information', 'information_id='.$this->config->get('config_account_id'), 'SSL'),
+            'privacy_policy' => $this->url->adminLink('information/information', 'information_id='.$this->config->get('config_privacy_policy_id'), 'SSL'),
             'system_email' => $this->config->get('config_email'),
-            'system_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $this->config->get('config_telephone'),
-        );
+            'system_phone' => '+'.$this->config->get('config_telephone_code').' '.$this->config->get('config_telephone'),
+        ];
 
         return $result;
     }
 
     // Order Total
-    public function getTotalTemplate($getTotal, $template_total, $order_info) {
-
-        $result = array();
+    public function getTotalTemplate($getTotal, $template_total, $order_info)
+    {
+        $result = [];
 
         //echo "<pre>";print_r($getTotal);die;
         foreach ($getTotal as $total) {
@@ -1652,14 +1694,16 @@ class Emailtemplate {
         return $result;
     }
 
-    public function getTotalFind() {
-        $result = array('{total_title}', '{total_value}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}');
+    public function getTotalFind()
+    {
+        $result = ['{total_title}', '{total_value}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}'];
 
         return $result;
     }
 
-    public function getTotalReplace($total, $order_info) {
-        $result = array(
+    public function getTotalReplace($total, $order_info)
+    {
+        $result = [
             'total_title' => $total['title'],
             'total_value' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
             //common replace
@@ -1672,16 +1716,17 @@ class Emailtemplate {
             'help_center' => $this->url->adminLink('information/help'),
             //'white_logo'=> HTTPS_CATALOG.'image/'. $this->config->get('config_white_logo'),
             'white_logo' => $this->resize($this->config->get('config_white_logo'), 197, 34),
-            'terms' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_account_id'), 'SSL'),
-            'privacy_policy' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_privacy_policy_id'), 'SSL'),
+            'terms' => $this->url->adminLink('information/information', 'information_id='.$this->config->get('config_account_id'), 'SSL'),
+            'privacy_policy' => $this->url->adminLink('information/information', 'information_id='.$this->config->get('config_privacy_policy_id'), 'SSL'),
             'system_email' => $this->config->get('config_email'),
-            'system_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $this->config->get('config_telephone'),
-        );
+            'system_phone' => '+'.$this->config->get('config_telephone_code').' '.$this->config->get('config_telephone'),
+        ];
 
         return $result;
     }
 
-    public function getDefaultSubject($type, $template_id, $data) {
+    public function getDefaultSubject($type, $template_id, $data)
+    {
         switch (ucwords($type)) {
             case 'Login':
                 $subject = $this->getDefautLoginSubject($template_id, $data);
@@ -1712,8 +1757,8 @@ class Emailtemplate {
         return $subject;
     }
 
-    public function getDefaultMessage($type, $template_id, $data) {
-
+    public function getDefaultMessage($type, $template_id, $data)
+    {
         $subject = null;
 
         switch (ucwords($type)) {
@@ -1746,40 +1791,43 @@ class Emailtemplate {
         return $subject;
     }
 
-    public function getDefautLoginSubject($type_id, $data) {
+    public function getDefautLoginSubject($type_id, $data)
+    {
         $username = $data['username'];
 
-        $subject = 'User ' . $username . ' logged in on ' . $this->config->get('config_name') . ' admin panel';
+        $subject = 'User '.$username.' logged in on '.$this->config->get('config_name').' admin panel';
 
         return $subject;
     }
 
-    public function getDefautLoginMessage($type_id, $data) {
+    public function getDefautLoginMessage($type_id, $data)
+    {
         $message = 'Hello,<br/><br/>';
-        $message .= 'We would like to notify you that user ' . $data['username'] . ' has just logged in to the admin panel of your store, ' . $data['store_name'] . ', using IP address ' . $data['ip_address'] . '.<br/><br/>';
+        $message .= 'We would like to notify you that user '.$data['username'].' has just logged in to the admin panel of your store, '.$data['store_name'].', using IP address '.$data['ip_address'].'.<br/><br/>';
         $message .= 'If this is expected you need to do nothing about it. If you suspect a hacking attempt, please log in to your store\'s admin panel immediately and change your password at once.<br/><br/>';
         $message .= 'Best Regards,<br/><br/>';
-        $message .= 'The ' . $data['store_name'] . ' team<br/><br/>';
+        $message .= 'The '.$data['store_name'].' team<br/><br/>';
 
         return $message;
     }
 
-    public function getDefautAffilateSubject($type_id, $data) {
+    public function getDefautAffilateSubject($type_id, $data)
+    {
         $this->load->language('mail/affiliate');
 
-        if ($type_id == 'affiliate_4') {
+        if ('affiliate_4' == $type_id) {
             $subject = sprintf($this->language->get('text_approve_subject'), $this->config->get('config_name'));
-        } else if ($type_id == 'affiliate_5') {
+        } elseif ('affiliate_5' == $type_id) {
             $subject = sprintf($this->language->get('text_commission_subject'), $this->config->get('config_name'));
-        } else if ($type_id == 'affiliate_1') {
+        } elseif ('affiliate_1' == $type_id) {
             $subject = sprintf($this->language->get('text_register_subject'), $this->config->get('config_name'));
-        } else if ($type_id == 'affiliate_3') {
+        } elseif ('affiliate_3' == $type_id) {
             $subject = sprintf($this->language->get('text_register_approve_subject'), $this->config->get('config_name'));
-        } else if ($type_id == 'affiliate_2') {
+        } elseif ('affiliate_2' == $type_id) {
             // Reset Password Null
             $subject = '';
         } else {
-            $subject = $this->config->get('config_name') . ' - Affilate Mail';
+            $subject = $this->config->get('config_name').' - Affilate Mail';
         }
 
         $this->load->language('mail/affiliate');
@@ -1787,28 +1835,29 @@ class Emailtemplate {
         return $subject;
     }
 
-    public function getDefautAffilateMessage($type_id, $data) {
+    public function getDefautAffilateMessage($type_id, $data)
+    {
         $this->load->language('mail/affiliate');
 
-        if ($type_id == 'affiliate_4') {
-            $message = sprintf($this->language->get('text_approve_welcome'), $this->config->get('config_name')) . "\n\n";
-            $message .= $this->language->get('text_approve_login') . "\n";
-            $message .= HTTP_CATALOG . 'index.php?path=affiliate/login' . "\n\n";
-            $message .= $this->language->get('text_approve_services') . "\n\n";
-            $message .= $this->language->get('text_approve_thanks') . "\n";
+        if ('affiliate_4' == $type_id) {
+            $message = sprintf($this->language->get('text_approve_welcome'), $this->config->get('config_name'))."\n\n";
+            $message .= $this->language->get('text_approve_login')."\n";
+            $message .= HTTP_CATALOG.'index.php?path=affiliate/login'."\n\n";
+            $message .= $this->language->get('text_approve_services')."\n\n";
+            $message .= $this->language->get('text_approve_thanks')."\n";
             $message .= $this->config->get('config_name');
-        } else if ($type_id == 'affiliate_5') {
-            $message = sprintf($this->language->get('text_commission_received'), $this->currency->format($data['amount'], $this->config->get('config_currency'))) . "\n\n";
+        } elseif ('affiliate_5' == $type_id) {
+            $message = sprintf($this->language->get('text_commission_received'), $this->currency->format($data['amount'], $this->config->get('config_currency')))."\n\n";
             $message .= sprintf($this->language->get('text_commission_total'), $this->currency->format($this->getCommissionTotal($data['affiliate_id']), $this->config->get('config_currency')));
-        } else if ($type_id == 'affiliate_1') {
-            $message = sprintf($this->language->get('text_register_message'), $data['firstname'] . ' ' . $data['lastname'], $this->config->get('config_name'));
-        } else if ($type_id == 'affiliate_3') {
-            $message = sprintf($this->language->get('text_register_approve_message'), $data['firstname'] . ' ' . $data['lastname'], $this->config->get('config_name'));
-        } else if ($type_id == 'affiliate_2') {
+        } elseif ('affiliate_1' == $type_id) {
+            $message = sprintf($this->language->get('text_register_message'), $data['firstname'].' '.$data['lastname'], $this->config->get('config_name'));
+        } elseif ('affiliate_3' == $type_id) {
+            $message = sprintf($this->language->get('text_register_approve_message'), $data['firstname'].' '.$data['lastname'], $this->config->get('config_name'));
+        } elseif ('affiliate_2' == $type_id) {
             // Reset Password Null
-            $message = sprintf($this->language->get('text_register_approve_subject'), $this->config->get('config_name'), $data['firstname'] . ' ' . $data['lastname']);
+            $message = sprintf($this->language->get('text_register_approve_subject'), $this->config->get('config_name'), $data['firstname'].' '.$data['lastname']);
         } else {
-            $message = 'Hi!' . "\n" . 'Welcome ' . $data['firstname'] . ' ' . $data['lastname'];
+            $message = 'Hi!'."\n".'Welcome '.$data['firstname'].' '.$data['lastname'];
         }
 
         return $message;
@@ -1816,26 +1865,28 @@ class Emailtemplate {
 
     /* Affilate getComissionTotal Frontend & Backend */
 
-    public function getCommissionTotal($affiliate_id) {
-        $query = $this->db->query("SELECT SUM(amount) AS total FROM " . DB_PREFIX . "affiliate_commission WHERE affiliate_id = '" . (int) $affiliate_id . "'");
+    public function getCommissionTotal($affiliate_id)
+    {
+        $query = $this->db->query('SELECT SUM(amount) AS total FROM '.DB_PREFIX."affiliate_commission WHERE affiliate_id = '".(int) $affiliate_id."'");
 
         return $query->row['total'];
     }
 
     /* Affilate getComissionTotal Frontend & Backend */
 
-    public function getDefaultCustomerSubject($type_id, $data) {
+    public function getDefaultCustomerSubject($type_id, $data)
+    {
         $this->load->language('mail/customer');
 
-        if ($type_id == 'customer_4') {
+        if ('customer_4' == $type_id) {
             $subject = sprintf($this->language->get('text_approve_subject'), $this->config->get('config_name'));
-        } else if ($type_id == 'customer_1') {
+        } elseif ('customer_1' == $type_id) {
             // Register
             $subject = sprintf($this->language->get('text_register_subject'), $this->config->get('config_name'));
-        } else if ($type_id == 'customer_2') {
+        } elseif ('customer_2' == $type_id) {
             // Aprove
             $subject = sprintf($this->language->get('text_approve_wait_subject'), $this->config->get('config_name'));
-        } else if ($type_id == 'customer_3') {
+        } elseif ('customer_3' == $type_id) {
             // Reset
             $subject = sprintf($this->language->get('text_approve_subject'), $this->config->get('config_name'));
         }
@@ -1843,98 +1894,97 @@ class Emailtemplate {
         return $subject;
     }
 
-    public function getDefaultCustomerMessage($type_id, $data) {
+    public function getDefaultCustomerMessage($type_id, $data)
+    {
         $this->load->language('mail/customer');
 
-        if ($type_id == 'customer_4') {
+        if ('customer_4' == $type_id) {
             $store_name = $this->config->get('config_name');
-            $store_url = HTTP_CATALOG . 'index.php?path=account/login';
+            $store_url = HTTP_CATALOG.'index.php?path=account/login';
 
-            $message = sprintf($this->language->get('text_approve_welcome'), $store_name) . "\n\n";
-            $message .= $this->language->get('text_approve_login') . "\n";
-            $message .= $store_url . "\n\n";
-            $message .= $this->language->get('text_approve_services') . "\n\n";
-            $message .= $this->language->get('text_approve_thanks') . "\n";
+            $message = sprintf($this->language->get('text_approve_welcome'), $store_name)."\n\n";
+            $message .= $this->language->get('text_approve_login')."\n";
+            $message .= $store_url."\n\n";
+            $message .= $this->language->get('text_approve_services')."\n\n";
+            $message .= $this->language->get('text_approve_thanks')."\n";
             $message .= $store_name;
-        } else if ($type_id == 'customer_1') {
+        } elseif ('customer_1' == $type_id) {
             // Register
             $message = sprintf($this->language->get('text_register_message'), $this->config->get('config_name'));
-        } else if ($type_id == 'customer_2') {
+        } elseif ('customer_2' == $type_id) {
             // Aprove
             $message = sprintf($this->language->get('text_register_message'), $this->config->get('config_name'));
-        } else if ($type_id == 'customer_3') {
+        } elseif ('customer_3' == $type_id) {
             $message = ' --- ';
         }
 
         return $message;
     }
 
-    public function imageResize($filename, $width, $height) {
-        if (!is_file(DIR_IMAGE . $filename)) {
+    public function imageResize($filename, $width, $height)
+    {
+        if (!is_file(DIR_IMAGE.$filename)) {
             return;
         }
 
         $extension = pathinfo($filename, PATHINFO_EXTENSION);
 
         $old_image = $filename;
-        $new_image = 'cache/' . utf8_substr($filename, 0, utf8_strrpos($filename, '.')) . '-' . $width . 'x' . $height . '.' . $extension;
+        $new_image = 'cache/'.utf8_substr($filename, 0, utf8_strrpos($filename, '.')).'-'.$width.'x'.$height.'.'.$extension;
 
-        if (!is_file(DIR_IMAGE . $new_image) || (filectime(DIR_IMAGE . $old_image) > filectime(DIR_IMAGE . $new_image))) {
+        if (!is_file(DIR_IMAGE.$new_image) || (filectime(DIR_IMAGE.$old_image) > filectime(DIR_IMAGE.$new_image))) {
             $path = '';
 
             $directories = explode('/', dirname(str_replace('../', '', $new_image)));
 
             foreach ($directories as $directory) {
-                $path = $path . '/' . $directory;
+                $path = $path.'/'.$directory;
 
-                if (!is_dir(DIR_IMAGE . $path)) {
-                    $this->filesystem->mkdir(DIR_IMAGE . $path);
+                if (!is_dir(DIR_IMAGE.$path)) {
+                    $this->filesystem->mkdir(DIR_IMAGE.$path);
                 }
             }
 
-            list($width_orig, $height_orig) = getimagesize(DIR_IMAGE . $old_image);
+            list($width_orig, $height_orig) = getimagesize(DIR_IMAGE.$old_image);
 
             if ($width_orig != $width || $height_orig != $height) {
-                $image = new Image(DIR_IMAGE . $old_image);
+                $image = new Image(DIR_IMAGE.$old_image);
                 $image->resize($width, $height);
-                $image->save(DIR_IMAGE . $new_image);
+                $image->save(DIR_IMAGE.$new_image);
             } else {
-                copy(DIR_IMAGE . $old_image, DIR_IMAGE . $new_image);
+                copy(DIR_IMAGE.$old_image, DIR_IMAGE.$new_image);
             }
         }
         $log = new Log('error.log');
 
-
         if ($_SERVER['HTTPS']) {
-            return HTTPS_IMAGE . $new_image;
+            return HTTPS_IMAGE.$new_image;
         } else {
-            return HTTP_IMAGE . $new_image;
+            return HTTP_IMAGE.$new_image;
         }
 
         if (!trim($this->config->get('config_ssl')) && !trim($this->config->get('config_url'))) {
-            return HTTP_SERVER . 'image/' . $new_image;
+            return HTTP_SERVER.'image/'.$new_image;
         }
     }
 
-    public function getUploadByCode($code) {
-        $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "upload` WHERE code = '" . $this->db->escape($code) . "'");
+    public function getUploadByCode($code)
+    {
+        $query = $this->db->query('SELECT * FROM `'.DB_PREFIX."upload` WHERE code = '".$this->db->escape($code)."'");
 
         return $query->row;
     }
 
-    public function getProduct($product_id) {
-
-
+    public function getProduct($product_id)
+    {
         $this->db->join('product', 'product.product_id = product_to_store.product_id', 'left');
         $this->db->join('product_description', 'product_description.product_id = product_to_store.product_id', 'left');
         $this->db->where('product_to_store.product_store_id', $product_id);
 
         $query = $this->db->get('product_to_store');
 
-
-
         if ($query->num_rows) {
-            return array(
+            return [
                 'product_id' => $query->row['product_id'],
                 'name' => $query->row['name'],
                 'unit' => $query->row['unit'],
@@ -1957,15 +2007,15 @@ class Emailtemplate {
                 'status' => $query->row['status'],
                 'date_added' => $query->row['date_added'],
                 'date_modified' => $query->row['date_modified'],
-                'viewed' => 0
-            );
+                'viewed' => 0,
+            ];
         } else {
             return false;
         }
     }
 
-    public function sendmessageOld($to, $message) {
-
+    public function sendmessageOld($to, $message)
+    {
         $log = new Log('error.log');
         /* $sender_id = $this->config->get('config_sms_sender_id');
           $username  = $this->config->get('config_sms_username');
@@ -1988,53 +2038,52 @@ class Emailtemplate {
          */
         //zenvia,twilio
 
-        if ($this->config->get('config_sms_protocol') == 'twilio') {
+        if ('twilio' == $this->config->get('config_sms_protocol')) {
             $sid = $this->config->get('config_sms_sender_id');
             $token = $this->config->get('config_sms_token');
             $from = $this->config->get('config_sms_number');
 
-            $log->write("sms twilio 2");
+            $log->write('sms twilio 2');
             $log->write($to);
-            if (substr($to, 0, 1) != '+') {
-                $to = '+' . $to;
+            if ('+' != substr($to, 0, 1)) {
+                $to = '+'.$to;
             }
             //$log->write($to);
             $client = new Client($sid, $token);
 
             try {
                 $sms = $client->messages->create(
-                        $to, array(
+                        $to, [
                     'from' => $from,
                     //'from' => '+19789864215',
-                    'body' => $message
-                        )
+                    'body' => $message,
+                        ]
                 );
             } catch (Exception $exception) {
                 return false;
             }
         } else {
-
             $from = $this->config->get('config_zenvia_sms_sender_id');
             $authToken = $this->config->get('config_zenvia_sms_token');
             $apiEndPoint = $this->config->get('config_zenvia_sms_number');
 
-            $log->write("zenvia sms");
+            $log->write('zenvia sms');
 
-            $postData = array(
-                'sendSmsRequest' => array(
+            $postData = [
+                'sendSmsRequest' => [
                     'from' => $from,
-                    "to" => $to,
-                    "msg" => $message,
-                    "callbackOption" => "NONE",
-                    "id" => uniqid(),
-                    "aggregateId" => "1111"
-                )
-            );
+                    'to' => $to,
+                    'msg' => $message,
+                    'callbackOption' => 'NONE',
+                    'id' => uniqid(),
+                    'aggregateId' => '1111',
+                ],
+            ];
             //c3VwZXIub25saW5lLndlYjpydFdjSVVZUENO
-            $headr = array();
+            $headr = [];
             $headr[] = 'Accept : application/json';
             $headr[] = 'Content-type: application/json';
-            $headr[] = 'Authorization: Basic ' . $authToken;
+            $headr[] = 'Authorization: Basic '.$authToken;
 
             $curl = curl_init();
 
@@ -2052,8 +2101,7 @@ class Emailtemplate {
 
             if (isset($response['sendSmsResponse'])) {
                 if (is_array($response['sendSmsResponse'])) {
-                    if ($response['sendSmsResponse']['statusCode'] == 00) {
-                        
+                    if (00 == $response['sendSmsResponse']['statusCode']) {
                     } else {
                         return false;
                     }
@@ -2061,12 +2109,11 @@ class Emailtemplate {
             }
         }
 
-
         return true;
     }
 
-    public function sendmessage($to, $message) {
-
+    public function sendmessage($to, $message)
+    {
         $log = new Log('error.log');
 
         $result['status'] = false;
@@ -2075,9 +2122,21 @@ class Emailtemplate {
 
         $country_prefix = $this->config->get('config_telephone_code');
 
-        $to = $country_prefix . '' . $to;
+        $to = $country_prefix.''.$to;
 
-        if ($this->config->get('config_sms_protocol') == 'twilio') {
+        if ('africastalking' == $this->config->get('config_sms_protocol')) {
+            $username = $this->config->get('config_africastalking_sms_username');
+            $apiKey = $this->config->get('config_africastalking_sms_api_key');
+            $AT = new AfricasTalking($username, $apiKey);
+            $sms = $AT->sms();
+
+            $sms->send([
+                'to' => $this->formatPhoneNumber($to),
+                'message' => $message,
+            ]);
+
+            $log->write("Africa's Talking Sending SMS ".$message.' to '.$to);
+        } elseif ('twilio' == $this->config->get('config_sms_protocol')) {
             $sid = $this->config->get('config_sms_sender_id');
             $token = $this->config->get('config_sms_token');
             $from = $this->config->get('config_sms_number');
@@ -2088,44 +2147,42 @@ class Emailtemplate {
             //$sid = "ACe596b1c5068a7076d1a05552a66503f3";
             //$token = "a15911012556c6795359cba517bb7328";
 
-            $log->write("sms twilio 2");
+            $log->write('sms twilio 2');
             $log->write($to);
-            if (substr($to, 0, 1) != '+') {
-                $to = '+' . $to;
+            if ('+' != substr($to, 0, 1)) {
+                $to = '+'.$to;
             }
             //$log->write($to);
             $client = new Client($sid, $token);
 
             try {
                 $sms = $client->messages->create(
-                        $to, array(
+                        $to, [
                     'from' => $from,
                     //'from' => '+19789864215',
-                    'body' => $message
-                        )
+                    'body' => $message,
+                        ]
                 );
             } catch (Exception $exception) {
                 return $result;
             }
-        } elseif ($this->config->get('config_sms_protocol') == 'zenvia') {
-
-
+        } elseif ('zenvia' == $this->config->get('config_sms_protocol')) {
             $from = $this->config->get('config_zenvia_sms_sender_id');
             $authToken = $this->config->get('config_zenvia_sms_token');
             $apiEndPoint = $this->config->get('config_zenvia_sms_number');
 
-            $log->write("zenvia sms  2ss");
+            $log->write('zenvia sms  2ss');
 
-            $postData = array(
-                'sendSmsRequest' => array(
+            $postData = [
+                'sendSmsRequest' => [
                     'from' => $from,
-                    "to" => $to,
-                    "msg" => $message,
-                    "callbackOption" => "NONE",
-                    "id" => uniqid(),
-                    "aggregateId" => "1111"
-                )
-            );
+                    'to' => $to,
+                    'msg' => $message,
+                    'callbackOption' => 'NONE',
+                    'id' => uniqid(),
+                    'aggregateId' => '1111',
+                ],
+            ];
 
             $log->write($postData);
             //c3VwZXIub25saW5lLndlYjpydFdjSVVZUENO
@@ -2135,7 +2192,7 @@ class Emailtemplate {
             curl_setopt($curl, CURLOPT_URL, $apiEndPoint);
             //curl_setopt($curl, CURLOPT_URL,"https://api-rest.zenvia360.com.br/services/send-sms");
             //https://api-rest.zenvia360.com.br/services/send-sms
-            curl_setopt($curl, CURLOPT_HTTPHEADER, array('Accept: application/json', 'Content-type: application/json', 'Authorization: Basic ' . $authToken));
+            curl_setopt($curl, CURLOPT_HTTPHEADER, ['Accept: application/json', 'Content-type: application/json', 'Authorization: Basic '.$authToken]);
 
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($curl, CURLOPT_POST, 1);
@@ -2149,16 +2206,14 @@ class Emailtemplate {
 
             if (isset($response['sendSmsResponse'])) {
                 if (is_array($response['sendSmsResponse'])) {
-                    if ($response['sendSmsResponse']['statusCode'] == 00) {
-                        
+                    if (00 == $response['sendSmsResponse']['statusCode']) {
                     } else {
                         return false;
                     }
                 }
             }
             curl_close($curl);
-        } elseif ($this->config->get('config_sms_protocol') == 'uwaziimobile') {
-
+        } elseif ('uwaziimobile' == $this->config->get('config_sms_protocol')) {
             $curl = curl_init();
             //$authToken = 'VlNMVEQ6VlNMVEQxMjM0NQ==';
 
@@ -2168,25 +2223,24 @@ class Emailtemplate {
             $password = $this->config->get('config_uwaziimobile_sms_sender_id');
 
             //echo "<pre>";print_r($from."c".$username."d".$password);die;
-            $str = $username . ":" . $password;
+            $str = $username.':'.$password;
 
             $authToken = base64_encode($str);
 
             $apiEndPoint = 'http://107.20.199.106/restapi/sms/1/text/single';
-            $postData = array(
+            $postData = [
                 'from' => $from,
-                "to" => $to,
-                "text" => $message);
+                'to' => $to,
+                'text' => $message, ];
 
             curl_setopt($curl, CURLOPT_URL, $apiEndPoint);
             //curl_setopt($curl, CURLOPT_URL,"https://api-rest.zenvia360.com.br/services/send-sms");
             //https://api-rest.zenvia360.com.br/services/send-sms
-            curl_setopt($curl, CURLOPT_HTTPHEADER, array('Accept: application/json', 'Content-type: application/json', 'Authorization: Basic ' . $authToken));
+            curl_setopt($curl, CURLOPT_HTTPHEADER, ['Accept: application/json', 'Content-type: application/json', 'Authorization: Basic '.$authToken]);
 
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($curl, CURLOPT_POST, 1);
             curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($postData));
-
 
             try {
                 //$response = $request->send();
@@ -2195,15 +2249,12 @@ class Emailtemplate {
                 $response = json_decode($response, true);
 
                 //echo "<pre>";print_r($response);die;
-                if (isset($response['messages']) && isset($response['messages'][0]['status']) && $response['messages'][0]['status']['id'] == 0) {
-
+                if (isset($response['messages']) && isset($response['messages'][0]['status']) && 0 == $response['messages'][0]['status']['id']) {
                     $result['status'] = true;
                 } else {
                     $result['status'] = false;
                     $result['message'] = $response['messages'][0]['status']['description'];
                 }
-
-                //
             } catch (HttpException $ex) {
                 // echo $ex;
 
@@ -2223,16 +2274,16 @@ class Emailtemplate {
 
             $msg = $message;
 
-            $url = 'http://login.smsgatewayhub.com/smsapi/pushsms.aspx?user=' . $username . '&pwd=' . $password . '&to=' . $to . '&sid=' . $sender_id . '&msg=' . urlencode($msg) . '&fl=0&gwid=2';
+            $url = 'http://login.smsgatewayhub.com/smsapi/pushsms.aspx?user='.$username.'&pwd='.$password.'&to='.$to.'&sid='.$sender_id.'&msg='.urlencode($msg).'&fl=0&gwid=2';
 
             // Get cURL resource
             $curl = curl_init();
             // Set some options - we are passing in a useragent too here
-            curl_setopt_array($curl, array(
+            curl_setopt_array($curl, [
                 CURLOPT_RETURNTRANSFER => 1,
                 CURLOPT_URL => $url,
-                CURLOPT_USERAGENT => 'Codular Sample cURL Request'
-            ));
+                CURLOPT_USERAGENT => 'Codular Sample cURL Request',
+            ]);
             // Send the request & save response to $resp
             $resp = curl_exec($curl);
 
@@ -2243,9 +2294,20 @@ class Emailtemplate {
         return true;
     }
 
-    public function sendPushNotification($to, $deviceId, $order_id, $store_id, $message, $title, $app_action = 'com.instagolocal.showorder') {
+    public function formatPhoneNumber($phoneNumber)
+    {
+        $phoneUtil = \libphonenumber\PhoneNumberUtil::getInstance();
+        try {
+            $numberPrototype = $phoneUtil->parse($phoneNumber, 'KE');
 
+            return $phoneUtil->format($numberPrototype, \libphonenumber\PhoneNumberFormat::E164);
+        } catch (\libphonenumber\NumberParseException $e) {
+            var_dump($e);
+        }
+    }
 
+    public function sendPushNotification($to, $deviceId, $order_id, $store_id, $message, $title, $app_action = 'com.instagolocal.showorder')
+    {
         $log = new Log('error.log');
         $log->write('sendPushNotification');
 
@@ -2257,8 +2319,7 @@ class Emailtemplate {
 
         if (isset($to)) {
             if (isset($deviceId) && isset($to)) {
-
-                $log->write("api key");
+                $log->write('api key');
 
                 $apiKey = $this->config->get('config_seller_api_key');
                 //$apiKey = 'AIzaSyAK3VgDt_MTGRaTMfs_9v_YdsK6tjFRsoo';
@@ -2283,7 +2344,7 @@ class Emailtemplate {
                 //$log->write($dataSend);
                 $message->setNotification($note)
                         //$message->setData( $dataSend );
-                        ->setData(array('order_id' => $order_id, 'store_id' => $store_id));
+                        ->setData(['order_id' => $order_id, 'store_id' => $store_id]);
 
                 $response = $client->send($message);
 
@@ -2300,12 +2361,12 @@ class Emailtemplate {
         } else {
             $json['error'] = 'no user_id';
         }
+
         return true;
     }
 
-    public function sendReturnPushNotification($to, $deviceId, $return_id, $store_id, $message, $title, $app_action = 'com.instagolocal.showorder') {
-
-
+    public function sendReturnPushNotification($to, $deviceId, $return_id, $store_id, $message, $title, $app_action = 'com.instagolocal.showorder')
+    {
         $log = new Log('error.log');
         $log->write('sendPushNotification');
 
@@ -2317,8 +2378,7 @@ class Emailtemplate {
 
         if (isset($to)) {
             if (isset($deviceId) && isset($to)) {
-
-                $log->write("api key");
+                $log->write('api key');
 
                 $apiKey = $this->config->get('config_seller_api_key');
                 //$apiKey = 'AIzaSyAK3VgDt_MTGRaTMfs_9v_YdsK6tjFRsoo';
@@ -2342,7 +2402,7 @@ class Emailtemplate {
                 //$log->write($dataSend);
                 $message->setNotification($note)
                         //$message->setData( $dataSend );
-                        ->setData(array('return_id' => $return_id, 'store_id' => $store_id));
+                        ->setData(['return_id' => $return_id, 'store_id' => $store_id]);
 
                 $response = $client->send($message);
 
@@ -2359,12 +2419,12 @@ class Emailtemplate {
         } else {
             $json['error'] = 'no user_id';
         }
+
         return true;
     }
 
-    public function sendCustomerReturnPushNotification($to, $deviceId, $return_id, $store_id, $message, $title, $app_action = 'com.instagolocal.showreturn') {
-
-
+    public function sendCustomerReturnPushNotification($to, $deviceId, $return_id, $store_id, $message, $title, $app_action = 'com.instagolocal.showreturn')
+    {
         $log = new Log('error.log');
         $log->write('sendPushNotification');
 
@@ -2376,8 +2436,7 @@ class Emailtemplate {
 
         if (isset($to)) {
             if (isset($deviceId) && isset($to)) {
-
-                $log->write("api key");
+                $log->write('api key');
 
                 $apiKey = $this->config->get('config_seller_api_key');
                 //$apiKey = 'AIzaSyAK3VgDt_MTGRaTMfs_9v_YdsK6tjFRsoo';
@@ -2401,7 +2460,7 @@ class Emailtemplate {
                 //$log->write($dataSend);
                 $message->setNotification($note)
                         //$message->setData( $dataSend );
-                        ->setData(array('return_id' => $return_id, 'store_id' => $store_id));
+                        ->setData(['return_id' => $return_id, 'store_id' => $store_id]);
 
                 $response = $client->send($message);
 
@@ -2418,12 +2477,12 @@ class Emailtemplate {
         } else {
             $json['error'] = 'no user_id';
         }
+
         return true;
     }
 
-    public function sendVendorPushNotification($to, $deviceId, $wallet_id, $store_id, $message, $title, $args) {
-
-
+    public function sendVendorPushNotification($to, $deviceId, $wallet_id, $store_id, $message, $title, $args)
+    {
         $log = new Log('error.log');
         $log->write('sendVendorPushNotification');
 
@@ -2435,8 +2494,7 @@ class Emailtemplate {
 
         if (isset($to)) {
             if (isset($deviceId) && isset($to)) {
-
-                $log->write("api key");
+                $log->write('api key');
 
                 $apiKey = $this->config->get('config_seller_api_key');
                 //$apiKey = 'AIzaSyAK3VgDt_MTGRaTMfs_9v_YdsK6tjFRsoo';
@@ -2455,7 +2513,7 @@ class Emailtemplate {
                 //$message->addRecipient(new Device('dLz1Z9CHl_g:APA91bGTZlzoAF-5JGsqHgA9y4N9Odz0h3Dg19dOrE0Sulrnixz-QzMUaasxSljrmncmZGoUAZ0Q-VJytOFsQYfhHfoUJKOCqb4SCnc9z_0sqmwu4fNqmZ_yuIg6vkp19ChJGb1ibuht'));
                 $message->addRecipient(new Device($deviceId));
                 $message->setNotification($note)
-                        ->setData(array('wallet_id' => $wallet_id, 'store_id' => $store_id, 'notification_id' => $args['notification_id']));
+                        ->setData(['wallet_id' => $wallet_id, 'store_id' => $store_id, 'notification_id' => $args['notification_id']]);
 
                 $response = $client->send($message);
                 //var_dump($response);die;
@@ -2470,12 +2528,12 @@ class Emailtemplate {
         } else {
             $json['error'] = 'no user_id';
         }
+
         return true;
     }
 
-    public function sendOrderVendorPushNotification($to, $deviceId, $order_id, $store_id, $message, $title, $args) {
-
-
+    public function sendOrderVendorPushNotification($to, $deviceId, $order_id, $store_id, $message, $title, $args)
+    {
         $log = new Log('error.log');
         $log->write('sendVendorPushNotification');
 
@@ -2487,8 +2545,7 @@ class Emailtemplate {
 
         if (isset($to)) {
             if (isset($deviceId) && isset($to)) {
-
-                $log->write("api key");
+                $log->write('api key');
 
                 $apiKey = $this->config->get('config_seller_api_key');
                 //$apiKey = 'AIzaSyAK3VgDt_MTGRaTMfs_9v_YdsK6tjFRsoo';
@@ -2507,7 +2564,7 @@ class Emailtemplate {
                 //$message->addRecipient(new Device('dLz1Z9CHl_g:APA91bGTZlzoAF-5JGsqHgA9y4N9Odz0h3Dg19dOrE0Sulrnixz-QzMUaasxSljrmncmZGoUAZ0Q-VJytOFsQYfhHfoUJKOCqb4SCnc9z_0sqmwu4fNqmZ_yuIg6vkp19ChJGb1ibuht'));
                 $message->addRecipient(new Device($deviceId));
                 $message->setNotification($note)
-                        ->setData(array('order_id' => $order_id, 'store_id' => $store_id, 'notification_id' => $args['notification_id']));
+                        ->setData(['order_id' => $order_id, 'store_id' => $store_id, 'notification_id' => $args['notification_id']]);
 
                 $response = $client->send($message);
                 //var_dump($response);die;
@@ -2522,15 +2579,16 @@ class Emailtemplate {
         } else {
             $json['error'] = 'no user_id';
         }
+
         return true;
     }
 
-    public function getRealOrderProducts($order_id, $store_id = 0) {
-
-        $sql = "SELECT * FROM " . DB_PREFIX . "real_order_product WHERE order_id = '" . (int) $order_id . "'";
+    public function getRealOrderProducts($order_id, $store_id = 0)
+    {
+        $sql = 'SELECT * FROM '.DB_PREFIX."real_order_product WHERE order_id = '".(int) $order_id."'";
 
         if ($store_id) {
-            $sql .= " AND store_id='" . $store_id . "'";
+            $sql .= " AND store_id='".$store_id."'";
         }
 
         $query = $this->db->query($sql);
@@ -2538,62 +2596,66 @@ class Emailtemplate {
         return $query->rows;
     }
 
-    public function getStore($store_id) {
-        return $this->db->query('select * from ' . DB_PREFIX . 'store WHERE store_id="' . $store_id . '"')->row;
+    public function getStore($store_id)
+    {
+        return $this->db->query('select * from '.DB_PREFIX.'store WHERE store_id="'.$store_id.'"')->row;
     }
 
-    public function getCustomer($customer_id) {
-        return $this->db->query('select * from ' . DB_PREFIX . 'customer WHERE customer_id="' . $customer_id . '"')->row;
+    public function getCustomer($customer_id)
+    {
+        return $this->db->query('select * from '.DB_PREFIX.'customer WHERE customer_id="'.$customer_id.'"')->row;
     }
 
-    public function resize($filename, $width, $height) {
-        if (!is_file(DIR_IMAGE . $filename)) {
+    public function resize($filename, $width, $height)
+    {
+        if (!is_file(DIR_IMAGE.$filename)) {
             return;
         }
 
         $extension = pathinfo($filename, PATHINFO_EXTENSION);
 
         $old_image = $filename;
-        $new_image = 'cache/' . utf8_substr($filename, 0, utf8_strrpos($filename, '.')) . '-' . $width . 'x' . $height . '.' . $extension;
+        $new_image = 'cache/'.utf8_substr($filename, 0, utf8_strrpos($filename, '.')).'-'.$width.'x'.$height.'.'.$extension;
 
-        if (!is_file(DIR_IMAGE . $new_image) || (filectime(DIR_IMAGE . $old_image) > filectime(DIR_IMAGE . $new_image))) {
+        if (!is_file(DIR_IMAGE.$new_image) || (filectime(DIR_IMAGE.$old_image) > filectime(DIR_IMAGE.$new_image))) {
             $path = '';
 
             $directories = explode('/', dirname(str_replace('../', '', $new_image)));
 
             foreach ($directories as $directory) {
-                $path = $path . '/' . $directory;
+                $path = $path.'/'.$directory;
 
-                if (!is_dir(DIR_IMAGE . $path)) {
-                    $this->filesystem->mkdir(DIR_IMAGE . $path);
+                if (!is_dir(DIR_IMAGE.$path)) {
+                    $this->filesystem->mkdir(DIR_IMAGE.$path);
                 }
             }
 
-            list($width_orig, $height_orig) = getimagesize(DIR_IMAGE . $old_image);
+            list($width_orig, $height_orig) = getimagesize(DIR_IMAGE.$old_image);
 
             if ($width_orig != $width || $height_orig != $height) {
-                $image = new Image(DIR_IMAGE . $old_image);
+                $image = new Image(DIR_IMAGE.$old_image);
                 $image->resize($width, $height);
-                $image->save(DIR_IMAGE . $new_image);
+                $image->save(DIR_IMAGE.$new_image);
             } else {
-                copy(DIR_IMAGE . $old_image, DIR_IMAGE . $new_image);
+                copy(DIR_IMAGE.$old_image, DIR_IMAGE.$new_image);
             }
         }
 
         if (isset($this->request->server['HTTPS']) && $this->request->server['HTTPS']) {
-            return HTTPS_CATALOG . 'image/' . $new_image;
+            return HTTPS_CATALOG.'image/'.$new_image;
         } else {
-            return HTTPS_CATALOG . 'image/' . $new_image;
+            return HTTPS_CATALOG.'image/'.$new_image;
         }
     }
 
-    public function maskingOrderDetailUrl($link) {
+    public function maskingOrderDetailUrl($link)
+    {
         $parts = parse_url($link);
         parse_str($parts['query'], $query);
         $orderId = $query['order_id'];
-        $decodedOrderId = base64_encode('     ' . $query['order_id'] . '     ');
-        $maskedhref = $this->url->link('account/order/info', 'order_id=' . $decodedOrderId);
+        $decodedOrderId = base64_encode('     '.$query['order_id'].'     ');
+        $maskedhref = $this->url->link('account/order/info', 'order_id='.$decodedOrderId);
+
         return $maskedhref;
     }
-
 }

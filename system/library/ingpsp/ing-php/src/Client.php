@@ -16,9 +16,6 @@ final class Client
      */
     private $httpClient;
 
-    /**
-     * @param HttpClient $httpClient
-     */
     public function __construct(HttpClient $httpClient)
     {
         $this->httpClient = $httpClient;
@@ -26,7 +23,7 @@ final class Client
 
     /**
      * Set httpClient default SSL validation using cURL CA bundle.
-     * http://curl.haxx.se/docs/caextract.html
+     * http://curl.haxx.se/docs/caextract.html.
      *
      * @return void
      */
@@ -50,11 +47,7 @@ final class Client
                 $this->httpClient->get('ideal/issuers/')->json()
             );
         } catch (RequestException $exception) {
-            throw new ClientException(
-                'An error occurred while processing the request: '.$exception->getMessage(),
-                $exception->getCode(),
-                $exception
-            );
+            throw new ClientException('An error occurred while processing the request: '.$exception->getMessage(), $exception->getCode(), $exception);
         }
     }
 
@@ -78,28 +71,29 @@ final class Client
      * Process the API response with allowed payment methods.
      *
      * @param array $details
+     *
      * @return array
      */
     private function processProducts($details)
     {
-        $result = array();
+        $result = [];
 
         if (!array_key_exists('permissions', $details)) {
             return $result;
         }
 
         if (array_key_exists('status', $details)
-            && $details['status'] == 'active-testing') {
-            return array('ideal');
+            && 'active-testing' == $details['status']) {
+            return ['ideal'];
         }
 
-        $products_to_check = array(
+        $products_to_check = [
             'ideal' => 'ideal',
             'bank-transfer' => 'banktransfer',
             'bancontact' => 'bancontact',
             'cash-on-delivery' => 'cashondelivery',
             'credit-card' => 'creditcard',
-        );
+        ];
 
         foreach ($products_to_check as $permission_id => $id) {
             if (array_key_exists('/payment-methods/'.$permission_id.'/', $details['permissions']) &&
@@ -125,11 +119,7 @@ final class Client
                 $this->httpClient->get('merchants/self/projects/self/')->json()
             );
         } catch (RequestException $exception) {
-            throw new ClientException(
-                'An error occurred while processing the request: '.$exception->getMessage(),
-                $exception->getCode(),
-                $exception
-            );
+            throw new ClientException('An error occurred while processing the request: '.$exception->getMessage(), $exception->getCode(), $exception);
         }
     }
 
@@ -137,6 +127,7 @@ final class Client
      * Process test-mode API response.
      *
      * @param array $projectDetails
+     *
      * @return bool
      */
     private function isTestMode($projectDetails)
@@ -145,23 +136,23 @@ final class Client
             return false;
         }
 
-        return ($projectDetails['status'] == 'active-testing');
+        return 'active-testing' == $projectDetails['status'];
     }
 
     /**
      * Create a new iDEAL order.
      *
-     * @param integer $amount Amount in cents.
-     * @param string $currency A valid currency code.
-     * @param string $issuerId The SWIFT/BIC code of the iDEAL issuer.
-     * @param string $description A description of the order.
-     * @param string $merchantOrderId A merchant-defined order identifier.
-     * @param string $returnUrl The return URL.
+     * @param int    $amount           amount in cents
+     * @param string $currency         a valid currency code
+     * @param string $issuerId         the SWIFT/BIC code of the iDEAL issuer
+     * @param string $description      a description of the order
+     * @param string $merchantOrderId  a merchant-defined order identifier
+     * @param string $returnUrl        the return URL
      * @param string $expirationPeriod The expiration period as an ISO 8601 duration
-     * @param array $customer Customer information.
-     * @param array $extra Extra information.
+     * @param array  $customer         customer information
+     * @param array  $extra            extra information
      *
-     * @return Order The newly created order.
+     * @return Order the newly created order
      */
     public function createIdealOrder(
         $amount,
@@ -194,17 +185,17 @@ final class Client
     /**
      * Create a new SEPA order.
      *
-     * @param integer $amount Amount in cents.
-     * @param string $currency A valid currency code.
-     * @param array $paymentMethodDetails An array of extra payment method details.
-     * @param string $description A description of the order.
-     * @param string $merchantOrderId A merchant-defined order identifier.
-     * @param string $returnUrl The return URL.
-     * @param string $expirationPeriod The expiration period as an ISO 8601 duration
-     * @param array $customer Customer information.
-     * @param array $extra Extra information.
+     * @param int    $amount               amount in cents
+     * @param string $currency             a valid currency code
+     * @param array  $paymentMethodDetails an array of extra payment method details
+     * @param string $description          a description of the order
+     * @param string $merchantOrderId      a merchant-defined order identifier
+     * @param string $returnUrl            the return URL
+     * @param string $expirationPeriod     The expiration period as an ISO 8601 duration
+     * @param array  $customer             customer information
+     * @param array  $extra                extra information
      *
-     * @return Order The newly created order.
+     * @return Order the newly created order
      */
     public function createSepaOrder(
         $amount,
@@ -237,17 +228,17 @@ final class Client
     /**
      * Create a new SOFORT order.
      *
-     * @param integer $amount Amount in cents.
-     * @param string $currency A valid currency code.
-     * @param array $paymentMethodDetails An array of extra payment method details.
-     * @param string $description A description of the order.
-     * @param string $merchantOrderId A merchant-defined order identifier.
-     * @param string $returnUrl The return URL.
-     * @param string $expirationPeriod The expiration period as an ISO 8601 duration
-     * @param array $customer Customer information.
-     * @param array $extra Extra information.
+     * @param int    $amount               amount in cents
+     * @param string $currency             a valid currency code
+     * @param array  $paymentMethodDetails an array of extra payment method details
+     * @param string $description          a description of the order
+     * @param string $merchantOrderId      a merchant-defined order identifier
+     * @param string $returnUrl            the return URL
+     * @param string $expirationPeriod     The expiration period as an ISO 8601 duration
+     * @param array  $customer             customer information
+     * @param array  $extra                extra information
      *
-     * @return Order The newly created order.
+     * @return Order the newly created order
      */
     public function createSofortOrder(
         $amount,
@@ -280,16 +271,16 @@ final class Client
     /**
      * Create a new credit card order.
      *
-     * @param integer $amount Amount in cents.
-     * @param string $currency A valid currency code.
-     * @param string $description A description of the order.
-     * @param string $merchantOrderId A merchant-defined order identifier.
-     * @param string $returnUrl The return URL.
+     * @param int    $amount           amount in cents
+     * @param string $currency         a valid currency code
+     * @param string $description      a description of the order
+     * @param string $merchantOrderId  a merchant-defined order identifier
+     * @param string $returnUrl        the return URL
      * @param string $expirationPeriod The expiration period as an ISO 8601 duration
-     * @param array $customer Customer information.
-     * @param array $extra Extra information.
+     * @param array  $customer         customer information
+     * @param array  $extra            extra information
      *
-     * @return Order The newly created order.
+     * @return Order the newly created order
      */
     public function createCreditCardOrder(
         $amount,
@@ -320,16 +311,16 @@ final class Client
     /**
      * Create a new Bancontact order.
      *
-     * @param integer $amount Amount in cents.
-     * @param string $currency A valid currency code.
-     * @param string $description A description of the order.
-     * @param string $merchantOrderId A merchant-defined order identifier.
-     * @param string $returnUrl The return URL.
+     * @param int    $amount           amount in cents
+     * @param string $currency         a valid currency code
+     * @param string $description      a description of the order
+     * @param string $merchantOrderId  a merchant-defined order identifier
+     * @param string $returnUrl        the return URL
      * @param string $expirationPeriod The expiration period as an ISO 8601 duration
-     * @param array $customer Customer information.
-     * @param array $extra Extra information.
+     * @param array  $customer         customer information
+     * @param array  $extra            extra information
      *
-     * @return Order The newly created order.
+     * @return Order the newly created order
      */
     public function createBancontactOrder(
         $amount,
@@ -360,18 +351,18 @@ final class Client
     /**
      * Create a new Cash On Delivery/Corporate Account/ Cheque Payment order.
      *
-     * @param integer $amount Amount in cents.
-     * @param string $currency A valid currency code.
-     * @param array $paymentMethodDetails An array of extra payment method details.
-     * @param string $description A description of the order.
-     * @param string $merchantOrderId A merchant-defined order identifier.
-     * @param string $returnUrl The return URL.
-     * @param string $expirationPeriod The expiration period as an ISO 8601 duration
-     * @param array $customer Customer information.
-     * @param array $extra Extra information.
-     * @param string $webhookUrl The webhook URL.
+     * @param int    $amount               amount in cents
+     * @param string $currency             a valid currency code
+     * @param array  $paymentMethodDetails an array of extra payment method details
+     * @param string $description          a description of the order
+     * @param string $merchantOrderId      a merchant-defined order identifier
+     * @param string $returnUrl            the return URL
+     * @param string $expirationPeriod     The expiration period as an ISO 8601 duration
+     * @param array  $customer             customer information
+     * @param array  $extra                extra information
+     * @param string $webhookUrl           the webhook URL
      *
-     * @return Order The newly created order.
+     * @return Order the newly created order
      */
     public function createCashOnDeliveryOrder(
         $amount,
@@ -404,19 +395,19 @@ final class Client
     /**
      * Create a new order.
      *
-     * @param integer $amount Amount in cents.
-     * @param string $currency A valid currency code.
-     * @param string $paymentMethod The payment method to use.
-     * @param array $paymentMethodDetails An array of extra payment method details.
-     * @param string $description A description of the order.
-     * @param string $merchantOrderId A merchant-defined order identifier.
-     * @param string $returnUrl The return URL.
-     * @param string $expirationPeriod The expiration period as an ISO 8601 duration
-     * @param array $customer Customer information.
-     * @param array $extra Extra information.
-     * @param string $webhookUrl The webhook URL.
+     * @param int    $amount               amount in cents
+     * @param string $currency             a valid currency code
+     * @param string $paymentMethod        the payment method to use
+     * @param array  $paymentMethodDetails an array of extra payment method details
+     * @param string $description          a description of the order
+     * @param string $merchantOrderId      a merchant-defined order identifier
+     * @param string $returnUrl            the return URL
+     * @param string $expirationPeriod     The expiration period as an ISO 8601 duration
+     * @param array  $customer             customer information
+     * @param array  $extra                extra information
+     * @param string $webhookUrl           the webhook URL
      *
-     * @return Order The newly created order.
+     * @return Order the newly created order
      */
     public function createOrder(
         $amount,
@@ -451,7 +442,8 @@ final class Client
     /**
      * Get a single order.
      *
-     * @param string $id The order ID.
+     * @param string $id the order ID
+     *
      * @return Order
      */
     public function getOrder($id)
@@ -461,21 +453,16 @@ final class Client
                 $this->httpClient->get("orders/$id")->json()
             );
         } catch (RequestException $exception) {
-            if ($exception->getCode() == 404) {
+            if (404 == $exception->getCode()) {
                 throw new OrderNotFoundException('No order with that ID was found.', 404, $exception);
             }
-            throw new ClientException(
-                'An error occurred while getting the order: '.$exception->getMessage(),
-                $exception->getCode(),
-                $exception
-            );
+            throw new ClientException('An error occurred while getting the order: '.$exception->getMessage(), $exception->getCode(), $exception);
         }
     }
 
     /**
      * Update an existing order.
      *
-     * @param Order $order
      * @return Order
      */
     public function updateOrder(Order $order)
@@ -486,7 +473,6 @@ final class Client
     /**
      * Post a new order.
      *
-     * @param Order $order
      * @return Order
      */
     private function postOrder(Order $order)
@@ -499,23 +485,19 @@ final class Client
                     'headers' => ['Content-Type' => 'application/json'],
                     'body' => json_encode(
                         ArrayFunctions::withoutNullValues($order->toArray())
-                    )
+                    ),
                 ]
             );
         } catch (RequestException $exception) {
-            throw new ClientException(
-                'An error occurred while posting the order: '.$exception->getMessage(),
-                $exception->getCode(),
-                $exception
-            );
+            throw new ClientException('An error occurred while posting the order: '.$exception->getMessage(), $exception->getCode(), $exception);
         }
+
         return Order::fromArray($response->json());
     }
 
     /**
      * PUT order data to Ginger API.
      *
-     * @param Order $order
      * @return Order
      */
     private function putOrder(Order $order)
@@ -523,22 +505,18 @@ final class Client
         try {
             return Order::fromArray(
                 $this->httpClient->put(
-                    "orders/".$order->id()."/",
+                    'orders/'.$order->id().'/',
                     [
-                        "timeout" => 3,
-                        "json" => ArrayFunctions::withoutNullValues($order->toArray())
+                        'timeout' => 3,
+                        'json' => ArrayFunctions::withoutNullValues($order->toArray()),
                     ]
                 )->json()
             );
         } catch (RequestException $exception) {
-            if ($exception->getCode() == 404) {
+            if (404 == $exception->getCode()) {
                 throw new OrderNotFoundException('No order with that ID was found.', 404, $exception);
             }
-            throw new ClientException(
-                'An error occurred while updating the order: '.$exception->getMessage(),
-                $exception->getCode(),
-                $exception
-            );
+            throw new ClientException('An error occurred while updating the order: '.$exception->getMessage(), $exception->getCode(), $exception);
         }
     }
 }

@@ -1,9 +1,9 @@
 <?php
 
-
-class EventAccountDemo extends Event {
-
-    public function preCustomerAddAddress($data) {
+class EventAccountDemo extends Event
+{
+    public function preCustomerAddAddress($data)
+    {
         $xyz = $data;
     }
 }

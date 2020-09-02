@@ -2,10 +2,10 @@
 
 class ControllerApiCustomerCheckout extends Controller
 {
-    public function getDeliveryTimeslot() {
-
+    public function getDeliveryTimeslot()
+    {
         //echo "<pre>";print_r('getDeliveryTimeslot');die;
-        $json = array();
+        $json = [];
 
         $this->load->language('information/locations');
 
@@ -21,75 +21,65 @@ class ControllerApiCustomerCheckout extends Controller
 
         $this->load->model('tool/image');
 
-
-        if(isset($this->request->get['store_id']) && isset($this->request->get['shipping_method'])) {
-            
-            $data = array();
+        if (isset($this->request->get['store_id']) && isset($this->request->get['shipping_method'])) {
+            $data = [];
 
             $this->language->load('checkout/delivery_time');
 
             $data['text_no_timeslot'] = $this->language->get('text_no_timeslot');
 
             $store_id = $this->request->get['store_id'];
-            $shipping_method =  $this->request->get['shipping_method'];
+            $shipping_method = $this->request->get['shipping_method'];
 
             //TO STORE STORE ID AND SHIPPING METHOD IN SESSION
             $this->session->data['store_id_for_timeslot'] = $store_id;
             $this->session->data['shipping_method_for_timeslot'] = $shipping_method;
-            
-            $getActiveDays = $this->getActiveDays($store_id,$shipping_method);
+
+            $getActiveDays = $this->getActiveDays($store_id, $shipping_method);
 
             $log = new Log('error.log');
             $log->write('timeslots');
             /*$log->write($store_id."ss".$shipping_method);
-            
+
             $log->write($getActiveDays);*/
-            $data['dates'] = $this->getDates($getActiveDays,$store_id,$shipping_method);
+            $data['dates'] = $this->getDates($getActiveDays, $store_id, $shipping_method);
             $data['timeslots'] = [];
-            
+
             $data['formatted_dates'] = [];
-            
+
             //$log->write($data['dates']);
-            foreach ($data['dates'] as $date) {                
-                
+            foreach ($data['dates'] as $date) {
                 $amTimeslot = [];
                 $pmTimeslot = [];
                 $inPmfirstTimeslot = [];
-                
-                $temp = $this->get_all_time_slot($store_id,$shipping_method,$date);            
+
+                $temp = $this->get_all_time_slot($store_id, $shipping_method, $date);
 
                 foreach ($temp as $temp1) {
-                        
                     $temp2 = explode('-', $temp1['timeslot']);
-                    
-                    
-                    if (strpos($temp2[0], 'am') !== false) {
-                        array_push($amTimeslot, $temp1);
-                    } else {      
 
-                        if(substr($temp2[0], 0,2) == '12') {
-                            
+                    if (false !== strpos($temp2[0], 'am')) {
+                        array_push($amTimeslot, $temp1);
+                    } else {
+                        if ('12' == substr($temp2[0], 0, 2)) {
                             array_push($inPmfirstTimeslot, $temp1);
                         } else {
                             array_push($pmTimeslot, $temp1);
                         }
                     }
-
                 }
 
                 foreach ($inPmfirstTimeslot as $te) {
-                    
-                    array_push($amTimeslot, $te);    
+                    array_push($amTimeslot, $te);
                 }
 
                 foreach ($pmTimeslot as $te) {
-                    
-                    array_push($amTimeslot, $te);    
+                    array_push($amTimeslot, $te);
                 }
-                
+
                 //echo "<pre>";print_r($temp);print_r($amTimeslot);
                 //$data['timeslots'][$date] = $amTimeslot;
-                if(count($amTimeslot) > 0) {
+                if (count($amTimeslot) > 0) {
                     $data['timeslots'][$date] = $amTimeslot;
                     $data['formatted_dates'][] = $date;
                 }
@@ -102,50 +92,45 @@ class ControllerApiCustomerCheckout extends Controller
             $log->write($data['timeslots']);*/
             $data['store'] = $this->getStoreDetail($store_id);
 
+            if ('express.express' == $this->request->get['shipping_method']) {
+                $data['settings'] = $this->getSettings('express', 0);
 
-            if($this->request->get['shipping_method'] == 'express.express'){
-                $data['settings'] = $this->getSettings('express',0);
-
-                $settings = $this->getSettings('express',0);
+                $settings = $this->getSettings('express', 0);
                 $timeDiff = $settings['express_how_much_time'];
-                
+
                 $min = 0;
                 if ($timeDiff) {
                     $i = explode(':', $timeDiff);
                     $min = $min + $i[0] * 60 + $i[1]; //add difference minut to current time
                 }
-                $to = date('h:ia',strtotime('+'.$min.' minutes',strtotime(date('h:ia'))));
+                $to = date('h:ia', strtotime('+'.$min.' minutes', strtotime(date('h:ia'))));
 
                 $delivery_timeslot = date('h:ia').' - '.$to;
 
                 //$data['delivery_timeslot'] = $delivery_timeslot;
-                $data['delivery_timeslot'] = 'Within '.$min . ' minutes';
+                $data['delivery_timeslot'] = 'Within '.$min.' minutes';
             } else {
                 $data['delivery_timeslot'] = '';
             }
             //echo "<pre>";print_r($data);die;
-            
+
             $json['data'] = $data;
-
         } else {
-
             $json['status'] = 10013;
 
-            $json['message'][] = ['type' =>  '' , 'body' =>  $this->language->get('text_not_loggedin') ];
+            $json['message'][] = ['type' => '', 'body' => $this->language->get('text_not_loggedin')];
 
             http_response_code(400);
-
         }
-        
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getApiDeliveryTimeslot($data) {
-
+    public function getApiDeliveryTimeslot($data)
+    {
         //echo "<pre>";print_r('getDeliveryTimeslot');die;
-        $json = array();
+        $json = [];
 
         $this->load->language('information/locations');
 
@@ -161,72 +146,59 @@ class ControllerApiCustomerCheckout extends Controller
 
         $this->load->model('tool/image');
 
-        
-
-        if(isset($data['store_id']) && isset($data['shipping_method'])) {
-            
-
+        if (isset($data['store_id']) && isset($data['shipping_method'])) {
             $this->language->load('checkout/delivery_time');
 
             $data['text_no_timeslot'] = $this->language->get('text_no_timeslot');
 
             $store_id = $data['store_id'];
-            $shipping_method =  $data['shipping_method'];
+            $shipping_method = $data['shipping_method'];
 
             //TO STORE STORE ID AND SHIPPING METHOD IN SESSION
             $this->session->data['store_id_for_timeslot'] = $store_id;
             $this->session->data['shipping_method_for_timeslot'] = $shipping_method;
-            
-            $getActiveDays = $this->getActiveDays($store_id,$shipping_method);
+
+            $getActiveDays = $this->getActiveDays($store_id, $shipping_method);
 
             $log = new Log('error.log');
-            
-            $data['dates'] = $this->getDates($getActiveDays,$store_id,$shipping_method);
+
+            $data['dates'] = $this->getDates($getActiveDays, $store_id, $shipping_method);
             $data['timeslots'] = [];
-            
+
             $data['formatted_dates'] = [];
-            
-            
-            foreach ($data['dates'] as $date) {                
-                
+
+            foreach ($data['dates'] as $date) {
                 $amTimeslot = [];
                 $pmTimeslot = [];
                 $inPmfirstTimeslot = [];
-                
-                $temp = $this->get_all_time_slot($store_id,$shipping_method,$date);            
+
+                $temp = $this->get_all_time_slot($store_id, $shipping_method, $date);
 
                 foreach ($temp as $temp1) {
-                        
                     $temp2 = explode('-', $temp1['timeslot']);
-                    
-                    
-                    if (strpos($temp2[0], 'am') !== false) {
-                        array_push($amTimeslot, $temp1);
-                    } else {      
 
-                        if(substr($temp2[0], 0,2) == '12') {
-                            
+                    if (false !== strpos($temp2[0], 'am')) {
+                        array_push($amTimeslot, $temp1);
+                    } else {
+                        if ('12' == substr($temp2[0], 0, 2)) {
                             array_push($inPmfirstTimeslot, $temp1);
                         } else {
                             array_push($pmTimeslot, $temp1);
                         }
                     }
-
                 }
 
                 foreach ($inPmfirstTimeslot as $te) {
-                    
-                    array_push($amTimeslot, $te);    
+                    array_push($amTimeslot, $te);
                 }
 
                 foreach ($pmTimeslot as $te) {
-                    
-                    array_push($amTimeslot, $te);    
+                    array_push($amTimeslot, $te);
                 }
-                
+
                 //echo "<pre>";print_r($temp);print_r($amTimeslot);
                 //$data['timeslots'][$date] = $amTimeslot;
-                if(count($amTimeslot) > 0) {
+                if (count($amTimeslot) > 0) {
                     $data['timeslots'][$date] = $amTimeslot;
                     $data['formatted_dates'][] = $date;
                 }
@@ -238,7 +210,7 @@ class ControllerApiCustomerCheckout extends Controller
             /*
                 if usa_date uncomment below
             */
-            
+
             /*$newDate = [];
             foreach ($data['dates'] as $dateT) {
                 $newDate[] = date("m-d-Y", strtotime($dateT));
@@ -249,53 +221,49 @@ class ControllerApiCustomerCheckout extends Controller
             /*
                 if usa_date uncomment above
             */
-           
+
             $data['store'] = $this->getStoreDetail($store_id);
 
+            if ('express.express' == $data['shipping_method']) {
+                $data['settings'] = $this->getSettings('express', 0);
 
-            if($data['shipping_method'] == 'express.express'){
-                $data['settings'] = $this->getSettings('express',0);
-
-                $settings = $this->getSettings('express',0);
+                $settings = $this->getSettings('express', 0);
                 $timeDiff = $settings['express_how_much_time'];
-                
+
                 $min = 0;
                 if ($timeDiff) {
                     $i = explode(':', $timeDiff);
                     $min = $min + $i[0] * 60 + $i[1]; //add difference minut to current time
                 }
-                $to = date('h:ia',strtotime('+'.$min.' minutes',strtotime(date('h:ia'))));
+                $to = date('h:ia', strtotime('+'.$min.' minutes', strtotime(date('h:ia'))));
 
                 $delivery_timeslot = date('h:ia').' - '.$to;
 
                 //$data['delivery_timeslot'] = $delivery_timeslot;
-                $data['delivery_timeslot'] = 'Within '.$min . ' minutes';
+                $data['delivery_timeslot'] = 'Within '.$min.' minutes';
             } else {
                 $data['delivery_timeslot'] = '';
             }
             //echo "<pre>";print_r($data);die;
-            
+
             $json['data'] = $data;
-
         } else {
-
             $json['status'] = 10013;
 
-            $json['message'][] = ['type' =>  '' , 'body' =>  $this->language->get('text_not_loggedin') ];
+            $json['message'][] = ['type' => '', 'body' => $this->language->get('text_not_loggedin')];
 
             http_response_code(400);
-
         }
-        
+
         return $json;
         /*$this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));*/
     }
-    
-    public function getPaymentMethods() {
 
+    public function getPaymentMethods()
+    {
         //echo "<pre>";print_r('getStoreShippingMethods');die;
-        $json = array();
+        $json = [];
 
         $this->load->language('information/locations');
 
@@ -311,27 +279,24 @@ class ControllerApiCustomerCheckout extends Controller
 
         $this->load->model('tool/image');
 
-
-        if( isset($this->request->get['total'])) {
-            
+        if (isset($this->request->get['total'])) {
             $this->load->language('checkout/checkout');
             // Payment Methods
-            $method_data = array();
+            $method_data = [];
 
             $this->load->model('extension/extension');
 
             $results = $this->model_extension_extension->getExtensions('payment');
-            
-            //echo "<pre>";print_r($results);die;  
+
+            //echo "<pre>";print_r($results);die;
             $total = $this->request->get['total'];
 
             foreach ($results as $result) {
-          
-                if ($this->config->get($result['code'] . '_status')) {
-                    $this->load->model('payment/' . $result['code']);
+                if ($this->config->get($result['code'].'_status')) {
+                    $this->load->model('payment/'.$result['code']);
 
-                    $method = $this->{'model_payment_' . $result['code']}->getMethod($total);
-                    
+                    $method = $this->{'model_payment_'.$result['code']}->getMethod($total);
+
                     //echo "<pre>";print_r($method);die;
                     if ($method) {
                         $method_data[] = $method;
@@ -339,36 +304,32 @@ class ControllerApiCustomerCheckout extends Controller
                 }
             }
 
-            $sort_order = array();
-        
+            $sort_order = [];
+
             foreach ($method_data as $key => $value) {
                 $sort_order[$key] = $value['sort_order'];
             }
-            
+
             array_multisort($sort_order, SORT_ASC, $method_data);
-            
+
             //echo "<pre>";print_r($method_data);die;
             $json['data'] = $method_data;
-
         } else {
-
             $json['status'] = 10013;
 
-            $json['message'][] = ['type' =>  '' , 'body' =>  $this->language->get('text_not_loggedin') ];
+            $json['message'][] = ['type' => '', 'body' => $this->language->get('text_not_loggedin')];
 
             http_response_code(400);
-
         }
-        
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
 
-    public function addApplyCoupon() {
-
+    public function addApplyCoupon()
+    {
         //echo "<pre>";print_r('addApplyCoupon');die;
-        $json = array();
+        $json = [];
 
         $this->load->language('information/locations');
 
@@ -384,9 +345,7 @@ class ControllerApiCustomerCheckout extends Controller
 
         $this->load->model('tool/image');
 
-
-        if( isset($this->request->post['coupon']) && isset($this->request->post['store_id']) && isset($this->request->post['total']) && isset($this->request->post['sub_total']) ) {
-            
+        if (isset($this->request->post['coupon']) && isset($this->request->post['store_id']) && isset($this->request->post['total']) && isset($this->request->post['sub_total'])) {
             $this->load->language('checkout/coupon');
 
             $this->load->model('checkout/coupon');
@@ -397,50 +356,42 @@ class ControllerApiCustomerCheckout extends Controller
                 $coupon = '';
             }
 
-            $coupon_info = $this->model_checkout_coupon->apiGetCoupon($coupon,$this->request->post['sub_total']);
+            $coupon_info = $this->model_checkout_coupon->apiGetCoupon($coupon, $this->request->post['sub_total']);
 
-            $detail = $this->getCouponDiscountAmount($value='',$coupon,$this->request->post['store_id'],$this->request->post['sub_total'],$this->request->post['sub_total']);
+            $detail = $this->getCouponDiscountAmount($value = '', $coupon, $this->request->post['store_id'], $this->request->post['sub_total'], $this->request->post['sub_total']);
 
             //echo "<pre>";print_r($detail);die;
-            
+
             if (empty($this->request->post['coupon'])) {
-
-                $json['message'][] = ['type' =>  '' , 'body' =>  $this->language->get('error_empty') ];
-
-            } elseif ($coupon_info && count($detail) > 0 ) {
-
+                $json['message'][] = ['type' => '', 'body' => $this->language->get('error_empty')];
+            } elseif ($coupon_info && count($detail) > 0) {
                 $json['data'] = $coupon_info;
 
-                $json['data']['discount_amount'] = isset($detail[0]['value'])?-$detail[0]['value']:0;
-                $json['data']['coupon_type'] = isset($detail[0]['coupon_type'])?$detail[0]['coupon_type']:'';
+                $json['data']['discount_amount'] = isset($detail[0]['value']) ? -$detail[0]['value'] : 0;
+                $json['data']['coupon_type'] = isset($detail[0]['coupon_type']) ? $detail[0]['coupon_type'] : '';
 
-                $json['message'][] = ['type' =>  '' , 'body' =>  $this->language->get('text_success') ];
+                $json['message'][] = ['type' => '', 'body' => $this->language->get('text_success')];
             } else {
-
                 $json['status'] = 10021;
 
-                $json['message'][] = ['type' =>  '' , 'body' =>  $this->language->get('error_coupon') ];
+                $json['message'][] = ['type' => '', 'body' => $this->language->get('error_coupon')];
             }
-
         } else {
-
             $json['status'] = 10013;
 
-            $json['message'][] = ['type' =>  '' , 'body' =>  $this->language->get('text_not_loggedin') ];
+            $json['message'][] = ['type' => '', 'body' => $this->language->get('text_not_loggedin')];
 
             http_response_code(400);
-
         }
-        
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
 
-    public function addApplyReward() {
-
+    public function addApplyReward()
+    {
         //echo "<pre>";print_r('addApplyCoupon');die;
-        $json = array();
+        $json = [];
 
         $this->load->language('information/locations');
 
@@ -451,60 +402,44 @@ class ControllerApiCustomerCheckout extends Controller
         $this->load->language('api/general');
         $this->load->language('checkout/reward');
 
-        if( isset($this->request->post['reward']) && $this->request->post['reward'] > 0) {
-            
+        if (isset($this->request->post['reward']) && $this->request->post['reward'] > 0) {
             $this->load->model('checkout/coupon');
 
             $points = $this->customer->getRewardPoints();
 
             //echo "<pre>";print_r($points);die;
             if ($this->request->post['reward'] > $points) {
-                
-
                 $json['status'] = 10024;
 
-                $json['message'][] = ['type' =>  '' , 'body' =>  sprintf($this->language->get('error_points'), $this->request->post['reward']) ];
-
+                $json['message'][] = ['type' => '', 'body' => sprintf($this->language->get('error_points'), $this->request->post['reward'])];
             } else {
-                
                 $json['data']['discount_amount'] = $this->request->post['reward'] * $this->config->get('config_reward_value');
 
-                $json['message'][] = ['type' =>  '' , 'body' =>  sprintf($this->language->get('text_success'), $this->request->post['reward'],$this->customer->getRewardPoints()) ];
-
-                
-                
-
+                $json['message'][] = ['type' => '', 'body' => sprintf($this->language->get('text_success'), $this->request->post['reward'], $this->customer->getRewardPoints())];
             }
-
         } else {
-
             $json['status'] = 10025;
 
-            $json['message'][] = ['type' =>  '' , 'body' =>  $this->language->get('error_reward') ];
+            $json['message'][] = ['type' => '', 'body' => $this->language->get('error_reward')];
 
             http_response_code(400);
         }
-        
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
 
+    public function getApiNextTimeSlot($args)
+    {
+        $data = [];
 
-    public function getApiNextTimeSlot($args) {
-        
-
-        $data = array();
-
-        
         $store_id = $args['store_id'];
-        $shipping_method =  $args['shipping_method'];
+        $shipping_method = $args['shipping_method'];
 
-        if($shipping_method == 'express') {
+        if ('express' == $shipping_method) {
+            $settings = $this->getSettings('express', 0);
 
-            $settings = $this->getSettings('express',0);
-
-            $time_diff =  $settings['express_delivery_time_diff'];
+            $time_diff = $settings['express_delivery_time_diff'];
 
             $i = explode(':', $time_diff);
             $min = $i[0] * 60 + $i[1]; //add difference minut to current time
@@ -515,53 +450,43 @@ class ControllerApiCustomerCheckout extends Controller
         $this->session->data['store_id_for_timeslot'] = $store_id;
         $this->session->data['shipping_method_for_timeslot'] = $shipping_method;
 
-
-        $getActiveDays = $this->getActiveDays($store_id,$shipping_method);
+        $getActiveDays = $this->getActiveDays($store_id, $shipping_method);
         $log = new Log('error.log');
-        
+
         $log->write($getActiveDays);
-        $data['dates'] = $this->getDates($getActiveDays,$store_id,$shipping_method);
+        $data['dates'] = $this->getDates($getActiveDays, $store_id, $shipping_method);
         $data['timeslots'] = [];
-        
-        
+
         $log->write($data['dates']);
-        foreach ($data['dates'] as $date) {                
-            
+        foreach ($data['dates'] as $date) {
             $amTimeslot = [];
             $pmTimeslot = [];
             $inPmfirstTimeslot = [];
-            
-            $temp = $this->get_all_time_slot($store_id,$shipping_method,$date);            
+
+            $temp = $this->get_all_time_slot($store_id, $shipping_method, $date);
 
             foreach ($temp as $temp1) {
-                    
                 $temp2 = explode('-', $temp1['timeslot']);
-                
-                
-                if (strpos($temp2[0], 'am') !== false) {
-                    array_push($amTimeslot, $temp1);
-                } else {      
 
-                    if(substr($temp2[0], 0,2) == '12') {
-                        
+                if (false !== strpos($temp2[0], 'am')) {
+                    array_push($amTimeslot, $temp1);
+                } else {
+                    if ('12' == substr($temp2[0], 0, 2)) {
                         array_push($inPmfirstTimeslot, $temp1);
                     } else {
                         array_push($pmTimeslot, $temp1);
                     }
                 }
-
             }
 
             foreach ($inPmfirstTimeslot as $te) {
-                
-                array_push($amTimeslot, $te);    
+                array_push($amTimeslot, $te);
             }
 
             foreach ($pmTimeslot as $te) {
-                
-                array_push($amTimeslot, $te);    
+                array_push($amTimeslot, $te);
             }
-            
+
             //echo "<pre>";print_r($temp);print_r($amTimeslot);
             $data['timeslots'][$date] = $amTimeslot;
             //$data['timeslots'][$date] = $temp;
@@ -569,61 +494,47 @@ class ControllerApiCustomerCheckout extends Controller
 
         //echo "<pre>";print_r($data);die;
 
-        if(count($data['dates']) > 0 ) {
-
-            if(date('d-m-Y') == $data['dates'][0]) {
+        if (count($data['dates']) > 0) {
+            if (date('d-m-Y') == $data['dates'][0]) {
                 // todays date avialable
-                if( isset($data['timeslots'][$data['dates'][0]]) && count($data['timeslots'][$data['dates'][0]]) > 0 ) {
-
+                if (isset($data['timeslots'][$data['dates'][0]]) && count($data['timeslots'][$data['dates'][0]]) > 0) {
                     //echo "<pre>";print_r($data['timeslots'][$data['dates'][0]]);die;
 
-                    if(count($data['timeslots'][$data['dates'][0]]) > 0) {
-
+                    if (count($data['timeslots'][$data['dates'][0]]) > 0) {
                         $temp = explode('-', $data['timeslots'][$data['dates'][0]][0]['timeslot']);
 
-                        if ($shipping_method == 'normal') {
-
-                            $settings = $this->getSettings('normal',0);
+                        if ('normal' == $shipping_method) {
+                            $settings = $this->getSettings('normal', 0);
                             $timeDiff = $settings['normal_delivery_time_diff'];
-
                         } else {
-
                             $storeDetail = $this->getStoreDetail($store_id);
                             $timeDiff = $storeDetail['delivery_time_diff'];
-
                         }
 
-            
                         //echo "<pre>";print_r($timeDiff);die;
-                        
-                        $is_enabled = $this->timeIsBetween($temp[0], $temp[1], date('h:ia'),$timeDiff);
+
+                        $is_enabled = $this->timeIsBetween($temp[0], $temp[1], date('h:ia'), $timeDiff);
 
                         //echo "<pre>";print_r($is_enabled);die;
 
-                        if($is_enabled){
-                            
+                        if ($is_enabled) {
                             $i = explode(':', $timeDiff);
                             $min = $i[0] * 60 + $i[1]; //add difference minut to current time
 
                             //echo "<pre>";print_r($min);die;
                             return $min;
-
                         } else {
-
                             return '--';
                         }
-
                     } else {
                         return '--';
                     }
                 }
-
             } else {
-                // 
                 $timestamp = strtotime($data['dates'][0]);
                 //$day = date('D', $timestamp); // thr
                 $day = date('l', $timestamp); //Thursday
-                
+
                 return $day;
             }
         } else {
@@ -633,20 +544,18 @@ class ControllerApiCustomerCheckout extends Controller
         return '--';
     }
 
-
-    public function getRawTimeslot() {
-        
-        $data = array();
+    public function getRawTimeslot()
+    {
+        $data = [];
 
         $this->language->load('checkout/delivery_time');
 
         $data['text_no_timeslot'] = $this->language->get('text_no_timeslot');
 
         $store_id = $this->request->get['store_id'];
-        $shipping_method =  $this->request->get['shipping_method'];
+        $shipping_method = $this->request->get['shipping_method'];
 
-        
-        $data['store'] = $this->getStoreDetail($store_id);    
+        $data['store'] = $this->getStoreDetail($store_id);
         //echo "<pre>";print_r($data);die;
 
         //Shipping data start
@@ -654,125 +563,113 @@ class ControllerApiCustomerCheckout extends Controller
         $this->load->language('checkout/checkout');
 
         // Shipping Methods
-        $method_data = array();
+        $method_data = [];
 
         $this->load->model('extension/extension');
 
         $results = $this->model_extension_extension->getExtensions('shipping');
 
         $this->load->model('tool/image');
-    
-        $store_info =  $this->model_tool_image->getStore($store_id);
 
-        $delivery_by_owner =  $store_info['delivery_by_owner'];
+        $store_info = $this->model_tool_image->getStore($store_id);
 
-        $pickup_delivery =  $store_info['store_pickup_timeslots'];
+        $delivery_by_owner = $store_info['delivery_by_owner'];
+
+        $pickup_delivery = $store_info['store_pickup_timeslots'];
 
         $free_delivery_amount = $store_info['min_order_cod'];
-        
 
+        $store_total = $this->cart->getSubTotal($store_id);
 
-        $store_total  = $this->cart->getSubTotal($store_id);
-
-        if ($store_total > $free_delivery_amount){
-
+        if ($store_total > $free_delivery_amount) {
             $cost = 0;
-
         } else {
             $cost = $store_info['cost_of_delivery'];
         }
-        // code = pickup 
-        // code = store_delivery 
+        // code = pickup
+        // code = store_delivery
         //echo "<pre>";print_r($results);die;
 
         foreach ($results as $result) {
-            
-            if ($this->config->get($result['code'] . '_status')) {
-                if ($result['code'] == 'normal' ) {
+            if ($this->config->get($result['code'].'_status')) {
+                if ('normal' == $result['code']) {
                     //echo "<pre>";print_r('normal');die;
                     //if ($delivery_by_owner) {
-                        $this->load->model('shipping/' . $result['code']);
-                        $quote = $this->{'model_shipping_' . $result['code']}->getQuote($cost,$store_info['name']);
+                    $this->load->model('shipping/'.$result['code']);
+                    $quote = $this->{'model_shipping_'.$result['code']}->getQuote($cost, $store_info['name']);
 
-                            
-                            if ($quote) {
-                                $method_data[$result['code']] = array(
+                    if ($quote) {
+                        $method_data[$result['code']] = [
                                     'title' => $quote['title'],
                                     'quote' => $quote['quote'],
                                     'sort_order' => $quote['sort_order'],
                                     'error' => $quote['error'],
-                                    'shipping_timeslots' => $this->getRawTimeslots($quote['code'],$store_id),
-                                    
-                                );
+                                    'shipping_timeslots' => $this->getRawTimeslots($quote['code'], $store_id),
+                                ];
 
-                                //echo "<pre>";print_r(key($method_data[$result['code']]['quote']);die;
-                            }
-
+                        //echo "<pre>";print_r(key($method_data[$result['code']]['quote']);die;
+                    }
 
                     //}
-                } elseif($result['code'] == 'express' ) {
+                } elseif ('express' == $result['code']) {
                     //echo "<pre>";print_r('express');die;
-                    $this->load->model('shipping/' . $result['code']);
-                    $quote = $this->{'model_shipping_' . $result['code']}->getQuote($cost,$store_info['name']);
+                    $this->load->model('shipping/'.$result['code']);
+                    $quote = $this->{'model_shipping_'.$result['code']}->getQuote($cost, $store_info['name']);
 
                     if ($quote) {
-                        $method_data[$result['code']] = array(
+                        $method_data[$result['code']] = [
                             'title' => $quote['title'],
                             'quote' => $quote['quote'],
                             'sort_order' => $quote['sort_order'],
                             'error' => $quote['error'],
-                            'shipping_timeslots' => $this->getRawTimeslots($quote['code'],$store_id),
-                        );
+                            'shipping_timeslots' => $this->getRawTimeslots($quote['code'], $store_id),
+                        ];
                     }
-                } elseif($result['code'] == 'store_delivery' ) {
-
+                } elseif ('store_delivery' == $result['code']) {
                     if ($delivery_by_owner) {
-
-                        $this->load->model('shipping/' . $result['code']);
-                        $quote = $this->{'model_shipping_' . $result['code']}->getQuote($cost,$store_info['name']);
+                        $this->load->model('shipping/'.$result['code']);
+                        $quote = $this->{'model_shipping_'.$result['code']}->getQuote($cost, $store_info['name']);
                         if ($quote) {
-                            $method_data[$result['code']] = array(
+                            $method_data[$result['code']] = [
                                 'title' => $quote['title'],
                                 'quote' => $quote['quote'],
                                 'sort_order' => $quote['sort_order'],
                                 'error' => $quote['error'],
-                                'shipping_timeslots' => $this->getRawTimeslots($quote['code'],$store_id),
-                            );
+                                'shipping_timeslots' => $this->getRawTimeslots($quote['code'], $store_id),
+                            ];
                         }
                     }
-                } elseif($result['code'] == 'pickup' ) {
-
+                } elseif ('pickup' == $result['code']) {
                     if ($pickup_delivery) {
-
-                        $this->load->model('shipping/' . $result['code']);
-                        $quote = $this->{'model_shipping_' . $result['code']}->getQuote($cost,$store_info['name']);
+                        $this->load->model('shipping/'.$result['code']);
+                        $quote = $this->{'model_shipping_'.$result['code']}->getQuote($cost, $store_info['name']);
                         if ($quote) {
-                            $method_data[$result['code']] = array(
+                            $method_data[$result['code']] = [
                                 'title' => $quote['title'],
                                 'quote' => $quote['quote'],
                                 'sort_order' => $quote['sort_order'],
                                 'error' => $quote['error'],
-                                'shipping_timeslots' => $this->getRawTimeslots($quote['code'],$store_id),
-                            );
+                                'shipping_timeslots' => $this->getRawTimeslots($quote['code'], $store_id),
+                            ];
                         }
                     }
                 } else {
-                    $this->load->model('shipping/' . $result['code']);
-                    $quote = $this->{'model_shipping_' . $result['code']}->getQuote($cost,$store_info['name']);
+                    $this->load->model('shipping/'.$result['code']);
+                    $quote = $this->{'model_shipping_'.$result['code']}->getQuote($cost, $store_info['name']);
                     if ($quote) {
-                        $method_data[$result['code']] = array(
+                        $method_data[$result['code']] = [
                             'title' => $quote['title'],
                             'quote' => $quote['quote'],
                             'sort_order' => $quote['sort_order'],
                             'error' => $quote['error'],
-                            'shipping_timeslots' => $this->getRawTimeslots($quote['code'],$store_id),
-                        );
+                            'shipping_timeslots' => $this->getRawTimeslots($quote['code'], $store_id),
+                        ];
                     }
-                } 
+                }
             }
         }
-        
-        $sort_order = array();
+
+        $sort_order = [];
 
         foreach ($method_data as $key => $value) {
             $sort_order[$key] = $value['sort_order'];
@@ -780,7 +677,7 @@ class ControllerApiCustomerCheckout extends Controller
         array_multisort($sort_order, SORT_ASC, $method_data);
 
         $this->session->data['shipping_methods'][$store_id] = $method_data;
-        
+
         $data['text_shipping_method'] = $this->language->get('text_shipping_method');
         $data['text_comments'] = $this->language->get('text_comments');
         $data['text_loading'] = $this->language->get('text_loading');
@@ -796,9 +693,8 @@ class ControllerApiCustomerCheckout extends Controller
         if (isset($this->session->data['shipping_methods'][$store_id])) {
             $data['shipping_methods'] = $this->session->data['shipping_methods'][$store_id];
         } else {
-            $data['shipping_methods'] = array();
+            $data['shipping_methods'] = [];
         }
-
 
         if (isset($this->session->data['shipping_method'][$store_id])) {
             $found = false;
@@ -812,73 +708,66 @@ class ControllerApiCustomerCheckout extends Controller
                     }
                 }
             }
-            if ($found === false) {
-               $data['code'] = '';
+            if (false === $found) {
+                $data['code'] = '';
             }
-
-        }else{
+        } else {
             $data['code'] = 'store_delivery.store_delivery';
         }
         //echo "<pre>";print_r($method_data);die;
         $data['code'] = 'express.express';
-        
+
         $data['store_id'] = $store_id;
-        
-        
 
         //Shipping data end
 
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/information/delivery_time.tpl')) {
-            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/information/delivery_time.tpl', $data));
+        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/information/delivery_time.tpl')) {
+            $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/information/delivery_time.tpl', $data));
         } else {
             $this->response->setOutput($this->load->view('default/template/information/delivery_time.tpl', $data));
         }
     }
 
-
-    public function get_all_time_slot($store_id,$shipping_method,$date) {
-        
-
+    public function get_all_time_slot($store_id, $shipping_method, $date)
+    {
         $log = new Log('error.log');
         $log->write('get_all_time_slot');
 
-        $day = date('w',strtotime($date));
+        $day = date('w', strtotime($date));
         $log->write($day);
 
-        if(isset($date)) {
-
+        if (isset($date)) {
             $delivery_date = $date;
             //$this->session->data['dates'][$store_id] = $delivery_date;
 
             $log->write($delivery_date);
-        } else{
+        } else {
             $delivery_date = '';
         }
 
-        
-        $data['timeslot'] = $this->newGetStoreTimeSlot($store_id, $shipping_method,$day,$date);
+        $data['timeslot'] = $this->newGetStoreTimeSlot($store_id, $shipping_method, $day, $date);
 
         return $data['timeslot'];
-        
     }
 
-    public function getStoreDetail($store_id) {
-
+    public function getStoreDetail($store_id)
+    {
         $this->load->model('tool/image');
-    
+
         return $this->model_tool_image->getStoreData($store_id);
     }
 
-    public function getSettings($code,$store_id = 0) {
-
+    public function getSettings($code, $store_id = 0)
+    {
         $this->load->model('setting/setting');
-        return $this->model_setting_setting->getSetting($code,$store_id);
+
+        return $this->model_setting_setting->getSetting($code, $store_id);
     }
 
-    protected function getDates($getActiveDays,$store_id,$shipping_method){
-        
-        $avalday = array();
-        
+    protected function getDates($getActiveDays, $store_id, $shipping_method)
+    {
+        $avalday = [];
+
         $log = new Log('error.log');
         $log->write('getDates');
         //CREATING ARRAY FOR THE AVAILABLE DAYS OF THE WEEK.
@@ -887,258 +776,236 @@ class ControllerApiCustomerCheckout extends Controller
         $number_of_days_front = $storeDetail['number_of_days_front'];
 
         foreach ($getActiveDays as $ad) {
-              $avalday[] = $ad['day'];     
+            $avalday[] = $ad['day'];
         }
 
         //CHECKS IF CURRENT DAY IS IN THE LIST OF AVAILABLE DAYS OF WEEK
-        if(in_array(date('w'),$avalday)){
-            
-            $date = $this->checkCurrentDateTs($store_id,$shipping_method);
-            
-            
-            if($date) {
+        if (in_array(date('w'), $avalday)) {
+            $date = $this->checkCurrentDateTs($store_id, $shipping_method);
 
+            if ($date) {
                 $tmpDate = date('Y-m-d');
-            }else{
+            } else {
                 //echo "<pres>";print_r($date."hvhj");die;
-                $tmpDate = date('Y-m-d', strtotime('+1 Days'));     
+                $tmpDate = date('Y-m-d', strtotime('+1 Days'));
             }
-        } else{
+        } else {
             $tmpDate = date('Y-m-d');
         }
 
         //CREATES THE LIST OF DAYS TO DISPLAY USER AS AVAILABLE DAYS OF DELIVERY.
-        $nextBusinessDay = array();
-        $j=0;
-        
+        $nextBusinessDay = [];
+        $j = 0;
 
-        $shipping_method = explode('.',$shipping_method);
+        $shipping_method = explode('.', $shipping_method);
 
         $forwardDays = 7;
 
-        if ($shipping_method[0] == 'normal' || $shipping_method[0] == 'express') {
-
-            if($this->config->get('normal_number_of_days')) {
+        if ('normal' == $shipping_method[0] || 'express' == $shipping_method[0]) {
+            if ($this->config->get('normal_number_of_days')) {
                 $forwardDays = $this->config->get('normal_number_of_days');
             }
-        } elseif ($shipping_method[0] == 'store_delivery' || $shipping_method[0] == 'pickup') {
-
-            if($number_of_days_front) {
+        } elseif ('store_delivery' == $shipping_method[0] || 'pickup' == $shipping_method[0]) {
+            if ($number_of_days_front) {
                 $forwardDays = $number_of_days_front;
             }
         }
-        
-        if(count($nextBusinessDay) < $forwardDays){
-            $end;
-            if(!empty($nextBusinessDay)){
 
+        if (count($nextBusinessDay) < $forwardDays) {
+            $end;
+            if (!empty($nextBusinessDay)) {
                 $end = end($nextBusinessDay);
-                
+
                 //$log->write($end);
 
-                $log->write("end");
+                $log->write('end');
 
-                for($i=1;$i<=49;$i++){
-                
+                for ($i = 1; $i <= 49; ++$i) {
                     $tmp_date = date('d-m-Y', strtotime($end.' +'.$i.' Days'));
 
-                    $day = date('w',strtotime($tmp_date));
-                   
+                    $day = date('w', strtotime($tmp_date));
+
                     //$daycheck = $this->futurecheckDateTs($this->session->data['store_id_for_timeslot'],$this->session->data['shipping_method_for_timeslot'],$day);
 
-                    $daycheck = $this->get_all_time_slot($this->session->data['store_id_for_timeslot'],$this->session->data['shipping_method_for_timeslot'],$tmp_date);            
-                    
-                    if(!empty($daycheck))
-                    {   
+                    $daycheck = $this->get_all_time_slot($this->session->data['store_id_for_timeslot'], $this->session->data['shipping_method_for_timeslot'], $tmp_date);
+
+                    if (!empty($daycheck)) {
                         $nextBusinessDay[] = $tmp_date;
                     }
-                    if(count($nextBusinessDay) == $forwardDays){
+                    if (count($nextBusinessDay) == $forwardDays) {
                         break;
                     }
-                } 
-
-            }else{
+                }
+            } else {
                 $end = date('d-m-Y');
-                for($i=0;$i<=49;$i++){
-                
+                for ($i = 0; $i <= 49; ++$i) {
                     $tmp_date = date('d-m-Y', strtotime($end.' +'.$i.' Days'));
 
-                    $day = date('w',strtotime($tmp_date));
-            
+                    $day = date('w', strtotime($tmp_date));
+
                     //$daycheck = $this->futurecheckDateTs($this->session->data['store_id_for_timeslot'],$this->session->data['shipping_method_for_timeslot'],$day);
 
-                    $daycheck = $this->get_all_time_slot($this->session->data['store_id_for_timeslot'],$this->session->data['shipping_method_for_timeslot'],$tmp_date);            
+                    $daycheck = $this->get_all_time_slot($this->session->data['store_id_for_timeslot'], $this->session->data['shipping_method_for_timeslot'], $tmp_date);
 
-                    if(!empty($daycheck))
-                    {   
+                    if (!empty($daycheck)) {
                         $nextBusinessDay[] = $tmp_date;
                     }
-                    if(count($nextBusinessDay) == $forwardDays){
+                    if (count($nextBusinessDay) == $forwardDays) {
                         break;
                     }
                 }
             }
-            
         }
-        
+
         return $nextBusinessDay;
     }
 
-    public function getActiveDays($store_id,$method){
-        
-        $shipping_method = explode('.',$method);
+    public function getActiveDays($store_id, $method)
+    {
+        $shipping_method = explode('.', $method);
 
-        if ($shipping_method[0] == 'normal') {
-            $this->db->group_by('day');    
-            $this->db->select('day', FALSE);
-            $this->db->where('status', '1');     
-            $rows  = $this->db->get('normal_delivery_timeslot')->rows;   
-            return $rows;
-        }elseif($shipping_method[0] == 'express') {
+        if ('normal' == $shipping_method[0]) {
             $this->db->group_by('day');
-            $this->db->select('day', FALSE);
-            $this->db->where('status', '1'); 
-            $rows  = $this->db->get('express_delivery_timeslot')->rows;               
+            $this->db->select('day', false);
+            $this->db->where('status', '1');
+            $rows = $this->db->get('normal_delivery_timeslot')->rows;
+
             return $rows;
-        } elseif ($shipping_method[0] == 'pickup') {
-            $this->db->group_by('day');    
-            $this->db->select('day', FALSE);
-            $this->db->where('status', '1');     
-            $this->db->where('store_id', $store_id);
-            $rows  = $this->db->get('store_pickup_timeslot')->rows;   
-            return $rows;
-        } else{
+        } elseif ('express' == $shipping_method[0]) {
             $this->db->group_by('day');
-            $this->db->select('day', FALSE);
-            $this->db->where('status', '1');     
+            $this->db->select('day', false);
+            $this->db->where('status', '1');
+            $rows = $this->db->get('express_delivery_timeslot')->rows;
+
+            return $rows;
+        } elseif ('pickup' == $shipping_method[0]) {
+            $this->db->group_by('day');
+            $this->db->select('day', false);
+            $this->db->where('status', '1');
             $this->db->where('store_id', $store_id);
-            $rows  = $this->db->get('store_delivery_timeslot')->rows;               
+            $rows = $this->db->get('store_pickup_timeslot')->rows;
+
+            return $rows;
+        } else {
+            $this->db->group_by('day');
+            $this->db->select('day', false);
+            $this->db->where('status', '1');
+            $this->db->where('store_id', $store_id);
+            $rows = $this->db->get('store_delivery_timeslot')->rows;
+
             return $rows;
         }
     }
 
-    public function newGetStoreTimeSlot($store_id,$method,$day,$date) {
-
+    public function newGetStoreTimeSlot($store_id, $method, $day, $date)
+    {
         $log = new Log('error.log');
         $log->write('newGetStoreTimeSlot');
 
         $storeDetail = $this->getStoreDetail($store_id);
         $timeDiff = $storeDetail['delivery_time_diff'];
 
+        $shipping_method = explode('.', $method);
 
-        $shipping_method = explode('.',$method);
-
-        if ($shipping_method[0] == 'normal') {
-
-            $settings = $this->getSettings('normal',0);
+        if ('normal' == $shipping_method[0]) {
+            $settings = $this->getSettings('normal', 0);
             $timeDiff = $settings['normal_delivery_time_diff'];
 
             $this->db->where('day', $day);
-            $this->db->select('timeslot', FALSE);
-            $this->db->where('status', '1');     
-            $rows  = $this->db->get('normal_delivery_timeslot')->rows;   
-           
-        } elseif($shipping_method[0] == 'express') {
-
-            $settings = $this->getSettings('express',0);
+            $this->db->select('timeslot', false);
+            $this->db->where('status', '1');
+            $rows = $this->db->get('normal_delivery_timeslot')->rows;
+        } elseif ('express' == $shipping_method[0]) {
+            $settings = $this->getSettings('express', 0);
             $timeDiff = $settings['express_delivery_time_diff'];
 
             $this->db->where('day', $day);
-            $this->db->select('timeslot', FALSE);
-            $this->db->where('status', '1');    
-            $rows  = $this->db->get('express_delivery_timeslot')->rows;               
-           
-        } elseif ($shipping_method[0] == 'pickup') {
-
+            $this->db->select('timeslot', false);
+            $this->db->where('status', '1');
+            $rows = $this->db->get('express_delivery_timeslot')->rows;
+        } elseif ('pickup' == $shipping_method[0]) {
             $this->db->where('day', $day);
-            $this->db->select('timeslot', FALSE);
-            $this->db->where('status', '1');     
+            $this->db->select('timeslot', false);
+            $this->db->where('status', '1');
             $this->db->where('store_id', $store_id);
-            $rows  = $this->db->get('store_pickup_timeslot')->rows;   
-
-        } else { 
+            $rows = $this->db->get('store_pickup_timeslot')->rows;
+        } else {
             $this->db->where('day', $day);
-            $this->db->select('timeslot', FALSE);
-            $this->db->where('status', '1');     
+            $this->db->select('timeslot', false);
+            $this->db->where('status', '1');
             $this->db->where('store_id', $store_id);
-            $rows  = $this->db->get('store_delivery_timeslot')->rows;               
-            
+            $rows = $this->db->get('store_delivery_timeslot')->rows;
         }
-        
+
         $is_enabled = false;
-        $time_slot_rows = array();
-        
+        $time_slot_rows = [];
+
         $log->write('newGetStoreTimeSlot rows');
-        
+
         foreach ($rows as $tslot) {
             $row['timeslot'] = $tslot['timeslot'];
             $temp = explode('-', $tslot['timeslot']);
             $date = $date;
 
-            if($date != date('d-m-Y') ) {
-                
+            if ($date != date('d-m-Y')) {
                 array_push($time_slot_rows, $row);
-            }else{
+            } else {
                 $log->write(date('d-m-Y'));
                 $log->write($timeDiff);
                 $log->write($temp);
 
-                $is_enabled = $this->timeIsBetween($temp[0], $temp[1], date('h:ia'),$timeDiff);
-                if($is_enabled){
+                $is_enabled = $this->timeIsBetween($temp[0], $temp[1], date('h:ia'), $timeDiff);
+                if ($is_enabled) {
                     array_push($time_slot_rows, $row);
                 }
             }
         }
         $log->write('time_slot_rows row');
-        
+
         return $time_slot_rows;
-    } 
+    }
 
-    public function getStoreTimeSlot($store_id,$method,$day){
-
-        
+    public function getStoreTimeSlot($store_id, $method, $day)
+    {
         /*$storeDetail = $this->getStoreDetail($store_id);
         $timeDiff = $storeDetail['delivery_time_diff'];*/
-        $shipping_method = explode('.',$method);
+        $shipping_method = explode('.', $method);
 
-        if ($shipping_method[0] == 'normal') {
-
-            $settings = $this->getSettings('normal',0);
+        if ('normal' == $shipping_method[0]) {
+            $settings = $this->getSettings('normal', 0);
             $timeDiff = $settings['normal_delivery_time_diff'];
 
             $this->db->where('day', $day);
-            $this->db->select('timeslot', FALSE);
-            $this->db->where('status', '1');     
+            $this->db->select('timeslot', false);
+            $this->db->where('status', '1');
             $this->db->where('store_id', $store_id);
-            $rows  = $this->db->get('normal_delivery_timeslot')->rows;   
-           // return $rows;
-        }else{
-
-            $settings = $this->getSettings('express',0);
+            $rows = $this->db->get('normal_delivery_timeslot')->rows;
+        // return $rows;
+        } else {
+            $settings = $this->getSettings('express', 0);
             $timeDiff = $settings['express_delivery_time_diff'];
 
             $this->db->where('day', $day);
-            $this->db->select('timeslot', FALSE);
-            $this->db->where('status', '1');     
+            $this->db->select('timeslot', false);
+            $this->db->where('status', '1');
             //$this->db->where('store_id', $store_id);
-            $rows  = $this->db->get('express_delivery_timeslot')->rows;               
-           // return $rows;
+            $rows = $this->db->get('express_delivery_timeslot')->rows;
+            // return $rows;
         }
 
         $is_enabled = false;
-        $time_slot_rows = array();
+        $time_slot_rows = [];
         /*echo "<pre>";
         print_r($rows);*/
         foreach ($rows as $tslot) {
             $row['timeslot'] = $tslot['timeslot'];
             $temp = explode('-', $tslot['timeslot']);
             $date = $this->request->get['date'];
-            if(date("N") != $day){
+            if (date('N') != $day) {
                 array_push($time_slot_rows, $row);
-            }else{
-
-                $is_enabled = $this->timeIsBetween($temp[0], $temp[1], date('h:ia'),$timeDiff);
-                if($is_enabled){
+            } else {
+                $is_enabled = $this->timeIsBetween($temp[0], $temp[1], date('h:ia'), $timeDiff);
+                if ($is_enabled) {
                     array_push($time_slot_rows, $row);
                 }
             }
@@ -1147,125 +1014,122 @@ class ControllerApiCustomerCheckout extends Controller
         //die;
         return $time_slot_rows;
         //return $is_enabled;
+    }
 
-    } 
-    public function get_time_slot(){
-        
+    public function get_time_slot()
+    {
         $store_id = $this->request->get['store_id'];
-        $shipping_method =  $this->request->get['shipping_method'];
-        $date =  $this->request->get['date'];
-        $day = date('w',strtotime($date));
+        $shipping_method = $this->request->get['shipping_method'];
+        $date = $this->request->get['date'];
+        $day = date('w', strtotime($date));
 
-        if(isset($this->request->get['date'])){
+        if (isset($this->request->get['date'])) {
             $delivery_date = $this->request->get['date'];
-            //$this->session->data['dates'][$store_id] = $delivery_date;
-        }else{
+        //$this->session->data['dates'][$store_id] = $delivery_date;
+        } else {
             $delivery_date = '';
         }
 
-        
-        $data['timeslot'] = $this->getStoreTimeSlot($store_id, $shipping_method,$day);
+        $data['timeslot'] = $this->getStoreTimeSlot($store_id, $shipping_method, $day);
 
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/checkout/delivery_slot.tpl')) {
-            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/checkout/delivery_slot.tpl', $data));
+        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/checkout/delivery_slot.tpl')) {
+            $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/checkout/delivery_slot.tpl', $data));
         } else {
             $this->response->setOutput($this->load->view('default/template/checkout/delivery_slot.tpl', $data));
         }
-
     }
 
-    public function checkCurrentDateTs($store_id,$method) {
-        
-        
+    public function checkCurrentDateTs($store_id, $method)
+    {
         $storeDetail = $this->getStoreDetail($store_id);
         $timeDiff = $storeDetail['delivery_time_diff'];
 
         $log = new Log('error.log');
-        $log->write("checkCurrentDateTs");
+        $log->write('checkCurrentDateTs');
 
         $day = date('w');
         //print_r($day);
-        $shipping_method = explode('.',$method);
-        if ($shipping_method[0] == 'normal') {
-
-            $settings = $this->getSettings('normal',0);
+        $shipping_method = explode('.', $method);
+        if ('normal' == $shipping_method[0]) {
+            $settings = $this->getSettings('normal', 0);
             $timeDiff = $settings['normal_delivery_time_diff'];
 
             $this->db->where('day', $day);
-            $this->db->select('timeslot', FALSE);
-            $this->db->where('status', '1');     
-            $timeslots  = $this->db->get('normal_delivery_timeslot')->rows;   
-        }elseif($shipping_method[0] == 'express') {
-
-            $settings = $this->getSettings('express',0);
+            $this->db->select('timeslot', false);
+            $this->db->where('status', '1');
+            $timeslots = $this->db->get('normal_delivery_timeslot')->rows;
+        } elseif ('express' == $shipping_method[0]) {
+            $settings = $this->getSettings('express', 0);
             $timeDiff = $settings['express_delivery_time_diff'];
 
             $this->db->where('day', $day);
-            $this->db->select('timeslot', FALSE);
-            $this->db->where('status', '1');     
-            $timeslots  = $this->db->get('express_delivery_timeslot')->rows;               
-        } elseif ($shipping_method[0] == 'pickup') {
+            $this->db->select('timeslot', false);
+            $this->db->where('status', '1');
+            $timeslots = $this->db->get('express_delivery_timeslot')->rows;
+        } elseif ('pickup' == $shipping_method[0]) {
             $this->db->where('day', $day);
-            $this->db->select('timeslot', FALSE);
-            $this->db->where('status', '1');     
+            $this->db->select('timeslot', false);
+            $this->db->where('status', '1');
             $this->db->where('store_id', $store_id);
-            $timeslots  = $this->db->get('store_pickup_timeslot')->rows;   
+            $timeslots = $this->db->get('store_pickup_timeslot')->rows;
         } else {
             $this->db->where('day', $day);
-            $this->db->select('timeslot', FALSE);
-            $this->db->where('status', '1');     
+            $this->db->select('timeslot', false);
+            $this->db->where('status', '1');
             $this->db->where('store_id', $store_id);
-            $timeslots  = $this->db->get('store_delivery_timeslot')->rows;               
+            $timeslots = $this->db->get('store_delivery_timeslot')->rows;
         }
 
         $is_enabled = false;
-       
+
         foreach ($timeslots as $timeslot) {
             $temp = explode('-', $timeslot['timeslot']);
-            $is_enabled = $this->timeIsBetween($temp[0], $temp[1], date('h:ia'),$timeDiff);
-            
-            if($is_enabled) {
+            $is_enabled = $this->timeIsBetween($temp[0], $temp[1], date('h:ia'), $timeDiff);
+
+            if ($is_enabled) {
                 return $is_enabled;
             }
-                
         }
         //echo "<pre>";print_r("ena".$is_enabled);die;
         return $is_enabled;
-    } 
-    private function timeIsBetween($from, $to, $time, $time_diff = false) {
+    }
 
+    private function timeIsBetween($from, $to, $time, $time_diff = false)
+    {
         //echo "time";print_r($from.$to.$time.$time_diff);
         $log = new Log('error.log');
-        $log->write("time diff");
+        $log->write('time diff');
         $log->write($from.$to.$time.$time_diff);
-        
+
         $to = trim($to);
-        //calculate from_time in minuts 
+        //calculate from_time in minuts
         $i = explode(':', $to);
-        if ($i[0] == 12) {
+        if (12 == $i[0]) {
             $to_min = substr($i[1], 0, 2);
         } else {
             $to_min = ($i[0] * 60) + substr($i[1], 0, 2);
         }
-        //if pm add 12 hours 
+        //if pm add 12 hours
         $am_pm = substr($to, -2);
-        if ($am_pm == 'pm')
+        if ('pm' == $am_pm) {
             $to_min += 12 * 60;
-       
-        //calculate time in minuts             
+        }
+
+        //calculate time in minuts
         $i = explode(':', $time);
-        if ($i[0] == 12) {
+        if (12 == $i[0]) {
             $min = substr($i[1], 0, 2);
         } else {
             $min = $i[0] * 60 + substr($i[1], 0, 2);
         }
 
-        //if pm add 12 hours 
+        //if pm add 12 hours
         $am_pm = substr($time, -2);
-        if ($am_pm == 'pm')
+        if ('pm' == $am_pm) {
             $min += 12 * 60;
+        }
 
-        //if time difference 
+        //if time difference
         if ($time_diff) {
             $i = explode(':', $time_diff);
             $min = $min + $i[0] * 60 + $i[1]; //add difference minut to current time
@@ -1280,121 +1144,112 @@ class ControllerApiCustomerCheckout extends Controller
         }
     }
 
-
-
-    
-    //save deliery date / timeslot 
-    public function save(){
-        
-        if(isset($this->request->post['store_id'])){
+    //save deliery date / timeslot
+    public function save()
+    {
+        if (isset($this->request->post['store_id'])) {
             $store_id = $this->request->post['store_id'];
-        }else{
+        } else {
             $store_id;
         }
-        if(isset($this->request->post['date'])){
+        if (isset($this->request->post['date'])) {
             $delivery_date = $this->request->post['date'];
             $this->session->data['dates'][$store_id] = $delivery_date;
-        }else{
+        } else {
             $delivery_date = '';
         }
-        
-        if(isset($this->request->post['timeslot'])){
+
+        if (isset($this->request->post['timeslot'])) {
             $delivery_timeslot = $this->request->post['timeslot'];
             $this->session->data['timeslot'][$store_id] = $delivery_timeslot;
-        }else{
+        } else {
             $delivery_timeslot = '';
         }
-        $this->load->controller("checkout/confirm");
-        exit;        
+        $this->load->controller('checkout/confirm');
+        exit;
     }
 
-
     //NEW METHOD TO CHECK EACH DAYS TIMESLOTS
-    public function checkDateTs($store_id,$method,$day) {
-        
-        
-        $shipping_method = explode('.',$method);
+    public function checkDateTs($store_id, $method, $day)
+    {
+        $shipping_method = explode('.', $method);
 
-        if ($shipping_method[0] == 'normal') {
-
-            $settings = $this->getSettings('normal',0);
+        if ('normal' == $shipping_method[0]) {
+            $settings = $this->getSettings('normal', 0);
             $timeDiff = $settings['normal_delivery_time_diff'];
 
             $this->db->where('day', $day);
-            $this->db->select('timeslot', FALSE);
-            $this->db->where('status', '1');     
-            $timeslots  = $this->db->get('normal_delivery_timeslot')->rows;  
-        }else{
-
-            $settings = $this->getSettings('express',0);
+            $this->db->select('timeslot', false);
+            $this->db->where('status', '1');
+            $timeslots = $this->db->get('normal_delivery_timeslot')->rows;
+        } else {
+            $settings = $this->getSettings('express', 0);
             $timeDiff = $settings['express_delivery_time_diff'];
 
             $this->db->where('day', $day);
-            $this->db->select('timeslot', FALSE);
-            $this->db->where('status', '1');     
-            $timeslots  = $this->db->get('express_delivery_timeslot')->rows;               
+            $this->db->select('timeslot', false);
+            $this->db->where('status', '1');
+            $timeslots = $this->db->get('express_delivery_timeslot')->rows;
         }
 
         $is_enabled = false;
-        
+
         /*echo $day;
         echo "<pre>";print_r($timeslots);*/
 
         foreach ($timeslots as $timeslot) {
             $temp = explode('-', $timeslot['timeslot']);
-            $is_enabled = $this->timeIsBetween($temp[0], $temp[1], date('h:ia'),$timeDiff);
+            $is_enabled = $this->timeIsBetween($temp[0], $temp[1], date('h:ia'), $timeDiff);
             //echo "<pre>";print_r("ena".$is_enabled."is_enabled");
-            
-            if($is_enabled) {
+
+            if ($is_enabled) {
                 break;
             }
         }
+
         return $is_enabled;
     }
 
     //NEW METHOD TO CHECK EACH DAYS TIMESLOTS
-    public function futurecheckDateTs($store_id,$method,$day) {
-        
+    public function futurecheckDateTs($store_id, $method, $day)
+    {
         $storeDetail = $this->getStoreDetail($store_id);
         $timeDiff = $storeDetail['delivery_time_diff'];
-        
-        $shipping_method = explode('.',$method);
 
-        if ($shipping_method[0] == 'normal') {
+        $shipping_method = explode('.', $method);
 
-            $settings = $this->getSettings('normal',0);
+        if ('normal' == $shipping_method[0]) {
+            $settings = $this->getSettings('normal', 0);
             $timeDiff = $settings['normal_delivery_time_diff'];
 
             $this->db->where('day', $day);
-            $this->db->select('timeslot', FALSE);
-            $this->db->where('status', '1');     
-            $timeslots  = $this->db->get('normal_delivery_timeslot')->rows;  
-        } elseif($shipping_method[0] == 'express'){
-
-            $settings = $this->getSettings('express',0);
+            $this->db->select('timeslot', false);
+            $this->db->where('status', '1');
+            $timeslots = $this->db->get('normal_delivery_timeslot')->rows;
+        } elseif ('express' == $shipping_method[0]) {
+            $settings = $this->getSettings('express', 0);
             $timeDiff = $settings['express_delivery_time_diff'];
 
             $this->db->where('day', $day);
-            $this->db->select('timeslot', FALSE);
-            $this->db->where('status', '1');     
-            $timeslots  = $this->db->get('express_delivery_timeslot')->rows;      
-
-        } elseif ($shipping_method[0] == 'pickup') {
+            $this->db->select('timeslot', false);
+            $this->db->where('status', '1');
+            $timeslots = $this->db->get('express_delivery_timeslot')->rows;
+        } elseif ('pickup' == $shipping_method[0]) {
             $this->db->where('day', $day);
-            $this->db->select('timeslot', FALSE);
-            $this->db->where('status', '1');     
+            $this->db->select('timeslot', false);
+            $this->db->where('status', '1');
             $this->db->where('store_id', $store_id);
-            $timeslots  = $this->db->get('store_pickup_timeslot')->rows;   
+            $timeslots = $this->db->get('store_pickup_timeslot')->rows;
         } else {
             $this->db->where('day', $day);
-            $this->db->select('timeslot', FALSE);
-            $this->db->where('status', '1');     
+            $this->db->select('timeslot', false);
+            $this->db->where('status', '1');
             $this->db->where('store_id', $store_id);
-            $timeslots  = $this->db->get('store_delivery_timeslot')->rows;               
+            $timeslots = $this->db->get('store_delivery_timeslot')->rows;
         }
 
         $is_enabled = false;
-        
+
         /*echo $day;
         echo "<pre>";print_r($timeslots);*/
 
@@ -1402,21 +1257,22 @@ class ControllerApiCustomerCheckout extends Controller
             $temp = explode('-', $timeslot['timeslot']);
             $is_enabled = $this->timeIsBetween($temp[0], $temp[1], date('h:ia'),$timeDiff);
             //echo "<pre>";print_r("ena".$is_enabled."is_enabled");
-            
+
             if($is_enabled) {
                 break;
             }
         }*/
 
-        if(count($timeslots) > 0) {
+        if (count($timeslots) > 0) {
             return true;
         }
+
         return false;
     }
 
-    function getRawTimeslots($shipping_method,$store_id) {
-
-        $data = array();
+    public function getRawTimeslots($shipping_method, $store_id)
+    {
+        $data = [];
 
         $this->language->load('checkout/delivery_time');
 
@@ -1425,58 +1281,50 @@ class ControllerApiCustomerCheckout extends Controller
         //TO STORE STORE ID AND SHIPPING METHOD IN SESSION
         $this->session->data['store_id_for_timeslot'] = $store_id;
         $this->session->data['shipping_method_for_timeslot'] = $shipping_method;
-        
-        $getActiveDays = $this->getActiveDays($store_id,$shipping_method);
+
+        $getActiveDays = $this->getActiveDays($store_id, $shipping_method);
 
         $log = new Log('error.log');
 
-        $data['dates'] = $this->getDates($getActiveDays,$store_id,$shipping_method);
+        $data['dates'] = $this->getDates($getActiveDays, $store_id, $shipping_method);
         $data['timeslots'] = [];
-        
-        
+
         $log->write($data['dates']);
-        foreach ($data['dates'] as $date) {                
-            
+        foreach ($data['dates'] as $date) {
             $amTimeslot = [];
             $pmTimeslot = [];
             $inPmfirstTimeslot = [];
 
-            $temp = $this->get_all_time_slot($store_id,$shipping_method,$date);            
+            $temp = $this->get_all_time_slot($store_id, $shipping_method, $date);
 
             foreach ($temp as $temp1) {
-                    
                 $temp2 = explode('-', $temp1['timeslot']);
                 //echo "vrve";print_r($temp2);die;
-                if (strpos($temp2[0], 'am') !== false) {
+                if (false !== strpos($temp2[0], 'am')) {
                     array_push($amTimeslot, $temp1);
-                } else {         
-                    if(substr($temp2[0], 0,2) == '12') {
-                        
+                } else {
+                    if ('12' == substr($temp2[0], 0, 2)) {
                         array_push($inPmfirstTimeslot, $temp1);
                     } else {
                         array_push($pmTimeslot, $temp1);
-                    }       
-                    
+                    }
                 }
-
             }
 
             //array_push($amTimeslot,$pmTimeslot);
 
             foreach ($inPmfirstTimeslot as $te) {
-                
-                array_push($amTimeslot, $te);    
+                array_push($amTimeslot, $te);
             }
 
             foreach ($pmTimeslot as $te) {
-                
-                array_push($amTimeslot, $te);    
+                array_push($amTimeslot, $te);
             }
-            
+
             /*echo "<pre>";
             print_r($amTimeslot);
             print_r($pmTimeslot);
-            
+
             print_r($temp);
             print_r($amTimeslot);
             die;*/
@@ -1489,9 +1337,8 @@ class ControllerApiCustomerCheckout extends Controller
         return $data;
     }
 
-    public function getCouponDiscountAmount($value='',$coupon,$store_id,$sub_total,$total)
+    public function getCouponDiscountAmount($value = '', $coupon, $store_id, $sub_total, $total)
     {
-
         $total_data = [];
 
         if ($store_id) {
@@ -1500,7 +1347,7 @@ class ControllerApiCustomerCheckout extends Controller
 
                 $this->load->model('checkout/coupon');
 
-                $coupon_info = $this->model_checkout_coupon->apiGetCoupon($coupon,$total);
+                $coupon_info = $this->model_checkout_coupon->apiGetCoupon($coupon, $total);
 
                 if ($coupon_info && $sub_total) {
                     $discount_total = 0;
@@ -1511,37 +1358,31 @@ class ControllerApiCustomerCheckout extends Controller
                         //$sub_total = 0;
 
                         /*foreach ($this->cart->getProducts() as $product) {
-                            
+
                             if ($product['store_id'] == $store_id) {
                                 if (in_array($product['product_id'], $coupon_info['product'])) {
                                     $sub_total += $product['total'];
                                 }
-                            }else{  
+                            }else{
                                 if (in_array($product['product_id'], $coupon_info['product'])) {
                                     $sub_total += $product['total'];
                                 }
                             }
 
-                            
+
                         }*/
                     }
                     //$main_total  = $this->cart->getSubTotal();
 
-                    $main_total  = $sub_total;
+                    $main_total = $sub_total;
 
-                    $weightage = ($sub_total * 100)/$main_total;
-                    if ($coupon_info['type'] == 'F') {
-                       
-                        $store_discount = ($coupon_info['discount'] * $weightage)/100;
+                    $weightage = ($sub_total * 100) / $main_total;
+                    if ('F' == $coupon_info['type']) {
+                        $store_discount = ($coupon_info['discount'] * $weightage) / 100;
 
                         $discount_total = min($store_discount, $sub_total);
-
-
-                    }elseif ($coupon_info['type'] == 'P') {
-
+                    } elseif ('P' == $coupon_info['type']) {
                         $discount_total = $sub_total / 100 * $coupon_info['discount'];
-
-
                     }
 
                     //echo "<pre>";print_r($discount_total);die;
@@ -1553,15 +1394,12 @@ class ControllerApiCustomerCheckout extends Controller
                         $discount_total += $cost;
                     }*/
 
-
                     if ($coupon_info['shipping'] && isset($this->session->data['shipping_method'][$store_id])) {
-
-
                         if (!empty($this->session->data['shipping_method'][$store_id]['shipping_method']['tax_class_id'])) {
                             $tax_rates = $this->tax->getRates($this->session->data['shipping_method'][$store_id]['shipping_method']['cost'], $this->session->data['shipping_method'][$store_id]['shipping_method']['tax_class_id']);
 
                             foreach ($tax_rates as $tax_rate) {
-                                if ($tax_rate['type'] == 'P') {
+                                if ('P' == $tax_rate['type']) {
                                     $taxes[$tax_rate['tax_rate_id']] -= $tax_rate['amount'];
                                 }
                             }
@@ -1576,22 +1414,21 @@ class ControllerApiCustomerCheckout extends Controller
 
                     /*if($coupon_info['coupon_type'] == 'c') {
                         $discount_total = -0;
-                    }*/ 
+                    }*/
 
-                    $total_data[] = array(
+                    $total_data[] = [
                         'code' => 'coupon',
                         'coupon_type' => $coupon_info['coupon_type'],
                         'title' => sprintf($this->language->get('text_coupon'), $coupon),
                         'value' => -$discount_total,
-                        'sort_order' => $this->config->get('coupon_sort_order')
-
-                    );
+                        'sort_order' => $this->config->get('coupon_sort_order'),
+                    ];
 
                     $total -= $discount_total;
                 }
             }
         }
-        
+
         return $total_data;
     }
 }

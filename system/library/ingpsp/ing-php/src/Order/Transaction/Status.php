@@ -9,7 +9,7 @@ final class Status
     use ChoiceBasedValueObject;
 
     /**
-     * Possible transaction statuses
+     * Possible transaction statuses.
      */
     const BRAND_NEW = 'new';
     const PENDING = 'pending';
@@ -31,7 +31,7 @@ final class Status
             self::ERROR,
             self::COMPLETED,
             self::CANCELLED,
-            self::EXPIRED
+            self::EXPIRED,
         ];
     }
 
@@ -40,7 +40,7 @@ final class Status
      */
     public function isNew()
     {
-        return $this->value === self::BRAND_NEW;
+        return self::BRAND_NEW === $this->value;
     }
 
     /**
@@ -48,7 +48,7 @@ final class Status
      */
     public function isPending()
     {
-        return $this->value === self::PENDING;
+        return self::PENDING === $this->value;
     }
 
     /**
@@ -56,7 +56,7 @@ final class Status
      */
     public function isProcessing()
     {
-        return $this->value === self::PROCESSING;
+        return self::PROCESSING === $this->value;
     }
 
     /**
@@ -64,7 +64,7 @@ final class Status
      */
     public function isError()
     {
-        return $this->value === self::ERROR;
+        return self::ERROR === $this->value;
     }
 
     /**
@@ -72,7 +72,7 @@ final class Status
      */
     public function isCompleted()
     {
-        return $this->value === self::COMPLETED;
+        return self::COMPLETED === $this->value;
     }
 
     /**
@@ -80,7 +80,7 @@ final class Status
      */
     public function isCancelled()
     {
-        return $this->value === self::CANCELLED;
+        return self::CANCELLED === $this->value;
     }
 
     /**
@@ -88,6 +88,6 @@ final class Status
      */
     public function isExpired()
     {
-        return $this->value === self::EXPIRED;
+        return self::EXPIRED === $this->value;
     }
 }

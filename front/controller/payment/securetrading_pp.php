@@ -1,8 +1,9 @@
 <?php
 
-class ControllerPaymentSecureTradingPp extends Controller {
-
-    public function index() {
+class ControllerPaymentSecureTradingPp extends Controller
+{
+    public function index()
+    {
         $this->load->model('checkout/order');
         $this->load->model('localisation/country');
         $this->load->language('payment/securetrading_pp');
@@ -16,7 +17,7 @@ class ControllerPaymentSecureTradingPp extends Controller {
             $data['child_css'] = $this->config->get('securetrading_pp_child_css');
             $data['currency'] = $order_info['currency_code'];
             $data['total'] = $this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value'], false);
-            $data['settle_due_date'] = date('Y-m-d', strtotime(date('Y-m-d') . ' +' . $this->config->get('securetrading_pp_settle_due_date') . ' days'));
+            $data['settle_due_date'] = date('Y-m-d', strtotime(date('Y-m-d').' +'.$this->config->get('securetrading_pp_settle_due_date').' days'));
             $data['settle_status'] = $this->config->get('securetrading_pp_settle_status');
 
             $data['payment_country'] = $this->config->get('config_country_id');
@@ -24,12 +25,12 @@ class ControllerPaymentSecureTradingPp extends Controller {
             $data['shipping_country'] = $this->config->get('config_country_id');
 
             if ($this->config->get('securetrading_pp_site_security_status')) {
-                $data['site_security'] = hash('sha256', $order_info['currency_code'] . $data['total'] . $data['site_reference'] . $data['settle_status'] . $data['settle_due_date'] . $order_info['order_id'] . $this->config->get('securetrading_pp_site_security_password'));
+                $data['site_security'] = hash('sha256', $order_info['currency_code'].$data['total'].$data['site_reference'].$data['settle_status'].$data['settle_due_date'].$order_info['order_id'].$this->config->get('securetrading_pp_site_security_password'));
             } else {
                 $data['site_security'] = false;
             }
 
-            $cards = array(
+            $cards = [
                 'AMEX' => 'American Express',
                 'VISA' => 'Visa',
                 'DELTA' => 'Visa Debit',
@@ -40,9 +41,9 @@ class ControllerPaymentSecureTradingPp extends Controller {
                 'MASTERCARDDEBIT' => 'MasterCard Debit',
                 'MAESTRO' => 'Maestro',
                 'PAYPAL' => 'PayPal',
-            );
+            ];
 
-            $data['cards'] = array();
+            $data['cards'] = [];
 
             foreach ($cards as $key => $value) {
                 if (in_array($key, $this->config->get('securetrading_pp_cards_accepted'))) {
@@ -54,15 +55,16 @@ class ControllerPaymentSecureTradingPp extends Controller {
             $data['text_payment_details'] = $this->language->get('text_payment_details');
             $data['entry_card_type'] = $this->language->get('entry_card_type');
 
-            if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/securetrading_pp.tpl')) {
-                return $this->load->view($this->config->get('config_template') . '/template/payment/securetrading_pp.tpl', $data);
+            if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/payment/securetrading_pp.tpl')) {
+                return $this->load->view($this->config->get('config_template').'/template/payment/securetrading_pp.tpl', $data);
             } else {
                 return $this->load->view('default/template/payment/securetrading_pp.tpl', $data);
             }
         }
     }
 
-    public function ipn() {
+    public function ipn()
+    {
         $this->load->model('checkout/order');
         $this->load->model('payment/securetrading_pp');
         $this->load->language('payment/securetrading_pp');
@@ -70,7 +72,7 @@ class ControllerPaymentSecureTradingPp extends Controller {
         $keys = array_keys($this->request->post);
         sort($keys);
 
-        $keys_ignore = array('notificationreference', 'responsesitesecurity');
+        $keys_ignore = ['notificationreference', 'responsesitesecurity'];
 
         $string_to_hash = '';
 
@@ -88,13 +90,13 @@ class ControllerPaymentSecureTradingPp extends Controller {
             if ($order_info) {
                 $order_total = $this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value'], false);
 
-                if ($order_total == $this->request->post['mainamount'] && $order_info['currency_code'] == $this->request->post['currencyiso3a'] && $order_info['payment_code'] == 'securetrading_pp') {
-                    $status_code_mapping = array(
+                if ($order_total == $this->request->post['mainamount'] && $order_info['currency_code'] == $this->request->post['currencyiso3a'] && 'securetrading_pp' == $order_info['payment_code']) {
+                    $status_code_mapping = [
                         0 => $this->language->get('text_not_given'),
                         1 => $this->language->get('text_not_checked'),
                         2 => $this->language->get('text_match'),
                         4 => $this->language->get('text_not_match'),
-                    );
+                    ];
                     $shipping_country = $this->model_payment_securetrading_pp->getCountry($this->request->post['customercountryiso2a']);
                     $payment_country = $this->model_payment_securetrading_pp->getCountry($this->request->post['billingcountryiso2a']);
 
@@ -126,18 +128,18 @@ class ControllerPaymentSecureTradingPp extends Controller {
                     $security_code_status = $this->request->post['securityresponsesecuritycode'];
                     $address_status = $this->request->post['securityresponseaddress'];
 
-                    $message = sprintf($this->language->get('text_postcode_check'), $status_code_mapping[$postcode_status]) . "\n";
-                    $message .= sprintf($this->language->get('text_security_code_check'), $status_code_mapping[$security_code_status]) . "\n";
-                    $message .= sprintf($this->language->get('text_address_check'), $status_code_mapping[$address_status]) . "\n";
+                    $message = sprintf($this->language->get('text_postcode_check'), $status_code_mapping[$postcode_status])."\n";
+                    $message .= sprintf($this->language->get('text_security_code_check'), $status_code_mapping[$security_code_status])."\n";
+                    $message .= sprintf($this->language->get('text_address_check'), $status_code_mapping[$address_status])."\n";
 
                     $this->model_payment_securetrading_pp->addReference($order_info['order_id'], $this->request->post['transactionreference']);
 
-                    if ($this->request->post['errorcode'] == '0') {
+                    if ('0' == $this->request->post['errorcode']) {
                         $order_status_id = $this->config->get('securetrading_pp_order_status_id');
 
                         $this->model_payment_securetrading_pp->confirmOrder($order_info['order_id'], $order_status_id);
                         $this->model_payment_securetrading_pp->updateOrder($order_info['order_id'], $order_status_id, $message);
-                    } elseif ($this->request->post['errorcode'] == '70000') {
+                    } elseif ('70000' == $this->request->post['errorcode']) {
                         $order_status_id = $this->config->get('securetrading_pp_declined_order_status_id');
 
                         $this->model_payment_securetrading_pp->updateOrder($order_info['order_id'], $order_status_id, $message);

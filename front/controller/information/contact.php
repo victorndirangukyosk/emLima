@@ -1,21 +1,20 @@
 <?php
 
-class ControllerInformationContact extends Controller {
+class ControllerInformationContact extends Controller
+{
+    private $error = [];
 
-    private $error = array();
-
-    public function index() {
-
+    public function index()
+    {
         $log = new Log('error.log');
-        $log->write("11");
+        $log->write('11');
         $this->load->language('information/contact');
 
         //$this->document->setTitle($this->language->get('heading_title'));
         $this->document->addStyle('front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_checkout.css');
 
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->request->isAjax() && $this->validate()) {
-
-            $log->write("12");
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->request->isAjax() && $this->validate()) {
+            $log->write('12');
             $this->request->post['mobile'] = $this->request->post['telephone'];
             $subject = $this->emailtemplate->getSubject('Contact', 'contact_1', $this->request->post);
             $message = $this->emailtemplate->getMessage('Contact', 'contact_1', $this->request->post);
@@ -36,23 +35,23 @@ class ControllerInformationContact extends Controller {
                 $this->response->addHeader('Content-Type: application/json');
                 $this->response->setOutput(json_encode($data));
             }
-            
+
             //$this->response->redirect($this->url->link('information/contact/success'));
         }
 
-        $log->write("13");
+        $log->write('13');
 
-        $data['breadcrumbs'] = array();
+        $data['breadcrumbs'] = [];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home')
-        );
+            'href' => $this->url->link('common/home'),
+        ];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('information/contact')
-        );
+            'href' => $this->url->link('information/contact'),
+        ];
 
         $data['heading_title'] = $this->language->get('heading_title');
 
@@ -116,7 +115,7 @@ class ControllerInformationContact extends Controller {
         $data['open'] = nl2br($this->config->get('config_open'));
         $data['comment'] = $this->config->get('config_comment');
 
-        $data['locations'] = array();
+        $data['locations'] = [];
 
         $this->load->model('localisation/location');
 
@@ -130,7 +129,7 @@ class ControllerInformationContact extends Controller {
                     $image = false;
                 }
 
-                $data['locations'][] = array(
+                $data['locations'][] = [
                     'location_id' => $location_info['location_id'],
                     'name' => $location_info['name'],
                     'address' => nl2br($location_info['address']),
@@ -139,8 +138,8 @@ class ControllerInformationContact extends Controller {
                     'fax' => $location_info['fax'],
                     'image' => $image,
                     'open' => nl2br($location_info['open']),
-                    'comment' => $location_info['comment']
-                );
+                    'comment' => $location_info['comment'],
+                ];
             }
         }
 
@@ -169,7 +168,7 @@ class ControllerInformationContact extends Controller {
         } else {
             $data['site_key'] = '';
         }
-        $log->write("14");
+        $log->write('14');
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['column_right'] = $this->load->controller('common/column_right');
         $data['content_top'] = $this->load->controller('common/content_top');
@@ -177,9 +176,9 @@ class ControllerInformationContact extends Controller {
         //$data['footer'] = $this->load->controller('common/footer');
         //$data['header'] = $this->load->controller('common/header/onlyHeader');
 
-        if ( ( $this->request->server['REQUEST_METHOD'] == 'POST' ) && $this->request->isAjax()) { 
-            $log->write("15.4");
-            if( !$this->validate() ) {
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->request->isAjax()) {
+            $log->write('15.4');
+            if (!$this->validate()) {
                 $data['status'] = false;
                 if ($this->request->isAjax()) {
                     $this->response->addHeader('Content-Type: application/json');
@@ -195,32 +194,33 @@ class ControllerInformationContact extends Controller {
                 }
             }
         }
-        
-        $log->write("15");
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/information/contact.tpl')) {
-            return $this->load->view($this->config->get('config_template') . '/template/information/contact.tpl', $data);
+
+        $log->write('15');
+        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/information/contact.tpl')) {
+            return $this->load->view($this->config->get('config_template').'/template/information/contact.tpl', $data);
         } else {
             return $this->load->view('default/template/information/contact.tpl', $data);
         }
     }
 
-    public function success() {
+    public function success()
+    {
         $this->load->language('information/contact');
 
         $this->document->setTitle($this->language->get('heading_title'));
         $this->document->addStyle('front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_checkout.css');
-        
-        $data['breadcrumbs'] = array();
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'] = [];
+
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home')
-        );
+            'href' => $this->url->link('common/home'),
+        ];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('information/contact')
-        );
+            'href' => $this->url->link('information/contact'),
+        ];
 
         $data['heading_title'] = $this->language->get('heading_title');
 
@@ -237,14 +237,15 @@ class ControllerInformationContact extends Controller {
         $data['footer'] = $this->load->controller('common/footer');
         $data['header'] = $this->load->controller('common/header/information');
 
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/success.tpl')) {
-            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/success.tpl', $data));
+        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/common/success.tpl')) {
+            $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/common/success.tpl', $data));
         } else {
             $this->response->setOutput($this->load->view('default/template/common/success.tpl', $data));
         }
     }
 
-    protected function validate() {
+    protected function validate()
+    {
         if ((utf8_strlen($this->request->post['name']) < 3) || (utf8_strlen($this->request->post['name']) > 32)) {
             $this->error['name'] = $this->language->get('error_name');
         }
@@ -261,7 +262,6 @@ class ControllerInformationContact extends Controller {
             $this->error['company-name'] = 'Company name is required!';
         }
 
-
         /*if ($this->config->get('config_google_captcha_status')) {
             $json = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret=' . urlencode($this->config->get('config_google_captcha_secret')) . '&response=g-recaptcha&remoteip=' . $this->request->server['REMOTE_ADDR']);
             $json = json_decode($json, true);
@@ -274,11 +274,11 @@ class ControllerInformationContact extends Controller {
     }
 
     //send email by AJAX
-    public function send(){
-        
-        $json = array();
-        
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+    public function send()
+    {
+        $json = [];
+
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validate()) {
             $subject = $this->emailtemplate->getSubject('Contact', 'contact_1', $this->request->post);
             $message = $this->emailtemplate->getMessage('Contact', 'contact_1', $this->request->post);
 
@@ -291,9 +291,7 @@ class ControllerInformationContact extends Controller {
             $mail->send();
 
             $json['status'] = 1;
-            
-        }else{
-            
+        } else {
             if (isset($this->error['name'])) {
                 $json['error_name'] = $this->error['name'];
             } else {
@@ -314,7 +312,7 @@ class ControllerInformationContact extends Controller {
 
             $json['status'] = 0;
         }
-        
-        echo json_encode($json);        
+
+        echo json_encode($json);
     }
 }

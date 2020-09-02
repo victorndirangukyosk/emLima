@@ -1,8 +1,9 @@
 <?php
 
-class ControllerDashboardCharts extends Controller {
-
-    public function index() {
+class ControllerDashboardCharts extends Controller
+{
+    public function index()
+    {
         $this->load->language('dashboard/charts');
 
         $data['heading_title'] = $this->language->get('heading_title');
@@ -54,29 +55,27 @@ class ControllerDashboardCharts extends Controller {
 
         $data['token'] = $this->session->data['token'];
 
-
-
         $this->load->model('localisation/currency');
 
         $currency = $this->model_localisation_currency->getCurrencyByCode($this->config->get('config_currency'));
         $data['symbol_left'] = $currency['symbol_left'];
         $data['symbol_right'] = $currency['symbol_right'];
 
-        $data['todaysCreatedOrders'] = $this->getTodayOrderChartData('xyz','day' ,true);
-        $data['todaysDeliveredOrders'] = $this->getTodayOrderChartData('complete','day', true);
-        $data['todaysCancelledOrders'] = $this->getTodayOrderChartData('cancelled', 'day',true);
+        $data['todaysCreatedOrders'] = $this->getTodayOrderChartData('xyz', 'day', true);
+        $data['todaysDeliveredOrders'] = $this->getTodayOrderChartData('complete', 'day', true);
+        $data['todaysCancelledOrders'] = $this->getTodayOrderChartData('cancelled', 'day', true);
 
-        if(count($data['todaysCreatedOrders']) <= 0) {
+        if (count($data['todaysCreatedOrders']) <= 0) {
             $data['todaysCreatedOrders']['total'] = 0;
             $data['todaysCreatedOrders']['value'] = 0;
         }
 
-        if(count($data['todaysDeliveredOrders']) <= 0) {
+        if (count($data['todaysDeliveredOrders']) <= 0) {
             $data['todaysDeliveredOrders']['total'] = 0;
             $data['todaysDeliveredOrders']['value'] = 0;
         }
 
-        if(count($data['todaysCancelledOrders']) <= 0) {
+        if (count($data['todaysCancelledOrders']) <= 0) {
             $data['todaysCancelledOrders']['total'] = 0;
             $data['todaysCancelledOrders']['value'] = 0;
         }
@@ -89,27 +88,25 @@ class ControllerDashboardCharts extends Controller {
 
         $data['store_count'] = $this->model_setting_store->getTotalStores();
 
-
         //echo "<pre>";print_r($data['store_count']);die;
         //echo "<pre>";print_r($data['todaysCreatedOrders']);print_r($data['todaysDeliveredOrders']);print_r($data['todaysCancelledOrders']);die;
 
-        # links
-        $data['link_review_waiting'] = $this->url->link('catalog/review', 'token=' . $this->session->data['token'] . '&sort=r.status&order=ASC', 'SSL');
-        $data['link_customer_waiting'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_approved=0', 'SSL');
-        $data['link_customers'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'], 'SSL');
-        $data['link_sales'] = $this->url->link('report/sale_order', 'token=' . $this->session->data['token'], 'SSL');
-        $data['link_orders'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'], 'SSL');
-        $data['link_affiliates'] = $this->url->link('sale/affiliate', 'token=' . $this->session->data['token'], 'SSL');
-        $data['link_affiliate_waiting'] = $this->url->link('sale/affiliate', 'token=' . $this->session->data['token'] . '&filter_approved=0', 'SSL');
-
+        // links
+        $data['link_review_waiting'] = $this->url->link('catalog/review', 'token='.$this->session->data['token'].'&sort=r.status&order=ASC', 'SSL');
+        $data['link_customer_waiting'] = $this->url->link('sale/customer', 'token='.$this->session->data['token'].'&filter_approved=0', 'SSL');
+        $data['link_customers'] = $this->url->link('sale/customer', 'token='.$this->session->data['token'], 'SSL');
+        $data['link_sales'] = $this->url->link('report/sale_order', 'token='.$this->session->data['token'], 'SSL');
+        $data['link_orders'] = $this->url->link('sale/order', 'token='.$this->session->data['token'], 'SSL');
+        $data['link_affiliates'] = $this->url->link('sale/affiliate', 'token='.$this->session->data['token'], 'SSL');
+        $data['link_affiliate_waiting'] = $this->url->link('sale/affiliate', 'token='.$this->session->data['token'].'&filter_approved=0', 'SSL');
 
         return $this->load->view('dashboard/charts.tpl', $data);
     }
 
-    # Ajax Functions
-    /*     * ******************************************************************************************************************* */
-    
-    public function vendorsales() {
+    // Ajax Functions
+
+    public function vendorsales()
+    {
         $this->load->language('dashboard/charts');
         $this->load->model('dashboard/charts');
 
@@ -119,7 +116,8 @@ class ControllerDashboardCharts extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-    public function vendorbookedsales() {
+    public function vendorbookedsales()
+    {
         $this->load->language('dashboard/charts');
         $this->load->model('dashboard/charts');
 
@@ -128,28 +126,29 @@ class ControllerDashboardCharts extends Controller {
 
         $this->response->setOutput(json_encode($json));
     }
-    
-    public function VendorOrders(){
+
+    public function VendorOrders()
+    {
         $this->load->language('dashboard/charts');
 
         $json = $this->getChartData('getVendorOrders');
         $json['order']['label'] = $this->language->get('text_order');
 
-        $json['created_orders'] = $this->getTodayOrderChartData('xyz','day' ,true);
-        $json['delivered_orders'] = $this->getTodayOrderChartData('complete','day', true);
-        $json['cancelled_orders'] = $this->getTodayOrderChartData('cancelled', 'day',true);
+        $json['created_orders'] = $this->getTodayOrderChartData('xyz', 'day', true);
+        $json['delivered_orders'] = $this->getTodayOrderChartData('complete', 'day', true);
+        $json['cancelled_orders'] = $this->getTodayOrderChartData('cancelled', 'day', true);
 
-        if(count($json['created_orders']) <= 0) {
+        if (count($json['created_orders']) <= 0) {
             $json['created_orders']['total'] = 0;
             $json['created_orders']['value'] = 0;
         }
 
-        if(count($json['delivered_orders']) <= 0) {
+        if (count($json['delivered_orders']) <= 0) {
             $json['delivered_orders']['total'] = 0;
             $json['delivered_orders']['value'] = 0;
         }
 
-        if(count($json['cancelled_orders']) <= 0) {
+        if (count($json['cancelled_orders']) <= 0) {
             $json['cancelled_orders']['total'] = 0;
             $json['cancelled_orders']['value'] = 0;
         }
@@ -158,49 +157,49 @@ class ControllerDashboardCharts extends Controller {
         $json['delivered_orders']['value'] = $this->currency->format($json['delivered_orders']['value']);
         $json['cancelled_orders']['value'] = $this->currency->format($json['cancelled_orders']['value']);
 
-        
         $this->response->setOutput(json_encode($json));
     }
 
-
-    public function VendorCreatedOrders(){
+    public function VendorCreatedOrders()
+    {
         $this->load->language('dashboard/charts');
 
         $json = $this->getChartData('getVendorCreatedOrders');
-        $json['order']['label'] = $this->language->get('text_order');        
+        $json['order']['label'] = $this->language->get('text_order');
         $this->response->setOutput(json_encode($json));
     }
 
-
-    public function VendorCancelledOrders(){
+    public function VendorCancelledOrders()
+    {
         $this->load->language('dashboard/charts');
 
         $json = $this->getChartData('getVendorCancelledOrders');
-        $json['order']['label'] = $this->language->get('text_order');        
+        $json['order']['label'] = $this->language->get('text_order');
         $this->response->setOutput(json_encode($json));
     }
-    
-    public function orders() {
+
+    public function orders()
+    {
         $this->load->language('dashboard/charts');
 
         $json = $this->getChartData('getOrders');
         $json['order']['label'] = $this->language->get('text_order');
 
-        $json['created_orders'] = $this->getTodayOrderChartData('xyz','day' ,true);
-        $json['delivered_orders'] = $this->getTodayOrderChartData('complete','day', true);
-        $json['cancelled_orders'] = $this->getTodayOrderChartData('cancelled', 'day',true);
+        $json['created_orders'] = $this->getTodayOrderChartData('xyz', 'day', true);
+        $json['delivered_orders'] = $this->getTodayOrderChartData('complete', 'day', true);
+        $json['cancelled_orders'] = $this->getTodayOrderChartData('cancelled', 'day', true);
 
-        if(count($json['created_orders']) <= 0) {
+        if (count($json['created_orders']) <= 0) {
             $json['created_orders']['total'] = 0;
             $json['created_orders']['value'] = 0;
         }
 
-        if(count($json['delivered_orders']) <= 0) {
+        if (count($json['delivered_orders']) <= 0) {
             $json['delivered_orders']['total'] = 0;
             $json['delivered_orders']['value'] = 0;
         }
 
-        if(count($json['cancelled_orders']) <= 0) {
+        if (count($json['cancelled_orders']) <= 0) {
             $json['cancelled_orders']['total'] = 0;
             $json['cancelled_orders']['value'] = 0;
         }
@@ -212,32 +211,28 @@ class ControllerDashboardCharts extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-
-    public function Createdorders() {
+    public function Createdorders()
+    {
         $this->load->language('dashboard/charts');
 
         $json = $this->getChartData('getCreatedOrders');
-        $json['order']['label'] = $this->language->get('text_order');     
-
-       
+        $json['order']['label'] = $this->language->get('text_order');
 
         $this->response->setOutput(json_encode($json));
     }
 
-
-    public function Cancelledorders() {
+    public function Cancelledorders()
+    {
         $this->load->language('dashboard/charts');
 
         $json = $this->getChartData('getCancelledOrders');
-        $json['order']['label'] = $this->language->get('text_order');  
-
-       
+        $json['order']['label'] = $this->language->get('text_order');
 
         $this->response->setOutput(json_encode($json));
     }
 
-
-    public function customers() {
+    public function customers()
+    {
         $this->load->language('dashboard/charts');
         $this->load->model('dashboard/charts');
 
@@ -247,7 +242,8 @@ class ControllerDashboardCharts extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-    public function sales() {
+    public function sales()
+    {
         $this->load->language('dashboard/charts');
         $this->load->model('dashboard/charts');
 
@@ -257,8 +253,8 @@ class ControllerDashboardCharts extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-
-    public function bookedsales() {
+    public function bookedsales()
+    {
         $this->load->language('dashboard/charts');
         $this->load->model('dashboard/charts');
 
@@ -268,7 +264,8 @@ class ControllerDashboardCharts extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-    public function affiliates() {
+    public function affiliates()
+    {
         $this->load->language('dashboard/charts');
         $this->load->model('dashboard/charts');
 
@@ -278,7 +275,8 @@ class ControllerDashboardCharts extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-    public function reviews() {
+    public function reviews()
+    {
         $this->load->language('dashboard/charts');
         $this->load->model('dashboard/charts');
 
@@ -288,7 +286,8 @@ class ControllerDashboardCharts extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-    public function rewards() {
+    public function rewards()
+    {
         $this->load->language('dashboard/charts');
         $this->load->model('dashboard/charts');
 
@@ -298,10 +297,11 @@ class ControllerDashboardCharts extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getChartData($modelFunction, $currency_format = false) {
+    public function getChartData($modelFunction, $currency_format = false)
+    {
         $this->load->model('dashboard/charts');
 
-        $json = array();
+        $json = [];
 
         if (isset($this->request->get['start'])) {
             $start = $this->request->get['start'];
@@ -326,26 +326,26 @@ class ControllerDashboardCharts extends Controller {
         switch ($range) {
             case 'hour':
                 $results = $this->model_dashboard_charts->{$modelFunction}($date_start, $date_end, 'HOUR');
-                $order_data = array();
+                $order_data = [];
 
-                for ($i = 0; $i < 24; $i++) {
-                    $order_data[$i] = array(
+                for ($i = 0; $i < 24; ++$i) {
+                    $order_data[$i] = [
                         'hour' => $i,
-                        'total' => 0
-                    );
+                        'total' => 0,
+                    ];
 
-                    $json['xaxis'][] = array($i, $i . ':00');
+                    $json['xaxis'][] = [$i, $i.':00'];
                 }
 
                 foreach ($results->rows as $result) {
-                    $order_data[$result['hour']] = array(
+                    $order_data[$result['hour']] = [
                         'hour' => $result['hour'],
-                        'total' => $result['total']
-                    );
+                        'total' => $result['total'],
+                    ];
                 }
 
                 foreach ($order_data as $key => $value) {
-                    $json['order']['data'][] = array($key, $value['total']);
+                    $json['order']['data'][] = [$key, $value['total']];
                 }
 
                 break;
@@ -353,93 +353,92 @@ class ControllerDashboardCharts extends Controller {
             case 'day':
                 $results = $this->model_dashboard_charts->{$modelFunction}($date_start, $date_end, 'DAY');
                 $str_date = substr($date_start, 0, 10);
-                $order_data = array();
+                $order_data = [];
 
-                for ($i = 0; $i < $diff; $i++) {
-                    $date = date_create($str_date)->modify('+' . $i . ' day')->format('Y-m-d');
+                for ($i = 0; $i < $diff; ++$i) {
+                    $date = date_create($str_date)->modify('+'.$i.' day')->format('Y-m-d');
 
-                    //setting default values 
-                    $order_data[$date] = array(
+                    //setting default values
+                    $order_data[$date] = [
                         'day' => $date,
-                        'total' => 0
-                    );
+                        'total' => 0,
+                    ];
 
-                    $json['xaxis'][] = array($i, $date);
+                    $json['xaxis'][] = [$i, $date];
                 }
 
                 foreach ($results->rows as $result) {
-                    
                     $total = $result['total'];
-                    
+
                     if ($currency_format) {
                         $total = $this->currency->format($result['total'], $this->config->get('config_currency'), '', false);
                     }
 
-                    $order_data[$result['date']] = array(
+                    $order_data[$result['date']] = [
                         'day' => $result['date'],
-                        'total' => $total
-                    );
+                        'total' => $total,
+                    ];
                 }
 
                 $i = 0;
                 foreach ($order_data as $key => $value) {
-                    $json['order']['data'][] = array($i++, $value['total']);
+                    $json['order']['data'][] = [$i++, $value['total']];
                 }
 
                 break;
             case 'month':
                 $results = $this->model_dashboard_charts->{$modelFunction}($date_start, $date_end, 'MONTH');
                 $months = $this->getMonths($date_start, $date_end);
-                $order_data = array();
+                $order_data = [];
 
-                for ($i = 0; $i < count($months); $i++) {
-                    $order_data[$months[$i]] = array(
+                for ($i = 0; $i < count($months); ++$i) {
+                    $order_data[$months[$i]] = [
                         'month' => $months[$i],
-                        'total' => 0
-                    );
+                        'total' => 0,
+                    ];
 
-                    $json['xaxis'][] = array($i, $months[$i]);
+                    $json['xaxis'][] = [$i, $months[$i]];
                 }
 
                 foreach ($results->rows as $result) {
-                    $order_data[$result['month']] = array(
+                    $order_data[$result['month']] = [
                         'month' => $result['month'],
-                        'total' => $result['total']
-                    );
+                        'total' => $result['total'],
+                    ];
                 }
 
                 $i = 0;
                 foreach ($order_data as $key => $value) {
-                    $json['order']['data'][] = array($i++, $value['total']);
+                    $json['order']['data'][] = [$i++, $value['total']];
                 }
                 break;
             case 'year':
                 $results = $this->model_dashboard_charts->{$modelFunction}($date_start, $date_end, 'YEAR');
                 $str_date = substr($date_start, 0, 10);
-                $order_data = array();
+                $order_data = [];
                 $diff = floor($diff / 365) + 1;
 
-                for ($i = 0; $i < $diff; $i++) {
-                    $date = date_create($str_date)->modify('+' . $i . ' year')->format('Y');
+                for ($i = 0; $i < $diff; ++$i) {
+                    $date = date_create($str_date)->modify('+'.$i.' year')->format('Y');
 
-                    $order_data[$date] = array(
+                    $order_data[$date] = [
                         'year' => $date,
-                        'total' => 0
-                    );
+                        'total' => 0,
+                    ];
 
-                    $json['xaxis'][] = array($i, $date);
+                    $json['xaxis'][] = [$i, $date];
                 }
 
                 foreach ($results->rows as $result) {
-                    $order_data[$result['year']] = array(
+                    $order_data[$result['year']] = [
                         'year' => $result['year'],
-                        'total' => $result['total']
-                    );
+                        'total' => $result['total'],
+                    ];
                 }
 
                 $i = 0;
                 foreach ($order_data as $key => $value) {
-                    $json['order']['data'][] = array($i++, $value['total']);
+                    $json['order']['data'][] = [$i++, $value['total']];
                 }
                 break;
         }
@@ -457,13 +456,13 @@ class ControllerDashboardCharts extends Controller {
         return $json;
     }
 
-    public function getTodayOrderChartData($type, $range,$currency_format = false) {
-
+    public function getTodayOrderChartData($type, $range, $currency_format = false)
+    {
         $results = '';
         $modelFunction = 'getTodaysOrders';
         $this->load->model('dashboard/charts');
 
-        $json = array();
+        $json = [];
 
         if (isset($this->request->get['start'])) {
             $start = $this->request->get['start'];
@@ -485,43 +484,42 @@ class ControllerDashboardCharts extends Controller {
 
         //$range = $this->getRange($diff);
 
-
         switch ($range) {
             case 'hour':
                 $results = $this->model_dashboard_charts->{$modelFunction}($date_start, $date_end, 'HOUR');
-                $order_data = array();
+                $order_data = [];
 
-                for ($i = 0; $i < 24; $i++) {
-                    $order_data[$i] = array(
+                for ($i = 0; $i < 24; ++$i) {
+                    $order_data[$i] = [
                         'hour' => $i,
-                        'total' => 0
-                    );
+                        'total' => 0,
+                    ];
 
-                    $json['xaxis'][] = array($i, $i . ':00');
+                    $json['xaxis'][] = [$i, $i.':00'];
                 }
 
                 foreach ($results->rows as $result) {
-                    $order_data[$result['hour']] = array(
+                    $order_data[$result['hour']] = [
                         'hour' => $result['hour'],
-                        'total' => $result['total']
-                    );
+                        'total' => $result['total'],
+                    ];
                 }
 
                 foreach ($order_data as $key => $value) {
-                    $json['order']['data'][] = array($key, $value['total']);
+                    $json['order']['data'][] = [$key, $value['total']];
                 }
 
                 break;
             default:
             case 'day':
-                $results = $this->model_dashboard_charts->{$modelFunction}($date_start, $date_end, 'DAY',$type);
+                $results = $this->model_dashboard_charts->{$modelFunction}($date_start, $date_end, 'DAY', $type);
                 /*$str_date = substr($date_start, 0, 10);
                 $order_data = array();
 
                 for ($i = 0; $i < $diff; $i++) {
                     $date = date_create($str_date)->modify('+' . $i . ' day')->format('Y-m-d');
 
-                    //setting default values 
+                    //setting default values
                     $order_data[$date] = array(
                         'day' => $date,
                         'total' => 0
@@ -531,9 +529,9 @@ class ControllerDashboardCharts extends Controller {
                 }
 
                 foreach ($results->rows as $result) {
-                    
+
                     $total = $result['total'];
-                    
+
                     if ($currency_format) {
                         $total = $this->currency->format($result['total'], $this->config->get('config_currency'), '', false);
                     }
@@ -553,56 +551,56 @@ class ControllerDashboardCharts extends Controller {
             case 'month':
                 $results = $this->model_dashboard_charts->{$modelFunction}($date_start, $date_end, 'MONTH');
                 $months = $this->getMonths($date_start, $date_end);
-                $order_data = array();
+                $order_data = [];
 
-                for ($i = 0; $i < count($months); $i++) {
-                    $order_data[$months[$i]] = array(
+                for ($i = 0; $i < count($months); ++$i) {
+                    $order_data[$months[$i]] = [
                         'month' => $months[$i],
-                        'total' => 0
-                    );
+                        'total' => 0,
+                    ];
 
-                    $json['xaxis'][] = array($i, $months[$i]);
+                    $json['xaxis'][] = [$i, $months[$i]];
                 }
 
                 foreach ($results->rows as $result) {
-                    $order_data[$result['month']] = array(
+                    $order_data[$result['month']] = [
                         'month' => $result['month'],
-                        'total' => $result['total']
-                    );
+                        'total' => $result['total'],
+                    ];
                 }
 
                 $i = 0;
                 foreach ($order_data as $key => $value) {
-                    $json['order']['data'][] = array($i++, $value['total']);
+                    $json['order']['data'][] = [$i++, $value['total']];
                 }
                 break;
             case 'year':
                 $results = $this->model_dashboard_charts->{$modelFunction}($date_start, $date_end, 'YEAR');
                 $str_date = substr($date_start, 0, 10);
-                $order_data = array();
+                $order_data = [];
                 $diff = floor($diff / 365) + 1;
 
-                for ($i = 0; $i < $diff; $i++) {
-                    $date = date_create($str_date)->modify('+' . $i . ' year')->format('Y');
+                for ($i = 0; $i < $diff; ++$i) {
+                    $date = date_create($str_date)->modify('+'.$i.' year')->format('Y');
 
-                    $order_data[$date] = array(
+                    $order_data[$date] = [
                         'year' => $date,
-                        'total' => 0
-                    );
+                        'total' => 0,
+                    ];
 
-                    $json['xaxis'][] = array($i, $date);
+                    $json['xaxis'][] = [$i, $date];
                 }
 
                 foreach ($results->rows as $result) {
-                    $order_data[$result['year']] = array(
+                    $order_data[$result['year']] = [
                         'year' => $result['year'],
-                        'total' => $result['total']
-                    );
+                        'total' => $result['total'],
+                    ];
                 }
 
                 $i = 0;
                 foreach ($order_data as $key => $value) {
-                    $json['order']['data'][] = array($i++, $value['total']);
+                    $json['order']['data'][] = [$i++, $value['total']];
                 }
                 break;
         }
@@ -620,18 +618,18 @@ class ControllerDashboardCharts extends Controller {
         return $results;
     }
 
+    // extra functions
+    //#####################################################################################################################################################
 
-    # extra functions
-    ######################################################################################################################################################
-
-    function getMonths($date1, $date2) {
+    public function getMonths($date1, $date2)
+    {
         $time1 = strtotime($date1);
         $time2 = strtotime($date2);
         $my = date('n-Y', $time2);
-        $mesi = array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
+        $mesi = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
         //$mesi = array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec');
 
-        $months = array();
+        $months = [];
         $f = '';
 
         while ($time1 < $time2) {
@@ -639,25 +637,27 @@ class ControllerDashboardCharts extends Controller {
                 $f = date('n-Y', $time1);
                 if (date('n-Y', $time1) != $my && ($time1 < $time2)) {
                     $str_mese = $mesi[(date('n', $time1) - 1)];
-                    $months[] = $str_mese . " " . date('Y', $time1);
+                    $months[] = $str_mese.' '.date('Y', $time1);
                 }
             }
-            $time1 = strtotime((date('Y-n-d', $time1) . ' +15days'));
+            $time1 = strtotime((date('Y-n-d', $time1).' +15days'));
         }
 
         $str_mese = $mesi[(date('n', $time2) - 1)];
-        $months[] = $str_mese . " " . date('Y', $time2);
+        $months[] = $str_mese.' '.date('Y', $time2);
+
         return $months;
     }
 
-    public function getRange($diff) {
-        if (isset($this->request->get['range']) and ! empty($this->request->get['range']) and $this->request->get['range'] != 'undefined') {
+    public function getRange($diff)
+    {
+        if (isset($this->request->get['range']) and !empty($this->request->get['range']) and 'undefined' != $this->request->get['range']) {
             $range = $this->request->get['range'];
         } else {
             $range = 'day';
         }
 
-        if ($diff < 365 and $range == 'year') {
+        if ($diff < 365 and 'year' == $range) {
             $range = 'month';
         }
 
@@ -665,91 +665,82 @@ class ControllerDashboardCharts extends Controller {
             $range = 'day';
         }
 
-        if ($diff == 1) {
+        if (1 == $diff) {
             $range = 'hour';
         }
 
-        if ($diff >32 and $range == 'day') {
+        if ($diff > 32 and 'day' == $range) {
             $range = 'month';
         }
-       
+
         return $range;
     }
 
+    public function export_excel()
+    {
+        if (isset($this->request->get['start_date'])) {
+            $start_date = $this->request->get['start_date'];
+        } else {
+            $start_date = null;
+        }
 
+        if (isset($this->request->get['end_date'])) {
+            $end_date = $this->request->get['end_date'];
+        } else {
+            $end_date = null;
+        }
 
-    public function export_excel() {	 
-		if ( isset( $this->request->get['start_date'] ) ) {
-			$start_date = $this->request->get['start_date'];
-		} else {
-			$start_date = null;
-		}
+        if (isset($this->request->get['ss'])) {
+            $ss = $this->request->get['ss'];
+        } else {
+            $ss = null;
+        }
 
-		if ( isset( $this->request->get['end_date'] ) ) {
-			$end_date = $this->request->get['end_date'];
-		} else {
-			$end_date = null;
-		}
+        if (isset($this->request->get['os'])) {
+            $os = $this->request->get['os'];
+        } else {
+            $os = null;
+        }
 
-		if ( isset( $this->request->get['ss'] ) ) {
-			$ss = $this->request->get['ss'];
-		} else {
-			$ss = null;
-		}
+        if (isset($this->request->get['cs'])) {
+            $cs = $this->request->get['cs'];
+        } else {
+            $cs = null;
+        }
 
-		if ( isset( $this->request->get['os'] ) ) {
-			$os = $this->request->get['os'];
-		} else {
-			$os = null;
-		}
+        if (isset($this->request->get['bs'])) {
+            $bs = $this->request->get['bs'];
+        } else {
+            $bs = null;
+        }
 
-		if ( isset( $this->request->get['cs'] ) ) {
-			$cs = $this->request->get['cs'];
-		} else {
-			$cs = null;
-		}
+        if (isset($this->request->get['cos'])) {
+            $cos = $this->request->get['cos'];
+        } else {
+            $cos = null;
+        }
 
-		if ( isset( $this->request->get['bs'] ) ) {
-			$bs = $this->request->get['bs'];
-		} else {
-			$bs = null;
-		}
+        if (isset($this->request->get['cns'])) {
+            $cns = $this->request->get['cns'];
+        } else {
+            $cns = null;
+        }
 
+        $data = [
+            'start_date' => $start_date,
+            'end_date' => $end_date,
+            'ss' => $ss,
+            'os' => $os,
+            'cs' => $cs,
+            'bs' => $bs,
+            'cos' => $cos,
+            'cns' => $cns,
+        ];
 
-		if ( isset( $this->request->get['cos'] ) ) {
-			$cos = $this->request->get['cos'];
-		} else {
-			$cos = null;
-		}
+        //echo "<pre>";print_r($data);die;
 
-		if ( isset( $this->request->get['cns'] ) ) {
-			$cns = $this->request->get['cns'];
-		} else {
-			$cns = null;
-		} 
+        $this->load->model('report/excel');
 
-		$data = array(
-			'start_date' => $start_date,
-			'end_date' => $end_date,
-			'ss' => $ss,
-			'os' => $os,
-			'cs' => $cs,
-			'bs' => $bs,
-			'cos' => $cos,
-			'cns' => $cns 
-		); 
-
-
-  //echo "<pre>";print_r($data);die;
-
-
-        
-		$this->load->model('report/excel');	
-		
-
-		$this->model_report_excel->download_dashboard_excel($data);
-		
+        $this->model_report_excel->download_dashboard_excel($data);
     }
-
-
 }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Frontend translations
+ * Frontend translations.
  */
 $_['text_title'] = 'Bancontact';
 $_['text_payment_terms'] = '';

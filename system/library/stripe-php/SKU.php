@@ -3,14 +3,12 @@
 namespace Stripe;
 
 /**
- * Class SKU
- *
- * @package Stripe
+ * Class SKU.
  */
 class SKU extends ApiResource
 {
     /**
-     * @param string $id The ID of the SKU to retrieve.
+     * @param string            $id   the ID of the SKU to retrieve
      * @param array|string|null $opts
      *
      * @return SKU
@@ -21,10 +19,10 @@ class SKU extends ApiResource
     }
 
     /**
-     * @param array|null $params
+     * @param array|null        $params
      * @param array|string|null $opts
      *
-     * @return SKU The created SKU.
+     * @return SKU the created SKU
      */
     public static function create($params = null, $opts = null)
     {
@@ -32,11 +30,11 @@ class SKU extends ApiResource
     }
 
     /**
-     * @param string $id The ID of the SKU to update.
-     * @param array|null $params
+     * @param string            $id      the ID of the SKU to update
+     * @param array|null        $params
      * @param array|string|null $options
      *
-     * @return SKU The updated SKU.
+     * @return SKU the updated SKU
      */
     public static function update($id, $params = null, $options = null)
     {
@@ -46,7 +44,7 @@ class SKU extends ApiResource
     /**
      * @param array|string|null $opts
      *
-     * @return SKU The saved SKU.
+     * @return SKU the saved SKU
      */
     public function save($opts = null)
     {
@@ -54,7 +52,7 @@ class SKU extends ApiResource
     }
 
     /**
-     * @param array|null $params
+     * @param array|null        $params
      * @param array|string|null $opts
      *
      * @return Collection of SKUs
@@ -65,10 +63,10 @@ class SKU extends ApiResource
     }
 
     /**
-     * @param array|null $params
+     * @param array|null        $params
      * @param array|string|null $opts
      *
-     * @return SKU The deleted sku.
+     * @return SKU the deleted sku
      */
     public function delete($params = null, $opts = null)
     {

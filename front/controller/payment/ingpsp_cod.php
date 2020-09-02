@@ -1,17 +1,17 @@
 <?php
 
 /**
- * Class ControllerExtensionPaymentIngpspCod
+ * Class ControllerExtensionPaymentIngpspCod.
  */
 class ControllerPaymentIngpspCod extends Controller
 {
     /**
-     * Default currency for Order
+     * Default currency for Order.
      */
     const DEFAULT_CURRENCY = 'EUR';
 
     /**
-     * Payments module name
+     * Payments module name.
      */
     const MODULE_NAME = 'ingpsp_cod';
 
@@ -37,7 +37,8 @@ class ControllerPaymentIngpspCod extends Controller
     }
 
     /**
-     * Index Action
+     * Index Action.
+     *
      * @return mixed
      */
     public function index()
@@ -75,6 +76,7 @@ class ControllerPaymentIngpspCod extends Controller
      * Generate ING PSP Payments order.
      *
      * @param array
+     *
      * @return \GingerPayments\Payment\Order
      */
     protected function createOrder(array $orderData)
@@ -94,7 +96,7 @@ class ControllerPaymentIngpspCod extends Controller
     }
 
     /**
-     * Webhook action is called by API when transaction status is updated
+     * Webhook action is called by API when transaction status is updated.
      *
      * @return void
      */

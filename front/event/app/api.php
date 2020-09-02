@@ -2,28 +2,22 @@
 
 require_once DIR_SYSTEM.'/vendor/icanboogie/inflector/vendor/autoload.php';
 
-require_once(DIR_SYSTEM . 'vendor/firebase/php-jwt/vendor/autoload.php'); 
+require_once DIR_SYSTEM.'vendor/firebase/php-jwt/vendor/autoload.php';
 
-use ICanBoogie\Inflector;
 use Firebase\JWT\JWT;
+use ICanBoogie\Inflector;
 
-define('SECRET_KEY','customer-app-apiss');
-define('ALGORITHM','HS512');
-
+define('SECRET_KEY', 'customer-app-apiss');
+define('ALGORITHM', 'HS512');
 
 class EventAppApi extends Event
 {
-
     public function postAppEcommerce()
     {
-
-        
-
         // api/categories or api/categories/1
         $path = $this->getPath();
 
-
-        if (empty($path) || ($path[0] != 'api') || (count($path) < 2)) {
+        if (empty($path) || ('api' != $path[0]) || (count($path) < 2)) {
             return;
         }
 
@@ -44,9 +38,7 @@ class EventAppApi extends Event
         // api/orders
         //$route = $this->getRoute($path, $method);
 
-        
-
-        if(!empty($this->request->server['HTTP_X_USER']) && $this->request->server['HTTP_X_USER'] == 'customer') {
+        if (!empty($this->request->server['HTTP_X_USER']) && 'customer' == $this->request->server['HTTP_X_USER']) {
             // customer api
 
             $route = $this->getCustomerRoute($path, $method);
@@ -61,109 +53,87 @@ class EventAppApi extends Event
             //echo "<pre>";print_r($args);die;
 
             //unset($this->session->data['customer_id']);die;
-            if($route == 'api/customer/address/getAlladdress' || $route == 'api/customer/address/deleteaddress' || $route == 'api/customer/address/deleteAddress' || $route == 'api/customer/address/addAddress' || $route == 'api/customer/address/getAddress' || $route == 'api/customer/address/editAddress' || $route == 'api/customer/account/getUserdetails' || $route == 'api/customer/account/editUserdetail' || $route == 'api/customer/account/editUserDetail' || $route == 'api/customer/order/addMissingOrder' || $route == 'api/customer/order/addOrder' || $route == 'api/customer/order/getOrders' || $route == 'api/customer/checkout/addApplycoupon' || $route == 'api/customer/checkout/addApplyreward' || $route == 'api/customer/address/addMakedefaultaddress' || $route == 'api/customer/order/getOrder' || $route == 'api/customer/account/getUserRewards' || $route == 'api/customer/return/getUserReturns' || $route == 'api/customer/wishlist/getUserList' || $route == 'api/customer/refer/getUserRefers' || $route == 'api/customer/account/getUserCash' || $route == 'api/customer/wishlist/addCreateWishlist' || $route == 'api/customer/wishlist/addProductToWishlist' || $route == 'api/customer/wishlist/editWishlistProduct' || $route == 'api/customer/wishlist/editDeleteWishlist' || $route == 'api/customer/wishlist/editDeleteWishlistProduct' || $route == 'api/customer/wishlist/addCreateWishlistWithProduct' || $route == 'api/customer/return/getReturnDetail' || $route == 'api/customer/return/addReturnProduct' || $route == 'api/customer/wishlist/getUserListProduct' || $route == 'api/customer/payment/getStripeCustomerId' || $route == 'api/customer/order/addOrdercancel' || $route == 'api/customer/payment/addStripeEphemeralKey' || $route == 'api/customer/account/addStripeUser' || $route == 'api/customer/settings/addDeviceIdToCustomer' || $route == 'api/customer/stores/getStoreShippingMethods' || $route == 'api/customer/stores/getStoreshippingmethods' || $route == 'api/customer/login/addNewAccessToken' || $route == 'api/customer/payment/addMpesaConfirm' || $route == 'api/customer/payment/addMpesaComplete') {
-
+            if ('api/customer/address/getAlladdress' == $route || 'api/customer/address/deleteaddress' == $route || 'api/customer/address/deleteAddress' == $route || 'api/customer/address/addAddress' == $route || 'api/customer/address/getAddress' == $route || 'api/customer/address/editAddress' == $route || 'api/customer/account/getUserdetails' == $route || 'api/customer/account/editUserdetail' == $route || 'api/customer/account/editUserDetail' == $route || 'api/customer/order/addMissingOrder' == $route || 'api/customer/order/addOrder' == $route || 'api/customer/order/getOrders' == $route || 'api/customer/checkout/addApplycoupon' == $route || 'api/customer/checkout/addApplyreward' == $route || 'api/customer/address/addMakedefaultaddress' == $route || 'api/customer/order/getOrder' == $route || 'api/customer/account/getUserRewards' == $route || 'api/customer/return/getUserReturns' == $route || 'api/customer/wishlist/getUserList' == $route || 'api/customer/refer/getUserRefers' == $route || 'api/customer/account/getUserCash' == $route || 'api/customer/wishlist/addCreateWishlist' == $route || 'api/customer/wishlist/addProductToWishlist' == $route || 'api/customer/wishlist/editWishlistProduct' == $route || 'api/customer/wishlist/editDeleteWishlist' == $route || 'api/customer/wishlist/editDeleteWishlistProduct' == $route || 'api/customer/wishlist/addCreateWishlistWithProduct' == $route || 'api/customer/return/getReturnDetail' == $route || 'api/customer/return/addReturnProduct' == $route || 'api/customer/wishlist/getUserListProduct' == $route || 'api/customer/payment/getStripeCustomerId' == $route || 'api/customer/order/addOrdercancel' == $route || 'api/customer/payment/addStripeEphemeralKey' == $route || 'api/customer/account/addStripeUser' == $route || 'api/customer/settings/addDeviceIdToCustomer' == $route || 'api/customer/stores/getStoreShippingMethods' == $route || 'api/customer/stores/getStoreshippingmethods' == $route || 'api/customer/login/addNewAccessToken' == $route || 'api/customer/payment/addMpesaConfirm' == $route || 'api/customer/payment/addMpesaComplete' == $route) {
                 //echo "<pre>";print_r("ER");die;
                 // loogin required for above routes
                 $resp = $this->customer_token_authenticate();
 
                 //echo "<pre>";print_r($resp);die;
-                if ($resp['status'] == 1) {
+                if (1 == $resp['status']) {
                     $this->load->controller($route, $args);
                 } else {
-
                     $this->response->addHeader('Content-Type: application/json');
                     $this->response->setOutput(json_encode($resp));
                 }
-
-            } elseif($route == 'api/customer/login/addLogin') {
+            } elseif ('api/customer/login/addLogin' == $route) {
                 // Authorize
                 $this->load->controller('api/customer/login');
-
-            } elseif($route == 'api/customer/login/addLoginByOtp') {
-
+            } elseif ('api/customer/login/addLoginByOtp' == $route) {
                 // Authorize
                 $this->load->controller('api/customer/login/addLoginByOtp');
-            }
-            elseif($route == 'api/customer/login/addLoginVerifyOtp') {
-
+            } elseif ('api/customer/login/addLoginVerifyOtp' == $route) {
                 // Authorize
                 $this->load->controller('api/customer/login/addLoginVerifyOtp');
-            }
-            elseif($route == 'api/customer/login/addLoginVerifyOtp') {
-
+            } elseif ('api/customer/login/addLoginVerifyOtp' == $route) {
                 // Authorize
                 $this->load->controller('api/customer/login/addLoginVerifyOtp');
-            }
-            else {
-
+            } else {
                 //echo "<pre>";print_r($route);die;
 
                 $this->load->controller($route, $args);
             }
 
-            
-
             $this->response->output();
 
             die;
-
         } else {
-
             $route = $this->getRoute($path, $method);
 
             $log = new Log('error.log');
             $log->write('other api call other than customet api');
             $log->write($route);
 
-            if($route == 'api/forgetpassword/addForgetpassword') {
-                
-            }else if( $route == 'api/orders/getOrdersForDelivery'){
-                $groups = array('Delivery Team','Administrator','API User','vendor');
+            if ('api/forgetpassword/addForgetpassword' == $route) {
+            } elseif ('api/orders/getOrdersForDelivery' == $route) {
+                $groups = ['Delivery Team', 'Administrator', 'API User', 'vendor'];
                 if (!$this->authenticateByGroup($groups)) {
                     return;
-                } 
+                }
             } else {
-                $groups = array('Administrator','API User','vendor');
+                $groups = ['Administrator', 'API User', 'vendor'];
                 if (!$this->authenticateByGroup($groups)) {
                     return;
-                } 
+                }
             }
 
-            
             // Action
             $this->load->controller($route, $args);
 
             // Echo
             $this->response->output();
-
         }
 
-
         /*if($route == 'api/forgetpassword/addForgetpassword') {
-            
+
         } else {
             if (!$this->authenticate()) {
                 return;
-            } 
+            }
         }
 
-        
+
         // Action
         $this->load->controller($route, $args);
 
         // Echo
         $this->response->output();*/
-        
-        
 
         die();
     }
 
     private function getPath()
     {
-        
-        $parts = array();
+        $parts = [];
 
         $query_string = $this->uri->getQuery();
 
@@ -191,7 +161,7 @@ class EventAppApi extends Event
             // mod_php servers
             $username = $this->request->server['PHP_AUTH_USER'];
             $password = $this->request->server['PHP_AUTH_PW'];
-        } elseif (!empty($this->request->server['HTTP_AUTHORIZATION']) && (strpos(strtolower($this->request->server['HTTP_AUTHORIZATION']), 'basic') === 0)) {
+        } elseif (!empty($this->request->server['HTTP_AUTHORIZATION']) && (0 === strpos(strtolower($this->request->server['HTTP_AUTHORIZATION']), 'basic'))) {
             // most other servers
             list($username, $password) = explode(':', base64_decode(substr($this->request->server['HTTP_AUTHORIZATION'], 6)));
         }
@@ -199,7 +169,7 @@ class EventAppApi extends Event
         //echo "<pre>";print_r($password);die;
         if (empty($username) || empty($password)) {
             $this->response->addHeader('Content-Type: application/json');
-            $this->response->setOutput(json_encode(array('error' => 'Empty username or password')));
+            $this->response->setOutput(json_encode(['error' => 'Empty username or password']));
             $this->response->output();
 
             die();
@@ -214,7 +184,7 @@ class EventAppApi extends Event
 
         if (!isset($this->session->data['api_id'])) {
             $this->response->addHeader('Content-Type: application/json');
-            $this->response->setOutput(json_encode(array('error' => 'Login failed')));
+            $this->response->setOutput(json_encode(['error' => 'Login failed']));
             $this->response->output();
 
             die();
@@ -229,7 +199,7 @@ class EventAppApi extends Event
         return true;
     }
 
-    private function authenticateByGroup($groups=array())
+    private function authenticateByGroup($groups = [])
     {
         $username = $password = '';
 
@@ -237,7 +207,7 @@ class EventAppApi extends Event
             // mod_php servers
             $username = $this->request->server['PHP_AUTH_USER'];
             $password = $this->request->server['PHP_AUTH_PW'];
-        } elseif (!empty($this->request->server['HTTP_AUTHORIZATION']) && (strpos(strtolower($this->request->server['HTTP_AUTHORIZATION']), 'basic') === 0)) {
+        } elseif (!empty($this->request->server['HTTP_AUTHORIZATION']) && (0 === strpos(strtolower($this->request->server['HTTP_AUTHORIZATION']), 'basic'))) {
             // most other servers
             list($username, $password) = explode(':', base64_decode(substr($this->request->server['HTTP_AUTHORIZATION'], 6)));
         }
@@ -245,7 +215,7 @@ class EventAppApi extends Event
         //echo "<pre>";print_r($password);die;
         if (empty($username) || empty($password)) {
             $this->response->addHeader('Content-Type: application/json');
-            $this->response->setOutput(json_encode(array('error' => 'Empty username or password')));
+            $this->response->setOutput(json_encode(['error' => 'Empty username or password']));
             $this->response->output();
 
             die();
@@ -256,13 +226,12 @@ class EventAppApi extends Event
         $this->request->post['password'] = $password;
         $this->request->post['groups'] = $groups;
 
-
         // Authorize
         $this->load->controller('api/login');
 
         if (!isset($this->session->data['api_id'])) {
             $this->response->addHeader('Content-Type: application/json');
-            $this->response->setOutput(json_encode(array('error' => 'Login failed')));
+            $this->response->setOutput(json_encode(['error' => 'Login failed']));
             $this->response->output();
 
             die();
@@ -275,7 +244,6 @@ class EventAppApi extends Event
         unset($this->request->post['password']);
         unset($this->request->post['groups']);
 
-
         return true;
     }
 
@@ -283,7 +251,7 @@ class EventAppApi extends Event
     {
         $username = $password = '';
         //unset($this->session->data['customer_id']);die;
-        if( $this->customer->isLogged() ) {
+        if ($this->customer->isLogged()) {
             return true;
         }
 
@@ -296,8 +264,7 @@ class EventAppApi extends Event
 
             $username = $this->request->server['PHP_AUTH_USER'];
             $password = $this->request->server['PHP_AUTH_PW'];
-        } elseif (!empty($this->request->server['HTTP_AUTHORIZATION']) && (strpos(strtolower($this->request->server['HTTP_AUTHORIZATION']), 'basic') === 0)) {
-
+        } elseif (!empty($this->request->server['HTTP_AUTHORIZATION']) && (0 === strpos(strtolower($this->request->server['HTTP_AUTHORIZATION']), 'basic'))) {
             //echo "HTTP_AUTHORIZATION";die;
             // most other servers
             list($username, $password) = explode(':', base64_decode(substr($this->request->server['HTTP_AUTHORIZATION'], 6)));
@@ -305,7 +272,7 @@ class EventAppApi extends Event
 
         if (empty($username) || empty($password)) {
             $this->response->addHeader('Content-Type: application/json');
-            $this->response->setOutput(json_encode(array('error' => 'Empty username or password')));
+            $this->response->setOutput(json_encode(['error' => 'Empty username or password']));
             $this->response->output();
 
             die();
@@ -320,7 +287,7 @@ class EventAppApi extends Event
 
         if (!isset($this->session->data['customer_id'])) {
             $this->response->addHeader('Content-Type: application/json');
-            $this->response->setOutput(json_encode(array('error' => 'Login failed')));
+            $this->response->setOutput(json_encode(['error' => 'Login failed']));
             $this->response->output();
 
             die();
@@ -335,7 +302,6 @@ class EventAppApi extends Event
         return true;
     }
 
-
     private function getMethod()
     {
         $method = isset($this->request->server['REQUEST_METHOD']) ? $this->request->server['REQUEST_METHOD'] : 'GET';
@@ -345,7 +311,7 @@ class EventAppApi extends Event
 
     private function getArguments($path, $method)
     {
-        $args = array();
+        $args = [];
 
         switch ($method) {
             case 'get':
@@ -390,7 +356,7 @@ class EventAppApi extends Event
         $file = $path[1];
         $function = $this->getFunction($path, $method);
 
-        $route = $folder . '/' . $file . '/' . $function;//exit;
+        $route = $folder.'/'.$file.'/'.$function; //exit;
 
         return $route;
     }
@@ -402,17 +368,15 @@ class EventAppApi extends Event
         $file1 = $path[2];
         $function = $this->getFunction($path, $method);
 
-        $route = $folder . '/' . $file . '/' . $file1 . '/' . $function;
+        $route = $folder.'/'.$file.'/'.$file1.'/'.$function;
 
         return $route;
     }
 
-    
-
     private function getFunction($path, $method)
     {
-        $methods = array('get' => 'get', 'post' => 'add', 'put' => 'edit', 'delete' => 'delete');
-        
+        $methods = ['get' => 'get', 'post' => 'add', 'put' => 'edit', 'delete' => 'delete'];
+
         $log = new Log('error.log');
         $log->write('getFunction');
         $log->write($path);
@@ -442,12 +406,12 @@ class EventAppApi extends Event
 
         $log->write($name);
 
-        if (!$all_singular && ($method == 'get')) {
-            $function = $methods[$method] . ucfirst($name);
+        if (!$all_singular && ('get' == $method)) {
+            $function = $methods[$method].ucfirst($name);
         } else {
             $singular = Inflector::get()->singularize($name);
 
-            $function = $methods[$method] . ucfirst($singular);
+            $function = $methods[$method].ucfirst($singular);
         }
 
         $log->write($function);
@@ -455,13 +419,13 @@ class EventAppApi extends Event
         return $function;
     }
 
-    function getAuthorizationHeader(){
+    public function getAuthorizationHeader()
+    {
         $headers = null;
         if (isset($_SERVER['Authorization'])) {
-            $headers = trim($_SERVER["Authorization"]);
-        }
-        else if (isset($_SERVER['HTTP_AUTHORIZATION'])) { //Nginx or fast CGI
-            $headers = trim($_SERVER["HTTP_AUTHORIZATION"]);
+            $headers = trim($_SERVER['Authorization']);
+        } elseif (isset($_SERVER['HTTP_AUTHORIZATION'])) { //Nginx or fast CGI
+            $headers = trim($_SERVER['HTTP_AUTHORIZATION']);
         } elseif (function_exists('apache_request_headers')) {
             $requestHeaders = apache_request_headers();
             // Server-side fix for bug in old Android versions (a nice side-effect of this fix means we don't care about capitalization for Authorization)
@@ -471,15 +435,14 @@ class EventAppApi extends Event
                 $headers = trim($requestHeaders['Authorization']);
             }
         }
+
         return $headers;
     }
-
 
     private function customer_token_authenticate()
     {
         $res['status'] = 10022;
-        $res['message'] = "Unauthorized";
-        
+        $res['message'] = 'Unauthorized';
 
         $matches = [];
         $headers = $this->getAuthorizationHeader();
@@ -493,55 +456,47 @@ class EventAppApi extends Event
 
         $log = new Log('error.log');
         $log->write('customer_token_authenticate');
-        $log->write($this->customer->isLogged()."cerf");
+        $log->write($this->customer->isLogged().'cerf');
         $log->write($matches);
         //echo "<pre>";print_r($this->customer->isLogged());die;
-        
-        if(count($matches) > 1 && isset($matches[1])) {
+
+        if (count($matches) > 1 && isset($matches[1])) {
             //echo "<pre>";print_r($headers);die;
 
             try {
-                $secretKey = base64_decode(SECRET_KEY); 
-                $DecodedDataArray = JWT::decode($matches[1], $secretKey, array(ALGORITHM));
+                $secretKey = base64_decode(SECRET_KEY);
+                $DecodedDataArray = JWT::decode($matches[1], $secretKey, [ALGORITHM]);
 
                 $log->write($DecodedDataArray);
-                
-                if(isset($DecodedDataArray) && isset($DecodedDataArray->data)) {
-                    $this->session->data['customer_id'] = $DecodedDataArray->data->id;  
-                    
 
-                    $customer_query = $this->db->query( "SELECT * FROM " . DB_PREFIX . "customer WHERE customer_id = '" . (int)$DecodedDataArray->data->id . "' AND status = '1'" );
+                if (isset($DecodedDataArray) && isset($DecodedDataArray->data)) {
+                    $this->session->data['customer_id'] = $DecodedDataArray->data->id;
+
+                    $customer_query = $this->db->query('SELECT * FROM '.DB_PREFIX."customer WHERE customer_id = '".(int) $DecodedDataArray->data->id."' AND status = '1'");
 
                     //echo "<pre>";print_r($customer_query->row);die;
-                    if ( $customer_query->num_rows ) {
-                        $log->write("in customer st");
+                    if ($customer_query->num_rows) {
+                        $log->write('in customer st');
                         $this->customer->setVariables($customer_query->row);
                     } else {
                         return $res;
                     }
 
-
-                    $log->write($this->customer->isLogged()."cerfxx");
-                    $log->write($this->customer->getId()."cerfxx22");
-                    
-
+                    $log->write($this->customer->isLogged().'cerfxx');
+                    $log->write($this->customer->getId().'cerfxx22');
                 } else {
                     return $res;
                 }
                 //echo "<pre>";print_r($DecodedDataArray->data->id);die;
-                
+
                 $res['status'] = 1;
                 $res['data'] = json_encode($DecodedDataArray);
-
             } catch (Exception $e) {
-
                 //echo "<pre>";print_r($e);die;
             }
-
         }
 
-       //echo "<pre>";print_r($res);die;
-       return $res;
+        //echo "<pre>";print_r($res);die;
+        return $res;
     }
 }
-

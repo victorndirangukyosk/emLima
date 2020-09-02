@@ -1,17 +1,17 @@
 <?php
 
 /**
- * Class ControllerExtensionPaymentIngpspIdeal
+ * Class ControllerExtensionPaymentIngpspIdeal.
  */
 class ControllerPaymentIngpspIdeal extends Controller
 {
     /**
-     * Default currency for Order
+     * Default currency for Order.
      */
     const DEFAULT_CURRENCY = 'EUR';
 
     /**
-     * Payments module name
+     * Payments module name.
      */
     const MODULE_NAME = 'ingpsp_ideal';
 
@@ -37,7 +37,8 @@ class ControllerPaymentIngpspIdeal extends Controller
     }
 
     /**
-     * Index Action
+     * Index Action.
+     *
      * @return mixed
      */
     public function index()
@@ -53,7 +54,7 @@ class ControllerPaymentIngpspIdeal extends Controller
     }
 
     /**
-     * Order Confirm Action
+     * Order Confirm Action.
      */
     public function confirm()
     {
@@ -74,7 +75,7 @@ class ControllerPaymentIngpspIdeal extends Controller
     }
 
     /**
-     * Callback Action
+     * Callback Action.
      */
     public function callback()
     {
@@ -82,7 +83,7 @@ class ControllerPaymentIngpspIdeal extends Controller
     }
 
     /**
-     * Pending order processing page
+     * Pending order processing page.
      *
      * @return mixed
      */
@@ -92,7 +93,7 @@ class ControllerPaymentIngpspIdeal extends Controller
     }
 
     /**
-     * Pending order processing page
+     * Pending order processing page.
      *
      * @return mixed
      */
@@ -104,7 +105,7 @@ class ControllerPaymentIngpspIdeal extends Controller
     }
 
     /**
-     * Webhook action is called by API when transaction status is updated
+     * Webhook action is called by API when transaction status is updated.
      *
      * @return void
      */
@@ -119,6 +120,7 @@ class ControllerPaymentIngpspIdeal extends Controller
      * Generate ING PSP iDEAL order.
      *
      * @param array
+     *
      * @return \GingerPayments\Payment\Order
      */
     protected function createOrder(array $orderData)

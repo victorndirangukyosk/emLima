@@ -213,6 +213,8 @@
                         <div class="dropdownsetnew" style="margin-top: 10px;"><a class="header__upper-deck-item-link"
                             href="<?= $dashboard ?>"><i class="fa fa-user"></i>Dashboard &nbsp;<span
                               class="badge badge-pill badge-light">New</span></a></div>
+                               <div class="dropdownsetnew"  ><a class="header__upper-deck-item-link"
+                                   href="<?= $wishlist ?>" ><i class="fa fa-shopping-basket"></i>My Basket</a></div>
                         <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $account ?>"><i
                               class="fa fa-user"></i>My Account</a></div>
                         <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $help ?>"><i

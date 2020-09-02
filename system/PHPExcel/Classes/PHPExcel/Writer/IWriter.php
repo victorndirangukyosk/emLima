@@ -1,6 +1,6 @@
 <?php
 /**
- *  PHPExcel
+ *  PHPExcel.
  *
  *  Copyright (c) 2006 - 2014 PHPExcel
  *
@@ -19,28 +19,28 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  *
  *  @category   PHPExcel
- *  @package    PHPExcel_Writer
+ *
  *  @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  *  @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt    LGPL
+ *
  *  @version    1.8.0, 2014-03-02
  */
 
-
 /**
- *  PHPExcel_Writer_IWriter
+ *  PHPExcel_Writer_IWriter.
  *
  *  @category   PHPExcel
- *  @package    PHPExcel_Writer
+ *
  *  @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  */
 interface PHPExcel_Writer_IWriter
 {
     /**
-     *  Save PHPExcel to file
+     *  Save PHPExcel to file.
      *
      *  @param   string       $pFilename  Name of the file to save
+     *
      *  @throws  PHPExcel_Writer_Exception
      */
-    public function save($pFilename = NULL);
-
+    public function save($pFilename = null);
 }

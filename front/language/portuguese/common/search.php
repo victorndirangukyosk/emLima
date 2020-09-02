@@ -1,1 +1,4 @@
-<?php// Text$_['text_search'] = 'Procurar';?>
+<?php
+
+// Text
+$_['text_search'] = 'Procurar';

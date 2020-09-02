@@ -3,14 +3,12 @@
 namespace Stripe;
 
 /**
- * Class OrderReturn
- *
- * @package Stripe
+ * Class OrderReturn.
  */
 class OrderReturn extends ApiResource
 {
     /**
-     * @param string $id The ID of the OrderReturn to retrieve.
+     * @param string            $id   the ID of the OrderReturn to retrieve
      * @param array|string|null $opts
      *
      * @return Order
@@ -21,7 +19,7 @@ class OrderReturn extends ApiResource
     }
 
     /**
-     * @param array|null $params
+     * @param array|null        $params
      * @param array|string|null $opts
      *
      * @return Collection of OrderReturns

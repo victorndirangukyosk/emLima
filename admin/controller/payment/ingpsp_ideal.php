@@ -1,19 +1,19 @@
 <?php
 
 /**
- * Class ControllerPaymentIngIdeal
+ * Class ControllerPaymentIngIdeal.
  */
 class ControllerPaymentIngpspIdeal extends Controller
 {
     /**
-     * Prefix for fields in admin settings page
+     * Prefix for fields in admin settings page.
      */
     const POST_FIELD_PREFIX = 'ing_';
 
     /**
      * @var array
      */
-    static $update_fields = [
+    public static $update_fields = [
         'api_key',
         'psp_product',
         'status',
@@ -26,16 +26,16 @@ class ControllerPaymentIngpspIdeal extends Controller
         'order_status_id_error',
         'total',
         'bundle_cacert',
-        'send_webhook'
+        'send_webhook',
     ];
 
     /**
      * @var array ING PSP list of available products
      */
-    static $psp_products = [
+    public static $psp_products = [
         'kassacompleet' => 'Kassa Compleet',
         'ingcheckout' => 'ING Checkout',
-        'epay' => 'ING ePay'
+        'epay' => 'ING ePay',
     ];
 
     /**
@@ -46,13 +46,13 @@ class ControllerPaymentIngpspIdeal extends Controller
     /**
      * @var array
      */
-    private $error = array();
+    private $error = [];
 
     /**
      * @param string $ingModuleName
      */
     public function index($ingModuleName = 'ingpsp_ideal')
-    {   
+    {
         $this->setModuleName($ingModuleName);
 
         $this->language->load('payment/'.$ingModuleName);
@@ -61,7 +61,7 @@ class ControllerPaymentIngpspIdeal extends Controller
 
         $this->document->setTitle($this->language->get('heading_title'));
 
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validate()) {
             $this->updateSettings();
         }
 
@@ -99,7 +99,7 @@ class ControllerPaymentIngpspIdeal extends Controller
     }
 
     /**
-     * Method updates Payment Settings and redirects back to payment plugin page
+     * Method updates Payment Settings and redirects back to payment plugin page.
      */
     protected function updateSettings()
     {
@@ -108,7 +108,7 @@ class ControllerPaymentIngpspIdeal extends Controller
         $this->session->data['success'] = $this->language->get('text_settings_saved');
 
         $this->response->redirect(
-            $this->url->link('extension/payment', 'token='.$this->session->data['token'] . '&type=payment', true)
+            $this->url->link('extension/payment', 'token='.$this->session->data['token'].'&type=payment', true)
         );
     }
 
@@ -132,9 +132,9 @@ class ControllerPaymentIngpspIdeal extends Controller
             'entry_sort_order' => $this->language->get('entry_sort_order'),
             'entry_status' => $this->language->get('entry_status'),
             'entry_ing_total' => $this->language->get('entry_ing_total'),
-            'entry_ing_product' =>  $this->language->get('entry_ing_product'),
-            'entry_cacert' =>  $this->language->get('entry_cacert'),
-            'entry_send_webhook' =>  $this->language->get('entry_send_webhook'),
+            'entry_ing_product' => $this->language->get('entry_ing_product'),
+            'entry_cacert' => $this->language->get('entry_cacert'),
+            'entry_send_webhook' => $this->language->get('entry_send_webhook'),
             'text_enabled' => $this->language->get('text_enabled'),
             'text_disabled' => $this->language->get('text_disabled'),
             'button_save' => $this->language->get('text_button_save'),
@@ -146,22 +146,21 @@ class ControllerPaymentIngpspIdeal extends Controller
                 true
             ),
             'cancel' => $this->url->link(
-                'extension/payment', 'token='.$this->session->data['token'] . '&type=payment',
+                'extension/payment', 'token='.$this->session->data['token'].'&type=payment',
                 true
             ),
-            'psp_products' => self::$psp_products
+            'psp_products' => self::$psp_products,
         ];
     }
 
     /**
-     * Process and prepare data for configuration page
+     * Process and prepare data for configuration page.
      *
-     * @param array $data
      * @return array
      */
     protected function prepareSettingsData(array $data)
     {
-        foreach (static::$update_fields AS $fieldToUpdate) {
+        foreach (static::$update_fields as $fieldToUpdate) {
             $formPostFiled = $this->getPostFieldName($fieldToUpdate);
             if (isset($this->request->post[$formPostFiled])) {
                 $data[$formPostFiled] = $this->request->post[$formPostFiled];
@@ -184,7 +183,7 @@ class ControllerPaymentIngpspIdeal extends Controller
     }
 
     /**
-     * Generate configuration page breadcrumbs
+     * Generate configuration page breadcrumbs.
      *
      * @return array
      */
@@ -193,17 +192,17 @@ class ControllerPaymentIngpspIdeal extends Controller
         return [
             [
                 'text' => $this->language->get('text_home'),
-                'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], true)
+                'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], true),
             ],
             [
                 'text' => $this->language->get('text_extension'),
-                'href' => $this->url->link('extension/payment', 'token='.$this->session->data['token'].'&type=payment', true)
+                'href' => $this->url->link('extension/payment', 'token='.$this->session->data['token'].'&type=payment', true),
             ],
             [
                 'text' => $this->language->get('heading_title'),
                 'href' => $this->url->link('payment/'.$this->getModuleName(),
-                    'token='.$this->session->data['token'], true)
-            ]
+                    'token='.$this->session->data['token'], true),
+            ],
         ];
     }
 
@@ -213,9 +212,10 @@ class ControllerPaymentIngpspIdeal extends Controller
     protected function getUpdateFields()
     {
         $fields = [];
-        foreach (static::$update_fields AS $field) {
+        foreach (static::$update_fields as $field) {
             $fields[] = $this->getModuleName().'_'.$field;
         }
+
         return $fields;
     }
 
@@ -225,13 +225,12 @@ class ControllerPaymentIngpspIdeal extends Controller
     protected function mapPostData()
     {
         $postFields = [];
-        foreach (static::$update_fields AS $field) {
+        foreach (static::$update_fields as $field) {
             $postFields[$this->getModuleFieldName($field)] = $this->request->post[$this->getPostFieldName($field)];
         }
 
         return $postFields;
     }
-
 
     /**
      * @param string $ingModuleName
@@ -250,7 +249,8 @@ class ControllerPaymentIngpspIdeal extends Controller
     }
 
     /**
-     * @param  string $fieldName
+     * @param string $fieldName
+     *
      * @return string
      */
     protected function getModuleFieldName($fieldName)
@@ -260,6 +260,7 @@ class ControllerPaymentIngpspIdeal extends Controller
 
     /**
      * @param $postFieldName
+     *
      * @return string
      */
     protected function getPostFieldName($postFieldName)

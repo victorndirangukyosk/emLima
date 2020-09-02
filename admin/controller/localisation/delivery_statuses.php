@@ -1,18 +1,18 @@
 <?php
 
-class ControllerLocalisationDeliveryStatuses extends Controller {
+class ControllerLocalisationDeliveryStatuses extends Controller
+{
+    private $error = [];
 
-    private $error = array();
-
-    public function index() {
-
+    public function index()
+    {
         $this->load->language('localisation/delivery_statuses');
 
         $this->document->setTitle($this->language->get('heading_title'));
 
         $this->load->model('localisation/delivery_statuses');
 
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
             $this->model_localisation_tax_class->editTaxClass($this->request->get['tax_class_id'], $this->request->post);
 
             $this->session->data['success'] = $this->language->get('text_success');
@@ -20,40 +20,40 @@ class ControllerLocalisationDeliveryStatuses extends Controller {
             $url = '';
 
             if (isset($this->request->get['sort'])) {
-                $url .= '&sort=' . $this->request->get['sort'];
+                $url .= '&sort='.$this->request->get['sort'];
             }
 
             if (isset($this->request->get['order'])) {
-                $url .= '&order=' . $this->request->get['order'];
+                $url .= '&order='.$this->request->get['order'];
             }
 
             if (isset($this->request->get['page'])) {
-                $url .= '&page=' . $this->request->get['page'];
+                $url .= '&page='.$this->request->get['page'];
             }
 
-            if (isset($this->request->post['button']) and $this->request->post['button'] == 'save') {
-                $this->response->redirect($this->url->link('localisation/tax_class/edit', 'tax_class_id=' . $this->request->get['tax_class_id'] . '&token=' . $this->session->data['token'] . $url, 'SSL'));
+            if (isset($this->request->post['button']) and 'save' == $this->request->post['button']) {
+                $this->response->redirect($this->url->link('localisation/tax_class/edit', 'tax_class_id='.$this->request->get['tax_class_id'].'&token='.$this->session->data['token'].$url, 'SSL'));
             }
 
-            if (isset($this->request->post['button']) and $this->request->post['button'] == 'new') {
-                $this->response->redirect($this->url->link('localisation/tax_class/add', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            if (isset($this->request->post['button']) and 'new' == $this->request->post['button']) {
+                $this->response->redirect($this->url->link('localisation/tax_class/add', 'token='.$this->session->data['token'].$url, 'SSL'));
             }
 
-            $this->response->redirect($this->url->link('localisation/tax_class', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            $this->response->redirect($this->url->link('localisation/tax_class', 'token='.$this->session->data['token'].$url, 'SSL'));
         }
 
         $this->getForm();
     }
 
-    public function add() {
+    public function add()
+    {
         $this->load->language('localisation/delivery_statuses');
 
         $this->document->setTitle($this->language->get('heading_title'));
 
         //$this->load->model('localisation/delivery_statuses');
         //echo "<pre>";print_r($this->request->post);die;
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
             $this->load->model('localisation/order_status');
 
             $saveDeliveryStatuses = $this->model_localisation_order_status->saveDeliveryStatuses($this->request->post['delivery_status']);
@@ -62,13 +62,14 @@ class ControllerLocalisationDeliveryStatuses extends Controller {
 
             $url = '';
 
-            $this->response->redirect($this->url->link('localisation/delivery_statuses', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            $this->response->redirect($this->url->link('localisation/delivery_statuses', 'token='.$this->session->data['token'].$url, 'SSL'));
         }
 
         $this->getForm();
     }
 
-    protected function getForm() {
+    protected function getForm()
+    {
         $data['heading_title'] = $this->language->get('heading_title');
 
         $data['text_form'] = !isset($this->request->get['tax_class_id']) ? $this->language->get('text_add') : $this->language->get('text_edit');
@@ -90,7 +91,7 @@ class ControllerLocalisationDeliveryStatuses extends Controller {
         $data['button_cancel'] = $this->language->get('button_cancel');
         $data['button_rule_add'] = $this->language->get('button_rule_add');
         $data['button_remove'] = $this->language->get('button_remove');
-        
+
         if (isset($this->session->data['success'])) {
             $data['success'] = $this->session->data['success'];
             unset($this->session->data['success']);
@@ -119,38 +120,38 @@ class ControllerLocalisationDeliveryStatuses extends Controller {
         $url = '';
 
         if (isset($this->request->get['sort'])) {
-            $url .= '&sort=' . $this->request->get['sort'];
+            $url .= '&sort='.$this->request->get['sort'];
         }
 
         if (isset($this->request->get['order'])) {
-            $url .= '&order=' . $this->request->get['order'];
+            $url .= '&order='.$this->request->get['order'];
         }
 
         if (isset($this->request->get['page'])) {
-            $url .= '&page=' . $this->request->get['page'];
+            $url .= '&page='.$this->request->get['page'];
         }
 
-        $data['breadcrumbs'] = array();
+        $data['breadcrumbs'] = [];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL')
-        );
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
+        ];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('localisation/tax_class', 'token=' . $this->session->data['token'] . $url, 'SSL')
-        );
+            'href' => $this->url->link('localisation/tax_class', 'token='.$this->session->data['token'].$url, 'SSL'),
+        ];
 
         if (!isset($this->request->get['tax_class_id'])) {
-            $data['action'] = $this->url->link('localisation/delivery_statuses/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $data['action'] = $this->url->link('localisation/delivery_statuses/add', 'token='.$this->session->data['token'].$url, 'SSL');
         } else {
-            $data['action'] = $this->url->link('localisation/delivery_statuses/edit', 'token=' . $this->session->data['token'] . '&tax_class_id=' . $this->request->get['tax_class_id'] . $url, 'SSL');
+            $data['action'] = $this->url->link('localisation/delivery_statuses/edit', 'token='.$this->session->data['token'].'&tax_class_id='.$this->request->get['tax_class_id'].$url, 'SSL');
         }
 
-        $data['cancel'] = $this->url->link('localisation/delivery_statuses', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['cancel'] = $this->url->link('localisation/delivery_statuses', 'token='.$this->session->data['token'].$url, 'SSL');
 
-        if (isset($this->request->get['tax_class_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+        if (isset($this->request->get['tax_class_id']) && ('POST' != $this->request->server['REQUEST_METHOD'])) {
             $tax_class_info = $this->model_localisation_tax_class->getTaxClass($this->request->get['tax_class_id']);
         }
 
@@ -175,40 +176,35 @@ class ControllerLocalisationDeliveryStatuses extends Controller {
         $data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
 
         $db_delviery_statuses = $this->model_localisation_order_status->getDeliveryStatuses();
-        
+
         //echo "<pre>";print_r($db_delviery_statuses);die;
         //
-        $data['email'] = $this->config->get('config_delivery_username'); 
+        $data['email'] = $this->config->get('config_delivery_username');
         $data['password'] = $this->config->get('config_delivery_secret');
-        $response = $this->load->controller('deliversystem/deliversystem/getToken',$data);
+        $response = $this->load->controller('deliversystem/deliversystem/getToken', $data);
 
         $apiDeliveryStatuses = [];
-        
-        if($response['status']) {
-            $data['token'] = $response['token']; 
-            $res = $this->load->controller('deliversystem/deliversystem/getAllDeliveryStatus',$data);
-            
-            $apiDeliveryStatuses = json_decode($res['data'], true);
 
+        if ($response['status']) {
+            $data['token'] = $response['token'];
+            $res = $this->load->controller('deliversystem/deliversystem/getAllDeliveryStatus', $data);
+
+            $apiDeliveryStatuses = json_decode($res['data'], true);
         }
 
-
         //echo "<pre>";print_r($apiDeliveryStatuses);die;
-        $data['delivery_statuses'] =  array();
+        $data['delivery_statuses'] = [];
 
         if (isset($this->request->post['delivery_statuses'])) {
             $data['delivery_statuses'] = $this->request->post['delivery_statuses'];
         } else {
-            
             // $apiDeliveryStatuses = [ 0 => ['code' => '00','status' => 'pending'],1 => ['code' => '01','status' => 'processing']];
 
             foreach ($apiDeliveryStatuses as $apiStatus) {
-                    
-                $orderStatusId  = false;
+                $orderStatusId = false;
                 foreach ($db_delviery_statuses as $dbDeliveryStatuses) {
-                    
-                    if($apiStatus['code'] == $dbDeliveryStatuses['code']){
-                        $orderStatusId  = $dbDeliveryStatuses['order_status_id'];
+                    if ($apiStatus['code'] == $dbDeliveryStatuses['code']) {
+                        $orderStatusId = $dbDeliveryStatuses['order_status_id'];
                         break;
                     }
                 }
@@ -230,7 +226,8 @@ class ControllerLocalisationDeliveryStatuses extends Controller {
         $this->response->setOutput($this->load->view('localisation/delivery_statuses_form.tpl', $data));
     }
 
-    protected function validateForm() {
+    protected function validateForm()
+    {
         if (!$this->user->hasPermission('modify', 'localisation/delivery_statuses')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }

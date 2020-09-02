@@ -1,10 +1,11 @@
 <?php
 
-class Controllerlocalisationapporderstatus extends Controller {
+class Controllerlocalisationapporderstatus extends Controller
+{
+    private $error = [];
 
-    private $error = array();
-
-    public function index() {
+    public function index()
+    {
         $this->load->language('localisation/app_order_status');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -14,14 +15,15 @@ class Controllerlocalisationapporderstatus extends Controller {
         $this->getList();
     }
 
-    public function add() {
+    public function add()
+    {
         $this->load->language('localisation/app_order_status');
 
         $this->document->setTitle($this->language->get('heading_title'));
 
         $this->load->model('localisation/app_order_status');
 
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
             $app_order_status_id = $this->model_localisation_app_order_status->addOrderStatus($this->request->post);
 
             $this->session->data['success'] = $this->language->get('text_success');
@@ -29,39 +31,40 @@ class Controllerlocalisationapporderstatus extends Controller {
             $url = '';
 
             if (isset($this->request->get['sort'])) {
-                $url .= '&sort=' . $this->request->get['sort'];
+                $url .= '&sort='.$this->request->get['sort'];
             }
 
             if (isset($this->request->get['order'])) {
-                $url .= '&order=' . $this->request->get['order'];
+                $url .= '&order='.$this->request->get['order'];
             }
 
             if (isset($this->request->get['page'])) {
-                $url .= '&page=' . $this->request->get['page'];
+                $url .= '&page='.$this->request->get['page'];
             }
 
-            if (isset($this->request->post['button']) and $this->request->post['button'] == 'save') {
-                $this->response->redirect($this->url->link('localisation/app_order_status/edit', 'app_order_status_id=' . $app_order_status_id . '&token=' . $this->session->data['token'] . $url, 'SSL'));
+            if (isset($this->request->post['button']) and 'save' == $this->request->post['button']) {
+                $this->response->redirect($this->url->link('localisation/app_order_status/edit', 'app_order_status_id='.$app_order_status_id.'&token='.$this->session->data['token'].$url, 'SSL'));
             }
 
-            if (isset($this->request->post['button']) and $this->request->post['button'] == 'new') {
-                $this->response->redirect($this->url->link('localisation/app_order_status/add', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            if (isset($this->request->post['button']) and 'new' == $this->request->post['button']) {
+                $this->response->redirect($this->url->link('localisation/app_order_status/add', 'token='.$this->session->data['token'].$url, 'SSL'));
             }
 
-            $this->response->redirect($this->url->link('localisation/app_order_status', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            $this->response->redirect($this->url->link('localisation/app_order_status', 'token='.$this->session->data['token'].$url, 'SSL'));
         }
 
         $this->getForm();
     }
 
-    public function edit() {
+    public function edit()
+    {
         $this->load->language('localisation/app_order_status');
 
         $this->document->setTitle($this->language->get('heading_title'));
 
         $this->load->model('localisation/app_order_status');
 
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
             $this->model_localisation_app_order_status->editOrderStatus($this->request->get['app_order_status_id'], $this->request->post);
 
             $this->session->data['success'] = $this->language->get('text_success');
@@ -69,32 +72,33 @@ class Controllerlocalisationapporderstatus extends Controller {
             $url = '';
 
             if (isset($this->request->get['sort'])) {
-                $url .= '&sort=' . $this->request->get['sort'];
+                $url .= '&sort='.$this->request->get['sort'];
             }
 
             if (isset($this->request->get['order'])) {
-                $url .= '&order=' . $this->request->get['order'];
+                $url .= '&order='.$this->request->get['order'];
             }
 
             if (isset($this->request->get['page'])) {
-                $url .= '&page=' . $this->request->get['page'];
+                $url .= '&page='.$this->request->get['page'];
             }
 
-            if (isset($this->request->post['button']) and $this->request->post['button'] == 'save') {
-                $this->response->redirect($this->url->link('localisation/app_order_status/edit', 'app_order_status_id=' . $this->request->get['app_order_status_id'] . '&token=' . $this->session->data['token'] . $url, 'SSL'));
+            if (isset($this->request->post['button']) and 'save' == $this->request->post['button']) {
+                $this->response->redirect($this->url->link('localisation/app_order_status/edit', 'app_order_status_id='.$this->request->get['app_order_status_id'].'&token='.$this->session->data['token'].$url, 'SSL'));
             }
 
-            if (isset($this->request->post['button']) and $this->request->post['button'] == 'new') {
-                $this->response->redirect($this->url->link('localisation/app_order_status/add', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            if (isset($this->request->post['button']) and 'new' == $this->request->post['button']) {
+                $this->response->redirect($this->url->link('localisation/app_order_status/add', 'token='.$this->session->data['token'].$url, 'SSL'));
             }
 
-            $this->response->redirect($this->url->link('localisation/app_order_status', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            $this->response->redirect($this->url->link('localisation/app_order_status', 'token='.$this->session->data['token'].$url, 'SSL'));
         }
 
         $this->getForm();
     }
 
-    public function delete() {
+    public function delete()
+    {
         $this->load->language('localisation/app_order_status');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -111,24 +115,25 @@ class Controllerlocalisationapporderstatus extends Controller {
             $url = '';
 
             if (isset($this->request->get['sort'])) {
-                $url .= '&sort=' . $this->request->get['sort'];
+                $url .= '&sort='.$this->request->get['sort'];
             }
 
             if (isset($this->request->get['order'])) {
-                $url .= '&order=' . $this->request->get['order'];
+                $url .= '&order='.$this->request->get['order'];
             }
 
             if (isset($this->request->get['page'])) {
-                $url .= '&page=' . $this->request->get['page'];
+                $url .= '&page='.$this->request->get['page'];
             }
 
-            $this->response->redirect($this->url->link('localisation/app_order_status', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            $this->response->redirect($this->url->link('localisation/app_order_status', 'token='.$this->session->data['token'].$url, 'SSL'));
         }
 
         $this->getList();
     }
 
-    protected function getList() {
+    protected function getList()
+    {
         if (isset($this->request->get['sort'])) {
             $sort = $this->request->get['sort'];
         } else {
@@ -150,52 +155,52 @@ class Controllerlocalisationapporderstatus extends Controller {
         $url = '';
 
         if (isset($this->request->get['sort'])) {
-            $url .= '&sort=' . $this->request->get['sort'];
+            $url .= '&sort='.$this->request->get['sort'];
         }
 
         if (isset($this->request->get['order'])) {
-            $url .= '&order=' . $this->request->get['order'];
+            $url .= '&order='.$this->request->get['order'];
         }
 
         if (isset($this->request->get['page'])) {
-            $url .= '&page=' . $this->request->get['page'];
+            $url .= '&page='.$this->request->get['page'];
         }
 
-        $data['breadcrumbs'] = array();
+        $data['breadcrumbs'] = [];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL')
-        );
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
+        ];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('localisation/app_order_status', 'token=' . $this->session->data['token'] . $url, 'SSL')
-        );
+            'href' => $this->url->link('localisation/app_order_status', 'token='.$this->session->data['token'].$url, 'SSL'),
+        ];
 
-        $data['add'] = $this->url->link('localisation/app_order_status/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['delete'] = $this->url->link('localisation/app_order_status/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['add'] = $this->url->link('localisation/app_order_status/add', 'token='.$this->session->data['token'].$url, 'SSL');
+        $data['delete'] = $this->url->link('localisation/app_order_status/delete', 'token='.$this->session->data['token'].$url, 'SSL');
 
-        $data['app_order_statuses'] = array();
+        $data['app_order_statuses'] = [];
 
-        $filter_data = array(
+        $filter_data = [
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin')
-        );
+            'limit' => $this->config->get('config_limit_admin'),
+        ];
 
         $app_order_status_total = $this->model_localisation_app_order_status->getTotalOrderStatuses();
 
         $results = $this->model_localisation_app_order_status->getOrderStatuses($filter_data);
 
         foreach ($results as $result) {
-            $data['app_order_statuses'][] = array(
+            $data['app_order_statuses'][] = [
                 'app_order_status_id' => $result['app_order_status_id'],
-                'name' => $result['name'] . (($result['app_order_status_id'] == $this->config->get('config_app_order_status_id')) ? $this->language->get('text_default') : null),
-                'sort_order' => $result['sort_order'] ,
-                'edit' => $this->url->link('localisation/app_order_status/edit', 'token=' . $this->session->data['token'] . '&app_order_status_id=' . $result['app_order_status_id'] . $url, 'SSL')
-            );
+                'name' => $result['name'].(($result['app_order_status_id'] == $this->config->get('config_app_order_status_id')) ? $this->language->get('text_default') : null),
+                'sort_order' => $result['sort_order'],
+                'edit' => $this->url->link('localisation/app_order_status/edit', 'token='.$this->session->data['token'].'&app_order_status_id='.$result['app_order_status_id'].$url, 'SSL'),
+            ];
         }
 
         $data['heading_title'] = $this->language->get('heading_title');
@@ -229,39 +234,39 @@ class Controllerlocalisationapporderstatus extends Controller {
         if (isset($this->request->post['selected'])) {
             $data['selected'] = (array) $this->request->post['selected'];
         } else {
-            $data['selected'] = array();
+            $data['selected'] = [];
         }
 
         $url = '';
 
-        if ($order == 'ASC') {
+        if ('ASC' == $order) {
             $url .= '&order=DESC';
         } else {
             $url .= '&order=ASC';
         }
 
         if (isset($this->request->get['page'])) {
-            $url .= '&page=' . $this->request->get['page'];
+            $url .= '&page='.$this->request->get['page'];
         }
 
-        $data['sort_name'] = $this->url->link('localisation/app_order_status', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
-        $data['sort_sort_order'] = $this->url->link('localisation/app_order_status', 'token=' . $this->session->data['token'] . '&sort=sort_order' . $url, 'SSL');
+        $data['sort_name'] = $this->url->link('localisation/app_order_status', 'token='.$this->session->data['token'].'&sort=name'.$url, 'SSL');
+        $data['sort_sort_order'] = $this->url->link('localisation/app_order_status', 'token='.$this->session->data['token'].'&sort=sort_order'.$url, 'SSL');
 
         $url = '';
 
         if (isset($this->request->get['sort'])) {
-            $url .= '&sort=' . $this->request->get['sort'];
+            $url .= '&sort='.$this->request->get['sort'];
         }
 
         if (isset($this->request->get['order'])) {
-            $url .= '&order=' . $this->request->get['order'];
+            $url .= '&order='.$this->request->get['order'];
         }
 
         $pagination = new Pagination();
         $pagination->total = $app_order_status_total;
         $pagination->page = $page;
         $pagination->limit = $this->config->get('config_limit_admin');
-        $pagination->url = $this->url->link('localisation/app_order_status', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+        $pagination->url = $this->url->link('localisation/app_order_status', 'token='.$this->session->data['token'].$url.'&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
@@ -277,7 +282,8 @@ class Controllerlocalisationapporderstatus extends Controller {
         $this->response->setOutput($this->load->view('localisation/app_order_status_list.tpl', $data));
     }
 
-    protected function getForm() {
+    protected function getForm()
+    {
         $data['heading_title'] = $this->language->get('heading_title');
 
         $data['text_form'] = !isset($this->request->get['app_order_status_id']) ? $this->language->get('text_add') : $this->language->get('text_edit');
@@ -295,59 +301,59 @@ class Controllerlocalisationapporderstatus extends Controller {
         } else {
             $data['error_warning'] = '';
         }
-        
+
         if (isset($this->session->data['success'])) {
             $data['success'] = $this->session->data['success'];
             unset($this->session->data['success']);
         } else {
             $data['success'] = '';
         }
-        
+
         if (isset($this->error['name'])) {
             $data['error_name'] = $this->error['name'];
         } else {
-            $data['error_name'] = array();
+            $data['error_name'] = [];
         }
 
         if (isset($this->error['message'])) {
             $data['error_message'] = $this->error['message'];
         } else {
-            $data['error_message'] = array();
+            $data['error_message'] = [];
         }
 
         $url = '';
 
         if (isset($this->request->get['sort'])) {
-            $url .= '&sort=' . $this->request->get['sort'];
+            $url .= '&sort='.$this->request->get['sort'];
         }
 
         if (isset($this->request->get['order'])) {
-            $url .= '&order=' . $this->request->get['order'];
+            $url .= '&order='.$this->request->get['order'];
         }
 
         if (isset($this->request->get['page'])) {
-            $url .= '&page=' . $this->request->get['page'];
+            $url .= '&page='.$this->request->get['page'];
         }
 
-        $data['breadcrumbs'] = array();
+        $data['breadcrumbs'] = [];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL')
-        );
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
+        ];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('localisation/app_order_status', 'token=' . $this->session->data['token'] . $url, 'SSL')
-        );
+            'href' => $this->url->link('localisation/app_order_status', 'token='.$this->session->data['token'].$url, 'SSL'),
+        ];
 
         if (!isset($this->request->get['app_order_status_id'])) {
-            $data['action'] = $this->url->link('localisation/app_order_status/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $data['action'] = $this->url->link('localisation/app_order_status/add', 'token='.$this->session->data['token'].$url, 'SSL');
         } else {
-            $data['action'] = $this->url->link('localisation/app_order_status/edit', 'token=' . $this->session->data['token'] . '&app_order_status_id=' . $this->request->get['app_order_status_id'] . $url, 'SSL');
+            $data['action'] = $this->url->link('localisation/app_order_status/edit', 'token='.$this->session->data['token'].'&app_order_status_id='.$this->request->get['app_order_status_id'].$url, 'SSL');
         }
 
-        $data['cancel'] = $this->url->link('localisation/app_order_status', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['cancel'] = $this->url->link('localisation/app_order_status', 'token='.$this->session->data['token'].$url, 'SSL');
 
         $this->load->model('localisation/language');
 
@@ -358,7 +364,7 @@ class Controllerlocalisationapporderstatus extends Controller {
         } elseif (isset($this->request->get['app_order_status_id'])) {
             $data['app_order_status'] = $this->model_localisation_app_order_status->getOrderStatusDescriptions($this->request->get['app_order_status_id']);
         } else {
-            $data['app_order_status'] = array();
+            $data['app_order_status'] = [];
         }
 
         // Text Editor
@@ -375,7 +381,8 @@ class Controllerlocalisationapporderstatus extends Controller {
         $this->response->setOutput($this->load->view('localisation/app_order_status_form.tpl', $data));
     }
 
-    protected function validateForm() {
+    protected function validateForm()
+    {
         if (!$this->user->hasPermission('modify', 'localisation/app_order_status')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
@@ -393,7 +400,8 @@ class Controllerlocalisationapporderstatus extends Controller {
         return !$this->error;
     }
 
-    protected function validateDelete() {
+    protected function validateDelete()
+    {
         if (!$this->user->hasPermission('modify', 'localisation/app_order_status')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }

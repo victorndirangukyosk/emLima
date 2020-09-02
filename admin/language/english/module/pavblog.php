@@ -8,35 +8,35 @@
 *******************************************************/
 
 // Heading
-$_['heading_title']       = '<b style="color:#E1653B;font-size:110%">Pav Blog Management</b>';
+$_['heading_title'] = '<b style="color:#E1653B;font-size:110%">Pav Blog Management</b>';
 
 // Text
-$_['text_treemenu']     = 'Tree Category Management';
+$_['text_treemenu'] = 'Tree Category Management';
  $_['text_menu_assignment'] = 'Module Assignment';
-$_['text_module']         = 'Modules';
-$_['text_success']        = 'Success: You have modified module Category!';
-$_['text_content_top']    = 'Content Top';
+$_['text_module'] = 'Modules';
+$_['text_success'] = 'Success: You have modified module Category!';
+$_['text_content_top'] = 'Content Top';
 $_['text_content_bottom'] = 'Content Bottom';
-$_['text_column_left']    = 'Column Left';
-$_['text_column_right']   = 'Column Right';
-$_['text_mainmenu']   = 'Main Menu';
-$_['text_slideshow']   = 'Slideshow';
-$_['text_promotion']   = 'Promotion';
+$_['text_column_left'] = 'Column Left';
+$_['text_column_right'] = 'Column Right';
+$_['text_mainmenu'] = 'Main Menu';
+$_['text_slideshow'] = 'Slideshow';
+$_['text_promotion'] = 'Promotion';
 $_['text_mass_bottom'] = 'Mass Bottom';
-$_['text_bottom1']   = 'Bottom 1';
-$_['text_bottom2']   = 'Bottom 2';
-$_['text_bottom3']   = 'Bottom 3';
-$_['text_footer_top']   = 'Footer Top';
-$_['text_footer_center']   = 'Footer Center';
-$_['text_footer_bottom']   = 'Footer Bottom';
+$_['text_bottom1'] = 'Bottom 1';
+$_['text_bottom2'] = 'Bottom 2';
+$_['text_bottom3'] = 'Bottom 3';
+$_['text_footer_top'] = 'Footer Top';
+$_['text_footer_center'] = 'Footer Center';
+$_['text_footer_bottom'] = 'Footer Bottom';
 $_['text_create_new'] = 'Create New Category';
 $_['text_edit_menu'] = 'Edit: %s  (ID:%s)';
-$_['all_page']   = 'All Page';
+$_['all_page'] = 'All Page';
 $_['text_seo_data'] = 'SEO Data';
 $_['entry_keyword'] = '<b>SEO Keyword</b><p><i>*Do not use spaces instead replace spaces with - and make sure the keyword is globally unique.</i></p>';
 $_['text_keyword_listing_blogs_page'] = 'Key Word - Listing Blog Page<p><i>Keyword using for listing blog by tag or by user</i>:<br> Example: http://www.domain.com/blogs?tag=opencart</p>';
 
-$_['text_image_manager']   = 'Images Management';
+$_['text_image_manager'] = 'Images Management';
 $_['text_front_page'] = 'Front Page';
 $_['text_category_page'] = 'Category Page';
 $_['text_item_page'] = 'Item Page';
@@ -49,27 +49,27 @@ $_['text_guide_category'] = 'Manage Category';
 $_['text_guide_blog'] = 'Manage Blog';
 $_['text_guide_module_setting'] = 'Module Setting';
 // Entry
-$_['entry_banner']        = 'Banner:';
-$_['entry_dimension']     = 'Dimension (W x H) and Resize Type:';
-$_['entry_layout']        = 'Layout:';
-$_['entry_position']      = 'Position:';
-$_['entry_status']        = 'Status:';
-$_['entry_sort_order']    = 'Sort Order:';
-$_['entry_description']    = 'Description:';
-$_['entry_type']    = 'Type:';
-$_['entry_url']    = 'URL:';
-$_['entry_category']    = 'Category:';
-$_['entry_product']    = 'Product:';
-$_['entry_manufacturer']    = 'Manufacturer:';
-$_['entry_information']    = 'Information:';
-$_['entry_html']    = 'HTML:';
-$_['entry_parent_id']    = 'Parent ID:';
-$_['entry_menuclass']    = 'Menu Class:';
-$_['entry_showtitle']    = 'Show Title:';
-$_['entry_isgroup']    = 'Is Group:';
-$_['entry_iscontent']    = 'Is Content:';
-$_['entry_default_column_width']    = 'Default Column Width (SpanX): ';
-$_['entry_columns']    = 'Columns';
+$_['entry_banner'] = 'Banner:';
+$_['entry_dimension'] = 'Dimension (W x H) and Resize Type:';
+$_['entry_layout'] = 'Layout:';
+$_['entry_position'] = 'Position:';
+$_['entry_status'] = 'Status:';
+$_['entry_sort_order'] = 'Sort Order:';
+$_['entry_description'] = 'Description:';
+$_['entry_type'] = 'Type:';
+$_['entry_url'] = 'URL:';
+$_['entry_category'] = 'Category:';
+$_['entry_product'] = 'Product:';
+$_['entry_manufacturer'] = 'Manufacturer:';
+$_['entry_information'] = 'Information:';
+$_['entry_html'] = 'HTML:';
+$_['entry_parent_id'] = 'Parent ID:';
+$_['entry_menuclass'] = 'Menu Class:';
+$_['entry_showtitle'] = 'Show Title:';
+$_['entry_isgroup'] = 'Is Group:';
+$_['entry_iscontent'] = 'Is Content:';
+$_['entry_default_column_width'] = 'Default Column Width (SpanX): ';
+$_['entry_columns'] = 'Columns';
 $_['entry_detail_columns'] = 'Detail Columns Width';
 $_['entry_sub_menutype'] = 'Sub Menu Type';
 $_['entry_submenu_content'] = 'Submenu Content';
@@ -80,28 +80,25 @@ $_['text_explain_submenu_cols'] = 'Enter detail width of each subcols in values 
 $_['text_explain_submenu_type'] = 'If the type is Menu, so submenus of this will be showed';
 $_['text_browse'] = 'Browser';
 $_['text_clear'] = 'Clear';
-$_['entry_publish'] = 'is Published'; 
+$_['entry_publish'] = 'is Published';
 
+$_['button_save_edit'] = 'Save And Edit';
+$_['button_save_new'] = 'Save And Create New';
 
-$_['button_save_edit']    = "Save And Edit";
-$_['button_save_new']   = 'Save And Create New';
-
-
-//
-$_['message_delete'] = "Are you sure to delete this";
+$_['message_delete'] = 'Are you sure to delete this';
 // Error
-$_['error_permission']    = 'Warning: You do not have permission to modify module Category!';
-$_['error_dimension']     = 'Width &amp; Height dimensions required!';
+$_['error_permission'] = 'Warning: You do not have permission to modify module Category!';
+$_['error_dimension'] = 'Width &amp; Height dimensions required!';
 $_['error_missing_title'] = 'Please Enter Menu Title in each language tabs';
 $_['text_explain_drapanddrop'] = 'To sort orders or update parent-child, you drap and drop expected menu, then click to Update button to Save';
-/***/
-$_['menu_dashboard'] = "Dashboard";
-$_['menu_manage_categories'] = "Manage Categories";
-$_['menu_manage_blogs'] = "Manage Blogs";
-$_['menu_addblog'] = "Add Blog";
-$_['menu_comment'] = "Comments";
-$_['menu_module_setting'] = "General Setting";
-$_['menu_information'] = "Information";
+
+$_['menu_dashboard'] = 'Dashboard';
+$_['menu_manage_categories'] = 'Manage Categories';
+$_['menu_manage_blogs'] = 'Manage Blogs';
+$_['menu_addblog'] = 'Add Blog';
+$_['menu_comment'] = 'Comments';
+$_['menu_module_setting'] = 'General Setting';
+$_['menu_information'] = 'Information';
 /* DASHBOARD PAGE **/
 $_['panel_page_heading_title'] = 'Dashboard';
 $_['text_quickicons'] = 'Quick Icons';
@@ -121,16 +118,16 @@ $_['databroad_add_blog'] = 'Add Blog';
 $_['databroad_comment'] = 'Comment';
 $_['databroad_modules_setting'] = 'Modules Setting';
 
-/** CATEGORY PAGE **/
-$_['category_page_heading_title'] = "Categories Management";
-$_['text_tree_category_menu'] = "Categories Tree Menu"; 
-$_['text_category_information'] = "Information"; 
+/* CATEGORY PAGE **/
+$_['category_page_heading_title'] = 'Categories Management';
+$_['text_tree_category_menu'] = 'Categories Tree Menu';
+$_['text_category_information'] = 'Information';
 $_['text_filter_title'] = 'Filter Title';
 $_['text_reset'] = 'Reset';
 $_['text_position'] = 'Position';
-/** BLOGS PAGE **/
+/* BLOGS PAGE **/
 $_['blogs_page_heading_title'] = 'Blogs Managements';
-$_['entry_title'] = "Title";
+$_['entry_title'] = 'Title';
 $_['button_create_blog'] = 'Create Blog';
 $_['text_created'] = 'Created Date';
 $_['text_hits'] = 'Hits';
@@ -139,11 +136,11 @@ $_['text_explain_tags'] = 'example: fashion, smart,funny';
 $_['text_facebook_id_explain'] = 'Register A Comment Box, Then Get Application ID in Script Or Register Facebook Application ID to moderate comments';
 
 $_['text_error'] = 'Sorry, We are updating, please come back late. Thanks';
-/** BLOG PAGE **/
-$_['blog_page_heading_title'] = "Blog Edit/Create New"; 
-$_['text_general'] = "General"; 
-$_['text_gallery'] = "Images - Gallery"; 
-$_['text_meta']   = "Meta - SEO";
+/* BLOG PAGE **/
+$_['blog_page_heading_title'] = 'Blog Edit/Create New';
+$_['text_general'] = 'General';
+$_['text_gallery'] = 'Images - Gallery';
+$_['text_meta'] = 'Meta - SEO';
 $_['entry_category_id'] = 'Category';
 $_['entry_hits'] = 'Hits';
 $_['entry_created'] = 'Created Date';
@@ -168,8 +165,7 @@ $_['text_confirm_delete'] = 'Are you sure to  delete this?';
 $_['text_disable'] = 'Disable';
 $_['text_enable'] = 'Enable';
 
-
-/** GENERAL SETTING **/
+/* GENERAL SETTING **/
 $_['entry_children_columns'] = 'Children Columns';
 $_['entry_category_image_demension'] = 'Category Image Demension (Width x Height) ';
 $_['modules_page_heading_title'] = 'General & Modules Setting';
@@ -192,9 +188,9 @@ $_['entry_show_author'] = 'Show Author';
 $_['entry_show_category'] = 'Show Category';
 $_['entry_show_created'] = 'Show Created Date';
 $_['entry_show_comment_counter'] = 'Show Comment Counter';
-$_['entry_show_description'] = 'Show Description' ;
-$_['entry_show_readmore'] = 'Show Readmore' ;
-$_['entry_show_hits'] = 'Show Hits' ;
+$_['entry_show_description'] = 'Show Description';
+$_['entry_show_readmore'] = 'Show Readmore';
+$_['entry_show_hits'] = 'Show Hits';
 $_['text_blog_setting'] = 'Blog Setting';
 $_['entry_blog_image_types'] = 'Blog Image Type';
 $_['blog_secondary_image_types'] = 'Secondary Image Types';
@@ -216,7 +212,6 @@ $_['entry_columns_secondary_blogs'] = 'Columns Secondary Blogs';
 $_['entry_columns_leading_blogs'] = 'Column Leading Blogs';
 $_['entry_columns_secondary_blogs 	'] = 'Column Secondary Blogs';
 
-
 $_['entry_comment_engine'] = 'Comment Engine';
 $_['entry_diquis_account'] = 'Diquis Screen Name';
 $_['text_signup_diquis'] = 'SignUp Disquis';
@@ -228,12 +223,9 @@ $_['entry_auto_publish_comment'] = 'Auto Publish Comment';
 $_['entry_enable_recaptcha'] = 'Enable ReCaptCha';
 $_['entry_recaptcha_public_key'] = 'Public ReCaptCha';
 $_['entry_recaptcha_private_key'] = 'Private Key';
-$_['text_register_recaptcha'] = 'Register Recaptcha'; 
+$_['text_register_recaptcha'] = 'Register Recaptcha';
 $_['tab_pavblogcategory'] = 'Category module Setting';
 $_['tab_pavblogcomment'] = 'Latest comment module Setting';
 $_['tab_pavbloglatest'] = 'Latest module Setting';
-$_['text_showcase']	= 'Showcase';
+$_['text_showcase'] = 'Showcase';
 $_['menu_frontend_module_setting'] = 'Frontend Modules';
-
-
-?>

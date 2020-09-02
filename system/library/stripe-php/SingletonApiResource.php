@@ -3,9 +3,7 @@
 namespace Stripe;
 
 /**
- * Class SingletonApiResource
- *
- * @package Stripe
+ * Class SingletonApiResource.
  */
 abstract class SingletonApiResource extends ApiResource
 {
@@ -14,20 +12,22 @@ abstract class SingletonApiResource extends ApiResource
         $opts = Util\RequestOptions::parse($options);
         $instance = new static(null, $opts);
         $instance->refresh();
+
         return $instance;
     }
 
     /**
-     * @return string The endpoint associated with this singleton class.
+     * @return string the endpoint associated with this singleton class
      */
     public static function classUrl()
     {
         $base = static::className();
+
         return "/v1/${base}";
     }
 
     /**
-     * @return string The endpoint associated with this singleton API resource.
+     * @return string the endpoint associated with this singleton API resource
      */
     public function instanceUrl()
     {

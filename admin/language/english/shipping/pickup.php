@@ -1,1 +1,19 @@
-<?php// Heading$_['heading_title']    = 'Store Pickup';// Text$_['text_shipping']    = 'Shipping';$_['text_success']     = 'Success: You have modified store pickup shipping!';$_['text_edit']        = 'Edit Store Pickup Shipping';// Entry$_['entry_cost']       = 'Cost';$_['entry_tax_class']  = 'Tax Class';$_['entry_geo_zone']   = 'Geo Zone';$_['entry_status']     = 'Status';$_['entry_sort_order'] = 'Sort Order';// Error$_['error_permission'] = 'Warning: You do not have permission to modify store pickup shipping!';
+<?php
+
+// Heading
+$_['heading_title'] = 'Store Pickup';
+
+// Text
+$_['text_shipping'] = 'Shipping';
+$_['text_success'] = 'Success: You have modified store pickup shipping!';
+$_['text_edit'] = 'Edit Store Pickup Shipping';
+
+// Entry
+$_['entry_cost'] = 'Cost';
+$_['entry_tax_class'] = 'Tax Class';
+$_['entry_geo_zone'] = 'Geo Zone';
+$_['entry_status'] = 'Status';
+$_['entry_sort_order'] = 'Sort Order';
+
+// Error
+$_['error_permission'] = 'Warning: You do not have permission to modify store pickup shipping!';

@@ -3,16 +3,14 @@
 namespace Stripe;
 
 /**
- * Class FileUpload
+ * Class FileUpload.
  *
  * @property string $id
  * @property string $object
- * @property int $created
+ * @property int    $created
  * @property string $purpose
- * @property int $size
+ * @property int    $size
  * @property string $type
- *
- * @package Stripe
  */
 class FileUpload extends ApiResource
 {
@@ -27,7 +25,7 @@ class FileUpload extends ApiResource
     }
 
     /**
-     * @param string $id The ID of the file upload to retrieve.
+     * @param string            $id   the ID of the file upload to retrieve
      * @param array|string|null $opts
      *
      * @return FileUpload
@@ -38,10 +36,10 @@ class FileUpload extends ApiResource
     }
 
     /**
-     * @param array|null $params
+     * @param array|null        $params
      * @param array|string|null $opts
      *
-     * @return FileUpload The created file upload.
+     * @return FileUpload the created file upload
      */
     public static function create($params = null, $opts = null)
     {
@@ -49,7 +47,7 @@ class FileUpload extends ApiResource
     }
 
     /**
-     * @param array|null $params
+     * @param array|null        $params
      * @param array|string|null $opts
      *
      * @return Collection of FileUploads

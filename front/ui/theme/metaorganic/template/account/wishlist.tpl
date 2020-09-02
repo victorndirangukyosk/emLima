@@ -53,7 +53,7 @@
                                         <?php } ?>
                                         
                                     <?php } else { ?>
-                                        <p><?php echo $text_empty; ?></p>
+                                        <p>No lists found in your basket</p>
                                     <?php } ?>
                                 </div>
                             </div>

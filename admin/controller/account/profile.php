@@ -1,27 +1,28 @@
-<?php  
+<?php
 
-class ControllerAccountProfile extends Controller {
-    private $error = array();
+class ControllerAccountProfile extends Controller
+{
+    private $error = [];
 
-    public function index() {
-        
+    public function index()
+    {
         $this->language->load('account/profile');
 
         $this->document->setTitle($this->language->get('heading_title'));
 
-        $data['breadcrumbs'] = array();
+        $data['breadcrumbs'] = [];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
-            'separator' => false
-        );
+            'href' => $this->url->link('common/home', 'token='.$this->session->data['token'], 'SSL'),
+            'separator' => false,
+        ];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('account/profile', 'token=' . $this->session->data['token'] , 'SSL'),
-            'separator' => ' :: '
-        );
+            'href' => $this->url->link('account/profile', 'token='.$this->session->data['token'], 'SSL'),
+            'separator' => ' :: ',
+        ];
 
         $data['heading_title'] = $this->language->get('heading_title');
         $data['tab_bank_details'] = $this->language->get('tab_bank_details');
@@ -45,9 +46,9 @@ class ControllerAccountProfile extends Controller {
         $data['column_city'] = $this->language->get('column_city');
         $data['column_address'] = $this->language->get('column_address');
         $data['column_name'] = $this->language->get('column_name');
-        $data['column_priority'] = $this->language->get('column_priority');   
+        $data['column_priority'] = $this->language->get('column_priority');
         $data['column_activation_date'] = $this->language->get('column_activation_date');
-        $data['column_active_upto_date'] = $this->language->get('column_active_upto_date');   
+        $data['column_active_upto_date'] = $this->language->get('column_active_upto_date');
 
         $this->load->model('account/packages');
         $this->load->model('vendor/vendor');
@@ -56,9 +57,9 @@ class ControllerAccountProfile extends Controller {
 
         $city = $this->model_account_packages->getCity($data['user']['city_id']);
 
-        if($city) {
+        if ($city) {
             $data['user']['city'] = $city['name'];
-        }else{
+        } else {
             $data['user']['city'] = '';
         }
 
@@ -90,13 +91,11 @@ class ControllerAccountProfile extends Controller {
             $data['bank_branch_name'] = '';
         }
 
-
         if (!empty($vendor_bank_info)) {
             $data['bank_account_type'] = $vendor_bank_info['bank_account_type'];
         } else {
             $data['bank_account_type'] = '';
         }
-
 
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');

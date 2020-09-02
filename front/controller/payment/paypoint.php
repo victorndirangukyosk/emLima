@@ -1,8 +1,9 @@
 <?php
 
-class ControllerPaymentPaypoint extends Controller {
-
-    public function index() {
+class ControllerPaymentPaypoint extends Controller
+{
+    public function index()
+    {
         $data['button_confirm'] = $this->language->get('button_confirm');
 
         $this->load->model('checkout/order');
@@ -14,13 +15,12 @@ class ControllerPaymentPaypoint extends Controller {
         $data['amount'] = $this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value'], false);
 
         if ($this->config->get('paypoint_password')) {
-            $data['digest'] = md5($this->session->data['order_id'] . $this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value'], false) . $this->config->get('paypoint_password'));
+            $data['digest'] = md5($this->session->data['order_id'].$this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value'], false).$this->config->get('paypoint_password'));
         } else {
             $data['digest'] = '';
         }
 
-
-        //get address 
+        //get address
         $this->load->model('account/address');
         $this->load->model('account/customer');
 
@@ -36,13 +36,13 @@ class ControllerPaymentPaypoint extends Controller {
 
         if ($address_info) {
             $city = $address_info['city'];
-            $address = $address_info['address'] . ', ' . $address_info['city'];
+            $address = $address_info['address'].', '.$address_info['city'];
         } else {
             $city = '';
             $address = '';
         }
 
-        $data['bill_name'] = $order_info['firstname'] . ' ' . $order_info['lastname'];
+        $data['bill_name'] = $order_info['firstname'].' '.$order_info['lastname'];
         $data['bill_addr_1'] = $address;
         $data['bill_addr_2'] = '';
         $data['bill_city'] = $city;
@@ -76,16 +76,17 @@ class ControllerPaymentPaypoint extends Controller {
                 break;
         }
 
-        $data['options'] = 'test_status=' . $status . ',dups=false,cb_post=false';
+        $data['options'] = 'test_status='.$status.',dups=false,cb_post=false';
 
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/paypoint.tpl')) {
-            return $this->load->view($this->config->get('config_template') . '/template/payment/paypoint.tpl', $data);
+        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/payment/paypoint.tpl')) {
+            return $this->load->view($this->config->get('config_template').'/template/payment/paypoint.tpl', $data);
         } else {
             return $this->load->view('default/template/payment/paypoint.tpl', $data);
         }
     }
 
-    public function callback() {
+    public function callback()
+    {
         if (isset($this->request->get['trans_id'])) {
             $order_id = $this->request->get['trans_id'];
         } else {
@@ -99,7 +100,7 @@ class ControllerPaymentPaypoint extends Controller {
         // Validate the request is from PayPoint
         if ($this->config->get('paypoint_password')) {
             if (!empty($this->request->get['hash'])) {
-                $status = ($this->request->get['hash'] == md5(str_replace('hash=' . $this->request->get['hash'], '', htmlspecialchars_decode($this->request->server['REQUEST_URI'], ENT_COMPAT)) . $this->config->get('paypoint_password')));
+                $status = ($this->request->get['hash'] == md5(str_replace('hash='.$this->request->get['hash'], '', htmlspecialchars_decode($this->request->server['REQUEST_URI'], ENT_COMPAT)).$this->config->get('paypoint_password')));
             } else {
                 $status = false;
             }
@@ -135,27 +136,27 @@ class ControllerPaymentPaypoint extends Controller {
             $data['text_failure'] = $this->language->get('text_failure');
             $data['text_failure_wait'] = sprintf($this->language->get('text_failure_wait'), $this->url->link('checkout/cart'));
 
-            if (isset($this->request->get['code']) && $this->request->get['code'] == 'A' && $status) {
+            if (isset($this->request->get['code']) && 'A' == $this->request->get['code'] && $status) {
                 $message = '';
 
                 if (isset($this->request->get['code'])) {
-                    $message .= 'code: ' . $this->request->get['code'] . "\n";
+                    $message .= 'code: '.$this->request->get['code']."\n";
                 }
 
                 if (isset($this->request->get['auth_code'])) {
-                    $message .= 'auth_code: ' . $this->request->get['auth_code'] . "\n";
+                    $message .= 'auth_code: '.$this->request->get['auth_code']."\n";
                 }
 
                 if (isset($this->request->get['ip'])) {
-                    $message .= 'ip: ' . $this->request->get['ip'] . "\n";
+                    $message .= 'ip: '.$this->request->get['ip']."\n";
                 }
 
                 if (isset($this->request->get['cv2avs'])) {
-                    $message .= 'cv2avs: ' . $this->request->get['cv2avs'] . "\n";
+                    $message .= 'cv2avs: '.$this->request->get['cv2avs']."\n";
                 }
 
                 if (isset($this->request->get['valid'])) {
-                    $message .= 'valid: ' . $this->request->get['valid'] . "\n";
+                    $message .= 'valid: '.$this->request->get['valid']."\n";
                 }
 
                 $this->load->model('checkout/order');
@@ -178,8 +179,8 @@ class ControllerPaymentPaypoint extends Controller {
                 $data['footer'] = $this->load->controller('common/footer');
                 $data['header'] = $this->load->controller('common/header');
 
-                if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/paypoint_success.tpl')) {
-                    $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/payment/paypoint_success.tpl', $data));
+                if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/payment/paypoint_success.tpl')) {
+                    $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/payment/paypoint_success.tpl', $data));
                 } else {
                     $this->response->setOutput($this->load->view('default/template/payment/paypoint_success.tpl', $data));
                 }
@@ -193,8 +194,8 @@ class ControllerPaymentPaypoint extends Controller {
                 $data['footer'] = $this->load->controller('common/footer');
                 $data['header'] = $this->load->controller('common/header');
 
-                if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/paypoint_failure.tpl')) {
-                    $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/payment/paypoint_failure.tpl', $data));
+                if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/payment/paypoint_failure.tpl')) {
+                    $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/payment/paypoint_failure.tpl', $data));
                 } else {
                     $this->response->setOutput($this->load->view('default/template/payment/paypoint_failure.tpl', $data));
                 }

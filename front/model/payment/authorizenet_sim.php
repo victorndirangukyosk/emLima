@@ -1,25 +1,28 @@
 <?php
-class ModelPaymentAuthorizeNetSim extends Model {
-	public function getMethod($total) {
-		$this->load->language('payment/authorizenet_sim');
 
-		if ($this->config->get('authorizenet_sim_total') > 0 && $this->config->get('authorizenet_sim_total') > $total) {
-			$status = false;
-		} else {
-			$status = true;
-		}
+class ModelPaymentAuthorizeNetSim extends Model
+{
+    public function getMethod($total)
+    {
+        $this->load->language('payment/authorizenet_sim');
 
-		$method_data = array();
+        if ($this->config->get('authorizenet_sim_total') > 0 && $this->config->get('authorizenet_sim_total') > $total) {
+            $status = false;
+        } else {
+            $status = true;
+        }
 
-		if ($status) {
-			$method_data = array(
-				'code'       => 'authorizenet_sim',
-				'title'      => $this->language->get('text_title'),
-				'terms'      => '',
-				'sort_order' => $this->config->get('authorizenet_sim_sort_order')
-			);
-		}
+        $method_data = [];
 
-		return $method_data;
-	}
+        if ($status) {
+            $method_data = [
+                'code' => 'authorizenet_sim',
+                'title' => $this->language->get('text_title'),
+                'terms' => '',
+                'sort_order' => $this->config->get('authorizenet_sim_sort_order'),
+            ];
+        }
+
+        return $method_data;
+    }
 }

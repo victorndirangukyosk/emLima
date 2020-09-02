@@ -1,10 +1,11 @@
 <?php
 
-class ControllerSettingStoreType extends Controller {
+class ControllerSettingStoreType extends Controller
+{
+    private $error = [];
 
-    private $error = array();
-    
-    public function index() {
+    public function index()
+    {
         $this->load->language('setting/store_type');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -14,7 +15,8 @@ class ControllerSettingStoreType extends Controller {
         $this->getList();
     }
 
-    public function add() {
+    public function add()
+    {
         $this->load->language('setting/store_type');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -22,7 +24,7 @@ class ControllerSettingStoreType extends Controller {
         $this->load->model('setting/store_type');
 
         //echo "<pre>";print_r($this->request->post);die;
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
             //echo "<pre>";print_r($this->request->post);die;
             $category_id = $this->model_setting_store_type->addStoreType($this->request->post);
 
@@ -31,39 +33,40 @@ class ControllerSettingStoreType extends Controller {
             $url = '';
 
             if (isset($this->request->get['sort'])) {
-                $url .= '&sort=' . $this->request->get['sort'];
+                $url .= '&sort='.$this->request->get['sort'];
             }
 
             if (isset($this->request->get['order'])) {
-                $url .= '&order=' . $this->request->get['order'];
+                $url .= '&order='.$this->request->get['order'];
             }
 
             if (isset($this->request->get['page'])) {
-                $url .= '&page=' . $this->request->get['page'];
+                $url .= '&page='.$this->request->get['page'];
             }
 
-            if (isset($this->request->post['button']) and $this->request->post['button'] == 'save') {
-                $this->response->redirect($this->url->link('setting/store_type/edit', 'store_type_id=' . $category_id . '&token=' . $this->session->data['token'] . $url, 'SSL'));
+            if (isset($this->request->post['button']) and 'save' == $this->request->post['button']) {
+                $this->response->redirect($this->url->link('setting/store_type/edit', 'store_type_id='.$category_id.'&token='.$this->session->data['token'].$url, 'SSL'));
             }
 
-            if (isset($this->request->post['button']) and $this->request->post['button'] == 'new') {
-                $this->response->redirect($this->url->link('setting/store_type/add', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            if (isset($this->request->post['button']) and 'new' == $this->request->post['button']) {
+                $this->response->redirect($this->url->link('setting/store_type/add', 'token='.$this->session->data['token'].$url, 'SSL'));
             }
 
-            $this->response->redirect($this->url->link('setting/store_type', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            $this->response->redirect($this->url->link('setting/store_type', 'token='.$this->session->data['token'].$url, 'SSL'));
         }
 
         $this->getForm();
     }
 
-    public function edit() {
+    public function edit()
+    {
         $this->load->language('setting/store_type');
 
         $this->document->setTitle($this->language->get('heading_title'));
 
         $this->load->model('setting/store_type');
 
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
             $this->model_setting_store_type->editStoreType($this->request->get['store_type_id'], $this->request->post);
 
             $this->session->data['success'] = $this->language->get('text_success');
@@ -71,32 +74,33 @@ class ControllerSettingStoreType extends Controller {
             $url = '';
 
             if (isset($this->request->get['sort'])) {
-                $url .= '&sort=' . $this->request->get['sort'];
+                $url .= '&sort='.$this->request->get['sort'];
             }
 
             if (isset($this->request->get['order'])) {
-                $url .= '&order=' . $this->request->get['order'];
+                $url .= '&order='.$this->request->get['order'];
             }
 
             if (isset($this->request->get['page'])) {
-                $url .= '&page=' . $this->request->get['page'];
+                $url .= '&page='.$this->request->get['page'];
             }
 
-            if (isset($this->request->post['button']) and $this->request->post['button'] == 'save') {
-                $this->response->redirect($this->url->link('setting/store_type/edit', 'store_type_id=' . $this->request->get['store_type_id'] . '&token=' . $this->session->data['token'] . $url, 'SSL'));
+            if (isset($this->request->post['button']) and 'save' == $this->request->post['button']) {
+                $this->response->redirect($this->url->link('setting/store_type/edit', 'store_type_id='.$this->request->get['store_type_id'].'&token='.$this->session->data['token'].$url, 'SSL'));
             }
 
-            if (isset($this->request->post['button']) and $this->request->post['button'] == 'new') {
-                $this->response->redirect($this->url->link('setting/store_type/add', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            if (isset($this->request->post['button']) and 'new' == $this->request->post['button']) {
+                $this->response->redirect($this->url->link('setting/store_type/add', 'token='.$this->session->data['token'].$url, 'SSL'));
             }
 
-            $this->response->redirect($this->url->link('setting/store_type', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            $this->response->redirect($this->url->link('setting/store_type', 'token='.$this->session->data['token'].$url, 'SSL'));
         }
 
         $this->getForm();
     }
 
-    public function delete() {
+    public function delete()
+    {
         $this->load->language('setting/store_type');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -113,24 +117,25 @@ class ControllerSettingStoreType extends Controller {
             $url = '';
 
             if (isset($this->request->get['sort'])) {
-                $url .= '&sort=' . $this->request->get['sort'];
+                $url .= '&sort='.$this->request->get['sort'];
             }
 
             if (isset($this->request->get['order'])) {
-                $url .= '&order=' . $this->request->get['order'];
+                $url .= '&order='.$this->request->get['order'];
             }
 
             if (isset($this->request->get['page'])) {
-                $url .= '&page=' . $this->request->get['page'];
+                $url .= '&page='.$this->request->get['page'];
             }
 
-            $this->response->redirect($this->url->link('setting/store_type', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            $this->response->redirect($this->url->link('setting/store_type', 'token='.$this->session->data['token'].$url, 'SSL'));
         }
 
         $this->getList();
     }
 
-    public function repair() {
+    public function repair()
+    {
         $this->load->language('setting/store_type');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -142,13 +147,14 @@ class ControllerSettingStoreType extends Controller {
 
             $this->session->data['success'] = $this->language->get('text_success');
 
-            $this->response->redirect($this->url->link('setting/store_type', 'token=' . $this->session->data['token'], 'SSL'));
+            $this->response->redirect($this->url->link('setting/store_type', 'token='.$this->session->data['token'], 'SSL'));
         }
 
         $this->getList();
     }
 
-    protected function getList() {
+    protected function getList()
+    {
         if (isset($this->request->get['filter_name'])) {
             $filter_name = $this->request->get['filter_name'];
         } else {
@@ -182,50 +188,50 @@ class ControllerSettingStoreType extends Controller {
         $url = '';
 
         if (isset($this->request->get['filter_name'])) {
-            $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&filter_name='.urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_status'])) {
-            $url .= '&filter_status=' . $this->request->get['filter_status'];
+            $url .= '&filter_status='.$this->request->get['filter_status'];
         }
 
         if (isset($this->request->get['sort'])) {
-            $url .= '&sort=' . $this->request->get['sort'];
+            $url .= '&sort='.$this->request->get['sort'];
         }
 
         if (isset($this->request->get['order'])) {
-            $url .= '&order=' . $this->request->get['order'];
+            $url .= '&order='.$this->request->get['order'];
         }
 
         if (isset($this->request->get['page'])) {
-            $url .= '&page=' . $this->request->get['page'];
+            $url .= '&page='.$this->request->get['page'];
         }
 
-        $data['breadcrumbs'] = array();
+        $data['breadcrumbs'] = [];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL')
-        );
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
+        ];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('setting/store_type', 'token=' . $this->session->data['token'] . $url, 'SSL')
-        );
+            'href' => $this->url->link('setting/store_type', 'token='.$this->session->data['token'].$url, 'SSL'),
+        ];
 
-        $data['add'] = $this->url->link('setting/store_type/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['delete'] = $this->url->link('setting/store_type/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['repair'] = $this->url->link('setting/store_type/repair', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['add'] = $this->url->link('setting/store_type/add', 'token='.$this->session->data['token'].$url, 'SSL');
+        $data['delete'] = $this->url->link('setting/store_type/delete', 'token='.$this->session->data['token'].$url, 'SSL');
+        $data['repair'] = $this->url->link('setting/store_type/repair', 'token='.$this->session->data['token'].$url, 'SSL');
 
-        $data['helps'] = array();
+        $data['helps'] = [];
 
-        $filter_data = array(
+        $filter_data = [
             'filter_name' => $filter_name,
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin')
-        );
+            'limit' => $this->config->get('config_limit_admin'),
+        ];
 
         if (!empty($filter_name)) {
             $help_total = $this->model_setting_store_type->getTotalStoreTypeFilter($filter_data);
@@ -236,14 +242,14 @@ class ControllerSettingStoreType extends Controller {
         $results = $this->model_setting_store_type->getStoreTypes($filter_data);
 
         foreach ($results as $result) {
-            $data['helps'][] = array(
+            $data['helps'][] = [
                 'store_type_id' => $result['store_type_id'],
                 'store_type_id' => $result['store_type_id'],
                 'name' => $result['name'],
                 'sort_order' => $result['sort_order'],
-                'edit' => $this->url->link('setting/store_type/edit', 'token=' . $this->session->data['token'] . '&store_type_id=' . $result['store_type_id'] . $url, 'SSL'),
-                'delete' => $this->url->link('setting/store_type/delete', 'token=' . $this->session->data['token'] . '&store_type_id=' . $result['store_type_id'] . $url, 'SSL')
-            );
+                'edit' => $this->url->link('setting/store_type/edit', 'token='.$this->session->data['token'].'&store_type_id='.$result['store_type_id'].$url, 'SSL'),
+                'delete' => $this->url->link('setting/store_type/delete', 'token='.$this->session->data['token'].'&store_type_id='.$result['store_type_id'].$url, 'SSL'),
+            ];
         }
 
         $data['heading_title'] = $this->language->get('heading_title');
@@ -287,44 +293,44 @@ class ControllerSettingStoreType extends Controller {
         if (isset($this->request->post['selected'])) {
             $data['selected'] = (array) $this->request->post['selected'];
         } else {
-            $data['selected'] = array();
+            $data['selected'] = [];
         }
 
         $url = '';
 
-        if ($order == 'ASC') {
+        if ('ASC' == $order) {
             $url .= '&order=DESC';
         } else {
             $url .= '&order=ASC';
         }
 
         if (isset($this->request->get['page'])) {
-            $url .= '&page=' . $this->request->get['page'];
+            $url .= '&page='.$this->request->get['page'];
         }
 
-        $data['sort_name'] = $this->url->link('setting/store_type', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
-        $data['sort_status'] = $this->url->link('setting/store_type', 'token=' . $this->session->data['token'] . '&sort=status' . $url, 'SSL');
-        $data['sort_sort_order'] = $this->url->link('setting/store_type', 'token=' . $this->session->data['token'] . '&sort=sort_order' . $url, 'SSL');
+        $data['sort_name'] = $this->url->link('setting/store_type', 'token='.$this->session->data['token'].'&sort=name'.$url, 'SSL');
+        $data['sort_status'] = $this->url->link('setting/store_type', 'token='.$this->session->data['token'].'&sort=status'.$url, 'SSL');
+        $data['sort_sort_order'] = $this->url->link('setting/store_type', 'token='.$this->session->data['token'].'&sort=sort_order'.$url, 'SSL');
 
         $url = '';
 
         if (isset($this->request->get['filter_name'])) {
-            $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&filter_name='.urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['sort'])) {
-            $url .= '&sort=' . $this->request->get['sort'];
+            $url .= '&sort='.$this->request->get['sort'];
         }
 
         if (isset($this->request->get['order'])) {
-            $url .= '&order=' . $this->request->get['order'];
+            $url .= '&order='.$this->request->get['order'];
         }
 
         $pagination = new Pagination();
         $pagination->total = $help_total;
         $pagination->page = $page;
         $pagination->limit = $this->config->get('config_limit_admin');
-        $pagination->url = $this->url->link('setting/store_type', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+        $pagination->url = $this->url->link('setting/store_type', 'token='.$this->session->data['token'].$url.'&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
@@ -342,7 +348,8 @@ class ControllerSettingStoreType extends Controller {
         $this->response->setOutput($this->load->view('setting/store_type_list.tpl', $data));
     }
 
-    protected function getForm() {
+    protected function getForm()
+    {
         $data = $this->language->all();
         // leaving the followings for extension B/C purpose
         $data['heading_title'] = $this->language->get('heading_title');
@@ -367,7 +374,7 @@ class ControllerSettingStoreType extends Controller {
         } else {
             $data['error_warning'] = '';
         }
-        
+
         if (isset($this->session->data['success'])) {
             $data['success'] = $this->session->data['success'];
             unset($this->session->data['success']);
@@ -378,13 +385,13 @@ class ControllerSettingStoreType extends Controller {
         if (isset($this->error['name'])) {
             $data['error_name'] = $this->error['name'];
         } else {
-            $data['error_name'] = array();
+            $data['error_name'] = [];
         }
-        
+
         if (isset($this->error['answer'])) {
             $data['error_answer'] = $this->error['answer'];
         } else {
-            $data['error_answer'] = array();
+            $data['error_answer'] = [];
         }
 
         $url = '';
@@ -394,52 +401,51 @@ class ControllerSettingStoreType extends Controller {
         $data['languages'] = $this->model_localisation_language->getLanguages();
 
         if (isset($this->request->get['filter_name'])) {
-            $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&filter_name='.urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['sort'])) {
-            $url .= '&sort=' . $this->request->get['sort'];
+            $url .= '&sort='.$this->request->get['sort'];
         }
 
         if (isset($this->request->get['order'])) {
-            $url .= '&order=' . $this->request->get['order'];
+            $url .= '&order='.$this->request->get['order'];
         }
 
         if (isset($this->request->get['page'])) {
-            $url .= '&page=' . $this->request->get['page'];
+            $url .= '&page='.$this->request->get['page'];
         }
 
-        $data['breadcrumbs'] = array();
+        $data['breadcrumbs'] = [];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL')
-        );
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
+        ];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('setting/store_type', 'token=' . $this->session->data['token'] . $url, 'SSL')
-        );
+            'href' => $this->url->link('setting/store_type', 'token='.$this->session->data['token'].$url, 'SSL'),
+        ];
 
         if (!isset($this->request->get['store_type_id'])) {
-            $data['action'] = $this->url->link('setting/store_type/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $data['action'] = $this->url->link('setting/store_type/add', 'token='.$this->session->data['token'].$url, 'SSL');
         } else {
-            $data['action'] = $this->url->link('setting/store_type/edit', 'token=' . $this->session->data['token'] . '&store_type_id=' . $this->request->get['store_type_id'] . $url, 'SSL');
+            $data['action'] = $this->url->link('setting/store_type/edit', 'token='.$this->session->data['token'].'&store_type_id='.$this->request->get['store_type_id'].$url, 'SSL');
         }
 
-        $data['cancel'] = $this->url->link('setting/store_type', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['cancel'] = $this->url->link('setting/store_type', 'token='.$this->session->data['token'].$url, 'SSL');
 
-        if (isset($this->request->get['store_type_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+        if (isset($this->request->get['store_type_id']) && ('POST' != $this->request->server['REQUEST_METHOD'])) {
             //$help_info = $this->model_setting_store_type->getHelp($this->request->get['store_type_id']);
             $data['help'] = $this->model_setting_store_type->getStoreTypeDetails($this->request->get['store_type_id']);
         }
 
         //echo "<pre>";print_r($data['help']);die;
         $data['token'] = $this->session->data['token'];
-       
 
         //$data['categories'] = $this->model_setting_store_type->getCategories();
-        
+
         // Text Editor
         $data['text_editor'] = $this->config->get('config_text_editor', 'tinymce');
 
@@ -450,20 +456,17 @@ class ControllerSettingStoreType extends Controller {
         $this->response->setOutput($this->load->view('setting/store_type_form.tpl', $data));
     }
 
-    protected function validateForm() {
+    protected function validateForm()
+    {
         if (!$this->user->hasPermission('modify', 'setting/store_type')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
 
         foreach ($this->request->post['help'] as $language_id => $value) {
-
             if ((utf8_strlen($value['name']) < 2) || (utf8_strlen($value['name']) > 255)) {
                 $this->error['name'] = $this->language->get('error_name');
             }
-
         }
-
-        
 
         if ($this->error && !isset($this->error['warning'])) {
             $this->error['warning'] = $this->language->get('error_warning');
@@ -472,7 +475,8 @@ class ControllerSettingStoreType extends Controller {
         return !$this->error;
     }
 
-    protected function validateDelete() {
+    protected function validateDelete()
+    {
         if (!$this->user->hasPermission('modify', 'setting/store_type')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
@@ -480,28 +484,29 @@ class ControllerSettingStoreType extends Controller {
         return !$this->error;
     }
 
-    protected function validateRepair() {
+    protected function validateRepair()
+    {
         if (!$this->user->hasPermission('modify', 'setting/store_type')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
 
         return !$this->error;
     }
-    
-    public function autocomplete() {
-        $json = array();
+
+    public function autocomplete()
+    {
+        $json = [];
 
         if (isset($this->request->get['filter_name'])) {
-            
             $this->load->model('setting/store_type');
 
-            $filter_data = array(
+            $filter_data = [
                 'filter_name' => $this->request->get['filter_name'],
                 'sort' => 'name',
                 'order' => 'ASC',
                 'start' => 0,
-                'limit' => 5
-            );
+                'limit' => 5,
+            ];
 
             $json = $this->model_setting_store_type->getStoreTypes($filter_data);
         }

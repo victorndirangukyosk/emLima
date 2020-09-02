@@ -1,17 +1,17 @@
 <?php
 
-class ControllerModuleSimpleBlog extends Controller {
+class ControllerModuleSimpleBlog extends Controller
+{
+    private $error = [];
 
-    private $error = array();
-
-    public function index() {
+    public function index()
+    {
         if ($this->checkDatabase()) {
-
             $this->language->load('simple_blog/install');
 
             $this->document->setTitle($this->language->get('error_database'));
 
-            $data['install_database'] = $this->url->link('simple_blog/install/installDatabase', 'token=' . $this->session->data['token'], 'SSL');
+            $data['install_database'] = $this->url->link('simple_blog/install/installDatabase', 'token='.$this->session->data['token'], 'SSL');
 
             $data['text_install_message'] = $this->language->get('text_install_message');
 
@@ -19,13 +19,13 @@ class ControllerModuleSimpleBlog extends Controller {
 
             $data['error_database'] = $this->language->get('error_database');
 
-            $data['breadcrumbs'] = array();
+            $data['breadcrumbs'] = [];
 
-            $data['breadcrumbs'][] = array(
+            $data['breadcrumbs'][] = [
                 'text' => $this->language->get('text_home'),
-                'href' => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
-                'separator' => false
-            );
+                'href' => $this->url->link('common/home', 'token='.$this->session->data['token'], 'SSL'),
+                'separator' => false,
+            ];
 
             $data['header'] = $this->load->controller('common/header');
             $data['column_left'] = $this->load->controller('common/column_left');
@@ -37,7 +37,8 @@ class ControllerModuleSimpleBlog extends Controller {
         }
     }
 
-    public function checkDatabase() {
+    public function checkDatabase()
+    {
         $database_not_found = $this->load->controller('simple_blog/install/validateTable');
 
         if (!$database_not_found) {
@@ -47,7 +48,8 @@ class ControllerModuleSimpleBlog extends Controller {
         return false;
     }
 
-    public function getData() {
+    public function getData()
+    {
         $this->language->load('module/simple_blog');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -55,15 +57,14 @@ class ControllerModuleSimpleBlog extends Controller {
         $this->load->model('setting/setting');
 
         $data['success'] = '';
-        
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
 
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validate()) {
             //print "<pre>"; print_r($this->request->post); die;
 
             $this->model_setting_setting->editSetting('simple_blog', $this->request->post);
             $data['success'] = $this->language->get('text_success');
         }
-        
+
         $data['heading_title'] = $this->language->get('heading_title');
         $data['entry_simple_blog_seo_keyword'] = $this->language->get('simple_blog_seo_keyword');
         $data['entry_simple_blog_heading'] = $this->language->get('simple_blog_heading');
@@ -84,7 +85,6 @@ class ControllerModuleSimpleBlog extends Controller {
         $data['help_related_article'] = $this->language->get('help_related_article');
         $data['help_show_social_site_option'] = $this->language->get('help_show_social_site_option');
         $data['help_show_author'] = $this->language->get('help_show_author');
-
 
         $data['text_enabled'] = $this->language->get('text_enabled');
         $data['text_disabled'] = $this->language->get('text_disabled');
@@ -136,29 +136,29 @@ class ControllerModuleSimpleBlog extends Controller {
             $data['error_warning'] = '';
         }
 
-        $data['breadcrumbs'] = array();
+        $data['breadcrumbs'] = [];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
-            'separator' => false
-        );
+            'href' => $this->url->link('common/home', 'token='.$this->session->data['token'], 'SSL'),
+            'separator' => false,
+        ];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_module'),
-            'href' => $this->url->link('extension/module', 'token=' . $this->session->data['token'], 'SSL'),
-            'separator' => ' :: '
-        );
+            'href' => $this->url->link('extension/module', 'token='.$this->session->data['token'], 'SSL'),
+            'separator' => ' :: ',
+        ];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('module/simple_blog', 'token=' . $this->session->data['token'], 'SSL'),
-            'separator' => ' :: '
-        );
+            'href' => $this->url->link('module/simple_blog', 'token='.$this->session->data['token'], 'SSL'),
+            'separator' => ' :: ',
+        ];
 
-        $data['action'] = $this->url->link('module/simple_blog', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = $this->url->link('module/simple_blog', 'token='.$this->session->data['token'], 'SSL');
 
-        $data['cancel'] = $this->url->link('extension/module', 'token=' . $this->session->data['token'], 'SSL');
+        $data['cancel'] = $this->url->link('extension/module', 'token='.$this->session->data['token'], 'SSL');
 
         $this->load->model('tool/image');
 
@@ -195,25 +195,25 @@ class ControllerModuleSimpleBlog extends Controller {
 
         if (isset($this->request->post['simple_blog_status'])) {
             $data['simple_blog_status'] = $this->request->post['simple_blog_status'];
-        } else if ($this->config->get('simple_blog_status')) {
+        } elseif ($this->config->get('simple_blog_status')) {
             $data['simple_blog_status'] = $this->config->get('simple_blog_status');
         }
 
         if (isset($this->request->post['simple_blog_seo_keyword'])) {
             $data['simple_blog_seo_keyword'] = $this->request->post['simple_blog_seo_keyword'];
-        } else if ($this->config->get('simple_blog_seo_keyword')) {
+        } elseif ($this->config->get('simple_blog_seo_keyword')) {
             $data['simple_blog_seo_keyword'] = $this->config->get('simple_blog_seo_keyword');
         }
 
         if (isset($this->request->post['simple_blog_custom_theme'])) {
             $data['simple_blog_custom_theme'] = $this->request->post['simple_blog_custom_theme'];
-        } else if ($this->config->get('simple_blog_custom_theme')) {
+        } elseif ($this->config->get('simple_blog_custom_theme')) {
             $data['simple_blog_custom_theme'] = $this->config->get('simple_blog_custom_theme');
         }
 
         if (isset($this->request->post['blog_tagline'])) {
             $data['blog_tagline'] = $this->request->post['blog_tagline'];
-        } else if ($this->config->get('blog_tagline')) {
+        } elseif ($this->config->get('blog_tagline')) {
             $data['blog_tagline'] = $this->config->get('blog_tagline');
         }
 
@@ -223,7 +223,7 @@ class ControllerModuleSimpleBlog extends Controller {
             $data['blog_image'] = $this->config->get('blog_image');
         }
 
-        if ($this->config->get('blog_image') && file_exists(DIR_IMAGE . $this->config->get('blog_image')) && is_file(DIR_IMAGE . $this->config->get('blog_image'))) {
+        if ($this->config->get('blog_image') && file_exists(DIR_IMAGE.$this->config->get('blog_image')) && is_file(DIR_IMAGE.$this->config->get('blog_image'))) {
             $data['thumb'] = $this->model_tool_image->resize($this->config->get('blog_image'), 100, 100);
         } else {
             $data['thumb'] = $this->model_tool_image->resize('no_image.jpg', 100, 100);
@@ -231,61 +231,61 @@ class ControllerModuleSimpleBlog extends Controller {
 
         if (isset($this->request->post['simple_blog_display_category'])) {
             $data['simple_blog_display_category'] = $this->request->post['simple_blog_display_category'];
-        } else if ($this->config->get('simple_blog_display_category')) {
+        } elseif ($this->config->get('simple_blog_display_category')) {
             $data['simple_blog_display_category'] = $this->config->get('simple_blog_display_category');
         }
 
         if (isset($this->request->post['simple_blog_footer_heading'])) {
             $data['simple_blog_footer_heading'] = $this->request->post['simple_blog_footer_heading'];
-        } else if ($this->config->get('simple_blog_footer_heading')) {
+        } elseif ($this->config->get('simple_blog_footer_heading')) {
             $data['simple_blog_footer_heading'] = $this->config->get('simple_blog_footer_heading');
         }
 
         if (isset($this->request->post['simple_blog_heading'])) {
             $data['simple_blog_heading'] = $this->request->post['simple_blog_heading'];
-        } else if ($this->config->get('simple_blog_heading')) {
+        } elseif ($this->config->get('simple_blog_heading')) {
             $data['simple_blog_heading'] = $this->config->get('simple_blog_heading');
         }
 
         if (isset($this->request->post['simple_blog_product_related_heading'])) {
             $data['simple_blog_product_related_heading'] = $this->request->post['simple_blog_product_related_heading'];
-        } else if ($this->config->get('simple_blog_product_related_heading')) {
+        } elseif ($this->config->get('simple_blog_product_related_heading')) {
             $data['simple_blog_product_related_heading'] = $this->config->get('simple_blog_product_related_heading');
         }
 
         if (isset($this->request->post['simple_blog_comment_related_heading'])) {
             $data['simple_blog_comment_related_heading'] = $this->request->post['simple_blog_comment_related_heading'];
-        } else if ($this->config->get('simple_blog_comment_related_heading')) {
+        } elseif ($this->config->get('simple_blog_comment_related_heading')) {
             $data['simple_blog_comment_related_heading'] = $this->config->get('simple_blog_comment_related_heading');
         }
 
         if (isset($this->request->post['simple_blog_comment_auto_approval'])) {
             $data['simple_blog_comment_auto_approval'] = $this->request->post['simple_blog_comment_auto_approval'];
-        } else if ($this->config->get('simple_blog_comment_auto_approval')) {
+        } elseif ($this->config->get('simple_blog_comment_auto_approval')) {
             $data['simple_blog_comment_auto_approval'] = $this->config->get('simple_blog_comment_auto_approval');
         }
 
         if (isset($this->request->post['simple_blog_author_information'])) {
             $data['simple_blog_author_information'] = $this->request->post['simple_blog_author_information'];
-        } else if ($this->config->get('simple_blog_author_information')) {
+        } elseif ($this->config->get('simple_blog_author_information')) {
             $data['simple_blog_author_information'] = $this->config->get('simple_blog_author_information');
         }
 
         if (isset($this->request->post['simple_blog_share_social_site'])) {
             $data['simple_blog_share_social_site'] = $this->request->post['simple_blog_share_social_site'];
-        } else if ($this->config->get('simple_blog_share_social_site')) {
+        } elseif ($this->config->get('simple_blog_share_social_site')) {
             $data['simple_blog_share_social_site'] = $this->config->get('simple_blog_share_social_site');
         }
 
         if (isset($this->request->post['simple_blog_related_articles'])) {
             $data['simple_blog_related_articles'] = $this->request->post['simple_blog_related_articles'];
-        } else if ($this->config->get('simple_blog_related_articles')) {
+        } elseif ($this->config->get('simple_blog_related_articles')) {
             $data['simple_blog_related_articles'] = $this->config->get('simple_blog_related_articles');
         }
 
         if (isset($this->request->post['blog_show_authors'])) {
             $data['blog_show_authors'] = $this->request->post['blog_show_authors'];
-        } else if ($this->config->get('blog_show_authors')) {
+        } elseif ($this->config->get('blog_show_authors')) {
             $data['blog_show_authors'] = $this->config->get('blog_show_authors');
         }
 
@@ -302,7 +302,8 @@ class ControllerModuleSimpleBlog extends Controller {
         $this->response->setOutput($this->load->view('module/simple_blog.tpl', $data));
     }
 
-    protected function validate() {
+    protected function validate()
+    {
         if (!$this->user->hasPermission('modify', 'module/simple_blog')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
@@ -313,7 +314,4 @@ class ControllerModuleSimpleBlog extends Controller {
             return false;
         }
     }
-
 }
-
-?>

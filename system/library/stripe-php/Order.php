@@ -3,14 +3,12 @@
 namespace Stripe;
 
 /**
- * Class Order
- *
- * @package Stripe
+ * Class Order.
  */
 class Order extends ApiResource
 {
     /**
-     * @param string $id The ID of the Order to retrieve.
+     * @param string            $id   the ID of the Order to retrieve
      * @param array|string|null $opts
      *
      * @return Order
@@ -21,10 +19,10 @@ class Order extends ApiResource
     }
 
     /**
-     * @param array|null $params
+     * @param array|null        $params
      * @param array|string|null $opts
      *
-     * @return Order The created Order.
+     * @return Order the created Order
      */
     public static function create($params = null, $opts = null)
     {
@@ -32,11 +30,11 @@ class Order extends ApiResource
     }
 
     /**
-     * @param string $id The ID of the order to update.
-     * @param array|null $params
+     * @param string            $id      the ID of the order to update
+     * @param array|null        $params
      * @param array|string|null $options
      *
-     * @return Order The updated order.
+     * @return Order the updated order
      */
     public static function update($id, $params = null, $options = null)
     {
@@ -46,7 +44,7 @@ class Order extends ApiResource
     /**
      * @param array|string|null $opts
      *
-     * @return Order The saved Order.
+     * @return Order the saved Order
      */
     public function save($opts = null)
     {
@@ -54,7 +52,7 @@ class Order extends ApiResource
     }
 
     /**
-     * @param array|null $params
+     * @param array|null        $params
      * @param array|string|null $opts
      *
      * @return Collection of Orders
@@ -65,23 +63,25 @@ class Order extends ApiResource
     }
 
     /**
-     * @return Order The paid order.
+     * @return Order the paid order
      */
     public function pay($params = null, $opts = null)
     {
-        $url = $this->instanceUrl() . '/pay';
+        $url = $this->instanceUrl().'/pay';
         list($response, $opts) = $this->_request('post', $url, $params, $opts);
         $this->refreshFrom($response, $opts);
+
         return $this;
     }
 
     /**
-     * @return OrderReturn The newly created return.
+     * @return OrderReturn the newly created return
      */
     public function returnOrder($params = null, $opts = null)
     {
-        $url = $this->instanceUrl() . '/returns';
+        $url = $this->instanceUrl().'/returns';
         list($response, $opts) = $this->_request('post', $url, $params, $opts);
+
         return Util\Util::convertToStripeObject($response, $opts);
     }
 }

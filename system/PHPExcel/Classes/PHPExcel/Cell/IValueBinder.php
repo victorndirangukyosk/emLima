@@ -1,6 +1,6 @@
 <?php
 /**
- * PHPExcel
+ * PHPExcel.
  *
  * Copyright (c) 2006 - 2014 PHPExcel
  *
@@ -19,28 +19,29 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  *
  * @category   PHPExcel
- * @package    PHPExcel_Cell
+ *
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt    LGPL
+ *
  * @version    1.8.0, 2014-03-02
  */
 
-
 /**
- * PHPExcel_Cell_IValueBinder
+ * PHPExcel_Cell_IValueBinder.
  *
  * @category   PHPExcel
- * @package    PHPExcel_Cell
+ *
  * @copyright  Copyright (c) 2006 - 2014 PHPExcel (http://www.codeplex.com/PHPExcel)
  */
 interface PHPExcel_Cell_IValueBinder
 {
     /**
-     * Bind value to a cell
+     * Bind value to a cell.
      *
-     * @param  PHPExcel_Cell $cell    Cell to bind value to
-     * @param  mixed $value           Value to bind in cell
-     * @return boolean
+     * @param PHPExcel_Cell $cell  Cell to bind value to
+     * @param mixed         $value Value to bind in cell
+     *
+     * @return bool
      */
-    public function bindValue(PHPExcel_Cell $cell, $value = NULL);
+    public function bindValue(PHPExcel_Cell $cell, $value = null);
 }

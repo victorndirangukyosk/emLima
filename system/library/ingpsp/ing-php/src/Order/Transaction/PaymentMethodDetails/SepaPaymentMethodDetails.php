@@ -3,13 +3,12 @@
 namespace GingerPayments\Payment\Order\Transaction\PaymentMethodDetails;
 
 use GingerPayments\Payment\Iban;
-use GingerPayments\Payment\Order\Transaction\Reference;
-use GingerPayments\Payment\SwiftBic;
 use GingerPayments\Payment\Order\Transaction\PaymentMethodDetails;
-use GingerPayments\Payment\Order\Transaction\PaymentMethodDetails\ConsumerName;
 use GingerPayments\Payment\Order\Transaction\PaymentMethodDetails\IdealPaymentMethodDetails\ConsumerAddress;
 use GingerPayments\Payment\Order\Transaction\PaymentMethodDetails\IdealPaymentMethodDetails\ConsumerCity;
 use GingerPayments\Payment\Order\Transaction\PaymentMethodDetails\IdealPaymentMethodDetails\ConsumerCountry;
+use GingerPayments\Payment\Order\Transaction\Reference;
+use GingerPayments\Payment\SwiftBic;
 
 final class SepaPaymentMethodDetails implements PaymentMethodDetails
 {
@@ -22,7 +21,7 @@ final class SepaPaymentMethodDetails implements PaymentMethodDetails
      * @var Iban|null
      */
     private $consumerIban;
-    
+
     /**
      * @var SwiftBic|null
      */
@@ -49,7 +48,6 @@ final class SepaPaymentMethodDetails implements PaymentMethodDetails
     private $consumerCountry;
 
     /**
-     * @param array $details
      * @return SepaPaymentMethodDetails
      */
     public static function fromArray(array $details)
@@ -78,13 +76,13 @@ final class SepaPaymentMethodDetails implements PaymentMethodDetails
     public function toArray()
     {
         return [
-            'consumer_name' => ($this->consumerName() !== null) ? $this->consumerName()->toString() : null,
-            'consumer_address' => ($this->consumerAddress() !== null) ? $this->consumerAddress()->toString() : null,
-            'consumer_city' => ($this->consumerCity() !== null) ? $this->consumerCity()->toString() : null,
-            'consumer_country' => ($this->consumerCountry() !== null) ? $this->consumerCountry()->toString() : null,
-            'consumer_iban' => ($this->consumerIban() !== null) ? $this->consumerIban()->toString() : null,
-            'consumer_bic' => ($this->consumerBic() !== null) ? $this->consumerBic()->toString() : null,
-            'reference' => ($this->reference() !== null) ? $this->reference()->toString() : null
+            'consumer_name' => (null !== $this->consumerName()) ? $this->consumerName()->toString() : null,
+            'consumer_address' => (null !== $this->consumerAddress()) ? $this->consumerAddress()->toString() : null,
+            'consumer_city' => (null !== $this->consumerCity()) ? $this->consumerCity()->toString() : null,
+            'consumer_country' => (null !== $this->consumerCountry()) ? $this->consumerCountry()->toString() : null,
+            'consumer_iban' => (null !== $this->consumerIban()) ? $this->consumerIban()->toString() : null,
+            'consumer_bic' => (null !== $this->consumerBic()) ? $this->consumerBic()->toString() : null,
+            'reference' => (null !== $this->reference()) ? $this->reference()->toString() : null,
         ];
     }
 
@@ -145,13 +143,13 @@ final class SepaPaymentMethodDetails implements PaymentMethodDetails
     }
 
     /**
-     * @param ConsumerName $consumerName
+     * @param ConsumerName    $consumerName
      * @param ConsumerAddress $consumerAddress
-     * @param ConsumerCity $consumerCity
+     * @param ConsumerCity    $consumerCity
      * @param ConsumerCountry $consumerCountry
-     * @param Iban $consumerIban
-     * @param SwiftBic $consumerBic
-     * @param Reference $reference
+     * @param Iban            $consumerIban
+     * @param SwiftBic        $consumerBic
+     * @param Reference       $reference
      */
     private function __construct(
         ConsumerName $consumerName = null,

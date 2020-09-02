@@ -2,11 +2,10 @@
 
 class ControllerApiCategories extends Controller
 {
-
-    public function getCategory($args = array())
+    public function getCategory($args = [])
     {
         $this->load->language('api/categories');
-        $json = array();
+        $json = [];
 
         if (!isset($this->session->data['api_id']) || !isset($args['id'])) {
             $json['error'] = $this->language->get('error_permission');
@@ -30,20 +29,19 @@ class ControllerApiCategories extends Controller
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
-    
-    public function getCategories($args = array())
+
+    public function getCategories($args = [])
     {
-		$this->load->model('tool/image');
+        $this->load->model('tool/image');
         $this->load->language('api/categories');
 
-        $json = array();
+        $json = [];
 
         if (!isset($this->session->data['api_id'])) {
             $json['error'] = $this->language->get('error_permission');
         } else {
             $this->load->model('api/categories');
             $this->load->model('api/products');
-
 
             /*$category_data = array();
 
@@ -68,22 +66,22 @@ class ControllerApiCategories extends Controller
             $newCat = [];
 
             $categories = $this->model_api_products->getCategories($args);
-            if(isset($args['store_relation'])){
+            if (isset($args['store_relation'])) {
                 foreach ($categories as $cat) {
                     $cat['name'] = htmlspecialchars_decode($cat['name']);
                     $cat['thumb'] = $this->model_tool_image->resize($cat['image'], 300, 300);
                     $cat['description'] = htmlspecialchars_decode($cat['description']);
-                    if($cat['parent_id']==0){
-                    array_push($newCat, $cat);
+                    if (0 == $cat['parent_id']) {
+                        array_push($newCat, $cat);
                     }
                 }
-            }else{
+            } else {
                 $categories_store = $this->model_api_categories->getCategoriesbyStore($args);
                 $categories = array_filter($categories, function ($item) use ($categories_store) {
-                    if(in_array($item['category_id'], $categories_store) && ($item['parent_id']==0))
-                    {
-                    return true;
+                    if (in_array($item['category_id'], $categories_store) && (0 == $item['parent_id'])) {
+                        return true;
                     }
+
                     return false;
                 });
                 foreach ($categories as $cat) {
@@ -96,18 +94,17 @@ class ControllerApiCategories extends Controller
 
             $product['categories'] = $newCat;
             $json = $product;
-
         }
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getTotals($args = array())
+    public function getTotals($args = [])
     {
         $this->load->language('api/categories');
 
-        $json = array();
+        $json = [];
 
         if (!isset($this->session->data['api_id'])) {
             $json['error'] = $this->language->get('error_permission');
@@ -121,9 +118,9 @@ class ControllerApiCategories extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getProducts($args = array())
+    public function getProducts($args = [])
     {
-        $vars = array();
+        $vars = [];
         $vars['category'] = $args['id'];
 
         $this->load->controller('api/products/getproducts', $vars);

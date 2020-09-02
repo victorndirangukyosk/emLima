@@ -1,9 +1,9 @@
 <?php
 
-class ControllerReportShopper extends Controller { 
-        
-    public function index() {
-        
+class ControllerReportShopper extends Controller
+{
+    public function index()
+    {
         $this->load->language('report/shopper');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -13,7 +13,7 @@ class ControllerReportShopper extends Controller {
         } else {
             $filter_city = '';
         }
-        
+
         if (isset($this->request->get['filter_date_start'])) {
             $filter_date_start = $this->request->get['filter_date_start'];
         } else {
@@ -27,9 +27,9 @@ class ControllerReportShopper extends Controller {
         }
 
         if (isset($this->request->get['filter_group'])) {
-                $filter_group = $this->request->get['filter_group'];
+            $filter_group = $this->request->get['filter_group'];
         } else {
-                $filter_group = 'week';
+            $filter_group = 'week';
         }
 
         if (isset($this->request->get['filter_vendor'])) {
@@ -47,61 +47,61 @@ class ControllerReportShopper extends Controller {
         $url = '';
 
         if (isset($this->request->get['filter_city'])) {
-            $url .= '&filter_city=' . $this->request->get['filter_city'];
+            $url .= '&filter_city='.$this->request->get['filter_city'];
         }
-        
+
         if (isset($this->request->get['filter_date_start'])) {
-            $url .= '&filter_date_start=' . $this->request->get['filter_date_start'];
+            $url .= '&filter_date_start='.$this->request->get['filter_date_start'];
         }
 
         if (isset($this->request->get['filter_date_end'])) {
-            $url .= '&filter_date_end=' . $this->request->get['filter_date_end'];
+            $url .= '&filter_date_end='.$this->request->get['filter_date_end'];
         }
 
         if (isset($this->request->get['filter_vendor'])) {
-            $url .= '&filter_vendor=' . $this->request->get['filter_vendor'];
+            $url .= '&filter_vendor='.$this->request->get['filter_vendor'];
         }
-        
+
         if (isset($this->request->get['filter_group'])) {
-            $url .= '&filter_group=' . $this->request->get['filter_group'];
+            $url .= '&filter_group='.$this->request->get['filter_group'];
         }
 
         if (isset($this->request->get['page'])) {
-            $url .= '&page=' . $this->request->get['page'];
+            $url .= '&page='.$this->request->get['page'];
         }
 
-        $data['breadcrumbs'] = array();
+        $data['breadcrumbs'] = [];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL')
-        );
+            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
+        ];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('report/shopper', 'token=' . $this->session->data['token'] . $url, 'SSL')
-        );
+            'href' => $this->url->link('report/shopper', 'token='.$this->session->data['token'].$url, 'SSL'),
+        ];
 
         $this->load->model('report/shopper');
 
-        $data['shoppers'] = array();
+        $data['shoppers'] = [];
 
-        $filter_data = array(
+        $filter_data = [
             'filter_city' => $filter_city,
             'filter_date_start' => $filter_date_start,
             'filter_date_end' => $filter_date_end,
             'filter_vendor' => $filter_vendor,
             'filter_group' => $filter_group,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin')
-        );
+            'limit' => $this->config->get('config_limit_admin'),
+        ];
 
         $shopper_total = $this->model_report_shopper->getTotal($filter_data);
 
         $results = $this->model_report_shopper->getShoppers($filter_data);
 
         foreach ($results as $result) {
-            $data['shoppers'][] = array(
+            $data['shoppers'][] = [
                 'shopper' => $result['shopper'],
                 'email' => $result['email'],
                 'city' => $result['city'],
@@ -110,31 +110,31 @@ class ControllerReportShopper extends Controller {
                 'status' => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
                 'orders' => $result['orders'],
                 'commision' => $result['commision'],
-                'edit' => $this->url->link('shopper/shopper/edit', 'token='.$this->session->data['token'].'&user_id='.$result['user_id'], 'SSL')
-            );
+                'edit' => $this->url->link('shopper/shopper/edit', 'token='.$this->session->data['token'].'&user_id='.$result['user_id'], 'SSL'),
+            ];
         }
 
-        $data['groups'] = array();
+        $data['groups'] = [];
 
-        $data['groups'][] = array(
-                'text'  => $this->language->get('text_year'),
+        $data['groups'][] = [
+                'text' => $this->language->get('text_year'),
                 'value' => 'year',
-        );
+        ];
 
-        $data['groups'][] = array(
-                'text'  => $this->language->get('text_month'),
+        $data['groups'][] = [
+                'text' => $this->language->get('text_month'),
                 'value' => 'month',
-        );
+        ];
 
-        $data['groups'][] = array(
-                'text'  => $this->language->get('text_week'),
+        $data['groups'][] = [
+                'text' => $this->language->get('text_week'),
                 'value' => 'week',
-        );
+        ];
 
-        $data['groups'][] = array(
-                'text'  => $this->language->get('text_day'),
+        $data['groups'][] = [
+                'text' => $this->language->get('text_day'),
                 'value' => 'day',
-        );
+        ];
 
         $data['heading_title'] = $this->language->get('heading_title');
 
@@ -163,7 +163,6 @@ class ControllerReportShopper extends Controller {
         $data['entry_shopper'] = $this->language->get('entry_shopper');
         $data['entry_city'] = $this->language->get('entry_city');
 
-
         $data['button_edit'] = $this->language->get('button_edit');
         $data['button_filter'] = $this->language->get('button_filter');
         $data['button_show_filter'] = $this->language->get('button_show_filter');
@@ -174,26 +173,26 @@ class ControllerReportShopper extends Controller {
         $url = '';
 
         if (isset($this->request->get['filter_city'])) {
-            $url .= '&filter_city=' . $this->request->get['filter_city'];
+            $url .= '&filter_city='.$this->request->get['filter_city'];
         }
-        
+
         if (isset($this->request->get['filter_date_start'])) {
-            $url .= '&filter_date_start=' . $this->request->get['filter_date_start'];
+            $url .= '&filter_date_start='.$this->request->get['filter_date_start'];
         }
 
         if (isset($this->request->get['filter_date_end'])) {
-            $url .= '&filter_date_end=' . $this->request->get['filter_date_end'];
+            $url .= '&filter_date_end='.$this->request->get['filter_date_end'];
         }
 
         if (isset($this->request->get['filter_vendor'])) {
-            $url .= '&filter_vendor=' . $this->request->get['filter_vendor'];
+            $url .= '&filter_vendor='.$this->request->get['filter_vendor'];
         }
 
         $pagination = new Pagination();
         $pagination->total = $shopper_total;
         $pagination->page = $page;
         $pagination->limit = $this->config->get('config_limit_admin');
-        $pagination->url = $this->url->link('report/shopper', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+        $pagination->url = $this->url->link('report/shopper', 'token='.$this->session->data['token'].$url.'&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
@@ -210,30 +209,30 @@ class ControllerReportShopper extends Controller {
 
         $this->response->setOutput($this->load->view('report/shopper.tpl', $data));
     }
-    
-    public function name_autocomplete(){
-        
-        if(isset($this->request->get['filter_name'])){
+
+    public function name_autocomplete()
+    {
+        if (isset($this->request->get['filter_name'])) {
             $filter_name = $this->request->get['filter_name'];
-        }else{
+        } else {
             $filter_name = '';
         }
-        
+
         $shopper_group_id = $this->config->get('config_shopper_group_ids');
-        
+
         $this->load->model('sale/order');
 
-        $json =  $this->model_sale_order->getUserDetails($filter_name,$shopper_group_id);
+        $json = $this->model_sale_order->getUserDetails($filter_name, $shopper_group_id);
 
         header('Content-type: text/json');
         echo json_encode($json);
-    }    
-    
-    public function city_autocomplete(){
-        
+    }
+
+    public function city_autocomplete()
+    {
         $this->load->model('sale/order');
 
-        $json =  $this->model_sale_order->getCitiesLikeWithLimit($this->request->get['filter_name'],5);
+        $json = $this->model_sale_order->getCitiesLikeWithLimit($this->request->get['filter_name'], 5);
 
         header('Content-type: text/json');
         echo json_encode($json);

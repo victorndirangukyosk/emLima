@@ -7,7 +7,6 @@ final class ArrayFunctions
     /**
      * Returns a new array with all elements which have a null value removed.
      *
-     * @param array $array
      * @return array
      */
     public static function withoutNullValues(array $array)

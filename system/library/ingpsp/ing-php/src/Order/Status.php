@@ -9,7 +9,7 @@ final class Status
     use ChoiceBasedValueObject;
 
     /**
-     * Possible order statuses
+     * Possible order statuses.
      */
     const BRAND_NEW = 'new';
     const PROCESSING = 'processing';
@@ -31,7 +31,7 @@ final class Status
             self::COMPLETED,
             self::CANCELLED,
             self::EXPIRED,
-            self::SEE_TRANSACTIONS
+            self::SEE_TRANSACTIONS,
         ];
     }
 
@@ -40,7 +40,7 @@ final class Status
      */
     public function isNew()
     {
-        return $this->value === self::BRAND_NEW;
+        return self::BRAND_NEW === $this->value;
     }
 
     /**
@@ -48,7 +48,7 @@ final class Status
      */
     public function isProcessing()
     {
-        return $this->value === self::PROCESSING;
+        return self::PROCESSING === $this->value;
     }
 
     /**
@@ -56,7 +56,7 @@ final class Status
      */
     public function isError()
     {
-        return $this->value === self::ERROR;
+        return self::ERROR === $this->value;
     }
 
     /**
@@ -64,7 +64,7 @@ final class Status
      */
     public function isCompleted()
     {
-        return $this->value === self::COMPLETED;
+        return self::COMPLETED === $this->value;
     }
 
     /**
@@ -72,7 +72,7 @@ final class Status
      */
     public function isCancelled()
     {
-        return $this->value === self::CANCELLED;
+        return self::CANCELLED === $this->value;
     }
 
     /**
@@ -80,7 +80,7 @@ final class Status
      */
     public function isExpired()
     {
-        return $this->value === self::EXPIRED;
+        return self::EXPIRED === $this->value;
     }
 
     /**
@@ -88,6 +88,6 @@ final class Status
      */
     public function isSeeTransactions()
     {
-        return $this->value === self::SEE_TRANSACTIONS;
+        return self::SEE_TRANSACTIONS === $this->value;
     }
 }

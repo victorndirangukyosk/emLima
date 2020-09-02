@@ -12,4 +12,6 @@ return array(
     'Joomla\\Profiler\\' => array($vendorDir . '/joomla/profiler/src'),
     'Joomla\\Cache\\Tests\\' => array($vendorDir . '/joomla/cache/Tests'),
     'Joomla\\Cache\\' => array($vendorDir . '/joomla/cache/src'),
+    'AfricasTalking\\SDK\\' => array($vendorDir . '/africastalking/africastalking/src'),
+    'libphonenumber\\' => array($vendorDir . '/giggsey/libphonenumber-for-php/src'),
 );

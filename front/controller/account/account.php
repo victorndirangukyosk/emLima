@@ -4,25 +4,20 @@ require_once DIR_SYSTEM.'/vendor/konduto/vendor/autoload.php';
 
 //require_once DIR_SYSTEM.'/vendor/mpesa-php-sdk-master/vendor/autoload.php';
 
-use \Konduto\Core\Konduto;
-use \Konduto\Models;
 use paragraph1\phpFCM\Client;
-use paragraph1\phpFCM\Client as FCMClient;
-use paragraph1\phpFCM\Message;
-use paragraph1\phpFCM\Recipient\Device;
-use paragraph1\phpFCM\Notification;
+
 require_once DIR_SYSTEM.'/vendor/fcp-php/autoload.php';
 
 require DIR_SYSTEM.'vendor/Facebook/autoload.php';
 
 require_once DIR_APPLICATION.'/controller/api/settings.php';
 
-class ControllerAccountAccount extends Controller {
+class ControllerAccountAccount extends Controller
+{
+    private $error = [];
 
-    private $error = array();
-
-    public function createDSrequest() {
-
+    public function createDSrequest()
+    {
         $log = new Log('dserror.log');
         $log->write('in createDSrequest');
         $this->load->model('account/order');
@@ -30,64 +25,55 @@ class ControllerAccountAccount extends Controller {
 
         $pickupStatus = $this->config->get('config_ready_for_pickup_status');
 
-
         $orders = $this->model_account_order->getNonDSCreatedOrders($pickupStatus);
 
         //echo "<pre>";print_r($orders);die;
         //$log->write($orders);
 
         foreach ($orders as $order_info) {
-            
             $orderhistory = $this->model_account_order->getLatestOrderHistories($order_info['order_id']);
 
-            
-
-            if(!$orderhistory) {
+            if (!$orderhistory) {
                 //echo "<pre>";print_r($orderhistory);die;
                 continue;
             }
 
-            $ReadyForPickupStatus = false;            
+            $ReadyForPickupStatus = false;
 
-            if(is_array($pickupStatus) && count($pickupStatus) > 0) {
+            if (is_array($pickupStatus) && count($pickupStatus) > 0) {
                 foreach ($pickupStatus as $pickupStat) {
-
-                    if($order_info['order_status_id'] == $pickupStat) {
+                    if ($order_info['order_status_id'] == $pickupStat) {
                         $ReadyForPickupStatus = true;
                     }
                 }
             }
 
-            
-
-            if($ReadyForPickupStatus) {
-                $log->write("ReadyForPickupStatus if");;
+            if ($ReadyForPickupStatus) {
+                $log->write('ReadyForPickupStatus if');
                 $deliverSystemStatus = $this->config->get('config_deliver_system_status');
 
                 $checkoutDeliverSystemStatus = $this->config->get('config_checkout_deliver_system_status');
 
                 $deliverSystemStatusForShipping = false;
 
-                $log->write($deliverSystemStatus."erf".$checkoutDeliverSystemStatus);
+                $log->write($deliverSystemStatus.'erf'.$checkoutDeliverSystemStatus);
 
-                if($deliverSystemStatus && !$checkoutDeliverSystemStatus) {
-
-                    $log->write("ReadyForPickupStatus elsex yes");
+                if ($deliverSystemStatus && !$checkoutDeliverSystemStatus) {
+                    $log->write('ReadyForPickupStatus elsex yes');
                     $allowedShippingMethods = $this->config->get('config_delivery_shipping_methods_status');
-                    
-                    $log->write($allowedShippingMethods);
-            
-                    if(is_array($allowedShippingMethods) && count($allowedShippingMethods) > 0) {
-                        foreach ($allowedShippingMethods as $method) {
 
+                    $log->write($allowedShippingMethods);
+
+                    if (is_array($allowedShippingMethods) && count($allowedShippingMethods) > 0) {
+                        foreach ($allowedShippingMethods as $method) {
                             /*if($order_info['shipping_code'] == $method.".".$method) {
                                 $deliverSystemStatus = true;
                                 $deliverSystemStatusForShipping = true;
-                            }   */ 
+                            }   */
 
-                            $p = explode(".", $order_info['shipping_code']);
-                    
-                            if($p[0] == $method) {
+                            $p = explode('.', $order_info['shipping_code']);
+
+                            if ($p[0] == $method) {
                                 $deliverSystemStatus = true;
                                 $deliverSystemStatusForShipping = true;
                             }
@@ -97,67 +83,60 @@ class ControllerAccountAccount extends Controller {
                     $deliverSystemStatus = false;
                 }
 
-
-                if($deliverSystemStatus && $deliverSystemStatusForShipping) {
-                    $log->write("createDeliveryRequest creating");//die;
-                    $this->model_checkout_order->createDeliveryRequest($order_info['order_id'],$order_info['order_status_id']);
+                if ($deliverSystemStatus && $deliverSystemStatusForShipping) {
+                    $log->write('createDeliveryRequest creating'); //die;
+                    $this->model_checkout_order->createDeliveryRequest($order_info['order_id'], $order_info['order_status_id']);
                 } else {
-                    $log->write("deliverSystemStatus elsex");
+                    $log->write('deliverSystemStatus elsex');
                 }
             }
         }
     }
 
-    public function updateGetAmount($order_id,$total) {
-
-       
-
+    public function updateGetAmount($order_id, $total)
+    {
         $log = new Log('error.log');
 
-        $log->write("inside updateGetAmount");
+        $log->write('inside updateGetAmount');
 
-        $this->load->model( 'account/order' );
-        $this->load->model( 'api/checkout' );
+        $this->load->model('account/order');
+        $this->load->model('api/checkout');
 
         $order_info = $this->model_api_checkout->getOrder($order_id);
 
         //echo "<pre>";print_r($order_info);die;
         $deliveryAlreadyCreated = $this->model_account_order->getOrderDSDeliveryId($order_id);
 
-        if($order_info && $deliveryAlreadyCreated && $order_info['payment_code'] == 'cod') {
-
+        if ($order_info && $deliveryAlreadyCreated && 'cod' == $order_info['payment_code']) {
             $data['body'] = [
-                'manifest_id' => $deliveryAlreadyCreated,//order_id,
+                'manifest_id' => $deliveryAlreadyCreated, //order_id,
                 //'total_price' => (int) round($new_total),
                 'get_amount' => (int) round($total),
                 //'total_type' => $total_type,
                 //'manifest_data' => json_encode($data['products'])
             ];
-           
+
             $log->write($data['body']);
 
-            $data['email'] = $this->config->get('config_delivery_username'); 
+            $data['email'] = $this->config->get('config_delivery_username');
             $data['password'] = $this->config->get('config_delivery_secret');
-            $response = $this->load->controller('deliversystem/deliversystem/getToken',$data);
+            $response = $this->load->controller('deliversystem/deliversystem/getToken', $data);
 
-            $log->write("token");
+            $log->write('token');
             $log->write($response);
-            if($response['status']) {
-                $data['tokens'] = $response['token']; 
-                $res = $this->load->controller('deliversystem/deliversystem/updateDelivery',$data);
-                $log->write("reeponse");
+            if ($response['status']) {
+                $data['tokens'] = $response['token'];
+                $res = $this->load->controller('deliversystem/deliversystem/updateDelivery', $data);
+                $log->write('reeponse');
                 $log->write($res);
             }
         }
 
-
-
         return true;
     }
 
-    public function index() {  
-
-        
+    public function index()
+    {
         /*if (date_default_timezone_get()) {
             echo 'date_default_timezone_set: ' . date_default_timezone_get() . '<br />';
         }
@@ -173,10 +152,8 @@ class ControllerAccountAccount extends Controller {
         /*$order_id = 712;
         $query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "return WHERE order_id = '" . (int)$order_id . "' and return_status_id='".$this->config->get('config_complete_return_status_id')."'");
 
-        echo "<pre>";print_r($query->row['total']);die;*/ 
+        echo "<pre>";print_r($query->row['total']);die;*/
 
-
-        
         /*$code = 'cod';
         $c = $this->getPaymentName($code);
 
@@ -188,12 +165,11 @@ class ControllerAccountAccount extends Controller {
 
 
         echo "<pre>";print_r($c);die;*/
-        
 
         $data['kondutoStatus'] = $this->config->get('config_konduto_status');
-        
+
         $data['konduto_public_key'] = $this->config->get('config_konduto_public_key');
-        
+
         $data['redirect_coming'] = false;
 
         if (isset($_GET['redirect'])) {
@@ -203,7 +179,7 @@ class ControllerAccountAccount extends Controller {
         }
 
         $this->document->addStyle('/front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_login.css');
-        
+
         if (!$this->customer->isLogged()) {
             $this->session->data['redirect'] = $this->url->link('account/account', '', 'SSL');
 
@@ -212,19 +188,13 @@ class ControllerAccountAccount extends Controller {
 
         $this->load->language('account/edit');
         $this->load->language('account/account');
-        
 
         $this->document->setTitle($this->language->get('heading_title'));
         //echo "<pre>";print_r($this->language->get('heading_title'));die;
         $this->load->model('account/customer');
 
-
-        
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-
-            
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validate()) {
             // $date = $this->request->post['dob'];
-  
 
             $log = new Log('error.log');
             $log->write('account edit');
@@ -232,42 +202,40 @@ class ControllerAccountAccount extends Controller {
             // if(isset($date)) {
 
             //     $date = DateTime::createFromFormat('d/m/Y', $date);
-                
+
             //     $this->request->post['dob'] = $date->format('Y-m-d');
             // } else {
-                $this->request->post['dob'] = null;
+            $this->request->post['dob'] = null;
             // }
-            
 
             $this->model_account_customer->editCustomer($this->request->post);
 
-            if(isset($this->request->post['email']) && isset($this->request->post['password']) ) {
+            if (isset($this->request->post['email']) && isset($this->request->post['password'])) {
                 //echo "<pre>";print_r($this->request->post);die;
-                $this->model_account_customer->editPassword($this->request->post['email'],$this->request->post['password']);
+                $this->model_account_customer->editPassword($this->request->post['email'], $this->request->post['password']);
             }
 
-                //$this->session->data['success'] = $this->language->get('text_success');
+            //$this->session->data['success'] = $this->language->get('text_success');
             // } else {
             //     $this->session->data['success'] = $this->language->get('text_success');
             // }
-            
+
             $this->session->data['success'] = $this->language->get('text_success');
-            
 
             // Add to activity log
             $this->load->model('account/activity');
 
-            $activity_data = array(
+            $activity_data = [
                 'customer_id' => $this->customer->getId(),
-                'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName()
-            );
+                'name' => $this->customer->getFirstName().' '.$this->customer->getLastName(),
+            ];
             $log->write('account edit1');
 
             $this->model_account_activity->addActivity('edit', $activity_data);
 
             $log->write('account edit2');
 
-            if(isset($this->session->data['checkout_redirect']) ) {
+            if (isset($this->session->data['checkout_redirect'])) {
                 $redirectTo = $this->session->data['checkout_redirect'];
                 unset($this->session->data['checkout_redirect']);
                 $this->response->redirect($redirectTo);
@@ -276,17 +244,17 @@ class ControllerAccountAccount extends Controller {
             $this->response->redirect($this->url->link('account/account', '', 'SSL'));
         }
 
-        $data['breadcrumbs'] = array();
+        $data['breadcrumbs'] = [];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home')
-        );
+            'href' => $this->url->link('common/home'),
+        ];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_account'),
-            'href' => $this->url->link('account/account', '', 'SSL')
-        );
+            'href' => $this->url->link('account/account', '', 'SSL'),
+        ];
 
         /*if (isset($this->session->data['success'])) {
             $data['success'] = $this->session->data['success'];
@@ -297,23 +265,21 @@ class ControllerAccountAccount extends Controller {
         }*/
 
         $data['heading_title'] = $this->language->get('heading_title');
-        
+
         //echo "<pre>";print_r($data['title']);die;
 
         $data['text_your_details'] = $this->language->get('text_your_details');
         $data['text_additional'] = $this->language->get('text_additional');
         $data['text_select'] = $this->language->get('text_select');
         $data['text_loading'] = $this->language->get('text_loading');
-        
 
         $data['text_male'] = $this->language->get('text_male');
         $data['text_female'] = $this->language->get('text_female');
         $data['text_other'] = $this->language->get('text_other');
         $data['entry_dob'] = $this->language->get('entry_dob');
-        
+
         $data['entry_password'] = $this->language->get('entry_password');
         $data['entry_confirmpassword'] = $this->language->get('entry_confirmpassword');
-        
 
         $data['entry_firstname'] = $this->language->get('entry_firstname');
         $data['entry_lastname'] = $this->language->get('entry_lastname');
@@ -323,7 +289,6 @@ class ControllerAccountAccount extends Controller {
         $data['entry_fax'] = $this->language->get('entry_fax');
         $data['entry_companyname'] = $this->language->get('entry_companyname');
         $data['entry_companyaddress'] = $this->language->get('entry_companyaddress');
-
 
         $data['button_continue'] = $this->language->get('button_continue');
         $data['button_back'] = $this->language->get('button_back');
@@ -369,8 +334,8 @@ class ControllerAccountAccount extends Controller {
         $data['newsletter'] = $this->url->link('account/newsletter', '', 'SSL');
         $data['logout'] = $this->url->link('account/logout', '', 'SSL');
         $data['recurring'] = $this->url->link('account/recurring', '', 'SSL');
-        
-        if ($this->request->server['REQUEST_METHOD'] != 'POST') {
+
+        if ('POST' != $this->request->server['REQUEST_METHOD']) {
             $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
         }
 
@@ -385,7 +350,6 @@ class ControllerAccountAccount extends Controller {
         } else {
             $data['error_firstname'] = '';
         }
-
 
         if (isset($this->error['companyname'])) {
             $data['error_companyname'] = $this->error['companyname'];
@@ -416,7 +380,6 @@ class ControllerAccountAccount extends Controller {
         } else {
             $data['error_confirmpassword'] = '';
         }
-        
 
         if (isset($this->error['email'])) {
             $data['error_email'] = $this->error['email'];
@@ -436,8 +399,6 @@ class ControllerAccountAccount extends Controller {
             $data['error_tax'] = '';
         }
 
-        
-
         if (isset($this->error['dob'])) {
             $data['error_dob'] = $this->error['dob'];
         } else {
@@ -447,7 +408,7 @@ class ControllerAccountAccount extends Controller {
         if (isset($this->error['custom_field'])) {
             $data['error_custom_field'] = $this->error['custom_field'];
         } else {
-            $data['error_custom_field'] = array();
+            $data['error_custom_field'] = [];
         }
 
         if ($this->config->get('reward_status')) {
@@ -459,24 +420,22 @@ class ControllerAccountAccount extends Controller {
         if (isset($this->request->post['gender'])) {
             $data['gender'] = $this->request->post['gender'];
         } elseif (!empty($customer_info)) {
-            if(empty($customer_info['gender'])) {
+            if (empty($customer_info['gender'])) {
                 $data['gender'] = 'male';
             } else {
-                $data['gender'] = $customer_info['gender'];    
+                $data['gender'] = $customer_info['gender'];
             }
-            
         } else {
             $data['gender'] = 'male';
         }
 
-        if (isset($this->request->post['dob']) && "" != trim($this->request->post['dob'])) {
-            $data['dob'] = date("d/m/Y", strtotime($this->request->post['dob']));
+        if (isset($this->request->post['dob']) && '' != trim($this->request->post['dob'])) {
+            $data['dob'] = date('d/m/Y', strtotime($this->request->post['dob']));
         } elseif (!empty($customer_info['dob'])) {
-            $data['dob'] = date("d/m/Y", strtotime($customer_info['dob']));
+            $data['dob'] = date('d/m/Y', strtotime($customer_info['dob']));
         } else {
             $data['dob'] = '01/01/1990';
         }
-
 
         if (isset($this->request->post['firstname'])) {
             $data['firstname'] = $this->request->post['firstname'];
@@ -486,7 +445,6 @@ class ControllerAccountAccount extends Controller {
             $data['firstname'] = '';
         }
 
-
         if (isset($this->request->post['companyname'])) {
             $data['companyname'] = $this->request->post['companyname'];
         } elseif (!empty($customer_info)) {
@@ -494,8 +452,6 @@ class ControllerAccountAccount extends Controller {
         } else {
             $data['companyname'] = '';
         }
-
-
 
         if (isset($this->request->post['companyaddress'])) {
             $data['companyaddress'] = $this->request->post['companyaddress'];
@@ -505,7 +461,6 @@ class ControllerAccountAccount extends Controller {
             $data['companyaddress'] = '';
         }
 
-
         if (isset($this->request->post['fax'])) {
             $data['fax'] = $this->request->post['fax'];
         } elseif (!empty($customer_info)) {
@@ -513,7 +468,6 @@ class ControllerAccountAccount extends Controller {
         } else {
             $data['fax'] = '';
         }
-
 
         if (isset($this->request->post['lastname'])) {
             $data['lastname'] = $this->request->post['lastname'];
@@ -545,13 +499,13 @@ class ControllerAccountAccount extends Controller {
 
         if ($this->config->get('config_google_captcha_status')) {
             $this->document->addScript('https://www.google.com/recaptcha/api.js');
-            
+
             $data['site_key'] = $this->config->get('config_google_captcha_public');
         } else {
             $data['site_key'] = '';
         }
 
-        //for membership 
+        //for membership
         // $member_group_id = $this->config->get('config_member_group_id');
         // $customer_group_id = $this->customer->getGroupId();
         if ($this->request->server['HTTPS']) {
@@ -562,20 +516,20 @@ class ControllerAccountAccount extends Controller {
 
         $data['telephone_mask'] = $this->config->get('config_telephone_mask');
 
-        if(isset($data['telephone_mask'])) {
-            $data['telephone_mask_number'] = str_replace('#', '9', $this->config->get('config_telephone_mask'));    
+        if (isset($data['telephone_mask'])) {
+            $data['telephone_mask_number'] = str_replace('#', '9', $this->config->get('config_telephone_mask'));
         }
 
         $data['taxnumber_mask'] = $this->config->get('config_taxnumber_mask');
 
-        if(isset($data['taxnumber_mask'])) {
-            $data['taxnumber_mask_number'] = str_replace('#', '*', $this->config->get('config_taxnumber_mask'));    
+        if (isset($data['taxnumber_mask'])) {
+            $data['taxnumber_mask_number'] = str_replace('#', '*', $this->config->get('config_taxnumber_mask'));
         }
-        
+
         $data['base'] = $server;
 
         $data['action'] = $this->url->link('account/account', '', 'SSL');
-        
+
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['column_right'] = $this->load->controller('common/column_right');
         $data['content_top'] = $this->load->controller('common/content_top');
@@ -587,8 +541,8 @@ class ControllerAccountAccount extends Controller {
         $data['account_edit'] = $this->load->controller('account/edit');
 
         $data['home'] = $this->url->link('common/home/toHome');
-        $data['telephone'] =  $this->formatTelephone($this->customer->getTelephone());
-        /** Added new params */
+        $data['telephone'] = $this->formatTelephone($this->customer->getTelephone());
+        /* Added new params */
         $data['is_login'] = $this->customer->isLogged();
         $data['full_name'] = $this->customer->getFirstName();
         $data['text_my_cash'] = $this->language->get('text_my_cash');
@@ -596,213 +550,196 @@ class ControllerAccountAccount extends Controller {
         $data['label_my_address'] = $this->language->get('label_my_address');
         $data['contactus'] = $this->language->get('contactus');
         $data['text_cash'] = $this->language->get('text_cash');
-        
+
         //echo "<pre>";print_r($data['telephone'] );die;
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/account.tpl')) {
-            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/account.tpl', $data));
+        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/account/account.tpl')) {
+            $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/account/account.tpl', $data));
         } else {
             $this->response->setOutput($this->load->view('default/template/account/account.tpl', $data));
         }
     }
 
-    public function adduser(){
-            $log = new Log('error.log');
-            $log->write('sub customer add');
-            $this->load->model('account/customer');
-
-          
-            $this->request->post['dob'] = null;
-            $this->request->post['parent'] = $this->customer->getId();
-            $this->model_account_customer->addCustomer($this->request->post,true);    
-            $_SESSION['success_msg'] = 'User added successfully!';
-            
-
-            // Add to activity log
-            $this->load->model('account/activity');
-
-            $activity_data = array(
-                'customer_id' => $this->customer->getId(),
-                'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName()
-            );
-            $log->write('Add sub user account1');
-
-            $this->model_account_activity->addActivity('edit', $activity_data);
-
-            $log->write('Add sub user account2');
-
-            /*if(isset($this->session->data['checkout_redirect']) ) {
-                $redirectTo = $this->session->data['checkout_redirect'];
-                unset($this->session->data['checkout_redirect']);
-                $this->response->redirect($redirectTo);
-            }*/
-
-            $this->response->redirect($this->url->link('account/sub_users', '', 'SSL'));
-       
-    }
-    public function getShippingName($code,$store_id)
+    public function adduser()
     {
+        $log = new Log('error.log');
+        $log->write('sub customer add');
+        $this->load->model('account/customer');
 
-        $mp = explode(".", $code);
+        $this->request->post['dob'] = null;
+        $this->request->post['parent'] = $this->customer->getId();
+        $this->model_account_customer->addCustomer($this->request->post, true);
+        $_SESSION['success_msg'] = 'User added successfully!';
+
+        // Add to activity log
+        $this->load->model('account/activity');
+
+        $activity_data = [
+                'customer_id' => $this->customer->getId(),
+                'name' => $this->customer->getFirstName().' '.$this->customer->getLastName(),
+            ];
+        $log->write('Add sub user account1');
+
+        $this->model_account_activity->addActivity('edit', $activity_data);
+
+        $log->write('Add sub user account2');
+
+        /*if(isset($this->session->data['checkout_redirect']) ) {
+            $redirectTo = $this->session->data['checkout_redirect'];
+            unset($this->session->data['checkout_redirect']);
+            $this->response->redirect($redirectTo);
+        }*/
+
+        $this->response->redirect($this->url->link('account/sub_users', '', 'SSL'));
+    }
+
+    public function getShippingName($code, $store_id)
+    {
+        $mp = explode('.', $code);
 
         //echo "<pre>";print_r($mp);die;
 
-        if(!isset($mp[0])){
+        if (!isset($mp[0])) {
             return '';
         }
 
         $code = $mp[0];
 
-        $method_data = array();
+        $method_data = [];
 
         $this->load->model('extension/extension');
 
         $results = $this->model_extension_extension->getExtensions('shipping');
 
-
         $this->load->model('tool/image');
-    
-        $store_info =  $this->model_tool_image->getStore($store_id);
 
-        $delivery_by_owner =  $store_info['delivery_by_owner'];
+        $store_info = $this->model_tool_image->getStore($store_id);
 
-        $pickup_delivery =  $store_info['store_pickup_timeslots'];
-        
+        $delivery_by_owner = $store_info['delivery_by_owner'];
+
+        $pickup_delivery = $store_info['store_pickup_timeslots'];
+
         $free_delivery_amount = $store_info['min_order_cod'];
-        
 
-
-        $store_total  = 99999999999999999;
+        $store_total = 99999999999999999;
         $subtotal = $store_total;
         if ($store_total > $free_delivery_amount) {
-
             $cost = 0;
-
         } else {
             $cost = $store_info['cost_of_delivery'];
         }
 
         //echo "<pre>";print_r($results);die;
         foreach ($results as $result) {
-            
-            if ($this->config->get($result['code'] . '_status')) {
-                if ($result['code'] == 'normal' ) {
-                    
-                    $this->load->model('shipping/' . $result['code']);
-                    $quote = $this->{'model_shipping_' . $result['code']}->getApiQuote($cost,$store_info['name'],$subtotal,$subtotal);
+            if ($this->config->get($result['code'].'_status')) {
+                if ('normal' == $result['code']) {
+                    $this->load->model('shipping/'.$result['code']);
+                    $quote = $this->{'model_shipping_'.$result['code']}->getApiQuote($cost, $store_info['name'], $subtotal, $subtotal);
                     if ($quote) {
-                        $method_data[$result['code']] = array(
+                        $method_data[$result['code']] = [
                             'title' => $quote['title'],
                             'quote' => $quote['quote'],
                             'sort_order' => $quote['sort_order'],
-                            'error' => $quote['error']
-                        );
+                            'error' => $quote['error'],
+                        ];
                     }
-                } elseif($result['code'] == 'express' ) {
+                } elseif ('express' == $result['code']) {
                     //echo "<pre>";print_r('express');die;
-                    $this->load->model('shipping/' . $result['code']);
-                    $quote = $this->{'model_shipping_' . $result['code']}->getApiQuote($cost,$store_info['name'],$subtotal,$subtotal);
+                    $this->load->model('shipping/'.$result['code']);
+                    $quote = $this->{'model_shipping_'.$result['code']}->getApiQuote($cost, $store_info['name'], $subtotal, $subtotal);
 
                     if ($quote) {
-                        $method_data[$result['code']] = array(
+                        $method_data[$result['code']] = [
                             'title' => $quote['title'],
                             'quote' => $quote['quote'],
                             'sort_order' => $quote['sort_order'],
-                            'error' => $quote['error']
-                        );
+                            'error' => $quote['error'],
+                        ];
                     }
-                } elseif($result['code'] == 'store_delivery' ) {
-
+                } elseif ('store_delivery' == $result['code']) {
                     if ($delivery_by_owner) {
-
-                        $this->load->model('shipping/' . $result['code']);
-                        $quote = $this->{'model_shipping_' . $result['code']}->getApiQuote($cost,$store_info['name'],$subtotal,$subtotal);
+                        $this->load->model('shipping/'.$result['code']);
+                        $quote = $this->{'model_shipping_'.$result['code']}->getApiQuote($cost, $store_info['name'], $subtotal, $subtotal);
                         if ($quote) {
-                            $method_data[$result['code']] = array(
-                                'title' => 'Standard Delivery',//$quote['title'],
+                            $method_data[$result['code']] = [
+                                'title' => 'Standard Delivery', //$quote['title'],
                                 'quote' => $quote['quote'],
                                 'sort_order' => $quote['sort_order'],
-                                'error' => $quote['error']
-                            );
+                                'error' => $quote['error'],
+                            ];
                         }
                     }
-                } elseif($result['code'] == 'pickup' ) {
-
+                } elseif ('pickup' == $result['code']) {
                     if ($pickup_delivery) {
-
-                        $this->load->model('shipping/' . $result['code']);
-                        $quote = $this->{'model_shipping_' . $result['code']}->getApiQuote($cost,$store_info['name'],$subtotal,$subtotal);
+                        $this->load->model('shipping/'.$result['code']);
+                        $quote = $this->{'model_shipping_'.$result['code']}->getApiQuote($cost, $store_info['name'], $subtotal, $subtotal);
                         if ($quote) {
-                            $method_data[$result['code']] = array(
+                            $method_data[$result['code']] = [
                                 'title' => $quote['title'],
                                 'quote' => $quote['quote'],
                                 'sort_order' => $quote['sort_order'],
-                                'error' => $quote['error']
-                            );
+                                'error' => $quote['error'],
+                            ];
                         }
                     }
                 } else {
                     //echo "<pre>";print_r('express');die;
-                    $this->load->model('shipping/' . $result['code']);
-                    $quote = $this->{'model_shipping_' . $result['code']}->getApiQuote($cost,$store_info['name'],$subtotal,$subtotal);
+                    $this->load->model('shipping/'.$result['code']);
+                    $quote = $this->{'model_shipping_'.$result['code']}->getApiQuote($cost, $store_info['name'], $subtotal, $subtotal);
                     if ($quote) {
-                        $method_data[$result['code']] = array(
+                        $method_data[$result['code']] = [
                             'title' => $quote['title'],
                             'quote' => $quote['quote'],
                             'sort_order' => $quote['sort_order'],
-                            'error' => $quote['error']
-                        );
+                            'error' => $quote['error'],
+                        ];
                     }
-                } 
+                }
             }
         }
 
         //echo "<pre>";print_r($method_data);die;
-        if(isset($method_data[$code])) {
+        if (isset($method_data[$code])) {
             return $method_data[$code]['title'];
         } else {
             return '';
         }
     }
 
-    public function refundToCustomerWallet($order_id) {
-
+    public function refundToCustomerWallet($order_id)
+    {
         $this->load->model('account/activity');
         $log = new Log('error.log');
 
-        $order_info = $this->getOrder( $order_id );
+        $order_info = $this->getOrder($order_id);
         $this->load->language('checkout/success');
         $refundToCustomerWallet = false;
-        
-        if( $order_info) {
+
+        if ($order_info) {
             $allowedPaymentMethods = $this->config->get('config_payment_methods_status');
-            
-            //echo "<pre>";print_r($allowedPaymentMethods);die;     
+
+            //echo "<pre>";print_r($allowedPaymentMethods);die;
             $log->write($allowedPaymentMethods);
 
-            if(is_array($allowedPaymentMethods) && count($allowedPaymentMethods) > 0) {
+            if (is_array($allowedPaymentMethods) && count($allowedPaymentMethods) > 0) {
                 foreach ($allowedPaymentMethods as $method) {
-            
-                    if($order_info['payment_code'] == $method) {
+                    if ($order_info['payment_code'] == $method) {
                         $refundToCustomerWallet = true;
                     }
                 }
             }
 
-            if($refundToCustomerWallet) {
-                $log->write("refundToCustomerWallet");
+            if ($refundToCustomerWallet) {
+                $log->write('refundToCustomerWallet');
                 //referee points below
                 $description = 'Refund of order#'.$order_id;
-                $this->model_account_activity->addCredit($order_info['customer_id'], $description , $order_info['total'],$order_id);
+                $this->model_account_activity->addCredit($order_info['customer_id'], $description, $order_info['total'], $order_id);
             }
         }
     }
 
-    
-
-   
-
-    public function country() {
-        $json = array();
+    public function country()
+    {
+        $json = [];
 
         $this->load->model('localisation/country');
 
@@ -811,7 +748,7 @@ class ControllerAccountAccount extends Controller {
         if ($country_info) {
             $this->load->model('localisation/zone');
 
-            $json = array(
+            $json = [
                 'country_id' => $country_info['country_id'],
                 'name' => $country_info['name'],
                 'iso_code_2' => $country_info['iso_code_2'],
@@ -819,16 +756,16 @@ class ControllerAccountAccount extends Controller {
                 'address_format' => $country_info['address_format'],
                 'postcode_required' => $country_info['postcode_required'],
                 'zone' => $this->model_localisation_zone->getZonesByCountryId($this->request->get['country_id']),
-                'status' => $country_info['status']
-            );
+                'status' => $country_info['status'],
+            ];
         }
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
 
-    protected function validate() {
-
+    protected function validate()
+    {
         $this->load->language('account/edit');
 
         if ((utf8_strlen(trim($this->request->post['firstname'])) < 1) || (utf8_strlen(trim($this->request->post['firstname'])) > 32)) {
@@ -842,8 +779,6 @@ class ControllerAccountAccount extends Controller {
             $this->error['companyaddress'] = $this->language->get('error_companyaddress');
         }
 
-       
-
         //print_r($this->request->post);die;
         if ((utf8_strlen($this->request->post['email']) > 96) || !filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL)) {
             $this->error['email'] = $this->language->get('error_email');
@@ -853,39 +788,35 @@ class ControllerAccountAccount extends Controller {
             $this->error['warning'] = $this->language->get('error_exists');
         }
 
-       
-        if (strpos($this->request->post['telephone'], '#') !== false || empty($this->request->post['telephone'])) {
-            $this->error['telephone'] = $this->language->get( 'error_telephone' );
+        if (false !== strpos($this->request->post['telephone'], '#') || empty($this->request->post['telephone'])) {
+            $this->error['telephone'] = $this->language->get('error_telephone');
         }
 
         /*if (strpos($this->request->post['fax'], '#') !== false || empty($this->request->post['fax'])) {
             $this->error['error_tax'] = $this->language->get( 'error_tax' );
         }*/
 
-
-        if ( ( utf8_strlen( $this->request->post['password'] ) >= 1 ) && ( utf8_strlen( $this->request->post['password'] ) < 4 ) || ( utf8_strlen( $this->request->post['password'] ) > 20 ) ) {
-            $this->error['password'] = $this->language->get( 'error_password' );
+        if ((utf8_strlen($this->request->post['password']) >= 1) && (utf8_strlen($this->request->post['password']) < 4) || (utf8_strlen($this->request->post['password']) > 20)) {
+            $this->error['password'] = $this->language->get('error_password');
         }
 
-        if ( ( utf8_strlen( $this->request->post['confirmpassword'] ) >= 1 ) && ( utf8_strlen( $this->request->post['confirmpassword'] ) < 4 ) || ( utf8_strlen( $this->request->post['confirmpassword'] ) > 20 ) ) {
-            $this->error['confirmpassword'] = $this->language->get( 'error_confirmpassword' );
+        if ((utf8_strlen($this->request->post['confirmpassword']) >= 1) && (utf8_strlen($this->request->post['confirmpassword']) < 4) || (utf8_strlen($this->request->post['confirmpassword']) > 20)) {
+            $this->error['confirmpassword'] = $this->language->get('error_confirmpassword');
         }
 
-        if ( $this->request->post['confirmpassword'] != $this->request->post['password'] ) {
+        if ($this->request->post['confirmpassword'] != $this->request->post['password']) {
             $this->error['confirmpassword'] = $this->language->get('error_mismatch_password');
         }
 
         if ($this->config->get('config_google_captcha_status')) {
-            $json = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret=' . urlencode($this->config->get('config_google_captcha_secret')) . '&response=' . $this->request->post['g-recaptcha-response'] . '&remoteip=' . $this->request->server['REMOTE_ADDR']);
-            
+            $json = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.urlencode($this->config->get('config_google_captcha_secret')).'&response='.$this->request->post['g-recaptcha-response'].'&remoteip='.$this->request->server['REMOTE_ADDR']);
+
             $json = json_decode($json, true);
-                
+
             if (!$json['success']) {
                 $this->error['captcha'] = $this->language->get('error_captcha');
-            }       
+            }
         }
-
-        
 
         // if ( DateTime::createFromFormat('d/m/Y', $this->request->post['dob'] ) == FALSE ) {
         //     $this->error['dob'] = $this->language->get( 'error_dob' );
@@ -898,7 +829,7 @@ class ControllerAccountAccount extends Controller {
         $custom_fields = $this->model_account_custom_field->getCustomFields($this->config->get('config_customer_group_id'));
 
         foreach ($custom_fields as $custom_field) {
-            if (($custom_field['location'] == 'account') && $custom_field['required'] && empty($this->request->post['custom_field'][$custom_field['custom_field_id']])) {
+            if (('account' == $custom_field['location']) && $custom_field['required'] && empty($this->request->post['custom_field'][$custom_field['custom_field_id']])) {
                 $this->error['custom_field'][$custom_field['custom_field_id']] = sprintf($this->language->get('error_custom_field'), $custom_field['name']);
             }
         }
@@ -907,36 +838,35 @@ class ControllerAccountAccount extends Controller {
         return !$this->error;
     }
 
-    public function resetOfferPrice() {
-
+    public function resetOfferPrice()
+    {
         $log = new Log('error.log');
         $log->write('in resetOfferPrice');
 
         $this->load->model('api/offer');
 
-        $filter_data = array(
-            'filter_date_end'   => date("Y-m-d", strtotime("- 1 day")),
-        );
+        $filter_data = [
+            'filter_date_end' => date('Y-m-d', strtotime('- 1 day')),
+        ];
 
         $results = $this->model_api_offer->getOffers($filter_data);
 
         $log->write($results);
 
         foreach ($results as $key => $result) {
-
-            $offer_id  = $result['offer_id'];
+            $offer_id = $result['offer_id'];
             $products = $this->model_api_offer->getOfferProducts($result['offer_id']);
 
             $log->write($products);
-            
+
             foreach ($products as $pro) {
                 $this->model_api_offer->resetSpecialPrice($pro);
             }
         }
     }
-    
-    public function formatTelephone ($telephone) {
 
+    public function formatTelephone($telephone)
+    {
         /*if(strlen($telephone) == 11 ) {
             //(21) 42353-5255
 
@@ -950,7 +880,7 @@ class ControllerAccountAccount extends Controller {
             $str5 = substr($str,2,5);
             $str7 = substr($str,7,4);
 
-           
+
             return  $str1.$str2.$str3.$str4.$str5.$str6.$str7;
         } else {
             return $telephone;
@@ -958,19 +888,19 @@ class ControllerAccountAccount extends Controller {
         return $telephone;
     }
 
-    public function getOrder( $order_id ) {
-        $order_query = $this->db->query( "SELECT *, (SELECT os.name FROM `" . DB_PREFIX . "order_status` os WHERE os.order_status_id = o.order_status_id AND os.language_id = o.language_id) AS order_status FROM `" . DB_PREFIX . "order` o WHERE o.order_id = '" . (int) $order_id . "'" );
+    public function getOrder($order_id)
+    {
+        $order_query = $this->db->query('SELECT *, (SELECT os.name FROM `'.DB_PREFIX.'order_status` os WHERE os.order_status_id = o.order_status_id AND os.language_id = o.language_id) AS order_status FROM `'.DB_PREFIX."order` o WHERE o.order_id = '".(int) $order_id."'");
 
-        if ( $order_query->num_rows ) {
+        if ($order_query->num_rows) {
+            $this->load->model('localisation/language');
+            $this->load->model('account/order');
 
-            $this->load->model( 'localisation/language' );
-            $this->load->model( 'account/order' );
-
-            $language_info = $this->model_localisation_language->getLanguage( $order_query->row['language_id'] );
+            $language_info = $this->model_localisation_language->getLanguage($order_query->row['language_id']);
 
             $city_name = $this->model_account_order->getCityName($order_query->row['shipping_city_id']);
 
-            if ( $language_info ) {
+            if ($language_info) {
                 $language_code = $language_info['code'];
                 $language_directory = $language_info['directory'];
             } else {
@@ -978,7 +908,7 @@ class ControllerAccountAccount extends Controller {
                 $language_directory = '';
             }
 
-            return array(
+            return [
                 'order_id' => $order_query->row['order_id'],
                 'invoice_no' => $order_query->row['invoice_no'],
                 'invoice_prefix' => $order_query->row['invoice_prefix'],
@@ -993,7 +923,7 @@ class ControllerAccountAccount extends Controller {
                 'email' => $order_query->row['email'],
                 'telephone' => $order_query->row['telephone'],
                 'fax' => $order_query->row['fax'],
-                'custom_field' => unserialize( $order_query->row['custom_field'] ),
+                'custom_field' => unserialize($order_query->row['custom_field']),
                 'shipping_name' => $order_query->row['shipping_name'],
                 'shipping_address' => $order_query->row['shipping_address'],
                 'shipping_city' => $city_name,
@@ -1032,97 +962,95 @@ class ControllerAccountAccount extends Controller {
                 'date_added' => $order_query->row['date_added'],
 
                 'delivery_date' => $order_query->row['delivery_date'],
-                'delivery_timeslot' => $order_query->row['delivery_timeslot']
+                'delivery_timeslot' => $order_query->row['delivery_timeslot'],
                 /*'date_modified' => $order_query->row['date_modified'],
                 'date_added' => $order_query->row['date_added']*/
-
-            );
+            ];
         } else {
             return false;
         }
     }
-    public function getTimeslotAverage($timeslot) {
 
-        $str = $timeslot;//"06:26pm - 08:32pm";
+    public function getTimeslotAverage($timeslot)
+    {
+        $str = $timeslot; //"06:26pm - 08:32pm";
         $arr = explode('-', $str);
         //print_r($arr);
-        if(count($arr) == 2 ) {
-            $one = date("H:i", strtotime($arr[0]));
-            $two = date("H:i", strtotime($arr[1]));
+        if (2 == count($arr)) {
+            $one = date('H:i', strtotime($arr[0]));
+            $two = date('H:i', strtotime($arr[1]));
 
             $time1 = explode(':', $one);
             $time2 = explode(':', $two);
-            if(count($time1) ==  2 && count($time2) ==  2) {
-                $mid1 = ($time1[0]+$time2[0])/2;
-                $mid2 = ($time1[1]+$time2[1])/2;
+            if (2 == count($time1) && 2 == count($time2)) {
+                $mid1 = ($time1[0] + $time2[0]) / 2;
+                $mid2 = ($time1[1] + $time2[1]) / 2;
 
-                return $mid1.":".$mid2;
+                return $mid1.':'.$mid2;
             }
         }
 
         return false;
     }
 
-    public function send($to,$msg){
-        
+    public function send($to, $msg)
+    {
         // $sender_id = $this->config->get('config_sms_sender_id');
         // $username  = $this->config->get('config_sms_username');
         // $password  = $this->config->get('config_sms_password');
         $sender_id = 'KRAFTY';
-        $username  = 'krafty';
-        $password  = 'krafty@123';
-        
+        $username = 'krafty';
+        $password = 'krafty@123';
+
         $msg = 'Your OTP is not required. :) Regards, Abhishek ';
-        $url= 'http://login.smsgatewayhub.com/smsapi/pushsms.aspx?user='.$username.'&pwd='.$password.'&to='.$to.'&sid='.$sender_id.'&msg='.urlencode($msg).'&fl=0&gwid=2'; 
-        
+        $url = 'http://login.smsgatewayhub.com/smsapi/pushsms.aspx?user='.$username.'&pwd='.$password.'&to='.$to.'&sid='.$sender_id.'&msg='.urlencode($msg).'&fl=0&gwid=2';
+
         // Get cURL resource
         $curl = curl_init();
         // Set some options - we are passing in a useragent too here
-        curl_setopt_array($curl, array(
+        curl_setopt_array($curl, [
             CURLOPT_RETURNTRANSFER => 1,
             CURLOPT_URL => $url,
-            CURLOPT_USERAGENT => 'Codular Sample cURL Request'
-        ));
+            CURLOPT_USERAGENT => 'Codular Sample cURL Request',
+        ]);
         // Send the request & save response to $resp
         $resp = curl_exec($curl);
-        
+
         // Close request to clear up some resources
         curl_close($curl);
 
         return $resp;
     }
 
-    public function stripe_return() {
-        
+    public function stripe_return()
+    {
         $this->load->model('payment/stripe');
 
-        if($this->config->get('stripe_environment') == 'live') {
+        if ('live' == $this->config->get('stripe_environment')) {
             $secret_key = $this->config->get('stripe_live_secret_key');
         } else {
             $secret_key = $this->config->get('stripe_test_secret_key');
         }
 
-       
         //echo "<pre>";print_r($secret_key);die;
 
         //echo "<pre>";print_r($_GET);print_r($_POST);die;
         if (isset($_GET['code'])) { // Redirect w/ code
             $code = $_GET['code'];
 
-            $client_id = $this->config->get('stripe_connect_platform_id');//'ca_BoxbgCghYSt10rKtPzsW6WCLQ7nEEXIz';
+            $client_id = $this->config->get('stripe_connect_platform_id'); //'ca_BoxbgCghYSt10rKtPzsW6WCLQ7nEEXIz';
 
-            $token_request_body = array(
+            $token_request_body = [
                 'grant_type' => 'authorization_code',
                 'client_id' => $client_id,
                 'code' => $code,
                 //'client_secret' => 'sk_test_XKnQhs0XiKIEWP5bdjejJ0n4'
-                'client_secret' => $secret_key
-                
-            );
+                'client_secret' => $secret_key,
+            ];
 
             $req = curl_init('https://connect.stripe.com/oauth/token');
             curl_setopt($req, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($req, CURLOPT_POST, true );
+            curl_setopt($req, CURLOPT_POST, true);
             curl_setopt($req, CURLOPT_POSTFIELDS, http_build_query($token_request_body));
 
             // TODO: Additional error handling
@@ -1132,194 +1060,170 @@ class ControllerAccountAccount extends Controller {
 
             //echo "<pre>";print_r($resp);die;
 
-            if(isset($resp) && isset($resp['access_token']) ) {
+            if (isset($resp) && isset($resp['access_token'])) {
                 //save returned stripe repsonse for future response_type
 
                 $resp['vendor_id'] = $_GET['state'];
 
-                if($_GET['state'] == 'deliverysystem') {
-
-                    
-
+                if ('deliverysystem' == $_GET['state']) {
                     $resp['vendor_id'] = 0;
 
                     //$this->db->query( "DELTE " . DB_PREFIX . "setting SET store_id = 0, `code` = 'config', `key` = '" . $this->db->escape( $key ) . "', `value` = '" . $this->db->escape( $value ) . "'" );
-
                 }
-                
-                if($this->model_payment_stripe->addVendorStripeAccount($resp)) {
 
+                if ($this->model_payment_stripe->addVendorStripeAccount($resp)) {
                     echo "<center><h3 style='color:green'>Stripe account successfully linked!</h3> <a href='#' onclick='window.close();return false;'>Close</a> </center>";
                 } else {
                     echo "<center><h3 style='color:red'>Stripe User Already present!!</h3> <a href='#' onclick='window.close();return false;'>close</a> </center>";
                 }
-
-
-                
-            } else if (isset($resp['error'])) { // Error
-
-                echo "<center><h3 style='color:red'>".$resp['error_description']." </h3>  </center>";
+            } elseif (isset($resp['error'])) { // Error
+                echo "<center><h3 style='color:red'>".$resp['error_description'].' </h3>  </center>';
             } else {
                 //error access token not granted
                 echo "<center><h3 style='color:red'>Access token not granted. Try again </h3></center>";
             }
-
-        } else if (isset($_GET['error'])) { // Error
-
-            echo "<center><h3 style='color:red'>".$_GET['error_description']."</h3></center>";
-        } else { 
-
+        } elseif (isset($_GET['error'])) { // Error
+            echo "<center><h3 style='color:red'>".$_GET['error_description'].'</h3></center>';
+        } else {
             echo "<center><h3 style='color:red'>Something went wrong. Try again </h3></center>";
         }
-        
+
         die;
     }
 
-    public function getCategoryProducts( $filter_data ) {
-        $this->load->model( 'assets/product' );
+    public function getCategoryProducts($filter_data)
+    {
+        $this->load->model('assets/product');
 
         $max_discount = 5;
-        $results = $this->model_assets_product->getProductsForCron( $filter_data );
+        $results = $this->model_assets_product->getProductsForCron($filter_data);
 
         //echo "<pre>";print_r($filter_data);die;
         //echo "<pre>";print_r($results);die;
-        foreach ( $results as $result ) {
-
-            // if qty less then 1 dont show product 
-            if($result['quantity'] <= 0)
+        foreach ($results as $result) {
+            // if qty less then 1 dont show product
+            if ($result['quantity'] <= 0) {
                 continue;
+            }
 
-            
             $discount = '';
             $s_price = 0;
             $o_price = 0;
-            
-            if ( !$this->config->get( 'config_inclusiv_tax' ) ) {
-                //get price html
-                if ( ( $this->config->get( 'config_customer_price' ) && $this->customer->isLogged() ) || !$this->config->get( 'config_customer_price' ) ) {
-                    $price = $this->currency->format( $this->tax->calculate( $result['price'], $result['tax_class_id'], $this->config->get( 'config_tax' ) ) );
 
-                    $o_price = $this->tax->calculate( $result['price'], $result['tax_class_id'], $this->config->get( 'config_tax' ) );
+            if (!$this->config->get('config_inclusiv_tax')) {
+                //get price html
+                if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+                    $price = $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')));
+
+                    $o_price = $this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax'));
                 } else {
                     $price = false;
                 }
-                if ( (float) $result['special_price'] ) {
-                    $special_price = $this->currency->format( $this->tax->calculate( $result['special_price'], $result['tax_class_id'], $this->config->get( 'config_tax' ) ) );
+                if ((float) $result['special_price']) {
+                    $special_price = $this->currency->format($this->tax->calculate($result['special_price'], $result['tax_class_id'], $this->config->get('config_tax')));
 
-                    $s_price = $this->tax->calculate( $result['special_price'], $result['tax_class_id'], $this->config->get( 'config_tax' ) );
-
+                    $s_price = $this->tax->calculate($result['special_price'], $result['tax_class_id'], $this->config->get('config_tax'));
                 } else {
                     $special_price = false;
                 }
-            }else {
-                if ( ( $this->config->get( 'config_customer_price' ) && $this->customer->isLogged() ) || !$this->config->get( 'config_customer_price' ) ) {
-                    $price = $this->currency->format( $result['price'] );
+            } else {
+                if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+                    $price = $this->currency->format($result['price']);
                 } else {
                     $price = $result['price'];
                 }
 
-                if ( (float) $result['special_price'] ) {
-                    $special_price = $this->currency->format( $result['special_price'] );
+                if ((float) $result['special_price']) {
+                    $special_price = $this->currency->format($result['special_price']);
                 } else {
                     $special_price = $result['special_price'];
                 }
-
 
                 $s_price = $result['special_price'];
                 $o_price = $result['price'];
             }
 
             $percent_off = null;
-            if(isset($s_price)  && isset($o_price) && $o_price !=0 && $s_price !=0 ) {
+            if (isset($s_price) && isset($o_price) && 0 != $o_price && 0 != $s_price) {
                 $percent_off = (($o_price - $s_price) / $o_price) * 100;
             }
 
-            if($percent_off > $max_discount) {
+            if ($percent_off > $max_discount) {
                 $max_discount = $percent_off;
             }
         }
 
-        return number_format($max_discount,0);
+        return number_format($max_discount, 0);
     }
 
-    public function categoryPercentageSave() {
-
+    public function categoryPercentageSave()
+    {
         $this->load->model('assets/category');
 
-        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "store");
+        $query = $this->db->query('SELECT * FROM '.DB_PREFIX.'store');
 
         foreach ($query->rows as $row) {
+            $results = $this->model_assets_category->getCategoryByStoreForCron(0, $row['store_id']);
 
-            $results = $this->model_assets_category->getCategoryByStoreForCron( 0 ,$row['store_id']);
-
-            foreach ( $results as $result ) {
-
-                $filter_data = array(
+            foreach ($results as $result) {
+                $filter_data = [
                     'filter_category_id' => $result['category_id'],
                     'filter_sub_category' => true,
                     'store_id' => $row['store_id'],
-                );
+                ];
 
                 $children = $this->model_assets_category->getCategories($result['category_id']);
 
                 foreach ($children as $child) {
-
-                    $child_filter_data = array(
+                    $child_filter_data = [
                         'filter_category_id' => $child['category_id'],
                         'filter_sub_category' => true,
                         'store_id' => $row['store_id'],
-                    );
+                    ];
 
-                    $max_discount = $this->getCategoryProducts( $child_filter_data );
+                    $max_discount = $this->getCategoryProducts($child_filter_data);
 
-                    $this->db->query("UPDATE " . DB_PREFIX . "category_to_store SET max_discount ='" . (int) $max_discount . "' where store_id=".$row['store_id']." and category_id=".$child['category_id']);
-
+                    $this->db->query('UPDATE '.DB_PREFIX."category_to_store SET max_discount ='".(int) $max_discount."' where store_id=".$row['store_id'].' and category_id='.$child['category_id']);
                 }
 
-                $max_discount = $this->getCategoryProducts( $filter_data );
+                $max_discount = $this->getCategoryProducts($filter_data);
 
-                
-                  
-                $this->db->query("UPDATE " . DB_PREFIX . "category_to_store SET max_discount ='" . (int) $max_discount . "' where store_id=".$row['store_id']." and category_id=".$result['category_id']);
+                $this->db->query('UPDATE '.DB_PREFIX."category_to_store SET max_discount ='".(int) $max_discount."' where store_id=".$row['store_id'].' and category_id='.$result['category_id']);
             }
         }
 
         die;
     }
-    
-    public function getAddressFromLatLng($location) {
 
-        
-
+    public function getAddressFromLatLng($location)
+    {
         $data['full_address'] = '';
         $data['street_number'] = '';
         $data['short_address'] = '';
         $data['city'] = '';
 
-        $userSearch = explode(",", $location);
+        $userSearch = explode(',', $location);
 
         //echo "<pre>";print_r($location);die;
 
-        if(count($userSearch) >= 2) {
+        if (count($userSearch) >= 2) {
             $validateLat = is_numeric($userSearch[0]);
             $validateLat2 = is_numeric($userSearch[1]);
 
-            $validateLat3 = strpos( $userSearch[0], '.');
-            $validateLat4 = strpos( $userSearch[1], '.');
+            $validateLat3 = strpos($userSearch[0], '.');
+            $validateLat4 = strpos($userSearch[1], '.');
 
-
-            if($validateLat && $validateLat2 && $validateLat3 && $validateLat4 ) {
+            if ($validateLat && $validateLat2 && $validateLat3 && $validateLat4) {
                 try {
-
                     $url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='.$location.'&sensor=false&key='.$this->config->get('config_google_server_api_key');
 
                     //echo "<pre>";print_r($url);die;
                     $ch = curl_init();
                     curl_setopt($ch, CURLOPT_URL, $url);
-                    
-                    $headers = array( 
-                             "Cache-Control: no-cache", 
-                            ); 
+
+                    $headers = [
+                             'Cache-Control: no-cache',
+                            ];
                     curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
                     curl_setopt($ch, CURLOPT_FRESH_CONNECT, 1);
                     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -1332,41 +1236,36 @@ class ControllerAccountAccount extends Controller {
                     $output = json_decode($response);
 
                     //echo "<pre>";print_r($output);die;
-                    if(isset($output)) {
+                    if (isset($output)) {
                         foreach ($output->results[0]->address_components as $addres) {
-
-                            if(isset($addres->types)) {
-                                if(in_array('street_number', $addres->types)) {
+                            if (isset($addres->types)) {
+                                if (in_array('street_number', $addres->types)) {
                                     //echo "<pre>";print_r($addres);die;
                                     $data['street_number'] = $addres->long_name;
                                 }
 
-                                if(in_array('route', $addres->types)) {
+                                if (in_array('route', $addres->types)) {
                                     //echo "<pre>";print_r($addres);die;
                                     $data['short_address'] = $addres->short_name;
                                 }
 
-                                if(in_array('locality', $addres->types)) {
+                                if (in_array('locality', $addres->types)) {
                                     //echo "<pre>";print_r($addres);die;
                                     $data['city'] = $addres->short_name;
                                 }
-
                             }
-                        } 
+                        }
 
-                        if(isset($output->results[0]->formatted_address)) {
+                        if (isset($output->results[0]->formatted_address)) {
                             $data['full_address'] = $output->results[0]->formatted_address;
-                        }   
+                        }
                     }
-                    
                 } catch (Exception $e) {
-                    
                 }
             }
         }
-            
+
         //echo "<pre>";print_r($data['street_number']."ss".$data['short_address']."fd".$data['full_address']);die;
         return $data;
     }
-        
 }

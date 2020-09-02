@@ -1,15 +1,16 @@
 <?php
 
-class ControllerSearchSearch extends Controller {
-
-    public function index() {
+class ControllerSearchSearch extends Controller
+{
+    public function index()
+    {
         if (empty($this->session->data['token'])) {
             return;
         }
 
         $this->load->language('search/search');
 
-        $data = array();
+        $data = [];
 
         $data['text_search_options'] = $this->language->get('text_search_options');
         $data['text_catalog'] = $this->language->get('text_catalog');
@@ -19,12 +20,13 @@ class ControllerSearchSearch extends Controller {
         $data['text_customers_placeholder'] = $this->language->get('text_customers_placeholder');
         $data['text_orders_placeholder'] = $this->language->get('text_orders_placeholder');
 
-        $data['search_link'] = $this->url->link('search/search/search', 'token=' . $this->session->data['token'], 'SSL');
+        $data['search_link'] = $this->url->link('search/search/search', 'token='.$this->session->data['token'], 'SSL');
 
         return $this->load->view('search/search.tpl', $data);
     }
 
-    public function search() {
+    public function search()
+    {
         $this->load->language('search/search');
 
         $data['token'] = $this->session->data['token'];
@@ -51,6 +53,7 @@ class ControllerSearchSearch extends Controller {
 
         if (!empty($json['error'])) {
             $this->response->setOutput(json_encode($json));
+
             return;
         }
 
@@ -65,21 +68,20 @@ class ControllerSearchSearch extends Controller {
                 $data['products'] = $this->model_search_search->getProducts($_data);
 
                 foreach ($data['products'] as $key => $product) {
-                                        
                     if (!empty($product['image']) && file_exists(DIR_IMAGE.$product['image'])) {
                         $data['products'][$key]['image'] = $this->model_tool_image->resize($product['image'], 30, 30);
                     } else {
                         $data['products'][$key]['image'] = $this->model_tool_image->resize('no_image.png', 30, 30);
                     }
 
-                    $data['products'][$key]['url'] = $this->url->link('catalog/general/edit', 'token=' . $this->session->data['token'] . '&product_id=' . $product['product_id'], 'SSL');
+                    $data['products'][$key]['url'] = $this->url->link('catalog/general/edit', 'token='.$this->session->data['token'].'&product_id='.$product['product_id'], 'SSL');
                 }
 
                 // Get categories
                 $data['categories'] = $this->model_search_search->getCategories($_data);
 
                 foreach ($data['categories'] as $key => $category) {
-                    $data['categories'][$key]['url'] = $this->url->link('catalog/category/edit', 'token=' . $this->session->data['token'] . '&category_id=' . $category['category_id'], 'SSL');                                        
+                    $data['categories'][$key]['url'] = $this->url->link('catalog/category/edit', 'token='.$this->session->data['token'].'&category_id='.$category['category_id'], 'SSL');
                 }
 
                 // Get manufacturers
@@ -92,7 +94,7 @@ class ControllerSearchSearch extends Controller {
                         $data['manufacturers'][$key]['image'] = $this->model_tool_image->resize('no_image.png', 30, 30);
                     }
 
-                    $data['manufacturers'][$key]['url'] = $this->url->link('catalog/manufacturer/edit', 'token=' . $this->session->data['token'] . '&manufacturer_id=' . $manufacturer['manufacturer_id'], 'SSL');
+                    $data['manufacturers'][$key]['url'] = $this->url->link('catalog/manufacturer/edit', 'token='.$this->session->data['token'].'&manufacturer_id='.$manufacturer['manufacturer_id'], 'SSL');
                 }
 
                 $json['result'] = $this->load->view('search/catalog_result.tpl', $data);
@@ -102,7 +104,7 @@ class ControllerSearchSearch extends Controller {
                 $data['customers'] = $this->model_search_search->getCustomers($_data);
 
                 foreach ($data['customers'] as $key => $customer) {
-                    $data['customers'][$key]['url'] = $this->url->link('sale/customer/edit', 'token=' . $this->session->data['token'] . '&customer_id=' . $customer['customer_id'], 'SSL');
+                    $data['customers'][$key]['url'] = $this->url->link('sale/customer/edit', 'token='.$this->session->data['token'].'&customer_id='.$customer['customer_id'], 'SSL');
                 }
 
                 $json['result'] = $this->load->view('search/customers_result.tpl', $data);
@@ -111,7 +113,7 @@ class ControllerSearchSearch extends Controller {
                 $data['orders'] = $this->model_search_search->getOrders($_data);
 
                 foreach ($data['orders'] as $key => $order) {
-                    $data['orders'][$key]['url'] = $this->url->link('sale/order/info', 'token=' . $this->session->data['token'] . '&order_id=' . $order['order_id'], 'SSL');
+                    $data['orders'][$key]['url'] = $this->url->link('sale/order/info', 'token='.$this->session->data['token'].'&order_id='.$order['order_id'], 'SSL');
                 }
 
                 $json['result'] = $this->load->view('search/orders_result.tpl', $data);
@@ -122,5 +124,4 @@ class ControllerSearchSearch extends Controller {
 
         $this->response->setOutput(json_encode($json));
     }
-
 }

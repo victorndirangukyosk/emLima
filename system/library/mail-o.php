@@ -1,8 +1,7 @@
 <?php
 
-
-class Mail {
-
+class Mail
+{
     protected $to;
     protected $cc;
     protected $bcc;
@@ -15,8 +14,8 @@ class Mail {
     protected $text;
     protected $html;
     protected $charset = null;
-    protected $attachments = array();
-    protected $attachments_inline = array();
+    protected $attachments = [];
+    protected $attachments_inline = [];
     protected $priority;
     public $config_mail_protocol = 'phpmail';
     public $config_mail_sendmail_path = '/usr/sbin/sendmail -bs';
@@ -36,32 +35,35 @@ class Mail {
     public $smtp_timeout = 0;
     public $smtp_encryption = 'none';
 
-    public function __construct($config = array()) {
+    public function __construct($config = [])
+    {
         if (!class_exists('Swift_Message')) {
-            require_once(DIR_SYSTEM . 'vendor/swiftmailer/swiftmailer/lib/swift_required.php');
+            require_once DIR_SYSTEM.'vendor/swiftmailer/swiftmailer/lib/swift_required.php';
         }
 
         foreach ($config as $key => $value) {
             if (!strpos($key, 'config_mail_')) {
-                $this->set('config_mail_' . $key, $value);
+                $this->set('config_mail_'.$key, $value);
             } else {
                 $this->set($key, $value);
             }
         }
     }
 
-    public function get($name) {
+    public function get($name)
+    {
         return $this->$name;
     }
 
-    public function set($name, $value, $decode = true, $is_array = false) {
-        if ($is_array == true) {
+    public function set($name, $value, $decode = true, $is_array = false)
+    {
+        if (true == $is_array) {
             $array = $this->$name;
             $array[] = $value;
 
             $this->$name = $array;
         } else {
-            if ($decode == true) {
+            if (true == $decode) {
                 $this->$name = html_entity_decode($value, ENT_QUOTES, 'UTF-8');
             } else {
                 $this->$name = $value;
@@ -69,67 +71,83 @@ class Mail {
         }
     }
 
-    public function setTo($to, $decode = true) {
+    public function setTo($to, $decode = true)
+    {
         $this->set('to', $to, $decode);
     }
 
-    public function setCc($cc, $decode = true) {
+    public function setCc($cc, $decode = true)
+    {
         $this->set('cc', $cc, $decode);
     }
 
-    public function setBcc($bcc, $decode = true) {
+    public function setBcc($bcc, $decode = true)
+    {
         $this->set('bcc', $bcc, $decode);
     }
 
-    public function setFrom($from, $decode = true) {
+    public function setFrom($from, $decode = true)
+    {
         $this->set('from', $from, $decode);
     }
 
-    public function setReturnPath($return_path, $decode = true) {
+    public function setReturnPath($return_path, $decode = true)
+    {
         $this->set('return_path', $return_path, $decode);
     }
 
-    public function setReadReceiptTo($read_receipt_to, $decode = true) {
+    public function setReadReceiptTo($read_receipt_to, $decode = true)
+    {
         $this->set('read_receipt_to', $read_receipt_to, $decode);
     }
 
-    public function setSender($sender, $decode = true) {
+    public function setSender($sender, $decode = true)
+    {
         $this->set('sender', $sender, $decode);
     }
 
-    public function setReplyTo($reply_to, $decode = true) {
+    public function setReplyTo($reply_to, $decode = true)
+    {
         $this->set('reply_to', $reply_to, $decode);
     }
 
-    public function setSubject($subject, $decode = true) {
+    public function setSubject($subject, $decode = true)
+    {
         $this->set('subject', $subject, $decode);
     }
 
-    public function setText($text, $decode = true) {
+    public function setText($text, $decode = true)
+    {
         $this->set('text', $text, $decode);
     }
 
-    public function setHtml($html, $decode = true) {
+    public function setHtml($html, $decode = true)
+    {
         $this->set('html', $html, $decode);
     }
 
-    public function setCharset($charset, $decode = false) {
+    public function setCharset($charset, $decode = false)
+    {
         $this->set('charset', $charset, $decode);
     }
 
-    public function addAttachment($filename, $decode = false) {
+    public function addAttachment($filename, $decode = false)
+    {
         $this->set('attachments', $filename, $decode, true);
     }
 
-    public function addAttachmentInline($filename, $decode = false) {
+    public function addAttachmentInline($filename, $decode = false)
+    {
         $this->set('attachments_inline', $filename, $decode, true);
     }
 
-    public function setPriority($priority, $decode = false) {
+    public function setPriority($priority, $decode = false)
+    {
         $this->set('priority', $priority, $decode);
     }
 
-    public function send() {
+    public function send()
+    {
         // Check First
         if (!$this->to) {
             trigger_error('Error: E-Mail to required!');
@@ -157,7 +175,7 @@ class Mail {
         }
 
         if (!$this->reply_to) {
-            $this->setReplyTo(array($this->from => $this->sender), false);
+            $this->setReplyTo([$this->from => $this->sender], false);
         }
 
         // Create the message object
@@ -228,9 +246,9 @@ class Mail {
         }
 
         // Create the transport object
-        if ($this->config_mail_protocol == 'phpmail') {
+        if ('phpmail' == $this->config_mail_protocol) {
             $transport = Swift_MailTransport::newInstance();
-        } else if ($this->config_mail_protocol == 'sendmail') {
+        } elseif ('sendmail' == $this->config_mail_protocol) {
             $transport = Swift_SendmailTransport::newInstance($this->config_mail_sendmail_path);
         } else {
             $transport = Swift_SmtpTransport::newInstance($this->config_mail_smtp_hostname, $this->config_mail_smtp_port);
@@ -243,7 +261,7 @@ class Mail {
                 $transport->setPassword($this->config_mail_smtp_password);
             }
 
-            if ($this->config_mail_smtp_encryption != 'none') {
+            if ('none' != $this->config_mail_smtp_encryption) {
                 $transport->setEncryption($this->config_mail_smtp_encryption);
             }
         }
@@ -255,5 +273,4 @@ class Mail {
 
         return $result;
     }
-
 }

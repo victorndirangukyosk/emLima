@@ -7,12 +7,13 @@ use Assert\Assertion as Guard;
 final class Amount
 {
     /**
-     * @var integer
+     * @var int
      */
     private $amount;
 
     /**
-     * @param integer $amount
+     * @param int $amount
+     *
      * @return Amount
      */
     public static function fromInteger($amount)
@@ -21,7 +22,7 @@ final class Amount
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function toInteger()
     {
@@ -29,7 +30,7 @@ final class Amount
     }
 
     /**
-     * @param integer $amount
+     * @param int $amount
      */
     private function __construct($amount)
     {

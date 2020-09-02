@@ -9,7 +9,7 @@ final class Balance
     use ChoiceBasedValueObject;
 
     /**
-     * Possible transaction value values
+     * Possible transaction value values.
      */
     const INTERNAL = 'internal';
     const EXTERNAL = 'external';
@@ -23,7 +23,7 @@ final class Balance
         return [
             self::INTERNAL,
             self::EXTERNAL,
-            self::TEST
+            self::TEST,
         ];
     }
 
@@ -32,7 +32,7 @@ final class Balance
      */
     public function isInternal()
     {
-        return $this->value === self::INTERNAL;
+        return self::INTERNAL === $this->value;
     }
 
     /**
@@ -40,7 +40,7 @@ final class Balance
      */
     public function isExternal()
     {
-        return $this->value === self::EXTERNAL;
+        return self::EXTERNAL === $this->value;
     }
 
     /**
@@ -48,6 +48,6 @@ final class Balance
      */
     public function isTest()
     {
-        return $this->value === self::TEST;
+        return self::TEST === $this->value;
     }
 }

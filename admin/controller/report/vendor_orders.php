@@ -1,239 +1,233 @@
 <?php
-class ControllerReportVendorOrders extends Controller { 
-		
-	public function getUserByName($name) {
 
-        if($name) {
-            $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "user` u WHERE CONCAT(u.firstname,' ',u.lastname) LIKE '" . $this->db->escape($name) . "%'");
+class ControllerReportVendorOrders extends Controller
+{
+    public function getUserByName($name)
+    {
+        if ($name) {
+            $query = $this->db->query('SELECT * FROM `'.DB_PREFIX."user` u WHERE CONCAT(u.firstname,' ',u.lastname) LIKE '".$this->db->escape($name)."%'");
 
-            return $query->row['user_id'];    
+            return $query->row['user_id'];
         }
-        
     }
 
-    public function getStoreIdByName($name) {
+    public function getStoreIdByName($name)
+    {
+        if ($name) {
+            $query = $this->db->query('SELECT * FROM `'.DB_PREFIX."store` WHERE name LIKE '".$this->db->escape($name)."%'");
 
-        if($name) {
-            $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "store` WHERE name LIKE '" . $this->db->escape($name) . "%'");
-
-            return $query->row['store_id'];    
+            return $query->row['store_id'];
         }
-        
     }
 
-	public function excel(){
+    public function excel()
+    {
+        if (isset($this->request->get['filter_date_start'])) {
+            $filter_date_start = $this->request->get['filter_date_start'];
+        } else {
+            $filter_date_start = '';
+        }
 
-		if (isset($this->request->get['filter_date_start'])) {
-				$filter_date_start = $this->request->get['filter_date_start'];
-		} else {
-				$filter_date_start = '';
-		}
+        if (isset($this->request->get['filter_date_end'])) {
+            $filter_date_end = $this->request->get['filter_date_end'];
+        } else {
+            $filter_date_end = '';
+        }
 
-		if (isset($this->request->get['filter_date_end'])) {
-				$filter_date_end = $this->request->get['filter_date_end'];
-		} else {
-				$filter_date_end = '';
-		}
+        if (isset($this->request->get['filter_order_status_id'])) {
+            $filter_order_status_id = $this->request->get['filter_order_status_id'];
+        } else {
+            $filter_order_status_id = 0;
+        }
 
-		if (isset($this->request->get['filter_order_status_id'])) {
-				$filter_order_status_id = $this->request->get['filter_order_status_id'];
-		} else {
-				$filter_order_status_id = 0;
-		}
-		
-		if (isset($this->request->get['filter_city'])) {
-				$filter_city = $this->request->get['filter_city'];
-		} else {
-				$filter_city = '';
-		}
+        if (isset($this->request->get['filter_city'])) {
+            $filter_city = $this->request->get['filter_city'];
+        } else {
+            $filter_city = '';
+        }
 
-		if (isset($this->request->get['filter_vendor'])) {
-				$filter_vendor = $this->request->get['filter_vendor'];
-		} else {
-				$filter_vendor = '';
-		}
+        if (isset($this->request->get['filter_vendor'])) {
+            $filter_vendor = $this->request->get['filter_vendor'];
+        } else {
+            $filter_vendor = '';
+        }
 
-		if (isset($this->request->get['filter_store'])) {
-				$filter_store = $this->request->get['filter_store'];
-		} else {
-				$filter_store = '';
-		}
+        if (isset($this->request->get['filter_store'])) {
+            $filter_store = $this->request->get['filter_store'];
+        } else {
+            $filter_store = '';
+        }
 
+        $data = [
+            'filter_city' => $filter_city,
+            'filter_vendor' => $this->getUserByName($filter_vendor),
+            'filter_date_start' => $filter_date_start,
+            'filter_date_end' => $filter_date_end,
+            'filter_order_status_id' => $filter_order_status_id,
+            'filter_store' => $this->getStoreIdByName($filter_store),
+            'filter_store_name' => $filter_store,
+        ];
 
-		
-		$data = array(
-			'filter_city' => $filter_city,
-			'filter_vendor' => $this->getUserByName($filter_vendor),
-			'filter_date_start' => $filter_date_start,
-			'filter_date_end' => $filter_date_end,
-			'filter_order_status_id' => $filter_order_status_id,
-			'filter_store'            => $this->getStoreIdByName($filter_store),
-			'filter_store_name'            => $filter_store,
-		);
+        $this->load->model('report/excel');
+        $this->model_report_excel->download_report_vendor_orders_excel($data);
+    }
 
-		$this->load->model('report/excel');
-		$this->model_report_excel->download_report_vendor_orders_excel($data);
-	}
-		
-	public function index() {  
-		$this->language->load('report/vendor_orders');
+    public function index()
+    {
+        $this->language->load('report/vendor_orders');
 
-		$this->document->setTitle($this->language->get('heading_title'));
+        $this->document->setTitle($this->language->get('heading_title'));
 
-		if (isset($this->request->get['filter_date_start'])) {
-			$filter_date_start = $this->request->get['filter_date_start'];
-		} else {
-			$filter_date_start = '';
-		}
+        if (isset($this->request->get['filter_date_start'])) {
+            $filter_date_start = $this->request->get['filter_date_start'];
+        } else {
+            $filter_date_start = '';
+        }
 
-		if (isset($this->request->get['filter_date_end'])) {
-			$filter_date_end = $this->request->get['filter_date_end'];
-		} else {
-			$filter_date_end = '';
-		}
-				
-		if (isset($this->request->get['filter_order_status_id'])) {
-			$filter_order_status_id = $this->request->get['filter_order_status_id'];
-		} else {
-			$filter_order_status_id = 0;
-		}	
-				
-		if (isset($this->request->get['filter_city'])) {
-				$filter_city = $this->request->get['filter_city'];
-		} else {
-				$filter_city = '';
-		}
+        if (isset($this->request->get['filter_date_end'])) {
+            $filter_date_end = $this->request->get['filter_date_end'];
+        } else {
+            $filter_date_end = '';
+        }
 
-		if (isset($this->request->get['filter_vendor'])) {
-				$filter_vendor = $this->request->get['filter_vendor'];
-		} else {
-				$filter_vendor = '';
-		}
+        if (isset($this->request->get['filter_order_status_id'])) {
+            $filter_order_status_id = $this->request->get['filter_order_status_id'];
+        } else {
+            $filter_order_status_id = 0;
+        }
 
-		if (isset($this->request->get['filter_vendor_id'])) {
-				$filter_vendor_id = $this->request->get['filter_vendor_id'];
-		} else {
-				$filter_vendor_id = '';
-		}
+        if (isset($this->request->get['filter_city'])) {
+            $filter_city = $this->request->get['filter_city'];
+        } else {
+            $filter_city = '';
+        }
 
-		if (isset($this->request->get['filter_store'])) {
-				$filter_store = $this->request->get['filter_store'];
-		} else {
-				$filter_store = '';
-		}
+        if (isset($this->request->get['filter_vendor'])) {
+            $filter_vendor = $this->request->get['filter_vendor'];
+        } else {
+            $filter_vendor = '';
+        }
 
-		if(isset($this->request->get['sort'])){
-			$sort = $this->request->get['sort'];
-		}else{
-			$sort = '';
-		}
-		
-		if(isset($this->request->get['order'])){
-			$order = $this->request->get['order'];
-		}else{
-			$order = '';
-		}                 
-				
-		if (isset($this->request->get['filter_group'])) {
-			$filter_group = $this->request->get['filter_group'];
-		} else {
-			$filter_group = 'week';
-		}
+        if (isset($this->request->get['filter_vendor_id'])) {
+            $filter_vendor_id = $this->request->get['filter_vendor_id'];
+        } else {
+            $filter_vendor_id = '';
+        }
 
-		if (isset($this->request->get['page'])) {
-			$page = $this->request->get['page'];
-		} else {
-			$page = 1;
-		}
+        if (isset($this->request->get['filter_store'])) {
+            $filter_store = $this->request->get['filter_store'];
+        } else {
+            $filter_store = '';
+        }
 
-		$url = '';
+        if (isset($this->request->get['sort'])) {
+            $sort = $this->request->get['sort'];
+        } else {
+            $sort = '';
+        }
 
-		if (isset($this->request->get['filter_city'])) {
-			$url .= '&filter_city=' . $this->request->get['filter_city'];
-		}
+        if (isset($this->request->get['order'])) {
+            $order = $this->request->get['order'];
+        } else {
+            $order = '';
+        }
 
-		if (isset($this->request->get['filter_vendor'])) {
-			$url .= '&filter_vendor=' . $this->request->get['filter_vendor'];
-		}
+        if (isset($this->request->get['filter_group'])) {
+            $filter_group = $this->request->get['filter_group'];
+        } else {
+            $filter_group = 'week';
+        }
 
-		if (isset($this->request->get['filter_vendor_id'])) {
-			$url .= '&filter_vendor_id=' . $this->request->get['filter_vendor_id'];
-		}
+        if (isset($this->request->get['page'])) {
+            $page = $this->request->get['page'];
+        } else {
+            $page = 1;
+        }
 
-		if (isset($this->request->get['filter_store'])) {
-			$url .= '&filter_store=' . $this->request->get['filter_store'];
-		}
-				
-		if (isset($this->request->get['filter_date_start'])) {
-			$url .= '&filter_date_start=' . $this->request->get['filter_date_start'];
-		}
+        $url = '';
 
-		if (isset($this->request->get['filter_date_end'])) {
-			$url .= '&filter_date_end=' . $this->request->get['filter_date_end'];
-		}
+        if (isset($this->request->get['filter_city'])) {
+            $url .= '&filter_city='.$this->request->get['filter_city'];
+        }
 
-		if (isset($this->request->get['filter_group'])) {
-			$url .= '&filter_group=' . $this->request->get['filter_group'];
-		}		
+        if (isset($this->request->get['filter_vendor'])) {
+            $url .= '&filter_vendor='.$this->request->get['filter_vendor'];
+        }
 
-		if (isset($this->request->get['filter_order_status_id'])) {
-			$url .= '&filter_order_status_id=' . $this->request->get['filter_order_status_id'];
-		}
+        if (isset($this->request->get['filter_vendor_id'])) {
+            $url .= '&filter_vendor_id='.$this->request->get['filter_vendor_id'];
+        }
 
-		if (isset($this->request->get['page'])) {
-			$url .= '&page=' . $this->request->get['page'];
-		}
+        if (isset($this->request->get['filter_store'])) {
+            $url .= '&filter_store='.$this->request->get['filter_store'];
+        }
 
-		$data['breadcrumbs'] = array();
+        if (isset($this->request->get['filter_date_start'])) {
+            $url .= '&filter_date_start='.$this->request->get['filter_date_start'];
+        }
 
-		$data['breadcrumbs'][] = array(
-			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),       		
-			'separator' => false
-		);
+        if (isset($this->request->get['filter_date_end'])) {
+            $url .= '&filter_date_end='.$this->request->get['filter_date_end'];
+        }
 
-		$data['breadcrumbs'][] = array(
-			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('report/vendor_orders', 'token=' . $this->session->data['token'] . $url, 'SSL'),
-			'separator' => ' :: '
-		);
+        if (isset($this->request->get['filter_group'])) {
+            $url .= '&filter_group='.$this->request->get['filter_group'];
+        }
 
-		$this->load->model('report/sale');
-		$this->load->model('sale/order');
+        if (isset($this->request->get['filter_order_status_id'])) {
+            $url .= '&filter_order_status_id='.$this->request->get['filter_order_status_id'];
+        }
 
-		$data['vendor_orders'] = array();
+        if (isset($this->request->get['page'])) {
+            $url .= '&page='.$this->request->get['page'];
+        }
 
-		$filter_data = array(
-			'filter_city'   	=> $filter_city, 
-			'filter_vendor'   	=> $this->getUserByName($filter_vendor),     
-			'filter_date_start'	=> $filter_date_start, 
-			'filter_date_end'	=> $filter_date_end, 
-			'filter_order_status_id'=> $filter_order_status_id,
-			'filter_store'            => $this->getStoreIdByName($filter_store),
-			'filter_group'          => $filter_group,
-			'sort'                  => $sort,
-			'order'                 => $order,
-			'start'                 => ($page - 1) * $this->config->get('config_limit_admin'),
-			'limit'                 => $this->config->get('config_limit_admin')
-		);
+        $data['breadcrumbs'] = [];
 
-		//echo "<pre>";print_r($filter_data);die;
+        $data['breadcrumbs'][] = [
+            'text' => $this->language->get('text_home'),
+            'href' => $this->url->link('common/home', 'token='.$this->session->data['token'], 'SSL'),
+            'separator' => false,
+        ];
 
-		$order_total = $this->model_report_sale->getTotalReportVendorOrders($filter_data);
-		$results = $this->model_report_sale->getReportVendorOrders($filter_data);
-		//$order_total = count($results);
+        $data['breadcrumbs'][] = [
+            'text' => $this->language->get('heading_title'),
+            'href' => $this->url->link('report/vendor_orders', 'token='.$this->session->data['token'].$url, 'SSL'),
+            'separator' => ' :: ',
+        ];
 
-		//echo "<pre>";print_r($results);die;
-		foreach ($results as $result) {
+        $this->load->model('report/sale');
+        $this->load->model('sale/order');
 
-			$products_qty = 0;
+        $data['vendor_orders'] = [];
 
-			if($this->model_sale_order->hasRealOrderProducts($result['order_id'])) {
+        $filter_data = [
+            'filter_city' => $filter_city,
+            'filter_vendor' => $this->getUserByName($filter_vendor),
+            'filter_date_start' => $filter_date_start,
+            'filter_date_end' => $filter_date_end,
+            'filter_order_status_id' => $filter_order_status_id,
+            'filter_store' => $this->getStoreIdByName($filter_store),
+            'filter_group' => $filter_group,
+            'sort' => $sort,
+            'order' => $order,
+            'start' => ($page - 1) * $this->config->get('config_limit_admin'),
+            'limit' => $this->config->get('config_limit_admin'),
+        ];
 
+        //echo "<pre>";print_r($filter_data);die;
+
+        $order_total = $this->model_report_sale->getTotalReportVendorOrders($filter_data);
+        $results = $this->model_report_sale->getReportVendorOrders($filter_data);
+        //$order_total = count($results);
+
+        //echo "<pre>";print_r($results);die;
+        foreach ($results as $result) {
+            $products_qty = 0;
+
+            if ($this->model_sale_order->hasRealOrderProducts($result['order_id'])) {
                 $products_qty = $this->model_sale_order->getRealOrderProductsItems($result['order_id']);
-
             } else {
-
                 $products_qty = $this->model_sale_order->getOrderProductsItems($result['order_id']);
             }
 
@@ -243,188 +237,183 @@ class ControllerReportVendorOrders extends Controller {
 
             //echo "<pre>";print_r($totals);die;
             foreach ($totals as $total) {
-                if($total['code'] == 'sub_total') {
+                if ('sub_total' == $total['code']) {
                     $sub_total = $total['value'];
                     break;
                 }
             }
 
-
             //echo "<pre>";print_r($products);die;
 
-			$data['vendor_orders'][] = array(
+            $data['vendor_orders'][] = [
+                'delivery_date' => date($this->language->get('date_format_short'), strtotime($result['delivery_date'])),
+                'order_id' => $result['order_id'],
+                'products' => $products_qty,
+                'subtotal' => $this->currency->format($sub_total),
+                'total' => $this->currency->format($result['total']),
+            ];
+        }
 
-				'delivery_date' => date($this->language->get('date_format_short'), strtotime($result['delivery_date'])),
-				'order_id' => $result['order_id'],
-				'products' => $products_qty,
-				'subtotal'     => $this->currency->format($sub_total),				
-				'total'     => $this->currency->format($result['total']),				
-			);
-		}
+        $data['heading_title'] = $this->language->get('heading_title');
 
-		$data['heading_title'] = $this->language->get('heading_title');
+        $data['text_no_results'] = $this->language->get('text_no_results');
+        $data['text_all_status'] = $this->language->get('text_all_status');
 
-		$data['text_no_results'] = $this->language->get('text_no_results');
-		$data['text_all_status'] = $this->language->get('text_all_status');
+        $data['text_list'] = $this->language->get('text_list');
+        $data['button_show_filter'] = $this->language->get('button_show_filter');
+        $data['button_hide_filter'] = $this->language->get('button_hide_filter');
 
-		$data['text_list'] = $this->language->get('text_list');                 
-		$data['button_show_filter'] = $this->language->get('button_show_filter');                 
-		$data['button_hide_filter'] = $this->language->get('button_hide_filter');    
-				
-		$data['column_date_start'] = $this->language->get('column_date_start');
-		$data['column_date_end'] = $this->language->get('column_date_end');
+        $data['column_date_start'] = $this->language->get('column_date_start');
+        $data['column_date_end'] = $this->language->get('column_date_end');
 
-		$data['column_delivery_date'] = $this->language->get('column_delivery_date');
+        $data['column_delivery_date'] = $this->language->get('column_delivery_date');
 
-		$data['column_orders'] = $this->language->get('column_orders');
-		$data['column_products'] = $this->language->get('column_products');
-		$data['column_tax'] = $this->language->get('column_tax');
-		$data['column_total'] = $this->language->get('column_total');
-		$data['column_subtotal'] = $this->language->get('column_subtotal');
-		$data['column_vendor'] = $this->language->get('column_vendor');
+        $data['column_orders'] = $this->language->get('column_orders');
+        $data['column_products'] = $this->language->get('column_products');
+        $data['column_tax'] = $this->language->get('column_tax');
+        $data['column_total'] = $this->language->get('column_total');
+        $data['column_subtotal'] = $this->language->get('column_subtotal');
+        $data['column_vendor'] = $this->language->get('column_vendor');
 
-		$data['entry_date_start'] = $this->language->get('entry_date_start');
-		$data['entry_date_end'] = $this->language->get('entry_date_end');
-		$data['entry_group'] = $this->language->get('entry_group');	
-		$data['entry_status'] = $this->language->get('entry_status');
-		$data['entry_city'] = $this->language->get('entry_city');
-		$data['entry_vendor'] = $this->language->get('entry_vendor');
-		$data['entry_store_name'] = $this->language->get('entry_store_name');
-		
+        $data['entry_date_start'] = $this->language->get('entry_date_start');
+        $data['entry_date_end'] = $this->language->get('entry_date_end');
+        $data['entry_group'] = $this->language->get('entry_group');
+        $data['entry_status'] = $this->language->get('entry_status');
+        $data['entry_city'] = $this->language->get('entry_city');
+        $data['entry_vendor'] = $this->language->get('entry_vendor');
+        $data['entry_store_name'] = $this->language->get('entry_store_name');
 
-		$data['button_filter'] = $this->language->get('button_filter');
+        $data['button_filter'] = $this->language->get('button_filter');
 
-		$data['token'] = $this->session->data['token'];
+        $data['token'] = $this->session->data['token'];
 
-		$this->load->model('localisation/order_status');
+        $this->load->model('localisation/order_status');
 
-		$data['groups'] = array();
+        $data['groups'] = [];
 
-		$data['groups'][] = array(
-			'text'  => $this->language->get('text_year'),
-			'value' => 'year',
-		);
+        $data['groups'][] = [
+            'text' => $this->language->get('text_year'),
+            'value' => 'year',
+        ];
 
-		$data['groups'][] = array(
-			'text'  => $this->language->get('text_month'),
-			'value' => 'month',
-		);
+        $data['groups'][] = [
+            'text' => $this->language->get('text_month'),
+            'value' => 'month',
+        ];
 
-		$data['groups'][] = array(
-			'text'  => $this->language->get('text_week'),
-			'value' => 'week',
-		);
+        $data['groups'][] = [
+            'text' => $this->language->get('text_week'),
+            'value' => 'week',
+        ];
 
-		$data['groups'][] = array(
-			'text'  => $this->language->get('text_day'),
-			'value' => 'day',
-		);
+        $data['groups'][] = [
+            'text' => $this->language->get('text_day'),
+            'value' => 'day',
+        ];
 
-		$url = '';
+        $url = '';
 
-		if (isset($this->request->get['filter_city'])) {
-			$url .= '&filter_city=' . $this->request->get['filter_city'];
-		}
-		
-		if (isset($this->request->get['filter_vendor'])) {
-			$url .= '&filter_vendor=' . $this->request->get['filter_vendor'];
-		}
+        if (isset($this->request->get['filter_city'])) {
+            $url .= '&filter_city='.$this->request->get['filter_city'];
+        }
 
-		if (isset($this->request->get['filter_vendor_id'])) {
-			$url .= '&filter_vendor_id=' . $this->request->get['filter_vendor_id'];
-		}
+        if (isset($this->request->get['filter_vendor'])) {
+            $url .= '&filter_vendor='.$this->request->get['filter_vendor'];
+        }
 
-		if (isset($this->request->get['filter_store'])) {
-			$url .= '&filter_store=' . $this->request->get['filter_store'];
-		}
+        if (isset($this->request->get['filter_vendor_id'])) {
+            $url .= '&filter_vendor_id='.$this->request->get['filter_vendor_id'];
+        }
 
-		if (isset($this->request->get['filter_date_start'])) {
-			$url .= '&filter_date_start=' . $this->request->get['filter_date_start'];
-		}
+        if (isset($this->request->get['filter_store'])) {
+            $url .= '&filter_store='.$this->request->get['filter_store'];
+        }
 
-		if (isset($this->request->get['filter_order_status_id'])) {
-			$url .= '&filter_order_status_id=' . $this->request->get['filter_order_status_id'];
-		}
+        if (isset($this->request->get['filter_date_start'])) {
+            $url .= '&filter_date_start='.$this->request->get['filter_date_start'];
+        }
 
-		if (isset($this->request->get['filter_date_end'])) {
-			$url .= '&filter_date_end=' . $this->request->get['filter_date_end'];
-		}
+        if (isset($this->request->get['filter_order_status_id'])) {
+            $url .= '&filter_order_status_id='.$this->request->get['filter_order_status_id'];
+        }
 
-		if (isset($this->request->get['filter_group'])) {
-			$url .= '&filter_group=' . $this->request->get['filter_group'];
-		}
-								
-		if ($order == 'ASC') {
-			$url .= '&order=DESC';
-		} else {
-			$url .= '&order=ASC';
-		}
-				
-		if (isset($this->request->get['sort'])) {
-			$data['sort'] = $this->request->get['sort'];
-		}else{
-			$data['sort'] = 'total';
-		}
-		
-		if (isset($this->request->get['order'])) {
-			$data['order'] = $this->request->get['order'];
-		}else{
-			$data['order'] = 'DESC';
-		}
-		
-		$data['sort_orders'] = $this->url->link('report/vendor_orders', 'token=' . $this->session->data['token'] . '&sort=orders' . $url, 'SSL');
-		$data['sort_products'] = $this->url->link('report/vendor_orders', 'token=' . $this->session->data['token'] . '&sort=products' . $url, 'SSL');
-		$data['sort_total'] = $this->url->link('report/vendor_orders', 'token=' . $this->session->data['token'] . '&sort=total' . $url, 'SSL');
-		$data['sort_subtotal'] = $this->url->link('report/vendor_orders', 'token=' . $this->session->data['token'] . '&sort=subtotal' . $url, 'SSL');
-				
-		$pagination = new Pagination();
-		$pagination->total = $order_total;
-		$pagination->page = $page;
-		$pagination->limit = $this->config->get('config_limit_admin');
-		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = $this->url->link('report/vendor_orders', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+        if (isset($this->request->get['filter_date_end'])) {
+            $url .= '&filter_date_end='.$this->request->get['filter_date_end'];
+        }
 
-		$data['pagination'] = $pagination->render();		
+        if (isset($this->request->get['filter_group'])) {
+            $url .= '&filter_group='.$this->request->get['filter_group'];
+        }
 
-		$data['results'] = sprintf($this->language->get('text_pagination'), ($order_total) ? (($page - 1) * $this->config->get('config_limit_admin')) + 1 : 0, ((($page - 1) * $this->config->get('config_limit_admin')) > ($order_total - $this->config->get('config_limit_admin'))) ? $order_total : ((($page - 1) * $this->config->get('config_limit_admin')) + $this->config->get('config_limit_admin')), $order_total, ceil($order_total / $this->config->get('config_limit_admin')));
-				
-		$data['filter_city'] = $filter_city;
-		$data['filter_vendor'] = $filter_vendor;
-		$data['filter_store'] = $filter_store;
-		$data['filter_date_start'] = $filter_date_start;
-		$data['filter_date_end'] = $filter_date_end;		
-				$data['filter_order_status_id'] = $filter_order_status_id;		
-		$data['filter_group'] = $filter_group;
-				
-				$this->load->model('localisation/order_status');
-		$data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
-				
-		$data['header'] = $this->load->controller('common/header');
-		$data['column_left'] = $this->load->controller('common/column_left');
-		$data['footer'] = $this->load->controller('common/footer');
+        if ('ASC' == $order) {
+            $url .= '&order=DESC';
+        } else {
+            $url .= '&order=ASC';
+        }
 
-		$this->response->setOutput($this->load->view('report/vendor_orders.tpl', $data));
-	}
+        if (isset($this->request->get['sort'])) {
+            $data['sort'] = $this->request->get['sort'];
+        } else {
+            $data['sort'] = 'total';
+        }
+
+        if (isset($this->request->get['order'])) {
+            $data['order'] = $this->request->get['order'];
+        } else {
+            $data['order'] = 'DESC';
+        }
+
+        $data['sort_orders'] = $this->url->link('report/vendor_orders', 'token='.$this->session->data['token'].'&sort=orders'.$url, 'SSL');
+        $data['sort_products'] = $this->url->link('report/vendor_orders', 'token='.$this->session->data['token'].'&sort=products'.$url, 'SSL');
+        $data['sort_total'] = $this->url->link('report/vendor_orders', 'token='.$this->session->data['token'].'&sort=total'.$url, 'SSL');
+        $data['sort_subtotal'] = $this->url->link('report/vendor_orders', 'token='.$this->session->data['token'].'&sort=subtotal'.$url, 'SSL');
+
+        $pagination = new Pagination();
+        $pagination->total = $order_total;
+        $pagination->page = $page;
+        $pagination->limit = $this->config->get('config_limit_admin');
+        $pagination->text = $this->language->get('text_pagination');
+        $pagination->url = $this->url->link('report/vendor_orders', 'token='.$this->session->data['token'].$url.'&page={page}', 'SSL');
+
+        $data['pagination'] = $pagination->render();
+
+        $data['results'] = sprintf($this->language->get('text_pagination'), ($order_total) ? (($page - 1) * $this->config->get('config_limit_admin')) + 1 : 0, ((($page - 1) * $this->config->get('config_limit_admin')) > ($order_total - $this->config->get('config_limit_admin'))) ? $order_total : ((($page - 1) * $this->config->get('config_limit_admin')) + $this->config->get('config_limit_admin')), $order_total, ceil($order_total / $this->config->get('config_limit_admin')));
+
+        $data['filter_city'] = $filter_city;
+        $data['filter_vendor'] = $filter_vendor;
+        $data['filter_store'] = $filter_store;
+        $data['filter_date_start'] = $filter_date_start;
+        $data['filter_date_end'] = $filter_date_end;
+        $data['filter_order_status_id'] = $filter_order_status_id;
+        $data['filter_group'] = $filter_group;
+
+        $this->load->model('localisation/order_status');
+        $data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
+
+        $data['header'] = $this->load->controller('common/header');
+        $data['column_left'] = $this->load->controller('common/column_left');
+        $data['footer'] = $this->load->controller('common/footer');
+
+        $this->response->setOutput($this->load->view('report/vendor_orders.tpl', $data));
+    }
 
     public function consolidatedOrderSheet()
     {
-
         $deliveryDate = $this->request->get['filter_delivery_date'];
 
-        $filter_data = array(
-            'filter_delivery_date' => $deliveryDate
-        );
+        $filter_data = [
+            'filter_delivery_date' => $deliveryDate,
+        ];
 
         $this->load->model('sale/order');
         // $results = $this->model_sale_order->getOrders($filter_data);
         $results = $this->model_sale_order->getNonCancelledOrders($filter_data);
-        $data = array();
-        $unconsolidatedProducts = array();
-
+        $data = [];
+        $unconsolidatedProducts = [];
 
         foreach ($results as $index => $order) {
             $data['orders'][$index] = $order;
-            $orderProducts = $this->model_sale_order->getOrderAndRealOrderProducts($data['orders'][$index]['order_id']); 
+            $orderProducts = $this->model_sale_order->getOrderAndRealOrderProducts($data['orders'][$index]['order_id']);
             $data['orders'][$index]['products'] = $orderProducts;
 
             foreach ($orderProducts as $product) {
@@ -432,14 +421,13 @@ class ControllerReportVendorOrders extends Controller {
                     'name' => $product['name'],
                     'unit' => $product['unit'],
                     'quantity' => $product['quantity'],
-					'note' => $product['product_note'],
-					'produce_type'=>$product['produce_type']
+                    'note' => $product['product_note'],
+                    'produce_type' => $product['produce_type'],
                 ];
             }
         }
 
-		$consolidatedProducts = array();
-		
+        $consolidatedProducts = [];
 
         foreach ($unconsolidatedProducts as $product) {
             $productName = $product['name'];
@@ -448,53 +436,47 @@ class ControllerReportVendorOrders extends Controller {
             $productNote = $product['product_note'];
             $produceType = $product['produce_type'];
 
-            $consolidatedProductNames = array_column($consolidatedProducts, "name");
-            if (array_search($productName, $consolidatedProductNames) !== false) {
+            $consolidatedProductNames = array_column($consolidatedProducts, 'name');
+            if (false !== array_search($productName, $consolidatedProductNames)) {
                 $indexes = array_keys($consolidatedProductNames, $productName);
 
                 $foundExistingProductWithSimilarUnit = false;
                 foreach ($indexes as $index) {
                     if ($productUnit == $consolidatedProducts[$index]['unit']) {
-						if($consolidatedProducts[$index]['produce_type'])
-						{
-							$produceType=$consolidatedProducts[$index]['produce_type'].' / '.$produceType.' ';
-						}
-						 
-						
+                        if ($consolidatedProducts[$index]['produce_type']) {
+                            $produceType = $consolidatedProducts[$index]['produce_type'].' / '.$produceType.' ';
+                        }
+
                         $consolidatedProducts[$index]['quantity'] += $productQuantity;
-                        $consolidatedProducts[$index]['produce_type']  = $produceType;
+                        $consolidatedProducts[$index]['produce_type'] = $produceType;
                         $foundExistingProductWithSimilarUnit = true;
                         break;
                     }
                 }
 
-                if(!$foundExistingProductWithSimilarUnit) {
+                if (!$foundExistingProductWithSimilarUnit) {
                     $consolidatedProducts[] = [
                         'name' => $productName,
                         'unit' => $productUnit,
                         'quantity' => $productQuantity,
-						'note' => $productNote,
+                        'note' => $productNote,
                         'produce_type' => $produceType,
-						
                     ];
                 }
             } else {
-
                 $consolidatedProducts[] = [
                     'name' => $productName,
                     'unit' => $productUnit,
                     'quantity' => $productQuantity,
-					'note' => $productNote,
-					'produce_type' => $produceType,
-					
+                    'note' => $productNote,
+                    'produce_type' => $produceType,
                 ];
             }
-		}
-		//echo "<pre>";print_r($consolidatedProducts);die;
-		
+        }
+        //echo "<pre>";print_r($consolidatedProducts);die;
 
         $data['products'] = $consolidatedProducts;
-         // echo "<pre>";print_r($data);die;
+        // echo "<pre>";print_r($data);die;
 
         $this->load->model('report/excel');
         $this->model_report_excel->download_consolidated_order_sheet_excel($data);

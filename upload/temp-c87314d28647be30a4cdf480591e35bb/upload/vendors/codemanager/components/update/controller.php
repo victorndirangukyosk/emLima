@@ -5,10 +5,9 @@
     *  as-is and without warranty under the MIT License. See
     *  [root]/license.txt for more. This information must remain intact.
     */
-    
 
-    require_once('../../common.php');
-    require_once('class.update.php');
+    require_once '../../common.php';
+    require_once 'class.update.php';
 
     //////////////////////////////////////////////////////////////////
     // Verify Session or Key
@@ -17,33 +16,31 @@
     checkSession();
 
     $update = new Update();
-    
+
     //////////////////////////////////////////////////////////////////
     // Set Initial Version
     //////////////////////////////////////////////////////////////////
 
-    if($_GET['action']=='init'){
+    if ('init' == $_GET['action']) {
         $update->Init();
     }
-    
+
     //////////////////////////////////////////////////////////////////
     // Clear Version
     //////////////////////////////////////////////////////////////////
 
-    if($_GET['action']=='clear'){
-        if(checkAccess()) {
+    if ('clear' == $_GET['action']) {
+        if (checkAccess()) {
             $update->Clear();
         }
     }
-    
+
     //////////////////////////////////////////////////////////////////
     // OptOut
     //////////////////////////////////////////////////////////////////
 
-    if($_GET['action']=='optout'){
-        if(checkAccess()) {
+    if ('optout' == $_GET['action']) {
+        if (checkAccess()) {
             $update->OptOut();
         }
     }
-
-?>

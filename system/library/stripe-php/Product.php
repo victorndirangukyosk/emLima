@@ -3,14 +3,12 @@
 namespace Stripe;
 
 /**
- * Class Product
- *
- * @package Stripe
+ * Class Product.
  */
 class Product extends ApiResource
 {
     /**
-     * @param string $id The ID of the Product to retrieve.
+     * @param string            $id   the ID of the Product to retrieve
      * @param array|string|null $opts
      *
      * @return Product
@@ -21,10 +19,10 @@ class Product extends ApiResource
     }
 
     /**
-     * @param array|null $params
+     * @param array|null        $params
      * @param array|string|null $opts
      *
-     * @return Product The created Product.
+     * @return Product the created Product
      */
     public static function create($params = null, $opts = null)
     {
@@ -32,11 +30,11 @@ class Product extends ApiResource
     }
 
     /**
-     * @param string $id The ID of the product to update.
-     * @param array|null $params
+     * @param string            $id      the ID of the product to update
+     * @param array|null        $params
      * @param array|string|null $options
      *
-     * @return Product The updated product.
+     * @return Product the updated product
      */
     public static function update($id, $params = null, $options = null)
     {
@@ -46,7 +44,7 @@ class Product extends ApiResource
     /**
      * @param array|string|null $opts
      *
-     * @return Product The saved Product.
+     * @return Product the saved Product
      */
     public function save($opts = null)
     {
@@ -54,7 +52,7 @@ class Product extends ApiResource
     }
 
     /**
-     * @param array|null $params
+     * @param array|null        $params
      * @param array|string|null $opts
      *
      * @return Collection of Products
@@ -65,10 +63,10 @@ class Product extends ApiResource
     }
 
     /**
-     * @param array|null $params
+     * @param array|null        $params
      * @param array|string|null $opts
      *
-     * @return Product The deleted product.
+     * @return Product the deleted product
      */
     public function delete($params = null, $opts = null)
     {
