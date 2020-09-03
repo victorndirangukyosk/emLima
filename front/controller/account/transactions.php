@@ -538,11 +538,11 @@ class Controlleraccounttransactions extends Controller {
         $status = $this->ipinlistenercustom('CHANGE', $transaction_tracking_id, $merchant_reference, $order_id);
 
         if ('COMPLETED' == $status) {
-            $this->response->redirect($this->url->link('checkout/success'));
+            $this->response->redirect($this->url->link('checkout/pesapalsuccess'));
         }
 
         if ('COMPLETED' != $status || null == $status) {
-            $this->response->redirect($this->url->link('checkout/success/orderfailed'));
+            $this->response->redirect($this->url->link('checkout/success/pesapalfailed'));
         }
     }
 
