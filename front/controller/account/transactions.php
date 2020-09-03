@@ -444,6 +444,7 @@ class Controlleraccounttransactions extends Controller {
         }
 
         $pesapal_creds = $this->model_setting_setting->getSetting('pesapal', 0);
+        $this->model_checkout_order->UpdatePaymentMethod($order_id, 'PesaPal', 'pesapal');
 
         //pesapal params
         $token = $params = null;
