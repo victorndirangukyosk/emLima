@@ -426,6 +426,26 @@
      scrollTop: $("#payment_options").offset().top
      }, 2000);
      */
+    $.ajax({
+    url: 'index.php?path=account/transactions/pesapal',
+            type: 'post',
+            data: {
+            order_id : orderId,
+                    amount : amount_to_pay
+            },
+            dataType: 'html',
+            cache: false,
+            async: false,
+            success: function(json) {
+            console.log("json");
+            console.log(json);
+            /*$('#confirm-order').remove(); */
+            $('#pay-confirm-order').html(json);
+            $('#pay-confirm-order').removeAttr('style');
+            return true;
+            //window.location = json.redirect;
+            },
+    });
     }
 
     function payOptionSelected(){
