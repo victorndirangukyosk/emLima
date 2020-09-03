@@ -439,12 +439,14 @@
             success: function(json) {
             console.log("json");
             console.log(json);
-            /*$('#confirm-order').remove(); */
             $('#pay-confirm-order').html(json);
             $('#pay-confirm-order').removeAttr('style');
             return true;
             //window.location = json.redirect;
-            },
+            },error: function(xhr, ajaxOptions, thrownError) {
+            alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+            return false;
+            }
     });
     }
 

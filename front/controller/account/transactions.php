@@ -443,20 +443,6 @@ class Controlleraccounttransactions extends Controller {
             $amount = (int) ($order_info['total']);
         }
 
-        $data['text_instruction'] = $this->language->get('text_instruction');
-        $data['text_payable'] = $this->language->get('text_payable');
-        $data['text_address'] = $this->language->get('text_address');
-        $data['text_payment'] = $this->language->get('text_payment');
-
-        $data['button_confirm'] = $this->language->get('button_confirm');
-
-        $data['payable'] = $this->config->get('pesapal_payable');
-        $data['address'] = nl2br($this->config->get('config_address'));
-
-        $data['continue'] = $this->url->link('checkout/success');
-
-        $data['customer_number'] = $this->customer->getTelephone();
-
         $pesapal_creds = $this->model_setting_setting->getSetting('pesapal', 0);
 
         //pesapal params
@@ -519,13 +505,16 @@ class Controlleraccounttransactions extends Controller {
         $this->load->model('checkout/order');
         $this->load->model('account/customer');
 
-        foreach ($this->session->data['order_id'] as $key => $value) {
-            $order_id = $value;
+        $transaction_tracking_id = $this->request->get['pesapal_transaction_tracking_id'];
+        $merchant_reference = $this->request->get['pesapal_merchant_reference'];
+        $order_details = explode('-', $merchant_reference);
+        if (is_array($order_details)) {
+            $order_id = $order_details[0];
         }
 
-        $log->write('Pesapal Order ID');
-        $log->write($this->session->data['order_id']);
-        $log->write('Pesapal Order ID');
+        $log->write('Pesapal Order ID From Transactions Page');
+        $log->write($order_id);
+        $log->write('Pesapal Order ID From Transactions Page');
         $order_info = $this->model_checkout_order->getOrder($order_id);
         $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
         $log->write('Pesapal Creds Customer Info');
