@@ -23,6 +23,8 @@ class Controlleraccounttransactions extends Controller
         $data['redirect_coming'] = false;
 
         $this->document->addStyle('/front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_login.css');
+        $this->document->addScript('https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js');
+        $this->document->addScript('https://www.js-tutorials.com/demos/jquery_bootstrap_pagination_example_demo/jquery.twbsPagination.min.js');
 
         if (!$this->customer->isLogged()) {
             $this->session->data['redirect'] = $this->url->link('account/profileinfo', '', 'SSL');
@@ -214,7 +216,7 @@ class Controlleraccounttransactions extends Controller
         $order_total = $this->model_account_order->getTotalOrders();
 
         $results_orders = $this->model_account_order->getOrders(($page - 1) * 10, 10, $NoLimit = true);
-        $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online'];
+        $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal'];
         $statusCancelledFilter = ['Cancelled'];
         $statusSucessFilter = ['Delivered', 'Partially Delivered'];
         $statusPendingFilter = ['Cancelled', 'Delivered', 'Refunded', 'Returned', 'Partially Delivered'];
@@ -273,5 +275,146 @@ class Controlleraccounttransactions extends Controller
         }
 
         return !$this->error;
+    }
+
+    public function pendingtransactions()
+    {
+        $data['orders'] = [];
+
+        $this->load->model('account/order');
+        $order_total = $this->model_account_order->getTotalOrders();
+
+        $results_orders = $this->model_account_order->getOrders(($page - 1) * 10, 10, $NoLimit = true);
+        $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal'];
+        $statusCancelledFilter = ['Cancelled'];
+        $statusSucessFilter = ['Delivered', 'Partially Delivered'];
+        $statusPendingFilter = ['Cancelled', 'Delivered', 'Refunded', 'Returned', 'Partially Delivered'];
+        $data['pending_transactions'] = [];
+        $data['success_transactions'] = [];
+        $data['cancelled_transactions'] = [];
+        //echo "<pre>";print_r($results_orders);die;
+        $totalPendingAmount = 0;
+        if (count($results_orders) > 0) {
+            foreach ($results_orders as $order) {
+                $this->load->model('sale/order');
+                $order['transcation_id'] = $this->model_sale_order->getOrderTransactionId($order['order_id']);
+                //echo "<pre>";print_r($order);die;
+                if (in_array($order['payment_method'], $PaymentFilter)) {
+                    if (!empty($order['transcation_id'])) {
+                        //if(in_array($order['status'],$statusSucessFilter) && !empty($order['transcation_id'])){
+                        if (is_array($order) && array_key_exists('total', $order)) {
+                            $order['total_currency'] = $this->currency->format($order['total']);
+                        }
+                        $data['success_transactions'][] = $order;
+                    } elseif (in_array($order['status'], $statusCancelledFilter)) {
+                        if (is_array($order) && array_key_exists('total', $order)) {
+                            $order['total_currency'] = $this->currency->format($order['total']);
+                        }
+                        $data['cancelled_transactions'][] = $order;
+                    } elseif (!in_array($order['status'], $statusCancelledFilter)) {
+                        if (is_array($order) && array_key_exists('total', $order)) {
+                            $order['total_currency'] = $this->currency->format($order['total']);
+                        }
+                        $totalPendingAmount = $totalPendingAmount + $order['total'];
+                        $totalPendingAmount = $this->currency->format($totalPendingAmount);
+                        $data['pending_order_id'][] = $order['order_id'];
+                        $data['pending_transactions'][] = $order;
+                    }
+                }
+            }
+        }
+        //echo "<pre>";print_r($data);die;
+        $data['total_pending_amount'] = $this->currency->format($totalPendingAmount);
+        $data['pending_order_id'] = implode('--', $data['pending_order_id']);
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($data));
+    }
+
+    public function successfulltransactions()
+    {
+        $data['orders'] = [];
+
+        $this->load->model('account/order');
+        $order_total = $this->model_account_order->getTotalOrders();
+
+        $results_orders = $this->model_account_order->getOrders(($page - 1) * 10, 10, $NoLimit = true);
+        $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal'];
+        $statusCancelledFilter = ['Cancelled'];
+        $statusSucessFilter = ['Delivered', 'Partially Delivered'];
+        $statusPendingFilter = ['Cancelled', 'Delivered', 'Refunded', 'Returned', 'Partially Delivered'];
+        $data['pending_transactions'] = [];
+        $data['success_transactions'] = [];
+        $data['cancelled_transactions'] = [];
+        //echo "<pre>";print_r($results_orders);die;
+        $totalPendingAmount = 0;
+        if (count($results_orders) > 0) {
+            foreach ($results_orders as $order) {
+                $this->load->model('sale/order');
+                $order['transcation_id'] = $this->model_sale_order->getOrderTransactionId($order['order_id']);
+                //echo "<pre>";print_r($order);die;
+                if (in_array($order['payment_method'], $PaymentFilter)) {
+                    if (!empty($order['transcation_id'])) {
+                        //if(in_array($order['status'],$statusSucessFilter) && !empty($order['transcation_id'])){
+                        $data['success_transactions'][] = $order;
+                    } elseif (in_array($order['status'], $statusCancelledFilter)) {
+                        $data['cancelled_transactions'][] = $order;
+                    } elseif (!in_array($order['status'], $statusCancelledFilter)) {
+                        $totalPendingAmount = $totalPendingAmount + $order['total'];
+                        $totalPendingAmount = $this->currency->format($totalPendingAmount);
+                        $data['pending_order_id'][] = $order['order_id'];
+                        $data['pending_transactions'][] = $order;
+                    }
+                }
+            }
+        }
+        //echo "<pre>";print_r($data);die;
+        $data['total_pending_amount'] = $this->currency->format($totalPendingAmount);
+        $data['pending_order_id'] = implode('--', $data['pending_order_id']);
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($data));
+    }
+
+    public function cancelledtransactions()
+    {
+        $data['orders'] = [];
+
+        $this->load->model('account/order');
+        $order_total = $this->model_account_order->getTotalOrders();
+
+        $results_orders = $this->model_account_order->getOrders(($page - 1) * 10, 10, $NoLimit = true);
+        $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal'];
+        $statusCancelledFilter = ['Cancelled'];
+        $statusSucessFilter = ['Delivered', 'Partially Delivered'];
+        $statusPendingFilter = ['Cancelled', 'Delivered', 'Refunded', 'Returned', 'Partially Delivered'];
+        $data['pending_transactions'] = [];
+        $data['success_transactions'] = [];
+        $data['cancelled_transactions'] = [];
+        //echo "<pre>";print_r($results_orders);die;
+        $totalPendingAmount = 0;
+        if (count($results_orders) > 0) {
+            foreach ($results_orders as $order) {
+                $this->load->model('sale/order');
+                $order['transcation_id'] = $this->model_sale_order->getOrderTransactionId($order['order_id']);
+                //echo "<pre>";print_r($order);die;
+                if (in_array($order['payment_method'], $PaymentFilter)) {
+                    if (!empty($order['transcation_id'])) {
+                        //if(in_array($order['status'],$statusSucessFilter) && !empty($order['transcation_id'])){
+                        $data['success_transactions'][] = $order;
+                    } elseif (in_array($order['status'], $statusCancelledFilter)) {
+                        $data['cancelled_transactions'][] = $order;
+                    } elseif (!in_array($order['status'], $statusCancelledFilter)) {
+                        $totalPendingAmount = $totalPendingAmount + $order['total'];
+                        $totalPendingAmount = $this->currency->format($totalPendingAmount);
+                        $data['pending_order_id'][] = $order['order_id'];
+                        $data['pending_transactions'][] = $order;
+                    }
+                }
+            }
+        }
+        //echo "<pre>";print_r($data);die;
+        $data['total_pending_amount'] = $this->currency->format($totalPendingAmount);
+        $data['pending_order_id'] = implode('--', $data['pending_order_id']);
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($data));
     }
 }
