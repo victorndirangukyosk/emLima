@@ -28,9 +28,9 @@ class ModelCheckoutOrder extends Model
         $log->write('addMultiOrder 123');
         $log->write($is_he_parents);
         $log->write('addMultiOrder 123');
-        $parent_approval = NULL == $is_he_parents ? 'Approved' : 'Pending';
+        $parent_approval = null == $is_he_parents ? 'Approved' : 'Pending';
 
-        $order_status_id = NULL == $is_he_parents ? 14 : 15;
+        $order_status_id = null == $is_he_parents ? 14 : 15;
 
         if ($orders) {
             foreach ($stores as $key => $data) {
@@ -117,8 +117,8 @@ class ModelCheckoutOrder extends Model
         $log->write('addMultiOrder 123');
         $log->write($is_he_parents);
         $log->write('addMultiOrder 123');
-        $parent_approval = NULL == $is_he_parents ? 'Approved' : 'Pending';
-        $order_status_id = NULL == $is_he_parents ? 14 : 15;
+        $parent_approval = null == $is_he_parents ? 'Approved' : 'Pending';
+        $order_status_id = null == $is_he_parents ? 14 : 15;
 
         //if ( $orders && count($stores) == count($this->session->data['order_id'])) {
         if ($orders) {
