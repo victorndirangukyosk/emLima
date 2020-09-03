@@ -1,27 +1,28 @@
 <?php
 
-require_once DIR_SYSTEM . '/vendor/konduto/vendor/autoload.php';
+require_once DIR_SYSTEM.'/vendor/konduto/vendor/autoload.php';
 
 //require_once DIR_SYSTEM.'/vendor/mpesa-php-sdk-master/vendor/autoload.php';
 
-require_once DIR_SYSTEM . '/vendor/fcp-php/autoload.php';
+require_once DIR_SYSTEM.'/vendor/fcp-php/autoload.php';
 
-require DIR_SYSTEM . 'vendor/Facebook/autoload.php';
+require DIR_SYSTEM.'vendor/Facebook/autoload.php';
 
-require_once DIR_APPLICATION . '/controller/api/settings.php';
+require_once DIR_APPLICATION.'/controller/api/settings.php';
 
-class Controlleraccounttransactions extends Controller {
-
+class Controlleraccounttransactions extends Controller
+{
     private $error = [];
 
-    public function index() {
+    public function index()
+    {
         $data['kondutoStatus'] = $this->config->get('config_konduto_status');
 
         $data['konduto_public_key'] = $this->config->get('config_konduto_public_key');
 
         $data['redirect_coming'] = false;
 
-        $this->document->addStyle('/front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_login.css');
+        $this->document->addStyle('/front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_login.css');
         $this->document->addScript('https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js');
         $this->document->addScript('https://www.js-tutorials.com/demos/jquery_bootstrap_pagination_example_demo/jquery.twbsPagination.min.js');
 
@@ -46,7 +47,7 @@ class Controlleraccounttransactions extends Controller {
 
             $activity_data = [
                 'customer_id' => $this->customer->getId(),
-                'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
+                'name' => $this->customer->getFirstName().' '.$this->customer->getLastName(),
             ];
             $log = new Log('error.log');
             $log->write('account profileinfo');
@@ -249,14 +250,15 @@ class Controlleraccounttransactions extends Controller {
         //echo "<pre>";print_r($data);die;
         $data['total_pending_amount'] = $totalPendingAmount;
         $data['pending_order_id'] = implode('--', $data['pending_order_id']);
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/my_transactions.tpl')) {
-            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/my_transactions.tpl', $data));
+        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/account/my_transactions.tpl')) {
+            $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/account/my_transactions.tpl', $data));
         } else {
             $this->response->setOutput($this->load->view('default/template/account/my_transactions.tpl', $data));
         }
     }
 
-    protected function validate() {
+    protected function validate()
+    {
         //print_r($this->request->post);die;
         $this->load->language('account/edit');
 
@@ -275,8 +277,8 @@ class Controlleraccounttransactions extends Controller {
         return !$this->error;
     }
 
-    public function pendingtransactions() {
-
+    public function pendingtransactions()
+    {
         $data['orders'] = [];
 
         $this->load->model('account/order');
@@ -328,8 +330,8 @@ class Controlleraccounttransactions extends Controller {
         $this->response->setOutput(json_encode($data));
     }
 
-    public function successfulltransactions() {
-
+    public function successfulltransactions()
+    {
         $data['orders'] = [];
 
         $this->load->model('account/order');
@@ -372,8 +374,8 @@ class Controlleraccounttransactions extends Controller {
         $this->response->setOutput(json_encode($data));
     }
 
-    public function cancelledtransactions() {
-
+    public function cancelledtransactions()
+    {
         $data['orders'] = [];
 
         $this->load->model('account/order');
@@ -415,5 +417,4 @@ class Controlleraccounttransactions extends Controller {
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($data));
     }
-
 }
