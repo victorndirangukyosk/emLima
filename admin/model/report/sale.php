@@ -341,7 +341,11 @@ class ModelReportSale extends Model
 
     public function getVendorOrders($data = [])
     {
-        $sql = 'SELECT MIN(o.date_added) AS date_start, MAX(o.date_added) AS date_end, COUNT(*) AS `orders`, SUM((SELECT SUM(op.quantity) FROM `'.DB_PREFIX.'order_product` op WHERE op.order_id = o.order_id GROUP BY op.order_id)) AS products, 		SUM((SELECT SUM(op.total) FROM `'.DB_PREFIX.'order_product` op WHERE op.order_id = o.order_id GROUP BY op.order_id)) AS subtotal,		u.username as vendor, SUM((SELECT SUM(ot.value) FROM `'.DB_PREFIX."order_total` ot WHERE ot.order_id = o.order_id AND ot.code = 'tax' GROUP BY ot.order_id)) AS tax, SUM(o.total) AS `total` FROM `".DB_PREFIX.'order` o';
+        $sql = 'SELECT MIN(o.date_added) AS date_start, MAX(o.date_added) AS date_end, COUNT(*) AS `orders`, SUM((SELECT SUM(op.quantity) FROM `'.DB_PREFIX.'order_product` op WHERE op.order_id = o.order_id GROUP BY op.order_id)) AS products, 
+
+		SUM((SELECT SUM(op.total) FROM `'.DB_PREFIX.'order_product` op WHERE op.order_id = o.order_id GROUP BY op.order_id)) AS subtotal,
+
+		u.username as vendor, SUM((SELECT SUM(ot.value) FROM `'.DB_PREFIX."order_total` ot WHERE ot.order_id = o.order_id AND ot.code = 'tax' GROUP BY ot.order_id)) AS tax, SUM(o.total) AS `total` FROM `".DB_PREFIX.'order` o';
 
         $sql .= ' INNER JOIN `'.DB_PREFIX.'store` st on st.store_id = o.store_id ';
         $sql .= ' inner join '.DB_PREFIX.'user u on u.user_id = st.vendor_id';
@@ -786,7 +790,13 @@ class ModelReportSale extends Model
 
     public function getStoreSaleOrders($data = [])
     {
-        $sql = 'SELECT MIN(o.date_added) AS date_start, MAX(o.date_added) AS date_end, COUNT(*) AS `orders`, SUM((SELECT SUM(op.quantity) FROM `'.DB_PREFIX.'order_product` op WHERE op.order_id = o.order_id GROUP BY op.order_id)) AS products, 		st.name as store,		SUM((SELECT SUM(op.total) FROM `'.DB_PREFIX.'order_product` op WHERE op.order_id = o.order_id GROUP BY op.order_id)) AS subtotal,		u.username as vendor, SUM((SELECT SUM(ot.value) FROM `'.DB_PREFIX."order_total` ot WHERE ot.order_id = o.order_id AND ot.code = 'tax' GROUP BY ot.order_id)) AS tax, SUM(o.total) AS `total` FROM `".DB_PREFIX.'order` o';
+        $sql = 'SELECT MIN(o.date_added) AS date_start, MAX(o.date_added) AS date_end, COUNT(*) AS `orders`, SUM((SELECT SUM(op.quantity) FROM `'.DB_PREFIX.'order_product` op WHERE op.order_id = o.order_id GROUP BY op.order_id)) AS products, 
+
+		st.name as store,
+
+		SUM((SELECT SUM(op.total) FROM `'.DB_PREFIX.'order_product` op WHERE op.order_id = o.order_id GROUP BY op.order_id)) AS subtotal,
+
+		u.username as vendor, SUM((SELECT SUM(ot.value) FROM `'.DB_PREFIX."order_total` ot WHERE ot.order_id = o.order_id AND ot.code = 'tax' GROUP BY ot.order_id)) AS tax, SUM(o.total) AS `total` FROM `".DB_PREFIX.'order` o';
 
         $sql .= ' INNER JOIN `'.DB_PREFIX.'store` st on st.store_id = o.store_id ';
         $sql .= ' inner join '.DB_PREFIX.'user u on u.user_id = st.vendor_id';
@@ -2170,4 +2180,80 @@ class ModelReportSale extends Model
 
         return $this->db->query($sql)->rows;
     }
+
+
+
+    public function getNonCancelledOrders($data = [])
+    {
+        $sql = "SELECT o.order_id, o.delivery_date, o.order_status_id,o.store_name,o.comment,  o.date_added,o.shipping_address, o.date_modified FROM `".DB_PREFIX.'order` o ';
+        //$sql = "SELECT c.name as city, o.firstname,o.lastname,o.comment, (SELECT cust.company_name FROM hf7_customer cust WHERE o.customer_id = cust.customer_id ) AS company_name,o.order_id, o.delivery_date, o.delivery_timeslot, o.shipping_method, o.shipping_address, o.payment_method, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS status,(SELECT os.color FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS color, o.shipping_code, o.order_status_id,o.store_name,  o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified,o.po_number FROM `" . DB_PREFIX . "order` o ";
+
+       // $sql .= 'left join `'.DB_PREFIX.'city` c on c.city_id = o.shipping_city_id';
+       // $sql .= ' LEFT JOIN '.DB_PREFIX.'store on('.DB_PREFIX.'store.store_id = o.store_id) ';
+//o.order_status_id != '6'  And o.order_status_id != '15'  And
+        if (isset($data['filter_order_status_id'])) {
+        $sql .= " WHERE  o.order_status_id > '0'";
+
+        } else {
+        $sql .= " WHERE o.order_status_id > '0' ";
+        }
+
+        if ($this->user->isVendor()) {
+            $sql .= ' AND '.DB_PREFIX.'store.vendor_id="'.$this->user->getId().'"';
+        }
+
+        if (!empty($data['filter_city'])) {
+            $sql .= " AND c.name LIKE '".$data['filter_city']."%'";
+        }
+    
+    if(DATE($data['filter_date_start'])!=DATE($data['filter_date_end']))
+    {
+        if (!empty($data['filter_date_start'])) {
+            $sql .= " AND DATE(o.date_added) >= DATE('".($data['filter_date_start'])."')";
+        }
+
+        if (!empty($data['filter_date_end'])) {
+            $sql .= " AND DATE(o.date_added) <= DATE('".$this->db->escape($data['filter_date_end'])."')";
+        }
+    }
+    else
+    {
+        $sql .= " AND DATE(o.date_added) = DATE('".($data['filter_date_start'])."')";
+    }
+
+
+       
+
+    //     $sort_data = [
+    //        'o.order_id',
+    //        'customer',
+    //        'status',
+    //        'o.date_added',
+    //        'o.date_modified',
+    //        'o.total',
+    //        'c.name',
+    //    ];
+
+        // if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
+        //     $sql .= ' ORDER BY '.$data['sort'];
+        // } else {
+        //     $sql .= ' ORDER BY o.order_id';
+        // }
+
+        // if (isset($data['order']) && ('DESC' == $data['order'])) {
+        //     $sql .= ' DESC';
+        // } else {
+        //     $sql .= ' ASC';
+        // }
+
+         
+
+        $query = $this->db->query($sql);
+
+     //  echo "<pre>";print_r($sql);die;
+
+
+        return $query->rows;
+    }
+
 }

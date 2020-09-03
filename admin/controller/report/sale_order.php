@@ -104,6 +104,8 @@ class ControllerReportSaleOrder extends Controller
             $data['orders'][] = [
                 'date_start' => date($this->language->get('date_format_short'), strtotime($result['date_start'])),
                 'date_end' => date($this->language->get('date_format_short'), strtotime($result['date_end'])),
+                'date_starto' => $result['date_start'],
+                'date_endo' => $result['date_end'],
                 'orders' => $result['orders'],
                 'products' => $result['products'],
                 'tax' => $this->currency->format($result['tax'], $this->config->get('config_currency')),

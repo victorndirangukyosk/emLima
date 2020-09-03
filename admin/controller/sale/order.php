@@ -7132,4 +7132,103 @@ class ControllerSaleOrder extends Controller
         $this->load->model('report/excel');
         $this->model_report_excel->download_order_products_excel($data);
     }
+
+
+
+    public function consolidatedOrdersSummary()
+    { 
+        
+        $filter_city = $this->request->get['filter_city'];
+        $filter_date_start = $this->request->get['orderstartdate'];
+        $filter_date_end = $this->request->get['orderenddate'];
+        $filter_order_status_id = $this->request->get['filter_order_status_id']; 
+
+        $filter_data = [
+            'filter_city' => $filter_city,
+            'filter_date_start' => $filter_date_start,
+            'filter_date_end' => $filter_date_end, 
+            'filter_order_status_id' => $filter_order_status_id 
+        ]; 
+
+
+          //echo "<pre>";print_r($filter_data);die;
+
+        $this->load->model('report/sale'); 
+        $results = $this->model_report_sale->getNonCancelledOrders($filter_data);
+        //  echo "<pre>";print_r($results);die;
+
+        $data = []; 
+        $unconsolidatedProducts = [];
+        $this->load->model('sale/order'); 
+
+        foreach ($results as $index => $order) {
+            $data['orders'][$index] = $order;
+            $orderProducts = $this->model_sale_order->getOrderAndRealOrderProducts($data['orders'][$index]['order_id']);
+            $data['orders'][$index]['products'] = $orderProducts;
+
+            foreach ($orderProducts as $product) {
+                $unconsolidatedProducts[] = [
+                    'name' => $product['name'],
+                    'unit' => $product['unit'],
+                    'quantity' => $product['quantity'],
+                    'note' => $product['product_note'],
+                    'produce_type' => $product['produce_type'],
+                ];
+            }
+        }
+
+        $consolidatedProducts = [];
+
+        foreach ($unconsolidatedProducts as $product) {
+            $productName = $product['name'];
+            $productUnit = $product['unit'];
+            $productQuantity = $product['quantity'];
+            $productNote = $product['product_note'];
+            $produceType = $product['produce_type'];
+
+            $consolidatedProductNames = array_column($consolidatedProducts, 'name');
+            if (false !== array_search($productName, $consolidatedProductNames)) {
+                $indexes = array_keys($consolidatedProductNames, $productName);
+
+                $foundExistingProductWithSimilarUnit = false;
+                foreach ($indexes as $index) {
+                    if ($productUnit == $consolidatedProducts[$index]['unit']) {
+                        if ($consolidatedProducts[$index]['produce_type']) {
+                            $produceType = $consolidatedProducts[$index]['produce_type'].' / '.$produceType.' ';
+                        }
+
+                        $consolidatedProducts[$index]['quantity'] += $productQuantity;
+                        $consolidatedProducts[$index]['produce_type'] = $produceType;
+                        $foundExistingProductWithSimilarUnit = true;
+                        break;
+                    }
+                }
+
+                if (!$foundExistingProductWithSimilarUnit) {
+                    $consolidatedProducts[] = [
+                        'name' => $productName,
+                        'unit' => $productUnit,
+                        'quantity' => $productQuantity,
+                        'note' => $productNote,
+                        'produce_type' => $produceType,
+                    ];
+                }
+            } else {
+                $consolidatedProducts[] = [
+                    'name' => $productName,
+                    'unit' => $productUnit,
+                    'quantity' => $productQuantity,
+                    'note' => $productNote,
+                    'produce_type' => $produceType,
+                ];
+            }
+        }
+         //echo "<pre>";print_r($consolidatedProducts);die;
+
+        $data['products'] = $consolidatedProducts;
+        // echo "<pre>";print_r($data);die;
+
+        $this->load->model('report/excel');
+        $this->model_report_excel->download_consolidated_order_products_excel($data);
+    }
 }
