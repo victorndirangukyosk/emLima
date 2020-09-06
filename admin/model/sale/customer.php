@@ -93,6 +93,10 @@ class ModelSaleCustomer extends Model
 
         $implode = [];
 
+        if (!empty($data['filter_company'])) {
+            $implode[] = "company_name LIKE '%".$this->db->escape($data['filter_company'])."%'";
+        }
+
         if (!empty($data['filter_name'])) {
             if ($this->user->isVendor()) {
                 $implode[] = "c.firstname LIKE '%".$this->db->escape($data['filter_name'])."%'";
@@ -307,6 +311,10 @@ class ModelSaleCustomer extends Model
         $sql = 'SELECT COUNT(*) AS total FROM '.DB_PREFIX.'customer';
 
         $implode = [];
+
+        if (!empty($data['filter_company'])) {
+            $implode[] = "company_name LIKE '%".$this->db->escape($data['filter_company'])."%'";
+        }
 
         if (!empty($data['filter_name'])) {
             $implode[] = "CONCAT(firstname, ' ', lastname) LIKE '%".$this->db->escape($data['filter_name'])."%'";

@@ -43,6 +43,10 @@ class ControllerSaleCustomer extends Controller
 
             $url = '';
 
+            if (isset($this->request->get['filter_company'])) {
+                $url .= '&filter_company='.urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
+            }
+
             if (isset($this->request->get['filter_name'])) {
                 $url .= '&filter_name='.urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
             }
@@ -124,6 +128,10 @@ class ControllerSaleCustomer extends Controller
 
             $url = '';
 
+            if (isset($this->request->get['filter_company'])) {
+                $url .= '&filter_company='.urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
+            }
+
             if (isset($this->request->get['filter_name'])) {
                 $url .= '&filter_name='.urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
             }
@@ -195,6 +203,10 @@ class ControllerSaleCustomer extends Controller
 
             $url = '';
 
+            if (isset($this->request->get['filter_company'])) {
+                $url .= '&filter_company='.urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
+            }
+
             if (isset($this->request->get['filter_name'])) {
                 $url .= '&filter_name='.urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
             }
@@ -264,6 +276,10 @@ class ControllerSaleCustomer extends Controller
 
             $url = '';
 
+            if (isset($this->request->get['filter_company'])) {
+                $url .= '&filter_company='.urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
+            }
+
             if (isset($this->request->get['filter_name'])) {
                 $url .= '&filter_name='.urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
             }
@@ -325,6 +341,11 @@ class ControllerSaleCustomer extends Controller
 
             $url = '';
 
+
+            if (isset($this->request->get['filter_company'])) {
+                $url .= '&filter_company='.urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
+            }
+
             if (isset($this->request->get['filter_name'])) {
                 $url .= '&filter_name='.urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
             }
@@ -374,6 +395,13 @@ class ControllerSaleCustomer extends Controller
     protected function getList()
     {
         $this->load->language('sale/customer');
+
+
+        if (isset($this->request->get['filter_company'])) {
+            $filter_company = $this->request->get['filter_company'];
+        } else {
+            $filter_company = null;
+        }
 
         if (isset($this->request->get['filter_name'])) {
             $filter_name = $this->request->get['filter_name'];
@@ -443,6 +471,10 @@ class ControllerSaleCustomer extends Controller
 
         $url = '';
 
+        if (isset($this->request->get['filter_company'])) {
+            $url .= '&filter_company='.urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
+        }  
+
         if (isset($this->request->get['filter_name'])) {
             $url .= '&filter_name='.urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
         }
@@ -505,6 +537,7 @@ class ControllerSaleCustomer extends Controller
         $data['customers'] = [];
 
         $filter_data = [
+            'filter_company'=>$filter_company,
             'filter_name' => $filter_name,
             'filter_email' => $filter_email,
             'filter_telephone' => $filter_telephone,
@@ -632,6 +665,12 @@ class ControllerSaleCustomer extends Controller
 
         $url = '';
 
+        
+
+        if (isset($this->request->get['filter_company'])) {
+            $url .= '&filter_company='.urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
+        }
+
         if (isset($this->request->get['filter_name'])) {
             $url .= '&filter_name='.urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
         }
@@ -683,6 +722,10 @@ class ControllerSaleCustomer extends Controller
 
         $url = '';
 
+        if (isset($this->request->get['filter_company'])) {
+            $url .= '&filter_company='.urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
+        }
+
         if (isset($this->request->get['filter_name'])) {
             $url .= '&filter_name='.urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
         }
@@ -732,7 +775,8 @@ class ControllerSaleCustomer extends Controller
         $data['pagination'] = $pagination->render();
 
         $data['results'] = sprintf($this->language->get('text_pagination'), ($customer_total) ? (($page - 1) * $this->config->get('config_limit_admin')) + 1 : 0, ((($page - 1) * $this->config->get('config_limit_admin')) > ($customer_total - $this->config->get('config_limit_admin'))) ? $customer_total : ((($page - 1) * $this->config->get('config_limit_admin')) + $this->config->get('config_limit_admin')), $customer_total, ceil($customer_total / $this->config->get('config_limit_admin')));
-
+        
+        $data['filter_company'] = $filter_company;
         $data['filter_name'] = $filter_name;
         $data['filter_email'] = $filter_email;
         $data['filter_telephone'] = $filter_telephone;
@@ -938,6 +982,11 @@ class ControllerSaleCustomer extends Controller
         }
 
         $url = '';
+
+        if (isset($this->request->get['filter_company'])) {
+            $url .= '&filter_company='.urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
+        }
+
 
         if (isset($this->request->get['filter_name'])) {
             $url .= '&filter_name='.urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
