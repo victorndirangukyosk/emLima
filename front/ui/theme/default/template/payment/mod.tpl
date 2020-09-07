@@ -7,7 +7,7 @@ $('#button-confirm').on('click', function() {
     
     //location = '<?php echo $continue; ?>';
 
-    
+    saveOrder();
     $('#loading').show();
 
     if (!saveAddress()) { 
