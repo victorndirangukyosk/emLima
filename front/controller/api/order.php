@@ -749,4 +749,44 @@ class ControllerApiOrder extends Controller
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
+
+
+    public function ApproveOrRejectSubUserOrder()
+    {       
+
+        // $this->load->language('api/order');
+        $json = [];
+        $json['success'] = 'Something went wrong!';
+
+        if (!isset($this->session->data['api_id'])) {
+            $json['error'] = $this->language->get('error_permission');
+        } else {
+            $this->load->model('account/order');
+            // if (isset($this->request->get['order_id'])) {
+            //     $order_id = $this->request->get['order_id'];
+            // } else {
+            //     $order_id = 0;
+            // }
+            $order_id = $this->request->post['order_id'];
+            $customer_id = $this->request->post['customer_id'];
+            $order_status = $this->request->post['order_status'];
+            $log = new Log('error.log');
+            $log->write($order_id);
+            $log->write($customer_id);
+            $log->write($order_status);
+
+            $sub_users_order_details = $this->model_account_order->getSubUserOrderDetails($order_id, $customer_id);
+            $log->write($sub_users_order_details);
+
+            if (is_array($sub_users_order_details) && count($sub_users_order_details) > 0) {
+                $order_update = $this->model_account_order->ApproveOrRejectSubUserOrder($order_id, $customer_id, $order_status);
+                $json['success'] = 'Order '.$order_status.'!';
+            }
+
+             
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
 }
