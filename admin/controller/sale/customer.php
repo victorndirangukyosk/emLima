@@ -39,6 +39,14 @@ class ControllerSaleCustomer extends Controller
         if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
             $customer_id = $this->model_sale_customer->addCustomer($this->request->post);
 
+           
+
+            if (!empty($data['send_email'])) {
+                /*EMAIL SENDING WHEN CREATING USER FROM ADMIN PORTAL*/
+                
+               $t= $this->model_sale_customer->sendCustomerRegisterMail($this->request->post); 
+            }
+           
             $this->session->data['success'] = $this->language->get('text_success');
 
             $url = '';

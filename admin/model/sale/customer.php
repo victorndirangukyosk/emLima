@@ -4,8 +4,11 @@ class ModelSaleCustomer extends Model
 {
     public function addCustomer($data)
     {
-        $this->db->query('INSERT INTO '.DB_PREFIX."customer SET customer_group_id = '".(int) $data['customer_group_id']."', firstname = '".$this->db->escape($data['firstname'])."', gender = '".$this->db->escape($data['sex'])."', lastname = '".$this->db->escape($data['lastname'])."', email = '".$this->db->escape($data['email'])."',company_name = '".$this->db->escape($data['company_name'])."',company_address = '".$this->db->escape($data['company_address'])."', telephone = '".$this->db->escape($data['telephone'])."', fax = '".$this->db->escape($data['fax'])."', custom_field = '".$this->db->escape(isset($data['custom_field']) ? serialize($data['custom_field']) : '')."', newsletter = '".(int) $data['newsletter']."', salt = '".$this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9))."', password = '".$this->db->escape(sha1($salt.sha1($salt.sha1($data['password']))))."', status = '".(int) $data['status']."', approved = '".(int) $data['approved']."', safe = '".(int) $data['safe']."', date_added = NOW()");
 
+// echo "<pre>";print_r($data);die;
+
+        $this->db->query('INSERT INTO '.DB_PREFIX."customer SET customer_group_id = '".(int) $data['customer_group_id']."', firstname = '".$this->db->escape($data['firstname'])."', gender = '".$this->db->escape($data['sex'])."', lastname = '".$this->db->escape($data['lastname'])."', email = '".$this->db->escape($data['email'])."', ip = '".$this->db->escape($this->request->server['REMOTE_ADDR'])."',company_name = '".$this->db->escape($data['company_name'])."',company_address = '".$this->db->escape($data['company_address'])."', telephone = '".$this->db->escape($data['telephone'])."', fax = '".$this->db->escape($data['fax'])."', custom_field = '".$this->db->escape(isset($data['custom_field']) ? serialize($data['custom_field']) : '')."', newsletter = '".(int) $data['newsletter']."', salt = '".$this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9))."', password = '".$this->db->escape(sha1($salt.sha1($salt.sha1($data['password']))))."', status = '".(int) $data['status']."', approved = '".(int) $data['approved']."', safe = '".(int) $data['safe']."', customer_category = '".$data['customer_category']."', date_added = NOW()");
+  //echo "<pre>";print_r('INSERT INTO '.DB_PREFIX."customer SET customer_group_id = '".(int) $data['customer_group_id']."', firstname = '".$this->db->escape($data['firstname'])."', gender = '".$this->db->escape($data['sex'])."', lastname = '".$this->db->escape($data['lastname'])."', email = '".$this->db->escape($data['email'])."',company_name = '".$this->db->escape($data['company_name'])."',company_address = '".$this->db->escape($data['company_address'])."', telephone = '".$this->db->escape($data['telephone'])."', fax = '".$this->db->escape($data['fax'])."', custom_field = '".$this->db->escape(isset($data['custom_field']) ? serialize($data['custom_field']) : '')."', newsletter = '".(int) $data['newsletter']."', salt = '".$this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9))."', password = '".$this->db->escape(sha1($salt.sha1($salt.sha1($data['password']))))."', status = '".(int) $data['status']."', approved = '".(int) $data['approved']."', safe = '".(int) $data['safe']."', customer_category = '".$data['customer_category']."', date_added = NOW()");die;
         $customer_id = $this->db->getLastId();
 
         if (isset($data['address'])) {
@@ -19,11 +22,7 @@ class ModelSaleCustomer extends Model
                 }
             }
         }
-
-        if (!empty($data['send_email'])) {
-            /*EMAIL SENDING WHEN CREATING USER FROM ADMIN PORTAL*/
-            $this->sendCustomerRegisterMail($data);
-        }
+//moved mail sending code to controller as , it is givin error from model
 
         return $customer_id;
     }
@@ -1058,14 +1057,16 @@ class ModelSaleCustomer extends Model
         }
 
         // Send to main admin email if new account email is enabled
-        if ($this->config->get('config_account_mail')) {
+        if ($this->config->get('config_email')!=null && $this->config->get('config_email')!="") {
+            //echo "<pre>";print_r($this->config->get('config_email'));die;
+            $mail = new Mail($data['email']); 
             $mail->setTo($this->config->get('config_email'));
             $mail->send();
 
             $emails = explode(',', $this->config->get('config_alert_emails'));
 
             foreach ($emails as $email) {
-                if (strlen($email) > 0 && filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                if (strlen($email) > 5 && filter_var($email, FILTER_VALIDATE_EMAIL)) {
                     $mail->setTo($email);
                     $mail->send();
                 }

@@ -149,7 +149,7 @@
                             <?php if($gender == 'male') {?> 
                                 <input type="radio" name="sex" data-id="8" value="male" checked="checked" /> <?= $text_male ?> 
                             <?php } else {?>
-                            <input type="radio" name="sex" data-id="8" value="male"/> <?= $text_male ?> 
+                            <input type="radio" name="sex" data-id="8" value="male" checked="checked"/> <?= $text_male ?> 
                             <?php } ?>
                           <!-- </label> -->
 
@@ -176,7 +176,7 @@
                       <div class="form-group required">
                         <label class="col-sm-2 control-label" for="input-telephone"><?php echo $entry_telephone; ?></label>
                         <div class="col-sm-10">
-                          <input type="text" name="telephone" value="<?php echo $telephone; ?>" placeholder="<?php echo $entry_telephone; ?>" id="input-telephone" class="form-control" />
+                          <input type="text" name="telephone" value="<?php echo $telephone; ?>" placeholder="<?php echo $entry_telephone; ?>" id="input-telephone" class="form-control" maxlength=10 onkeypress="return isNumberKey(event)"  />
                           <?php if ($error_telephone) { ?>
                           <div class="text-danger"><?php echo $error_telephone; ?></div>
                           <?php  } ?>
@@ -464,7 +464,7 @@
               <div class="form-group">
                 <label class="col-sm-2 control-label" for="input-amount"><?php echo $entry_amount; ?></label>
                 <div class="col-sm-10">
-                  <input type="text" name="amount" value="" placeholder="<?php echo $entry_amount; ?>" id="input-amount" class="form-control" />
+                  <input type="number" name="amount" value="" placeholder="<?php echo $entry_amount; ?>" id="input-amount" class="form-control" />
                 </div>
               </div>
               <div class="text-right">
@@ -822,6 +822,12 @@ $('#credit').delegate('.pagination a', 'click', function(e) {
 $('#credit').load('index.php?path=sale/customer/credit&token=<?php echo $token; ?>&customer_id=<?php echo $customer_id; ?>');
 
 $('#button-credit').on('click', function(e) {
+
+  if(encodeURIComponent($('#tab-credit input[name=\'amount\']').val())==0)
+  {
+    alert("please enter valid amount");
+    return;
+  }
   e.preventDefault();
 
         $.ajax({
@@ -1632,7 +1638,14 @@ $('.time').datetimepicker({
 
 
     
+ function isNumberKey(evt)
+      {
+         var charCode = (evt.which) ? evt.which : event.keyCode
+         if (charCode > 31 && (charCode < 48 || charCode > 57))
+            return false;
 
+         return true;
+      }
     
     
 </script>
