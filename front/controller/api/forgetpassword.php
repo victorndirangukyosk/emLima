@@ -133,9 +133,10 @@ class ControllerApiForgetPassword extends Controller
         $json = [];
         $json['success'] = 'Something went wrong!';
 
-        if (!isset($this->session->data['api_id'])) {
-            $json['error'] = $this->language->get('error_permission');
-        } else {
+        // if (!isset($this->session->data['api_id'])) {
+        //     $json['error'] = $this->language->get('error_permission');
+        // } else 
+        {
 
          
         $this->load->language('account/changepass');
