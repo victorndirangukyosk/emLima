@@ -490,6 +490,11 @@
                 <button type="button" id="button-reward" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-primary"><i class="fa fa-plus-circle"></i> <?php echo $button_reward_add; ?></button>
               </div>
             </div>
+            
+            <div class="tab-pane" id="tab-ip">
+              <div id="ip"></div>
+              <br />
+            </div>
 
             <div class="tab-pane" id="tab-referral">
               <div id="referral"></div>
@@ -871,6 +876,16 @@ $('#referral').delegate('.pagination a', 'click', function(e) {
 $('#referral').load('index.php?path=sale/customer/referral&token=<?php echo $token; ?>&customer_id=<?php echo $customer_id; ?>');
 
 $('#button-reward').on('click', function(e) {
+  if(encodeURIComponent($('#tab-reward input[name=\'description\']').val())=='')
+  {
+    alert("please enter valid description");
+    return;
+  }
+  if(encodeURIComponent($('#tab-reward input[name=\'points\']').val())=='')
+  {
+    alert("please enter valid points");
+    return;
+  }  
   e.preventDefault();
 
   $.ajax({

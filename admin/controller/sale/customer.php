@@ -44,7 +44,8 @@ class ControllerSaleCustomer extends Controller {
                 $t = $this->model_sale_customer->sendCustomerRegisterMail($this->request->post);
             }
 
-            $this->session->data['success'] = $this->language->get('text_success');
+            //$this->session->data['success'] = $this->language->get('text_success');
+            $this->session->data['success'] = 'Success : Customer created successfully!';
 
             $url = '';
 
@@ -1557,9 +1558,6 @@ class ControllerSaleCustomer extends Controller {
 
         $this->load->model('sale/customer');
         
-        if (strlen($this->request->post['description']) == 0 || strlen($this->request->post['points']) == 0) {
-            $data['error_warning'] = 'Warning : All fields are mandatory!';
-        } else {
         if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->user->hasPermission('modify', 'sale/customer')) {
             $this->model_sale_customer->addReward($this->request->get['customer_id'], $this->request->post['description'], $this->request->post['points']);
 
@@ -1572,7 +1570,6 @@ class ControllerSaleCustomer extends Controller {
             $data['error_warning'] = $this->language->get('error_permission');
         } else {
             $data['error_warning'] = '';
-        }
         }
 
         $data['text_no_results'] = $this->language->get('text_no_results');
