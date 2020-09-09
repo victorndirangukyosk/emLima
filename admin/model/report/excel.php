@@ -3172,7 +3172,7 @@ class ModelReportExcel extends Model
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['name']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['email']);
 
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['dob']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['dob'] == '0000-00-00 00:00:00' ? '' : $result['dob']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['gender']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $result['telephone']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $result['status'] ? 'Enabled' : 'Disabled');
