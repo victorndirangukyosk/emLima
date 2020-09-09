@@ -9,7 +9,6 @@ $('#button-confirm').on('click', function() {
 
     
     $('#loading').show();
-    saveOrder();
 
     if (!saveAddress()) { 
         return false; 

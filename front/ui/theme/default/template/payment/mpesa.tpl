@@ -54,75 +54,7 @@
 	    }
 	});
 
-	$('#button-confirm').on('click', function() { 
-	    $('#loading').show();
-
-	    $('#error_msg').hide();
-
-	    if($('#mpesa_phone_number').val().length >= 9) {
-					saveOrder();
-
-	    	$.ajax({
-		        type: 'post',
-		        url: 'index.php?path=payment/mpesa/confirm',
-		        data: 'mobile=' + encodeURIComponent($('#mpesa_phone_number').val()),
-	            dataType: 'json',
-		        cache: false,
-		        beforeSend: function() {
-		            $(".overlayed").show();
-		            $('#button-confirm').button('loading');
-		        },
-		        complete: function() {
-		            $(".overlayed").hide();
-		        },      
-		        success: function(json) {
-
-		        	console.log(json);
-		        	console.log('json mpesa');
-
-		        	$('#button-confirm').button('reset');
-		            $('#loading').hide();
-
-		        	if(json['processed']) {
-		        		//location = '<?php echo $continue; ?>';
-		        		
-		        		//$('#success_msg').html('A payment request has been sent to the mpesa number '+$('#mpesa_phone_number').val()+'. Please wait for a few seconds then check for your phone for an MPESA PIN entry prompt.');
-
-		        		$('#success_msg').html('A payment request has been sent on your above number. Please make the payment by entering mpesa PIN and click on Confirm Payment button after receiving sms from mpesa');
-
-
-		        		
-		        		$('#success_msg').show();
-
-		        		
-		        		$('#button-complete').show();
-
-		        		console.log('json mpesa1');
-		        		$('#button-confirm').hide();
-		        		$('#button-retry').hide();
-		        		console.log('json mpesa2');
-
-		        	} else {
-		        		console.log('json mpesa err');
-		        		console.log(json['error']);
-		        		$('#error_msg').html(json['error']);
-		        		$('#error_msg').show();
-		        	}
-		            
-		        },
-		        error: function(json) {
-
-		        	console.log('josn mpesa');
-		        	console.log(json);
-
-		        	$('#error_msg').html(json['responseText']);
-		        	$('#error_msg').show();
-		        }
-		    });
-	    }
-	});
-
-		$('#button-retry').on('click', function() {
+	$('#button-confirm,#button-retry').on('click', function() {
 	    
 	    $('#loading').show();
 

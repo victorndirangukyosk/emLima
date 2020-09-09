@@ -1346,10 +1346,8 @@ function savePaymentMethod() {
                     $('#payment-method-wrapper').prepend('<div class="alert alert-warning">' + json['error']['warning'] + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
                 }
             } else {
-                //  loadConfirm();
-                enableConfirm();
-                 
-             }
+                loadConfirm();
+            }
         },
         error: function(xhr, ajaxOptions, thrownError) {
             alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
@@ -1525,126 +1523,6 @@ var name="dropoff_notes";
                 console.log(json);
                 $('#confirm-order').css({ 'display': "none" });
                 $('#confirm-order').attr('id', 'new-confirm-order');
-                /*$('#confirm-order').remove(); */
-                $('#pay-confirm-order').html(json);
-                $('#pay-confirm-order').removeAttr('style');
-                
-                return true;
-                    //window.location = json.redirect;
-                },
-            error: function(xhr, ajaxOptions, thrownError) {
-                alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
-                $('#button-confirm').button('reset');
-                return false;
-            }
-        });
-
-        return true;
-
-        /*if ($valid_address) {
-            return true;
-        }*/
-
-    } else {
-        $('html, body').animate({
-            scrollTop: 0
-        }, 'slow');
-        $('#button-confirm').button('reset');
-        return false;
-    }
-}
-
-
-function enableConfirm() {
-
-    console.log("saveOrder");
-    console.log("sri ");
-
-var name="dropoff_notes";
-
-     var cookieArr = document.cookie.split(";");
-    
-    // Loop through the array elements
-    for(var i = 0; i < cookieArr.length; i++) {
-        var cookiePair = cookieArr[i].split("=");
-        
-        /* Removing whitespace at the beginning of the cookie name
-        and compare it with the given string */
-        if(name == cookiePair[0].trim()) {
-            // Decode the cookie value and return
-            // alert( decodeURIComponent(cookiePair[1]));
-             var notes=decodeURIComponent(cookiePair[1]);
-
-          // $('textarea[name="dropoff_notes"]').val(decodeURIComponent(cookiePair[1]));
-
-        }
-    }
-    $error = false;
-
-    var shipping_name = $('input[name="shipping_name"]').val();
-    var shipping_contact_no = $('input[name="shipping_contact_no"]').val();
-    var shipping_address = $('textarea[name="shipping_address"]').val();
-    var shipping_city_id = $('input[name="shipping_city_id"]').val();
-
-    var landmark = $('input[name="landmark"]').val();
-    var building_name = $('input[name="building_name"]').val();
-    var flat_number = $('input[name="flat_number"]').val();
-    var address_type = $('input[name="address_type"]').val();
-
- 
-
-    //var dropoff_notes = $('textarea[name="dropoff_notes"]').val();
-    var dropoff_notes = notes;
-
-    
-    
- 
-    //$('input[name="shipping_address_id"]').val($(this).attr('data-address-id'));
-    if ($('input[name="shipping_address_id"]').val().length <= 0) {
-        $error = true;
-        console.log($('input[name="shipping_address_id"]').val()+"err");
-        $('input[name="shipping_address_id"]').parents('.form-group').addClass('has-error').find('.help-block').show();
-    }
-
-    appendDataToSend = '';
-     <?php foreach ($store_data as $os):  ?>
-        var shipping_method = $('input[name=\'shipping_method-'+<?php echo $os['store_id'] ?>+'\']:checked').attr('value')
-        if (shipping_method.length <= 0) {
-            console.log("shipping_method selected");
-            $error = true;
-        }
-        console.log("shipping-method-wrapper"+shipping_method);
-
-        /*if($('#delivery-time-wrapper-<?php echo $os["store_id"] ?> ul.list-group input[type=radio]:checked').val() == undefined ) {
-            $error = true;
-            console.log("shipping-method-wrappercer not selected");
-        }*/
-        var note =  encodeURIComponent($('textarea[name=dropoff_notes-<?php echo $os["store_id"] ?>]').val());
-        appendDataToSend += '&dropoff_notes['+<?php echo $os['store_id'] ?>+']='+notes;
-
-    <?php endforeach; ?>  
-
-
-   // var sendData = $('#place-order-form').serialize() + '&dropoff_notes=' + dropoff_notes+appendDataToSend;
-    var sendData =  '&dropoff_notes=' + dropoff_notes+appendDataToSend;
-    console.log("qwerty");
-    console.log('sendData');
-    console.log(sendData);
-    if (!$error) {
-
-        $valid_address = 0;
-        $.ajax({
-            url: 'index.php?path=checkout/confirm/multiStoreAdd',
-            type: 'post',
-            data: sendData,
-            dataType: 'html',
-            cache: false,
-            async: false,
-            success: function(json) {
-                console.log("json");
-                console.log(json);
-               // $('#confirm-order').css({ 'display': "none" });
-               // $('#confirm-order').attr('id', 'new-confirm-order');
                 /*$('#confirm-order').remove(); */
                 $('#pay-confirm-order').html(json);
                 $('#pay-confirm-order').removeAttr('style');
@@ -1897,7 +1775,7 @@ function saveInAddressBook() {
             $('#delivery_time_panel_link').attr("href","#collapseThree");
         }
 
-        //var p = saveOrder();
+        var p = saveOrder();
 
         console.log("timeslot  next saveOrder");
         
@@ -1941,13 +1819,13 @@ function saveInAddressBook() {
 
         if (!$error) {
             $('#delivery-time-wrapper').click();
-            //var p = saveOrder();
+            var p = saveOrder();
 
             console.log("asae order pay next");
             console.log(p);
-            //if(p) {
+            if(p) {
                 $('#payment-next').html('<?= $text_next?>');
-            //}
+            }
             
         } else {
 
@@ -2031,14 +1909,14 @@ function saveInAddressBook() {
                 success: function(json) {
                     console.log(json);
                     if (json['status']) {
-                        //var p = saveOrder();
+                        var p = saveOrder();
                         $('#question-next-button').click();
 
                         console.log("asae order pay next");
                         console.log(p);
-                        //if(p) {
+                        if(p) {
                             $('#question-payment-next').html('<?= $text_next?>');
-                       // }             
+                        }             
                     } else {
                         $('#question-payment-next').html('<?= $text_next?>');
                     }
