@@ -3132,7 +3132,7 @@ class ModelReportExcel extends Model
             //Company name, address
             $objPHPExcel->getActiveSheet()->mergeCells('A1:I2');
             $objPHPExcel->getActiveSheet()->setCellValue('A1', 'Customers ');
-            $objPHPExcel->getActiveSheet()->getStyle('A1:I2')->applyFromArray(['font' => ['bold' => true], 'color' => [
+            $objPHPExcel->getActiveSheet()->getStyle('A4:J4')->applyFromArray(['font' => ['bold' => true], 'color' => [
                     'rgb' => '4390df',
                 ]]);
 
@@ -3164,6 +3164,15 @@ class ModelReportExcel extends Model
 
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(2, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(3, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(4, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(5, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(6, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(7, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(8, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(9, 4)->applyFromArray($title);
+
 
             // Fetching the table data
             $row = 5;
@@ -3172,7 +3181,7 @@ class ModelReportExcel extends Model
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['name']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['email']);
 
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['dob']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['dob'] == '0000-00-00 00:00:00' ? '' : $result['dob']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['gender']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $result['telephone']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $result['status'] ? 'Enabled' : 'Disabled');
