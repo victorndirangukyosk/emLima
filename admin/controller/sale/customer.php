@@ -207,7 +207,8 @@ class ControllerSaleCustomer extends Controller
                 $this->model_sale_customer->deleteCustomer($customer_id);
             }
 
-            $this->session->data['success'] = $this->language->get('text_success');
+            //$this->session->data['success'] = $this->language->get('text_success');
+            $this->session->data['success'] = 'Success : Customer(s) deleted successfully!';
 
             $url = '';
 
