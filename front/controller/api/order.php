@@ -749,4 +749,165 @@ class ControllerApiOrder extends Controller
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
+
+
+    public function ApproveOrRejectSubUserOrder()
+    {       
+
+        // $this->load->language('api/order');
+        $json = [];
+        $json['success'] = 'Something went wrong!';
+
+        if (!isset($this->session->data['api_id'])) {
+            $json['error'] = $this->language->get('error_permission');
+        } else {
+            $this->load->model('account/order');
+            // if (isset($this->request->get['order_id'])) {
+            //     $order_id = $this->request->get['order_id'];
+            // } else {
+            //     $order_id = 0;
+            // }
+            $order_id = $this->request->post['order_id'];
+            $customer_id = $this->request->post['customer_id'];
+            $order_status = $this->request->post['order_status'];
+            $log = new Log('error.log');
+            $log->write($order_id);
+            $log->write($customer_id);
+            $log->write($order_status);
+
+            $sub_users_order_details = $this->model_account_order->getSubUserOrderDetails($order_id, $customer_id);
+            $log->write($sub_users_order_details);
+
+            if (is_array($sub_users_order_details) && count($sub_users_order_details) > 0) {
+                $order_update = $this->model_account_order->ApproveOrRejectSubUserOrder($order_id, $customer_id, $order_status);
+                $json['success'] = 'Order '.$order_status.'!';
+            }
+
+             
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    
+    public function editorderquantity()
+    {    
+        
+        $json = [];
+        $json['success'] = 'Something went wrong!';
+
+        if (!isset($this->session->data['api_id'])) {
+            $json['error'] = $this->language->get('error_permission');
+        } else {
+
+        $json['location'] = 'module';
+        
+        $json['data'] = [];
+        $json['message'] = [];
+
+        $order_id = $this->request->post['order_id'];
+        // $log->write($order_id);
+        $product_id = $this->request->post['product_id'];
+        $quantity = $this->request->post['quantity'];
+        $unit = $this->request->post['unit'];
+        $log = new Log('error.log');
+            $log->write($order_id);
+            $log->write($product_id);
+            $log->write($quantity);
+        $this->load->model('account/order');
+        $order_info = $this->model_account_order->getOrder($order_id, true);
+        if (null != $order_info && 15 == $order_info['order_status_id']) {
+            $order_products = $this->model_account_order->getOrderProducts($order_id);
+            // $log->write($order_products);
+
+            $key = array_search($product_id, array_column($order_products, 'product_id'));
+
+            $this->load->model('assets/product');
+            $product_info = $this->model_assets_product->getProductForPopup($order_products[$key]['product_id'], false, $order_products[$key]['store_id']);
+            $s_price = 0;
+            $o_price = 0;
+
+            if (!$this->config->get('config_inclusiv_tax')) {
+                //get price html
+                if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+                    $product_info['price'] = $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')));
+
+                    $o_price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
+                } else {
+                    $product_info['price'] = false;
+                }
+                if ((float) $product_info['special_price']) {
+                    $product_info['special_price'] = $this->currency->format($this->tax->calculate($product_info['special_price'], $product_info['tax_class_id'], $this->config->get('config_tax')));
+
+                    $s_price = $this->tax->calculate($product_info['special_price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
+                } else {
+                    $product_info['special_price'] = false;
+                }
+            } else {
+                $s_price = $product_info['special_price'];
+                $o_price = $product_info['price'];
+
+                if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+                    $product_info['price'] = $this->currency->format($product_info['price']);
+                } else {
+                    $product_info['price'] = $product_info['price'];
+                }
+
+                if ((float) $product_info['special_price']) {
+                    $product_info['special_price'] = $this->currency->format($product_info['special_price']);
+                } else {
+                    $product_info['special_price'] = $product_info['special_price'];
+                }
+            }
+
+            $cachePrice_data = $this->cache->get('category_price_data');
+            if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$product_info['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$order_products[$key]['store_id']])) {
+                $s_price = $cachePrice_data[$product_info['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$order_products[$key]['store_id']];
+                $o_price = $cachePrice_data[$product_info['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$order_products[$key]['store_id']];
+                $product_info['special_price'] = $this->currency->format($s_price);
+                $product_info['price'] = $this->currency->format($o_price);
+            }
+
+            $percent_off = null;
+            if (isset($s_price) && isset($o_price) && 0 != $o_price && 0 != $s_price) {
+                $percent_off = (($o_price - $s_price) / $o_price) * 100;
+            }
+            $log->write('product info');
+            $log->write($product_info);
+            $log->write('product info');
+            $special_price = explode(' ', $product_info['special_price']);
+              $log->write($special_price);
+            $total = $special_price[1] * $quantity + ($this->config->get('config_tax') ? ($order_products[$key]['tax'] * $quantity) : 0);
+            // $log->write($total);
+            $log->write($product_id);
+            $log->write($product_id);
+
+            $this->db->query('UPDATE '.DB_PREFIX.'order_product SET quantity = '.$quantity.', total = '.$total." WHERE order_product_id = '".(int) $order_products[$key]['order_product_id']."' AND order_id  = '".(int) $order_id."' AND product_id = '".(int) $product_id."'");
+            $this->db->query('UPDATE '.DB_PREFIX.'real_order_product SET quantity = '.$quantity.', total = '.$total." WHERE order_product_id = '".(int) $order_products[$key]['order_product_id']."' AND order_id  = '".(int) $order_id."' AND product_id = '".(int) $product_id."'");
+            $order_totals = $this->db->query('SELECT SUM(total) AS total FROM '.DB_PREFIX."order_product WHERE order_id = '".(int) $order_id."'");
+            $order_product_details = $this->db->query('SELECT * FROM '.DB_PREFIX."order_product WHERE order_product_id = '".(int) $order_products[$key]['order_product_id']."' AND order_id  = '".(int) $order_id."' AND product_id = '".(int) $product_id."'");
+            $this->db->query('UPDATE '.DB_PREFIX."order_total SET `value` = '".$order_totals->row['total']."' WHERE order_id = '".$order_id."' AND code='total'");
+            $this->db->query('UPDATE '.DB_PREFIX."order_total SET `value` = '".$order_totals->row['total']."' WHERE order_id = '".$order_id."' AND code='sub_total'");
+            $total_products = $this->db->query('SELECT SUM(quantity) AS quantity FROM '.DB_PREFIX."order_product WHERE order_id = '".(int) $order_id."'");
+
+            $json['count_products'] = $total_products->row['quantity'];
+            $json['total_amount'] = $this->currency->format($order_totals->row['total']);
+            $json['quantity'] = $total_products->row['quantity'];
+            $json['product_total_price'] = $this->currency->format($order_product_details->row['total']);
+
+            // $log->write($order_products);
+            // $log->write($key);
+            // $log->write($order_totals->row['total']);
+            // $log->write($order_product_details);
+            $json['status'] = 200;
+            $json['success'] =   'Your Order Updated!';
+        } else {
+            $json['success'] =   'You Cant Update Order In This Status!';
+        }
+       }
+        // $log->write('edit_order_quantity');
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
 }

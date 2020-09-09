@@ -1,11 +1,10 @@
 <?php
 
-class ControllerSaleCustomer extends Controller
-{
+class ControllerSaleCustomer extends Controller {
+
     private $error = [];
 
-    public function index()
-    {
+    public function index() {
         $this->load->language('sale/customer');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -21,15 +20,13 @@ class ControllerSaleCustomer extends Controller
         // $this->load->model('account/address');
     }
 
-    public function export_excel()
-    {
+    public function export_excel() {
         $data = [];
         $this->load->model('report/excel');
         $this->model_report_excel->download_customer_excel($data);
     }
 
-    public function add()
-    {
+    public function add() {
         $this->load->language('sale/customer');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -39,66 +36,77 @@ class ControllerSaleCustomer extends Controller
         if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
             $customer_id = $this->model_sale_customer->addCustomer($this->request->post);
 
+
+
+            if (!empty($data['send_email'])) {
+                /* EMAIL SENDING WHEN CREATING USER FROM ADMIN PORTAL */
+
+                $t = $this->model_sale_customer->sendCustomerRegisterMail($this->request->post);
+            }
+
             $this->session->data['success'] = $this->language->get('text_success');
 
             $url = '';
 
+            if (isset($this->request->get['filter_company'])) {
+                $url .= '&filter_company=' . urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
+            }
+
             if (isset($this->request->get['filter_name'])) {
-                $url .= '&filter_name='.urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+                $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
             }
 
             if (isset($this->request->get['filter_email'])) {
-                $url .= '&filter_email='.urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
+                $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
             }
 
             if (isset($this->request->get['filter_customer_group_id'])) {
-                $url .= '&filter_customer_group_id='.$this->request->get['filter_customer_group_id'];
+                $url .= '&filter_customer_group_id=' . $this->request->get['filter_customer_group_id'];
             }
 
             if (isset($this->request->get['filter_status'])) {
-                $url .= '&filter_status='.$this->request->get['filter_status'];
+                $url .= '&filter_status=' . $this->request->get['filter_status'];
             }
 
             if (isset($this->request->get['filter_approved'])) {
-                $url .= '&filter_approved='.$this->request->get['filter_approved'];
+                $url .= '&filter_approved=' . $this->request->get['filter_approved'];
             }
 
             if (isset($this->request->get['filter_ip'])) {
-                $url .= '&filter_ip='.$this->request->get['filter_ip'];
+                $url .= '&filter_ip=' . $this->request->get['filter_ip'];
             }
 
             if (isset($this->request->get['filter_date_added'])) {
-                $url .= '&filter_date_added='.$this->request->get['filter_date_added'];
+                $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
             }
 
             if (isset($this->request->get['sort'])) {
-                $url .= '&sort='.$this->request->get['sort'];
+                $url .= '&sort=' . $this->request->get['sort'];
             }
 
             if (isset($this->request->get['order'])) {
-                $url .= '&order='.$this->request->get['order'];
+                $url .= '&order=' . $this->request->get['order'];
             }
 
             if (isset($this->request->get['page'])) {
-                $url .= '&page='.$this->request->get['page'];
+                $url .= '&page=' . $this->request->get['page'];
             }
 
             if (isset($this->request->post['button']) and 'save' == $this->request->post['button']) {
-                $this->response->redirect($this->url->link('sale/customer/edit', 'customer_id='.$customer_id.'&token='.$this->session->data['token'].$url, 'SSL'));
+                $this->response->redirect($this->url->link('sale/customer/edit', 'customer_id=' . $customer_id . '&token=' . $this->session->data['token'] . $url, 'SSL'));
             }
 
             if (isset($this->request->post['button']) and 'new' == $this->request->post['button']) {
-                $this->response->redirect($this->url->link('sale/customer/add', 'token='.$this->session->data['token'].$url, 'SSL'));
+                $this->response->redirect($this->url->link('sale/customer/add', 'token=' . $this->session->data['token'] . $url, 'SSL'));
             }
 
-            $this->response->redirect($this->url->link('sale/customer', 'token='.$this->session->data['token'].$url, 'SSL'));
+            $this->response->redirect($this->url->link('sale/customer', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
 
         $this->getForm();
     }
 
-    public function edit()
-    {
+    public function edit() {
         $this->load->language('sale/customer');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -124,62 +132,65 @@ class ControllerSaleCustomer extends Controller
 
             $url = '';
 
+            if (isset($this->request->get['filter_company'])) {
+                $url .= '&filter_company=' . urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
+            }
+
             if (isset($this->request->get['filter_name'])) {
-                $url .= '&filter_name='.urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+                $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
             }
 
             if (isset($this->request->get['filter_email'])) {
-                $url .= '&filter_email='.urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
+                $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
             }
 
             if (isset($this->request->get['filter_customer_group_id'])) {
-                $url .= '&filter_customer_group_id='.$this->request->get['filter_customer_group_id'];
+                $url .= '&filter_customer_group_id=' . $this->request->get['filter_customer_group_id'];
             }
 
             if (isset($this->request->get['filter_status'])) {
-                $url .= '&filter_status='.$this->request->get['filter_status'];
+                $url .= '&filter_status=' . $this->request->get['filter_status'];
             }
 
             if (isset($this->request->get['filter_approved'])) {
-                $url .= '&filter_approved='.$this->request->get['filter_approved'];
+                $url .= '&filter_approved=' . $this->request->get['filter_approved'];
             }
 
             if (isset($this->request->get['filter_ip'])) {
-                $url .= '&filter_ip='.$this->request->get['filter_ip'];
+                $url .= '&filter_ip=' . $this->request->get['filter_ip'];
             }
 
             if (isset($this->request->get['filter_date_added'])) {
-                $url .= '&filter_date_added='.$this->request->get['filter_date_added'];
+                $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
             }
 
             if (isset($this->request->get['sort'])) {
-                $url .= '&sort='.$this->request->get['sort'];
+                $url .= '&sort=' . $this->request->get['sort'];
             }
 
             if (isset($this->request->get['order'])) {
-                $url .= '&order='.$this->request->get['order'];
+                $url .= '&order=' . $this->request->get['order'];
             }
 
             if (isset($this->request->get['page'])) {
-                $url .= '&page='.$this->request->get['page'];
+                $url .= '&page=' . $this->request->get['page'];
             }
 
             if (isset($this->request->post['button']) and 'save' == $this->request->post['button']) {
-                $this->response->redirect($this->url->link('sale/customer/edit', 'customer_id='.$this->request->get['customer_id'].'&token='.$this->session->data['token'].$url, 'SSL'));
+                $this->response->redirect($this->url->link('sale/customer/edit', 'customer_id=' . $this->request->get['customer_id'] . '&token=' . $this->session->data['token'] . $url, 'SSL'));
             }
 
             if (isset($this->request->post['button']) and 'new' == $this->request->post['button']) {
-                $this->response->redirect($this->url->link('sale/customer/add', 'token='.$this->session->data['token'].$url, 'SSL'));
+                $this->response->redirect($this->url->link('sale/customer/add', 'token=' . $this->session->data['token'] . $url, 'SSL'));
             }
 
-            $this->response->redirect($this->url->link('sale/customer', 'token='.$this->session->data['token'].$url, 'SSL'));
+            $this->response->redirect($this->url->link('sale/customer', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
 
         $this->getForm();
     }
 
-    public function delete()
-    {
+    public function delete() {
         $this->load->language('sale/customer');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -191,58 +202,62 @@ class ControllerSaleCustomer extends Controller
                 $this->model_sale_customer->deleteCustomer($customer_id);
             }
 
-            $this->session->data['success'] = $this->language->get('text_success');
+            //$this->session->data['success'] = $this->language->get('text_success');
+            $this->session->data['success'] = 'Success : Customer(s) deleted successfully!';
 
             $url = '';
 
+            if (isset($this->request->get['filter_company'])) {
+                $url .= '&filter_company=' . urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
+            }
+
             if (isset($this->request->get['filter_name'])) {
-                $url .= '&filter_name='.urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+                $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
             }
 
             if (isset($this->request->get['filter_email'])) {
-                $url .= '&filter_email='.urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
+                $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
             }
 
             if (isset($this->request->get['filter_customer_group_id'])) {
-                $url .= '&filter_customer_group_id='.$this->request->get['filter_customer_group_id'];
+                $url .= '&filter_customer_group_id=' . $this->request->get['filter_customer_group_id'];
             }
 
             if (isset($this->request->get['filter_status'])) {
-                $url .= '&filter_status='.$this->request->get['filter_status'];
+                $url .= '&filter_status=' . $this->request->get['filter_status'];
             }
 
             if (isset($this->request->get['filter_approved'])) {
-                $url .= '&filter_approved='.$this->request->get['filter_approved'];
+                $url .= '&filter_approved=' . $this->request->get['filter_approved'];
             }
 
             if (isset($this->request->get['filter_ip'])) {
-                $url .= '&filter_ip='.$this->request->get['filter_ip'];
+                $url .= '&filter_ip=' . $this->request->get['filter_ip'];
             }
 
             if (isset($this->request->get['filter_date_added'])) {
-                $url .= '&filter_date_added='.$this->request->get['filter_date_added'];
+                $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
             }
 
             if (isset($this->request->get['sort'])) {
-                $url .= '&sort='.$this->request->get['sort'];
+                $url .= '&sort=' . $this->request->get['sort'];
             }
 
             if (isset($this->request->get['order'])) {
-                $url .= '&order='.$this->request->get['order'];
+                $url .= '&order=' . $this->request->get['order'];
             }
 
             if (isset($this->request->get['page'])) {
-                $url .= '&page='.$this->request->get['page'];
+                $url .= '&page=' . $this->request->get['page'];
             }
 
-            $this->response->redirect($this->url->link('sale/customer', 'token='.$this->session->data['token'].$url, 'SSL'));
+            $this->response->redirect($this->url->link('sale/customer', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
 
         $this->getList();
     }
 
-    public function approve()
-    {
+    public function approve() {
         $this->load->language('sale/customer');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -264,54 +279,57 @@ class ControllerSaleCustomer extends Controller
 
             $url = '';
 
+            if (isset($this->request->get['filter_company'])) {
+                $url .= '&filter_company=' . urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
+            }
+
             if (isset($this->request->get['filter_name'])) {
-                $url .= '&filter_name='.urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+                $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
             }
 
             if (isset($this->request->get['filter_email'])) {
-                $url .= '&filter_email='.urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
+                $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
             }
 
             if (isset($this->request->get['filter_customer_group_id'])) {
-                $url .= '&filter_customer_group_id='.$this->request->get['filter_customer_group_id'];
+                $url .= '&filter_customer_group_id=' . $this->request->get['filter_customer_group_id'];
             }
 
             if (isset($this->request->get['filter_status'])) {
-                $url .= '&filter_status='.$this->request->get['filter_status'];
+                $url .= '&filter_status=' . $this->request->get['filter_status'];
             }
 
             if (isset($this->request->get['filter_approved'])) {
-                $url .= '&filter_approved='.$this->request->get['filter_approved'];
+                $url .= '&filter_approved=' . $this->request->get['filter_approved'];
             }
 
             if (isset($this->request->get['filter_ip'])) {
-                $url .= '&filter_ip='.$this->request->get['filter_ip'];
+                $url .= '&filter_ip=' . $this->request->get['filter_ip'];
             }
 
             if (isset($this->request->get['filter_date_added'])) {
-                $url .= '&filter_date_added='.$this->request->get['filter_date_added'];
+                $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
             }
 
             if (isset($this->request->get['sort'])) {
-                $url .= '&sort='.$this->request->get['sort'];
+                $url .= '&sort=' . $this->request->get['sort'];
             }
 
             if (isset($this->request->get['order'])) {
-                $url .= '&order='.$this->request->get['order'];
+                $url .= '&order=' . $this->request->get['order'];
             }
 
             if (isset($this->request->get['page'])) {
-                $url .= '&page='.$this->request->get['page'];
+                $url .= '&page=' . $this->request->get['page'];
             }
 
-            $this->response->redirect($this->url->link('sale/customer', 'token='.$this->session->data['token'].$url, 'SSL'));
+            $this->response->redirect($this->url->link('sale/customer', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
 
         $this->getList();
     }
 
-    public function unlock()
-    {
+    public function unlock() {
         $this->load->language('sale/customer');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -325,55 +343,66 @@ class ControllerSaleCustomer extends Controller
 
             $url = '';
 
+
+            if (isset($this->request->get['filter_company'])) {
+                $url .= '&filter_company=' . urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
+            }
+
             if (isset($this->request->get['filter_name'])) {
-                $url .= '&filter_name='.urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+                $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
             }
 
             if (isset($this->request->get['filter_email'])) {
-                $url .= '&filter_email='.urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
+                $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
             }
 
             if (isset($this->request->get['filter_customer_group_id'])) {
-                $url .= '&filter_customer_group_id='.$this->request->get['filter_customer_group_id'];
+                $url .= '&filter_customer_group_id=' . $this->request->get['filter_customer_group_id'];
             }
 
             if (isset($this->request->get['filter_status'])) {
-                $url .= '&filter_status='.$this->request->get['filter_status'];
+                $url .= '&filter_status=' . $this->request->get['filter_status'];
             }
 
             if (isset($this->request->get['filter_approved'])) {
-                $url .= '&filter_approved='.$this->request->get['filter_approved'];
+                $url .= '&filter_approved=' . $this->request->get['filter_approved'];
             }
 
             if (isset($this->request->get['filter_ip'])) {
-                $url .= '&filter_ip='.$this->request->get['filter_ip'];
+                $url .= '&filter_ip=' . $this->request->get['filter_ip'];
             }
 
             if (isset($this->request->get['filter_date_added'])) {
-                $url .= '&filter_date_added='.$this->request->get['filter_date_added'];
+                $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
             }
 
             if (isset($this->request->get['sort'])) {
-                $url .= '&sort='.$this->request->get['sort'];
+                $url .= '&sort=' . $this->request->get['sort'];
             }
 
             if (isset($this->request->get['order'])) {
-                $url .= '&order='.$this->request->get['order'];
+                $url .= '&order=' . $this->request->get['order'];
             }
 
             if (isset($this->request->get['page'])) {
-                $url .= '&page='.$this->request->get['page'];
+                $url .= '&page=' . $this->request->get['page'];
             }
 
-            $this->response->redirect($this->url->link('sale/customer', 'token='.$this->session->data['token'].$url, 'SSL'));
+            $this->response->redirect($this->url->link('sale/customer', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
 
         $this->getList();
     }
 
-    protected function getList()
-    {
+    protected function getList() {
         $this->load->language('sale/customer');
+
+
+        if (isset($this->request->get['filter_company'])) {
+            $filter_company = $this->request->get['filter_company'];
+        } else {
+            $filter_company = null;
+        }
 
         if (isset($this->request->get['filter_name'])) {
             $filter_name = $this->request->get['filter_name'];
@@ -443,68 +472,73 @@ class ControllerSaleCustomer extends Controller
 
         $url = '';
 
+        if (isset($this->request->get['filter_company'])) {
+            $url .= '&filter_company=' . urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
+        }
+
         if (isset($this->request->get['filter_name'])) {
-            $url .= '&filter_name='.urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_email'])) {
-            $url .= '&filter_email='.urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_telephone'])) {
-            $url .= '&filter_telephone='.urlencode(html_entity_decode($this->request->get['filter_telephone'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&filter_telephone=' . urlencode(html_entity_decode($this->request->get['filter_telephone'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_customer_group_id'])) {
-            $url .= '&filter_customer_group_id='.$this->request->get['filter_customer_group_id'];
+            $url .= '&filter_customer_group_id=' . $this->request->get['filter_customer_group_id'];
         }
 
         if (isset($this->request->get['filter_status'])) {
-            $url .= '&filter_status='.$this->request->get['filter_status'];
+            $url .= '&filter_status=' . $this->request->get['filter_status'];
         }
 
         if (isset($this->request->get['filter_approved'])) {
-            $url .= '&filter_approved='.$this->request->get['filter_approved'];
+            $url .= '&filter_approved=' . $this->request->get['filter_approved'];
         }
 
         if (isset($this->request->get['filter_ip'])) {
-            $url .= '&filter_ip='.$this->request->get['filter_ip'];
+            $url .= '&filter_ip=' . $this->request->get['filter_ip'];
         }
 
         if (isset($this->request->get['filter_date_added'])) {
-            $url .= '&filter_date_added='.$this->request->get['filter_date_added'];
+            $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
         }
 
         if (isset($this->request->get['sort'])) {
-            $url .= '&sort='.$this->request->get['sort'];
+            $url .= '&sort=' . $this->request->get['sort'];
         }
 
         if (isset($this->request->get['order'])) {
-            $url .= '&order='.$this->request->get['order'];
+            $url .= '&order=' . $this->request->get['order'];
         }
 
         if (isset($this->request->get['page'])) {
-            $url .= '&page='.$this->request->get['page'];
+            $url .= '&page=' . $this->request->get['page'];
         }
 
         $data['breadcrumbs'] = [];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
+            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('sale/customer', 'token='.$this->session->data['token'].$url, 'SSL'),
+            'href' => $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . $url, 'SSL'),
         ];
 
-        $data['add'] = $this->url->link('sale/customer/add', 'token='.$this->session->data['token'].$url, 'SSL');
-        $data['delete'] = $this->url->link('sale/customer/delete', 'token='.$this->session->data['token'].$url, 'SSL');
+        $data['add'] = $this->url->link('sale/customer/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['delete'] = $this->url->link('sale/customer/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
         $data['customers'] = [];
 
         $filter_data = [
+            'filter_company' => $filter_company,
             'filter_name' => $filter_name,
             'filter_email' => $filter_email,
             'filter_telephone' => $filter_telephone,
@@ -526,7 +560,7 @@ class ControllerSaleCustomer extends Controller
         //echo "<pre>";print_r($results);die;
         foreach ($results as $result) {
             if (!$result['approved']) {
-                $approve = $this->url->link('sale/customer/approve', 'token='.$this->session->data['token'].'&customer_id='.$result['customer_id'].$url, 'SSL');
+                $approve = $this->url->link('sale/customer/approve', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'] . $url, 'SSL');
             } else {
                 $approve = '';
             }
@@ -534,14 +568,14 @@ class ControllerSaleCustomer extends Controller
             $login_info = $this->model_sale_customer->getTotalLoginAttempts($result['email']);
 
             if ($login_info && $login_info['total'] >= $this->config->get('config_login_attempts')) {
-                $unlock = $this->url->link('sale/customer/unlock', 'token='.$this->session->data['token'].'&email='.$result['email'].$url, 'SSL');
+                $unlock = $this->url->link('sale/customer/unlock', 'token=' . $this->session->data['token'] . '&email=' . $result['email'] . $url, 'SSL');
             } else {
                 $unlock = '';
             }
 
-            $country_code = '+'.$this->config->get('config_telephone_code');
+            $country_code = '+' . $this->config->get('config_telephone_code');
             if ($result['company_name']) {
-                $result['company_name'] = ' ('.$result['company_name'].')';
+                $result['company_name'] = ' (' . $result['company_name'] . ')';
             } else {
                 // $result['company_name'] = "(NA)";
             }
@@ -551,14 +585,14 @@ class ControllerSaleCustomer extends Controller
                 'name' => $result['name'],
                 'company_name' => $result['company_name'],
                 'email' => $result['email'],
-                'telephone' => $country_code.$result['telephone'],
+                'telephone' => $country_code . $result['telephone'],
                 'customer_group' => $result['customer_group'],
                 'status' => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
                 'ip' => $result['ip'],
                 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
                 'approve' => $approve,
                 'unlock' => $unlock,
-                'edit' => $this->url->link('sale/customer/edit', 'token='.$this->session->data['token'].'&customer_id='.$result['customer_id'].$url, 'SSL'),
+                'edit' => $this->url->link('sale/customer/edit', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'] . $url, 'SSL'),
             ];
         }
 
@@ -632,36 +666,42 @@ class ControllerSaleCustomer extends Controller
 
         $url = '';
 
+
+
+        if (isset($this->request->get['filter_company'])) {
+            $url .= '&filter_company=' . urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
+        }
+
         if (isset($this->request->get['filter_name'])) {
-            $url .= '&filter_name='.urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_email'])) {
-            $url .= '&filter_email='.urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_telephone'])) {
-            $url .= '&filter_telephone='.urlencode(html_entity_decode($this->request->get['filter_telephone'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&filter_telephone=' . urlencode(html_entity_decode($this->request->get['filter_telephone'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_customer_group_id'])) {
-            $url .= '&filter_customer_group_id='.$this->request->get['filter_customer_group_id'];
+            $url .= '&filter_customer_group_id=' . $this->request->get['filter_customer_group_id'];
         }
 
         if (isset($this->request->get['filter_status'])) {
-            $url .= '&filter_status='.$this->request->get['filter_status'];
+            $url .= '&filter_status=' . $this->request->get['filter_status'];
         }
 
         if (isset($this->request->get['filter_approved'])) {
-            $url .= '&filter_approved='.$this->request->get['filter_approved'];
+            $url .= '&filter_approved=' . $this->request->get['filter_approved'];
         }
 
         if (isset($this->request->get['filter_ip'])) {
-            $url .= '&filter_ip='.$this->request->get['filter_ip'];
+            $url .= '&filter_ip=' . $this->request->get['filter_ip'];
         }
 
         if (isset($this->request->get['filter_date_added'])) {
-            $url .= '&filter_date_added='.$this->request->get['filter_date_added'];
+            $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
         }
 
         if ('ASC' == $order) {
@@ -671,68 +711,73 @@ class ControllerSaleCustomer extends Controller
         }
 
         if (isset($this->request->get['page'])) {
-            $url .= '&page='.$this->request->get['page'];
+            $url .= '&page=' . $this->request->get['page'];
         }
 
-        $data['sort_name'] = $this->url->link('sale/customer', 'token='.$this->session->data['token'].'&sort=name'.$url, 'SSL');
-        $data['sort_email'] = $this->url->link('sale/customer', 'token='.$this->session->data['token'].'&sort=c.email'.$url, 'SSL');
-        $data['sort_customer_group'] = $this->url->link('sale/customer', 'token='.$this->session->data['token'].'&sort=customer_group'.$url, 'SSL');
-        $data['sort_status'] = $this->url->link('sale/customer', 'token='.$this->session->data['token'].'&sort=c.status'.$url, 'SSL');
-        $data['sort_ip'] = $this->url->link('sale/customer', 'token='.$this->session->data['token'].'&sort=c.ip'.$url, 'SSL');
-        $data['sort_date_added'] = $this->url->link('sale/customer', 'token='.$this->session->data['token'].'&sort=c.date_added'.$url, 'SSL');
+        $data['sort_name'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
+        $data['sort_email'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=c.email' . $url, 'SSL');
+        $data['sort_customer_group'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=customer_group' . $url, 'SSL');
+        $data['sort_status'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=c.status' . $url, 'SSL');
+        $data['sort_ip'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=c.ip' . $url, 'SSL');
+        $data['sort_date_added'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=c.date_added' . $url, 'SSL');
 
         $url = '';
 
+        if (isset($this->request->get['filter_company'])) {
+            $url .= '&filter_company=' . urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
+        }
+
         if (isset($this->request->get['filter_name'])) {
-            $url .= '&filter_name='.urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_email'])) {
-            $url .= '&filter_email='.urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_telephone'])) {
-            $url .= '&filter_telephone='.urlencode(html_entity_decode($this->request->get['filter_telephone'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&filter_telephone=' . urlencode(html_entity_decode($this->request->get['filter_telephone'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_customer_group_id'])) {
-            $url .= '&filter_customer_group_id='.$this->request->get['filter_customer_group_id'];
+            $url .= '&filter_customer_group_id=' . $this->request->get['filter_customer_group_id'];
         }
 
         if (isset($this->request->get['filter_status'])) {
-            $url .= '&filter_status='.$this->request->get['filter_status'];
+            $url .= '&filter_status=' . $this->request->get['filter_status'];
         }
 
         if (isset($this->request->get['filter_approved'])) {
-            $url .= '&filter_approved='.$this->request->get['filter_approved'];
+            $url .= '&filter_approved=' . $this->request->get['filter_approved'];
         }
 
         if (isset($this->request->get['filter_ip'])) {
-            $url .= '&filter_ip='.$this->request->get['filter_ip'];
+            $url .= '&filter_ip=' . $this->request->get['filter_ip'];
         }
 
         if (isset($this->request->get['filter_date_added'])) {
-            $url .= '&filter_date_added='.$this->request->get['filter_date_added'];
+            $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
         }
 
         if (isset($this->request->get['sort'])) {
-            $url .= '&sort='.$this->request->get['sort'];
+            $url .= '&sort=' . $this->request->get['sort'];
         }
 
         if (isset($this->request->get['order'])) {
-            $url .= '&order='.$this->request->get['order'];
+            $url .= '&order=' . $this->request->get['order'];
         }
 
         $pagination = new Pagination();
         $pagination->total = $customer_total;
         $pagination->page = $page;
         $pagination->limit = $this->config->get('config_limit_admin');
-        $pagination->url = $this->url->link('sale/customer', 'token='.$this->session->data['token'].$url.'&page={page}', 'SSL');
+        $pagination->url = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
         $data['results'] = sprintf($this->language->get('text_pagination'), ($customer_total) ? (($page - 1) * $this->config->get('config_limit_admin')) + 1 : 0, ((($page - 1) * $this->config->get('config_limit_admin')) > ($customer_total - $this->config->get('config_limit_admin'))) ? $customer_total : ((($page - 1) * $this->config->get('config_limit_admin')) + $this->config->get('config_limit_admin')), $customer_total, ceil($customer_total / $this->config->get('config_limit_admin')));
 
+        $data['filter_company'] = $filter_company;
         $data['filter_name'] = $filter_name;
         $data['filter_email'] = $filter_email;
         $data['filter_telephone'] = $filter_telephone;
@@ -760,8 +805,7 @@ class ControllerSaleCustomer extends Controller
         $this->response->setOutput($this->load->view('sale/customer_list.tpl', $data));
     }
 
-    protected function getForm()
-    {
+    protected function getForm() {
         $data['heading_title'] = $this->language->get('heading_title');
 
         $data['entry_referred_by'] = $this->language->get('entry_referred_by');
@@ -939,61 +983,66 @@ class ControllerSaleCustomer extends Controller
 
         $url = '';
 
+        if (isset($this->request->get['filter_company'])) {
+            $url .= '&filter_company=' . urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
+        }
+
+
         if (isset($this->request->get['filter_name'])) {
-            $url .= '&filter_name='.urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_email'])) {
-            $url .= '&filter_email='.urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_customer_group_id'])) {
-            $url .= '&filter_customer_group_id='.$this->request->get['filter_customer_group_id'];
+            $url .= '&filter_customer_group_id=' . $this->request->get['filter_customer_group_id'];
         }
 
         if (isset($this->request->get['filter_status'])) {
-            $url .= '&filter_status='.$this->request->get['filter_status'];
+            $url .= '&filter_status=' . $this->request->get['filter_status'];
         }
 
         if (isset($this->request->get['filter_approved'])) {
-            $url .= '&filter_approved='.$this->request->get['filter_approved'];
+            $url .= '&filter_approved=' . $this->request->get['filter_approved'];
         }
 
         if (isset($this->request->get['filter_date_added'])) {
-            $url .= '&filter_date_added='.$this->request->get['filter_date_added'];
+            $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
         }
 
         if (isset($this->request->get['sort'])) {
-            $url .= '&sort='.$this->request->get['sort'];
+            $url .= '&sort=' . $this->request->get['sort'];
         }
 
         if (isset($this->request->get['order'])) {
-            $url .= '&order='.$this->request->get['order'];
+            $url .= '&order=' . $this->request->get['order'];
         }
 
         if (isset($this->request->get['page'])) {
-            $url .= '&page='.$this->request->get['page'];
+            $url .= '&page=' . $this->request->get['page'];
         }
 
         $data['breadcrumbs'] = [];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
+            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('sale/customer', 'token='.$this->session->data['token'].$url, 'SSL'),
+            'href' => $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . $url, 'SSL'),
         ];
 
         if (!isset($this->request->get['customer_id'])) {
-            $data['action'] = $this->url->link('sale/customer/add', 'token='.$this->session->data['token'].$url, 'SSL');
+            $data['action'] = $this->url->link('sale/customer/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
         } else {
-            $data['action'] = $this->url->link('sale/customer/edit', 'token='.$this->session->data['token'].'&customer_id='.$this->request->get['customer_id'].$url, 'SSL');
+            $data['action'] = $this->url->link('sale/customer/edit', 'token=' . $this->session->data['token'] . '&customer_id=' . $this->request->get['customer_id'] . $url, 'SSL');
         }
 
-        $data['cancel'] = $this->url->link('sale/customer', 'token='.$this->session->data['token'].$url, 'SSL');
+        $data['cancel'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
         if (isset($this->request->get['customer_id']) && ('POST' != $this->request->server['REQUEST_METHOD'])) {
             $customer_info = $this->model_sale_customer->getCustomer($this->request->get['customer_id']);
@@ -1003,10 +1052,10 @@ class ControllerSaleCustomer extends Controller
         $this->load->model('sale/customer_group');
         $filter_data = [
             'filter_parent' => $this->request->get['customer_id'],
-             'order' => 'DESC',
-             'start' => 0,
-             'limit' => 1000,
-         ];
+            'order' => 'DESC',
+            'start' => 0,
+            'limit' => 1000,
+        ];
         $data['sub_users'] = $this->model_sale_customer->getCustomers($filter_data);
         $data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups();
         $data['price_categories'] = $this->model_sale_customer_group->getPriceCategories();
@@ -1183,7 +1232,7 @@ class ControllerSaleCustomer extends Controller
         if (!empty($customer_info)) {
             $data['referee'] = $this->model_sale_customer->getCustomer($customer_info['refree_user_id']);
 
-            $data['referee_link'] = $this->url->link('sale/customer/edit', 'token='.$this->session->data['token'].'&customer_id='.$customer_info['refree_user_id'], 'SSL');
+            $data['referee_link'] = $this->url->link('sale/customer/edit', 'token=' . $this->session->data['token'] . '&customer_id=' . $customer_info['refree_user_id'], 'SSL');
         }
 
         //echo "<pre>";print_r($data);die;
@@ -1208,8 +1257,7 @@ class ControllerSaleCustomer extends Controller
         $this->response->setOutput($this->load->view('sale/customer_form.tpl', $data));
     }
 
-    protected function validateForm()
-    {
+    protected function validateForm() {
         //echo "<pre>";print_r($this->request->post);die;
         if (!$this->user->hasPermission('modify', 'sale/customer')) {
             $this->error['warning'] = $this->language->get('error_permission');
@@ -1266,18 +1314,16 @@ class ControllerSaleCustomer extends Controller
                     $this->error['address'][$key]['name'] = $this->language->get('error_name');
                 }
 
-                /*if (empty($value['zipcode']) || !is_numeric($value['zipcode'])) {
-                    $this->error['address'][$key]['zipcode'] = $this->language->get('error_zipcode');
-                }*/
+                /* if (empty($value['zipcode']) || !is_numeric($value['zipcode'])) {
+                  $this->error['address'][$key]['zipcode'] = $this->language->get('error_zipcode');
+                  } */
 
                 // if (empty($value['flat_number'])) {
                 //     $this->error['address'][$key]['flat_number'] = $this->language->get('error_flat_number');
                 // }
-
                 // if (empty($value['building_name'])) {
                 //     $this->error['address'][$key]['building_name'] = $this->language->get('error_building_name');
                 // }
-
                 // if (empty($value['landmark'])) {
                 //     $this->error['address'][$key]['landmark'] = $this->language->get('error_landmark');
                 // }
@@ -1291,8 +1337,7 @@ class ControllerSaleCustomer extends Controller
         return !$this->error;
     }
 
-    protected function validateDelete()
-    {
+    protected function validateDelete() {
         if (!$this->user->hasPermission('modify', 'sale/customer')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
@@ -1300,8 +1345,7 @@ class ControllerSaleCustomer extends Controller
         return !$this->error;
     }
 
-    protected function validateApprove()
-    {
+    protected function validateApprove() {
         if (!$this->user->hasPermission('modify', 'sale/customer')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
@@ -1309,8 +1353,7 @@ class ControllerSaleCustomer extends Controller
         return !$this->error;
     }
 
-    protected function validateUnlock()
-    {
+    protected function validateUnlock() {
         if (!$this->user->hasPermission('modify', 'sale/customer')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
@@ -1318,8 +1361,7 @@ class ControllerSaleCustomer extends Controller
         return !$this->error;
     }
 
-    protected function validateHistory()
-    {
+    protected function validateHistory() {
         if (!$this->user->hasPermission('modify', 'sale/customer')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
@@ -1331,8 +1373,7 @@ class ControllerSaleCustomer extends Controller
         return !$this->error;
     }
 
-    public function login()
-    {
+    public function login() {
         $json = [];
 
         if (isset($this->request->get['customer_id'])) {
@@ -1361,9 +1402,9 @@ class ControllerSaleCustomer extends Controller
             $store_info = $this->model_setting_store->getStore($store_id);
 
             if ($store_info) {
-                $this->response->redirect($store_info['url'].'index.php?path=account/login/adminRedirectLogin&token='.$token);
+                $this->response->redirect($store_info['url'] . 'index.php?path=account/login/adminRedirectLogin&token=' . $token);
             } else {
-                $this->response->redirect(HTTP_CATALOG.'index.php?path=account/login/adminRedirectLogin&token='.$token);
+                $this->response->redirect(HTTP_CATALOG . 'index.php?path=account/login/adminRedirectLogin&token=' . $token);
             }
         } else {
             $this->load->language('error/not_found');
@@ -1378,12 +1419,12 @@ class ControllerSaleCustomer extends Controller
 
             $data['breadcrumbs'][] = [
                 'text' => $this->language->get('text_home'),
-                'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
+                'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL'),
             ];
 
             $data['breadcrumbs'][] = [
                 'text' => $this->language->get('heading_title'),
-                'href' => $this->url->link('error/not_found', 'token='.$this->session->data['token'], 'SSL'),
+                'href' => $this->url->link('error/not_found', 'token=' . $this->session->data['token'], 'SSL'),
             ];
 
             $data['header'] = $this->load->controller('common/header');
@@ -1394,8 +1435,7 @@ class ControllerSaleCustomer extends Controller
         }
     }
 
-    public function history()
-    {
+    public function history() {
         $this->load->language('sale/customer');
 
         $this->load->model('sale/customer');
@@ -1442,7 +1482,7 @@ class ControllerSaleCustomer extends Controller
         $pagination->total = $history_total;
         $pagination->page = $page;
         $pagination->limit = 10;
-        $pagination->url = $this->url->link('sale/customer/history', 'token='.$this->session->data['token'].'&customer_id='.$this->request->get['customer_id'].'&page={page}', 'SSL');
+        $pagination->url = $this->url->link('sale/customer/history', 'token=' . $this->session->data['token'] . '&customer_id=' . $this->request->get['customer_id'] . '&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
@@ -1451,8 +1491,7 @@ class ControllerSaleCustomer extends Controller
         $this->response->setOutput($this->load->view('sale/customer_history.tpl', $data));
     }
 
-    public function credit()
-    {
+    public function credit() {
         $this->load->language('sale/customer');
 
         $this->load->model('sale/customer');
@@ -1504,7 +1543,7 @@ class ControllerSaleCustomer extends Controller
         $pagination->total = $credit_total;
         $pagination->page = $page;
         $pagination->limit = 10;
-        $pagination->url = $this->url->link('sale/customer/credit', 'token='.$this->session->data['token'].'&customer_id='.$this->request->get['customer_id'].'&page={page}', 'SSL');
+        $pagination->url = $this->url->link('sale/customer/credit', 'token=' . $this->session->data['token'] . '&customer_id=' . $this->request->get['customer_id'] . '&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
@@ -1513,12 +1552,14 @@ class ControllerSaleCustomer extends Controller
         $this->response->setOutput($this->load->view('sale/customer_credit.tpl', $data));
     }
 
-    public function reward()
-    {
+    public function reward() {
         $this->load->language('sale/customer');
 
         $this->load->model('sale/customer');
-
+        
+        if (strlen($this->request->post['description']) == 0 || strlen($this->request->post['points']) == 0) {
+            $data['error_warning'] = 'Warning : All fields are mandatory!';
+        } else {
         if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->user->hasPermission('modify', 'sale/customer')) {
             $this->model_sale_customer->addReward($this->request->get['customer_id'], $this->request->post['description'], $this->request->post['points']);
 
@@ -1531,6 +1572,7 @@ class ControllerSaleCustomer extends Controller
             $data['error_warning'] = $this->language->get('error_permission');
         } else {
             $data['error_warning'] = '';
+        }
         }
 
         $data['text_no_results'] = $this->language->get('text_no_results');
@@ -1566,7 +1608,7 @@ class ControllerSaleCustomer extends Controller
         $pagination->total = $reward_total;
         $pagination->page = $page;
         $pagination->limit = 10;
-        $pagination->url = $this->url->link('sale/customer/reward', 'token='.$this->session->data['token'].'&customer_id='.$this->request->get['customer_id'].'&page={page}', 'SSL');
+        $pagination->url = $this->url->link('sale/customer/reward', 'token=' . $this->session->data['token'] . '&customer_id=' . $this->request->get['customer_id'] . '&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
@@ -1575,8 +1617,7 @@ class ControllerSaleCustomer extends Controller
         $this->response->setOutput($this->load->view('sale/customer_reward.tpl', $data));
     }
 
-    public function ip()
-    {
+    public function ip() {
         $this->load->language('sale/customer');
 
         $this->load->model('sale/customer');
@@ -1608,7 +1649,7 @@ class ControllerSaleCustomer extends Controller
                 'ip' => $result['ip'],
                 'total' => $this->model_sale_customer->getTotalCustomersByIp($result['ip']),
                 'date_added' => date('d/m/y', strtotime($result['date_added'])),
-                'filter_ip' => $this->url->link('sale/customer', 'token='.$this->session->data['token'].'&filter_ip='.$result['ip'], 'SSL'),
+                'filter_ip' => $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_ip=' . $result['ip'], 'SSL'),
                 'ban_ip' => $ban_ip_total,
             ];
         }
@@ -1619,7 +1660,7 @@ class ControllerSaleCustomer extends Controller
         $pagination->total = $ip_total;
         $pagination->page = $page;
         $pagination->limit = 10;
-        $pagination->url = $this->url->link('sale/customer/ip', 'token='.$this->session->data['token'].'&customer_id='.$this->request->get['customer_id'].'&page={page}', 'SSL');
+        $pagination->url = $this->url->link('sale/customer/ip', 'token=' . $this->session->data['token'] . '&customer_id=' . $this->request->get['customer_id'] . '&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
@@ -1628,8 +1669,7 @@ class ControllerSaleCustomer extends Controller
         $this->response->setOutput($this->load->view('sale/customer_ip.tpl', $data));
     }
 
-    public function addBanIp()
-    {
+    public function addBanIp() {
         $this->load->language('sale/customer');
 
         $json = [];
@@ -1650,8 +1690,7 @@ class ControllerSaleCustomer extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function removeBanIp()
-    {
+    public function removeBanIp() {
         $this->load->language('sale/customer');
 
         $json = [];
@@ -1672,8 +1711,7 @@ class ControllerSaleCustomer extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function autocomplete()
-    {
+    public function autocomplete() {
         $json = [];
 
         if (isset($this->request->get['filter_name']) || isset($this->request->get['filter_email'])) {
@@ -1733,8 +1771,7 @@ class ControllerSaleCustomer extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function autocompletebyCompany()
-    {
+    public function autocompletebyCompany() {
         $json = [];
 
         if (isset($this->request->get['filter_name']) || isset($this->request->get['filter_email'])) {
@@ -1794,8 +1831,7 @@ class ControllerSaleCustomer extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function customfield()
-    {
+    public function customfield() {
         $json = [];
 
         $this->load->model('sale/custom_field');
@@ -1820,8 +1856,7 @@ class ControllerSaleCustomer extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function address()
-    {
+    public function address() {
         $json = [];
 
         if (!empty($this->request->get['address_id'])) {
@@ -1834,8 +1869,7 @@ class ControllerSaleCustomer extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function country()
-    {
+    public function country() {
         $json = [];
 
         $this->load->model('localisation/country');
@@ -1861,8 +1895,7 @@ class ControllerSaleCustomer extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function referral()
-    {
+    public function referral() {
         $this->load->language('sale/customer');
 
         $this->load->model('sale/customer');
@@ -1916,7 +1949,7 @@ class ControllerSaleCustomer extends Controller
         $pagination->total = $reward_total;
         $pagination->page = $page;
         $pagination->limit = 10;
-        $pagination->url = $this->url->link('sale/customer/referral', 'token='.$this->session->data['token'].'&customer_id='.$this->request->get['customer_id'].'&page={page}', 'SSL');
+        $pagination->url = $this->url->link('sale/customer/referral', 'token=' . $this->session->data['token'] . '&customer_id=' . $this->request->get['customer_id'] . '&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
@@ -1925,8 +1958,7 @@ class ControllerSaleCustomer extends Controller
         $this->response->setOutput($this->load->view('sale/customer_referrals.tpl', $data));
     }
 
-    public function autocompletecompany()
-    {
+    public function autocompletecompany() {
         $json = [];
 
         if (isset($this->request->get['filter_name'])) {
@@ -1963,4 +1995,5 @@ class ControllerSaleCustomer extends Controller
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
+
 }

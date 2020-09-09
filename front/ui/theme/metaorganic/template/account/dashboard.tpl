@@ -9,7 +9,7 @@
         </div>
         <div class="col-md-offset-2 col-md-2">
           <div class="form-group">
-            <select class="form-control">
+            <select class="company-name">
               <?php foreach($DashboardData['companyname'] as $companyname) { ?>
               <option value="<?php echo $companyname[customer_id]; ?>">
                 <?php  echo  $companyname['company_name']; ?>

@@ -946,6 +946,12 @@ class ControllerSaleOrder extends Controller
             $filter_order_id = null;
         }
 
+        if (isset($this->request->get['filter_company'])) {
+            $filter_company = $this->request->get['filter_company'];
+        } else {
+            $filter_company = null;
+        }
+
         if (isset($this->request->get['filter_customer'])) {
             $filter_customer = $this->request->get['filter_customer'];
         } else {
@@ -1028,6 +1034,9 @@ class ControllerSaleOrder extends Controller
             $url .= '&filter_order_id='.$this->request->get['filter_order_id'];
         }
 
+        if (isset($this->request->get['filter_company'])) {
+            $url .= '&filter_company='.urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
+        }
         if (isset($this->request->get['filter_customer'])) {
             $url .= '&filter_customer='.urlencode(html_entity_decode($this->request->get['filter_customer'], ENT_QUOTES, 'UTF-8'));
         }
@@ -1098,6 +1107,7 @@ class ControllerSaleOrder extends Controller
             'filter_city' => $filter_city,
             'filter_order_id' => $filter_order_id,
             'filter_customer' => $filter_customer,
+            'filter_company' => $filter_company,
             'filter_vendor' => $this->getUserByName($filter_vendor),
             'filter_store_name' => $filter_store_name,
             'filter_delivery_method' => $filter_delivery_method,
@@ -1246,7 +1256,9 @@ class ControllerSaleOrder extends Controller
         if (isset($this->request->get['filter_order_id'])) {
             $url .= '&filter_order_id='.$this->request->get['filter_order_id'];
         }
-
+        if (isset($this->request->get['filter_company'])) {
+            $url .= '&filter_company='.urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
+        }
         if (isset($this->request->get['filter_customer'])) {
             $url .= '&filter_customer='.urlencode(html_entity_decode($this->request->get['filter_customer'], ENT_QUOTES, 'UTF-8'));
         }
@@ -1309,6 +1321,9 @@ class ControllerSaleOrder extends Controller
 
         if (isset($this->request->get['filter_order_id'])) {
             $url .= '&filter_order_id='.$this->request->get['filter_order_id'];
+        } 
+        if (isset($this->request->get['filter_company'])) {
+            $url .= '&filter_company='.urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_customer'])) {
@@ -1367,6 +1382,7 @@ class ControllerSaleOrder extends Controller
 
         $data['filter_city'] = $filter_city;
         $data['filter_order_id'] = $filter_order_id;
+        $data['filter_company'] = $filter_company;
         $data['filter_customer'] = $filter_customer;
         $data['filter_vendor'] = $filter_vendor;
         $data['filter_store_name'] = $filter_store_name;

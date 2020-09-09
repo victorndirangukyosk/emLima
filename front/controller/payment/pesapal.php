@@ -15,7 +15,10 @@ class ControllerPaymentPesapal extends Controller
         foreach ($this->session->data['order_id'] as $key => $value) {
             $order_id = $value;
         }
-
+        if($order_id != NULL) {
+        $this->model_checkout_order->UpdateParentApproval($order_id);
+        }
+        
         $log = new Log('error.log');
         $log->write('Pesapal Order ID');
         $log->write($this->session->data['order_id']);

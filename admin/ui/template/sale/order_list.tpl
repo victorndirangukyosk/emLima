@@ -118,6 +118,11 @@
 
                         <div class="col-sm-4">
 
+                           <div class="form-group">
+                                <label class="control-label" for="input-company">Company Name</label>
+                                <input type="text" name="filter_company" value="<?php echo $filter_company; ?>" placeholder="Company Name" id="input-company" class="form-control" />
+                            </div>
+
                             <?php if(!$this->user->isVendor()){ ?>  
                             <div class="form-group">
                                 <label class="control-label" for="input-model"><?= $text_vendor ?></label>
@@ -396,6 +401,13 @@
    $('#button-filter').on('click', function () {
             url = 'index.php?path=sale/order&token=<?php echo $token; ?>';
 
+             var filter_company = $('input[name=\'filter_company\']').val();
+
+            if (filter_company) {
+                url += '&filter_company=' + encodeURIComponent(filter_company);
+            }
+  
+
             var filter_city = $('input[name=\'filter_city\']').val();
 
             if (filter_city) {
@@ -488,11 +500,11 @@
                 $('input[name=\'filter_city\']').val(item['label']);
             }
         });
-        
+         $companyName="";
         $('input[name=\'filter_customer\']').autocomplete({
             'source': function (request, response) {
                 $.ajax({
-                    url: 'index.php?path=sale/customer/autocomplete&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
+                    url: 'index.php?path=sale/customer/autocompletebyCompany&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request)+'&filter_company=' +$companyName,
                     dataType: 'json',
                     success: function (json) {
                         response($.map(json, function (item) {
@@ -508,6 +520,33 @@
                 $('input[name=\'filter_customer\']').val(item['label']);
             }
         });
+
+
+           $('input[name=\'filter_company\']').autocomplete({
+            'source': function (request, response) {
+                $.ajax({
+                    url: 'index.php?path=sale/customer/autocompletecompany&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
+                    dataType: 'json',
+                    success: function (json) {
+                        response($.map(json, function (item) {
+                            return {
+                                label: item['name'],
+                                value: item['name']
+                            }
+                        }));
+
+                        
+                    }
+                });
+                $companyName="";
+            },
+            'select': function (item) {
+                $('input[name=\'filter_company\']').val(item['label']);
+                $('input[name=\'filter_customer\']').val('');
+                $companyName=item['label'];
+            }
+        });
+        
         //--></script> 
     <script type="text/javascript"><!--
   $('input[name^=\'selected\']').on('change', function () {
