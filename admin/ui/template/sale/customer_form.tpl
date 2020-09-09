@@ -490,6 +490,11 @@
                 <button type="button" id="button-reward" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-primary"><i class="fa fa-plus-circle"></i> <?php echo $button_reward_add; ?></button>
               </div>
             </div>
+            
+            <div class="tab-pane" id="tab-ip">
+              <div id="ip"></div>
+              <br />
+            </div>
 
             <div class="tab-pane" id="tab-referral">
               <div id="referral"></div>
