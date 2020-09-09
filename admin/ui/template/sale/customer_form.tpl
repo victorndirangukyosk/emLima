@@ -876,6 +876,16 @@ $('#referral').delegate('.pagination a', 'click', function(e) {
 $('#referral').load('index.php?path=sale/customer/referral&token=<?php echo $token; ?>&customer_id=<?php echo $customer_id; ?>');
 
 $('#button-reward').on('click', function(e) {
+  if(encodeURIComponent($('#tab-reward input[name=\'description\']').val())=='')
+  {
+    alert("please enter valid description");
+    return;
+  }
+  if(encodeURIComponent($('#tab-reward input[name=\'points\']').val())=='')
+  {
+    alert("please enter valid points");
+    return;
+  }  
   e.preventDefault();
 
   $.ajax({
