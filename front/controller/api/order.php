@@ -758,9 +758,10 @@ class ControllerApiOrder extends Controller
         $json = [];
         $json['success'] = 'Something went wrong!';
 
-        if (!isset($this->session->data['api_id'])) {
-            $json['error'] = $this->language->get('error_permission');
-        } else {
+        //if (!isset($this->session->data['api_id'])) {
+          //  $json['error'] = $this->language->get('error_permission');
+       // } else
+        {
             $this->load->model('account/order');
             // if (isset($this->request->get['order_id'])) {
             //     $order_id = $this->request->get['order_id'];
@@ -797,9 +798,10 @@ class ControllerApiOrder extends Controller
         $json = [];
         $json['success'] = 'Something went wrong!';
 
-        if (!isset($this->session->data['api_id'])) {
-            $json['error'] = $this->language->get('error_permission');
-        } else {
+        //if (!isset($this->session->data['api_id'])) {
+            //$json['error'] = $this->language->get('error_permission');
+       // } else 
+       {
 
         $json['location'] = 'module';
         
