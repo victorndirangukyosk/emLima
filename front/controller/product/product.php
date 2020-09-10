@@ -955,10 +955,12 @@ class ControllerProductProduct extends Controller
             if (isset($this->session->data['cart'][$key])) {
                 $data['product']['qty_in_cart'] = $this->session->data['cart'][$key]['quantity'];
                 $data['product']['actualCart'] = 1;
+                $data['product']['product_note'] = $this->session->data['cart'][$key]['product_note'];
             } else {
                 $data['product']['qty_in_cart'] = 0;
                 if (isset($this->session->data['temp_cart'][$key])) {
                     $data['product']['qty_in_cart'] = $this->session->data['temp_cart'][$key]['quantity'];
+                    $data['product']['product_note'] = $this->session->data['temp_cart'][$key]['product_note'];
                 }
             }
             if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/product/product_popup.tpl')) {
