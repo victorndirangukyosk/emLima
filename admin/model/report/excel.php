@@ -1052,6 +1052,9 @@ if($sheet_subtitle_1!="" && $sheet_subtitle_1!=null)
                 $objPHPExcel->getActiveSheet()->mergeCells('A4:E4');
                 $objPHPExcel->getActiveSheet()->setCellValue('A4','Order Note : '. $sheet_subtitle_1);
                 $row = 6;
+                $objPHPExcel->getActiveSheet()->getStyle('A5:E5')->applyFromArray(['font' => ['bold' => true], 'color' => [
+                    'rgb' => '51AB66',
+                ]]);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 5, 'Product Name         ');
                 //$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'Produce Type');
 
