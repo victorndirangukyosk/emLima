@@ -246,9 +246,7 @@
 
     </div>
     <!--Cart HTML End-->    
-<?php echo $footer; ?>
-    <script src="<?= $base ?>front/ui/theme/mvgv2/js/bootstrap.min.js"></script>
-    
+<?php echo $footer; ?>    
     <script type="text/javascript" src="<?= $base ?>front/ui/theme/mvgv2/js/jquery.sticky.min.js"></script>
     <script type="text/javascript" src="<?= $base ?>front/ui/theme/mvgv2/js/header-sticky.js"></script>
 
