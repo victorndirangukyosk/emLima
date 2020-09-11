@@ -13,9 +13,9 @@
 
         
         <?php if ($product['quantity'] >= $product['minimum']) { ?>
-             <span data-tooltip="Maximum quantity per order for this product reached">
+             <!--<span data-tooltip="Maximum quantity per order for this product reached">-->
                 <input type="button" class="sp-plus fff mini-plus-quantity ddd" data-minimum='<?= $product["minimum"] ?>' data-key='<?= $product["key"] ?>' data-id='<?= $product["product_store_id"] ?>' data-unit='<?= $product["name"] ?>' id="plus"  value="+"/>
-            </span>
+            <!--</span>-->
 
         <?php } else { ?>
             
