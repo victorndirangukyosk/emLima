@@ -63,11 +63,15 @@ class ControllerPaymentCod extends Controller {
         $this->load->model('checkout/order');
 
         $log->write($this->config->get('cod_order_status_id'));
-
+        $is_he_parents = $this->model_account_customer->CheckHeIsParent();
+        $parent_approval = null == $is_he_parents ? 'Approved' : 'Pending';
+        $order_status_id = null == $is_he_parents ? $this->config->get('cod_order_status_id') : 15;
+       
         foreach ($orders as $order_id) {
             $log->write('cod loop' . $order_id);
 
-            $ret = $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('cod_order_status_id'));
+           // $ret = $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('cod_order_status_id'));
+            $ret = $this->model_checkout_order->addOrderHistory($order_id, $order_status_id);
         }
     }
 
