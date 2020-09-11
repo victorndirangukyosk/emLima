@@ -880,6 +880,7 @@ class ControllerApiOrder extends Controller
             $log->write('product info');
             $special_price = explode(' ', $product_info['special_price']);
               $log->write($special_price);
+              $special_price[1] = str_replace( ',', '', $special_price[1]);
             $total = $special_price[1] * $quantity + ($this->config->get('config_tax') ? ($order_products[$key]['tax'] * $quantity) : 0);
             // $log->write($total);
             $log->write($product_id);
