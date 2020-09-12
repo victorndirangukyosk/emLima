@@ -1186,13 +1186,15 @@ class ControllerCommonHome extends Controller
             }
             
             $log = new Log('error.log');
-            if($result['image'] == NULL) {
+            if ($result['image'] == NULL) {
                 $log->write('IMAGE NULL');
-                $image = $this->model_tool_image->resize('no_image.png', $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));    
-            } else if (file_exists(DIR_IMAGE.$result['image'])) {
+                $image = $this->model_tool_image->resize('placeholder.png', $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
+            } else if (file_exists(DIR_IMAGE . $result['image'])) {
                 $image = $this->model_tool_image->resize($result['image'], $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
+            } else if (!file_exists(DIR_IMAGE . $result['image'])) {
+                $image = $this->model_tool_image->resize('placeholder.png', $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
             } else {
-                $image = $this->model_tool_image->resize('no_image.png', $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
+                $image = $this->model_tool_image->resize('placeholder.png', $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
             }
 
             //if category discount define override special price
