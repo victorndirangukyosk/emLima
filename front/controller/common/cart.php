@@ -289,10 +289,10 @@ class ControllerCommonCart extends Controller
             if ($p_detail) {
                 $max_qty = $p_detail['quantity'];
             }
-
-            if (file_exists(DIR_IMAGE.$product['image'])) {
+            
+            if ($product['image'] != NULL && file_exists(DIR_IMAGE.$product['image'])) {
                 $image = $this->model_tool_image->resize($product['image'], $this->config->get('config_image_cart_width'), $this->config->get('config_image_cart_height'));
-            } else {
+            } else if($product['image'] == NULL || !file_exists(DIR_IMAGE.$product['image'])) {
                 //$image = '';
 
                 $image = $this->model_tool_image->resize('placeholder.png', $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
