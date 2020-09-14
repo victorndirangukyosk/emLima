@@ -553,9 +553,9 @@ class ControllerAccountOrder extends Controller
 
                 $this->load->model('tool/image');
 
-                if (file_exists(DIR_IMAGE.$product['image'])) {
+                if ($product['image'] != NULL && file_exists(DIR_IMAGE.$product['image'])) {
                     $image = $this->model_tool_image->resize($product['image'], 80, 100);
-                } else {
+                } else if($product['image'] == NULL || !file_exists(DIR_IMAGE.$product['image'])) {
                     $image = $this->model_tool_image->resize('placeholder.png', 80, 100);
                 }
 
