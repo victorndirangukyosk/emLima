@@ -222,8 +222,12 @@ class ControllerCommonHome extends Controller
     }
 
     public function terms_and_conditions()
-    {
-        $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/landing_page/terms-and-conditions.tpl'));
+    {   
+        $data['customer_id'] = NULL;
+        if ($this->customer->isLogged()) {
+        $data['customer_id'] = $this->session->data['customer_id'];    
+        }
+        $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/landing_page/terms-and-conditions.tpl', $data));
     }
 
     public function privacy_policy()
