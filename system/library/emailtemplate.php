@@ -2133,8 +2133,9 @@ class Emailtemplate
             $sms->send([
                 'to' => $this->formatPhoneNumber($to),
                 'message' => $message,
+                'from' => 'KWIKBASKET'
             ]);
-
+            
             $log->write("Africa's Talking Sending SMS ".$message.' to '.$to);
         } elseif ('twilio' == $this->config->get('config_sms_protocol')) {
             $sid = $this->config->get('config_sms_sender_id');

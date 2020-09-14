@@ -76,7 +76,7 @@
 
 
  <div class="variation-selector-container" style="width: 275px;">
-	<textarea name="product_notes" class="form-control" maxlength="200" placeholder="Product Notes" id="product_notes" style="height: 50px; margin-top:10px;"></textarea>
+	<textarea name="product_notes" class="form-control" maxlength="200" placeholder="Product Notes" id="product_notes" style="height: 50px; margin-top:10px;"><?php if($product['product_note'] != NULL){echo $product['product_note'];}?></textarea>
  </div>
 
 

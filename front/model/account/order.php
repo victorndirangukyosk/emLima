@@ -782,6 +782,12 @@ class ModelAccountOrder extends Model
         return $sub_users_order->row;
     }
 
+    public function getSubUserOrderDetailsapi($order_id)
+    {
+        $sub_users_order = $this->db->query('SELECT * FROM '.DB_PREFIX."order WHERE order_id = '".(int) $order_id."'");
+
+        return $sub_users_order->row;
+    }
     public function ApproveOrRejectSubUserOrder($order_id, $customer_id, $order_status)
     {
         if ('Approved' == $order_status) {
@@ -790,6 +796,18 @@ class ModelAccountOrder extends Model
         }
         if ('Rejected' == $order_status) {
             $this->db->query('UPDATE `'.DB_PREFIX."order` SET parent_approval = '".$order_status."', order_status_id = 16 WHERE order_id = '".(int) $order_id."' AND customer_id = '".(int) $customer_id."'");
+            $this->db->query('INSERT INTO '.DB_PREFIX."order_history SET order_id = '".(int) $order_id."', order_status_id = 16, notify = 1, comment = 'Order Rejected By Parent User', date_added = NOW()");
+        }
+    }
+
+    public function ApproveOrRejectSubUserOrderApi($order_id,$order_status)
+    {
+        if ('Approved' == $order_status) {
+            $this->db->query('UPDATE `'.DB_PREFIX."order` SET parent_approval = '".$order_status."', order_status_id = 14  WHERE order_id = '".(int) $order_id."'");
+            $this->db->query('INSERT INTO '.DB_PREFIX."order_history SET order_id = '".(int) $order_id."', order_status_id = 14, notify = 1, comment = 'Order Approved By Parent User', date_added = NOW()");
+        }
+        if ('Rejected' == $order_status) {
+            $this->db->query('UPDATE `'.DB_PREFIX."order` SET parent_approval = '".$order_status."', order_status_id = 16 WHERE order_id = '".(int) $order_id."' ");
             $this->db->query('INSERT INTO '.DB_PREFIX."order_history SET order_id = '".(int) $order_id."', order_status_id = 16, notify = 1, comment = 'Order Rejected By Parent User', date_added = NOW()");
         }
     }

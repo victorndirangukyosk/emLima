@@ -149,7 +149,7 @@
                             <?php if($gender == 'male') {?> 
                                 <input type="radio" name="sex" data-id="8" value="male" checked="checked" /> <?= $text_male ?> 
                             <?php } else {?>
-                            <input type="radio" name="sex" data-id="8" value="male"/> <?= $text_male ?> 
+                            <input type="radio" name="sex" data-id="8" value="male" checked="checked"/> <?= $text_male ?> 
                             <?php } ?>
                           <!-- </label> -->
 
@@ -176,7 +176,7 @@
                       <div class="form-group required">
                         <label class="col-sm-2 control-label" for="input-telephone"><?php echo $entry_telephone; ?></label>
                         <div class="col-sm-10">
-                          <input type="text" name="telephone" value="<?php echo $telephone; ?>" placeholder="<?php echo $entry_telephone; ?>" id="input-telephone" class="form-control" />
+                          <input type="text" name="telephone" value="<?php echo $telephone; ?>" placeholder="<?php echo $entry_telephone; ?>" id="input-telephone" class="form-control" maxlength=10 onkeypress="return isNumberKey(event)"  />
                           <?php if ($error_telephone) { ?>
                           <div class="text-danger"><?php echo $error_telephone; ?></div>
                           <?php  } ?>
@@ -464,7 +464,7 @@
               <div class="form-group">
                 <label class="col-sm-2 control-label" for="input-amount"><?php echo $entry_amount; ?></label>
                 <div class="col-sm-10">
-                  <input type="text" name="amount" value="" placeholder="<?php echo $entry_amount; ?>" id="input-amount" class="form-control" />
+                  <input type="number" name="amount" value="" placeholder="<?php echo $entry_amount; ?>" id="input-amount" class="form-control" />
                 </div>
               </div>
               <div class="text-right">
@@ -489,6 +489,11 @@
               <div class="text-right">
                 <button type="button" id="button-reward" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-primary"><i class="fa fa-plus-circle"></i> <?php echo $button_reward_add; ?></button>
               </div>
+            </div>
+            
+            <div class="tab-pane" id="tab-ip">
+              <div id="ip"></div>
+              <br />
             </div>
 
             <div class="tab-pane" id="tab-referral">
@@ -822,6 +827,12 @@ $('#credit').delegate('.pagination a', 'click', function(e) {
 $('#credit').load('index.php?path=sale/customer/credit&token=<?php echo $token; ?>&customer_id=<?php echo $customer_id; ?>');
 
 $('#button-credit').on('click', function(e) {
+
+  if(encodeURIComponent($('#tab-credit input[name=\'amount\']').val())==0)
+  {
+    alert("please enter valid amount");
+    return;
+  }
   e.preventDefault();
 
         $.ajax({
@@ -865,6 +876,16 @@ $('#referral').delegate('.pagination a', 'click', function(e) {
 $('#referral').load('index.php?path=sale/customer/referral&token=<?php echo $token; ?>&customer_id=<?php echo $customer_id; ?>');
 
 $('#button-reward').on('click', function(e) {
+  if(encodeURIComponent($('#tab-reward input[name=\'description\']').val())=='')
+  {
+    alert("please enter valid description");
+    return;
+  }
+  if(encodeURIComponent($('#tab-reward input[name=\'points\']').val())=='')
+  {
+    alert("please enter valid points");
+    return;
+  }  
   e.preventDefault();
 
   $.ajax({
@@ -1632,7 +1653,14 @@ $('.time').datetimepicker({
 
 
     
+ function isNumberKey(evt)
+      {
+         var charCode = (evt.which) ? evt.which : event.keyCode
+         if (charCode > 31 && (charCode < 48 || charCode > 57))
+            return false;
 
+         return true;
+      }
     
     
 </script>

@@ -637,7 +637,7 @@ class ControllerAccountLogin extends Controller
             $data['error_warning'] = $this->language->get('error_login');
         }
 
-        $data['redirect'] = '';
+        $data['redirect'] = null;//if null is not placed change pass not working
         //check email sessions
         $log = new Log('error.log');
         $this->load->model('checkout/order');

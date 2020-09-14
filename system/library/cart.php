@@ -660,7 +660,7 @@ class Cart
         return true;
     }
 
-    public function update($key, $qty, $product_note = null, $produce_type = null)
+    public function update($key, $qty, $product_note, $produce_type = null)
     {
         if (null == $produce_type || 'null' == $produce_type) {
             $this->data = [];
@@ -670,6 +670,7 @@ class Cart
             */
             if ((float) $qty && ((float) $qty > 0) && isset($this->session->data['cart'][$key])) {
                 $this->session->data['cart'][$key]['quantity'] = (float) $qty;
+                $this->session->data['cart'][$key]['product_note'] = $product_note;
             } else {
                 $this->remove($key);
             }
@@ -701,6 +702,7 @@ class Cart
 
             $this->session->data['cart'][$key]['produce_type'] = $preProduceTypes;
             $this->session->data['cart'][$key]['quantity'] = (float) $newquantity;
+            $this->session->data['cart'][$key]['product_note'] = $product_note;
         }
     }
 

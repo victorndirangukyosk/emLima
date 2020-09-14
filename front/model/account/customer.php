@@ -568,7 +568,9 @@ class ModelAccountCustomer extends Model
         $log = new Log('error.log');
         if (is_array($is_he_parent->rows) && count($is_he_parent->rows) > 0) {
             foreach ($is_he_parent->rows as $is_he) {
-                $parent = $is_he['parent'];
+                if (null != $is_he['parent'] && $is_he['parent'] > 0) {
+                    $parent = $is_he['parent'];
+                }
             }
         }
 

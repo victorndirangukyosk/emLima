@@ -1,21 +1,20 @@
 <?php
 
-require_once DIR_SYSTEM.'/vendor/konduto/vendor/autoload.php';
+require_once DIR_SYSTEM . '/vendor/konduto/vendor/autoload.php';
 
 use Konduto\Core\Konduto;
 use Konduto\Models;
 
-require_once DIR_APPLICATION.'/controller/api/settings.php';
+require_once DIR_APPLICATION . '/controller/api/settings.php';
 
-class ControllerCheckoutSuccess extends Controller
-{
-    public function index()
-    {
+class ControllerCheckoutSuccess extends Controller {
+
+    public function index() {
         //$this->load->language( 'account/register' );
 
         $this->load->language('checkout/success');
 
-        $this->document->addStyle('front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_checkout.css');
+        $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_checkout.css');
 
         if (!empty($_SESSION['parent'])) {
             $this->document->setTitle($this->language->get('heading_title_sub_user'));
@@ -105,14 +104,14 @@ class ControllerCheckoutSuccess extends Controller
                 if ($this->customer->isLogged()) {
                     $activity_data = [
                         'customer_id' => $this->customer->getId(),
-                        'name' => $this->customer->getFirstName().' '.$this->customer->getLastName(),
+                        'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
                         'order_id' => $order_id,
                     ];
 
                     $this->model_account_activity->addActivity('order_account', $activity_data);
                 } else {
                     $activity_data = [
-                        'name' => $this->session->data['guest']['firstname'].' '.$this->session->data['guest']['lastname'],
+                        'name' => $this->session->data['guest']['firstname'] . ' ' . $this->session->data['guest']['lastname'],
                         'order_id' => $order_id,
                     ];
 
@@ -185,20 +184,19 @@ class ControllerCheckoutSuccess extends Controller
         $data['footer'] = $this->load->controller('common/footer');
         $data['header'] = $this->load->controller('common/header/onlyHeader');
 
-        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/common/success.tpl')) {
-            $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/common/success.tpl', $data));
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/success.tpl')) {
+            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/success.tpl', $data));
         } else {
             $this->response->setOutput($this->load->view('default/template/common/success.tpl', $data));
         }
     }
 
-    public function orderfailed()
-    {
+    public function orderfailed() {
         //$this->load->language( 'account/register' );
 
         $this->load->language('checkout/success');
 
-        $this->document->addStyle('front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_checkout.css');
+        $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_checkout.css');
 
         $this->document->setTitle($this->language->get('heading_title_failed'));
 
@@ -270,14 +268,14 @@ class ControllerCheckoutSuccess extends Controller
                 if ($this->customer->isLogged()) {
                     $activity_data = [
                         'customer_id' => $this->customer->getId(),
-                        'name' => $this->customer->getFirstName().' '.$this->customer->getLastName(),
+                        'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
                         'order_id' => $order_id,
                     ];
 
                     $this->model_account_activity->addActivity('order_account', $activity_data);
                 } else {
                     $activity_data = [
-                        'name' => $this->session->data['guest']['firstname'].' '.$this->session->data['guest']['lastname'],
+                        'name' => $this->session->data['guest']['firstname'] . ' ' . $this->session->data['guest']['lastname'],
                         'order_id' => $order_id,
                     ];
 
@@ -347,15 +345,162 @@ class ControllerCheckoutSuccess extends Controller
         $data['footer'] = $this->load->controller('common/footer');
         $data['header'] = $this->load->controller('common/header/onlyHeader');
 
-        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/common/success.tpl')) {
-            $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/common/success.tpl', $data));
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/success.tpl')) {
+            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/success.tpl', $data));
         } else {
             $this->response->setOutput($this->load->view('default/template/common/success.tpl', $data));
         }
     }
 
-    public function sendOrderRating()
-    {
+    public function pesapalsuccess() {
+        //$this->load->language( 'account/register' );
+
+        $this->load->language('checkout/success');
+
+        $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_checkout.css');
+
+        if (!empty($_SESSION['parent'])) {
+            $this->document->setTitle($this->language->get('heading_title_sub_user'));
+        }
+        if (empty($_SESSION['parent'])) {
+            $this->document->setTitle($this->language->get('heading_title'));
+        }
+
+        $data['breadcrumbs'] = [];
+
+        $data['breadcrumbs'][] = [
+            'text' => $this->language->get('text_home'),
+            'href' => $this->url->link('common/home'),
+        ];
+
+        $data['breadcrumbs'][] = [
+            'text' => $this->language->get('text_basket'),
+            'href' => $this->url->link('checkout/cart'),
+        ];
+
+        $data['breadcrumbs'][] = [
+            'text' => $this->language->get('text_checkout'),
+            'href' => $this->url->link('checkout/checkout', '', 'SSL'),
+        ];
+
+        $data['breadcrumbs'][] = [
+            'text' => $this->language->get('text_success'),
+            'href' => $this->url->link('checkout/success'),
+        ];
+
+        $data['referral_description'] = $this->language->get('referral_description');
+        if (!empty($_SESSION['parent'])) {
+            $data['heading_title'] = $this->language->get('heading_title_sub_user');
+        }
+        if (empty($_SESSION['parent'])) {
+            $data['heading_title'] = $this->language->get('heading_title');
+        }
+
+        $data['text_basket'] = $this->language->get('text_basket');
+        if (empty($_SESSION['parent'])) {
+            $data['text_customer'] = $this->language->get('text_customer');
+        }
+        if (!empty($_SESSION['parent'])) {
+            $data['text_customer'] = $this->language->get('text_customer_sub_user');
+        }
+        $data['text_guest'] = $this->language->get('text_guest');
+        $data['text_order_id'] = $this->language->get('text_order_id');
+
+        // Get Order Status enter Message
+        if ($this->customer->isLogged() && empty($_SESSION['parent'])) {
+            $data['text_message'] = sprintf($this->language->get('text_customer'), $this->url->link('account/order', '', 'SSL'), $this->url->link('account/account', '', 'SSL'));
+        } elseif ($this->customer->isLogged() && !empty($_SESSION['parent'])) {
+            $data['text_message'] = sprintf($this->language->get('text_customer_sub_user'), $this->url->link('account/order', '', 'SSL'), $this->url->link('account/account', '', 'SSL'));
+        } else {
+            $data['text_message'] = sprintf($this->language->get('text_guest'), $this->url->link('information/contact'));
+        }
+
+        $data['konduto_public_key'] = $this->config->get('config_konduto_public_key');
+
+        $data['button_continue'] = $this->language->get('button_continue');
+
+        $data['continue'] = $this->url->link('common/home');
+
+        $data['column_left'] = $this->load->controller('common/column_left');
+        $data['column_right'] = $this->load->controller('common/column_right');
+        $data['content_top'] = $this->load->controller('common/content_top');
+        $data['content_bottom'] = $this->load->controller('common/content_bottom');
+        $data['footer'] = $this->load->controller('common/footer');
+        $data['header'] = $this->load->controller('common/header/onlyHeader');
+
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/success.tpl')) {
+            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/success.tpl', $data));
+        } else {
+            $this->response->setOutput($this->load->view('default/template/common/success.tpl', $data));
+        }
+    }
+
+    public function pesapalfailed() {
+        //$this->load->language( 'account/register' );
+
+        $this->load->language('checkout/success');
+
+        $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_checkout.css');
+
+        $this->document->setTitle($this->language->get('heading_title_failed'));
+
+        $data['breadcrumbs'] = [];
+
+        $data['breadcrumbs'][] = [
+            'text' => $this->language->get('text_home'),
+            'href' => $this->url->link('common/home'),
+        ];
+
+        $data['breadcrumbs'][] = [
+            'text' => $this->language->get('text_basket'),
+            'href' => $this->url->link('checkout/cart'),
+        ];
+
+        $data['breadcrumbs'][] = [
+            'text' => $this->language->get('text_checkout'),
+            'href' => $this->url->link('checkout/checkout', '', 'SSL'),
+        ];
+
+        $data['breadcrumbs'][] = [
+            'text' => $this->language->get('text_success'),
+            'href' => $this->url->link('checkout/success'),
+        ];
+
+        $data['referral_description'] = $this->language->get('referral_description');
+        $data['heading_title'] = $this->language->get('heading_title_failed');
+        $data['text_basket'] = $this->language->get('text_basket');
+        $data['text_customer'] = $this->language->get('text_customer_failed');
+        $data['text_guest'] = $this->language->get('text_guest');
+        $data['text_order_id'] = $this->language->get('text_order_id');
+
+        // Get Order Status enter Message
+        if ($this->customer->isLogged()) {
+            $data['text_message'] = sprintf($this->language->get('text_customer_failed'), $this->url->link('account/order', '', 'SSL'), $this->url->link('account/account', '', 'SSL'));
+        } else {
+            $data['text_message'] = sprintf($this->language->get('text_customer_failed'), $this->url->link('information/contact'));
+        }
+
+        $data['konduto_public_key'] = $this->config->get('config_konduto_public_key');
+
+        $data['button_continue'] = $this->language->get('button_continue');
+
+        $data['continue'] = $this->url->link('common/home');
+
+        $data['column_left'] = $this->load->controller('common/column_left');
+        $data['column_right'] = $this->load->controller('common/column_right');
+        $data['content_top'] = $this->load->controller('common/content_top');
+        $data['content_bottom'] = $this->load->controller('common/content_bottom');
+        $data['footer'] = $this->load->controller('common/footer');
+        $data['header'] = $this->load->controller('common/header/onlyHeader');
+
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/success.tpl')) {
+            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/success.tpl', $data));
+        } else {
+            $this->response->setOutput($this->load->view('default/template/common/success.tpl', $data));
+        }
+    }
+
+    public function sendOrderRating() {
         $data['email'] = $this->config->get('config_delivery_username');
         $data['password'] = $this->config->get('config_delivery_secret');
 
@@ -379,8 +524,7 @@ class ControllerCheckoutSuccess extends Controller
         }
     }
 
-    public function saveOrderRating()
-    {
+    public function saveOrderRating() {
         $response['status'] = true;
 
         $order_id = $this->request->post['order_id'];
@@ -394,8 +538,7 @@ class ControllerCheckoutSuccess extends Controller
         $this->response->setOutput(json_encode($response));
     }
 
-    public function getOrderRecommendation($order_id)
-    {
+    public function getOrderRecommendation($order_id) {
         $log = new Log('error.log');
         $log->write('getOrderRecommendation');
 
@@ -420,7 +563,7 @@ class ControllerCheckoutSuccess extends Controller
             //echo "<pre>";print_r($allowedShippingMethods);die;
             if (is_array($allowedShippingMethods) && count($allowedShippingMethods) > 0) {
                 foreach ($allowedShippingMethods as $method) {
-                    if ($order_info['shipping_code'] == $method.'.'.$method) {
+                    if ($order_info['shipping_code'] == $method . '.' . $method) {
                         $deliverSystemStatus = true;
                     }
                 }
@@ -444,7 +587,7 @@ class ControllerCheckoutSuccess extends Controller
                 $customer_info = $this->model_checkout_order->getCustomer($order_info['customer_id']);
 
                 //print_r($customer_info);die;
-                $customerName = $customer_info['firstname'].' '.$customer_info['lastname'];
+                $customerName = $customer_info['firstname'] . ' ' . $customer_info['lastname'];
                 $customerEmail = $customer_info['email'];
                 $customerAdded = $customer_info['date_added'];
                 $dob = $customer_info['dob'];
@@ -487,7 +630,7 @@ class ControllerCheckoutSuccess extends Controller
                         'dob' => $dob,
                         'phone1' => $telephone,
                         'email' => $customerEmail, //(required)
-                        'created_at' => $customerAdded, ],
+                        'created_at' => $customerAdded,],
                     'shipping' => [
                         'name' => $customerName, //(required)
                         'address1' => $order_info['shipping_address'],
@@ -568,8 +711,7 @@ class ControllerCheckoutSuccess extends Controller
         }
     }
 
-    public function isOnlinePayment($payment_code)
-    {
+    public function isOnlinePayment($payment_code) {
         $refundToCustomerWallet = false;
 
         $allowedPaymentMethods = $this->config->get('config_payment_methods_status');
@@ -585,8 +727,7 @@ class ControllerCheckoutSuccess extends Controller
         return $refundToCustomerWallet;
     }
 
-    public function createDeliveryRequest($order_id, $order_status_id = 1)
-    {
+    public function createDeliveryRequest($order_id, $order_status_id = 1) {
         $log = new Log('error.log');
         $order_info = $this->getOrder($order_id);
 
@@ -619,10 +760,10 @@ class ControllerCheckoutSuccess extends Controller
 
                 $this->load->model('tool/image');
 
-                if (file_exists(DIR_IMAGE.$product['image'])) {
-                    $image = HTTP_IMAGE.$product['image'];
+                if (file_exists(DIR_IMAGE . $product['image'])) {
+                    $image = HTTP_IMAGE . $product['image'];
                 } else {
-                    $image = HTTP_IMAGE.'placeholder.png';
+                    $image = HTTP_IMAGE . 'placeholder.png';
                 }
 
                 $var = [
@@ -662,7 +803,7 @@ class ControllerCheckoutSuccess extends Controller
             //get state name from city id belongs to
             $timeSlotAverage = $this->getTimeslotAverage($order_info['delivery_timeslot']);
 
-            $deliverAddress = $order_info['shipping_flat_number'].', '.$order_info['shipping_building_name'].', '.$order_info['shipping_landmark'];
+            $deliverAddress = $order_info['shipping_flat_number'] . ', ' . $order_info['shipping_building_name'] . ', ' . $order_info['shipping_landmark'];
 
             $this->load->model('sale/order');
 
@@ -727,7 +868,7 @@ class ControllerCheckoutSuccess extends Controller
                 'payment_code' => $order_info['payment_code'],
                 'total_price' => (int) round($new_total),
                 'get_amount' => (int) round($getPayment),
-                'total_type' => $total_type, ];
+                'total_type' => $total_type,];
 
             $log->write($data['body']);
 
@@ -755,8 +896,7 @@ class ControllerCheckoutSuccess extends Controller
         }
     }
 
-    public function getOrder($order_id)
-    {
+    public function getOrder($order_id) {
         $this->load->model('localisation/language');
         $this->load->model('account/order');
 
@@ -837,8 +977,7 @@ class ControllerCheckoutSuccess extends Controller
         }
     }
 
-    public function getTimeslotAverage($timeslot)
-    {
+    public function getTimeslotAverage($timeslot) {
         $str = $timeslot; //"06:26pm - 08:32pm";
         $arr = explode('-', $str);
         //print_r($arr);
@@ -858,23 +997,22 @@ class ControllerCheckoutSuccess extends Controller
                 $mid2 = round($mid2);
 
                 if ($mid2 <= 9) {
-                    $mid2 = '0'.$mid2;
+                    $mid2 = '0' . $mid2;
                 }
                 if ($mid1 <= 9) {
-                    $mid1 = '0'.$mid1;
+                    $mid1 = '0' . $mid1;
                 }
 
                 //if 19.5 is mid1 then i send 19 integer part cant send decimals
 
-                return $mid1.':'.$mid2;
+                return $mid1 . ':' . $mid2;
             }
         }
 
         return false;
     }
 
-    public function getOrderProductsForKonduto($order_id)
-    {
+    public function getOrderProductsForKonduto($order_id) {
         $this->load->model('account/order');
         $this->load->model('assets/product');
 
@@ -903,21 +1041,21 @@ class ControllerCheckoutSuccess extends Controller
 
                 $option_data[] = [
                     'name' => $option['name'],
-                    'value' => (utf8_strlen($value) > 20 ? utf8_substr($value, 0, 20).'..' : $value),
+                    'value' => (utf8_strlen($value) > 20 ? utf8_substr($value, 0, 20) . '..' : $value),
                 ];
             }
 
             $product_info = $this->model_assets_product->getDetailproduct($product['product_id']);
 
             if ($product_info) {
-                $reorder = $this->url->link('account/order/reorder', 'order_id='.$order_id.'&order_product_id='.$product['order_product_id'], 'SSL');
+                $reorder = $this->url->link('account/order/reorder', 'order_id=' . $order_id . '&order_product_id=' . $product['order_product_id'], 'SSL');
             } else {
                 $reorder = '';
             }
 
             $this->load->model('tool/image');
 
-            if (file_exists(DIR_IMAGE.$product['image'])) {
+            if (file_exists(DIR_IMAGE . $product['image'])) {
                 $image = $this->model_tool_image->resize($product['image'], 80, 100);
             } else {
                 $image = $this->model_tool_image->resize('placeholder.png', 80, 100);
@@ -935,4 +1073,5 @@ class ControllerCheckoutSuccess extends Controller
         // return false;
         return $data['products'];
     }
+
 }

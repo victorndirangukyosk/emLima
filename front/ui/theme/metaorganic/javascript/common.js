@@ -544,7 +544,23 @@ $(document).delegate('.mini-plus-quantity', 'click', function() {
     //$qty_wrapper.html($qty);
 
     $product_minimum = $this.attr('data-minimum');
+        
+        //NEW CODE WITHOUT PRODUCT MAX QUANTITY RESTRICTION
+        var d = cart.update($this.attr('data-key'), $qty);
+        $('#cart-qty-' + $product_id + '-' + $variation_id).val($qty);
+        $('#action_' + $product_id + ' .error-msg').html('');
+        /* Button code extened */
+        $('#AtcButton-id-' + $product_id + '-' + $variation_id).css("background-color", "#ea7128");
+        $('#flag-qty-id-' + $product_id + '-' + $variation_id).html($qty + ' items in cart <i class="fas fa-flag"></i>');
+        $('#flag-qty-id-' + $product_id + '-' + $variation_id).css("display", "block");
+        console.log("mini click");
+        $('.cart-panel-content').load('index.php?path=common/cart/newInfo', function () {
 
+
+});
+        //$this.removeClass("tooltip");
+        $this.removeAttr("data-tooltip");    
+        //NEW CODE WITHOUT PRODUCT MAX QUANTITY RESTRICTION
     if ($product_minimum >= $qty  ) {
 
         

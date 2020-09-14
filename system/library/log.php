@@ -6,7 +6,7 @@ class Log
 
     public function __construct($filename)
     {
-        $this->handle = fopen(DIR_LOG.$filename, 'a');
+        $this->handle = fopen(DIR_LOG.date('Y-m-d').'.log', 'a');
     }
 
     public function write($message)

@@ -297,7 +297,7 @@ $.fn.liveSearch = function (option) {
 
 // Cart add remove functions
 var cart = {
-	'add': function (product_id, quantity, variation_id, store_id = null, product_note = null, produce_type = null) {
+	'add': function (product_id, quantity, variation_id, store_id = null, product_note, produce_type = null) {
 
 
 		console.log("add variation id", variation_id);

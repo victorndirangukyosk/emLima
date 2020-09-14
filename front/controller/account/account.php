@@ -550,6 +550,7 @@ class ControllerAccountAccount extends Controller
         $data['label_my_address'] = $this->language->get('label_my_address');
         $data['contactus'] = $this->language->get('contactus');
         $data['text_cash'] = $this->language->get('text_cash');
+        $data['checkout'] = $this->url->link('checkout/checkout', '', 'SSL');
 
         //echo "<pre>";print_r($data['telephone'] );die;
         if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/account/account.tpl')) {

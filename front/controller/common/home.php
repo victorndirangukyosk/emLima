@@ -1184,10 +1184,11 @@ class ControllerCommonHome extends Controller
             if ($result['quantity'] <= 0) {
                 continue;
             }
-
-            if (file_exists(DIR_IMAGE.$result['image'])) {
+            
+            $log = new Log('error.log');
+            if ($result['image'] != NULL && file_exists(DIR_IMAGE . $result['image'])) {
                 $image = $this->model_tool_image->resize($result['image'], $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
-            } else {
+            } else if ($result['image'] == NULL || !file_exists(DIR_IMAGE . $result['image'])) {
                 $image = $this->model_tool_image->resize('placeholder.png', $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
             }
 
