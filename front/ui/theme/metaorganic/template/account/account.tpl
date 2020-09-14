@@ -225,7 +225,7 @@
     <!--Cart HTML Start-->
     <div class="store-cart-panel">
         <div class="modal right fade" id="store-cart-side" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
+            <div class="modal-dialog" role="document" style="width: 520px;">
                 <div class="modal-content">
                     <div class="cart-panel-content">
                     </div>
