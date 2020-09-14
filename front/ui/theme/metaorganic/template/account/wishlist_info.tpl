@@ -498,11 +498,17 @@
                 //$('#cart > button').button('reset');
             },
             success: function (json) {
-                if (json.status = true) {
+                if (json.status == true && json.delete == false) {
+                    console.log('Quantity Updated');
                     $("#span" + product_id).text(qty);
 
                     console.log($("#total_quantity").text().replace(/\s/g, ''));
                     $("#total_quantity").text(json.total_quantity);
+                    return false;
+                } if(json.status == true && json.delete == true) {
+                  console.log('reload page');
+                  window.location.reload();
+                  return false;
                 } else {
                     alert('Please try again later!');
                     return false;

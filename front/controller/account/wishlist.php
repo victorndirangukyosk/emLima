@@ -541,12 +541,20 @@ class ControllerAccountWishList extends Controller
             $this->load->model('account/wishlist');
 
             $this->model_account_wishlist->updateWishlistProduct($wishlist_id, $product_id, $quantity);
-            $log->write('total_quantity');
+            if ($quantity <= 0) {
+                $this->model_account_wishlist->deleteWishlistProduct($wishlist_id, $product_id);
+            }
+            //$log->write('total_quantity');
             $log->write($this->model_account_wishlist->getTotalWishlist());
             $data['total_quantity'] = $this->model_account_wishlist->getTotalWishlistQuantity();
-            $log->write('total_quantity');
+            //$log->write('total_quantity');
 
             $data['status'] = true;
+            if ($quantity <= 0) {
+                $data['delete'] = true;
+            } else {
+                $data['delete'] = false;  
+            }
         }
 
         $this->response->addHeader('Content-Type: application/json');
