@@ -278,27 +278,33 @@
                           </select>
                         </div>
                       </div>
-                      
+                            
+                            <?php if($parent_user_name != NULL) { ?>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="input-parent-user">Parent User Name</label>
                                 <div class="col-sm-10">
                                     <input type="text" value="<?php echo $parent_user_name; ?>" readonly="" class="form-control" />
                                 </div>
                             </div>
-
+                            <?php } ?>
+                            
+                            <?php if($parent_user_email != NULL) { ?>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="input-parent-user">Parent User Email</label>
                                 <div class="col-sm-10">
                                     <input type="text" value="<?php echo $parent_user_email; ?>" readonly="" class="form-control" />
                                 </div>
                             </div>
-
+                            <?php } ?>
+                            
+                            <?php if($parent_user_phone != NULL) { ?>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="input-parent-user">Parent User Phone</label>
                                 <div class="col-sm-10">
                                     <input type="text" value="<?php echo $parent_user_phone; ?>" readonly="" class="form-control" />
                                 </div>
                             </div>
+                            <?php } ?>
 
 
                       <?php if(count($referee) > 0) { ?>
