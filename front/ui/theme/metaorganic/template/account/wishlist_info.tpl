@@ -17,7 +17,7 @@
                                         <li class="list-group-item my-order-list-head">
                                             <h2 class="my-order-list-title"><?php echo $wishlist_name; ?></h2>
                                             <span>
-                                                (<strong id="total_quantity"><?php echo $total_quantity; ?></strong> <?= $text_items ?>)
+                                                (<strong id="total_quantity"><?php echo $total_items; ?></strong> <?= $text_items ?>)
                                             </span>
 
                                             <!-- <span class="my-order-id-item">

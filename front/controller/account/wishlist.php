@@ -383,8 +383,10 @@ class ControllerAccountWishList extends Controller
             $data['header'] = $this->load->controller('common/header/onlyHeader');
 
             $data['total_quantity'] = 0;
+            $data['total_items'] = 0;
             foreach ($data['products'] as $product) {
                 $data['total_quantity'] += $product['quantity'];
+                $data['total_items'] += 1;
             }
             //echo "<pre>";print_r($data);die;
             if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/account/wishlist_info.tpl')) {
