@@ -253,6 +253,8 @@
         autoclose: true,
     });
     function changeOrderIdForPay(orderId, amount_to_pay) {
+        $("input:radio").removeAttr("checked");
+        $("#payment_options_input").hide();
         $('#pay-confirm-order').html('');
         $('input[name="order_id"]').val(orderId);
         $('#mpesa_amount').val(amount_to_pay);
