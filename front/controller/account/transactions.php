@@ -457,7 +457,7 @@ class Controlleraccounttransactions extends Controller {
             $amount = $this->request->post['amount'];
         }
         if ($this->request->post['order_id'] != NULL && $this->request->post['payment_type'] != NULL && $this->request->post['payment_type'] == 'pay_full') {
-            $order_id = $this->customer->getId() . 'KBCUSTBULK';
+            $order_id = $this->customer->getId() . 'BULK';
             $this->session->data['pending_order_ids'] = $this->request->post['order_id'];
             $order_id_array = explode("--", $order_id);
             $bulk_orders = $this->request->post['order_id'];
@@ -563,17 +563,20 @@ class Controlleraccounttransactions extends Controller {
             $customer_id = $customer_info['customer_id'];
             $this->model_payment_pesapal->insertOrderTransactionIdPesapal($order_id, $transaction_tracking_id, $merchant_reference, $customer_id);
             $status = $this->ipinlistenercustom('CHANGE', $transaction_tracking_id, $merchant_reference, $order_id);
-        } else if (strpos($order_id, 'KBCUSTBULK') !== false) {
+        } else if (strpos($order_id, 'BULK') !== false) {
             $log->write($order_id . 'TRUE');
             $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
-            $log->write('Pesapal Creds Customer Info');
+            $log->write('Pesapal Creds Customer Info BULK');
             $log->write($customer_info);
-            $log->write('Pesapal Creds Customer Info');
+            $log->write('Pesapal Creds Customer Info BULK');
             $transaction_tracking_id = $this->request->get['pesapal_transaction_tracking_id'];
             $merchant_reference = $this->request->get['pesapal_merchant_reference'];
             $customer_id = $customer_info['customer_id'];
 
             $pending_order_ids = $this->session->data['pending_order_ids'];
+            $log->write('PENDING ORDERS SESSIONS');
+            $log->write($this->session->data['pending_order_ids']);
+            $log->write('PENDING ORDERS SESSIONS');
             $order_id_array = explode("--", $pending_order_ids);
             if (is_array($order_id_array) && count($order_id_array) > 0) {
                 foreach ($order_id_array as $order_id_arr) {
