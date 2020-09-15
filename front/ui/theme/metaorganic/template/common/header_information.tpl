@@ -387,5 +387,9 @@ width: 550px;
      margin-right: -220px;
  }
 
+ .clear-cart {
+       margin-right: -180px;
+ }
+
 
 </style>
