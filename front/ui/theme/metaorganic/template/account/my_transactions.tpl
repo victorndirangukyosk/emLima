@@ -81,7 +81,7 @@
         </div>
         <div class="col-md-9" id="payment_options_input" style="display:none;">
             <input id="pesapal_amount" name="pesapal_amount" type="text" value="" class="form-control input-md" required="" placeholder="Enter Amount" minlength="9" maxlength="9" style="display:inline-block; width: 22%;margin-left: 10px;">
-            <button type="button" id="button-confirm" data-toggle="collapse" style="width:200px;" data-loading-text="checking phone..." class="btn btn-default">PAY &amp; CONFIRM</button>
+            <button type="button" id="button-confirm" data-toggle="collapse" style="width:200px;" class="btn btn-default">PAY &amp; CONFIRM</button>
         </div>
 
         <input type="hidden" name="order_id" value="<?php echo $this->request->get['order_id'];?>">
@@ -398,7 +398,35 @@
                 console.log(json.status);
             }
         });
-    });</script>
+    });
+    $(document).delegate('#button-confirm', 'click', function () {
+        console.log('PAY OTHER AMOUNT');
+        var radioValue = $("input[name='pay_option']:checked").val();
+        $.ajax({
+            url: 'index.php?path=account/transactions/pesapal',
+            type: 'post',
+            data: {
+                order_id: '',
+                amount: $("input[name=pesapal_amount]").val(),
+                payment_type: radioValue
+            },
+            dataType: 'html',
+            cache: false,
+            async: false,
+            success: function (json) {
+                console.log("json");
+                console.log(json);
+                $('#pay-confirm-order').html(json);
+                $('#pay-confirm-order').removeAttr('style');
+                return true;
+                //window.location = json.redirect;
+            }, error: function (xhr, ajaxOptions, thrownError) {
+                alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                return false;
+            }
+        });
+    });
+</script>
 
 <script type="text/javascript">
     $(document).ready(function () {
