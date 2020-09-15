@@ -422,6 +422,7 @@ class Controlleraccounttransactions extends Controller {
         $this->load->model('payment/pesapal');
         $this->load->model('checkout/order');
         $this->load->model('account/customer');
+        $log = new Log('error.log');
 
         if ($this->request->post['order_id'] != NULL && $this->request->post['payment_type'] == NULL) {
 
@@ -453,6 +454,31 @@ class Controlleraccounttransactions extends Controller {
             $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
             $order_id = $this->customer->getId() . 'KBCUST';
             $amount = $this->request->post['amount'];
+        }
+        if ($this->request->post['order_id'] != NULL && $this->request->post['payment_type'] != NULL && $this->request->post['payment_type'] == 'pay_full') {
+            $order_id = $this->request->post['order_id'];
+            $order_id_array = explode("--", $order_id);
+
+            $log = new Log('error.log');
+            $log->write('Pesapal Order ID');
+            $log->write($order_id_array);
+            $log->write($order_id);
+            $log->write('Pesapal Order ID');
+            $order_info = $this->model_checkout_order->getOrder($order_id);
+            $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
+            $log->write('Pesapal Creds Customer Info');
+            $log->write($customer_info);
+            $log->write('Pesapal Creds Customer Info');
+
+            $log->write('Pesapal Order Info');
+            $log->write($order_info);
+            $log->write('Pesapal Order Info');
+
+            if (count($order_info) > 0) {
+                $amount = (int) ($order_info['total']);
+            }
+
+            $this->model_checkout_order->UpdatePaymentMethod($order_id, 'PesaPal', 'pesapal');
         }
         $pesapal_creds = $this->model_setting_setting->getSetting('pesapal', 0);
         //pesapal params

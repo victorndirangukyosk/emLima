@@ -303,7 +303,7 @@
                 url: 'index.php?path=account/transactions/pesapal',
                 type: 'post',
                 data: {
-                    order_id: '',
+                    order_id: $("input[name=pending_order_id]").val(),
                     amount: $("input[name=total_pending_amount]").val(),
                     payment_type: radioValue
                 },
