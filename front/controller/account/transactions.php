@@ -462,23 +462,20 @@ class Controlleraccounttransactions extends Controller {
             $log = new Log('error.log');
             $log->write('Pesapal Order ID');
             $log->write($order_id_array);
-            $log->write($order_id);
-            $log->write('Pesapal Order ID');
-            $order_info = $this->model_checkout_order->getOrder($order_id);
-            $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
+            $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
             $log->write('Pesapal Creds Customer Info');
             $log->write($customer_info);
             $log->write('Pesapal Creds Customer Info');
 
-            $log->write('Pesapal Order Info');
-            $log->write($order_info);
-            $log->write('Pesapal Order Info');
-
-            if (count($order_info) > 0) {
-                $amount = (int) ($order_info['total']);
+            if (is_array($order_id_array) && count($order_id_array) > 0) {
+                foreach ($order_id_array as $order_id_arr) {
+                    $log->write('Pesapal Order ID FOREACH');
+                    $log->write($order_id_arr);
+                    $log->write('Pesapal Order ID FOREACH');
+                    $this->model_checkout_order->UpdatePaymentMethod($order_id_arr, 'PesaPal', 'pesapal');
+                }
             }
-
-            $this->model_checkout_order->UpdatePaymentMethod($order_id, 'PesaPal', 'pesapal');
+            $amount = $this->request->post['amount'];
         }
         $pesapal_creds = $this->model_setting_setting->getSetting('pesapal', 0);
         //pesapal params
