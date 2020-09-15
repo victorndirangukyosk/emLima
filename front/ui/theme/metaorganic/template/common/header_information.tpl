@@ -271,7 +271,7 @@
                                                 </li>
                                             <?php } ?>
 
-                                            <?php if($this->config->get('config_reward_enabled')) { ?>
+                                          <!--  <?php if($this->config->get('config_reward_enabled')) { ?>
 
                                                 <li role="presentation">
 
@@ -283,7 +283,7 @@
                                                     <i class="fa fa-money"></i><?= $text_rewards ?> </a>
                                                 </li>
 
-                                            <?php } ?>
+                                            <?php } ?>-->
 
                                             <li role="presentation" >
 
