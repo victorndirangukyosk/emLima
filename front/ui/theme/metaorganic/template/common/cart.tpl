@@ -199,6 +199,8 @@ var key=$(this).attr('data-value');
 
 			        success: function(json) {
 			            console.log(json);
+                            alert('Item deleted successfully');
+
 
 			            for (var key in json['store_note']) {
 	                        //alert("User " + data[key] + " is #" + key); // "User john is #234"
