@@ -57,6 +57,7 @@
     <script src="<?= $base;?>front/ui/theme/metaorganic/javascript/common.js?v=2.0.7" charset="UTF-8" type="text/javascript"></script>
     <script type="text/javascript" src="https://js.iugu.com/v2"></script>
     <link rel="stylesheet" type="text/css" href="<?= $base ?>front/ui/theme/organic/stylesheet/style.min.css" media="all">
+    
 	<link rel="stylesheet" type="text/css" href="<?= $base ?>front/ui/theme/organic/stylesheet/responsive.min.css" media="all">
     <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/theme/metaorganic/assets/css/list.min.css">
     <script src="<?= $base;?>front/ui/javascript/easyzoom.js"></script>
@@ -301,6 +302,35 @@
                                 </div>
                             </div>
                              <?= $contactus_modal ?>
+
+
+
+
+                              <!--Cart HTML Start-->
+  <div class="store-cart-panel">
+    <div class="modal right fade" id="store-cart-side" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="cart-panel-content">
+          </div>
+          <div class="modal-footer">
+            <!-- <p><?= $text_verify_number ?></p> -->
+            <a href="<?php echo $checkout; ?>" id="proceed_to_checkout">
+
+              <button type="button" class="btn btn-primary btn-block btn-lg" id="proceed_to_checkout_button">
+                <span class="checkout-modal-text"><?= $text_proceed_to_checkout?> </span>
+                <div class="checkout-loader" style="display: none;"></div>
+
+              </button>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <!--Cart HTML End-->
+
                             <script>
         $(document).ready(function(){
   $(".newset").mouseleave(function(){
@@ -317,4 +347,45 @@
     $(".dropdownset").css("display", "block");
   });
 });
+ $(document).delegate('#clearcart', 'click', function () {
+    var choice = confirm($(this).attr('data-confirm'));
+
+    if (choice) {
+
+      $.ajax({
+        url: 'index.php?path=checkout/cart/clear_cart',
+        type: 'post',
+        data: '',
+        dataType: 'json',
+        success: function (json) {
+          if (json['location']) {
+            location = json.redirect;
+            location = location;
+          }
+        }
+      });
+    }
+  });
+
+$("#mini-cart-button").click(function () {
+    $("#toTop").show();
+    $("#toTop").css('opacity', '1.0');
+  });
+
 </script>
+
+<style>
+
+
+modal.left .modal-dialog, .modal.right .modal-dialog {
+width: 550px;
+}
+.mycart-header {
+    padding: 20px;
+}
+ .store-cart-panel .modal-header .close {
+     margin-right: -220px;
+ }
+
+
+</style>
