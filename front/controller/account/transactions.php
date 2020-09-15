@@ -281,6 +281,7 @@ class Controlleraccounttransactions extends Controller {
         $data['orders'] = [];
 
         $this->load->model('account/order');
+        $this->load->model('payment/pesapal');
         $order_total = $this->model_account_order->getTotalOrders();
 
         $results_orders = $this->model_account_order->getOrders(($page - 1) * 10, 10, $NoLimit = true);
@@ -325,7 +326,8 @@ class Controlleraccounttransactions extends Controller {
         //echo "<pre>";print_r($data);die;
         $data['total_pending_amount'] = $this->currency->format($totalPendingAmount);
         $data['pending_order_id'] = implode('--', $data['pending_order_id']);
-        $data['success_transactions_pay_other_amount'] = '';
+        $pay_other_amount = $this->model_payment_pesapal->getPesapalOtherAmount($this->customer->getId());
+        $data['success_transactions_pay_other_amount'] = $pay_other_amount;
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($data));
     }
