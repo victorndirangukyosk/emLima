@@ -109,8 +109,25 @@ class ModelPaymentPesapal extends Model
         //$sql = "INSERT into " . DB_PREFIX . "pesapal_transactions SET order_id = '" . $order_id . "', pesapal_transaction_tracking_id = '" . $transaction_tracking_id . "', pesapal_merchant_reference = '" . $merchant_reference . "'";
         //$query = $this->db->query($sql);
     }
+    
+    public function insertOrderTransactionIdPesapalOther($order_id, $transaction_tracking_id, $merchant_reference, $customer_id)
+    {
+        $this->db->query('INSERT INTO '.DB_PREFIX."pesapal_transactions SET order_id = NULL, pesapal_transaction_tracking_id = '".$transaction_tracking_id."', pesapal_merchant_reference = '".$merchant_reference."', customer_id = '".$customer_id."', created_at = NOW()");
+        //$sql = "INSERT into " . DB_PREFIX . "pesapal_transactions SET order_id = '" . $order_id . "', pesapal_transaction_tracking_id = '" . $transaction_tracking_id . "', pesapal_merchant_reference = '" . $merchant_reference . "'";
+        //$query = $this->db->query($sql);
+    }
 
     public function updateorderstatusipn($order_id, $transaction_tracking_id, $merchant_reference, $customer_id, $status)
+    {
+        $this->db->query('UPDATE `'.DB_PREFIX."pesapal_transactions` SET `status` = '".$status."',updated_at = NOW() where order_id='".$order_id."' AND pesapal_transaction_tracking_id ='".$transaction_tracking_id."'");
+    }
+    
+    public function updateorderstatusipnOther($order_id, $transaction_tracking_id, $merchant_reference, $customer_id, $status)
+    {
+        $this->db->query('UPDATE `'.DB_PREFIX."pesapal_transactions` SET `status` = '".$status."',updated_at = NOW() where pesapal_transaction_tracking_id ='".$transaction_tracking_id."'");
+    }
+    
+    public function updateorderstatusipnBytrackingID($order_id, $transaction_tracking_id, $merchant_reference, $customer_id, $status)
     {
         $this->db->query('UPDATE `'.DB_PREFIX."pesapal_transactions` SET `status` = '".$status."',updated_at = NOW() where order_id='".$order_id."' AND pesapal_transaction_tracking_id ='".$transaction_tracking_id."'");
     }

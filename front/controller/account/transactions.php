@@ -325,6 +325,7 @@ class Controlleraccounttransactions extends Controller {
         //echo "<pre>";print_r($data);die;
         $data['total_pending_amount'] = $this->currency->format($totalPendingAmount);
         $data['pending_order_id'] = implode('--', $data['pending_order_id']);
+        $data['success_transactions_pay_other_amount'] = '';
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($data));
     }
@@ -449,9 +450,9 @@ class Controlleraccounttransactions extends Controller {
 
             $this->model_checkout_order->UpdatePaymentMethod($order_id, 'PesaPal', 'pesapal');
         }
-        if ($this->request->post['order_id'] == NULL && $this->request->post['payment_type'] != NULL) {
+        if ($this->request->post['order_id'] == NULL && $this->request->post['payment_type'] != NULL && $this->request->post['payment_type'] == 'pay_other') {
             $log = new Log('error.log');
-            $log->write('Pesapal Custom Amount');
+            $log->write('Pesapal Pay Other Amount');
             $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
             $order_id = $this->customer->getId() . 'KBCUST';
             $amount = $this->request->post['amount'];
@@ -561,7 +562,7 @@ class Controlleraccounttransactions extends Controller {
             $transaction_tracking_id = $this->request->get['pesapal_transaction_tracking_id'];
             $merchant_reference = $this->request->get['pesapal_merchant_reference'];
             $customer_id = $customer_info['customer_id'];
-            $this->model_payment_pesapal->insertOrderTransactionIdPesapal($order_id, $transaction_tracking_id, $merchant_reference, $customer_id);
+            $this->model_payment_pesapal->insertOrderTransactionIdPesapalOther(NULL, $transaction_tracking_id, $merchant_reference, $customer_id);
             $status = $this->ipinlistenercustom('CHANGE', $transaction_tracking_id, $merchant_reference, $order_id);
         } else if (strpos($order_id, 'BULK') !== false) {
             $log->write($order_id . 'TRUE');
@@ -698,11 +699,11 @@ class Controlleraccounttransactions extends Controller {
 
             if (strpos($order_id, 'KBCUST') !== false) {
                 if ('COMPLETED' != $status || null == $response || null == $status) {
-                    $this->model_payment_pesapal->updateorderstatusipn($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
+                    $this->model_payment_pesapal->updateorderstatusipnOther($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
                 }
 
                 if ('COMPLETED' == $status) {
-                    $this->model_payment_pesapal->updateorderstatusipn($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
+                    $this->model_payment_pesapal->updateorderstatusipnOther($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
                 }
             } else {
                 if ('COMPLETED' != $status || null == $response || null == $status) {
