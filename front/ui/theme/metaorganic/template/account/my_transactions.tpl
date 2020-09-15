@@ -289,6 +289,7 @@
 
     function payOptionSelected() {
         //total_pending_amount
+        $("#pesapal_amount").prop("readonly", false);
         var radioValue = $("input[name='pay_option']:checked").val();
         var total_pending_amount = $("input[name='total_pending_amount']").val();
         console.log(total_pending_amount);
@@ -402,6 +403,7 @@
     $(document).delegate('#button-confirm', 'click', function () {
         console.log('PAY OTHER AMOUNT');
         var radioValue = $("input[name='pay_option']:checked").val();
+        $("#pesapal_amount").prop("readonly", true);
         $.ajax({
             url: 'index.php?path=account/transactions/pesapal',
             type: 'post',
