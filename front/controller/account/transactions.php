@@ -451,7 +451,7 @@ class Controlleraccounttransactions extends Controller {
             $log = new Log('error.log');
             $log->write('Pesapal Custom Amount');
             $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
-            $order_id = $this->customer->getId();
+            $order_id = $this->customer->getId() . 'KBCUST';
             $amount = $this->request->post['amount'];
         }
         $pesapal_creds = $this->model_setting_setting->getSetting('pesapal', 0);
@@ -525,26 +525,40 @@ class Controlleraccounttransactions extends Controller {
         $log->write('Pesapal Order ID From Transactions Page');
         $log->write($order_id);
         $log->write('Pesapal Order ID From Transactions Page');
-        $order_info = $this->model_checkout_order->getOrder($order_id);
-        $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
-        $log->write('Pesapal Creds Customer Info');
-        $log->write($customer_info);
-        $log->write('Pesapal Creds Customer Info');
 
-        $log->write('Pesapal Order Info');
-        $log->write($order_info);
-        $log->write('Pesapal Order Info');
+        if (strpos($order_id, 'KBCUST') !== false) {
+            $log->write($order_id . 'TRUE');
+            $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+            $log->write('Pesapal Creds Customer Info');
+            $log->write($customer_info);
+            $log->write('Pesapal Creds Customer Info');
+            $transaction_tracking_id = $this->request->get['pesapal_transaction_tracking_id'];
+            $merchant_reference = $this->request->get['pesapal_merchant_reference'];
+            $customer_id = $customer_info['customer_id'];
+            $this->model_payment_pesapal->insertOrderTransactionIdPesapal($order_id, $transaction_tracking_id, $merchant_reference, $customer_id);
+            $status = $this->ipinlistenercustom('CHANGE', $transaction_tracking_id, $merchant_reference, $order_id);
+        } else {
+            $order_info = $this->model_checkout_order->getOrder($order_id);
+            $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
+            $log->write('Pesapal Creds Customer Info');
+            $log->write($customer_info);
+            $log->write('Pesapal Creds Customer Info');
 
-        if (count($order_info) > 0) {
-            $amount = (int) ($order_info['total']);
+            $log->write('Pesapal Order Info');
+            $log->write($order_info);
+            $log->write('Pesapal Order Info');
+
+            if (count($order_info) > 0) {
+                $amount = (int) ($order_info['total']);
+            }
+
+            $transaction_tracking_id = $this->request->get['pesapal_transaction_tracking_id'];
+            $merchant_reference = $this->request->get['pesapal_merchant_reference'];
+            $customer_id = $customer_info['customer_id'];
+            $this->model_payment_pesapal->insertOrderTransactionIdPesapal($order_id, $transaction_tracking_id, $merchant_reference, $customer_id);
+            $this->model_payment_pesapal->OrderTransaction($order_id, $transaction_tracking_id);
+            $status = $this->ipinlistenercustom('CHANGE', $transaction_tracking_id, $merchant_reference, $order_id);
         }
-
-        $transaction_tracking_id = $this->request->get['pesapal_transaction_tracking_id'];
-        $merchant_reference = $this->request->get['pesapal_merchant_reference'];
-        $customer_id = $customer_info['customer_id'];
-        $this->model_payment_pesapal->insertOrderTransactionIdPesapal($order_id, $transaction_tracking_id, $merchant_reference, $customer_id);
-        $this->model_payment_pesapal->OrderTransaction($order_id, $transaction_tracking_id);
-        $status = $this->ipinlistenercustom('CHANGE', $transaction_tracking_id, $merchant_reference, $order_id);
 
         if ('COMPLETED' == $status) {
             $this->response->redirect($this->url->link('checkout/pesapalsuccess'));
@@ -564,9 +578,14 @@ class Controlleraccounttransactions extends Controller {
         $this->load->model('checkout/order');
         $this->load->model('account/customer');
         $pesapal_creds = $this->model_setting_setting->getSetting('pesapal', 0);
-        $order_info = $this->model_checkout_order->getOrder($order_id);
-        $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
-        $customer_id = $customer_info['customer_id'];
+        if (strpos($order_id, 'KBCUST') !== false) {
+            $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+            $customer_id = $customer_info['customer_id'];
+        } else {
+            $order_info = $this->model_checkout_order->getOrder($order_id);
+            $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
+            $customer_id = $customer_info['customer_id'];
+        }
 
         $consumer_key = $pesapal_creds['pesapal_consumer_key']; //Register a merchant account on
         //demo.pesapal.com and use the merchant key for testing.
@@ -629,14 +648,24 @@ class Controlleraccounttransactions extends Controller {
             $log->write('ORDER STATUS');
             curl_close($ch);
 
-            if ('COMPLETED' != $status || null == $response || null == $status) {
-                $this->model_payment_pesapal->addOrderHistory($order_id, $this->config->get('pesapal_failed_order_status_id'));
-                $this->model_payment_pesapal->updateorderstatusipn($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
-            }
+            if (strpos($order_id, 'KBCUST') !== false) {
+                if ('COMPLETED' != $status || null == $response || null == $status) {
+                    $this->model_payment_pesapal->updateorderstatusipn($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
+                }
 
-            if ('COMPLETED' == $status) {
-                $this->model_payment_pesapal->addOrderHistory($order_id, $this->config->get('pesapal_order_status_id'));
-                $this->model_payment_pesapal->updateorderstatusipn($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
+                if ('COMPLETED' == $status) {
+                    $this->model_payment_pesapal->updateorderstatusipn($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
+                }
+            } else {
+                if ('COMPLETED' != $status || null == $response || null == $status) {
+                    $this->model_payment_pesapal->addOrderHistory($order_id, $this->config->get('pesapal_failed_order_status_id'));
+                    $this->model_payment_pesapal->updateorderstatusipn($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
+                }
+
+                if ('COMPLETED' == $status) {
+                    $this->model_payment_pesapal->addOrderHistory($order_id, $this->config->get('pesapal_order_status_id'));
+                    $this->model_payment_pesapal->updateorderstatusipn($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
+                }
             }
         }
         echo $status;
