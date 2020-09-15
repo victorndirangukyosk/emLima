@@ -2,6 +2,26 @@
 <script>
 
 
+
+$( document ).ready(function() {
+    var url = window.location.href; 
+   var register = url.includes("register"); 
+ 
+if(register==true)
+{
+ // $(window).scrollTop($('#partner-registration').offset().top);
+var target = $('#partner-registration');
+   $('html,body').animate({
+            scrollTop: target.offset().top
+        }, 1000);
+        return false;
+
+}
+ 
+ 
+});
+
+
     
 function isNumberKey(evt)
 {

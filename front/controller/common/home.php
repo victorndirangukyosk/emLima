@@ -212,6 +212,7 @@ class ControllerCommonHome extends Controller
 
     public function partners()
     {
+        $data['register'] = $this->request->post['register'];
         $data['site_key'] = $this->config->get('config_google_captcha_public');
         $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/landing_page/partners.tpl', $data));
     }
