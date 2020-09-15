@@ -459,7 +459,7 @@ class Controlleraccounttransactions extends Controller {
         if ($this->request->post['order_id'] != NULL && $this->request->post['payment_type'] != NULL && $this->request->post['payment_type'] == 'pay_full') {
             $order_id = $this->customer->getId() . 'BULK';
             $this->session->data['pending_order_ids'] = $this->request->post['order_id'];
-            $order_id_array = explode("--", $order_id);
+            $order_id_array = explode("--", $this->request->post['order_id']);
             $bulk_orders = $this->request->post['order_id'];
 
             $log = new Log('error.log');
