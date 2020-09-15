@@ -423,29 +423,38 @@ class Controlleraccounttransactions extends Controller {
         $this->load->model('checkout/order');
         $this->load->model('account/customer');
 
-        $order_id = $this->request->post['order_id'];
+        if ($this->request->post['order_id'] != NULL && $this->request->post['payment_type'] == NULL) {
 
-        $log = new Log('error.log');
-        $log->write('Pesapal Order ID');
-        $log->write($order_id);
-        $log->write('Pesapal Order ID');
-        $order_info = $this->model_checkout_order->getOrder($order_id);
-        $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
-        $log->write('Pesapal Creds Customer Info');
-        $log->write($customer_info);
-        $log->write('Pesapal Creds Customer Info');
+            $order_id = $this->request->post['order_id'];
 
-        $log->write('Pesapal Order Info');
-        $log->write($order_info);
-        $log->write('Pesapal Order Info');
+            $log = new Log('error.log');
+            $log->write('Pesapal Order ID');
+            $log->write($order_id);
+            $log->write('Pesapal Order ID');
+            $order_info = $this->model_checkout_order->getOrder($order_id);
+            $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
+            $log->write('Pesapal Creds Customer Info');
+            $log->write($customer_info);
+            $log->write('Pesapal Creds Customer Info');
 
-        if (count($order_info) > 0) {
-            $amount = (int) ($order_info['total']);
+            $log->write('Pesapal Order Info');
+            $log->write($order_info);
+            $log->write('Pesapal Order Info');
+
+            if (count($order_info) > 0) {
+                $amount = (int) ($order_info['total']);
+            }
+
+            $this->model_checkout_order->UpdatePaymentMethod($order_id, 'PesaPal', 'pesapal');
         }
-
+        if ($this->request->post['order_id'] == NULL && $this->request->post['payment_type'] != NULL) {
+            $log = new Log('error.log');
+            $log->write('Pesapal Custom Amount');
+            $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+            $order_id = $this->customer->getId();
+            $amount = $this->request->post['amount'];
+        }
         $pesapal_creds = $this->model_setting_setting->getSetting('pesapal', 0);
-        $this->model_checkout_order->UpdatePaymentMethod($order_id, 'PesaPal', 'pesapal');
-
         //pesapal params
         $token = $params = null;
 

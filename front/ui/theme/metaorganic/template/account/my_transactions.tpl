@@ -420,8 +420,8 @@
     function changeOrderIdForPay(orderId, amount_to_pay){
     $('input[name="order_id"]').val(orderId);
     $('#mpesa_amount').val(amount_to_pay);
-    $('div#payment_options').hide();
-    $('div#payment_options').focus();
+    //$('div#payment_options').hide();
+    //$('div#payment_options').focus();
     /* $('html, body').animate({
      scrollTop: $("#payment_options").offset().top
      }, 2000);
@@ -431,7 +431,8 @@
             type: 'post',
             data: {
             order_id : orderId,
-                    amount : amount_to_pay
+            amount : amount_to_pay,
+            payment_type : ''
             },
             dataType: 'html',
             cache: false,
@@ -443,10 +444,10 @@
             $('#pay-confirm-order').removeAttr('style');
             return true;
             //window.location = json.redirect;
-            },error: function(xhr, ajaxOptions, thrownError) {
-            alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
-            return false;
-            }
+            }, error: function(xhr, ajaxOptions, thrownError) {
+    alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+    return false;
+    }
     });
     }
 
@@ -457,9 +458,55 @@
     if (radioValue == 'pay_full'){
     $('#mpesa_amount').attr('readonly', true);
     $('#mpesa_amount').val(total_pending_amount);
+    $.ajax({
+    url: 'index.php?path=account/transactions/pesapal',
+            type: 'post',
+            data: {
+            order_id : '',
+            amount : $("input[name=total_pending_amount]").val(),
+            payment_type : radioValue
+            },
+            dataType: 'html',
+            cache: false,
+            async: false,
+            success: function(json) {
+            console.log("json");
+            console.log(json);
+            $('#pay-confirm-order').html(json);
+            $('#pay-confirm-order').removeAttr('style');
+            return true;
+            //window.location = json.redirect;
+            }, error: function(xhr, ajaxOptions, thrownError) {
+    alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+    return false;
+    }
+    });
     } else{
     $('#mpesa_amount').attr('readonly', false);
     $('#mpesa_amount').val('');
+    $.ajax({
+    url: 'index.php?path=account/transactions/pesapal',
+            type: 'post',
+            data: {
+            order_id : '',
+            amount : $("input[name=total_pending_amount]").val(),
+            payment_type : radioValue
+            },
+            dataType: 'html',
+            cache: false,
+            async: false,
+            success: function(json) {
+            console.log("json");
+            console.log(json);
+            $('#pay-confirm-order').html(json);
+            $('#pay-confirm-order').removeAttr('style');
+            return true;
+            //window.location = json.redirect;
+            }, error: function(xhr, ajaxOptions, thrownError) {
+    alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+    return false;
+    }
+    });
     }
     }
 </script>
