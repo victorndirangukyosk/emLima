@@ -576,4 +576,18 @@ class ModelAccountCustomer extends Model
 
         return $parent;
     }
+    
+    public function getCustomerParentDetails($customer_id) {
+        $customer_parent_details = NULL;
+        $customer_details = $this->getCustomer($customer_id);
+        if ($customer_details != NULL && $customer_details['parent'] > 0 && $customer_details['parent'] != NULL) {
+            //$log = new Log('error.log');
+            //$log->write($customer_details);
+            $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . (int) $customer_details['parent'] . "'");
+            return $query->row;
+        } else {
+            return $customer_parent_details;
+        }
+    }    
+    
 }

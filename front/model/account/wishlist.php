@@ -21,9 +21,9 @@ class ModelAccountWishList extends Model
             foreach ($order_query->rows as $wishlist) {
                 $this->load->model('tool/image');
 
-                if (file_exists(DIR_IMAGE.$wishlist['image'])) {
+                if ($wishlist['image'] != NULL && file_exists(DIR_IMAGE.$wishlist['image'])) {
                     $image = $this->model_tool_image->resize($wishlist['image'], 80, 100);
-                } else {
+            } else if($wishlist['image'] == NULL || !file_exists(DIR_IMAGE.$wishlist['image'])) {
                     $image = $this->model_tool_image->resize('placeholder.png', 80, 100);
                 }
 

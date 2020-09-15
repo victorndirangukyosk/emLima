@@ -152,10 +152,12 @@ class ControllerAccountOrder extends Controller
             $this->load->model('account/customer');
             $customer_info = $this->model_account_customer->getCustomer($result['customer_id']);
             $is_he_parents = $this->model_account_customer->CheckHeIsParent();
+            $customer_parent_info = $this->model_account_customer->getCustomerParentDetails($result['customer_id']);
 
             $log = new Log('error.log');
             $log->write('IS HE PARENT USER');
             $log->write($is_he_parents);
+            //$log->write($customer_parent_info);
             $log->write('IS HE PARENT USER');
 
             $data['orders'][] = [
@@ -185,6 +187,7 @@ class ControllerAccountOrder extends Controller
                 'parent_approve_order' => $approve_order_button,
                 'customer_id' => $result['customer_id'],
                 'parent_approval' => $result['parent_approval'],
+                'parent_details' => $customer_parent_info != NULL && $customer_parent_info['email'] != NULL ? $customer_parent_info['email'] : NULL,
                 'edit_order' => 15 == $result['order_status_id'] && empty($_SESSION['parent']) ? $this->url->link('account/order/edit_order', 'order_id='.$result['order_id'], 'SSL') : '',
                 'order_company' => isset($customer_info) && null != $customer_info['company_name'] ? $customer_info['company_name'] : null,
             ];
@@ -550,9 +553,9 @@ class ControllerAccountOrder extends Controller
 
                 $this->load->model('tool/image');
 
-                if (file_exists(DIR_IMAGE.$product['image'])) {
+                if ($product['image'] != NULL && file_exists(DIR_IMAGE.$product['image'])) {
                     $image = $this->model_tool_image->resize($product['image'], 80, 100);
-                } else {
+                } else if($product['image'] == NULL || !file_exists(DIR_IMAGE.$product['image'])) {
                     $image = $this->model_tool_image->resize('placeholder.png', 80, 100);
                 }
 

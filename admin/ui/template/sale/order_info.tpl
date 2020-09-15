@@ -171,6 +171,12 @@
 						<td><?php echo $text_email; ?></td>
 						<td><a href="mailto:<?php echo $email; ?>"><?php echo $email; ?></a></td>
 					  </tr>
+                                          <?php if($parent_user_email != NULL) { ?>
+                                          <tr>
+						<td>Parent User Email:</td>
+						<td><a href="mailto:<?php echo $email; ?>"><?php echo $parent_user_email; ?></a></td>
+					  </tr>
+                                          <?php } ?>
 					  <tr>
 						<td><?php echo $text_telephone; ?></td>
 						<td><?php echo $country_code; ?> <?php echo $telephone; ?></td>

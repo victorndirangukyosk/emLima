@@ -2656,6 +2656,13 @@ class ControllerSaleOrder extends Controller
             }
 
             $data['email'] = $order_info['email'];
+            $this->load->model('sale/customer');
+            $parent_user_info = $this->model_sale_customer->getCustomerParentDetails($order_info['customer_id']);
+            if($parent_user_info != NULL && $parent_user_info['email'] != NULL) {
+            $data['parent_user_email'] = $parent_user_info['email'];
+            } else {
+            $data['parent_user_email'] = NULL;    
+            }
             $data['telephone'] = $order_info['telephone'];
             $data['fax'] = $order_info['fax'];
 

@@ -1044,9 +1044,20 @@ class ControllerSaleCustomer extends Controller {
         }
 
         $data['cancel'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . $url, 'SSL');
-
+        $data['parent_user_name'] = NULL;
+        $data['parent_user_email'] = NULL;
+        $data['parent_user_phone'] = NULL;
         if (isset($this->request->get['customer_id']) && ('POST' != $this->request->server['REQUEST_METHOD'])) {
             $customer_info = $this->model_sale_customer->getCustomer($this->request->get['customer_id']);
+            $customer_parent_info = $this->model_sale_customer->getCustomerParentDetails($this->request->get['customer_id']);
+            if($customer_parent_info != NULL) {
+            $data['parent_user_name'] = $customer_parent_info['firstname'].''.$customer_parent_info['lastname'];
+            $data['parent_user_email'] = $customer_parent_info['email'];
+            $data['parent_user_phone'] = $customer_parent_info['telephone'];
+            }
+
+            //$log = new Log('error.log');
+            //$log->write($customer_parent_info);
         }
 
         //echo "<pre>";print_r($customer_info);die;

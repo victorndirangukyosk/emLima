@@ -17,7 +17,7 @@
                                         <li class="list-group-item my-order-list-head">
                                             <h2 class="my-order-list-title"><?php echo $wishlist_name; ?></h2>
                                             <span>
-                                                (<strong id="total_quantity"><?php echo $total_quantity; ?></strong> <?= $text_items ?>)
+                                                (<strong id="total_quantity"><?php echo $total_items; ?></strong> <?= $text_items ?>)
                                             </span>
 
                                             <!-- <span class="my-order-id-item">
@@ -498,11 +498,17 @@
                 //$('#cart > button').button('reset');
             },
             success: function (json) {
-                if (json.status = true) {
+                if (json.status == true && json.delete == false) {
+                    console.log('Quantity Updated');
                     $("#span" + product_id).text(qty);
 
                     console.log($("#total_quantity").text().replace(/\s/g, ''));
                     $("#total_quantity").text(json.total_quantity);
+                    return false;
+                } if(json.status == true && json.delete == true) {
+                  console.log('reload page');
+                  window.location.reload();
+                  return false;
                 } else {
                     alert('Please try again later!');
                     return false;

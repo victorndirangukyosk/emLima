@@ -813,15 +813,15 @@ class ControllerProductProduct extends Controller
         //echo "<pre>";print_r($product_info);die;
 
         if ($product_info) {
-            if (file_exists(DIR_IMAGE.$product_info['image'])) {
+            if ($product_info['image'] != NULL && file_exists(DIR_IMAGE.$product_info['image'])) {
                 $thumb = $this->model_tool_image->resize($product_info['image'], $this->config->get('config_image_thumb_width'), $this->config->get('config_image_thumb_height'));
-            } else {
+            } else if($product_info['image'] == NULL || !file_exists(DIR_IMAGE.$product_info['image'])) {
                 $thumb = $this->model_tool_image->resize('placeholder.png', $this->config->get('config_image_thumb_width'), $this->config->get('config_image_thumb_height'));
             }
 
-            if (file_exists(DIR_IMAGE.$product_info['image'])) {
+            if ($product_info['image'] != NULL && file_exists(DIR_IMAGE.$product_info['image'])) {
                 $zoom_thumb = $this->model_tool_image->resize($product_info['image'], $this->config->get('config_zoomimage_thumb_width'), $this->config->get('config_zoomimage_thumb_height'));
-            } else {
+            } else if($product_info['image'] == NULL || !file_exists(DIR_IMAGE.$product_info['image'])) {
                 $zoom_thumb = $this->model_tool_image->resize('placeholder.png', $this->config->get('config_zoomimage_thumb_width'), $this->config->get('config_zoomimage_thumb_height'));
             }
 
