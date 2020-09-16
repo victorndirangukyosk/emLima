@@ -138,7 +138,7 @@
                                             <div class="row" style="margin-bottom: 8px">
 
 
-                                                <div class="col-md-12">
+                                                <div class="col-md-16">
 
                                                     <?php if($store_selected) { ?>
                                                     <button id="selected-add-to-cart" data-id="<?php echo $wishlist_id; ?>" class="btn btn-primary" type="button" data-confirm="This will  add products to basket!!">
@@ -152,7 +152,7 @@
                                             <div class="row" style="margin-bottom: 8px">
 
 
-                                                <div class="col-md-12">
+                                                <div class="col-md-16">
 
                                                     <?php if($store_selected) { ?>
                                                     <button id="list-add-to-cart" data-id="<?php echo $wishlist_id; ?>"  class="btn btn-primary" type="button" data-confirm="This will add products to basket!!">
@@ -169,12 +169,12 @@
                                                 </div>
                                             </div>
 
-                                            <div class="row" style="margin-bottom: 8px;align:center">
+                                            <div class="row" style="margin-bottom: 8px;">
 
 
-                                                <div class="col-md-12" >
+                                                <div class="col-md-16" style="text-align:center;">
 
-                                                    <a href="<?= $store ?>" style="width:257px;" class="btn btn-default"><?= $text_shopping?></a>
+                                                    <a href="<?= $store ?>"  class="btn btn-default"><?= $text_shopping?></a>
 
                                                 </div>
                                             </div>
