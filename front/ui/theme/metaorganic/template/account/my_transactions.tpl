@@ -7,9 +7,10 @@
     <div class="row">
         <div class="col-md-9">
             <ul class="nav nav-tabs">
-                <li class="active"><a data-toggle="tab" href="#pending">Pending Payments</a></li>
-                <li><a data-toggle="tab" href="#successfull">Successfull Payments</a></li>
-                <li><a data-toggle="tab" href="#cancelled">Cancelled Payments</a></li>
+                <li class="active" style="width:25%;"><a data-toggle="tab" href="#pending">Pending Payments</a></li>
+                <li style="width:25%;"><a data-toggle="tab" href="#successfull">Successfull Payments</a></li>
+                <li style="width:25%;"><a data-toggle="tab" href="#cancelled">Cancelled Payments</a></li>
+                <li style="width:25%;"><a data-toggle="tab" href="#other_payment">Other Payments</a></li>
             </ul>
 
             <div class="tab-content">
@@ -66,6 +67,24 @@
                     </table>
                     <div id="pager">
                         <ul id="paginationcancelled" class="pagination-sm"></ul>
+                    </div>
+                </div>
+                <div id="other_payment" class="tab-pane fade">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Customer Id </th>
+                                <th>Amount</th>
+                                <th>Date</th>
+                                <th>Transaction Id</th>
+                                <!--<th>Action</th>-->
+                            </tr>
+                        </thead>
+                        <tbody id="emp_bodyother">
+                        </tbody>
+                    </table>
+                    <div id="pager">
+                        <ul id="paginationother_payment" class="pagination-sm"></ul>
                     </div>
                 </div>
             </div>
@@ -577,6 +596,55 @@
         });
     });</script>
 
+<script type="text/javascript">
+    $(document).ready(function () {
+        console.log('pagination');
+        var $pagination = $('#paginationother_payment'),
+                totalRecords = 0,
+                records = [],
+                displayRecords = [],
+                recPerPage = 5,
+                page = 1,
+                totalPages = 0;
+        $.ajax({
+            url: "index.php?path=account/transactions/pendingtransactions",
+            async: true,
+            dataType: 'json',
+            success: function (data) {
+                records = data.success_transactions_pay_other_amount;
+                console.log(records);
+                totalRecords = records.length;
+                totalPages = Math.ceil(totalRecords / recPerPage);
+                apply_pagination();
+            }
+        });
+        function generate_table() {
+            var tr;
+            $('#emp_bodyother').html('');
+            for (var i = 0; i < displayRecords.length; i++) {
+                tr = $('<tr/>');
+                tr.append("<td>" + displayRecords[i].customer_id + "</td>");
+                tr.append("<td>" + displayRecords[i].amount + "</td>");
+                tr.append("<td>" + displayRecords[i].created_at + "</td>");
+                tr.append("<td>" + displayRecords[i].pesapal_transaction_tracking_id + "</td>");
+                $('#emp_bodyother').append(tr);
+            }
+        }
+        function apply_pagination() {
+            $pagination.twbsPagination({
+                totalPages: totalPages,
+                visiblePages: 6,
+                onPageClick: function (event, page) {
+                    displayRecordsIndex = Math.max(page - 1, 0) * recPerPage;
+                    endRec = (displayRecordsIndex) + recPerPage;
+                    console.log(displayRecordsIndex + 'ssssssssss' + endRec);
+                    displayRecords = records.slice(displayRecordsIndex, endRec);
+                    generate_table();
+                }
+            });
+        }
+    });
+</script>
 
 <?php if($redirect_coming) { ?>
 <script type="text/javascript">
