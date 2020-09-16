@@ -163,7 +163,6 @@
                                 yourself: yourself
                             },
                             success: function (json) {
-                                registerButton.text('SIGN UP');
                                 registerButton.toggleClass('disabled');
 
                                 if (json['status']) {
