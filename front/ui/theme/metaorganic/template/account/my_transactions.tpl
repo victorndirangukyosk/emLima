@@ -99,7 +99,7 @@
             </div>
         </div>
         <div class="col-md-9" id="payment_options_input" style="display:none;">
-            <input id="pesapal_amount" name="pesapal_amount" type="text" value="" class="form-control input-md" required="" placeholder="Enter Amount" minlength="9" maxlength="9" style="display:inline-block; width: 22%;margin-left: 10px;">
+            <input id="pesapal_amount" name="pesapal_amount" type="number" min="0.01" step="0.01" value="" class="form-control input-md" required="" placeholder="Enter Amount" minlength="9" maxlength="9" style="display:inline-block; width: 22%;margin-left: 10px;">
             <button type="button" id="button-confirm" data-toggle="collapse" style="width:200px;" class="btn btn-default">PAY &amp; CONFIRM</button>
         </div>
 
@@ -423,7 +423,17 @@
     });
     $(document).delegate('#button-confirm', 'click', function () {
         console.log('PAY OTHER AMOUNT');
+        var amount = $("#pesapal_amount").val();
         var radioValue = $("input[name='pay_option']:checked").val();
+        var validatePrice = function (amount) {
+            return /^(?:\d+|\d{1,3}(?:,\d{3})+)(?:\.\d+)?$/.test(amount);
+        }
+        var result = validatePrice(amount); // False
+        console.log(result);
+        if (result == false) {
+        alert('Please enter valid amount');
+        return false;
+        }
         $("#pesapal_amount").prop("readonly", true);
         $.ajax({
             url: 'index.php?path=account/transactions/pesapal',
