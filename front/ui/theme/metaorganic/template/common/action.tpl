@@ -7,15 +7,15 @@
     <?php if ($product['quantity']) { ?> 
     <div class="inc-dec-quantity" id="<?= $product['product_store_id'] ?>-<?= $product['store_product_variation_id'] ?>">           
         <input type="button" class="sp-minus fff mini-minus-quantity ddd" data-key='<?= $product["key"] ?>' data-id='<?= $product["product_store_id"] ?>' data-unit='<?= $product["name"] ?>' id="minus" value="-"/>
-        <span class="sp-input middle-quantity quntity-input product-count" id='<?= $product["key"] ?>'>
+        <span class="sp-input middle-quantity quntity-input product-count" id='<?= $product["key"] ?>' style="width:50px;">
             <?= $product['quantity'] ?>
         </span>
 
         
         <?php if ($product['quantity'] >= $product['minimum']) { ?>
-             <span data-tooltip="Maximum quantity per order for this product reached">
+             <!--<span data-tooltip="Maximum quantity per order for this product reached">-->
                 <input type="button" class="sp-plus fff mini-plus-quantity ddd" data-minimum='<?= $product["minimum"] ?>' data-key='<?= $product["key"] ?>' data-id='<?= $product["product_store_id"] ?>' data-unit='<?= $product["name"] ?>' id="plus"  value="+"/>
-            </span>
+            <!--</span>-->
 
         <?php } else { ?>
             

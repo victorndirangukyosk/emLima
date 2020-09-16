@@ -1,28 +1,31 @@
 <?php
 
-require_once DIR_SYSTEM.'/vendor/konduto/vendor/autoload.php';
+require_once DIR_SYSTEM . '/vendor/konduto/vendor/autoload.php';
 
 //require_once DIR_SYSTEM.'/vendor/mpesa-php-sdk-master/vendor/autoload.php';
 
-require_once DIR_SYSTEM.'/vendor/fcp-php/autoload.php';
+require_once DIR_SYSTEM . '/vendor/fcp-php/autoload.php';
 
-require DIR_SYSTEM.'vendor/Facebook/autoload.php';
+require DIR_SYSTEM . 'vendor/Facebook/autoload.php';
 
-require_once DIR_APPLICATION.'/controller/api/settings.php';
+require_once DIR_APPLICATION . '/controller/api/settings.php';
 
-class Controlleraccounttransactions extends Controller
-{
+require_once DIR_SYSTEM . '/vendor/pesapal/OAuth.php';
+
+class Controlleraccounttransactions extends Controller {
+
     private $error = [];
 
-    public function index()
-    {
+    public function index() {
         $data['kondutoStatus'] = $this->config->get('config_konduto_status');
 
         $data['konduto_public_key'] = $this->config->get('config_konduto_public_key');
 
         $data['redirect_coming'] = false;
 
-        $this->document->addStyle('/front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_login.css');
+        $this->document->addStyle('/front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_login.css');
+        $this->document->addScript('https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js');
+        $this->document->addScript('https://www.js-tutorials.com/demos/jquery_bootstrap_pagination_example_demo/jquery.twbsPagination.min.js');
 
         if (!$this->customer->isLogged()) {
             $this->session->data['redirect'] = $this->url->link('account/profileinfo', '', 'SSL');
@@ -45,7 +48,7 @@ class Controlleraccounttransactions extends Controller
 
             $activity_data = [
                 'customer_id' => $this->customer->getId(),
-                'name' => $this->customer->getFirstName().' '.$this->customer->getLastName(),
+                'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
             ];
             $log = new Log('error.log');
             $log->write('account profileinfo');
@@ -214,7 +217,7 @@ class Controlleraccounttransactions extends Controller
         $order_total = $this->model_account_order->getTotalOrders();
 
         $results_orders = $this->model_account_order->getOrders(($page - 1) * 10, 10, $NoLimit = true);
-        $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online'];
+        $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal'];
         $statusCancelledFilter = ['Cancelled'];
         $statusSucessFilter = ['Delivered', 'Partially Delivered'];
         $statusPendingFilter = ['Cancelled', 'Delivered', 'Refunded', 'Returned', 'Partially Delivered'];
@@ -248,15 +251,14 @@ class Controlleraccounttransactions extends Controller
         //echo "<pre>";print_r($data);die;
         $data['total_pending_amount'] = $totalPendingAmount;
         $data['pending_order_id'] = implode('--', $data['pending_order_id']);
-        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/account/my_transactions.tpl')) {
-            $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/account/my_transactions.tpl', $data));
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/my_transactions.tpl')) {
+            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/my_transactions.tpl', $data));
         } else {
             $this->response->setOutput($this->load->view('default/template/account/my_transactions.tpl', $data));
         }
     }
 
-    protected function validate()
-    {
+    protected function validate() {
         //print_r($this->request->post);die;
         $this->load->language('account/edit');
 
@@ -274,4 +276,455 @@ class Controlleraccounttransactions extends Controller
 
         return !$this->error;
     }
+
+    public function pendingtransactions() {
+        $data['orders'] = [];
+
+        $this->load->model('account/order');
+        $this->load->model('payment/pesapal');
+        $order_total = $this->model_account_order->getTotalOrders();
+
+        $results_orders = $this->model_account_order->getOrders(($page - 1) * 10, 10, $NoLimit = true);
+        $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal'];
+        $statusCancelledFilter = ['Cancelled'];
+        $statusSucessFilter = ['Delivered', 'Partially Delivered'];
+        $statusPendingFilter = ['Cancelled', 'Delivered', 'Refunded', 'Returned', 'Partially Delivered'];
+        $data['pending_transactions'] = [];
+        $data['success_transactions'] = [];
+        $data['cancelled_transactions'] = [];
+        //echo "<pre>";print_r($results_orders);die;
+        $totalPendingAmount = 0;
+        if (count($results_orders) > 0) {
+            foreach ($results_orders as $order) {
+                $this->load->model('sale/order');
+                $order['transcation_id'] = $this->model_sale_order->getOrderTransactionId($order['order_id']);
+                //echo "<pre>";print_r($order);die;
+                if (in_array($order['payment_method'], $PaymentFilter)) {
+                    if (!empty($order['transcation_id'])) {
+                        //if(in_array($order['status'],$statusSucessFilter) && !empty($order['transcation_id'])){
+                        if (is_array($order) && array_key_exists('total', $order)) {
+                            $order['total_currency'] = $this->currency->format($order['total']);
+                        }
+                        $data['success_transactions'][] = $order;
+                    } elseif (in_array($order['status'], $statusCancelledFilter)) {
+                        if (is_array($order) && array_key_exists('total', $order)) {
+                            $order['total_currency'] = $this->currency->format($order['total']);
+                        }
+                        $data['cancelled_transactions'][] = $order;
+                    } elseif (!in_array($order['status'], $statusCancelledFilter)) {
+                        if (is_array($order) && array_key_exists('total', $order)) {
+                            $order['total_currency'] = $this->currency->format($order['total']);
+                        }
+                        $totalPendingAmount = $totalPendingAmount + $order['total'];
+                        $totalPendingAmount = $this->currency->format($totalPendingAmount);
+                        $data['pending_order_id'][] = $order['order_id'];
+                        $data['pending_transactions'][] = $order;
+                    }
+                }
+            }
+        }
+        //echo "<pre>";print_r($data);die;
+        $data['total_pending_amount'] = $this->currency->format($totalPendingAmount);
+        $data['pending_order_id'] = implode('--', $data['pending_order_id']);
+        $pay_other_amount = $this->model_payment_pesapal->getPesapalOtherAmount($this->customer->getId());
+        $data['success_transactions_pay_other_amount'] = $pay_other_amount;
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($data));
+    }
+
+    public function successfulltransactions() {
+        $data['orders'] = [];
+
+        $this->load->model('account/order');
+        $order_total = $this->model_account_order->getTotalOrders();
+
+        $results_orders = $this->model_account_order->getOrders(($page - 1) * 10, 10, $NoLimit = true);
+        $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal'];
+        $statusCancelledFilter = ['Cancelled'];
+        $statusSucessFilter = ['Delivered', 'Partially Delivered'];
+        $statusPendingFilter = ['Cancelled', 'Delivered', 'Refunded', 'Returned', 'Partially Delivered'];
+        $data['pending_transactions'] = [];
+        $data['success_transactions'] = [];
+        $data['cancelled_transactions'] = [];
+        //echo "<pre>";print_r($results_orders);die;
+        $totalPendingAmount = 0;
+        if (count($results_orders) > 0) {
+            foreach ($results_orders as $order) {
+                $this->load->model('sale/order');
+                $order['transcation_id'] = $this->model_sale_order->getOrderTransactionId($order['order_id']);
+                //echo "<pre>";print_r($order);die;
+                if (in_array($order['payment_method'], $PaymentFilter)) {
+                    if (!empty($order['transcation_id'])) {
+                        //if(in_array($order['status'],$statusSucessFilter) && !empty($order['transcation_id'])){
+                        $data['success_transactions'][] = $order;
+                    } elseif (in_array($order['status'], $statusCancelledFilter)) {
+                        $data['cancelled_transactions'][] = $order;
+                    } elseif (!in_array($order['status'], $statusCancelledFilter)) {
+                        $totalPendingAmount = $totalPendingAmount + $order['total'];
+                        $totalPendingAmount = $this->currency->format($totalPendingAmount);
+                        $data['pending_order_id'][] = $order['order_id'];
+                        $data['pending_transactions'][] = $order;
+                    }
+                }
+            }
+        }
+        //echo "<pre>";print_r($data);die;
+        $data['total_pending_amount'] = $this->currency->format($totalPendingAmount);
+        $data['pending_order_id'] = implode('--', $data['pending_order_id']);
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($data));
+    }
+
+    public function cancelledtransactions() {
+        $data['orders'] = [];
+
+        $this->load->model('account/order');
+        $order_total = $this->model_account_order->getTotalOrders();
+
+        $results_orders = $this->model_account_order->getOrders(($page - 1) * 10, 10, $NoLimit = true);
+        $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal'];
+        $statusCancelledFilter = ['Cancelled'];
+        $statusSucessFilter = ['Delivered', 'Partially Delivered'];
+        $statusPendingFilter = ['Cancelled', 'Delivered', 'Refunded', 'Returned', 'Partially Delivered'];
+        $data['pending_transactions'] = [];
+        $data['success_transactions'] = [];
+        $data['cancelled_transactions'] = [];
+        //echo "<pre>";print_r($results_orders);die;
+        $totalPendingAmount = 0;
+        if (count($results_orders) > 0) {
+            foreach ($results_orders as $order) {
+                $this->load->model('sale/order');
+                $order['transcation_id'] = $this->model_sale_order->getOrderTransactionId($order['order_id']);
+                //echo "<pre>";print_r($order);die;
+                if (in_array($order['payment_method'], $PaymentFilter)) {
+                    if (!empty($order['transcation_id'])) {
+                        //if(in_array($order['status'],$statusSucessFilter) && !empty($order['transcation_id'])){
+                        $data['success_transactions'][] = $order;
+                    } elseif (in_array($order['status'], $statusCancelledFilter)) {
+                        $data['cancelled_transactions'][] = $order;
+                    } elseif (!in_array($order['status'], $statusCancelledFilter)) {
+                        $totalPendingAmount = $totalPendingAmount + $order['total'];
+                        $totalPendingAmount = $this->currency->format($totalPendingAmount);
+                        $data['pending_order_id'][] = $order['order_id'];
+                        $data['pending_transactions'][] = $order;
+                    }
+                }
+            }
+        }
+        //echo "<pre>";print_r($data);die;
+        $data['total_pending_amount'] = $this->currency->format($totalPendingAmount);
+        $data['pending_order_id'] = implode('--', $data['pending_order_id']);
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($data));
+    }
+
+    public function pesapal() {
+        //print_r($this->request->post);die;
+        $bulk_orders = NULL;
+        $this->load->language('payment/pesapal');
+        $this->load->model('setting/setting');
+        $this->load->model('payment/pesapal');
+        $this->load->model('checkout/order');
+        $this->load->model('account/customer');
+        $log = new Log('error.log');
+
+        if ($this->request->post['order_id'] != NULL && $this->request->post['payment_type'] == NULL) {
+
+            $order_id = $this->request->post['order_id'];
+
+            $log = new Log('error.log');
+            $log->write('Pesapal Order ID');
+            $log->write($order_id);
+            $log->write('Pesapal Order ID');
+            $order_info = $this->model_checkout_order->getOrder($order_id);
+            $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
+            $log->write('Pesapal Creds Customer Info');
+            $log->write($customer_info);
+            $log->write('Pesapal Creds Customer Info');
+
+            $log->write('Pesapal Order Info');
+            $log->write($order_info);
+            $log->write('Pesapal Order Info');
+
+            if (count($order_info) > 0) {
+                $amount = (int) ($order_info['total']);
+            }
+
+            $this->model_checkout_order->UpdatePaymentMethod($order_id, 'PesaPal', 'pesapal');
+        }
+        if ($this->request->post['order_id'] == NULL && $this->request->post['payment_type'] != NULL && $this->request->post['payment_type'] == 'pay_other') {
+            $log = new Log('error.log');
+            $log->write('Pesapal Pay Other Amount');
+            $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+            $order_id = $this->customer->getId() . 'KBCUST';
+            $amount = $this->request->post['amount'];
+            $this->session->data['pay_other_amount'] = $amount;
+        }
+        if ($this->request->post['order_id'] != NULL && $this->request->post['payment_type'] != NULL && $this->request->post['payment_type'] == 'pay_full') {
+            $order_id = $this->customer->getId() . 'BULK';
+            $this->session->data['pending_order_ids'] = $this->request->post['order_id'];
+            $order_id_array = explode("--", $this->request->post['order_id']);
+            $bulk_orders = $this->request->post['order_id'];
+
+            $log = new Log('error.log');
+            $log->write('Pesapal Order ID');
+            $log->write($order_id_array);
+            $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+            $log->write('Pesapal Creds Customer Info');
+            $log->write($customer_info);
+            $log->write('Pesapal Creds Customer Info');
+
+            if (is_array($order_id_array) && count($order_id_array) > 0) {
+                foreach ($order_id_array as $order_id_arr) {
+                    $log->write('Pesapal Order ID FOREACH');
+                    $log->write($order_id_arr);
+                    $log->write('Pesapal Order ID FOREACH');
+                    $this->model_checkout_order->UpdatePaymentMethod($order_id_arr, 'PesaPal', 'pesapal');
+                }
+            }
+            $amount = $this->request->post['amount'];
+        }
+        $pesapal_creds = $this->model_setting_setting->getSetting('pesapal', 0);
+        //pesapal params
+        $token = $params = null;
+
+        /*
+          PesaPal Sandbox is at https://demo.pesapal.com. Use this to test your developement and
+          when you are ready to go live change to https://www.pesapal.com.
+         */
+        $consumer_key = $pesapal_creds['pesapal_consumer_key']; //Register a merchant account on
+        //demo.pesapal.com and use the merchant key for testing.
+        //When you are ready to go live make sure you change the key to the live account
+        //registered on www.pesapal.com!
+        $consumer_secret = $pesapal_creds['pesapal_consumer_secret']; // Use the secret from your test
+        //account on demo.pesapal.com. When you are ready to go live make sure you
+        //change the secret to the live account registered on www.pesapal.com!
+        $signature_method = new OAuthSignatureMethod_HMAC_SHA1();
+        $iframelink = 'https://www.pesapal.com/api/PostPesapalDirectOrderV4'; //change to
+        //https://www.pesapal.com/API/PostPesapalDirectOrderV4 when you are ready to go live!
+        //get form details
+        $amount = str_replace(',', '', $amount);
+        $log->write($amount);
+        //$amount = 100;
+        $amount = number_format($amount, 2); //format amount to 2 decimal places
+
+        $desc = $customer_info['company_name'] . '-' . $customer_info['firstname'] . '-' . $customer_info['lastname'] . '-' . $order_id . '-' . $bulk_orders;
+        $type = 'MERCHANT'; //default value = MERCHANT
+        $reference = $order_id . '-' . time() . '-' . $customer_info['customer_id']; //unique order id of the transaction, generated by merchant
+        $this->session->data['pay_other_reference'] = $reference;
+        $first_name = $customer_info['firstname'];
+        $last_name = $customer_info['lastname'];
+        $email = $customer_info['email'];
+        $phonenumber = '+254' . $customer_info['telephone']; //ONE of email or phonenumber is required
+        $Currency = 'KES';
+
+        $callback_url = $this->url->link('account/transactions/status', '', 'SSL'); //redirect url, the page that will handle the response from pesapal.
+
+        $post_xml = '<?xml version="1.0" encoding="utf-8"?><PesapalDirectOrderInfo xmlns:xsi="http://www.w3.org/2001/XMLSchemainstance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Amount="' . $amount . '" Description="' . $desc . '" Type="' . $type . '" Reference="' . $reference . '" FirstName="' . $first_name . '" LastName="' . $last_name . '" Email="' . $email . '" PhoneNumber="' . $phonenumber . '" xmlns="http://www.pesapal.com" />';
+        $post_xml = htmlentities($post_xml);
+
+        $consumer = new OAuthConsumer($consumer_key, $consumer_secret, $callback_url);
+        //print_r($consumer);
+        //post transaction to pesapal
+        $iframe_src = OAuthRequest::from_consumer_and_token($consumer, $token, 'GET', $iframelink, $params);
+        $iframe_src->set_parameter('oauth_callback', $callback_url);
+        $iframe_src->set_parameter('pesapal_request_data', $post_xml);
+        $iframe_src->sign_request($signature_method, $consumer, $token);
+        //display pesapal - iframe and pass iframe_src
+        $log->write($iframe_src);
+        $data['iframe'] = $iframe_src;
+
+        echo '<iframe src=' . $iframe_src . ' width="100%" height="700px"  scrolling="no" frameBorder="0"><p>Browser unable to load iFrame</p></iframe>';
+    }
+
+    public function status() {
+        $log = new Log('error.log');
+
+        $this->load->language('payment/pesapal');
+        $this->load->model('setting/setting');
+        $this->load->model('payment/pesapal');
+        $this->load->model('checkout/order');
+        $this->load->model('account/customer');
+
+        $transaction_tracking_id = $this->request->get['pesapal_transaction_tracking_id'];
+        $merchant_reference = $this->request->get['pesapal_merchant_reference'];
+        $order_details = explode('-', $merchant_reference);
+        if (is_array($order_details)) {
+            $order_id = $order_details[0];
+        }
+
+        $log->write('Pesapal Order ID From Transactions Page');
+        $log->write($order_id);
+        $log->write('Pesapal Order ID From Transactions Page');
+
+        if (strpos($order_id, 'KBCUST') !== false) {
+            $log->write($order_id . 'TRUE');
+            $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+            $log->write('Pesapal Creds Customer Info');
+            $log->write($customer_info);
+            $log->write('Pesapal Creds Customer Info');
+            $transaction_tracking_id = $this->request->get['pesapal_transaction_tracking_id'];
+            $merchant_reference = $this->request->get['pesapal_merchant_reference'];
+            $customer_id = $customer_info['customer_id'];
+            $this->model_payment_pesapal->insertOrderTransactionIdPesapalOther(NULL, $transaction_tracking_id, $merchant_reference, $customer_id, $this->session->data['pay_other_amount']);
+            $status = $this->ipinlistenercustom('CHANGE', $transaction_tracking_id, $merchant_reference, $order_id);
+            unset($this->session->data['pay_other_amount']);
+            unset($this->session->data['pay_other_reference']);
+        } else if (strpos($order_id, 'BULK') !== false) {
+            $log->write($order_id . 'TRUE');
+            $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+            $log->write('Pesapal Creds Customer Info BULK');
+            $log->write($customer_info);
+            $log->write('Pesapal Creds Customer Info BULK');
+            $transaction_tracking_id = $this->request->get['pesapal_transaction_tracking_id'];
+            $merchant_reference = $this->request->get['pesapal_merchant_reference'];
+            $customer_id = $customer_info['customer_id'];
+
+            $pending_order_ids = $this->session->data['pending_order_ids'];
+            $log->write('PENDING ORDERS SESSIONS');
+            $log->write($this->session->data['pending_order_ids']);
+            $log->write('PENDING ORDERS SESSIONS');
+            $order_id_array = explode("--", $pending_order_ids);
+            if (is_array($order_id_array) && count($order_id_array) > 0) {
+                foreach ($order_id_array as $order_id_arr) {
+                    $this->model_payment_pesapal->insertOrderTransactionIdPesapal($order_id_arr, $transaction_tracking_id, $merchant_reference, $customer_id);
+                    $this->model_payment_pesapal->OrderTransaction($order_id_arr, $transaction_tracking_id);
+                    $status = $this->ipinlistenercustom('CHANGE', $transaction_tracking_id, $merchant_reference, $order_id_arr);
+                }
+            }
+        unset($this->session->data['pending_order_ids']);    
+        } else {
+            $order_info = $this->model_checkout_order->getOrder($order_id);
+            $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
+            $log->write('Pesapal Creds Customer Info');
+            $log->write($customer_info);
+            $log->write('Pesapal Creds Customer Info');
+
+            $log->write('Pesapal Order Info');
+            $log->write($order_info);
+            $log->write('Pesapal Order Info');
+
+            if (count($order_info) > 0) {
+                $amount = (int) ($order_info['total']);
+            }
+
+            $transaction_tracking_id = $this->request->get['pesapal_transaction_tracking_id'];
+            $merchant_reference = $this->request->get['pesapal_merchant_reference'];
+            $customer_id = $customer_info['customer_id'];
+            $this->model_payment_pesapal->insertOrderTransactionIdPesapal($order_id, $transaction_tracking_id, $merchant_reference, $customer_id);
+            $this->model_payment_pesapal->OrderTransaction($order_id, $transaction_tracking_id);
+            $status = $this->ipinlistenercustom('CHANGE', $transaction_tracking_id, $merchant_reference, $order_id);
+        }
+
+        if ('COMPLETED' == $status) {
+            $this->response->redirect($this->url->link('checkout/pesapalsuccess'));
+        }
+
+        if ('COMPLETED' != $status || null == $status) {
+            $this->response->redirect($this->url->link('checkout/success/pesapalfailed'));
+        }
+    }
+
+    public function ipinlistenercustom($pesapalNotification, $pesapalTrackingId, $pesapal_merchant_reference, $order_id) {
+        $status = null;
+        $log = new Log('error.log');
+        $log->write('ipinlistener');
+        $this->load->model('setting/setting');
+        $this->load->model('payment/pesapal');
+        $this->load->model('checkout/order');
+        $this->load->model('account/customer');
+        $pesapal_creds = $this->model_setting_setting->getSetting('pesapal', 0);
+        if (strpos($order_id, 'KBCUST') !== false) {
+            $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+            $customer_id = $customer_info['customer_id'];
+        } else {
+            $order_info = $this->model_checkout_order->getOrder($order_id);
+            $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
+            $customer_id = $customer_info['customer_id'];
+        }
+
+        $consumer_key = $pesapal_creds['pesapal_consumer_key']; //Register a merchant account on
+        //demo.pesapal.com and use the merchant key for testing.
+        //When you are ready to go live make sure you change the key to the live account
+        //registered on www.pesapal.com!
+        $consumer_secret = $pesapal_creds['pesapal_consumer_secret']; // Use the secret from your test
+        //account on demo.pesapal.com. When you are ready to go live make sure you
+        //change the secret to the live account registered on www.pesapal.com!
+        $statusrequestAPI = 'https://www.pesapal.com/api/querypaymentstatus';
+        //'https://demo.pesapal.com/api/querypaymentstatus'; //change to
+        //https://www.pesapal.com/api/querypaymentstatus' when you are ready to go live!
+        // Parameters sent to you by PesaPal IPN
+        $pesapalNotification = $pesapalNotification;
+        $pesapalTrackingId = $pesapalTrackingId;
+        $pesapal_merchant_reference = $pesapal_merchant_reference;
+
+        /* $pesapalNotification = $this->request->get['pesapal_notification_type'];
+          $pesapalTrackingId = $this->request->get['pesapal_transaction_tracking_id'];
+          $pesapal_merchant_reference = $this->request->get['pesapal_merchant_reference']; */
+
+        if ('CHANGE' == $pesapalNotification && '' != $pesapalTrackingId) {
+            $log->write('ipinlistener');
+            $token = $params = null;
+            $consumer = new OAuthConsumer($consumer_key, $consumer_secret);
+            $signature_method = new OAuthSignatureMethod_HMAC_SHA1();
+
+            //get transaction status
+            $request_status = OAuthRequest::from_consumer_and_token($consumer, $token, 'GET', $statusrequestAPI, $params);
+            $request_status->set_parameter('pesapal_merchant_reference', $pesapal_merchant_reference);
+            $request_status->set_parameter('pesapal_transaction_tracking_id', $pesapalTrackingId);
+            $request_status->sign_request($signature_method, $consumer, $token);
+
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $request_status);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_HEADER, 1);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+            if (defined('CURL_PROXY_REQUIRED')) {
+                if (CURL_PROXY_REQUIRED == 'True') {
+                    $proxy_tunnel_flag = (defined('CURL_PROXY_TUNNEL_FLAG') && 'FALSE' == strtoupper(CURL_PROXY_TUNNEL_FLAG)) ? false : true;
+                    curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, $proxy_tunnel_flag);
+                    curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
+                    curl_setopt($ch, CURLOPT_PROXY, CURL_PROXY_SERVER_DETAILS);
+                }
+            }
+
+            $response = curl_exec($ch);
+            $log->write($response);
+
+            $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+            $raw_header = substr($response, 0, $header_size - 4);
+            $headerArray = explode("\r\n\r\n", $raw_header);
+            $header = $headerArray[count($headerArray) - 1];
+
+            //transaction status
+            $elements = preg_split('/=/', substr($response, $header_size));
+            $status = $elements[1];
+            $log->write('ORDER STATUS');
+            $log->write($status);
+            $log->write('ORDER STATUS');
+            curl_close($ch);
+
+            if (strpos($order_id, 'KBCUST') !== false) {
+                if ('COMPLETED' != $status || null == $response || null == $status) {
+                    $this->model_payment_pesapal->updateorderstatusipnOther($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
+                }
+
+                if ('COMPLETED' == $status) {
+                    $this->model_payment_pesapal->updateorderstatusipnOther($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
+                }
+            } else {
+                if ('COMPLETED' != $status || null == $response || null == $status) {
+                    $this->model_payment_pesapal->addOrderHistory($order_id, $this->config->get('pesapal_failed_order_status_id'));
+                    $this->model_payment_pesapal->updateorderstatusipn($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
+                }
+
+                if ('COMPLETED' == $status) {
+                    $this->model_payment_pesapal->addOrderHistory($order_id, $this->config->get('pesapal_order_status_id'));
+                    $this->model_payment_pesapal->updateorderstatusipn($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
+                }
+            }
+        }
+        echo $status;
+    }
+
 }

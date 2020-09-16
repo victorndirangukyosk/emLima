@@ -86,6 +86,7 @@
                 <td class="text-right"><?php echo $column_products; ?></td>
                 <td class="text-right"><?php echo $column_tax; ?></td>
                 <td class="text-right"><?php echo $column_total; ?></td>
+                <td class="text-center"><?php echo $column_action; ?></td>
               </tr>
             </thead>
             <tbody>
@@ -98,6 +99,7 @@
                 <td class="text-right"><?php echo $order['products']; ?></td>
                 <td class="text-right"><?php echo $order['tax']; ?></td>
                 <td class="text-right"><?php echo $order['total']; ?></td>
+                 <td class="text-center"><a class="download" id="download-order-products"  data-toggle="tooltip" order_startdate="<?php echo $order['date_starto']; ?>" order_enddate="<?php echo $order['date_endo']; ?>"  title="Download Individual Order Summary" class="btn btn-info"><i  style="cursor: pointer;height:20px;width:20px" class="fa fa-file-excel-o"></i></a></td>
               </tr>
               <?php } ?>
               <?php } else { ?>
@@ -175,7 +177,45 @@ $('#button-filter').on('click', function() {
 //--></script> 
   <script type="text/javascript"><!--
 $('.date').datetimepicker({
-	pickTime: false
+	pickTime: false,
+             widgetParent: 'body'
 });
 //--></script></div>
 <?php echo $footer; ?>
+
+
+<script type="text/javascript">
+
+
+ $(document).delegate('.download', 'click', function(e) {
+  
+            e.preventDefault();            
+            $orderstartdate = $(this).attr('order_startdate');
+            $orderenddate = $(this).attr('order_enddate');            
+            url = 'index.php?path=sale/order/consolidatedOrdersSummary&token=<?php echo $token; ?>&orderenddate=' + $orderenddate+'&orderstartdate='+$orderstartdate;               
+            var filter_order_status_id = $('select[name=\'filter_order_status_id\']').val();
+	
+                           
+              if (filter_order_status_id != 0) {
+                alert(1);
+                url += '&filter_order_status_id=' + encodeURIComponent(filter_order_status_id);
+              }	 
+                var filter_city = $('input[name=\'filter_city\']').val();
+              
+              if (filter_city) {
+                url += '&filter_city=' + encodeURIComponent(filter_city);
+              }
+                location = url;
+             
+        });
+        </script>
+<style>
+
+        .download
+ {
+   font-size: 1.5em;
+ }
+ body {
+    position: relative;
+}
+ </style>

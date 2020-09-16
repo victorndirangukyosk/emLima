@@ -1,34 +1,10 @@
 <?php
 
-class ModelPaymentPesapal extends Model {
+class ModelInformationCareers extends Model {
 
-    public function getMethod($total) {
-        $this->load->language('payment/pesapal');
+    public function createCareers($first_name, $last_name, $role, $yourself) {
 
-        if ($this->config->get('pesapal_total') > 0 && $this->config->get('pesapal_total') > $total) {
-            $status = false;
-        } else {
-            $status = true;
-        }
-
-        $method_data = [];
-
-        if ($status) {
-            $method_data = [
-                'code' => 'pesapal',
-                'title' => $this->language->get('text_title'),
-                'terms' => $this->language->get('text_terms'),
-                'sort_order' => $this->config->get('pesapal_sort_order'),
-            ];
-        }
-
-        return $method_data;
-    }
-
-    public function addOrder($order_info, $request_id, $checkout_request_id) {
-        //$this->db->query("DELETE FROM " . DB_PREFIX . "pesapal_order WHERE order_id = " . (int) $order_info['order_id']);
-
-        $this->db->query('INSERT INTO `' . DB_PREFIX . "pesapal_order` SET `order_id` = '" . (int) $order_info['order_id'] . "', `request_id` = '" . $request_id . "', `checkout_request_id` = '" . $checkout_request_id . "'");
+        $this->db->query('INSERT INTO `' . DB_PREFIX . "careers` SET `first_name` = '" . $first_name . "', `last_name` = '" . $last_name . "', `role` = '" . $role . "', `your_self` = '" . $yourself . "', created_at = NOW()");
 
         return $this->db->getLastId();
     }

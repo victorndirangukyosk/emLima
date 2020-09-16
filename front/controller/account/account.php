@@ -334,7 +334,7 @@ class ControllerAccountAccount extends Controller
         $data['newsletter'] = $this->url->link('account/newsletter', '', 'SSL');
         $data['logout'] = $this->url->link('account/logout', '', 'SSL');
         $data['recurring'] = $this->url->link('account/recurring', '', 'SSL');
-
+        
         if ('POST' != $this->request->server['REQUEST_METHOD']) {
             $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
         }
@@ -550,6 +550,7 @@ class ControllerAccountAccount extends Controller
         $data['label_my_address'] = $this->language->get('label_my_address');
         $data['contactus'] = $this->language->get('contactus');
         $data['text_cash'] = $this->language->get('text_cash');
+        $data['checkout'] = $this->url->link('checkout/checkout', '', 'SSL');
 
         //echo "<pre>";print_r($data['telephone'] );die;
         if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/account/account.tpl')) {

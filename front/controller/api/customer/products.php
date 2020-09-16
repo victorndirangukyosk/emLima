@@ -593,6 +593,8 @@ class ControllerApiCustomerProducts extends Controller
                 'max_qty' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity'],
                 'rating' => 0,
                 'href' => $this->url->link('product/product', '&product_store_id='.$result['product_store_id']),
+                'produce_type' => $result['produce_type'],
+
             ];
         }
 
@@ -885,6 +887,8 @@ class ControllerApiCustomerProducts extends Controller
                             'max_qty' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity'],
                             'rating' => 0,
                             'href' => $this->url->link('product/product', '&product_store_id='.$result['product_store_id']),
+                            'produce_type' => $result['produce_type'],
+
                         ];
                     }
 
@@ -1339,6 +1343,7 @@ class ControllerApiCustomerProducts extends Controller
                             'max_qty' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity'],
                             'rating' => 0,
                             'href' => $this->url->link('product/product', '&product_store_id='.$result['product_store_id']),
+                            'produce_type' => $result['produce_type'],
                         ];
                         }
                     }
@@ -1632,6 +1637,8 @@ class ControllerApiCustomerProducts extends Controller
                 'rating' => 0,
                 'href' => $this->url->link('product/product', '&product_store_id='.$result['product_store_id']),
                 'variations' => $this->model_assets_product->getProductVariations($name, $formatted),
+                'produce_type' => $result['produce_type'],
+               
                 /*'variations' => array(
                     array(
                         'variation_id' => $result['product_store_id'],
@@ -1785,6 +1792,7 @@ class ControllerApiCustomerProducts extends Controller
                     'percent_off' => number_format($percent_off, 0),
                     'default_variation_name' => $product_info['default_variation_name'],
                     'variations' => $this->model_assets_product->getApiVariations($product_info['product_store_id']),
+                    'produce_type' => $product_info['produce_type'],
                 ];
 
                 if (is_null($data['product']['variations'])) {

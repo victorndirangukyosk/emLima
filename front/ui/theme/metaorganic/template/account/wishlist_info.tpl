@@ -17,7 +17,7 @@
                                         <li class="list-group-item my-order-list-head">
                                             <h2 class="my-order-list-title"><?php echo $wishlist_name; ?></h2>
                                             <span>
-                                                (<strong id="total_quantity"><?php echo $total_quantity; ?></strong> <?= $text_items ?>)
+                                                (<strong id="total_quantity"><?php echo $total_items; ?></strong> <?= $text_items ?>)
                                             </span>
 
                                             <!-- <span class="my-order-id-item">
@@ -65,7 +65,7 @@
 
                                                     <div class="inc-dec-quantity" id="<?php echo $product['product_id'] ?>">           
                                                         <input type="button" class="sp-minus fff mini-minus-quantity ddd" data-id="<?php echo $product['product_id'] ?>" data-unit="<?php echo $product['unit'] ?>" data-wishlistid="<?php echo $wishlist_id; ?>" id="minus" value="-">
-                                                        <span class="sp-input middle-quantity quntity-input product-count" id="<?php echo 'span'.$product['product_id'] ?>">
+                                                        <span class="sp-input middle-quantity quntity-input product-count" id="<?php echo 'span'.$product['product_id'] ?>" style="width:50px;">
                                                             <?= $product['quantity']?>        </span>
 
                                                         <input type="button" class="sp-plus fff mini-plus-quantity ddd" data-id="<?php echo $product['product_id'] ?>" data-unit="<?php echo $product['unit'] ?>" data-wishlistid="<?php echo $wishlist_id; ?>" id="plus" value="+">
@@ -138,7 +138,7 @@
                                             <div class="row" style="margin-bottom: 8px">
 
 
-                                                <div class="col-md-12">
+                                                <div class="col-md-16">
 
                                                     <?php if($store_selected) { ?>
                                                     <button id="selected-add-to-cart" data-id="<?php echo $wishlist_id; ?>" class="btn btn-primary" type="button" data-confirm="This will  add products to basket!!">
@@ -152,7 +152,7 @@
                                             <div class="row" style="margin-bottom: 8px">
 
 
-                                                <div class="col-md-12">
+                                                <div class="col-md-16">
 
                                                     <?php if($store_selected) { ?>
                                                     <button id="list-add-to-cart" data-id="<?php echo $wishlist_id; ?>"  class="btn btn-primary" type="button" data-confirm="This will add products to basket!!">
@@ -169,12 +169,12 @@
                                                 </div>
                                             </div>
 
-                                            <div class="row" style="margin-bottom: 8px;align:center">
+                                            <div class="row" style="margin-bottom: 8px;">
 
 
-                                                <div class="col-md-12" >
+                                                <div class="col-md-16" style="text-align:center;">
 
-                                                    <a href="<?= $store ?>" style="width:257px;" class="btn btn-default"><?= $text_shopping?></a>
+                                                    <a href="<?= $store ?>"  class="btn btn-default"><?= $text_shopping?></a>
 
                                                 </div>
                                             </div>
@@ -498,11 +498,17 @@
                 //$('#cart > button').button('reset');
             },
             success: function (json) {
-                if (json.status = true) {
+                if (json.status == true && json.delete == false) {
+                    console.log('Quantity Updated');
                     $("#span" + product_id).text(qty);
 
                     console.log($("#total_quantity").text().replace(/\s/g, ''));
                     $("#total_quantity").text(json.total_quantity);
+                    return false;
+                } if(json.status == true && json.delete == true) {
+                  console.log('reload page');
+                  window.location.reload();
+                  return false;
                 } else {
                     alert('Please try again later!');
                     return false;

@@ -4,8 +4,10 @@
     <div class="mycart-header">
         <h4 class="modal-title" id="myModalLabel"><?= $text_my_cart ?>
         <span class="cart-header_items-count"> (<?= $this->cart->countProducts(); ?> <?= $text_item ?>)</span>
+        <?php if($this->cart->countProducts() > 0) { ?>
         <span id="clearcart" class="cart-header_items-count clear-cart" data-confirm="<?= $text_comfirm_clear ?>" ><?= $button_clear_cart ?></span>
-         </h4>
+        <?php } ?>
+        </h4>
     </div>  
     <!--<div class="store-shop-panel">
         <div class="row">
@@ -197,6 +199,8 @@ var key=$(this).attr('data-value');
 
 			        success: function(json) {
 			            console.log(json);
+                            alert('Item deleted successfully');
+
 
 			            for (var key in json['store_note']) {
 	                        //alert("User " + data[key] + " is #" + key); // "User john is #234"

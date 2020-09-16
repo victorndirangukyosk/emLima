@@ -41,6 +41,22 @@
       <div class="panel-body">
         <div class="well" style="display:none;">
           <div class="row">
+
+           <div class="col-sm-3">
+ <div class="form-group">
+                                <label class="control-label" for="input-company">Company Name</label>
+                                <input type="text" name="filter_company" value="<?php echo $filter_company; ?>" placeholder="Company Name" id="input-company" class="form-control" />
+                            </div>
+
+                             <div class="form-group">
+                <label class="control-label" for="input-date-added"><?php echo $entry_date_added; ?></label>
+                <div class="input-group date" style="max-width: 321px;">
+                  <input type="text" name="filter_date_added" value="<?php echo $filter_date_added; ?>" placeholder="<?php echo $entry_date_added; ?>" data-date-format="YYYY-MM-DD" id="input-date-added" class="form-control" />
+                  <span class="input-group-btn">
+                  <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                  </span></div>
+              </div>
+           </div>
             <div class="col-sm-3">
               <div class="form-group">
                 <label class="control-label" for="input-name"><?php echo $entry_name; ?></label>
@@ -115,14 +131,7 @@
               </div>
             </div>
             <div class="col-sm-3">
-              <div class="form-group">
-                <label class="control-label" for="input-date-added"><?php echo $entry_date_added; ?></label>
-                <div class="input-group date">
-                  <input type="text" name="filter_date_added" value="<?php echo $filter_date_added; ?>" placeholder="<?php echo $entry_date_added; ?>" data-date-format="YYYY-MM-DD" id="input-date-added" class="form-control" />
-                  <span class="input-group-btn">
-                  <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
-                  </span></div>
-              </div>
+             
               <div class="form-group">
                   <label class="control-label"></label>
                   <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>    
@@ -194,9 +203,9 @@
                     <button type="button" class="btn btn-success" disabled><i class="fa fa-check"></i></button>
                     <?php } ?>
                     
-                    <a target="_blank" class="btn btn-info" href="index.php?path=sale/customer/login&token=<?php echo $token; ?>&customer_id=<?php echo $customer['customer_id']; ?>&store_id=0">
+                   <!-- <a target="_blank" class="btn btn-info" href="index.php?path=sale/customer/login&token=<?php echo $token; ?>&customer_id=<?php echo $customer['customer_id']; ?>&store_id=75">
                       <i class="fa fa-lock"></i>
-                    </a>
+                    </a>-->
                     
                     <?php if ($customer['unlock']) { ?>
                     <a href="<?php echo $customer['unlock']; ?>" data-toggle="tooltip" title="<?php echo $button_unlock; ?>" class="btn btn-warning"><i class="fa fa-unlock"></i></a>
@@ -225,6 +234,12 @@
   <script type="text/javascript"><!--
 $('#button-filter').on('click', function() {
   url = 'index.php?path=sale/customer&token=<?php echo $token; ?>';
+
+    var filter_company = $('input[name=\'filter_company\']').val();
+
+            if (filter_company) {
+                url += '&filter_company=' + encodeURIComponent(filter_company);
+            }
   
   var filter_name = $('input[name=\'filter_name\']').val();
   
@@ -272,10 +287,12 @@ $('#button-filter').on('click', function() {
 });
 //--></script> 
   <script type="text/javascript"><!--
+
+  $companyName="";
 $('input[name=\'filter_name\']').autocomplete({
   'source': function(request, response) {
     $.ajax({
-      url: 'index.php?path=sale/customer/autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request),
+      url: 'index.php?path=sale/customer/autocompletebyCompany&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request)+'&filter_company=' +$companyName,
       dataType: 'json',     
       success: function(json) {
         response($.map(json, function(item) {
@@ -291,6 +308,32 @@ $('input[name=\'filter_name\']').autocomplete({
     $('input[name=\'filter_name\']').val(item['label']);
   } 
 });
+
+ $('input[name=\'filter_company\']').autocomplete({
+            'source': function (request, response) {
+                $.ajax({
+                    url: 'index.php?path=sale/customer/autocompletecompany&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
+                    dataType: 'json',
+                    success: function (json) {
+                        response($.map(json, function (item) {
+                            return {
+                                label: item['name'],
+                                value: item['name']
+                            }
+                        }));
+
+                        
+                    }
+                });
+                $companyName="";
+            },
+            'select': function (item) {
+                $('input[name=\'filter_company\']').val(item['label']);
+                $('input[name=\'filter_customer\']').val('');
+                $companyName=item['label'];
+            }
+        });
+
 
 $('input[name=\'filter_email\']').autocomplete({
   'source': function(request, response) {
@@ -314,7 +357,8 @@ $('input[name=\'filter_email\']').autocomplete({
 //--></script> 
   <script type="text/javascript"><!--
 $('.date').datetimepicker({
-  pickTime: false
+  pickTime: false,
+     widgetParent: 'body'
 });
 
 function excel() {
@@ -326,3 +370,10 @@ function excel() {
 
 //--></script></div>
 <?php echo $footer; ?> 
+
+<style>
+body {
+    position: relative;
+}
+</style>
+

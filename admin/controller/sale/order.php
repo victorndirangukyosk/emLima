@@ -946,6 +946,12 @@ class ControllerSaleOrder extends Controller
             $filter_order_id = null;
         }
 
+        if (isset($this->request->get['filter_company'])) {
+            $filter_company = $this->request->get['filter_company'];
+        } else {
+            $filter_company = null;
+        }
+
         if (isset($this->request->get['filter_customer'])) {
             $filter_customer = $this->request->get['filter_customer'];
         } else {
@@ -1028,6 +1034,9 @@ class ControllerSaleOrder extends Controller
             $url .= '&filter_order_id='.$this->request->get['filter_order_id'];
         }
 
+        if (isset($this->request->get['filter_company'])) {
+            $url .= '&filter_company='.urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
+        }
         if (isset($this->request->get['filter_customer'])) {
             $url .= '&filter_customer='.urlencode(html_entity_decode($this->request->get['filter_customer'], ENT_QUOTES, 'UTF-8'));
         }
@@ -1098,6 +1107,7 @@ class ControllerSaleOrder extends Controller
             'filter_city' => $filter_city,
             'filter_order_id' => $filter_order_id,
             'filter_customer' => $filter_customer,
+            'filter_company' => $filter_company,
             'filter_vendor' => $this->getUserByName($filter_vendor),
             'filter_store_name' => $filter_store_name,
             'filter_delivery_method' => $filter_delivery_method,
@@ -1246,7 +1256,9 @@ class ControllerSaleOrder extends Controller
         if (isset($this->request->get['filter_order_id'])) {
             $url .= '&filter_order_id='.$this->request->get['filter_order_id'];
         }
-
+        if (isset($this->request->get['filter_company'])) {
+            $url .= '&filter_company='.urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
+        }
         if (isset($this->request->get['filter_customer'])) {
             $url .= '&filter_customer='.urlencode(html_entity_decode($this->request->get['filter_customer'], ENT_QUOTES, 'UTF-8'));
         }
@@ -1309,6 +1321,9 @@ class ControllerSaleOrder extends Controller
 
         if (isset($this->request->get['filter_order_id'])) {
             $url .= '&filter_order_id='.$this->request->get['filter_order_id'];
+        } 
+        if (isset($this->request->get['filter_company'])) {
+            $url .= '&filter_company='.urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_customer'])) {
@@ -1367,6 +1382,7 @@ class ControllerSaleOrder extends Controller
 
         $data['filter_city'] = $filter_city;
         $data['filter_order_id'] = $filter_order_id;
+        $data['filter_company'] = $filter_company;
         $data['filter_customer'] = $filter_customer;
         $data['filter_vendor'] = $filter_vendor;
         $data['filter_store_name'] = $filter_store_name;
@@ -2640,6 +2656,13 @@ class ControllerSaleOrder extends Controller
             }
 
             $data['email'] = $order_info['email'];
+            $this->load->model('sale/customer');
+            $parent_user_info = $this->model_sale_customer->getCustomerParentDetails($order_info['customer_id']);
+            if($parent_user_info != NULL && $parent_user_info['email'] != NULL) {
+            $data['parent_user_email'] = $parent_user_info['email'];
+            } else {
+            $data['parent_user_email'] = NULL;    
+            }
             $data['telephone'] = $order_info['telephone'];
             $data['fax'] = $order_info['fax'];
 
@@ -7131,5 +7154,104 @@ class ControllerSaleOrder extends Controller
 
         $this->load->model('report/excel');
         $this->model_report_excel->download_order_products_excel($data);
+    }
+
+
+
+    public function consolidatedOrdersSummary()
+    { 
+        
+        $filter_city = $this->request->get['filter_city'];
+        $filter_date_start = $this->request->get['orderstartdate'];
+        $filter_date_end = $this->request->get['orderenddate'];
+        $filter_order_status_id = $this->request->get['filter_order_status_id']; 
+
+        $filter_data = [
+            'filter_city' => $filter_city,
+            'filter_date_start' => $filter_date_start,
+            'filter_date_end' => $filter_date_end, 
+            'filter_order_status_id' => $filter_order_status_id 
+        ]; 
+
+
+          //echo "<pre>";print_r($filter_data);die;
+
+        $this->load->model('report/sale'); 
+        $results = $this->model_report_sale->getNonCancelledOrders($filter_data);
+        //  echo "<pre>";print_r($results);die;
+
+        $data = []; 
+        $unconsolidatedProducts = [];
+        $this->load->model('sale/order'); 
+
+        foreach ($results as $index => $order) {
+            $data['orders'][$index] = $order;
+            $orderProducts = $this->model_sale_order->getOrderAndRealOrderProducts($data['orders'][$index]['order_id']);
+            $data['orders'][$index]['products'] = $orderProducts;
+
+            foreach ($orderProducts as $product) {
+                $unconsolidatedProducts[] = [
+                    'name' => $product['name'],
+                    'unit' => $product['unit'],
+                    'quantity' => $product['quantity'],
+                    'note' => $product['product_note'],
+                    'produce_type' => $product['produce_type'],
+                ];
+            }
+        }
+
+        $consolidatedProducts = [];
+
+        foreach ($unconsolidatedProducts as $product) {
+            $productName = $product['name'];
+            $productUnit = $product['unit'];
+            $productQuantity = $product['quantity'];
+            $productNote = $product['product_note'];
+            $produceType = $product['produce_type'];
+
+            $consolidatedProductNames = array_column($consolidatedProducts, 'name');
+            if (false !== array_search($productName, $consolidatedProductNames)) {
+                $indexes = array_keys($consolidatedProductNames, $productName);
+
+                $foundExistingProductWithSimilarUnit = false;
+                foreach ($indexes as $index) {
+                    if ($productUnit == $consolidatedProducts[$index]['unit']) {
+                        if ($consolidatedProducts[$index]['produce_type']) {
+                            $produceType = $consolidatedProducts[$index]['produce_type'].' / '.$produceType.' ';
+                        }
+
+                        $consolidatedProducts[$index]['quantity'] += $productQuantity;
+                        $consolidatedProducts[$index]['produce_type'] = $produceType;
+                        $foundExistingProductWithSimilarUnit = true;
+                        break;
+                    }
+                }
+
+                if (!$foundExistingProductWithSimilarUnit) {
+                    $consolidatedProducts[] = [
+                        'name' => $productName,
+                        'unit' => $productUnit,
+                        'quantity' => $productQuantity,
+                        'note' => $productNote,
+                        'produce_type' => $produceType,
+                    ];
+                }
+            } else {
+                $consolidatedProducts[] = [
+                    'name' => $productName,
+                    'unit' => $productUnit,
+                    'quantity' => $productQuantity,
+                    'note' => $productNote,
+                    'produce_type' => $produceType,
+                ];
+            }
+        }
+         //echo "<pre>";print_r($consolidatedProducts);die;
+
+        $data['products'] = $consolidatedProducts;
+        // echo "<pre>";print_r($data);die;
+
+        $this->load->model('report/excel');
+        $this->model_report_excel->download_consolidated_order_products_excel($data);
     }
 }

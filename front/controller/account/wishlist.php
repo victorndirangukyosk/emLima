@@ -383,8 +383,10 @@ class ControllerAccountWishList extends Controller
             $data['header'] = $this->load->controller('common/header/onlyHeader');
 
             $data['total_quantity'] = 0;
+            $data['total_items'] = 0;
             foreach ($data['products'] as $product) {
                 $data['total_quantity'] += $product['quantity'];
+                $data['total_items'] += 1;
             }
             //echo "<pre>";print_r($data);die;
             if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/account/wishlist_info.tpl')) {
@@ -541,12 +543,20 @@ class ControllerAccountWishList extends Controller
             $this->load->model('account/wishlist');
 
             $this->model_account_wishlist->updateWishlistProduct($wishlist_id, $product_id, $quantity);
-            $log->write('total_quantity');
+            if ($quantity <= 0) {
+                $this->model_account_wishlist->deleteWishlistProduct($wishlist_id, $product_id);
+            }
+            //$log->write('total_quantity');
             $log->write($this->model_account_wishlist->getTotalWishlist());
             $data['total_quantity'] = $this->model_account_wishlist->getTotalWishlistQuantity();
-            $log->write('total_quantity');
+            //$log->write('total_quantity');
 
             $data['status'] = true;
+            if ($quantity <= 0) {
+                $data['delete'] = true;
+            } else {
+                $data['delete'] = false;  
+            }
         }
 
         $this->response->addHeader('Content-Type: application/json');

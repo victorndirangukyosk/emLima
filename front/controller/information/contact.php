@@ -15,7 +15,7 @@ class ControllerInformationContact extends Controller
 
         if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->request->isAjax() && $this->validate()) {
             $log->write('12');
-            $this->request->post['mobile'] = $this->request->post['telephone'];
+            //$this->request->post['mobile'] = $this->request->post['telephone'];
             $subject = $this->emailtemplate->getSubject('Contact', 'contact_1', $this->request->post);
             $message = $this->emailtemplate->getMessage('Contact', 'contact_1', $this->request->post);
 
@@ -89,11 +89,11 @@ class ControllerInformationContact extends Controller
             $data['error_enquiry'] = '';
         }
 
-        if (isset($this->error['company-name'])) {
+        /*if (isset($this->error['company-name'])) {
             $data['error_company'] = $this->error['company-name'];
         } else {
             $data['error_company'] = '';
-        }
+        }*/
 
         $data['button_submit'] = $this->language->get('button_submit');
 
@@ -258,9 +258,9 @@ class ControllerInformationContact extends Controller
             $this->error['enquiry'] = $this->language->get('error_enquiry');
         }
 
-        if ((utf8_strlen($this->request->post['company-name']) < 1)) {
+        /*if ((utf8_strlen($this->request->post['company-name']) < 1)) {
             $this->error['company-name'] = 'Company name is required!';
-        }
+        }*/
 
         /*if ($this->config->get('config_google_captcha_status')) {
             $json = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret=' . urlencode($this->config->get('config_google_captcha_secret')) . '&response=g-recaptcha&remoteip=' . $this->request->server['REMOTE_ADDR']);

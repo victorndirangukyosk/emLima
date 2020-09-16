@@ -568,10 +568,26 @@ class ModelAccountCustomer extends Model
         $log = new Log('error.log');
         if (is_array($is_he_parent->rows) && count($is_he_parent->rows) > 0) {
             foreach ($is_he_parent->rows as $is_he) {
-                $parent = $is_he['parent'];
+                if (null != $is_he['parent'] && $is_he['parent'] > 0) {
+                    $parent = $is_he['parent'];
+                }
             }
         }
 
         return $parent;
     }
+    
+    public function getCustomerParentDetails($customer_id) {
+        $customer_parent_details = NULL;
+        $customer_details = $this->getCustomer($customer_id);
+        if ($customer_details != NULL && $customer_details['parent'] > 0 && $customer_details['parent'] != NULL) {
+            //$log = new Log('error.log');
+            //$log->write($customer_details);
+            $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . (int) $customer_details['parent'] . "'");
+            return $query->row;
+        } else {
+            return $customer_parent_details;
+        }
+    }    
+    
 }
