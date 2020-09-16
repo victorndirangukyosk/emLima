@@ -634,7 +634,7 @@
             for (var i = 0; i < displayRecords.length; i++) {
                 tr = $('<tr/>');
                 tr.append("<td>" + displayRecords[i].customer_id + "</td>");
-                tr.append("<td>" + displayRecords[i].amount + "</td>");
+                tr.append("<td> KES " + displayRecords[i].amount + "</td>");
                 tr.append("<td>" + displayRecords[i].created_at + "</td>");
                 tr.append("<td>" + displayRecords[i].pesapal_transaction_tracking_id + "</td>");
                 $('#emp_bodyother').append(tr);
