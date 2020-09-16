@@ -203,9 +203,9 @@
                     <button type="button" class="btn btn-success" disabled><i class="fa fa-check"></i></button>
                     <?php } ?>
                     
-                   <!-- <a target="_blank" class="btn btn-info" href="index.php?path=sale/customer/login&token=<?php echo $token; ?>&customer_id=<?php echo $customer['customer_id']; ?>&store_id=75">
+                   <a target="_blank" class="btn btn-info" href="index.php?path=sale/customer/login&token=<?php echo $token; ?>&customer_id=<?php echo $customer['customer_id']; ?>&store_id=75">
                       <i class="fa fa-lock"></i>
-                    </a>-->
+                    </a>
                     
                     <?php if ($customer['unlock']) { ?>
                     <a href="<?php echo $customer['unlock']; ?>" data-toggle="tooltip" title="<?php echo $button_unlock; ?>" class="btn btn-warning"><i class="fa fa-unlock"></i></a>
