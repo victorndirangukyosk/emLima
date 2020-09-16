@@ -677,8 +677,8 @@
               position: 'absolute',
              // left: item.pageX - ($('#tooltip').outerWidth() / 2),
               //top: item.pageY - $('#tooltip').outerHeight(),
-               left: item.pageX - 70,
-              top: item.pageY - 1,
+               left: item.pageX - 100,
+              top: item.pageY - 10,
               pointer: 'cusror'
             }).fadeIn('slow');
 

@@ -40,7 +40,7 @@
             <?php if ($customer_id) { ?>
             <li><a href="#tab-history" data-toggle="tab"><?php echo $tab_history; ?></a></li>
             <li><a href="#tab-credit" data-toggle="tab"><?php echo $tab_credit; ?></a></li>
-            <li><a href="#tab-reward" data-toggle="tab"><?php echo $tab_reward; ?></a></li>
+           <!-- <li><a href="#tab-reward" data-toggle="tab"><?php echo $tab_reward; ?></a></li>-->
             <li><a href="#tab-ip" data-toggle="tab"><?php echo $tab_ip; ?></a></li>
             <li><a href="#tab-referral" data-toggle="tab"><?php echo $tab_referral; ?></a></li>
 			<li><a href="#tab-sub-customer" data-toggle="tab"><?php echo $tab_sub_customer; ?></a></li>
