@@ -141,56 +141,49 @@
                         const yourself = $('#careers-about-yourself').val();
                         const registerForm = $('#careers-form')[0];
                         const formIsValid = registerForm.reportValidity();
+                        const registerButton = $('#careers-submit-button');
                         if (formIsValid) {
-                        if (grecaptcha.getResponse() == '') {
-                            iziToast.warning({
-                                position: 'topRight',
-                                message: 'Please complete captcha'
-                            });
-                        } else {
-                            registerButton.text('PLEASE WAIT');
-                            registerButton.toggleClass('disabled');
+                    if (grecaptcha.getResponse() == '') {
+                        iziToast.warning({
+                            position: 'topRight',
+                            message: 'Please complete captcha'
+                        });
+                    } else {
+                        registerButton.text('PLEASE WAIT');
+                        registerButton.toggleClass('disabled');
 
-                            $.ajax({
-                                url: 'index.php?path=account/register/register_send_otp',
-                                type: 'POST',
-                                dataType: 'json',
-                                data: {
-                                    firstname: firstName,
-                                    lastname: lastName,
-                                    email: email,
-                                    telephone: phone,
-                                    company_name: companyName,
-                                    company_address: companyAddress,
-                                    customer_group_id: businessType,
-                                    house_building: buildingName,
-                                    address: addressLine,
-                                    location: location,
-                                    password: password,
-                                    confirm: passwordConfirmation
-                                },
-                                success: function (json) {
-                                    registerButton.text('SIGN UP');
-                                    registerButton.toggleClass('disabled');
+                        $.ajax({
+                            url: 'index.php?path=common/home/savecareers',
+                            type: 'POST',
+                            dataType: 'json',
+                            data: {
+                                firstname: firstName,
+                                lastname: lastName,
+                                role: role,
+                                yourself: yourself
+                            },
+                            success: function (json) {
+                                registerButton.text('SIGN UP');
+                                registerButton.toggleClass('disabled');
 
-                                    if (json['status']) {
-                                        iziToast.success({
-                                            position: 'topRight',
-                                            message: json['success_message']
-                                        });
+                                if (json['status']) {
+                                    iziToast.success({
+                                        position: 'topRight',
+                                        message: json['success_message']
+                                    });
 
-                                        registrationView.hide();
-                                        otpView.show();
-                                    } else {
-                                        iziToast.warning({
-                                            position: 'topRight',
-                                            title: 'Oops',
-                                            message: json['error_warning']
-                                        });
-                                    }
+                                    registrationView.hide();
+                                    otpView.show();
+                                } else {
+                                    iziToast.warning({
+                                        position: 'topRight',
+                                        title: 'Oops',
+                                        message: json['error_warning']
+                                    });
                                 }
-                            });
-                        }
+                            }
+                        });
+                    }
                 }
             });
         </script>    

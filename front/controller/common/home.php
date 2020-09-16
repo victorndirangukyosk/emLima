@@ -1,9 +1,8 @@
 <?php
 
-class ControllerCommonHome extends Controller
-{
-    public function show_home()
-    {
+class ControllerCommonHome extends Controller {
+
+    public function show_home() {
         unset($this->session->data['config_store_id']);
 
         if ($this->request->server['HTTPS']) {
@@ -15,26 +14,23 @@ class ControllerCommonHome extends Controller
         $this->response->redirect($server);
     }
 
-    public function saveVisitorId()
-    {
+    public function saveVisitorId() {
         $this->session->data['visitor_id'] = $this->request->get['visitor_id'];
 
         return $this->session->data['visitor_id'];
     }
 
-    public function start()
-    {
+    public function start() {
         $this->session->data['config_store_id'] = $this->request->post['store_id'];
 
         $json['status'] = 1;
 
-        $json['location'] = $this->url->link('product/store', 'store_id='.$this->session->data['config_store_id'].'');
+        $json['location'] = $this->url->link('product/store', 'store_id=' . $this->session->data['config_store_id'] . '');
 
         echo json_encode($json);
     }
 
-    public function getFacebookRedirectUrl()
-    {
+    public function getFacebookRedirectUrl() {
         $url = null;
         if (isset($this->request->get['category'])) {
             $url = $this->request->get['category'];
@@ -44,7 +40,7 @@ class ControllerCommonHome extends Controller
             if (false !== ($pos = strpos($this->request->get['redirect_url'], 'path='))) {
                 $redirectPath = substr($this->request->get['redirect_url'], $pos + 5);
                 if ($url) {
-                    $redirectPath .= '&category='.$url;
+                    $redirectPath .= '&category=' . $url;
                 }
                 $this->session->data['redirect'] = $this->url->link($redirectPath);
             } else {
@@ -52,7 +48,7 @@ class ControllerCommonHome extends Controller
             }
         }
 
-        require DIR_SYSTEM.'vendor/Facebook/autoload.php';
+        require DIR_SYSTEM . 'vendor/Facebook/autoload.php';
 
         $fb = new Facebook\Facebook([
             'app_id' => !empty($this->config->get('config_fb_app_id')) ? $this->config->get('config_fb_app_id') : 'randomstringforappid',
@@ -69,15 +65,14 @@ class ControllerCommonHome extends Controller
             $server = $this->config->get('config_url');
         }
 
-        $json['facebook'] = $helper->getLoginUrl($server.'index.php?path=account/facebook', ['email']);
+        $json['facebook'] = $helper->getLoginUrl($server . 'index.php?path=account/facebook', ['email']);
 
         echo json_encode($json);
     }
 
-    public function saveLocation()
-    {
+    public function saveLocation() {
         if (isset($this->request->post['name']) && isset($this->request->post['lat']) && isset($this->request->post['lng'])) {
-            $_COOKIE['location'] = $this->request->post['lat'].','.$this->request->post['lng'];
+            $_COOKIE['location'] = $this->request->post['lat'] . ',' . $this->request->post['lng'];
             /* Commented For Meta Organic */
             //setcookie('location', $this->request->post['lat'].','.$this->request->post['lng'], time() + (86400 * 30 * 30 * 30 * 3), "/");// 3 month expiry
             /* Commented For Meta Organic */
@@ -90,8 +85,7 @@ class ControllerCommonHome extends Controller
         echo json_encode($html);
     }
 
-    public function find_store()
-    {
+    public function find_store() {
         $html = '';
         $this->load->language('information/locations');
         if (isset($this->request->get['filter_name'])) {
@@ -119,8 +113,7 @@ class ControllerCommonHome extends Controller
         echo json_encode($html);
     }
 
-    public function homepage()
-    {
+    public function homepage() {
         if ($this->request->server['HTTPS']) {
             $server = $this->config->get('config_ssl');
         } else {
@@ -162,11 +155,10 @@ class ControllerCommonHome extends Controller
 
 //    echo "<pre>";print_r($data);die;
 
-        $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/landing_page/index.tpl', $data));
+        $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/index.tpl', $data));
     }
 
-    public function faq()
-    {
+    public function faq() {
         $this->load->model('catalog/help');
         $questions = $this->model_catalog_help->getHelps();
         $categories = $this->model_catalog_help->getCategories();
@@ -181,67 +173,64 @@ class ControllerCommonHome extends Controller
             $data[$question['category_id']]['questions'][] = $question;
         }
 
-        $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/landing_page/faq.tpl', $data));
+        $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/faq.tpl', $data));
     }
 
-    public function covid19()
-    {
-        $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/landing_page/covid19.tpl'));
+    public function covid19() {
+        $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/covid19.tpl'));
     }
 
-    public function blog()
-    {
-        $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/landing_page/blog.tpl'));
+    public function blog() {
+        $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/blog.tpl'));
     }
 
-    public function technology()
-    {
-        $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/landing_page/technology.tpl'));
+    public function technology() {
+        $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/technology.tpl'));
     }
 
-    public function careers()
-    {
+    public function careers() {
         $data['site_key'] = $this->config->get('config_google_captcha_public');
-        $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/landing_page/careers.tpl', $data));
+        $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/careers.tpl', $data));
     }
 
-    public function farmers()
-    {
-        $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/landing_page/farmer-engagement.tpl'));
+    public function savecareers() {
+
+        $json['status'] = true;
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
     }
 
-    public function partners()
-    {
+    public function farmers() {
+        $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/farmer-engagement.tpl'));
+    }
+
+    public function partners() {
         $data['register'] = $this->request->post['register'];
         $data['site_key'] = $this->config->get('config_google_captcha_public');
-        $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/landing_page/partners.tpl', $data));
+        $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/partners.tpl', $data));
     }
 
-    public function about_us()
-    {
-        $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/landing_page/about-us.tpl'));
+    public function about_us() {
+        $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/about-us.tpl'));
     }
 
-    public function terms_and_conditions()
-    {   
+    public function terms_and_conditions() {
         $data['customer_id'] = NULL;
         if ($this->customer->isLogged()) {
-        $data['customer_id'] = $this->session->data['customer_id'];    
+            $data['customer_id'] = $this->session->data['customer_id'];
         }
-        $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/landing_page/terms-and-conditions.tpl', $data));
+        $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/terms-and-conditions.tpl', $data));
     }
 
-    public function privacy_policy()
-    {
+    public function privacy_policy() {
         $data['customer_id'] = NULL;
         if ($this->customer->isLogged()) {
-        $data['customer_id'] = $this->session->data['customer_id'];    
+            $data['customer_id'] = $this->session->data['customer_id'];
         }
-        $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/landing_page/privacy-policy.tpl', $data));
+        $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/privacy-policy.tpl', $data));
     }
 
-    public function index()
-    {
+    public function index() {
         if (!isset($this->session->data['customer_id'])) {
             if (isset($_REQUEST['action']) && ('shop' == $_REQUEST['action'])) {
                 $this->response->redirect($this->url->link('account/login/customer'));
@@ -250,11 +239,11 @@ class ControllerCommonHome extends Controller
             }
         }
 
-        $customer_details = $this->db->query('SELECT * FROM '.DB_PREFIX."customer WHERE customer_id = '".$this->db->escape($this->session->data['customer_id'])."' AND status = '1'");
+        $customer_details = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->db->escape($this->session->data['customer_id']) . "' AND status = '1'");
         $this->session->data['customer_category'] = isset($customer_details->row['customer_category']) ? $customer_details->row['customer_category'] : null;
 
         $log = new Log('error.log');
-        $log->write($this->session->data['customer_category'].'customer_category');
+        $log->write($this->session->data['customer_category'] . 'customer_category');
 
         $data['kondutoStatus'] = $this->config->get('config_konduto_status');
 
@@ -295,27 +284,27 @@ class ControllerCommonHome extends Controller
         }
 
         if (defined('const_latitude') && defined('const_longitude') && !empty(const_latitude) && !empty(const_longitude)) {
-            $_COOKIE['location'] = const_latitude.','.const_longitude;
+            $_COOKIE['location'] = const_latitude . ',' . const_longitude;
 
-            setcookie('location', const_latitude.','.const_longitude, time() + (86400 * 30 * 30 * 30 * 3), '/'); // 3 month expiry
+            setcookie('location', const_latitude . ',' . const_longitude, time() + (86400 * 30 * 30 * 30 * 3), '/'); // 3 month expiry
 
             $_COOKIE['location_name'] = const_location_name;
             setcookie('location_name', const_location_name, time() + (86400 * 30 * 30 * 30 * 3), '/');
 
-            $this->response->redirect($this->url->link('information/locations/stores', 'location='.const_latitude.','.const_longitude));
+            $this->response->redirect($this->url->link('information/locations/stores', 'location=' . const_latitude . ',' . const_longitude));
         }
 
         if (count($_COOKIE) > 0 && isset($_COOKIE['zipcode'])) {
-            $this->response->redirect($this->url->link('information/locations/stores', 'zipcode='.$_COOKIE['zipcode']));
+            $this->response->redirect($this->url->link('information/locations/stores', 'zipcode=' . $_COOKIE['zipcode']));
         }
         if (count($_COOKIE) > 0 && isset($_COOKIE['location'])) {
-            $this->response->redirect($this->url->link('information/locations/stores', 'location='.$_COOKIE['location']));
+            $this->response->redirect($this->url->link('information/locations/stores', 'location=' . $_COOKIE['location']));
         }
 
         if (isset($this->session->data['config_store_id'])) {
             //$this->response->redirect($this->url->link('product/store'));
 
-            $this->response->redirect($this->url->link('product/store', 'store_id='.$this->session->data['config_store_id'].''));
+            $this->response->redirect($this->url->link('product/store', 'store_id=' . $this->session->data['config_store_id'] . ''));
         }
 
         $this->load->model('tool/image');
@@ -335,7 +324,7 @@ class ControllerCommonHome extends Controller
                 'date_added' => date($this->language->get('date_format_medium'), strtotime($result['date_added'])),
                 'product_count' => $totalCount,
                 'products' => $wishlist_products,
-                'href' => $this->url->link('account/wishlist/info', 'wishlist_id='.$result['wishlist_id'], 'SSL'),
+                'href' => $this->url->link('account/wishlist/info', 'wishlist_id=' . $result['wishlist_id'], 'SSL'),
             ];
         }
 
@@ -345,7 +334,7 @@ class ControllerCommonHome extends Controller
 
         // echo "<pre>";print_r($blocks);die;
         foreach ($blocks as $block) {
-            if (is_file(DIR_IMAGE.$block['image'])) {
+            if (is_file(DIR_IMAGE . $block['image'])) {
                 $image = $this->model_tool_image->resize($block['image'], 290, 163);
             } else {
                 $image = $this->model_tool_image->resize('no_image.png', 290, 163);
@@ -539,22 +528,22 @@ class ControllerCommonHome extends Controller
             $server = $this->config->get('config_url');
         }
 
-        if (is_file(DIR_IMAGE.$this->config->get('config_icon'))) {
+        if (is_file(DIR_IMAGE . $this->config->get('config_icon'))) {
             //$data['icon'] = $server . 'image/' . $this->config->get('config_icon');
             $data['icon'] = $this->model_tool_image->resize($this->config->get('config_icon'), 30, 30);
         } else {
             $data['icon'] = '';
         }
 
-        if (is_file(DIR_IMAGE.$this->config->get('config_fav_icon'))) {
-            $data['fav_icon'] = $server.'image/'.$this->config->get('config_fav_icon');
+        if (is_file(DIR_IMAGE . $this->config->get('config_fav_icon'))) {
+            $data['fav_icon'] = $server . 'image/' . $this->config->get('config_fav_icon');
         } else {
             $data['fav_icon'] = '';
         }
 
-        if (is_file(DIR_IMAGE.$this->config->get('config_logo'))) {
+        if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
             //$data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'),200,110);
-            $data['logo'] = $server.'image/'.$this->config->get('config_logo');
+            $data['logo'] = $server . 'image/' . $this->config->get('config_logo');
         } else {
             $data['logo'] = '';
         }
@@ -584,7 +573,7 @@ class ControllerCommonHome extends Controller
 
         foreach ($rows as $row) {
             if (false === strpos($row['link'], '://')) {
-                $row['link'] = 'http://'.$row['link'];
+                $row['link'] = 'http://' . $row['link'];
             }
             $row['image'] = $this->model_tool_image->resize($row['image'], 300, 300);
             $data['banners'][] = $row;
@@ -622,7 +611,7 @@ class ControllerCommonHome extends Controller
                 $children_data[] = [
                     'name' => $child['name'],
                     'id' => $child['category_id'],
-                    'href' => $this->url->link('product/category', 'category='.$category['category_id'].'_'.$child['category_id']),
+                    'href' => $this->url->link('product/category', 'category=' . $category['category_id'] . '_' . $child['category_id']),
                 ];
             }
 
@@ -641,7 +630,7 @@ class ControllerCommonHome extends Controller
                 'thumb' => $this->model_tool_image->resize($category['image'], 300, 300),
                 'children' => $children_data,
                 'column' => $category['column'] ? $category['column'] : 1,
-                'href' => $this->url->link('product/category', 'category='.$category['category_id']),
+                'href' => $this->url->link('product/category', 'category=' . $category['category_id']),
                 'products' => $this->getProducts($filter_data_product),
             ];
         }
@@ -673,14 +662,14 @@ class ControllerCommonHome extends Controller
         // echo'<pre>';print_r($stores);exit;
         foreach ($stores as $store) {
             $tempStore = $store;
-            $tempStore['href'] = $this->model_setting_store->getSeoUrl('store_id='.$store['store_id']);
+            $tempStore['href'] = $this->model_setting_store->getSeoUrl('store_id=' . $store['store_id']);
             $tempStore['thumb'] = $this->model_tool_image->resize($store['logo'], 300, 300);
             $tempStore['categorycount'] = $this->model_setting_store->getStoreCategoriesbyStoreId($store['store_id'], $_REQUEST['category']);
             if (!empty($store['store_type_ids'])) {
                 $arrayStoretypes = explode(',', $store['store_type_ids']);
                 $tempStoretypename = '';
                 foreach ($arrayStoretypes as $key => $types) {
-                    $tempStoretypename .= (0 == $key) ? $tempStoreTypeArray[$types] : ','.$tempStoreTypeArray[$types];
+                    $tempStoretypename .= (0 == $key) ? $tempStoreTypeArray[$types] : ',' . $tempStoreTypeArray[$types];
                 }
                 $tempStore['storeTypes'] = $tempStoretypename;
             }
@@ -718,8 +707,8 @@ class ControllerCommonHome extends Controller
         }
         //	    echo'<pre>';print_r($data['stores']);exit;
         // 5 best seller product
-        $complete_status_ids = '('.implode(',', $this->config->get('config_complete_status')).')';
-        $query_best = $this->db->query('SELECT SUM( op.quantity )AS total, op.product_id,op.general_product_id, pd.name FROM '.DB_PREFIX.'order_product AS op LEFT JOIN '.DB_PREFIX.'order AS o ON ( op.order_id = o.order_id ) LEFT JOIN  '.DB_PREFIX."product_description AS pd ON (op.general_product_id = pd.product_id)  WHERE pd.language_id = '".(int) $this->config->get('config_language_id')."' AND o.order_status_id IN ".$complete_status_ids.' GROUP BY pd.name ORDER BY total DESC LIMIT 5');
+        $complete_status_ids = '(' . implode(',', $this->config->get('config_complete_status')) . ')';
+        $query_best = $this->db->query('SELECT SUM( op.quantity )AS total, op.product_id,op.general_product_id, pd.name FROM ' . DB_PREFIX . 'order_product AS op LEFT JOIN ' . DB_PREFIX . 'order AS o ON ( op.order_id = o.order_id ) LEFT JOIN  ' . DB_PREFIX . "product_description AS pd ON (op.general_product_id = pd.product_id)  WHERE pd.language_id = '" . (int) $this->config->get('config_language_id') . "' AND o.order_status_id IN " . $complete_status_ids . ' GROUP BY pd.name ORDER BY total DESC LIMIT 5');
         $best_products = $query_best->rows;
 
         foreach ($best_products as $products) {
@@ -738,9 +727,9 @@ class ControllerCommonHome extends Controller
         /* add Contact modal */
         $data['contactus_modal'] = $this->load->controller('information/contact');
 
-        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/common/home.tpl') && isset($this->session->data['customer_id'])) {
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/home.tpl') && isset($this->session->data['customer_id'])) {
             // $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/home.tpl', $data));
-            $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/common/homenew.tpl', $data));
+            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/homenew.tpl', $data));
         } else {
             if ($this->request->server['HTTPS']) {
                 $server = $this->config->get('config_ssl');
@@ -783,13 +772,12 @@ class ControllerCommonHome extends Controller
 
 //    echo "<pre>";print_r($data);die;
 
-            $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/landing_page/index.tpl', $data));
+            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/index.tpl', $data));
             //$this->response->setOutput($this->load->view('default/template/common/home.tpl', $data));
         }
     }
 
-    public function toHome()
-    {
+    public function toHome() {
         //echo "cer";die;
         unset($this->session->data['config_store_id']);
         unset($this->session->data['zipcode']);
@@ -826,8 +814,7 @@ class ControllerCommonHome extends Controller
         $this->response->redirect($server);
     }
 
-    public function toStore()
-    {
+    public function toStore() {
         if (!$this->config->get('config_multi_store')) {
             unset($this->session->data['config_store_id']);
             $this->cart->clear();
@@ -836,8 +823,7 @@ class ControllerCommonHome extends Controller
         $this->response->redirect($this->url->link('common/home/index'));
     }
 
-    public function array_sort_by_column(&$arr, $col, $dir = SORT_DESC)
-    {
+    public function array_sort_by_column(&$arr, $col, $dir = SORT_DESC) {
         $sort_col = [];
         foreach ($arr as $key => $row) {
             $sort_col[$key] = $row[$col];
@@ -845,8 +831,7 @@ class ControllerCommonHome extends Controller
         array_multisort($sort_col, $dir, $arr);
     }
 
-    public function cartItemDetails()
-    {
+    public function cartItemDetails() {
         $this->load->language('common/home');
 
         //check login
@@ -857,7 +842,7 @@ class ControllerCommonHome extends Controller
         $currentprice = 'initial';
         $log = new Log('error.log');
         $log->write('1');
-        $this->document->addStyle('front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_checkout.css');
+        $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_checkout.css');
 
         $json['href'] = $this->url->link('checkout/checkoutitems', '', 'SSL');
 
@@ -925,7 +910,7 @@ class ControllerCommonHome extends Controller
                 'reward' => ($product['reward'] ? sprintf($this->language->get('text_points'), $product['reward']) : ''),
                 'price' => $price,
                 'total' => $total,
-                'href' => $this->url->link('product/product', 'product_store_id='.$product['product_store_id']),
+                'href' => $this->url->link('product/product', 'product_store_id=' . $product['product_store_id']),
             ];
 
             /* if ( $product['minimum'] > $product_total ) {
@@ -976,7 +961,7 @@ class ControllerCommonHome extends Controller
                 if ($store_info['min_order_cod'] > $store_total) {
                     $freedeliveryprice = $store_info['min_order_cod'] - $store_total;
 
-                    $json['store_note'][$os] = "<center style='background-color:#ff811e;color:#fff'> You are only ".$this->currency->format($freedeliveryprice).' away for FREE DELIVERY! </center>';
+                    $json['store_note'][$os] = "<center style='background-color:#ff811e;color:#fff'> You are only " . $this->currency->format($freedeliveryprice) . ' away for FREE DELIVERY! </center>';
                 }
             } else {
                 $json['store_note'][$os] = '';
@@ -990,7 +975,7 @@ class ControllerCommonHome extends Controller
                 $this->response->addHeader('Content-Type: application/json');
                 $this->response->setOutput(json_encode($json));
 
-                $json['store_note'][$os] = "<center style='background-color:#ee4054;color:#fff'>".$this->currency->format($currentprice).' away from minimum order value </center>';
+                $json['store_note'][$os] = "<center style='background-color:#ee4054;color:#fff'>" . $this->currency->format($currentprice) . ' away from minimum order value </center>';
             }
         }
         $log->write('4');
@@ -1002,7 +987,7 @@ class ControllerCommonHome extends Controller
         if (0 == $currentprice) {
             $json['amount'] = $this->language->get('text_no_product');
         } else {
-            $json['amount'] = $this->currency->format($currentprice).' '.$this->language->get('text_away_from').' ( '.$store_name.' )'; //. $this->language->get('text_store') .' )';
+            $json['amount'] = $this->currency->format($currentprice) . ' ' . $this->language->get('text_away_from') . ' ( ' . $store_name . ' )'; //. $this->language->get('text_store') .' )';
         }
 
         $json['text_proceed_to_checkout'] = $this->language->get('text_proceed_to_checkout');
@@ -1011,8 +996,7 @@ class ControllerCommonHome extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function cartDetails()
-    {
+    public function cartDetails() {
         $this->load->language('common/home');
 
         //check login
@@ -1023,7 +1007,7 @@ class ControllerCommonHome extends Controller
         $currentprice = 'initial';
         $log = new Log('error.log');
         $log->write('1');
-        $this->document->addStyle('front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_checkout.css');
+        $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_checkout.css');
 
         $json['href'] = $this->url->link('checkout/checkout', '', 'SSL');
 
@@ -1090,7 +1074,7 @@ class ControllerCommonHome extends Controller
                 'reward' => ($product['reward'] ? sprintf($this->language->get('text_points'), $product['reward']) : ''),
                 'price' => $price,
                 'total' => $total,
-                'href' => $this->url->link('product/product', 'product_store_id='.$product['product_store_id']),
+                'href' => $this->url->link('product/product', 'product_store_id=' . $product['product_store_id']),
             ];
 
             /* if ( $product['minimum'] > $product_total ) {
@@ -1141,7 +1125,7 @@ class ControllerCommonHome extends Controller
                 if ($store_info['min_order_cod'] > $store_total) {
                     $freedeliveryprice = $store_info['min_order_cod'] - $store_total;
 
-                    $json['store_note'][$os] = "<center style='background-color:#ff811e;color:#fff'> You are only ".$this->currency->format($freedeliveryprice).' away for FREE DELIVERY! </center>';
+                    $json['store_note'][$os] = "<center style='background-color:#ff811e;color:#fff'> You are only " . $this->currency->format($freedeliveryprice) . ' away for FREE DELIVERY! </center>';
                 }
             } else {
                 $json['store_note'][$os] = '';
@@ -1155,7 +1139,7 @@ class ControllerCommonHome extends Controller
                 $this->response->addHeader('Content-Type: application/json');
                 $this->response->setOutput(json_encode($json));
 
-                $json['store_note'][$os] = "<center style='background-color:#ee4054;color:#fff'>".$this->currency->format($currentprice).' away from minimum order value </center>';
+                $json['store_note'][$os] = "<center style='background-color:#ee4054;color:#fff'>" . $this->currency->format($currentprice) . ' away from minimum order value </center>';
             }
         }
         $log->write('4');
@@ -1167,7 +1151,7 @@ class ControllerCommonHome extends Controller
         if (0 == $currentprice) {
             $json['amount'] = $this->language->get('text_no_product');
         } else {
-            $json['amount'] = $this->currency->format($currentprice).' '.$this->language->get('text_away_from').' ( '.$store_name.' )'; //. $this->language->get('text_store') .' )';
+            $json['amount'] = $this->currency->format($currentprice) . ' ' . $this->language->get('text_away_from') . ' ( ' . $store_name . ' )'; //. $this->language->get('text_store') .' )';
         }
 
         $json['text_proceed_to_checkout'] = $this->language->get('text_proceed_to_checkout');
@@ -1176,8 +1160,7 @@ class ControllerCommonHome extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getProducts($filter_data)
-    {
+    public function getProducts($filter_data) {
         $this->load->model('assets/product');
         $this->load->model('tool/image');
 
@@ -1193,7 +1176,7 @@ class ControllerCommonHome extends Controller
             if ($result['quantity'] <= 0) {
                 continue;
             }
-            
+
             $log = new Log('error.log');
             if ($result['image'] != NULL && file_exists(DIR_IMAGE . $result['image'])) {
                 $image = $this->model_tool_image->resize($result['image'], $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
@@ -1242,9 +1225,9 @@ class ControllerCommonHome extends Controller
 
                 //echo $s_price.'===>'.$o_price.'==>'.$special_price.'===>'.$price;//exit;
 
-                if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$result['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$filter_data['store_id']])) {
-                    $s_price = $cachePrice_data[$result['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$filter_data['store_id']];
-                    $o_price = $cachePrice_data[$result['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$filter_data['store_id']];
+                if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$result['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $filter_data['store_id']])) {
+                    $s_price = $cachePrice_data[$result['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $filter_data['store_id']];
+                    $o_price = $cachePrice_data[$result['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $filter_data['store_id']];
                     $special_price = $this->currency->format($s_price);
                     $price = $this->currency->format($o_price);
                 }
@@ -1310,12 +1293,12 @@ class ControllerCommonHome extends Controller
                             'special' => $special_price,
                         ],
                     ],
-                    'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('config_product_description_length')).'..',
+                    'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('config_product_description_length')) . '..',
                     'percent_off' => number_format($percent_off, 0),
                     'tax' => $result['tax_percentage'],
                     'minimum' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity'],
                     'rating' => 0,
-                    'href' => $this->url->link('product/product', '&product_store_id='.$result['product_store_id']),
+                    'href' => $this->url->link('product/product', '&product_store_id=' . $result['product_store_id']),
                 ];
             }
         }
