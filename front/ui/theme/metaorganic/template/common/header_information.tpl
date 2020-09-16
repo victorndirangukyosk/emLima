@@ -236,7 +236,7 @@
                                             <i class="fa fa-reorder"></i><?= $text_order ?></a>
                                             </li>
 
-                                            <?php if($this->config->get('config_account_return_status') == 'yes') { ?>
+                                           <!-- <?php if($this->config->get('config_account_return_status') == 'yes') { ?>
                                                 <li role="presentation" >
                                                     <?php if(strpos( $return,$_SERVER["REQUEST_URI"]) !== false) { ?>
                                                         <a href="<?= $return ?>" class="active">
@@ -246,7 +246,7 @@
 
                                                     <i class="fa fa-undo"></i><?= $text_return ?></a>
                                                 </li>
-                                            <?php } ?>
+                                            <?php } ?>-->
 
                                             <li role="presentation" >
                                                 <?php if(strpos($wishlist,$_SERVER["REQUEST_URI"]) !== false) { ?>
