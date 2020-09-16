@@ -12,7 +12,7 @@
             <?php foreach($data as $category) { ?>
             <div class="row">
                 <div class="col-md-12">
-                    <div id="accordion" class="py-3">
+                    <div id="accordion-<?= $category['category'] ?>" class="py-3">
                         <h6 class="mb-3"><strong><?= $category['category'] ?></strong></h6>
                         <?php foreach($category['questions'] as $faq) { ?>
                             <div class="card border-0 wow fadeInUp" style="visibility: visible; animation-name: fadeInUp;">
@@ -24,7 +24,7 @@
                                         </button>
                                 </div>
                                 <div id="collapse-<?= $faq['help_id'] ?>" class="collapse " aria-labelledby="heading-<?= $faq['help_id'] ?>"
-                                    data-parent="#accordion">
+                                    data-parent="#accordion-<?= $category['category'] ?>">
                                     <div class="card-body accordion-body">
                                         <p>
                                             <?= $faq['answer'] ?>
