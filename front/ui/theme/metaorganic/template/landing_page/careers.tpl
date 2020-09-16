@@ -171,9 +171,6 @@
                                         position: 'topRight',
                                         message: json['success_message']
                                     });
-
-                                    registrationView.hide();
-                                    otpView.show();
                                 } else {
                                     iziToast.warning({
                                         position: 'topRight',

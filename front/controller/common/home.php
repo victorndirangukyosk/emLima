@@ -196,6 +196,7 @@ class ControllerCommonHome extends Controller {
     public function savecareers() {
 
         $json['status'] = true;
+        $json['success_message'] = 'Thank you we will contact you shortly';
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
