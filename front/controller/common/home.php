@@ -205,6 +205,8 @@ class ControllerCommonHome extends Controller {
 
     public function savepartner() {
 
+        $this->load->model('information/partners');
+        $this->model_information_partners->createPartners($this->request->post['firstname'], $this->request->post['lastname'], $this->request->post['designation'], $this->request->post['company'], $this->request->post['email'], $this->request->post['phone'], $this->request->post['description']);
         $json['status'] = true;
         $json['success_message'] = 'Thank you we will contact you shortly';
         $this->response->addHeader('Content-Type: application/json');
