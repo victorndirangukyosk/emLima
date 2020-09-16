@@ -201,6 +201,14 @@ class ControllerCommonHome extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+    public function savepartner() {
+
+        $json['status'] = true;
+        $json['success_message'] = 'Thank you we will contact you shortly';
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
     public function farmers() {
         $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/farmer-engagement.tpl'));
     }
