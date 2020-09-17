@@ -196,7 +196,7 @@ class ControllerCommonHome extends Controller {
     public function savecareers() {
 
         $this->load->model('information/careers');
-        $this->model_information_careers->createCareers($this->request->post['firstname'], $this->request->post['lastname'], $this->request->post['role'], $this->request->post['yourself']);
+        $this->model_information_careers->createCareers(str_replace("'", "", $this->request->post['firstname']), str_replace("'", "", $this->request->post['lastname']), str_replace("'", "", $this->request->post['role']), str_replace("'", "", $this->request->post['yourself']));
         $json['status'] = true;
         $json['success_message'] = 'Thank you we will contact you shortly';
         $this->response->addHeader('Content-Type: application/json');
@@ -205,6 +205,8 @@ class ControllerCommonHome extends Controller {
 
     public function savepartner() {
 
+        $this->load->model('information/partners');
+        $this->model_information_partners->createPartners(str_replace("'", "", $this->request->post['firstname']), str_replace("'", "", $this->request->post['lastname']), str_replace("'", "", $this->request->post['designation']), str_replace("'", "", $this->request->post['company']), str_replace("'", "", $this->request->post['email']), str_replace("'", "", $this->request->post['phone']), str_replace("'", "", $this->request->post['description']));
         $json['status'] = true;
         $json['success_message'] = 'Thank you we will contact you shortly';
         $this->response->addHeader('Content-Type: application/json');

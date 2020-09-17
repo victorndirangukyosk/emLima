@@ -176,7 +176,6 @@
                         const email = $('#partner-email').val();
                         const phone = $('#partner-phone').val();
                         const description = $('#partner-description').val();
-
                         const registerForm = $('#partner-registration-form')[0];
                         const formIsValid = registerForm.reportValidity();
                         const registerButton = $('#partner-registration-button');
@@ -199,12 +198,11 @@
                                 lastname: lastName,
                                 designation: designation,
                                 company: company,
-                                email : email,
-                                phone : phone,
-                                description : description
+                                email: email,
+                                phone: phone,
+                                description: description
                             },
                             success: function (json) {
-                                registerButton.text('SIGN UP');
                                 registerButton.toggleClass('disabled');
 
                                 if (json['status']) {
@@ -212,6 +210,7 @@
                                         position: 'topRight',
                                         message: json['success_message']
                                     });
+                                    $('#partner-registration-form')[0].reset();
                                 } else {
                                     iziToast.warning({
                                         position: 'topRight',

@@ -163,7 +163,6 @@
                                 yourself: yourself
                             },
                             success: function (json) {
-                                registerButton.text('SIGN UP');
                                 registerButton.toggleClass('disabled');
 
                                 if (json['status']) {
@@ -171,6 +170,7 @@
                                         position: 'topRight',
                                         message: json['success_message']
                                     });
+                                    $('#careers-form')[0].reset();
                                 } else {
                                     iziToast.warning({
                                         position: 'topRight',
