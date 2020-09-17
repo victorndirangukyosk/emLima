@@ -1127,6 +1127,7 @@ class ControllerApiCustomerOrder extends Controller
 
         $this->load->model('account/order');
         $this->load->model('account/address');
+        $this->load->model('account/customer');
 
         $order_total = $this->model_account_order->getTotalOrders();
 
@@ -1209,6 +1210,7 @@ class ControllerApiCustomerOrder extends Controller
             if ($real_product_total) {
                 $product_total = $real_product_total;
             }
+            $customer_parent_info = $this->model_account_customer->getCustomerParentEmail($result['customer_id']);
 
             $data['orders'][] = [
                 'order_id' => $result['order_id'],
@@ -1242,6 +1244,7 @@ class ControllerApiCustomerOrder extends Controller
                 'sub_total' => $sub_total,
                 'href' => $this->url->link('account/order/info', 'order_id='.$result['order_id'], 'SSL'),
                 'real_href' => $this->url->link('account/order/realinfo', 'order_id='.$result['order_id'], 'SSL'),
+                'customer_parent_info'=> $customer_parent_info,
             ];
         }
 
@@ -1270,6 +1273,7 @@ class ControllerApiCustomerOrder extends Controller
             $order_id = $this->request->get['order_id'];
 
             $this->load->model('account/order');
+            $this->load->model('account/customer');
 
             $order_info = $this->model_account_order->getOrder($order_id);
 
@@ -1710,6 +1714,8 @@ class ControllerApiCustomerOrder extends Controller
                 $data['comment'] = nl2br($order_info['comment']);
 
                 $data['total_quantity'] = 0;
+                $data['customer_parent_info'] = $this->model_account_customer->getCustomerParentEmail($order_info['customer_id']);
+
 
                 foreach ($data['products'] as $product) {
                     $data['total_quantity'] += $product['quantity'];
