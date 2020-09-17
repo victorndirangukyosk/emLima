@@ -1093,6 +1093,13 @@ class ControllerApiCustomerOrder extends Controller
 
             http_response_code(400);
         }
+        $json['data']['Order_Ids'] = Order_Ids;
+        if (200 == $json['status']) {
+            $json['data']['status'] = true;
+            $json['data']['Order_Ids'] = Order_Ids;
+        } else {
+            $json['data']['status'] = false;
+        }
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
