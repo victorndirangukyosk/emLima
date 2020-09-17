@@ -296,7 +296,8 @@ class ControllerApiCustomerCheckout extends Controller
                     $this->load->model('payment/'.$result['code']);
 
                     $method = $this->{'model_payment_'.$result['code']}->getMethod($total);
-
+                    $method['terms']=str_replace("(No Transaction Fee)","", $method['terms']);
+                    //removed  (No Transaction Fee) from terms,as suggested
                     //echo "<pre>";print_r($method);die;
                     if ($method) {
                         $method_data[] = $method;
