@@ -861,9 +861,13 @@ class ControllerPaymentPesapal extends Controller {
         if (count($order_info) > 0) {
             $amount = (int) ($order_info['total']);
         }
-
+        
+        $log->write('PESAPAL CALL BACK');
         $transaction_tracking_id = $this->request->get['pesapal_transaction_tracking_id'];
         $merchant_reference = $this->request->get['pesapal_merchant_reference'];
+        $log->write($transaction_tracking_id);
+        $log->write($merchant_reference);
+        $log->write('PESAPAL CALL BACK');
         $customer_id = $customer_info['customer_id'];
         $this->model_payment_pesapal->insertOrderTransactionIdPesapal($order_id, $transaction_tracking_id, $merchant_reference, $customer_id);
         $this->model_payment_pesapal->OrderTransaction($order_id, $transaction_tracking_id);
