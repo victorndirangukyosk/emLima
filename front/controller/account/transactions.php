@@ -545,9 +545,13 @@ class Controlleraccounttransactions extends Controller {
         $this->load->model('payment/pesapal');
         $this->load->model('checkout/order');
         $this->load->model('account/customer');
-
+        
+        $log->write('PESAPAL CALL BACK');
         $transaction_tracking_id = $this->request->get['pesapal_transaction_tracking_id'];
         $merchant_reference = $this->request->get['pesapal_merchant_reference'];
+        $log->write($transaction_tracking_id);
+        $log->write($merchant_reference);
+        $log->write('PESAPAL CALL BACK');
         $order_details = explode('-', $merchant_reference);
         if (is_array($order_details)) {
             $order_id = $order_details[0];
