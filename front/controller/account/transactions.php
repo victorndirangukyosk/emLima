@@ -484,6 +484,23 @@ class Controlleraccounttransactions extends Controller {
             }
             $amount = $this->request->post['amount'];
         }
+        if ($this->request->post['order_id'] != NULL && $this->request->post['payment_type'] != NULL && $this->request->post['payment_type'] == 'pay_selected_order') {
+            $log->write($this->request->post['order_id']);
+            $log->write($this->request->post['payment_type']);
+            $log->write($this->request->post['amount']);
+
+            $order_id = $this->customer->getId() . 'BULK';
+            $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+            $amount = $this->request->post['amount'];
+            if (is_array($this->request->post['order_id']) && count($this->request->post['order_id']) > 0) {
+                foreach ($this->request->post['order_id'] as $order_id_arr) {
+                    $log->write('Pesapal Order ID FOREACH pay_selected_order');
+                    $log->write($order_id_arr);
+                    $log->write('Pesapal Order ID FOREACH pay_selected_order');
+                    $this->model_checkout_order->UpdatePaymentMethod($order_id_arr, 'PesaPal', 'pesapal');
+                }
+            }
+        }
         $pesapal_creds = $this->model_setting_setting->getSetting('pesapal', 0);
         //pesapal params
         $token = $params = null;
@@ -545,7 +562,7 @@ class Controlleraccounttransactions extends Controller {
         $this->load->model('payment/pesapal');
         $this->load->model('checkout/order');
         $this->load->model('account/customer');
-        
+
         $log->write('PESAPAL CALL BACK');
         $transaction_tracking_id = $this->request->get['pesapal_transaction_tracking_id'];
         $merchant_reference = $this->request->get['pesapal_merchant_reference'];
@@ -596,7 +613,7 @@ class Controlleraccounttransactions extends Controller {
                     $status = $this->ipinlistenercustom('CHANGE', $transaction_tracking_id, $merchant_reference, $order_id_arr);
                 }
             }
-        unset($this->session->data['pending_order_ids']);    
+            unset($this->session->data['pending_order_ids']);
         } else {
             $order_info = $this->model_checkout_order->getOrder($order_id);
             $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);

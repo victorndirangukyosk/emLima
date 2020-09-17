@@ -368,6 +368,29 @@
                 alert('Please select atleast one order!');
                 return false;
             }
+            $.ajax({
+                url: 'index.php?path=account/transactions/pesapal',
+                type: 'post',
+                data: {
+                    order_id: val,
+                    amount: total,
+                    payment_type: radioValue
+                },
+                dataType: 'html',
+                cache: false,
+                async: false,
+                success: function (json) {
+                    console.log("json");
+                    console.log(json);
+                    $('#pay-confirm-order').html(json);
+                    $('#pay-confirm-order').removeAttr('style');
+                    return true;
+                    //window.location = json.redirect;
+                }, error: function (xhr, ajaxOptions, thrownError) {
+                    alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                    return false;
+                }
+            });
         } else {
             console.log('Pay Other Amount');
             $('#pay-confirm-order').html('');
