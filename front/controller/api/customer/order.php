@@ -1048,6 +1048,9 @@ class ControllerApiCustomerOrder extends Controller
 
             $this->model_api_checkout->apiAddTransaction($transactionData, $order_ids);
 
+            $json['data']['Order_Ids'] = $order_ids;
+
+
         /*if(isset($args['stripe_source']) && $args['payment_method_code'] == 'stripe') {
             $this->load->model('api/payment');
 
@@ -1093,10 +1096,9 @@ class ControllerApiCustomerOrder extends Controller
 
             http_response_code(400);
         }
-        $json['data']['Order_Ids'] = $Order_Ids;
+       
         if (200 == $json['status']) {
             $json['data']['status'] = true;
-            $json['data']['Order_Ids'] = $Order_Ids;
         } else {
             $json['data']['status'] = false;
         }
