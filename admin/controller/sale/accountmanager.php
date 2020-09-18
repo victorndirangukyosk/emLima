@@ -67,62 +67,18 @@ class ControllerSaleAccountManager extends Controller {
     }
 
     public function edit() {
-        $this->load->language('sale/customer');
+        $this->load->language('user/user');
 
         $this->document->setTitle($this->language->get('heading_title'));
 
-        $this->load->model('sale/customer');
+        $this->load->model('user/user');
 
         if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
-            $date = $this->request->post['dob'];
-            if (!empty($date)) {
-                //echo "<pre>";print_r($date);die;
-
-                $date = DateTime::createFromFormat('d/m/Y', $date);
-
-                $this->request->post['dob'] = $date->format('Y-m-d');
-            } else {
-                $this->request->post['dob'] = null;
-            }
-
-            //echo "<pre>";print_r($this->request->post);die;
-            $this->model_sale_customer->editCustomer($this->request->get['customer_id'], $this->request->post);
+            $this->model_user_user->editUser($this->request->get['user_id'], $this->request->post);
 
             $this->session->data['success'] = $this->language->get('text_success');
 
             $url = '';
-
-            if (isset($this->request->get['filter_company'])) {
-                $url .= '&filter_company=' . urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
-            }
-
-            if (isset($this->request->get['filter_name'])) {
-                $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
-            }
-
-            if (isset($this->request->get['filter_email'])) {
-                $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
-            }
-
-            if (isset($this->request->get['filter_customer_group_id'])) {
-                $url .= '&filter_customer_group_id=' . $this->request->get['filter_customer_group_id'];
-            }
-
-            if (isset($this->request->get['filter_status'])) {
-                $url .= '&filter_status=' . $this->request->get['filter_status'];
-            }
-
-            if (isset($this->request->get['filter_approved'])) {
-                $url .= '&filter_approved=' . $this->request->get['filter_approved'];
-            }
-
-            if (isset($this->request->get['filter_ip'])) {
-                $url .= '&filter_ip=' . $this->request->get['filter_ip'];
-            }
-
-            if (isset($this->request->get['filter_date_added'])) {
-                $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
-            }
 
             if (isset($this->request->get['sort'])) {
                 $url .= '&sort=' . $this->request->get['sort'];
@@ -137,67 +93,34 @@ class ControllerSaleAccountManager extends Controller {
             }
 
             if (isset($this->request->post['button']) and 'save' == $this->request->post['button']) {
-                $this->response->redirect($this->url->link('sale/accountmanager/edit', 'customer_id=' . $this->request->get['customer_id'] . '&token=' . $this->session->data['token'] . $url, 'SSL'));
+                $this->response->redirect($this->url->link('user/user/edit', 'user_id=' . $this->request->get['user_id'] . '&token=' . $this->session->data['token'] . $url, 'SSL'));
             }
 
             if (isset($this->request->post['button']) and 'new' == $this->request->post['button']) {
-                $this->response->redirect($this->url->link('sale/accountmanager/add', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+                $this->response->redirect($this->url->link('user/user/add', 'token=' . $this->session->data['token'] . $url, 'SSL'));
             }
 
-            $this->response->redirect($this->url->link('sale/accountmanager', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            $this->response->redirect($this->url->link('user/user', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
 
         $this->getForm();
     }
 
     public function delete() {
-        $this->load->language('sale/customer');
+        $this->load->language('sale/accountmanager');
 
         $this->document->setTitle($this->language->get('heading_title'));
 
-        $this->load->model('sale/customer');
+        $this->load->model('user/accountmanager');
 
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
-            foreach ($this->request->post['selected'] as $customer_id) {
-                $this->model_sale_customer->deleteCustomer($customer_id);
+            foreach ($this->request->post['selected'] as $user_id) {
+                $this->model_user_accountmanager->deleteUser($user_id);
             }
 
-            //$this->session->data['success'] = $this->language->get('text_success');
-            $this->session->data['success'] = 'Success : Customer(s) deleted successfully!';
+            $this->session->data['success'] = $this->language->get('text_success');
 
             $url = '';
-
-            if (isset($this->request->get['filter_company'])) {
-                $url .= '&filter_company=' . urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
-            }
-
-            if (isset($this->request->get['filter_name'])) {
-                $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
-            }
-
-            if (isset($this->request->get['filter_email'])) {
-                $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
-            }
-
-            if (isset($this->request->get['filter_customer_group_id'])) {
-                $url .= '&filter_customer_group_id=' . $this->request->get['filter_customer_group_id'];
-            }
-
-            if (isset($this->request->get['filter_status'])) {
-                $url .= '&filter_status=' . $this->request->get['filter_status'];
-            }
-
-            if (isset($this->request->get['filter_approved'])) {
-                $url .= '&filter_approved=' . $this->request->get['filter_approved'];
-            }
-
-            if (isset($this->request->get['filter_ip'])) {
-                $url .= '&filter_ip=' . $this->request->get['filter_ip'];
-            }
-
-            if (isset($this->request->get['filter_date_added'])) {
-                $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
-            }
 
             if (isset($this->request->get['sort'])) {
                 $url .= '&sort=' . $this->request->get['sort'];
@@ -211,7 +134,7 @@ class ControllerSaleAccountManager extends Controller {
                 $url .= '&page=' . $this->request->get['page'];
             }
 
-            $this->response->redirect($this->url->link('sale/customer', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            $this->response->redirect($this->url->link('sale/accountmanager', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
 
         $this->getList();
@@ -982,7 +905,7 @@ class ControllerSaleAccountManager extends Controller {
     }
 
     protected function validateDelete() {
-        if (!$this->user->hasPermission('modify', 'sale/customer')) {
+        if (!$this->user->hasPermission('modify', 'sale/accountmanager')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
 
