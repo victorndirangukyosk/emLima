@@ -126,3 +126,4 @@ $_['entry_lastname'] = 'Last Name';
 $_['entry_email'] = 'E-Mail';
 $_['entry_image'] = 'Image';
 $_['entry_status'] = 'Status';
+$_['error_username'] = 'Username must be between 3 and 20 characters!';
