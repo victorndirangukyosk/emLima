@@ -254,11 +254,13 @@ class ModelUserAccountmanager extends Model {
 
         $query = $this->db->query($sql);
 
+        //echo "<pre>";print_r($sql);die;
+
         return $query->row['total'];
     }
 
     public function getAccountManagers($data = []) {
-        $sql = "SELECT *, CONCAT(c.firstname, ' ', c.lastname) AS name, cgd.name AS customer_group FROM " . DB_PREFIX . 'user c LEFT JOIN ' . DB_PREFIX . "user_group cgd ON (c.user_group_id = cgd.user_group_id)";
+        $sql = "SELECT *, CONCAT(c.firstname, ' ', c.lastname) AS name FROM " . DB_PREFIX . 'user c';
 
         $implode = [];
 
@@ -289,7 +291,7 @@ class ModelUserAccountmanager extends Model {
         }
 
         if ($implode) {
-            $sql .= ' AND ' . implode(' AND ', $implode);
+            $sql .= ' WHERE ' . implode(' AND ', $implode);
         }
 
         $sort_data = [
