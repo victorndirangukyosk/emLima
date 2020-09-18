@@ -3072,11 +3072,13 @@ class ControllerAccountOrder extends Controller
             $originalProducts = $products = $this->model_account_order->getOnlyOrderProducts($order_id);
         }
  
-        // echo "<pre>";print_r($originalProducts);die;
+         //echo "<pre>";print_r($originalProducts);die;
 
         foreach ($originalProducts as $originalProduct) {
-            $totalUpdated = $originalProduct['price'] * $originalProduct['quantity']
-                + ($this->config->get('config_tax') ? $originalProduct['tax'] : 0);
+            // $totalUpdated = $originalProduct['price'] * $originalProduct['quantity']
+            //     + ($this->config->get('config_tax') ? $originalProduct['tax'] : 0);
+            //in admin orders screen, directly showing total
+            $totalUpdated = $originalProduct['total']  ;
 
             $uomOrderedWithoutApproximations = trim(explode('(', $originalProduct['unit'])[0]);
 
