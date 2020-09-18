@@ -633,6 +633,21 @@
             });
         }
     });
+    $(document).delegate('input[name="order_id_selected"]', 'click', function () {
+        var checkedNum = $('input[name="order_id_selected[]"]:checked').length;
+        console.log(checkedNum);
+        var val = [];
+        if (!checkedNum) {
+            $(':checkbox:checked').each(function (i) {
+                val[i] = $(this).data("id");
+            });
+            console.log(val.length);
+        }
+        if (val.length > 0) {
+            $("input:radio").removeAttr("checked");
+            $('#pay-confirm-order').html('');
+        }
+    });
     $(document).delegate('#send_mail', 'click', function () {
         var checkedNum = $('input[name="app_cand[]"]:checked').length;
         console.log(checkedNum);
