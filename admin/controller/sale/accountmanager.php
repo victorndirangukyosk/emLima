@@ -35,37 +35,10 @@ class ControllerSaleAccountManager extends Controller {
 
         if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
             $user_id = $this->model_user_accountmanager->addAccountManager($this->request->post);
-            $this->session->data['success'] = 'Success : Accountmanager created successfully!';
+
+            $this->session->data['success'] = $this->language->get('text_success');
 
             $url = '';
-
-            if (isset($this->request->get['filter_company'])) {
-                $url .= '&filter_company=' . urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
-            }
-
-            if (isset($this->request->get['filter_name'])) {
-                $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
-            }
-
-            if (isset($this->request->get['filter_email'])) {
-                $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
-            }
-
-            if (isset($this->request->get['filter_status'])) {
-                $url .= '&filter_status=' . $this->request->get['filter_status'];
-            }
-
-            if (isset($this->request->get['filter_approved'])) {
-                $url .= '&filter_approved=' . $this->request->get['filter_approved'];
-            }
-
-            if (isset($this->request->get['filter_ip'])) {
-                $url .= '&filter_ip=' . $this->request->get['filter_ip'];
-            }
-
-            if (isset($this->request->get['filter_date_added'])) {
-                $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
-            }
 
             if (isset($this->request->get['sort'])) {
                 $url .= '&sort=' . $this->request->get['sort'];
@@ -860,12 +833,12 @@ class ControllerSaleAccountManager extends Controller {
         ];
 
         if (!isset($this->request->get['user_id'])) {
-            $data['action'] = $this->url->link('user/user/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $data['action'] = $this->url->link('sale/accountmanager/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
         } else {
-            $data['action'] = $this->url->link('user/user/edit', 'token=' . $this->session->data['token'] . '&user_id=' . $this->request->get['user_id'] . $url, 'SSL');
+            $data['action'] = $this->url->link('sale/accountmanager/edit', 'token=' . $this->session->data['token'] . '&user_id=' . $this->request->get['user_id'] . $url, 'SSL');
         }
 
-        $data['cancel'] = $this->url->link('user/user', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['cancel'] = $this->url->link('sale/accountmanager', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
         if (isset($this->request->get['user_id']) && ('POST' != $this->request->server['REQUEST_METHOD'])) {
             $user_info = $this->model_user_user->getUser($this->request->get['user_id']);
@@ -963,47 +936,35 @@ class ControllerSaleAccountManager extends Controller {
     }
 
     protected function validateForm() {
-        //echo "<pre>";print_r($this->request->post);die;
-        if (!$this->user->hasPermission('modify', 'sale/customer')) {
+        if (!$this->user->hasPermission('modify', 'sale/accountmanager')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
 
-        if ((utf8_strlen($this->request->post['firstname']) < 1) || (utf8_strlen(trim($this->request->post['firstname'])) > 32)) {
-            $this->error['firstname'] = $this->language->get('error_firstname');
+        if ((utf8_strlen($this->request->post['username']) < 3) || (utf8_strlen($this->request->post['username']) > 20)) {
+            $this->error['username'] = $this->language->get('error_username');
         }
 
-        if ((utf8_strlen($this->request->post['lastname']) < 1) || (utf8_strlen(trim($this->request->post['lastname'])) > 32)) {
-            $this->error['lastname'] = $this->language->get('error_lastname');
-        }
+        $user_info = $this->model_user_accountmanager->getUserByUsername($this->request->post['username']);
 
-        if ((utf8_strlen($this->request->post['email']) > 96) || !filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL)) {
-            $this->error['email'] = $this->language->get('error_email');
-        }
-
-        if ((utf8_strlen($this->request->post['company_name']) < 1)) {
-            $this->error['company_name'] = $this->language->get('error_company_name');
-        }
-        if ((utf8_strlen($this->request->post['company_address']) < 1)) {
-            $this->error['company_address'] = $this->language->get('error_company_address');
-        }
-
-        $customer_info = $this->model_sale_customer->getCustomerByEmail($this->request->post['email']);
-
-        if (!isset($this->request->get['customer_id'])) {
-            if ($customer_info) {
+        if (!isset($this->request->get['user_id'])) {
+            if ($user_info) {
                 $this->error['warning'] = $this->language->get('error_exists');
             }
         } else {
-            if ($customer_info && ($this->request->get['customer_id'] != $customer_info['customer_id'])) {
+            if ($user_info && ($this->request->get['user_id'] != $user_info['user_id'])) {
                 $this->error['warning'] = $this->language->get('error_exists');
             }
         }
 
-        if ((utf8_strlen($this->request->post['telephone']) < 3) || (utf8_strlen($this->request->post['telephone']) > 32)) {
-            $this->error['telephone'] = $this->language->get('error_telephone');
+        if ((utf8_strlen(trim($this->request->post['firstname'])) < 1) || (utf8_strlen(trim($this->request->post['firstname'])) > 32)) {
+            $this->error['firstname'] = $this->language->get('error_firstname');
         }
 
-        if ($this->request->post['password'] || (!isset($this->request->get['customer_id']))) {
+        if ((utf8_strlen(trim($this->request->post['lastname'])) < 1) || (utf8_strlen(trim($this->request->post['lastname'])) > 32)) {
+            $this->error['lastname'] = $this->language->get('error_lastname');
+        }
+
+        if ($this->request->post['password'] || (!isset($this->request->get['user_id']))) {
             if ((utf8_strlen($this->request->post['password']) < 4) || (utf8_strlen($this->request->post['password']) > 20)) {
                 $this->error['password'] = $this->language->get('error_password');
             }
@@ -1013,31 +974,9 @@ class ControllerSaleAccountManager extends Controller {
             }
         }
 
-        if (isset($this->request->post['address'])) {
-            foreach ($this->request->post['address'] as $key => $value) {
-                if ((utf8_strlen($value['name']) < 1) || (utf8_strlen($value['name']) > 32)) {
-                    $this->error['address'][$key]['name'] = $this->language->get('error_name');
-                }
-
-                /* if (empty($value['zipcode']) || !is_numeric($value['zipcode'])) {
-                  $this->error['address'][$key]['zipcode'] = $this->language->get('error_zipcode');
-                  } */
-
-                // if (empty($value['flat_number'])) {
-                //     $this->error['address'][$key]['flat_number'] = $this->language->get('error_flat_number');
-                // }
-                // if (empty($value['building_name'])) {
-                //     $this->error['address'][$key]['building_name'] = $this->language->get('error_building_name');
-                // }
-                // if (empty($value['landmark'])) {
-                //     $this->error['address'][$key]['landmark'] = $this->language->get('error_landmark');
-                // }
-            }
-        }
-
-        if ($this->error && !isset($this->error['warning'])) {
-            $this->error['warning'] = $this->language->get('error_warning');
-        }
+        // if($this->error) {
+        //     $this->error['warning'] = $this->language->get('error_warning');
+        // }
 
         return !$this->error;
     }
