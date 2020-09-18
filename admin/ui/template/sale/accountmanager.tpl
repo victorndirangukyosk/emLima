@@ -210,7 +210,7 @@
     </div>
     <script type="text/javascript"><!--
   $('#button-filter').on('click', function () {
-            url = 'index.php?path=sale/customer&token=<?php echo $token; ?>';
+            url = 'index.php?path=sale/accountmanager&token=<?php echo $token; ?>';
 
             var filter_company = $('input[name=\'filter_company\']').val();
 
@@ -269,7 +269,7 @@
         $('input[name=\'filter_name\']').autocomplete({
             'source': function (request, response) {
                 $.ajax({
-                    url: 'index.php?path=sale/customer/autocompletebyCompany&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request) + '&filter_company=' + $companyName,
+                    url: 'index.php?path=sale/accountmanager/autocompletebyCompany&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request) + '&filter_company=' + $companyName,
                     dataType: 'json',
                     success: function (json) {
                         response($.map(json, function (item) {
@@ -289,7 +289,7 @@
         $('input[name=\'filter_company\']').autocomplete({
             'source': function (request, response) {
                 $.ajax({
-                    url: 'index.php?path=sale/customer/autocompletecompany&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
+                    url: 'index.php?path=sale/accountmanager/autocompletecompany&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
                     dataType: 'json',
                     success: function (json) {
                         response($.map(json, function (item) {
@@ -315,7 +315,7 @@
         $('input[name=\'filter_email\']').autocomplete({
             'source': function (request, response) {
                 $.ajax({
-                    url: 'index.php?path=sale/customer/autocomplete&token=<?php echo $token; ?>&filter_email=' + encodeURIComponent(request),
+                    url: 'index.php?path=sale/accountmanager/autocomplete&token=<?php echo $token; ?>&filter_email=' + encodeURIComponent(request),
                     dataType: 'json',
                     success: function (json) {
                         response($.map(json, function (item) {
@@ -340,7 +340,7 @@
 
         function excel() {
 
-            url = 'index.php?path=sale/customer/export_excel&token=<?php echo $token; ?>';
+            url = 'index.php?path=sale/accountmanager/export_excel&token=<?php echo $token; ?>';
 
             location = url;
         }

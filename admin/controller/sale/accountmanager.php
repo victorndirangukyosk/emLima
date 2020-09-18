@@ -530,11 +530,11 @@ class ControllerSaleAccountManager extends Controller {
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+            'href' => $this->url->link('sale/accountmanager', 'token=' . $this->session->data['token'] . $url, 'SSL'),
         ];
 
         $data['add'] = $this->url->link('sale/customer/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['delete'] = $this->url->link('sale/customer/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['delete'] = $this->url->link('sale/accountmanager/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
         $data['customers'] = [];
 
@@ -558,7 +558,7 @@ class ControllerSaleAccountManager extends Controller {
 
         //echo "<pre>";print_r($results);die;
         foreach ($results as $result) {
-            $approve = $this->url->link('sale/customer/approve', 'token=' . $this->session->data['token'] . '&user_id=' . $result['user_id'] . $url, 'SSL');
+            $approve = $this->url->link('sale/accountmanager/approve', 'token=' . $this->session->data['token'] . '&user_id=' . $result['user_id'] . $url, 'SSL');
 
             $country_code = '+' . $this->config->get('config_telephone_code');
 
@@ -571,7 +571,7 @@ class ControllerSaleAccountManager extends Controller {
                 'status' => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
                 'ip' => $result['ip'],
                 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
-                'edit' => $this->url->link('sale/customer/edit', 'token=' . $this->session->data['token'] . '&user_id=' . $result['user_id'] . $url, 'SSL'),
+                'edit' => $this->url->link('sale/accountmanager/edit', 'token=' . $this->session->data['token'] . '&user_id=' . $result['user_id'] . $url, 'SSL'),
             ];
         }
 
@@ -692,12 +692,11 @@ class ControllerSaleAccountManager extends Controller {
             $url .= '&page=' . $this->request->get['page'];
         }
 
-        $data['sort_name'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
-        $data['sort_email'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=c.email' . $url, 'SSL');
-        $data['sort_customer_group'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=customer_group' . $url, 'SSL');
-        $data['sort_status'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=c.status' . $url, 'SSL');
-        $data['sort_ip'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=c.ip' . $url, 'SSL');
-        $data['sort_date_added'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=c.date_added' . $url, 'SSL');
+        $data['sort_name'] = $this->url->link('sale/accountmanager', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
+        $data['sort_email'] = $this->url->link('sale/accountmanager', 'token=' . $this->session->data['token'] . '&sort=c.email' . $url, 'SSL');
+        $data['sort_status'] = $this->url->link('sale/accountmanager', 'token=' . $this->session->data['token'] . '&sort=c.status' . $url, 'SSL');
+        $data['sort_ip'] = $this->url->link('sale/accountmanager', 'token=' . $this->session->data['token'] . '&sort=c.ip' . $url, 'SSL');
+        $data['sort_date_added'] = $this->url->link('sale/accountmanager', 'token=' . $this->session->data['token'] . '&sort=c.date_added' . $url, 'SSL');
 
         $url = '';
 
@@ -749,7 +748,7 @@ class ControllerSaleAccountManager extends Controller {
         $pagination->total = $customer_total;
         $pagination->page = $page;
         $pagination->limit = $this->config->get('config_limit_admin');
-        $pagination->url = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+        $pagination->url = $this->url->link('sale/accountmanager', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
@@ -868,10 +867,10 @@ class ControllerSaleAccountManager extends Controller {
         $data['label_zipcode'] = $this->language->get('label_zipcode');
         $data['text_locality'] = $this->language->get('text_locality');
 
-        if (isset($this->request->get['customer_id'])) {
-            $data['customer_id'] = $this->request->get['customer_id'];
+        if (isset($this->request->get['user_id'])) {
+            $data['user_id'] = $this->request->get['user_id'];
         } else {
-            $data['customer_id'] = 0;
+            $data['user_id'] = 0;
         }
 
         if (isset($this->error['warning'])) {
@@ -1011,16 +1010,16 @@ class ControllerSaleAccountManager extends Controller {
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+            'href' => $this->url->link('sale/accountmanager', 'token=' . $this->session->data['token'] . $url, 'SSL'),
         ];
 
         if (!isset($this->request->get['customer_id'])) {
-            $data['action'] = $this->url->link('sale/customer/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $data['action'] = $this->url->link('sale/accountmanager/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
         } else {
-            $data['action'] = $this->url->link('sale/customer/edit', 'token=' . $this->session->data['token'] . '&customer_id=' . $this->request->get['customer_id'] . $url, 'SSL');
+            $data['action'] = $this->url->link('sale/accountmanager/edit', 'token=' . $this->session->data['token'] . '&customer_id=' . $this->request->get['customer_id'] . $url, 'SSL');
         }
 
-        $data['cancel'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['cancel'] = $this->url->link('sale/accountmanager', 'token=' . $this->session->data['token'] . $url, 'SSL');
         $data['parent_user_name'] = NULL;
         $data['parent_user_email'] = NULL;
         $data['parent_user_phone'] = NULL;
@@ -1221,7 +1220,7 @@ class ControllerSaleAccountManager extends Controller {
         if (!empty($customer_info)) {
             $data['referee'] = $this->model_sale_customer->getCustomer($customer_info['refree_user_id']);
 
-            $data['referee_link'] = $this->url->link('sale/customer/edit', 'token=' . $this->session->data['token'] . '&customer_id=' . $customer_info['refree_user_id'], 'SSL');
+            $data['referee_link'] = $this->url->link('sale/accountmanager/edit', 'token=' . $this->session->data['token'] . '&customer_id=' . $customer_info['refree_user_id'], 'SSL');
         }
 
         //echo "<pre>";print_r($data);die;
@@ -1471,7 +1470,7 @@ class ControllerSaleAccountManager extends Controller {
         $pagination->total = $history_total;
         $pagination->page = $page;
         $pagination->limit = 10;
-        $pagination->url = $this->url->link('sale/customer/history', 'token=' . $this->session->data['token'] . '&customer_id=' . $this->request->get['customer_id'] . '&page={page}', 'SSL');
+        $pagination->url = $this->url->link('sale/accountmanager/history', 'token=' . $this->session->data['token'] . '&customer_id=' . $this->request->get['customer_id'] . '&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
@@ -1532,7 +1531,7 @@ class ControllerSaleAccountManager extends Controller {
         $pagination->total = $credit_total;
         $pagination->page = $page;
         $pagination->limit = 10;
-        $pagination->url = $this->url->link('sale/customer/credit', 'token=' . $this->session->data['token'] . '&customer_id=' . $this->request->get['customer_id'] . '&page={page}', 'SSL');
+        $pagination->url = $this->url->link('sale/accountmanager/credit', 'token=' . $this->session->data['token'] . '&customer_id=' . $this->request->get['customer_id'] . '&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
@@ -1634,7 +1633,7 @@ class ControllerSaleAccountManager extends Controller {
                 'ip' => $result['ip'],
                 'total' => $this->model_sale_customer->getTotalCustomersByIp($result['ip']),
                 'date_added' => date('d/m/y', strtotime($result['date_added'])),
-                'filter_ip' => $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_ip=' . $result['ip'], 'SSL'),
+                'filter_ip' => $this->url->link('sale/accountmanager', 'token=' . $this->session->data['token'] . '&filter_ip=' . $result['ip'], 'SSL'),
                 'ban_ip' => $ban_ip_total,
             ];
         }
@@ -1645,7 +1644,7 @@ class ControllerSaleAccountManager extends Controller {
         $pagination->total = $ip_total;
         $pagination->page = $page;
         $pagination->limit = 10;
-        $pagination->url = $this->url->link('sale/customer/ip', 'token=' . $this->session->data['token'] . '&customer_id=' . $this->request->get['customer_id'] . '&page={page}', 'SSL');
+        $pagination->url = $this->url->link('sale/accountmanager/ip', 'token=' . $this->session->data['token'] . '&user_id=' . $this->request->get['user_id'] . '&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
