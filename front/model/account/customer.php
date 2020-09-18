@@ -145,19 +145,21 @@ class ModelAccountCustomer extends Model
         }
 
         // Send to main admin email if new account email is enabled
-        if ($this->config->get('config_account_mail')) {
-            $mail->setTo($this->config->get('config_email'));
-            $mail->send();
+        //commented as particular message is not required.
+        // if ($this->config->get('config_account_mail')) {
+        //     $mail = new Mail($this->config->get('config_mail'));
+        //     $mail->setTo($this->config->get('config_email'));
+        //     $mail->send();
 
-            $emails = explode(',', $this->config->get('config_alert_emails'));
+        //     $emails = explode(',', $this->config->get('config_alert_emails'));
 
-            foreach ($emails as $email) {
-                if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                    $mail->setTo($email);
-                    $mail->send();
-                }
-            }
-        }
+        //     foreach ($emails as $email) {
+        //         if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        //             $mail->setTo($email);
+        //             $mail->send();
+        //         }
+        //     }
+        // }
 
         $this->trigger->fire('post.customer.add', $customer_id);
 
@@ -584,6 +586,19 @@ class ModelAccountCustomer extends Model
             //$log = new Log('error.log');
             //$log->write($customer_details);
             $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . (int) $customer_details['parent'] . "'");
+            return $query->row;
+        } else {
+            return $customer_parent_details;
+        }
+    }    
+    
+    public function getCustomerParentEmail($customer_id) {
+        $customer_parent_details = NULL;
+        $customer_details = $this->getCustomer($customer_id);
+        if ($customer_details != NULL && $customer_details['parent'] > 0 && $customer_details['parent'] != NULL) {
+            //$log = new Log('error.log');
+            //$log->write($customer_details);
+            $query = $this->db->query('SELECT  customer_id,email,firstname,lastname FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . (int) $customer_details['parent'] . "'");
             return $query->row;
         } else {
             return $customer_parent_details;

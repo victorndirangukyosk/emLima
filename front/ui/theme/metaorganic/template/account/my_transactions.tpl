@@ -18,6 +18,7 @@
                     <table id="employee" class="table table-bordered">
                         <thead>
                             <tr>
+                                <th></th>
                                 <th>Order Id </th>
                                 <th>Order Date</th>
                                 <th>Amount Payable</th>
@@ -96,6 +97,9 @@
             </div>
             <div class="radio">
                 <label><input type="radio" class="option_pay" onchange="payOptionSelected()" value="pay_other" name="pay_option">Pay Other Amount</label>
+            </div>
+            <div class="radio">
+                <label><input type="radio" class="option_pay" onchange="payOptionSelected()" value="pay_selected_order" name="pay_option">Pay Selected Orders</label>
             </div>
         </div>
         <div class="col-md-9" id="payment_options_input" style="display:none;">
@@ -341,6 +345,52 @@
                     return false;
                 }
             });
+        } else if (radioValue == 'pay_selected_order') {
+            var checkedNum = $('input[name="order_id_selected[]"]:checked').length;
+            console.log(checkedNum);
+            var val = [];
+            var amount = [];
+            if (!checkedNum) {
+                $(':checkbox:checked').each(function (i) {
+                    val[i] = $(this).data("id");
+                    amount[i] = $(this).data("amount");
+                });
+                console.log(val);
+                console.log(amount);
+                var total = 0;
+                for (var i = 0; i < amount.length; i++) {
+                    total += amount[i] << 0;
+                }
+                console.log(total);
+            }
+            if (val.length == 0 || amount.length == 0) {
+                $("input:radio").removeAttr("checked");
+                alert('Please select atleast one order!');
+                return false;
+            }
+            $.ajax({
+                url: 'index.php?path=account/transactions/pesapal',
+                type: 'post',
+                data: {
+                    order_id: val,
+                    amount: total,
+                    payment_type: radioValue
+                },
+                dataType: 'html',
+                cache: false,
+                async: false,
+                success: function (json) {
+                    console.log("json");
+                    console.log(json);
+                    $('#pay-confirm-order').html(json);
+                    $('#pay-confirm-order').removeAttr('style');
+                    return true;
+                    //window.location = json.redirect;
+                }, error: function (xhr, ajaxOptions, thrownError) {
+                    alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                    return false;
+                }
+            });
         } else {
             console.log('Pay Other Amount');
             $('#pay-confirm-order').html('');
@@ -376,11 +426,12 @@
             $('#emp_body').html('');
             for (var i = 0; i < displayRecords.length; i++) {
                 tr = $('<tr/>');
+                tr.append("<td><input type='checkbox' id='order_id_selected' data-id='" + displayRecords[i].order_id + "' data-amount='" + displayRecords[i].total + "' name='order_id_selected' value='" + displayRecords[i].order_id + "'></td>");
                 tr.append("<td>" + displayRecords[i].order_id + "</td>");
                 tr.append("<td>" + displayRecords[i].date_added + "</td>");
                 tr.append("<td>" + displayRecords[i].total_currency + "</td>");
                 tr.append("<td>" + displayRecords[i].payment_method + "</td>");
-                tr.append("<a class='btn btn-default' onclick='changeOrderIdForPay(" + displayRecords[i].order_id + "," + displayRecords[i].total + ")'>Pay Now</a>");
+                tr.append("<td><a class='btn btn-default' onclick='changeOrderIdForPay(" + displayRecords[i].order_id + "," + displayRecords[i].total + ")'>Pay Now</a></td>");
                 $('#emp_body').append(tr);
             }
         }
@@ -431,8 +482,8 @@
         var result = validatePrice(amount); // False
         console.log(result);
         if (result == false) {
-        alert('Please enter valid amount');
-        return false;
+            alert('Please enter valid amount');
+            return false;
         }
         $("#pesapal_amount").prop("readonly", true);
         $.ajax({
@@ -580,6 +631,21 @@
                     generate_table();
                 }
             });
+        }
+    });
+    $(document).delegate('input[name="order_id_selected"]', 'click', function () {
+        var checkedNum = $('input[name="order_id_selected[]"]:checked').length;
+        console.log(checkedNum);
+        var val = [];
+        if (!checkedNum) {
+            $(':checkbox:checked').each(function (i) {
+                val[i] = $(this).data("id");
+            });
+            console.log(val.length);
+        }
+        if (val.length > 0) {
+            $("input:radio").removeAttr("checked");
+            $('#pay-confirm-order').html('');
         }
     });
     $(document).delegate('#send_mail', 'click', function () {

@@ -10,6 +10,12 @@
                 <div class="list-group my-order-group">
                     <li class="list-group-item my-order-list-head">
                         <i class="fa fa-clock-o"></i> <?= $text_placed_on?> <span><strong><?php echo $order['date_added']; ?></strong></span>, <?php echo $order['time_added']; ?> <span>
+                            
+                            <div class="pull-right">
+              <button type="button" style="height:25px" onclick="excel(<?=$order["order_id"] ?>,'<?=$order["order_company"] ?>');" data-toggle="tooltip" title="Download Ordered Products"
+                class="btn btn-success " data-original-title="Download Excel"><i class="fa fa-download"></i></button>
+            </div>
+
                             <?php if($order['status'] == 'Arrived for Delivery'){?>
                                                      <a href="<?php echo $order['accept_reject_href']?>"  class="btn btn-default btn-xs btn-accept-reject" >Accept Delivery</a>
                                                     <?php } ?>
@@ -21,6 +27,7 @@
                             <?php } else { ?>
                             <a href="#" data-toggle="modal" data-target="#contactusModal"  class="btn btn-default btn-xs"><?= $text_report_issue ?></a>
                             <?php } ?>
+                            
 
                         </span>
                     </li>
@@ -407,6 +414,14 @@
         location = location;
     }, 6000 * 1000); // 60 * 1000 milsec
 
+
+
+
+  function excel(order_id,order_company) {
+     //alert(order_company);
+     url = 'index.php?path=account/order/export_products_excel&order_id='+order_id+'&company='+order_company;
+    location = url;
+  }
 
 </script>
 </body>

@@ -4515,8 +4515,10 @@ class ControllerSaleOrder extends Controller
         }
 
         foreach ($originalProducts as $originalProduct) {
-            $totalUpdated = $originalProduct['price'] * $originalProduct['quantity']
-                + ($this->config->get('config_tax') ? $originalProduct['tax'] : 0);
+           // $totalUpdated = $originalProduct['price'] * $originalProduct['quantity']
+            //     + ($this->config->get('config_tax') ? $originalProduct['tax'] : 0);
+            //in admin orders screen, directly showing total
+            $totalUpdated = $originalProduct['total']  ;
 
             $uomOrderedWithoutApproximations = trim(explode('(', $originalProduct['unit'])[0]);
 

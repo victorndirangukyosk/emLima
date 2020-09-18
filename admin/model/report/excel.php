@@ -3725,7 +3725,7 @@ else{
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $order['unit_updated']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $order['quantity_updated']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, str_replace('KES', ' ', $order['total_updated']));
-                $Amount = $Amount + $order['total_updated_value'];
+                $Amount = $Amount + $order['total_updatedvalue'];
                 ++$row;
             }
             $Amount = str_replace('KES', ' ', $this->currency->format($Amount));

@@ -339,4 +339,94 @@ class Controllerapicustomerpayment extends Controller
 
         return false;
     }
+
+//Work in progress
+    public function PesapalComplete() {
+        $status = null;
+        $order_id = null;
+        $log = new Log('error.log');
+        $log->write('PesapalComplete');
+        $this->load->model('setting/setting');
+        $this->load->model('payment/pesapal');
+        $this->load->model('checkout/order');
+        $this->load->model('account/customer');
+
+         $pesapalNotification = $this->request->get['pesapal_notification_type'];
+          $pesapalTrackingId = $this->request->get['pesapal_transaction_tracking_id'];
+          $pesapal_merchant_reference = $this->request->get['pesapal_merchant_reference'];
+        {
+            if (null != $pesapal_merchant_reference) {
+                $order_details = explode('-', $pesapal_merchant_reference);
+                $order_id = $order_details[0];
+            }
+            $log->write('PesapalComplete');
+            $log->write($order_id);
+            $log->write('PesapalComplete');
+
+            $pesapal_creds = $this->model_setting_setting->getSetting('pesapal', 0);
+            $order_info = $this->model_checkout_order->getOrder($order_id);
+            $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
+            $customer_id = $customer_info['customer_id'];
+        }
+
+        // $consumer_key = $pesapal_creds['pesapal_consumer_key'];  
+        // $consumer_secret = $pesapal_creds['pesapal_consumer_secret'];  
+        // $statusrequestAPI = 'https://www.pesapal.com/api/querypaymentstatus';
+         
+
+        if ('CHANGE' == $pesapalNotification && '' != $pesapalTrackingId) {
+            $log->write('ipinlistener');
+            $token = $params = null;
+            $consumer = new OAuthConsumer($consumer_key, $consumer_secret);
+            $signature_method = new OAuthSignatureMethod_HMAC_SHA1();
+
+            //get transaction status
+            $request_status = OAuthRequest::from_consumer_and_token($consumer, $token, 'GET', $statusrequestAPI, $params);
+            $request_status->set_parameter('pesapal_merchant_reference', $pesapal_merchant_reference);
+            $request_status->set_parameter('pesapal_transaction_tracking_id', $pesapalTrackingId);
+            $request_status->sign_request($signature_method, $consumer, $token);
+
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $request_status);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_HEADER, 1);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+            if (defined('CURL_PROXY_REQUIRED')) {
+                if (CURL_PROXY_REQUIRED == 'True') {
+                    $proxy_tunnel_flag = (defined('CURL_PROXY_TUNNEL_FLAG') && 'FALSE' == strtoupper(CURL_PROXY_TUNNEL_FLAG)) ? false : true;
+                    curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, $proxy_tunnel_flag);
+                    curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
+                    curl_setopt($ch, CURLOPT_PROXY, CURL_PROXY_SERVER_DETAILS);
+                }
+            }
+
+            $response = curl_exec($ch);
+            $log->write($response);
+
+            $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+            $raw_header = substr($response, 0, $header_size - 4);
+            $headerArray = explode("\r\n\r\n", $raw_header);
+            $header = $headerArray[count($headerArray) - 1];
+
+            //transaction status
+            $elements = preg_split('/=/', substr($response, $header_size));
+            $status = $elements[1];
+            $log->write('ORDER STATUS');
+            $log->write($status);
+            $log->write('ORDER STATUS');
+            curl_close($ch);
+              {
+                if ('COMPLETED' != $status || null == $response || null == $status) {
+                    $this->model_payment_pesapal->addOrderHistory($order_id, $this->config->get('pesapal_failed_order_status_id'));
+                    $this->model_payment_pesapal->updateorderstatusipn($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
+                }
+
+                if ('COMPLETED' == $status) {
+                    $this->model_payment_pesapal->addOrderHistory($order_id, $this->config->get('pesapal_order_status_id'));
+                    $this->model_payment_pesapal->updateorderstatusipn($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
+                }
+            }
+        }
+        echo $status;
+    }
 }

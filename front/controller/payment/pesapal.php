@@ -862,8 +862,12 @@ class ControllerPaymentPesapal extends Controller {
             $amount = (int) ($order_info['total']);
         }
 
+        $log->write('PESAPAL CALL BACK');
         $transaction_tracking_id = $this->request->get['pesapal_transaction_tracking_id'];
         $merchant_reference = $this->request->get['pesapal_merchant_reference'];
+        $log->write($transaction_tracking_id);
+        $log->write($merchant_reference);
+        $log->write('PESAPAL CALL BACK');
         $customer_id = $customer_info['customer_id'];
         $this->model_payment_pesapal->insertOrderTransactionIdPesapal($order_id, $transaction_tracking_id, $merchant_reference, $customer_id);
         $this->model_payment_pesapal->OrderTransaction($order_id, $transaction_tracking_id);
@@ -991,114 +995,154 @@ class ControllerPaymentPesapal extends Controller {
             $pesapal_creds = $this->model_setting_setting->getSetting('pesapal', 0);
             $customer_info = $this->model_account_customer->getCustomer($order_id);
             $customer_id = $customer_info['customer_id'];
-        } elseif (strpos($pesapal_merchant_reference, 'BULK') !== false) {
-            if (null != $pesapal_merchant_reference) {
-                $order_details = explode('-', $pesapal_merchant_reference);
-                $order_id = str_replace("BULK", "", $order_details[0]);
-            }
-            $log->write('ipinlistener');
-            $log->write($order_id);
-            $log->write('ipinlistener');
 
-            $pesapal_creds = $this->model_setting_setting->getSetting('pesapal', 0);
-            $customer_info = $this->model_account_customer->getCustomer($order_id);
-            $customer_id = $customer_info['customer_id'];
+            $consumer_key = $pesapal_creds['pesapal_consumer_key']; //Register a merchant account on
+            //demo.pesapal.com and use the merchant key for testing.
+            //When you are ready to go live make sure you change the key to the live account
+            //registered on www.pesapal.com!
+            $consumer_secret = $pesapal_creds['pesapal_consumer_secret']; // Use the secret from your test
+            //account on demo.pesapal.com. When you are ready to go live make sure you
+            //change the secret to the live account registered on www.pesapal.com!
+            $statusrequestAPI = 'https://www.pesapal.com/api/querypaymentstatus';
+            //'https://demo.pesapal.com/api/querypaymentstatus'; //change to
+            //https://www.pesapal.com/api/querypaymentstatus' when you are ready to go live!
+            // Parameters sent to you by PesaPal IPN
+            /* $pesapalNotification = $pesapalNotification;
+              $pesapalTrackingId = $pesapalTrackingId;
+              $pesapal_merchant_reference = $pesapal_merchant_reference; */
+
+            if ('CHANGE' == $pesapalNotification && '' != $pesapalTrackingId) {
+                $log->write('ipinlistener');
+                $token = $params = null;
+                $consumer = new OAuthConsumer($consumer_key, $consumer_secret);
+                $signature_method = new OAuthSignatureMethod_HMAC_SHA1();
+
+                //get transaction status
+                $request_status = OAuthRequest::from_consumer_and_token($consumer, $token, 'GET', $statusrequestAPI, $params);
+                $request_status->set_parameter('pesapal_merchant_reference', $pesapal_merchant_reference);
+                $request_status->set_parameter('pesapal_transaction_tracking_id', $pesapalTrackingId);
+                $request_status->sign_request($signature_method, $consumer, $token);
+
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, $request_status);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($ch, CURLOPT_HEADER, 1);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+                if (defined('CURL_PROXY_REQUIRED')) {
+                    if (CURL_PROXY_REQUIRED == 'True') {
+                        $proxy_tunnel_flag = (defined('CURL_PROXY_TUNNEL_FLAG') && 'FALSE' == strtoupper(CURL_PROXY_TUNNEL_FLAG)) ? false : true;
+                        curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, $proxy_tunnel_flag);
+                        curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
+                        curl_setopt($ch, CURLOPT_PROXY, CURL_PROXY_SERVER_DETAILS);
+                    }
+                }
+
+                $response = curl_exec($ch);
+                $log->write($response);
+
+                $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+                $raw_header = substr($response, 0, $header_size - 4);
+                $headerArray = explode("\r\n\r\n", $raw_header);
+                $header = $headerArray[count($headerArray) - 1];
+
+                //transaction status
+                $elements = preg_split('/=/', substr($response, $header_size));
+                $status = $elements[1];
+                $log->write('ORDER STATUS');
+                $log->write($status);
+                $log->write('ORDER STATUS');
+                curl_close($ch);
+
+                if ('COMPLETED' != $status || null == $response || null == $status) {
+                    $this->model_payment_pesapal->updateorderstatusipnOther($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
+                }
+
+                if ('COMPLETED' == $status) {
+                    $this->model_payment_pesapal->updateorderstatusipnOther($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
+                }
+            }
         } else {
             if (null != $pesapal_merchant_reference) {
                 $order_details = explode('-', $pesapal_merchant_reference);
                 $order_id = $order_details[0];
             }
-            $log->write('ipinlistener');
-            $log->write($order_id);
-            $log->write('ipinlistener');
+            $ord_arr = explode(",", $order_id);
+            foreach ($ord_arr as $ord_ar) {
+                $log->write('ipinlistener');
+                $log->write($ord_ar);
+                $log->write('ipinlistener');
 
-            $pesapal_creds = $this->model_setting_setting->getSetting('pesapal', 0);
-            $order_info = $this->model_checkout_order->getOrder($order_id);
-            $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
-            $customer_id = $customer_info['customer_id'];
-        }
+                $pesapal_creds = $this->model_setting_setting->getSetting('pesapal', 0);
+                $order_info = $this->model_checkout_order->getOrder($ord_ar);
+                $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
+                $customer_id = $customer_info['customer_id'];
 
-        $consumer_key = $pesapal_creds['pesapal_consumer_key']; //Register a merchant account on
-        //demo.pesapal.com and use the merchant key for testing.
-        //When you are ready to go live make sure you change the key to the live account
-        //registered on www.pesapal.com!
-        $consumer_secret = $pesapal_creds['pesapal_consumer_secret']; // Use the secret from your test
-        //account on demo.pesapal.com. When you are ready to go live make sure you
-        //change the secret to the live account registered on www.pesapal.com!
-        $statusrequestAPI = 'https://www.pesapal.com/api/querypaymentstatus';
-        //'https://demo.pesapal.com/api/querypaymentstatus'; //change to
-        //https://www.pesapal.com/api/querypaymentstatus' when you are ready to go live!
-        // Parameters sent to you by PesaPal IPN
-        /* $pesapalNotification = $pesapalNotification;
-          $pesapalTrackingId = $pesapalTrackingId;
-          $pesapal_merchant_reference = $pesapal_merchant_reference; */
+                $consumer_key = $pesapal_creds['pesapal_consumer_key']; //Register a merchant account on
+                //demo.pesapal.com and use the merchant key for testing.
+                //When you are ready to go live make sure you change the key to the live account
+                //registered on www.pesapal.com!
+                $consumer_secret = $pesapal_creds['pesapal_consumer_secret']; // Use the secret from your test
+                //account on demo.pesapal.com. When you are ready to go live make sure you
+                //change the secret to the live account registered on www.pesapal.com!
+                $statusrequestAPI = 'https://www.pesapal.com/api/querypaymentstatus';
+                //'https://demo.pesapal.com/api/querypaymentstatus'; //change to
+                //https://www.pesapal.com/api/querypaymentstatus' when you are ready to go live!
+                // Parameters sent to you by PesaPal IPN
+                /* $pesapalNotification = $pesapalNotification;
+                  $pesapalTrackingId = $pesapalTrackingId;
+                  $pesapal_merchant_reference = $pesapal_merchant_reference; */
 
-        if ('CHANGE' == $pesapalNotification && '' != $pesapalTrackingId) {
-            $log->write('ipinlistener');
-            $token = $params = null;
-            $consumer = new OAuthConsumer($consumer_key, $consumer_secret);
-            $signature_method = new OAuthSignatureMethod_HMAC_SHA1();
+                if ('CHANGE' == $pesapalNotification && '' != $pesapalTrackingId) {
+                    $log->write('ipinlistener');
+                    $token = $params = null;
+                    $consumer = new OAuthConsumer($consumer_key, $consumer_secret);
+                    $signature_method = new OAuthSignatureMethod_HMAC_SHA1();
 
-            //get transaction status
-            $request_status = OAuthRequest::from_consumer_and_token($consumer, $token, 'GET', $statusrequestAPI, $params);
-            $request_status->set_parameter('pesapal_merchant_reference', $pesapal_merchant_reference);
-            $request_status->set_parameter('pesapal_transaction_tracking_id', $pesapalTrackingId);
-            $request_status->sign_request($signature_method, $consumer, $token);
+                    //get transaction status
+                    $request_status = OAuthRequest::from_consumer_and_token($consumer, $token, 'GET', $statusrequestAPI, $params);
+                    $request_status->set_parameter('pesapal_merchant_reference', $pesapal_merchant_reference);
+                    $request_status->set_parameter('pesapal_transaction_tracking_id', $pesapalTrackingId);
+                    $request_status->sign_request($signature_method, $consumer, $token);
 
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $request_status);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_HEADER, 1);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-            if (defined('CURL_PROXY_REQUIRED')) {
-                if (CURL_PROXY_REQUIRED == 'True') {
-                    $proxy_tunnel_flag = (defined('CURL_PROXY_TUNNEL_FLAG') && 'FALSE' == strtoupper(CURL_PROXY_TUNNEL_FLAG)) ? false : true;
-                    curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, $proxy_tunnel_flag);
-                    curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
-                    curl_setopt($ch, CURLOPT_PROXY, CURL_PROXY_SERVER_DETAILS);
-                }
-            }
+                    $ch = curl_init();
+                    curl_setopt($ch, CURLOPT_URL, $request_status);
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                    curl_setopt($ch, CURLOPT_HEADER, 1);
+                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+                    if (defined('CURL_PROXY_REQUIRED')) {
+                        if (CURL_PROXY_REQUIRED == 'True') {
+                            $proxy_tunnel_flag = (defined('CURL_PROXY_TUNNEL_FLAG') && 'FALSE' == strtoupper(CURL_PROXY_TUNNEL_FLAG)) ? false : true;
+                            curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, $proxy_tunnel_flag);
+                            curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
+                            curl_setopt($ch, CURLOPT_PROXY, CURL_PROXY_SERVER_DETAILS);
+                        }
+                    }
 
-            $response = curl_exec($ch);
-            $log->write($response);
+                    $response = curl_exec($ch);
+                    $log->write($response);
 
-            $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
-            $raw_header = substr($response, 0, $header_size - 4);
-            $headerArray = explode("\r\n\r\n", $raw_header);
-            $header = $headerArray[count($headerArray) - 1];
+                    $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+                    $raw_header = substr($response, 0, $header_size - 4);
+                    $headerArray = explode("\r\n\r\n", $raw_header);
+                    $header = $headerArray[count($headerArray) - 1];
 
-            //transaction status
-            $elements = preg_split('/=/', substr($response, $header_size));
-            $status = $elements[1];
-            $log->write('ORDER STATUS');
-            $log->write($status);
-            $log->write('ORDER STATUS');
-            curl_close($ch);
-            if (strpos($pesapal_merchant_reference, 'KBCUST') !== false) {
-                if ('COMPLETED' != $status || null == $response || null == $status) {
-                    $this->model_payment_pesapal->updateorderstatusipnOther($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
-                }
+                    //transaction status
+                    $elements = preg_split('/=/', substr($response, $header_size));
+                    $status = $elements[1];
+                    $log->write('ORDER STATUS');
+                    $log->write($status);
+                    $log->write('ORDER STATUS');
+                    curl_close($ch);
 
-                if ('COMPLETED' == $status) {
-                    $this->model_payment_pesapal->updateorderstatusipnOther($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
-                }
-            } elseif (strpos($pesapal_merchant_reference, 'BULK') !== false) {
-                if ('COMPLETED' != $status || null == $response || null == $status) {
-                    $this->model_payment_pesapal->updateorderstatusipnOther($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
-                }
+                    if ('COMPLETED' != $status || null == $response || null == $status) {
+                        $this->model_payment_pesapal->addOrderHistory($ord_ar, $this->config->get('pesapal_failed_order_status_id'));
+                        $this->model_payment_pesapal->updateorderstatusipn($ord_ar, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
+                    }
 
-                if ('COMPLETED' == $status) {
-                    $this->model_payment_pesapal->updateorderstatusipnOther($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
-                }
-            } else {
-                if ('COMPLETED' != $status || null == $response || null == $status) {
-                    $this->model_payment_pesapal->addOrderHistory($order_id, $this->config->get('pesapal_failed_order_status_id'));
-                    $this->model_payment_pesapal->updateorderstatusipn($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
-                }
-
-                if ('COMPLETED' == $status) {
-                    $this->model_payment_pesapal->addOrderHistory($order_id, $this->config->get('pesapal_order_status_id'));
-                    $this->model_payment_pesapal->updateorderstatusipn($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
+                    if ('COMPLETED' == $status) {
+                        $this->model_payment_pesapal->addOrderHistory($ord_ar, $this->config->get('pesapal_order_status_id'));
+                        $this->model_payment_pesapal->updateorderstatusipn($ord_ar, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
+                    }
                 }
             }
         }
