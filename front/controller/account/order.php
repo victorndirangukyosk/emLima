@@ -3112,14 +3112,14 @@ class ControllerAccountOrder extends Controller
 
         $this->load->model('account/order'); 
         $order_info = $this->model_account_order->getOrder($orderid);
-        //   echo "<pre>";print_r($order_info);die;
+          //  echo "<pre>";print_r($order_info);die;
         
        
         $customer = $order_info['firstname'].' '.$order_info['lastname'];
          $company =  $this->request->get['company'];
         $date =$order_info['date_added'];
         $deliverydate =$order_info['delivery_date'];
-        $shippingaddress =$order_info['address'].' '.$order_info['city'].' '.$order_info['zipcode'];
+        $shippingaddress =$order_info['shipping_address'].' . '.$order_info['shipping_city'].' '.$order_info['zipcode'];
         $paymentmethod =$order_info['payment_method'];
 
 
