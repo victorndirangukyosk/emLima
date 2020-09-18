@@ -146,6 +146,7 @@ class ModelAccountCustomer extends Model
 
         // Send to main admin email if new account email is enabled
         if ($this->config->get('config_account_mail')) {
+            $mail = new Mail($this->config->get('config_mail'));
             $mail->setTo($this->config->get('config_email'));
             $mail->send();
 
