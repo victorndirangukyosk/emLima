@@ -564,7 +564,7 @@ class ControllerSaleAccountManager extends Controller {
 
 
             $data['customers'][] = [
-                'customer_id' => $result['user_id'],
+                'user_id' => $result['user_id'],
                 'name' => $result['name'],
                 'email' => $result['email'],
                 'telephone' => $country_code . $result['telephone'],
