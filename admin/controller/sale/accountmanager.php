@@ -27,25 +27,15 @@ class ControllerSaleAccountManager extends Controller {
     }
 
     public function add() {
-        $this->load->language('sale/customer');
+        $this->load->language('sale/accountmanager');
 
         $this->document->setTitle($this->language->get('heading_title'));
 
-        $this->load->model('sale/customer');
+        $this->load->model('user/accountmanager');
 
         if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
-            $customer_id = $this->model_sale_customer->addCustomer($this->request->post);
-
-
-
-            if (!empty($data['send_email'])) {
-                /* EMAIL SENDING WHEN CREATING USER FROM ADMIN PORTAL */
-
-                $t = $this->model_sale_customer->sendCustomerRegisterMail($this->request->post);
-            }
-
-            //$this->session->data['success'] = $this->language->get('text_success');
-            $this->session->data['success'] = 'Success : Customer created successfully!';
+            $user_id = $this->model_user_accountmanager->addAccountManager($this->request->post);
+            $this->session->data['success'] = 'Success : Accountmanager created successfully!';
 
             $url = '';
 
@@ -59,10 +49,6 @@ class ControllerSaleAccountManager extends Controller {
 
             if (isset($this->request->get['filter_email'])) {
                 $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
-            }
-
-            if (isset($this->request->get['filter_customer_group_id'])) {
-                $url .= '&filter_customer_group_id=' . $this->request->get['filter_customer_group_id'];
             }
 
             if (isset($this->request->get['filter_status'])) {
@@ -94,7 +80,7 @@ class ControllerSaleAccountManager extends Controller {
             }
 
             if (isset($this->request->post['button']) and 'save' == $this->request->post['button']) {
-                $this->response->redirect($this->url->link('sale/accountmanager/edit', 'customer_id=' . $customer_id . '&token=' . $this->session->data['token'] . $url, 'SSL'));
+                $this->response->redirect($this->url->link('sale/accountmanager/edit', 'user_id=' . $user_id . '&token=' . $this->session->data['token'] . $url, 'SSL'));
             }
 
             if (isset($this->request->post['button']) and 'new' == $this->request->post['button']) {
@@ -558,10 +544,7 @@ class ControllerSaleAccountManager extends Controller {
 
         //echo "<pre>";print_r($results);die;
         foreach ($results as $result) {
-            $approve = $this->url->link('sale/accountmanager/approve', 'token=' . $this->session->data['token'] . '&user_id=' . $result['user_id'] . $url, 'SSL');
-
             $country_code = '+' . $this->config->get('config_telephone_code');
-
 
             $data['customers'][] = [
                 'user_id' => $result['user_id'],
@@ -785,92 +768,33 @@ class ControllerSaleAccountManager extends Controller {
     protected function getForm() {
         $data['heading_title'] = $this->language->get('heading_title');
 
-        $data['entry_referred_by'] = $this->language->get('entry_referred_by');
-
-        $data['text_form'] = !isset($this->request->get['customer_id']) ? $this->language->get('text_add') : $this->language->get('text_edit');
+        $data['text_form'] = !isset($this->request->get['user_id']) ? $this->language->get('text_add') : $this->language->get('text_edit');
         $data['text_enabled'] = $this->language->get('text_enabled');
         $data['text_disabled'] = $this->language->get('text_disabled');
-        $data['text_yes'] = $this->language->get('text_yes');
-        $data['text_no'] = $this->language->get('text_no');
-        $data['text_select'] = $this->language->get('text_select');
-        $data['text_none'] = $this->language->get('text_none');
-        $data['text_loading'] = $this->language->get('text_loading');
-        $data['text_add_ban_ip'] = $this->language->get('text_add_ban_ip');
-        $data['text_remove_ban_ip'] = $this->language->get('text_remove_ban_ip');
 
-        $data['text_male'] = $this->language->get('text_male');
-        $data['text_female'] = $this->language->get('text_female');
-        $data['text_other'] = $this->language->get('text_other');
-        $data['entry_dob'] = $this->language->get('entry_dob');
-        $data['entry_gender'] = $this->language->get('entry_gender');
-
-        $data['entry_customer_group'] = $this->language->get('entry_customer_group');
+        $data['entry_username'] = $this->language->get('entry_username');
+        $data['entry_user_group'] = $this->language->get('entry_user_group');
+        $data['entry_password'] = $this->language->get('entry_password');
+        $data['entry_confirm'] = $this->language->get('entry_confirm');
         $data['entry_firstname'] = $this->language->get('entry_firstname');
         $data['entry_lastname'] = $this->language->get('entry_lastname');
         $data['entry_email'] = $this->language->get('entry_email');
-
-        $data['entry_company_name'] = $this->language->get('entry_company_name');
-        $data['entry_company_address'] = $this->language->get('entry_company_address');
-
-        $data['entry_telephone'] = $this->language->get('entry_telephone');
-        $data['entry_fax'] = $this->language->get('entry_fax');
-        $data['entry_password'] = $this->language->get('entry_password');
-        $data['entry_confirm'] = $this->language->get('entry_confirm');
-        $data['entry_newsletter'] = $this->language->get('entry_newsletter');
+        $data['entry_image'] = $this->language->get('entry_image');
         $data['entry_status'] = $this->language->get('entry_status');
-        $data['entry_approved'] = $this->language->get('entry_approved');
-        $data['entry_safe'] = $this->language->get('entry_safe');
-        $data['entry_company'] = $this->language->get('entry_company');
-        $data['entry_address_1'] = $this->language->get('entry_address_1');
-        $data['entry_address_2'] = $this->language->get('entry_address_2');
-        $data['entry_city'] = $this->language->get('entry_city');
-        $data['entry_postcode'] = $this->language->get('entry_postcode');
-        $data['entry_zone'] = $this->language->get('entry_zone');
-        $data['entry_country'] = $this->language->get('entry_country');
-        $data['entry_default'] = $this->language->get('entry_default');
-        $data['entry_comment'] = $this->language->get('entry_comment');
-        $data['entry_description'] = $this->language->get('entry_description');
-        $data['entry_amount'] = $this->language->get('entry_amount');
-        $data['entry_points'] = $this->language->get('entry_points');
-        $data['entry_send_email'] = $this->language->get('entry_send_email');
-        $data['entry_name'] = $this->language->get('entry_name');
-        $data['entry_contact_no'] = $this->language->get('entry_contact_no');
-        $data['entry_address'] = $this->language->get('entry_address');
-
-        $data['help_safe'] = $this->language->get('help_safe');
-        $data['help_points'] = $this->language->get('help_points');
 
         $data['button_save'] = $this->language->get('button_save');
         $data['button_savenew'] = $this->language->get('button_savenew');
         $data['button_saveclose'] = $this->language->get('button_saveclose');
         $data['button_cancel'] = $this->language->get('button_cancel');
-        $data['button_address_add'] = $this->language->get('button_address_add');
-        $data['button_history_add'] = $this->language->get('button_history_add');
-        $data['button_credit_add'] = $this->language->get('button_credit_add');
-        $data['button_reward_add'] = $this->language->get('button_reward_add');
-        $data['button_remove'] = $this->language->get('button_remove');
-        $data['button_upload'] = $this->language->get('button_upload');
-
-        $data['tab_general'] = $this->language->get('tab_general');
-        $data['tab_address'] = $this->language->get('tab_address');
-        $data['tab_history'] = $this->language->get('tab_history');
-        $data['tab_credit'] = $this->language->get('tab_credit');
-        $data['tab_reward'] = $this->language->get('tab_reward');
-        $data['tab_referral'] = $this->language->get('tab_referral');
-        $data['tab_sub_customer'] = $this->language->get('tab_sub_customer');
-        $data['tab_ip'] = $this->language->get('tab_ip');
 
         $data['token'] = $this->session->data['token'];
 
-        $data['text_flat_house_office'] = $this->language->get('text_flat_house_office');
-        $data['text_stree_society_office'] = $this->language->get('text_stree_society_office');
-        $data['label_zipcode'] = $this->language->get('label_zipcode');
-        $data['text_locality'] = $this->language->get('text_locality');
+        if (isset($this->session->data['success'])) {
+            $data['success'] = $this->session->data['success'];
 
-        if (isset($this->request->get['user_id'])) {
-            $data['user_id'] = $this->request->get['user_id'];
+            unset($this->session->data['success']);
         } else {
-            $data['user_id'] = 0;
+            $data['success'] = '';
         }
 
         if (isset($this->error['warning'])) {
@@ -879,59 +803,10 @@ class ControllerSaleAccountManager extends Controller {
             $data['error_warning'] = '';
         }
 
-        if (isset($this->session->data['success'])) {
-            $data['success'] = $this->session->data['success'];
-            unset($this->session->data['success']);
+        if (isset($this->error['username'])) {
+            $data['error_username'] = $this->error['username'];
         } else {
-            $data['success'] = '';
-        }
-
-        if (isset($this->error['firstname'])) {
-            $data['error_firstname'] = $this->error['firstname'];
-        } else {
-            $data['error_firstname'] = '';
-        }
-
-        if (isset($this->error['lastname'])) {
-            $data['error_lastname'] = $this->error['lastname'];
-        } else {
-            $data['error_lastname'] = '';
-        }
-
-        if (isset($this->error['dob'])) {
-            $data['error_dob'] = $this->error['dob'];
-        } else {
-            $data['error_dob'] = '';
-        }
-
-        if (isset($this->error['gender'])) {
-            $data['error_gender'] = $this->error['gender'];
-        } else {
-            $data['error_gender'] = '';
-        }
-
-        if (isset($this->error['email'])) {
-            $data['error_email'] = $this->error['email'];
-        } else {
-            $data['error_email'] = '';
-        }
-
-        if (isset($this->error['company_name'])) {
-            $data['error_company_name'] = $this->error['company_name'];
-        } else {
-            $data['error_company_name'] = '';
-        }
-
-        if (isset($this->error['company_address'])) {
-            $data['error_company_address'] = $this->error['company_address'];
-        } else {
-            $data['error_company_address'] = '';
-        }
-
-        if (isset($this->error['telephone'])) {
-            $data['error_telephone'] = $this->error['telephone'];
-        } else {
-            $data['error_telephone'] = '';
+            $data['error_username'] = '';
         }
 
         if (isset($this->error['password'])) {
@@ -946,48 +821,19 @@ class ControllerSaleAccountManager extends Controller {
             $data['error_confirm'] = '';
         }
 
-        if (isset($this->error['custom_field'])) {
-            $data['error_custom_field'] = $this->error['custom_field'];
+        if (isset($this->error['firstname'])) {
+            $data['error_firstname'] = $this->error['firstname'];
         } else {
-            $data['error_custom_field'] = [];
+            $data['error_firstname'] = '';
         }
 
-        if (isset($this->error['address'])) {
-            $data['error_address'] = $this->error['address'];
+        if (isset($this->error['lastname'])) {
+            $data['error_lastname'] = $this->error['lastname'];
         } else {
-            $data['error_address'] = [];
+            $data['error_lastname'] = '';
         }
 
         $url = '';
-
-        if (isset($this->request->get['filter_company'])) {
-            $url .= '&filter_company=' . urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
-        }
-
-
-        if (isset($this->request->get['filter_name'])) {
-            $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
-        }
-
-        if (isset($this->request->get['filter_email'])) {
-            $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
-        }
-
-        if (isset($this->request->get['filter_customer_group_id'])) {
-            $url .= '&filter_customer_group_id=' . $this->request->get['filter_customer_group_id'];
-        }
-
-        if (isset($this->request->get['filter_status'])) {
-            $url .= '&filter_status=' . $this->request->get['filter_status'];
-        }
-
-        if (isset($this->request->get['filter_approved'])) {
-            $url .= '&filter_approved=' . $this->request->get['filter_approved'];
-        }
-
-        if (isset($this->request->get['filter_date_added'])) {
-            $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
-        }
 
         if (isset($this->request->get['sort'])) {
             $url .= '&sort=' . $this->request->get['sort'];
@@ -1010,239 +856,110 @@ class ControllerSaleAccountManager extends Controller {
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('sale/accountmanager', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+            'href' => $this->url->link('user/user', 'token=' . $this->session->data['token'] . $url, 'SSL'),
         ];
 
-        if (!isset($this->request->get['customer_id'])) {
-            $data['action'] = $this->url->link('sale/accountmanager/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        if (!isset($this->request->get['user_id'])) {
+            $data['action'] = $this->url->link('user/user/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
         } else {
-            $data['action'] = $this->url->link('sale/accountmanager/edit', 'token=' . $this->session->data['token'] . '&customer_id=' . $this->request->get['customer_id'] . $url, 'SSL');
+            $data['action'] = $this->url->link('user/user/edit', 'token=' . $this->session->data['token'] . '&user_id=' . $this->request->get['user_id'] . $url, 'SSL');
         }
 
-        $data['cancel'] = $this->url->link('sale/accountmanager', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['parent_user_name'] = NULL;
-        $data['parent_user_email'] = NULL;
-        $data['parent_user_phone'] = NULL;
-        if (isset($this->request->get['customer_id']) && ('POST' != $this->request->server['REQUEST_METHOD'])) {
-            $customer_info = $this->model_sale_customer->getCustomer($this->request->get['customer_id']);
-            $customer_parent_info = $this->model_sale_customer->getCustomerParentDetails($this->request->get['customer_id']);
-            if ($customer_parent_info != NULL) {
-                $data['parent_user_name'] = $customer_parent_info['firstname'] . '' . $customer_parent_info['lastname'];
-                $data['parent_user_email'] = $customer_parent_info['email'];
-                $data['parent_user_phone'] = $customer_parent_info['telephone'];
-            }
+        $data['cancel'] = $this->url->link('user/user', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
-            //$log = new Log('error.log');
-            //$log->write($customer_parent_info);
+        if (isset($this->request->get['user_id']) && ('POST' != $this->request->server['REQUEST_METHOD'])) {
+            $user_info = $this->model_user_user->getUser($this->request->get['user_id']);
         }
 
-        //echo "<pre>";print_r($customer_info);die;
-        $this->load->model('sale/customer_group');
-        $filter_data = [
-            'filter_parent' => $this->request->get['customer_id'],
-            'order' => 'DESC',
-            'start' => 0,
-            'limit' => 1000,
-        ];
-        $data['sub_users'] = $this->model_sale_customer->getCustomers($filter_data);
-        $data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups();
-        $data['price_categories'] = $this->model_sale_customer_group->getPriceCategories();
-
-        if (isset($this->request->post['company_name'])) {
-            $data['company_name'] = $this->request->post['company_name'];
-        } elseif (!empty($customer_info)) {
-            $data['company_name'] = $customer_info['company_name'];
+        if (isset($this->request->post['username'])) {
+            $data['username'] = $this->request->post['username'];
+        } elseif (!empty($user_info)) {
+            $data['username'] = $user_info['username'];
         } else {
-            $data['company_name'] = '';
+            $data['username'] = '';
         }
 
-        if (isset($this->request->post['company_address'])) {
-            $data['company_address'] = $this->request->post['company_address'];
-        } elseif (!empty($customer_info)) {
-            $data['company_address'] = $customer_info['company_address'];
+        if (isset($this->request->post['user_group_id'])) {
+            $data['user_group_id'] = $this->request->post['user_group_id'];
+        } elseif (!empty($user_info)) {
+            $data['user_group_id'] = $user_info['user_group_id'];
         } else {
-            $data['company_address'] = '';
+            $data['user_group_id'] = '';
         }
 
-        if (isset($this->request->post['customer_group_id'])) {
-            $data['customer_group_id'] = $this->request->post['customer_group_id'];
-        } elseif (!empty($customer_info)) {
-            $data['customer_group_id'] = $customer_info['customer_group_id'];
-        } else {
-            $data['customer_group_id'] = $this->config->get('config_customer_group_id');
-        }
+        $this->load->model('user/user_group');
 
-        if (isset($this->request->post['customer_category'])) {
-            $data['customer_category'] = $this->request->post['customer_category'];
-        } elseif (!empty($customer_info)) {
-            $data['customer_category'] = $customer_info['customer_category'];
-        }
-
-        if (isset($this->request->post['firstname'])) {
-            $data['firstname'] = $this->request->post['firstname'];
-        } elseif (!empty($customer_info)) {
-            $data['firstname'] = $customer_info['firstname'];
-        } else {
-            $data['firstname'] = '';
-        }
-
-        if (isset($this->request->post['lastname'])) {
-            $data['lastname'] = $this->request->post['lastname'];
-        } elseif (!empty($customer_info)) {
-            $data['lastname'] = $customer_info['lastname'];
-        } else {
-            $data['lastname'] = '';
-        }
-
-        if (isset($this->request->post['email'])) {
-            $data['email'] = $this->request->post['email'];
-        } elseif (!empty($customer_info)) {
-            $data['email'] = $customer_info['email'];
-        } else {
-            $data['email'] = '';
-        }
-
-        if (isset($this->request->post['telephone'])) {
-            $data['telephone'] = $this->request->post['telephone'];
-        } elseif (!empty($customer_info)) {
-            $data['telephone'] = $customer_info['telephone'];
-        } else {
-            $data['telephone'] = '';
-        }
-
-        if (isset($this->request->post['fax'])) {
-            $data['fax'] = $this->request->post['fax'];
-        } elseif (!empty($customer_info)) {
-            $data['fax'] = $customer_info['fax'];
-        } else {
-            $data['fax'] = '';
-        }
-
-        if (isset($this->request->post['sex'])) {
-            $data['gender'] = $this->request->post['sex'];
-        } elseif (!empty($customer_info)) {
-            $data['gender'] = $customer_info['gender'];
-        } else {
-            $data['gender'] = '';
-        }
-
-        if (isset($this->request->post['dob'])) {
-            $data['dob'] = date('d/m/Y', strtotime($this->request->post['dob']));
-        } elseif (!empty($customer_info['dob'])) {
-            $data['dob'] = date('d/m/Y', strtotime($customer_info['dob']));
-        } else {
-            $data['dob'] = null;
-        }
-
-        //echo "<pre>";print_r($data);die;
-
-        if (isset($this->request->post['send_email'])) {
-            $data['send_email'] = $this->request->post['send_email'];
-        } elseif (!empty($customer_info)) {
-            $data['send_email'] = $customer_info['email'];
-        } else {
-            $data['send_email'] = '';
-        }
-
-        $data['show_send_email'] = '';
-
-        if (!isset($this->request->get['customer_id'])) {
-            $data['show_send_email'] = true;
-        }
-
-        if (isset($this->request->post['custom_field'])) {
-            $data['account_custom_field'] = $this->request->post['custom_field'];
-        } elseif (!empty($customer_info)) {
-            $data['account_custom_field'] = unserialize($customer_info['custom_field']);
-        } else {
-            $data['account_custom_field'] = [];
-        }
-
-        if (isset($this->request->post['newsletter'])) {
-            $data['newsletter'] = $this->request->post['newsletter'];
-        } elseif (!empty($customer_info)) {
-            $data['newsletter'] = $customer_info['newsletter'];
-        } else {
-            $data['newsletter'] = '';
-        }
-
-        if (isset($this->request->post['status'])) {
-            $data['status'] = $this->request->post['status'];
-        } elseif (!empty($customer_info)) {
-            $data['status'] = $customer_info['status'];
-        } else {
-            $data['status'] = true;
-        }
-
-        if (isset($this->request->post['approved'])) {
-            $data['approved'] = $this->request->post['approved'];
-        } elseif (!empty($customer_info)) {
-            $data['approved'] = $customer_info['approved'];
-        } else {
-            $data['approved'] = true;
-        }
-
-        if (isset($this->request->post['safe'])) {
-            $data['safe'] = $this->request->post['safe'];
-        } elseif (!empty($customer_info)) {
-            $data['safe'] = $customer_info['safe'];
-        } else {
-            $data['safe'] = 0;
-        }
+        $data['user_groups'] = $this->model_user_user_group->getUserGroups();
 
         if (isset($this->request->post['password'])) {
             $data['password'] = $this->request->post['password'];
-        } elseif (!empty($customer_info)) {
-            //else if is added ,because while editing of some other fields in screen,
-            // password field is asking to enter password again
-            $data['password'] = 'default';
         } else {
             $data['password'] = '';
         }
 
         if (isset($this->request->post['confirm'])) {
             $data['confirm'] = $this->request->post['confirm'];
-        } elseif (!empty($customer_info)) {
-            $data['confirm'] = 'default';
         } else {
             $data['confirm'] = '';
         }
 
-        if (isset($this->request->post['address'])) {
-            $data['addresses'] = $this->request->post['address'];
-        } elseif (isset($this->request->get['customer_id'])) {
-            $data['addresses'] = $this->model_sale_customer->getAddresses($this->request->get['customer_id']);
+        if (isset($this->request->post['firstname'])) {
+            $data['firstname'] = $this->request->post['firstname'];
+        } elseif (!empty($user_info)) {
+            $data['firstname'] = $user_info['firstname'];
         } else {
-            $data['addresses'] = [];
+            $data['firstname'] = '';
         }
 
-        $data['referee'] = [];
-        if (!empty($customer_info)) {
-            $data['referee'] = $this->model_sale_customer->getCustomer($customer_info['refree_user_id']);
-
-            $data['referee_link'] = $this->url->link('sale/accountmanager/edit', 'token=' . $this->session->data['token'] . '&customer_id=' . $customer_info['refree_user_id'], 'SSL');
-        }
-
-        //echo "<pre>";print_r($data);die;
-        //echo "<pre>";print_r($this->request->post);die;
-        if (isset($this->request->post['address_id'])) {
-            $data['address_id'] = $this->request->post['address_id'];
-        } elseif (!empty($customer_info)) {
-            $data['address_id'] = $customer_info['address_id'];
+        if (isset($this->request->post['lastname'])) {
+            $data['lastname'] = $this->request->post['lastname'];
+        } elseif (!empty($user_info)) {
+            $data['lastname'] = $user_info['lastname'];
         } else {
-            $data['address_id'] = '';
+            $data['lastname'] = '';
         }
 
-        $this->load->model('sale/customer_group');
+        if (isset($this->request->post['email'])) {
+            $data['email'] = $this->request->post['email'];
+        } elseif (!empty($user_info)) {
+            $data['email'] = $user_info['email'];
+        } else {
+            $data['email'] = '';
+        }
 
-        //echo "<pre>";print_r($data);die;
-        $data['cities'] = $this->model_sale_customer_group->getCities();
+        if (isset($this->request->post['image'])) {
+            $data['image'] = $this->request->post['image'];
+        } elseif (!empty($user_info)) {
+            $data['image'] = $user_info['image'];
+        } else {
+            $data['image'] = '';
+        }
+
+        $this->load->model('tool/image');
+
+        if (isset($this->request->post['image']) && is_file(DIR_IMAGE . $this->request->post['image'])) {
+            $data['thumb'] = $this->model_tool_image->resize($this->request->post['image'], 100, 100);
+        } elseif (!empty($user_info) && $user_info['image'] && is_file(DIR_IMAGE . $user_info['image'])) {
+            $data['thumb'] = $this->model_tool_image->resize($user_info['image'], 100, 100);
+        } else {
+            $data['thumb'] = $this->model_tool_image->resize('no_image.png', 100, 100);
+        }
+
+        $data['placeholder'] = $this->model_tool_image->resize('no_image.png', 100, 100);
+
+        if (isset($this->request->post['status'])) {
+            $data['status'] = $this->request->post['status'];
+        } elseif (!empty($user_info)) {
+            $data['status'] = $user_info['status'];
+        } else {
+            $data['status'] = 0;
+        }
 
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
 
-        $this->response->setOutput($this->load->view('sale/customer_form.tpl', $data));
+        $this->response->setOutput($this->load->view('sale/accountmanager_form.tpl', $data));
     }
 
     protected function validateForm() {
