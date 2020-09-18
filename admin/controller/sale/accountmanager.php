@@ -9,7 +9,7 @@ class ControllerSaleAccountManager extends Controller {
 
         $this->document->setTitle($this->language->get('heading_title'));
 
-        $this->load->model('sale/customer');
+        $this->load->model('user/accountmanager');
 
         $this->getList();
 
@@ -543,9 +543,7 @@ class ControllerSaleAccountManager extends Controller {
             'filter_name' => $filter_name,
             'filter_email' => $filter_email,
             'filter_telephone' => $filter_telephone,
-            'filter_customer_group_id' => $filter_customer_group_id,
             'filter_status' => $filter_status,
-            'filter_approved' => $filter_approved,
             'filter_date_added' => $filter_date_added,
             'filter_ip' => $filter_ip,
             'sort' => $sort,
@@ -554,46 +552,26 @@ class ControllerSaleAccountManager extends Controller {
             'limit' => $this->config->get('config_limit_admin'),
         ];
 
-        $customer_total = $this->model_sale_customer->getTotalCustomers($filter_data);
+        $customer_total = $this->model_user_accountmanager->getTotalAccountManagers($filter_data);
 
-        $results = $this->model_sale_customer->getCustomers($filter_data);
+        $results = $this->model_user_accountmanager->getAccountManagers($filter_data);
 
         //echo "<pre>";print_r($results);die;
         foreach ($results as $result) {
-            if (!$result['approved']) {
-                $approve = $this->url->link('sale/customer/approve', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'] . $url, 'SSL');
-            } else {
-                $approve = '';
-            }
-
-            $login_info = $this->model_sale_customer->getTotalLoginAttempts($result['email']);
-
-            if ($login_info && $login_info['total'] >= $this->config->get('config_login_attempts')) {
-                $unlock = $this->url->link('sale/customer/unlock', 'token=' . $this->session->data['token'] . '&email=' . $result['email'] . $url, 'SSL');
-            } else {
-                $unlock = '';
-            }
+            $approve = $this->url->link('sale/customer/approve', 'token=' . $this->session->data['token'] . '&user_id=' . $result['user_id'] . $url, 'SSL');
 
             $country_code = '+' . $this->config->get('config_telephone_code');
-            if ($result['company_name']) {
-                $result['company_name'] = ' (' . $result['company_name'] . ')';
-            } else {
-                // $result['company_name'] = "(NA)";
-            }
+
 
             $data['customers'][] = [
-                'customer_id' => $result['customer_id'],
+                'customer_id' => $result['user_id'],
                 'name' => $result['name'],
-                'company_name' => $result['company_name'],
                 'email' => $result['email'],
                 'telephone' => $country_code . $result['telephone'],
-                'customer_group' => $result['customer_group'],
                 'status' => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
                 'ip' => $result['ip'],
                 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
-                'approve' => $approve,
-                'unlock' => $unlock,
-                'edit' => $this->url->link('sale/customer/edit', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'] . $url, 'SSL'),
+                'edit' => $this->url->link('sale/customer/edit', 'token=' . $this->session->data['token'] . '&user_id=' . $result['user_id'] . $url, 'SSL'),
             ];
         }
 
@@ -621,7 +599,6 @@ class ControllerSaleAccountManager extends Controller {
         $data['entry_name'] = $this->language->get('entry_name');
         $data['entry_email'] = $this->language->get('entry_email');
 
-        $data['entry_company_name'] = $this->language->get('entry_company_name');
         $data['entry_company_address'] = $this->language->get('entry_company_address');
 
         $data['entry_telephone'] = $this->language->get('entry_telephone');

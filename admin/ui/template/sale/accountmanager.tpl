@@ -191,22 +191,6 @@
                                     <td class="text-left"><?php echo $customer['status']; ?></td>
                                     <td class="text-left"><?php echo $customer['ip']; ?></td>
                                     <td class="text-left"><?php echo $customer['date_added']; ?></td>
-                                    <td class="text-right"><?php if ($customer['approve']) { ?>
-                                        <a href="<?php echo $customer['approve']; ?>" data-toggle="tooltip" title="<?php echo $button_verify; ?>" class="btn btn-success"><i class="fa fa-check"></i></a>
-                                        <?php } else { ?>
-                                        <button type="button" class="btn btn-success" disabled><i class="fa fa-check"></i></button>
-                                        <?php } ?>
-
-                                        <a target="_blank" class="btn btn-info" href="index.php?path=sale/customer/login&token=<?php echo $token; ?>&customer_id=<?php echo $customer['customer_id']; ?>&store_id=0">
-                                            <i class="fa fa-lock"></i>
-                                        </a>
-
-                                        <?php if ($customer['unlock']) { ?>
-                                        <a href="<?php echo $customer['unlock']; ?>" data-toggle="tooltip" title="<?php echo $button_unlock; ?>" class="btn btn-warning"><i class="fa fa-unlock"></i></a>
-                                        <?php } else { ?>
-                                        <button type="button" class="btn btn-warning" disabled><i class="fa fa-unlock"></i></button>
-                                        <?php } ?>
-                                        <a href="<?php echo $customer['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a></td>
                                 </tr>
                                 <?php } ?>
                                 <?php } else { ?>
