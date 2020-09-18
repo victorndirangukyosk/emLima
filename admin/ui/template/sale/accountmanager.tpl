@@ -179,10 +179,10 @@
                                 <?php if ($customers) { ?>
                                 <?php foreach ($customers as $customer) { ?>
                                 <tr>
-                                    <td class="text-center"><?php if (in_array($customer['customer_id'], $selected)) { ?>
-                                        <input type="checkbox" name="selected[]" value="<?php echo $customer['customer_id']; ?>" checked="checked" />
+                                    <td class="text-center"><?php if (in_array($customer['user_id'], $selected)) { ?>
+                                        <input type="checkbox" name="selected[]" value="<?php echo $customer['user_id']; ?>" checked="checked" />
                                         <?php } else { ?>
-                                        <input type="checkbox" name="selected[]" value="<?php echo $customer['customer_id']; ?>" />
+                                        <input type="checkbox" name="selected[]" value="<?php echo $customer['user_id']; ?>" />
                                         <?php } ?></td>
                                     <td class="text-left"><?php echo $customer['name']; ?></td>
                                     <td class="text-left"><?php echo $customer['email']; ?></td>
@@ -212,12 +212,6 @@
   $('#button-filter').on('click', function () {
             url = 'index.php?path=sale/accountmanager&token=<?php echo $token; ?>';
 
-            var filter_company = $('input[name=\'filter_company\']').val();
-
-            if (filter_company) {
-                url += '&filter_company=' + encodeURIComponent(filter_company);
-            }
-
             var filter_name = $('input[name=\'filter_name\']').val();
 
             if (filter_name) {
@@ -228,12 +222,6 @@
 
             if (filter_email) {
                 url += '&filter_email=' + encodeURIComponent(filter_email);
-            }
-
-            var filter_customer_group_id = $('select[name=\'filter_customer_group_id\']').val();
-
-            if (filter_customer_group_id != '*') {
-                url += '&filter_customer_group_id=' + encodeURIComponent(filter_customer_group_id);
             }
 
             var filter_status = $('select[name=\'filter_status\']').val();
@@ -275,7 +263,7 @@
                         response($.map(json, function (item) {
                             return {
                                 label: item['name'],
-                                value: item['customer_id']
+                                value: item['user_id']
                             }
                         }));
                     }
@@ -321,7 +309,7 @@
                         response($.map(json, function (item) {
                             return {
                                 label: item['email'],
-                                value: item['customer_id']
+                                value: item['user_id']
                             }
                         }));
                     }

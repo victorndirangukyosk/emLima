@@ -94,14 +94,14 @@ class ControllerSaleAccountManager extends Controller {
             }
 
             if (isset($this->request->post['button']) and 'save' == $this->request->post['button']) {
-                $this->response->redirect($this->url->link('sale/customer/edit', 'customer_id=' . $customer_id . '&token=' . $this->session->data['token'] . $url, 'SSL'));
+                $this->response->redirect($this->url->link('sale/accountmanager/edit', 'customer_id=' . $customer_id . '&token=' . $this->session->data['token'] . $url, 'SSL'));
             }
 
             if (isset($this->request->post['button']) and 'new' == $this->request->post['button']) {
-                $this->response->redirect($this->url->link('sale/customer/add', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+                $this->response->redirect($this->url->link('sale/accountmanager/add', 'token=' . $this->session->data['token'] . $url, 'SSL'));
             }
 
-            $this->response->redirect($this->url->link('sale/customer', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            $this->response->redirect($this->url->link('sale/accountmanager', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
 
         $this->getForm();
@@ -178,14 +178,14 @@ class ControllerSaleAccountManager extends Controller {
             }
 
             if (isset($this->request->post['button']) and 'save' == $this->request->post['button']) {
-                $this->response->redirect($this->url->link('sale/customer/edit', 'customer_id=' . $this->request->get['customer_id'] . '&token=' . $this->session->data['token'] . $url, 'SSL'));
+                $this->response->redirect($this->url->link('sale/accountmanager/edit', 'customer_id=' . $this->request->get['customer_id'] . '&token=' . $this->session->data['token'] . $url, 'SSL'));
             }
 
             if (isset($this->request->post['button']) and 'new' == $this->request->post['button']) {
-                $this->response->redirect($this->url->link('sale/customer/add', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+                $this->response->redirect($this->url->link('sale/accountmanager/add', 'token=' . $this->session->data['token'] . $url, 'SSL'));
             }
 
-            $this->response->redirect($this->url->link('sale/customer', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            $this->response->redirect($this->url->link('sale/accountmanager', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
 
         $this->getForm();
@@ -533,7 +533,7 @@ class ControllerSaleAccountManager extends Controller {
             'href' => $this->url->link('sale/accountmanager', 'token=' . $this->session->data['token'] . $url, 'SSL'),
         ];
 
-        $data['add'] = $this->url->link('sale/customer/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['add'] = $this->url->link('sale/accountmanager/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
         $data['delete'] = $this->url->link('sale/accountmanager/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
         $data['customers'] = [];
