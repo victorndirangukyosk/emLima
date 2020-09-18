@@ -151,7 +151,7 @@ class ControllerApiStores extends Controller
 
             $results = $this->model_api_stores->getStores($filter_data);
             $total = $this->model_api_stores->getTotalStores($filter_data);
-
+ 
             $json['stores_count'] = $total;
             foreach ($results as $result) {
                 $json['stores'][] = [
@@ -161,6 +161,9 @@ class ControllerApiStores extends Controller
                     'address' => $result['address'],
                     'zipcode' => $result['zipcode'],
                     'status' => $result['status'],
+                    'min_order_cod' => $result['min_order_cod'],
+                    'min_order_amount' => $result['min_order_amount'],
+
                 ];
             }
         }
