@@ -35,37 +35,10 @@ class ControllerSaleAccountManager extends Controller {
 
         if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
             $user_id = $this->model_user_accountmanager->addAccountManager($this->request->post);
-            $this->session->data['success'] = 'Success : Accountmanager created successfully!';
+
+            $this->session->data['success'] = $this->language->get('text_success');
 
             $url = '';
-
-            if (isset($this->request->get['filter_company'])) {
-                $url .= '&filter_company=' . urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
-            }
-
-            if (isset($this->request->get['filter_name'])) {
-                $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
-            }
-
-            if (isset($this->request->get['filter_email'])) {
-                $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
-            }
-
-            if (isset($this->request->get['filter_status'])) {
-                $url .= '&filter_status=' . $this->request->get['filter_status'];
-            }
-
-            if (isset($this->request->get['filter_approved'])) {
-                $url .= '&filter_approved=' . $this->request->get['filter_approved'];
-            }
-
-            if (isset($this->request->get['filter_ip'])) {
-                $url .= '&filter_ip=' . $this->request->get['filter_ip'];
-            }
-
-            if (isset($this->request->get['filter_date_added'])) {
-                $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
-            }
 
             if (isset($this->request->get['sort'])) {
                 $url .= '&sort=' . $this->request->get['sort'];
@@ -860,12 +833,12 @@ class ControllerSaleAccountManager extends Controller {
         ];
 
         if (!isset($this->request->get['user_id'])) {
-            $data['action'] = $this->url->link('user/user/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $data['action'] = $this->url->link('sale/accountmanager/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
         } else {
-            $data['action'] = $this->url->link('user/user/edit', 'token=' . $this->session->data['token'] . '&user_id=' . $this->request->get['user_id'] . $url, 'SSL');
+            $data['action'] = $this->url->link('sale/accountmanager/edit', 'token=' . $this->session->data['token'] . '&user_id=' . $this->request->get['user_id'] . $url, 'SSL');
         }
 
-        $data['cancel'] = $this->url->link('user/user', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['cancel'] = $this->url->link('sale/accountmanager', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
         if (isset($this->request->get['user_id']) && ('POST' != $this->request->server['REQUEST_METHOD'])) {
             $user_info = $this->model_user_user->getUser($this->request->get['user_id']);
