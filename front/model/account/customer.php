@@ -145,20 +145,21 @@ class ModelAccountCustomer extends Model
         }
 
         // Send to main admin email if new account email is enabled
-        if ($this->config->get('config_account_mail')) {
-            $mail = new Mail($this->config->get('config_mail'));
-            $mail->setTo($this->config->get('config_email'));
-            $mail->send();
+        //commented as particular message is not required.
+        // if ($this->config->get('config_account_mail')) {
+        //     $mail = new Mail($this->config->get('config_mail'));
+        //     $mail->setTo($this->config->get('config_email'));
+        //     $mail->send();
 
-            $emails = explode(',', $this->config->get('config_alert_emails'));
+        //     $emails = explode(',', $this->config->get('config_alert_emails'));
 
-            foreach ($emails as $email) {
-                if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                    $mail->setTo($email);
-                    $mail->send();
-                }
-            }
-        }
+        //     foreach ($emails as $email) {
+        //         if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        //             $mail->setTo($email);
+        //             $mail->send();
+        //         }
+        //     }
+        // }
 
         $this->trigger->fire('post.customer.add', $customer_id);
 
