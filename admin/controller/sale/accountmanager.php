@@ -67,7 +67,7 @@ class ControllerSaleAccountManager extends Controller {
     }
 
     public function edit() {
-        $this->load->language('user/user');
+        $this->load->language('sale/accountmanager');
 
         $this->document->setTitle($this->language->get('heading_title'));
 
