@@ -684,6 +684,7 @@ class ControllerSaleAccountManager extends Controller {
         $data['button_cancel'] = $this->language->get('button_cancel');
         $data['tab_general'] = $this->language->get('tab_general');
         $data['tab_assign_customers'] = 'Assign Customers';
+        $data['tab_assigned_customers'] = 'Assigned Customers';
 
         $data['token'] = $this->session->data['token'];
 
@@ -1587,6 +1588,11 @@ class ControllerSaleAccountManager extends Controller {
         $json = true;
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
+    }
+
+    public function getAccountManagerCustomers($account_manager_id) {
+        $this->load->model('user/accountmanager');
+        $results = $this->model_user_accountmanager->getCustomerByAccountManagerId($account_manager_id);
     }
 
 }

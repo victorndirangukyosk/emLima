@@ -344,4 +344,9 @@ class ModelUserAccountmanager extends Model {
         $this->db->query('UPDATE `' . DB_PREFIX . "customer` SET account_manager_id = '" . (int) $account_manager_id . "' WHERE customer_id = '" . (int) $customer_id . "'");
     }
 
+    public function getCustomerByAccountManagerId($account_manager_id) {
+        $query = $this->db->query('SELECT * FROM `' . DB_PREFIX . "customer` WHERE account_manager_id = '" . (int) $account_manager_id . "'");
+        return $query->rows;
+    }
+
 }

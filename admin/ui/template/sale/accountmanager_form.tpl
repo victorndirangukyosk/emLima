@@ -42,6 +42,7 @@
                         <li class="active"><a href="#tab-general" data-toggle="tab"><?php echo $tab_general; ?></a></li>
                         <?php if ($user_id) { ?>
                         <li><a href="#tab-assign-customers" data-toggle="tab"><?php echo $tab_assign_customers; ?></a></li>
+                        <li><a href="#tab-assigned-customers" data-toggle="tab"><?php echo $tab_assigned_customers; ?></a></li>
                         <?php } ?>
                     </ul>
                     <div class="tab-content">
@@ -146,6 +147,8 @@
                             <div class="text-right">
                                 <button id="button-assign-customer" class="btn btn-primary"><i class="fa fa-plus-circle"></i>Assign Customers</button>
                             </div>
+                        </div>
+                        <div class="tab-pane" id="tab-assigned-customers">
                         </div>
                         <?php } ?>
                     </div>
