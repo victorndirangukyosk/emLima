@@ -135,7 +135,7 @@
                                 <label class="col-sm-2 control-label" for="input-assign-username">Assign Customers</label>
                                 <div class="col-sm-10">
                                     <input type="text" name="assign_customers" value="" placeholder="Type Customer Name" id="input-assign-customer" class="form-control" />
-                                    <div id="product-category" class="well well-sm" style="height: 150px; overflow: auto;">
+                                    <div id="assign_customers_select" class="well well-sm" style="height: 150px; overflow: auto;">
                                     </div>
                                 </div>
                             </div>
@@ -164,7 +164,9 @@ function save(type) {
         'source': function (request, response) {
             $.ajax({
                 url: 'index.php?path=sale/accountmanager/getUnassignedCustomers&token=<?php echo $token; ?>',
+                type: 'post',
                 dataType: 'json',
+                data : { name : $("input[name=assign_customers]").val() },
                 success: function (json) {
                     response($.map(json, function (item) {
                         return {
@@ -177,8 +179,8 @@ function save(type) {
         },
         'select': function (item) {
             $('input[name=\'assign_customers\']').val('');
-            $('#product-category' + item['value']).remove();
-            $('#product-category').append('<div id="product-category' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="product_category[]" value="' + item['value'] + '" /></div>');
+            $('#assign_customers_select' + item['value']).remove();
+            $('#assign_customers_select').append('<div id="assign_customers_select' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="assign_customers_select[]" value="' + item['value'] + '" /></div>');
         }
     });
 //--></script>

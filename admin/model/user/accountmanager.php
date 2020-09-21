@@ -334,8 +334,8 @@ class ModelUserAccountmanager extends Model {
         return $query->rows;
     }
 
-    public function getUnassignedCustomers() {
-        $query = $this->db->query('SELECT * FROM `' . DB_PREFIX . "customer` WHERE account_manager_id IS NULL OR account_manager_id = 0");
+    public function getUnassignedCustomers($name) {
+        $query = $this->db->query('SELECT * FROM `' . DB_PREFIX . "customer` WHERE CONCAT(firstname,' ',lastname) LIKE '" . $this->db->escape($name) . "%' AND (account_manager_id IS NULL OR account_manager_id = 0)");
 
         return $query->rows;
     }
