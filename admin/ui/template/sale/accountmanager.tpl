@@ -173,6 +173,7 @@
                                         <?php } else { ?>
                                         <a href="<?php echo $sort_date_added; ?>"><?php echo $column_date_added; ?></a>
                                         <?php } ?></td>
+                                    <td class="text-right"><?php echo $column_action; ?></td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -190,6 +191,7 @@
                                     <td class="text-left"><?php echo $customer['status']; ?></td>
                                     <td class="text-left"><?php echo $customer['ip']; ?></td>
                                     <td class="text-left"><?php echo $customer['date_added']; ?></td>
+                                    <td><a href="<?php echo $customer['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a></td></td>
                                 </tr>
                                 <?php } ?>
                                 <?php } else { ?>
