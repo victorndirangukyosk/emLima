@@ -259,6 +259,48 @@ class ModelUserAccountmanager extends Model {
         return $query->row['total'];
     }
 
+    public function getTotalAccountManagersCustomers($data = [], $account_manager_id) {
+        $sql = 'SELECT COUNT(*) AS total FROM ' . DB_PREFIX . 'customer';
+
+        $implode = [];
+
+        if (!empty($data['filter_name'])) {
+            $implode[] = "CONCAT(firstname, ' ', lastname) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+        }
+
+        if (!empty($data['filter_email'])) {
+            $implode[] = "email LIKE '" . $this->db->escape($data['filter_email']) . "%'";
+        }
+
+        if (!empty($data['filter_telephone'])) {
+            $implode[] = "telephone LIKE '" . $this->db->escape($data['filter_telephone']) . "%'";
+        }
+
+        $implode[] = "account_manager_id = '" . (int) $account_manager_id . "'";
+
+        if (!empty($data['filter_ip'])) {
+            $implode[] = "ip = '" . $this->db->escape($data['filter_ip']) . "'";
+        }
+
+        if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
+            $implode[] = "status = '" . (int) $data['filter_status'] . "'";
+        }
+
+        if (!empty($data['filter_date_added'])) {
+            $implode[] = "DATE(date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
+        }
+
+        if ($implode) {
+            $sql .= ' WHERE ' . implode(' AND ', $implode);
+        }
+
+        $query = $this->db->query($sql);
+
+        //echo "<pre>";print_r($sql);die;
+
+        return $query->row['total'];
+    }
+
     public function getAccountManagers($data = []) {
         $sql = "SELECT *, CONCAT(c.firstname, ' ', c.lastname) AS name FROM " . DB_PREFIX . 'user c';
 
@@ -346,6 +388,81 @@ class ModelUserAccountmanager extends Model {
 
     public function getCustomerByAccountManagerId($account_manager_id) {
         $query = $this->db->query('SELECT * FROM `' . DB_PREFIX . "customer` WHERE account_manager_id = '" . (int) $account_manager_id . "'");
+        return $query->rows;
+    }
+
+    public function getAccountManagersCustomers($data = [], $account_manager_id) {
+        $sql = "SELECT *, CONCAT(c.firstname, ' ', c.lastname) AS name FROM " . DB_PREFIX . 'customer c';
+
+        $implode = [];
+
+        if (!empty($data['filter_name'])) {
+            $implode[] = "CONCAT(c.firstname, ' ', c.lastname) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+        }
+
+        if (!empty($data['filter_email'])) {
+            $implode[] = "c.email LIKE '" . $this->db->escape($data['filter_email']) . "%'";
+        }
+
+        if (!empty($data['filter_telephone'])) {
+            $implode[] = "c.telephone LIKE '" . $this->db->escape($data['filter_telephone']) . "%'";
+        }
+
+        $implode[] = "c.account_manager_id = '" . $account_manager_id . "'";
+
+        if (!empty($data['filter_ip'])) {
+            $implode[] = "c.ip = '" . $this->db->escape($data['filter_ip']) . "'";
+        }
+
+        if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
+            $implode[] = "c.status = '" . (int) $data['filter_status'] . "'";
+        }
+
+        if (!empty($data['filter_date_added'])) {
+            $implode[] = "DATE(c.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
+        }
+
+        if ($implode) {
+            $sql .= ' WHERE ' . implode(' AND ', $implode);
+        }
+
+        $sort_data = [
+            'name',
+            'c.email',
+            'customer_group',
+            'c.status',
+            'c.ip',
+            'c.date_added',
+        ];
+
+        if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
+            $sql .= ' ORDER BY ' . $data['sort'];
+        } else {
+            $sql .= ' ORDER BY name';
+        }
+
+        if (isset($data['order']) && ('DESC' == $data['order'])) {
+            $sql .= ' DESC';
+        } else {
+            $sql .= ' ASC';
+        }
+
+        if (isset($data['start']) || isset($data['limit'])) {
+            if ($data['start'] < 0) {
+                $data['start'] = 0;
+            }
+
+            if ($data['limit'] < 1) {
+                $data['limit'] = 20;
+            }
+
+            $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
+        }
+
+        $query = $this->db->query($sql);
+
+        //echo "<pre>";print_r($sql);die;
+
         return $query->rows;
     }
 
