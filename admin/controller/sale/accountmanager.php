@@ -1562,4 +1562,12 @@ class ControllerSaleAccountManager extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+    public function getUnassignedCustomers() {
+        $this->load->model('user/accountmanager');
+        $results = $this->model_user_accountmanager->getUnassignedCustomers();
+        $json = $results;
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
 }

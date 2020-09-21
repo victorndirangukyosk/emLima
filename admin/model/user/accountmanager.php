@@ -334,4 +334,10 @@ class ModelUserAccountmanager extends Model {
         return $query->rows;
     }
 
+    public function getUnassignedCustomers() {
+        $query = $this->db->query('SELECT * FROM `' . DB_PREFIX . "customer` WHERE account_manager_id IS NULL OR account_manager_id = 0");
+
+        return $query->rows;
+    }
+
 }

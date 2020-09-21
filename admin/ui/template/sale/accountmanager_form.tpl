@@ -135,6 +135,8 @@
                                 <label class="col-sm-2 control-label" for="input-assign-username">Assign Customers</label>
                                 <div class="col-sm-10">
                                     <input type="text" name="assign_customers" value="" placeholder="Type Customer Name" id="input-assign-customer" class="form-control" />
+                                    <div id="product-category" class="well well-sm" style="height: 150px; overflow: auto;">
+                                    </div>
                                 </div>
                             </div>
                             <div class="text-right">
@@ -157,5 +159,27 @@ function save(type) {
         form = $("form[id^='form-']").append(input);
         form.submit();
     }
+// Customers
+    $('input[name=\'assign_customers\']').autocomplete({
+        'source': function (request, response) {
+            $.ajax({
+                url: 'index.php?path=sale/accountmanager/getUnassignedCustomers&token=<?php echo $token; ?>',
+                dataType: 'json',
+                success: function (json) {
+                    response($.map(json, function (item) {
+                        return {
+                            label: item['email'],
+                            value: item['customer_id']
+                        }
+                    }));
+                }
+            });
+        },
+        'select': function (item) {
+            $('input[name=\'assign_customers\']').val('');
+            $('#product-category' + item['value']).remove();
+            $('#product-category').append('<div id="product-category' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="product_category[]" value="' + item['value'] + '" /></div>');
+        }
+    });
 //--></script>
 <?php echo $footer; ?> 
