@@ -166,7 +166,7 @@ function save(type) {
                 url: 'index.php?path=sale/accountmanager/getUnassignedCustomers&token=<?php echo $token; ?>',
                 type: 'post',
                 dataType: 'json',
-                data : { name : $("input[name=assign_customers]").val() },
+                data: {name: $("input[name=assign_customers]").val()},
                 success: function (json) {
                     response($.map(json, function (item) {
                         return {
@@ -182,6 +182,9 @@ function save(type) {
             $('#assign_customers_select' + item['value']).remove();
             $('#assign_customers_select').append('<div id="assign_customers_select' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="assign_customers_select[]" value="' + item['value'] + '" /></div>');
         }
+    });
+    $('#assign_customers_select').delegate('.fa-minus-circle', 'click', function () {
+        $(this).parent().remove();
     });
 //--></script>
 <?php echo $footer; ?> 
