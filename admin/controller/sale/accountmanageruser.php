@@ -25,7 +25,7 @@ class ControllerSaleAccountManagerUser extends Controller {
     public function export_excel() {
         $data = [];
         $this->load->model('report/excel');
-        $this->model_report_excel->download_accountmanager_excel($data);
+        $this->model_report_excel->download_accountmanagercustomers_excel($data, $this->user->getId());
     }
 
     public function add() {

@@ -327,7 +327,7 @@
 
         function excel() {
 
-            url = 'index.php?path=sale/accountmanager/export_excel&token=<?php echo $token; ?>';
+            url = 'index.php?path=sale/accountmanageruser/export_excel&token=<?php echo $token; ?>';
 
             location = url;
         }
