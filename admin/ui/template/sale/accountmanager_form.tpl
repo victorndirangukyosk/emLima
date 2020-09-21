@@ -149,6 +149,30 @@
                             </div>
                         </div>
                         <div class="tab-pane" id="tab-assigned-customers">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Customer Name </th>
+                                        <th>E-Mail</th>
+                                        <th>Phone No</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php if(count($assigned_customers)){?>
+            <?php foreach($assigned_customers as $user){?>
+            <tr>
+            <td><?php echo $user['firstname'].' '.$user['lastname'];?></td>
+            <td><?php echo $user['email'];?></td>
+            <td><?php echo $user['telephone'];?></td>
+            </tr>
+            <?php } ?>
+            <?php }else{ ?>
+                                    <tr style="text-align:center">
+                                        <td colspan="5">No Customers found</td>
+                                    </tr>
+                                    <?php } ?>
+                                </tbody>
+                            </table>
                         </div>
                         <?php } ?>
                     </div>

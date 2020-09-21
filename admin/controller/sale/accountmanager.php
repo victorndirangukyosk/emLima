@@ -685,6 +685,10 @@ class ControllerSaleAccountManager extends Controller {
         $data['tab_general'] = $this->language->get('tab_general');
         $data['tab_assign_customers'] = 'Assign Customers';
         $data['tab_assigned_customers'] = 'Assigned Customers';
+        $data['assigned_customers'] = NULL;
+        if (isset($this->request->get['user_id'])) {
+            $data['assigned_customers'] = $this->model_user_accountmanager->getCustomerByAccountManagerId($this->request->get['user_id']);
+        }
 
         $data['token'] = $this->session->data['token'];
 
