@@ -340,4 +340,8 @@ class ModelUserAccountmanager extends Model {
         return $query->rows;
     }
 
+    public function AssignCustomersToAccountManager($customer_id, $account_manager_id) {
+        $this->db->query('UPDATE `' . DB_PREFIX . "customer` SET account_manager_id = '" . (int) $account_manager_id . "' WHERE customer_id = '" . (int) $customer_id . "'");
+    }
+
 }

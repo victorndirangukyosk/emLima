@@ -217,6 +217,7 @@ function save(type) {
         if (val.length == 0) {
             $(".alert").show();
             $('.alert').html('Please select atleast one customer!');
+            $('.alert').delay(5000).fadeOut('slow');
             return false;
         }
         console.log(val);
@@ -226,13 +227,16 @@ function save(type) {
             dataType: 'json',
             data: {assigncustomer: val, account_manager_id: <?php echo $user_id; ?> },
             beforeSend: function () {
-                $('#button-history').button('loading');
+                $('#button-assign-customer').button('loading');
             },
             complete: function () {
-                $('#button-history').button('reset');
+                $('#button-assign-customer').button('reset');
             },
-            success: function (html) {
-                $('.alert').remove();
+            success: function (json) {
+                $('.alert').html('Customer assigned successfully!');
+                $(".alert").attr('class', 'alert alert-success');
+                $(".alert").show();
+                console.log(json);
             }
         });
     });
