@@ -1574,4 +1574,9 @@ class ControllerSaleAccountManager extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+    public function assigncustomer() {
+        $log = new Log('error.log');
+        $log->write($this->request->post['assigncustomer']);
+    }
+
 }

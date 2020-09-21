@@ -28,6 +28,10 @@
             <button type="button" class="close" data-dismiss="alert">&times;</button>
         </div>
         <?php } ?>
+
+        <div class="alert alert-danger" style="display: none;"><i class="fa fa-exclamation-circle"></i>
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+        </div>
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title"><i class="fa fa-pencil"></i> <?php echo $text_form; ?></h3>
@@ -176,7 +180,7 @@ function save(type) {
                             }
                         ];
                         response(result);
-                    } else if ($("input[name=assign_customers]").val() == '') {
+                    } else if ($("input[name=assign_customers]").val() == '' || $("input[name=assign_customers]").val() == null) {
                         var result = [
                             {
                                 label: 'Type customer name',
@@ -203,6 +207,34 @@ function save(type) {
     });
     $('#assign_customers_select').delegate('.fa-minus-circle', 'click', function () {
         $(this).parent().remove();
+    });
+    $('#button-assign-customer').on('click', function (e) {
+        e.preventDefault();
+        var val = [];
+        $('input[name=\'assign_customers_select[]\']').each(function (i) {
+            val[i] = $(this).val();
+        });
+        if (val.length == 0) {
+            $(".alert").show();
+            $('.alert').html('Please select atleast one customer!');
+            return false;
+        }
+        console.log(val);
+        $.ajax({
+            url: 'index.php?path=sale/accountmanager/assigncustomer&token=<?php echo $token; ?>',
+            type: 'post',
+            dataType: 'json',
+            data: {assigncustomer: val, account_manager_id: <?php echo $user_id; ?> },
+            beforeSend: function () {
+                $('#button-history').button('loading');
+            },
+            complete: function () {
+                $('#button-history').button('reset');
+            },
+            success: function (html) {
+                $('.alert').remove();
+            }
+        });
     });
 //--></script>
 <?php echo $footer; ?> 
