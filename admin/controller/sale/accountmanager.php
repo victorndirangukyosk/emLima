@@ -71,10 +71,10 @@ class ControllerSaleAccountManager extends Controller {
 
         $this->document->setTitle($this->language->get('heading_title'));
 
-        $this->load->model('user/user');
+        $this->load->model('user/accountmanager');
 
         if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
-            $this->model_user_user->editUser($this->request->get['user_id'], $this->request->post);
+            $this->model_user_accountmanager->editUser($this->request->get['user_id'], $this->request->post);
 
             $this->session->data['success'] = $this->language->get('text_success');
 
@@ -764,7 +764,7 @@ class ControllerSaleAccountManager extends Controller {
         $data['cancel'] = $this->url->link('sale/accountmanager', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
         if (isset($this->request->get['user_id']) && ('POST' != $this->request->server['REQUEST_METHOD'])) {
-            $user_info = $this->model_user_user->getUser($this->request->get['user_id']);
+            $user_info = $this->model_user_accountmanager->getUser($this->request->get['user_id']);
         }
 
         if (isset($this->request->post['username'])) {
