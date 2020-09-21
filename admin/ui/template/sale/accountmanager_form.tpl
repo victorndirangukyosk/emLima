@@ -168,12 +168,30 @@ function save(type) {
                 dataType: 'json',
                 data: {name: $("input[name=assign_customers]").val()},
                 success: function (json) {
-                    response($.map(json, function (item) {
-                        return {
-                            label: item['email'],
-                            value: item['customer_id']
-                        }
-                    }));
+                    if (!json.length) {
+                        var result = [
+                            {
+                                label: 'No matches found',
+                                value: ''
+                            }
+                        ];
+                        response(result);
+                    } else if ($("input[name=assign_customers]").val() == '') {
+                        var result = [
+                            {
+                                label: 'Type customer name',
+                                value: ''
+                            }
+                        ];
+                        response(result);
+                    } else {
+                        response($.map(json, function (item) {
+                            return {
+                                label: item['email'],
+                                value: item['customer_id']
+                            }
+                        }));
+                    }
                 }
             });
         },
