@@ -34,91 +34,106 @@
             </div>
             <div class="panel-body">
                 <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form-user" class="form-horizontal">
-                    <div class="form-group required">
-                        <label class="col-sm-2 control-label" for="input-username"><?php echo $entry_username; ?></label>
-                        <div class="col-sm-10">
-                            <input type="text" name="username" value="<?php echo $username; ?>" placeholder="<?php echo $entry_username; ?>" id="input-username" class="form-control" />
-                            <?php if ($error_username) { ?>
-                            <div class="text-danger"><?php echo $error_username; ?></div>
-                            <?php } ?>
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#tab-general" data-toggle="tab"><?php echo $tab_general; ?></a></li>
+                        <?php if ($user_id) { ?>
+                        <li><a href="#tab-assign-customers" data-toggle="tab"><?php echo $tab_assign_customers; ?></a></li>
+                        <?php } ?>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="tab-general">
+                            <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-username"><?php echo $entry_username; ?></label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="username" value="<?php echo $username; ?>" placeholder="<?php echo $entry_username; ?>" id="input-username" class="form-control" />
+                                    <?php if ($error_username) { ?>
+                                    <div class="text-danger"><?php echo $error_username; ?></div>
+                                    <?php } ?>
+                                </div>
+                            </div>
+                            <input type="hidden"  name="user_group_id" id="input-user-group" value="17">
+                            <!--<div class="form-group">
+                              <label class="col-sm-2 control-label" for="input-user-group"><?php echo $entry_user_group; ?></label>
+                              <div class="col-sm-10">
+                                <select name="user_group_id" id="input-user-group" class="form-control">
+                                  <?php foreach ($user_groups as $user_group) { ?>
+                                  <?php if ($user_group['user_group_id'] == $user_group_id) { ?>
+                                  <option value="<?php echo $user_group['user_group_id']; ?>" selected="selected"><?php echo $user_group['name']; ?></option>
+                                  <?php } else { ?>
+                                  <option value="<?php echo $user_group['user_group_id']; ?>"><?php echo $user_group['name']; ?></option>
+                                  <?php } ?>
+                                  <?php } ?>
+                                </select>
+                              </div>
+                            </div>-->
+                            <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-firstname"><?php echo $entry_firstname; ?></label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="firstname" value="<?php echo $firstname; ?>" placeholder="<?php echo $entry_firstname; ?>" id="input-firstname" class="form-control" />
+                                    <?php if ($error_firstname) { ?>
+                                    <div class="text-danger"><?php echo $error_firstname; ?></div>
+                                    <?php } ?>
+                                </div>
+                            </div>
+                            <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-lastname"><?php echo $entry_lastname; ?></label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="lastname" value="<?php echo $lastname; ?>" placeholder="<?php echo $entry_lastname; ?>" id="input-lastname" class="form-control" />
+                                    <?php if ($error_lastname) { ?>
+                                    <div class="text-danger"><?php echo $error_lastname; ?></div>
+                                    <?php } ?>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-email"><?php echo $entry_email; ?></label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="email" value="<?php echo $email; ?>" placeholder="<?php echo $entry_email; ?>" id="input-email" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-image"><?php echo $entry_image; ?></label>
+                                <div class="col-sm-10"><a href="" id="thumb-image" data-toggle="image" class="img-thumbnail"><img src="<?php echo $thumb; ?>" alt="" title="" data-placeholder="<?php echo $placeholder; ?>" /></a>
+                                    <input type="hidden" name="image" value="<?php echo $image; ?>" id="input-image" />
+                                </div>
+                            </div>
+                            <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-password"><?php echo $entry_password; ?></label>
+                                <div class="col-sm-10">
+                                    <input type="password" name="password" value="<?php echo $password; ?>" placeholder="<?php echo $entry_password; ?>" id="input-password" class="form-control" autocomplete="off" />
+                                    <?php if ($error_password) { ?>
+                                    <div class="text-danger"><?php echo $error_password; ?></div>
+                                    <?php  } ?>
+                                </div>
+                            </div>
+                            <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-confirm"><?php echo $entry_confirm; ?></label>
+                                <div class="col-sm-10">
+                                    <input type="password" name="confirm" value="<?php echo $confirm; ?>" placeholder="<?php echo $entry_confirm; ?>" id="input-confirm" class="form-control" />
+                                    <?php if ($error_confirm) { ?>
+                                    <div class="text-danger"><?php echo $error_confirm; ?></div>
+                                    <?php  } ?>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-status"><?php echo $entry_status; ?></label>
+                                <div class="col-sm-10">
+                                    <select name="status" id="input-status" class="form-control">
+                                        <?php if ($status) { ?>
+                                        <option value="0"><?php echo $text_disabled; ?></option>
+                                        <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+                                        <?php } else { ?>
+                                        <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+                                        <option value="1"><?php echo $text_enabled; ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <input type="hidden"  name="user_group_id" id="input-user-group" value="17">
-                    <!--<div class="form-group">
-                      <label class="col-sm-2 control-label" for="input-user-group"><?php echo $entry_user_group; ?></label>
-                      <div class="col-sm-10">
-                        <select name="user_group_id" id="input-user-group" class="form-control">
-                          <?php foreach ($user_groups as $user_group) { ?>
-                          <?php if ($user_group['user_group_id'] == $user_group_id) { ?>
-                          <option value="<?php echo $user_group['user_group_id']; ?>" selected="selected"><?php echo $user_group['name']; ?></option>
-                          <?php } else { ?>
-                          <option value="<?php echo $user_group['user_group_id']; ?>"><?php echo $user_group['name']; ?></option>
-                          <?php } ?>
-                          <?php } ?>
-                        </select>
-                      </div>
-                    </div>-->
-                    <div class="form-group required">
-                        <label class="col-sm-2 control-label" for="input-firstname"><?php echo $entry_firstname; ?></label>
-                        <div class="col-sm-10">
-                            <input type="text" name="firstname" value="<?php echo $firstname; ?>" placeholder="<?php echo $entry_firstname; ?>" id="input-firstname" class="form-control" />
-                            <?php if ($error_firstname) { ?>
-                            <div class="text-danger"><?php echo $error_firstname; ?></div>
-                            <?php } ?>
+                        <?php if ($user_id) { ?>
+                        <div class="tab-pane" id="tab-assign-customers">
+
                         </div>
-                    </div>
-                    <div class="form-group required">
-                        <label class="col-sm-2 control-label" for="input-lastname"><?php echo $entry_lastname; ?></label>
-                        <div class="col-sm-10">
-                            <input type="text" name="lastname" value="<?php echo $lastname; ?>" placeholder="<?php echo $entry_lastname; ?>" id="input-lastname" class="form-control" />
-                            <?php if ($error_lastname) { ?>
-                            <div class="text-danger"><?php echo $error_lastname; ?></div>
-                            <?php } ?>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label" for="input-email"><?php echo $entry_email; ?></label>
-                        <div class="col-sm-10">
-                            <input type="text" name="email" value="<?php echo $email; ?>" placeholder="<?php echo $entry_email; ?>" id="input-email" class="form-control" />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label" for="input-image"><?php echo $entry_image; ?></label>
-                        <div class="col-sm-10"><a href="" id="thumb-image" data-toggle="image" class="img-thumbnail"><img src="<?php echo $thumb; ?>" alt="" title="" data-placeholder="<?php echo $placeholder; ?>" /></a>
-                            <input type="hidden" name="image" value="<?php echo $image; ?>" id="input-image" />
-                        </div>
-                    </div>
-                    <div class="form-group required">
-                        <label class="col-sm-2 control-label" for="input-password"><?php echo $entry_password; ?></label>
-                        <div class="col-sm-10">
-                            <input type="password" name="password" value="<?php echo $password; ?>" placeholder="<?php echo $entry_password; ?>" id="input-password" class="form-control" autocomplete="off" />
-                            <?php if ($error_password) { ?>
-                            <div class="text-danger"><?php echo $error_password; ?></div>
-                            <?php  } ?>
-                        </div>
-                    </div>
-                    <div class="form-group required">
-                        <label class="col-sm-2 control-label" for="input-confirm"><?php echo $entry_confirm; ?></label>
-                        <div class="col-sm-10">
-                            <input type="password" name="confirm" value="<?php echo $confirm; ?>" placeholder="<?php echo $entry_confirm; ?>" id="input-confirm" class="form-control" />
-                            <?php if ($error_confirm) { ?>
-                            <div class="text-danger"><?php echo $error_confirm; ?></div>
-                            <?php  } ?>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label" for="input-status"><?php echo $entry_status; ?></label>
-                        <div class="col-sm-10">
-                            <select name="status" id="input-status" class="form-control">
-                                <?php if ($status) { ?>
-                                <option value="0"><?php echo $text_disabled; ?></option>
-                                <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
-                                <?php } else { ?>
-                                <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
-                                <option value="1"><?php echo $text_enabled; ?></option>
-                                <?php } ?>
-                            </select>
-                        </div>
+                        <?php } ?>
                     </div>
                 </form>
             </div>

@@ -682,6 +682,8 @@ class ControllerSaleAccountManager extends Controller {
         $data['button_savenew'] = $this->language->get('button_savenew');
         $data['button_saveclose'] = $this->language->get('button_saveclose');
         $data['button_cancel'] = $this->language->get('button_cancel');
+        $data['tab_general'] = $this->language->get('tab_general');
+        $data['tab_assign_customers'] = 'Assign Customers';
 
         $data['token'] = $this->session->data['token'];
 
@@ -765,6 +767,7 @@ class ControllerSaleAccountManager extends Controller {
 
         if (isset($this->request->get['user_id']) && ('POST' != $this->request->server['REQUEST_METHOD'])) {
             $user_info = $this->model_user_accountmanager->getUser($this->request->get['user_id']);
+            $data['user_id'] = $user_info['user_id'];
         }
 
         if (isset($this->request->post['username'])) {
