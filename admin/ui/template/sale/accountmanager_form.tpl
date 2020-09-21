@@ -131,7 +131,15 @@
                         </div>
                         <?php if ($user_id) { ?>
                         <div class="tab-pane" id="tab-assign-customers">
-
+                            <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-assign-username">Assign Customers</label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="assign_customers" value="" placeholder="Type Customer Name" id="input-assign-customer" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <button id="button-assign-customer" class="btn btn-primary"><i class="fa fa-plus-circle"></i>Assign Customers</button>
+                            </div>
                         </div>
                         <?php } ?>
                     </div>
