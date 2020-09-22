@@ -2,9 +2,9 @@
 
 class ModelAccountCustomer extends Model {
 
-    //overrided for direct login
+//overrided for direct login
     public function addCustomer($data, $override = false) {
-        //echo '<pre>';print_r($data);exit;
+//echo '<pre>';print_r($data);exit;
         $log = new Log('error.log');
         if (!isset($data['dob'])) {
             $log->write('customer in');
@@ -51,7 +51,7 @@ class ModelAccountCustomer extends Model {
         }
 
         if (isset($data['telephone'])) {
-            //(21) 42353-5255
+//(21) 42353-5255
             $data['telephone'] = preg_replace('/[^0-9]/', '', $data['telephone']);
         }
 
@@ -61,10 +61,10 @@ class ModelAccountCustomer extends Model {
             $customer_category = $parent_info->row['customer_category'];
         }
         if (!isset($data['dob'])) {
-            //$this->db->query("INSERT INTO " . DB_PREFIX . "customer SET customer_group_id = '" . (int) $customer_group_id . "', store_id = '" . (int) $this->config->get('config_store_id') . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', company_name = '" . $this->db->escape($data['company_name']) . "', company_address = '" . $this->db->escape($data['company_address']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', gender = '" . $this->db->escape($data['gender']). "', fax = '" . $this->db->escape($data['fax']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']['account']) ? serialize($data['custom_field']['account']) : '') . "', salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', newsletter = '" . (isset($data['newsletter']) ? (int) $data['newsletter'] : 0) . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "', status = '1', approved = '" . (int) !$customer_group_info['approval'] . "', date_added = NOW()");
+//$this->db->query("INSERT INTO " . DB_PREFIX . "customer SET customer_group_id = '" . (int) $customer_group_id . "', store_id = '" . (int) $this->config->get('config_store_id') . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', company_name = '" . $this->db->escape($data['company_name']) . "', company_address = '" . $this->db->escape($data['company_address']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', gender = '" . $this->db->escape($data['gender']). "', fax = '" . $this->db->escape($data['fax']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']['account']) ? serialize($data['custom_field']['account']) : '') . "', salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', newsletter = '" . (isset($data['newsletter']) ? (int) $data['newsletter'] : 0) . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "', status = '1', approved = '" . (int) !$customer_group_info['approval'] . "', date_added = NOW()");
             $this->db->query('INSERT INTO ' . DB_PREFIX . "customer SET customer_group_id = '" . (int) $customer_group_id . "', store_id = '" . (int) $this->config->get('config_store_id') . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', company_name = '" . $this->db->escape($data['company_name']) . "', company_address = '" . $this->db->escape($data['company_address']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', gender = '" . $this->db->escape($data['gender']) . "', fax = '" . $this->db->escape($data['fax']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']['account']) ? serialize($data['custom_field']['account']) : '') . "', salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', newsletter = '" . (isset($data['newsletter']) ? (int) $data['newsletter'] : 0) . "',parent = '" . (isset($data['parent']) ? (int) $data['parent'] : null) . "',customer_category = '" . (null != $customer_category ? $customer_category : null) . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "', status = '1', approved = '" . (int) $customer_group_info['approval'] . "', date_added = NOW()");
         } else {
-            //$this->db->query("INSERT INTO " . DB_PREFIX . "customer SET customer_group_id = '" . (int) $customer_group_id . "', store_id = '" . (int) $this->config->get('config_store_id') . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', company_name = '" . $this->db->escape($data['company_name']) . "', company_address = '" . $this->db->escape($data['company_address']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', gender = '" . $this->db->escape($data['gender']). "', dob = '" . $data['dob']. "', fax = '" . $this->db->escape($data['fax']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']['account']) ? serialize($data['custom_field']['account']) : '') . "', salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', newsletter = '" . (isset($data['newsletter']) ? (int) $data['newsletter'] : 0) . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "', status = '1', approved = '" . (int) !$customer_group_info['approval'] . "', date_added = NOW()");
+//$this->db->query("INSERT INTO " . DB_PREFIX . "customer SET customer_group_id = '" . (int) $customer_group_id . "', store_id = '" . (int) $this->config->get('config_store_id') . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', company_name = '" . $this->db->escape($data['company_name']) . "', company_address = '" . $this->db->escape($data['company_address']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', gender = '" . $this->db->escape($data['gender']). "', dob = '" . $data['dob']. "', fax = '" . $this->db->escape($data['fax']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']['account']) ? serialize($data['custom_field']['account']) : '') . "', salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', newsletter = '" . (isset($data['newsletter']) ? (int) $data['newsletter'] : 0) . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "', status = '1', approved = '" . (int) !$customer_group_info['approval'] . "', date_added = NOW()");
             $this->db->query('INSERT INTO ' . DB_PREFIX . "customer SET customer_group_id = '" . (int) $customer_group_id . "', store_id = '" . (int) $this->config->get('config_store_id') . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', company_name = '" . $this->db->escape($data['company_name']) . "', company_address = '" . $this->db->escape($data['company_address']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', gender = '" . $this->db->escape($data['gender']) . "', dob = '" . $data['dob'] . "', fax = '" . $this->db->escape($data['fax']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']['account']) ? serialize($data['custom_field']['account']) : '') . "', salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', newsletter = '" . (isset($data['newsletter']) ? (int) $data['newsletter'] : 0) . "',parent = '" . (isset($data['parent']) ? (int) $data['parent'] : null) . "',customer_category = '" . (null != $customer_category ? $customer_category : null) . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "', status = '1', approved = '" . (int) $customer_group_info['approval'] . "', date_added = NOW()");
         }
 
@@ -79,29 +79,29 @@ class ModelAccountCustomer extends Model {
         }
 
         if (!empty($data['address'])) {
-            //$this->db->query("INSERT INTO " . DB_PREFIX . "address SET customer_id = '" . (int) $customer_id . "', name = '" . $this->db->escape($data['firstname']) . " " . $this->db->escape($data['lastname']). "',  address = '" . $this->db->escape($data['address']) . "', location = '" . $this->db->escape($data['address_2']) . "', city = '" . $this->db->escape($data['city']) . "', postcode = '" . $this->db->escape($data['postcode']) . "', country_id = '" . (int) $data['country_id'] . "', zone_id = '" . (int) $data['zone_id'] . "', custom_field = '" . $this->db->escape(isset($data['custom_field']['address']) ? serialize($data['custom_field']['address']) : '') . "'");
+//$this->db->query("INSERT INTO " . DB_PREFIX . "address SET customer_id = '" . (int) $customer_id . "', name = '" . $this->db->escape($data['firstname']) . " " . $this->db->escape($data['lastname']). "',  address = '" . $this->db->escape($data['address']) . "', location = '" . $this->db->escape($data['address_2']) . "', city = '" . $this->db->escape($data['city']) . "', postcode = '" . $this->db->escape($data['postcode']) . "', country_id = '" . (int) $data['country_id'] . "', zone_id = '" . (int) $data['zone_id'] . "', custom_field = '" . $this->db->escape(isset($data['custom_field']['address']) ? serialize($data['custom_field']['address']) : '') . "'");
             $this->db->query('INSERT INTO ' . DB_PREFIX . "address SET customer_id = '" . (int) $customer_id . "', name = '" . $this->db->escape($data['firstname']) . ' ' . $this->db->escape($data['lastname']) . "',  address = '" . $this->db->escape($data['address']) . ' ' . $this->db->escape($data['location']) . "', building_name = '" . $this->db->escape($data['house_building']) . "'");
             $address_id = $this->db->getLastId();
             $this->db->query('UPDATE ' . DB_PREFIX . "customer SET address_id = '" . (int) $address_id . "' WHERE customer_id = '" . (int) $customer_id . "'");
         }
 
         if (!empty($data['company_address'])) {
-            //$this->db->query("INSERT INTO " . DB_PREFIX . "address SET customer_id = '" . (int) $customer_id . "', name = '" . $this->db->escape($data['firstname']) . " " . $this->db->escape($data['lastname']). "',  address = '" . $this->db->escape($data['address']) . "', location = '" . $this->db->escape($data['address_2']) . "', city = '" . $this->db->escape($data['city']) . "', postcode = '" . $this->db->escape($data['postcode']) . "', country_id = '" . (int) $data['country_id'] . "', zone_id = '" . (int) $data['zone_id'] . "', custom_field = '" . $this->db->escape(isset($data['custom_field']['address']) ? serialize($data['custom_field']['address']) : '') . "'");
+//$this->db->query("INSERT INTO " . DB_PREFIX . "address SET customer_id = '" . (int) $customer_id . "', name = '" . $this->db->escape($data['firstname']) . " " . $this->db->escape($data['lastname']). "',  address = '" . $this->db->escape($data['address']) . "', location = '" . $this->db->escape($data['address_2']) . "', city = '" . $this->db->escape($data['city']) . "', postcode = '" . $this->db->escape($data['postcode']) . "', country_id = '" . (int) $data['country_id'] . "', zone_id = '" . (int) $data['zone_id'] . "', custom_field = '" . $this->db->escape(isset($data['custom_field']['address']) ? serialize($data['custom_field']['address']) : '') . "'");
             $this->db->query('INSERT INTO ' . DB_PREFIX . "address SET customer_id = '" . (int) $customer_id . "', name = '" . $this->db->escape($data['firstname']) . ' ' . $this->db->escape($data['lastname']) . "',  address = '" . $this->db->escape($data['company_address']) . ' ' . $this->db->escape($data['modal_address_locality']) . "', flat_number = '" . $this->db->escape($data['company_address']) . "', building_name = '" . $this->db->escape($data['modal_address_locality']) . "',landmark = '" . $this->db->escape($data['modal_address_locality']) . "', latitude = '" . $this->db->escape($data['latitude']) . "', longitude = '" . $this->db->escape($data['longitude']) . "', address_type = '" . 'office' . "'");
             $address_id = $this->db->getLastId();
             $this->db->query('UPDATE ' . DB_PREFIX . "customer SET address_id = '" . (int) $address_id . "' WHERE customer_id = '" . (int) $customer_id . "'");
         }
 
-        //update refree id start
+//update refree id start
 
         if (isset($data['referee_user_id'])) {
             $this->db->query('UPDATE ' . DB_PREFIX . "customer SET refree_user_id = '" . (int) $data['referee_user_id'] . "' WHERE customer_id = '" . (int) $customer_id . "'");
         }
 
-        //update refree id end
-        //Get Email Template
+//update refree id end
+//Get Email Template
         if (!$customer_group_info['approval']) {
-            //Customer Registration Register
+//Customer Registration Register
 
             $subject = $this->emailtemplate->getSubject('Customer', 'customer_1', $data);
             $message = $this->emailtemplate->getMessage('Customer', 'customer_1', $data);
@@ -115,48 +115,48 @@ class ModelAccountCustomer extends Model {
             $mail->setHTML($message);
             $mail->send();
         } else {
-            //Customer Registration Approve
+//Customer Registration Approve
 
             $data['confirm_code'] = substr(sha1(uniqid(mt_rand(), true)), 0, 25);
 
-            //set token and send mail
+//set token and send mail
             $this->setCustomerToken($data['confirm_code'], $customer_id);
 
-            //customer_7 is for resend verification mail template
-            //customer_2 is for verify registration mail template
-            //customer_4 is for after customer verified
+//customer_7 is for resend verification mail template
+//customer_2 is for verify registration mail template
+//customer_4 is for after customer verified
 
             /* $subject = $this->emailtemplate->getSubject('Customer', 'customer_7', $data);
               $message = $this->emailtemplate->getMessage('Customer', 'customer_7', $data); */
 
-            //unset($data['confirm_code']);
+//unset($data['confirm_code']);
 
             /* verification mail end */
 
-            // $subject = $this->emailtemplate->getSubject('Customer', 'customer_2', $data);
-            // $message = $this->emailtemplate->getMessage('Customer', 'customer_2', $data);
+// $subject = $this->emailtemplate->getSubject('Customer', 'customer_2', $data);
+// $message = $this->emailtemplate->getMessage('Customer', 'customer_2', $data);
             $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_2', $data);
         }
 
-        // send message here
+// send message here
         if ($this->emailtemplate->getSmsEnabled('Customer', 'customer_1')) {
             $ret = $this->emailtemplate->sendmessage($data['telephone'], $sms_message);
         }
 
-        // Send to main admin email if new account email is enabled
-        //commented as particular message is not required.
-        // if ($this->config->get('config_account_mail')) {
-        //     $mail = new Mail($this->config->get('config_mail'));
-        //     $mail->setTo($this->config->get('config_email'));
-        //     $mail->send();
-        //     $emails = explode(',', $this->config->get('config_alert_emails'));
-        //     foreach ($emails as $email) {
-        //         if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        //             $mail->setTo($email);
-        //             $mail->send();
-        //         }
-        //     }
-        // }
+// Send to main admin email if new account email is enabled
+//commented as particular message is not required.
+// if ($this->config->get('config_account_mail')) {
+//     $mail = new Mail($this->config->get('config_mail'));
+//     $mail->setTo($this->config->get('config_email'));
+//     $mail->send();
+//     $emails = explode(',', $this->config->get('config_alert_emails'));
+//     foreach ($emails as $email) {
+//         if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+//             $mail->setTo($email);
+//             $mail->send();
+//         }
+//     }
+// }
 
         $this->trigger->fire('post.customer.add', $customer_id);
 
@@ -164,13 +164,13 @@ class ModelAccountCustomer extends Model {
     }
 
     public function editCustomer($data) {
-        // echo "<pre>";print_r($data);die;
+// echo "<pre>";print_r($data);die;
         $this->trigger->fire('pre.customer.edit', $data);
 
         $customer_id = $this->customer->getId();
 
         if (isset($data['telephone'])) {
-            //(21) 42353-5255
+//(21) 42353-5255
             $data['telephone'] = preg_replace('/[^0-9]/', '', $data['telephone']);
         }
 
@@ -181,9 +181,9 @@ class ModelAccountCustomer extends Model {
         if (!isset($data['gender'])) {
             $data['gender'] = null;
         }
-        //if(isset($data['dob'])) {
+//if(isset($data['dob'])) {
         $this->db->query('UPDATE ' . DB_PREFIX . "customer SET  customer_group_id = '" . (int) $data['customer_group_id'] . "' , firstname = '" . $this->db->escape($data['firstname']) . "', dob = '" . $data['dob'] . "', gender = '" . $this->db->escape($data['gender']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', company_name = '" . $this->db->escape($data['companyname']) . "', company_address = '" . $this->db->escape($data['companyaddress']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']) ? serialize($data['custom_field']) : '') . "' WHERE customer_id = '" . (int) $customer_id . "'");
-        //}
+//}
 
         $this->trigger->fire('post.customer.edit', $customer_id);
     }
@@ -212,10 +212,10 @@ class ModelAccountCustomer extends Model {
     }
 
     public function resetPassword($email, $password) {
-        //echo "<pre>";print_r($password);die;, ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "'
+//echo "<pre>";print_r($password);die;, ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "'
 
         if ($password && 'default' != $password) {
-            // echo "<pre>";print_r($this->db->escape($this->request->server['REMOTE_ADDR']));die;
+// echo "<pre>";print_r($this->db->escape($this->request->server['REMOTE_ADDR']));die;
 
             $this->trigger->fire('pre.customer.edit.password');
 
@@ -226,10 +226,10 @@ class ModelAccountCustomer extends Model {
     }
 
     public function editPassword($email, $password) {
-        //  echo "<pre>";print_r($password);die;
+//  echo "<pre>";print_r($password);die;
 
         if ($password && 'default' != $password) {
-            // echo "<pre>";print_r($password);die;
+// echo "<pre>";print_r($password);die;
 
             $this->trigger->fire('pre.customer.edit.password');
 
@@ -266,7 +266,7 @@ class ModelAccountCustomer extends Model {
     public function getTotalOrders($customer_id) {
         $query = $this->db->query('SELECT COUNT(*) AS total FROM `' . DB_PREFIX . "order` o WHERE customer_id = '" . (int) $customer_id . "' AND o.order_status_id > '0' ");
 
-        //return $query;
+//return $query;
         return $query->row['total'];
     }
 
@@ -295,7 +295,7 @@ class ModelAccountCustomer extends Model {
     }
 
     public function deleteOTP($customer_id, $otp, $type) {
-        //echo "<pre>";print_r($customer_id.$otp.$type);die;
+//echo "<pre>";print_r($customer_id.$otp.$type);die;
         $query = $this->db->query('DELETE FROM ' . DB_PREFIX . "otp WHERE otp='" . $this->db->escape($otp) . "' AND customer_id = '" . $customer_id . "' and type='" . $type . "'");
 
         return true;
@@ -370,7 +370,7 @@ class ModelAccountCustomer extends Model {
             'ip_address' => $customer['ip'],
         ];
 
-        //Reset Password id = 3
+//Reset Password id = 3
         $subject = $this->emailtemplate->getSubject('Customer', 'customer_3', $data);
         $message = $this->emailtemplate->getMessage('Customer', 'customer_3', $data);
 
@@ -405,7 +405,7 @@ class ModelAccountCustomer extends Model {
         if ($customer_info) {
             $this->db->query('UPDATE ' . DB_PREFIX . "customer SET approved = '1' , token = '' WHERE customer_id = '" . (int) $customer_id . "'");
 
-            //AFTER CUSTOMER VERIFIED MAIL SENDING
+//AFTER CUSTOMER VERIFIED MAIL SENDING
 //            $store_name = $this->config->get('config_name');
 //            $store_url = HTTP_CATALOG . 'index.php?path=account/login';
 //
@@ -452,7 +452,7 @@ class ModelAccountCustomer extends Model {
     public function resendVerificationEmail($data, $customer_id) {
         $data['confirm_code'] = substr(sha1(uniqid(mt_rand(), true)), 0, 25);
 
-        //set token and send mail
+//set token and send mail
         $this->setCustomerToken($data['confirm_code'], $customer_id);
 
         $verification_subject = $this->emailtemplate->getSubject('Customer', 'customer_7', $data);
@@ -513,9 +513,9 @@ class ModelAccountCustomer extends Model {
         $this->cache->delete('category_price_data');
         $cache_price_data = [];
         $sql = 'SELECT * FROM `' . DB_PREFIX . "product_category_prices` where `store_id` = $store_id";
-        //echo $sql;exit;
+//echo $sql;exit;
         $resultsdata = $this->db->query($sql);
-        //echo '<pre>'; print_r($resultsdata);exit;
+//echo '<pre>'; print_r($resultsdata);exit;
         if (count($resultsdata->rows) > 0) {
             foreach ($resultsdata->rows as $result) {
                 $cache_price_data[$result['product_store_id'] . '_' . $result['price_category'] . '_' . $store_id] = $result['price'];
@@ -544,8 +544,8 @@ class ModelAccountCustomer extends Model {
         $customer_parent_details = NULL;
         $customer_details = $this->getCustomer($customer_id);
         if ($customer_details != NULL && $customer_details['parent'] > 0 && $customer_details['parent'] != NULL) {
-            //$log = new Log('error.log');
-            //$log->write($customer_details);
+//$log = new Log('error.log');
+//$log->write($customer_details);
             $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . (int) $customer_details['parent'] . "'");
             return $query->row;
         } else {
@@ -557,8 +557,8 @@ class ModelAccountCustomer extends Model {
         $customer_parent_details = NULL;
         $customer_details = $this->getCustomer($customer_id);
         if ($customer_details != NULL && $customer_details['parent'] > 0 && $customer_details['parent'] != NULL) {
-            //$log = new Log('error.log');
-            //$log->write($customer_details);
+//$log = new Log('error.log');
+//$log->write($customer_details);
             $query = $this->db->query('SELECT  customer_id,email,firstname,lastname FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . (int) $customer_details['parent'] . "'");
             return $query->row;
         } else {
@@ -567,8 +567,13 @@ class ModelAccountCustomer extends Model {
     }
 
     public function getSubusersByParent($parent_user_id) {
-        $sub_users = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer c WHERE c.parent = '" . (int) $parent_user_id . "'");
+        $sub_users = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer c WHERE c.parent = '" . (int) $parent_user_id . "' AND (order_approval_access = 0 OR order_approval_access IS NULL)");
         return $sub_users->rows;
+    }
+
+    public function UpdateOrderApprovalAccess($parent_id, $customer_id, $status) {
+        $sql = 'UPDATE  ' . DB_PREFIX . "customer SET  order_approval_access = '" . (int) $status . "' WHERE parent = '" . (int) $parent_id . "' AND customer_id ='" . (int) $customer_id . "'";
+        $this->db->query($sql);
     }
 
 }

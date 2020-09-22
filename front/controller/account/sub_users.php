@@ -632,6 +632,14 @@ class Controlleraccountsubusers extends Controller {
         $log->write($this->request->post['button']);
         $log->write($this->request->post['head_chef']);
         $log->write($this->request->post['procurement_person']);
+        $this->load->model('account/customer');
+        if ($this->request->post['button'] == 'assign_head_chef') {
+            $this->model_account_customer->UpdateOrderApprovalAccess($this->customer->getId(), $this->request->post['head_chef'], 1);
+        }
+
+        if ($this->request->post['button'] == 'assign_procurement_person') {
+            $this->model_account_customer->UpdateOrderApprovalAccess($this->customer->getId(), $this->request->post['procurement_person'], 1);
+        }
     }
 
 }
