@@ -320,7 +320,7 @@
                                         </select>
                                     </div>
                                     <div class="col-sm-2 col-sm-pull-2 secion-row text-center" style="margin-bottom: 20px; float: right; margin-right: 63px">
-                                        <button type="submit" data-style="zoom-out" id="save-button" onclick="return validateAndSubmitForm()" class="btn btn-default"><span class="ladda-label"><?= $button_save ?></span><span class="ladda-spinner"></span></button>
+                                        <button type="submit" data-style="zoom-out" id="assign_head_chef" class="btn btn-default"><span class="ladda-label"><?= $button_save ?></span><span class="ladda-spinner"></span></button>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -330,7 +330,7 @@
                                         </select>
                                     </div>
                                     <div class="col-sm-2 col-sm-pull-2 secion-row text-center" style="margin-bottom: 20px; float: right; margin-right: 63px">
-                                        <button type="submit" data-style="zoom-out" id="save-button" onclick="return validateAndSubmitForm()" class="btn btn-default"><span class="ladda-label"><?= $button_save ?></span><span class="ladda-spinner"></span></button>
+                                        <button type="submit" data-style="zoom-out" id="assign_procurement_person" class="btn btn-default"><span class="ladda-label"><?= $button_save ?></span><span class="ladda-spinner"></span></button>
                                     </div>
                                 </div>
                             </fieldset>
@@ -368,60 +368,60 @@
 <?php if ($kondutoStatus) { ?>
 <script src="https://i.k-analytix.com/konduto.min.js" type="text/javascript"></script>
 <script type="text/javascript">
-                                            var __kdt = __kdt || [];
-                                            var public_key = '<?php echo $konduto_public_key ?>';
-                                            console.log("public_key");
-                                            console.log(public_key);
-                                            __kdt.push({"public_key": public_key}); // The public key identifies your store
-                                            __kdt.push({"post_on_load": false});
-                                            (function () {
-                                                var kdt = document.createElement('script');
-                                                kdt.id = 'kdtjs';
-                                                kdt.type = 'text/javascript';
-                                                kdt.async = true;
-                                                kdt.src = 'https://i.k-analytix.com/k.js';
-                                                var s = document.getElementsByTagName('body')[0];
-                                                console.log(s);
-                                                s.parentNode.insertBefore(kdt, s);
-                                            })();
+                                var __kdt = __kdt || [];
+                                var public_key = '<?php echo $konduto_public_key ?>';
+                                console.log("public_key");
+                                console.log(public_key);
+                                __kdt.push({"public_key": public_key}); // The public key identifies your store
+                                __kdt.push({"post_on_load": false});
+                                (function () {
+                                    var kdt = document.createElement('script');
+                                    kdt.id = 'kdtjs';
+                                    kdt.type = 'text/javascript';
+                                    kdt.async = true;
+                                    kdt.src = 'https://i.k-analytix.com/k.js';
+                                    var s = document.getElementsByTagName('body')[0];
+                                    console.log(s);
+                                    s.parentNode.insertBefore(kdt, s);
+                                })();
 
-                                            var visitorID;
-                                            (function () {
-                                                var period = 300;
-                                                var limit = 20 * 1e3;
-                                                var nTry = 0;
-                                                var intervalID = setInterval(function () {
-                                                    var clear = limit / period <= ++nTry;
-                                                    console.log("visitorID trssy");
-                                                    if (typeof (Konduto.getVisitorID) !== "undefined") {
-                                                        visitorID = window.Konduto.getVisitorID();
-                                                        clear = true;
-                                                    }
-                                                    console.log("visitorID clear");
-                                                    if (clear) {
-                                                        clearInterval(intervalID);
-                                                    }
-                                                }, period);
-                                            })(visitorID);
+                                var visitorID;
+                                (function () {
+                                    var period = 300;
+                                    var limit = 20 * 1e3;
+                                    var nTry = 0;
+                                    var intervalID = setInterval(function () {
+                                        var clear = limit / period <= ++nTry;
+                                        console.log("visitorID trssy");
+                                        if (typeof (Konduto.getVisitorID) !== "undefined") {
+                                            visitorID = window.Konduto.getVisitorID();
+                                            clear = true;
+                                        }
+                                        console.log("visitorID clear");
+                                        if (clear) {
+                                            clearInterval(intervalID);
+                                        }
+                                    }, period);
+                                })(visitorID);
 
 
-                                            var page_category = 'my-account-page';
-                                            (function () {
-                                                var period = 300;
-                                                var limit = 20 * 1e3;
-                                                var nTry = 0;
-                                                var intervalID = setInterval(function () {
-                                                    var clear = limit / period <= ++nTry;
-                                                    if (typeof (Konduto.sendEvent) !== "undefined") {
-                                                        Konduto.sendEvent(' page ', page_category); //Programmatic trigger event
-                                                        clear = true;
-                                                    }
-                                                    if (clear) {
-                                                        clearInterval(intervalID);
-                                                    }
-                                                },
-                                                        period);
-                                            })(page_category);
+                                var page_category = 'my-account-page';
+                                (function () {
+                                    var period = 300;
+                                    var limit = 20 * 1e3;
+                                    var nTry = 0;
+                                    var intervalID = setInterval(function () {
+                                        var clear = limit / period <= ++nTry;
+                                        if (typeof (Konduto.sendEvent) !== "undefined") {
+                                            Konduto.sendEvent(' page ', page_category); //Programmatic trigger event
+                                            clear = true;
+                                        }
+                                        if (clear) {
+                                            clearInterval(intervalID);
+                                        }
+                                    },
+                                            period);
+                                })(page_category);
 
 
 </script>
@@ -760,6 +760,21 @@
                         $head_chef.append('<option value=' + value.customer_id + '>' + value.email + '</option>'); // return empty
                     });
                 }
+            }
+        });
+    });
+    $(document).delegate('#assign_head_chef, #assign_procurement_person', 'click', function (e) {
+        e.preventDefault();
+        //alert(this.id);
+        console.log($('#head_chef').val());
+        console.log($('#procurement_person').val());
+        $.ajax({
+            url: 'index.php?path=account/sub_users/assignorderapprovals',
+            type: 'post',
+            data: {button: this.id, head_chef: $('#head_chef').val(), procurement_person: $('#procurement_person').val()},
+            dataType: 'json',
+            success: function (json) {
+                console.log(json);
             }
         });
     });

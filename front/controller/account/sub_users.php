@@ -627,4 +627,11 @@ class Controlleraccountsubusers extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+    public function assignorderapprovals() {
+        $log = new Log('error.log');
+        $log->write($this->request->post['button']);
+        $log->write($this->request->post['head_chef']);
+        $log->write($this->request->post['procurement_person']);
+    }
+
 }
