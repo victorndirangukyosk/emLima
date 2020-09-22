@@ -758,7 +758,7 @@
                     var $procurement_person = $('#procurement_person');
                     var $head_chef = $('#head_chef');
                     $('#procurement_person').empty();
-                    $('#procurement_person').append('<option>Select Procurement Person</option>');
+                    $('#procurement_person').append('<option value="">Select Procurement Person</option>');
                     $.each(json.data, function (key, value)
                     {
                         if (value.order_approval_access == 1 && value.order_approval_access_role == 'procurement_person') {
@@ -771,7 +771,7 @@
                     });
 
                     $('#head_chef').empty();
-                    $('#head_chef').append('<option>Select Head Chef</option>');
+                    $('#head_chef').append('<option value="">Select Head Chef</option>');
                     $.each(json.data, function (key, value)
                     {
                         if (value.order_approval_access == 1 && value.order_approval_access_role == 'head_chef') {
@@ -794,6 +794,15 @@
         //alert(this.id);
         console.log($('#head_chef').val());
         console.log($('#procurement_person').val());
+        if (this.id == 'assign_head_chef' && $('#head_chef').val() == '') {
+            alert('Please select option');
+            return false;
+        }
+
+        if (this.id == 'assign_procurement_person' && $('#procurement_person').val() == '') {
+            alert('Please select option');
+            return false;
+        }
         $.ajax({
             url: 'index.php?path=account/sub_users/assignorderapprovals',
             type: 'post',
@@ -819,7 +828,7 @@
                             var $procurement_person = $('#procurement_person');
                             var $head_chef = $('#head_chef');
                             $('#procurement_person').empty();
-                            $('#procurement_person').append('<option>Select Procurement Person</option>');
+                            $('#procurement_person').append('<option value="">Select Procurement Person</option>');
                             $.each(json.data, function (key, value)
                             {
                                 if (value.order_approval_access == 1 && value.order_approval_access_role == 'procurement_person') {
@@ -831,7 +840,7 @@
                             });
 
                             $('#head_chef').empty();
-                            $('#head_chef').append('<option>Select Head Chef</option>');
+                            $('#head_chef').append('<option value="">Select Head Chef</option>');
                             $.each(json.data, function (key, value)
                             {
                                 if (value.order_approval_access == 1 && value.order_approval_access_role == 'head_chef') {
