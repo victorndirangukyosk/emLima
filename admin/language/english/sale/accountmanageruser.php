@@ -4,10 +4,10 @@
 $_['heading_title'] = 'Customers';
 
 // Text
-$_['text_success'] = 'Success: You have modified account managers!';
+$_['text_success'] = 'Success: You have modified customers!';
 $_['text_list'] = 'Customers List';
-$_['text_add'] = 'Add Account Manager';
-$_['text_edit'] = 'Edit Account Manager';
+$_['text_add'] = 'Add Customer';
+$_['text_edit'] = 'Edit Customer';
 $_['text_default'] = 'Default';
 $_['text_balance'] = 'Balance';
 $_['text_add_ban_ip'] = 'Add Ban IP';
@@ -19,9 +19,9 @@ $_['entry_dob'] = 'DOB';
 
 $_['entry_gender'] = 'Gender';
 // Column
-$_['column_name'] = 'Account Manager Name';
+$_['column_name'] = 'Customer Name';
 $_['column_email'] = 'E-Mail';
-$_['column_customer_group'] = 'Account Manager Group';
+$_['column_customer_group'] = 'Customer Group';
 $_['column_status'] = 'Status';
 $_['column_date_added'] = 'Date Added';
 $_['column_comment'] = 'Comment';
@@ -35,7 +35,7 @@ $_['column_total'] = 'Total Accounts';
 $_['column_action'] = 'Action';
 $_['column_telephone'] = 'Phone No.';
 // Entry
-$_['entry_customer_group'] = 'Account Manager Group';
+$_['entry_customer_group'] = 'Customer Group';
 $_['entry_firstname'] = 'First Name';
 $_['entry_lastname'] = 'Last Name';
 $_['entry_email'] = 'E-Mail';
@@ -60,7 +60,7 @@ $_['entry_comment'] = 'Comment';
 $_['entry_description'] = 'Description';
 $_['entry_amount'] = 'Amount';
 $_['entry_points'] = 'Points';
-$_['entry_name'] = 'Account Manager Name';
+$_['entry_name'] = 'Customer Name';
 $_['entry_ip'] = 'IP';
 $_['entry_date_added'] = 'Date Added';
 $_['entry_send_email'] = 'Send Mail';

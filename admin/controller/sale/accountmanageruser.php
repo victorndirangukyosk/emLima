@@ -7,7 +7,7 @@ class ControllerSaleAccountManagerUser extends Controller {
     public function index() {
         $log = new Log('error.log');
         $log->write($this->user->getId());
-        $this->load->language('sale/accountmanager');
+        $this->load->language('sale/accountmanageruser');
 
         $this->document->setTitle($this->language->get('heading_title'));
 
@@ -26,120 +26,6 @@ class ControllerSaleAccountManagerUser extends Controller {
         $data = [];
         $this->load->model('report/excel');
         $this->model_report_excel->download_accountmanagercustomers_excel($data, $this->user->getId());
-    }
-
-    public function add() {
-        $this->load->language('sale/accountmanager');
-
-        $this->document->setTitle($this->language->get('heading_title'));
-
-        $this->load->model('user/accountmanager');
-
-        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
-            $user_id = $this->model_user_accountmanager->addAccountManager($this->request->post);
-
-            $this->session->data['success'] = $this->language->get('text_success');
-
-            $url = '';
-
-            if (isset($this->request->get['sort'])) {
-                $url .= '&sort=' . $this->request->get['sort'];
-            }
-
-            if (isset($this->request->get['order'])) {
-                $url .= '&order=' . $this->request->get['order'];
-            }
-
-            if (isset($this->request->get['page'])) {
-                $url .= '&page=' . $this->request->get['page'];
-            }
-
-            if (isset($this->request->post['button']) and 'save' == $this->request->post['button']) {
-                $this->response->redirect($this->url->link('sale/accountmanager/edit', 'user_id=' . $user_id . '&token=' . $this->session->data['token'] . $url, 'SSL'));
-            }
-
-            if (isset($this->request->post['button']) and 'new' == $this->request->post['button']) {
-                $this->response->redirect($this->url->link('sale/accountmanager/add', 'token=' . $this->session->data['token'] . $url, 'SSL'));
-            }
-
-            $this->response->redirect($this->url->link('sale/accountmanager', 'token=' . $this->session->data['token'] . $url, 'SSL'));
-        }
-
-        $this->getForm();
-    }
-
-    public function edit() {
-        $this->load->language('sale/accountmanager');
-
-        $this->document->setTitle($this->language->get('heading_title'));
-
-        $this->load->model('user/accountmanager');
-
-        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
-            $this->model_user_accountmanager->editUser($this->request->get['user_id'], $this->request->post);
-
-            $this->session->data['success'] = $this->language->get('text_success');
-
-            $url = '';
-
-            if (isset($this->request->get['sort'])) {
-                $url .= '&sort=' . $this->request->get['sort'];
-            }
-
-            if (isset($this->request->get['order'])) {
-                $url .= '&order=' . $this->request->get['order'];
-            }
-
-            if (isset($this->request->get['page'])) {
-                $url .= '&page=' . $this->request->get['page'];
-            }
-
-            if (isset($this->request->post['button']) and 'save' == $this->request->post['button']) {
-                $this->response->redirect($this->url->link('sale/accountmanager/edit', 'user_id=' . $this->request->get['user_id'] . '&token=' . $this->session->data['token'] . $url, 'SSL'));
-            }
-
-            if (isset($this->request->post['button']) and 'new' == $this->request->post['button']) {
-                $this->response->redirect($this->url->link('sale/accountmanager/add', 'token=' . $this->session->data['token'] . $url, 'SSL'));
-            }
-
-            $this->response->redirect($this->url->link('sale/accountmanager', 'token=' . $this->session->data['token'] . $url, 'SSL'));
-        }
-
-        $this->getForm();
-    }
-
-    public function delete() {
-        $this->load->language('sale/accountmanager');
-
-        $this->document->setTitle($this->language->get('heading_title'));
-
-        $this->load->model('user/accountmanager');
-
-        if (isset($this->request->post['selected']) && $this->validateDelete()) {
-            foreach ($this->request->post['selected'] as $user_id) {
-                $this->model_user_accountmanager->deleteUser($user_id);
-            }
-
-            $this->session->data['success'] = $this->language->get('text_success');
-
-            $url = '';
-
-            if (isset($this->request->get['sort'])) {
-                $url .= '&sort=' . $this->request->get['sort'];
-            }
-
-            if (isset($this->request->get['order'])) {
-                $url .= '&order=' . $this->request->get['order'];
-            }
-
-            if (isset($this->request->get['page'])) {
-                $url .= '&page=' . $this->request->get['page'];
-            }
-
-            $this->response->redirect($this->url->link('sale/accountmanager', 'token=' . $this->session->data['token'] . $url, 'SSL'));
-        }
-
-        $this->getList();
     }
 
     protected function getList() {
@@ -277,11 +163,11 @@ class ControllerSaleAccountManagerUser extends Controller {
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('sale/accountmanager', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+            'href' => $this->url->link('sale/accountmanageruser', 'token=' . $this->session->data['token'] . $url, 'SSL'),
         ];
 
-        $data['add'] = $this->url->link('sale/accountmanager/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['delete'] = $this->url->link('sale/accountmanager/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['add'] = $this->url->link('sale/accountmanageruser/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['delete'] = $this->url->link('sale/accountmanageruser/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
         $data['customers'] = [];
 
@@ -315,7 +201,7 @@ class ControllerSaleAccountManagerUser extends Controller {
                 'status' => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
                 'ip' => $result['ip'],
                 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
-                'edit' => $this->url->link('sale/accountmanager/edit', 'token=' . $this->session->data['token'] . '&user_id=' . $result['customer_id'] . $url, 'SSL'),
+                'edit' => $this->url->link('sale/accountmanageruser/edit', 'token=' . $this->session->data['token'] . '&user_id=' . $result['customer_id'] . $url, 'SSL'),
             ];
         }
 
@@ -436,11 +322,11 @@ class ControllerSaleAccountManagerUser extends Controller {
             $url .= '&page=' . $this->request->get['page'];
         }
 
-        $data['sort_name'] = $this->url->link('sale/accountmanager', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
-        $data['sort_email'] = $this->url->link('sale/accountmanager', 'token=' . $this->session->data['token'] . '&sort=c.email' . $url, 'SSL');
-        $data['sort_status'] = $this->url->link('sale/accountmanager', 'token=' . $this->session->data['token'] . '&sort=c.status' . $url, 'SSL');
-        $data['sort_ip'] = $this->url->link('sale/accountmanager', 'token=' . $this->session->data['token'] . '&sort=c.ip' . $url, 'SSL');
-        $data['sort_date_added'] = $this->url->link('sale/accountmanager', 'token=' . $this->session->data['token'] . '&sort=c.date_added' . $url, 'SSL');
+        $data['sort_name'] = $this->url->link('sale/accountmanageruser', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
+        $data['sort_email'] = $this->url->link('sale/accountmanageruser', 'token=' . $this->session->data['token'] . '&sort=c.email' . $url, 'SSL');
+        $data['sort_status'] = $this->url->link('sale/accountmanageruser', 'token=' . $this->session->data['token'] . '&sort=c.status' . $url, 'SSL');
+        $data['sort_ip'] = $this->url->link('sale/accountmanageruser', 'token=' . $this->session->data['token'] . '&sort=c.ip' . $url, 'SSL');
+        $data['sort_date_added'] = $this->url->link('sale/accountmanageruser', 'token=' . $this->session->data['token'] . '&sort=c.date_added' . $url, 'SSL');
 
         $url = '';
 
@@ -492,7 +378,7 @@ class ControllerSaleAccountManagerUser extends Controller {
         $pagination->total = $customer_total;
         $pagination->page = $page;
         $pagination->limit = $this->config->get('config_limit_admin');
-        $pagination->url = $this->url->link('sale/accountmanager', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+        $pagination->url = $this->url->link('sale/accountmanageruser', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
@@ -527,7 +413,7 @@ class ControllerSaleAccountManagerUser extends Controller {
     }
 
     protected function validateForm() {
-        if (!$this->user->hasPermission('modify', 'sale/accountmanager')) {
+        if (!$this->user->hasPermission('modify', 'sale/accountmanageruser')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
 
@@ -568,14 +454,6 @@ class ControllerSaleAccountManagerUser extends Controller {
         // if($this->error) {
         //     $this->error['warning'] = $this->language->get('error_warning');
         // }
-
-        return !$this->error;
-    }
-
-    protected function validateDelete() {
-        if (!$this->user->hasPermission('modify', 'sale/accountmanager')) {
-            $this->error['warning'] = $this->language->get('error_permission');
-        }
 
         return !$this->error;
     }
