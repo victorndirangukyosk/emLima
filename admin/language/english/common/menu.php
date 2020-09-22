@@ -17,6 +17,7 @@ $_['text_customer'] = 'Customers';
 $_['text_customer_group'] = 'Customer Groups';
 $_['text_customer_ban_ip'] = 'Banned IP';
 $_['text_account_managers'] = 'Account Managers';
+$_['text_account_managers_customers'] = 'Customers';
 $_['text_custom_field'] = 'Custom Fields';
 $_['text_dashboard'] = 'Dashboard';
 $_['text_design'] = 'Design';
