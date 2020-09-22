@@ -751,13 +751,23 @@
                     $procurement_person.find('option').remove();
                     $.each(json.data, function (key, value)
                     {
-                        $procurement_person.append('<option value=' + value.customer_id + '>' + value.email + '</option>'); // return empty
+                        if (value.order_approval_access == 1 && value.order_approval_access_role == 'procurement_person') {
+                            console.log(value.order_approval_access);
+                            console.log(value.order_approval_access_role);
+                            $procurement_person.append('<option value=' + value.customer_id + ' selected="selected">' + value.email + '</option>'); // return empty
+                        } else {
+                            $procurement_person.append('<option value=' + value.customer_id + '>' + value.email + '</option>'); // return empty
+                        }
                     });
 
                     $head_chef.find('option').remove();
                     $.each(json.data, function (key, value)
                     {
-                        $head_chef.append('<option value=' + value.customer_id + '>' + value.email + '</option>'); // return empty
+                        if (value.order_approval_access == 1 && value.order_approval_access_role == 'head_chef') {
+                            $head_chef.append('<option value=' + value.customer_id + ' selected="selected">' + value.email + '</option>'); // return empty
+                        } else {
+                            $head_chef.append('<option value=' + value.customer_id + '>' + value.email + '</option>'); // return empty
+                        }
                     });
                 }
             }
@@ -784,13 +794,23 @@
                     $procurement_person.find('option').remove();
                     $.each(json.data, function (key, value)
                     {
-                        $procurement_person.append('<option value=' + value.customer_id + '>' + value.email + '</option>'); // return empty
+                        if (value.order_approval_access == 1 && value.order_approval_access_role == 'procurement_person') {
+                            $procurement_person.append('<option value=' + value.customer_id + ' selected="selected">' + value.email + '</option>');
+                        }// return empty
+                        else {
+                            $procurement_person.append('<option value=' + value.customer_id + '>' + value.email + '</option>');
+                        }
                     });
 
                     $head_chef.find('option').remove();
                     $.each(json.data, function (key, value)
                     {
-                        $head_chef.append('<option value=' + value.customer_id + '>' + value.email + '</option>'); // return empty
+                        if (value.order_approval_access == 1 && value.order_approval_access_role == 'head_chef') {
+                            $procurement_person.append('<option value=' + value.customer_id + ' selected="selected">' + value.email + '</option>');
+                        }// return empty
+                        else {
+                            $head_chef.append('<option value=' + value.customer_id + '>' + value.email + '</option>'); // return empty
+                        }
                     });
                 }
             }
