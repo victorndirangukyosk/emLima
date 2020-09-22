@@ -316,7 +316,7 @@
                                 <div class="form-group">
                                     <label for="name" class="col-sm-3 control-label">Select Head Chef</label>
                                     <div class="col-sm-4">
-                                        <select class="form-control input-lg">
+                                        <select class="form-control input-lg" id="head_chef" name="head_chef">
                                         </select>
                                     </div>
                                     <div class="col-sm-2 col-sm-pull-2 secion-row text-center" style="margin-bottom: 20px; float: right; margin-right: 63px">
@@ -326,7 +326,7 @@
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label" for="input-lastname">Select Procurement Person</label>
                                     <div class="col-sm-4">
-                                        <select class="form-control input-lg">
+                                        <select class="form-control input-lg" id="procurement_person" name="procurement_person">
                                         </select>
                                     </div>
                                     <div class="col-sm-2 col-sm-pull-2 secion-row text-center" style="margin-bottom: 20px; float: right; margin-right: 63px">
@@ -745,6 +745,20 @@
                 if (json.success == true) {
                     console.log(json.success);
                     console.log(json.data);
+
+                    var $procurement_person = $('#procurement_person');
+                    var $head_chef = $('#head_chef');
+                    $procurement_person.find('option').remove();
+                    $.each(json.data, function (key, value)
+                    {
+                        $procurement_person.append('<option value=' + value.customer_id + '>' + value.email + '</option>'); // return empty
+                    });
+
+                    $head_chef.find('option').remove();
+                    $.each(json.data, function (key, value)
+                    {
+                        $head_chef.append('<option value=' + value.customer_id + '>' + value.email + '</option>'); // return empty
+                    });
                 }
             }
         });
