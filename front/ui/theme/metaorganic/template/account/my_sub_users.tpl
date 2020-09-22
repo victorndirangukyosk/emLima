@@ -756,7 +756,7 @@
                             console.log(value.order_approval_access);
                             console.log(value.order_approval_access_role);
                             $procurement_person.append('<option value=' + value.customer_id + ' selected="selected">' + value.email + '</option>'); // return empty
-                        } else {
+                        } else if (value.order_approval_access == 0 && (value.order_approval_access_role == null || value.order_approval_access_role == '')) {
                             $procurement_person.append('<option value=' + value.customer_id + '>' + value.email + '</option>'); // return empty
                         }
                     });
@@ -767,7 +767,7 @@
                     {
                         if (value.order_approval_access == 1 && value.order_approval_access_role == 'head_chef') {
                             $head_chef.append('<option value=' + value.customer_id + ' selected="selected">' + value.email + '</option>'); // return empty
-                        } else {
+                        } else if (value.order_approval_access == 0 && (value.order_approval_access_role == null || value.order_approval_access_role == '')) {
                             $head_chef.append('<option value=' + value.customer_id + '>' + value.email + '</option>'); // return empty
                         }
                     });
@@ -778,47 +778,6 @@
     $(document).delegate('#assign_head_chef, #assign_procurement_person', 'click', function (e) {
         e.preventDefault();
         console.log('Hi');
-        $.ajax({
-            url: 'index.php?path=account/sub_users/getSubusers',
-            type: 'post',
-            dataType: 'json',
-            success: function (json) {
-                if (json.success == false) {
-                    console.log(json.success);
-                }
-
-                if (json.success == true) {
-                    console.log(json.success);
-                    console.log(json.data);
-
-                    var $procurement_person = $('#procurement_person');
-                    var $head_chef = $('#head_chef');
-                    $('#procurement_person').empty();
-                    $('#procurement_person').append('<option>Select Procurement Person</option>');
-                    $.each(json.data, function (key, value)
-                    {
-                        if (value.order_approval_access == 1 && value.order_approval_access_role == 'procurement_person') {
-                            $procurement_person.append('<option value=' + value.customer_id + ' selected="selected">' + value.email + '</option>');
-                        }// return empty
-                        else if() {
-                            $procurement_person.append('<option value=' + value.customer_id + '>' + value.email + '</option>');
-                        }
-                    });
-
-                    $('#head_chef').empty();
-                    $('#head_chef').append('<option>Select Head Chef</option>');
-                    $.each(json.data, function (key, value)
-                    {
-                        if (value.order_approval_access == 1 && value.order_approval_access_role == 'head_chef') {
-                            $head_chef.append('<option value=' + value.customer_id + ' selected="selected">' + value.email + '</option>');
-                        }// return empty
-                        else {
-                            $head_chef.append('<option value=' + value.customer_id + '>' + value.email + '</option>'); // return empty
-                        }
-                    });
-                }
-            }
-        });
     });
 
     $(document).delegate('#assign_head_chef, #assign_procurement_person', 'click', function (e) {
@@ -833,6 +792,47 @@
             dataType: 'json',
             success: function (json) {
                 console.log(json);
+                $.ajax({
+                    url: 'index.php?path=account/sub_users/getSubusers',
+                    type: 'post',
+                    dataType: 'json',
+                    success: function (json) {
+                        if (json.success == false) {
+                            console.log(json.success);
+                        }
+
+                        if (json.success == true) {
+                            console.log(json.success);
+                            console.log(json.data);
+
+                            var $procurement_person = $('#procurement_person');
+                            var $head_chef = $('#head_chef');
+                            $('#procurement_person').empty();
+                            $('#procurement_person').append('<option>Select Procurement Person</option>');
+                            $.each(json.data, function (key, value)
+                            {
+                                if (value.order_approval_access == 1 && value.order_approval_access_role == 'procurement_person') {
+                                    $procurement_person.append('<option value=' + value.customer_id + ' selected="selected">' + value.email + '</option>');
+                                }// return empty
+                                else if (value.order_approval_access == 0 && (value.order_approval_access_role == '' || value.order_approval_access_role == null)) {
+                                    $procurement_person.append('<option value=' + value.customer_id + '>' + value.email + '</option>');
+                                }
+                            });
+
+                            $('#head_chef').empty();
+                            $('#head_chef').append('<option>Select Head Chef</option>');
+                            $.each(json.data, function (key, value)
+                            {
+                                if (value.order_approval_access == 1 && value.order_approval_access_role == 'head_chef') {
+                                    $head_chef.append('<option value=' + value.customer_id + ' selected="selected">' + value.email + '</option>');
+                                }// return empty
+                                else if (value.order_approval_access == 0 && (value.order_approval_access_role == '' || value.order_approval_access_role == null)) {
+                                    $head_chef.append('<option value=' + value.customer_id + '>' + value.email + '</option>'); // return empty
+                                }
+                            });
+                        }
+                    }
+                });
             }
         });
     });
