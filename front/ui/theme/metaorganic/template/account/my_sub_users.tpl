@@ -10,6 +10,7 @@
             <ul class="nav nav-tabs">
                 <li class="active"><a data-toggle="tab" href="#addSubUser">Add Sub User</a></li>
                 <li><a data-toggle="tab" href="#allsubusers">Sub users</a></li>
+                <li><a data-toggle="tab" href="#assign_approvals">Assign Order Approvals</a></li>
             </ul>
 
             <div class="tab-content">
@@ -304,8 +305,34 @@
                         <div class="col-sm-2 col-sm-pull-2 secion-row text-center" style="margin-bottom: 20px; float: right; margin-right: 63px">
                             <button type="submit" data-style="zoom-out" id="save-button" onclick="return validateAndSubmitForm()" class="btn btn-default"><span class="ladda-label"><?= $button_save ?></span><span class="ladda-spinner"></span></button>
                         </div>
+                    </form>
                 </div>
-                </form>
+                <div id="assign_approvals" class="tab-pane fade">
+                    <form  autocomplete="off" method="post" action="<?php echo $action?>" id="add-user-form" enctype="multipart/form-data" class="form-horizontal">
+                        <div class="secion-row">
+                            <br />
+
+                            <fieldset>
+                                <div class="form-group">
+                                    <label for="name" class="col-sm-3 control-label">Select Head Chef</label>
+                                    <div class="col-sm-6">
+                                        <input type="text" value="" size="30" placeholder="Contact Person First Name" name="firstname" maxlength="100" id="name" class="form-control input-lg" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="input-lastname">Select Procurement Person</label>
+                                    <div class="col-sm-6 col-xs-12">
+                                        <input type="text" name="lastname" value="" placeholder="Contact Person Last Name" id="input-lastname" class="form-control input-lg" />
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                        </div>
+                        <div class="col-sm-2 col-sm-pull-2 secion-row text-center" style="margin-bottom: 20px; float: right; margin-right: 63px">
+                            <button type="submit" data-style="zoom-out" id="save-button" onclick="return validateAndSubmitForm()" class="btn btn-default"><span class="ladda-label"><?= $button_save ?></span><span class="ladda-spinner"></span></button>
+                        </div>
+                    </form>
+                </div>      
             </div>
 
         </div>
