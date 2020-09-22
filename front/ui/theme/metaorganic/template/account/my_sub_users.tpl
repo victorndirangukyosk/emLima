@@ -749,6 +749,7 @@
                     var $procurement_person = $('#procurement_person');
                     var $head_chef = $('#head_chef');
                     $('#procurement_person').empty();
+                    $('#procurement_person').append('<option>Select Procurement Person</option>');
                     $.each(json.data, function (key, value)
                     {
                         if (value.order_approval_access == 1 && value.order_approval_access_role == 'procurement_person') {
@@ -761,6 +762,7 @@
                     });
 
                     $('#head_chef').empty();
+                    $('#head_chef').append('<option>Select Head Chef</option>');
                     $.each(json.data, function (key, value)
                     {
                         if (value.order_approval_access == 1 && value.order_approval_access_role == 'head_chef') {
@@ -792,17 +794,19 @@
                     var $procurement_person = $('#procurement_person');
                     var $head_chef = $('#head_chef');
                     $('#procurement_person').empty();
+                    $('#procurement_person').append('<option>Select Procurement Person</option>');
                     $.each(json.data, function (key, value)
                     {
                         if (value.order_approval_access == 1 && value.order_approval_access_role == 'procurement_person') {
                             $procurement_person.append('<option value=' + value.customer_id + ' selected="selected">' + value.email + '</option>');
                         }// return empty
-                        else {
+                        else if() {
                             $procurement_person.append('<option value=' + value.customer_id + '>' + value.email + '</option>');
                         }
                     });
 
                     $('#head_chef').empty();
+                    $('#head_chef').append('<option>Select Head Chef</option>');
                     $.each(json.data, function (key, value)
                     {
                         if (value.order_approval_access == 1 && value.order_approval_access_role == 'head_chef') {
