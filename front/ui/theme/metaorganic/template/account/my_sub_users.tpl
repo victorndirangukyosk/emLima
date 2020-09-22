@@ -765,6 +765,40 @@
     });
     $(document).delegate('#assign_head_chef, #assign_procurement_person', 'click', function (e) {
         e.preventDefault();
+        console.log('Hi');
+        $.ajax({
+            url: 'index.php?path=account/sub_users/getSubusers',
+            type: 'post',
+            dataType: 'json',
+            success: function (json) {
+                if (json.success == false) {
+                    console.log(json.success);
+                }
+
+                if (json.success == true) {
+                    console.log(json.success);
+                    console.log(json.data);
+
+                    var $procurement_person = $('#procurement_person');
+                    var $head_chef = $('#head_chef');
+                    $procurement_person.find('option').remove();
+                    $.each(json.data, function (key, value)
+                    {
+                        $procurement_person.append('<option value=' + value.customer_id + '>' + value.email + '</option>'); // return empty
+                    });
+
+                    $head_chef.find('option').remove();
+                    $.each(json.data, function (key, value)
+                    {
+                        $head_chef.append('<option value=' + value.customer_id + '>' + value.email + '</option>'); // return empty
+                    });
+                }
+            }
+        });
+    });
+
+    $(document).delegate('#assign_head_chef, #assign_procurement_person', 'click', function (e) {
+        e.preventDefault();
         //alert(this.id);
         console.log($('#head_chef').val());
         console.log($('#procurement_person').val());
