@@ -567,12 +567,12 @@ class ModelAccountCustomer extends Model {
     }
 
     public function getSubusersByParent($parent_user_id) {
-        $sub_users = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer c WHERE c.parent = '" . (int) $parent_user_id . "' AND (order_approval_access = 0 OR order_approval_access IS NULL)");
+        $sub_users = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer c WHERE c.parent = '" . (int) $parent_user_id . "'");
         return $sub_users->rows;
     }
 
-    public function UpdateOrderApprovalAccess($parent_id, $customer_id, $status) {
-        $sql = 'UPDATE  ' . DB_PREFIX . "customer SET  order_approval_access = '" . (int) $status . "' WHERE parent = '" . (int) $parent_id . "' AND customer_id ='" . (int) $customer_id . "'";
+    public function UpdateOrderApprovalAccess($parent_id, $customer_id, $status, $role) {
+        $sql = 'UPDATE  ' . DB_PREFIX . "customer SET  order_approval_access = '" . (int) $status . "', order_approval_access_role = '" . $role . "' WHERE parent = '" . (int) $parent_id . "' AND customer_id ='" . (int) $customer_id . "'";
         $this->db->query($sql);
     }
 
