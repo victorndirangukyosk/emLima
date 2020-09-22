@@ -748,7 +748,7 @@
 
                     var $procurement_person = $('#procurement_person');
                     var $head_chef = $('#head_chef');
-                    $procurement_person.find('option').remove();
+                    $('#procurement_person').empty();
                     $.each(json.data, function (key, value)
                     {
                         if (value.order_approval_access == 1 && value.order_approval_access_role == 'procurement_person') {
@@ -760,7 +760,7 @@
                         }
                     });
 
-                    $head_chef.find('option').remove();
+                    $('#head_chef').empty();
                     $.each(json.data, function (key, value)
                     {
                         if (value.order_approval_access == 1 && value.order_approval_access_role == 'head_chef') {
@@ -791,7 +791,7 @@
 
                     var $procurement_person = $('#procurement_person');
                     var $head_chef = $('#head_chef');
-                    $procurement_person.find('option').remove();
+                    $('#procurement_person').empty();
                     $.each(json.data, function (key, value)
                     {
                         if (value.order_approval_access == 1 && value.order_approval_access_role == 'procurement_person') {
@@ -802,11 +802,11 @@
                         }
                     });
 
-                    $head_chef.find('option').remove();
+                    $('#head_chef').empty();
                     $.each(json.data, function (key, value)
                     {
                         if (value.order_approval_access == 1 && value.order_approval_access_role == 'head_chef') {
-                            $procurement_person.append('<option value=' + value.customer_id + ' selected="selected">' + value.email + '</option>');
+                            $head_chef.append('<option value=' + value.customer_id + ' selected="selected">' + value.email + '</option>');
                         }// return empty
                         else {
                             $head_chef.append('<option value=' + value.customer_id + '>' + value.email + '</option>'); // return empty
