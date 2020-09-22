@@ -267,10 +267,10 @@
                                         <?php echo $product['quantity'] ?>
                                     </td>
                                     <td class="text-left">
-                                        <input name="total_procured_qty" type="number" class="procured_qty" data-general_product_id="<?php echo $product['product_id']; ?>" data-name="<?php echo $product['name']; ?>" data-current-qty="<?php echo $product['quantity']; ?>"  id="<?php echo $product['product_store_id'];?>" value="">
+                                        <input name="total_procured_qty" type="text" onkeypress="return validateFloatKeyPress(this, event);"  class="procured_qty" data-general_product_id="<?php echo $product['product_id']; ?>" data-name="<?php echo $product['name']; ?>" data-current-qty="<?php echo $product['quantity']; ?>"  id="<?php echo $product['product_store_id'];?>" value="">
                                     </td>
                                     <td class="text-left">
-                                        <input name="rejected_qty" type="number" class="rejected_qty"  id="rejected_qty_<?php echo $product['product_store_id'];?>" data-current-qty="<?php echo $product['quantity']; ?>" value="">
+                                        <input name="rejected_qty" type="text" class="rejected_qty" onkeypress="return validateFloatKeyPress(this, event);" id="rejected_qty_<?php echo $product['product_store_id'];?>" data-current-qty="<?php echo $product['quantity']; ?>" value="">
                                     </td>
 									<td class="text-left">
                                         <input name="total_qty" disabled type="number"  id="total_qty_<?php echo $product['product_store_id'];?>" value="">
@@ -633,6 +633,68 @@ $('input.rejected_qty').keyup(function(){
 	$('#total_qty_'+vendor_product_id).val(total);
 });
 
-//--></script>
+//-->
+
+function isNumberKey(txt,evt)
+      {
+          
+          
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+      if (charCode == 46) {
+        //Check if the text already contains the . character
+        
+        if (txt.value.indexOf('.') === -1  ) {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+         
+
+        if (charCode > 31 &&
+          (charCode < 48 || charCode > 57))
+          return false;
+      }
+      return true; 
+      }
+
+
+       function validateFloatKeyPress(el, evt) {
+
+      // $optionvalue=$('.product-variation option:selected').text().trim();
+       //alert($optionvalue);
+       //if($optionvalue=="Per Kg")
+       //{
+            var charCode = (evt.which) ? evt.which : event.keyCode;
+            var number = el.value.split('.');
+            if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
+                return false;
+            }
+            //just one dot
+            if(number.length>1 && charCode == 46){
+                return false;
+            }
+            //get the carat position
+            var caratPos = getSelectionStart(el);
+            var dotPos = el.value.indexOf(".");
+            if( caratPos > dotPos && dotPos>-1 && (number[1].length > 1)){
+                return false;
+            }
+            return true;
+        //}
+
+       //else{
+      //var charCode = (evt.which) ? evt.which : event.keyCode;
+       // if (charCode > 31 &&
+       //   (charCode < 48 || charCode > 57))
+       //   return false;
+         // else
+      
+      //return true;
+      // }
+}
+
+
+</script>
 
 <?php echo $footer; ?>
