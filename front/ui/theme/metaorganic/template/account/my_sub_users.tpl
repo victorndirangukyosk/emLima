@@ -317,9 +317,6 @@
                                     <label for="name" class="col-sm-3 control-label">Select Head Chef</label>
                                     <div class="col-sm-4">
                                         <select class="form-control input-lg">
-                                            <option></option>
-                                            <option></option>
-                                            <option></option>
                                         </select>
                                     </div>
                                     <div class="col-sm-2 col-sm-pull-2 secion-row text-center" style="margin-bottom: 20px; float: right; margin-right: 63px">
@@ -330,9 +327,6 @@
                                     <label class="col-sm-3 control-label" for="input-lastname">Select Procurement Person</label>
                                     <div class="col-sm-4">
                                         <select class="form-control input-lg">
-                                            <option></option>
-                                            <option></option>
-                                            <option></option>
                                         </select>
                                     </div>
                                     <div class="col-sm-2 col-sm-pull-2 secion-row text-center" style="margin-bottom: 20px; float: right; margin-right: 63px">
@@ -737,6 +731,23 @@
                 }
             });
         }
+    });
+    $(document).ready(function () {
+        $.ajax({
+            url: 'index.php?path=account/sub_users/getSubusers',
+            type: 'post',
+            dataType: 'json',
+            success: function (json) {
+                if (json.success == false) {
+                    console.log(json.success);
+                }
+
+                if (json.success == true) {
+                    console.log(json.success);
+                    console.log(json.data);
+                }
+            }
+        });
     });
 </script>
 </body>

@@ -1,21 +1,20 @@
 <?php
 
-require_once DIR_SYSTEM.'/vendor/konduto/vendor/autoload.php';
+require_once DIR_SYSTEM . '/vendor/konduto/vendor/autoload.php';
 
 //require_once DIR_SYSTEM.'/vendor/mpesa-php-sdk-master/vendor/autoload.php';
 
-require_once DIR_SYSTEM.'/vendor/fcp-php/autoload.php';
+require_once DIR_SYSTEM . '/vendor/fcp-php/autoload.php';
 
-require DIR_SYSTEM.'vendor/Facebook/autoload.php';
+require DIR_SYSTEM . 'vendor/Facebook/autoload.php';
 
-require_once DIR_APPLICATION.'/controller/api/settings.php';
+require_once DIR_APPLICATION . '/controller/api/settings.php';
 
-class Controlleraccountsubusers extends Controller
-{
+class Controlleraccountsubusers extends Controller {
+
     private $error = [];
 
-    public function index()
-    {
+    public function index() {
         //unset($_SESSION['success_msg']);
         if (!empty($_SESSION['parent'])) {
             $this->response->redirect($this->url->link('account/account'));
@@ -26,7 +25,7 @@ class Controlleraccountsubusers extends Controller
 
         $data['redirect_coming'] = false;
 
-        $this->document->addStyle('/front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_login.css');
+        $this->document->addStyle('/front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_login.css');
 
         if (!$this->customer->isLogged()) {
             $this->session->data['redirect'] = $this->url->link('account/profileinfo', '', 'SSL');
@@ -49,7 +48,7 @@ class Controlleraccountsubusers extends Controller
 
             $activity_data = [
                 'customer_id' => $this->customer->getId(),
-                'name' => $this->customer->getFirstName().' '.$this->customer->getLastName(),
+                'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
             ];
             $log = new Log('error.log');
             $log->write('account profileinfo');
@@ -552,15 +551,14 @@ class Controlleraccountsubusers extends Controller
           $data['total_pending_amount'] = $totalPendingAmount;
           $data['pending_order_id'] = implode('--',$data['pending_order_id']); */
         $data['sub_users'] = $result_customers;
-        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/account/my_sub_users.tpl')) {
-            $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/account/my_sub_users.tpl', $data));
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/my_sub_users.tpl')) {
+            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/my_sub_users.tpl', $data));
         } else {
             $this->response->setOutput($this->load->view('default/template/account/my_sub_users.tpl', $data));
         }
     }
 
-    protected function validate()
-    {
+    protected function validate() {
         //print_r($this->request->post);die;
         $this->load->language('account/edit');
 
@@ -579,13 +577,12 @@ class Controlleraccountsubusers extends Controller
         return !$this->error;
     }
 
-    public function ActivateSubUsers()
-    {
+    public function ActivateSubUsers() {
         $log = new Log('error.log');
         $log->write($this->request->post['user_id']);
         $log->write($this->request->post['active_status']);
         $user_id = $this->request->post['user_id'];
-        $log->write($user_id.'USER ID');
+        $log->write($user_id . 'USER ID');
         $this->load->model('account/customer');
         $this->model_account_customer->approvecustom($user_id, $this->request->post['active_status']);
 
@@ -594,12 +591,11 @@ class Controlleraccountsubusers extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function DeleteSubUsers()
-    {
+    public function DeleteSubUsers() {
         $log = new Log('error.log');
         $log->write($this->request->post['user_id']);
         $user_id = $this->request->post['user_id'];
-        $log->write($user_id.'USER ID');
+        $log->write($user_id . 'USER ID');
         $this->load->model('account/customer');
         $this->model_account_customer->deletecustom($user_id);
 
@@ -608,16 +604,27 @@ class Controlleraccountsubusers extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function EmailUnique()
-    {
+    public function EmailUnique() {
         $log = new Log('error.log');
         $log->write($this->request->post['email']);
         $this->load->model('account/customer');
         $count = $this->model_account_customer->getTotalCustomersByEmail($this->request->post['email']);
-        $log->write($count.'Email Count');
+        $log->write($count . 'Email Count');
 
         $json['success'] = 0 == $count || null == $count ? true : false;
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
+
+    public function getSubusers() {
+        $json['success'] = true;
+        $log = new Log('error.log');
+        $this->load->model('account/customer');
+        $sub_users = $this->model_account_customer->getSubusersByParent($this->customer->getId());
+        $log->write($sub_users);
+        $json['data'] = $sub_users;
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
 }
