@@ -246,7 +246,7 @@ function excel() {
 //--></script> 
 <script type="text/javascript"><!--
 $('.date').datetimepicker({
-	pickTime: false
+	pickTime: false,  widgetParent: 'body'
 });
 //-->
 
@@ -254,3 +254,10 @@ $('.date').datetimepicker({
 </script>
 </div>
 <?php echo $footer; ?>
+
+
+<style>
+body {
+    position: inline;
+}
+</style>

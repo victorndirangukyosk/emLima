@@ -329,7 +329,8 @@
     
     <script type="text/javascript">
         $('.date').datetimepicker({
-            pickTime: false
+            pickTime: false,
+              widgetParent: 'body'
         });
 
         $( "#consolidated-order-sheet-datepicker" ).datetimepicker({
@@ -372,3 +373,9 @@
 </div>
 
 <?php echo $footer; ?>
+
+<style>
+body {
+    position: inline;
+}
+</style>

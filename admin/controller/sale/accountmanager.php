@@ -23,7 +23,7 @@ class ControllerSaleAccountManager extends Controller {
     public function export_excel() {
         $data = [];
         $this->load->model('report/excel');
-        $this->model_report_excel->download_customer_excel($data);
+        $this->model_report_excel->download_accountmanager_excel($data);
     }
 
     public function add() {
@@ -67,14 +67,14 @@ class ControllerSaleAccountManager extends Controller {
     }
 
     public function edit() {
-        $this->load->language('user/user');
+        $this->load->language('sale/accountmanager');
 
         $this->document->setTitle($this->language->get('heading_title'));
 
-        $this->load->model('user/user');
+        $this->load->model('user/accountmanager');
 
         if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
-            $this->model_user_user->editUser($this->request->get['user_id'], $this->request->post);
+            $this->model_user_accountmanager->editUser($this->request->get['user_id'], $this->request->post);
 
             $this->session->data['success'] = $this->language->get('text_success');
 
@@ -93,14 +93,14 @@ class ControllerSaleAccountManager extends Controller {
             }
 
             if (isset($this->request->post['button']) and 'save' == $this->request->post['button']) {
-                $this->response->redirect($this->url->link('user/user/edit', 'user_id=' . $this->request->get['user_id'] . '&token=' . $this->session->data['token'] . $url, 'SSL'));
+                $this->response->redirect($this->url->link('sale/accountmanager/edit', 'user_id=' . $this->request->get['user_id'] . '&token=' . $this->session->data['token'] . $url, 'SSL'));
             }
 
             if (isset($this->request->post['button']) and 'new' == $this->request->post['button']) {
-                $this->response->redirect($this->url->link('user/user/add', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+                $this->response->redirect($this->url->link('sale/accountmanager/add', 'token=' . $this->session->data['token'] . $url, 'SSL'));
             }
 
-            $this->response->redirect($this->url->link('user/user', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            $this->response->redirect($this->url->link('sale/accountmanager', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
 
         $this->getForm();
@@ -682,6 +682,13 @@ class ControllerSaleAccountManager extends Controller {
         $data['button_savenew'] = $this->language->get('button_savenew');
         $data['button_saveclose'] = $this->language->get('button_saveclose');
         $data['button_cancel'] = $this->language->get('button_cancel');
+        $data['tab_general'] = $this->language->get('tab_general');
+        $data['tab_assign_customers'] = 'Assign Customers';
+        $data['tab_assigned_customers'] = 'Assigned Customers';
+        $data['assigned_customers'] = NULL;
+        if (isset($this->request->get['user_id'])) {
+            $data['assigned_customers'] = $this->model_user_accountmanager->getCustomerByAccountManagerId($this->request->get['user_id']);
+        }
 
         $data['token'] = $this->session->data['token'];
 
@@ -764,7 +771,8 @@ class ControllerSaleAccountManager extends Controller {
         $data['cancel'] = $this->url->link('sale/accountmanager', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
         if (isset($this->request->get['user_id']) && ('POST' != $this->request->server['REQUEST_METHOD'])) {
-            $user_info = $this->model_user_user->getUser($this->request->get['user_id']);
+            $user_info = $this->model_user_accountmanager->getUser($this->request->get['user_id']);
+            $data['user_id'] = $user_info['user_id'];
         }
 
         if (isset($this->request->post['username'])) {
@@ -1557,6 +1565,38 @@ class ControllerSaleAccountManager extends Controller {
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
+    }
+
+    public function getUnassignedCustomers() {
+        $name = $this->request->post['name'];
+        $json = NULL;
+        if ($name != NULL) {
+            $this->load->model('user/accountmanager');
+            $results = $this->model_user_accountmanager->getUnassignedCustomers($name);
+            $json = $results;
+        }
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function assigncustomer() {
+        $log = new Log('error.log');
+        $log->write($this->request->post['assigncustomer']);
+        $log->write($this->request->post['account_manager_id']);
+        $this->load->model('user/accountmanager');
+        if (is_array($this->request->post['assigncustomer']) && count($this->request->post['assigncustomer']) > 0) {
+            foreach ($this->request->post['assigncustomer'] as $customer_id) {
+                $results = $this->model_user_accountmanager->AssignCustomersToAccountManager($customer_id, $this->request->post['account_manager_id']);
+            }
+        }
+        $json = true;
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function getAccountManagerCustomers($account_manager_id) {
+        $this->load->model('user/accountmanager');
+        $results = $this->model_user_accountmanager->getCustomerByAccountManagerId($account_manager_id);
     }
 
 }

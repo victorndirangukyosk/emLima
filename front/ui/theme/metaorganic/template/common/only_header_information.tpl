@@ -981,13 +981,7 @@ width: 550px;
 .mycart-header {
     padding: 20px;
 }
- .store-cart-panel .modal-header .close {
-     margin-right: -220px;
- }
 
- .clear-cart {
-       margin-right: -180px;
- }
 .mycart-product-listing .total-price {
   margin-top: 40px;
 }

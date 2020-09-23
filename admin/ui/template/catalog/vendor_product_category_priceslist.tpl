@@ -612,7 +612,7 @@ $('input.rejected_qty').keyup(function(){
     }
 
      if(parseFloat(procured_qty) < parseFloat(rejected_qty)){
-		alert("Rejected quantity should less than Procured quantity!");
+		alert("Rejected quantity should be less than procured quantity!");
 		$('#rejected_qty_'+vendor_product_id).val(0);
 		rejected_qty = 0;
 		

@@ -158,6 +158,18 @@
     </li>
     <?php } ?>
 
+    <?php
+    if( $preturn_account_manager_customers != false) {
+    ?>
+    <li><a class="parent"><i class="fa fa-user fa-fw"></i> <span><?php echo $text_account_managers_customers; ?></span></a>
+        <ul class="collapse">
+            <?php if($preturn_account_manager_customers) { ?>
+            <li><a href="<?php echo $accountmanager_customers; ?>"><?php echo $text_account_managers_customers; ?></a></li>
+            <?php } ?>
+        </ul>
+    </li>
+    <?php } ?>
+
     <?php if( $preturn_vendor != false || $preturn_vendor_permission != false) { ?>
     <li>
         <a class="parent">
