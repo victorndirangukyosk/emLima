@@ -509,6 +509,8 @@ class ModelAccountOrder extends Model {
             //$log->write($sub_users);
             //$log->write('SUB USERS ORDERS');
             $s_users = array_column($sub_users, 'customer_id');
+            array_push($s_users, $order_approval_access_user['parent']);
+            $sub_users_od = implode(',', $s_users);
         } else {
             $sub_users_query = $this->db->query('SELECT c.customer_id FROM ' . DB_PREFIX . "customer c WHERE parent = '" . (int) $this->customer->getId() . "'");
             $sub_users = $sub_users_query->rows;
@@ -516,11 +518,9 @@ class ModelAccountOrder extends Model {
             //$log->write($sub_users);
             //$log->write('SUB USERS ORDERS');
             $s_users = array_column($sub_users, 'customer_id');
+            array_push($s_users, $this->customer->getId());
+            $sub_users_od = implode(',', $s_users);
         }
-
-
-        array_push($s_users, $this->customer->getId());
-        $sub_users_od = implode(',', $s_users);
 
         if (false == $noLimit) {
             //$sub_users_orders = $this->db->query("SELECT o.order_id FROM " . DB_PREFIX . "order o WHERE customer_id IN (".$sub_users_od.")");
@@ -675,6 +675,10 @@ class ModelAccountOrder extends Model {
             $log->write($sub_users);
             $log->write('SUB USERS ORDERS');
             $s_users = array_column($sub_users, 'customer_id');
+
+            array_push($s_users, $order_approval_access_user['parent']);
+            $sub_users_od = implode(',', $s_users);
+            $log->write($sub_users_od);
         } else {
             $sub_users_query = $this->db->query('SELECT c.customer_id FROM ' . DB_PREFIX . "customer c WHERE parent = '" . (int) $this->customer->getId() . "'");
             $sub_users = $sub_users_query->rows;
@@ -682,11 +686,13 @@ class ModelAccountOrder extends Model {
             $log->write($sub_users);
             $log->write('SUB USERS ORDERS');
             $s_users = array_column($sub_users, 'customer_id');
+
+            array_push($s_users, $this->customer->getId());
+            $sub_users_od = implode(',', $s_users);
+            $log->write($sub_users_od);
         }
 
-        array_push($s_users, $this->customer->getId());
-        $sub_users_od = implode(',', $s_users);
-        $log->write($sub_users_od);
+
 
         $query = $this->db->query('SELECT COUNT(*) AS total FROM `' . DB_PREFIX . "order` o WHERE customer_id IN (" . $sub_users_od . ") AND o.order_status_id > '0' ");
 
