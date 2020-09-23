@@ -17,6 +17,8 @@ class ControllerCatalogGeneral extends Controller
 
     public function add()
     {
+
+      //  echo "<pre>";print_r($this->request->post);die;
         $this->load->language('catalog/general');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -1215,8 +1217,14 @@ class ControllerCatalogGeneral extends Controller
             $this->error['warning'] = $this->language->get('error_warning');
         }
 
+        if ($this->request->post['image']==null ||  $this->request->post['image']==""){
+            $this->error['warning'] =$this->error['warning'].' Please upload image .';
+        }
+
         return !$this->error;
     }
+
+   
 
     protected function validateDelete()
     {
