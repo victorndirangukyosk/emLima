@@ -140,6 +140,25 @@
                             <?php if($order['edit_order'] != NULL) { ?> |&nbsp;<a class="btn-link text_green" role="button" href="<?php echo $order['edit_order']; ?>" id="editorder<?php echo $order['order_id']; ?>" aria-expanded="false">Edit Order</a> <?php } ?>
                         </div>
                     </li>
+                    
+                    <?php if($order['head_chef'] == 'Pending' && $order['order_approval_access'] == true && $order['order_approval_access_role'] == 'head_chef') { ?>
+                    <li class="list-group-item">
+                        <div class="my-order-showaddress" id="">  
+                            <a href="#" class="btn btn-default btn-xs">APPROVE ORDER</a>
+                            <a href="#" class="btn btn-default btn-xs">REJECT ORDER</a>
+                        </div>
+                    </li>
+                    <?php } ?>
+                    
+                    <?php if($order['procurement'] == 'Pending' && $order['order_approval_access'] == true && $order['order_approval_access_role'] == 'procurement') { ?>
+                    <li class="list-group-item">
+                        <div class="my-order-showaddress" id="">  
+                            <a href="#" class="btn btn-default btn-xs">APPROVE ORDER</a>
+                            <a href="#" class="btn btn-default btn-xs">REJECT ORDER</a>
+                        </div>
+                    </li>
+                    <?php } ?>
+                    
                     <?php if($order['status'] == 'Order Approval Pending' && $order['parent_approve_order'] == 'Need Approval' && $order['parent_approval'] == 'Pending') { ?>
                     <li class="list-group-item">
                         <div class="my-order-showaddress" id="<?php echo $order['order_id']; ?>">  

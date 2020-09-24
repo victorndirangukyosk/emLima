@@ -145,8 +145,12 @@ class ControllerAccountOrder extends Controller {
 
             $this->load->model('sale/order');
             $approve_order_button = null;
-            if ((empty($_SESSION['parent']) && $result['customer_id'] != $this->customer->getId()) || ($this->session->data['order_approval_access'] > 0 && $this->session->data['order_approval_access_role'] != NULL)) {
+            $order_appoval_access = false;
+            if (empty($_SESSION['parent']) && $result['customer_id'] != $this->customer->getId()) {
                 $approve_order_button = 'Need Approval';
+            }
+            if ($this->session->data['order_approval_access'] > 0 && $this->session->data['order_approval_access_role'] != NULL) {
+                $order_appoval_access = true;
             }
             $this->load->model('account/customer');
             $customer_info = $this->model_account_customer->getCustomer($result['customer_id']);
@@ -186,6 +190,10 @@ class ControllerAccountOrder extends Controller {
                 'parent_approve_order' => $approve_order_button,
                 'customer_id' => $result['customer_id'],
                 'parent_approval' => $result['parent_approval'],
+                'order_approval_access' => $order_appoval_access,
+                'head_chef' => $result['head_chef'],
+                'procurement' => $result['procurement'],
+                'order_approval_access_role' => $this->session->data['order_approval_access_role'],
                 'parent_details' => $customer_parent_info != NULL && $customer_parent_info['email'] != NULL ? $customer_parent_info['email'] : NULL,
                 'edit_order' => 15 == $result['order_status_id'] && empty($_SESSION['parent']) ? $this->url->link('account/order/edit_order', 'order_id=' . $result['order_id'], 'SSL') : '',
                 'order_company' => isset($customer_info) && null != $customer_info['company_name'] ? $customer_info['company_name'] : null,
