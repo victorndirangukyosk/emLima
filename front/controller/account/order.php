@@ -1,12 +1,11 @@
 <?php
 
-class ControllerAccountOrder extends Controller
-{
+class ControllerAccountOrder extends Controller {
+
     private $error = [];
 
-    public function index()
-    {
-        $this->document->addStyle('front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_login.css');
+    public function index() {
+        $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_login.css');
 
         if (!$this->customer->isLogged()) {
             $this->session->data['redirect'] = $this->url->link('account/order', '', 'SSL');
@@ -38,7 +37,7 @@ class ControllerAccountOrder extends Controller
         $url = '';
 
         if (isset($this->request->get['page'])) {
-            $url .= '&page='.$this->request->get['page'];
+            $url .= '&page=' . $this->request->get['page'];
         }
 
         $data['breadcrumbs'][] = [
@@ -109,7 +108,7 @@ class ControllerAccountOrder extends Controller
             $shipping_address = null;
 
             if (isset($result['shipping_address'])) {
-                $shipping_address['address'] = $result['shipping_building_name'].', '.$result['shipping_flat_number'];
+                $shipping_address['address'] = $result['shipping_building_name'] . ', ' . $result['shipping_flat_number'];
                 $shipping_address['city'] = $city_name;
                 $shipping_address['zipcode'] = $result['shipping_zipcode'];
                 //$order_info['shipping_flat_number'].", ".$order_info['shipping_building_name'].", ".$order_info['shipping_landmark'];
@@ -146,8 +145,12 @@ class ControllerAccountOrder extends Controller
 
             $this->load->model('sale/order');
             $approve_order_button = null;
+            $order_appoval_access = false;
             if (empty($_SESSION['parent']) && $result['customer_id'] != $this->customer->getId()) {
                 $approve_order_button = 'Need Approval';
+            }
+            if ($this->session->data['order_approval_access'] > 0 && $this->session->data['order_approval_access_role'] != NULL) {
+                $order_appoval_access = true;
             }
             $this->load->model('account/customer');
             $customer_info = $this->model_account_customer->getCustomer($result['customer_id']);
@@ -162,7 +165,7 @@ class ControllerAccountOrder extends Controller
 
             $data['orders'][] = [
                 'order_id' => $result['order_id'],
-                'name' => $result['firstname'].' '.$result['lastname'],
+                'name' => $result['firstname'] . ' ' . $result['lastname'],
                 'shipping_name' => $result['shipping_name'],
                 'payment_method' => $result['payment_method'],
                 'payment_transaction_id' => $this->model_sale_order->getOrderTransactionId($result['order_id']),
@@ -181,14 +184,18 @@ class ControllerAccountOrder extends Controller
                 'products' => ($product_total + $voucher_total),
                 'real_products' => ($real_product_total + $voucher_total),
                 'total' => $this->currency->format($total, $result['currency_code'], $result['currency_value']),
-                'href' => $this->url->link('account/order/info', 'order_id='.$result['order_id'], 'SSL'),
-                'real_href' => $this->url->link('account/order/realinfo', 'order_id='.$result['order_id'], 'SSL'),
-                'accept_reject_href' => $this->url->link('account/order/accept_reject', 'order_id='.$result['order_id'], 'SSL'),
+                'href' => $this->url->link('account/order/info', 'order_id=' . $result['order_id'], 'SSL'),
+                'real_href' => $this->url->link('account/order/realinfo', 'order_id=' . $result['order_id'], 'SSL'),
+                'accept_reject_href' => $this->url->link('account/order/accept_reject', 'order_id=' . $result['order_id'], 'SSL'),
                 'parent_approve_order' => $approve_order_button,
                 'customer_id' => $result['customer_id'],
                 'parent_approval' => $result['parent_approval'],
+                'order_approval_access' => $order_appoval_access,
+                'head_chef' => $result['head_chef'],
+                'procurement' => $result['procurement'],
+                'order_approval_access_role' => $this->session->data['order_approval_access_role'],
                 'parent_details' => $customer_parent_info != NULL && $customer_parent_info['email'] != NULL ? $customer_parent_info['email'] : NULL,
-                'edit_order' => 15 == $result['order_status_id'] && empty($_SESSION['parent']) ? $this->url->link('account/order/edit_order', 'order_id='.$result['order_id'], 'SSL') : '',
+                'edit_order' => 15 == $result['order_status_id'] && empty($_SESSION['parent']) ? $this->url->link('account/order/edit_order', 'order_id=' . $result['order_id'], 'SSL') : '',
                 'order_company' => isset($customer_info) && null != $customer_info['company_name'] ? $customer_info['company_name'] : null,
             ];
         }
@@ -223,20 +230,19 @@ class ControllerAccountOrder extends Controller
 
         $data['base'] = $server;
 
-        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/account/order_list.tpl')) {
-            $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/account/order_list.tpl', $data));
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/order_list.tpl')) {
+            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/order_list.tpl', $data));
         } else {
             $this->response->setOutput($this->load->view('default/template/account/order_list.tpl', $data));
         }
     }
 
-    public function info()
-    {
+    public function info() {
         $redirectNotLogin = true;
         $this->load->language('account/order');
         $this->load->language('account/return');
 
-        $this->document->addStyle('front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_login.css');
+        $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_login.css');
 
         if (isset($this->request->get['order_id'])) {
             $order_id = $this->request->get['order_id'];
@@ -258,7 +264,7 @@ class ControllerAccountOrder extends Controller
         $this->document->setTitle($this->language->get('heading_title'));
 
         if (!$this->customer->isLogged() && (true == $redirectNotLogin)) {
-            $this->session->data['redirect'] = $this->url->link('account/order/info', 'order_id='.$order_id, 'SSL');
+            $this->session->data['redirect'] = $this->url->link('account/order/info', 'order_id=' . $order_id, 'SSL');
             $this->response->redirect($this->url->link('account/login', '', 'SSL'));
         }
 
@@ -298,7 +304,7 @@ class ControllerAccountOrder extends Controller
             $url = '';
 
             if (isset($this->request->get['page'])) {
-                $url .= '&page='.$this->request->get['page'];
+                $url .= '&page=' . $this->request->get['page'];
             }
 
             $data['breadcrumbs'][] = [
@@ -308,7 +314,7 @@ class ControllerAccountOrder extends Controller
 
             $data['breadcrumbs'][] = [
                 'text' => $this->language->get('text_order'),
-                'href' => $this->url->link('account/order/info', 'order_id='.$this->request->get['order_id'].$url, 'SSL'),
+                'href' => $this->url->link('account/order/info', 'order_id=' . $this->request->get['order_id'] . $url, 'SSL'),
             ];
 
             $data['text_go_back'] = $this->language->get('text_go_back');
@@ -407,7 +413,7 @@ class ControllerAccountOrder extends Controller
             }
 
             if ($order_info['invoice_no']) {
-                $data['invoice_no'] = $order_info['invoice_prefix'].$order_info['invoice_no'];
+                $data['invoice_no'] = $order_info['invoice_prefix'] . $order_info['invoice_no'];
             } else {
                 $data['invoice_no'] = '';
             }
@@ -447,7 +453,7 @@ class ControllerAccountOrder extends Controller
             $data['shipping_name'] = $order_info['shipping_name'];
             $data['shipping_contact_no'] = $order_info['shipping_contact_no'];
 
-            $data['shipping_address'] = $order_info['shipping_flat_number'].', '.$order_info['shipping_building_name'].', '.$order_info['shipping_landmark'];
+            $data['shipping_address'] = $order_info['shipping_flat_number'] . ', ' . $order_info['shipping_building_name'] . ', ' . $order_info['shipping_landmark'];
 
             $data['shipping_method'] = $order_info['shipping_method'];
             $data['shipping_city'] = $order_info['shipping_city'];
@@ -473,7 +479,7 @@ class ControllerAccountOrder extends Controller
             $data['rating'] = is_null($order_info['rating']) ? 0 : $order_info['rating']; //"del_XPeEGFX3Hc4ZeWg5";//
             //echo "<pre>";print_r($data['rating']);die;
             //$data['delivery_id'] =  26;
-            $data['shopper_link'] = $this->config->get('config_shopper_link').'/storage/';
+            $data['shopper_link'] = $this->config->get('config_shopper_link') . '/storage/';
 
             $data['products_status'] = [];
             $data['delivery_data'] = [];
@@ -539,23 +545,23 @@ class ControllerAccountOrder extends Controller
 
                     $option_data[] = [
                         'name' => $option['name'],
-                        'value' => (utf8_strlen($value) > 20 ? utf8_substr($value, 0, 20).'..' : $value),
+                        'value' => (utf8_strlen($value) > 20 ? utf8_substr($value, 0, 20) . '..' : $value),
                     ];
                 }
 
                 $product_info = $this->model_assets_product->getDetailproduct($product['product_id']);
 
                 if ($product_info) {
-                    $reorder = $this->url->link('account/order/reorder', 'order_id='.$order_id.'&order_product_id='.$product['order_product_id'], 'SSL');
+                    $reorder = $this->url->link('account/order/reorder', 'order_id=' . $order_id . '&order_product_id=' . $product['order_product_id'], 'SSL');
                 } else {
                     $reorder = '';
                 }
 
                 $this->load->model('tool/image');
 
-                if ($product['image'] != NULL && file_exists(DIR_IMAGE.$product['image'])) {
+                if ($product['image'] != NULL && file_exists(DIR_IMAGE . $product['image'])) {
                     $image = $this->model_tool_image->resize($product['image'], 80, 100);
-                } else if($product['image'] == NULL || !file_exists(DIR_IMAGE.$product['image'])) {
+                } else if ($product['image'] == NULL || !file_exists(DIR_IMAGE . $product['image'])) {
                     $image = $this->model_tool_image->resize('placeholder.png', 80, 100);
                 }
 
@@ -590,7 +596,7 @@ class ControllerAccountOrder extends Controller
                     'price' => $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
                     'total' => $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
                     'reorder' => $reorder,
-                    'return' => $this->url->link('account/return/add', 'order_id='.$order_info['order_id'].'&product_id='.$product['product_id'], 'SSL'),
+                    'return' => $this->url->link('account/return/add', 'order_id=' . $order_info['order_id'] . '&product_id=' . $product['product_id'], 'SSL'),
                 ];
             }
 
@@ -702,7 +708,7 @@ class ControllerAccountOrder extends Controller
                 $information_info = $this->model_assets_information->getInformation($this->config->get('config_return_id'));
 
                 if ($information_info) {
-                    $data['text_agree'] = sprintf($this->language->get('text_agree'), $this->url->link('information/information/agree', 'information_id='.$this->config->get('config_return_id'), 'SSL'), $information_info['title'], $information_info['title']);
+                    $data['text_agree'] = sprintf($this->language->get('text_agree'), $this->url->link('information/information/agree', 'information_id=' . $this->config->get('config_return_id'), 'SSL'), $information_info['title'], $information_info['title']);
                 } else {
                     $data['text_agree'] = '';
                 }
@@ -711,8 +717,8 @@ class ControllerAccountOrder extends Controller
             }
             //echo "<pre>";print_r($data);die;
 
-            if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/account/order_info.tpl')) {
-                $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/account/order_info.tpl', $data));
+            if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/order_info.tpl')) {
+                $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/order_info.tpl', $data));
             } else {
                 $this->response->setOutput($this->load->view('default/template/account/order_info.tpl', $data));
             }
@@ -744,7 +750,7 @@ class ControllerAccountOrder extends Controller
 
             $data['breadcrumbs'][] = [
                 'text' => $this->language->get('text_order'),
-                'href' => $this->url->link('account/order/info', 'order_id='.$order_id, 'SSL'),
+                'href' => $this->url->link('account/order/info', 'order_id=' . $order_id, 'SSL'),
             ];
 
             $data['continue'] = $this->url->link('account/order', '', 'SSL');
@@ -756,19 +762,18 @@ class ControllerAccountOrder extends Controller
             $data['footer'] = $this->load->controller('common/footer');
             $data['header'] = $this->load->controller('common/header/orderSummaryHeader');
 
-            if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/error/not_found.tpl')) {
-                $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/error/not_found.tpl', $data));
+            if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/error/not_found.tpl')) {
+                $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/error/not_found.tpl', $data));
             } else {
                 $this->response->setOutput($this->load->view('default/template/error/not_found.tpl', $data));
             }
         }
     }
 
-    public function realinfo()
-    {
+    public function realinfo() {
         $this->load->language('account/order');
 
-        $this->document->addStyle('front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_login.css');
+        $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_login.css');
 
         if (isset($this->request->get['order_id'])) {
             $order_id = $this->request->get['order_id'];
@@ -782,7 +787,7 @@ class ControllerAccountOrder extends Controller
         $this->document->setTitle($this->language->get('heading_title'));
 
         if (!$this->customer->isLogged()) {
-            $this->session->data['redirect'] = $this->url->link('account/order/info', 'order_id='.$order_id, 'SSL');
+            $this->session->data['redirect'] = $this->url->link('account/order/info', 'order_id=' . $order_id, 'SSL');
 
             $this->response->redirect($this->url->link('account/login', '', 'SSL'));
         }
@@ -819,7 +824,7 @@ class ControllerAccountOrder extends Controller
             $url = '';
 
             if (isset($this->request->get['page'])) {
-                $url .= '&page='.$this->request->get['page'];
+                $url .= '&page=' . $this->request->get['page'];
             }
 
             $data['breadcrumbs'][] = [
@@ -829,7 +834,7 @@ class ControllerAccountOrder extends Controller
 
             $data['breadcrumbs'][] = [
                 'text' => $this->language->get('text_order'),
-                'href' => $this->url->link('account/order/info', 'order_id='.$this->request->get['order_id'].$url, 'SSL'),
+                'href' => $this->url->link('account/order/info', 'order_id=' . $this->request->get['order_id'] . $url, 'SSL'),
             ];
 
             $data['text_go_back'] = $this->language->get('text_go_back');
@@ -905,7 +910,7 @@ class ControllerAccountOrder extends Controller
             }
 
             if ($order_info['invoice_no']) {
-                $data['invoice_no'] = $order_info['invoice_prefix'].$order_info['invoice_no'];
+                $data['invoice_no'] = $order_info['invoice_prefix'] . $order_info['invoice_no'];
             } else {
                 $data['invoice_no'] = '';
             }
@@ -946,7 +951,7 @@ class ControllerAccountOrder extends Controller
             $data['shipping_name'] = $order_info['shipping_name'];
             $data['shipping_contact_no'] = $order_info['shipping_contact_no'];
 
-            $data['shipping_address'] = $order_info['shipping_flat_number'].', '.$order_info['shipping_building_name'].', '.$order_info['shipping_landmark'];
+            $data['shipping_address'] = $order_info['shipping_flat_number'] . ', ' . $order_info['shipping_building_name'] . ', ' . $order_info['shipping_landmark'];
 
             $data['shipping_method'] = $order_info['shipping_method'];
             $data['shipping_city'] = $order_info['shipping_city'];
@@ -969,7 +974,7 @@ class ControllerAccountOrder extends Controller
 
             $data['delivery_id'] = $order_info['delivery_id']; //"del_XPeEGFX3Hc4ZeWg5";//
             //$data['delivery_id'] =  26;
-            $data['shopper_link'] = $this->config->get('config_shopper_link').'/storage/';
+            $data['shopper_link'] = $this->config->get('config_shopper_link') . '/storage/';
 
             $data['products_status'] = [];
             $data['delivery_data'] = [];
@@ -1034,21 +1039,21 @@ class ControllerAccountOrder extends Controller
 
                     $option_data[] = [
                         'name' => $option['name'],
-                        'value' => (utf8_strlen($value) > 20 ? utf8_substr($value, 0, 20).'..' : $value),
+                        'value' => (utf8_strlen($value) > 20 ? utf8_substr($value, 0, 20) . '..' : $value),
                     ];
                 }
 
                 $product_info = $this->model_assets_product->getDetailproduct($product['product_id']);
 
                 if ($product_info) {
-                    $reorder = $this->url->link('account/order/reorder', 'order_id='.$order_id.'&order_product_id='.$product['order_product_id'], 'SSL');
+                    $reorder = $this->url->link('account/order/reorder', 'order_id=' . $order_id . '&order_product_id=' . $product['order_product_id'], 'SSL');
                 } else {
                     $reorder = '';
                 }
 
                 $this->load->model('tool/image');
 
-                if (isset($product['image']) && file_exists(DIR_IMAGE.$product['image'])) {
+                if (isset($product['image']) && file_exists(DIR_IMAGE . $product['image'])) {
                     $image = $this->model_tool_image->resize($product['image'], 80, 100);
                 } else {
                     $image = $this->model_tool_image->resize('placeholder.png', 80, 100);
@@ -1068,7 +1073,7 @@ class ControllerAccountOrder extends Controller
                     'price' => $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
                     'total' => $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
                     'reorder' => $reorder,
-                    'return' => $this->url->link('account/return/add', 'order_id='.$order_info['order_id'].'&product_id='.$product['product_id'], 'SSL'),
+                    'return' => $this->url->link('account/return/add', 'order_id=' . $order_info['order_id'] . '&product_id=' . $product['product_id'], 'SSL'),
                 ];
             }
 
@@ -1150,8 +1155,8 @@ class ControllerAccountOrder extends Controller
                 $data['total_quantity'] += $product['quantity'];
             }
 
-            if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/account/real_order_info.tpl')) {
-                $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/account/real_order_info.tpl', $data));
+            if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/real_order_info.tpl')) {
+                $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/real_order_info.tpl', $data));
             } else {
                 $this->response->setOutput($this->load->view('default/template/account/real_order_info.tpl', $data));
             }
@@ -1183,7 +1188,7 @@ class ControllerAccountOrder extends Controller
 
             $data['breadcrumbs'][] = [
                 'text' => $this->language->get('text_order'),
-                'href' => $this->url->link('account/order/info', 'order_id='.$order_id, 'SSL'),
+                'href' => $this->url->link('account/order/info', 'order_id=' . $order_id, 'SSL'),
             ];
 
             $data['continue'] = $this->url->link('account/order', '', 'SSL');
@@ -1195,16 +1200,15 @@ class ControllerAccountOrder extends Controller
             $data['footer'] = $this->load->controller('common/footer');
             $data['header'] = $this->load->controller('common/header/onlyHeader');
 
-            if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/error/not_found.tpl')) {
-                $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/error/not_found.tpl', $data));
+            if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/error/not_found.tpl')) {
+                $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/error/not_found.tpl', $data));
             } else {
                 $this->response->setOutput($this->load->view('default/template/error/not_found.tpl', $data));
             }
         }
     }
 
-    public function reorder()
-    {
+    public function reorder() {
         $this->load->language('account/order');
 
         if (isset($this->request->get['order_id'])) {
@@ -1263,12 +1267,11 @@ class ControllerAccountOrder extends Controller
             }
         }
 
-        $this->response->redirect($this->url->link('account/order/info', 'order_id='.$order_id));
+        $this->response->redirect($this->url->link('account/order/info', 'order_id=' . $order_id));
     }
 
-    public function refundCancelOrder()
-    {
-        require_once DIR_SYSTEM.'library/Iugu.php';
+    public function refundCancelOrder() {
+        require_once DIR_SYSTEM . 'library/Iugu.php';
 
         $data['status'] = false;
 
@@ -1311,7 +1314,7 @@ class ControllerAccountOrder extends Controller
             $log->write($order_id);
 
             $notify = true;
-            $comment = 'Order ID #'.$order_id.' Cancelled';
+            $comment = 'Order ID #' . $order_id . ' Cancelled';
 
             $this->load->model('localisation/order_status');
 
@@ -1340,13 +1343,12 @@ class ControllerAccountOrder extends Controller
         $this->response->setOutput(json_encode($data));
     }
 
-    public function can_return()
-    {
+    public function can_return() {
         $this->load->language('account/order');
 
         $resp['can_return'] = false;
 
-        $this->document->addStyle('front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_login.css');
+        $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_login.css');
 
         if (isset($this->request->post['order_id'])) {
             $order_id = $this->request->post['order_id'];
@@ -1385,12 +1387,11 @@ class ControllerAccountOrder extends Controller
         $this->response->setOutput(json_encode($resp));
     }
 
-    public function accept_delivery_submit()
-    {
+    public function accept_delivery_submit() {
         try {
             $this->load->language('account/order');
 
-            $this->document->addStyle('front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_login.css');
+            $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_login.css');
 
             $order_id = $this->request->post['order_id'];
             $products = $this->request->post['products'];
@@ -1401,7 +1402,7 @@ class ControllerAccountOrder extends Controller
                 $action_note = $product[3];
                 //echo "UPDATE `" . DB_PREFIX . "order_product` SET 	on_delivery_action = '" . $action . "', delivery_action_note = '" . $action_note . "' WHERE order_id = '" . (int) $order_id . "' AND product_id = '" . (int) $product_id . "'";
                 //echo '<br>';
-                $this->db->query('UPDATE `'.DB_PREFIX."order_product` SET 	on_delivery_action = '".$action."', delivery_action_note = '".$action_note."' WHERE order_id = '".(int) $order_id."' AND product_id = '".(int) $product_id."'");
+                $this->db->query('UPDATE `' . DB_PREFIX . "order_product` SET 	on_delivery_action = '" . $action . "', delivery_action_note = '" . $action_note . "' WHERE order_id = '" . (int) $order_id . "' AND product_id = '" . (int) $product_id . "'");
             }
 
             if ($return_replace_count > 0) {
@@ -1410,7 +1411,7 @@ class ControllerAccountOrder extends Controller
                 $orderStatus = 'Delivered';
             }
 
-            $sql = 'SELECT order_status_id FROM '.DB_PREFIX."order_status WHERE language_id = '".(int) $this->config->get('config_language_id')."' AND name='".$orderStatus."'";
+            $sql = 'SELECT order_status_id FROM ' . DB_PREFIX . "order_status WHERE language_id = '" . (int) $this->config->get('config_language_id') . "' AND name='" . $orderStatus . "'";
             $query = $this->db->query($sql);
             $order_status_id = $query->row['order_status_id'];
             //echo "Order_status_id "+$order_status_id;
@@ -1419,8 +1420,8 @@ class ControllerAccountOrder extends Controller
             //echo "UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'";
             //echo "INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', order_status_id = '" . (int) $order_status_id . "', comment = '" . $this->db->escape( $comment ) . "', date_added = NOW()";
             //exit;
-            $this->db->query('UPDATE `'.DB_PREFIX."order` SET order_status_id = '".(int) $order_status_id."', date_modified = NOW() WHERE order_id = '".(int) $order_id."'");
-            $this->db->query('INSERT INTO `'.DB_PREFIX."order_history` SET order_id = '".(int) $order_id."', comment = '".$this->db->escape($comment)."', date_added = NOW()");
+            $this->db->query('UPDATE `' . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
+            $this->db->query('INSERT INTO `' . DB_PREFIX . "order_history` SET order_id = '" . (int) $order_id . "', comment = '" . $this->db->escape($comment) . "', date_added = NOW()");
             $resp['status'] = true;
         } catch (Exception $e) {
             $resp['status'] = false;
@@ -1429,13 +1430,12 @@ class ControllerAccountOrder extends Controller
         $this->response->setOutput(json_encode($resp));
     }
 
-    public function accept_reject()
-    {
+    public function accept_reject() {
         //echo '<pre>';print_r($_REQUEST);exit;
         $this->load->language('account/order');
         $this->load->language('account/return');
 
-        $this->document->addStyle('front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_login.css');
+        $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_login.css');
 
         if (isset($this->request->get['order_id'])) {
             $order_id = $this->request->get['order_id'];
@@ -1449,7 +1449,7 @@ class ControllerAccountOrder extends Controller
         $this->document->setTitle($this->language->get('heading_title'));
 
         if (!$this->customer->isLogged()) {
-            $this->session->data['redirect'] = $this->url->link('account/order/info', 'order_id='.$order_id, 'SSL');
+            $this->session->data['redirect'] = $this->url->link('account/order/info', 'order_id=' . $order_id, 'SSL');
 
             $this->response->redirect($this->url->link('account/login', '', 'SSL'));
         }
@@ -1486,7 +1486,7 @@ class ControllerAccountOrder extends Controller
             $url = '';
 
             if (isset($this->request->get['page'])) {
-                $url .= '&page='.$this->request->get['page'];
+                $url .= '&page=' . $this->request->get['page'];
             }
 
             $data['breadcrumbs'][] = [
@@ -1496,7 +1496,7 @@ class ControllerAccountOrder extends Controller
 
             $data['breadcrumbs'][] = [
                 'text' => $this->language->get('text_order'),
-                'href' => $this->url->link('account/order/info', 'order_id='.$this->request->get['order_id'].$url, 'SSL'),
+                'href' => $this->url->link('account/order/info', 'order_id=' . $this->request->get['order_id'] . $url, 'SSL'),
             ];
 
             $data['text_go_back'] = $this->language->get('text_go_back');
@@ -1595,7 +1595,7 @@ class ControllerAccountOrder extends Controller
             }
 
             if ($order_info['invoice_no']) {
-                $data['invoice_no'] = $order_info['invoice_prefix'].$order_info['invoice_no'];
+                $data['invoice_no'] = $order_info['invoice_prefix'] . $order_info['invoice_no'];
             } else {
                 $data['invoice_no'] = '';
             }
@@ -1635,7 +1635,7 @@ class ControllerAccountOrder extends Controller
             $data['shipping_name'] = $order_info['shipping_name'];
             $data['shipping_contact_no'] = $order_info['shipping_contact_no'];
 
-            $data['shipping_address'] = $order_info['shipping_flat_number'].', '.$order_info['shipping_building_name'].', '.$order_info['shipping_landmark'];
+            $data['shipping_address'] = $order_info['shipping_flat_number'] . ', ' . $order_info['shipping_building_name'] . ', ' . $order_info['shipping_landmark'];
 
             $data['shipping_method'] = $order_info['shipping_method'];
             $data['shipping_city'] = $order_info['shipping_city'];
@@ -1661,7 +1661,7 @@ class ControllerAccountOrder extends Controller
             $data['rating'] = is_null($order_info['rating']) ? 0 : $order_info['rating']; //"del_XPeEGFX3Hc4ZeWg5";//
             //echo "<pre>";print_r($data['rating']);die;
             //$data['delivery_id'] =  26;
-            $data['shopper_link'] = $this->config->get('config_shopper_link').'/storage/';
+            $data['shopper_link'] = $this->config->get('config_shopper_link') . '/storage/';
 
             $data['products_status'] = [];
             $data['delivery_data'] = [];
@@ -1727,21 +1727,21 @@ class ControllerAccountOrder extends Controller
 
                     $option_data[] = [
                         'name' => $option['name'],
-                        'value' => (utf8_strlen($value) > 20 ? utf8_substr($value, 0, 20).'..' : $value),
+                        'value' => (utf8_strlen($value) > 20 ? utf8_substr($value, 0, 20) . '..' : $value),
                     ];
                 }
 
                 $product_info = $this->model_assets_product->getDetailproduct($product['product_id']);
 
                 if ($product_info) {
-                    $reorder = $this->url->link('account/order/reorder', 'order_id='.$order_id.'&order_product_id='.$product['order_product_id'], 'SSL');
+                    $reorder = $this->url->link('account/order/reorder', 'order_id=' . $order_id . '&order_product_id=' . $product['order_product_id'], 'SSL');
                 } else {
                     $reorder = '';
                 }
 
                 $this->load->model('tool/image');
 
-                if (file_exists(DIR_IMAGE.$product['image'])) {
+                if (file_exists(DIR_IMAGE . $product['image'])) {
                     $image = $this->model_tool_image->resize($product['image'], 80, 100);
                 } else {
                     $image = $this->model_tool_image->resize('placeholder.png', 80, 100);
@@ -1778,7 +1778,7 @@ class ControllerAccountOrder extends Controller
                     'price' => $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
                     'total' => $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
                     'reorder' => $reorder,
-                    'return' => $this->url->link('account/return/add', 'order_id='.$order_info['order_id'].'&product_id='.$product['product_id'], 'SSL'),
+                    'return' => $this->url->link('account/return/add', 'order_id=' . $order_info['order_id'] . '&product_id=' . $product['product_id'], 'SSL'),
                 ];
             }
 
@@ -1890,7 +1890,7 @@ class ControllerAccountOrder extends Controller
                 $information_info = $this->model_assets_information->getInformation($this->config->get('config_return_id'));
 
                 if ($information_info) {
-                    $data['text_agree'] = sprintf($this->language->get('text_agree'), $this->url->link('information/information/agree', 'information_id='.$this->config->get('config_return_id'), 'SSL'), $information_info['title'], $information_info['title']);
+                    $data['text_agree'] = sprintf($this->language->get('text_agree'), $this->url->link('information/information/agree', 'information_id=' . $this->config->get('config_return_id'), 'SSL'), $information_info['title'], $information_info['title']);
                 } else {
                     $data['text_agree'] = '';
                 }
@@ -1910,14 +1910,14 @@ class ControllerAccountOrder extends Controller
             $recurring = $this->cart->hasRecurringProducts();
 
             foreach ($results as $result) {
-                if ($this->config->get($result['code'].'_status')) {
-                    $this->load->model('payment/'.$result['code']);
+                if ($this->config->get($result['code'] . '_status')) {
+                    $this->load->model('payment/' . $result['code']);
 
-                    $method = $this->{'model_payment_'.$result['code']}->getMethod($total);
+                    $method = $this->{'model_payment_' . $result['code']}->getMethod($total);
 
                     if ($method) {
                         if ($recurring) {
-                            if (method_exists($this->{'model_payment_'.$result['code']}, 'recurringPayments') && $this->{'model_payment_'.$result['code']}->recurringPayments()) {
+                            if (method_exists($this->{'model_payment_' . $result['code']}, 'recurringPayments') && $this->{'model_payment_' . $result['code']}->recurringPayments()) {
                                 $method_data[$result['code']] = $method;
                             }
                         } else {
@@ -1948,8 +1948,8 @@ class ControllerAccountOrder extends Controller
             $data['account'] = $this->url->link('account/order');
             $data['continue'] = $this->url->link('checkout/success');
 
-            if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/account/order_accept_delivery.tpl')) {
-                $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/account/order_accept_delivery.tpl', $data));
+            if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/order_accept_delivery.tpl')) {
+                $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/order_accept_delivery.tpl', $data));
             } else {
                 $this->response->setOutput($this->load->view('default/template/account/order_accept_delivery	.tpl', $data));
             }
@@ -1981,7 +1981,7 @@ class ControllerAccountOrder extends Controller
 
             $data['breadcrumbs'][] = [
                 'text' => $this->language->get('text_order'),
-                'href' => $this->url->link('account/order/info', 'order_id='.$order_id, 'SSL'),
+                'href' => $this->url->link('account/order/info', 'order_id=' . $order_id, 'SSL'),
             ];
 
             $data['continue'] = $this->url->link('account/order', '', 'SSL');
@@ -1993,16 +1993,15 @@ class ControllerAccountOrder extends Controller
             $data['footer'] = $this->load->controller('common/footer');
             $data['header'] = $this->load->controller('common/header/onlyHeader');
 
-            if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/error/not_found.tpl')) {
-                $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/error/not_found.tpl', $data));
+            if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/error/not_found.tpl')) {
+                $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/error/not_found.tpl', $data));
             } else {
                 $this->response->setOutput($this->load->view('default/template/error/not_found.tpl', $data));
             }
         }
     }
 
-    public function translateAmountToWords(int $number)
-    {
+    public function translateAmountToWords(int $number) {
         /*
          * A recursive function to turn digits into words
          * Numbers must be integers from -999,999,999,999 to 999,999,999,999 inclusive.
@@ -2018,7 +2017,7 @@ class ControllerAccountOrder extends Controller
                 case $number < 0:
                     $prefix = 'negative';
                     $suffix = $this->translateAmountToWords(-1 * $number);
-                    $string = $prefix.' '.$suffix;
+                    $string = $prefix . ' ' . $suffix;
                     break;
                 case 1:
                     $string = 'one';
@@ -2100,69 +2099,68 @@ class ControllerAccountOrder extends Controller
                 case $number < 100:
                     $prefix = $this->translateAmountToWords($number - $number % 10);
                     $suffix = $this->translateAmountToWords($number % 10);
-                    $string = $prefix.' '.$suffix;
+                    $string = $prefix . ' ' . $suffix;
                     break;
                 // handles all number 100 to 999
                 case $number < pow(10, 3):
                     // floor return a float not an integer
-                    $prefix = $this->translateAmountToWords(intval(floor($number / pow(10, 2)))).' hundred';
+                    $prefix = $this->translateAmountToWords(intval(floor($number / pow(10, 2)))) . ' hundred';
                     if ($number % pow(10, 2)) {
-                        $suffix = ' and '.$this->translateAmountToWords($number % pow(10, 2));
+                        $suffix = ' and ' . $this->translateAmountToWords($number % pow(10, 2));
                     }
-                    $string = $prefix.$suffix;
+                    $string = $prefix . $suffix;
                     break;
                 case $number < pow(10, 6):
                     // floor return a float not an integer
-                    $prefix = $this->translateAmountToWords(intval(floor($number / pow(10, 3)))).' thousand';
+                    $prefix = $this->translateAmountToWords(intval(floor($number / pow(10, 3)))) . ' thousand';
                     if ($number % pow(10, 3)) {
                         $suffix = $this->translateAmountToWords($number % pow(10, 3));
                     }
-                    $string = $prefix.' '.$suffix;
+                    $string = $prefix . ' ' . $suffix;
                     break;
                 case $number < pow(10, 9):
                     // floor return a float not an integer
-                    $prefix = $this->translateAmountToWords(intval(floor($number / pow(10, 6)))).' million';
+                    $prefix = $this->translateAmountToWords(intval(floor($number / pow(10, 6)))) . ' million';
                     if ($number % pow(10, 6)) {
                         $suffix = $this->translateAmountToWords($number % pow(10, 6));
                     }
-                    $string = $prefix.' '.$suffix;
+                    $string = $prefix . ' ' . $suffix;
                     break;
                 case $number < pow(10, 12):
                     // floor return a float not an integer
-                    $prefix = $this->translateAmountToWords(intval(floor($number / pow(10, 9)))).' billion';
+                    $prefix = $this->translateAmountToWords(intval(floor($number / pow(10, 9)))) . ' billion';
                     if ($number % pow(10, 9)) {
                         $suffix = $this->translateAmountToWords($number % pow(10, 9));
                     }
-                    $string = $prefix.' '.$suffix;
+                    $string = $prefix . ' ' . $suffix;
                     break;
                 case $number < pow(10, 15):
                     // floor return a float not an integer
-                    $prefix = $this->translateAmountToWords(intval(floor($number / pow(10, 12)))).' trillion';
+                    $prefix = $this->translateAmountToWords(intval(floor($number / pow(10, 12)))) . ' trillion';
                     if ($number % pow(10, 12)) {
                         $suffix = $this->translateAmountToWords($number % pow(10, 12));
                     }
-                    $string = $prefix.' '.$suffix;
+                    $string = $prefix . ' ' . $suffix;
                     break;
                 // Be careful not to pass default formatted numbers in the quadrillions+ into this function
                 // Default formatting is float and causes errors
                 case $number < pow(10, 18):
                     // floor return a float not an integer
-                    $prefix = $this->translateAmountToWords(intval(floor($number / pow(10, 15)))).' quadrillion';
+                    $prefix = $this->translateAmountToWords(intval(floor($number / pow(10, 15)))) . ' quadrillion';
                     if ($number % pow(10, 15)) {
                         $suffix = $this->translateAmountToWords($number % pow(10, 15));
                     }
-                    $string = $prefix.' '.$suffix;
+                    $string = $prefix . ' ' . $suffix;
                     break;
             }
         } else {
-            echo "ERROR with - $number<br/> Number must be an integer between -".number_format($max_size, 0, '.', ',').' and '.number_format($max_size, 0, '.', ',').' exclusive.';
+            echo "ERROR with - $number<br/> Number must be an integer between -" . number_format($max_size, 0, '.', ',') . ' and ' . number_format($max_size, 0, '.', ',') . ' exclusive.';
         }
 
         return $string;
     }
 
-    public function invoice()
-    {
+    public function invoice() {
         $this->load->language('account/invoice');
 
         $data['title'] = $this->language->get('text_invoice');
@@ -2199,10 +2197,10 @@ class ControllerAccountOrder extends Controller
         $data['column_produce_type'] = $this->language->get('column_produce_type');
 
         $data['column_model'] = $this->language->get('column_model');
-        $data['column_unit'] = $this->language->get('column_unit').' Ordered';
-        $data['column_quantity'] = $this->language->get('column_quantity').' Ordered';
-        $data['column_unit_change'] = $this->language->get('column_unit').' Change';
-        $data['column_quantity_change'] = $this->language->get('column_quantity').' Change';
+        $data['column_unit'] = $this->language->get('column_unit') . ' Ordered';
+        $data['column_quantity'] = $this->language->get('column_quantity') . ' Ordered';
+        $data['column_unit_change'] = $this->language->get('column_unit') . ' Change';
+        $data['column_quantity_change'] = $this->language->get('column_quantity') . ' Change';
         $data['column_price'] = $this->language->get('column_price');
         $data['column_total'] = $this->language->get('column_total');
         $data['column_comment'] = $this->language->get('column_comment');
@@ -2262,7 +2260,7 @@ class ControllerAccountOrder extends Controller
                 $data['store_name'] = $store_data['name'];
 
                 if ($order_info['invoice_no']) {
-                    $invoice_no = $order_info['invoice_prefix'].$order_info['invoice_no'].$order_info['invoice_sufix'];
+                    $invoice_no = $order_info['invoice_prefix'] . $order_info['invoice_no'] . $order_info['invoice_sufix'];
                 } else {
                     $invoice_no = '';
                 }
@@ -2326,7 +2324,7 @@ class ControllerAccountOrder extends Controller
                     $total_data[] = [
                         'title' => $total['title'],
                         'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
-                        'amount_in_words' => ucwords($this->translateAmountToWords(floor(($total['value'] * 100) / 100))).' Kenyan Shillings',
+                        'amount_in_words' => ucwords($this->translateAmountToWords(floor(($total['value'] * 100) / 100))) . ' Kenyan Shillings',
                     ];
                 }
 
@@ -2350,7 +2348,7 @@ class ControllerAccountOrder extends Controller
                     'shipping_city' => $order_info['shipping_city'],
                     'shipping_flat_number' => $order_info['shipping_flat_number'],
                     'shipping_contact_no' => ($order_info['shipping_contact_no']) ? $order_info['shipping_contact_no'] : $order_info['telephone'],
-                    'shipping_name' => ($order_info['shipping_name']) ? $order_info['shipping_name'] : $order_info['firstname'].' '.$order_info['lastname'],
+                    'shipping_name' => ($order_info['shipping_name']) ? $order_info['shipping_name'] : $order_info['firstname'] . ' ' . $order_info['lastname'],
                     'customer_company_name' => $order_info['customer_company_name'],
                     'shipping_method' => $order_info['shipping_method'],
                     'po_number' => $order_info['po_number'],
@@ -2365,17 +2363,15 @@ class ControllerAccountOrder extends Controller
         $this->response->setOutput($this->load->view('metaorganic/template/account/order_invoice.tpl', $data['orders'][0]));
     }
 
-    public function getUser($id)
-    {
+    public function getUser($id) {
         if ($id) {
-            $query = $this->db->query('SELECT * FROM `'.DB_PREFIX."customer`  WHERE customer_id ='".$id."'");
+            $query = $this->db->query('SELECT * FROM `' . DB_PREFIX . "customer`  WHERE customer_id ='" . $id . "'");
 
             return $query->row['fax'];
         }
     }
 
-    public function ApproveOrRejectSubUserOrder()
-    {
+    public function ApproveOrRejectSubUserOrder() {
         $json['success'] = 'Something went wrong!';
         $order_id = $this->request->post['order_id'];
         $customer_id = $this->request->post['customer_id'];
@@ -2392,20 +2388,72 @@ class ControllerAccountOrder extends Controller
 
         if (is_array($sub_users_order_details) && count($sub_users_order_details) > 0) {
             $order_update = $this->model_account_order->ApproveOrRejectSubUserOrder($order_id, $customer_id, $order_status);
-            $json['success'] = 'Order '.$order_status.'!';
+            $sub_users_order_details = $this->model_account_order->getSubUserOrderDetails($order_id, $customer_id);
+
+            if ($sub_users_order_details['parent_approval'] == 'Approved' && $sub_users_order_details['head_chef'] == 'Approved' && $sub_users_order_details['procurement'] == 'Approved') {
+                $json['success'] = 'Order Recieved';
+                $this->model_account_order->UpdateOrderStatus($order_id, 14);
+            }
+
+            if ($sub_users_order_details['parent_approval'] == 'Pending' || $sub_users_order_details['head_chef'] == 'Pending' || $sub_users_order_details['procurement'] == 'Pending') {
+                $json['success'] = 'Order Approval Pending';
+            }
+
+            if ($sub_users_order_details['parent_approval'] == 'Rejected' && $sub_users_order_details['head_chef'] == 'Rejected' && $sub_users_order_details['procurement'] == 'Rejected') {
+                $json['success'] = 'Order Rejected';
+                $this->model_account_order->UpdateOrderStatus($order_id, 16);
+            }
         }
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
 
-    public function edit_order()
-    {
+    public function ApproveOrRejectSubUserOrderByChefProcurement() {
+        $json['success'] = 'Something went wrong!';
+        $order_id = $this->request->post['order_id'];
+        $customer_id = $this->request->post['customer_id'];
+        $order_status = $this->request->post['order_status'];
+        $role = $this->request->post['role'];
+
+        $log = new Log('error.log');
+        $log->write($order_id);
+        $log->write($customer_id);
+        $log->write($order_status);
+
+        $this->load->model('account/order');
+        $sub_users_order_details = $this->model_account_order->getSubUserOrderDetails($order_id, $customer_id);
+
+        if (is_array($sub_users_order_details) && count($sub_users_order_details) > 0) {
+            $order_update = $this->model_account_order->ApproveOrRejectSubUserOrderByChefProcurement($order_id, $customer_id, $order_status, $role);
+            $sub_users_order_details = $this->model_account_order->getSubUserOrderDetails($order_id, $customer_id);
+            $log->write($sub_users_order_details);
+
+            if ($sub_users_order_details['parent_approval'] == 'Approved' && $sub_users_order_details['head_chef'] == 'Approved' && $sub_users_order_details['procurement'] == 'Approved') {
+                $json['success'] = 'Order Recieved';
+                $this->model_account_order->UpdateOrderStatus($order_id, 14);
+            }
+
+            if ($sub_users_order_details['parent_approval'] == 'Pending' || $sub_users_order_details['head_chef'] == 'Pending' || $sub_users_order_details['procurement'] == 'Pending') {
+                $json['success'] = 'Order Approval Pending';
+            }
+
+            if ($sub_users_order_details['parent_approval'] == 'Rejected' && $sub_users_order_details['head_chef'] == 'Rejected' && $sub_users_order_details['procurement'] == 'Rejected') {
+                $json['success'] = 'Order Rejected';
+                $this->model_account_order->UpdateOrderStatus($order_id, 16);
+            }
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function edit_order() {
         $this->load->model('account/customer');
         $is_he_parents = $this->model_account_customer->CheckHeIsParent();
         if (null != $is_he_parents) {
-            if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/error/not_found.tpl')) {
-                $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/error/not_found.tpl', $data));
+            if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/error/not_found.tpl')) {
+                $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/error/not_found.tpl', $data));
             } else {
                 $this->response->setOutput($this->load->view('default/template/error/not_found.tpl', $data));
             }
@@ -2414,7 +2462,7 @@ class ControllerAccountOrder extends Controller
         $this->load->language('account/order');
         $this->load->language('account/return');
 
-        $this->document->addStyle('front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_login.css');
+        $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_login.css');
 
         if (isset($this->request->get['order_id'])) {
             $order_id = $this->request->get['order_id'];
@@ -2436,7 +2484,7 @@ class ControllerAccountOrder extends Controller
         $this->document->setTitle($this->language->get('heading_title'));
 
         if (!$this->customer->isLogged() && (true == $redirectNotLogin)) {
-            $this->session->data['redirect'] = $this->url->link('account/order/info', 'order_id='.$order_id, 'SSL');
+            $this->session->data['redirect'] = $this->url->link('account/order/info', 'order_id=' . $order_id, 'SSL');
             $this->response->redirect($this->url->link('account/login', '', 'SSL'));
         }
 
@@ -2476,7 +2524,7 @@ class ControllerAccountOrder extends Controller
             $url = '';
 
             if (isset($this->request->get['page'])) {
-                $url .= '&page='.$this->request->get['page'];
+                $url .= '&page=' . $this->request->get['page'];
             }
 
             $data['breadcrumbs'][] = [
@@ -2486,7 +2534,7 @@ class ControllerAccountOrder extends Controller
 
             $data['breadcrumbs'][] = [
                 'text' => $this->language->get('text_order'),
-                'href' => $this->url->link('account/order/info', 'order_id='.$this->request->get['order_id'].$url, 'SSL'),
+                'href' => $this->url->link('account/order/info', 'order_id=' . $this->request->get['order_id'] . $url, 'SSL'),
             ];
 
             $data['text_go_back'] = $this->language->get('text_go_back');
@@ -2585,7 +2633,7 @@ class ControllerAccountOrder extends Controller
             }
 
             if ($order_info['invoice_no']) {
-                $data['invoice_no'] = $order_info['invoice_prefix'].$order_info['invoice_no'];
+                $data['invoice_no'] = $order_info['invoice_prefix'] . $order_info['invoice_no'];
             } else {
                 $data['invoice_no'] = '';
             }
@@ -2625,7 +2673,7 @@ class ControllerAccountOrder extends Controller
             $data['shipping_name'] = $order_info['shipping_name'];
             $data['shipping_contact_no'] = $order_info['shipping_contact_no'];
 
-            $data['shipping_address'] = $order_info['shipping_flat_number'].', '.$order_info['shipping_building_name'].', '.$order_info['shipping_landmark'];
+            $data['shipping_address'] = $order_info['shipping_flat_number'] . ', ' . $order_info['shipping_building_name'] . ', ' . $order_info['shipping_landmark'];
 
             $data['shipping_method'] = $order_info['shipping_method'];
             $data['shipping_city'] = $order_info['shipping_city'];
@@ -2651,7 +2699,7 @@ class ControllerAccountOrder extends Controller
             $data['rating'] = is_null($order_info['rating']) ? 0 : $order_info['rating']; //"del_XPeEGFX3Hc4ZeWg5";//
             //echo "<pre>";print_r($data['rating']);die;
             //$data['delivery_id'] =  26;
-            $data['shopper_link'] = $this->config->get('config_shopper_link').'/storage/';
+            $data['shopper_link'] = $this->config->get('config_shopper_link') . '/storage/';
 
             $data['products_status'] = [];
             $data['delivery_data'] = [];
@@ -2717,21 +2765,21 @@ class ControllerAccountOrder extends Controller
 
                     $option_data[] = [
                         'name' => $option['name'],
-                        'value' => (utf8_strlen($value) > 20 ? utf8_substr($value, 0, 20).'..' : $value),
+                        'value' => (utf8_strlen($value) > 20 ? utf8_substr($value, 0, 20) . '..' : $value),
                     ];
                 }
 
                 $product_info = $this->model_assets_product->getDetailproduct($product['product_id']);
 
                 if ($product_info) {
-                    $reorder = $this->url->link('account/order/reorder', 'order_id='.$order_id.'&order_product_id='.$product['order_product_id'], 'SSL');
+                    $reorder = $this->url->link('account/order/reorder', 'order_id=' . $order_id . '&order_product_id=' . $product['order_product_id'], 'SSL');
                 } else {
                     $reorder = '';
                 }
 
                 $this->load->model('tool/image');
 
-                if (file_exists(DIR_IMAGE.$product['image'])) {
+                if (file_exists(DIR_IMAGE . $product['image'])) {
                     $image = $this->model_tool_image->resize($product['image'], 80, 100);
                 } else {
                     $image = $this->model_tool_image->resize('placeholder.png', 80, 100);
@@ -2768,7 +2816,7 @@ class ControllerAccountOrder extends Controller
                     'price' => $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
                     'total' => $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
                     'reorder' => $reorder,
-                    'return' => $this->url->link('account/return/add', 'order_id='.$order_info['order_id'].'&product_id='.$product['product_id'], 'SSL'),
+                    'return' => $this->url->link('account/return/add', 'order_id=' . $order_info['order_id'] . '&product_id=' . $product['product_id'], 'SSL'),
                 ];
             }
 
@@ -2884,7 +2932,7 @@ class ControllerAccountOrder extends Controller
                 $information_info = $this->model_assets_information->getInformation($this->config->get('config_return_id'));
 
                 if ($information_info) {
-                    $data['text_agree'] = sprintf($this->language->get('text_agree'), $this->url->link('information/information/agree', 'information_id='.$this->config->get('config_return_id'), 'SSL'), $information_info['title'], $information_info['title']);
+                    $data['text_agree'] = sprintf($this->language->get('text_agree'), $this->url->link('information/information/agree', 'information_id=' . $this->config->get('config_return_id'), 'SSL'), $information_info['title'], $information_info['title']);
                 } else {
                     $data['text_agree'] = '';
                 }
@@ -2893,8 +2941,8 @@ class ControllerAccountOrder extends Controller
             }
             //echo "<pre>";print_r($data);die;
 
-            if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/account/order_edit.tpl')) {
-                $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/account/order_edit.tpl', $data));
+            if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/order_edit.tpl')) {
+                $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/order_edit.tpl', $data));
             } else {
                 $this->response->setOutput($this->load->view('default/template/account/order_edit.tpl', $data));
             }
@@ -2926,7 +2974,7 @@ class ControllerAccountOrder extends Controller
 
             $data['breadcrumbs'][] = [
                 'text' => $this->language->get('text_order'),
-                'href' => $this->url->link('account/order/info', 'order_id='.$order_id, 'SSL'),
+                'href' => $this->url->link('account/order/info', 'order_id=' . $order_id, 'SSL'),
             ];
 
             $data['continue'] = $this->url->link('account/order', '', 'SSL');
@@ -2938,16 +2986,15 @@ class ControllerAccountOrder extends Controller
             $data['footer'] = $this->load->controller('common/footer');
             $data['header'] = $this->load->controller('common/header/orderSummaryHeader');
 
-            if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/error/not_found.tpl')) {
-                $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/error/not_found.tpl', $data));
+            if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/error/not_found.tpl')) {
+                $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/error/not_found.tpl', $data));
             } else {
                 $this->response->setOutput($this->load->view('default/template/error/not_found.tpl', $data));
             }
         }
     }
 
-    public function edit_order_quantity()
-    {
+    public function edit_order_quantity() {
         $log = new Log('error.log');
         $json = [];
         $json['location'] = 'module';
@@ -3005,9 +3052,9 @@ class ControllerAccountOrder extends Controller
             }
 
             $cachePrice_data = $this->cache->get('category_price_data');
-            if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$product_info['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$order_products[$key]['store_id']])) {
-                $s_price = $cachePrice_data[$product_info['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$order_products[$key]['store_id']];
-                $o_price = $cachePrice_data[$product_info['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$order_products[$key]['store_id']];
+            if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$product_info['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $order_products[$key]['store_id']])) {
+                $s_price = $cachePrice_data[$product_info['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $order_products[$key]['store_id']];
+                $o_price = $cachePrice_data[$product_info['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $order_products[$key]['store_id']];
                 $product_info['special_price'] = $this->currency->format($s_price);
                 $product_info['price'] = $this->currency->format($o_price);
             }
@@ -3021,7 +3068,7 @@ class ControllerAccountOrder extends Controller
             $log->write('product info');
             $special_price = explode(' ', $product_info['special_price']);
             $log->write($special_price);
-            $special_price[1] = str_replace( ',', '', $special_price[1]);
+            $special_price[1] = str_replace(',', '', $special_price[1]);
             $total = $special_price[1] * $quantity + ($this->config->get('config_tax') ? ($order_products[$key]['tax'] * $quantity) : 0);
             $log->write('TOTAL');
             $log->write($total);
@@ -3029,13 +3076,13 @@ class ControllerAccountOrder extends Controller
             $log->write($product_id);
             $log->write($product_id);
 
-            $this->db->query('UPDATE '.DB_PREFIX.'order_product SET quantity = '.$quantity.', total = '.$total." WHERE order_product_id = '".(int) $order_products[$key]['order_product_id']."' AND order_id  = '".(int) $order_id."' AND product_id = '".(int) $product_id."'");
-            $this->db->query('UPDATE '.DB_PREFIX.'real_order_product SET quantity = '.$quantity.', total = '.$total." WHERE order_product_id = '".(int) $order_products[$key]['order_product_id']."' AND order_id  = '".(int) $order_id."' AND product_id = '".(int) $product_id."'");
-            $order_totals = $this->db->query('SELECT SUM(total) AS total FROM '.DB_PREFIX."order_product WHERE order_id = '".(int) $order_id."'");
-            $order_product_details = $this->db->query('SELECT * FROM '.DB_PREFIX."order_product WHERE order_product_id = '".(int) $order_products[$key]['order_product_id']."' AND order_id  = '".(int) $order_id."' AND product_id = '".(int) $product_id."'");
-            $this->db->query('UPDATE '.DB_PREFIX."order_total SET `value` = '".$order_totals->row['total']."' WHERE order_id = '".$order_id."' AND code='total'");
-            $this->db->query('UPDATE '.DB_PREFIX."order_total SET `value` = '".$order_totals->row['total']."' WHERE order_id = '".$order_id."' AND code='sub_total'");
-            $total_products = $this->db->query('SELECT SUM(quantity) AS quantity FROM '.DB_PREFIX."order_product WHERE order_id = '".(int) $order_id."'");
+            $this->db->query('UPDATE ' . DB_PREFIX . 'order_product SET quantity = ' . $quantity . ', total = ' . $total . " WHERE order_product_id = '" . (int) $order_products[$key]['order_product_id'] . "' AND order_id  = '" . (int) $order_id . "' AND product_id = '" . (int) $product_id . "'");
+            $this->db->query('UPDATE ' . DB_PREFIX . 'real_order_product SET quantity = ' . $quantity . ', total = ' . $total . " WHERE order_product_id = '" . (int) $order_products[$key]['order_product_id'] . "' AND order_id  = '" . (int) $order_id . "' AND product_id = '" . (int) $product_id . "'");
+            $order_totals = $this->db->query('SELECT SUM(total) AS total FROM ' . DB_PREFIX . "order_product WHERE order_id = '" . (int) $order_id . "'");
+            $order_product_details = $this->db->query('SELECT * FROM ' . DB_PREFIX . "order_product WHERE order_product_id = '" . (int) $order_products[$key]['order_product_id'] . "' AND order_id  = '" . (int) $order_id . "' AND product_id = '" . (int) $product_id . "'");
+            $this->db->query('UPDATE ' . DB_PREFIX . "order_total SET `value` = '" . $order_totals->row['total'] . "' WHERE order_id = '" . $order_id . "' AND code='total'");
+            $this->db->query('UPDATE ' . DB_PREFIX . "order_total SET `value` = '" . $order_totals->row['total'] . "' WHERE order_id = '" . $order_id . "' AND code='sub_total'");
+            $total_products = $this->db->query('SELECT SUM(quantity) AS quantity FROM ' . DB_PREFIX . "order_product WHERE order_id = '" . (int) $order_id . "'");
 
             $json['count_products'] = $total_products->row['quantity'];
             $json['total_amount'] = $this->currency->format($order_totals->row['total']);
@@ -3056,29 +3103,28 @@ class ControllerAccountOrder extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getOrderProductsWithVariancesNew($order_id)
-    {
-         
-        $this->load->model('account/order'); 
-        $orderProducts = [];
-        
+    public function getOrderProductsWithVariancesNew($order_id) {
 
-        if ($this->model_account_order->hasRealOrderProduct($order_id)) {             
+        $this->load->model('account/order');
+        $orderProducts = [];
+
+
+        if ($this->model_account_order->hasRealOrderProduct($order_id)) {
             // Order products with weight change
             $originalProducts = $products = $this->model_account_order->getOnlyRealOrderProducts($order_id);
         } else {
-            
+
             // Products as the user ordered them on the platform
             $originalProducts = $products = $this->model_account_order->getOnlyOrderProducts($order_id);
         }
- 
-         //echo "<pre>";print_r($originalProducts);die;
+
+        //echo "<pre>";print_r($originalProducts);die;
 
         foreach ($originalProducts as $originalProduct) {
             // $totalUpdated = $originalProduct['price'] * $originalProduct['quantity']
             //     + ($this->config->get('config_tax') ? $originalProduct['tax'] : 0);
             //in admin orders screen, directly showing total
-            $totalUpdated = $originalProduct['total']  ;
+            $totalUpdated = $originalProduct['total'];
 
             $uomOrderedWithoutApproximations = trim(explode('(', $originalProduct['unit'])[0]);
 
@@ -3106,43 +3152,41 @@ class ControllerAccountOrder extends Controller
         return $orderProducts;
     }
 
-    public function export_products_excel($order_id)
-    {
-        $data = []; 
-       
-        $orderid =$this->request->get['order_id'];
+    public function export_products_excel($order_id) {
+        $data = [];
 
-        $this->load->model('account/order'); 
+        $orderid = $this->request->get['order_id'];
+
+        $this->load->model('account/order');
         $order_info = $this->model_account_order->getOrder($orderid);
-          //  echo "<pre>";print_r($order_info);die;
-        
-       
-        $customer = $order_info['firstname'].' '.$order_info['lastname'];
-         $company =  $this->request->get['company'];
-        $date =$order_info['date_added'];
-        $deliverydate =$order_info['delivery_date'];
-        $shippingaddress =$order_info['shipping_address'].' . '.$order_info['shipping_city'].' '.$order_info['zipcode'];
-        $paymentmethod =$order_info['payment_method'];
+        //  echo "<pre>";print_r($order_info);die;
+
+
+        $customer = $order_info['firstname'] . ' ' . $order_info['lastname'];
+        $company = $this->request->get['company'];
+        $date = $order_info['date_added'];
+        $deliverydate = $order_info['delivery_date'];
+        $shippingaddress = $order_info['shipping_address'] . ' . ' . $order_info['shipping_city'] . ' ' . $order_info['zipcode'];
+        $paymentmethod = $order_info['payment_method'];
 
 
 
-          
-          $data['consolidation'][] = [
-              'orderid' => $orderid,
+
+        $data['consolidation'][] = [
+            'orderid' => $orderid,
             'customer' => $customer,
-           'company' => $company,
+            'company' => $company,
             'date' => $date,
             'deliverydate' => $deliverydate,
             'shippingaddress' => $shippingaddress,
             'paymentmethod' => $paymentmethod,
-          ];
+        ];
 
         $orderProducts = $this->getOrderProductsWithVariancesNew($orderid);
         $data['products'] = $orderProducts;
 
-         // echo "<pre>";print_r($orderProducts);die;
+        // echo "<pre>";print_r($orderProducts);die;
         // $sum = 0;
-
         // foreach ($orderProducts as $item) {
         //     $sum += $item['total_updatedvalue'];
         // } 
@@ -3151,7 +3195,5 @@ class ControllerAccountOrder extends Controller
         $this->load->model('account/order');
         $this->model_account_order->download_products_excel($data);
     }
-
-
 
 }
