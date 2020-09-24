@@ -1666,6 +1666,24 @@ class ModelCheckoutOrder extends Model {
 
             foreach ($order_approval_access_user as $order_approval_access_use) {
                 if ($order_approval_access_use['order_approval_access_role'] == 'head_chef' && $order_approval_access_use['order_approval_access'] > 0) {
+
+                    $order_id = openssl_encrypt($order_info['order_id'], $ciphering, $encryption_key, $options, $encryption_iv);
+                    $customer_id = openssl_encrypt($order_info['customer_id'], $ciphering, $encryption_key, $options, $encryption_iv);
+                    $parent_id = openssl_encrypt($order_approval_access_use['customer_id'], $ciphering, $encryption_key, $options, $encryption_iv);
+
+                    $order_approval_access_use['store_name'] = $store_name;
+                    $order_approval_access_use['branchname'] = $sub_customer_info['company_name'];
+                    $order_approval_access_use['subuserfirstname'] = $sub_customer_info['firstname'];
+                    $order_approval_access_use['subuserlastname'] = $sub_customer_info['lastname'];
+                    $order_approval_access_use['order_link'] = $this->url->link('account/login/checksubuserorder', 'order_token=' . $order_id . '&user_token=' . $customer_id . '&parent_user_token=' . $parent_id, 'SSL');
+
+                    $log->write('EMAIL SENDING');
+                    $log->write($customer_info);
+                    $log->write('EMAIL SENDING');
+
+                    $subject = $this->emailtemplate->getSubject('Customer', 'customer_7', $order_approval_access_use);
+                    $message = $this->emailtemplate->getMessage('Customer', 'customer_7', $order_approval_access_use);
+
                     $mail = new Mail($this->config->get('config_mail'));
                     $mail->setTo($order_approval_access_use['email']);
                     $mail->setFrom($this->config->get('config_from_email'));
@@ -1676,6 +1694,23 @@ class ModelCheckoutOrder extends Model {
                 }
 
                 if ($order_approval_access_use['order_approval_access_role'] == 'procurement_person' && $order_approval_access_use['order_approval_access'] > 0) {
+                    $order_id = openssl_encrypt($order_info['order_id'], $ciphering, $encryption_key, $options, $encryption_iv);
+                    $customer_id = openssl_encrypt($order_info['customer_id'], $ciphering, $encryption_key, $options, $encryption_iv);
+                    $parent_id = openssl_encrypt($order_approval_access_use['customer_id'], $ciphering, $encryption_key, $options, $encryption_iv);
+
+                    $order_approval_access_use['store_name'] = $store_name;
+                    $order_approval_access_use['branchname'] = $sub_customer_info['company_name'];
+                    $order_approval_access_use['subuserfirstname'] = $sub_customer_info['firstname'];
+                    $order_approval_access_use['subuserlastname'] = $sub_customer_info['lastname'];
+                    $order_approval_access_use['order_link'] = $this->url->link('account/login/checksubuserorder', 'order_token=' . $order_id . '&user_token=' . $customer_id . '&parent_user_token=' . $parent_id, 'SSL');
+
+                    $log->write('EMAIL SENDING');
+                    $log->write($customer_info);
+                    $log->write('EMAIL SENDING');
+
+                    $subject = $this->emailtemplate->getSubject('Customer', 'customer_7', $order_approval_access_use);
+                    $message = $this->emailtemplate->getMessage('Customer', 'customer_7', $order_approval_access_use);
+
                     $mail = new Mail($this->config->get('config_mail'));
                     $mail->setTo($order_approval_access_use['email']);
                     $mail->setFrom($this->config->get('config_from_email'));
