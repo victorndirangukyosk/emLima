@@ -1323,11 +1323,11 @@ class ModelCheckoutOrder extends Model {
             }
 
             if ($refundToCustomerWallet) {
-                $log->write($this->config->get(credit_status));
+                $log->write($this->config->get('credit_status'));
                 $log->write("refundToCustomerWallet");
                 //referee points below
                 $description = 'Refund of order#' . $order_id;
-                if($this->config->get(credit_status))
+                if($this->config->get('credit_status')==1)
                 {
                   $this->model_account_activity->addCredit($order_info['customer_id'], $description, $order_info['total'], $order_id);
                 }
