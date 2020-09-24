@@ -413,7 +413,7 @@
                 console.log(json);
                 var approved = $('<li class="list-group-item"><div class="row"><div class="col-md-4"></div><div class="col-md-4"><div class="my-order-showaddress"><h3 class="my-order-title label" style="background-color: #8E45FF;display: block;line-height: 2; text-align:center;">Approved</h3></div></div><div class="col-md-4"></div></div>');
                 parent_div.html(approved);
-                $('#orderstatus' + order_id).text('Order Received');
+                $('#orderstatus' + order_id).text(json.success);
                 $('#editorder' + order_id).remove();
             }
         });
@@ -446,7 +446,7 @@
                 console.log(json);
                 var approved = $('<li class="list-group-item"><div class="row"><div class="col-md-4"></div><div class="col-md-4"><div class="my-order-showaddress"><h3 class="my-order-title label" style="background-color: #8E45FF;display: block;line-height: 2; text-align:center;">Approved</h3></div></div><div class="col-md-4"></div></div>');
                 parent_div.html(approved);
-                $('#orderstatus' + order_id).text('Order Received');
+                $('#orderstatus' + order_id).text(json.success);
                 $('#editorder' + order_id).remove();
             }
         });
@@ -476,7 +476,7 @@
                 console.log(json);
                 var approved = $('<li class="list-group-item"><div class="row"><div class="col-md-4"></div><div class="col-md-4"><div class="my-order-showaddress"><h3 class="my-order-title label" style="background-color: #8E45FF;display: block;line-height: 2; text-align:center;">Rejected</h3></div></div><div class="col-md-4"></div></div>');
                 parent_div.html(approved);
-                $('#orderstatus' + order_id).text('Order Rejected');
+                $('#orderstatus' + order_id).text(json.success);
                 $('#editorder' + order_id).remove();
             }
         });
@@ -509,7 +509,7 @@
                 console.log(json);
                 var approved = $('<li class="list-group-item"><div class="row"><div class="col-md-4"></div><div class="col-md-4"><div class="my-order-showaddress"><h3 class="my-order-title label" style="background-color: #8E45FF;display: block;line-height: 2; text-align:center;">Approved</h3></div></div><div class="col-md-4"></div></div>');
                 parent_div.html(approved);
-                $('#orderstatus' + order_id).text('Order Received');
+                $('#orderstatus' + order_id).text(json.success);
                 $('#editorder' + order_id).remove();
             }
         });
@@ -542,7 +542,7 @@
                 console.log(json);
                 var approved = $('<li class="list-group-item"><div class="row"><div class="col-md-4"></div><div class="col-md-4"><div class="my-order-showaddress"><h3 class="my-order-title label" style="background-color: #8E45FF;display: block;line-height: 2; text-align:center;">Approved</h3></div></div><div class="col-md-4"></div></div>');
                 parent_div.html(approved);
-                $('#orderstatus' + order_id).text('Order Received');
+                $('#orderstatus' + order_id).text(json.success);
                 $('#editorder' + order_id).remove();
             }
         });
@@ -571,7 +571,7 @@
                 console.log(json);
                 var approved = $('<li class="list-group-item"><div class="row"><div class="col-md-4"></div><div class="col-md-4"><div class="my-order-showaddress"><h3 class="my-order-title label" style="background-color: #8E45FF;display: block;line-height: 2; text-align:center;">Rejected</h3></div></div><div class="col-md-4"></div></div>');
                 parent_div.html(approved);
-                $('#orderstatus' + order_id).text('Order Rejected');
+                $('#orderstatus' + order_id).text(json.success);
                 $('#editorder' + order_id).remove();
             }
         });
