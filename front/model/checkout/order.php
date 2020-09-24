@@ -1326,7 +1326,7 @@ class ModelCheckoutOrder extends Model {
                 $log->write("refundToCustomerWallet");
                 //referee points below
                 $description = 'Refund of order#' . $order_id;
-                $this->model_account_activity->addCredit($order_info['customer_id'], $description, $order_info['total'], $order_id);
+                // $this->model_account_activity->addCredit($order_info['customer_id'], $description, $order_info['total'], $order_id);
             }
         }
     }
