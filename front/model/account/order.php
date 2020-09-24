@@ -812,13 +812,40 @@ class ModelAccountOrder extends Model {
 
     public function ApproveOrRejectSubUserOrder($order_id, $customer_id, $order_status) {
         if ('Approved' == $order_status) {
-            $this->db->query('UPDATE `' . DB_PREFIX . "order` SET parent_approval = '" . $order_status . "', order_status_id = 14  WHERE order_id = '" . (int) $order_id . "' AND customer_id = '" . (int) $customer_id . "'");
-            $this->db->query('INSERT INTO ' . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', order_status_id = 14, notify = 1, comment = 'Order Approved By Parent User', date_added = NOW()");
+            $this->db->query('UPDATE `' . DB_PREFIX . "order` SET parent_approval = '" . $order_status . "'  WHERE order_id = '" . (int) $order_id . "' AND customer_id = '" . (int) $customer_id . "'");
+            //$this->db->query('INSERT INTO ' . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', order_status_id = 14, notify = 1, comment = 'Order Approved By Parent User', date_added = NOW()");
         }
         if ('Rejected' == $order_status) {
-            $this->db->query('UPDATE `' . DB_PREFIX . "order` SET parent_approval = '" . $order_status . "', order_status_id = 16 WHERE order_id = '" . (int) $order_id . "' AND customer_id = '" . (int) $customer_id . "'");
-            $this->db->query('INSERT INTO ' . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', order_status_id = 16, notify = 1, comment = 'Order Rejected By Parent User', date_added = NOW()");
+            $this->db->query('UPDATE `' . DB_PREFIX . "order` SET parent_approval = '" . $order_status . "' WHERE order_id = '" . (int) $order_id . "' AND customer_id = '" . (int) $customer_id . "'");
+            //$this->db->query('INSERT INTO ' . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', order_status_id = 16, notify = 1, comment = 'Order Rejected By Parent User', date_added = NOW()");
         }
+    }
+
+    public function ApproveOrRejectSubUserOrderByChefProcurement($order_id, $customer_id, $order_status, $role) {
+        if ('Approved' == $order_status && $role == 'head_chef') {
+            $this->db->query('UPDATE `' . DB_PREFIX . "order` SET head_chef = '" . $order_status . "'  WHERE order_id = '" . (int) $order_id . "' AND customer_id = '" . (int) $customer_id . "'");
+            //$this->db->query('INSERT INTO ' . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', order_status_id = 14, notify = 1, comment = 'Order Approved By Parent User', date_added = NOW()");
+        }
+
+        if ('Approved' == $order_status && $role == 'procurement') {
+            $this->db->query('UPDATE `' . DB_PREFIX . "order` SET procurement = '" . $order_status . "'  WHERE order_id = '" . (int) $order_id . "' AND customer_id = '" . (int) $customer_id . "'");
+            //$this->db->query('INSERT INTO ' . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', order_status_id = 14, notify = 1, comment = 'Order Approved By Parent User', date_added = NOW()");
+        }
+
+        if ('Rejected' == $order_status && $role == 'head_chef') {
+            $this->db->query('UPDATE `' . DB_PREFIX . "order` SET head_chef = '" . $order_status . "' WHERE order_id = '" . (int) $order_id . "' AND customer_id = '" . (int) $customer_id . "'");
+            //$this->db->query('INSERT INTO ' . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', order_status_id = 16, notify = 1, comment = 'Order Rejected By Parent User', date_added = NOW()");
+        }
+
+        if ('Rejected' == $order_status && $role == 'procurement') {
+            $this->db->query('UPDATE `' . DB_PREFIX . "order` SET procurement = '" . $order_status . "' WHERE order_id = '" . (int) $order_id . "' AND customer_id = '" . (int) $customer_id . "'");
+            //$this->db->query('INSERT INTO ' . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', order_status_id = 16, notify = 1, comment = 'Order Rejected By Parent User', date_added = NOW()");
+        }
+    }
+
+    public function UpdateOrderStatus($order_id, $order_status_id) {
+        $this->db->query('UPDATE `' . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', order_status_id = '" . (int) $order_status_id . "', notify = 1, comment = 'Order Approved By Parent User', date_added = NOW()");
     }
 
     public function ApproveOrRejectSubUserOrderApi($order_id, $order_status) {
