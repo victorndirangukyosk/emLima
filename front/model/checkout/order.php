@@ -1660,6 +1660,33 @@ class ModelCheckoutOrder extends Model {
         $mail->setHTML($message);
         $mail->send();
 
+        if ($is_he_parents != NULL && $is_he_parents > 0) {
+            $order_approval_access = $this->db->query('SELECT c.customer_id, c.parent, c.order_approval_access_role, c.order_approval_access, c.email FROM ' . DB_PREFIX . "customer c WHERE c.parent = '" . (int) $is_he_parents . "' AND c.order_approval_access = 1 AND (c.order_approval_access_role = 'head_chef' OR c.order_approval_access_role = 'procurement_person')");
+            $order_approval_access_user = $order_approval_access->rows;
+
+            foreach ($order_approval_access_user as $order_approval_access_use) {
+                if ($order_approval_access_use['order_approval_access_role'] == 'head_chef' && $order_approval_access_use['order_approval_access'] > 0) {
+                    $mail = new Mail($this->config->get('config_mail'));
+                    $mail->setTo($order_approval_access_use['email']);
+                    $mail->setFrom($this->config->get('config_from_email'));
+                    $mail->setSender($this->config->get('config_name'));
+                    $mail->setSubject($subject);
+                    $mail->setHTML($message);
+                    $mail->send();
+                }
+
+                if ($order_approval_access_use['order_approval_access_role'] == 'procurement_person' && $order_approval_access_use['order_approval_access'] > 0) {
+                    $mail = new Mail($this->config->get('config_mail'));
+                    $mail->setTo($order_approval_access_use['email']);
+                    $mail->setFrom($this->config->get('config_from_email'));
+                    $mail->setSender($this->config->get('config_name'));
+                    $mail->setSubject($subject);
+                    $mail->setHTML($message);
+                    $mail->send();
+                }
+            }
+        }
+
         $log->write('SMS SENDING');
         $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_7', $customer_info);
         // send message here
