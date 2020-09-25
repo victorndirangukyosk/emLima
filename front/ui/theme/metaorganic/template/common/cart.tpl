@@ -188,7 +188,7 @@ var key=$(this).attr('data-value');
 
 					$('.cart-panel-content').load('index.php?path=common/cart/newInfo');
 
-					$('.cart-count').html(json['count_products']);
+					$('.cart-count').html(json['count_products']+' ITEMS IN CART ');
                     $('.cart-total-amount').html(json['total_amount']);
 				}
 
