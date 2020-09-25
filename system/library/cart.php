@@ -681,7 +681,10 @@ class Cart
             if ($qty && ($qty > 0)) {
                 $this->session->data['temp_cart'][$key]['quantity'] = (float) $qty;
                 //$this->session->data['temp_cart'][$key]['ripe'] =   $ripe;
+                if($product_note!=null && $product_note!="null")
+                {
                 $this->session->data['temp_cart'][$key]['product_note'] = $product_note;
+                }
                 $this->session->data['temp_cart'][$key]['produce_type'] = $produce_type;
             } else {
                 //$this->session->data['temp_cart'][$key] = (int) $qty;
