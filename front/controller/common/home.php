@@ -1022,7 +1022,7 @@ class ControllerCommonHome extends Controller {
         $log->write('1');
         $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_checkout.css');
 
-        $json['href'] = $this->url->link('checkout/checkout', '', 'SSL');
+        $json['href'] = $this->url->link('checkout/checkoutitems', '', 'SSL');
 
         // Validate cart has products and has stock.
         if ((!$this->cart->hasProducts() && empty($this->session->data['vouchers'])) /* || ( !$this->cart->hasStock() && !$this->config->get( 'config_stock_checkout' ) ) */) {
