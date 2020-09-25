@@ -28,9 +28,9 @@ class ModelCatalogVendorProduct extends Model
     {
         $this->trigger->fire('pre.admin.product.edit', $data);
 
-        if ($this->user->isVendor() && !$this->config->get('config_auto_approval_product')) {
+        /*if ($this->user->isVendor() && !$this->config->get('config_auto_approval_product')) {
             $data['status'] = $this->config->get('config_auto_approval_product');
-        }
+        }*/
 
         $query = 'UPDATE '.DB_PREFIX."product_to_store SET product_id = '".$data['product_id']."', store_id = '".$this->db->escape($data['product_store'])."', price = '".$data['price']."',special_price = '".$data['special_price']."',tax_percentage = '".$data['tax_percentage']."',quantity = '".$data['quantity']."',min_quantity = '".$data['min_quantity']."',subtract_quantity = '".$data['subtract_quantity']."',status = '".$data['status']."',tax_class_id = '".$data['tax_class_id']."' WHERE product_store_id = '".(int) $store_product_id."'";
 
