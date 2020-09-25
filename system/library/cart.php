@@ -693,6 +693,8 @@ class Cart
             $log = new Log('error.log');
             $log->write('test123');
             $log->write($produce_type);
+            if($qty>0)
+            {
             $preProduceTypes = $this->session->data['cart'][$key]['produce_type'];
             $oldquantity = $this->session->data['cart'][$key]['quantity'];
             $i = 0;
@@ -712,6 +714,12 @@ class Cart
             {
             $this->session->data['cart'][$key]['product_note'] = $product_note;
             }
+            }
+           else{
+            //if produce type is availabe and 0 is passed , deletion should be happen based on produce type
+            //not on entire key
+
+             }
         }
     }
 
