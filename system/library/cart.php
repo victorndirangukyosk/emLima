@@ -670,7 +670,10 @@ class Cart
             */
             if ((float) $qty && ((float) $qty > 0) && isset($this->session->data['cart'][$key])) {
                 $this->session->data['cart'][$key]['quantity'] = (float) $qty;
+                if($product_note!=null && $product_note!="null")
+                {
                 $this->session->data['cart'][$key]['product_note'] = $product_note;
+                }
             } else {
                 $this->remove($key);
             }
@@ -678,7 +681,10 @@ class Cart
             if ($qty && ($qty > 0)) {
                 $this->session->data['temp_cart'][$key]['quantity'] = (float) $qty;
                 //$this->session->data['temp_cart'][$key]['ripe'] =   $ripe;
+                if($product_note!=null && $product_note!="null")
+                {
                 $this->session->data['temp_cart'][$key]['product_note'] = $product_note;
+                }
                 $this->session->data['temp_cart'][$key]['produce_type'] = $produce_type;
             } else {
                 //$this->session->data['temp_cart'][$key] = (int) $qty;
@@ -702,7 +708,10 @@ class Cart
 
             $this->session->data['cart'][$key]['produce_type'] = $preProduceTypes;
             $this->session->data['cart'][$key]['quantity'] = (float) $newquantity;
+            if($product_note!=null && $product_note!="null")
+            {
             $this->session->data['cart'][$key]['product_note'] = $product_note;
+            }
         }
     }
 

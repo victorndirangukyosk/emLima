@@ -638,7 +638,8 @@
     <script type="text/javascript" src="<?= $base?>admin/ui/javascript/map-picker/js/locationpicker.jquery.js?v=2.3"></script>
     
   <script type="text/javascript">
-      $(document).delegate('#clearcart', 'click', function(){
+  //as in header page , clear cart funtionality is already mentioned.Commented here
+     /* $(document).delegate('#clearcart', 'click', function(){
         var choice = confirm($(this).attr('data-confirm'));
 
         if(choice) {
@@ -655,7 +656,7 @@
                 }}
             });
         }
-    });
+    });*/
 
  $(document).delegate('#save_basket_action', 'click', function(){
   
