@@ -579,4 +579,9 @@ class ModelAccountCustomer extends Model {
         $this->db->query($sql2);
     }
 
+    public function GetOrderApprovalAccessByParentId($parent_id, $customer_id) {
+        $order_approval_access = $this->db->query('SELECT COUNT(*) AS total FROM ' . DB_PREFIX . "customer c WHERE c.customer_id = '" . (int) $customer_id . "' AND c.parent = '" . (int) $parent_id . "' AND c.order_approval_access = 1 AND (c.order_approval_access_role = 'head_chef' OR c.order_approval_access_role = 'procurement_person')");
+        return $order_approval_access->row['total'];
+    }
+
 }
