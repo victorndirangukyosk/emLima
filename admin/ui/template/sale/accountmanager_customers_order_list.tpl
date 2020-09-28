@@ -379,7 +379,7 @@
         });
 
    $('#button-filter').on('click', function () {
-            url = 'index.php?path=sale/order&token=<?php echo $token; ?>';
+            url = 'index.php?path=sale/accountmanageruserorders&token=<?php echo $token; ?>';
 
              var filter_company = $('input[name=\'filter_company\']').val();
 
@@ -464,7 +464,7 @@
         $('input[name=\'filter_city\']').autocomplete({
             'source': function (request, response) {
                 $.ajax({
-                    url: 'index.php?path=sale/order/city_autocomplete&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
+                    url: 'index.php?path=sale/accountmanageruserorders/city_autocomplete&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
                     dataType: 'json',
                     success: function (json) {
                         response($.map(json, function (item) {
@@ -668,7 +668,7 @@
                  
 
                  $.ajax({
-                    url: 'index.php?path=sale/order/getPO&token=<?php echo $token; ?>&order_id='+$order_id,
+                    url: 'index.php?path=sale/accountmanageruserorders/getPO&token=<?php echo $token; ?>&order_id='+$order_id,
                     type: 'POST',
                     dataType: 'json',
                     data:{order_id:$order_id},
@@ -722,7 +722,7 @@
                 else{  
                   
                     $.ajax({
-                    url: 'index.php?path=sale/order/updatePO&token=<?php echo $token; ?>',
+                    url: 'index.php?path=sale/accountmanageruserorders/updatePO&token=<?php echo $token; ?>',
                     type: 'post',
                     dataType: 'json',
                     data:$('#poModal-form').serialize(),

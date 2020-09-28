@@ -176,13 +176,13 @@ class ControllerSaleAccountManagerUserOrders extends Controller {
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('sale/order', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+            'href' => $this->url->link('sale/accountmanageruserorders', 'token=' . $this->session->data['token'] . $url, 'SSL'),
         ];
 
-        $data['invoice'] = $this->url->link('sale/order/invoice', 'token=' . $this->session->data['token'], 'SSL');
-        $data['shipping'] = $this->url->link('sale/order/shipping', 'token=' . $this->session->data['token'], 'SSL');
-        $data['add'] = $this->url->link('sale/order/add', 'token=' . $this->session->data['token'], 'SSL');
-        $data['delivery_sheet'] = $this->url->link('sale/order/consolidatedOrderSheet', 'token=' . $this->session->data['token'], 'SSL');
+        $data['invoice'] = $this->url->link('sale/accountmanageruserorders/invoice', 'token=' . $this->session->data['token'], 'SSL');
+        $data['shipping'] = $this->url->link('sale/accountmanageruserorders/shipping', 'token=' . $this->session->data['token'], 'SSL');
+        $data['add'] = $this->url->link('sale/accountmanageruserorders/add', 'token=' . $this->session->data['token'], 'SSL');
+        $data['delivery_sheet'] = $this->url->link('sale/accountmanageruserorders/consolidatedOrderSheet', 'token=' . $this->session->data['token'], 'SSL');
         $data['orders'] = [];
 
         $filter_data = [
@@ -251,12 +251,12 @@ class ControllerSaleAccountManagerUserOrders extends Controller {
                 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
                 'date_modified' => date($this->language->get('date_format_short'), strtotime($result['date_modified'])),
                 'shipping_code' => $result['shipping_code'],
-                'view' => $this->url->link('sale/order/info', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL'),
-                'invoice' => $this->url->link('sale/order/invoice', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL'),
-                'order_spreadsheet' => $this->url->link('sale/order/orderCalculationSheet', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL'),
-                'shipping' => $this->url->link('sale/order/shipping', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL'),
-                'edit' => $this->url->link('sale/order/EditInvoice', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL'),
-                'delete' => $this->url->link('sale/order/delete', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL'),
+                'view' => $this->url->link('sale/accountmanageruserorders/info', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL'),
+                'invoice' => $this->url->link('sale/accountmanageruserorders/invoice', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL'),
+                'order_spreadsheet' => $this->url->link('sale/accountmanageruserorders/orderCalculationSheet', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL'),
+                'shipping' => $this->url->link('sale/accountmanageruserorders/shipping', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL'),
+                'edit' => $this->url->link('sale/accountmanageruserorders/EditInvoice', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL'),
+                'delete' => $this->url->link('sale/accountmanageruserorders/delete', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL'),
                 'po_number' => $result['po_number'],
                 'SAP_customer_no' => $result['SAP_customer_no'],
                 'SAP_doc_no' => $result['SAP_doc_no'],
@@ -382,13 +382,13 @@ class ControllerSaleAccountManagerUserOrders extends Controller {
             $url .= '&page=' . $this->request->get['page'];
         }
 
-        $data['sort_order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&sort=o.order_id' . $url, 'SSL');
-        $data['sort_city'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&sort=c.name' . $url, 'SSL');
-        $data['sort_customer'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&sort=customer' . $url, 'SSL');
-        $data['sort_status'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&sort=status' . $url, 'SSL');
-        $data['sort_total'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&sort=o.total' . $url, 'SSL');
-        $data['sort_date_added'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&sort=o.date_added' . $url, 'SSL');
-        $data['sort_date_modified'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&sort=o.date_modified' . $url, 'SSL');
+        $data['sort_order'] = $this->url->link('sale/accountmanageruserorders', 'token=' . $this->session->data['token'] . '&sort=o.order_id' . $url, 'SSL');
+        $data['sort_city'] = $this->url->link('sale/accountmanageruserorders', 'token=' . $this->session->data['token'] . '&sort=c.name' . $url, 'SSL');
+        $data['sort_customer'] = $this->url->link('sale/accountmanageruserorders', 'token=' . $this->session->data['token'] . '&sort=customer' . $url, 'SSL');
+        $data['sort_status'] = $this->url->link('sale/accountmanageruserorders', 'token=' . $this->session->data['token'] . '&sort=status' . $url, 'SSL');
+        $data['sort_total'] = $this->url->link('sale/accountmanageruserorders', 'token=' . $this->session->data['token'] . '&sort=o.total' . $url, 'SSL');
+        $data['sort_date_added'] = $this->url->link('sale/accountmanageruserorders', 'token=' . $this->session->data['token'] . '&sort=o.date_added' . $url, 'SSL');
+        $data['sort_date_modified'] = $this->url->link('sale/accountmanageruserorders', 'token=' . $this->session->data['token'] . '&sort=o.date_modified' . $url, 'SSL');
 
         $url = '';
 
