@@ -56,7 +56,7 @@
     body {
       padding-right: 0 !important;
     }
-    
+
     @media (min-width:768px) and (max-width:1023px) {
 
       .header__primary-navigation-item--more-categories {
@@ -1051,10 +1051,11 @@
   });
 
   $(document).ready(function () {
-    console.log("ready in top_category");
-    $(document).delegate('.open-popup', 'click', function () {
-      console.log("product blocks" + $(this).attr('data-id'));
+    $(document).one().delegate('.open-popup', 'click', function () {
+      $('.open-popup').prop('disabled', true);
+      // console.log("product blocks" + $(this).attr('data-id'));
       $.get('index.php?path=product/product/view&product_store_id=' + $(this).attr('data-id') + '&store_id=' + $(this).attr('data-store'), function (data) {
+        $('.open-popup').prop('disabled', false);
         $('.modal-wrapper').html(data);
         $('#popupmodal').modal('show');
       });
