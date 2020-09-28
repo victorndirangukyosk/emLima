@@ -235,7 +235,6 @@
                                     
                                     <td class="text-right"><?php echo $column_delivery_method; ?></td>
 
-                                    <td class="text-right"><?php echo $column_action; ?></td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -281,30 +280,6 @@
 
                                     
                                     <td class="text-right"><?php echo $order['shipping_method']; ?></td>
-
-                                    <td class="text-right">
-
-                                    <?php if (!$this->user->isVendor()): ?>
-                                        <!-- <a href="<?php echo $order['order_spreadsheet']; ?>" target="_blank" data-toggle="tooltip" title="Download Calculation Sheet" class="btn btn-info"><i class="fa fa-file-excel-o"></i></a> -->
-                                        <a href="<?php echo $order['shipping']; ?>" target="_blank" data-toggle="tooltip" title="Print Delivery Note" class="btn btn-info"><i class="fa fa-truck"></i></a>
-                                    <?php endif ?>  
-                
-                                       
-                                        <a href="<?php echo $order['invoice']; ?>" target="_blank" data-toggle="tooltip" title="Print Invoice" class="btn btn-info"><i class="fa fa-print"></i></a>
-
-                                        
-
-                                        <a href="<?php echo $order['view']; ?>" data-toggle="tooltip" title="<?php echo $button_view; ?>" class="btn btn-info"><i class="fa fa-eye"></i></a> 
-                                       
-                                            <?php if ( !in_array( $order['order_status_id'], array_merge( $this->config->get( 'config_refund_status' ), $this->config->get( 'config_complete_status' ) ) ) ) { ?>
-                                                <a href="<?php echo $order['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a> 
-                                            <?php } ?>
-                                        
-                                        <!-- <a href="<?php echo $order['delete']; ?>" id="button-delete<?php echo $order['order_id']; ?>" data-toggle="tooltip" title="<?php echo $button_delete; ?>" class="btn btn-danger"><i class="fa fa-trash-o"></i></a> -->
-                                       
-                                       <a href="#" onclick="getPO(<?= $order['order_id'] ?>)"   data-toggle="modal" data-dismiss="modal" data-target="#poModal"    class="btn btn-info" style="border-radius: 0px;"  >PO</a>
-                                        </td>
-                                        
                                 </tr>
                                 <?php } ?>
                                 <?php } else { ?>
