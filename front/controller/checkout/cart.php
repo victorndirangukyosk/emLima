@@ -391,8 +391,8 @@ class ControllerCheckoutCart extends Controller
             $produce_type = $this->request->post['produce_type'];
         }
 
-        console.log('ripasdsfdsfe');
-        console.log($ripe);
+        /*console.log('ripasdsfdsfe');
+        console.log($ripe);*/
 
         $this->load->model('assets/product');
 

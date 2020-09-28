@@ -1297,6 +1297,7 @@ class ControllerCommonHome extends Controller {
                     'default_variation_name' => $result['default_variation_name'],
                     'thumb' => $image,
                     'name' => $name,
+                    'store_id' => $result['store_id'],
                     'variations' => [
                         [
                             'variation_id' => $result['product_store_id'],

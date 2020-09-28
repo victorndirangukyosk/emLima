@@ -61,7 +61,7 @@
        data-key='<?= $product["key"] ?>'
        class="AtcButton__button_text___VoXuy unique_add_button<?= $product['product_store_id'] ?>-<?= $product['store_product_variation_id'] ?>"
        id="add-cart-btnnew"
-       data-store-id="<?= ACTIVE_STORE_ID ?>"
+       data-store-id="<?= $product['store_id'] ?>"
        data-variation-id="<?= $product['store_product_variation_id'] ?>"
        data-id="<?= $product['product_store_id'] ?>"      
        data-producetype-id=""       
