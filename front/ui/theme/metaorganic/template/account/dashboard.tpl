@@ -241,6 +241,32 @@
   </div>
 </div>
 
+ <!--Cart HTML Start-->
+ <div class="store-cart-panel">
+        <div class="modal right fade" id="store-cart-side" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="cart-panel-content">
+                    </div>
+                    <div class="modal-footer">
+                        <!-- <p><?= $text_verify_number ?></p> -->
+                        <a href="<?php echo $checkout; ?>" id="proceed_to_checkout">
+
+                            <button type="button" class="btn btn-primary btn-block btn-lg" id="proceed_to_checkout_button">
+                                <span class="checkout-modal-text"><?= $text_proceed_to_checkout?> </span>
+                                <div class="checkout-loader" style="display: none;"></div>
+
+                            </button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+</div>
+<!--Cart HTML End-->
+
+
 <?php echo $footer; ?>
 
 <div class="phoneModal-popup">
