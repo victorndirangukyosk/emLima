@@ -927,6 +927,7 @@ class ControllerProductProduct extends Controller
                 'zoom_thumb' => $zoom_thumb,
                 'key' => $key,
                 'product_store_id' => $product_info['product_store_id'],
+                'store_id' => $product_info['store_id'],
                 'store_product_variation_id' => 0,
                 'images' => $data['images'],
                 'product_info' => $product_info,
