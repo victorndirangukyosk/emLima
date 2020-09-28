@@ -127,6 +127,17 @@ class ControllerCheckoutPaymentMethod extends Controller
         }
 
         //echo "<pre>";print_r($data);die;
+        $log = new Log('error.log');
+        
+        if (!empty($_SESSION['parent'])) {
+            $log->write('FOR SUB USERS REMOVED OTHER PAYMENT METHODS');
+            foreach ($data['payment_methods'] as $payment_method) {
+                if ($payment_method['code'] != 'cod') {
+                    unset($data['payment_methods'][$payment_method['code']]);
+                }
+            }
+            $log->write('FOR SUB USERS REMOVED OTHER PAYMENT METHODS');
+        }
 
         if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/checkout/payment_method.tpl')) {
             $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/checkout/payment_method.tpl', $data));
