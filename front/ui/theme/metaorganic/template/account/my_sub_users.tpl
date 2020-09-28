@@ -765,7 +765,7 @@
                             console.log(value.order_approval_access);
                             console.log(value.order_approval_access_role);
                             $procurement_person.append('<option value=' + value.customer_id + ' selected="selected">' + value.email + '</option>'); // return empty
-                        } else if (value.order_approval_access == 0 && (value.order_approval_access_role == null || value.order_approval_access_role == '')) {
+                        } else if ((value.order_approval_access == 0 || value.order_approval_access == null) && (value.order_approval_access_role == null || value.order_approval_access_role == '')) {
                             $procurement_person.append('<option value=' + value.customer_id + '>' + value.email + '</option>'); // return empty
                         }
                     });
@@ -776,7 +776,7 @@
                     {
                         if (value.order_approval_access == 1 && value.order_approval_access_role == 'head_chef') {
                             $head_chef.append('<option value=' + value.customer_id + ' selected="selected">' + value.email + '</option>'); // return empty
-                        } else if (value.order_approval_access == 0 && (value.order_approval_access_role == null || value.order_approval_access_role == '')) {
+                        } else if ((value.order_approval_access == 0 || value.order_approval_access == null) && (value.order_approval_access_role == null || value.order_approval_access_role == '')) {
                             $head_chef.append('<option value=' + value.customer_id + '>' + value.email + '</option>'); // return empty
                         }
                     });
