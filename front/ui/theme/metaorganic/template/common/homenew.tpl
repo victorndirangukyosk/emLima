@@ -53,6 +53,10 @@
   <link rel="stylesheet" type="text/css"
     href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.transitions.min.css">
   <style>
+    body {
+      padding-right: 0 !important;
+    }
+
     @media (min-width:768px) and (max-width:1023px) {
 
       .header__primary-navigation-item--more-categories {
@@ -131,44 +135,14 @@
                           <input type="text" name="product_name" id="product_name"
                             class="header__search-input zipcode-enter" placeholder="Search for your product" />
                           <span class="input-group-btn">
-                            <!--<button type="submit" class="search-btn"> <span class="glyphicon glyphicon-search"> <span class="sr-only">Search</span> </span> </button>-->
                             <div class="resp-searchresult">
                               <div></div>
                             </div>
                           </span> </div>
                       </form>
-
-                      <?php /* if($this->config->get('config_store_location') == 'autosuggestion') { ?>
-                      <input name="zipcode" id="searchTextField" class="header__search-input zipcode-enter" type="text"
-                        required="" alt="" maxlength="" size="" tabindex="3" placeholder="Find Stores in your Location"
-                        highlight="y" strict="y" autocomplete="off">
-                      <?php } else { ?>
-                      <input name="zipcode" id="searchTextField" class="header__search-input zipcode-enter" type="text"
-                        required="" alt="" maxlength="" size="" tabindex="3" placeholder="<?= $zipcode_mask ?>"
-                        highlight="y" strict="y" autocomplete="off">
-
-                      <?php } */ ?>
-
-
-
-                      <!--<input type="hidden" name="store_list_url" value="<?=BASE_URL ?>">
-
-                                            <input type="hidden" id="store_location" value="<?= $this->config->get('config_store_location'); ?>">-->
-
-
-
-
                     </div>
                   </div>
                 </li>
-                <!--<li class="header__search-bar-item header__search-bar-item--submit search-submit">
-                              <button type="submit" tabindex="5" data-spinner-btn="" class="header__search-button">
-                                    <i class="fa fa-search header__search-button-icon header__search-button-icon--search" aria-hidden="true"></i>
-
-                                 <span class="header__search-button-text">Search</span>
-                              </button>
-                           </li>-->
-
               </ul>
             </form>
           </div>
@@ -221,27 +195,6 @@
                               class="fa fa-question-circle"></i>Help</a></div>
                         <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $logout ?>"><i
                               class="fa fa-power-off"></i><?= $text_logout ?></a></div>
-
-
-                        <!-- <div class="dropdownsetnew" style="margin-top: 10px;"><a class="header__upper-deck-item-link"
-                            href="<?= $account ?>"><i class="fa fa-user"></i>Profile</a></div>
-                        <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $order ?>"><i
-                              class="fa fa-reorder"></i><?= $text_orders ?></a></div>
-                        <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $wishlist ?>"><i
-                              class="fa fa-list-ul"></i><?= $text_my_wishlist?></a></div>
-                        <?php if($this->config->get('config_credit_enabled')) { ?>
-
-                        <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $credit ?>"><i
-                              class="fa fa-money"></i><?= $text_my_cash ?></a></div>
-                        <?php } ?>
-
-                        <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $address ?>"><i
-                              class="fa fa-address-book"></i><?= $label_my_address ?></a></div>
-                        <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="#"
-                            class="header__upper-deck-item-link btn-link-white" type="button" data-toggle="modal"
-                            data-target="#contactusModal"><i class="fa fa-phone-square"></i><?= $contactus ?></a></div>
-                         -->
-
                       </div>
                     </div>
                     <div class="butn setui" style="position:relative; z-index:-1000;">
@@ -272,23 +225,6 @@
     </div>
 
   </div>
-  <!-- <div id="header-new" class="header">
-
-         <div class="header__wrapper">
-
-
-
-
-
-            <div class="header__top-layer">
-
-            <div id="homepage-billboard-new" class="header__home-hero header__home-hero--homenew">
-               <div class="header__home-hero-image-wrapper">
-                  <picture id="random-hero-image" class="header__home-hero-image" alt="">
-                     <!--[if IE 9]>
-
-                     <![endif]-->
-  <!--<img id="random-hero-img" class="header__home-hero-image" alt="" src="assets/images/xxlarge.jpg">-->
   </picture>
   </div>
 
@@ -389,7 +325,7 @@
           <li class="col-md-2 ">
 
             <div class="_2sT86 _1fLGj">
-              <a class="product-detail-bnt open-popup" role="button" data-store=<?= ACTIVE_STORE_ID?>
+              <a class="product-detail-bnt open-popup" role="button" data-store="<?= $product['store_id'] ?>"
                 data-id="<?= $product['product_store_id'] ?>" target="_blank" aria-label="<?=$product['name']?>">
 
                 <!--<article class="_3Oe1A">-->
@@ -1113,13 +1049,13 @@
     $('#bannermodal').modal('hide');
     $('.modal-backdrop').remove();
   });
+
   $(document).ready(function () {
-    console.log("ready in top_category");
-    $(document).delegate('.open-popup', 'click', function () {
-      //alert("wfe");
-      //$('#popupmodal').modal('hide');
-      console.log("product blocks" + $(this).attr('data-id'));
+    $(document).one().delegate('.open-popup', 'click', function () {
+      $('.open-popup').prop('disabled', true);
+      // console.log("product blocks" + $(this).attr('data-id'));
       $.get('index.php?path=product/product/view&product_store_id=' + $(this).attr('data-id') + '&store_id=' + $(this).attr('data-store'), function (data) {
+        $('.open-popup').prop('disabled', false);
         $('.modal-wrapper').html(data);
         $('#popupmodal').modal('show');
       });

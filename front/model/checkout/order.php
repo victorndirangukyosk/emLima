@@ -1323,10 +1323,14 @@ class ModelCheckoutOrder extends Model {
             }
 
             if ($refundToCustomerWallet) {
+                $log->write($this->config->get('credit_status'));
                 $log->write("refundToCustomerWallet");
                 //referee points below
                 $description = 'Refund of order#' . $order_id;
-                $this->model_account_activity->addCredit($order_info['customer_id'], $description, $order_info['total'], $order_id);
+                if($this->config->get('credit_status')==1)
+                {
+                  $this->model_account_activity->addCredit($order_info['customer_id'], $description, $order_info['total'], $order_id);
+                }
             }
         }
     }
@@ -1660,6 +1664,68 @@ class ModelCheckoutOrder extends Model {
         $mail->setHTML($message);
         $mail->send();
 
+        if ($is_he_parents != NULL && $is_he_parents > 0) {
+            $order_approval_access = $this->db->query('SELECT c.customer_id, c.parent, c.order_approval_access_role, c.order_approval_access, c.email, c.firstname, c.lastname  FROM ' . DB_PREFIX . "customer c WHERE c.parent = '" . (int) $is_he_parents . "' AND c.order_approval_access = 1 AND (c.order_approval_access_role = 'head_chef' OR c.order_approval_access_role = 'procurement_person')");
+            $order_approval_access_user = $order_approval_access->rows;
+
+            foreach ($order_approval_access_user as $order_approval_access_use) {
+                if ($order_approval_access_use['order_approval_access_role'] == 'head_chef' && $order_approval_access_use['order_approval_access'] > 0) {
+
+                    $order_id = openssl_encrypt($order_info['order_id'], $ciphering, $encryption_key, $options, $encryption_iv);
+                    $customer_id = openssl_encrypt($order_info['customer_id'], $ciphering, $encryption_key, $options, $encryption_iv);
+                    $parent_id = openssl_encrypt($order_approval_access_use['customer_id'], $ciphering, $encryption_key, $options, $encryption_iv);
+
+                    $order_approval_access_use['store_name'] = $store_name;
+                    $order_approval_access_use['branchname'] = $sub_customer_info['company_name'];
+                    $order_approval_access_use['subuserfirstname'] = $sub_customer_info['firstname'];
+                    $order_approval_access_use['subuserlastname'] = $sub_customer_info['lastname'];
+                    $order_approval_access_use['order_link'] = $this->url->link('account/login/checksubuserorder', 'order_token=' . $order_id . '&user_token=' . $customer_id . '&parent_user_token=' . $parent_id, 'SSL');
+
+                    $log->write('EMAIL SENDING');
+                    $log->write($customer_info);
+                    $log->write('EMAIL SENDING');
+
+                    $subject = $this->emailtemplate->getSubject('Customer', 'customer_7', $order_approval_access_use);
+                    $message = $this->emailtemplate->getMessage('Customer', 'customer_7', $order_approval_access_use);
+
+                    $mail = new Mail($this->config->get('config_mail'));
+                    $mail->setTo($order_approval_access_use['email']);
+                    $mail->setFrom($this->config->get('config_from_email'));
+                    $mail->setSender($this->config->get('config_name'));
+                    $mail->setSubject($subject);
+                    $mail->setHTML($message);
+                    $mail->send();
+                }
+
+                if ($order_approval_access_use['order_approval_access_role'] == 'procurement_person' && $order_approval_access_use['order_approval_access'] > 0) {
+                    $order_id = openssl_encrypt($order_info['order_id'], $ciphering, $encryption_key, $options, $encryption_iv);
+                    $customer_id = openssl_encrypt($order_info['customer_id'], $ciphering, $encryption_key, $options, $encryption_iv);
+                    $parent_id = openssl_encrypt($order_approval_access_use['customer_id'], $ciphering, $encryption_key, $options, $encryption_iv);
+
+                    $order_approval_access_use['store_name'] = $store_name;
+                    $order_approval_access_use['branchname'] = $sub_customer_info['company_name'];
+                    $order_approval_access_use['subuserfirstname'] = $sub_customer_info['firstname'];
+                    $order_approval_access_use['subuserlastname'] = $sub_customer_info['lastname'];
+                    $order_approval_access_use['order_link'] = $this->url->link('account/login/checksubuserorder', 'order_token=' . $order_id . '&user_token=' . $customer_id . '&parent_user_token=' . $parent_id, 'SSL');
+
+                    $log->write('EMAIL SENDING');
+                    $log->write($customer_info);
+                    $log->write('EMAIL SENDING');
+
+                    $subject = $this->emailtemplate->getSubject('Customer', 'customer_7', $order_approval_access_use);
+                    $message = $this->emailtemplate->getMessage('Customer', 'customer_7', $order_approval_access_use);
+
+                    $mail = new Mail($this->config->get('config_mail'));
+                    $mail->setTo($order_approval_access_use['email']);
+                    $mail->setFrom($this->config->get('config_from_email'));
+                    $mail->setSender($this->config->get('config_name'));
+                    $mail->setSubject($subject);
+                    $mail->setHTML($message);
+                    $mail->send();
+                }
+            }
+        }
+
         $log->write('SMS SENDING');
         $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_7', $customer_info);
         // send message here
@@ -1679,9 +1745,35 @@ class ModelCheckoutOrder extends Model {
         $log->write('Order Confirm In COD');
         $log->write($is_he_parents);
         $log->write('Order Confirm In COD');
+
+        $head_chef = 'Approved';
+        $procurement = 'Approved';
+        if ($is_he_parents != NULL && $is_he_parents > 0) {
+            $order_approval_access = $this->db->query('SELECT c.customer_id, c.parent, c.order_approval_access_role, c.order_approval_access FROM ' . DB_PREFIX . "customer c WHERE c.parent = '" . (int) $is_he_parents . "' AND c.order_approval_access = 1 AND (c.order_approval_access_role = 'head_chef' OR c.order_approval_access_role = 'procurement_person')");
+            $order_approval_access_user = $order_approval_access->rows;
+
+            foreach ($order_approval_access_user as $order_approval_access_use) {
+                if ($order_approval_access_use['order_approval_access_role'] == 'head_chef' && $order_approval_access_use['order_approval_access'] > 0) {
+                    $head_chef = 'Pending';
+
+                    //$log->write('Order Approval Access');
+                    //$log->write($order_approval_access_user);
+                    //$log->write('Order Approval Access');
+                }
+
+                if ($order_approval_access_use['order_approval_access_role'] == 'procurement_person' && $order_approval_access_use['order_approval_access'] > 0) {
+                    $procurement = 'Pending';
+
+                    //$log->write('Order Approval Access');
+                    //$log->write($order_approval_access_user);
+                    //$log->write('Order Approval Access');
+                }
+            }
+        }
+
         $parent_approval = null == $is_he_parents ? 'Approved' : 'Pending';
         $order_status_id = null == $is_he_parents ? $this->config->get('cod_order_status_id') : 15;
-        $this->db->query('UPDATE `' . DB_PREFIX . "order` SET parent_approval = '" . $parent_approval . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
+        $this->db->query('UPDATE `' . DB_PREFIX . "order` SET parent_approval = '" . $parent_approval . "',head_chef = '" . $head_chef . "',procurement = '" . $procurement . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
     }
 
 }

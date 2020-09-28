@@ -1,10 +1,9 @@
 <?php
 
-class ControllerAccountLogout extends Controller
-{
-    public function index()
-    {
-        $this->document->addStyle('front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_login.css');
+class ControllerAccountLogout extends Controller {
+
+    public function index() {
+        $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_login.css');
 
         if ($this->customer->isLogged()) {
             $this->trigger->fire('pre.customer.logout');
@@ -30,6 +29,8 @@ class ControllerAccountLogout extends Controller
             unset($this->session->data['email_sub_user_order_id']);
             unset($this->session->data['email_sub_user_id']);
             unset($this->session->data['email_parent_user_id']);
+            unset($this->session->data['order_approval_access']);
+            unset($this->session->data['order_approval_access_role']);
 
             setcookie('zipcode', null, time() - 3600, '/');
 
@@ -89,16 +90,15 @@ class ControllerAccountLogout extends Controller
 
         //REDIRECTING TO HOME PAGE AFTER LOGOUT
         $this->response->redirect('/');
-        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/common/success.tpl')) {
-            $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/common/success.tpl', $data));
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/success.tpl')) {
+            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/success.tpl', $data));
         } else {
             $this->response->setOutput($this->load->view('default/template/common/success.tpl', $data));
         }
     }
 
-    public function checkoutLogout()
-    {
-        $this->document->addStyle('front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_login.css');
+    public function checkoutLogout() {
+        $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_login.css');
 
         $json['status'] = true;
 
@@ -131,4 +131,5 @@ class ControllerAccountLogout extends Controller
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
+
 }

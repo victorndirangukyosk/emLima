@@ -638,7 +638,8 @@
     <script type="text/javascript" src="<?= $base?>admin/ui/javascript/map-picker/js/locationpicker.jquery.js?v=2.3"></script>
     
   <script type="text/javascript">
-      $(document).delegate('#clearcart', 'click', function(){
+  //as in header page , clear cart funtionality is already mentioned.Commented here
+     /* $(document).delegate('#clearcart', 'click', function(){
         var choice = confirm($(this).attr('data-confirm'));
 
         if(choice) {
@@ -655,7 +656,7 @@
                 }}
             });
         }
-    });
+    });*/
 
  $(document).delegate('#save_basket_action', 'click', function(){
   
@@ -792,7 +793,7 @@ console.log(key);
 
 					$('.cart-panel-content').load('index.php?path=common/cart/newInfo');
 
-					$('.cart-count').html(json['count_products']);
+					$('.cart-count').html(json['count_products']+' ITEMS IN CART ');
                     $('.cart-total-amount').html(json['total_amount']);
 				}*/
 
@@ -899,7 +900,7 @@ var cart = {
 					$('.cart-panel-content').load('index.php?path=common/cart/newInfo');
                     $('#cart').load('index.php?path=common/cart/info');
 
-                    $('.cart-count').html(json['count_products']);
+                    $('.cart-count').html(json['count_products']+' ITEMS IN CART ');
                     $('.cart-total-amount').html(json['total_amount']);
 
                     $('.cart-total-amount').html(json['total_amount']);
@@ -951,7 +952,8 @@ var cart = {
 
 					$('.cart-panel-content').load('index.php?path=common/cart/newInfo');
 
-					$('.cart-count').html(json['count_products']);
+					$('.cart-count').html(json['count_products']+' ITEMS IN CART ');
+
                     $('.cart-total-amount').html(json['total_amount']);
 				}
 
@@ -2044,7 +2046,7 @@ function saveInAddressBook() {
             dataType: 'json',
             success: function(json) {
              console.log(json);
-             $('.cart-count').text(json.count_products);
+             $('.cart-count').text(json.count_products+' ITEMS IN CART ');
              $('.cart-total-amount').text(json.total_amount);
              $('.checout-invoice-price').text(json.total_amount);
              $('.checkout-payable .checkout-payable-price').text(json.total_amount);

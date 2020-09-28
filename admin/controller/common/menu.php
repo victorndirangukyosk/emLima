@@ -80,6 +80,7 @@ class ControllerCommonMenu extends Controller
         
         $data['accountmanager'] = $this->url->link('sale/accountmanager', 'token='.$this->session->data['token'].'&sort=c.date_added&order=DESC', 'SSL');
         $data['accountmanager_customers'] = $this->url->link('sale/accountmanageruser', 'token='.$this->session->data['token'].'&sort=c.date_added&order=DESC', 'SSL');
+        $data['account_manager_customer_orders'] = $this->url->link('sale/accountmanageruserorders', 'token='.$this->session->data['token'], 'SSL');
         
         $data['bulk_email'] = $this->url->link('email/bulk_email', 'token='.$this->session->data['token'], 'SSL');
         $data['email_groups'] = $this->url->link('email/groups', 'token='.$this->session->data['token'], 'SSL');
@@ -276,6 +277,7 @@ class ControllerCommonMenu extends Controller
         $data['preturn_customer_ban_ip'] = $this->user->hasPermission('access', 'sale/customer_ban_ip');
         $data['preturn_account_manager'] = $this->user->hasPermission('access', 'sale/accountmanager');
         $data['preturn_account_manager_customers'] = $this->user->hasPermission('access', 'sale/accountmanageruser');
+        $data['preturn_account_manager_customer_orders'] = $this->user->hasPermission('access', 'sale/accountmanageruserorders');
         $data['preturn_custom_field'] = $this->user->hasPermission('access', 'sale/custom_field');
         $data['preturn_voucher'] = $this->user->hasPermission('access', 'sale/voucher');
         $data['preturn_voucher_theme'] = $this->user->hasPermission('access', 'sale/voucher_theme');

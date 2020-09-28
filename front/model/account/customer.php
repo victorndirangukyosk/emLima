@@ -572,8 +572,16 @@ class ModelAccountCustomer extends Model {
     }
 
     public function UpdateOrderApprovalAccess($parent_id, $customer_id, $status, $role) {
-        $sql = 'UPDATE  ' . DB_PREFIX . "customer SET  order_approval_access = '" . (int) $status . "', order_approval_access_role = '" . $role . "' WHERE parent = '" . (int) $parent_id . "' AND customer_id ='" . (int) $customer_id . "'";
+        $sql = 'UPDATE  ' . DB_PREFIX . "customer SET  order_approval_access = '0', order_approval_access_role = NULL WHERE parent = '" . (int) $parent_id . "' AND order_approval_access = 1 AND order_approval_access_role = '" . $role . "'";
         $this->db->query($sql);
+
+        $sql2 = 'UPDATE  ' . DB_PREFIX . "customer SET  order_approval_access = '" . (int) $status . "', order_approval_access_role = '" . $role . "' WHERE parent = '" . (int) $parent_id . "' AND customer_id ='" . (int) $customer_id . "'";
+        $this->db->query($sql2);
+    }
+
+    public function GetOrderApprovalAccessByParentId($parent_id, $customer_id) {
+        $order_approval_access = $this->db->query('SELECT COUNT(*) AS total FROM ' . DB_PREFIX . "customer c WHERE c.customer_id = '" . (int) $customer_id . "' AND c.parent = '" . (int) $parent_id . "' AND c.order_approval_access = 1 AND (c.order_approval_access_role = 'head_chef' OR c.order_approval_access_role = 'procurement_person')");
+        return $order_approval_access->row['total'];
     }
 
 }

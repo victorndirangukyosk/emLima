@@ -31,7 +31,7 @@ class ControllerShopperWallet extends Controller {
             $data['credits'][] = array(
                 'amount' => $this->currency->format($result['amount'], $this->config->get('config_currency')),
                 'description' => $result['description'],
-                'order_id' => $result['order_id'],date_added
+                'order_id' => $result['order_id'],
                 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added']))
             );
         }
