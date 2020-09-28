@@ -304,16 +304,17 @@ $(document).delegate('#clearcart', 'click', function(){
 
 </script>
 <script type="text/javascript">
-    $(document).ready(function() {
-    console.log("ready in category");
-        $(document).delegate('.open-popup', 'click', function(){
-            //alert("wfe");
-            console.log("product blocks"+$(this).attr('data-id'));
-            $.get('index.php?path=product/product/view&product_store_id='+$(this).attr('data-id'), function(data){
-                $('.modal-wrapper').html(data);
-                $('#popupmodal').modal('show');
-            });
-        });
+  $(document).ready(function () {
+    $(document).delegate('.open-popup', 'click', function () {
+      $('.open-popup').prop('disabled', true);
+      // console.log("product blocks" + $(this).attr('data-id'));
+      $.get('index.php?path=product/product/view&product_store_id=' + $(this).attr('data-id') + '&store_id=' + $(this).attr('data-store'), function (data) {
+        $('.open-popup').prop('disabled', false);
+        $('.modal-wrapper').html(data);
+        $('#popupmodal').modal('show');
+      });
+      $('#product_name').val('');
     });
+  });
 
 </script>
