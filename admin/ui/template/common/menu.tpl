@@ -159,7 +159,7 @@
     <?php } ?>
 
     <?php
-    if( $preturn_account_manager_customers != false) {
+    if($preturn_account_manager_customers != false) {
     ?>
     <li><a class="parent"><i class="fa fa-user fa-fw"></i> <span><?php echo $text_account_managers_customers; ?></span></a>
         <ul class="collapse">
@@ -168,6 +168,16 @@
             <?php } ?>
         </ul>
     </li>
+    <?php } ?>
+
+    <?php if($preturn_account_manager_customer_orders != false){ ?>
+    <li id="sale"><a class="parent"><i class="fa fa-shopping-cart fa-fw"></i> <span><?php echo $text_sale; ?></span></a>
+        <ul class="collapse">
+            <?php if($preturn_account_manager_customer_orders) { ?>
+            <li><a href="<?php echo $account_manager_customer_orders; ?>"><?php echo $text_order; ?></a></li>
+            <?php } ?>
+        </ul>
+    </li>               
     <?php } ?>
 
     <?php if( $preturn_vendor != false || $preturn_vendor_permission != false) { ?>
