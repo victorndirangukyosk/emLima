@@ -30,10 +30,11 @@
 
     		<ul class="listnone">
             <?php $this->load->model('account/address'); ?>
+                <li class="store_note"> <?php echo $this->model_account_address->getMultiStoreText(); ?> </li>
                 <?php foreach ($arr as $key=> $products) { ?>
                     <li> <b> <?php echo $this->model_account_address->getStoreNameById($key); ?> </b> <b style="float: right"> <?php echo $this->currency->format($this->cart->getTotalByStore($key)); ?>  </b> </li>
 
-                    <li class="store_note<?= $key?> store-note"> <?php echo $this->model_account_address->getStoreTextById($key); ?> </li>
+                    <!--REMOVED THIS FOR MULTI VENDOR<li class="store_note<?= $key?> store-note"> <?php echo $this->model_account_address->getStoreTextById($key); ?> </li>-->
 
         			<?php foreach ($products as $product) { ?>
 

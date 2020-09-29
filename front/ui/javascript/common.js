@@ -686,7 +686,8 @@ $(document).delegate('.mini-cart-button', 'click', function (e) {
 	console.log("mini cart click");
 
 	$.ajax({
-		url: 'index.php?path=common/home/cartItemDetails',
+		//url: 'index.php?path=common/home/cartItemDetails',
+                url: 'index.php?path=common/home/MultiStorecartItemDetails',
 		type: 'post',
 		dataType: 'json',
 		success: function (json) {

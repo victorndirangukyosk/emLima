@@ -127,7 +127,8 @@ class ControllerCheckoutCheckout extends Controller
 
         foreach ($order_stores as $os) {
             $store_info = $this->model_account_address->getStoreData($os);
-            $store_total = $this->cart->getSubTotal($os);
+            //$store_total = $this->cart->getSubTotal($os);
+            $store_total = $this->cart->getSubTotal();
             $store_info['servicable_zipcodes'] = $this->model_account_address->getZipList($os);
             $store_data[] = $store_info;
 

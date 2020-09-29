@@ -382,6 +382,32 @@ class ModelAccountAddress extends Model
 
         return $ret;
     }
+    
+    public function getMultiStoreText()
+    {
+        $store_info = $this->getStoreData(75);
+        $store_total = $this->cart->getSubTotal();
+
+        $ret = "<center style='background-color:#43b02a;color:#fff'> Yay! Free Delivery </center>";
+
+        if ((0 <= $store_info['min_order_cod']) && ($store_info['min_order_cod'] <= 10000)) {
+            if ($store_info['min_order_cod'] > $store_total) {
+                $freedeliveryprice = $store_info['min_order_cod'] - $store_total;
+
+                $ret = "<center style='background-color:#ff811e;color:#fff'> You are only ".$this->currency->format($freedeliveryprice).' away for FREE DELIVERY! </center>';
+            }
+        } else {
+            $ret = '';
+        }
+
+        if ($store_info['min_order_amount'] > $store_total) {
+            $currentprice = $store_info['min_order_amount'] - $store_total;
+
+            $ret = "<center style='background-color:#ee4054;color:#fff'>".$this->currency->format($currentprice).' away from minimum order value </center>';
+        }
+
+        return $ret;
+    }
 
     public function getTotalByStore($store_id)
     {
