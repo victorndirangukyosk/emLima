@@ -156,12 +156,16 @@ class ControllerAccountOrder extends Controller {
             $customer_info = $this->model_account_customer->getCustomer($result['customer_id']);
             $is_he_parents = $this->model_account_customer->CheckHeIsParent();
             $customer_parent_info = $this->model_account_customer->getCustomerParentDetails($result['customer_id']);
+            $sub_user_order = FALSE;
+            if (($customer_info['order_approval_access'] == NULL || $customer_info['order_approval_access'] == 0) && $customer_info['order_approval_access_role'] == NULL && $customer_parent_info != NULL) {
+                $sub_user_order = TRUE;
+            }
 
             $log = new Log('error.log');
-            $log->write('IS HE PARENT USER');
-            $log->write($is_he_parents);
+            //$log->write('IS HE PARENT USER');
+            //$log->write($is_he_parents);
             //$log->write($customer_parent_info);
-            $log->write('IS HE PARENT USER');
+            //$log->write('IS HE PARENT USER');
 
             $data['orders'][] = [
                 'order_id' => $result['order_id'],
@@ -193,6 +197,7 @@ class ControllerAccountOrder extends Controller {
                 'order_approval_access' => $order_appoval_access,
                 'head_chef' => $result['head_chef'],
                 'procurement' => $result['procurement'],
+                'sub_user_order' => $sub_user_order,
                 'order_approval_access_role' => $this->session->data['order_approval_access_role'],
                 'parent_details' => $customer_parent_info != NULL && $customer_parent_info['email'] != NULL ? $customer_parent_info['email'] : NULL,
                 'edit_order' => 15 == $result['order_status_id'] && (empty($_SESSION['parent']) || $order_appoval_access) ? $this->url->link('account/order/edit_order', 'order_id=' . $result['order_id'], 'SSL') : '',
