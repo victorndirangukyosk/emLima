@@ -601,8 +601,8 @@ class ControllerCheckoutCart extends Controller
 
         $ripe = $this->request->post['ripe'];
 
-        console.log('ripe');
-        console.log($ripe);
+        //console.log('ripe');
+        //console.log($ripe);
 
         //echo $this->request->post['ripe'];
         $this->cart->update($this->request->post['key'], $this->request->post['quantity'], $this->request->post['product_note'], $this->request->post['produce_type']);
