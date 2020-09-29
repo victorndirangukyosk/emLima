@@ -323,7 +323,7 @@
 
                             <fieldset>
                                 <div class="form-group">
-                                    <label for="name" class="col-sm-3 control-label">Select Head Chef</label>
+                                    <label for="name" class="col-sm-3 control-label">First Leavel Approver</label>
                                     <div class="col-sm-4">
                                         <select class="form-control input-lg" id="head_chef" name="head_chef">
                                         </select>
@@ -333,7 +333,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-3 control-label" for="input-lastname">Select Procurement Person</label>
+                                    <label class="col-sm-3 control-label" for="input-lastname">Second Level Approver</label>
                                     <div class="col-sm-4">
                                         <select class="form-control input-lg" id="procurement_person" name="procurement_person">
                                         </select>
