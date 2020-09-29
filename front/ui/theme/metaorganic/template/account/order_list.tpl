@@ -76,8 +76,8 @@
                             <?php if($order['parent_details'] != NULL && !empty($_SESSION['parent']) && $_SESSION['parent'] > 0) { ?>
                             <div class="row">
                                 <div class="col-md-4">Parent User Email</div>
-                                <div class="col-md-8"><?php echo $order['parent_details']; ?></div>
-                                <div class="col-md-8"><?php echo $order['parent_approval']; ?></div>
+                                <div class="col-md-4"><?php echo $order['parent_details']; ?></div>
+                                <div class="col-md-4"><?php echo $order['parent_approval']; ?></div>
                             </div>
                             <?php if($order['sub_user_order'] == TRUE) { ?>
                             <div class="row">
@@ -87,8 +87,8 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-4">Second Leavel Approver</div>
-                                <div class="col-md-8"><?php echo $order['procurement_person_email']; ?></div>
-                                <div class="col-md-8"><?php echo $order['procurement']; ?></div>
+                                <div class="col-md-4"><?php echo $order['procurement_person_email']; ?></div>
+                                <div class="col-md-4"><?php echo $order['procurement']; ?></div>
                             </div>
                             <?php } ?>
                             <?php } ?>
