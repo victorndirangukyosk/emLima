@@ -80,16 +80,20 @@
                                 <div class="col-md-4"><?php echo $order['parent_approval']; ?></div>
                             </div>
                             <?php if($order['sub_user_order'] == TRUE) { ?>
+                            <?php if($order['head_chef_email'] != NULL) { ?>
                             <div class="row">
                                 <div class="col-md-4">First Level Approver</div>
                                 <div class="col-md-4"><?php echo $order['head_chef_email']; ?></div>
                                 <div class="col-md-4"><?php echo $order['head_chef']; ?></div>
                             </div>
+                            <?php } ?>
+                            <?php if($order['procurement_person_email'] != NULL) { ?>
                             <div class="row">
                                 <div class="col-md-4">Second Leavel Approver</div>
                                 <div class="col-md-4"><?php echo $order['procurement_person_email']; ?></div>
                                 <div class="col-md-4"><?php echo $order['procurement']; ?></div>
                             </div>
+                            <?php } ?>
                             <?php } ?>
                             <?php } ?>
                             <div class="row">
