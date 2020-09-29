@@ -1327,9 +1327,8 @@ class ModelCheckoutOrder extends Model {
                 $log->write("refundToCustomerWallet");
                 //referee points below
                 $description = 'Refund of order#' . $order_id;
-                if($this->config->get('credit_status')==1)
-                {
-                  $this->model_account_activity->addCredit($order_info['customer_id'], $description, $order_info['total'], $order_id);
+                if ($this->config->get('credit_status') == 1) {
+                    $this->model_account_activity->addCredit($order_info['customer_id'], $description, $order_info['total'], $order_id);
                 }
             }
         }
@@ -1742,13 +1741,18 @@ class ModelCheckoutOrder extends Model {
         $log = new Log('error.log');
         $this->load->model('account/customer');
         $is_he_parents = $this->model_account_customer->CheckHeIsParent();
+        $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+        $order_appoval_access = FALSE;
+        if ($this->session->data['order_approval_access'] > 0 && $this->session->data['order_approval_access_role'] != NULL) {
+            $order_appoval_access = TRUE;
+        }
         $log->write('Order Confirm In COD');
         $log->write($is_he_parents);
         $log->write('Order Confirm In COD');
 
         $head_chef = 'Approved';
         $procurement = 'Approved';
-        if ($is_he_parents != NULL && $is_he_parents > 0) {
+        if ($is_he_parents != NULL && $is_he_parents > 0 && $order_appoval_access == FALSE) {
             $order_approval_access = $this->db->query('SELECT c.customer_id, c.parent, c.order_approval_access_role, c.order_approval_access FROM ' . DB_PREFIX . "customer c WHERE c.parent = '" . (int) $is_he_parents . "' AND c.order_approval_access = 1 AND (c.order_approval_access_role = 'head_chef' OR c.order_approval_access_role = 'procurement_person')");
             $order_approval_access_user = $order_approval_access->rows;
 
@@ -1771,8 +1775,8 @@ class ModelCheckoutOrder extends Model {
             }
         }
 
-        $parent_approval = null == $is_he_parents ? 'Approved' : 'Pending';
-        $order_status_id = null == $is_he_parents ? $this->config->get('cod_order_status_id') : 15;
+        $parent_approval = $is_he_parents == NULL || $order_appoval_access == TRUE ? 'Approved' : 'Pending';
+        $order_status_id = $is_he_parents == NULL || $order_appoval_access == TRUE ? $this->config->get('cod_order_status_id') : 15;
         $this->db->query('UPDATE `' . DB_PREFIX . "order` SET parent_approval = '" . $parent_approval . "',head_chef = '" . $head_chef . "',procurement = '" . $procurement . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
     }
 

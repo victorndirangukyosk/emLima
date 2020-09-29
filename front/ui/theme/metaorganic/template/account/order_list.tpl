@@ -136,8 +136,8 @@
                     </li> 
                     <li class="list-group-item">
                         <div class="my-order-showaddress">  
-                            <a class="btn-link text_green" role="button" data-toggle="collapse" href="#<?= $order['order_id'] ?>" aria-expanded="false" aria-controls="<?= $order['order_id'] ?>"><?= $text_view_billing?></a>&nbsp;|&nbsp;<a class="btn-link text_green" role="button" href="<?php echo ($order['realproducts'] ? $order['real_href'] : $order['href'].'&order_status='.urlencode($order['status'])) ;?>" aria-expanded="false" aria-controls="<?= $order['order_status'] ?>"><?= $text_view_order?></a>
-                            <?php if($order['edit_order'] != NULL) { ?> |&nbsp;<a class="btn-link text_green" role="button" href="<?php echo $order['edit_order']; ?>" id="editorder<?php echo $order['order_id']; ?>" aria-expanded="false">Edit Order</a> <?php } ?>
+                            <a class="btn-link text_green" role="button" data-toggle="collapse" href="#<?= $order['order_id'] ?>" aria-expanded="false" aria-controls="<?= $order['order_id'] ?>"><?= $text_view_billing?></a>&nbsp;|&nbsp;<a class="btn-link text_green" role="button" href="<?php echo ($order['realproducts'] ? $order['real_href'] : $order['href'].'&order_status='.urlencode($order['status'])) ;?>" aria-expanded="false" aria-controls="<?= $order['status'] ?>"><?= $text_view_order?></a>
+                            <?php if($order['edit_order'] != NULL && (($order['order_approval_access_role'] == 'head_chef' && $order['head_chef'] == 'Pending') || ($order['order_approval_access_role'] == 'procurement_person' && $order['procurement'] == 'Pending') || (empty($_SESSION['parent']) && $order['parent_approval'] == 'Pending'))) { ?> |&nbsp;<a class="btn-link text_green" role="button" href="<?php echo $order['edit_order']; ?>" id="editorder<?php echo $order['order_id']; ?>" aria-expanded="false">Edit Order</a> <?php } ?>
                         </div>
                     </li>
 
