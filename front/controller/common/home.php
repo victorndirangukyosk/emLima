@@ -612,7 +612,7 @@ class ControllerCommonHome extends Controller {
         $this->load->controller('product/store');
         //$categories = $this->model_assets_category->getCategoriesNoRelationStore();
         $categories = $this->model_assets_category->getCategoryByStoreId(ACTIVE_STORE_ID, 0);
-
+        $selectedProducts=[];
         foreach ($categories as $category) {
             // Level 2
             $children_data = [];
@@ -634,9 +634,11 @@ class ControllerCommonHome extends Controller {
                 'start' => 0,
                 'limit' => (1359 == $category['category_id']) ? 12 : 12,
                 'store_id' => ACTIVE_STORE_ID,
+                'selectedProducts' => $selectedProducts,
             ];
 
             // Level 1
+            $productslisted = $this->getProducts($filter_data_product);
             $data['categories'][] = [
                 'name' => $category['name'],
                 'id' => $category['category_id'],
@@ -644,8 +646,13 @@ class ControllerCommonHome extends Controller {
                 'children' => $children_data,
                 'column' => $category['column'] ? $category['column'] : 1,
                 'href' => $this->url->link('product/category', 'category=' . $category['category_id']),
-                'products' => $this->getProducts($filter_data_product),
+                'products' => $productslisted,
             ];
+         
+            foreach($productslisted as $producted)
+            {
+            $selectedProducts[]=$producted['product_store_id'];
+            }
         }
         //	   echo "<pre>";print_r($data['categories']);die;
         $data['page'] = $_REQUEST['page'];
