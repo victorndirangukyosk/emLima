@@ -508,11 +508,14 @@ function changeProductStatus(status, product_store_id) {
             success: function(json) {
                 if (json) {
                     console.log(json);
-                }
-                else {
                     location.reload();
                 }
-            }
+                else {
+                }
+            },
+            oncomplete: function(data,status){
+            console.log(data);    
+           }
         });
     }    
 //--></script>
