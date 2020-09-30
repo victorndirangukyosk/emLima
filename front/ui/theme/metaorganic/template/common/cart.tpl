@@ -270,12 +270,9 @@ margin-top: .55rem;
 .sp-quantity {
     width: 100%;
     display: flex;
-    flex-flow: row nowrap;
-    align-items: center;
-    justify-content: end;
+    flex-flow: column nowrap;
+    align-items: flex-end;
+    justify-content: center;
     margin-top: 1.4rem;
 }
-
-
-
 </style>

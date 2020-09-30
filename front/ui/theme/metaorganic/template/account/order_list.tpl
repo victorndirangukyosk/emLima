@@ -73,11 +73,28 @@
                     </li>
                     <li class="list-group-item">
                         <div class="my-order-details" style="border: none !important;">
-                            <?php if($order['parent_details'] != NULL && !empty($_SESSION['parent']) && $_SESSION['parent'] > 0) { ?>
+                            <?php if($order['parent_details'] != NULL /*&& !empty($_SESSION['parent']) && $_SESSION['parent'] > 0*/) { ?>
                             <div class="row">
                                 <div class="col-md-4">Parent User Email</div>
-                                <div class="col-md-8"><?php echo $order['parent_details']; ?></div>
-                            </div> 
+                                <div class="col-md-4"><?php echo $order['parent_details']; ?></div>
+                                <div class="col-md-4"><?php echo $order['parent_approval']; ?></div>
+                            </div>
+                            <?php if($order['sub_user_order'] == TRUE) { ?>
+                            <?php if($order['head_chef_email'] != NULL) { ?>
+                            <div class="row">
+                                <div class="col-md-4">First Level Approver</div>
+                                <div class="col-md-4"><?php echo $order['head_chef_email']; ?></div>
+                                <div class="col-md-4"><?php echo $order['head_chef']; ?></div>
+                            </div>
+                            <?php } ?>
+                            <?php if($order['procurement_person_email'] != NULL) { ?>
+                            <div class="row">
+                                <div class="col-md-4">Second Leavel Approver</div>
+                                <div class="col-md-4"><?php echo $order['procurement_person_email']; ?></div>
+                                <div class="col-md-4"><?php echo $order['procurement']; ?></div>
+                            </div>
+                            <?php } ?>
+                            <?php } ?>
                             <?php } ?>
                             <div class="row">
                                 <div class="col-md-4"><?= $text_payment_options?></div>
@@ -141,14 +158,14 @@
                         </div>
                     </li>
 
-                    <?php if($order['head_chef'] == 'Pending' && $order['order_approval_access'] == true && $order['order_approval_access_role'] == 'head_chef') { ?>
+                    <?php if($order['sub_user_order'] == TRUE && $order['parent_approval'] == 'Pending' && $order['head_chef'] == 'Pending' && $order['order_approval_access'] == true && $order['order_approval_access_role'] == 'head_chef') { ?>
                     <li class="list-group-item">
                         <div class="my-order-showaddress" id="<?php echo $order['order_id']; ?>">  
                             <a href="#" id="approve_order_head_chef" data-id="<?= $order['order_id'] ?>" data-custid="<?= $order['customer_id'] ?>" class="btn btn-default btn-xs">APPROVE ORDER</a>
                             <a href="#" id="reject_order_head_chef" data-id="<?= $order['order_id'] ?>" data-custid="<?= $order['customer_id'] ?>" class="btn btn-default btn-xs">REJECT ORDER</a>
                         </div>
                     </li>
-                    <?php } else if($order['head_chef'] == 'Approved' && $order['order_approval_access'] == true && $order['order_approval_access_role'] == 'head_chef') { ?>
+                    <?php } else if($order['sub_user_order'] == TRUE && $order['head_chef'] == 'Approved' && $order['order_approval_access'] == true && $order['order_approval_access_role'] == 'head_chef') { ?>
                     <li class="list-group-item">
                         <div class="row">
                             <div class="col-md-4">
@@ -162,14 +179,14 @@
                             </div>
                         </div>
                     </li>
-                    <?php } else if($order['head_chef'] == 'Rejected' && $order['order_approval_access'] == true && $order['order_approval_access_role'] == 'head_chef') { ?> 
+                    <?php } else if($order['sub_user_order'] == TRUE && $order['head_chef'] == 'Rejected' && $order['order_approval_access'] == true && $order['order_approval_access_role'] == 'head_chef') { ?> 
                     <li class="list-group-item">
                         <div class="row">
                             <div class="col-md-4">
                             </div>
                             <div class="col-md-4">
                                 <div class="my-order-showaddress">  
-                                    <h3 class="my-order-title label" style="background-color: #8E45FF;display: block;line-height: 2; text-align:center;"><?php echo $order['head_chef']; ?></h3>
+                                    <h3 class="my-order-title label" style="background-color: #FF5C23;display: block;line-height: 2; text-align:center;"><?php echo $order['head_chef']; ?></h3>
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -178,14 +195,14 @@
                     </li>
                     <?php } ?>
 
-                    <?php if($order['head_chef'] == 'Approved' && $order['procurement'] == 'Pending' && $order['order_approval_access'] == true && $order['order_approval_access_role'] == 'procurement_person') { ?>
+                    <?php if($order['sub_user_order'] == TRUE && $order['head_chef'] == 'Approved' && $order['procurement'] == 'Pending' && $order['order_approval_access'] == true && $order['order_approval_access_role'] == 'procurement_person') { ?>
                     <li class="list-group-item">
                         <div class="my-order-showaddress" id="<?php echo $order['order_id']; ?>">  
                             <a href="#" id="approve_order_procurement" data-id="<?= $order['order_id'] ?>" data-custid="<?= $order['customer_id'] ?>" class="btn btn-default btn-xs">APPROVE ORDER</a>
                             <a href="#" id="reject_order_procurement" data-id="<?= $order['order_id'] ?>" data-custid="<?= $order['customer_id'] ?>" class="btn btn-default btn-xs">REJECT ORDER</a>
                         </div>
                     </li>
-                    <?php } else if($order['procurement'] == 'Approved' && $order['order_approval_access'] == true && $order['order_approval_access_role'] == 'procurement_person') { ?>
+                    <?php } else if($order['sub_user_order'] == TRUE && $order['procurement'] == 'Approved' && $order['order_approval_access'] == true && $order['order_approval_access_role'] == 'procurement_person') { ?>
                     <li class="list-group-item">
                         <div class="row">
                             <div class="col-md-4">
@@ -199,14 +216,14 @@
                             </div>
                         </div>
                     </li>
-                    <?php } else if($order['procurement'] == 'Approved' && $order['order_approval_access'] == true && $order['order_approval_access_role'] == 'procurement_person') { ?>
+                    <?php } else if($order['sub_user_order'] == TRUE && $order['procurement'] == 'Rejected' && $order['order_approval_access'] == true && $order['order_approval_access_role'] == 'procurement_person') { ?>
                     <li class="list-group-item">
                         <div class="row">
                             <div class="col-md-4">
                             </div>
                             <div class="col-md-4">
                                 <div class="my-order-showaddress">  
-                                    <h3 class="my-order-title label" style="background-color: #8E45FF;display: block;line-height: 2; text-align:center;"><?php echo $order['procurement']; ?></h3>
+                                    <h3 class="my-order-title label" style="background-color: #FF5C23;display: block;line-height: 2; text-align:center;"><?php echo $order['procurement']; ?></h3>
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -214,14 +231,14 @@
                         </div>
                     </li>
                     <?php } ?>
-                    <?php if($order['status'] == 'Order Approval Pending' && $order['parent_approve_order'] == 'Need Approval' && $order['parent_approval'] == 'Pending') { ?>
+                    <?php if($order['sub_user_order'] == TRUE && $order['status'] == 'Order Approval Pending' && $order['parent_approve_order'] == 'Need Approval' && $order['parent_approval'] == 'Pending') { ?>
                     <li class="list-group-item">
                         <div class="my-order-showaddress" id="<?php echo $order['order_id']; ?>">  
                             <a href="#" id="approve_order" data-id="<?= $order['order_id'] ?>" data-custid="<?= $order['customer_id'] ?>" class="btn btn-default btn-xs">APPROVE ORDER</a>
                             <a href="#" id="reject_order" data-id="<?= $order['order_id'] ?>" data-custid="<?= $order['customer_id'] ?>" class="btn btn-default btn-xs">REJECT ORDER</a>
                         </div>
                     </li>
-                    <?php } elseif($order['parent_approve_order'] == 'Need Approval' && $order['parent_approval'] != 'Pending') { ?>
+                    <?php } elseif($order['sub_user_order'] == TRUE && $order['parent_approve_order'] == 'Need Approval' && $order['parent_approval'] != 'Pending') { ?>
                     <li class="list-group-item">
                         <div class="row">
                             <div class="col-md-4">
@@ -474,7 +491,7 @@
             dataType: 'json',
             success: function (json) {
                 console.log(json);
-                var approved = $('<li class="list-group-item"><div class="row"><div class="col-md-4"></div><div class="col-md-4"><div class="my-order-showaddress"><h3 class="my-order-title label" style="background-color: #8E45FF;display: block;line-height: 2; text-align:center;">Rejected</h3></div></div><div class="col-md-4"></div></div>');
+                var approved = $('<li class="list-group-item"><div class="row"><div class="col-md-4"></div><div class="col-md-4"><div class="my-order-showaddress"><h3 class="my-order-title label" style="background-color: #FF5C23;display: block;line-height: 2; text-align:center;">Rejected</h3></div></div><div class="col-md-4"></div></div>');
                 parent_div.html(approved);
                 $('#orderstatus' + order_id).text(json.success);
                 $('#editorder' + order_id).remove();
@@ -540,7 +557,7 @@
             dataType: 'json',
             success: function (json) {
                 console.log(json);
-                var approved = $('<li class="list-group-item"><div class="row"><div class="col-md-4"></div><div class="col-md-4"><div class="my-order-showaddress"><h3 class="my-order-title label" style="background-color: #8E45FF;display: block;line-height: 2; text-align:center;">Approved</h3></div></div><div class="col-md-4"></div></div>');
+                var approved = $('<li class="list-group-item"><div class="row"><div class="col-md-4"></div><div class="col-md-4"><div class="my-order-showaddress"><h3 class="my-order-title label" style="background-color: #FF5C23;display: block;line-height: 2; text-align:center;">Rejected</h3></div></div><div class="col-md-4"></div></div>');
                 parent_div.html(approved);
                 $('#orderstatus' + order_id).text(json.success);
                 $('#editorder' + order_id).remove();
@@ -569,7 +586,7 @@
             dataType: 'json',
             success: function (json) {
                 console.log(json);
-                var approved = $('<li class="list-group-item"><div class="row"><div class="col-md-4"></div><div class="col-md-4"><div class="my-order-showaddress"><h3 class="my-order-title label" style="background-color: #8E45FF;display: block;line-height: 2; text-align:center;">Rejected</h3></div></div><div class="col-md-4"></div></div>');
+                var approved = $('<li class="list-group-item"><div class="row"><div class="col-md-4"></div><div class="col-md-4"><div class="my-order-showaddress"><h3 class="my-order-title label" style="background-color: #FF5C23;display: block;line-height: 2; text-align:center;">Rejected</h3></div></div><div class="col-md-4"></div></div>');
                 parent_div.html(approved);
                 $('#orderstatus' + order_id).text(json.success);
                 $('#editorder' + order_id).remove();

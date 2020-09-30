@@ -157,11 +157,36 @@ class ControllerAccountOrder extends Controller {
             $is_he_parents = $this->model_account_customer->CheckHeIsParent();
             $customer_parent_info = $this->model_account_customer->getCustomerParentDetails($result['customer_id']);
 
+            $sub_user_order = FALSE;
+            $procurement_person = NULL;
+            $head_chef = NULL;
+            if (($customer_info['order_approval_access'] == NULL || $customer_info['order_approval_access'] == 0) && $customer_info['order_approval_access_role'] == NULL && $customer_parent_info != NULL) {
+                $log = new Log('error.log');
+                $order_approval_access = $this->db->query('SELECT c.customer_id, c.parent, c.order_approval_access_role, c.order_approval_access, c.email, c.firstname, c.lastname  FROM ' . DB_PREFIX . "customer c WHERE c.parent = '" . (int) $customer_parent_info['customer_id'] . "' AND c.order_approval_access = 1 AND (c.order_approval_access_role = 'head_chef' OR c.order_approval_access_role = 'procurement_person')");
+                $order_approval_access_user = $order_approval_access->rows;
+
+                foreach ($order_approval_access_user as $order_approval_access_use) {
+                    if ($order_approval_access_use['order_approval_access_role'] == 'head_chef' && $order_approval_access_use['order_approval_access'] > 0) {
+                        $head_chef = $order_approval_access_use['email'];
+                        $log->write($order_approval_access_use['order_approval_access_role']);
+                        $log->write($order_approval_access_use['order_approval_access']);
+                        $log->write($order_approval_access_use['customer_id']);
+                    }
+                    if ($order_approval_access_use['order_approval_access_role'] == 'procurement_person' && $order_approval_access_use['order_approval_access'] > 0) {
+                        $procurement_person = $order_approval_access_use['email'];
+                        $log->write($order_approval_access_use['order_approval_access_role']);
+                        $log->write($order_approval_access_use['order_approval_access']);
+                        $log->write($order_approval_access_use['customer_id']);
+                    }
+                }
+                $sub_user_order = TRUE;
+            }
+
             $log = new Log('error.log');
-            $log->write('IS HE PARENT USER');
-            $log->write($is_he_parents);
+            //$log->write('IS HE PARENT USER');
+            //$log->write($is_he_parents);
             //$log->write($customer_parent_info);
-            $log->write('IS HE PARENT USER');
+            //$log->write('IS HE PARENT USER');
 
             $data['orders'][] = [
                 'order_id' => $result['order_id'],
@@ -193,6 +218,9 @@ class ControllerAccountOrder extends Controller {
                 'order_approval_access' => $order_appoval_access,
                 'head_chef' => $result['head_chef'],
                 'procurement' => $result['procurement'],
+                'sub_user_order' => $sub_user_order,
+                'procurement_person_email' => $procurement_person,
+                'head_chef_email' => $head_chef,
                 'order_approval_access_role' => $this->session->data['order_approval_access_role'],
                 'parent_details' => $customer_parent_info != NULL && $customer_parent_info['email'] != NULL ? $customer_parent_info['email'] : NULL,
                 'edit_order' => 15 == $result['order_status_id'] && (empty($_SESSION['parent']) || $order_appoval_access) ? $this->url->link('account/order/edit_order', 'order_id=' . $result['order_id'], 'SSL') : '',
@@ -2390,18 +2418,70 @@ class ControllerAccountOrder extends Controller {
             $order_update = $this->model_account_order->ApproveOrRejectSubUserOrder($order_id, $customer_id, $order_status);
             $sub_users_order_details = $this->model_account_order->getSubUserOrderDetails($order_id, $customer_id);
 
-            if ($sub_users_order_details['parent_approval'] == 'Approved' && $sub_users_order_details['head_chef'] == 'Approved' && $sub_users_order_details['procurement'] == 'Approved') {
-                $json['success'] = 'Order Recieved';
+            if (($sub_users_order_details['parent_approval'] == 'Approved') || ($sub_users_order_details['head_chef'] == 'Approved' && $sub_users_order_details['procurement'] == 'Approved')) {
                 $this->model_account_order->UpdateOrderStatus($order_id, 14);
+                
+                $sub_users_order_details = $this->model_account_order->getSubUserOrderDetails($order_id, $customer_id);
+                if ($sub_users_order_details['order_status_id'] == 14) {
+                    $json['success'] = 'Order Recieved';
+                }
+
+                if ($sub_users_order_details['order_status_id'] == 15) {
+                    $json['success'] = 'Order Approval Pending';
+                }
+
+                if ($sub_users_order_details['order_status_id'] == 16) {
+                    $json['success'] = 'Order Rejected';
+                }
             }
 
-            if ($sub_users_order_details['parent_approval'] == 'Pending' || $sub_users_order_details['head_chef'] == 'Pending' || $sub_users_order_details['procurement'] == 'Pending') {
-                $json['success'] = 'Order Approval Pending';
-            }
-
-            if ($sub_users_order_details['parent_approval'] == 'Rejected' && $sub_users_order_details['head_chef'] == 'Rejected' && $sub_users_order_details['procurement'] == 'Rejected') {
-                $json['success'] = 'Order Rejected';
+            if ($sub_users_order_details['parent_approval'] == 'Rejected' || $sub_users_order_details['head_chef'] == 'Rejected') {
                 $this->model_account_order->UpdateOrderStatus($order_id, 16);
+                
+                $sub_users_order_details = $this->model_account_order->getSubUserOrderDetails($order_id, $customer_id);
+                if ($sub_users_order_details['order_status_id'] == 14) {
+                    $json['success'] = 'Order Recieved';
+                }
+
+                if ($sub_users_order_details['order_status_id'] == 15) {
+                    $json['success'] = 'Order Approval Pending';
+                }
+
+                if ($sub_users_order_details['order_status_id'] == 16) {
+                    $json['success'] = 'Order Rejected';
+                }
+            }
+
+            if ($sub_users_order_details['head_chef'] == 'Pending' || $sub_users_order_details['procurement'] == 'Pending') {
+                $sub_users_order_details = $this->model_account_order->getSubUserOrderDetails($order_id, $customer_id);
+                if ($sub_users_order_details['order_status_id'] == 14) {
+                    $json['success'] = 'Order Recieved';
+                }
+
+                if ($sub_users_order_details['order_status_id'] == 15) {
+                    $json['success'] = 'Order Approval Pending';
+                }
+
+                if ($sub_users_order_details['order_status_id'] == 16) {
+                    $json['success'] = 'Order Rejected';
+                }
+            }
+
+            if (($sub_users_order_details['head_chef'] == 'Rejected' || $sub_users_order_details['head_chef'] == 'Approved') && $sub_users_order_details['procurement'] == 'Rejected') {
+                $this->model_account_order->UpdateOrderStatus($order_id, 16);
+                
+                $sub_users_order_details = $this->model_account_order->getSubUserOrderDetails($order_id, $customer_id);
+                if ($sub_users_order_details['order_status_id'] == 14) {
+                    $json['success'] = 'Order Recieved';
+                }
+
+                if ($sub_users_order_details['order_status_id'] == 15) {
+                    $json['success'] = 'Order Approval Pending';
+                }
+
+                if ($sub_users_order_details['order_status_id'] == 16) {
+                    $json['success'] = 'Order Rejected';
+                }
             }
         }
 
@@ -2429,18 +2509,71 @@ class ControllerAccountOrder extends Controller {
             $sub_users_order_details = $this->model_account_order->getSubUserOrderDetails($order_id, $customer_id);
             $log->write($sub_users_order_details);
 
-            if ($sub_users_order_details['parent_approval'] == 'Approved' && $sub_users_order_details['head_chef'] == 'Approved' && $sub_users_order_details['procurement'] == 'Approved') {
-                $json['success'] = 'Order Recieved';
+            if (($sub_users_order_details['parent_approval'] == 'Approved') || ($sub_users_order_details['head_chef'] == 'Approved' && $sub_users_order_details['procurement'] == 'Approved')) {
                 $this->model_account_order->UpdateOrderStatus($order_id, 14);
+                
+                $sub_users_order_details = $this->model_account_order->getSubUserOrderDetails($order_id, $customer_id);
+                if ($sub_users_order_details['order_status_id'] == 14) {
+                    $json['success'] = 'Order Recieved';
+                }
+
+                if ($sub_users_order_details['order_status_id'] == 15) {
+                    $json['success'] = 'Order Approval Pending';
+                }
+
+                if ($sub_users_order_details['order_status_id'] == 16) {
+                    $json['success'] = 'Order Rejected';
+                }
             }
 
-            if ($sub_users_order_details['parent_approval'] == 'Pending' || $sub_users_order_details['head_chef'] == 'Pending' || $sub_users_order_details['procurement'] == 'Pending') {
-                $json['success'] = 'Order Approval Pending';
-            }
-
-            if ($sub_users_order_details['parent_approval'] == 'Rejected' && $sub_users_order_details['head_chef'] == 'Rejected' && $sub_users_order_details['procurement'] == 'Rejected') {
-                $json['success'] = 'Order Rejected';
+            if ($sub_users_order_details['parent_approval'] == 'Rejected' || $sub_users_order_details['head_chef'] == 'Rejected') {
                 $this->model_account_order->UpdateOrderStatus($order_id, 16);
+                
+                $sub_users_order_details = $this->model_account_order->getSubUserOrderDetails($order_id, $customer_id);
+                if ($sub_users_order_details['order_status_id'] == 14) {
+                    $json['success'] = 'Order Recieved';
+                }
+
+                if ($sub_users_order_details['order_status_id'] == 15) {
+                    $json['success'] = 'Order Approval Pending';
+                }
+
+                if ($sub_users_order_details['order_status_id'] == 16) {
+                    $json['success'] = 'Order Rejected';
+                }
+            }
+
+            if ($sub_users_order_details['head_chef'] == 'Pending' || $sub_users_order_details['procurement'] == 'Pending') {
+                
+                $sub_users_order_details = $this->model_account_order->getSubUserOrderDetails($order_id, $customer_id);
+                if ($sub_users_order_details['order_status_id'] == 14) {
+                    $json['success'] = 'Order Recieved';
+                }
+
+                if ($sub_users_order_details['order_status_id'] == 15) {
+                    $json['success'] = 'Order Approval Pending';
+                }
+
+                if ($sub_users_order_details['order_status_id'] == 16) {
+                    $json['success'] = 'Order Rejected';
+                }
+            }
+
+            if (($sub_users_order_details['head_chef'] == 'Rejected' || $sub_users_order_details['head_chef'] == 'Approved') && $sub_users_order_details['procurement'] == 'Rejected') {
+                $this->model_account_order->UpdateOrderStatus($order_id, 16);
+                
+                $sub_users_order_details = $this->model_account_order->getSubUserOrderDetails($order_id, $customer_id);
+                if ($sub_users_order_details['order_status_id'] == 14) {
+                    $json['success'] = 'Order Recieved';
+                }
+
+                if ($sub_users_order_details['order_status_id'] == 15) {
+                    $json['success'] = 'Order Approval Pending';
+                }
+
+                if ($sub_users_order_details['order_status_id'] == 16) {
+                    $json['success'] = 'Order Rejected';
+                }
             }
         }
 
