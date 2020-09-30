@@ -257,7 +257,14 @@
                                                 <?php } ?>
                                     </td>
                                     <td class="text-left">
-                                        <?php echo $product['status']; ?>
+                                        <?php //echo $product['status']; 
+                                        if($product['status'] == 'Disabled') {
+                                        ?>
+                                        <button type="button" data-toggle="tooltip" title="" class="btn btn-default" onclick="changeProductStatus(1, <?php echo $product['product_store_id']; ?>)" data-original-title="Enable"><i class="fa fa-check-circle text-success"></i></button>
+                                        <?php } if($product['status'] == 'Enabled') { ?>
+                                        <button type="button" data-toggle="tooltip" title="" class="btn btn-default" onclick="changeProductStatus(0, <?php echo $product['product_store_id']; ?>)" data-original-title="Disable"><i class="fa fa-times-circle text-danger"></i></button>
+                                        <?php } ?>
+                                        
                                     </td>
                                     <td class="text-right"><a href="<?php echo $product['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a></td>
                                     
@@ -492,6 +499,22 @@ function changeStatus(status) {
             }
         });
     }
+function changeProductStatus(status, product_store_id) {
+        $.ajax({
+            url: 'index.php?path=catalog/vendor_product/enabledisablevendorproducts&token=<?php echo $token; ?>',
+            dataType: 'json',
+            type: 'post',
+            data: { 'status' : status,  'product_store_id' : product_store_id },
+            success: function(json) {
+                if (json) {
+                    console.log(json);
+                }
+                else {
+                    location.reload();
+                }
+            }
+        });
+    }    
 //--></script>
 
 <script type="text/javascript"> 
