@@ -216,14 +216,14 @@
                             </div>
                         </div>
                     </li>
-                    <?php } else if($order['procurement'] == 'Approved' && $order['order_approval_access'] == true && $order['order_approval_access_role'] == 'procurement_person') { ?>
+                    <?php } else if($order['procurement'] == 'Rejected' && $order['order_approval_access'] == true && $order['order_approval_access_role'] == 'procurement_person') { ?>
                     <li class="list-group-item">
                         <div class="row">
                             <div class="col-md-4">
                             </div>
                             <div class="col-md-4">
                                 <div class="my-order-showaddress">  
-                                    <h3 class="my-order-title label" style="background-color: #8E45FF;display: block;line-height: 2; text-align:center;"><?php echo $order['procurement']; ?></h3>
+                                    <h3 class="my-order-title label" style="background-color: #FF5C23;display: block;line-height: 2; text-align:center;"><?php echo $order['procurement']; ?></h3>
                                 </div>
                             </div>
                             <div class="col-md-4">
