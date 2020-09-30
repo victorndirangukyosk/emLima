@@ -557,6 +557,13 @@ class ModelAssetsProduct extends Model
             }
         }
 
+
+        if (!empty($data['selectedProducts'])) {      
+
+                  
+            $this->db->where_not_in('product_to_store.product_store_id', $data['selectedProducts']);
+        }
+
         if ($data['start'] < 0) {
             $data['start'] = 0;
             $offset = $data['start'];
