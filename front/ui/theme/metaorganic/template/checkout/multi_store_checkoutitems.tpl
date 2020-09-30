@@ -2044,7 +2044,7 @@ function saveInAddressBook() {
             dataType: 'json',
             success: function(json) {
              console.log(json);
-             $('.cart-count').text(json.count_products);
+             $('.cart-count').text(json.count_products + ' ITEMS IN CART ');
              $('.cart-total-amount').text(json.total_amount);
              $('.checout-invoice-price').text(json.total_amount);
              $('.checkout-payable .checkout-payable-price').text(json.total_amount);
