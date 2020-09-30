@@ -48,6 +48,38 @@ class ModelCatalogVendorProduct extends Model
 
         return $product_id;
     }
+    
+    public function enabledisablevendorproducts($store_product_id, $status) {
+        $query = $this->db->query('SELECT DISTINCT p.*,pd.name,v.user_id as vendor_id FROM ' . DB_PREFIX . 'product_to_store p LEFT JOIN ' . DB_PREFIX . 'product_description pd ON (p.product_id = pd.product_id) LEFT JOIN ' . DB_PREFIX . 'store st ON (st.store_id = p.store_id) LEFT JOIN ' . DB_PREFIX . "user v ON (v.user_id = st.vendor_id) WHERE p.product_store_id = '" . (int) $store_product_id . "' AND pd.language_id = '" . (int) $this->config->get('config_language_id') . "'");
+
+        $data = $query->row;
+        $log = new Log('error.log');
+        $log->write('enabledisablevendorproducts');
+        $log->write($data);
+        $log->write('enabledisablevendorproducts');
+
+        $this->trigger->fire('pre.admin.product.edit', $data);
+
+        /* if ($this->user->isVendor() && !$this->config->get('config_auto_approval_product')) {
+          $data['status'] = $this->config->get('config_auto_approval_product');
+          } */
+
+        $query = 'UPDATE ' . DB_PREFIX . "product_to_store SET status = '" . $status . "' WHERE product_store_id = '" . (int) $store_product_id . "'";
+
+        $this->db->query($query);
+
+        //  delete variation here
+        $this->db->query('DELETE FROM ' . DB_PREFIX . "variation_to_product_store WHERE product_store_id = '" . (int) $store_product_id . "'");
+        // insert variation
+        if (isset($this->request->post['product_variation']['variation'])) {
+            foreach ($this->request->post['product_variation']['variation'] as $prv => $value) {
+                $this->db->query('INSERT INTO ' . DB_PREFIX . "variation_to_product_store SET  variation_id = '" . $value . "', product_store_id = '" . $store_product_id . "', price = '" . $this->request->post['product_variation']['price'][$prv] . "',special_price = '" . $this->request->post['product_variation']['special_price'][$prv] . "'");
+            }
+        }
+        $this->trigger->fire('post.admin.product.edit', $store_product_id);
+
+        return $product_id;
+    }
 
     public function getProduct($product_store_id)
     {

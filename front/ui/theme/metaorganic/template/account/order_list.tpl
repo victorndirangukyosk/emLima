@@ -89,7 +89,7 @@
                             <?php } ?>
                             <?php if($order['procurement_person_email'] != NULL) { ?>
                             <div class="row">
-                                <div class="col-md-4">Second Leavel Approver</div>
+                                <div class="col-md-4">Second Level Approver</div>
                                 <div class="col-md-4"><?php echo $order['procurement_person_email']; ?></div>
                                 <div class="col-md-4"><?php echo $order['procurement']; ?></div>
                             </div>
