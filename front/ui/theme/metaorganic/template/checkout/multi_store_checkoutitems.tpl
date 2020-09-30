@@ -38,12 +38,11 @@
                          </tbody>
            
             
-                            
+                            <div  class="checkout-cart-merchant-box text-center"> <span  ><h1>Order Summary</h1></span> <span class="checkout-cart-merchant-item"></span> </div>
                             <?php foreach ($arrs as $key=> $products) { ?>
                              
-                                <div >
-                                    <div  class="checkout-cart-merchant-box text-center"> <span  ><h1>Order Summary</h1></span> <span class="checkout-cart-merchant-item"></span> </div>
-                                    <div >
+                                <div>
+                                    <div>
                                         <div class="collapse in" id="collapseExample<?= $key ?>">
                                             <div class="checkout-item-list">
 
