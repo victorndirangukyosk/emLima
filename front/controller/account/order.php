@@ -2462,16 +2462,21 @@ class ControllerAccountOrder extends Controller {
             $sub_users_order_details = $this->model_account_order->getSubUserOrderDetails($order_id, $customer_id);
             $log->write($sub_users_order_details);
 
-            if ($sub_users_order_details['parent_approval'] == 'Approved' && $sub_users_order_details['head_chef'] == 'Approved' && $sub_users_order_details['procurement'] == 'Approved') {
+            if (($sub_users_order_details['parent_approval'] == 'Approved') || ($sub_users_order_details['head_chef'] == 'Approved' && $sub_users_order_details['procurement'] == 'Approved')) {
                 $json['success'] = 'Order Recieved';
                 $this->model_account_order->UpdateOrderStatus($order_id, 14);
             }
 
-            if ($sub_users_order_details['parent_approval'] == 'Pending' || $sub_users_order_details['head_chef'] == 'Pending' || $sub_users_order_details['procurement'] == 'Pending') {
+            if ($sub_users_order_details['parent_approval'] == 'Rejected' || $sub_users_order_details['head_chef'] == 'Rejected') {
+                $json['success'] = 'Order Rejected';
+                $this->model_account_order->UpdateOrderStatus($order_id, 16);
+            }
+
+            if ($sub_users_order_details['head_chef'] == 'Pending' || $sub_users_order_details['procurement'] == 'Pending') {
                 $json['success'] = 'Order Approval Pending';
             }
 
-            if ($sub_users_order_details['parent_approval'] == 'Rejected' && $sub_users_order_details['head_chef'] == 'Rejected' && $sub_users_order_details['procurement'] == 'Rejected') {
+            if (($sub_users_order_details['head_chef'] == 'Rejected' || $sub_users_order_details['head_chef'] == 'Approved') && $sub_users_order_details['procurement'] == 'Rejected') {
                 $json['success'] = 'Order Rejected';
                 $this->model_account_order->UpdateOrderStatus($order_id, 16);
             }
