@@ -98,6 +98,8 @@ class ControllerCatalogVendorProduct extends Controller {
         $log->write($status);
         $json['product_store_id'] = $product_store_id;
         $json['status'] = $status;
+        $this->load->model('catalog/vendor_product');
+        $this->model_catalog_vendor_product->enabledisablevendorproducts($product_store_id, $status);
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
