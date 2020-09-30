@@ -688,12 +688,13 @@
                     if (active_status == 0) {
                         $(this).find('i').toggleClass('fa-times fa-check');
                         console.log(active_status + ' ' + 'Active Status');
-                        $('.status' + user_id).html('Verified');
+                        $('.status' + user_id).html('Unverified');
                     }
 
                     if (active_status == 1) {
                         $(this).find('i').toggleClass('fa-times fa-check');
                         console.log(active_status + ' ' + 'Active Status');
+                        $('.status' + user_id).html('Verified');
                     }
 
                 }
