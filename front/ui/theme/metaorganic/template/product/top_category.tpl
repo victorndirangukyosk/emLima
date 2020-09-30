@@ -331,7 +331,7 @@
                                                     <div class="_2sT86 EurVi">
                                                     <article class="_3Oe1A">
 
- <a class="product-detail-bnt open-popup" role="button" data-store=<?= $current_store;?> data-id="<?= $product['product_store_id'] ?>" target="_blank"  aria-label="<?=$product['name']?>">
+ <a class="product-detail-bnt open-popup" role="button" data-store=<?= $product['store_id'];?> data-id="<?= $product['product_store_id'] ?>" target="_blank"  aria-label="<?=$product['name']?>">
                                                   
                                                     <div class="col-md-12 col-sm-12 pl0 pr0">
                                                     <div class="col-md-12 col-sm-12 pl0 pr0 listwidth">

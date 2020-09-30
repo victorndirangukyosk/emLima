@@ -765,7 +765,7 @@ class ControllerProductStore extends Controller
             if (!empty($this->session->data['config_store_id'])) {
                 $key = base64_encode(serialize(['product_store_id' => (int) $result['product_store_id'], 'store_id' => $this->session->data['config_store_id']]));
             } else {
-                $key = base64_encode(serialize(['product_store_id' => (int) $result['product_store_id'], 'store_id' => $filter_data['store_id']]));
+                $key = base64_encode(serialize(['product_store_id' => (int) $result['product_store_id'], 'store_id' => $result['store_id']]));
             }
             if (isset($this->session->data['cart'][$key])) {
                 $qty_in_cart = $this->session->data['cart'][$key]['quantity'];
@@ -812,6 +812,7 @@ class ControllerProductStore extends Controller
                     'default_variation_name' => $result['default_variation_name'],
                     'thumb' => $image,
                     'name' => $name,
+                    'store_id' => $result['store_id'],
                     'variations' => [
                         [
                             'variation_id' => $result['product_store_id'],
