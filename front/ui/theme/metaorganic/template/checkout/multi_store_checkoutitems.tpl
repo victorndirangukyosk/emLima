@@ -50,8 +50,8 @@
                                                     <?php 
                                                       $orderNotes ='';
                                                       $i = 1; 
-													  foreach ($products as $key=>$product) {
-                                                       //echo '<pre>';print_r($product);exit;
+		                                        foreach ($products as $key=>$product) {
+                                                        //echo '<pre>';print_r($product);exit;
                                                         if((isset($product['product_note']) && ($product['product_note'] != null) && ($product['product_note'] != 'null') ) || (isset($product['produce_type']) && ($product['produce_type'] != null) && ($product['produce_type'] != 'null'))){ 
                                                          $orderNotes .= $product['name'];
 														 
