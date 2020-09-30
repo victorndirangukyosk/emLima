@@ -73,7 +73,7 @@
                     </li>
                     <li class="list-group-item">
                         <div class="my-order-details" style="border: none !important;">
-                            <?php if($order['parent_details'] != NULL) { ?>
+                            <?php if($order['parent_details'] != NULL /*&& !empty($_SESSION['parent']) && $_SESSION['parent'] > 0*/) { ?>
                             <div class="row">
                                 <div class="col-md-4">Parent User Email</div>
                                 <div class="col-md-4"><?php echo $order['parent_details']; ?></div>
