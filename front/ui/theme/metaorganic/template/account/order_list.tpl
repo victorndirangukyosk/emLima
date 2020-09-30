@@ -186,7 +186,7 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="my-order-showaddress">  
-                                    <h3 class="my-order-title label" style="background-color: #8E45FF;display: block;line-height: 2; text-align:center;"><?php echo $order['head_chef']; ?></h3>
+                                    <h3 class="my-order-title label" style="background-color: #FF5C23;display: block;line-height: 2; text-align:center;"><?php echo $order['head_chef']; ?></h3>
                                 </div>
                             </div>
                             <div class="col-md-4">
