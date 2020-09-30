@@ -158,7 +158,7 @@
                         </div>
                     </li>
 
-                    <?php if($order['head_chef'] == 'Pending' && $order['order_approval_access'] == true && $order['order_approval_access_role'] == 'head_chef') { ?>
+                    <?php if($order['parent_approval'] == 'Pending' && $order['head_chef'] == 'Pending' && $order['order_approval_access'] == true && $order['order_approval_access_role'] == 'head_chef') { ?>
                     <li class="list-group-item">
                         <div class="my-order-showaddress" id="<?php echo $order['order_id']; ?>">  
                             <a href="#" id="approve_order_head_chef" data-id="<?= $order['order_id'] ?>" data-custid="<?= $order['customer_id'] ?>" class="btn btn-default btn-xs">APPROVE ORDER</a>
