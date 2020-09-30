@@ -314,7 +314,7 @@
                                 <div class="col-md-12">
                                     <div class="alerter" style="display: none;">
                                         <div class="alert alert-info normalalert">
-                                            <p class="notice-text">Order Approvals Assinged!</p>
+                                            <p class="notice-text">Order Approvals Assigned!</p>
                                         </div>
                                     </div>
                                 </div>
@@ -323,7 +323,7 @@
 
                             <fieldset>
                                 <div class="form-group">
-                                    <label for="name" class="col-sm-3 control-label">First Leavel Approver</label>
+                                    <label for="name" class="col-sm-3 control-label">First Level Approver</label>
                                     <div class="col-sm-4">
                                         <select class="form-control input-lg" id="head_chef" name="head_chef">
                                         </select>
@@ -711,7 +711,7 @@
                 if (json.success == false) {
                     console.log(json.success);
                     $("#save-button").prop('disabled', true);
-                    $('<div class="text-danger">Email address shold be unique</div>').insertAfter($("input[name='email']"));
+                    $('<div class="text-danger">Email address should be unique</div>').insertAfter($("input[name='email']"));
                 }
 
                 if (json.success == true) {
