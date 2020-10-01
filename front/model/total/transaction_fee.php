@@ -4,7 +4,7 @@ class ModelTotalTransactionFee extends Model
 {
     public function getTotal(&$total_data, &$total, &$taxes, $store_id = false)
     {
-        $this->load->language('total/sub_total');
+        $this->load->language('total/transaction_fee');
 
         $sub_total = $this->cart->getSubTotal($store_id);
 
