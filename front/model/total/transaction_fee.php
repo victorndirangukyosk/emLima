@@ -6,21 +6,13 @@ class ModelTotalTransactionFee extends Model
     {
         $this->load->language('total/transaction_fee');
 
-        $sub_total = $this->cart->getSubTotal($store_id);
-
-        /*echo "sub";
-        echo $sub_total;*/
-        if (isset($this->session->data['vouchers']) && $this->session->data['vouchers']) {
-            foreach ($this->session->data['vouchers'] as $voucher) {
-                $sub_total += $voucher['amount'];
-            }
-        }
+        $sub_total = $this->cart->getSubTotal();
 
         $total_data[] = [
-            'code' => 'sub_total',
-            'title' => $this->language->get('text_sub_total'),
+            'code' => 'transaction_fee',
+            'title' => $this->language->get('text_transaction_fee'),
             'value' => $sub_total,
-            'sort_order' => $this->config->get('sub_total_sort_order'),
+            'sort_order' => $this->config->get('transaction_fee_sort_order'),
         ];
 
         $total += $sub_total;
