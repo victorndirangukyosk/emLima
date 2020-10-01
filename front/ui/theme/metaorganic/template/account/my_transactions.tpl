@@ -302,6 +302,7 @@
                 console.log("json");
                 console.log(json);
                 $('#pay-confirm-order').html(json);
+                $("#pay-confirm-order").prepend("<p>* 3.5% Payment Gateway Charges Applicable On Order Total</p>");
                 $('#pay-confirm-order').removeAttr('style');
                 return true;
                 //window.location = json.redirect;
@@ -337,6 +338,7 @@
                     console.log("json");
                     console.log(json);
                     $('#pay-confirm-order').html(json);
+                    $("#pay-confirm-order").prepend("<p>* 3.5% Payment Gateway Charges Applicable On Order Total</p>");
                     $('#pay-confirm-order').removeAttr('style');
                     return true;
                     //window.location = json.redirect;
@@ -383,6 +385,7 @@
                     console.log("json");
                     console.log(json);
                     $('#pay-confirm-order').html(json);
+                    $("#pay-confirm-order").prepend("<p>* 3.5% Payment Gateway Charges Applicable On Order Total</p>");
                     $('#pay-confirm-order').removeAttr('style');
                     return true;
                     //window.location = json.redirect;
@@ -501,6 +504,7 @@
                 console.log("json");
                 console.log(json);
                 $('#pay-confirm-order').html(json);
+                $("#pay-confirm-order").prepend("<p>* 3.5% Payment Gateway Charges Applicable On Order Total</p>");
                 $('#pay-confirm-order').removeAttr('style');
                 return true;
                 //window.location = json.redirect;

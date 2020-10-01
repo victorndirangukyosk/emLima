@@ -519,7 +519,12 @@ class Controlleraccounttransactions extends Controller {
         $iframelink = 'https://www.pesapal.com/api/PostPesapalDirectOrderV4'; //change to
         //https://www.pesapal.com/API/PostPesapalDirectOrderV4 when you are ready to go live!
         //get form details
-        $amount = str_replace(',', '', $amount);
+        $transaction_fee = 0;
+        $percentage = 3.5;
+        $transaction_fee = ($percentage / 100) * $amount;
+        $amount = str_replace(',', '', $amount + + $transaction_fee);
+        $log->write('TRANSACTION FEE');
+        $log->write($transaction_fee);
         $log->write($amount);
         //$amount = 100;
         $amount = number_format($amount, 2); //format amount to 2 decimal places
