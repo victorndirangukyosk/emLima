@@ -23,7 +23,7 @@ class ModelTotalTransactionFee extends Model
             'sort_order' => $this->config->get('transaction_fee_sort_order'),
         ];
 
-        $total += $sub_total+$transaction_fee;
+        $total +=$transaction_fee;
     }
 
     public function getApiTotal(&$total_data, &$total, &$taxes, $store_id = false, $args)
