@@ -597,20 +597,20 @@ class ControllerApiCustomerSubusers extends Controller
 
         $this->load->model('account/customer');
         $this->model_account_customer->approvecustom($user_id, $args['active_status']);
-if($args['active_status']=="0")
-{
-    $json['message'][] = ['type' => '', 'body' => 'User de-activated!'];
+        if($args['active_status']=="0")
+        {
+            $json['message'][] = ['type' => '', 'body' => 'User de-activated!'];
 
-        $json['success'] = 'User de-activated!';
-}
-else if($args['active_status']=="1")
-{
-    $json['message'][] = ['type' => '', 'body' => 'User activated!'];
+                $json['success'] = 'User de-activated!';
+        }
+        else if($args['active_status']=="1")
+        {
+            $json['message'][] = ['type' => '', 'body' => 'User activated!'];
 
-        $json['success'] = 'User activated!';
+                $json['success'] = 'User activated!';
 
-}
-        
+        }
+                
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
@@ -717,4 +717,48 @@ else if($args['active_status']=="1")
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
+
+
+    public function getAllSubUsers()
+    {
+        $json = [];
+
+        $log = new Log('error.log');
+        $log->write('getAllSubUsers');
+
+        $log->write($this->request->get);
+
+        $this->load->language('information/locations');
+
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
+
+        $filter_data = [
+            'filter_parent' => $_SESSION['customer_id'],
+            'order' => 'DESC',
+            'start' => 0,
+            'limit' => 1000,
+        ];
+        $this->load->model('sale/order');
+        $customer_total = $this->model_sale_order->getTotalCustomers($filter_data);
+        $result_customers = $this->model_sale_order->getCustomers($filter_data);
+
+
+        //if( $this->customer->isLogged() )         
+             
+            // foreach ($results as $result) {
+            //     $data['delivery_addresses'][] = [
+            //     'address_id' => $result['address_id'],
+            //     'name' => $result['name'],
+            //       ];           
+
+            $json['data'] =$result_customers;// $data;
+            
+        // }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
 }
