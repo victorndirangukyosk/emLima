@@ -45,8 +45,9 @@
                         <?php } ?>
                         
                     </div>
-
-            <?php } elseif($total['title'] != 'Transaction-Fee') { ?>
+            
+            <?php /* } else { */ ?>
+            <?php  } elseif($total['title'] != 'Transaction-Fee') {  ?>
                 <div class="checkout-invoice">
                     <div class="checout-invoice-title"><?php echo $total['title']; ?></div>
                     <div class="checout-invoice-price"><?php echo $total['text']; ?></div>
