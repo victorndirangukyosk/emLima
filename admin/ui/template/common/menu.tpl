@@ -598,6 +598,13 @@
             <?php if($preturn_email_template) { ?>
             <li><a href="<?php echo $email_template; ?>"><?php echo $text_email_template; ?></a></li>
             <?php } ?>
+
+
+             <?php if($preturn_newfeature != false) { ?>
+            <li><a href="<?php echo $newfeature; ?>">New Feature Request</a></li>
+            <?php } ?>
+
+
         </ul>
     </li>
     <?php } ?>
