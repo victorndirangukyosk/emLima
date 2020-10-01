@@ -124,8 +124,9 @@ class ControllerCheckoutCheckout extends Controller
 
         $min_order_or_not = [];
         $store_data = [];
-
-        foreach ($order_stores as $os) {
+        
+        //REMOVED FOR MULT STORE ORDERS
+        /*foreach ($order_stores as $os) {
             $store_info = $this->model_account_address->getStoreData($os);
             //$store_total = $this->cart->getSubTotal($os);
             $store_total = $this->cart->getSubTotal();
@@ -135,7 +136,18 @@ class ControllerCheckoutCheckout extends Controller
             if ($this->cart->getTotalProductsByStore($os) && $store_info['min_order_amount'] > $store_total) {
                 $this->response->redirect($this->url->link('checkout/cart'));
             }
-        }
+        }*/
+        
+        //ADDED FOR MULTI STORE ORDERS
+        $store_info = $this->model_account_address->getStoreData(75);
+            //$store_total = $this->cart->getSubTotal($os);
+            $store_total = $this->cart->getSubTotal();
+            $store_info['servicable_zipcodes'] = $this->model_account_address->getZipList(75);
+            $store_data[] = $store_info;
+
+            if ($this->cart->getTotalProductsByStore(75) && $store_info['min_order_amount'] > $store_total) {
+                $this->response->redirect($this->url->link('checkout/cart'));
+            }
 
         //echo "<pre>";print_r($store_data);die;
         $data['kondutoStatus'] = $this->config->get('config_konduto_status');
