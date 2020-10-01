@@ -4345,7 +4345,7 @@ class ControllerSaleOrder extends Controller
             }
         }
 
-        //    echo "<pre>";print_r($data['orders'][0]);die;
+        // echo "<pre>";print_r($data);die;
         /*$log = new Log('error.log');
         $log->write(DIR_TEMPLATE);
         require_once DIR_ROOT . '/vendor/autoload.php';
@@ -4360,7 +4360,7 @@ class ControllerSaleOrder extends Controller
         $mpdf->Output();
         $mpdf->Output("KwikBasket Invoice # ".$order_id.".pdf", 'D');*/
 
-        $this->response->setOutput($this->load->view('sale/order_invoice.tpl', $data['orders'][0]));
+        $this->response->setOutput($this->load->view('sale/order_invoice.tpl', $data));
     }
 
     public function consolidatedCalculationSheet()

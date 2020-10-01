@@ -4,13 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KwikBasket Invoice #<?= $order_id ?></title>
+    <title>KwikBasket Invoice</title>
     <link rel="stylesheet" href="ui/stylesheet/bootstrap.min.css">
     <link rel="stylesheet" href="ui/javascript/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="ui/stylesheet/print.css">
 </head>
 
 <body>
+<?php foreach($orders as $order) { ?>
+    
 <div class="page">
     <table class="document-container">
         <tbody>
@@ -32,24 +34,23 @@
                                 </div>
                             </div>
                             <div class="col-md-4 offset-md-4 text-right">
-                                <h5 class="bold">TAX INVOICE #<?= $invoice_no ?></h5>
+                                <h5 class="bold">TAX INVOICE #<?= $order['invoice_no'] ?></h5>
                                 <?php if($po_number) { ?>
-                                    <h5 class="bold">P.O. NUMBER <?= $po_number ?></h5>
+                                    <h5 class="bold">P.O. NUMBER <?= $order['$po_number'] ?></h5>
                                 <?php } ?>
-                                <h5><?= $delivery_date ?></h5>
+                                <h5><?= $order['delivery_date'] ?></h5>
                                 
                             </div>
                         </div>
-
                         <div class="row mb-2">
                             <div class="col-md-4">
-                                <h5 class="bold text-uppercase mb-3">TO <?= $customer_company_name ?></h5>
+                                <h5 class="bold text-uppercase mb-3">TO <?= $order['customer_company_name'] ?></h5>
                                 <ul class="list-block">
-                                    <li><?= $shipping_name ?></li>
-                                    <li><?= $telephone ?></li>
-                                    <li class="mb-2"><?= $email ?></li>
+                                    <li><?= $order['shipping_name'] ?></li>
+                                    <li><?= $order['telephone'] ?></li>
+                                    <li class="mb-2"><?= $order['email'] ?></li>
                                     <li>
-                                        <p class="bold"><?= $shipping_address ?></p>
+                                        <p class="bold"><?= $order['shipping_address'] ?></p>
                                     </li>
                                 </ul>
 
@@ -58,14 +59,10 @@
                             <div class="col-md-4 offset-md-4 text-right">
                                 <h6 class="bold mb-3">ORDER INFO</h6>
                                 <ul class="list-block">
-                                    <li>Order # <?= $order_id ?></li>
-                                    <li>Placed On <?= $date_added ?></li>
-                                    <li>Delivered On <?= $delivery_date ?></li>
-                                    <li><?= $shipping_method ?></li>
-                                   <!-- <li><?= $payment_method ?></li>
-                                      <?php if($po_number)  {?>                                     
-                  <li>P.O Number:<?= $po_number ?></li>
-                  <?php }?>-->
+                                    <li>Order # <?= $order['order_id'] ?></li>
+                                    <li>Placed On <?= $order['date_added'] ?></li>
+                                    <li>Delivered On <?= $order['delivery_date'] ?></li>
+                                    <li><?= $order['shipping_method'] ?></li>
                                 </ul>
                             </div>
                         </div>
@@ -81,7 +78,7 @@
                             </tr>
                             </thead>
                             <tbody class="datatable-content">
-                            <?php foreach($products as $product) { ?>
+                            <?php foreach($order['products'] as $product) { ?>
                             <tr>
                                 <td><?= $product['product_id'] ?></td>
                                 <td><?= $product['name'] ?></td>
@@ -91,7 +88,7 @@
                             </tr>
                             <?php } ?>
 
-                            <?php foreach($totals as $total) { ?>
+                            <?php foreach($order['totals'] as $total) { ?>
                             <tr>
                                 <td colspan="4" class="bold text-right"><?= $total['title'] ?></td>
                                 <td class="bold text-right"><?= $total['text'] ?></td>
@@ -101,7 +98,7 @@
                         </table>
                         
                         <div class="mt-4">
-                            <?php foreach($totals as $total) { ?>
+                            <?php foreach($order['totals'] as $total) { ?>
                                 <?php if($total['title'] == 'Total') { ?>
                                     <h5><strong>Total In Words </strong> <?= $total['amount_in_words']?></h5>
                                 <?php } ?>
@@ -138,7 +135,7 @@
                                         <li>Select Lipa Na M-PESA</li>
                                         <li>Select Pay Bill</li>
                                         <li>Enter <strong>4029127</strong></li>
-                                        <li>Enter <strong>KB<?= $order_id ?></strong> as the account number</li>
+                                        <li>Enter <strong>KB<?= $order['order_id'] ?></strong> as the account number</li>
                                         <li>Enter total amount</li>
                                         <li>Enter M-PESA Pin</li>
                                     </ul>
@@ -174,6 +171,8 @@
         </div>
     </div>
 </div>
+
+<?php } ?>
 
 <div class="document-actions">
     <button class="btn btn-primary mb-2" onclick="printDocument()"><i class="fa fa-print"></i> Print Document</button>
