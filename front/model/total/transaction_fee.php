@@ -3,14 +3,15 @@
 class ModelTotalTransactionFee extends Model
 {
     public function getTotal(&$total_data, &$total, &$taxes, $store_id = false)
-    {
+    {   
+        /*FOR PESAPAL TRANSACTION*/
         $this->load->language('total/transaction_fee');
 
         $sub_total = $this->cart->getSubTotal();
         
         $transaction_fee = 0;
         $percentage = 3.5;
-        //$transaction_fee = ($percentage / 100) * $sub_total;
+        /*$transaction_fee = ($percentage / 100) * $sub_total;*/
         $log = new Log('error.log');
         $log->write('TRANSACTION FEE');
         $log->write($transaction_fee);
