@@ -10,7 +10,7 @@ class ModelTotalTransactionFee extends Model
         
         $transaction_fee = 0;
         $percentage = 3.5;
-        $transaction_fee = ($percentage / 100) * $sub_total;
+        //$transaction_fee = ($percentage / 100) * $sub_total;
         $log = new Log('error.log');
         $log->write('TRANSACTION FEE');
         $log->write($transaction_fee);
