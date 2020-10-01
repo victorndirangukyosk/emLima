@@ -728,7 +728,7 @@ class ControllerApiCustomerSubusers extends Controller
 
         $log->write($this->request->get);
 
-        $this->load->language('information/locations');
+       // $this->load->language('information/locations');
 
         $json['status'] = 200;
         $json['data'] = [];
@@ -757,6 +757,29 @@ class ControllerApiCustomerSubusers extends Controller
             
         // }
 
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+//Same method copied from web
+    public function addAssignorderapproval() {
+
+        $json = [];
+        $log = new Log('error.log');
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = 'Updated';
+
+        $log->write($this->request->post['button']);
+        $log->write($this->request->post['head_chef']);
+        $log->write($this->request->post['procurement_person']);
+        $this->load->model('account/customer');
+        if ($this->request->post['button'] == 'assign_head_chef') {
+            $this->model_account_customer->UpdateOrderApprovalAccess($this->customer->getId(), $this->request->post['head_chef'], 1, 'head_chef');
+        }
+
+        if ($this->request->post['button'] == 'assign_procurement_person') {
+            $this->model_account_customer->UpdateOrderApprovalAccess($this->customer->getId(), $this->request->post['procurement_person'], 1, 'procurement_person');
+        }
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
