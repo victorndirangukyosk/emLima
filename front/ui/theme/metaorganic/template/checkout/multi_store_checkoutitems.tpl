@@ -30,7 +30,7 @@
                         <th class="text-center">Sub Total</th>
                         <th rowspan="1"></th>
                         <th class="text-center">&nbsp;</th>
-                        
+                        <th rowspan="1"></th>
                     </tr>
                                     </thead>
                
@@ -130,7 +130,7 @@
 
   </td>
   <td class="a-center hidden-table a">
-      <a id="update_quantity" class="fa fa-refresh" title="Update product quantity" data-id="<?= $product['key']?>" data-prodorderid="<?= $i?>"><span data-id="<?= $product['key']?>"></span></a>
+      <!--<a id="update_quantity" class="fa fa-refresh" title="Update product quantity" data-id="<?= $product['key']?>" data-prodorderid="<?= $i?>"><span data-id="<?= $product['key']?>"></span></a>-->
   </td>
   <td class="a-center hidden-table">
       <p> <a title="Remove item" class="button remove-item" style="background-color: #ec9f4e ;"><span><span><?= $product['key']?></span></span></a></p>
@@ -150,15 +150,26 @@
                             <?php $i++; } ?>
 
 <tfoot>
+    
 <tr class="first last">
-<td colspan="12" class="a-right last">
+<td colspan="4" class="a-right last">                                                       
+</td>    
+<td colspan="4" class="a-left last">                                                       
+<button type="submit" style="width:170px;background-color: #ec9f4e ; padding: 15px 20px 27px 20px;" name="update_cart_action" value="update_qty" title="Update Cart" class="button"><span id="updatecart">Update Cart</span></button>
+</td>
+<td colspan="4" class="a-right last">                                                       
+</td>
+</tr>
+
+<tr class="first last">
+<td colspan="4" class="a-right last">
 <a  href="<?php echo $continue; ?>"> <button type="button" title="Continue Shopping" class="button btn-continue" style="width:210px;background-color: #ec9f4e ; padding: 15px 20px 27px 20px;" ><span><span>Continue Shopping</span></span></button></a>
-                                                       
-                                                       
-<button type="submit" style="width:170px;background-color: #ec9f4e ; padding: 15px 20px 27px 20px;" name="save_basket_action" id="save_basket_action" value="save_basket" title="Save Basket" class="button btn-update" data-confirm="This will add products to basket!!"><span id="savebasket">Save Basket</span></button>
-                           <button type="submit" style="width:170px;background-color: #ec9f4e ; padding: 15px 20px 27px 20px;" name="update_cart_action" value="update_qty" title="Update Cart" class="button btn-update"><span id="updatecart">Update Cart</span></button>
-                          
-                            <button type="submit"  style="width:180px;background-color: #ec9f4e ; padding: 15px 20px 27px 20px;" name="update_cart_action" value="empty_cart" title="Clear Cart" class="button btn-empty" id="empty_cart_button"><span id="clearcart" class="cart-header_items-count clear-cart1" style="border-bottom:none;" data-confirm="This will empty your cart!!" >Clear Cart</span></button>
+</td>
+<td colspan="4" class="a-left last">
+    <button type="submit" style="width:170px;background-color: #ec9f4e ; padding: 15px 20px 27px 20px;" name="save_basket_action" id="save_basket_action" value="save_basket" title="Save Basket" class="button" data-confirm="This will add products to basket!!"><span id="savebasket">Save Basket</span></button>
+</td>
+<td colspan="4" class="a-right last">
+<button type="submit"  style="width:180px;background-color: #ec9f4e ; padding: 15px 20px 27px 20px;" name="update_cart_action" value="empty_cart" title="Clear Cart" class="button btn-empty" id="empty_cart_button"><span id="clearcart" class="cart-header_items-count clear-cart1" style="border-bottom:none;" data-confirm="This will empty your cart!!" >Clear Cart</span></button>
 </td>
 </tr>
 </tfoot>
