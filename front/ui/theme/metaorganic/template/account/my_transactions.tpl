@@ -19,11 +19,11 @@
                         <thead>
                             <tr>
                                 <th></th>
-                                <th>Order Id </th>
-                                <th>Order Date</th>
-                                <th>Amount Payable</th>
-                                <th>Payment Method</th>
-                                <th>Action</th>
+                                <th class="order_id">Order Id </th>
+                                <th class="order_id">Order Date</th>
+                                <th class="order_id">Amount Payable</th>
+                                <th class="order_id">Payment Method</th>
+                                <th class="order_id">Action</th>
                             </tr>
                         </thead>
                         <tbody id="emp_body">
@@ -37,11 +37,11 @@
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th>Order Id </th>
-                                <th>Amount Paid</th>
-                                <th>Order Date</th>
-                                <th>Payment Method</th>
-                                <th>Transaction Id</th>
+                                <th class="order_id">Order Id </th>
+                                <th class="order_id">Amount Paid</th>
+                                <th class="order_id">Order Date</th>
+                                <th class="order_id">Payment Method</th>
+                                <th class="order_id">Transaction Id</th>
                                 <!--<th>Action</th>-->
                             </tr>
                         </thead>
@@ -56,10 +56,10 @@
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th>Order Id </th>
-                                <th>Amount Payable</th>
-                                <th>Order Date</th>
-                                <th>Payment Method</th>
+                                <th class="order_id">Order Id </th>
+                                <th class="order_id">Amount Payable</th>
+                                <th class="order_id">Order Date</th>
+                                <th class="order_id">Payment Method</th>
                                 <!--<th>Action</th>-->
                             </tr>
                         </thead>
@@ -74,10 +74,10 @@
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th>Customer Id </th>
-                                <th>Amount</th>
-                                <th>Date</th>
-                                <th>Transaction Id</th>
+                                <th class="order_id">Customer Id </th>
+                                <th class="order_id">Amount</th>
+                                <th class="order_id">Date</th>
+                                <th class="order_id">Transaction Id</th>
                                 <!--<th>Action</th>-->
                             </tr>
                         </thead>
@@ -302,6 +302,7 @@
                 console.log("json");
                 console.log(json);
                 $('#pay-confirm-order').html(json);
+                $("#pay-confirm-order").prepend("<p>* 3.5% Payment Gateway Charges Applicable On Order Total</p>");
                 $('#pay-confirm-order').removeAttr('style');
                 return true;
                 //window.location = json.redirect;
@@ -337,6 +338,7 @@
                     console.log("json");
                     console.log(json);
                     $('#pay-confirm-order').html(json);
+                    $("#pay-confirm-order").prepend("<p>* 3.5% Payment Gateway Charges Applicable On Order Total</p>");
                     $('#pay-confirm-order').removeAttr('style');
                     return true;
                     //window.location = json.redirect;
@@ -383,6 +385,7 @@
                     console.log("json");
                     console.log(json);
                     $('#pay-confirm-order').html(json);
+                    $("#pay-confirm-order").prepend("<p>* 3.5% Payment Gateway Charges Applicable On Order Total</p>");
                     $('#pay-confirm-order').removeAttr('style');
                     return true;
                     //window.location = json.redirect;
@@ -426,12 +429,12 @@
             $('#emp_body').html('');
             for (var i = 0; i < displayRecords.length; i++) {
                 tr = $('<tr/>');
-                tr.append("<td><input type='checkbox' id='order_id_selected' data-id='" + displayRecords[i].order_id + "' data-amount='" + displayRecords[i].total + "' name='order_id_selected' value='" + displayRecords[i].order_id + "'></td>");
-                tr.append("<td>" + displayRecords[i].order_id + "</td>");
+                tr.append("<td><input type='checkbox' id='order_id_selected' data-id='" + displayRecords[i].order_id + "' data-amount='" + displayRecords[i].value + "' name='order_id_selected' value='" + displayRecords[i].order_id + "'></td>");
+                tr.append("<td class='order_id'>" + displayRecords[i].order_id + "</td>");
                 tr.append("<td>" + displayRecords[i].date_added + "</td>");
-                tr.append("<td>" + displayRecords[i].total_currency + "</td>");
+                tr.append("<td class='amount'>" + displayRecords[i].total_currency + "</td>");
                 tr.append("<td>" + displayRecords[i].payment_method + "</td>");
-                tr.append("<td><a class='btn btn-default' onclick='changeOrderIdForPay(" + displayRecords[i].order_id + "," + displayRecords[i].total + ")'>Pay Now</a></td>");
+                tr.append("<td><a class='btn btn-default' onclick='changeOrderIdForPay(" + displayRecords[i].order_id + "," + displayRecords[i].value + ")'>Pay Now</a></td>");
                 $('#emp_body').append(tr);
             }
         }
@@ -442,36 +445,14 @@
                 onPageClick: function (event, page) {
                     displayRecordsIndex = Math.max(page - 1, 0) * recPerPage;
                     endRec = (displayRecordsIndex) + recPerPage;
-                    console.log(displayRecordsIndex + 'ssssssssss' + endRec);
+                    console.log(displayRecordsIndex + 'PAGINATION' + endRec);
                     displayRecords = records.slice(displayRecordsIndex, endRec);
                     generate_table();
                 }
             });
         }
     });
-    $(document).delegate('#send_mail', 'click', function () {
-        var checkedNum = $('input[name="app_cand[]"]:checked').length;
-        console.log(checkedNum);
-        var val = [];
-        if (!checkedNum) {
-            $(':checkbox:checked').each(function (i) {
-                val[i] = $(this).attr("id");
-            });
-            console.log(val);
-        }
 
-        $.ajax({
-            url: 'userapi.php',
-            type: 'post',
-            data: {'app_cand': val},
-            dataType: 'json',
-            cache: false,
-            async: true,
-            success: function (json) {
-                console.log(json.status);
-            }
-        });
-    });
     $(document).delegate('#button-confirm', 'click', function () {
         console.log('PAY OTHER AMOUNT');
         var amount = $("#pesapal_amount").val();
@@ -501,6 +482,7 @@
                 console.log("json");
                 console.log(json);
                 $('#pay-confirm-order').html(json);
+                $("#pay-confirm-order").prepend("<p>* 3.5% Payment Gateway Charges Applicable On Order Total</p>");
                 $('#pay-confirm-order').removeAttr('style');
                 return true;
                 //window.location = json.redirect;
@@ -539,8 +521,8 @@
             $('#emp_bodys').html('');
             for (var i = 0; i < displayRecords.length; i++) {
                 tr = $('<tr/>');
-                tr.append("<td>" + displayRecords[i].order_id + "</td>");
-                tr.append("<td>" + displayRecords[i].total_currency + "</td>");
+                tr.append("<td class='order_id'>" + displayRecords[i].order_id + "</td>");
+                tr.append("<td class='amount'>" + displayRecords[i].total_currency + "</td>");
                 tr.append("<td>" + displayRecords[i].date_added + "</td>");
                 tr.append("<td>" + displayRecords[i].payment_method + "</td>");
                 tr.append("<td>" + displayRecords[i].transcation_id + "</td>");
@@ -554,36 +536,14 @@
                 onPageClick: function (event, page) {
                     displayRecordsIndex = Math.max(page - 1, 0) * recPerPage;
                     endRec = (displayRecordsIndex) + recPerPage;
-                    console.log(displayRecordsIndex + 'ssssssssss' + endRec);
+                    console.log(displayRecordsIndex + 'PAGINATION' + endRec);
                     displayRecords = records.slice(displayRecordsIndex, endRec);
                     generate_table();
                 }
             });
         }
     });
-    $(document).delegate('#send_mail', 'click', function () {
-        var checkedNum = $('input[name="app_cand[]"]:checked').length;
-        console.log(checkedNum);
-        var val = [];
-        if (!checkedNum) {
-            $(':checkbox:checked').each(function (i) {
-                val[i] = $(this).attr("id");
-            });
-            console.log(val);
-        }
-
-        $.ajax({
-            url: 'userapi.php',
-            type: 'post',
-            data: {'app_cand': val},
-            dataType: 'json',
-            cache: false,
-            async: true,
-            success: function (json) {
-                console.log(json.status);
-            }
-        });
-    });</script>
+    </script>
 
 <script type="text/javascript">
     $(document).ready(function () {
@@ -612,8 +572,8 @@
             $('#emp_bodysc').html('');
             for (var i = 0; i < displayRecords.length; i++) {
                 tr = $('<tr/>');
-                tr.append("<td>" + displayRecords[i].order_id + "</td>");
-                tr.append("<td>" + displayRecords[i].total_currency + "</td>");
+                tr.append("<td class='order_id'>" + displayRecords[i].order_id + "</td>");
+                tr.append("<td class='amount'>" + displayRecords[i].total_currency + "</td>");
                 tr.append("<td>" + displayRecords[i].date_added + "</td>");
                 tr.append("<td>" + displayRecords[i].payment_method + "</td>");
                 $('#emp_bodysc').append(tr);
@@ -626,7 +586,7 @@
                 onPageClick: function (event, page) {
                     displayRecordsIndex = Math.max(page - 1, 0) * recPerPage;
                     endRec = (displayRecordsIndex) + recPerPage;
-                    console.log(displayRecordsIndex + 'ssssssssss' + endRec);
+                    console.log(displayRecordsIndex + 'PAGINATION' + endRec);
                     displayRecords = records.slice(displayRecordsIndex, endRec);
                     generate_table();
                 }
@@ -648,29 +608,7 @@
             $('#pay-confirm-order').html('');
         }
     });
-    $(document).delegate('#send_mail', 'click', function () {
-        var checkedNum = $('input[name="app_cand[]"]:checked').length;
-        console.log(checkedNum);
-        var val = [];
-        if (!checkedNum) {
-            $(':checkbox:checked').each(function (i) {
-                val[i] = $(this).attr("id");
-            });
-            console.log(val);
-        }
-
-        $.ajax({
-            url: 'userapi.php',
-            type: 'post',
-            data: {'app_cand': val},
-            dataType: 'json',
-            cache: false,
-            async: true,
-            success: function (json) {
-                console.log(json.status);
-            }
-        });
-    });</script>
+    </script>
 
 <script type="text/javascript">
     $(document).ready(function () {
@@ -699,8 +637,8 @@
             $('#emp_bodyother').html('');
             for (var i = 0; i < displayRecords.length; i++) {
                 tr = $('<tr/>');
-                tr.append("<td>" + displayRecords[i].customer_id + "</td>");
-                tr.append("<td> KES " + displayRecords[i].amount + "</td>");
+                tr.append("<td class='order_id'>" + displayRecords[i].customer_id + "</td>");
+                tr.append("<td class='amount'> KES " + displayRecords[i].amount + "</td>");
                 tr.append("<td>" + displayRecords[i].created_at + "</td>");
                 tr.append("<td>" + displayRecords[i].pesapal_transaction_tracking_id + "</td>");
                 $('#emp_bodyother').append(tr);
@@ -713,7 +651,7 @@
                 onPageClick: function (event, page) {
                     displayRecordsIndex = Math.max(page - 1, 0) * recPerPage;
                     endRec = (displayRecordsIndex) + recPerPage;
-                    console.log(displayRecordsIndex + 'ssssssssss' + endRec);
+                    console.log(displayRecordsIndex + 'PAGINATION' + endRec);
                     displayRecords = records.slice(displayRecordsIndex, endRec);
                     generate_table();
                 }
@@ -736,6 +674,16 @@
     .option_pay {
         margin-top:-3px !important;
     }
+.amount
+{
+    text-align: center; 
+    vertical-align: middle;
+}
+.order_id
+{
+    text-align: center; 
+    vertical-align: middle;
+}
 </style>
 </body>
 </html>

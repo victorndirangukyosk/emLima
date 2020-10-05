@@ -61,8 +61,14 @@
     <?php if($preturn_vendor_product) { ?>    
     <li><a href="<?php echo $inventory_management; ?>"><i class="fa inventory"></i> <span>Inventory</span></a></li>
     <?php } ?>
-    <?php if($preturn_vendor_product) { ?>    
-    <li><a href="<?php echo $category_prices; ?>"><i class="fa fa-tags fa-fw"></i> <span>Category Prices</span></a></li>
+    <?php if($preturn_vendor_product) { ?>  
+    <li id="simple-blog">
+    <a class="parent"><i class="fa fa-tags fa-fw"></i> <span>Category Prices</span></a>
+    <ul>
+    <li><a href="<?php echo $category_prices; ?>"><span>Category Prices</span></a></li>
+    <li><a href="<?php echo $export_import; ?>"><span><?php echo $text_export_import; ?></span></a></li>
+    </ul>
+    </li>
     <?php } ?>
     <?php
     if($preturn_simple_blog_author != false || $preturn_simple_blog_category != false || $preturn_simple_blog_article != false || 
@@ -598,6 +604,13 @@
             <?php if($preturn_email_template) { ?>
             <li><a href="<?php echo $email_template; ?>"><?php echo $text_email_template; ?></a></li>
             <?php } ?>
+
+
+             <?php if($preturn_newfeature != false) { ?>
+            <li><a href="<?php echo $newfeature; ?>">New Feature Request</a></li>
+            <?php } ?>
+
+
         </ul>
     </li>
     <?php } ?>

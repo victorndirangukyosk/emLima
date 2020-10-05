@@ -302,21 +302,26 @@ class Controlleraccounttransactions extends Controller {
                 if (in_array($order['payment_method'], $PaymentFilter)) {
                     if (!empty($order['transcation_id'])) {
                         //if(in_array($order['status'],$statusSucessFilter) && !empty($order['transcation_id'])){
-                        if (is_array($order) && array_key_exists('total', $order)) {
-                            $order['total_currency'] = $this->currency->format($order['total']);
+                        if (is_array($order) && array_key_exists('value', $order)) {
+                            $order['total_currency'] = $this->currency->format($order['value']);
                         }
                         $data['success_transactions'][] = $order;
                     } elseif (in_array($order['status'], $statusCancelledFilter)) {
-                        if (is_array($order) && array_key_exists('total', $order)) {
-                            $order['total_currency'] = $this->currency->format($order['total']);
+                        if (is_array($order) && array_key_exists('value', $order)) {
+                            $order['total_currency'] = $this->currency->format($order['value']);
                         }
                         $data['cancelled_transactions'][] = $order;
                     } elseif (!in_array($order['status'], $statusCancelledFilter)) {
-                        if (is_array($order) && array_key_exists('total', $order)) {
-                            $order['total_currency'] = $this->currency->format($order['total']);
+                        if (is_array($order) && array_key_exists('value', $order)) {
+                            $order['total_currency'] = $this->currency->format($order['value']);
                         }
-                        $totalPendingAmount = $totalPendingAmount + $order['total'];
-                        $totalPendingAmount = $this->currency->format($totalPendingAmount);
+                        /*$log = new Log('error.log');
+                        $log->write('NON NUMERIC');
+                        $log->write($totalPendingAmount);
+                        $log->write($order['total']);
+                        $log->write('NON NUMERIC');*/
+                        $totalPendingAmount = $totalPendingAmount + $order['value'];
+                        //$totalPendingAmount = $this->currency->format($totalPendingAmount);
                         $data['pending_order_id'][] = $order['order_id'];
                         $data['pending_transactions'][] = $order;
                     }
@@ -519,7 +524,12 @@ class Controlleraccounttransactions extends Controller {
         $iframelink = 'https://www.pesapal.com/api/PostPesapalDirectOrderV4'; //change to
         //https://www.pesapal.com/API/PostPesapalDirectOrderV4 when you are ready to go live!
         //get form details
-        $amount = str_replace(',', '', $amount);
+        $transaction_fee = 0;
+        $percentage = 3.5;
+        $transaction_fee = ($percentage / 100) * $amount;
+        $amount = str_replace(',', '', $amount + + $transaction_fee);
+        $log->write('TRANSACTION FEE');
+        $log->write($transaction_fee);
         $log->write($amount);
         //$amount = 100;
         $amount = number_format($amount, 2); //format amount to 2 decimal places
