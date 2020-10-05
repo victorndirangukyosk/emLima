@@ -719,13 +719,13 @@ class ControllerApiCustomerSubusers extends Controller
     }
 
 
-    public function getAllSubUsers()
+    public function getAllSubUsers($args = [])
     {
         $json = [];
 
         $log = new Log('error.log');
         $log->write('getAllSubUsers');
-
+        $parentuser_id = $args['parent_user_id'];
         $log->write($this->request->get);
 
        // $this->load->language('information/locations');
@@ -735,7 +735,7 @@ class ControllerApiCustomerSubusers extends Controller
         $json['message'] = [];
 
         $filter_data = [
-            'filter_parent' => $_SESSION['customer_id'],
+            'filter_parent' => $parentuser_id,
             'order' => 'DESC',
             'start' => 0,
             'limit' => 1000,
