@@ -1224,6 +1224,49 @@ class ControllerApiCustomerOrder extends Controller
             if ($real_product_total) {
                 $product_total = $real_product_total;
             }
+
+            $this->load->model('sale/order');
+            $approve_order_button = null;
+            $order_appoval_access = false;
+            if (empty($_SESSION['parent']) && $result['customer_id'] != $this->customer->getId()) {
+                $approve_order_button = 'Need Approval';
+            }
+            if ($this->session->data['order_approval_access'] > 0 && $this->session->data['order_approval_access_role'] != NULL) {
+                $order_appoval_access = true;
+            }
+            $this->load->model('account/customer');
+            $customer_info = $this->model_account_customer->getCustomer($result['customer_id']);
+            $is_he_parents = $this->model_account_customer->CheckHeIsParent();
+            $customer_parent_info = $this->model_account_customer->getCustomerParentDetails($result['customer_id']);
+
+            $sub_user_order = FALSE;
+            $procurement_person = NULL;
+            $head_chef = NULL;
+
+
+            if (($customer_info['order_approval_access'] == NULL || $customer_info['order_approval_access'] == 0) && $customer_info['order_approval_access_role'] == NULL && $customer_parent_info != NULL) {
+                $log = new Log('error.log');
+                $order_approval_access = $this->db->query('SELECT c.customer_id, c.parent, c.order_approval_access_role, c.order_approval_access, c.email, c.firstname, c.lastname  FROM ' . DB_PREFIX . "customer c WHERE c.parent = '" . (int) $customer_parent_info['customer_id'] . "' AND c.order_approval_access = 1 AND (c.order_approval_access_role = 'head_chef' OR c.order_approval_access_role = 'procurement_person')");
+                $order_approval_access_user = $order_approval_access->rows;
+
+                foreach ($order_approval_access_user as $order_approval_access_use) {
+                    if ($order_approval_access_use['order_approval_access_role'] == 'head_chef' && $order_approval_access_use['order_approval_access'] > 0) {
+                        $head_chef = $order_approval_access_use['email'];
+                        $log->write($order_approval_access_use['order_approval_access_role']);
+                        $log->write($order_approval_access_use['order_approval_access']);
+                        $log->write($order_approval_access_use['customer_id']);
+                    }
+                    if ($order_approval_access_use['order_approval_access_role'] == 'procurement_person' && $order_approval_access_use['order_approval_access'] > 0) {
+                        $procurement_person = $order_approval_access_use['email'];
+                        $log->write($order_approval_access_use['order_approval_access_role']);
+                        $log->write($order_approval_access_use['order_approval_access']);
+                        $log->write($order_approval_access_use['customer_id']);
+                    }
+                }
+                $sub_user_order = TRUE;
+            }
+
+
             $customer_parent_info = $this->model_account_customer->getCustomerParentEmail($result['customer_id']);
 
             $data['orders'][] = [
@@ -1259,6 +1302,20 @@ class ControllerApiCustomerOrder extends Controller
                 'href' => $this->url->link('account/order/info', 'order_id='.$result['order_id'], 'SSL'),
                 'real_href' => $this->url->link('account/order/realinfo', 'order_id='.$result['order_id'], 'SSL'),
                 'customer_parent_info'=> $customer_parent_info,
+                'accept_reject_href' => $this->url->link('account/order/accept_reject', 'order_id=' . $result['order_id'], 'SSL'),
+                'parent_approve_order' => $approve_order_button,
+                'customer_id' => $result['customer_id'],
+                'parent_approval' => $result['parent_approval'],
+                'order_approval_access' => $order_appoval_access,
+                'head_chef' => $result['head_chef'],
+                'procurement' => $result['procurement'],
+                'sub_user_order' => $sub_user_order,
+                'procurement_person_email' => $procurement_person,
+                'head_chef_email' => $head_chef,
+                'order_approval_access_role' => $this->session->data['order_approval_access_role'],
+                'parent_details' => $customer_parent_info != NULL && $customer_parent_info['email'] != NULL ? $customer_parent_info['email'] : NULL,
+                'edit_order' => 15 == $result['order_status_id'] && (empty($_SESSION['parent']) || $order_appoval_access) ? $this->url->link('account/order/edit_order', 'order_id=' . $result['order_id'], 'SSL') : '',
+                'order_company' => isset($customer_info) && null != $customer_info['company_name'] ? $customer_info['company_name'] : null,
             ];
         }
 
