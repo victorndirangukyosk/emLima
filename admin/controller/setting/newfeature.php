@@ -1,4 +1,5 @@
 <?php
+$target_dir = "uploads/";
 
 class ControllerSettingNewfeature extends Controller
 {
@@ -514,5 +515,146 @@ class ControllerSettingNewfeature extends Controller
         }
 
         return !$this->error;
+    }
+
+    
+    public function uploadAdditionlRequirement()
+    {   
+
+        $target_file = $target_dir . basename($_FILES["additional_requirement"]["name"]);
+        $uploadOk = 1;
+        $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+        // Check if image file is a actual image or fake image
+        if(isset($_POST["submit"])) {
+        // $check = getimagesize($_FILES["additional_requirement"]["tmp_name"]);
+        // if($check !== false) {
+        //     echo "File is an image - " . $check["mime"] . ".";
+        //     $uploadOk = 1;
+        // } else {
+        //     echo "File is not an image.";
+        //     $uploadOk = 0;
+        // }
+        }
+     // Check if file already exists
+        if (file_exists($target_file)) {
+            echo "Sorry, file already exists.";
+            $uploadOk = 0;
+          }
+
+          // Check file size
+        if ($_FILES["additional_requirement"]["size"] > 500000) {
+            echo "Sorry, your file is too large.";
+            $uploadOk = 0;
+        }
+
+
+            // Allow certain file formats
+            if($imageFileType != "doc" && $imageFileType != "docx" && $imageFileType != "pdf" && $imageFileType != "xls" && $imageFileType != "xlsx"
+            && $imageFileType != "ppt" ) {
+            echo "Sorry, only Word, Excel, PPT, PDF files are allowed.";
+            $uploadOk = 0;
+            }
+            // Check if $uploadOk is set to 0 by an error
+            if ($uploadOk == 0) {
+                echo "Sorry, your file was not uploaded.";
+            // if everything is ok, try to upload file
+            } else {
+                if (move_uploaded_file($_FILES["additional_requirement"]["tmp_name"], $target_file)) {
+                echo "The file ". htmlspecialchars( basename( $_FILES["additional_requirement"]["name"])). " has been uploaded.";
+                } else {
+                echo "Sorry, there was an error uploading your file.";
+                }
+            }
+
+
+
+        $json = []; 
+        // Check user has permission
+        if (!$this->user->hasPermission('modify', 'common/filemanager')) {
+            $json['error'] = $this->language->get('error_permission');
+        } 
+        // Make sure we have the correct directory
+        // Make sure we have the correct directory 
+        
+            if (isset($this->request->get['directory'])) {
+                $directory = rtrim(DIR_IMAGE.'data/'.str_replace(['../', '..\\', '..'], '', $this->request->get['directory']), '/');
+            } else {
+                $directory = DIR_IMAGE.'data';
+            }
+         
+
+        //create directory if not exists
+        if (!file_exists($directory)) {
+            mkdir($directory, 0777, true);
+        }
+
+        // Check its a directory
+        if (!is_dir($directory)) {
+            $json['error'] = $this->language->get('error_directory');
+        }
+
+        if (!$json) {
+            if (!empty($this->request->files['file']['name']) && is_file($this->request->files['file']['tmp_name'])) {
+                // Sanitize the filename
+                $filename = basename(html_entity_decode($this->request->files['file']['name'], ENT_QUOTES, 'UTF-8'));
+
+                // Validate the filename length
+                if ((utf8_strlen($filename) < 3) || (utf8_strlen($filename) > 255)) {
+                    $json['error'] = $this->language->get('error_filename');
+                }
+
+                // Allowed file types: Word, Excel, PPT, PDF
+                $allowed = [
+                    'docx',
+                    'doc',
+                    'xlsx',
+                    'xls',
+                    'pdf',
+                    'ppt',
+                ];
+
+                if (!in_array(utf8_strtolower(utf8_substr(strrchr($filename, '.'), 1)), $allowed)) {
+                    $json['error'] = $this->language->get('error_filetype');
+                }
+
+                // Allowed file mime types
+                $allowed = [
+                    'application/msword',
+                    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                    'application/pdf',
+                    'application/vnd.ms-powerpoint',
+                    'application/vnd.ms-excel',
+                    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+
+                ];
+
+                if (!in_array($this->request->files['file']['type'], $allowed)) {
+                    $json['error'] = $this->language->get('error_filetype');
+                }
+
+                // Check to see if any PHP files are trying to be uploaded
+                $content = file_get_contents($this->request->files['file']['tmp_name']);
+
+                if (preg_match('/\<\?php/i', $content)) {
+                    $json['error'] = $this->language->get('error_filetype');
+                }
+
+                // Return any upload error
+                if (UPLOAD_ERR_OK != $this->request->files['file']['error']) {
+                    $json['error'] = $this->language->get('error_upload_'.$this->request->files['file']['error']);
+                }
+            } else {
+                $json['error'] = $this->language->get('error_upload');
+            }
+        }
+
+        if (!$json) {
+            move_uploaded_file($this->request->files['file']['tmp_name'], $directory.'/'.$filename);
+
+            $json['success'] = $this->language->get('text_uploaded');
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
     }
 }

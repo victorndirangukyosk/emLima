@@ -640,7 +640,7 @@ class ControllerApiCustomerSubusers extends Controller
         // } else 
         //{
          $this->request->post['dob'] = null;
-         $this->request->post['parent'] = $this->customer->getId();           
+         $this->request->post['parent'] = $this->request->post['parent_customer_id'];//$this->customer->getId();           
          $customer_id = $this->model_account_customer->addCustomer($this->request->post);
             // Clear any previous login attempts for unregistered accounts.
         $this->model_account_customer->deleteLoginAttempts($this->request->post['email']);

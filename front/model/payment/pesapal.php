@@ -140,7 +140,7 @@ class ModelPaymentPesapal extends Model {
         $transaction_fee = 0;
         $percentage = 3.5;
         $transaction_fee = ($percentage / 100) * $result['value'];
-        $total = str_replace(',', '', $order_total['value'] + $transaction_fee);
+        $total = str_replace(',', '', $result['value'] + $transaction_fee);
         $log->write('TRANSACTION FEE');
         $log->write($transaction_fee);
         $log->write($total);
