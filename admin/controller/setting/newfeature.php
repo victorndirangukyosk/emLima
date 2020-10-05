@@ -141,7 +141,7 @@ class ControllerSettingNewfeature extends Controller
                 'business_impact' => $result['business_impact'],
                 'is_customer_requirement' => $result['is_customer_requirement'],
                 'customer_name' => $result['customer_name'],
-                'no_of_customers_requested' => $result['customers_requested'],
+                'customers_requested' => $result['customers_requested'],
                 'no_of_customers_onboarded' => $result['no_of_customers_onboarded'],
 
                 'edit' => $this->url->link('setting/newfeature/edit', 'token='.$this->session->data['token'].'&newfeature_id='.$result['newfeature_id'], 'SSL'),
@@ -227,7 +227,7 @@ class ControllerSettingNewfeature extends Controller
         $data['column_additional_requirement'] = $this->language->get('column_additional_requirement');
         $data['column_File'] = $this->language->get('column_File');
         $data['column_customer_name'] = $this->language->get('column_customer_name');
-        $data['column_no_of_customers_requested'] = $this->language->get('column_no_of_customers_requested');
+        $data['column_customers_requested'] = $this->language->get('column_customers_requested');
         $data['column_no_of_customers_onboarded'] = $this->language->get('column_no_of_customers_onboarded');
         $data['column_business_impact'] = $this->language->get('column_business_impact');
         $data['column_is_customer_requirement'] = $this->language->get('column_is_customer_requirement');
@@ -286,10 +286,10 @@ class ControllerSettingNewfeature extends Controller
 
 
 
-        if (isset($this->error['no_of_customers_requested'])) {
-            $data['error_no_of_customers_requested'] = $this->error['no_of_customers_requested'];
+        if (isset($this->error['customers_requested'])) {
+            $data['error_customers_requested'] = $this->error['customers_requested'];
         } else {
-            $data['error_no_of_customers_requested'] = '';
+            $data['error_customers_requested'] = '';
         }
 
 
@@ -410,12 +410,12 @@ class ControllerSettingNewfeature extends Controller
             $data['customer_name'] = '';
         }
 
-        if (isset($this->request->post['no_of_customers_requested'])) {
-            $data['no_of_customers_requested'] = $this->request->post['no_of_customers_requested'];
+        if (isset($this->request->post['customers_requested'])) {
+            $data['customers_requested'] = $this->request->post['customers_requested'];
         } elseif (isset($newfeature_info)) {
-            $data['no_of_customers_requested'] = $newfeature_info['customers_requested'];
+            $data['customers_requested'] = $newfeature_info['customers_requested'];
         } else {
-            $data['no_of_customers_requested'] = '';
+            $data['customers_requested'] = '';
         }
 
         if (isset($this->request->post['no_of_customers_onboarded'])) {
@@ -465,21 +465,21 @@ class ControllerSettingNewfeature extends Controller
             $this->error['detail_description'] = $this->language->get('error_detail_description');
         } 
 
-        if (!$this->request->post['additional_requirement']) {
-            $this->error['additional_requirement'] = $this->language->get('error_file');
-        } 
+        // if (!$this->request->post['file']) {
+        //     $this->error['error_file'] = $this->language->get('error_file');
+        // } 
 
 
-        if (!$this->request->post['additional_requirement']) {
-            $this->error['additional_requirement'] = $this->language->get('error_additional_requirement');
-        } 
+        // if (!$this->request->post['additional_requirement']) {
+        //     $this->error['additional_requirement'] = $this->language->get('error_additional_requirement');
+        // } 
 
         if (!$this->request->post['customer_name']) {
             $this->error['customer_name'] = $this->language->get('error_customer_name');
         }  
         
-        if (!$this->request->post['no_of_customers_requested']) {
-            $this->error['no_of_customers_requested'] = $this->language->get('error_no_of_customers_requested');
+        if (!$this->request->post['customers_requested']) {
+            $this->error['customers_requested'] = $this->language->get('error_customers_requested');
         } 
 
         if (!$this->request->post['no_of_customers_onboarded']) {

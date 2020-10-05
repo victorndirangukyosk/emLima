@@ -97,10 +97,10 @@
                         </div>
                     </div>   
 
-                     <div class="form-group required">
+                     <div class="form-group">
                         <label class="col-sm-4 control-label" for="input-additional_requirement"><?= $column_additional_requirement ?></label>
                         <div class="col-sm-4"><!--type="file"-->
-                            <input   name="additional_requirement" value="<?php echo $additional_requirement; ?>" placeholder="" id="input-additional_requirement" class="form-control" />
+                            <input type="file"  name="additional_requirement" value="<?php echo $additional_requirement; ?>" placeholder="" id="input-additional_requirement" class="form-control" />
                           <?php if ($error_file) { ?>
                             <div class="text-danger"><?php echo $error_file; ?></div>
                             <?php } ?>
@@ -148,13 +148,13 @@
 
 
                      <div class="form-group required">
-                        <label class="col-sm-4 control-label" for="input-no_of_customers_requested"><?= $column_no_of_customers_requested ?></label>
+                        <label class="col-sm-4 control-label" for="input-customers_requested"><?= $column_customers_requested ?></label>
                         <div class="col-sm-4">
-                            <input type="number" maxlength=50  name="no_of_customers_requested" value="<?php echo $no_of_customers_requested; ?>" placeholder="" id="input-no_of_customers_requested" class="form-control" />
+                            <input type="number" maxlength=50  name="customers_requested" value="<?php echo $customers_requested; ?>" placeholder="" id="input-customers_requested" class="form-control" />
                         
                         
-                         <?php if ($error_no_of_customers_requested) { ?>
-                            <div class="text-danger"><?php echo $error_no_of_customers_requested; ?></div>
+                         <?php if ($error_customers_requested) { ?>
+                            <div class="text-danger"><?php echo $error_customers_requested; ?></div>
                             <?php } ?></div>
                     </div>
 
