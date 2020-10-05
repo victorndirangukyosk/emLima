@@ -610,6 +610,10 @@
             <li><a href="<?php echo $newfeature; ?>">New Feature Request</a></li>
             <?php } ?>
 
+             <?php if($preturn_jobposition != false) { ?>
+            <li><a href="<?php echo $jobposition; ?>">Job Positions</a></li>
+            <?php } ?>
+
 
         </ul>
     </li>
