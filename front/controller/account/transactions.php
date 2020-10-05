@@ -302,25 +302,25 @@ class Controlleraccounttransactions extends Controller {
                 if (in_array($order['payment_method'], $PaymentFilter)) {
                     if (!empty($order['transcation_id'])) {
                         //if(in_array($order['status'],$statusSucessFilter) && !empty($order['transcation_id'])){
-                        if (is_array($order) && array_key_exists('total', $order)) {
-                            $order['total_currency'] = $this->currency->format($order['total']);
+                        if (is_array($order) && array_key_exists('value', $order)) {
+                            $order['total_currency'] = $this->currency->format($order['value']);
                         }
                         $data['success_transactions'][] = $order;
                     } elseif (in_array($order['status'], $statusCancelledFilter)) {
-                        if (is_array($order) && array_key_exists('total', $order)) {
-                            $order['total_currency'] = $this->currency->format($order['total']);
+                        if (is_array($order) && array_key_exists('value', $order)) {
+                            $order['total_currency'] = $this->currency->format($order['value']);
                         }
                         $data['cancelled_transactions'][] = $order;
                     } elseif (!in_array($order['status'], $statusCancelledFilter)) {
-                        if (is_array($order) && array_key_exists('total', $order)) {
-                            $order['total_currency'] = $this->currency->format($order['total']);
+                        if (is_array($order) && array_key_exists('value', $order)) {
+                            $order['total_currency'] = $this->currency->format($order['value']);
                         }
                         /*$log = new Log('error.log');
                         $log->write('NON NUMERIC');
                         $log->write($totalPendingAmount);
                         $log->write($order['total']);
                         $log->write('NON NUMERIC');*/
-                        $totalPendingAmount = $totalPendingAmount + $order['total'];
+                        $totalPendingAmount = $totalPendingAmount + $order['value'];
                         //$totalPendingAmount = $this->currency->format($totalPendingAmount);
                         $data['pending_order_id'][] = $order['order_id'];
                         $data['pending_transactions'][] = $order;

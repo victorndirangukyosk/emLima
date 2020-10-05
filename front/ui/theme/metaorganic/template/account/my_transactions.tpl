@@ -429,12 +429,12 @@
             $('#emp_body').html('');
             for (var i = 0; i < displayRecords.length; i++) {
                 tr = $('<tr/>');
-                tr.append("<td><input type='checkbox' id='order_id_selected' data-id='" + displayRecords[i].order_id + "' data-amount='" + displayRecords[i].total + "' name='order_id_selected' value='" + displayRecords[i].order_id + "'></td>");
+                tr.append("<td><input type='checkbox' id='order_id_selected' data-id='" + displayRecords[i].order_id + "' data-amount='" + displayRecords[i].value + "' name='order_id_selected' value='" + displayRecords[i].order_id + "'></td>");
                 tr.append("<td>" + displayRecords[i].order_id + "</td>");
                 tr.append("<td>" + displayRecords[i].date_added + "</td>");
                 tr.append("<td>" + displayRecords[i].total_currency + "</td>");
                 tr.append("<td>" + displayRecords[i].payment_method + "</td>");
-                tr.append("<td><a class='btn btn-default' onclick='changeOrderIdForPay(" + displayRecords[i].order_id + "," + displayRecords[i].total + ")'>Pay Now</a></td>");
+                tr.append("<td><a class='btn btn-default' onclick='changeOrderIdForPay(" + displayRecords[i].order_id + "," + displayRecords[i].value + ")'>Pay Now</a></td>");
                 $('#emp_body').append(tr);
             }
         }
