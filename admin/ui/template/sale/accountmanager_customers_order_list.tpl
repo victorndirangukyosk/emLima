@@ -234,6 +234,7 @@
 
                                     
                                     <td class="text-right"><?php echo $column_delivery_method; ?></td>
+                                    <td class="text-right"><?php echo $column_action; ?></td>
 
                                 </tr>
                             </thead>
@@ -280,6 +281,14 @@
 
                                     
                                     <td class="text-right"><?php echo $order['shipping_method']; ?></td>
+                                    <td class="text-right">
+
+                                    <?php if (!$this->user->isVendor()): ?>
+                                        <!-- <a href="<?php echo $order['order_spreadsheet']; ?>" target="_blank" data-toggle="tooltip" title="Download Calculation Sheet" class="btn btn-info"><i class="fa fa-file-excel-o"></i></a> -->
+                                        <a href="<?php echo $order['shipping']; ?>" target="_blank" data-toggle="tooltip" title="Print Delivery Note" class="btn btn-info"><i class="fa fa-truck"></i></a>
+                                    <?php endif ?>                                         
+                                        <a href="<?php echo $order['invoice']; ?>" target="_blank" data-toggle="tooltip" title="Print Invoice" class="btn btn-info"><i class="fa fa-print"></i></a>
+                                        </td>
                                 </tr>
                                 <?php } ?>
                                 <?php } else { ?>
