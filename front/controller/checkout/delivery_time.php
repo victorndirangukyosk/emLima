@@ -93,6 +93,9 @@ class Controllercheckoutdeliverytime extends Controller
         //echo "<pre>";print_r($order_info);die;
         $shipping_method = $order_info['shipping_code'];
         $store_id = $order_info['store_id'];
+        $date_added = $order_info['date_added'];
+        $delivery_date = $order_info['delivery_date'];
+
 
         $data = [];
         $this->language->load('checkout/delivery_time');
@@ -109,10 +112,9 @@ class Controllercheckoutdeliverytime extends Controller
         //$log->write($store_id."ss".$shipping_method);
 
         //$log->write($getActiveDays);
-        $data['dates'] = $this->getDates($getActiveDays, $store_id, $shipping_method);
-        $data['timeslots'] = [];
-
-        //echo "<pre>";print_r($data['dates']);die;
+        // $data['dates'] = $this->getDates($getActiveDays, $store_id, $shipping_method);
+        $data['dates'] = $this->getDatesbyOrderDate($getActiveDays, $store_id, $shipping_method,$date_added);
+        $data['timeslots'] = []; 
         $data['formatted_dates'] = [];
         //$log->write($data['dates']);
         foreach ($data['dates'] as $date) {
@@ -914,6 +916,139 @@ class Controllercheckoutdeliverytime extends Controller
         }*/
         return $nextBusinessDay;
     }
+    protected function getDatesbyOrderDate($getActiveDays, $store_id, $shipping_method,$date_added)
+    {
+        $avalday = [];
+
+        $log = new Log('error.log');
+        $log->write('getDates');
+        //CREATING ARRAY FOR THE AVAILABLE DAYS OF THE WEEK.
+
+        foreach ($getActiveDays as $ad) {
+            $avalday[] = $ad['day'];
+        }
+
+        $log->write($avalday);
+
+        //echo "<pre>";print_r($avalday);die;
+        //CHECKS IF CURRENT DAY IS IN THE LIST OF AVAILABLE DAYS OF WEEK
+        if (in_array(date('w'), $avalday)) {
+            //echo "<pre>";print_r("current day");die;
+            $date = $this->checkCurrentDateTs($store_id, $shipping_method);
+
+            if ($date) {
+                $tmpDate = date('Y-m-d');
+            } else {
+                //echo "<pres>";print_r($date."hvhj");die;
+                $tmpDate = date('Y-m-d', strtotime('+1 Days'));
+            }
+        } else {
+            //echo "<pre>";print_r("current no");die;
+            $tmpDate = date('Y-m-d');
+        }
+
+        $log->write($tmpDate);
+        //CREATES THE LIST OF DAYS TO DISPLAY USER AS AVAILABLE DAYS OF DELIVERY.
+        $nextBusinessDay = [];
+        $j = 0;
+
+        $log->write(date('w'));
+
+        /*for($i=date("w", strtotime($tmpDate));$i<=6;$i++) {
+            if(in_array($i, $avalday)) {
+                $nextBusinessDay[] = date('d-m-Y', strtotime($tmpDate.' +'.$j.'Days'));
+            }
+            $j++;
+        }*/
+        $log->write($nextBusinessDay);
+
+        $shipping_method = explode('.', $shipping_method);
+
+        if ('normal' == $shipping_method[0] || 'express' == $shipping_method[0]) {
+            if ($this->config->get('normal_number_of_days')) {
+                $forwardDays = $this->config->get('normal_number_of_days');
+            } else {
+                $forwardDays = 7;
+            }
+        } else {
+            $forwardDays = 7;
+        }
+
+        //echo "<pre>";print_r($nextBusinessDay);die;
+        if (count($nextBusinessDay) < $forwardDays) {
+            $end;
+            if (!empty($nextBusinessDay)) {
+                $log->write($nextBusinessDay);
+
+                $end = end($nextBusinessDay);
+
+                $log->write($end);
+
+                $log->write('end');
+
+                for ($i = 1; $i <= 49; ++$i) {
+                    $tmp_date = date('d-m-Y', strtotime($end.' +'.$i.' Days'));
+
+                    $day = date('w', strtotime($tmp_date));
+
+                    $daycheck = $this->futurecheckDateTs($this->session->data['store_id_for_timeslot'], $this->session->data['shipping_method_for_timeslot'], $day);
+
+                    $log->write('daycheck');
+                    $log->write($daycheck);
+
+                    //echo "<pre>";print_r($daycheck);
+                    if (!empty($daycheck)) {
+                        $nextBusinessDay[] = $tmp_date;
+                    }
+                    if (count($nextBusinessDay) == $forwardDays) {
+                        break;
+                    }
+                }
+            } else {
+                // $end = date('d-m-Y');//if current date
+                  // $end =($date_added);//if based on order date// format check
+                   $end =date('d-m-Y',strtotime("-2 days"));;//just show two days earlier
+                  //echo "<pre>";print_r($end);die;
+               
+                  for ($i = 0; $i <= 49; ++$i) {
+                    $tmp_date = date('d-m-Y', strtotime($end.' +'.$i.' Days'));
+
+                    $day = date('w', strtotime($tmp_date));
+
+                    $daycheck = $this->futurecheckDateTs($this->session->data['store_id_for_timeslot'], $this->session->data['shipping_method_for_timeslot'], $day);
+
+                    if (!empty($daycheck)) {
+                        $nextBusinessDay[] = $tmp_date;
+                    }
+                    if (count($nextBusinessDay) == $forwardDays) {
+                        break;
+                    }
+                }
+            }
+        }
+
+        /*$i = 0;
+        $nextBusinessDay = array();
+        for ($i=0; $i <=6; $i++) {
+            if (in_array($i, $avalday)) {
+                $nextBusinessDay[] = date('d-m-Y', strtotime($tmpDate . ' +' . $i . ' Days'));
+            }
+
+        }
+        $total = count($nextBusinessDay);
+        if ($total <= 7) {
+            $length = 7 -  $total;
+            for ($i=7; $i <= 6 +$length; $i++) {
+                if (in_array($i, $avalday)) {
+                    $nextBusinessDay[] = date('d-m-Y', strtotime($tmpDate . ' +' . $i . ' Days'));
+                }
+
+            }
+
+        }*/
+        return $nextBusinessDay;
+    }
+    
 
     public function getActiveDays($store_id, $method)
     {
@@ -1148,9 +1283,10 @@ class Controllercheckoutdeliverytime extends Controller
             $this->db->select('timeslot', false);
             $this->db->where('status', '1');
             $this->db->where('store_id', $store_id);
+            
             $timeslots = $this->db->get('store_delivery_timeslot')->rows;
         }
-
+       
         $is_enabled = false;
 
         foreach ($timeslots as $timeslot) {
