@@ -315,8 +315,13 @@ class Controlleraccounttransactions extends Controller {
                         if (is_array($order) && array_key_exists('total', $order)) {
                             $order['total_currency'] = $this->currency->format($order['total']);
                         }
+                        /*$log = new Log('error.log');
+                        $log->write('NON NUMERIC');
+                        $log->write($totalPendingAmount);
+                        $log->write($order['total']);
+                        $log->write('NON NUMERIC');*/
                         $totalPendingAmount = $totalPendingAmount + $order['total'];
-                        $totalPendingAmount = $this->currency->format($totalPendingAmount);
+                        //$totalPendingAmount = $this->currency->format($totalPendingAmount);
                         $data['pending_order_id'][] = $order['order_id'];
                         $data['pending_transactions'][] = $order;
                     }
