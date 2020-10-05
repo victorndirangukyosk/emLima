@@ -452,29 +452,7 @@
             });
         }
     });
-    $(document).delegate('#send_mail', 'click', function () {
-        var checkedNum = $('input[name="app_cand[]"]:checked').length;
-        console.log(checkedNum);
-        var val = [];
-        if (!checkedNum) {
-            $(':checkbox:checked').each(function (i) {
-                val[i] = $(this).attr("id");
-            });
-            console.log(val);
-        }
 
-        $.ajax({
-            url: 'userapi.php',
-            type: 'post',
-            data: {'app_cand': val},
-            dataType: 'json',
-            cache: false,
-            async: true,
-            success: function (json) {
-                console.log(json.status);
-            }
-        });
-    });
     $(document).delegate('#button-confirm', 'click', function () {
         console.log('PAY OTHER AMOUNT');
         var amount = $("#pesapal_amount").val();
@@ -565,29 +543,7 @@
             });
         }
     });
-    $(document).delegate('#send_mail', 'click', function () {
-        var checkedNum = $('input[name="app_cand[]"]:checked').length;
-        console.log(checkedNum);
-        var val = [];
-        if (!checkedNum) {
-            $(':checkbox:checked').each(function (i) {
-                val[i] = $(this).attr("id");
-            });
-            console.log(val);
-        }
-
-        $.ajax({
-            url: 'userapi.php',
-            type: 'post',
-            data: {'app_cand': val},
-            dataType: 'json',
-            cache: false,
-            async: true,
-            success: function (json) {
-                console.log(json.status);
-            }
-        });
-    });</script>
+    </script>
 
 <script type="text/javascript">
     $(document).ready(function () {
@@ -652,29 +608,7 @@
             $('#pay-confirm-order').html('');
         }
     });
-    $(document).delegate('#send_mail', 'click', function () {
-        var checkedNum = $('input[name="app_cand[]"]:checked').length;
-        console.log(checkedNum);
-        var val = [];
-        if (!checkedNum) {
-            $(':checkbox:checked').each(function (i) {
-                val[i] = $(this).attr("id");
-            });
-            console.log(val);
-        }
-
-        $.ajax({
-            url: 'userapi.php',
-            type: 'post',
-            data: {'app_cand': val},
-            dataType: 'json',
-            cache: false,
-            async: true,
-            success: function (json) {
-                console.log(json.status);
-            }
-        });
-    });</script>
+    </script>
 
 <script type="text/javascript">
     $(document).ready(function () {

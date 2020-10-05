@@ -431,7 +431,15 @@ class ModelSaleOrder extends Model
 
         $query = $this->db->query($sql);
         if (isset($query->row)) {
+            /*$log = new Log('error.log');
+            $log->write('order model');
+            $log->write($query->row);
+            $log->write('order model');*/
+            if(array_key_exists('transaction_id', $query->row)) {
             return $query->row['transaction_id'];
+            } else {
+            return '';    
+            }
         }
 
         return null;
