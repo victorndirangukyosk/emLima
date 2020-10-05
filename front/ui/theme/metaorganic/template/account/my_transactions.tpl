@@ -445,7 +445,7 @@
                 onPageClick: function (event, page) {
                     displayRecordsIndex = Math.max(page - 1, 0) * recPerPage;
                     endRec = (displayRecordsIndex) + recPerPage;
-                    console.log(displayRecordsIndex + 'ssssssssss' + endRec);
+                    console.log(displayRecordsIndex + 'PAGINATION' + endRec);
                     displayRecords = records.slice(displayRecordsIndex, endRec);
                     generate_table();
                 }
@@ -536,7 +536,7 @@
                 onPageClick: function (event, page) {
                     displayRecordsIndex = Math.max(page - 1, 0) * recPerPage;
                     endRec = (displayRecordsIndex) + recPerPage;
-                    console.log(displayRecordsIndex + 'ssssssssss' + endRec);
+                    console.log(displayRecordsIndex + 'PAGINATION' + endRec);
                     displayRecords = records.slice(displayRecordsIndex, endRec);
                     generate_table();
                 }
@@ -586,7 +586,7 @@
                 onPageClick: function (event, page) {
                     displayRecordsIndex = Math.max(page - 1, 0) * recPerPage;
                     endRec = (displayRecordsIndex) + recPerPage;
-                    console.log(displayRecordsIndex + 'ssssssssss' + endRec);
+                    console.log(displayRecordsIndex + 'PAGINATION' + endRec);
                     displayRecords = records.slice(displayRecordsIndex, endRec);
                     generate_table();
                 }
@@ -651,7 +651,7 @@
                 onPageClick: function (event, page) {
                     displayRecordsIndex = Math.max(page - 1, 0) * recPerPage;
                     endRec = (displayRecordsIndex) + recPerPage;
-                    console.log(displayRecordsIndex + 'ssssssssss' + endRec);
+                    console.log(displayRecordsIndex + 'PAGINATION' + endRec);
                     displayRecords = records.slice(displayRecordsIndex, endRec);
                     generate_table();
                 }
