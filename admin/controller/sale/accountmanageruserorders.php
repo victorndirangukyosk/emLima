@@ -3023,4 +3023,531 @@ class ControllerSaleAccountManagerUserOrders extends Controller {
         $this->response->setOutput($this->load->view('sale/order_history.tpl', $data));
     }
 
+    public function save_order_transaction_id() {
+        $this->load->language('sale/order');
+
+        $log = new Log('error.log');
+        $log->write('save_order_transaction_id');
+        $log->write($this->request->post);
+
+        $json = [];
+
+        if (!$this->user->hasPermission('modify', 'sale/order')) {
+            $json['error'] = $this->language->get('error_permission');
+        } else {
+            if (isset($this->request->get['order_id'])) {
+                $order_id = $this->request->get['order_id'];
+            } else {
+                $order_id = 0;
+            }
+
+            if (isset($this->request->post['transaction_id'])) {
+                $transaction_id = trim($this->request->post['transaction_id']);
+            } else {
+                $transaction_id = 0;
+            }
+
+            $this->load->model('sale/order');
+
+            $order_info = $this->model_sale_order->getOrder($order_id);
+
+            if ($order_info && $order_id && $transaction_id) {
+                $this->load->model('sale/customer');
+
+                $this->model_sale_order->insertOrderTransactionId($order_id, $transaction_id);
+            }
+
+            $json['success'] = $this->language->get('text_reward_added');
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function createInvoiceNo() {
+        $this->load->language('sale/order');
+
+        $json = [];
+
+        if (!$this->user->hasPermission('modify', 'sale/order')) {
+            $json['error'] = $this->language->get('error_permission');
+        } elseif (isset($this->request->get['order_id'])) {
+            if (isset($this->request->get['order_id'])) {
+                $order_id = $this->request->get['order_id'];
+            } else {
+                $order_id = 0;
+            }
+
+            $this->load->model('sale/order');
+
+            $invoice_no = $this->model_sale_order->createInvoiceNo($order_id);
+
+            if ($invoice_no) {
+                $json['invoice_no'] = $invoice_no;
+            } else {
+                $json['error'] = $this->language->get('error_action');
+            }
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function addReward() {
+        $this->load->language('sale/order');
+
+        $json = [];
+
+        if (!$this->user->hasPermission('modify', 'sale/order')) {
+            $json['error'] = $this->language->get('error_permission');
+        } else {
+            if (isset($this->request->get['order_id'])) {
+                $order_id = $this->request->get['order_id'];
+            } else {
+                $order_id = 0;
+            }
+
+            $this->load->model('sale/order');
+
+            $order_info = $this->model_sale_order->getOrder($order_id);
+
+            if ($order_info && $order_info['customer_id'] && ($order_info['reward'] > 0)) {
+                $this->load->model('sale/customer');
+
+                $reward_total = $this->model_sale_customer->getTotalCustomerRewardsByOrderId($order_id);
+
+                if (!$reward_total) {
+                    $this->model_sale_customer->addReward($order_info['customer_id'], $this->language->get('text_order_id') . ' #' . $order_id, $order_info['reward'], $order_id);
+                }
+            }
+
+            $json['success'] = $this->language->get('text_reward_added');
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function removeReward() {
+        $this->load->language('sale/order');
+
+        $json = [];
+
+        if (!$this->user->hasPermission('modify', 'sale/order')) {
+            $json['error'] = $this->language->get('error_permission');
+        } else {
+            if (isset($this->request->get['order_id'])) {
+                $order_id = $this->request->get['order_id'];
+            } else {
+                $order_id = 0;
+            }
+
+            $this->load->model('sale/order');
+
+            $order_info = $this->model_sale_order->getOrder($order_id);
+
+            if ($order_info) {
+                $this->load->model('sale/customer');
+
+                $this->model_sale_customer->deleteReward($order_id);
+            }
+
+            $json['success'] = $this->language->get('text_reward_removed');
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function addCommission() {
+        $this->load->language('sale/order');
+
+        $json = [];
+
+        if (!$this->user->hasPermission('modify', 'sale/order')) {
+            $json['error'] = $this->language->get('error_permission');
+        } else {
+            if (isset($this->request->get['order_id'])) {
+                $order_id = $this->request->get['order_id'];
+            } else {
+                $order_id = 0;
+            }
+
+            $this->load->model('sale/order');
+
+            $order_info = $this->model_sale_order->getOrder($order_id);
+
+            if ($order_info) {
+                $this->load->model('marketing/affiliate');
+
+                $affiliate_total = $this->model_marketing_affiliate->getTotalCommissionsByOrderId($order_id);
+
+                if (!$affiliate_total) {
+                    $this->model_marketing_affiliate->addCommission($order_info['affiliate_id'], $this->language->get('text_order_id') . ' #' . $order_id, $order_info['commission'], $order_id);
+                }
+            }
+
+            $json['success'] = $this->language->get('text_commission_added');
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function removeCommission() {
+        $this->load->language('sale/order');
+
+        $json = [];
+
+        if (!$this->user->hasPermission('modify', 'sale/order')) {
+            $json['error'] = $this->language->get('error_permission');
+        } else {
+            if (isset($this->request->get['order_id'])) {
+                $order_id = $this->request->get['order_id'];
+            } else {
+                $order_id = 0;
+            }
+
+            $this->load->model('sale/order');
+
+            $order_info = $this->model_sale_order->getOrder($order_id);
+
+            if ($order_info) {
+                $this->load->model('marketing/affiliate');
+
+                $this->model_marketing_affiliate->deleteCommission($order_id);
+            }
+
+            $json['success'] = $this->language->get('text_commission_removed');
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function notFraudApi() {
+        $json = [];
+
+        $this->load->language('sale/order');
+
+        $log = new Log('error.log');
+        $log->write('api/order');
+
+        $this->document->setTitle($this->language->get('heading_title'));
+
+        if ($this->validate()) {
+            // Store
+            $log->write('api/order validate');
+            if (isset($this->request->get['store_id'])) {
+                $store_id = $this->request->get['store_id'];
+                $this->session->data['config_store_id'] = $store_id;
+            } else {
+                $store_id = 0;
+            }
+            $log->write($store_id);
+
+            $this->load->model('setting/store');
+
+            $url = HTTPS_CATALOG;
+
+            $log->write($this->request->get['api']);
+
+            if (isset($this->request->get['api'])) {
+                // Include any URL perameters
+                $log->write('if cook');
+                $url_data = [];
+                $log->write('if');
+                foreach ($this->request->get as $key => $value) {
+                    if ('path' != $key && 'token' != $key && 'store_id' != $key) {
+                        $url_data[$key] = $value;
+                    }
+                }
+
+                $curl = curl_init();
+
+                // Set SSL if required
+                if ('https' == substr($url, 0, 5)) {
+                    curl_setopt($curl, CURLOPT_PORT, 443);
+                }
+
+                curl_setopt($curl, CURLOPT_HEADER, false);
+                curl_setopt($curl, CURLINFO_HEADER_OUT, true);
+                curl_setopt($curl, CURLOPT_USERAGENT, $this->request->server['HTTP_USER_AGENT']);
+                curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+                curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+                curl_setopt($curl, CURLOPT_FORBID_REUSE, false);
+                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($curl, CURLOPT_URL, $url . 'index.php?path=' . $this->request->get['api'] . ($url_data ? '&' . http_build_query($url_data) : ''));
+
+                $log->write($url_data);
+                $log->write($this->request->post);
+
+                if ($this->request->post) {
+                    $this->load->model('localisation/order_status');
+
+                    $order_status = $this->model_localisation_order_status->getOrderStatuses();
+
+                    $log->write($order_status);
+
+                    $order_status_id = 'no';
+                    foreach ($order_status as $order_state) {
+                        // code...
+                        if ('pending' == strtolower($order_state['name'])) {
+                            $order_status_id = $order_state['order_status_id'];
+                            break;
+                        }
+                    }
+
+                    $log->write($order_status_id);
+                    if ('no' != $order_status_id) {
+                        $this->request->post['comment'] = 'Marked not fraud from admin';
+                        $this->request->post['order_status_id'] = $order_status_id;
+
+                        curl_setopt($curl, CURLOPT_POST, true);
+                        curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($this->request->post));
+                    }
+                }
+
+                /* curl_setopt($curl, CURLOPT_COOKIE, session_name() . '=' . $this->session->data['cookie'] . ';'); */
+
+                $json = curl_exec($curl);
+
+                $this->createDeliveryRequest($this->request->get['order_id']);
+
+                $log->write('json');
+                $log->write($json);
+                curl_close($curl);
+            }
+
+            $log->write('if ekse');
+        } else {
+            $response = [];
+            $response['error'] = $this->error;
+            unset($this->error);
+
+            $json = json_encode($response);
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput($json);
+    }
+
+    public function reversePaymentApi() {
+        //set order status to Pending and raise delivery request
+
+        /* Iugu::setApiKey($this->config->get('iugu_token'));
+
+          $Invoice = Iugu_Invoice::fetch ("AE27126C4B8A4C79859B29CD210BA58F");
+          $Invoice-> refund (); */
+
+        if (isset($this->request->post)) {
+            $event = $this->request->post['event'];
+            $data = $this->request->post['data'];
+
+            $this->load->model('payment/iugu');
+
+            $order_id = $this->model_payment_iugu->updateOrderHistory($data['id'], $data['status']);
+
+            if (false !== $order_id) {
+                /* Carrega Model */
+                $this->load->model('payment/iugu');
+
+                /* Carrega library */
+                require_once DIR_SYSTEM . 'library/Iugu.php';
+
+                /* Define a API */
+                Iugu::setApiKey($this->config->get('iugu_token'));
+
+                $data = [];
+
+                /* Método de Pagamento (somente boleto) */
+                $data['payable_with '] = $this->config->get('iugu_reminder_payment_method');
+
+                /* Url de Notificações */
+                $data['notification_url'] = $this->url->link('payment/iugu/notification', '', 'SSL');
+
+                /* Url de Expiração */
+                $data['expired_url'] = $this->url->link('payment/iugu/expired', '', 'SSL');
+
+                /* Validade */
+                $data['due_date'] = date('d/m/Y', strtotime('+7 days'));
+
+                /* Captura informações do pedido */
+                $order_info = $this->model_payment_iugu->getOrder($order_id);
+
+                /* Captura o E-mail do Cliente */
+                $data['email'] = $order_info['email'];
+
+                /* Captura os produtos comprados */
+                $products = $this->model_payment_iugu->getOrderProducts($order_id);
+
+                /* Formata as informações do produto (Nome, Quantidade e Preço unitário) */
+                $data['items'] = [];
+
+                $count = 0;
+
+                foreach ($products as $product) {
+                    $data['items'][$count] = [
+                        'description' => $product['name'],
+                        'quantity' => $product['quantity'],
+                        'price_cents' => $this->currency->format($product['price'], 'BRL', null, false) * 100,
+                    ];
+                    ++$count;
+                }
+
+                $totals = $this->model_payment_iugu->getOrderTotals($order_id);
+
+                foreach ($totals as $total) {
+                    if ('sub_total' != $total['code'] && 'total' != $total['code']) {
+                        $data['items'][$count] = [
+                            'description' => $total['title'],
+                            'quantity' => 1,
+                            'price_cents' => $total['value'] * 100,
+                        ];
+                        ++$count;
+                    }
+                }
+
+                unset($count);
+
+                /* Captura os Descontos, Acréscimo, Vale-Presente, Crédito do Cliente, etc. */
+                $data['items'] = $data['items'];
+
+                /* Captura valor do desconto */
+                $sub_total = 0;
+
+                foreach ($totals as $total) {
+                    if ('sub_total' == $total['code']) {
+                        $sub_total = $total['value'];
+                        break;
+                    }
+                }
+                $data['discount_cents'] = $this->model_payment_iugu->getDiscount($sub_total, $this->config->get('iugu_reminder_payment_method'));
+
+                /* Captura valor do acréscimo */
+                $data['tax_cents'] = $this->model_payment_iugu->getInterest($sub_total, $this->config->get('iugu_reminder_payment_method'));
+
+                /* Informações do Cliente */
+                $data['payer'] = [];
+                $data['payer']['cpf_cnpj'] = isset($order_info['custom_field'][$this->config->get('iugu_custom_field_cpf')]) ? $order_info['custom_field'][$this->config->get('iugu_custom_field_cpf')] : '';
+                $data['payer']['name'] = $order_info['firstname'] . ' ' . $order_info['lastname'];
+                $data['payer']['phone_prefix'] = substr($order_info['telephone'], 0, 2);
+                $data['payer']['phone'] = substr($order_info['telephone'], 2);
+                $data['payer']['email'] = $order_info['email'];
+
+                /* Informações de Endereço */
+                $data['payer']['address'] = [];
+                $data['payer']['address']['street'] = $order_info['payment_address_1'];
+                $data['payer']['address']['number'] = isset($order_info['payment_custom_field'][$this->config->get('iugu_custom_field_number')]) ? $order_info['payment_custom_field'][$this->config->get('iugu_custom_field_number')] : 0;
+                $data['payer']['address']['city'] = $order_info['payment_city'];
+                $data['payer']['address']['state'] = $order_info['payment_zone_code'];
+                $data['payer']['address']['country'] = $order_info['payment_country'];
+                $data['payer']['address']['zip_code'] = $order_info['payment_postcode'];
+
+                /* Informações adicionais */
+                $data['custom_variables'] = [
+                    [
+                        'name' => 'order_id',
+                        'value' => $order_id,
+                    ],
+                ];
+
+                /* Envia informações */
+                try {
+                    $token = Iugu_Invoice::create($data);
+                } catch (Exception $e) {
+                    $this->log->write($e->getMessage());
+                    die();
+                }
+
+                $result = [];
+
+                foreach (reset($token) as $key => $value) {
+                    $result[$key] = $value;
+                }
+
+                if (isset($result['errors']) && !empty($result['errors'])) {
+                    foreach ($result['errors'] as $key => $error_base) {
+                        foreach ($error_base as $error) {
+                            $this->log->write('Iugu: ' . ucfirst($key) . ' ' . $error);
+                        }
+                    }
+                } else {
+                    $this->model_payment_iugu->updateOrder($order_id, $result);
+
+                    $data = array_merge($this->language->load('mail/iugu'), $result);
+
+                    $mail = new Mail();
+                    $mail->protocol = $this->config->get('config_mail_protocol');
+                    $mail->parameter = $this->config->get('config_mail_parameter');
+                    $mail->smtp_hostname = $this->config->get('config_mail_smtp_hostname');
+                    $mail->smtp_username = $this->config->get('config_mail_smtp_username');
+                    $mail->smtp_password = html_entity_decode($this->config->get('config_mail_smtp_password'), ENT_QUOTES, 'UTF-8');
+                    $mail->smtp_port = $this->config->get('config_mail_smtp_port');
+                    $mail->smtp_timeout = $this->config->get('config_mail_smtp_timeout');
+                    $mail->setTo($order_info['email']);
+                    $mail->setFrom($this->config->get('config_from_email'));
+                    $mail->setSender($this->config->get('config_name'));
+                    $mail->setSubject(sprintf($this->language->get('text_mail_subject_expired'), $this->config->get('config_name')));
+                    $mail->setHtml($this->getHtml($order_info, $products, $totals));
+
+                    $mail->setText($this->language->get('text_mail_text'));
+
+                    return $mail->send();
+                }
+            } else {
+                $this->log->write('Iugu: Invoice ' . $data['id'] . ' não localizado.');
+            }
+        }
+    }
+
+    public function settle_payment() {
+        $this->load->language('sale/order');
+
+        $json['status'] = true;
+
+        $log = new Log('error.log');
+
+        if (!$this->user->isVendor()) {
+            $this->load->model('sale/order');
+
+            $order_id = $this->request->post['order_id'];
+            $customer_id = $this->request->post['customer_id'];
+            $final_amount = $this->request->post['final_amount'];
+
+            $iuguData = $this->model_sale_order->getOrderIuguAndTotal($order_id);
+
+            if ($iuguData) {
+                $invoiceId = $iuguData['invoice_id'];
+                $original_subtotal = $iuguData['value'];
+
+                //$this->captureInvoice($order_id,$invoiceId);
+
+                $log->write('admin settle ');
+
+                if ($original_subtotal != $final_amount) {
+                    //cancel invoice API and create new invoice and save this new api where??
+                    // wallet entry do
+                    $amountWallet = $original_subtotal - $final_amount;
+                    $description = 'On Order #' . $order_id;
+                    $log->write('admin settle not =');
+                    //$this->actionOnCustomerWallet($customer_id,$description,$amountWallet);
+
+                    $this->chargeCustomer($customer_id, $description, $final_amount, $order_id);
+                }
+
+                if (isset($order_id) && isset($final_amount)) {
+                    $this->model_sale_order->settle_payment($order_id, $final_amount);
+                }
+
+                $json['success'] = $this->language->get('text_settlement');
+            } else {
+                $json['status'] = false;
+            }
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
 }
