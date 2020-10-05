@@ -60,11 +60,12 @@ class ModelUserUser extends Model
 
         $isWhere = 1;
         $_sql = [];
+        $config_account_manager_group_id = 18;
 
         //filter vendor groups
         $sql .= ' WHERE user_group_id NOT IN ('.$this->db->escape($this->config->get('config_vendor_group_ids')).') ';
         $sql .= ' AND user_group_id NOT IN ('.$this->db->escape($this->config->get('config_shopper_group_ids')).') ';
-        //$sql .= ' AND user_group_id NOT IN ('.$this->db->escape($this->config->get('config_shopper_group_ids')).') ';
+        $sql .= ' AND user_group_id NOT IN ('.$config_account_manager_group_id.') ';
 
         if (isset($data['filter_user_name']) && !is_null($data['filter_user_name'])) {
             $isWhere = 1;
