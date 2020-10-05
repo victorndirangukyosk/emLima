@@ -172,6 +172,7 @@
                                         <?php } else { ?>
                                         <a href="<?php echo $sort_date_added; ?>"><?php echo $column_date_added; ?></a>
                                         <?php } ?></td>
+                                    <td class="text-right"><?php echo $column_action; ?></td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -189,6 +190,10 @@
                                     <td class="text-left"><?php echo $customer['status']; ?></td>
                                     <td class="text-left"><?php echo $customer['ip']; ?></td>
                                     <td class="text-left"><?php echo $customer['date_added']; ?></td>
+                                    <td class="text-right">
+                                        <a target="_blank" class="btn btn-info" href="index.php?path=sale/customer/login&token=<?php echo $token; ?>&customer_id=<?php echo $customer['customer_id']; ?>&store_id=0">
+                                            <i class="fa fa-lock"></i>
+                                        </a>
                                 </tr>
                                 <?php } ?>
                                 <?php } else { ?>
