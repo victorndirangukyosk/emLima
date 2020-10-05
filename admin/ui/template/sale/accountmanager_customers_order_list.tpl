@@ -5,14 +5,14 @@
         <div class="container-fluid">
             <div class="pull-right">
                 <?php if (!$this->user->isVendor()): ?>
-                        <button type="" id="button-shipping" form="form-order" formaction="<?php echo $shipping; ?>" data-toggle="tooltip" title="<?php echo $button_shipping_print; ?>" class="btn btn-default"><i class="fa fa-truck"></i></button>
+                <button type="" id="button-shipping" form="form-order" formaction="<?php echo $shipping; ?>" data-toggle="tooltip" title="<?php echo $button_shipping_print; ?>" class="btn btn-default"><i class="fa fa-truck"></i></button>
                 <?php endif ?>  
 
-                
+
                 <button type="" id="button-invoice" form="form-order" formaction="<?php echo $invoice; ?>" data-toggle="tooltip" title="<?php echo $button_invoice_print; ?>" class="btn btn-default"><i class="fa fa-print"></i></button>
 
-               <?php if (!$this->user->isVendor()): ?>
-                        <!-- <a href="<?php echo $add; ?>" data-toggle="tooltip" title="<?php echo $button_add; ?>" class="btn btn-success"><i class="fa fa-plus"></i></a> -->
+                <?php if (!$this->user->isVendor()): ?>
+                <!-- <a href="<?php echo $add; ?>" data-toggle="tooltip" title="<?php echo $button_add; ?>" class="btn btn-success"><i class="fa fa-plus"></i></a> -->
                 <?php endif ?>  
             </div>
             <h1><?php echo $heading_title; ?></h1>
@@ -24,19 +24,19 @@
         </div>
     </div>
     <div class="container-fluid">
-        
+
         <?php if ($error_warning) { ?>
         <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> <?php echo $error_warning; ?>
             <button type="button" class="close" data-dismiss="alert">&times;</button>
         </div>
         <?php } ?>
-        
+
         <?php if ($success) { ?>
         <div class="alert alert-success"><i class="fa fa-check-circle"></i> <?php echo $success; ?>
             <button type="button" class="close" data-dismiss="alert">&times;</button>
         </div>
         <?php } ?>
-        
+
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title"><i class="fa fa-list"></i> <?php echo $text_list; ?></h3>
@@ -55,25 +55,25 @@
                             </div>
 
                             <?php if (!$this->user->isVendor()): ?>
-                                <div class="form-group">
-                                    <label class="control-label" for="input-customer"><?php echo $entry_customer; ?></label>
-                                    <input type="text" name="filter_customer" value="<?php echo $filter_customer; ?>" placeholder="<?php echo $entry_customer; ?>" id="input-customer" class="form-control" />
-                                </div>
+                            <div class="form-group">
+                                <label class="control-label" for="input-customer"><?php echo $entry_customer; ?></label>
+                                <input type="text" name="filter_customer" value="<?php echo $filter_customer; ?>" placeholder="<?php echo $entry_customer; ?>" id="input-customer" class="form-control" />
+                            </div>
                             <?php endif ?> 
-                            
-                            
-                            
+
+
+
                             <div class="form-group">
                                 <label class="control-label" for="input-customer"><?= $entry_city ?></label>
                                 <input type="text" name="filter_city" value="<?php echo $filter_city; ?>" class="form-control" />
                             </div>
 
-                             <div class="form-group">
+                            <div class="form-group">
                                 <label class="control-label" for="input-name"><?= $column_delivery_method ?></label>
                                 <input type="text" name="filter_delivery_method" value="<?php echo $filter_delivery_method; ?>" placeholder="<?php echo $column_delivery_method; ?>" id="input-name" class="form-control" />
                             </div>
 
-                            
+
                         </div>
                         <div class="col-sm-4">
                             <div class="form-group">
@@ -105,10 +105,10 @@
                             </div>
 
                             <?php if (!$this->user->isVendor()): ?>
-                                <div class="form-group">
-                                    <label class="control-label" for="input-name"><?= $column_payment ?></label>
-                                    <input type="text" name="filter_payment" value="<?php echo $filter_payment; ?>" placeholder="<?php echo $column_payment; ?>" id="input-name" class="form-control" />
-                                </div>
+                            <div class="form-group">
+                                <label class="control-label" for="input-name"><?= $column_payment ?></label>
+                                <input type="text" name="filter_payment" value="<?php echo $filter_payment; ?>" placeholder="<?php echo $column_payment; ?>" id="input-name" class="form-control" />
+                            </div>
                             <?php endif ?> 
 
 
@@ -118,7 +118,7 @@
 
                         <div class="col-sm-4">
 
-                           <div class="form-group">
+                            <div class="form-group">
                                 <label class="control-label" for="input-company">Company Name</label>
                                 <input type="text" name="filter_company" value="<?php echo $filter_company; ?>" placeholder="Company Name" id="input-company" class="form-control" />
                             </div>
@@ -149,12 +149,12 @@
                                     </span>
                                 </div>
                             </div>
-                            
+
                             <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
 
                         </div>
 
-                        
+
                     </div>
                 </div>
                 <form method="post" enctype="multipart/form-data" target="_blank" id="form-order">
@@ -173,17 +173,17 @@
 
                                     <?php if (!$this->user->isVendor()): ?>
 
-                                        <td class="text-left">
-                                            <?php if ($sort == 'customer') { ?>
-                                            <a href="<?php echo $sort_customer; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_customer; ?></a>
-                                            <?php } else { ?>
-                                            <a href="<?php echo $sort_customer; ?>"><?php echo $column_customer; ?></a>
-                                            <?php } ?>
-                                        </td>
+                                    <td class="text-left">
+                                        <?php if ($sort == 'customer') { ?>
+                                        <a href="<?php echo $sort_customer; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_customer; ?></a>
+                                        <?php } else { ?>
+                                        <a href="<?php echo $sort_customer; ?>"><?php echo $column_customer; ?></a>
+                                        <?php } ?>
+                                    </td>
 
                                     <?php endif ?> 
 
-                                    
+
                                     <!-- <td class="text-left">
                                         <?php if ($sort == 'city') { ?>
                                         <a href="<?php echo $sort_city; ?>" class="<?php echo strtolower($order); ?>">City</a>
@@ -199,7 +199,7 @@
                                         <?php } ?>
                                     </td>
 
-                                    
+
 
                                     <!-- <td class="text-right"><?php if ($sort == 'o.total') { ?>
                                         <a href="<?php echo $sort_total; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_total; ?></a>
@@ -229,10 +229,10 @@
                                     <td class="text-left">Delivery Timeslot</td>
 
                                     <?php if (!$this->user->isVendor()): ?>
-                                        <td class="text-right"><?php echo $column_payment; ?></td>
-                                     <?php endif ?>  
+                                    <td class="text-right"><?php echo $column_payment; ?></td>
+                                    <?php endif ?>  
 
-                                    
+
                                     <td class="text-right"><?php echo $column_delivery_method; ?></td>
                                     <td class="text-right"><?php echo $column_action; ?></td>
 
@@ -253,42 +253,48 @@
 
                                     <?php if (!$this->user->isVendor()): ?>
 
-                                        <td class="text-left" style="width:200px">
-                                            <?php echo $order['customer']; ?>  <br/>
-                                            <?php echo $order['company_name']  ; ?> <br/>
-                                            <?php echo $order['shipping_address']  ; ?>
-                                        </td>
+                                    <td class="text-left" style="width:200px">
+                                        <?php echo $order['customer']; ?>  <br/>
+                                        <?php echo $order['company_name']  ; ?> <br/>
+                                        <?php echo $order['shipping_address']  ; ?>
+                                    </td>
 
                                     <?php endif ?> 
                                     <!-- <td class="text-left"><?php echo $order['city']; ?></td> -->
                                     <!-- <td class="text-left"><?php echo $order['status']; ?></td> -->
                                     <td class="text-left">
 
-                                    <h3 class="my-order-title label" style="background-color: #<?= $order['order_status_color']; ?>;display: block;line-height: 2;" id="order-status" ><?php echo $order['status']; ?></h3>
+                                        <h3 class="my-order-title label" style="background-color: #<?= $order['order_status_color']; ?>;display: block;line-height: 2;" id="order-status" ><?php echo $order['status']; ?></h3>
                                     </td>
-                                   
+
 
                                     <td class="text-right"><?php echo $order['sub_total']; ?></td>
                                     <td class="text-left"><?php echo $order['date_added']; ?></td>
                                     <!-- <td class="text-left"><?php echo $order['date_modified']; ?></td> -->
 
-                                     <td class="text-right"><?php echo $order['delivery_date']; ?></td>
+                                    <td class="text-right"><?php echo $order['delivery_date']; ?></td>
                                     <td class="text-left"><?php echo $order['delivery_timeslot']; ?></td>
-                                    
-                                    <?php if (!$this->user->isVendor()): ?>
-                                        <td class="text-right"  style="width:120px"><?php echo $order['payment_method']; ?></td>
-                                     <?php endif ?>  
 
-                                    
+                                    <?php if (!$this->user->isVendor()): ?>
+                                    <td class="text-right"  style="width:120px"><?php echo $order['payment_method']; ?></td>
+                                    <?php endif ?>  
+
+
                                     <td class="text-right"><?php echo $order['shipping_method']; ?></td>
                                     <td class="text-right">
 
-                                    <?php if (!$this->user->isVendor()): ?>
+                                        <?php if (!$this->user->isVendor()): ?>
                                         <!-- <a href="<?php echo $order['order_spreadsheet']; ?>" target="_blank" data-toggle="tooltip" title="Download Calculation Sheet" class="btn btn-info"><i class="fa fa-file-excel-o"></i></a> -->
                                         <a href="<?php echo $order['shipping']; ?>" target="_blank" data-toggle="tooltip" title="Print Delivery Note" class="btn btn-info"><i class="fa fa-truck"></i></a>
-                                    <?php endif ?>                                         
+                                        <?php endif ?>                                         
                                         <a href="<?php echo $order['invoice']; ?>" target="_blank" data-toggle="tooltip" title="Print Invoice" class="btn btn-info"><i class="fa fa-print"></i></a>
-                                        </td>
+
+                                        <a href="<?php echo $order['view']; ?>" data-toggle="tooltip" title="<?php echo $button_view; ?>" class="btn btn-info"><i class="fa fa-eye"></i></a> 
+
+                                        <?php if ( !in_array( $order['order_status_id'], array_merge( $this->config->get( 'config_refund_status' ), $this->config->get( 'config_complete_status' ) ) ) ) { ?>
+                                        <a href="<?php echo $order['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a> 
+                                        <?php } ?>
+                                    </td>
                                 </tr>
                                 <?php } ?>
                                 <?php } else { ?>
@@ -311,98 +317,98 @@
     </div>
     <script type="text/javascript"><!--
     $('input[name=\'filter_store_name\']').autocomplete({
-    'source': function(request, response) {
-        $.ajax({
-            url: 'index.php?path=setting/store/autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request),
-            dataType: 'json',
-            success: function(json) {
-                response($.map(json, function(item) {
-                    return {
-                        label: item['name'],
-                        value: item['store_id']
+            'source': function (request, response) {
+                $.ajax({
+                    url: 'index.php?path=setting/store/autocomplete&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
+                    dataType: 'json',
+                    success: function (json) {
+                        response($.map(json, function (item) {
+                            return {
+                                label: item['name'],
+                                value: item['store_id']
+                            }
+                        }));
                     }
-                }));
+                });
+            },
+            'select': function (item) {
+                $('input[name=\'filter_store_name\']').val(item['label']);
             }
         });
-    },
-    'select': function(item) {
-        $('input[name=\'filter_store_name\']').val(item['label']);
-    }
-    });
 
 
-    $('input[name=\'filter_vendor\']').autocomplete({
-    'source': function(request, response) {
-        $.ajax({
-            url: 'index.php?path=setting/store/vendor_autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request),
-            dataType: 'json',
-            success: function(json) {
-                response($.map(json, function(item) {
-                    return {
-                        label: item['name'],
-                        value: item['user_id']
+        $('input[name=\'filter_vendor\']').autocomplete({
+            'source': function (request, response) {
+                $.ajax({
+                    url: 'index.php?path=setting/store/vendor_autocomplete&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
+                    dataType: 'json',
+                    success: function (json) {
+                        response($.map(json, function (item) {
+                            return {
+                                label: item['name'],
+                                value: item['user_id']
+                            }
+                        }));
                     }
-                }));
+                });
+            },
+            'select': function (item) {
+                $('input[name=\'filter_vendor\']').val(item['label']);
             }
         });
-    },
-    'select': function(item) {
-        $('input[name=\'filter_vendor\']').val(item['label']);
-    }
-    });
 
 
-    function excel() {
-      url = 'index.php?path=report/product_purchased/excel&token=<?php echo $token; ?>';
-      
-      var filter_city = $('input[name=\'filter_city\']').val();
-      
-      if (filter_city) {
-        url += '&filter_city=' + encodeURIComponent(filter_city);
-      }
-            
-      var filter_date_start = $('input[name=\'filter_date_start\']').val();
-      
-      if (filter_date_start) {
-        url += '&filter_date_start=' + encodeURIComponent(filter_date_start);
-      }
-
-      var filter_date_end = $('input[name=\'filter_date_end\']').val();
-      
-      if (filter_date_end) {
-        url += '&filter_date_end=' + encodeURIComponent(filter_date_end);
-      }
-      
-      var filter_order_status_id = $('select[name=\'filter_order_status_id\']').val();
-      
-      if (filter_order_status_id != 0) {
-        url += '&filter_order_status_id=' + encodeURIComponent(filter_order_status_id);
-      } 
-      
-      location = url;
-    }
-
-
-  $('#button-shipping, #button-invoice').on('click', function () {
-  location = location;
-        });
-
-   $('#button-filter').on('click', function () {
-            url = 'index.php?path=sale/accountmanageruserorders&token=<?php echo $token; ?>';
-
-             var filter_company = $('input[name=\'filter_company\']').val();
-
-            if (filter_company) {
-                url += '&filter_company=' + encodeURIComponent(filter_company);
-            }
-  
+        function excel() {
+            url = 'index.php?path=report/product_purchased/excel&token=<?php echo $token; ?>';
 
             var filter_city = $('input[name=\'filter_city\']').val();
 
             if (filter_city) {
                 url += '&filter_city=' + encodeURIComponent(filter_city);
             }
-            
+
+            var filter_date_start = $('input[name=\'filter_date_start\']').val();
+
+            if (filter_date_start) {
+                url += '&filter_date_start=' + encodeURIComponent(filter_date_start);
+            }
+
+            var filter_date_end = $('input[name=\'filter_date_end\']').val();
+
+            if (filter_date_end) {
+                url += '&filter_date_end=' + encodeURIComponent(filter_date_end);
+            }
+
+            var filter_order_status_id = $('select[name=\'filter_order_status_id\']').val();
+
+            if (filter_order_status_id != 0) {
+                url += '&filter_order_status_id=' + encodeURIComponent(filter_order_status_id);
+            }
+
+            location = url;
+        }
+
+
+        $('#button-shipping, #button-invoice').on('click', function () {
+            location = location;
+        });
+
+        $('#button-filter').on('click', function () {
+            url = 'index.php?path=sale/accountmanageruserorders&token=<?php echo $token; ?>';
+
+            var filter_company = $('input[name=\'filter_company\']').val();
+
+            if (filter_company) {
+                url += '&filter_company=' + encodeURIComponent(filter_company);
+            }
+
+
+            var filter_city = $('input[name=\'filter_city\']').val();
+
+            if (filter_city) {
+                url += '&filter_city=' + encodeURIComponent(filter_city);
+            }
+
             var filter_order_id = $('input[name=\'filter_order_id\']').val();
 
             if (filter_order_id) {
@@ -469,7 +475,7 @@
         });
         //--></script>
     <script type="text/javascript"><!--
-        
+
         $('input[name=\'filter_city\']').autocomplete({
             'source': function (request, response) {
                 $.ajax({
@@ -489,11 +495,11 @@
                 $('input[name=\'filter_city\']').val(item['label']);
             }
         });
-         $companyName="";
+        $companyName = "";
         $('input[name=\'filter_customer\']').autocomplete({
             'source': function (request, response) {
                 $.ajax({
-                    url: 'index.php?path=sale/customer/autocompletebyCompany&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request)+'&filter_company=' +$companyName,
+                    url: 'index.php?path=sale/customer/autocompletebyCompany&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request) + '&filter_company=' + $companyName,
                     dataType: 'json',
                     success: function (json) {
                         response($.map(json, function (item) {
@@ -511,7 +517,7 @@
         });
 
 
-           $('input[name=\'filter_company\']').autocomplete({
+        $('input[name=\'filter_company\']').autocomplete({
             'source': function (request, response) {
                 $.ajax({
                     url: 'index.php?path=sale/customer/autocompletecompany&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
@@ -524,18 +530,18 @@
                             }
                         }));
 
-                        
+
                     }
                 });
-                $companyName="";
+                $companyName = "";
             },
             'select': function (item) {
                 $('input[name=\'filter_company\']').val(item['label']);
                 $('input[name=\'filter_customer\']').val('');
-                $companyName=item['label'];
+                $companyName = item['label'];
             }
         });
-        
+
         //--></script> 
     <script type="text/javascript"><!--
   $('input[name^=\'selected\']').on('change', function () {
@@ -572,8 +578,8 @@
 
 
 
-    
-<div class="phoneModal-popup">
+
+    <div class="phoneModal-popup">
         <div class="modal fade" id="poModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog" role="document">
                 <div class="modal-content"  >
@@ -584,79 +590,79 @@
                                 <div class="store-find">
                                     <div class="store-head">
                                         <h2>  Save PO & SAP  data     </h2>
-                                          </br> 
+                                        </br> 
                                     </div>
                                     <div id="poModal-message" style="color: red;text-align:center; font-size: 15px;" >
                                     </div>
                                     <div id="poModal-success-message" style="color: green; ; text-align:center; font-size: 15px;">
                                     </div>  
-                                      </br>
+                                    </br>
                                     <!-- Text input-->
                                     <div class="store-form">
                                         <form id="poModal-form" action="" method="post" enctype="multipart/form-data">
- 
+
 
                                             <div class="form-row">
                                                 <div class="form-group">
                                                     <label > P.O. Number </label>
-                                                        <input id="order_id"   name="order_id" type="hidden"  class="form-control input-md" required>
+                                                    <input id="order_id"   name="order_id" type="hidden"  class="form-control input-md" required>
 
                                                     <div class="col-md-12">
                                                         <input id="po_number" maxlength="30" required style="max-width:100% ;" name="po_number" type="text" placeholder="P.O. Number" class="form-control" required>
-                                                    <br/> </div>
+                                                        <br/> </div>
 
 
                                                 </div>
-                                               
 
 
-                                                 <div class="form-row">
-                                                <div class="form-group">
-                                                    <label    > SAP Customer Number </label>
-
-                                                    <div class="col-md-12">
-                                                        <input id="SAP_customer_no" maxlength="30" required style="max-width:100% ;" name="SAP_customer_no" type="text" placeholder="SAP Customer Number" class="form-control input-md" required>
-                                                    <br/> </div>
-
-                                                   
-                                                </div>
-                                                  
 
                                                 <div class="form-row">
+                                                    <div class="form-group">
+                                                        <label    > SAP Customer Number </label>
 
-                                                 <div class="form-group">
-                                                    <label    > SAP Doc Number </label>
+                                                        <div class="col-md-12">
+                                                            <input id="SAP_customer_no" maxlength="30" required style="max-width:100% ;" name="SAP_customer_no" type="text" placeholder="SAP Customer Number" class="form-control input-md" required>
+                                                            <br/> </div>
 
-                                                    <div class="col-md-12">
-                                                        <input id="SAP_doc_no" maxlength="30" required style="max-width:100% ;" name="SAP_doc_no" type="text" placeholder="SAP Doc Number" class="form-control input-md" required>
+
                                                     </div>
 
-                                                    
-                                                </div>
-                                                </div>
+
+                                                    <div class="form-row">
+
+                                                        <div class="form-group">
+                                                            <label    > SAP Doc Number </label>
+
+                                                            <div class="col-md-12">
+                                                                <input id="SAP_doc_no" maxlength="30" required style="max-width:100% ;" name="SAP_doc_no" type="text" placeholder="SAP Doc Number" class="form-control input-md" required>
+                                                            </div>
 
 
-                                                 <div class="form-group">
-                                                    <div class="col-md-12">
-                                                       </br>
-                                                     
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="form-group">
+                                                        <div class="col-md-12">
+                                                            </br>
+
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <div class="col-md-12"> 
+                                                            <button type="button" class="btn btn-grey" data-dismiss="modal" style="width:30%; float: right; margin-top: 10px; height: 45px;border-radius:20px">Close</button>
+
+
+                                                            <button id="po-button" name="po-button" onclick="savePO()" type="button" class="btn btn-lg btn-success"  style="width:30%; float: right; margin-top: 10px; height: 45px;border-radius:20px">Save</button>
+                                                        </div>
                                                     </div>
                                                 </div>
-
-                                                <div class="form-group">
-                                                    <div class="col-md-12"> 
-                                                        <button type="button" class="btn btn-grey" data-dismiss="modal" style="width:30%; float: right; margin-top: 10px; height: 45px;border-radius:20px">Close</button>
-
-
-                                                        <button id="po-button" name="po-button" onclick="savePO()" type="button" class="btn btn-lg btn-success"  style="width:30%; float: right; margin-top: 10px; height: 45px;border-radius:20px">Save</button>
-                                                    </div>
-                                                </div>
-                                            </div>
                                         </form>
                                     </div>  
                                 </div>
                             </div>
-                           
+
                             <!-- next div code -->
                         </div>
                     </div>
@@ -667,97 +673,94 @@
 
 
 
-<script  type="text/javascript">
+    <script  type="text/javascript">
 
 
-  function getPO($order_id) {
-               
-                $('#poModal-message').html('');
-               $('#poModal-success-message').html('');
-                 
+        function getPO($order_id) {
 
-                 $.ajax({
-                    url: 'index.php?path=sale/accountmanageruserorders/getPO&token=<?php echo $token; ?>&order_id='+$order_id,
-                    type: 'POST',
-                    dataType: 'json',
-                    data:{order_id:$order_id},
-                    async: true,
-                    success: function(json) {
-                        console.log(json); 
-                        if (json['status']) {
-                           $('input[name="po_number"]').val(json['po_number']) ;
-                           $('input[name="SAP_customer_no"]').val(json['SAP_customer_no']) ;
-                           $('input[name="SAP_doc_no"]').val(json['SAP_doc_no']) ;
-                        }
-                        else {
-                             $('input[name="po_number"]').val('') ;
-                           $('input[name="SAP_customer_no"]').val('') ;
-                           $('input[name="SAP_doc_no"]').val('') ;
-                            
-                        }
-                    },
-                    error: function(xhr, ajaxOptions, thrownError) { 
-
-                         $('input[name="po_number"]').val('') ;
-                           $('input[name="SAP_customer_no"]').val('') ;
-                           $('input[name="SAP_doc_no"]').val('') ;
-                                
-                                    return false;
-                                }
-                });
+            $('#poModal-message').html('');
+            $('#poModal-success-message').html('');
 
 
-               
-               $('input[name="order_id"]').val($order_id) ;
-                  
-            }
+            $.ajax({
+                url: 'index.php?path=sale/accountmanageruserorders/getPO&token=<?php echo $token; ?>&order_id=' + $order_id,
+                type: 'POST',
+                dataType: 'json',
+                data:{order_id:$order_id},
+                async: true,
+                success: function (json) {
+                    console.log(json);
+                    if (json['status']) {
+                        $('input[name="po_number"]').val(json['po_number']);
+                        $('input[name="SAP_customer_no"]').val(json['SAP_customer_no']);
+                        $('input[name="SAP_doc_no"]').val(json['SAP_doc_no']);
+                    } else {
+                        $('input[name="po_number"]').val('');
+                        $('input[name="SAP_customer_no"]').val('');
+                        $('input[name="SAP_doc_no"]').val('');
+
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+
+                    $('input[name="po_number"]').val('');
+                    $('input[name="SAP_customer_no"]').val('');
+                    $('input[name="SAP_doc_no"]').val('');
+
+                    return false;
+                }
+            });
 
 
- function savePO() { 
- 
-    $('#poModal-message').html('');
-               $('#poModal-success-message').html('');
-   var po = $('input[name="po_number"]').val();
-    var scno =  $('input[name="SAP_customer_no"]').val() ;
-     var sdno =   $('input[name="SAP_doc_no"]').val() ;
 
-              console.log($('#poModal-form').serialize());
- 
-                if (po.length  <= 1 && scno.length<=1 && sdno.length<=1) {
-                   
-                      $('#poModal-message').html("Please enter data");
-                       return false;
-                } 
-                else{  
-                  
-                    $.ajax({
+            $('input[name="order_id"]').val($order_id);
+
+        }
+
+
+        function savePO() {
+
+            $('#poModal-message').html('');
+            $('#poModal-success-message').html('');
+            var po = $('input[name="po_number"]').val();
+            var scno = $('input[name="SAP_customer_no"]').val();
+            var sdno = $('input[name="SAP_doc_no"]').val();
+
+            console.log($('#poModal-form').serialize());
+
+            if (po.length <= 1 && scno.length <= 1 && sdno.length <= 1) {
+
+                $('#poModal-message').html("Please enter data");
+                return false;
+            } else {
+
+                $.ajax({
                     url: 'index.php?path=sale/accountmanageruserorders/updatePO&token=<?php echo $token; ?>',
                     type: 'post',
                     dataType: 'json',
-                    data:$('#poModal-form').serialize(),
+                    data: $('#poModal-form').serialize(),
                     async: true,
-                    success: function(json) {
-                        console.log(json); 
+                    success: function (json) {
+                        console.log(json);
                         if (json['status']) {
                             $('#poModal-success-message').html(' Saved Successfully');
-                        }
-                        else {
+                        } else {
                             $('#poModal-success-message').html('Please try again');
                         }
                     },
-                    error: function(xhr, ajaxOptions, thrownError) {    
+                    error: function (xhr, ajaxOptions, thrownError) {
 
-                                 // alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);                       
-                                $('#poModal-message').html("Please try again");
-                                    return false;
-                                }
+                        // alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);                       
+                        $('#poModal-message').html("Please try again");
+                        return false;
+                    }
                 });
-                }
-               
             }
 
-            
-            </script>
+        }
+
+
+    </script>
 
 
 
@@ -769,9 +772,9 @@
             pickTime: false
         });
 
-    setInterval(function() {
-     location = location;
-    }, 300 * 1000); // 60 * 1000 milsec
-    
+        setInterval(function () {
+            location = location;
+        }, 300 * 1000); // 60 * 1000 milsec
+
         //--></script></div>
 <?php echo $footer; ?>
