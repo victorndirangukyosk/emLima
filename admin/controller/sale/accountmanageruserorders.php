@@ -3550,4 +3550,228 @@ class ControllerSaleAccountManagerUserOrders extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+    public function api() {
+        $json = [];
+
+        $this->load->language('sale/order');
+
+        $log = new Log('error.log');
+        $log->write('api/order');
+
+        $this->document->setTitle($this->language->get('heading_title'));
+
+        if ($this->validate()) {
+            // Store
+            if (isset($this->request->get['store_id'])) {
+                $store_id = $this->request->get['store_id'];
+                $this->session->data['config_store_id'] = $store_id;
+            } else {
+                $store_id = 0;
+            }
+            $log->write($store_id);
+
+            $this->load->model('setting/store');
+            $this->load->model('sale/order');
+
+            /* $store_info = $this->model_setting_store->getStore($store_id);
+              $log->write($store_info); */
+            // if ($store_info) {
+            //     $url = $store_info['ssl'];
+            // } else {
+            $url = HTTPS_CATALOG;
+            // }
+            //$log->write($this->session->data['cookie']);
+            $log->write($this->request->get);
+
+            $this->request->post['notify'] = 1;
+
+            $log->write($this->request->post);
+
+            $order_info = $this->getOrder($this->request->get['order_id']);
+
+            //$log->write($order_info);
+            //die;
+            if (isset($this->request->get['api']) && $order_info && $order_info['order_status_id'] != $this->request->post['order_status_id'] && !in_array($order_info['order_status_id'], $this->config->get('config_complete_status'))) {
+                // Include any URL perameters
+
+                $url_data = [];
+                $log->write('if');
+                foreach ($this->request->get as $key => $value) {
+                    if ('path' != $key && 'token' != $key && 'store_id' != $key) {
+                        $url_data[$key] = $value;
+                    }
+                }
+
+                $curl = curl_init();
+
+                // Set SSL if required
+                if ('https' == substr($url, 0, 5)) {
+                    curl_setopt($curl, CURLOPT_PORT, 443);
+                }
+
+                $log->write($url . 'index.php?path=' . $this->request->get['api'] . ($url_data ? '&' . http_build_query($url_data) : ''));
+
+                curl_setopt($curl, CURLOPT_HEADER, false);
+                curl_setopt($curl, CURLINFO_HEADER_OUT, true);
+                curl_setopt($curl, CURLOPT_USERAGENT, $this->request->server['HTTP_USER_AGENT']);
+                curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+                curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+                curl_setopt($curl, CURLOPT_FORBID_REUSE, false);
+                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($curl, CURLOPT_URL, $url . 'index.php?path=' . $this->request->get['api'] . ($url_data ? '&' . http_build_query($url_data) : ''));
+
+                if ($this->request->post) {
+                    curl_setopt($curl, CURLOPT_POST, true);
+                    curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($this->request->post));
+                }
+
+                /* curl_setopt($curl, CURLOPT_COOKIE, session_name() . '=' . $this->session->data['cookie'] . ';'); */
+
+                $json = curl_exec($curl);
+
+                /* if ( in_array( $this->request->post['order_status_id'], $this->config->get( 'config_ready_for_pickup_status' ) ) )
+                  {
+                  $log->write('create delivery if');
+                  $this->createDeliveryRequest($this->request->get['order_id']);
+                  } */
+
+                if (in_array($this->request->post['order_status_id'], $this->config->get('config_complete_status'))) {
+                    //completed order
+                    //capture stripe payment if paid via stripe
+
+                    $manifest_id = $this->request->get['order_id'];
+                    $log->write('order payment distribution');
+
+                    $order_info = $this->model_sale_order->getOrder($manifest_id);
+
+                    $log->write($order_info);
+                    $log->write($manifest_id);
+
+                    $response['already_deliversystem_distributed'] = false;
+                    if ($order_info && !$order_info['commsion_received']) {
+                        //get order detail store id
+
+                        $order_id = $manifest_id;
+                        $status = 1;
+                        //status:1
+                        $store_id = $order_info['store_id'];
+
+                        $distribution_resp = $this->model_sale_order->payment_status($order_id, $status, $store_id);
+
+                        $response['deliversystem_distributed'] = $distribution_resp['ds_payment_distributed'];
+                        $response['ds_transfer'] = $distribution_resp['ds_transfer'];
+
+                        $log->write('deliversystem_distributed');
+                        $log->write($response);
+
+                        $response['status'] = true;
+                    } else {
+                        $response['already_deliversystem_distributed'] = true;
+                        $log->write('order commsion_received already');
+                    }
+                }
+
+                curl_close($curl);
+            } else {
+                $log->write('already delivered');
+                $response['error'] = $this->language->get('error_status_change');
+                $json = json_encode($response);
+            }
+        } else {
+            $response = [];
+            $response['error'] = $this->error;
+            unset($this->error);
+
+            $json = json_encode($response);
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput($json);
+    }
+
+    public function getOrder($order_id) {
+        $order_query = $this->db->query('SELECT *, (SELECT os.name FROM `' . DB_PREFIX . 'order_status` os WHERE os.order_status_id = o.order_status_id AND os.language_id = o.language_id) AS order_status FROM `' . DB_PREFIX . "order` o WHERE o.order_id = '" . (int) $order_id . "'");
+
+        if ($order_query->num_rows) {
+            $this->load->model('localisation/language');
+            $this->load->model('account/order');
+
+            $language_info = $this->model_localisation_language->getLanguage($order_query->row['language_id']);
+
+            $city_name = $this->model_account_order->getCityName($order_query->row['shipping_city_id']);
+
+            if ($language_info) {
+                $language_code = $language_info['code'];
+                $language_directory = $language_info['directory'];
+            } else {
+                $language_code = '';
+                $language_directory = '';
+            }
+
+            return [
+                'order_id' => $order_query->row['order_id'],
+                'invoice_no' => $order_query->row['invoice_no'],
+                'invoice_prefix' => $order_query->row['invoice_prefix'],
+                'invoice_sufix' => $order_query->row['invoice_sufix'],
+                'store_id' => $order_query->row['store_id'],
+                'store_name' => $order_query->row['store_name'],
+                'store_url' => $order_query->row['store_url'],
+                'customer_id' => $order_query->row['customer_id'],
+                'firstname' => $order_query->row['firstname'],
+                'lastname' => $order_query->row['lastname'],
+                'email' => $order_query->row['email'],
+                'telephone' => $order_query->row['telephone'],
+                'fax' => $order_query->row['fax'],
+                'custom_field' => unserialize($order_query->row['custom_field']),
+                'shipping_name' => $order_query->row['shipping_name'],
+                'shipping_address' => $order_query->row['shipping_address'],
+                'shipping_city' => $city_name,
+                'shipping_contact_no' => $order_query->row['shipping_contact_no'],
+                'shipping_method' => $order_query->row['shipping_method'],
+                'shipping_zipcode' => $order_query->row['shipping_zipcode'],
+                'shipping_code' => $order_query->row['shipping_code'],
+                'shipping_flat_number' => $order_query->row['shipping_flat_number'],
+                'shipping_building_name' => $order_query->row['shipping_building_name'],
+                'shipping_landmark' => $order_query->row['shipping_landmark'],
+                'payment_method' => $order_query->row['payment_method'],
+                'payment_code' => $order_query->row['payment_code'],
+                'comment' => $order_query->row['comment'],
+                'total' => $order_query->row['total'],
+                'order_status_id' => $order_query->row['order_status_id'],
+                'order_status' => $order_query->row['order_status'],
+                'affiliate_id' => $order_query->row['affiliate_id'],
+                'commission' => $order_query->row['commission'],
+                'language_id' => $order_query->row['language_id'],
+                'language_code' => $language_code,
+                'language_directory' => $language_directory,
+                'currency_id' => $order_query->row['currency_id'],
+                'currency_code' => $order_query->row['currency_code'],
+                'currency_value' => $order_query->row['currency_value'],
+                'order_pdf_link' => $order_query->row['order_pdf_link'],
+                'ip' => $order_query->row['ip'],
+                'forwarded_ip' => $order_query->row['forwarded_ip'],
+                'user_agent' => $order_query->row['user_agent'],
+                'accept_language' => $order_query->row['accept_language'],
+                'date_modified' => $order_query->row['date_modified'],
+                'date_added' => $order_query->row['date_added'],
+                'delivery_date' => $order_query->row['delivery_date'],
+                'delivery_timeslot' => $order_query->row['delivery_timeslot'],
+                    /* 'date_modified' => $order_query->row['date_modified'],
+                      'date_added' => $order_query->row['date_added'] */
+            ];
+        } else {
+            return false;
+        }
+    }
+
+    protected function validate() {
+        if (!$this->user->hasPermission('modify', 'sale/accountmanageruserorders')) {
+            $this->error['warning'] = $this->language->get('error_permission');
+        }
+
+        return !$this->error;
+
+        //        return true;
+    }
+
 }
