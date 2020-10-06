@@ -45,93 +45,7 @@
                         <p class="section-subtitle">Our team is made up of all kinds of nerds, from Software Engineers to Finance Gurus, UI/UX Designers to Customer Success Experts. Looking to work with us? We'd love to have you on our team!</p>
                     </div>
                 </div>
-
-                   <?php if (count($job_categories)>1) { ?>
-                <div class="row mt-6">
-                <form action="filter" method="post" enctype="multipart/form-data" id="form">
-                <div class="row" style="width:100%">
-                        <div class="col-sm-4">
-                            <div class="form-group">
-                                <label class="control-label" for="input-job_category"></label>
-                                <select name="job_category" id="input-job_category" class="form-control">
-                                <option value="All Job Category" selected="selected">All Job Category </option>
-                                <?php foreach ($job_categories as $job_category) { ?>
-                                <?php if ($job_category['job_category']  == $job_category_name) { ?>
-                                <option value="<?php echo $job_category['job_category'] ; ?>" selected="selected"><?php echo $job_category['job_category'] ; ?></option>
-                                <?php } else { ?>
-                                <option value="<?php echo $job_category['job_category'] ; ?>"><?php echo $job_category['job_category'] ; ?></option>
-                                <?php } ?>
-                                <?php } ?>
-                                </select> 
-                             </div> 
-                         </div>
-                        <div class="col-sm-4">
-                            <div class="form-group" >
-                                <label class="control-label" for="input-job_type"></label>
-                                 <select  name="job_type" id="input-job_type" class="form-control">
-                          <option value="All Job Type" selected="selected">All Job Type </option>
-                            <?php foreach ($job_types as $job_type) { ?>
-                            <?php if ($job_type['job_type']  == $job_type_name) { ?>
-                            <option value="<?php echo $job_type['job_type'] ; ?>" selected="selected"><?php echo $job_type['job_type'] ; ?></option>
-                            <?php } else { ?>
-                            <option value="<?php echo $job_type['job_type'] ; ?>"><?php echo $job_type['job_type'] ; ?></option>
-                            <?php } ?>
-                            <?php } ?>
-                          </select>
-                            </div> 
-
-                        </div>
-
-
-
-                        <div class="col-sm-4">
-
-                           <div class="form-group">
-                                <label class="control-label" for="input-job_location"></label>
-                                 <select name="job_location" id="input-job_location" class="form-control">
-                          <option value="All Job Location" selected="selected">All Job Location </option>
-                            <?php foreach ($job_locations as $job_location) { ?>
-                            <?php if ($job_location['job_location']  == $job_location_name) { ?>
-                            <option value="<?php echo $job_loction['job_location'] ; ?>" selected="selected"><?php echo $job_location ['job_location']; ?></option>
-                            <?php } else { ?>
-                            <option value="<?php echo $job_location ['job_location']; ?>"><?php echo $job_location['job_location'] ; ?></option>
-                            <?php } ?>
-                            <?php } ?>
-                          </select> 
-                            </div>      
-                            <!--<button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> Filter</button>-->
-
-                        </div>
-
-                        
-                    </div> 
-                  </form>  
-                </div>
-
-                <div class="row" id="sum_widgets">              
-                        <?php foreach ($jobpositions as $jobposition) { ?>
-                        <div class="col-lg-4 col-md-4 col-sm-6"><div class="panel income db mbm">
-                        <div class="panel-body"  >
-                            <!--<p class="icon"><i class="icon fa fa-money"></i></p>-->
-                            <h4 class="value"><span><?php echo $jobposition['job_category'] ; ?></span></h4>
-                            <p class="description"> </p>
-                            <p class="description"> </p>
-                            <p class="description"><?php echo $jobposition['job_type'] ; ?></p>
-                            <p class="description"><?php echo $jobposition['job_location'] ; ?></p>
-                            <p class="description"> 
-                            <a href="<?= BASE_URL." /index.php?path=common/home/jobopenings&id=" ?><?php echo $jobposition['job_id'] ; ?>">more details</a>
-                            </p>
-                        </div>
-                        </div>
-                        </div>
-                                                    
-                        <?php } ?>
-                </div>   
-
-     <?php } else { ?>
-
-
-      <div class="row mt-4">
+                <div class="row mt-4">
                     <div class="col-md-12">
                         <form id="careers-form">
                             <div class="form-row">
@@ -154,9 +68,6 @@
                         </form>
                     </div>
                 </div>
-
- <?php } ?>
-
             </div>
         </section>
     </main>
@@ -231,11 +142,3 @@
 </body>
 
 </html>
-
-
-<script>
-        function filter() {
-
-           alert(1);
-        }
-</script>
