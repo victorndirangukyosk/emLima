@@ -573,6 +573,7 @@ class ControllerAccountLogin extends Controller {
         $data['status'] = false;
 
         $this->load->model('account/customer');
+        $this->load->model('account/customertwofactor');
 
         if (isset($this->request->post['password']) && isset($this->request->post['email'])) {
             //$otp_data = $this->model_account_customer->getOTP($this->request->post['customer_id'],$this->request->post['verify_otp'],'login');
@@ -587,6 +588,7 @@ class ControllerAccountLogin extends Controller {
                     $log->write('TWO FACTOR');
                     $log->write($data['two_factor']);
                     $log->write('TWO FACTOR');
+                    $this->model_account_customertwofactor->addupdateCustomerTwoFactor($data['two_factor']['secret'], $data['two_factor']['one_code'], $user_query->row['customer_id']);
                 }
             } else {
                 $data['error_warning'] = $this->language->get('error_login');
