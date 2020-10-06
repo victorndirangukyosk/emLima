@@ -44,9 +44,49 @@
                 loginButton.text('PLEASE WAIT');
                 loginButton.toggleClass('disabled');
                 $.ajax({
-                    url: 'index.php?path=account/login/login',
+                    url: 'index.php?path=account/login/beforeLogin',
                     type: 'post',
                     data: {email: email, password: password},
+                    dataType: 'json',
+                    success: function (json) {
+                        console.log(json);
+                        if (json['status'] == true) {
+                            if (json['two_factor'] != null) {
+                                $("#creds").hide();
+                                $("#qrcode").show();
+                                $("#qrcode_img").append("<img src='" + json['two_factor']['qr_code'] + "'/>");
+                                console.log(json['two_factor']['qr_code']);
+                                loginButton.text('LOGIN');
+                            }
+                        } else {
+                            iziToast.error({
+                                position: 'topRight',
+                                message: json['error_warning']
+                            });
+                            loginButton.text('LOGIN');
+                            loginButton.toggleClass('disabled');
+                        }
+                    }
+                });
+            }
+        });
+
+        // Customer Login
+        $(document).delegate('#qr-login-button', 'click', function (e) {
+            e.preventDefault();
+
+            const loginButton = $('#login-button');
+                    const email = $('#login-email').val();
+                    const password = $('#login-password').val();
+                    const secret_code = $('#secret_code').val();
+                    const one_time_code = $('#one_time_code').val();
+                    if (email.length > 0 && password.length > 0 && secret_code.length > 0 && one_time_code.length > 0) {
+                loginButton.text('PLEASE WAIT');
+                loginButton.toggleClass('disabled');
+                $.ajax({
+                    url: 'index.php?path=account/login/login',
+                    type: 'post',
+                    data: {email: email, password: password, secret_code: secret_code, one_time_code: one_time_code},
                     dataType: 'json',
                     success: function (json) {
                         if (json['status']) {

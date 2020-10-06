@@ -569,6 +569,34 @@ class ControllerAccountLogin extends Controller {
         $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/login.tpl', $data));
     }
 
+    public function beforeLogin() {
+        $data['status'] = false;
+
+        $this->load->model('account/customer');
+
+        if (isset($this->request->post['password']) && isset($this->request->post['email'])) {
+            //$otp_data = $this->model_account_customer->getOTP($this->request->post['customer_id'],$this->request->post['verify_otp'],'login');
+
+            $user_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE email = '" . $this->db->escape($this->request->post['email']) . "' AND (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape($this->request->post['password']) . "'))))) OR password = '" . $this->db->escape(md5($this->request->post['password'])) . "')");
+
+            if ($user_query->num_rows) {
+                if ($user_query->row['approved']) {
+                    $data['status'] = true;
+                    $data['two_factor'] = $this->GenerateGoogleTwoFactor();
+                    $log = new Log('error.log');
+                    $log->write('TWO FACTOR');
+                    $log->write($data['two_factor']);
+                    $log->write('TWO FACTOR');
+                }
+            } else {
+                $data['error_warning'] = $this->language->get('error_login');
+            }
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($data));
+    }
+
     public function login() {
         $data['status'] = false;
 
@@ -613,11 +641,6 @@ class ControllerAccountLogin extends Controller {
                         $this->model_account_customer->cacheProductPrices(75);
                         $this->session->data['order_approval_access'] = $user_query->row['order_approval_access'];
                         $this->session->data['order_approval_access_role'] = $user_query->row['order_approval_access_role'];
-                        $data['two_factor'] = $this->GenerateGoogleTwoFactor();
-                        $log = new Log('error.log');
-                        $log->write('TWO FACTOR');
-                        $log->write($data['two_factor']);
-                        $log->write('TWO FACTOR');
                     }
                 } else {
                     $data['status'] = false;
