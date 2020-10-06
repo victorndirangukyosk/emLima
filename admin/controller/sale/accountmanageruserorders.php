@@ -2432,7 +2432,7 @@ class ControllerSaleAccountManagerUserOrders extends Controller {
             unset($this->session->data['cookie']);
 
             // Set up the API session
-            if ($this->user->hasPermission('modify', 'sale/order')) {
+            if ($this->user->hasPermission('modify', 'sale/accountmanageruserorders')) {
                 $this->load->model('user/api');
 
                 $api_info = $this->model_user_api->getApi($this->config->get('config_api_id'));
@@ -3032,7 +3032,7 @@ class ControllerSaleAccountManagerUserOrders extends Controller {
 
         $json = [];
 
-        if (!$this->user->hasPermission('modify', 'sale/order')) {
+        if (!$this->user->hasPermission('modify', 'sale/accountmanageruserorders')) {
             $json['error'] = $this->language->get('error_permission');
         } else {
             if (isset($this->request->get['order_id'])) {
@@ -3069,7 +3069,7 @@ class ControllerSaleAccountManagerUserOrders extends Controller {
 
         $json = [];
 
-        if (!$this->user->hasPermission('modify', 'sale/order')) {
+        if (!$this->user->hasPermission('modify', 'sale/accountmanageruserorders')) {
             $json['error'] = $this->language->get('error_permission');
         } elseif (isset($this->request->get['order_id'])) {
             if (isset($this->request->get['order_id'])) {
@@ -3098,7 +3098,7 @@ class ControllerSaleAccountManagerUserOrders extends Controller {
 
         $json = [];
 
-        if (!$this->user->hasPermission('modify', 'sale/order')) {
+        if (!$this->user->hasPermission('modify', 'sale/accountmanageruserorders')) {
             $json['error'] = $this->language->get('error_permission');
         } else {
             if (isset($this->request->get['order_id'])) {
@@ -3133,7 +3133,7 @@ class ControllerSaleAccountManagerUserOrders extends Controller {
 
         $json = [];
 
-        if (!$this->user->hasPermission('modify', 'sale/order')) {
+        if (!$this->user->hasPermission('modify', 'sale/accountmanageruserorders')) {
             $json['error'] = $this->language->get('error_permission');
         } else {
             if (isset($this->request->get['order_id'])) {
@@ -3164,7 +3164,7 @@ class ControllerSaleAccountManagerUserOrders extends Controller {
 
         $json = [];
 
-        if (!$this->user->hasPermission('modify', 'sale/order')) {
+        if (!$this->user->hasPermission('modify', 'sale/accountmanageruserorders')) {
             $json['error'] = $this->language->get('error_permission');
         } else {
             if (isset($this->request->get['order_id'])) {
@@ -3199,7 +3199,7 @@ class ControllerSaleAccountManagerUserOrders extends Controller {
 
         $json = [];
 
-        if (!$this->user->hasPermission('modify', 'sale/order')) {
+        if (!$this->user->hasPermission('modify', 'sale/accountmanageruserorders')) {
             $json['error'] = $this->language->get('error_permission');
         } else {
             if (isset($this->request->get['order_id'])) {
