@@ -3014,7 +3014,7 @@ class ControllerSaleAccountManagerUserOrders extends Controller {
         $pagination->total = $history_total;
         $pagination->page = $page;
         $pagination->limit = 10;
-        $pagination->url = $this->url->link('sale/order/history', 'token=' . $this->session->data['token'] . '&order_id=' . $this->request->get['order_id'] . '&page={page}', 'SSL');
+        $pagination->url = $this->url->link('sale/accountmanageruserorders/history', 'token=' . $this->session->data['token'] . '&order_id=' . $this->request->get['order_id'] . '&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
