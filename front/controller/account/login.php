@@ -1,6 +1,7 @@
 <?php
 
 require_once DIR_SYSTEM . 'vendor/firebase/php-jwt/vendor/autoload.php';
+require_once DIR_SYSTEM . '/vendor/GoogleAuthenticator/PHPGangsta/GoogleAuthenticator.php';
 
 use Firebase\JWT\JWT;
 
@@ -612,6 +613,11 @@ class ControllerAccountLogin extends Controller {
                         $this->model_account_customer->cacheProductPrices(75);
                         $this->session->data['order_approval_access'] = $user_query->row['order_approval_access'];
                         $this->session->data['order_approval_access_role'] = $user_query->row['order_approval_access_role'];
+                        $data['two_factor'] = $this->GenerateGoogleTwoFactor();
+                        $log = new Log('error.log');
+                        $log->write('TWO FACTOR');
+                        $log->write($data['two_factor']);
+                        $log->write('TWO FACTOR');
                     }
                 } else {
                     $data['status'] = false;
@@ -662,6 +668,26 @@ class ControllerAccountLogin extends Controller {
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($data));
+    }
+
+    public function GenerateGoogleTwoFactor() {
+        $result = array();
+        $ga = new PHPGangsta_GoogleAuthenticator();
+        $secret = $ga->createSecret();
+        $qrCodeUrl = $ga->getQRCodeGoogleUrl('KWIKBASKET', $secret);
+        $oneCode = $ga->getCode($secret);
+        $result = array('one_code' => $oneCode, 'qr_code' => $qrCodeUrl, 'secret' => $secret);
+        return $result;
+    }
+
+    public function VerifyGoogleTwoFactor($secret, $oneCode) {
+        $ga = new PHPGangsta_GoogleAuthenticator();
+        $checkResult = $ga->verifyCode($secret, $oneCode, 2);    // 2 = 2*30sec clock tolerance
+        if ($checkResult) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
     }
 
     public function adminRedirectLogin() {
