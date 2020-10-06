@@ -603,6 +603,7 @@ class ControllerAccountLogin extends Controller {
         $data['status'] = false;
 
         $this->load->model('account/customer');
+        $this->load->model('account/customertwofactor');
 
         if (isset($this->request->post['password']) && isset($this->request->post['email'])) {
             //$otp_data = $this->model_account_customer->getOTP($this->request->post['customer_id'],$this->request->post['verify_otp'],'login');
@@ -611,7 +612,15 @@ class ControllerAccountLogin extends Controller {
 
             //print_r($user_query);
             if ($user_query->num_rows) {
-                if ($user_query->row['approved']) {
+                $two_factor_details = $this->model_account_customertwofactor->getCustomerTwoFactor($this->request->post['secret_code'], $this->request->post['one_time_code'], $user_query->row['customer_id']);
+                $two_factor_checking = $this->VerifyGoogleTwoFactor($this->request->post['secret_code'], $this->request->post['one_time_code']);
+                $log = new Log('error.log');
+                $log->write('TWO FACTOR CHECKING');
+                $log->write($two_factor_details);
+                $log->write($two_factor_checking);
+                $log->write('TWO FACTOR CHECKING');
+
+                if ($user_query->row['approved'] && $two_factor_checking == TRUE && $two_factor_details > 0) {
                     $data['customer_id'] = $user_query->row['customer_id'];
                     $data['customer_email'] = $user_query->row['email'];
                     $data['temppassword'] = $user_query->row['tempPassword'];

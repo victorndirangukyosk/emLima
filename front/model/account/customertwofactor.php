@@ -13,4 +13,9 @@ class ModelAccountCustomerTwoFactor extends Model {
         $this->db->query($sql);
     }
 
+    public function getCustomerTwoFactor($secret_code, $onetime_password, $customer_id) {
+        $customer_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer_two_factor WHERE customer_id = '" . $this->db->escape($customer_id) . "' AND secret_code = '" . $secret_code . "' AND onetime_password = '" . $onetime_password . "'");
+        return $customer_query->num_rows;
+    }
+
 }
