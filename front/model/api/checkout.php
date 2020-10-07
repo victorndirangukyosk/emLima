@@ -109,8 +109,17 @@ class ModelApiCheckout extends Model
         $log->write('addMultiOrder 123');
         $log->write($is_he_parents);
         $log->write('addMultiOrder 123');
-        $parent_approval = null == $is_he_parents ? 'Approved' : 'Pending';
-        $order_status_id = null == $is_he_parents ? 14 : 15;
+        // $parent_approval = null == $is_he_parents ? 'Approved' : 'Pending';
+        // $order_status_id = null == $is_he_parents ? 14 : 15;
+
+        $order_appoval_access = FALSE;
+        if ($this->session->data['order_approval_access'] > 0 && $this->session->data['order_approval_access_role'] != NULL) {
+            $order_appoval_access = TRUE;
+        }
+
+        $parent_approval = $is_he_parents == NULL || $order_appoval_access == TRUE ? 'Approved' : 'Pending';
+        $order_status_id = $is_he_parents == NULL || $order_appoval_access == TRUE ? $this->config->get('cod_order_status_id') : 15;
+
 
         //if ( $orders && count($stores) == count($this->session->data['order_id'])) {
         if ($orders) {
