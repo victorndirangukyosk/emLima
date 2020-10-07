@@ -1,18 +1,17 @@
 <?php
+
 $target_dir = "uploads/";
 
-class ControllerSettingNewfeature extends Controller
-{
+class ControllerSettingNewfeature extends Controller {
+
     private $error = [];
 
-    public function index()
-    {
+    public function index() {
 
         $this->getList();
     }
 
-    public function add()
-    {
+    public function add() {
         $this->load->language('setting/newfeature');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -20,20 +19,41 @@ class ControllerSettingNewfeature extends Controller
         $this->load->model('setting/newfeature');
 
         if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
-            $newfeature_id = $this->model_setting_newfeature->addNewfeature($this->request->post);
+            $file_upload_status = $this->FeatureFileUpload($this->request->files);
+            $log = new Log('error.log');
+            $log->write($file_upload_status);
+            if ($file_upload_status != NULL && $file_upload_status['status'] == TRUE && $file_upload_status['file_name'] != NULL) {
+                $newfeature_id = $this->model_setting_newfeature->addNewfeature($this->request->post, $file_upload_status['file_name']);
 
-            $this->load->model('setting/setting');
- 
-            $this->session->data['success'] = $this->language->get('text_success');
+                $this->load->model('setting/setting');
 
-            $this->response->redirect($this->url->link('setting/newfeature', 'token='.$this->session->data['token'], 'SSL'));
+                $this->session->data['success'] = $this->language->get('text_success');
+            } else {
+                $this->session->data['success'] = $this->language->get('text_error');
+            }
+
+            $this->response->redirect($this->url->link('setting/newfeature', 'token=' . $this->session->data['token'], 'SSL'));
         }
 
         $this->getForm();
     }
 
-    public function edit()
-    {
+    public function FeatureFileUpload($file_data) {
+        $status = array();
+        if ((isset($file_data['additional_requirement'])) && (is_uploaded_file($file_data['additional_requirement']['tmp_name']))) {
+            if (!file_exists(DIR_UPLOAD . 'newfeature/')) {
+                mkdir(DIR_UPLOAD . 'newfeature/', 0777, true);
+            }
+            $file_name = md5(mt_rand()) . '' . $file_data['additional_requirement']['name'];
+            if (move_uploaded_file($file_data['additional_requirement']['tmp_name'], DIR_UPLOAD . 'newfeature/' . $file_name)) {
+                return $status = array('status' => TRUE, 'file_name' => $file_name);
+            } else {
+                return $status = array('status' => FALSE, 'file_name' => '');
+            }
+        }
+    }
+
+    public function edit() {
         $this->load->language('setting/newfeature');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -45,34 +65,33 @@ class ControllerSettingNewfeature extends Controller
 
             $this->load->model('setting/setting');
 
-           // !empty($this->request->post['date_added']) ?: $this->request->post['date_added'] = $this->request->post['config_name'];
- 
+            // !empty($this->request->post['date_added']) ?: $this->request->post['date_added'] = $this->request->post['config_name'];
+
             $this->session->data['success'] = $this->language->get('text_success');
 
             if (isset($this->request->post['button']) and 'save' == $this->request->post['button']) {
-                $this->response->redirect($this->url->link('setting/newfeature/edit', 'newfeature_id='.$this->request->get['newfeature_id'].'&token='.$this->session->data['token'].$url, 'SSL'));
+                $this->response->redirect($this->url->link('setting/newfeature/edit', 'newfeature_id=' . $this->request->get['newfeature_id'] . '&token=' . $this->session->data['token'] . $url, 'SSL'));
             }
 
             if (isset($this->request->post['button']) and 'new' == $this->request->post['button']) {
-                $this->response->redirect($this->url->link('setting/newfeature/add', 'token='.$this->session->data['token'].$url, 'SSL'));
+                $this->response->redirect($this->url->link('setting/newfeature/add', 'token=' . $this->session->data['token'] . $url, 'SSL'));
             }
 
             if (isset($this->request->post['button']) and 'save' == $this->request->post['button']) {
-                $this->response->redirect($this->url->link('setting/newfeature/edit', 'newfeature_id='.$this->request->get['newfeature_id'].'&token='.$this->session->data['token'].$url, 'SSL'));
+                $this->response->redirect($this->url->link('setting/newfeature/edit', 'newfeature_id=' . $this->request->get['newfeature_id'] . '&token=' . $this->session->data['token'] . $url, 'SSL'));
             }
 
             if (isset($this->request->post['button']) and 'new' == $this->request->post['button']) {
-                $this->response->redirect($this->url->link('setting/newfeature/add', 'token='.$this->session->data['token'].$url, 'SSL'));
+                $this->response->redirect($this->url->link('setting/newfeature/add', 'token=' . $this->session->data['token'] . $url, 'SSL'));
             }
 
-            $this->response->redirect($this->url->link('setting/newfeature', 'token='.$this->session->data['token'].'&newfeature_id='.$this->request->get['newfeature_id'], 'SSL'));
+            $this->response->redirect($this->url->link('setting/newfeature', 'token=' . $this->session->data['token'] . '&newfeature_id=' . $this->request->get['newfeature_id'], 'SSL'));
         }
 
         $this->getForm();
     }
 
-    public function delete()
-    {
+    public function delete() {
         $this->load->language('setting/newfeature');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -81,22 +100,20 @@ class ControllerSettingNewfeature extends Controller
 
         $this->load->model('setting/setting');
 
-        if (isset($this->request->post['selected'])  ) {
+        if (isset($this->request->post['selected'])) {
             foreach ($this->request->post['selected'] as $newfeature_id) {
                 $this->model_setting_newfeature->deleteNewfeature($newfeature_id);
- 
             }
 
             $this->session->data['success'] = $this->language->get('text_success');
 
-            $this->response->redirect($this->url->link('setting/newfeature', 'token='.$this->session->data['token'], 'SSL'));
+            $this->response->redirect($this->url->link('setting/newfeature', 'token=' . $this->session->data['token'], 'SSL'));
         }
 
         $this->getList();
     }
 
-    protected function getList()
-    {
+    protected function getList() {
 
         $this->load->language('setting/newfeature');
 
@@ -107,23 +124,23 @@ class ControllerSettingNewfeature extends Controller
         $url = '';
 
         if (isset($this->request->get['page'])) {
-            $url .= '&page='.$this->request->get['page'];
+            $url .= '&page=' . $this->request->get['page'];
         }
 
         $data['breadcrumbs'] = [];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
+            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('setting/newfeature', 'token='.$this->session->data['token'], 'SSL'),
+            'href' => $this->url->link('setting/newfeature', 'token=' . $this->session->data['token'], 'SSL'),
         ];
 
-        $data['add'] = $this->url->link('setting/newfeature/add', 'token='.$this->session->data['token'], 'SSL');
-        $data['delete'] = $this->url->link('setting/newfeature/delete', 'token='.$this->session->data['token'], 'SSL');
+        $data['add'] = $this->url->link('setting/newfeature/add', 'token=' . $this->session->data['token'], 'SSL');
+        $data['delete'] = $this->url->link('setting/newfeature/delete', 'token=' . $this->session->data['token'], 'SSL');
 
         $data['newfeatures'] = [];
 
@@ -144,8 +161,7 @@ class ControllerSettingNewfeature extends Controller
                 'customer_name' => $result['customer_name'],
                 'customers_requested' => $result['customers_requested'],
                 'no_of_customers_onboarded' => $result['no_of_customers_onboarded'],
-
-                'edit' => $this->url->link('setting/newfeature/edit', 'token='.$this->session->data['token'].'&newfeature_id='.$result['newfeature_id'], 'SSL'),
+                'edit' => $this->url->link('setting/newfeature/edit', 'token=' . $this->session->data['token'] . '&newfeature_id=' . $result['newfeature_id'], 'SSL'),
             ];
         }
 
@@ -157,7 +173,7 @@ class ControllerSettingNewfeature extends Controller
         $data['text_enable'] = $this->language->get('text_enable');
         $data['text_disable'] = $this->language->get('text_disable');
 
-        
+
         $data['column_name'] = $this->language->get('column_name');
         $data['column_summary'] = $this->language->get('column_summary');
         $data['column_detail_description'] = $this->language->get('column_detail_description');
@@ -203,15 +219,14 @@ class ControllerSettingNewfeature extends Controller
         $this->response->setOutput($this->load->view('setting/newfeature_list.tpl', $data));
     }
 
-    public function getForm()
-    {
+    public function getForm() {
         $data['heading_title'] = $this->language->get('heading_title');
 
         $data['text_newfeatures'] = $this->language->get('text_newfeatures');
         $data['text_no_results'] = $this->language->get('text_no_results');
         $data['text_confirm'] = $this->language->get('text_confirm');
 
-        
+
 
         $data['entry_name'] = $this->language->get('column_name');
         $data['entry_summary'] = $this->language->get('column_summary');
@@ -232,7 +247,7 @@ class ControllerSettingNewfeature extends Controller
         $data['column_no_of_customers_onboarded'] = $this->language->get('column_no_of_customers_onboarded');
         $data['column_business_impact'] = $this->language->get('column_business_impact');
         $data['column_is_customer_requirement'] = $this->language->get('column_is_customer_requirement');
- 
+
         if (isset($this->error['warning'])) {
             $data['error_warning'] = $this->error['warning'];
         } else {
@@ -304,23 +319,23 @@ class ControllerSettingNewfeature extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
+            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('setting/newfeature', 'token='.$this->session->data['token'], 'SSL'),
+            'href' => $this->url->link('setting/newfeature', 'token=' . $this->session->data['token'], 'SSL'),
         ];
 
         if (!isset($this->request->get['newfeature_id'])) {
             $data['breadcrumbs'][] = [
                 'text' => $this->language->get('text_settings'),
-                'href' => $this->url->link('setting/newfeature/add', 'token='.$this->session->data['token'], 'SSL'),
+                'href' => $this->url->link('setting/newfeature/add', 'token=' . $this->session->data['token'], 'SSL'),
             ];
         } else {
             $data['breadcrumbs'][] = [
                 'text' => $this->language->get('text_settings'),
-                'href' => $this->url->link('setting/newfeature/edit', 'token='.$this->session->data['token'].'&newfeature_id='.$this->request->get['newfeature_id'], 'SSL'),
+                'href' => $this->url->link('setting/newfeature/edit', 'token=' . $this->session->data['token'] . '&newfeature_id=' . $this->request->get['newfeature_id'], 'SSL'),
             ];
         }
 
@@ -333,16 +348,16 @@ class ControllerSettingNewfeature extends Controller
         }
 
         if (!isset($this->request->get['newfeature_id'])) {
-            $data['action'] = $this->url->link('setting/newfeature/add', 'token='.$this->session->data['token'], 'SSL');
+            $data['action'] = $this->url->link('setting/newfeature/add', 'token=' . $this->session->data['token'], 'SSL');
         } else {
-            $data['action'] = $this->url->link('setting/newfeature/edit', 'token='.$this->session->data['token'].'&newfeature_id='.$this->request->get['newfeature_id'], 'SSL');
+            $data['action'] = $this->url->link('setting/newfeature/edit', 'token=' . $this->session->data['token'] . '&newfeature_id=' . $this->request->get['newfeature_id'], 'SSL');
         }
 
-        $data['cancel'] = $this->url->link('setting/newfeature', 'token='.$this->session->data['token'], 'SSL');
+        $data['cancel'] = $this->url->link('setting/newfeature', 'token=' . $this->session->data['token'], 'SSL');
 
         if (isset($this->request->get['newfeature_id']) && ('POST' != $this->request->server['REQUEST_METHOD'])) {
             $this->load->model('setting/newfeature');
-             
+
             $newfeature_info = $this->model_setting_newfeature->getNewfeature($this->request->get['newfeature_id']);
         }
 
@@ -427,13 +442,13 @@ class ControllerSettingNewfeature extends Controller
             $data['no_of_customers_onboarded'] = '';
         }
 
-        
+
 
         $this->load->model('tool/image');
 
-        if (isset($this->request->post['image']) && is_file(DIR_IMAGE.$this->request->post['image'])) {
+        if (isset($this->request->post['image']) && is_file(DIR_IMAGE . $this->request->post['image'])) {
             $data['thumb'] = $this->model_tool_image->resize($this->request->post['image'], 100, 100);
-        } elseif (isset($newfeature_info['image']) && is_file(DIR_IMAGE.$newfeature_info['image'])) {
+        } elseif (isset($newfeature_info['image']) && is_file(DIR_IMAGE . $newfeature_info['image'])) {
             $data['thumb'] = $this->model_tool_image->resize($newfeature_info['image'], 100, 100);
         } else {
             $data['thumb'] = $this->model_tool_image->resize('no_image.png', 100, 100);
@@ -448,8 +463,7 @@ class ControllerSettingNewfeature extends Controller
         $this->response->setOutput($this->load->view('setting/newfeature_form.tpl', $data));
     }
 
-    protected function validateForm()
-    {
+    protected function validateForm() {
         if (!$this->user->hasPermission('modify', 'setting/newfeature')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
@@ -464,28 +478,26 @@ class ControllerSettingNewfeature extends Controller
 
         if (!$this->request->post['detail_description']) {
             $this->error['detail_description'] = $this->language->get('error_detail_description');
-        } 
+        }
 
         // if (!$this->request->post['file']) {
         //     $this->error['error_file'] = $this->language->get('error_file');
         // } 
-
-
         // if (!$this->request->post['additional_requirement']) {
         //     $this->error['additional_requirement'] = $this->language->get('error_additional_requirement');
         // } 
 
         if (!$this->request->post['customer_name']) {
             $this->error['customer_name'] = $this->language->get('error_customer_name');
-        }  
-        
+        }
+
         if (!$this->request->post['customers_requested']) {
             $this->error['customers_requested'] = $this->language->get('error_customers_requested');
-        } 
+        }
 
         if (!$this->request->post['no_of_customers_onboarded']) {
             $this->error['no_of_customers_onboarded'] = $this->language->get('error_no_of_customers_onboarded');
-        } 
+        }
 
         if ($this->error && !isset($this->error['warning'])) {
             $this->error['warning'] = $this->language->get('error_warning');
@@ -494,73 +506,68 @@ class ControllerSettingNewfeature extends Controller
         return !$this->error;
     }
 
-   
-
-    
-    public function uploadAdditionlRequirement()
-    {   
+    public function uploadAdditionlRequirement() {
 
         $target_file = $target_dir . basename($_FILES["additional_requirement"]["name"]);
         $uploadOk = 1;
-        $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
         // Check if image file is a actual image or fake image
-        if(isset($_POST["submit"])) {
-        // $check = getimagesize($_FILES["additional_requirement"]["tmp_name"]);
-        // if($check !== false) {
-        //     echo "File is an image - " . $check["mime"] . ".";
-        //     $uploadOk = 1;
-        // } else {
-        //     echo "File is not an image.";
-        //     $uploadOk = 0;
-        // }
+        if (isset($_POST["submit"])) {
+            // $check = getimagesize($_FILES["additional_requirement"]["tmp_name"]);
+            // if($check !== false) {
+            //     echo "File is an image - " . $check["mime"] . ".";
+            //     $uploadOk = 1;
+            // } else {
+            //     echo "File is not an image.";
+            //     $uploadOk = 0;
+            // }
         }
-     // Check if file already exists
+        // Check if file already exists
         if (file_exists($target_file)) {
             echo "Sorry, file already exists.";
             $uploadOk = 0;
-          }
+        }
 
-          // Check file size
+        // Check file size
         if ($_FILES["additional_requirement"]["size"] > 500000) {
             echo "Sorry, your file is too large.";
             $uploadOk = 0;
         }
 
 
-            // Allow certain file formats
-            if($imageFileType != "doc" && $imageFileType != "docx" && $imageFileType != "pdf" && $imageFileType != "xls" && $imageFileType != "xlsx"
-            && $imageFileType != "ppt" ) {
+        // Allow certain file formats
+        if ($imageFileType != "doc" && $imageFileType != "docx" && $imageFileType != "pdf" && $imageFileType != "xls" && $imageFileType != "xlsx" && $imageFileType != "ppt") {
             echo "Sorry, only Word, Excel, PPT, PDF files are allowed.";
             $uploadOk = 0;
-            }
-            // Check if $uploadOk is set to 0 by an error
-            if ($uploadOk == 0) {
-                echo "Sorry, your file was not uploaded.";
+        }
+        // Check if $uploadOk is set to 0 by an error
+        if ($uploadOk == 0) {
+            echo "Sorry, your file was not uploaded.";
             // if everything is ok, try to upload file
+        } else {
+            if (move_uploaded_file($_FILES["additional_requirement"]["tmp_name"], $target_file)) {
+                echo "The file " . htmlspecialchars(basename($_FILES["additional_requirement"]["name"])) . " has been uploaded.";
             } else {
-                if (move_uploaded_file($_FILES["additional_requirement"]["tmp_name"], $target_file)) {
-                echo "The file ". htmlspecialchars( basename( $_FILES["additional_requirement"]["name"])). " has been uploaded.";
-                } else {
                 echo "Sorry, there was an error uploading your file.";
-                }
             }
+        }
 
 
 
-        $json = []; 
+        $json = [];
         // Check user has permission
         if (!$this->user->hasPermission('modify', 'common/filemanager')) {
             $json['error'] = $this->language->get('error_permission');
-        } 
+        }
         // Make sure we have the correct directory
         // Make sure we have the correct directory 
-        
-            if (isset($this->request->get['directory'])) {
-                $directory = rtrim(DIR_IMAGE.'data/'.str_replace(['../', '..\\', '..'], '', $this->request->get['directory']), '/');
-            } else {
-                $directory = DIR_IMAGE.'data';
-            }
-         
+
+        if (isset($this->request->get['directory'])) {
+            $directory = rtrim(DIR_IMAGE . 'data/' . str_replace(['../', '..\\', '..'], '', $this->request->get['directory']), '/');
+        } else {
+            $directory = DIR_IMAGE . 'data';
+        }
+
 
         //create directory if not exists
         if (!file_exists($directory)) {
@@ -604,7 +611,6 @@ class ControllerSettingNewfeature extends Controller
                     'application/vnd.ms-powerpoint',
                     'application/vnd.ms-excel',
                     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-
                 ];
 
                 if (!in_array($this->request->files['file']['type'], $allowed)) {
@@ -620,7 +626,7 @@ class ControllerSettingNewfeature extends Controller
 
                 // Return any upload error
                 if (UPLOAD_ERR_OK != $this->request->files['file']['error']) {
-                    $json['error'] = $this->language->get('error_upload_'.$this->request->files['file']['error']);
+                    $json['error'] = $this->language->get('error_upload_' . $this->request->files['file']['error']);
                 }
             } else {
                 $json['error'] = $this->language->get('error_upload');
@@ -628,7 +634,7 @@ class ControllerSettingNewfeature extends Controller
         }
 
         if (!$json) {
-            move_uploaded_file($this->request->files['file']['tmp_name'], $directory.'/'.$filename);
+            move_uploaded_file($this->request->files['file']['tmp_name'], $directory . '/' . $filename);
 
             $json['success'] = $this->language->get('text_uploaded');
         }
@@ -636,4 +642,5 @@ class ControllerSettingNewfeature extends Controller
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
+
 }
