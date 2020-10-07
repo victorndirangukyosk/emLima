@@ -34,7 +34,7 @@
         });
 
         // Customer Login
-        $(document).delegate('#login-button', 'click', function (e) {
+        $(document).delegate('#login-button, #re_qrcode', 'click', function (e) {
             e.preventDefault();
 
             const loginButton = $('#login-button');
@@ -54,6 +54,7 @@
                             if (json['two_factor'] != null) {
                                 $("#creds").hide();
                                 $("#qrcode").show();
+                                $("#qrcode_img").empty();
                                 $("#qrcode_img").append("<img width='100' height='100' src='" + json['two_factor']['qr_code'] + "'/>");
                                 console.log(json['two_factor']['qr_code']);
                                 loginButton.text('LOGIN');
