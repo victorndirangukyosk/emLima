@@ -383,6 +383,10 @@ class ControllerCommonHome extends Controller {
             array_push($data['blocks'], $temp);
         }
 
+        $this->load->model('sale/order');
+        $numberOfOrders = count($this->model_sale_order->getOrders());
+        $data['order_count'] = $numberOfOrders;
+
         //echo "<pre>";print_r($data['blocks']);die;
         $this->document->setTitle($this->config->get('config_meta_title'));
         $this->document->setDescription($this->config->get('config_meta_description'));
