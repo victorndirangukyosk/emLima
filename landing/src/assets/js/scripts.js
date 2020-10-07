@@ -32,7 +32,7 @@
             y: 0,
             duration: .5
         });
-        
+
         var timerOn = true;
         function timer(remaining) {
             var m = Math.floor(remaining / 60);
@@ -40,7 +40,7 @@
 
             m = m < 10 ? '0' + m : m;
             s = s < 10 ? '0' + s : s;
-            $("#re_qrcode").hide();
+            $("#re_gen_qrcode").hide();
             document.getElementById('qrcode_timer').innerHTML = m + ':' + s;
             remaining -= 1;
 
@@ -49,10 +49,13 @@
                     timer(remaining);
                 }, 1000);
                 return;
+            } else {
+                console.log('TIMER');
+                $("#re_gen_qrcode").show();
+                $("#qrcode_timer").hide();
             }
 
             if (!timerOn) {
-                console.log('TIMER');
                 // Do validate stuff here
                 return;
             }
