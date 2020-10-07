@@ -1107,18 +1107,18 @@
 				$("#switch-grid").hide();
 			}
             console.log("ready in top_category");
-            $(document).delegate('.open-popup', 'click', function(){
-                //alert("wfe");
-                //$('#popupmodal').modal('hide');
-                console.log("product blocks"+$(this).attr('data-id'));
-                $.get('index.php?path=product/product/view&product_store_id='+$(this).attr('data-id')+'&store_id='+$(this).attr('data-store'), function(data){
-                    $('.modal-wrapper').html(data);
-                    $('#popupmodal').modal('show');
-                });
-
-                if($('#product_name').length)
-                $('#product_name').val('');
-            });
+  $(document).ready(function () {
+    $(document).delegate('.open-popup', 'click', function () {
+      $('.open-popup').prop('disabled', true);
+      // console.log("product blocks" + $(this).attr('data-id'));
+      $.get('index.php?path=product/product/view&product_store_id=' + $(this).attr('data-id') + '&store_id=' + $(this).attr('data-store'), function (data) {
+        $('.open-popup').prop('disabled', false);
+        $('.modal-wrapper').html(data);
+        $('#popupmodal').modal('show');
+      });
+      $('#product_name').val('');
+    });
+  });
         });
 		
 		$('input[name="price_slabs"]').click(function () {

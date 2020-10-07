@@ -1,23 +1,22 @@
 <?php
 
-require_once DIR_SYSTEM.'vendor/firebase/php-jwt/vendor/autoload.php';
+require_once DIR_SYSTEM . 'vendor/firebase/php-jwt/vendor/autoload.php';
 
 use Firebase\JWT\JWT;
 
 define('SECRET_KEY', 'customer-app-apiss');
 define('ALGORITHM', 'HS512');
 
-class ControllerAccountLogin extends Controller
-{
+class ControllerAccountLogin extends Controller {
+
     private $error = [];
 
-    public function index()
-    {
+    public function index() {
         if (!$this->request->isAjax()) {
             $this->response->redirect($this->url->link('common/home/toHome'));
         }
 
-        $this->document->addStyle('front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_login.css');
+        $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_login.css');
 
         $this->load->model('account/customer');
 
@@ -83,7 +82,7 @@ class ControllerAccountLogin extends Controller
 
             $activity_data = [
                 'customer_id' => $this->customer->getId(),
-                'name' => $this->customer->getFirstName().' '.$this->customer->getLastName(),
+                'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
             ];
 
             $this->model_account_activity->addActivity('login', $activity_data);
@@ -147,7 +146,7 @@ class ControllerAccountLogin extends Controller
             $data['error_warning'] = '';
         }
         //get fb login url
-        require DIR_SYSTEM.'vendor/Facebook/autoload.php';
+        require DIR_SYSTEM . 'vendor/Facebook/autoload.php';
 
         $fb = new Facebook\Facebook([
             'app_id' => !empty($this->config->get('config_fb_app_id')) ? $this->config->get('config_fb_app_id') : 'randomstringforappid',
@@ -162,7 +161,7 @@ class ControllerAccountLogin extends Controller
             $server = $this->config->get('config_url');
         }
 
-        $data['facebook'] = $helper->getLoginUrl($server.'index.php?path=account/facebook', ['email']);
+        $data['facebook'] = $helper->getLoginUrl($server . 'index.php?path=account/facebook', ['email']);
 
         if (isset($this->request->post['redirect']) && (false !== strpos($this->request->post['redirect'], $this->config->get('config_url')) || false !== strpos($this->request->post['redirect'], $this->config->get('config_ssl')))) {
             $data['redirect'] = $this->request->post['redirect'];
@@ -204,8 +203,7 @@ class ControllerAccountLogin extends Controller
         // }
     }
 
-    protected function validate()
-    {
+    protected function validate() {
         $this->trigger->fire('pre.customer.login');
 
         // Check how many login attempts have been made.
@@ -242,8 +240,7 @@ class ControllerAccountLogin extends Controller
         return !$this->error;
     }
 
-    public function login_send_otp()
-    {
+    public function login_send_otp() {
         $data['status'] = true;
 
         $this->load->model('account/customer');
@@ -313,8 +310,7 @@ class ControllerAccountLogin extends Controller
         $this->response->setOutput(json_encode($data));
     }
 
-    public function login_verify_otp()
-    {
+    public function login_verify_otp() {
         $data['status'] = true;
 
         $this->load->model('account/customer');
@@ -327,7 +323,7 @@ class ControllerAccountLogin extends Controller
                 $data['status'] = false;
 
                 $data['error_warning'] = $this->language->get('error_invalid_otp');
-            // user not found
+                // user not found
             } else {
                 // add activity and all
 
@@ -343,7 +339,7 @@ class ControllerAccountLogin extends Controller
 
                     $activity_data = [
                         'customer_id' => $this->customer->getId(),
-                        'name' => $this->customer->getFirstName().' '.$this->customer->getLastName(),
+                        'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
                     ];
 
                     $this->model_account_activity->addActivity('login', $activity_data);
@@ -372,8 +368,7 @@ class ControllerAccountLogin extends Controller
         $this->response->setOutput(json_encode($data));
     }
 
-    public function newcustomer()
-    {
+    public function newcustomer() {
         if ($this->request->server['HTTPS']) {
             $server = $this->config->get('config_ssl');
         } else {
@@ -387,22 +382,22 @@ class ControllerAccountLogin extends Controller
         $this->load->language('common/login_modal');
         $this->load->model('tool/image');
 
-        if (is_file(DIR_IMAGE.$this->config->get('config_icon'))) {
+        if (is_file(DIR_IMAGE . $this->config->get('config_icon'))) {
             //$data['icon'] = $server . 'image/' . $this->config->get('config_icon');
             $data['icon'] = $this->model_tool_image->resize($this->config->get('config_icon'), 30, 30);
         } else {
             $data['icon'] = '';
         }
 
-        if (is_file(DIR_IMAGE.$this->config->get('config_fav_icon'))) {
-            $data['fav_icon'] = $server.'image/'.$this->config->get('config_fav_icon');
+        if (is_file(DIR_IMAGE . $this->config->get('config_fav_icon'))) {
+            $data['fav_icon'] = $server . 'image/' . $this->config->get('config_fav_icon');
         } else {
             $data['fav_icon'] = '';
         }
 
-        if (is_file(DIR_IMAGE.$this->config->get('config_logo'))) {
+        if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
             $data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'), 200, 110);
-        //$data['logo'] = $server . 'image/' . $this->config->get('config_logo');
+            //$data['logo'] = $server . 'image/' . $this->config->get('config_logo');
         } else {
             $data['logo'] = '';
         }
@@ -426,7 +421,7 @@ class ControllerAccountLogin extends Controller
         $data['forget_link'] = $this->url->link('account/forgotten');
 
         /* Login Variables */
-        $data['text_number_verification'] = $this->language->get('text_number_verification').' '.$this->config->get('config_name');
+        $data['text_number_verification'] = $this->language->get('text_number_verification') . ' ' . $this->config->get('config_name');
         $data['text_enter_number_to_login'] = $this->language->get('text_enter_number_to_login');
         $data['text_enter_email_address'] = $this->language->get('text_enter_email_address');
         $data['text_enter_password'] = $this->language->get('text_enter_password');
@@ -454,9 +449,9 @@ class ControllerAccountLogin extends Controller
         $data['text_have_account'] = $this->language->get('text_have_account');
         $data['text_forget_password'] = $this->language->get('text_forget_password');
 
-        $data['privacy_link'] = $this->url->link('information/information', 'information_id='.$this->config->get('config_privacy_policy_id'), 'SSL');
+        $data['privacy_link'] = $this->url->link('information/information', 'information_id=' . $this->config->get('config_privacy_policy_id'), 'SSL');
 
-        $data['account_terms_link'] = $this->url->link('information/information', 'information_id='.$this->config->get('config_account_id'), 'SSL');
+        $data['account_terms_link'] = $this->url->link('information/information', 'information_id=' . $this->config->get('config_account_id'), 'SSL');
 
         /* Register Variables */
         $this->load->language('account/register');
@@ -537,11 +532,10 @@ class ControllerAccountLogin extends Controller
             $data['site_key'] = '';
         }
 
-        $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/landing_page/register.tpl', $data));
+        $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/register.tpl', $data));
     }
 
-    public function customer()
-    {
+    public function customer() {
         if ($this->request->server['HTTPS']) {
             $server = $this->config->get('config_ssl');
         } else {
@@ -571,11 +565,10 @@ class ControllerAccountLogin extends Controller
         $data['forget_link'] = $this->url->link('account/forgotten');
 
 //          echo '<pre>';print_r($data);exit;
-        $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/landing_page/login.tpl', $data));
+        $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/login.tpl', $data));
     }
 
-    public function login()
-    {
+    public function login() {
         $data['status'] = false;
 
         $this->load->model('account/customer');
@@ -583,7 +576,7 @@ class ControllerAccountLogin extends Controller
         if (isset($this->request->post['password']) && isset($this->request->post['email'])) {
             //$otp_data = $this->model_account_customer->getOTP($this->request->post['customer_id'],$this->request->post['verify_otp'],'login');
 
-            $user_query = $this->db->query('SELECT * FROM '.DB_PREFIX."customer WHERE email = '".$this->db->escape($this->request->post['email'])."' AND (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('".$this->db->escape($this->request->post['password'])."'))))) OR password = '".$this->db->escape(md5($this->request->post['password']))."')");
+            $user_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE email = '" . $this->db->escape($this->request->post['email']) . "' AND (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape($this->request->post['password']) . "'))))) OR password = '" . $this->db->escape(md5($this->request->post['password'])) . "')");
 
             //print_r($user_query);
             if ($user_query->num_rows) {
@@ -604,7 +597,7 @@ class ControllerAccountLogin extends Controller
 
                         $activity_data = [
                             'customer_id' => $this->customer->getId(),
-                            'name' => $this->customer->getFirstName().' '.$this->customer->getLastName(),
+                            'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
                         ];
 
                         $this->model_account_activity->addActivity('login', $activity_data);
@@ -617,6 +610,8 @@ class ControllerAccountLogin extends Controller
 
                         $data['success_message'] = $this->language->get('text_login_success');
                         $this->model_account_customer->cacheProductPrices(75);
+                        $this->session->data['order_approval_access'] = $user_query->row['order_approval_access'];
+                        $this->session->data['order_approval_access_role'] = $user_query->row['order_approval_access_role'];
                     }
                 } else {
                     $data['status'] = false;
@@ -637,7 +632,7 @@ class ControllerAccountLogin extends Controller
             $data['error_warning'] = $this->language->get('error_login');
         }
 
-        $data['redirect'] = null;//if null is not placed change pass not working
+        $data['redirect'] = null; //if null is not placed change pass not working
         //check email sessions
         $log = new Log('error.log');
         $this->load->model('checkout/order');
@@ -669,9 +664,8 @@ class ControllerAccountLogin extends Controller
         $this->response->setOutput(json_encode($data));
     }
 
-    public function adminRedirectLogin()
-    {
-        $this->document->addStyle('front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_login.css');
+    public function adminRedirectLogin() {
+        $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_login.css');
 
         $this->load->model('account/customer');
 
@@ -741,7 +735,7 @@ class ControllerAccountLogin extends Controller
 
             $activity_data = [
                 'customer_id' => $this->customer->getId(),
-                'name' => $this->customer->getFirstName().' '.$this->customer->getLastName(),
+                'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
             ];
 
             $this->model_account_activity->addActivity('login', $activity_data);
@@ -800,7 +794,7 @@ class ControllerAccountLogin extends Controller
             $data['error_warning'] = '';
         }
         //get fb login url
-        require DIR_SYSTEM.'vendor/Facebook/autoload.php';
+        require DIR_SYSTEM . 'vendor/Facebook/autoload.php';
 
         $fb = new Facebook\Facebook([
             'app_id' => !empty($this->config->get('config_fb_app_id')) ? $this->config->get('config_fb_app_id') : 'randomstringforappid',
@@ -816,7 +810,7 @@ class ControllerAccountLogin extends Controller
             $server = $this->config->get('config_url');
         }
 
-        $data['facebook'] = $helper->getLoginUrl($server.'index.php?path=account/facebook', ['email']);
+        $data['facebook'] = $helper->getLoginUrl($server . 'index.php?path=account/facebook', ['email']);
 
         if (isset($this->request->post['redirect']) && (false !== strpos($this->request->post['redirect'], $this->config->get('config_url')) || false !== strpos($this->request->post['redirect'], $this->config->get('config_ssl')))) {
             $data['redirect'] = $this->request->post['redirect'];
@@ -858,13 +852,13 @@ class ControllerAccountLogin extends Controller
         // }
     }
 
-    public function autologin()
-    {
+    public function autologin() {
         $res['status'] = 10022;
         $res['message'] = 'Unauthorized';
         $headers = $_REQUEST['token'];
         if (!empty($headers)) {
             if (preg_match('/Bearer\s(\S+)/', $headers, $matches)) {
+                
             }
         }
 
@@ -876,7 +870,7 @@ class ControllerAccountLogin extends Controller
                 //echo '<pre>';print_r($DecodedDataArray);exit;
 
                 if (isset($DecodedDataArray) && isset($DecodedDataArray->data)) {
-                    $customer_query = $this->db->query('SELECT * FROM '.DB_PREFIX."customer WHERE customer_id = '".(int) $DecodedDataArray->data->id."' AND status = '1'");
+                    $customer_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . (int) $DecodedDataArray->data->id . "' AND status = '1'");
 
                     if ($customer_query->num_rows) {
                         $this->customer->setVariables($customer_query->row);
@@ -887,13 +881,13 @@ class ControllerAccountLogin extends Controller
                         if ($resChannel) {
                             $this->session->data['customer_id'] = $this->customer->getId();
                             if (!empty($_REQUEST['store_id'])) {
-                                $storeSEO = $this->model_setting_store->getSeoUrl('store_id='.$_REQUEST['store_id']);
+                                $storeSEO = $this->model_setting_store->getSeoUrl('store_id=' . $_REQUEST['store_id']);
                                 if (!empty($storeSEO)) {
                                     $redirect .= '/';
-                                    $redirect .= 'store/'.$storeSEO;
+                                    $redirect .= 'store/' . $storeSEO;
                                 }
                             }
-                            header('Location:'.$redirect);
+                            header('Location:' . $redirect);
                         } else {
                             $this->response->addHeader('Content-Type: application/json');
                             $this->response->setOutput(json_encode($res));
@@ -913,8 +907,7 @@ class ControllerAccountLogin extends Controller
         }
     }
 
-    public function farmer()
-    {
+    public function farmer() {
         if ($this->request->server['HTTPS']) {
             $server = $this->config->get('config_ssl');
         } else {
@@ -928,22 +921,22 @@ class ControllerAccountLogin extends Controller
         $this->load->language('common/login_modal');
         $this->load->model('tool/image');
 
-        if (is_file(DIR_IMAGE.$this->config->get('config_icon'))) {
+        if (is_file(DIR_IMAGE . $this->config->get('config_icon'))) {
             //$data['icon'] = $server . 'image/' . $this->config->get('config_icon');
             $data['icon'] = $this->model_tool_image->resize($this->config->get('config_icon'), 30, 30);
         } else {
             $data['icon'] = '';
         }
 
-        if (is_file(DIR_IMAGE.$this->config->get('config_fav_icon'))) {
-            $data['fav_icon'] = $server.'image/'.$this->config->get('config_fav_icon');
+        if (is_file(DIR_IMAGE . $this->config->get('config_fav_icon'))) {
+            $data['fav_icon'] = $server . 'image/' . $this->config->get('config_fav_icon');
         } else {
             $data['fav_icon'] = '';
         }
 
-        if (is_file(DIR_IMAGE.$this->config->get('config_logo'))) {
+        if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
             $data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'), 200, 110);
-        //$data['logo'] = $server . 'image/' . $this->config->get('config_logo');
+            //$data['logo'] = $server . 'image/' . $this->config->get('config_logo');
         } else {
             $data['logo'] = '';
         }
@@ -1018,11 +1011,10 @@ class ControllerAccountLogin extends Controller
             $data['site_key'] = '';
         }
 
-        $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/landing_page/farmer-registration.tpl', $data));
+        $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/farmer-registration.tpl', $data));
     }
 
-    public function checksubuserorder()
-    {
+    public function checksubuserorder() {
         $decryption_iv = '1234567891011121';
         $decryption_key = 'KwikBasket';
         $options = 0;
@@ -1033,14 +1025,14 @@ class ControllerAccountLogin extends Controller
         $user_id = openssl_decrypt($this->request->get['user_token'], $ciphering, $decryption_key, $options, $decryption_iv);
         $parent_user_id = openssl_decrypt($this->request->get['parent_user_token'], $ciphering, $decryption_key, $options, $decryption_iv);
 
-        echo 'order_token : '.$order_id;
-        echo 'sub_user_token : '.$user_id;
-        echo 'parent_user_token : '.$parent_user_id;
+        echo 'order_token : ' . $order_id;
+        echo 'sub_user_token : ' . $user_id;
+        echo 'parent_user_token : ' . $parent_user_id;
         echo 'Order Details Checking';
         $log = new Log('error.log');
-        $log->write('order_token : '.$order_id);
-        $log->write('sub_user_token : '.$user_id);
-        $log->write('parent_token : '.$parent_user_id);
+        $log->write('order_token : ' . $order_id);
+        $log->write('sub_user_token : ' . $user_id);
+        $log->write('parent_token : ' . $parent_user_id);
         $log->write('checksubuserorder');
 
         echo $this->session->data['email_sub_user_order_id'] = $order_id;
@@ -1053,4 +1045,5 @@ class ControllerAccountLogin extends Controller
             $this->response->redirect($this->url->link('account/login/customer', '', 'SSL'));
         }
     }
+
 }

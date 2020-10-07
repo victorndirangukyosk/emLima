@@ -581,30 +581,7 @@ class="KFSGT product-detail-bnt product-img product-description open-popup" role
          </div>
 
  </div>
- <!--Cart HTML Start-->
- <div class="store-cart-panel">
-        <div class="modal right fade" id="store-cart-side" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="cart-panel-content">
-                    </div>
-                    <div class="modal-footer">
-                        <!-- <p><?= $text_verify_number ?></p> -->
-                        <a href="<?php echo $checkout; ?>" id="proceed_to_checkout">
 
-                            <button type="button" class="btn btn-primary btn-block btn-lg" id="proceed_to_checkout_button">
-                                <span class="checkout-modal-text"><?= $text_proceed_to_checkout?> </span>
-                                <div class="checkout-loader" style="display: none;"></div>
-
-                            </button>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-</div>
-<!--Cart HTML End-->
   <div class="modal-wrapper"></div>
     <?php echo $footer ?>
     <!-- Phone Modal -->
@@ -916,19 +893,18 @@ __kdt.push({"post_on_load": false});
             $('#bannermodal').modal('hide');
             $('.modal-backdrop').remove();
     });
-        $(document).ready(function() {
-            console.log("ready in top_category");
-            $(document).delegate('.open-popup', 'click', function(){
-                //alert("wfe");
-                //$('#popupmodal').modal('hide');
-                console.log("product blocks"+$(this).attr('data-id'));
-                $.get('index.php?path=product/product/view&product_store_id='+$(this).attr('data-id')+'&store_id='+$(this).attr('data-store'), function(data){
-                    $('.modal-wrapper').html(data);
-                    $('#popupmodal').modal('show');
-                });
-                 $('#product_name').val('');
-            });
-        });
+  $(document).ready(function () {
+    $(document).delegate('.open-popup', 'click', function () {
+      $('.open-popup').prop('disabled', true);
+      // console.log("product blocks" + $(this).attr('data-id'));
+      $.get('index.php?path=product/product/view&product_store_id=' + $(this).attr('data-id') + '&store_id=' + $(this).attr('data-store'), function (data) {
+        $('.open-popup').prop('disabled', false);
+        $('.modal-wrapper').html(data);
+        $('#popupmodal').modal('show');
+      });
+      $('#product_name').val('');
+    });
+  });
 
     </script>
     <script type="text/javascript">
@@ -971,3 +947,20 @@ __kdt.push({"post_on_load": false});
     });
 </script>
 </html>
+
+<style>
+
+
+modal.left .modal-dialog, .modal.right .modal-dialog {
+width: 550px;
+}
+.mycart-header {
+    padding: 20px;
+}
+
+.mycart-product-listing .total-price {
+  margin-top: 40px;
+}
+
+
+</style>

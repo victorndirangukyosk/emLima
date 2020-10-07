@@ -41,6 +41,8 @@ class ModelAccountApi extends Model
             //if($user_query->row['token'] == "") {
             if ($user_query->row['approved']) {
                 $data['customer_id'] = $user_query->row['customer_id'];
+                $data['order_approval_access'] = $user_query->row['order_approval_access'];
+                $data['order_approval_access_role'] = $user_query->row['order_approval_access_role'];
 
                 $data['customer_email'] = $user_query->row['email'];
             } else {

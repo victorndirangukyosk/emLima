@@ -27,6 +27,9 @@
 		<div class="panel panel-default">
 			<div class="panel-body">
 				<ul class="nav nav-tabs">
+                                        <?php if($this->user->getGroupId() == 16) { ?>
+                                        <li class="active"><a href="#tab_import_prices" data-toggle="tab"><?php echo $tab_import_prices; ?></a></li>
+                                        <?php } else { ?>
 					<li class="active">
 						<a href="#tab-export" data-toggle="tab"><?php echo $tab_export; ?></a>
 					</li>
@@ -44,6 +47,7 @@
 					<?php } ?>
 
 					<li><a href="#tab_import_prices" data-toggle="tab"><?php echo $tab_import_prices; ?></a></li>
+                                        <?php } ?>
 				</ul>
 				<div class="tab-content">
 					<div class="tab-pane active" id="tab-export">

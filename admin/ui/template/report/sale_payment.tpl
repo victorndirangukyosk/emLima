@@ -168,7 +168,7 @@ $('#button-filter').on('click', function() {
 //--></script> 
   <script type="text/javascript"><!--
 $('.date').datetimepicker({
-	pickTime: false
+	pickTime: false,  widgetParent: 'body'
 });
 
     $('input[name=\'filter_city\']').autocomplete({
@@ -237,3 +237,10 @@ function excel() {
 
 //--></script></div>
 <?php echo $footer; ?>
+
+
+<style>
+body {
+    position: inline;
+}
+</style>

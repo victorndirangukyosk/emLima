@@ -14,7 +14,7 @@
                 <button type="button" data-toggle="tooltip" title="<?php echo $button_disable; ?>" class="btn btn-default" onclick="changeStatus(0)"><i class="fa fa-times-circle text-danger"></i></button>
                 <!--<button type="button" data-toggle="tooltip" title="<?php echo $button_delete; ?>" class="btn btn-danger" onclick="confirm('<?php echo $text_confirm; ?>') ? $('#form-product').submit() : false;"><i class="fa fa-trash-o"></i></button>-->
             <?php } ?>
-				<span style="margin-left: 10px;" onclick="ChangeInventory()" form="form-product" data-toggle="tooltip" title="" class="btn btn-success"><i class="fa fa-check"></i></span>
+				<span style="margin-left: 10px;" onclick="ChangeInventory()" form="form-product" data-toggle="tooltip" title="Change Inventory" class="btn btn-success"><i class="fa fa-check"></i></span>
             </div>
             <h1><?php echo $heading_title; ?></h1>
             <ul class="breadcrumb">
@@ -267,15 +267,15 @@
                                         <?php echo $product['quantity'] ?>
                                     </td>
                                     <td class="text-left">
-                                        <input name="total_procured_qty" type="number" class="procured_qty" data-general_product_id="<?php echo $product['product_id']; ?>" data-name="<?php echo $product['name']; ?>" data-current-qty="<?php echo $product['quantity']; ?>"  id="<?php echo $product['product_store_id'];?>" value="">
+                                        <input name="total_procured_qty" type="text" onkeypress="return validateFloatKeyPress(this, event);"  class="procured_qty" data-general_product_id="<?php echo $product['product_id']; ?>" data-name="<?php echo $product['name']; ?>" data-current-qty="<?php echo $product['quantity']; ?>"  id="<?php echo $product['product_store_id'];?>" value="">
                                     </td>
                                     <td class="text-left">
-                                        <input name="rejected_qty" type="number" class="rejected_qty"  id="rejected_qty_<?php echo $product['product_store_id'];?>" data-current-qty="<?php echo $product['quantity']; ?>" value="">
+                                        <input name="rejected_qty" type="text" class="rejected_qty" onkeypress="return validateFloatKeyPress(this, event);" id="rejected_qty_<?php echo $product['product_store_id'];?>" data-current-qty="<?php echo $product['quantity']; ?>" value="">
                                     </td>
 									<td class="text-left">
                                         <input name="total_qty" disabled type="number"  id="total_qty_<?php echo $product['product_store_id'];?>" value="">
                                     </td>
-                                    <td class="text-right"><button type="button" onclick="ChangeInventory();" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="Save"><i class="fa fa-check-circle text-success"></i></button>
+                                    <td class="text-right"><button type="button" onclick="ChangeProductInventory('<?php echo $product['product_store_id']; ?>');" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="Save"><i class="fa fa-check-circle text-success"></i></button>
 									<button type="button" onclick="getProductInventoryHistory('<?php echo $product['product_store_id']; ?>');" 
 									data-toggle="modal" data-target="#<?php echo $product['product_store_id']; ?>historyModal"
 								    title="" class="btn btn-default" data-original-title="History"><i class="fa fa-history text-success"></i></button>
@@ -551,6 +551,50 @@ function getProductInventoryHistory(product_store_id){
          });
 }
 
+
+function ChangeProductInventory(product_store_id){
+    var data_array = [];
+    $(".procured_qty").each(function() {
+        var tempObj ={};
+        var procured_qty = $(this).val();
+        if(procured_qty != undefined && procured_qty>0){
+            
+            var vendor_product_id = $(this).attr('id');
+            var general_product_id = $(this).attr('data-general_product_id');
+            var product_name = $(this).attr('data-name');
+			var current_qty = $(this).attr('data-current-qty');
+            var rejected_qty = $('#rejected_qty_'+vendor_product_id).val();
+            tempObj.product_store_id = vendor_product_id;
+            tempObj.product_id = general_product_id;
+            tempObj.product_name = product_name;
+            tempObj.procured_qty = procured_qty;
+            tempObj.rejected_qty = rejected_qty;
+			tempObj.current_qty = current_qty;
+            if(product_store_id==vendor_product_id)
+            data_array.push(tempObj);
+        }
+    });
+    console.log('data_array',data_array);
+    console.log('data_array_length',data_array.length);
+    if(data_array.length  > 0){
+           $.ajax({
+                    url: 'index.php?path=catalog/product/updateInventory&token=<?= $token ?>',
+                    dataType: 'json',
+                    data: {updated_products :data_array},
+                    success: function(json) {
+                        if (json) {
+                            $('.panel.panel-default').before('<div class="alert alert-warning"><i class="fa fa-warning"></i> ' + json.warning + '<button type="button" class="close" data-dismiss="alert">×</button></div>');
+                        }
+                        else {
+                            location.reload();
+                        }
+                  }
+         });
+    }
+
+}
+
+
 function ChangeInventory(){
     var data_array = [];
     $(".procured_qty").each(function() {
@@ -624,7 +668,7 @@ $('input.rejected_qty').keyup(function(){
     }
 
      if(parseFloat(procured_qty) < parseFloat(rejected_qty)){
-		alert("Rejected quantity should less than Procured quantity!");
+		alert("Rejected quantity should be less than procured quantity!");
 		$('#rejected_qty_'+vendor_product_id).val(0);
 		rejected_qty = 0;
 		
@@ -633,6 +677,68 @@ $('input.rejected_qty').keyup(function(){
 	$('#total_qty_'+vendor_product_id).val(total);
 });
 
-//--></script>
+//-->
+
+function isNumberKey(txt,evt)
+      {
+          
+          
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+      if (charCode == 46) {
+        //Check if the text already contains the . character
+        
+        if (txt.value.indexOf('.') === -1  ) {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+         
+
+        if (charCode > 31 &&
+          (charCode < 48 || charCode > 57))
+          return false;
+      }
+      return true; 
+      }
+
+
+       function validateFloatKeyPress(el, evt) {
+
+      // $optionvalue=$('.product-variation option:selected').text().trim();
+       //alert($optionvalue);
+       //if($optionvalue=="Per Kg")
+       //{
+            var charCode = (evt.which) ? evt.which : event.keyCode;
+            var number = el.value.split('.');
+            if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
+                return false;
+            }
+            //just one dot
+            if(number.length>1 && charCode == 46){
+                return false;
+            }
+            //get the carat position
+            var caratPos = getSelectionStart(el);
+            var dotPos = el.value.indexOf(".");
+            if( caratPos > dotPos && dotPos>-1 && (number[1].length > 1)){
+                return false;
+            }
+            return true;
+        //}
+
+       //else{
+      //var charCode = (evt.which) ? evt.which : event.keyCode;
+       // if (charCode > 31 &&
+       //   (charCode < 48 || charCode > 57))
+       //   return false;
+         // else
+      
+      //return true;
+      // }
+}
+
+
+</script>
 
 <?php echo $footer; ?>

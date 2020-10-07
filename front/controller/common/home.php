@@ -612,7 +612,7 @@ class ControllerCommonHome extends Controller {
         $this->load->controller('product/store');
         //$categories = $this->model_assets_category->getCategoriesNoRelationStore();
         $categories = $this->model_assets_category->getCategoryByStoreId(ACTIVE_STORE_ID, 0);
-
+        $selectedProducts=[];
         foreach ($categories as $category) {
             // Level 2
             $children_data = [];
@@ -634,9 +634,11 @@ class ControllerCommonHome extends Controller {
                 'start' => 0,
                 'limit' => (1359 == $category['category_id']) ? 12 : 12,
                 'store_id' => ACTIVE_STORE_ID,
+                'selectedProducts' => $selectedProducts,
             ];
 
             // Level 1
+            $productslisted = $this->getProducts($filter_data_product);
             $data['categories'][] = [
                 'name' => $category['name'],
                 'id' => $category['category_id'],
@@ -644,8 +646,13 @@ class ControllerCommonHome extends Controller {
                 'children' => $children_data,
                 'column' => $category['column'] ? $category['column'] : 1,
                 'href' => $this->url->link('product/category', 'category=' . $category['category_id']),
-                'products' => $this->getProducts($filter_data_product),
+                'products' => $productslisted,
             ];
+         
+            foreach($productslisted as $producted)
+            {
+            $selectedProducts[]=$producted['product_store_id'];
+            }
         }
         //	   echo "<pre>";print_r($data['categories']);die;
         $data['page'] = $_REQUEST['page'];
@@ -1022,7 +1029,7 @@ class ControllerCommonHome extends Controller {
         $log->write('1');
         $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_checkout.css');
 
-        $json['href'] = $this->url->link('checkout/checkout', '', 'SSL');
+        $json['href'] = $this->url->link('checkout/checkoutitems', '', 'SSL');
 
         // Validate cart has products and has stock.
         if ((!$this->cart->hasProducts() && empty($this->session->data['vouchers'])) /* || ( !$this->cart->hasStock() && !$this->config->get( 'config_stock_checkout' ) ) */) {
@@ -1297,6 +1304,7 @@ class ControllerCommonHome extends Controller {
                     'default_variation_name' => $result['default_variation_name'],
                     'thumb' => $image,
                     'name' => $name,
+                    'store_id' => $result['store_id'],
                     'variations' => [
                         [
                             'variation_id' => $result['product_store_id'],
@@ -1319,277 +1327,4 @@ class ControllerCommonHome extends Controller {
 
         return $data['products'];
     }
-
-//    public function vqmodhome() {
-//        echo '<!DOCTYPE html>
-//<html lang="en">
-//   <head>
-//      <meta charset="utf-8">
-//      <meta http-equiv="X-UA-Compatible" content="IE=edge">
-//      <meta name="viewport" content="width=device-width,initial-scale=1">
-//      <link rel="icon" type="image/svg" href="https://dev.kwikbasket.com/front/ui/theme/metaorganic/assets_landing_page/img/favicon.svg">
-//      <title>KwikBasket | Fresh Produce Supply Reimagined</title>
-//      <link rel="preload" href="https://dev.kwikbasket.com/front/ui/theme/metaorganic/assets_landing_page/css/style.min.css" as="style">
-//      <link rel="stylesheet" href="https://dev.kwikbasket.com/front/ui/theme/metaorganic/assets_landing_page/css/reset.css">
-//      <link rel="stylesheet" href="https://dev.kwikbasket.com/front/ui/theme/metaorganic/assets_landing_page/css/bootstrap.min.css">
-//      <link rel="stylesheet" href="https://dev.kwikbasket.com/front/ui/theme/metaorganic/assets_landing_page/css/font-awesome.min.css">
-//      <link rel="stylesheet" type="text/css" href="https://dev.kwikbasket.com/front/ui/theme/metaorganic/assets_landing_page/css/iziToast.min.css">
-//      <link rel="stylesheet" href="https://dev.kwikbasket.com/front/ui/theme/metaorganic/assets_landing_page/css/style.min.css">
-//   </head>
-//   <body>
-//      <nav class="navbar navbar-expand-lg fixed-top">
-//         <div class="container">
-//            <a class="navbar-brand" href="https://dev.kwikbasket.com/index.php"><img src="https://dev.kwikbasket.com/front/ui/theme/metaorganic/assets_landing_page/img/logo.svg" class="logo" alt="KwikBasket Logo"> </a><button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-//            <div class="collapse navbar-collapse justify-content-between align-items-center w-100" id="navbarNav">
-//               <ul class="navbar-nav mx-auto text-center">
-//                  <li class="nav-item"><a class="nav-link" href="https://dev.kwikbasket.com/index.php?path=common/home/homepage#what-we-do">What We Do</a></li>
-//                  <li class="nav-item"><a class="nav-link" href="https://dev.kwikbasket.com/index.php?path=common/home/homepage#existing-clients">Customers</a></li>
-//                  <li class="nav-item"><a class="nav-link" href="https://dev.kwikbasket.com/index.php?path=common/home/farmers">Farmers</a></li>
-//                  <li class="nav-item"><a class="nav-link" href="https://dev.kwikbasket.com/index.php?path=common/home/partners">Partners</a></li>
-//               </ul>
-//               <ul class="nav navbar-nav flex-row justify-content-center flex-nowrap">
-//                  <li class="nav-item mr-3"><a href="https://dev.kwikbasket.com/index.php?path=account/login/customer" class="btn btn-outline-secondary">Login</a></li>
-//                  <li class="nav-item"><a href="https://dev.kwikbasket.com/index.php?path=account/login/newCustomer" class="btn btn-primary">Register</a></li>
-//               </ul>
-//            </div>
-//         </div>
-//      </nav>
-//      <main>
-//         <section id="hero">
-//            <div class="container">
-//               <div class="row">
-//                  <div class="col-md-12">
-//                     <h1 class="hero-title anim-from-top"><span class="primary-text">Save time, </span><span class="secondary-text">Get value</span></h1>
-//                     <div class="anim-from-bottom">
-//                        <p class="hero-subtitle">With fresh produce straight from farms</p>
-//                        <p class="hero-description">Refining the agricultural and consumer space in Africa using Big Data and Machine Learning</p>
-//                        <a href="https://dev.kwikbasket.com/index.php?path=account/login/customer" class="btn btn-primary btn-cta mt-2" data-scroll>Place an Order</a>
-//                     </div>
-//                  </div>
-//               </div>
-//            </div>
-//         </section>
-//         <section id="existing-clients">
-//            <div class="container">
-//               <div class="row">
-//                  <div class="section-header col-md-12">
-//                     <h4 class="section-title">Customers who already trust us</h4>
-//                     <!-- <p class="section-subtitle">We serve restaurants, schools & colleges, hospitals, caterers, industrial canteens
-//                        and residences
-//                        </p> -->
-//                  </div>
-//               </div>
-//               <div class="row mt-4">
-//                  <div class="col-md-2 d-flex justify-content-center align-items-center"><img src="https://dev.kwikbasket.com/front/ui/theme/metaorganic/assets_landing_page/img/sarova.svg" alt="Sarova, a KwikBasket Client" class="client-logo"></div>
-//                  <div class="col-md-2 d-flex justify-content-center align-items-center"><img src="https://dev.kwikbasket.com/front/ui/theme/metaorganic/assets_landing_page/img/tribe.png" alt="Tribe Hotels, a KwikBasket Client" class="client-logo"></div>
-//                  <div class="col-md-2 d-flex justify-content-center align-items-center"><img src="https://dev.kwikbasket.com/front/ui/theme/metaorganic/assets_landing_page/img/inti.svg" alt="INTI, a KwikBasket Client" class="client-logo"></div>
-//                  <div class="col-md-2 d-flex justify-content-center align-items-center"><img style="width: 120px" src="https://dev.kwikbasket.com/front/ui/theme/metaorganic/assets_landing_page/img/mama-ashanti.png" alt="Mama Ashanti, a KwikBasket Client" class="client-logo"></div>
-//                  <div class="col-md-2 d-flex justify-content-center align-items-center"><img src="https://dev.kwikbasket.com/front/ui/theme/metaorganic/assets_landing_page/img/mayura.png" alt="Mayura, a KwikBasket Client" class="client-logo"></div>
-//                  <div class="col-md-2 d-flex justify-content-center align-items-center"><img src="https://dev.kwikbasket.com/front/ui/theme/metaorganic/assets_landing_page/img/caribea.png" alt="Caribea, a KwikBasket Client" class="client-logo"></div>
-//               </div>
-//               <div class="row">
-//                  <div class="col-md-2 d-flex justify-content-center align-items-center"><img src="https://dev.kwikbasket.com/front/ui/theme/metaorganic/assets_landing_page/img/pallet-cafe.png" alt="Pallet Cafe, a KwikBasket Client" class="client-logo"></div>
-//                  <div class="col-md-2 d-flex justify-content-center align-items-center"><img src="https://dev.kwikbasket.com/front/ui/theme/metaorganic/assets_landing_page/img/cedars.png" alt="Cedars, a KwikBasket Client" class="client-logo"></div>
-//                  <div class="col-md-2 d-flex justify-content-center align-items-center"><img style="width: 200px" src="https://dev.kwikbasket.com/front/ui/theme/metaorganic/assets_landing_page/img/honey-dough.png" alt="Honey & Dough, a KwikBasket Client" class="client-logo"></div>
-//                  <div class="col-md-2 d-flex justify-content-center align-items-center"><img style="width: 150px" src="https://dev.kwikbasket.com/front/ui/theme/metaorganic/assets_landing_page/img/mercado.png" alt="Mercado, a KwikBasket Client" class="client-logo"></div>
-//                  <div class="col-md-2 d-flex justify-content-center align-items-center"><img src="https://dev.kwikbasket.com/front/ui/theme/metaorganic/assets_landing_page/img/strathmore.png" alt="Strathmore University, a KwikBasket Client" class="client-logo"></div>
-//                  <div class="col-md-2 d-flex justify-content-center align-items-center"><img src="https://dev.kwikbasket.com/front/ui/theme/metaorganic/assets_landing_page/img/pizza-corner.png" alt="Pizza Corner, a KwikBasket Client" class="client-logo"></div>
-//               </div>
-//            </div>
-//         </section>
-//         <section id="what-we-do">
-//            <div class="container">
-//               <div class="row">
-//                  <div class="section-header col-md-12">
-//                     <h4 class="section-title">Creating technology that works for farmers and consumers</h4>
-//                     <p class="section-subtitle">We are a team of passionate agriculture enthusiasts and techies committed to changing farmers lives by improving their access to fair markets and providing high quality fresh produce to our customers</p>
-//                  </div>
-//               </div>
-//               <div class="row mt-5">
-//                  <div class="col-md-6 form-group">
-//                     <div class="card kwikbasket-promise">
-//                        <picture>
-//                           <source srcset="https://dev.kwikbasket.com/front/ui/theme/metaorganic/assets_landing_page/img/farmer-technology.webp" type="image/webp">
-//                           <source srcset="https://dev.kwikbasket.com/front/ui/theme/metaorganic/assets_landing_page/img/farmer-technology.jpg" type="image/jpeg">
-//                           <img src="https://dev.kwikbasket.com/front/ui/theme/metaorganic/assets_landing_page/img/farmer-technology.jpg" alt="KwikBasket Farmer Technology">
-//                        </picture>
-//                        <div class="promise-description">
-//                           <h6 class="secondary-text">Whats in it for farmers?</h6>
-//                           <ul>
-//                              <li>Realtime advisories and insights</li>
-//                              <li>Comprehensive operational support</li>
-//                              <li>Fair prices for their produce</li>
-//                           </ul>
-//                        </div>
-//                     </div>
-//                  </div>
-//                  <div class="col-md-6 form-group">
-//                     <div class="card kwikbasket-promise">
-//                        <picture>
-//                           <source srcset="https://dev.kwikbasket.com/front/ui/theme/metaorganic/assets_landing_page/img/consumer-technology.webp" type="image/webp">
-//                           <source srcset="https://dev.kwikbasket.com/front/ui/theme/metaorganic/assets_landing_page/img/consumer-technology.jpg" type="image/jpeg">
-//                           <img src="https://dev.kwikbasket.com/front/ui/theme/metaorganic/assets_landing_page/img/consumer-technology.jpg" alt="KwikBasket Consumer Technology">
-//                        </picture>
-//                        <div class="promise-description">
-//                           <h6 class="primary-text">What we offer our customers?</h6>
-//                           <ul>
-//                              <li>A seamless digital experience</li>
-//                              <li>High quality fresh produce deliveries</li>
-//                              <li>Good value for their money</li>
-//                           </ul>
-//                        </div>
-//                     </div>
-//                  </div>
-//               </div>
-//            </div>
-//         </section>
-//         <section id="order-cycle">
-//            <div class="container">
-//               <div class="row" data-scroll>
-//                  <div class="col-md-4 scorecard form-group">
-//                     <img src="https://dev.kwikbasket.com/front/ui/theme/metaorganic/assets_landing_page/img/customer-satisfaction.svg" alt="KwikBasket Customer Satisfaction">
-//                     <div class="d-flex flex-column align-items-start">
-//                        <h1 class="secondary-text">215</h1>
-//                        <p class="secondary-text"><strong>Happy Customers</strong></p>
-//                     </div>
-//                  </div>
-//                  <div class="col-md-4 scorecard form-group">
-//                     <img src="https://dev.kwikbasket.com/front/ui/theme/metaorganic/assets_landing_page/img/farmers-impacted.svg" alt="KwikBasket Farmer Impact">
-//                     <div class="d-flex flex-column align-items-start">
-//                        <h1 class="secondary-text">5250</h1>
-//                        <p class="secondary-text"><strong>Farmers Impacted</strong></p>
-//                     </div>
-//                  </div>
-//                  <div class="col-md-4 scorecard form-group">
-//                     <img src="https://dev.kwikbasket.com/front/ui/theme/metaorganic/assets_landing_page/img/orders-delivered.svg" alt="KwikBasket Delivered Orders">
-//                     <div class="d-flex flex-column align-items-start">
-//                        <h1 class="secondary-text">2490</h1>
-//                        <p class="secondary-text"><strong>Orders Delivered</strong></p>
-//                     </div>
-//                  </div>
-//               </div>
-//               <div class="row order-step">
-//                  <div class="col-md-4 step-content form-group" data-scroll>
-//                     <h5 class="step-title">Were always getting to know you better</h5>
-//                     <p class="step-description">At KwikBasket, were constantly innovating to design profitable models and build delightful user experiences while crafting digital tools to further streamline our efficiency. Using Artificial Intelligence, we learn customer preferences and customize their in app experience making placing orders quick and hassle free.</p>
-//                     <a href="https://dev.kwikbasket.com/index.php?path=account/login/customer" class="btn btn-primary btn-cta">Place Your Order</a>
-//                  </div>
-//                  <div class="col-md-4 step-content form-group" data-scroll>
-//                     <h5 class="step-title">Everyday is payday for our farmers</h5>
-//                     <p class="step-description">Were always engaging farmers. We continuously collect and analyze our customers data, understanding their purchasing habits inside out. With this data, we advise farmers on what to plant, in what quantities and when to do so. Better yet, we pay our farmers fairly, immediately we source produce from them!</p>
-//                     <a href="https://dev.kwikbasket.com/index.php?path=account/login/farmer" class="btn btn-primary btn-cta">Sell Your Produce</a>
-//                  </div>
-//                  <div class="col-md-4 step-content form-group" data-scroll>
-//                     <h5 class="step-title">Kwik Orders, Kwik Deliveries</h5>
-//                     <p class="step-description">What if we told you its possible to do a background check on your veggies? We use IoT devices and sensors all across our supply chain. These enable our customers to not only track delivery progress but also know what environmental conditions the produce is being subjected to while in transit.</p>
-//                     <a href="https://dev.kwikbasket.com/index.php?path=account/login/customer" class="btn btn-primary btn-cta">Track Your Order</a>
-//                  </div>
-//               </div>
-//            </div>
-//         </section>
-//         <section id="partners">
-//            <div class="container">
-//               <div class="row">
-//                  <div class="section-header col-md-12">
-//                     <h4 class="section-title">Some of our strategic partners</h4>
-//                     <p class="section-subtitle">Our partners are companies involved in the fresh produce agriculture supply chain. Weve partnered with suppliers, logistics providers, cold storage facilities, farmer insurance brokers, seed suppliers, soil testing experts and agricultural research organizations.</p>
-//                  </div>
-//               </div>
-//               <div class="row mt-4">
-//                  <div class="col-md-4 form-group d-flex justify-content-center align-items-center"><img src="https://dev.kwikbasket.com/front/ui/theme/metaorganic/assets_landing_page/img/etg.png" alt="Export Trading Group, a KwikBasket Partner" class="partner-logo"></div>
-//                  <div class="col-md-4 form-group d-flex justify-content-center align-items-center"><img src="https://dev.kwikbasket.com/front/ui/theme/metaorganic/assets_landing_page/img/technobrain.png" alt="Techno Brain Group, a KwikBasket Partner" class="partner-logo"></div>
-//                  <div class="col-md-4 form-group d-flex justify-content-center align-items-center"><img src="https://dev.kwikbasket.com/front/ui/theme/metaorganic/assets_landing_page/img/vpgroup.png" alt="VegPro, a KwikBasket Partner" class="partner-logo"></div>
-//               </div>
-//               <div class="row">
-//                  <div class="col-md-4 form-group d-flex justify-content-center align-items-center"><img src="https://dev.kwikbasket.com/front/ui/theme/metaorganic/assets_landing_page/img/fruitbox.png" alt="Fruit Box, a KwikBasket Partner" class="partner-logo"></div>
-//                  <div class="col-md-4 form-group d-flex justify-content-center align-items-center"><img src="https://dev.kwikbasket.com/front/ui/theme/metaorganic/assets_landing_page/img/quatrix.png" alt="Quatrix, a KwikBasket Partner" class="partner-logo"></div>
-//                  <div class="col-md-4 form-group d-flex justify-content-center align-items-center"><img src="https://dev.kwikbasket.com/front/ui/theme/metaorganic/assets_landing_page/img/fresh2go.png" alt="Fresh2Go, a KwikBasket Partner" class="partner-logo"></div>
-//               </div>
-//               <div class="row mt-2">
-//                  <div class="col-md-12 text-center"><a href="https://dev.kwikbasket.com/index.php?path=common/home/partners" class="btn btn-primary btn-cta mt-2">Partner With Us</a></div>
-//               </div>
-//            </div>
-//         </section>
-//         <section id="app-download" class="py-4">
-//            <div class="container">
-//               <div class="row mb-3">
-//                  <div class="col-md-12 text-center d-flex flex-row justify-content-center">
-//                     <h5 class="text-white">Download the KwikBasket app to enjoy a revolutionary digital experience,<br>free deliveries and exclusive price offers</h5>
-//                  </div>
-//               </div>
-//               <div class="row">
-//                  <div class="col-md-12 d-flex flex-row justify-content-center"><a target="_blank" href="https://play.google.com/store/apps/details?id=com.kwikbasket.customer"><img width="130" src="https://dev.kwikbasket.com/front/ui/theme/metaorganic/assets_landing_page/img/badge-google-play.png" alt="KwikBasket application on Google Play"></a></div>
-//               </div>
-//            </div>
-//         </section>
-//      </main>
-//      <div class="covid-prevention-bar">
-//         <p>We have placed measures to curb the spread of COVID-19</p>
-//         <a href="https://dev.kwikbasket.com/index.php?path=common/home/covid19">Learn More</a>
-//      </div>
-//      <footer>
-//         <div id="footer" class="footers pt-3 pb-3">
-//            <div class="container pt-5">
-//               <div class="row">
-//                  <div class="col-xs-12 col-sm-6 col-md-4 footers-one">
-//                     <div class="footers-logo"><img src="https://dev.kwikbasket.com/front/ui/theme/metaorganic/assets_landing_page/img/logo.svg" class="logo" alt="KwikBasket Logo"></div>
-//                     <div class="footers-info mt-3">
-//                        <p>3rd Floor, Heritan House<br>Woodlands Road Nairobi, Kenya<br><br>+254738770186 / +254780703586<br><a href="mailto:hello@kwikbasket.com?subject = Feedback&body = Message">hello@kwikbasket.com</a></p>
-//                     </div>
-//                     <div class="social-icons mb-3">
-//                        <a target="_blank" href="https://www.facebook.com/kwikbasket"><i id="social-fb" class="fa fa-facebook-square fa-2x social"></i></a><!-- <a target="_blank" href="#"><i id="social-tw" class="fa fa-twitter-square fa-2x social"></i></a> --> <a target="_blank" href="https://www.linkedin.com/company/kwikbasket"><i id="social-li" class="fa fa-linkedin-square fa-2x social"></i></a> <a target="_blank" href="https://www.instagram.com/kwikbasket/"><i id="social-in" class="fa fa-instagram fa-2x social"></i></a>
-//                     </div>
-//                  </div>
-//                  <div class="col-xs-12 col-sm-6 col-md-2 footers-two">
-//                     <h5 class="primary-text">Company</h5>
-//                     <ul class="list-unstyled">
-//                        <li><a href="https://dev.kwikbasket.com/index.php?path=common/home/about_us">About Us</a></li>
-//                        <li><a href="https://dev.kwikbasket.com/index.php?path=common/home/careers">Careers</a></li>
-//                     </ul>
-//                  </div>
-//                  <div class="col-xs-12 col-sm-6 col-md-2 footers-three">
-//                     <h5 class="primary-text">Explore</h5>
-//                     <ul class="list-unstyled">
-//                        <li><a href="https://dev.kwikbasket.com/index.php?path=common/home/homepage#order-cycle">Customers</a></li>
-//                        <li><a href="https://dev.kwikbasket.com/index.php?path=common/home/farmers">Farmers</a></li>
-//                        <li><a href="https://dev.kwikbasket.com/index.php?path=common/home/partners">Partners</a></li>
-//                     </ul>
-//                  </div>
-//                  <div class="col-xs-12 col-sm-6 col-md-2 footers-four">
-//                     <h5 class="primary-text">Resources</h5>
-//                     <ul class="list-unstyled">
-//                        <li><a href="https://dev.kwikbasket.com/index.php?path=common/home/technology">Technology</a></li>
-//                        <li><a href="https://dev.kwikbasket.com/index.php?path=common/home/faq">FAQs</a></li>
-//                        <li><a href="https://dev.kwikbasket.com/index.php?path=common/home/blog">Blog & Media</a></li>
-//                     </ul>
-//                  </div>
-//                  <div class="col-xs-12 col-sm-6 col-md-2 footers-five">
-//                     <h5 class="primary-text">Reach Out</h5>
-//                     <ul class="list-unstyled">
-//                        <li><a target="_blank" href="https://www.facebook.com/kwikbasket">Facebook</a></li>
-//                        <li><a target="_blank" href="https://www.linkedin.com/company/kwikbasket">LinkedIn</a></li>
-//                        <li><a target="_blank" href="https://www.instagram.com/kwikbasket/">Instagram</a></li>
-//                     </ul>
-//                  </div>
-//               </div>
-//            </div>
-//         </div>
-//         <div class="copyright border">
-//            <div class="container">
-//               <div class="row pt-3 pb-1">
-//                  <div class="content-container col-md-12">
-//                     <p class="text-muted">© 2020 KwikBasket | All Rights Reserved</p>
-//                     <ul>
-//                        <li><a href="https://dev.kwikbasket.com/index.php?path=common/home/terms_and_conditions">Terms & Conditions</a></li>
-//                        <li><a href="https://dev.kwikbasket.com/index.php?path=common/home/privacy_policy">Privacy Policy</a></li>
-//                     </ul>
-//                  </div>
-//               </div>
-//            </div>
-//         </div>
-//      </footer>
-//      <script src="https://dev.kwikbasket.com/front/ui/theme/metaorganic/assets_landing_page/js/jquery-3.2.1.min.js"></script><script src="https://dev.kwikbasket.com/front/ui/theme/metaorganic/assets_landing_page/js/popper.min.js"></script><script src="https://dev.kwikbasket.com/front/ui/theme/metaorganic/assets_landing_page/js/bootstrap.min.js"></script><script src="https://dev.kwikbasket.com/front/ui/theme/metaorganic/assets_landing_page/js/scroll-out.min.js"></script><script src="https://dev.kwikbasket.com/front/ui/theme/metaorganic/assets_landing_page/js/iziToast.min.js" async defer="defer"></script><script src="https://dev.kwikbasket.com/front/ui/theme/metaorganic/assets_landing_page/js/gsap.min.js"></script><script src="https://dev.kwikbasket.com/front/ui/theme/metaorganic/assets_landing_page/js/modernizr-custom.js"></script><script src="https://dev.kwikbasket.com/front/ui/theme/metaorganic/assets_landing_page/js/scripts.min.js"></script>
-//   </body>
-//</html>';
-//    }
 }

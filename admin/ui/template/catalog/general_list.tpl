@@ -18,7 +18,7 @@
                 <button type="button" data-toggle="tooltip" title="<?php echo $button_copy; ?>" class="btn btn-default" onclick="$('#form-product').attr('action', '<?php echo $copy; ?>').submit()"><i class="fa fa-copy"></i></button>
                 <button type="button" data-toggle="tooltip" title="<?php echo $button_enable; ?>" class="btn btn-default" onclick="changeStatus(1)"><i class="fa fa-check-circle text-success"></i></button>
                 <button type="button" data-toggle="tooltip" title="<?php echo $button_disable; ?>" class="btn btn-default" onclick="changeStatus(0)"><i class="fa fa-times-circle text-danger"></i></button>
-                <button type="button" data-toggle="tooltip" title="<?php echo $button_delete; ?>" class="btn btn-danger" onclick="confirm('<?php echo $text_confirm; ?>') ? $('#form-product').submit() : false;"><i class="fa fa-trash-o"></i></button>
+                <button type="button" data-toggle="tooltip" title="<?php echo $button_delete; ?>" class="btn btn-danger" onclick="confirmnew('<?php echo $text_confirm; ?>') ? $('#form-product').submit() : false;"><i class="fa fa-trash-o"></i></button>
             <?php } ?>
             </div>
             <h1><?php echo $heading_title; ?></h1>
@@ -455,6 +455,25 @@ function changeStatus(status) {
             }
         });
     }
+
+
+    function confirmnew(str) { 
+
+         if($('input[name="selected[]"]:checked').length == 0){
+             alert('Please select the product');
+            }
+            else{
+              $res=  confirm(str); 
+              if($res==false)
+              {
+                $('input[name="selected[]"]:checked'). prop("checked", false);                   
+              }
+                 return $res; 
+            }
+    }
+       
+        
+     
 //--></script>
 
 <?php echo $footer; ?>

@@ -4,7 +4,7 @@
 $_['heading_title'] = 'Email and SMS Template';
 
 // Text
-$_['text_success'] = 'Success: You have modified email tempaltes!';
+$_['text_success'] = 'Success: You have modified email templates!';
 $_['text_list'] = 'Email and SMS Templates List';
 $_['text_add'] = 'Add Email Template';
 $_['text_edit'] = 'Edit Email and SMS Template';

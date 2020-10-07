@@ -43,12 +43,15 @@
     		                    	<?php if ($product['thumb']) { ?>
     									 <div class="mycart-product-img"><img src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>" class="img-responsive" title="<?php echo $product['name']; ?>"></div>
     								<?php }?>  
-    		                    </div>
+                                </div>
+                                
     		                    <div class="col-md-8 col-sm-8 nopl col-xs-8">
     		                        <div class="mycart-product-info">
+                                       <a title="Remove item" class="delete-item" data-value='<?= $product["key"] ?>'  
+                                           product_id='<?= $product["product_store_id"] ?>'  
+                                           style=" background-color: #ec9f4e ;">  </a>
 
-                                       <a title="Remove item" class="delete-item" data-value='<?= $product["key"] ?>'  product_id='<?= $product["product_store_id"] ?>'  style=" background-color: #ec9f4e ;">  </a>
-    		                            <h3 style="width:200px;"> <?php echo $product['name']; ?> </h3>
+    		                            <h3 style="display: inline-block;"> <?php echo $product['name']; ?> </h3>
                                         <div style="font-size:13px;">
                                                 <?php  $fpt ='';
                                                 foreach ($product['produce_type'] as $pt) {
@@ -57,32 +60,13 @@
                                                     }    
                                                     ?><?= $fpt?></div> 
     		                            <p class="product-info">
-
-                                            <span class="small-info"><?php echo ( isset($product['unit']) ? $product['unit'] : ''); ?></span>
-
-                                            <!-- <?php if($product['product_type'] == 'replacable') { ?>
-                                                <span   class="badge badge-success replacable" style="cursor: pointer;" data-key='<?= $product["key"] ?>' data-value="replacable" data-toggle="tooltip" data-placement="left" title="<?= $text_replacable_title ?>">
-                                                 <?= $text_replacable ?>
-                                                </span>
-                                            <?php } else { ?>
-                                                <span  class="badge badge-danger replacable" style="cursor: pointer;" data-key='<?= $product["key"] ?>' data-value="not-replacable" data-toggle="tooltip" data-placement="left" title="<?= $text_not_replacable_title ?>">
-                                                    <?= $text_not_replacable ?>
-                                                </span>
-                                            <?php } ?>  -->
-                                            
+                                            <span class="small-info"><?php echo ( isset($product['unit']) ? $product['unit'] : ''); ?></span>                        
                                         </p>
 
-<!--  <button type="button" class="delete_item" id="delete_item"  value='<?= $product["key"] ?>' >
-                                <span class="checkout-modal-text">Delete</span>
-                                
-                            </button>-->
-
-                          
+                                        <?php require 'action.tpl'; ?>
 
                                         <div class="product-items product-price">
                                                 <div class="pro-qty-addbtn " data-variation-id="<?= $product['store_product_variation_id'] ?>" id="action_<?= $product['product_store_id'] ?>">
-
-                                                        
                                                 </div>
 
                                                 <div class="product-price-combo">
@@ -97,8 +81,6 @@
                                                 </div>
                                                 <span class="total-price"><?php echo $product['total']; ?></span>
                                         </div>
-
-                                        <?php require 'action.tpl'; ?>
     		                        </div>
     		                    </div>
     		                </div>
@@ -188,7 +170,7 @@ var key=$(this).attr('data-value');
 
 					$('.cart-panel-content').load('index.php?path=common/cart/newInfo');
 
-					$('.cart-count').html(json['count_products']);
+					$('.cart-count').html(json['count_products']+' ITEMS IN CART ');
                     $('.cart-total-amount').html(json['total_amount']);
 				}
 
@@ -273,24 +255,24 @@ var key=$(this).attr('data-value');
     transition: all 0.3s linear;
     -moz-transition: all 0.3s linear;
     -webkit-transition: all 0.3s linear;
-    border: 1px #ddd solid;
     border-radius: 999px;
     position: absolute;
- right: 18px;
-    top: -10px;
+    right: 0;
+    top: 0;
+    margin-right: 1rem;
 }
 
 .mycart-product-info  h3{
-margin-top: 30px;
+margin-top: .55rem;
 }
 
 
-.product-quantity {
-    position: absolute;
-    left: 230px;
-    top: 45px !important;
+.sp-quantity {
+    width: 100%;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: flex-end;
+    justify-content: center;
+    margin-top: 1.4rem;
 }
-
-
-
 </style>

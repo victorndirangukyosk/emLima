@@ -77,7 +77,11 @@ class ControllerCommonMenu extends Controller
         $data['offer'] = $this->url->link('marketing/offer', 'token='.$this->session->data['token'], 'SSL');
         $data['currency'] = $this->url->link('localisation/currency', 'token='.$this->session->data['token'], 'SSL');
         $data['customer'] = $this->url->link('sale/customer', 'token='.$this->session->data['token'].'&sort=c.date_added&order=DESC', 'SSL');
-
+        
+        $data['accountmanager'] = $this->url->link('sale/accountmanager', 'token='.$this->session->data['token'].'&sort=c.date_added&order=DESC', 'SSL');
+        $data['accountmanager_customers'] = $this->url->link('sale/accountmanageruser', 'token='.$this->session->data['token'].'&sort=c.date_added&order=DESC', 'SSL');
+        $data['account_manager_customer_orders'] = $this->url->link('sale/accountmanageruserorders', 'token='.$this->session->data['token'], 'SSL');
+        
         $data['bulk_email'] = $this->url->link('email/bulk_email', 'token='.$this->session->data['token'], 'SSL');
         $data['email_groups'] = $this->url->link('email/groups', 'token='.$this->session->data['token'], 'SSL');
 
@@ -164,6 +168,7 @@ class ControllerCommonMenu extends Controller
         $data['store_group'] = $this->url->link('setting/store_group', 'token='.$this->session->data['token'], 'SSL');
         $data['store_type'] = $this->url->link('setting/store_type', 'token='.$this->session->data['token'], 'SSL');
         $data['testimonial'] = $this->url->link('setting/testimonial', 'token='.$this->session->data['token'], 'SSL');
+        $data['newfeature'] = $this->url->link('setting/newfeature', 'token='.$this->session->data['token'], 'SSL');
         $data['stock_status'] = $this->url->link('localisation/stock_status', 'token='.$this->session->data['token'], 'SSL');
         $data['tax_class'] = $this->url->link('localisation/tax_class', 'token='.$this->session->data['token'], 'SSL');
         $data['tax_rate'] = $this->url->link('localisation/tax_rate', 'token='.$this->session->data['token'], 'SSL');
@@ -271,6 +276,9 @@ class ControllerCommonMenu extends Controller
         $data['preturn_customer'] = $this->user->hasPermission('access', 'sale/customer');
         $data['preturn_customer_group'] = $this->user->hasPermission('access', 'sale/customer_group');
         $data['preturn_customer_ban_ip'] = $this->user->hasPermission('access', 'sale/customer_ban_ip');
+        $data['preturn_account_manager'] = $this->user->hasPermission('access', 'sale/accountmanager');
+        $data['preturn_account_manager_customers'] = $this->user->hasPermission('access', 'sale/accountmanageruser');
+        $data['preturn_account_manager_customer_orders'] = $this->user->hasPermission('access', 'sale/accountmanageruserorders');
         $data['preturn_custom_field'] = $this->user->hasPermission('access', 'sale/custom_field');
         $data['preturn_voucher'] = $this->user->hasPermission('access', 'sale/voucher');
         $data['preturn_voucher_theme'] = $this->user->hasPermission('access', 'sale/voucher_theme');
@@ -296,6 +304,7 @@ class ControllerCommonMenu extends Controller
         $data['preturn_store_type'] = $this->user->hasPermission('access', 'setting/store_type');
 
         $data['preturn_testimonial'] = $this->user->hasPermission('access', 'setting/testimonial');
+        $data['preturn_newfeature'] = $this->user->hasPermission('access', 'setting/newfeature');
 
         $data['preturn_design_offer'] = $this->user->hasPermission('access', 'design/offer');
         $data['preturn_design_slider'] = $this->user->hasPermission('access', 'design/slider');

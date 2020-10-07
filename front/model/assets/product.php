@@ -260,11 +260,15 @@ class ModelAssetsProduct extends Model
 
     public function getProduct($product_store_id, $is_admin = false, $store_id = null)
     {
+        if($store_id == NULL) {
         if (isset($this->session->data['config_store_id'])) {
             $store_id = $this->session->data['config_store_id'];
         } else {
             $store_id = ACTIVE_STORE_ID;
         }
+        }
+        $log = new Log('error.log');
+        $log->write($store_id);
         $this->db->select('product_to_store.*,product_description.*,product.unit,product.image', false);
         $this->db->join('product', 'product.product_id = product_to_store.product_id', 'left');
         $this->db->join('product_description', 'product_description.product_id = product_to_store.product_id', 'left');
@@ -378,7 +382,8 @@ class ModelAssetsProduct extends Model
     {
         $returnData = [];
 
-        $all_variations = 'SELECT * ,product_store_id as variation_id FROM '.DB_PREFIX.'product_to_store ps LEFT JOIN '.DB_PREFIX."product p ON (ps.product_id = p.product_id) WHERE name = '$product_name'";
+       // $all_variations = 'SELECT * ,product_store_id as variation_id FROM '.DB_PREFIX.'product_to_store ps LEFT JOIN '.DB_PREFIX."product p ON (ps.product_id = p.product_id) WHERE name = '$product_name'";
+        $all_variations = 'SELECT * ,product_store_id as variation_id FROM '.DB_PREFIX.'product_to_store ps LEFT JOIN '.DB_PREFIX."product p ON (ps.product_id = p.product_id) WHERE name = '$product_name' and ps.status=1";
 
         //echo $all_variations;die;
         $result = $this->db->query($all_variations);
@@ -552,6 +557,13 @@ class ModelAssetsProduct extends Model
             }
         }
 
+
+        if (!empty($data['selectedProducts'])) {      
+
+                  
+            $this->db->where_not_in('product_to_store.product_store_id', $data['selectedProducts']);
+        }
+
         if ($data['start'] < 0) {
             $data['start'] = 0;
             $offset = $data['start'];
@@ -586,7 +598,7 @@ class ModelAssetsProduct extends Model
 
         // $this->db->group_by('product_to_store.product_store_id');
         $this->db->group_by('product_description.name');
-        $this->db->where('product_to_store.store_id', $store_id);
+        //$this->db->where('product_to_store.store_id', $store_id);
         $this->db->where('product_to_store.status', 1);
         $this->db->where('product_to_store.quantity >=', 1);
         $this->db->where('product_description.language_id', $this->config->get('config_language_id'));

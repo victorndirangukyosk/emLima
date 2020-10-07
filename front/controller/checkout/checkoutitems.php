@@ -1040,7 +1040,6 @@ class ControllerCheckoutCheckoutItems extends Controller
         $output = '';
         $itemsperslide = 4;
         $totalcount = count($result);
-        console.log($totalcount);
         $count = 0;
         $i = 0;
         if (0 == $totalcount) {

@@ -44,7 +44,7 @@
             <li><a href="<?php echo $general_products; ?>">General products</a></li>
             <?php } ?>
 
-            
+
 
             <?php if($preturn_vendor_product) { ?>    
             <li><a href="<?php echo $vendor_product; ?>"><?php echo $text_product; ?></a></li>
@@ -59,10 +59,16 @@
     <?php } ?>
 
     <?php if($preturn_vendor_product) { ?>    
-            <li><a href="<?php echo $inventory_management; ?>"><i class="fa inventory"></i> <span>Inventory</span></a></li>
+    <li><a href="<?php echo $inventory_management; ?>"><i class="fa inventory"></i> <span>Inventory</span></a></li>
     <?php } ?>
-     <?php if($preturn_vendor_product) { ?>    
-            <li><a href="<?php echo $category_prices; ?>"><i class="fa fa-tags fa-fw"></i> <span>Category Prices</span></a></li>
+    <?php if($preturn_vendor_product) { ?>  
+    <li id="simple-blog">
+    <a class="parent"><i class="fa fa-tags fa-fw"></i> <span>Category Prices</span></a>
+    <ul>
+    <li><a href="<?php echo $category_prices; ?>"><span>Category Prices</span></a></li>
+    <li><a href="<?php echo $export_import; ?>"><span><?php echo $text_export_import; ?></span></a></li>
+    </ul>
+    </li>
     <?php } ?>
     <?php
     if($preturn_simple_blog_author != false || $preturn_simple_blog_category != false || $preturn_simple_blog_article != false || 
@@ -116,14 +122,14 @@
             <?php if($preturn_fast_order) { ?>
             <li><a href="<?php echo $fast_order; ?>"><?php echo $text_fast_order; ?></a></li>
             <?php } ?>
-            
-             <?php if($preturn_return) { ?> 
+
+            <?php if($preturn_return) { ?> 
             <li><a href="<?php echo $return; ?>"><?php echo $text_return; ?></a></li>
             <?php } ?>
             <?php if($preturn_transaction) { ?>  
             <li><a href="<?php echo $transaction; ?>">Order Transactions</a></li>
             <?php } ?>
-           
+
         </ul>
     </li>
     <?php } ?>
@@ -144,6 +150,40 @@
             <?php } ?>
         </ul>
     </li>
+    <?php } ?>
+
+    <?php
+    if( $preturn_account_manager != false) {
+    ?>
+    <li><a class="parent"><i class="fa fa-user fa-fw"></i> <span><?php echo $text_account_managers; ?></span></a>
+        <ul class="collapse">
+            <?php if($preturn_account_manager) { ?>
+            <li><a href="<?php echo $accountmanager; ?>"><?php echo $text_account_managers; ?></a></li>
+            <?php } ?>
+        </ul>
+    </li>
+    <?php } ?>
+
+    <?php
+    if($preturn_account_manager_customers != false) {
+    ?>
+    <li><a class="parent"><i class="fa fa-user fa-fw"></i> <span><?php echo $text_account_managers_customers; ?></span></a>
+        <ul class="collapse">
+            <?php if($preturn_account_manager_customers) { ?>
+            <li><a href="<?php echo $accountmanager_customers; ?>"><?php echo $text_account_managers_customers; ?></a></li>
+            <?php } ?>
+        </ul>
+    </li>
+    <?php } ?>
+
+    <?php if($preturn_account_manager_customer_orders != false){ ?>
+    <li id="sale"><a class="parent"><i class="fa fa-shopping-cart fa-fw"></i> <span><?php echo $text_sale; ?></span></a>
+        <ul class="collapse">
+            <?php if($preturn_account_manager_customer_orders) { ?>
+            <li><a href="<?php echo $account_manager_customer_orders; ?>"><?php echo $text_order; ?></a></li>
+            <?php } ?>
+        </ul>
+    </li>               
     <?php } ?>
 
     <?php if( $preturn_vendor != false || $preturn_vendor_permission != false) { ?>
@@ -169,34 +209,34 @@
         </a>
         <ul>
             <?php if($preturn_store != false) { ?>
-                <li>
-                    <a href="<?php echo $store; ?>">
-                        <?php echo $text_store; ?>
-                    </a>
-                </li>
+            <li>
+                <a href="<?php echo $store; ?>">
+                    <?php echo $text_store; ?>
+                </a>
+            </li>
             <?php } ?>
 
 
             <?php if($preturn_store_group != false) { ?>
-                <li>
-                    <a href="<?php echo $store_group; ?>">
-                        <?php echo $text_store_group; ?>
-                    </a>
-                </li>
+            <li>
+                <a href="<?php echo $store_group; ?>">
+                    <?php echo $text_store_group; ?>
+                </a>
+            </li>
             <?php } ?>
 
             <?php if($preturn_store_type != false) { ?>
-                <li>
-                    <a href="<?php echo $store_type; ?>">
-                        <?php echo $text_store_type; ?>
-                    </a>
-                </li>
+            <li>
+                <a href="<?php echo $store_type; ?>">
+                    <?php echo $text_store_type; ?>
+                </a>
+            </li>
             <?php } ?>
         </ul>
     </li>
     <?php } ?>
 
-    
+
 
     <?php if( $preturn_shopper != false || $preturn_shopper_permission != false) { ?>
     <!-- <li>
@@ -323,7 +363,7 @@
                     <?php if($preturn_sale_productmissing) { ?>
                     <li><a href="<?php echo $report_sale_productmissing; ?>"><?php echo $text_report_sale_productmissing; ?></a></li>
                     <?php }?>
-                    
+
 
                     <?php if($preturn_sale_tax) { ?>
                     <li><a href="<?php echo $report_sale_tax; ?>"><?php echo $text_report_sale_tax; ?></a></li>
@@ -347,10 +387,10 @@
                     <?php if($preturn_sale_coupon) { ?>
                     <li><a href="<?php echo $report_sale_coupon; ?>"><?php echo $text_report_sale_coupon; ?></a></li>
                     <?php } ?>
-                     <?php if($preturn_vendor_commission) { ?>
+                    <?php if($preturn_vendor_commission) { ?>
                     <li><a href="<?php echo $report_vendor_commission; ?>"><?php echo 'Commission'; ?></a></li>
                     <?php } ?>
-                    
+
                 </ul>
             </li>
             <?php } ?>
@@ -370,7 +410,7 @@
             <?php if( $preturn_customer_online != false || $preturn_customer_activity != false || $preturn_customer_order != false || $preturn_customer_reward != false || $preturn_customer_credit != false ) { ?>
             <li><a class="parent"><?php echo $text_customer; ?></a>
                 <ul>
-                    
+
                     <?php if($preturn_customer_activity) { ?>
                     <li><a href="<?php echo $report_customer_activity; ?>"><?php echo $text_report_customer_activity; ?></a></li>
                     <?php } ?>
@@ -383,7 +423,7 @@
                     <?php if($preturn_customer_credit) { ?>
                     <li><a href="<?php echo $report_customer_credit; ?>"><?php echo $text_report_customer_credit; ?></a></li>
                     <?php } ?>
-                     <?php if($preturn_customer_order) { ?>
+                    <?php if($preturn_customer_order) { ?>
                     <li><a href="<?php echo $report_customer_statement; ?>"><?php echo $text_report_customer_statement; ?></a></li>
                     <?php } ?>
                 </ul>
@@ -560,10 +600,17 @@
             </li>
             <?php } ?>
 
-            
+
             <?php if($preturn_email_template) { ?>
             <li><a href="<?php echo $email_template; ?>"><?php echo $text_email_template; ?></a></li>
             <?php } ?>
+
+
+             <?php if($preturn_newfeature != false) { ?>
+            <li><a href="<?php echo $newfeature; ?>">New Feature Request</a></li>
+            <?php } ?>
+
+
         </ul>
     </li>
     <?php } ?>
@@ -583,7 +630,7 @@
             <?php if($preturn_export_import) { ?>
             <li><a href="<?php echo $clear_data; ?>"><?php echo $text_clear_data; ?></a></li>
             <?php } ?>
-            
+
             <?php if($preturn_upload) { ?>
             <!-- <li><a href="<?php echo $upload; ?>"><?php echo $text_upload; ?></a></li> -->
             <?php } ?>

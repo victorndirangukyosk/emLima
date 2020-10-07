@@ -131,7 +131,7 @@
 								<label class="col-sm-2 control-label"><?php echo $entry_price; ?></label>
 								<div class="col-sm-10">
 
-									<input type="number" name="price" value="<?php echo $price; ?>" id="price" class="form-control input-full-width" />
+									<input type="text" name="price" onkeypress="return validateFloatKeyPress(this, event);"  value="<?php echo $price; ?>" id="price" class="form-control input-full-width" />
 
 
 									<?php if ($error_price) { ?>
@@ -145,7 +145,7 @@
 							<div class="form-group ">
 								<label class="col-sm-2 control-label"><?php echo $entry_special_price; ?></label>
 								<div class="col-sm-10">
-									<input type="number" name="special_price" value="<?php echo $special_price; ?>" id="special_price" class="form-control input-full-width" />
+									<input type="text" name="special_price" onkeypress="return validateFloatKeyPress(this, event);"  value="<?php echo $special_price; ?>" id="special_price" class="form-control input-full-width" />
 								</div>
 							</div>
 
@@ -333,4 +333,41 @@ $('input[name=\'product\']').autocomplete({
 		});
 	}	
 });
+
+
+ function validateFloatKeyPress(el, evt) {
+
+      // $optionvalue=$('.product-variation option:selected').text().trim();
+       //alert($optionvalue);
+       //if($optionvalue=="Per Kg")
+       //{
+            var charCode = (evt.which) ? evt.which : event.keyCode;
+            var number = el.value.split('.');
+            if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
+                return false;
+            }
+            //just one dot
+            if(number.length>1 && charCode == 46){
+                return false;
+            }
+            //get the carat position
+            var caratPos = getSelectionStart(el);
+            var dotPos = el.value.indexOf(".");
+            if( caratPos > dotPos && dotPos>-1 && (number[1].length > 1)){
+                return false;
+            }
+            return true;
+        //}
+
+       //else{
+      //var charCode = (evt.which) ? evt.which : event.keyCode;
+       // if (charCode > 31 &&
+       //   (charCode < 48 || charCode > 57))
+       //   return false;
+         // else
+      
+      //return true;
+      // }
+}
+
 </script>
