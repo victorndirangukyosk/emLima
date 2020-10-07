@@ -782,14 +782,14 @@ class ControllerApiOrder extends Controller
             if (is_array($sub_users_order_details) && count($sub_users_order_details) > 0) {
                 $order_update = $this->model_account_order->ApproveOrRejectSubUserOrderApi($order_id, $order_status);
                 //$json['success'] = 'Order '.$order_status.'!';
-                $sub_users_order_details = $this->model_account_order->ApproveOrRejectSubUserOrderApi($order_id);
+                $sub_users_order_details = $this->model_account_order->getSubUserOrderDetailsapi($order_id);
                 
-                //echo "<pre>";print_r( $sub_users_order_details);die;
+                // echo "<pre>";print_r( $sub_users_order_details);die;
                 
                 if (($sub_users_order_details['parent_approval'] == 'Approved') || ($sub_users_order_details['head_chef'] == 'Approved' && $sub_users_order_details['procurement'] == 'Approved')) {
                     $this->model_account_order->UpdateOrderStatus($order_id, 14);
                     
-                    $sub_users_order_details = $this->model_account_order->ApproveOrRejectSubUserOrderApi($order_id);
+                    $sub_users_order_details = $this->model_account_order->getSubUserOrderDetailsapi($order_id);
                    
                     //echo "<pre>";print_r( $sub_users_order_details);die;
                     if ($sub_users_order_details['order_status_id'] == 14) {
