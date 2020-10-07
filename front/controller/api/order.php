@@ -761,7 +761,7 @@ class ControllerApiOrder extends Controller
         //if (!isset($this->session->data['api_id'])) {
           //  $json['error'] = $this->language->get('error_permission');
        // } else
-        {
+        //{
             $this->load->model('account/order');
             // if (isset($this->request->get['order_id'])) {
             //     $order_id = $this->request->get['order_id'];
@@ -782,11 +782,16 @@ class ControllerApiOrder extends Controller
             if (is_array($sub_users_order_details) && count($sub_users_order_details) > 0) {
                 $order_update = $this->model_account_order->ApproveOrRejectSubUserOrderApi($order_id, $order_status);
                 //$json['success'] = 'Order '.$order_status.'!';
-                $sub_users_order_details = $this->model_account_order->getSubUserOrderDetails($order_id, $customer_id);
+                $sub_users_order_details = $this->model_account_order->ApproveOrRejectSubUserOrderApi($order_id);
+                
+                //echo "<pre>";print_r( $sub_users_order_details);die;
+                
                 if (($sub_users_order_details['parent_approval'] == 'Approved') || ($sub_users_order_details['head_chef'] == 'Approved' && $sub_users_order_details['procurement'] == 'Approved')) {
                     $this->model_account_order->UpdateOrderStatus($order_id, 14);
                     
-                    $sub_users_order_details = $this->model_account_order->getSubUserOrderDetails($order_id, $customer_id);
+                    $sub_users_order_details = $this->model_account_order->ApproveOrRejectSubUserOrderApi($order_id);
+                   
+                    //echo "<pre>";print_r( $sub_users_order_details);die;
                     if ($sub_users_order_details['order_status_id'] == 14) {
                         $json['success'] = 'Order Recieved';
                     }
@@ -803,7 +808,7 @@ class ControllerApiOrder extends Controller
                 if ($sub_users_order_details['parent_approval'] == 'Rejected' || $sub_users_order_details['head_chef'] == 'Rejected') {
                     $this->model_account_order->UpdateOrderStatus($order_id, 16);
                     
-                    $sub_users_order_details = $this->model_account_order->getSubUserOrderDetails($order_id, $customer_id);
+                    $sub_users_order_details = $this->model_account_order->getSubUserOrderDetailsapi($order_id);
                     if ($sub_users_order_details['order_status_id'] == 14) {
                         $json['success'] = 'Order Recieved';
                     }
@@ -818,7 +823,7 @@ class ControllerApiOrder extends Controller
                 }
     
                 if ($sub_users_order_details['head_chef'] == 'Pending' || $sub_users_order_details['procurement'] == 'Pending') {
-                    $sub_users_order_details = $this->model_account_order->getSubUserOrderDetails($order_id, $customer_id);
+                    $sub_users_order_details = $this->model_account_order->getSubUserOrderDetailsapi($order_id);
                     if ($sub_users_order_details['order_status_id'] == 14) {
                         $json['success'] = 'Order Recieved';
                     }
@@ -835,7 +840,7 @@ class ControllerApiOrder extends Controller
                 if (($sub_users_order_details['head_chef'] == 'Rejected' || $sub_users_order_details['head_chef'] == 'Approved') && $sub_users_order_details['procurement'] == 'Rejected') {
                     $this->model_account_order->UpdateOrderStatus($order_id, 16);
                     
-                    $sub_users_order_details = $this->model_account_order->getSubUserOrderDetails($order_id, $customer_id);
+                    $sub_users_order_details = $this->model_account_order->getSubUserOrderDetailsapi($order_id);
                     if ($sub_users_order_details['order_status_id'] == 14) {
                         $json['success'] = 'Order Recieved';
                     }
@@ -851,7 +856,7 @@ class ControllerApiOrder extends Controller
             }
 
              
-        }
+        //}
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
@@ -870,7 +875,7 @@ class ControllerApiOrder extends Controller
         $log->write($order_status);
 
         $this->load->model('account/order');
-        $sub_users_order_details = $this->model_account_order->getSubUserOrderDetails($order_id, $customer_id);
+        $sub_users_order_details = $this->model_account_order->getSubUserOrderDetailsapi($order_id, $customer_id);
 
         if (is_array($sub_users_order_details) && count($sub_users_order_details) > 0) {
             $order_update = $this->model_account_order->ApproveOrRejectSubUserOrderByChefProcurement($order_id, $customer_id, $order_status, $role);
