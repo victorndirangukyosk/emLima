@@ -540,6 +540,17 @@ class ModelAccountCustomer extends Model {
         return $parent;
     }
 
+
+    public function CheckApprover() {
+        
+        $query = $this->db->query('SELECT c.order_approval_access,c.order_approval_access_role FROM ' . DB_PREFIX . "customer c WHERE customer_id = '" . (int) $this->customer->getId() . "'");
+          
+        
+        // echo '<pre>';print_r($query->row);exit;
+        return $query->row;
+    }
+
+
     public function getCustomerParentDetails($customer_id) {
         $customer_parent_details = NULL;
         $customer_details = $this->getCustomer($customer_id);
