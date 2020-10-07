@@ -41,6 +41,7 @@
             m = m < 10 ? '0' + m : m;
             s = s < 10 ? '0' + s : s;
             $("#re_gen_qrcode").hide();
+            $("#qrcode_timer").show();
             document.getElementById('qrcode_timer').innerHTML = m + ':' + s;
             remaining -= 1;
 
