@@ -32,7 +32,34 @@
             y: 0,
             duration: .5
         });
+        
+        var timerOn = true;
+        function timer(remaining) {
+            var m = Math.floor(remaining / 60);
+            var s = remaining % 60;
 
+            m = m < 10 ? '0' + m : m;
+            s = s < 10 ? '0' + s : s;
+            $("#re_qrcode").hide();
+            document.getElementById('qrcode_timer').innerHTML = m + ':' + s;
+            remaining -= 1;
+
+            if (remaining >= 0 && timerOn) {
+                setTimeout(function () {
+                    timer(remaining);
+                }, 1000);
+                return;
+            }
+
+            if (!timerOn) {
+                console.log('TIMER');
+                // Do validate stuff here
+                return;
+            }
+
+            // Do timeout stuff here
+            alert('Timeout for otp');
+        }
         // Customer Login
         $(document).delegate('#login-button, #re_qrcode', 'click', function (e) {
             e.preventDefault();
@@ -56,6 +83,7 @@
                                 $("#qrcode").show();
                                 $("#qrcode_img").empty();
                                 $("#qrcode_img").append("<img width='100' height='100' src='" + json['two_factor']['qr_code'] + "'/>");
+                                timer(60);
                                 console.log(json['two_factor']['qr_code']);
                                 loginButton.text('LOGIN');
                             }
