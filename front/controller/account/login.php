@@ -720,7 +720,7 @@ class ControllerAccountLogin extends Controller {
 
     public function VerifyGoogleTwoFactor($secret, $oneCode) {
         $ga = new PHPGangsta_GoogleAuthenticator();
-        $checkResult = $ga->verifyCode($secret, $oneCode, 2);    // 2 = 2*30sec clock tolerance
+        $checkResult = $ga->verifyCode($secret, $oneCode, 1);    // 2 = 2*30sec clock tolerance
         if ($checkResult) {
             return TRUE;
         } else {

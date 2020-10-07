@@ -123,6 +123,8 @@
                     dataType: 'json',
                     success: function (json) {
                         if (json['status']) {
+                            $("#re_gen_qrcode").hide();
+                            $("#qrcode_timer").hide();
                             if (json['redirect'] != null) {
                                 window.location.href = json['redirect'];
                             } else if (json['temppassword'] == '1') {
