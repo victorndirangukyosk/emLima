@@ -653,10 +653,14 @@ class ControllerAccountLogin extends Controller {
                         $this->session->data['order_approval_access'] = $user_query->row['order_approval_access'];
                         $this->session->data['order_approval_access_role'] = $user_query->row['order_approval_access_role'];
                     }
-                } else {
+                } else if ($user_query->row['approved'] == 0 || $user_query->row['approved'] == NULL) {
                     $data['status'] = false;
 
                     $data['error_warning'] = $this->language->get('error_approved');
+                } else if ($two_factor_checking == FALSE || $two_factor_details <= 0) {
+                    $data['status'] = false;
+
+                    $data['error_warning'] = 'Invalid QR Code Details';
                 }
             } else {
                 $data['status'] = false;
