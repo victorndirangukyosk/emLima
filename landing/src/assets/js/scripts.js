@@ -111,7 +111,7 @@
             } else {
                 iziToast.warning({
                     position: 'topRight',
-                    message: 'Please enter your email and password'
+                    message: 'Please enter your secret code and one time code'
                 });
             }
         });
