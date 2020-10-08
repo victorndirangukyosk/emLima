@@ -169,6 +169,7 @@ class ControllerCommonMenu extends Controller
         $data['store_type'] = $this->url->link('setting/store_type', 'token='.$this->session->data['token'], 'SSL');
         $data['testimonial'] = $this->url->link('setting/testimonial', 'token='.$this->session->data['token'], 'SSL');
         $data['newfeature'] = $this->url->link('setting/newfeature', 'token='.$this->session->data['token'], 'SSL');
+        $data['jobposition'] = $this->url->link('setting/jobposition', 'token='.$this->session->data['token'], 'SSL');
         $data['stock_status'] = $this->url->link('localisation/stock_status', 'token='.$this->session->data['token'], 'SSL');
         $data['tax_class'] = $this->url->link('localisation/tax_class', 'token='.$this->session->data['token'], 'SSL');
         $data['tax_rate'] = $this->url->link('localisation/tax_rate', 'token='.$this->session->data['token'], 'SSL');
@@ -305,6 +306,7 @@ class ControllerCommonMenu extends Controller
 
         $data['preturn_testimonial'] = $this->user->hasPermission('access', 'setting/testimonial');
         $data['preturn_newfeature'] = $this->user->hasPermission('access', 'setting/newfeature');
+        $data['preturn_jobposition'] = $this->user->hasPermission('access', 'setting/jobposition');
 
         $data['preturn_design_offer'] = $this->user->hasPermission('access', 'design/offer');
         $data['preturn_design_slider'] = $this->user->hasPermission('access', 'design/slider');

@@ -109,4 +109,65 @@ class ModelInformationCareers extends Model {
         return $result;
     }
 
+
+    public function getJobPositions($data)
+    {
+        
+        $sql = 'SELECT distinct *  FROM '.DB_PREFIX.'jobposition where status=1';
+        $implode = [];
+
+        if (!empty($data['job_category'])) {
+            $implode[] = " job_category LIKE '%".$this->db->escape($data['job_category'])."%'";
+        }
+        if (!empty($data['job_type'])) {
+            $implode[] = " job_type LIKE '%".$this->db->escape($data['job_type'])."%'";
+        }
+        if (!empty($data['job_location'])) {
+            $implode[] = " job_location LIKE '%".$this->db->escape($data['job_location'])."%'";
+        }
+        if (!empty($data['id'])) {
+            $implode[] = " job_id = ' ".$this->db->escape($data['id'])."'";
+        }
+        
+        if ($implode) {
+            $sql .= ' AND '.implode(' AND ', $implode);
+        }
+
+
+        $sql .= ' ORDER BY date_added DESC';
+        $sql .= ' LIMIT 0,9';
+        $query = $this->db->query($sql);
+
+        //   echo  $sql;die;
+        return $query->rows;
+    }
+
+    public function getJobCategories()
+    {
+        
+        $sql = 'SELECT distinct job_category  FROM '.DB_PREFIX.'jobposition where status=1';
+        //$sql .= ' LIMIT 0,9';
+        $query = $this->db->query($sql);
+        // echo  $sql;die;
+        return $query->rows;
+    }
+    public function getJobLocations()
+    {
+        
+        $sql = 'SELECT distinct job_location  FROM '.DB_PREFIX.'jobposition where status=1';
+        //$sql .= ' LIMIT 0,9';
+        $query = $this->db->query($sql);
+        // echo  $sql;die;
+        return $query->rows;
+    }
+
+    public function getJobTypes()
+    {
+        
+        $sql = 'SELECT distinct job_type  FROM '.DB_PREFIX.'jobposition where status=1';
+        //$sql .= ' LIMIT 0,9';
+        $query = $this->db->query($sql);
+        // echo  $sql;die;
+        return $query->rows;
+    }
 }

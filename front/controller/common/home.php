@@ -190,8 +190,30 @@ class ControllerCommonHome extends Controller {
 
     public function careers() {
         $data['site_key'] = $this->config->get('config_google_captcha_public');
+        $this->load->model('information/careers');
+        $data['jobpositions'] = $this->model_information_careers->getJobPositions($filter);
+        $data['job_categories'] =$this->model_information_careers->getJobCategories();
+        $data['job_types']=$this->model_information_careers->getJobTypes();
+        $data['job_locations']=$this->model_information_careers->getJobLocations();
         $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/careers.tpl', $data));
+        // echo "<pre>";print_r($data['job_categories']);die;
+    
     }
+
+    public function jobopenings() {
+        if (isset($this->request->get['id'])) {
+            $filter['id'] = $this->request->get['id'];
+        } else {
+            $filter['id'] = 0;
+        }
+        // echo  ($id);die;
+        $this->load->model('information/careers');
+        $data['site_key'] = $this->config->get('config_google_captcha_public');
+        $data['jobpositions'] = $this->model_information_careers->getJobPositions($filter);
+        // echo "<pre>";print_r($data['jobpositions']);die;
+        $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/jobopenings.tpl', $data));
+    }
+
 
     public function savecareers() {
 
@@ -360,6 +382,10 @@ class ControllerCommonHome extends Controller {
 
             array_push($data['blocks'], $temp);
         }
+
+        $this->load->model('sale/order');
+        $numberOfOrders = count($this->model_sale_order->getOrders());
+        $data['order_count'] = $numberOfOrders;
 
         //echo "<pre>";print_r($data['blocks']);die;
         $this->document->setTitle($this->config->get('config_meta_title'));
