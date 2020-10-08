@@ -15,6 +15,7 @@
                 </div>
             </div>
 
+            <?php if(count($jobpositions) == 0) { ?>
             <div class="row mt-4">
                 <div class="col-md-12">
                     <form id="careers-form">
@@ -56,6 +57,43 @@
                     </form>
                 </div>
             </div>
+            <?php } else { ?>
+                    <div class="row mt-4">
+                        <?php foreach($jobpositions as $position) { ?>
+                        <div class="job-box bg-white col-md-4 p-0 form-group">
+                            <div class="p-4">
+                                <div class="row align-items-center">
+                                    <div class="col-md-6">
+                                        <div>
+                                            <h5 class="f-18"><a href="#" class="text-dark"><?= $position['job_type'] ?></a></h5>
+                                            <p class="text-muted mb-0"><?= $position['job_category'] ?></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div>
+                                            <p class="text-muted mb-0"><i class="fa fa-map-marker primary-text mr-2"></i><?= $position['job_location'] ?></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-3 bg-light">
+                                <div class="row">
+                                    <div class="col-md-7">
+                                        <div>
+                                            <p class="text-muted mb-0 mo-mb-2"><?= $position['experience'] ?> <span class="text-muted"> Experience</span></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5 d-flex align-items-center">
+                                        <div>
+                                            <a href="#">Apply Now &nbsp;&nbsp; <i class="fa fa-chevron-right"></i><i class="fa fa-chevron-right"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <?php } ?>
+                    </div>                
+            <?php } ?>
         </div>
     </section>
 </main>

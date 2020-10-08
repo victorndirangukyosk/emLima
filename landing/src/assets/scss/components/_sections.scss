@@ -258,6 +258,18 @@ section#partner-registration {
 section#careers {
   margin-top: 6rem;
 
+  .job-box {
+    box-shadow: 0 -3px 31px 0 rgba(0, 0, 0, 0.03), 0 6px 20px 0 rgba(0, 0, 0, 0.02);
+    border-radius: 9px;
+    overflow: hidden;
+    margin: 1rem;
+
+    a, a:hover {
+      text-decoration: none !important;
+      color: $primary-color;
+    }
+  }
+
   #careers-form {
     padding: 2rem;
     background-color: $primary-color;

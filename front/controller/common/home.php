@@ -196,7 +196,7 @@ class ControllerCommonHome extends Controller {
         $data['job_types']=$this->model_information_careers->getJobTypes();
         $data['job_locations']=$this->model_information_careers->getJobLocations();
         $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/careers.tpl', $data));
-        // echo "<pre>";print_r($data['job_categories']);die;
+        // echo "<pre>";print_r($data['jobpositions']);die;
     
     }
 
