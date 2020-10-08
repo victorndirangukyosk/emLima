@@ -1,0 +1,28 @@
+@@include('./_partials/header.html')
+@@include('./_partials/navbar.html')
+<main>
+    <section id="careers">
+        <div class="container">
+            <div class="row">
+                <div class="section-header col-md-12">
+                    <h4 class="section-title"><?= $job_type ?></h4>
+                    <p class="section-subtitle">
+                        With <?= $experience ?> of experience, needed in <?= $job_location ?>
+                    </p>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="section-header col-md-12">
+                    <h4 class="section-title">Roles & Responsibilities</h4>
+                </div>
+
+                <div class="col-md-12">
+                    <?= $roles_responsibilities ?>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+@@include('./_partials/footer-links.html')
+@@include('./_partials/footer.html')

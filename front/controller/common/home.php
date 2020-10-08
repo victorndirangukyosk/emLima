@@ -200,7 +200,7 @@ class ControllerCommonHome extends Controller {
     
     }
 
-    public function jobopenings() {
+    public function job_opening_details() {
         if (isset($this->request->get['id'])) {
             $filter['id'] = $this->request->get['id'];
         } else {
@@ -210,8 +210,8 @@ class ControllerCommonHome extends Controller {
         $this->load->model('information/careers');
         $data['site_key'] = $this->config->get('config_google_captcha_public');
         $data['jobpositions'] = $this->model_information_careers->getJobPositions($filter);
-        // echo "<pre>";print_r($data['jobpositions']);die;
-        $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/jobopenings.tpl', $data));
+        // echo "<pre>";print_r($data['jobpositions'][0]);die;
+        $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/jobopening.tpl', $data['jobpositions'][0]));
     }
 
 
