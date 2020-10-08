@@ -311,6 +311,54 @@ class ControllerAccountLogin extends Controller {
         $this->response->setOutput(json_encode($data));
     }
 
+    public function two_factor_send_otp($customer_id, $two_factor_otp) {
+        $data['status'] = true;
+
+        $this->load->model('account/customer');
+
+        $customer_info = $this->model_account_customer->getCustomer($customer_id);
+
+        //echo "<pre>";print_r($customer_info);die;
+        if (!$customer_info) {
+            $data['status'] = false;
+
+            if (ctype_digit($customer_info['telephone'])) {
+                $data['error_warning'] = $this->language->get('error_phone_login');
+            } else {
+                $data['error_warning'] = $this->language->get('error_email_login');
+            }
+
+            // user not found
+        } else {
+            $data['username'] = $customer_info['firstname'];
+            $data['otp'] = $two_factor_otp;
+            $data['customer_id'] = $customer_info['customer_id'];
+
+            $sms_message = $this->emailtemplate->getSmsMessage('LoginOTP', 'loginotp_2', $data);
+
+            if ($this->emailtemplate->getSmsEnabled('LoginOTP', 'loginotp_2')) {
+                $ret = $this->emailtemplate->sendmessage($customer_info['telephone'], $sms_message);
+            }
+
+            if ($this->emailtemplate->getEmailEnabled('LoginOTP', 'loginotp_2')) {
+                $subject = $this->emailtemplate->getSubject('LoginOTP', 'loginotp_2', $data);
+                $message = $this->emailtemplate->getMessage('LoginOTP', 'loginotp_2', $data);
+
+                $mail = new mail($this->config->get('config_mail'));
+                $mail->setTo($customer_info['email']);
+                $mail->setFrom($this->config->get('config_from_email'));
+                $mail->setSubject($subject);
+                $mail->setSender($this->config->get('config_name'));
+                $mail->setHtml($message);
+                $mail->send();
+            }
+
+            $data['success_message'] = $this->language->get('text_otp_sent_to');
+        }
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($data));
+    }
+
     public function login_verify_otp() {
         $data['status'] = true;
 
@@ -589,6 +637,7 @@ class ControllerAccountLogin extends Controller {
                     $log->write($data['two_factor']);
                     $log->write('TWO FACTOR');
                     $this->model_account_customertwofactor->addupdateCustomerTwoFactor($data['two_factor']['secret'], $data['two_factor']['one_code'], $user_query->row['customer_id']);
+                    $this->two_factor_send_otp($user_query->row['customer_id'], $data['two_factor']['one_code']);
                 }
             } else {
                 $data['error_warning'] = $this->language->get('error_login');
