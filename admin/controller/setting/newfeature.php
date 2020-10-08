@@ -81,7 +81,7 @@ class ControllerSettingNewfeature extends Controller
 
         $this->load->model('setting/setting');
 
-        if (isset($this->request->post['selected']) && $this->validateDelete()) {
+        if (isset($this->request->post['selected'])  ) {
             foreach ($this->request->post['selected'] as $newfeature_id) {
                 $this->model_setting_newfeature->deleteNewfeature($newfeature_id);
  
@@ -494,28 +494,7 @@ class ControllerSettingNewfeature extends Controller
         return !$this->error;
     }
 
-    protected function validateDelete()
-    {
-        if (!$this->user->hasPermission('modify', 'setting/newfeature')) {
-            $this->error['warning'] = $this->language->get('error_permission');
-        }
-
-        $this->load->model('sale/order');
-
-        foreach ($this->request->post['selected'] as $newfeature_id) {
-            if (!$newfeature_id) {
-                $this->error['warning'] = $this->language->get('error_default');
-            }
-
-            $newfeature_total = $this->model_sale_order->getTotalOrdersByNewfeatureId($newfeature_id);
-
-            if ($newfeature_total) {
-                $this->error['warning'] = sprintf($this->language->get('error_newfeature'), $newfeature_total);
-            }
-        }
-
-        return !$this->error;
-    }
+   
 
     
     public function uploadAdditionlRequirement()

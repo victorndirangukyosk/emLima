@@ -641,7 +641,7 @@ class ControllerApiCustomerSubusers extends Controller
         //{
          $this->request->post['dob'] = null;
          $this->request->post['parent'] = $this->request->post['parent_customer_id'];//$this->customer->getId();           
-         $customer_id = $this->model_account_customer->addCustomer($this->request->post);
+         $customer_id = $this->model_account_customer->addCustomer($this->request->post, true);
             // Clear any previous login attempts for unregistered accounts.
         $this->model_account_customer->deleteLoginAttempts($this->request->post['email']);
         //$logged_in = $this->customer->login($this->request->post['email'], $this->request->post['password']);
@@ -774,11 +774,12 @@ class ControllerApiCustomerSubusers extends Controller
         $log->write($this->request->post['procurement_person']);
         $this->load->model('account/customer');
         if ($this->request->post['button'] == 'assign_head_chef') {
-            $this->model_account_customer->UpdateOrderApprovalAccess($this->customer->getId(), $this->request->post['head_chef'], 1, 'head_chef');
+            // $this->model_account_customer->UpdateOrderApprovalAccess($this->customer->getId(), $this->request->post['head_chef'], 1, 'head_chef');
+            $this->model_account_customer->UpdateOrderApprovalAccess($this->request->post['customer_id'], $this->request->post['head_chef'], 1, 'head_chef');
         }
 
         if ($this->request->post['button'] == 'assign_procurement_person') {
-            $this->model_account_customer->UpdateOrderApprovalAccess($this->customer->getId(), $this->request->post['procurement_person'], 1, 'procurement_person');
+            $this->model_account_customer->UpdateOrderApprovalAccess($this->request->post['customer_id'], $this->request->post['procurement_person'], 1, 'procurement_person');
         }
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));

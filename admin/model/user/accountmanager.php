@@ -234,7 +234,7 @@ class ModelUserAccountmanager extends Model {
             $implode[] = "telephone LIKE '" . $this->db->escape($data['filter_telephone']) . "%'";
         }
 
-        $implode[] = "user_group_id = 17";
+        $implode[] = "user_group_id = 18";
 
         if (!empty($data['filter_ip'])) {
             $implode[] = "ip = '" . $this->db->escape($data['filter_ip']) . "'";

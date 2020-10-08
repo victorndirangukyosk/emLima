@@ -111,8 +111,8 @@ class Controllercheckoutdeliverytime extends Controller
         //$log->write($store_id."ss".$shipping_method);
 
         //$log->write($getActiveDays);
-        $data['dates'] = $this->getDates($getActiveDays, $store_id, $shipping_method);
-        $data['dates'] = $this->getDatesbyOrderDate($getActiveDays, $store_id, $shipping_method);
+        //$data['dates'] = $this->getDates($getActiveDays, $store_id, $shipping_method);
+        $data['dates'] = $this->getDatesbyOrderDate($getActiveDays, $store_id, $shipping_method,$date_added);
         $data['timeslots'] = [];
 
         //echo "<pre>";print_r($data['dates']);die;

@@ -65,19 +65,39 @@ class ControllerPaymentCod extends Controller {
     public function apiConfirm($orders) {
         $log = new Log('error.log');
         $log->write('apiConfirm cod confirm');
+        $log->write($this->customer->getId());
 
         $this->load->model('checkout/order');
 
         $log->write($this->config->get('cod_order_status_id'));
         $is_he_parents = $this->model_account_customer->CheckHeIsParent();
-        $parent_approval = null == $is_he_parents ? 'Approved' : 'Pending';
-        $order_status_id = null == $is_he_parents ? $this->config->get('cod_order_status_id') : 15;
 
+        $order_appoval_access = FALSE;
+        //session values are not getting
+        // if ($this->session->data['order_approval_access'] > 0 && $this->session->data['order_approval_access_role'] != NULL) {
+        //     $order_appoval_access = TRUE;
+        // }
+        
+        $Approver_assigned = $this->model_account_customer->CheckApprover();
+        $log->write($Approver_assigned['order_approval_access']);
+        $log->write($Approver_assigned['order_approval_access_role']);       
+
+        if ($Approver_assigned['order_approval_access'] > 0 && $Approver_assigned['order_approval_access_role'] != NULL) {
+            $order_appoval_access = TRUE;
+        }
+
+        $parent_approval = $is_he_parents == NULL || $order_appoval_access == TRUE ? 'Approved' : 'Pending';
+        $order_status_id = $is_he_parents == NULL || $order_appoval_access == TRUE ? $this->config->get('cod_order_status_id') : 15;
+
+        $order_id = NULL;
         foreach ($orders as $order_id) {
             $log->write('cod loop' . $order_id);
 
             // $ret = $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('cod_order_status_id'));
             $ret = $this->model_checkout_order->addOrderHistory($order_id, $order_status_id);
+        }
+        if ($order_id != NULL) {
+            $this->model_checkout_order->UpdateParentApprovalAPI($order_id,$Approver_assigned['order_approval_access'],$Approver_assigned['order_approval_access_role']);
         }
     }
 

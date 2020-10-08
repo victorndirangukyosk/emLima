@@ -268,7 +268,7 @@
                                     </td>
                                    
 
-                                    <td class="text-right"><?php /*echo $order['sub_total'];*/ echo $order['total']; ?></td>
+                                    <td class="text-right"><?php echo $order['sub_total']; /*echo $order['total'];*/ ?></td>
                                     <td class="text-left"><?php echo $order['date_added']; ?></td>
                                     <!-- <td class="text-left"><?php echo $order['date_modified']; ?></td> -->
 
