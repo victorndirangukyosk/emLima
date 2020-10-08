@@ -106,7 +106,8 @@
                             <?php } ?>
                         
                         </div>
-                    </div>
+                        <div class="col-sm-4"><a href="" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="Download"><i class="fa fa-download text-success"></i></a></div>
+                     </div>
  <div class="form-group required">
                         <label class="col-sm-4 control-label" for="input-is_customer_requirement"><?= $column_is_customer_requirement ?></label>
                         <div class="col-sm-4">
