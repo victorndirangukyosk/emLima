@@ -643,4 +643,27 @@ class ControllerSettingNewfeature extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+    public function FileDownload() {
+
+        //$file = 'e20c21b7250b707dd72f337ba3b8a1511176013441-10000131649.pdf';
+        $file = 'CAB BOOKING Changes.docx';
+        $filepath = DIR_UPLOAD . "newfeature/" . $file;
+        // Process download
+        if (file_exists($filepath)) {
+            header('Content-Description: File Transfer');
+            header('Content-Type: application/octet-stream');
+            header('Content-Disposition: attachment; filename="' . basename($filepath) . '"');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate');
+            header('Pragma: public');
+            header('Content-Length: ' . filesize($filepath));
+            flush(); // Flush system output buffer
+            readfile($filepath);
+            die();
+        } else {
+            http_response_code(404);
+            die();
+        }
+    }
+
 }
