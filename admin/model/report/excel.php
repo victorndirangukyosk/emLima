@@ -960,11 +960,11 @@ class ModelReportExcel extends Model {
                 // $objPHPExcel->getActiveSheet()->getStyle($columnID)->applyFromArray($styleArray);
             }
 
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 4, 'Product Name       ');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 4, 'Product Name');
             //$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'Produce Type');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'Quantity              ');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 4, 'UOM               ');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 4, 'Source              ');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'Quantity');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 4, 'UOM ');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 4, 'Source');
 
             // $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 4)->applyFromArray($title);
             // $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 4)->applyFromArray($title);
@@ -1031,13 +1031,13 @@ class ModelReportExcel extends Model {
                     $objPHPExcel->getActiveSheet()->getStyle('A5:E5')->applyFromArray(['font' => ['bold' => true], 'color' => [
                             'rgb' => '51AB66',
                     ]]);
-                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 5, 'Product Name         ');
+                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 5, 'Product Name');
                     //$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'Produce Type');
 
-                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 5, 'Quantity          ');
-                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 5, 'UOM               ');
-                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 5, 'Product Note      ');
-                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 5, 'Source            ');
+                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 5, 'Quantity');
+                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 5, 'UOM ');
+                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 5, 'Product Note');
+                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 5, 'Source');
 
                     // $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 5)->applyFromArray($title);
                     // $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 5)->applyFromArray($title);
@@ -1046,13 +1046,13 @@ class ModelReportExcel extends Model {
                     // //$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(4, 4)->applyFromArray($title);
                     // //$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(5, 4)->applyFromArray($title);
                 } else {
-                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 4, 'Product Name          ');
+                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 4, 'Product Name');
                     //$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'Produce Type');
 
-                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'Quantity          ');
-                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 4, 'UOM          ');
-                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 4, 'Product Note          ');
-                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 4, 'Source          ');
+                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'Quantity');
+                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 4, 'UOM ');
+                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 4, 'Product Note');
+                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 4, 'Source');
 
                     // $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 5)->applyFromArray($title);
                     // $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 5)->applyFromArray($title);
