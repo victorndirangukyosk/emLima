@@ -318,7 +318,6 @@ class ControllerAccountLogin extends Controller {
 
         $customer_info = $this->model_account_customer->getCustomer($customer_id);
 
-        //echo "<pre>";print_r($customer_info);die;
         if (!$customer_info) {
             $data['status'] = false;
 
