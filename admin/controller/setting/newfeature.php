@@ -59,11 +59,17 @@ class ControllerSettingNewfeature extends Controller {
         $this->document->setTitle($this->language->get('heading_title'));
 
         $this->load->model('setting/newfeature');
+        $this->load->model('setting/setting');
 
         if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
-            $this->model_setting_newfeature->editNewfeature($this->request->get['newfeature_id'], $this->request->post);
-
-            $this->load->model('setting/setting');
+            $file_upload_status = $this->FeatureFileUpload($this->request->files);
+            $log = new Log('error.log');
+            $log->write($file_upload_status);
+            if ($file_upload_status != NULL && $file_upload_status['status'] == TRUE && $file_upload_status['file_name'] != NULL) {
+                $this->model_setting_newfeature->editNewfeature($this->request->get['newfeature_id'], $this->request->post, $file_upload_status['file_name']);
+            } else {
+                $this->model_setting_newfeature->editNewfeature($this->request->get['newfeature_id'], $this->request->post, NULL);
+            }
 
             // !empty($this->request->post['date_added']) ?: $this->request->post['date_added'] = $this->request->post['config_name'];
 
@@ -222,7 +228,7 @@ class ControllerSettingNewfeature extends Controller {
         $pagination->total = $newfeature_total;
         $pagination->page = $page;
         $pagination->limit = $this->config->get('config_limit_admin');
-        $pagination->url = $this->url->link('setting/newfeature', 'token='.$this->session->data['token'].$url.'&page={page}', 'SSL');
+        $pagination->url = $this->url->link('setting/newfeature', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 

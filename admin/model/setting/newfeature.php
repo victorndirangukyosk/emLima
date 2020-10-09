@@ -11,12 +11,16 @@ class ModelSettingNewfeature extends Model {
         $this->db->query('INSERT INTO ' . DB_PREFIX . "newfeature SET `user_name` = '" . $this->db->escape($data['name']) . "', detail_description = '" . $this->db->escape($data['detail_description']) . "', summary='" . $data['summary'] . "' , File = '" . $file . "', business_impact = '" . $this->db->escape($data['business_impact']) . "', is_customer_requirement = '" . $this->db->escape($data['is_customer_requirement']) . "', customer_name = '" . $this->db->escape($data['customer_name']) . "',customers_requested = '" . $data['customers_requested'] . "', no_of_customers_onboarded='" . $data['no_of_customers_onboarded'] . "'");
     }
 
-    public function editNewfeature($newfeature_id, $data) {
+    public function editNewfeature($newfeature_id, $data, $file) {
 
 
         //     $sql= 'UPDATE '.DB_PREFIX."newfeature SET `user_name` = '".$this->db->escape($data['name'])."', detail_description = '".$this->db->escape($data['detail_description'])."', summary='".$data['summary']."', File = '".$this->db->escape($data['File'])."', business_impact = '".$this->db->escape($data['business_impact'])."', is_customer_requirement = '".$this->db->escape($data['is_customer_requirement'])."', customer_name = '".$this->db->escape($data['customer_name'])."', customers_requested = '".$data['customers_requested']."', no_of_customers_onboarded='".$data['no_of_customers_onboarded']."' WHERE newfeature_id='".$newfeature_id."'";
         //    echo "<pre>";print_r($sql);die;
-        $this->db->query('UPDATE ' . DB_PREFIX . "newfeature SET `user_name` = '" . $this->db->escape($data['name']) . "', detail_description = '" . $this->db->escape($data['detail_description']) . "', summary='" . $data['summary'] . "' ,  File = '" . $this->db->escape($data['File']) . "', business_impact = '" . $this->db->escape($data['business_impact']) . "', is_customer_requirement = '" . $this->db->escape($data['is_customer_requirement']) . "', customer_name = '" . $this->db->escape($data['customer_name']) . "', customers_requested = '" . $data['customers_requested'] . "', no_of_customers_onboarded='" . $data['no_of_customers_onboarded'] . "' WHERE newfeature_id='" . $newfeature_id . "'");
+        if ($file != NULL) {
+            $this->db->query('UPDATE ' . DB_PREFIX . "newfeature SET `user_name` = '" . $this->db->escape($data['name']) . "', detail_description = '" . $this->db->escape($data['detail_description']) . "', summary='" . $data['summary'] . "' ,  File = '" . $file . "', business_impact = '" . $this->db->escape($data['business_impact']) . "', is_customer_requirement = '" . $this->db->escape($data['is_customer_requirement']) . "', customer_name = '" . $this->db->escape($data['customer_name']) . "', customers_requested = '" . $data['customers_requested'] . "', no_of_customers_onboarded='" . $data['no_of_customers_onboarded'] . "' WHERE newfeature_id='" . $newfeature_id . "'");
+        } else {
+            $this->db->query('UPDATE ' . DB_PREFIX . "newfeature SET `user_name` = '" . $this->db->escape($data['name']) . "', detail_description = '" . $this->db->escape($data['detail_description']) . "', summary='" . $data['summary'] . "' , business_impact = '" . $this->db->escape($data['business_impact']) . "', is_customer_requirement = '" . $this->db->escape($data['is_customer_requirement']) . "', customer_name = '" . $this->db->escape($data['customer_name']) . "', customers_requested = '" . $data['customers_requested'] . "', no_of_customers_onboarded='" . $data['no_of_customers_onboarded'] . "' WHERE newfeature_id='" . $newfeature_id . "'");
+        }
     }
 
     public function deleteNewFeature($newfeature_id) {
@@ -32,7 +36,7 @@ class ModelSettingNewfeature extends Model {
     public function getNewfeatures($data = []) {
 
 
-        $sql='SELECT * FROM ' . DB_PREFIX . 'newfeature ORDER BY newfeature_id DESC';
+        $sql = 'SELECT * FROM ' . DB_PREFIX . 'newfeature ORDER BY newfeature_id DESC';
 
         if (isset($data['start']) || isset($data['limit'])) {
             if ($data['start'] < 0) {
@@ -43,9 +47,9 @@ class ModelSettingNewfeature extends Model {
                 $data['limit'] = 20;
             }
 
-            $sql .= ' LIMIT '.(int) $data['start'].','.(int) $data['limit'];
+            $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
         }
-       $query = $this->db->query($sql);
+        $query = $this->db->query($sql);
         return $query->rows;
     }
 
