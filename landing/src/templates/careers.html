@@ -15,8 +15,47 @@
                 </div>
             </div>
 
+            <div class="row mt-3">
+                <div class="col-md-4 form-group">
+                    <label for="careers-job-category">Job Category</label>
+                    <select class="form-control" id="careers-job-category">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                    </select>
+                </div>
+                <div class="col-md-4 form-group">
+                    <label for="careers-job-type">Job Type</label>
+                    <select class="form-control" id="careers-job-type">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                    </select>
+                </div>
+                <div class="col-md-4 form-group">
+                    <label for="careers-job-position">Job Location</label>
+                    <select class="form-control" id="careers-job-position">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                    </select>
+                </div>
+            </div>
+
             <?php if(count($jobpositions) == 0) { ?>
             <div class="row mt-4">
+                <div class="section-header col-md-12">
+                    <p class="section-subtitle">
+                        There are no job openings available right now. Leave your details below and we'll give you a call when we're hiring
+                    </p>
+                </div>
+
                 <div class="col-md-12">
                     <form id="careers-form">
                         <div class="form-row">
