@@ -158,7 +158,18 @@ $('#button-filter').on('click', function() {
   if(filter_date_end=="" || filter_date_start=="")
   {
     alert("Please select Start and End Dates");
+
+      return;
+  }
+  else{
+        dt1 = new Date(filter_date_start);
+    dt2 = new Date(filter_date_end);
+    if(diff_months(dt1, dt2)>12)
+    {
+    alert("Please select Start and End months less than 12 or with in the year");
     return;
+    }
+ 
   }
 	if (filter_order_status_id != 0) {
 		url += '&filter_order_status_id=' + encodeURIComponent(filter_order_status_id);
@@ -173,7 +184,14 @@ $('#button-filter').on('click', function() {
   <script type="text/javascript"><!--
 
 
+function diff_months(dt2, dt1) 
+ {
 
+  var diff =(dt2.getTime() - dt1.getTime()) / 1000;
+   diff /= (60 * 60 * 24 * 7 * 4);
+  return Math.abs(Math.round(diff));
+  
+ }
 
    $companyName="";
        /* $('input[name=\'filter_customer\']').autocomplete({         
