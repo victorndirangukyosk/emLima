@@ -108,100 +108,91 @@
                         </div>
                         <?php if($File != NULL) { ?>
                         <div class="col-sm-4">
-                            <button type="button" onclick="downloadFile(<?php echo $newfeature_id; ?>);" data-toggle="tooltip" title="" class="btn btn-success " data-original-title="Download"><i class="fa fa-download"></i></button>
-                        <?php } ?>
-                    </div>
-                    <div class="form-group required">
-                        <label class="col-sm-4 control-label" for="input-is_customer_requirement"><?= $column_is_customer_requirement ?></label>
-                        <div class="col-sm-4">
-
-
-                            <!-- <label class="radio-multipart">-->
-                            <?php if ($is_customer_requirement=="1") { ?>
-                            <input type="radio"  name="is_customer_requirement" value="Yes" checked="checked">Yes</option><br>
-                            <input type="radio" name="is_customer_requirement" value="No"  >No</option><br>
-                            <?php }
-                            else if($is_customer_requirement=="yes")  { ?>
-                            <input type="radio" name="is_customer_requirement" value="Yes" checked="checked" >Yes</option><br>
-                            <input type="radio" name="is_customer_requirement" value="No"  >No</option><br>
-
-                            <?php }
-                            else   { ?>
-                            <input type="radio" name="is_customer_requirement" value="Yes" >Yes</option><br>
-                            <input type="radio" name="is_customer_requirement"  value="No" checked="checked">No</option><br>
-
-                            <?php }
-                            ?>
-
-                            <!-- </label>-->
-
-                        </div>
-                    </div>   
-
-
-                    <div class="form-group required">
-                        <label class="col-sm-4 control-label" for="input-customer_name"><?= $column_customer_name ?></label>
-                        <div class="col-sm-4">
-                            <input type="text" maxlength=50 name="customer_name" value="<?php echo $customer_name; ?>" placeholder="" id="input-customer_name" class="form-control" />
-
-
-                            <?php if ($error_customer_name) { ?>
-                            <div class="text-danger"><?php echo $error_customer_name; ?></div>
-                            <?php } ?></div>
-                    </div>
-
-
-                    <div class="form-group required">
-                        <label class="col-sm-4 control-label" for="input-customers_requested"><?= $column_customers_requested ?></label>
-                        <div class="col-sm-4">
-                            <input type="number" maxlength=50  name="customers_requested" value="<?php echo $customers_requested; ?>" placeholder="" id="input-customers_requested" class="form-control" />
-
-
-                            <?php if ($error_customers_requested) { ?>
-                            <div class="text-danger"><?php echo $error_customers_requested; ?></div>
-                            <?php } ?></div>
-                    </div>
-
-
-                    <div class="form-group required">
-                        <label class="col-sm-4 control-label" for="input-no_of_customers_onboarded"><?= $column_no_of_customers_onboarded ?></label>
-                        <div class="col-sm-4">
-                            <input type="text" maxlength=50 name="no_of_customers_onboarded" value="<?php echo $no_of_customers_onboarded; ?>" placeholder="" id="input-no_of_customers_onboarded" class="form-control" />
-
-                            <?php if ($error_no_of_customers_onboarded) { ?>
-                            <div class="text-danger"><?php echo $error_no_of_customers_onboarded; ?></div>
+                            <button type="button" onclick="downloadFile( <?=$newfeature_id ?>, '<?=$this->session->data['token'] ?>');" data-toggle="tooltip" title="" class="btn btn-success " data-original-title="Download"><i class="fa fa-download"></i></button>
                             <?php } ?>
                         </div>
-                    </div>
+                        <div class="form-group required">
+                            <label class="col-sm-4 control-label" for="input-is_customer_requirement"><?= $column_is_customer_requirement ?></label>
+                            <div class="col-sm-4">
 
+
+                                <!-- <label class="radio-multipart">-->
+                                <?php if ($is_customer_requirement=="1") { ?>
+                                <input type="radio"  name="is_customer_requirement" value="Yes" checked="checked">Yes</option><br>
+                                <input type="radio" name="is_customer_requirement" value="No"  >No</option><br>
+                                <?php }
+                                else if($is_customer_requirement=="yes")  { ?>
+                                <input type="radio" name="is_customer_requirement" value="Yes" checked="checked" >Yes</option><br>
+                                <input type="radio" name="is_customer_requirement" value="No"  >No</option><br>
+
+                                <?php }
+                                else   { ?>
+                                <input type="radio" name="is_customer_requirement" value="Yes" >Yes</option><br>
+                                <input type="radio" name="is_customer_requirement"  value="No" checked="checked">No</option><br>
+
+                                <?php }
+                                ?>
+
+                                <!-- </label>-->
+
+                            </div>
+                        </div>   
+
+
+                        <div class="form-group required">
+                            <label class="col-sm-4 control-label" for="input-customer_name"><?= $column_customer_name ?></label>
+                            <div class="col-sm-4">
+                                <input type="text" maxlength=50 name="customer_name" value="<?php echo $customer_name; ?>" placeholder="" id="input-customer_name" class="form-control" />
+
+
+                                <?php if ($error_customer_name) { ?>
+                                <div class="text-danger"><?php echo $error_customer_name; ?></div>
+                                <?php } ?></div>
+                        </div>
+
+
+                        <div class="form-group required">
+                            <label class="col-sm-4 control-label" for="input-customers_requested"><?= $column_customers_requested ?></label>
+                            <div class="col-sm-4">
+                                <input type="number" maxlength=50  name="customers_requested" value="<?php echo $customers_requested; ?>" placeholder="" id="input-customers_requested" class="form-control" />
+
+
+                                <?php if ($error_customers_requested) { ?>
+                                <div class="text-danger"><?php echo $error_customers_requested; ?></div>
+                                <?php } ?></div>
+                        </div>
+
+
+                        <div class="form-group required">
+                            <label class="col-sm-4 control-label" for="input-no_of_customers_onboarded"><?= $column_no_of_customers_onboarded ?></label>
+                            <div class="col-sm-4">
+                                <input type="text" maxlength=50 name="no_of_customers_onboarded" value="<?php echo $no_of_customers_onboarded; ?>" placeholder="" id="input-no_of_customers_onboarded" class="form-control" />
+
+                                <?php if ($error_no_of_customers_onboarded) { ?>
+                                <div class="text-danger"><?php echo $error_no_of_customers_onboarded; ?></div>
+                                <?php } ?>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
             </div>
-            </form>
         </div>
     </div>
-</div>
 
-<script type="text/javascript"><!--
-function save(type) {
-        var input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = 'button';
-        input.value = type;
-        form = $("form[id^='form-']").append(input);
-        form.submit();
-    }
-    function downloadFile(feature_id) {
-        $.ajax({
-            url: 'index.php?path=setting/newfeature/FileDownload',
-            type: 'post',
-            data: {
-                feature_id: feature_id
-            },
-            dataType: 'json',
-            success: function (json) {
-                console.log(json);
-            }
-        });
-    }
-    //--></script>
+    <script type="text/javascript"><!--
+    function save(type) {
+            var input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'button';
+            input.value = type;
+            form = $("form[id^='form-']").append(input);
+            form.submit();
+        }
+        function downloadFile(feature_id, token) {
+            url = 'index.php?path=setting/newfeature/FileDownload&feature_id=' + feature_id + '&token=' + token;
+            location = url;
+        }
+        //--></script>
 
-<?php echo $footer; ?>
+    <?php echo $footer; ?>

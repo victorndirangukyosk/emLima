@@ -370,9 +370,9 @@ class ControllerSettingNewfeature extends Controller {
         } else {
             $data['name'] = '';
         }
-        
+
         if (isset($newfeature_info['newfeature_id'])) {
-        $data['newfeature_id'] = $newfeature_info['newfeature_id'];
+            $data['newfeature_id'] = $newfeature_info['newfeature_id'];
         }
 
         if (isset($this->request->post['detail_description'])) {
@@ -647,10 +647,11 @@ class ControllerSettingNewfeature extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-    public function FileDownload() {
+    public function FileDownload($feature_id) {
 
         $this->load->model('setting/newfeature');
-        $feature_id = $$this->request->post('feature_id');
+        $feature_id = $this->request->get['feature_id'];
+        //$feature_id = $this->request->post('feature_id');
         $newfeature_info = $this->model_setting_newfeature->getNewfeature($feature_id);
         $file = $newfeature_info['File'];
 
