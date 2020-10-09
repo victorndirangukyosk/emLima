@@ -371,6 +371,10 @@ class ControllerSettingNewfeature extends Controller {
             $data['name'] = '';
         }
 
+        if (isset($newfeature_info['newfeature_id'])) {
+            $data['newfeature_id'] = $newfeature_info['newfeature_id'];
+        }
+
         if (isset($this->request->post['detail_description'])) {
             $data['detail_description'] = $this->request->post['detail_description'];
         } elseif (isset($newfeature_info['detail_description'])) {
@@ -641,6 +645,33 @@ class ControllerSettingNewfeature extends Controller {
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
+    }
+
+    public function FileDownload($feature_id) {
+
+        $this->load->model('setting/newfeature');
+        $feature_id = $this->request->get['feature_id'];
+        //$feature_id = $this->request->post('feature_id');
+        $newfeature_info = $this->model_setting_newfeature->getNewfeature($feature_id);
+        $file = $newfeature_info['File'];
+
+        $filepath = DIR_UPLOAD . "newfeature/" . $file;
+        // Process download
+        if (file_exists($filepath)) {
+            header('Content-Description: File Transfer');
+            header('Content-Type: application/octet-stream');
+            header('Content-Disposition: attachment; filename="' . basename($filepath) . '"');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate');
+            header('Pragma: public');
+            header('Content-Length: ' . filesize($filepath));
+            flush(); // Flush system output buffer
+            readfile($filepath);
+            die();
+        } else {
+            http_response_code(404);
+            die();
+        }
     }
 
 }
