@@ -107,7 +107,8 @@
 
                         </div>
                         <?php if($File != NULL) { ?>
-                        <div class="col-sm-4"><a href="" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="Download"><i class="fa fa-download text-success"></i></a></div>
+                        <div class="col-sm-4">
+                            <button type="button" onclick="downloadFile(<?php echo $newfeature_id; ?>);" data-toggle="tooltip" title="" class="btn btn-success " data-original-title="Download"><i class="fa fa-download"></i></button>
                         <?php } ?>
                     </div>
                     <div class="form-group required">
@@ -187,6 +188,19 @@ function save(type) {
         input.value = type;
         form = $("form[id^='form-']").append(input);
         form.submit();
+    }
+    function downloadFile(feature_id) {
+        $.ajax({
+            url: 'index.php?path=setting/newfeature/FileDownload',
+            type: 'post',
+            data: {
+                feature_id: feature_id
+            },
+            dataType: 'json',
+            success: function (json) {
+                console.log(json);
+            }
+        });
     }
     //--></script>
 

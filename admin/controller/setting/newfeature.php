@@ -370,6 +370,10 @@ class ControllerSettingNewfeature extends Controller {
         } else {
             $data['name'] = '';
         }
+        
+        if (isset($newfeature_info['newfeature_id'])) {
+        $data['newfeature_id'] = $newfeature_info['newfeature_id'];
+        }
 
         if (isset($this->request->post['detail_description'])) {
             $data['detail_description'] = $this->request->post['detail_description'];
@@ -645,8 +649,11 @@ class ControllerSettingNewfeature extends Controller {
 
     public function FileDownload() {
 
-        //$file = 'e20c21b7250b707dd72f337ba3b8a1511176013441-10000131649.pdf';
-        $file = 'CAB BOOKING Changes.docx';
+        $this->load->model('setting/newfeature');
+        $feature_id = $$this->request->post('feature_id');
+        $newfeature_info = $this->model_setting_newfeature->getNewfeature($feature_id);
+        $file = $newfeature_info['File'];
+
         $filepath = DIR_UPLOAD . "newfeature/" . $file;
         // Process download
         if (file_exists($filepath)) {
