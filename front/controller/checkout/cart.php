@@ -373,11 +373,15 @@ class ControllerCheckoutCart extends Controller
         } else {
             $store_id = $this->request->post['store_id'];
         }
-        if (isset($this->session->data['ripe'])) {
-            $ripe = $this->session->data['ripe'];
-        } else {
-            $ripe = $this->request->post['ripe'];
-        }
+        // if (isset($this->session->data['ripe'])) {
+        //     $ripe = $this->session->data['ripe'];
+        // } else {
+        //     $ripe = $this->request->post['ripe'];
+        // }
+
+        $log = new Log('error.log');
+
+        $log->write('PROD notes INFO');
 
         if (isset($this->session->data['product_note'])) {
             $product_note = $this->session->data['product_note'];
@@ -385,19 +389,23 @@ class ControllerCheckoutCart extends Controller
             $product_note = $this->request->post['product_note'];
         }
 
+        $log->write($product_note);
+        $log->write($product_store_id);
+
         if (isset($this->session->data['produce_type'])) {
             $produce_type = $this->session->data['produce_type'];
         } else {
             $produce_type = $this->request->post['produce_type'];
         }
 
+        $log->write('END PROD notes INFO');
         /*console.log('ripasdsfdsfe');
         console.log($ripe);*/
 
         $this->load->model('assets/product');
 
         $product_info = $this->model_assets_product->getProduct($product_store_id, false, $store_id);
-        $log = new Log('error.log');
+      
         $log->write('PROD INFO');
         $log->write($product_info);
         $log->write('PROD INFO');
