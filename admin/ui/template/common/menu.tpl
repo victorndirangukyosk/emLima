@@ -426,6 +426,11 @@
                     <?php if($preturn_customer_order) { ?>
                     <li><a href="<?php echo $report_customer_statement; ?>"><?php echo $text_report_customer_statement; ?></a></li>
                     <?php } ?>
+
+                    <?php if($preturn_customer_order_pattern) { ?>
+                    <li><a href="<?php echo $report_customer_order_pattern; ?>"><?php echo $text_report_customer_order_pattern; ?></a></li>
+                    <?php } ?>
+
                 </ul>
             </li>
             <?php }?>
