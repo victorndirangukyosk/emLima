@@ -4517,14 +4517,14 @@ class ModelReportExcel extends Model {
             //         'rgb' => '51AB66',
             // ]]);
 
-            $objPHPExcel->getActiveSheet()->getStyle('A1:B3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-            $objPHPExcel->getActiveSheet()->getStyle('D')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-
-            //    foreach(range('A','L') as $columnID) {
-            // 	   $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
-            // 		   ->setAutoSize(true);
-            //    }
-            $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(60);
+            $objPHPExcel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $objPHPExcel->getActiveSheet()->getStyle('B:Z')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+            
+               foreach(range('A','L') as $columnID) {
+            	   $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+            		   ->setAutoSize(true);
+               }
+            // $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(60);
             $cellid=0;
             foreach ($data[0] as $h_key=>$h_value) {               
                 // echo "<pre>";print_r($h_key);die;

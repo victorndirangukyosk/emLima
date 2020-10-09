@@ -115,13 +115,13 @@ class ControllerReportCustomerOrderPattern extends Controller
                     $totalOrders= $totalOrders+$totalpermonth['TotalOrders'];
                     $OrdersValue=$OrdersValue+$totalpermonth['Total'];
                     //$data['customers'][$i][$monthname]=$this->currency->format($totalpermonth['Total'], $this->config->get('config_currency'));
-                    $data['customers'][$i][$monthname]=round($totalpermonth['Total'],2)??0;
+                    $data['customers'][$i][$monthname]=number_format($totalpermonth['Total'],2)??0;
                }
-                $data['customers'][$i]['Total']= $OrdersValue;
+                $data['customers'][$i]['Total']= number_format($OrdersValue);
                 $data['customers'][$i]['Order Count']= $totalOrders;
                 if($OrdersValue>0 && $totalOrders>0)
                 {
-                $data['customers'][$i]['Avg. Order Value']= round(($OrdersValue/$totalOrders),2);
+                $data['customers'][$i]['Avg. Order Value']= number_format(($OrdersValue/$totalOrders),2);
                 }
                 else
                 {
@@ -339,13 +339,13 @@ class ControllerReportCustomerOrderPattern extends Controller
                     $totalOrders= $totalOrders+$totalpermonth['TotalOrders'];
                     $OrdersValue=$OrdersValue+$totalpermonth['Total'];
                     //$data['customers'][$i][$monthname]=$this->currency->format($totalpermonth['Total'], $this->config->get('config_currency'));
-                    $data['customers'][$i][$monthname]=round($totalpermonth['Total'],2)??0;
+                    $data['customers'][$i][$monthname]=number_format($totalpermonth['Total'],2);
                }
-                $data['customers'][$i]['Total']= $OrdersValue;
+                $data['customers'][$i]['Total']=number_format($OrdersValue);
                 $data['customers'][$i]['Order Count']= $totalOrders;
                 if($OrdersValue>0 && $totalOrders>0)
                 {
-                $data['customers'][$i]['Avg. Order Value']= round(($OrdersValue/$totalOrders),2);
+                $data['customers'][$i]['Avg. Order Value']= number_format(($OrdersValue/$totalOrders),2);
                 }
                 else
                 {

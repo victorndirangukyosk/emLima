@@ -79,8 +79,12 @@
           <table class="table table-bordered table-hover">
             <thead>
               <tr>
-                 <?php foreach ($customers[0] as $h_key=>$h_value) { ?>                 
-                <td class="text-left"><?php echo $h_key; ?></td>                
+                 <?php foreach ($customers[0] as $h_key=>$h_value) { ?>   
+                  <?php if($h_key=="Company Name") {    ?>         
+                <td class="text-left"><?php echo $h_key; ?></td>  
+              <?php } else { ?>
+                <td class="text-right"><?php echo $h_key; ?></td>  
+          <?php } ?>
                 <?php } ?>
                
               </tr>
@@ -90,9 +94,11 @@
               <?php foreach ($customers as  $b_key=>$b_value) { ?>
             <tr>
               <?php foreach ($b_value as  $bb_key=>$bb_value) { ?>
-            
+              <?php if($bb_key=="Company Name") {    ?> 
                 <td class="text-left"><?php echo  $bb_value; ?></td>
-                 
+                 <?php } else { ?>
+                <td class="text-right"><?php echo $bb_value; ?></td>  
+          <?php } ?>
                
                 <?php } ?>
               </tr>
