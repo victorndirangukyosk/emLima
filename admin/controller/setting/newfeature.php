@@ -127,6 +127,18 @@ class ControllerSettingNewfeature extends Controller {
             $url .= '&page=' . $this->request->get['page'];
         }
 
+        if (isset($this->request->get['page'])) {
+            $page = $this->request->get['page'];
+        } else {
+            $page = 1;
+        }
+
+        $filter_data = [
+            'start' => ($page - 1) * $this->config->get('config_limit_admin'),
+            'limit' => $this->config->get('config_limit_admin'),
+        ];
+
+
         $data['breadcrumbs'] = [];
 
         $data['breadcrumbs'][] = [
@@ -146,7 +158,7 @@ class ControllerSettingNewfeature extends Controller {
 
         $newfeature_total = $this->model_setting_newfeature->getTotalNewfeatures();
 
-        $results = $this->model_setting_newfeature->getNewfeatures();
+        $results = $this->model_setting_newfeature->getNewfeatures($filter_data);
 
         foreach ($results as $result) {
             $data['newfeatures'][] = [
@@ -205,6 +217,17 @@ class ControllerSettingNewfeature extends Controller {
         } else {
             $data['success'] = '';
         }
+
+        $pagination = new Pagination();
+        $pagination->total = $newfeature_total;
+        $pagination->page = $page;
+        $pagination->limit = $this->config->get('config_limit_admin');
+        $pagination->url = $this->url->link('setting/newfeature', 'token='.$this->session->data['token'].$url.'&page={page}', 'SSL');
+
+        $data['pagination'] = $pagination->render();
+
+        $data['results'] = sprintf($this->language->get('text_pagination'), ($newfeature_total) ? (($page - 1) * $this->config->get('config_limit_admin')) + 1 : 0, ((($page - 1) * $this->config->get('config_limit_admin')) > ($newfeature_total - $this->config->get('config_limit_admin'))) ? $newfeature_total : ((($page - 1) * $this->config->get('config_limit_admin')) + $this->config->get('config_limit_admin')), $newfeature_total, ceil($newfeature_total / $this->config->get('config_limit_admin')));
+
 
         if (isset($this->request->post['selected'])) {
             $data['selected'] = (array) $this->request->post['selected'];

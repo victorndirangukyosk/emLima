@@ -99,23 +99,24 @@
 
                     <div class="form-group">
                         <label class="col-sm-4 control-label" for="input-additional_requirement"><?= $column_additional_requirement ?></label>
-                        <div class="col-sm-4"><!--type="file"-->
-                            <input type="file"  name="additional_requirement" value="<?php echo $additional_requirement; ?>" placeholder="" id="input-additional_requirement" class="form-control" />
+                        <div class="col-sm-2"><!--type="file"-->
+                            <input type="file"  style="width:200px" name="additional_requirement" value="<?php echo $additional_requirement; ?>" placeholder="" id="input-additional_requirement" class="form-control" />
                             <?php if ($error_file) { ?>
                             <div class="text-danger"><?php echo $error_file; ?></div>
                             <?php } ?>
+                        </div>
+                         <div class="col-sm-2">
+                         <?php if($File != NULL) { ?>
+                                   
+                                        <button type="button" onclick="downloadFile( <?=$newfeature_id ?>, '<?=$this->session->data['token'] ?>');" data-toggle="tooltip" title="" class="btn btn-success " data-original-title="Download"><i class="fa fa-download"></i></button>
+                                        <?php } ?>
+                                      </div>
+                       </div> 
 
-                        </div>
-                        <?php if($File != NULL) { ?>
-                        <div class="col-sm-4">
-                            <button type="button" onclick="downloadFile( <?=$newfeature_id ?>, '<?=$this->session->data['token'] ?>');" data-toggle="tooltip" title="" class="btn btn-success " data-original-title="Download"><i class="fa fa-download"></i></button>
-                            <?php } ?>
-                        </div>
+
                         <div class="form-group required">
                             <label class="col-sm-4 control-label" for="input-is_customer_requirement"><?= $column_is_customer_requirement ?></label>
                             <div class="col-sm-4">
-
-
                                 <!-- <label class="radio-multipart">-->
                                 <?php if ($is_customer_requirement=="1") { ?>
                                 <input type="radio"  name="is_customer_requirement" value="Yes" checked="checked">Yes</option><br>
@@ -136,7 +137,7 @@
                                 <!-- </label>-->
 
                             </div>
-                        </div>   
+                        </div>  
 
 
                         <div class="form-group required">
