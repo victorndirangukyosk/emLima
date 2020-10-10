@@ -116,7 +116,7 @@
 
                     </td> 
                         <td class="a-right movewishlist">
-        <input disabled type="number" name="cart[<?= $i ?>][qty]" id="cart[<?= $i ?>][qty]" value="<?= $product['quantity']?>" size="4" title="Qty" class="input-text qty" maxlength="12" style="width:80px !important;disabled">
+        <input disabled type="number" name="cart[<?= $i ?>][qty]" id="cart[<?= $i ?>][qty]" value="<?= $product['quantity']?>" size="4" title="Qty" class="input-text qty" min="1" maxlength="12" style="width:80px !important;disabled">
     </td>
         <td class="a-right hidden-table" >
                     <span class="cart-price">
