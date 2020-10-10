@@ -16,10 +16,10 @@ class ControllerCheckoutSuccess extends Controller {
 
         $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_checkout.css');
 
-        if (!empty($_SESSION['parent'])) {
+        if (!empty($_SESSION['parent']) && ($this->session->data['order_approval_access'] == 0 && $this->session->data['order_approval_access_role'] == NULL)) {
             $this->document->setTitle($this->language->get('heading_title_sub_user'));
         }
-        if (empty($_SESSION['parent'])) {
+        if (empty($_SESSION['parent']) || ($this->session->data['order_approval_access'] > 0 && $this->session->data['order_approval_access_role'] != NULL)) {
             $this->document->setTitle($this->language->get('heading_title'));
         }
 
@@ -46,27 +46,27 @@ class ControllerCheckoutSuccess extends Controller {
         ];
 
         $data['referral_description'] = $this->language->get('referral_description');
-        if (!empty($_SESSION['parent'])) {
+        if (!empty($_SESSION['parent']) && ($this->session->data['order_approval_access'] == 0 && $this->session->data['order_approval_access_role'] == NULL)) {
             $data['heading_title'] = $this->language->get('heading_title_sub_user');
         }
-        if (empty($_SESSION['parent'])) {
+        if (empty($_SESSION['parent']) || ($this->session->data['order_approval_access'] > 0 && $this->session->data['order_approval_access_role'] != NULL)) {
             $data['heading_title'] = $this->language->get('heading_title');
         }
 
         $data['text_basket'] = $this->language->get('text_basket');
-        if (empty($_SESSION['parent'])) {
+        if (empty($_SESSION['parent']) || ($this->session->data['order_approval_access'] > 0 && $this->session->data['order_approval_access_role'] != NULL)) {
             $data['text_customer'] = $this->language->get('text_customer');
         }
-        if (!empty($_SESSION['parent'])) {
+        if (!empty($_SESSION['parent']) && ($this->session->data['order_approval_access'] == 0 && $this->session->data['order_approval_access_role'] == NULL)) {
             $data['text_customer'] = $this->language->get('text_customer_sub_user');
         }
         $data['text_guest'] = $this->language->get('text_guest');
         $data['text_order_id'] = $this->language->get('text_order_id');
 
         // Get Order Status enter Message
-        if ($this->customer->isLogged() && empty($_SESSION['parent'])) {
+        if ($this->customer->isLogged() && (empty($_SESSION['parent']) || ($this->session->data['order_approval_access'] > 0 && $this->session->data['order_approval_access_role'] != NULL))) {
             $data['text_message'] = sprintf($this->language->get('text_customer'), $this->url->link('account/order', '', 'SSL'), $this->url->link('account/account', '', 'SSL'));
-        } elseif ($this->customer->isLogged() && !empty($_SESSION['parent'])) {
+        } elseif ($this->customer->isLogged() && (!empty($_SESSION['parent']) && ($this->session->data['order_approval_access'] == 0 && $this->session->data['order_approval_access_role'] == NULL))) {
             $data['text_message'] = sprintf($this->language->get('text_customer_sub_user'), $this->url->link('account/order', '', 'SSL'), $this->url->link('account/account', '', 'SSL'));
         } else {
             $data['text_message'] = sprintf($this->language->get('text_guest'), $this->url->link('information/contact'));
