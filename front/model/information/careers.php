@@ -4,7 +4,7 @@ class ModelInformationCareers extends Model {
 
     public function createCareers($first_name, $last_name, $role, $yourself) {
 
-        $this->db->query('INSERT INTO `' . DB_PREFIX . "careers` SET `first_name` = '" . $first_name . "', `last_name` = '" . $last_name . "', `role` = '" . $role . "', `your_self` = '" . $yourself . "', created_at = NOW()");
+        $this->db->query('INSERT INTO `' . DB_PREFIX . "careers` SET `first_name` = '" . $first_name . "', `last_name` = '" . $last_name . "', `role` = '" . $role . "', `your_self` = '" . $yourself . "', `job_id` = '" . $job_id . "', `cover_letter` = '" . $cover_letter . "', `cv_path` = '" . $cv_path . "', created_at = NOW()");
 
         return $this->db->getLastId();
     }
@@ -135,7 +135,7 @@ class ModelInformationCareers extends Model {
 
 
         $sql .= ' ORDER BY date_added DESC';
-        $sql .= ' LIMIT 0,9';
+        // $sql .= ' LIMIT 0,9';
         $query = $this->db->query($sql);
 
         //   echo  $sql;die;
