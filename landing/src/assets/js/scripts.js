@@ -243,6 +243,9 @@
                     const lastName = $('#careers-last-name').val();
                     const role = $('#careers-designation').val();
                     const yourself = $('#careers-about-yourself').val();
+                    const job_id = $('#careers-job-id').val();
+                    const cover = $('#careers-cover-letter').val();
+                    // const cv_path = $('#careers-cv-path').val();
                     const registerForm = $('#careers-form')[0];
                     const formIsValid = registerForm.reportValidity();
                     const registerButton = $('#careers-submit-button');
@@ -263,7 +266,10 @@
                             firstname: firstName,
                             lastname: lastName,
                             role: role,
-                            yourself: yourself
+                            yourself: yourself,
+                            job_id: job_id,
+                            cover: cover,
+                            //cv_path: cv_pathk
                         },
                         success: function (json) {
                             registerButton.toggleClass('disabled');
@@ -273,6 +279,8 @@
                                     message: json['success_message']
                                 });
                                 $('#careers-form')[0].reset();
+                                registerButton.text('SUBMIT');
+
                             } else {
                                 iziToast.warning({
                                     position: 'topRight',

@@ -218,7 +218,7 @@ class ControllerCommonHome extends Controller {
     public function savecareers() {
 
         $this->load->model('information/careers');
-        $this->model_information_careers->createCareers(str_replace("'", "", $this->request->post['firstname']), str_replace("'", "", $this->request->post['lastname']), str_replace("'", "", $this->request->post['role']), str_replace("'", "", $this->request->post['yourself']));
+        $this->model_information_careers->createCareers(str_replace("'", "", $this->request->post['firstname']), str_replace("'", "", $this->request->post['lastname']), str_replace("'", "", $this->request->post['role']), str_replace("'", "", $this->request->post['yourself']), str_replace("'", "", $this->request->post['job_id']), str_replace("'", "", $this->request->post['cover']), str_replace("'", "", $this->request->post['cv_path']));
         $json['status'] = true;
         $json['success_message'] = 'Thank you we will contact you shortly';
         $this->response->addHeader('Content-Type: application/json');
