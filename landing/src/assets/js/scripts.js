@@ -241,8 +241,8 @@
             e.preventDefault();
                     const firstName = $('#careers-first-name').val();
                     const lastName = $('#careers-last-name').val();
-                    const role = $('#careers-designation').val();
-                    const yourself = $('#careers-about-yourself').val();
+                    const role = $('#careers-email').val();
+                    const yourself = $('#careers-phone-number').val();
                     const job_id = $('#careers-job-id').val();
                     const cover = $('#careers-cover-letter').val();
                     // const cv_path = $('#careers-cv-path').val();
