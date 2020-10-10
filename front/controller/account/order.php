@@ -2419,7 +2419,8 @@ class ControllerAccountOrder extends Controller {
             $sub_users_order_details = $this->model_account_order->getSubUserOrderDetails($order_id, $customer_id);
 
             if (($sub_users_order_details['parent_approval'] == 'Approved') || ($sub_users_order_details['head_chef'] == 'Approved' && $sub_users_order_details['procurement'] == 'Approved')) {
-                $this->model_account_order->UpdateOrderStatus($order_id, 14);
+                $comment = 'Order Approved By Parent User';
+                $this->model_account_order->UpdateOrderStatus($order_id, 14, $comment);
                 
                 $sub_users_order_details = $this->model_account_order->getSubUserOrderDetails($order_id, $customer_id);
                 if ($sub_users_order_details['order_status_id'] == 14) {
@@ -2436,7 +2437,8 @@ class ControllerAccountOrder extends Controller {
             }
 
             if ($sub_users_order_details['parent_approval'] == 'Rejected' || $sub_users_order_details['head_chef'] == 'Rejected') {
-                $this->model_account_order->UpdateOrderStatus($order_id, 16);
+                $comment = 'Order Rejected By Parent User';
+                $this->model_account_order->UpdateOrderStatus($order_id, 16, $comment);
                 
                 $sub_users_order_details = $this->model_account_order->getSubUserOrderDetails($order_id, $customer_id);
                 if ($sub_users_order_details['order_status_id'] == 14) {
@@ -2468,7 +2470,8 @@ class ControllerAccountOrder extends Controller {
             }
 
             if (($sub_users_order_details['head_chef'] == 'Rejected' || $sub_users_order_details['head_chef'] == 'Approved') && $sub_users_order_details['procurement'] == 'Rejected') {
-                $this->model_account_order->UpdateOrderStatus($order_id, 16);
+                $comment = 'Order Rejected By Parent User';
+                $this->model_account_order->UpdateOrderStatus($order_id, 16, $comment);
                 
                 $sub_users_order_details = $this->model_account_order->getSubUserOrderDetails($order_id, $customer_id);
                 if ($sub_users_order_details['order_status_id'] == 14) {
@@ -2510,7 +2513,8 @@ class ControllerAccountOrder extends Controller {
             $log->write($sub_users_order_details);
 
             if (($sub_users_order_details['parent_approval'] == 'Approved') || ($sub_users_order_details['head_chef'] == 'Approved' && $sub_users_order_details['procurement'] == 'Approved')) {
-                $this->model_account_order->UpdateOrderStatus($order_id, 14);
+                $comment = 'Order Approved By Parent User';
+                $this->model_account_order->UpdateOrderStatus($order_id, 14, $comment);
                 
                 $sub_users_order_details = $this->model_account_order->getSubUserOrderDetails($order_id, $customer_id);
                 if ($sub_users_order_details['order_status_id'] == 14) {
@@ -2527,7 +2531,8 @@ class ControllerAccountOrder extends Controller {
             }
 
             if ($sub_users_order_details['parent_approval'] == 'Rejected' || $sub_users_order_details['head_chef'] == 'Rejected') {
-                $this->model_account_order->UpdateOrderStatus($order_id, 16);
+                $comment = 'Order Rejected By Parent User';
+                $this->model_account_order->UpdateOrderStatus($order_id, 16, $comment);
                 
                 $sub_users_order_details = $this->model_account_order->getSubUserOrderDetails($order_id, $customer_id);
                 if ($sub_users_order_details['order_status_id'] == 14) {
@@ -2560,7 +2565,8 @@ class ControllerAccountOrder extends Controller {
             }
 
             if (($sub_users_order_details['head_chef'] == 'Rejected' || $sub_users_order_details['head_chef'] == 'Approved') && $sub_users_order_details['procurement'] == 'Rejected') {
-                $this->model_account_order->UpdateOrderStatus($order_id, 16);
+                $comment = 'Order Rejected By Parent User';
+                $this->model_account_order->UpdateOrderStatus($order_id, 16, $comment);
                 
                 $sub_users_order_details = $this->model_account_order->getSubUserOrderDetails($order_id, $customer_id);
                 if ($sub_users_order_details['order_status_id'] == 14) {
