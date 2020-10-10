@@ -1,0 +1,74 @@
+@@include('./_partials/header.html')
+@@include('./_partials/navbar.html')
+<main>
+    <section id="careers">
+        <div class="container">
+            <div class="row">
+                <div class="section-header col-md-12">
+                    <h4 class="section-title"><?= $job_type ?></h4>
+                    <p class="section-subtitle">With
+                        <?= $experience ?>of experience, needed in
+                        <?= $job_location ?>
+                    </p>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="section-header col-md-12">
+                    <h4 class="section-title">Roles & Responsibilities</h4>
+                </div>
+                <div class="col-md-12 text-center">
+                    <?= html_entity_decode($roles_responsibilities) ?>
+                </div>
+            </div>
+            <div class="row mt-5">
+                <div class="section-header col-md-12">
+                    <h4 class="section-title">Apply for this position</h4>
+                </div>
+                <div class="col-md-12 mt-3">
+                    <form id="careers-form">
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="careers-first-name">Full Name</label>
+                                <input required type="text" class="form-control rounded-0" id="careers-first-name">
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="careers-email">Email</label>
+                                <input required type="email" class="form-control rounded-0" id="careers-email">
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="careers-phone-number">Phone Number</label>
+                                <input required type="number" class="form-control rounded-0" id="careers-phone-number">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label for="careers-cover-letter">Cover Letter</label>
+                                <textarea  required id="careers-cover-letter" cols="30" rows="10" class="form-control"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label for="careers-resume">Upload CV/Resume</label>
+                                <input required type="file" class="form-control rounded-0" id="careers-resume">
+                                <small>Allowed Type(s): .pdf, .doc, .docx</small>
+                            </div>
+                        </div>
+                        <div class="form-row mb-3">
+                            <div class="col-md-12 d-flex justify-content-center">
+                                <div class="g-recaptcha" data-sitekey="<?= $site_key ?>"></div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-12 text-center">
+                                <button id="careers-submit-button" class="btn btn-secondary rounded-0 mt-4 px-5 py-2">SUBMIT</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+@@include('./_partials/footer-links.html')
+@@include('./_partials/footer.html')

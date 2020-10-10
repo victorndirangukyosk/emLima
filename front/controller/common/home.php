@@ -196,11 +196,11 @@ class ControllerCommonHome extends Controller {
         $data['job_types']=$this->model_information_careers->getJobTypes();
         $data['job_locations']=$this->model_information_careers->getJobLocations();
         $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/careers.tpl', $data));
-        // echo "<pre>";print_r($data['job_categories']);die;
+        // echo "<pre>";print_r($data['jobpositions']);die;
     
     }
 
-    public function jobopenings() {
+    public function job_opening_details() {
         if (isset($this->request->get['id'])) {
             $filter['id'] = $this->request->get['id'];
         } else {
@@ -210,15 +210,15 @@ class ControllerCommonHome extends Controller {
         $this->load->model('information/careers');
         $data['site_key'] = $this->config->get('config_google_captcha_public');
         $data['jobpositions'] = $this->model_information_careers->getJobPositions($filter);
-        // echo "<pre>";print_r($data['jobpositions']);die;
-        $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/jobopenings.tpl', $data));
+        // echo "<pre>";print_r($data['jobpositions'][0]);die;
+        $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/jobopening.tpl', $data['jobpositions'][0]));
     }
 
 
     public function savecareers() {
 
         $this->load->model('information/careers');
-        $this->model_information_careers->createCareers(str_replace("'", "", $this->request->post['firstname']), str_replace("'", "", $this->request->post['lastname']), str_replace("'", "", $this->request->post['role']), str_replace("'", "", $this->request->post['yourself']));
+        $this->model_information_careers->createCareers(str_replace("'", "", $this->request->post['firstname']), str_replace("'", "", $this->request->post['lastname']), str_replace("'", "", $this->request->post['role']), str_replace("'", "", $this->request->post['yourself']), str_replace("'", "", $this->request->post['job_id']), str_replace("'", "", $this->request->post['cover']), str_replace("'", "", $this->request->post['cv_path']));
         $json['status'] = true;
         $json['success_message'] = 'Thank you we will contact you shortly';
         $this->response->addHeader('Content-Type: application/json');

@@ -608,4 +608,180 @@ class ModelReportCustomer extends Model
 
         return $query->rows;
     }
+    
+
+    public function getValidCompanyOrders($data = [])
+    {
+        $sql = "SELECT c.company_name  as company  , sum(ot.value) as Total,  extract(MONTH from o.date_added) as month    FROM `".DB_PREFIX.'order` o LEFT JOIN `'.DB_PREFIX.'customer` c ON (o.customer_id = c.customer_id) LEFT JOIN `'.DB_PREFIX."order_total` ot ON (o.order_id = ot.order_id) WHERE ot.code ='total' ";
+        //$sql = "SELECT  c.company_name,  sum(ot.value) as Total,extract(MONTH from o.date_added) as month  FROM `".DB_PREFIX.'order` o JOIN `'.DB_PREFIX.'customer` c  ON c.customer_id = o.customer_id join `'.DB_PREFIX.'order_total` ot on ot.order_id =o.order_id'";
+        //$sql .= " WHERE ot.code='total' ";
+
+        if (!empty($data['filter_order_status_id'])) {
+            $sql .= " AND o.order_status_id = '".(int) $data['filter_order_status_id']."'";
+        } else {
+            $sql .= " AND o.order_status_id > '0' AND  o.order_status_id != '6'";
+        }
+        // and o.date_added BETWEEN '2020-06-01 00:00:00' AND '2020-09-30 00:00:00' 
+        if (!empty($data['filter_date_start'])) {
+            $sql .= " AND DATE(o.date_added) >= '".$this->db->escape($data['filter_date_start'])."'";
+        }
+
+        if (!empty($data['filter_date_end'])) {
+            $sql .= " AND DATE(o.date_added) < '".$this->db->escape($data['filter_date_end'])."'";
+        }
+
+        // if (!empty($data['filter_customer'])) {
+        //     // $sql .= " AND   c.customer_id   = '" .(int) $this->db->escape($data['filter_customer']) . "'";
+        //     $sql .= " AND CONCAT(c.firstname, ' ', c.lastname)  LIKE '%".$this->db->escape($data['filter_customer'])."%'";
+        // }
+
+        if (!empty($data['filter_company'])) {
+            $sql .= " AND c.company_name   LIKE '%".$this->db->escape($data['filter_company'])."%'";
+        }
+        $sql .= "group by month( o.date_added),c.company_name ORDER BY c.company_name asc";
+ 
+        // if (isset($data['start']) || isset($data['limit'])) {
+        //     if ($data['start'] < 0) {
+        //         $data['start'] = 0;
+        //     }
+
+        //     if ($data['limit'] < 1) {
+        //         $data['limit'] = 20;
+        //     }
+
+        //     $sql .= ' LIMIT '.(int) $data['start'].','.(int) $data['limit'];
+        // }
+        $query = $this->db->query($sql);
+         //echo  ($sql);die;
+        //echo "<pre>";print_r($query->rows);die;
+        return $query->rows;
+    }
+
+    public function getmonths($data = [])
+    {
+        $sql = "SELECT  distinct  extract(MONTH from o.date_added) as month    FROM `".DB_PREFIX.'order` o LEFT JOIN `'.DB_PREFIX.'customer` c ON (o.customer_id = c.customer_id) LEFT JOIN `'.DB_PREFIX."order_total` ot ON (o.order_id = ot.order_id) WHERE ot.code ='total' ";
+        // if (!empty($data['filter_order_status_id'])) {
+        //     $sql .= " AND o.order_status_id = '".(int) $data['filter_order_status_id']."'";
+        // } else {
+        //     $sql .= " AND o.order_status_id > '0' AND  o.order_status_id != '6'";
+        // }
+        // and o.date_added BETWEEN '2020-06-01 00:00:00' AND '2020-09-30 00:00:00' 
+        if (!empty($data['filter_date_start'])) {
+            $sql .= " AND DATE(o.date_added) >= '".$this->db->escape($data['filter_date_start'])."'";
+        }
+        if (!empty($data['filter_date_end'])) {
+            $sql .= " AND DATE(o.date_added) < '".$this->db->escape($data['filter_date_end'])."'";
+        }
+        // if (!empty($data['filter_customer'])) {
+        //     // $sql .= " AND   c.customer_id   = '" .(int) $this->db->escape($data['filter_customer']) . "'";
+        //     $sql .= " AND CONCAT(c.firstname, ' ', c.lastname)  LIKE '%".$this->db->escape($data['filter_customer'])."%'";
+        // }
+        // if (!empty($data['filter_company'])) {
+        //     $sql .= " AND c.company_name   LIKE '%".$this->db->escape($data['filter_company'])."%'";
+        // }
+        $sql .= "group by month( o.date_added)    asc";
+         $query = $this->db->query($sql);
+         //echo  ($sql);die;
+        //echo "<pre>";print_r($query->rows);die;
+        return $query->rows;
+    }
+    public function getValidCompanies($data = [])
+    {
+        $sql = "SELECT c.company_name  as company  from hf7_customer c ";          
+
+        if (!empty($data['filter_company'])) {
+            $sql .= " where c.company_name   LIKE '%".$this->db->escape($data['filter_company'])."%'";
+        }
+
+        
+
+        $sql .= "group by  c.company_name ORDER BY c.company_name asc";
+      
+        if (isset($data['start']) || isset($data['limit'])) {
+            if ($data['start'] < 0) {
+                $data['start'] = 0;
+            }
+
+            if ($data['limit'] < 1) {
+                $data['limit'] = 20;
+            }
+
+            $sql .= ' LIMIT '.(int) $data['start'].','.(int) $data['limit'];
+        }
+
+        $query = $this->db->query($sql);
+            //  echo  ($sql);die;
+        //echo "<pre>";print_r($query->rows);die;
+        return $query->rows;
+    }
+
+
+    public function getTotalValidCompanies($data = [])
+    {
+        $sql = "SELECT count( distinct (c.company_name) ) as companycount  from hf7_customer c ";          
+
+        if (!empty($data['filter_company'])) {
+            $sql .= " where c.company_name   LIKE '%".$this->db->escape($data['filter_company'])."%'";
+        } 
+        //$sql .= "group by  c.company_name ORDER BY c.company_name asc"; 
+
+        $query = $this->db->query($sql);
+                // echo  ($query->row['companycount']);die;
+        //echo "<pre>";print_r($query->rows);die;
+        return $query->row['companycount'];
+    }
+
+    public function getCompanyTotal($data = [],$month,$company)
+    {
+        $sql = "SELECT c.company_name  as company  , sum(ot.value) as Total,count(o.order_id) as TotalOrders,  extract(MONTH from o.date_added) as month    FROM `".DB_PREFIX.'order` o LEFT JOIN `'.DB_PREFIX.'customer` c ON (o.customer_id = c.customer_id) LEFT JOIN `'.DB_PREFIX."order_total` ot ON (o.order_id = ot.order_id) WHERE ot.code ='total' ";
+        //$sql = "SELECT  c.company_name,  sum(ot.value) as Total,extract(MONTH from o.date_added) as month  FROM `".DB_PREFIX.'order` o JOIN `'.DB_PREFIX.'customer` c  ON c.customer_id = o.customer_id join `'.DB_PREFIX.'order_total` ot on ot.order_id =o.order_id'";
+        //$sql .= " WHERE ot.code='total' ";
+
+        if (!empty($data['filter_order_status_id'])) {
+            $sql .= " AND o.order_status_id = '".(int) $data['filter_order_status_id']."'";
+        } else {
+            $sql .= " AND o.order_status_id > '0' AND  o.order_status_id != '6'";
+        }
+        // and o.date_added BETWEEN '2020-06-01 00:00:00' AND '2020-09-30 00:00:00' 
+        if (!empty($data['filter_date_start'])) {
+            $sql .= " AND DATE(o.date_added) >= '".$this->db->escape($data['filter_date_start'])."'";
+        }
+
+        if (!empty($data['filter_date_end'])) {
+            $sql .= " AND DATE(o.date_added) < '".$this->db->escape($data['filter_date_end'])."'";
+        }
+        $sql .= " AND Month(o.date_added) = '".$month."'";
+        
+
+        // if (!empty($data['filter_customer'])) {
+        //     // $sql .= " AND   c.customer_id   = '" .(int) $this->db->escape($data['filter_customer']) . "'";
+        //     $sql .= " AND CONCAT(c.firstname, ' ', c.lastname)  LIKE '%".$this->db->escape($data['filter_customer'])."%'";
+        // }
+
+        // if (!empty($data['filter_company'])) {
+            // $sql .= " AND c.company_name   LIKE '%".$this->db->escape($data['filter_company'])."%'";
+            $sql .= " AND c.company_name   = '".$company."'";
+        // }
+        $sql .= "group by month( o.date_added),c.company_name ORDER BY c.company_name asc";
+ 
+        // if (isset($data['start']) || isset($data['limit'])) {
+        //     if ($data['start'] < 0) {
+        //         $data['start'] = 0;
+        //     }
+
+        //     if ($data['limit'] < 1) {
+        //         $data['limit'] = 20;
+        //     }
+
+        //     $sql .= ' LIMIT '.(int) $data['start'].','.(int) $data['limit'];
+        // }
+
+        $query = $this->db->query($sql);
+        //   echo  ($sql);die;
+        //echo "<pre>";print_r($query->rows);die;
+
+
+        return $query->row;
+    }
+
 }
