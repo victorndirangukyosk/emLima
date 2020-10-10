@@ -12,7 +12,13 @@ class ControllerCheckoutSuccess extends Controller {
     public function index() {
         //$this->load->language( 'account/register' );
 
+        $this->load->model('account/customer');
+        $parent_info = $this->model_account_customer->getCustomer($_SESSION['parent']);
         $this->load->language('checkout/success');
+        /*$log = new Log('error.log');
+        $log->write('parent_info');
+        $log->write($parent_info);
+        $log->write('parent_info');*/
 
         $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_checkout.css');
 
@@ -58,7 +64,7 @@ class ControllerCheckoutSuccess extends Controller {
             $data['text_customer'] = $this->language->get('text_customer');
         }
         if (!empty($_SESSION['parent']) && ($this->session->data['order_approval_access'] == 0 && $this->session->data['order_approval_access_role'] == NULL)) {
-            $data['text_customer'] = $this->language->get('text_customer_sub_user');
+            $data['text_customer'] = $this->language->get('text_customer_sub_user_new');
         }
         $data['text_guest'] = $this->language->get('text_guest');
         $data['text_order_id'] = $this->language->get('text_order_id');
@@ -67,7 +73,7 @@ class ControllerCheckoutSuccess extends Controller {
         if ($this->customer->isLogged() && (empty($_SESSION['parent']) || ($this->session->data['order_approval_access'] > 0 && $this->session->data['order_approval_access_role'] != NULL))) {
             $data['text_message'] = sprintf($this->language->get('text_customer'), $this->url->link('account/order', '', 'SSL'), $this->url->link('account/account', '', 'SSL'));
         } elseif ($this->customer->isLogged() && (!empty($_SESSION['parent']) && ($this->session->data['order_approval_access'] == 0 && $this->session->data['order_approval_access_role'] == NULL))) {
-            $data['text_message'] = sprintf($this->language->get('text_customer_sub_user'), $this->url->link('account/order', '', 'SSL'), $this->url->link('account/account', '', 'SSL'));
+            $data['text_message'] = sprintf($this->language->get('text_customer_sub_user_new'), $parent_info['firstname'], $parent_info['lastname'], $this->url->link('account/order', '', 'SSL'), $this->url->link('account/account', '', 'SSL'));
         } else {
             $data['text_message'] = sprintf($this->language->get('text_guest'), $this->url->link('information/contact'));
         }

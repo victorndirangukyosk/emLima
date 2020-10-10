@@ -9646,7 +9646,7 @@ button.button.btn-continue:before {
 	border-top:1px #eaeaea solid;
 	background:#fff;
 	border-bottom:none;
-	padding: 20px 30px;
+	padding: 20px 20px;
 }
 button.button.btn-update:before {
 	content: "\f021";
