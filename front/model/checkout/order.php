@@ -144,6 +144,13 @@ class ModelCheckoutOrder extends Model {
                         foreach ($product['produce_type'] as $producttype) {
                             $produce_type = $produce_type . ' ' . $producttype['type'] . '-' . $producttype['value'];
                         }
+                        $log = new Log('error.log');
+                        $log->write('PRODUCT NOTE FRONT.MODEL.CHECKOUT.ORDER');
+                        $log->write($product['product_note'] . '' . $product['product_id'] . '' . $product['name']);
+                        $log->write('PRODUCT NOTE FRONT.MODEL.CHECKOUT.ORDER');
+                        if ($product['product_note'] == 'undefined' || $product['product_note'] == 'null') {
+                            $product['product_note'] = '';
+                        }
                         $this->db->query("INSERT INTO " . DB_PREFIX . "order_product SET vendor_id='" . (int) $product['vendor_id'] . "', store_id='" . (int) $product['store_id'] . "', product_type='" . $product['product_type'] . "',product_note='" . $product['product_note'] . "', general_product_id='" . $product['product_id'] . "', unit='" . $product['unit'] . "', order_id = '" . (int) $order_id . "', variation_id = '" . (int) $product['store_product_variation_id'] . "', product_id = '" . (int) $product['product_store_id'] . "', name = '" . $this->db->escape($product['name']) . "', model = '" . $this->db->escape($product['model']) . "', quantity = '" . (float) $product['quantity'] . "', price = '" . (float) $product['price'] . "', total = '" . (float) $product['total'] . "', tax = '" . (float) $product['tax'] . "', reward = '" . (int) $product['reward'] . "', produce_type = '" . $this->db->escape($produce_type) . "'");
                     }
                 }
@@ -184,7 +191,13 @@ class ModelCheckoutOrder extends Model {
                         foreach ($product['produce_type'] as $producttype) {
                             $produce_type = $produce_type . ' ' . $producttype['type'] . '-' . $producttype['value'];
                         }
-
+                        $log = new Log('error.log');
+                        $log->write('PRODUCT NOTE FRONT.MODEL.CHECKOUT.ORDER');
+                        $log->write($product['product_note'] . '' . $product['product_id'] . '' . $product['name']);
+                        $log->write('PRODUCT NOTE FRONT.MODEL.CHECKOUT.ORDER');
+                        if ($product['product_note'] == 'undefined' || $product['product_note'] == 'null') {
+                            $product['product_note'] = '';
+                        }
                         $this->db->query("INSERT INTO " . DB_PREFIX . "order_product SET vendor_id='" . (int) $product['vendor_id'] . "', store_id='" . (int) $product['store_id'] . "', product_type='" . $product['product_type'] . "',product_note='" . $product['product_note'] . "', general_product_id='" . $product['product_id'] . "', unit='" . $product['unit'] . "', order_id = '" . (int) $order_id . "', variation_id = '" . (int) $product['store_product_variation_id'] . "', product_id = '" . (int) $product['product_store_id'] . "', name = '" . $this->db->escape($product['name']) . "', model = '" . $this->db->escape($product['model']) . "', quantity = '" . (float) $product['quantity'] . "', price = '" . (float) $product['price'] . "', total = '" . (float) $product['total'] . "', tax = '" . (float) $product['tax'] . "', reward = '" . (int) $product['reward'] . "', produce_type = '" . $this->db->escape($produce_type) . "'");
                     }
                 }
@@ -1780,15 +1793,14 @@ class ModelCheckoutOrder extends Model {
         $this->db->query('UPDATE `' . DB_PREFIX . "order` SET parent_approval = '" . $parent_approval . "',head_chef = '" . $head_chef . "',procurement = '" . $procurement . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
     }
 
-
-    public function UpdateParentApprovalAPI($order_id,$order_approval_access,$order_approval_access_role) {
+    public function UpdateParentApprovalAPI($order_id, $order_approval_access, $order_approval_access_role) {
         $log = new Log('error.log');
         $this->load->model('account/customer');
         $is_he_parents = $this->model_account_customer->CheckHeIsParent();
         $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
         $order_appoval_access = FALSE;
         // if ($this->session->data['order_approval_access'] > 0 && $this->session->data['order_approval_access_role'] != NULL) {
-            if ($order_approval_access  > 0 && $order_approval_access_role  != NULL) {
+        if ($order_approval_access > 0 && $order_approval_access_role != NULL) {
             $order_appoval_access = TRUE;
         }
         $log->write('Order Confirm In COD');

@@ -866,9 +866,9 @@ class ModelAccountOrder extends Model {
         }
     }
 
-    public function UpdateOrderStatus($order_id, $order_status_id) {
+    public function UpdateOrderStatus($order_id, $order_status_id, $comment) {
         $this->db->query('UPDATE `' . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
-        $this->db->query('INSERT INTO ' . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', order_status_id = '" . (int) $order_status_id . "', notify = 1, comment = 'Order Approved By Parent User', date_added = NOW()");
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', order_status_id = '" . (int) $order_status_id . "', notify = 1, comment = '".$comment."', date_added = NOW()");
     }
 
     public function ApproveOrRejectSubUserOrderApi($order_id, $order_status) {

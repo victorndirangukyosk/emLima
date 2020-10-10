@@ -152,7 +152,7 @@ class ModelPaymentPesapal extends Model {
             $this->db->query('UPDATE `' . DB_PREFIX . "order_total` SET value = '" . $total . "' WHERE order_id = '" . (int) $order_id . "' AND code='total'");
         } else {
             $log->write('TRANSACTION FEE INSERTION');
-            $sql = 'INSERT INTO ' . DB_PREFIX . "order_total SET value = '" . $transaction_fee . "', order_id = '" . $order_id . "', title = 'Transaction-Fee', code = 'transaction_fee', sort_order = '10'";
+            $sql = 'INSERT INTO ' . DB_PREFIX . "order_total SET value = '" . $transaction_fee . "', order_id = '" . $order_id . "', title = 'Transaction-Fee', code = 'transaction_fee', sort_order = '".$this->config->get('transaction_fee_sort_order')."'";
             $this->db->query($sql);
             $this->db->query('UPDATE `' . DB_PREFIX . "order_total` SET value = '" . $total . "' WHERE order_id = '" . (int) $order_id . "' AND code='total'");
         }
