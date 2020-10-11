@@ -146,7 +146,7 @@ class ModelCheckoutOrder extends Model {
                         }
                         $log = new Log('error.log');
                         $log->write('PRODUCT NOTE FRONT.MODEL.CHECKOUT.ORDER');
-                        $log->write($product['product_note'] . '' . $product['product_id'] . '' . $product['name']);
+                        $log->write($product['product_note'] . '-' . $product['product_id'] . '-' . $product['name']);
                         $log->write('PRODUCT NOTE FRONT.MODEL.CHECKOUT.ORDER');
                         if ($product['product_note'] == 'undefined' || $product['product_note'] == 'null') {
                             $product['product_note'] = '';
@@ -193,7 +193,7 @@ class ModelCheckoutOrder extends Model {
                         }
                         $log = new Log('error.log');
                         $log->write('PRODUCT NOTE FRONT.MODEL.CHECKOUT.ORDER');
-                        $log->write($product['product_note'] . '' . $product['product_id'] . '' . $product['name']);
+                        $log->write($product['product_note'] . '-' . $product['product_id'] . '-' . $product['name']);
                         $log->write('PRODUCT NOTE FRONT.MODEL.CHECKOUT.ORDER');
                         if ($product['product_note'] == 'undefined' || $product['product_note'] == 'null') {
                             $product['product_note'] = '';

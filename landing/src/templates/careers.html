@@ -7,96 +7,101 @@
             <div class="row">
                 <div class="section-header col-md-12">
                     <h4 class="section-title">Careers</h4>
-                    <p class="section-subtitle">
-                        Our team is made up of all kinds of nerds, from Software Engineers to Finance Gurus, UI/UX
-                        Designers to Customer Success Experts. Looking to work with us?
-                        We'd love to have you on our team!
-                    </p>
+                    <p class="section-subtitle">Our team is made up of all kinds of nerds, from Software Engineers to Finance Gurus, UI/UX Designers to Customer Success Experts. Looking to work with us? We'd love to have you on our team!</p>
                 </div>
             </div>
 
-            <div class="row mt-3">
-                <div class="col-md-4 form-group">
-                    <label for="careers-job-category">Job Category</label>
-                    <select class="form-control" id="careers-job-category">
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
-                    </select>
-                </div>
-                <div class="col-md-4 form-group">
-                    <label for="careers-job-type">Job Type</label>
-                    <select class="form-control" id="careers-job-type">
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
-                    </select>
-                </div>
-                <div class="col-md-4 form-group">
-                    <label for="careers-job-position">Job Location</label>
-                    <select class="form-control" id="careers-job-position">
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
-                    </select>
-                </div>
-            </div>
-
-            <?php if(count($jobpositions) == 0) { ?>
+            <?php if(count($jobpositions)==0 ) { ?>
             <div class="row mt-4">
                 <div class="section-header col-md-12">
-                    <p class="section-subtitle">
-                        There are no job openings available right now. Leave your details below and we'll give you a call when we're hiring
-                    </p>
+                    <p class="section-subtitle">There are no job openings available right now. Leave your details below and we'll give you a call when we're hiring</p>
                 </div>
-
                 <div class="col-md-12">
                     <form id="careers-form">
                         <div class="form-row">
                             <div class="form-group col-md-4">
-                                <label for="careers-first-name">First Name</label>
+                                <label for="careers-first-name">Full Name</label>
                                 <input required type="text" class="form-control rounded-0" id="careers-first-name">
                             </div>
                             <div class="form-group col-md-4">
-                                <label for="careers-last-name">Last Name</label>
-                                <input required type="text" class="form-control rounded-0" id="careers-last-name">
+                                <label for="careers-email">Email</label>
+                                <input required type="email" class="form-control rounded-0" id="careers-email">
                             </div>
                             <div class="form-group col-md-4">
-                                <label for="careers-designation">Desired Role</label>
-                                <input required type="text" class="form-control rounded-0" id="careers-designation">
+                                <label for="careers-phone-number">Phone Number</label>
+                                <input required type="number" class="form-control rounded-0" id="careers-phone-number">
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group col-md-12">
-                                <label for="careers-about-yourself">Tell us about yourself</label>
-                                <textarea id="careers-about-yourself" cols="30" rows="10" class="form-control">
-                                </textarea>
+                                <label for="careers-cover-letter">Cover Letter</label>
+                                <textarea id="careers-cover-letter" cols="30" rows="10" class="form-control" required></textarea>
                             </div>
                         </div>
-
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label for="careers-resume">Upload CV/Resume</label>
+                                <input required type="file" class="form-control rounded-0" id="careers-resume" required>
+                                <small>Allowed Type(s): .pdf, .doc, .docx</small>
+                            </div>
+                        </div>
                         <div class="form-row mb-3">
                             <div class="col-md-12 d-flex justify-content-center">
                                 <div class="g-recaptcha" data-sitekey="<?= $site_key ?>"></div>
                             </div>
                         </div>
-
                         <div class="form-row">
                             <div class="col-md-12 text-center">
-                                <button id="careers-submit-button" class="btn btn-secondary rounded-0 mt-4 px-5 py-2">
-                                    SUBMIT
-                                </button>
+                                <button id="careers-submit-button" class="btn btn-secondary rounded-0 mt-4 px-5 py-2">SUBMIT</button>
                             </div>
                         </div>
                     </form>
                 </div>
             </div>
             <?php } else { ?>
+
+            <div class="row mt-3">
+                <div class="col-md-4 form-group">
+                    <label for="careers-job-category">Job Category</label>
+                    <select class="form-control" id="careers-job-category">
+                        <option value="All Job Category" selected="selected">All Job Category </option>
+                        <?php foreach ($job_categories as $job_category) { ?>
+                        <?php if ($job_category['job_category']  == $job_category_name) { ?>
+                        <option value="<?php echo $job_category['job_category'] ; ?>" selected="selected"><?php echo $job_category['job_category'] ; ?></option>
+                        <?php } else { ?>
+                        <option value="<?php echo $job_category['job_category'] ; ?>"><?php echo $job_category['job_category'] ; ?></option>
+                        <?php } ?>
+                        <?php } ?>
+                    </select>
+                </div>
+                <div class="col-md-4 form-group">
+                    <label for="careers-job-type">Job Type</label>
+                    <select class="form-control" id="careers-job-type">
+                        <option value="All Job Type" selected="selected">All Job Type </option>
+                        <?php foreach ($job_types as $job_type) { ?>
+                        <?php if ($job_type['job_type']  == $job_type_name) { ?>
+                        <option value="<?php echo $job_type['job_type'] ; ?>" selected="selected"><?php echo $job_type['job_type'] ; ?></option>
+                        <?php } else { ?>
+                        <option value="<?php echo $job_type['job_type'] ; ?>"><?php echo $job_type['job_type'] ; ?></option>
+                        <?php } ?>
+                        <?php } ?>
+                    </select>
+                </div>
+                <div class="col-md-4 form-group">
+                    <label for="careers-job-position">Job Location</label>
+                    <select class="form-control" id="careers-job-position">
+                        <option value="All Job Location" selected="selected">All Job Location </option>
+                        <?php foreach ($job_locations as $job_location) { ?>
+                        <?php if ($job_location['job_location']  == $job_location_name) { ?>
+                        <option value="<?php echo $job_loction['job_location'] ; ?>" selected="selected"><?php echo $job_location ['job_location']; ?></option>
+                        <?php } else { ?>
+                        <option value="<?php echo $job_location ['job_location']; ?>"><?php echo $job_location['job_location'] ; ?></option>
+                        <?php } ?>
+                        <?php } ?>
+                    </select>
+                </div>
+            </div>
+
             <div class="row mt-5">
                 <?php foreach($jobpositions as $position) { ?>
                 <div class="col-md-4 form-group">
@@ -105,14 +110,16 @@
                             <div class="row align-items-center">
                                 <div class="col-md-8">
                                     <div>
-                                        <h6><?= $position['job_type'] ?></h6>
-                                        <p class="text-muted mb-0"><?= $position['job_category'] ?></p>
+                                        <h6><?= $position['job_category'] ?></h6>
+                                        <p class="text-muted mb-0">
+                                            <?= $position['job_type'] ?>
+                                        </p>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div>
-                                        <p class="text-muted text-center mb-0"><i
-                                                class="fa fa-map-marker primary-text mr-2"></i><?= $position['job_location'] ?>
+                                        <p class="text-muted text-center mb-0"><i class="fa fa-map-marker primary-text mr-2"></i>
+                                            <?= $position[ 'job_location'] ?>
                                         </p>
                                     </div>
                                 </div>
@@ -122,20 +129,19 @@
                             <div class="row">
                                 <div class="col-md-8">
                                     <div>
-                                        <p class="text-muted mb-0 mo-mb-2"><?= $position['experience'] ?> <span
-                                                class="text-muted"> Experience</span></p>
+                                        <p class="text-muted mb-0 mo-mb-2">
+                                            <?= $position[ 'experience'] ?> <span class="text-muted">Experience</span>
+                                        </p>
                                     </div>
                                 </div>
                                 <div class="col-md-4 d-flex align-items-center justify-content-center">
-                                    <div>
-                                        <a href="<?= BASE_URL." /index.php?path=common/home/job_opening_details&id=" ?><?php echo $position['job_id'] ; ?>">Details</a>
+                                    <div><a href="<?= BASE_URL." /index.php?path=common/home/job_opening_details&id=" ?><?php echo $position['job_id'] ; ?>">Details</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
                 <?php } ?>
             </div>
             <?php } ?>
