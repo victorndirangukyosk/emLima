@@ -1062,6 +1062,14 @@ class ControllerApiOrder extends Controller
             $json['quantity'] = $total_products->row['quantity'];
             $json['product_total_price'] = $this->currency->format($order_product_details->row['total']);
 
+            if ($quantity <= 0) {
+                // $log = new Log('error.log');
+                // $log->write('DELETED');
+                // $log->write($quantity);
+                // $log->write('DELETED');
+                $this->db->query("DELETE FROM `" . DB_PREFIX . "order_product` WHERE order_product_id = '" . (int) $order_products[$key]['order_product_id'] . "' AND order_id  = '" . (int) $order_id . "' AND product_id = '" . (int) $product_id . "'");
+                $this->db->query("DELETE FROM `" . DB_PREFIX . "real_order_product` WHERE order_product_id = '" . (int) $order_products[$key]['order_product_id'] . "' AND order_id  = '" . (int) $order_id . "' AND product_id = '" . (int) $product_id . "'");
+            }
             // $log->write($order_products);
             // $log->write($key);
             // $log->write($order_totals->row['total']);
