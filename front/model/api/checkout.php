@@ -768,12 +768,12 @@ class ModelApiCheckout extends Model
                         $log->write($vendorData);
 
                         if (isset($vendorData['device_id']) && strlen($vendorData['device_id']) > 0) {
-                            $log->write('device id set');
-                            $ret = $this->emailtemplate->sendPushNotification($temporaryVendorInfo['vendor_id'], $vendorData['device_id'], $order_id, $order_info['store_id'], $mobile_notification_title, $mobile_notification_template);
+                            $log->write('VENDOR MOBILE PUSH NOTIFICATION device id set FRONT.MODEL.API.CHECKOUT');
+                            $ret = $this->emailtemplate->sendPushNotification($temporaryVendorInfo['vendor_id'], $vendorData['device_id'], $order_id, $order_info['store_id'], $mobile_notification_template, $mobile_notification_title);
 
-                            $this->saveVendorNotification($temporaryVendorInfo['vendor_id'], $vendorData['device_id'], $order_id, $mobile_notification_title, $mobile_notification_template);
+                            $this->saveVendorNotification($temporaryVendorInfo['vendor_id'], $vendorData['device_id'], $order_id, $mobile_notification_template, $mobile_notification_title);
                         } else {
-                            $log->write('device id not set');
+                            $log->write('VENDOR MOBILE PUSH NOTIFICATION device id not set FRONT.MODEL.API.CHECKOUT');
                         }
                     }
 
