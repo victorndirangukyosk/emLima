@@ -190,17 +190,119 @@ class ControllerCommonHome extends Controller {
 
     public function careers() {
         $data['site_key'] = $this->config->get('config_google_captcha_public');
+        if (isset($this->request->get['filter_category'])) {
+            if($this->request->get['filter_category']!="All Job Category")
+            {
+            $filter_category = $this->request->get['filter_category'];
+            }
+            else
+            {
+                $filter_category = null;
+            }
+        } else {
+            $filter_category = null;
+        }
+
+        if (isset($this->request->get['filter_type'])) {
+            if($this->request->get['filter_type']!="All Job Type")
+            {
+            $filter_type = $this->request->get['filter_type'];
+            }
+            else
+            {
+                $filter_type = null;
+            }
+        } else {
+            $filter_type = null;
+        }
+
+        if (isset($this->request->get['filter_location'])) {
+            if($this->request->get['filter_location']!="All Job Location")
+            {
+            $filter_location = $this->request->get['filter_location'];
+            }
+            else
+            {
+                $filter_location = null;
+            }
+        } else {
+            $filter_location = null;
+        }
+
+        $url = '';
+
+        if (isset($this->request->get['filter_category'])) {
+            $url .= '&filter_category='.urlencode(html_entity_decode($this->request->get['filter_category'], ENT_QUOTES, 'UTF-8'));
+        }
+
+        if (isset($this->request->get['filter_type'])) {
+            $url .= '&filter_type='.urlencode(html_entity_decode($this->request->get['filter_type'], ENT_QUOTES, 'UTF-8'));
+        }
+
+        if (isset($this->request->get['filter_location'])) {
+            $url .= '&filter_location='.urlencode(html_entity_decode($this->request->get['filter_location'], ENT_QUOTES, 'UTF-8'));
+        }
+        $filter_data = [
+            'filter_category' => $filter_category,
+            'filter_type' => $filter_type,
+            'filter_location' => $filter_location, 
+            // 'sort' => $sort,
+            // 'order' => $order,
+            // 'start' => ($page - 1) * $this->config->get('config_limit_admin'),
+            // 'limit' => $this->config->get('config_limit_admin'),
+        ];
+        // if($filter_data['filter_category']!=null)
+        // $data['job_category_name'] = $filter_data['filter_category'];
+        // if($filter_data['filter_type']!=null)
+        // $data['job_type_name'] = $filter_data['filter_type'];
+        // if($filter_data['filter_location']!=null)
+        // $data['job_location_name'] = $filter_data['filter_location'];
+
         $this->load->model('information/careers');
-        $data['jobpositions'] = $this->model_information_careers->getJobPositions($filter);
+
+
+        $data['jobpositions'] = $this->model_information_careers->getJobPositions($filter_data);
         $data['job_categories'] =$this->model_information_careers->getJobCategories();
         $data['job_types']=$this->model_information_careers->getJobTypes();
         $data['job_locations']=$this->model_information_careers->getJobLocations();
+
+         $url = '';
+
+        if (isset($this->request->get['filter_category'])) {
+            $url .= '&filter_category='.urlencode(html_entity_decode($this->request->get['filter_category'], ENT_QUOTES, 'UTF-8'));
+        }
+
+        if (isset($this->request->get['filter_type'])) {
+            $url .= '&filter_type='.urlencode(html_entity_decode($this->request->get['filter_type'], ENT_QUOTES, 'UTF-8'));
+        }
+
+        if (isset($this->request->get['filter_location'])) {
+            $url .= '&filter_location='.urlencode(html_entity_decode($this->request->get['filter_location'], ENT_QUOTES, 'UTF-8'));
+        }
+        $filter_data = [
+            'filter_category' => $filter_category,
+            'filter_type' => $filter_type,
+            'filter_location' => $filter_location, 
+            // 'sort' => $sort,
+            // 'order' => $order,
+            // 'start' => ($page - 1) * $this->config->get('config_limit_admin'),
+            // 'limit' => $this->config->get('config_limit_admin'),
+        ];
+
+        //   echo "<pre>";($url);;
+        if($filter_data['filter_category']!=null)
+        $data['job_category_name'] = $filter_data['filter_category'];
+        if($filter_data['filter_type']!=null)
+        $data['job_type_name'] = $filter_data['filter_type'];
+        if($filter_data['filter_location']!=null)
+        $data['job_location_name'] = $filter_data['filter_location'];
         $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/careers.tpl', $data));
         // echo "<pre>";print_r($data['jobpositions']);die;
     
     }
 
     public function job_opening_details() {
+        $data['site_key'] = $this->config->get('config_google_captcha_public');
         if (isset($this->request->get['id'])) {
             $filter['id'] = $this->request->get['id'];
         } else {
@@ -208,8 +310,9 @@ class ControllerCommonHome extends Controller {
         }
         // echo  ($id);die;
         $this->load->model('information/careers');
-        $data['site_key'] = $this->config->get('config_google_captcha_public');
+       
         $data['jobpositions'] = $this->model_information_careers->getJobPositions($filter);
+        $data['jobpositions'][0]['site_key']= $this->config->get('config_google_captcha_public');
         // echo "<pre>";print_r($data['jobpositions'][0]);die;
         $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/jobopening.tpl', $data['jobpositions'][0]));
     }
@@ -218,11 +321,43 @@ class ControllerCommonHome extends Controller {
     public function savecareers() {
 
         $this->load->model('information/careers');
-        $this->model_information_careers->createCareers(str_replace("'", "", $this->request->post['firstname']), str_replace("'", "", $this->request->post['lastname']), str_replace("'", "", $this->request->post['role']), str_replace("'", "", $this->request->post['yourself']), str_replace("'", "", $this->request->post['job_id']), str_replace("'", "", $this->request->post['cover']), str_replace("'", "", $this->request->post['cv_path']));
-        $json['status'] = true;
-        $json['success_message'] = 'Thank you we will contact you shortly';
+
+        if (('POST' == $this->request->server['REQUEST_METHOD']) ) {
+        $file_upload_status = $this->FeatureFileUpload($this->request->files);
+
+        $log = new Log('error.log');
+        $log->write($file_upload_status);
+          if ($file_upload_status != NULL && $file_upload_status['status'] == TRUE && $file_upload_status['file_name'] != NULL) {
+        //   if(1==1){
+            $this->load->model('setting/setting');
+            $id=$this->model_information_careers->createCareers(str_replace("'", "", $this->request->post['firstname']), str_replace("'", "", $this->request->post['lastname']), str_replace("'", "", $this->request->post['role']), str_replace("'", "", $this->request->post['yourself']), str_replace("'", "", $this->request->post['email']), str_replace("'", "", $this->request->post['phone']), str_replace("'", "", $this->request->post['job_id']), str_replace("'", "", $this->request->post['cover']), $file_upload_status['file_name'], str_replace("'", "", $this->request->post['jobposition']));
+            $json['status'] = true;
+            $json['success_message'] = 'Thank you we will contact you shortly';
+
+        } else {
+            $json['status'] = true;
+            $json['success_message'] = 'Please upload correct file and data';
+        
+        }
+
+       
         $this->response->addHeader('Content-Type: application/json');
+    }
         $this->response->setOutput(json_encode($json));
+    }
+    public function FeatureFileUpload($file_data) {
+        $status = array();
+        if ((isset($file_data['careers-resume'])) && (is_uploaded_file($file_data['careers-resume']['tmp_name']))) {
+            if (!file_exists(DIR_UPLOAD . 'careers/')) {
+                mkdir(DIR_UPLOAD . 'careers/', 0777, true);
+            }
+            $file_name = md5(mt_rand()) . '' . $file_data['careers-resume']['name'];
+            if (move_uploaded_file($file_data['careers-resume']['tmp_name'], DIR_UPLOAD . 'careers/' . $file_name)) {
+                return $status = array('status' => TRUE, 'file_name' => $file_name);
+            } else {
+                return $status = array('status' => FALSE, 'file_name' => '');
+            }
+        }
     }
 
     public function savepartner() {
