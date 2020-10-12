@@ -139,7 +139,7 @@
                             <div class="form-group required">
                                 <label class="col-sm-2 control-label" for="input-assign-username">Assign Customers</label>
                                 <div class="col-sm-10">
-                                    <input type="text" name="assign_customers" value="" placeholder="Type Customer Name" id="input-assign-customer" class="form-control" />
+                                    <input type="text" name="assign_customers" value="" placeholder="Type Company Name" id="input-assign-customer" class="form-control" />
                                     <div id="assign_customers_select" class="well well-sm" style="height: 150px; overflow: auto;">
                                     </div>
                                 </div>
@@ -210,7 +210,7 @@ function save(type) {
                     } else if ($("input[name=assign_customers]").val() == '' || $("input[name=assign_customers]").val() == null) {
                         var result = [
                             {
-                                label: 'Type customer name',
+                                label: 'Type company name',
                                 value: ''
                             }
                         ];
@@ -218,7 +218,7 @@ function save(type) {
                     } else {
                         response($.map(json, function (item) {
                             return {
-                                label: item['email'],
+                                label: item['company_name'],
                                 value: item['customer_id']
                             }
                         }));
