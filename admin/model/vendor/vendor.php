@@ -460,7 +460,7 @@ class ModelVendorVendor extends Model {
 
                 if(isset($vendorData['device_id']) && strlen($vendorData['device_id']) > 0 ) {
 
-                    $log->write('device id set');
+                    $log->write('VENDOR MOBILE PUSH NOTIFICATION device id set ADMIN.MODEL.VENDOR.VENDOR');
 
                     $this->load->model('sale/order');
 
@@ -473,7 +473,7 @@ class ModelVendorVendor extends Model {
                     $ret =  $this->emailtemplate->sendVendorPushNotification($vendor_id,$vendorData['device_id'],$order_id,'1',$mobile_notification_template,$mobile_notification_title,$sen);
 
                 } else {
-                    $log->write('device id not set ');
+                    $log->write('VENDOR MOBILE PUSH NOTIFICATION device id not set ADMIN.MODEL.VENDOR.VENDOR');
                 }
             }
         }
