@@ -913,7 +913,7 @@ class ModelCheckoutOrder extends Model {
 
                         if (isset($vendorData['device_id']) && strlen($vendorData['device_id']) > 0) {
 
-                            $log->write('device id set');
+                            $log->write('VENDOR MOBILE PUSH NOTIFICATION device id set front.model.checkout.order');
 
                             $notification_id = $this->saveVendorNotification($temporaryVendorInfo['vendor_id'], $vendorData['device_id'], $order_id, $mobile_notification_template, $mobile_notification_title);
 
@@ -921,7 +921,7 @@ class ModelCheckoutOrder extends Model {
 
                             $ret = $this->emailtemplate->sendOrderVendorPushNotification($temporaryVendorInfo['vendor_id'], $vendorData['device_id'], $order_id, $order_info['store_id'], $mobile_notification_template, $mobile_notification_title, $sen);
                         } else {
-                            $log->write('device id not set');
+                            $log->write('VENDOR MOBILE PUSH NOTIFICATION device id not set front.model.checkout.order');
                         }
 
                         // vendor push notitification end 
