@@ -767,7 +767,7 @@ class ModelCheckoutOrder extends Model {
                             $log->write('customer device id set FRONT.MODEL.CHECKOUT.ORDER');
                             $ret = $this->emailtemplate->sendPushNotification($order_info['customer_id'], $customer_info['device_id'], $order_id, $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
 
-                            $this->saveVendorNotification($order_info['customer_id'], $customer_info['device_id'], $order_id, $mobile_notification_title, $mobile_notification_template);
+                            $this->saveVendorNotification($order_info['customer_id'], $customer_info['device_id'], $order_id, $mobile_notification_template, $mobile_notification_title);
                         } else {
                             $log->write('customer device id not set FRONT.MODEL.CHECKOUT.ORDER');
                         }
