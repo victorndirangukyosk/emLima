@@ -165,7 +165,7 @@
             <td><?php echo $user['firstname'].' '.$user['lastname'];?></td>
             <td><?php echo $user['email'];?></td>
             <td><?php echo $user['telephone'];?></td>
-            <td><a href="#" data-toggle="tooltip" title="Un Assign" class="btn btn-primary"><i class="fa fa-pencil"></i></a></td>
+            <td><a href="#" data-toggle="tooltip" title="Un Assign" class="btn btn-primary"><i class="fa fa-minus"></i></a></td>
             </tr>
             <?php } ?>
             <?php }else{ ?>
