@@ -74,7 +74,7 @@
                       <div class="form-group required">
                         <label class="col-sm-2 control-label" for="input-experience"><?= $column_experience ?></label>
                         <div class="col-sm-4">
-                            <input type="text" name="experience" maxlength=250   placeholder="Enter experience"  value="<?php echo $experience; ?>"  id="input-experience" class="form-control"></input>
+                            <input type="number" name="experience" maxlength=250   placeholder="Enter experience"  value="<?php echo $experience; ?>"  id="input-experience" class="form-control"></input>
                             <?php if ($error_experience) { ?>
                             <div class="text-danger"><?php echo $error_experience; ?></div>
                             <?php } ?>
