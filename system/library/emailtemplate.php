@@ -2331,7 +2331,7 @@ class Emailtemplate
                 $client->setApiKey($apiKey);
                 $client->injectHttpClient(new \GuzzleHttp\Client());
 
-                $note = new Notification($title, $message);
+                $note = new Notification($message, $title);
                 $note->setIcon('notification_icon_resource_name')
                         ->setColor('#3ca826')
                         ->setSound('default')

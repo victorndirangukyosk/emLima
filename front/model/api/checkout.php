@@ -769,7 +769,7 @@ class ModelApiCheckout extends Model
 
                         if (isset($vendorData['device_id']) && strlen($vendorData['device_id']) > 0) {
                             $log->write('device id set');
-                            $ret = $this->emailtemplate->sendPushNotification($temporaryVendorInfo['vendor_id'], $vendorData['device_id'], $order_id, $order_info['store_id'], $mobile_notification_title, $mobile_notification_template);
+                            $ret = $this->emailtemplate->sendPushNotification($temporaryVendorInfo['vendor_id'], $vendorData['device_id'], $order_id, $order_info['store_id'], $mobile_notification_template, $mobile_notification_title);
 
                             $this->saveVendorNotification($temporaryVendorInfo['vendor_id'], $vendorData['device_id'], $order_id, $mobile_notification_template, $mobile_notification_title);
                         } else {
