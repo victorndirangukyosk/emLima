@@ -919,7 +919,7 @@ class ModelCheckoutOrder extends Model {
 
                             $sen['notification_id'] = $notification_id;
 
-                            $ret = $this->emailtemplate->sendOrderVendorPushNotification($temporaryVendorInfo['vendor_id'], $vendorData['device_id'], $order_id, $order_info['store_id'], $mobile_notification_template, $mobile_notification_title, $sen);
+                            $ret = $this->emailtemplate->sendOrderVendorPushNotification($temporaryVendorInfo['vendor_id'], $vendorData['device_id'], $order_id, $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, $sen);
                         } else {
                             $log->write('VENDOR MOBILE PUSH NOTIFICATION device id not set front.model.checkout.order');
                         }
