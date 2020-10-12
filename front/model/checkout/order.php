@@ -918,6 +918,8 @@ class ModelCheckoutOrder extends Model {
                             $notification_id = $this->saveVendorNotification($temporaryVendorInfo['vendor_id'], $vendorData['device_id'], $order_id, $mobile_notification_template, $mobile_notification_title);
 
                             $sen['notification_id'] = $notification_id;
+                            $log->write('title:'.$mobile_notification_title);
+                            $log->write('template:'.$mobile_notification_template);
 
                             $ret = $this->emailtemplate->sendOrderVendorPushNotification($temporaryVendorInfo['vendor_id'], $vendorData['device_id'], $order_id, $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, $sen);
                         } else {
