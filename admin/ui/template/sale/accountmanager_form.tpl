@@ -165,7 +165,7 @@
                                         <td><?php echo $user['firstname'].' '.$user['lastname'];?></td>
                                         <td><?php echo $user['email'];?></td>
                                         <td><?php echo $user['telephone'];?></td>
-                                        <td><a href="#" title="Un Assign Customer" id="unassigncustomer" data-accountmanager="<?php echo $user_id; ?>" data-customer="<?php echo $user['customer_id']; ?>" class="btn btn-primary"><i class="fa fa-minus"></i></a></td>
+                                        <td><a href="#" data-toggle="tooltip" title="Un Assign Customer" id="unassigncustomer" data-accountmanager="<?php echo $user_id; ?>" data-customer="<?php echo $user['customer_id']; ?>" class="btn btn-primary"><i class="fa fa-minus"></i></a></td>
                                     </tr>
                                     <?php } ?>
                                     <?php } else { ?>
