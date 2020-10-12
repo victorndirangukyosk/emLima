@@ -155,6 +155,7 @@
                                         <th>Customer Name </th>
                                         <th>E-Mail</th>
                                         <th>Phone No</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -164,6 +165,7 @@
             <td><?php echo $user['firstname'].' '.$user['lastname'];?></td>
             <td><?php echo $user['email'];?></td>
             <td><?php echo $user['telephone'];?></td>
+            <td><a href="#" data-toggle="tooltip" title="Un Assign" class="btn btn-primary"><i class="fa fa-pencil"></i></a></td>
             </tr>
             <?php } ?>
             <?php }else{ ?>
