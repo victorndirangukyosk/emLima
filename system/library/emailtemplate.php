@@ -2312,11 +2312,12 @@ class Emailtemplate
         $log = new Log('error.log');
         $log->write('sendPushNotification');
 
-        $log->write($to);
-        $log->write($deviceId);
-        $log->write($order_id);
-        $log->write($message);
-        $log->write($title);
+        $log->write('TO :'.$to);
+        $log->write('DEVICE:'.$deviceId);
+        $log->write('ORDER ID :'.$order_id);
+        $log->write('STORE ID :'.$store_id);
+        $log->write('MESSAGE:'.$message);
+        $log->write('TITLE:'.$title);
 
         if (isset($to)) {
             if (isset($deviceId) && isset($to)) {
@@ -2324,7 +2325,6 @@ class Emailtemplate
 
                 $apiKey = $this->config->get('config_seller_api_key');
                 //$apiKey = 'AIzaSyAK3VgDt_MTGRaTMfs_9v_YdsK6tjFRsoo';
-                $apiKey = 'AAAAAFXtKG0:APA91bHdJcfVkRRQNTZ75cOiWivD51dhoCRYyBJjd9B6uD4mxHWisp1E00KZLma7Tzjji41tezvP-kYSBKDdm7ajsHobrpY1SDBJgxeiFSlAOTnwgxG6lbQ0Uj7qagrf7S_JrKvpfDpH';
 
                 $log->write($apiKey);
                 $client = new FCMClient();

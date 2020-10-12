@@ -1,13 +1,11 @@
 <?php
 
-class ControllerApiLogin extends Controller
-{
-    public function index()
-    {
+class ControllerApiLogin extends Controller {
+
+    public function index() {
         $this->load->language('api/login');
 
         // Delete old login so not to cause any issues if there is an error
-
         //echo $this->session->data['api_id'];
         // echo "session api id";
 
@@ -61,4 +59,12 @@ class ControllerApiLogin extends Controller
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
+
+    public function sendpushnotification() {
+        $ret = $this->emailtemplate->sendPushNotification($this->request->post['vendor_id'], $this->request->post['device_id'], $this->request->post['order_id'], $this->request->post['store_id'], $this->request->post['message'], $this->request->post['title']);
+        $json['response'] = $ret;
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
 }
