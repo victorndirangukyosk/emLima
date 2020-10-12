@@ -159,16 +159,16 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php if(count($assigned_customers)){?>
-            <?php foreach($assigned_customers as $user){?>
-            <tr>
-            <td><?php echo $user['firstname'].' '.$user['lastname'];?></td>
-            <td><?php echo $user['email'];?></td>
-            <td><?php echo $user['telephone'];?></td>
-            <td><a href="#" data-toggle="tooltip" title="Un Assign" class="btn btn-primary"><i class="fa fa-minus"></i></a></td>
-            </tr>
-            <?php } ?>
-            <?php }else{ ?>
+                                    <?php if(count($assigned_customers)) { ?>
+                                    <?php foreach($assigned_customers as $user) { ?>
+                                    <tr>
+                                        <td><?php echo $user['firstname'].' '.$user['lastname'];?></td>
+                                        <td><?php echo $user['email'];?></td>
+                                        <td><?php echo $user['telephone'];?></td>
+                                        <td><a href="#" title="Un Assign Customer" id="unassigncustomer" data-accountmanager="<?php echo $user_id; ?>" data-customer="<?php echo $user['customer_id']; ?>" class="btn btn-primary"><i class="fa fa-minus"></i></a></td>
+                                    </tr>
+                                    <?php } ?>
+                                    <?php } else { ?>
                                     <tr style="text-align:center">
                                         <td colspan="5">No Customers found</td>
                                     </tr>
@@ -266,6 +266,28 @@ function save(type) {
                 $(".alert").attr('class', 'alert alert-success');
                 $(".alert").show();
                 console.log(json);
+            }
+        });
+    });
+
+    $(document).delegate('#unassigncustomer', 'click', function (e) {
+        e.preventDefault();
+        var accountmanager_id = $(this).attr('data-accountmanager');
+        var customer_id = $(this).attr('data-customer');
+        console.log(accountmanager_id);
+        console.log(customer_id);
+        console.log('UN ASSIGN');
+        $.ajax({
+            url: 'index.php?path=sale/accountmanager/unassigncustomer&token=<?php echo $token; ?>',
+            type: 'post',
+            dataType: 'json',
+            data: {unassigncustomer: customer_id, account_manager_id: accountmanager_id},
+            beforeSend: function () {
+            },
+            complete: function () {
+            },
+            success: function (json) {
+
             }
         });
     });
