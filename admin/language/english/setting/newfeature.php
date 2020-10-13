@@ -6,6 +6,7 @@ $_['heading_title'] = 'New Feature Requests';
 // Text
 $_['text_success'] = 'Success: You have modified Request!';
 $_['text_list'] = 'List';
+$_['text_error'] = 'Please upload word files of size less than 1MB ';
 $_['text_featurerequests'] = 'Feature Requests';
 $_['text_enable'] = 'Enable';
 $_['text_disable'] = 'Disable';
