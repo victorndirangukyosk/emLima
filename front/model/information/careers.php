@@ -7,32 +7,7 @@ class ModelInformationCareers extends Model {
         $this->db->query('INSERT INTO `' . DB_PREFIX . "careers` SET `first_name` = '" . $first_name . "', `last_name` = '" . $last_name . "', `role` = '" . $role . "', `your_self` = '" . $yourself . "', `email` = '" . $email . "', `phone` = '" . $phone . "', `job_id` = '" . $job_id . "', `cover_letter` = '" . $cover . "', `cv_path` = '" . $cv_path . "', created_at = NOW()");
         
         $id=$this->db->getLastId();
-        if ($id>0) {
-           
-            //send mail notification to 'stalluri@technobraingroup.com'
-            // $subject = $this->emailtemplate->getSubject('Customer', 'customer_1', $data);
-            // $message = $this->emailtemplate->getMessage('Customer', 'customer_1', $data);
-            $subject = "Job Request";
-            $message = "Following details are received for the job position - ". $jobposition."<br>";
-            $message = $message ."<li> Full Name :".$first_name ."</li><br><li> Email :".$email ."</li><br><li> Phone :".$phone ."</li><br>";
-            $email = "stalluri@technobraingroup.com";
-            $bccemail = "sridivya.talluri@technobraingroup.com";
-           
-
-            // if (move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile)) {
-            //     $mail->addAttachment($uploadfile, $filename);
-            // }
-
-            $mail = new Mail($this->config->get('config_mail'));
-            $mail->setTo($email);
-            $mail->setBCC($bccemail);
-            $mail->setFrom($this->config->get('config_from_email'));
-            $mail->setSender($this->config->get('config_name'));
-            $mail->setSubject($subject);
-            $mail->setHTML($message);
-            // $mail->addAttachment();
-            $mail->send();
-        } 
+       
 
         return $id;
     }

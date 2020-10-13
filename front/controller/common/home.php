@@ -188,8 +188,11 @@ class ControllerCommonHome extends Controller {
         $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/technology.tpl'));
     }
 
-    public function careers() {
+    public function careers($id=0,$successmessage="",$errormessage="") {
         $data['site_key'] = $this->config->get('config_google_captcha_public');
+        $data['action'] = $this->url->link('common/home/savecareers','','SSL');
+        $data['message'] = $successmessage;
+        $data['errormessage'] = $errormessage;
         if (isset($this->request->get['filter_category'])) {
             if($this->request->get['filter_category']!="All Job Category")
             {
@@ -297,23 +300,26 @@ class ControllerCommonHome extends Controller {
         if($filter_data['filter_location']!=null)
         $data['job_location_name'] = $filter_data['filter_location'];
         $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/careers.tpl', $data));
-        // echo "<pre>";print_r($data['jobpositions']);die;
+        //   echo "<pre>";print_r($data);die;
     
     }
 
-    public function job_opening_details() {
+    public function job_opening_details($id=0,$message="",$errormessage="") {
         $data['site_key'] = $this->config->get('config_google_captcha_public');
         if (isset($this->request->get['id'])) {
             $filter['id'] = $this->request->get['id'];
         } else {
-            $filter['id'] = 0;
+            $filter['id'] = $id;
         }
         // echo  ($id);die;
         $this->load->model('information/careers');
        
         $data['jobpositions'] = $this->model_information_careers->getJobPositions($filter);
         $data['jobpositions'][0]['site_key']= $this->config->get('config_google_captcha_public');
-        // echo "<pre>";print_r($data['jobpositions'][0]);die;
+        $data['jobpositions'][0]['action'] = $this->url->link('common/home/savecareers','','SSL');
+        $data['jobpositions'][0]['message'] = $message;
+        $data['jobpositions'][0]['errormessage'] = $errormessage;
+        //   echo "<pre>";print_r($data['jobpositions'][0]);die;
         $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/jobopening.tpl', $data['jobpositions'][0]));
     }
 
@@ -324,34 +330,79 @@ class ControllerCommonHome extends Controller {
 
         if (('POST' == $this->request->server['REQUEST_METHOD']) ) {
         $file_upload_status = $this->FeatureFileUpload($this->request->files);
-
+        $file_data =$this->request->files;
         $log = new Log('error.log');
         $log->write($file_upload_status);
           if ($file_upload_status != NULL && $file_upload_status['status'] == TRUE && $file_upload_status['file_name'] != NULL) {
-        //   if(1==1){
             $this->load->model('setting/setting');
-            $id=$this->model_information_careers->createCareers(str_replace("'", "", $this->request->post['firstname']), str_replace("'", "", $this->request->post['lastname']), str_replace("'", "", $this->request->post['role']), str_replace("'", "", $this->request->post['yourself']), str_replace("'", "", $this->request->post['email']), str_replace("'", "", $this->request->post['phone']), str_replace("'", "", $this->request->post['job_id']), str_replace("'", "", $this->request->post['cover']), $file_upload_status['file_name'], str_replace("'", "", $this->request->post['jobposition']));
-            $json['status'] = true;
-            $json['success_message'] = 'Thank you we will contact you shortly';
+            $first_name=str_replace("'", "", $this->request->post['careers-first-name']);
+            $email=str_replace("'", "", $this->request->post['careers-email']);
+            $phone=str_replace("'", "", $this->request->post['careers-phone-number']);
+            $id=$this->model_information_careers->createCareers($first_name, str_replace("'", "", $this->request->post['lastname']), str_replace("'", "", $this->request->post['role']), str_replace("'", "", $this->request->post['yourself']), $email, $phone, str_replace("'", "", $this->request->post['careers-job-id']), str_replace("'", "", $this->request->post['careers-cover-letter']), $file_upload_status['file_name'], str_replace("'", "", $this->request->post['careers-job-position']));
+            $status = true;
+            $success_message = 'Thank you we will contact you shortly';
+
+            if ($id>0) {
+           
+                //send mail notification to 'stalluri@technobraingroup.com'
+                // $subject = $this->emailtemplate->getSubject('Customer', 'customer_1', $data);
+                // $message = $this->emailtemplate->getMessage('Customer', 'customer_1', $data);
+                $subject = "Job Request";
+                if($jobposition!="")
+                $message = "Following details are received for the job position - ". $jobposition."<br>";
+               else
+                $message = "Following details are received.  <br>";
+                $message = $message ."<li> Full Name :".$first_name ."</li><br><li> Email :".$email ."</li><br><li> Phone :".$phone ."</li><br>";
+                $email = Career_Mail_ID;
+                // $bccemail = "sridivya.talluri@technobraingroup.com";
+                //  echo "<pre>";print_r($file_data);die;
+                $filepath = DIR_UPLOAD . "careers/" . $file_upload_status['file_name'];
+                $mail = new Mail($this->config->get('config_mail'));
+                $mail->setTo($email);
+                $mail->setBCC($bccemail);
+                $mail->setFrom($this->config->get('config_from_email'));
+                $mail->setSender($this->config->get('config_name'));
+                $mail->setSubject($subject);
+                $mail->setHTML($message);
+                $mail->addAttachment($filepath);
+                $mail->send();
+            } 
 
         } else {
-            $json['status'] = true;
-            $json['success_message'] = 'Please upload correct file and data';
+            $status  = true;
+            $error_message  = 'Please upload correct file and data';
         
         }
 
        
-        $this->response->addHeader('Content-Type: application/json');
+        //$this->response->addHeader('Content-Type: application/json');
     }
-        $this->response->setOutput(json_encode($json));
+        // $this->response->setOutput(json_encode($json));
+    if($this->request->post['careers-job-id']==0)
+       $this->careers(0,$success_message,$error_message);
+       else
+       $this->job_opening_details($this->request->post['careers-job-id'],$success_message,$error_message);
+        // $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/jobopening.tpl', $data['jobpositions'][0]));
+
     }
     public function FeatureFileUpload($file_data) {
         $status = array();
         if ((isset($file_data['careers-resume'])) && (is_uploaded_file($file_data['careers-resume']['tmp_name']))) {
+           
+            if($file_data['careers-resume']['type']!="application/msword")
+            {
+                return $status = array('status' => FALSE, 'file_name' => '');
+            }
+            if($file_data['careers-resume']['size']> 5000000)
+            {
+                return $status = array('status' => FALSE, 'file_name' => '');
+            }
+            
+           
             if (!file_exists(DIR_UPLOAD . 'careers/')) {
                 mkdir(DIR_UPLOAD . 'careers/', 0777, true);
-            }
-            $file_name = md5(mt_rand()) . '' . $file_data['careers-resume']['name'];
+            }//md5(mt_rand())
+            $file_name = (rand(10,100) ). '' . $file_data['careers-resume']['name'];
             if (move_uploaded_file($file_data['careers-resume']['tmp_name'], DIR_UPLOAD . 'careers/' . $file_name)) {
                 return $status = array('status' => TRUE, 'file_name' => $file_name);
             } else {
