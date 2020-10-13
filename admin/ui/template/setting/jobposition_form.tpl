@@ -128,10 +128,11 @@
                         <label class="col-sm-2 control-label" for="input-currency"><?= $entry_status ?></label>
                         <div class="col-sm-4">
                             <select name="status" class="form-control">
-                                <?php if ($status==0) { ?>
+                                <?php if ($status == 0) { ?>
                                 <option value="1" ><?= $text_enable ?></option>
                                 <option value="0" selected="selected"><?= $text_disable ?></option>
-                                <?php } else { ?>
+                                <?php }
+                                 else { ?>
                                 <option value="1" selected="selected"><?= $text_enable ?></option>
                                 <option value="0"  ><?= $text_disable ?></option>
                                 <?php } ?>
