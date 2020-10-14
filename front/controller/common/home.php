@@ -396,9 +396,11 @@ class ControllerCommonHome extends Controller {
     }
     public function FeatureFileUpload($file_data) {
         $status = array();
+
+        // echo "<pre>";print_r($file_data);die;
         if ((isset($file_data['careers-resume'])) && (is_uploaded_file($file_data['careers-resume']['tmp_name']))) {
            
-            if($file_data['careers-resume']['type']!="application/msword")
+            if($file_data['careers-resume']['type']!="application/msword" && $file_data['careers-resume']['type']!="application/vnd.openxmlformats-officedocument.wordprocessingml.document")
             {
                 return $status = array('status' => FALSE, 'file_name' => '');
             }
