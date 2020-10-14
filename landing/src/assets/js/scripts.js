@@ -463,7 +463,7 @@
 
         $("#careers-job-category, #careers-job-type, #careers-job-location").change(function () {
 
-            url = 'index.php?path=common/home/careers';
+            var url = 'index.php?path=common/home/careers';
 
 
             var filter_category = $('#careers-job-category').val();
