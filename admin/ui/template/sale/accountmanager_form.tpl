@@ -139,7 +139,7 @@
                             <div class="form-group required">
                                 <label class="col-sm-2 control-label" for="input-assign-username">Assign Customers</label>
                                 <div class="col-sm-10">
-                                    <input type="text" name="assign_customers" value="" placeholder="Type Customer Name" id="input-assign-customer" class="form-control" />
+                                    <input type="text" name="assign_customers" value="" placeholder="Type Company Name" id="input-assign-customer" class="form-control" />
                                     <div id="assign_customers_select" class="well well-sm" style="height: 150px; overflow: auto;">
                                     </div>
                                 </div>
@@ -155,18 +155,20 @@
                                         <th>Customer Name </th>
                                         <th>E-Mail</th>
                                         <th>Phone No</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php if(count($assigned_customers)){?>
-            <?php foreach($assigned_customers as $user){?>
-            <tr>
-            <td><?php echo $user['firstname'].' '.$user['lastname'];?></td>
-            <td><?php echo $user['email'];?></td>
-            <td><?php echo $user['telephone'];?></td>
-            </tr>
-            <?php } ?>
-            <?php }else{ ?>
+                                    <?php if(count($assigned_customers)) { ?>
+                                    <?php foreach($assigned_customers as $user) { ?>
+                                    <tr>
+                                        <td><?php echo $user['firstname'].' '.$user['lastname'];?></td>
+                                        <td><?php echo $user['email'];?></td>
+                                        <td><?php echo $user['telephone'];?></td>
+                                        <td><a href="#" data-toggle="tooltip" title="Un Assign Customer" id="unassigncustomer" data-accountmanager="<?php echo $user_id; ?>" data-customer="<?php echo $user['customer_id']; ?>" class="btn btn-primary"><i class="fa fa-minus"></i></a></td>
+                                    </tr>
+                                    <?php } ?>
+                                    <?php } else { ?>
                                     <tr style="text-align:center">
                                         <td colspan="5">No Customers found</td>
                                     </tr>
@@ -210,7 +212,7 @@ function save(type) {
                     } else if ($("input[name=assign_customers]").val() == '' || $("input[name=assign_customers]").val() == null) {
                         var result = [
                             {
-                                label: 'Type customer name',
+                                label: 'Type company name',
                                 value: ''
                             }
                         ];
@@ -218,7 +220,7 @@ function save(type) {
                     } else {
                         response($.map(json, function (item) {
                             return {
-                                label: item['email'],
+                                label: item['company_name'],
                                 value: item['customer_id']
                             }
                         }));
@@ -264,6 +266,28 @@ function save(type) {
                 $(".alert").attr('class', 'alert alert-success');
                 $(".alert").show();
                 console.log(json);
+            }
+        });
+    });
+
+    $(document).delegate('#unassigncustomer', 'click', function (e) {
+        e.preventDefault();
+        var accountmanager_id = $(this).attr('data-accountmanager');
+        var customer_id = $(this).attr('data-customer');
+        console.log(accountmanager_id);
+        console.log(customer_id);
+        console.log('UN ASSIGN');
+        $.ajax({
+            url: 'index.php?path=sale/accountmanager/unassigncustomer&token=<?php echo $token; ?>',
+            type: 'post',
+            dataType: 'json',
+            data: {unassigncustomer: customer_id, account_manager_id: accountmanager_id},
+            beforeSend: function () {
+            },
+            complete: function () {
+            },
+            success: function (json) {
+
             }
         });
     });

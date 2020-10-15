@@ -28,6 +28,7 @@ define('DIR_BASE', $base . '/');
 define('DIR_ROOT', $base . '/');
 
 define('BCC_MAILS', 'test@gmail.com');
+define('Career_Mail_ID', 'hello@kwikbasket.com');
 
 define('DIR_INSTALL', DIR_ROOT . 'install/');
 define('DIR_APPLICATION', DIR_ROOT . 'front/');

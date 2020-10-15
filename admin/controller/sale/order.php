@@ -7045,7 +7045,7 @@ class ControllerSaleOrder extends Controller
                     $notification_id = $this->saveVendorNotification($temporaryVendorInfo['vendor_id'], $vendorDetail['device_id'], $order_id, $mobile_notification_template, $mobile_notification_title);
 
                     $sen['notification_id'] = $notification_id;
-
+                    $log->write('VENDOR  device id set admin.controller.sale.order');
                     $ret = $this->emailtemplate->sendOrderVendorPushNotification($temporaryVendorInfo['vendor_id'], $vendorDetail['device_id'], $order_id, $order_info['store_id'], $mobile_notification_template, $mobile_notification_title, $sen);
                 }
             }

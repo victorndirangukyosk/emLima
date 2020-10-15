@@ -460,6 +460,32 @@
                 }
             }
         });
+
+        $("#careers-job-category, #careers-job-type, #careers-job-location").change(function () {
+
+            var url = 'index.php?path=common/home/careers';
+
+
+            var filter_category = $('#careers-job-category').val();
+
+            if (filter_category && filter_category != "All Job Category") {
+                url += '&filter_category=' + encodeURIComponent(filter_category);
+            }
+
+            var filter_type = $('#careers-job-type').val();
+
+            if (filter_type && filter_type != "All Job Type") {
+                url += '&filter_type=' + encodeURIComponent(filter_type);
+            }
+
+            var filter_location = $('#careers-job-location').val();
+
+            if (filter_location && filter_location != "All Job Location") {
+                url += '&filter_location=' + encodeURIComponent(filter_location);
+            }
+            location = url;
+
+        });
     });
 
 })(jQuery, window, document);

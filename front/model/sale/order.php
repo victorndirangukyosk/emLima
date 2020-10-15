@@ -647,4 +647,25 @@ class ModelSaleOrder extends Model
     {
         return $this->db->query('select * from '.DB_PREFIX.'store where store_id ='.$store_id.'')->row;
     }
+
+    public function getOrdersCount()
+    {
+        $sql = "SELECT  count(o.order_id) as OrdersCount FROM `".DB_PREFIX.'order` o';  
+        $query = $this->db->query($sql);
+        return $query->row['OrdersCount'];
+    }
+
+    public function getFarmersCount()
+    {
+        $sql = "SELECT  count(f.order_id) as FarmersCount FROM `".DB_PREFIX.'farmer` f';  
+        $query = $this->db->query($sql);
+        return $query->row['FarmersCount'];
+    }
+
+    public function getCustomersCount()
+    {
+        $sql = "SELECT  count(c.customer_id) as CustomersCount FROM `".DB_PREFIX.'customer` c';  
+        $query = $this->db->query($sql);
+        return $query->row['CustomersCount'];
+    }
 }

@@ -2312,11 +2312,12 @@ class Emailtemplate
         $log = new Log('error.log');
         $log->write('sendPushNotification');
 
-        $log->write($to);
-        $log->write($deviceId);
-        $log->write($order_id);
-        $log->write($message);
-        $log->write($title);
+        $log->write('TO :'.$to);
+        $log->write('DEVICE:'.$deviceId);
+        $log->write('ORDER ID :'.$order_id);
+        $log->write('STORE ID :'.$store_id);
+        $log->write('MESSAGE:'.$message);
+        $log->write('TITLE:'.$title);
 
         if (isset($to)) {
             if (isset($deviceId) && isset($to)) {

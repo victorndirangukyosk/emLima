@@ -764,12 +764,12 @@ class ModelCheckoutOrder extends Model {
 
                         if (isset($customer_info) && isset($customer_info['device_id']) && strlen($customer_info['device_id']) > 0) {
 
-                            $log->write('customer device id set');
-                            $ret = $this->emailtemplate->sendPushNotification($order_info['customer_id'], $customer_info['device_id'], $order_id, $order_info['store_id'], $mobile_notification_template, $mobile_notification_title, 'com.instagolocal.showorder');
+                            $log->write('customer device id set FRONT.MODEL.CHECKOUT.ORDER');
+                            $ret = $this->emailtemplate->sendPushNotification($order_info['customer_id'], $customer_info['device_id'], $order_id, $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
 
                             $this->saveVendorNotification($order_info['customer_id'], $customer_info['device_id'], $order_id, $mobile_notification_template, $mobile_notification_title);
                         } else {
-                            $log->write('customer device id not set');
+                            $log->write('customer device id not set FRONT.MODEL.CHECKOUT.ORDER');
                         }
 
                         // customer push notitification end
@@ -913,15 +913,18 @@ class ModelCheckoutOrder extends Model {
 
                         if (isset($vendorData['device_id']) && strlen($vendorData['device_id']) > 0) {
 
-                            $log->write('device id set');
+                            $log->write('VENDOR MOBILE PUSH NOTIFICATION device id set front.model.checkout.order');
 
                             $notification_id = $this->saveVendorNotification($temporaryVendorInfo['vendor_id'], $vendorData['device_id'], $order_id, $mobile_notification_template, $mobile_notification_title);
 
                             $sen['notification_id'] = $notification_id;
+                            $log->write('title:'.$mobile_notification_title);
+                            $log->write('template:'.$mobile_notification_template);
+                            $log->write('order status id:'.$order_status_id);
 
-                            $ret = $this->emailtemplate->sendOrderVendorPushNotification($temporaryVendorInfo['vendor_id'], $vendorData['device_id'], $order_id, $order_info['store_id'], $mobile_notification_template, $mobile_notification_title, $sen);
+                            $ret = $this->emailtemplate->sendOrderVendorPushNotification($temporaryVendorInfo['vendor_id'], $vendorData['device_id'], $order_id, $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, $sen);
                         } else {
-                            $log->write('device id not set');
+                            $log->write('VENDOR MOBILE PUSH NOTIFICATION device id not set front.model.checkout.order');
                         }
 
                         // vendor push notitification end 

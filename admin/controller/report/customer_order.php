@@ -425,4 +425,42 @@ class ControllerReportCustomerOrder extends Controller
         $this->load->model('report/excel');
         $this->model_report_excel->download_customer_statement_excel($filter_data);
     }
+
+
+    public function orderexcel()
+    {
+        $this->load->language('report/customer_order');
+
+        $this->document->setTitle($this->language->get('heading_title'));
+
+        if (isset($this->request->get['filter_date_start'])) {
+            $filter_date_start = $this->request->get['filter_date_start'];
+        } else {
+            $filter_date_start = '1990-01-01';
+        }
+
+        if (isset($this->request->get['filter_date_end'])) {
+            $filter_date_end = $this->request->get['filter_date_end'];
+        } else {
+            $filter_date_end = date('Y-m-d');
+        }
+
+        if (isset($this->request->get['filter_order_status_id'])) {
+            $filter_order_status_id = $this->request->get['filter_order_status_id'];
+        } else {
+            $filter_order_status_id = 0;
+        }
+
+        
+
+        $filter_data = [
+            'filter_date_start' => $filter_date_start,
+            'filter_date_end' => $filter_date_end,
+            'filter_order_status_id' => $filter_order_status_id,
+             
+        ];
+
+        $this->load->model('report/excel');
+        $this->model_report_excel->download_customer_order_excel($filter_data);
+    }
 }

@@ -16,7 +16,7 @@ class EventAppApi extends Event
     {
         // api/categories or api/categories/1
         $path = $this->getPath();
-
+        // echo "<pre>";print_r($path);die;
         if (empty($path) || ('api' != $path[0]) || (count($path) < 2)) {
             return;
         }
@@ -86,7 +86,22 @@ class EventAppApi extends Event
             $this->response->output();
 
             die;
-        } else {
+        } 
+        //added else if condition to skip authentication for landing pages
+        else if('landingpage' == $path[1])
+        {
+            $route = $this->getCustomerRoute($path, $method);
+
+            $log = new Log('error.log');
+            $log->write('route  api landing');
+            $log->write($route);
+
+            $this->load->controller($route, $args);
+            $this->response->output();
+            die;
+        }
+        
+        else {
             $route = $this->getRoute($path, $method);
 
             $log = new Log('error.log');

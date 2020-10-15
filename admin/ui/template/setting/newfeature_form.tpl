@@ -100,7 +100,7 @@
                     <div class="form-group">
                         <label class="col-sm-4 control-label" for="input-additional_requirement"><?= $column_additional_requirement ?></label>
                         <div class="col-sm-2"><!--type="file"-->
-                            <input type="file"  style="width:200px" name="additional_requirement" value="<?php echo $additional_requirement; ?>" placeholder="" id="input-additional_requirement" class="form-control" />
+                            <input type="file"  style="width:200px" accept=".doc,.docx" name="additional_requirement" value="<?php echo $additional_requirement; ?>" placeholder="" id="input-additional_requirement" class="form-control" />
                             <?php if ($error_file) { ?>
                             <div class="text-danger"><?php echo $error_file; ?></div>
                             <?php } ?>

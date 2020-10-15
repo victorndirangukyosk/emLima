@@ -121,10 +121,25 @@ class ModelPaymentPesapal extends Model {
         $notify = 1;
         $comment = '';
         $this->db->query('UPDATE `' . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
-        $this->db->query('INSERT INTO ' . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', order_status_id = '" . (int) $order_status_id . "', notify = '" . (int) $notify . "', comment = '" . $this->db->escape($comment) . "', date_added = NOW()");
+        $order_history = $this->db->query('SELECT * FROM `' . DB_PREFIX . "order_history` WHERE `order_id` = '" . $order_id . "' AND order_status_id='" . (int) $order_status_id . "'")->num_rows;
+        $log = new Log('error.log');
+        $log->write('PESAPAL ORDER HISTORY');
+        $log->write($order_history);
+        if ($order_history <= 0) {
+            $log = new Log('error.log');
+            $log->write('PESAPAL ORDER HISTORY');
+            $log->write($order_history);
+            $this->db->query('INSERT INTO ' . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', order_status_id = '" . (int) $order_status_id . "', notify = '" . (int) $notify . "', comment = '" . $this->db->escape($comment) . "', date_added = NOW()");
+        }
+        if ($order_history > 0) {
+            $log = new Log('error.log');
+            $log->write('PESAPAL ORDER HISTORY');
+            $log->write($order_history);
+            $this->db->query('UPDATE `' . DB_PREFIX . "order_history SET `notify` = '" . (int) $notify . "', comment = '" . $this->db->escape($comment) . "', date_added = NOW()");
+        }
         $this->insertOrderTransactionFee($order_id, $order_status_id);
     }
-    
+
     public function insertOrderTransactionFee($order_id, $order_status_id) {
         $result = $this->db->query('SELECT * FROM `' . DB_PREFIX . "order_total` WHERE `order_id` = '" . $order_id . "' AND code='sub_total'")->row;
         $order_total = $this->db->query('SELECT * FROM `' . DB_PREFIX . "order_total` WHERE `order_id` = '" . $order_id . "' AND code='total'")->row;
@@ -152,7 +167,7 @@ class ModelPaymentPesapal extends Model {
             $this->db->query('UPDATE `' . DB_PREFIX . "order_total` SET value = '" . $total . "' WHERE order_id = '" . (int) $order_id . "' AND code='total'");
         } else {
             $log->write('TRANSACTION FEE INSERTION');
-            $sql = 'INSERT INTO ' . DB_PREFIX . "order_total SET value = '" . $transaction_fee . "', order_id = '" . $order_id . "', title = 'Transaction-Fee', code = 'transaction_fee', sort_order = '".$this->config->get('transaction_fee_sort_order')."'";
+            $sql = 'INSERT INTO ' . DB_PREFIX . "order_total SET value = '" . $transaction_fee . "', order_id = '" . $order_id . "', title = 'Transaction-Fee', code = 'transaction_fee', sort_order = '" . $this->config->get('transaction_fee_sort_order') . "'";
             $this->db->query($sql);
             $this->db->query('UPDATE `' . DB_PREFIX . "order_total` SET value = '" . $total . "' WHERE order_id = '" . (int) $order_id . "' AND code='total'");
         }

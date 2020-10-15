@@ -1218,7 +1218,7 @@ class ModelReportSaleTransaction extends Model
             $log->write($vendorData);
 
             if (isset($vendorData['device_id']) && strlen($vendorData['device_id']) > 0) {
-                $log->write('device id set');
+                $log->write('VENDOR MOBILE PUSH NOTIFICATION device id set ADMIN.MODEL.REPORT.SALE TRANSACTION');
 
                 $notification_id = $this->saveVendorNotification($order_info['vendor_id'], $vendorData['device_id'], $order_id, $mobile_notification_template, $mobile_notification_title);
 
@@ -1226,7 +1226,7 @@ class ModelReportSaleTransaction extends Model
 
                 $ret = $this->emailtemplate->sendVendorPushNotification($order_info['vendor_id'], $vendorData['device_id'], $order_id, $order_info['store_id'], $mobile_notification_template, $mobile_notification_title, $sen);
             } else {
-                $log->write('device id not set ');
+                $log->write('VENDOR MOBILE PUSH NOTIFICATION device id not set ADMIN.MODEL.REPORT.SALE TRANSACTION');
             }
         }
     }

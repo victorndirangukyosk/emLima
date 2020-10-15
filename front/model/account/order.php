@@ -317,7 +317,7 @@ class ModelAccountOrder extends Model {
 
                   $this->saveVendorNotification($order_info['vendor_id'],$vendorData['device_id'],$order_id,$mobile_notification_template,$mobile_notification_title); */
 
-                $log->write('device id set');
+                $log->write('VENDOR MOBILE PUSH NOTIFICATION device id set FRONT.MODEL.ACCOUNT.ORDER');
 
                 $notification_id = $this->saveVendorNotification($order_info['vendor_id'], $vendorData['device_id'], $order_id, $mobile_notification_template, $mobile_notification_title);
 
@@ -325,7 +325,7 @@ class ModelAccountOrder extends Model {
 
                 $ret = $this->emailtemplate->sendVendorPushNotification($order_info['vendor_id'], $vendorData['device_id'], $order_id, $order_info['store_id'], $mobile_notification_template, $mobile_notification_title, $sen);
             } else {
-                $log->write('device id not set ');
+                $log->write('VENDOR MOBILE PUSH NOTIFICATION device id not set FRONT.MODEL.ACCOUNT.ORDER');
             }
         }
     }
