@@ -1235,6 +1235,8 @@ class ModelAccountOrder extends Model {
         $customer_info['subuserlastname'] = $sub_customer_info['lastname'];
         $customer_info['subuserorderid'] = $order_info['order_id'];
         $customer_info['order_link'] = $this->url->link('account/order', '', 'SSL');
+        $customer_info['device_id'] = $sub_customer_info['device_id'];
+        $customer_info['telephone'] = $sub_customer_info['telephone'];
 
         $log->write('EMAIL SENDING');
         $log->write($customer_info);
