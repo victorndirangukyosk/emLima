@@ -2421,6 +2421,7 @@ class ControllerAccountOrder extends Controller {
             if (($sub_users_order_details['parent_approval'] == 'Approved') || ($sub_users_order_details['head_chef'] == 'Approved' && $sub_users_order_details['procurement'] == 'Approved')) {
                 $comment = 'Order Approved By Parent User';
                 $this->model_account_order->UpdateOrderStatus($order_id, 14, $comment);
+                $this->SubUserOrderApproved($order_id, 14);
 
                 $sub_users_order_details = $this->model_account_order->getSubUserOrderDetails($order_id, $customer_id);
                 if ($sub_users_order_details['order_status_id'] == 14) {
@@ -2521,6 +2522,7 @@ class ControllerAccountOrder extends Controller {
             if (($sub_users_order_details['parent_approval'] == 'Approved') || ($sub_users_order_details['head_chef'] == 'Approved' && $sub_users_order_details['procurement'] == 'Approved')) {
                 $comment = 'Order Approved By ' . $user_role . ' User';
                 $this->model_account_order->UpdateOrderStatus($order_id, 14, $comment);
+                $this->SubUserOrderApproved($order_id, 14);
 
                 $sub_users_order_details = $this->model_account_order->getSubUserOrderDetails($order_id, $customer_id);
                 if ($sub_users_order_details['order_status_id'] == 14) {
@@ -3518,6 +3520,30 @@ class ControllerAccountOrder extends Controller {
         // send message here
         if ($this->emailtemplate->getSmsEnabled('Customer', 'customer_14')) {
             $ret = $this->emailtemplate->sendmessage($customer_info['telephone'], $sms_message);
+        }
+
+        $log->write('outside mobi noti');
+        if ($this->emailtemplate->getNotificationEnabled('Customer', 'customer_14')) {
+
+            $log->write('status enabled of mobi noti');
+            $mobile_notification_template = $this->emailtemplate->getNotificationMessage('Customer', 'customer_14', $customer_info);
+
+            //$log->write($mobile_notification_template);
+
+            $mobile_notification_title = $this->emailtemplate->getNotificationTitle('Customer', 'customer_14', $customer_info);
+
+            //$log->write($mobile_notification_title);
+            // customer push notitification start
+
+            if (isset($customer_info) && isset($customer_info['device_id']) && strlen($customer_info['device_id']) > 0) {
+
+                $log->write('customer device id set FRONT.MODEL.CHECKOUT.ORDER');
+                $ret = $this->emailtemplate->sendPushNotification($order_info['customer_id'], $customer_info['device_id'], $order_id, $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
+            } else {
+                $log->write('customer device id not set FRONT.MODEL.CHECKOUT.ORDER');
+            }
+
+            // customer push notitification end
         }
     }
 
