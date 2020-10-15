@@ -50,10 +50,11 @@ class ControllerPaymentCod extends Controller {
                 $log->write('cod loop' . $order_id);
 
                 $ret = $this->model_checkout_order->addOrderHistory($order_id, $order_status_id);
-            }
-            if ($order_id != NULL) {
                 $this->model_checkout_order->UpdateParentApproval($order_id);
             }
+            /* if ($order_id != NULL) {
+              $this->model_checkout_order->UpdateParentApproval($order_id);
+              } */
             /* foreach ($this->session->data['order_id'] as $order_id) {
               $log->write('cod loop' . $order_id);
 
@@ -77,10 +78,10 @@ class ControllerPaymentCod extends Controller {
         // if ($this->session->data['order_approval_access'] > 0 && $this->session->data['order_approval_access_role'] != NULL) {
         //     $order_appoval_access = TRUE;
         // }
-        
+
         $Approver_assigned = $this->model_account_customer->CheckApprover();
         $log->write($Approver_assigned['order_approval_access']);
-        $log->write($Approver_assigned['order_approval_access_role']);       
+        $log->write($Approver_assigned['order_approval_access_role']);
 
         if ($Approver_assigned['order_approval_access'] > 0 && $Approver_assigned['order_approval_access_role'] != NULL) {
             $order_appoval_access = TRUE;
@@ -97,10 +98,10 @@ class ControllerPaymentCod extends Controller {
             $ret = $this->model_checkout_order->addOrderHistory($order_id, $order_status_id);
         }
         if ($order_id != NULL) {
-            $this->model_checkout_order->UpdateParentApprovalAPI($order_id,$Approver_assigned['order_approval_access'],$Approver_assigned['order_approval_access_role']);
+            $this->model_checkout_order->UpdateParentApprovalAPI($order_id, $Approver_assigned['order_approval_access'], $Approver_assigned['order_approval_access_role']);
         }
 
-        if ($parent_approval=="Pending") {
+        if ($parent_approval == "Pending") {
             $this->load->model('checkout/order');
             $this->model_checkout_order->SendMailToParentUser($order_id);
         }
