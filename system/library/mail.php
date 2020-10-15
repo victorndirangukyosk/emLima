@@ -204,7 +204,7 @@ class mail
            
              // echo "<pre>";print_r($this->attachments[0]);
             $mg = Mailgun::create($mailgun_key);
-            if($this->attachments[0])
+            if(is_array($this->attachments[0]) && count($this->attachments[0]) > 0 && $this->attachments[0])
             {
             $mg->messages()->send($mailgun_domain, [
               'from' => $this->from,
