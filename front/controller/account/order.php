@@ -3473,4 +3473,52 @@ class ControllerAccountOrder extends Controller {
         /* customer mail/sms/notificaiton end */
     }
 
+    public function SubUserOrderApproved($order_id, $order_status_id) {
+        $log = new Log('error.log');
+        $log->write('SEND MAIL');
+        $log->write($order_id);
+        $this->load->model('account/customer');
+        $this->load->model('checkout/order');
+
+        $order_info = $this->model_checkout_order->getOrder($order_id);
+        $is_he_parents = $this->model_account_customer->CheckHeIsParent();
+        $customer_info = $this->model_account_customer->getCustomer($is_he_parents);
+
+        if ($order_info) {
+            $store_name = $order_info['firstname'] . ' ' . $order_info['lastname'];
+            $store_url = $this->url->link('account/login/customer');
+        }
+        $sub_customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
+
+        $order_id = $order_info['order_id'];
+        $customer_id = $order_info['customer_id'];
+
+        $customer_info['subuserfirstname'] = $sub_customer_info['firstname'];
+        $customer_info['subuserlastname'] = $sub_customer_info['lastname'];
+        $customer_info['subuserorderid'] = $order_info['order_id'];
+        $customer_info['order_link'] = $this->url->link('account/order', '', 'SSL');
+
+        $log->write('EMAIL SENDING');
+        $log->write($customer_info);
+        $log->write('EMAIL SENDING');
+
+        $subject = $this->emailtemplate->getSubject('Customer', 'customer_14', $customer_info);
+        $message = $this->emailtemplate->getMessage('Customer', 'customer_14', $customer_info);
+
+        $mail = new Mail($this->config->get('config_mail'));
+        $mail->setTo($customer_info['email']);
+        $mail->setFrom($this->config->get('config_from_email'));
+        $mail->setSender($this->config->get('config_name'));
+        $mail->setSubject($subject);
+        $mail->setHTML($message);
+        $mail->send();
+
+        $log->write('SMS SENDING');
+        $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_14', $customer_info);
+        // send message here
+        if ($this->emailtemplate->getSmsEnabled('Customer', 'customer_14')) {
+            $ret = $this->emailtemplate->sendmessage($customer_info['telephone'], $sms_message);
+        }
+    }
+
 }
