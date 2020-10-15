@@ -1208,4 +1208,76 @@ class ModelAccountOrder extends Model {
         /* customer mail/sms/notificaiton end */
     }
 
+    public function SubUserOrderApproved($order_id, $order_status_id) {
+        $log = new Log('error.log');
+        $log->write('SEND MAIL');
+        $log->write($order_id);
+        $this->load->model('account/customer');
+        $this->load->model('checkout/order');
+
+        $order_info = $this->model_checkout_order->getOrder($order_id);
+        $is_he_parents = $this->model_account_customer->CheckHeIsParent();
+        $customer_info = $this->model_account_customer->getCustomer($is_he_parents);
+
+        if ($order_info) {
+            $store_name = $order_info['firstname'] . ' ' . $order_info['lastname'];
+            $store_url = $this->url->link('account/login/customer');
+        }
+        $sub_customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
+
+        $order_id = $order_info['order_id'];
+        $customer_id = $order_info['customer_id'];
+
+        $customer_info['subuserfirstname'] = $sub_customer_info['firstname'];
+        $customer_info['subuserlastname'] = $sub_customer_info['lastname'];
+        $customer_info['subuserorderid'] = $order_info['order_id'];
+        $customer_info['order_link'] = $this->url->link('account/order', '', 'SSL');
+
+        $log->write('EMAIL SENDING');
+        $log->write($customer_info);
+        $log->write('EMAIL SENDING');
+
+        $subject = $this->emailtemplate->getSubject('Customer', 'customer_14', $customer_info);
+        $message = $this->emailtemplate->getMessage('Customer', 'customer_14', $customer_info);
+
+        $mail = new Mail($this->config->get('config_mail'));
+        $mail->setTo($customer_info['email']);
+        $mail->setFrom($this->config->get('config_from_email'));
+        $mail->setSender($this->config->get('config_name'));
+        $mail->setSubject($subject);
+        $mail->setHTML($message);
+        $mail->send();
+
+        $log->write('SMS SENDING');
+        $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_14', $customer_info);
+        // send message here
+        if ($this->emailtemplate->getSmsEnabled('Customer', 'customer_14')) {
+            $ret = $this->emailtemplate->sendmessage($customer_info['telephone'], $sms_message);
+        }
+
+        $log->write('outside mobi noti');
+        if ($this->emailtemplate->getNotificationEnabled('Customer', 'customer_14')) {
+
+            $log->write('status enabled of mobi noti');
+            $mobile_notification_template = $this->emailtemplate->getNotificationMessage('Customer', 'customer_14', $customer_info);
+
+            //$log->write($mobile_notification_template);
+
+            $mobile_notification_title = $this->emailtemplate->getNotificationTitle('Customer', 'customer_14', $customer_info);
+
+            //$log->write($mobile_notification_title);
+            // customer push notitification start
+
+            if (isset($customer_info) && isset($customer_info['device_id']) && strlen($customer_info['device_id']) > 0) {
+
+                $log->write('customer device id set FRONT.MODEL.CHECKOUT.ORDER');
+                $ret = $this->emailtemplate->sendPushNotification($order_info['customer_id'], $customer_info['device_id'], $order_id, $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
+            } else {
+                $log->write('customer device id not set FRONT.MODEL.CHECKOUT.ORDER');
+            }
+
+            // customer push notitification end
+        }
+    }
+
 }
