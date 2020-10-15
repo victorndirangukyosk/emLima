@@ -1662,6 +1662,8 @@ class ModelCheckoutOrder extends Model {
         $customer_info['branchname'] = $sub_customer_info['company_name'];
         $customer_info['subuserfirstname'] = $sub_customer_info['firstname'];
         $customer_info['subuserlastname'] = $sub_customer_info['lastname'];
+        $customer_info['subuserorderid'] = $order_info['order_id'];
+        $customer_info['ip_address'] = $order_info['ip'];
         $customer_info['order_link'] = $this->url->link('account/login/checksubuserorder', 'order_token=' . $order_id . '&user_token=' . $customer_id . '&parent_user_token=' . $parent_id, 'SSL');
 
         $log->write('EMAIL SENDING');
