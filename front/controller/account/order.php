@@ -2434,6 +2434,10 @@ class ControllerAccountOrder extends Controller {
                 if ($sub_users_order_details['order_status_id'] == 16) {
                     $json['success'] = 'Order Rejected';
                 }
+
+                if (($sub_users_order_details['parent_approval'] == 'Approved') && ($sub_users_order_details['head_chef'] == 'Approved' && $sub_users_order_details['procurement'] == 'Approved')) {
+                    $this->model_account_order->SubUserOrderApproved($order_id, 14);
+                }
             }
 
             if ($sub_users_order_details['parent_approval'] == 'Rejected' || $sub_users_order_details['head_chef'] == 'Rejected') {
@@ -3341,4 +3345,5 @@ class ControllerAccountOrder extends Controller {
         $this->load->model('account/order');
         $this->model_account_order->download_products_excel($data);
     }
+
 }
