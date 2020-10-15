@@ -868,7 +868,7 @@ class ModelAccountOrder extends Model {
 
     public function UpdateOrderStatus($order_id, $order_status_id, $comment) {
         $this->db->query('UPDATE `' . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
-        $this->db->query('INSERT INTO ' . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', order_status_id = '" . (int) $order_status_id . "', notify = 1, comment = '".$comment."', date_added = NOW()");
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', order_status_id = '" . (int) $order_status_id . "', notify = 1, comment = '" . $comment . "', date_added = NOW()");
     }
 
     public function ApproveOrRejectSubUserOrderApi($order_id, $order_status) {
@@ -878,7 +878,7 @@ class ModelAccountOrder extends Model {
         }
         if ('Rejected' == $order_status) {
             $this->db->query('UPDATE `' . DB_PREFIX . "order` SET parent_approval = '" . $order_status . "'  WHERE order_id = '" . (int) $order_id . "' ");
-           // $this->db->query('INSERT INTO ' . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', order_status_id = 16, notify = 1, comment = 'Order Rejected By Parent User', date_added = NOW()");
+            // $this->db->query('INSERT INTO ' . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', order_status_id = 16, notify = 1, comment = 'Order Rejected By Parent User', date_added = NOW()");
         }
     }
 
@@ -1075,6 +1075,136 @@ class ModelAccountOrder extends Model {
 
             return;
         }
+    }
+
+    public function SubUserOrderReject($order_id, $order_status_id) {
+
+        $this->load->model('checkout/order');
+        $this->load->model('account/customer');
+        $order_info = $this->model_checkout_order->getOrder($order_id);
+
+        //this is solely used to send mails
+
+        $order_status = $this->db->query("SELECT name FROM " . DB_PREFIX . "order_status WHERE order_status_id = '" . (int) $order_status_id . "' AND language_id = '" . (int) $order_info['language_id'] . "'");
+        $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
+
+        if ($order_status->num_rows) {
+            $order_status = $order_status->row['name'];
+        } else {
+            $order_status = '';
+        }
+
+        // Account Href
+        $order_href = '';
+        $order_pdf_href = '';
+
+        if ($order_info['customer_id']) {
+            $order_href = $order_info['store_url'] . 'index.php?path=account/order/info&order_id=' . $order_info['order_id'];
+        }
+
+        //Address Shipping and Payment
+        $totals = array();
+        $tax_amount = 0;
+
+        if (strlen($order_info['shipping_name']) <> 0) {
+            $address = $order_info['shipping_name'] . '<br />' . $order_info['shipping_address'] . '<br /><b>Contact No.:</b> ' . $order_info['shipping_contact_no'];
+        } else {
+            $address = '';
+        }
+
+        $payment_address = '';
+
+        $order_total = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order_total` WHERE order_id = '" . (int) $order_info['order_id'] . "'");
+
+        foreach ($order_total->rows as $total) {
+            $totals[$total['code']][] = array(
+                'title' => $total['title'],
+                'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
+                'value' => $total['value']
+            );
+
+            if ($total['code'] == 'tax') {
+                $tax_amount += $total['value'];
+            }
+        }
+
+        $log = new Log('error.log');
+
+        $this->load->model('account/order');
+
+        $special = NULL;
+
+        $data = array(
+            'template_id' => 'order_' . (int) $order_status_id,
+            'order_info' => $order_info,
+            'address' => $address,
+            'payment_address' => $payment_address,
+            'special' => $special,
+            'order_href' => $order_href,
+            'order_pdf_href' => $order_pdf_href,
+            'order_status' => $order_status,
+            'totals' => $totals,
+            'tax_amount' => $tax_amount,
+            'order_id' => $order_id,
+            'invoice_no' => !empty($invoice_no) ? $invoice_no : ''
+        );
+
+        $log->write('in if');
+
+        $log->write("cust orderData");
+
+        /* customer mail/sms/notificaiton start */
+        $subject = $this->emailtemplate->getSubject('OrderAll', 'order_' . (int) $order_status_id, $data);
+        $message = $this->emailtemplate->getMessage('OrderAll', 'order_' . (int) $order_status_id, $data);
+        $sms_message = $this->emailtemplate->getSmsMessage('OrderAll', 'order_' . (int) $order_status_id, $data);
+
+        //$log->write($message);
+        //echo "<pre>";print_r($message);die;
+        if ($this->emailtemplate->getEmailEnabled('OrderAll', 'order_' . (int) $order_status_id)) {
+
+
+            $mail = new mail($this->config->get('config_mail'));
+            $mail->setTo($order_info['email']);
+            $mail->setFrom($this->config->get('config_from_email'));
+            $mail->setSender($order_info['store_name']);
+            $mail->setSubject($subject);
+            $mail->setHtml($message);
+            //$mail->setText( $text );
+            $mail->send();
+
+            $log->write('mail end');
+        }
+
+        if ($this->emailtemplate->getSmsEnabled('OrderAll', 'order_' . (int) $order_status_id)) {
+
+            $ret = $this->emailtemplate->sendmessage($order_info['telephone'], $sms_message);
+        }
+
+        $log->write('outside mobi noti');
+        if ($this->emailtemplate->getNotificationEnabled('OrderAll', 'order_' . (int) $order_status_id)) {
+
+            $log->write('status enabled of mobi noti');
+            $mobile_notification_template = $this->emailtemplate->getNotificationMessage('OrderAll', 'order_' . (int) $order_status_id, $data);
+
+            //$log->write($mobile_notification_template);
+
+            $mobile_notification_title = $this->emailtemplate->getNotificationTitle('OrderAll', 'order_' . (int) $order_status_id, $data);
+
+            //$log->write($mobile_notification_title);
+            // customer push notitification start
+
+            if (isset($customer_info) && isset($customer_info['device_id']) && strlen($customer_info['device_id']) > 0) {
+
+                $log->write('customer device id set FRONT.MODEL.ACCOUNT.ORDER');
+                $ret = $this->emailtemplate->sendPushNotification($order_info['customer_id'], $customer_info['device_id'], $order_id, $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
+            } else {
+                $log->write('customer device id not set FRONT.MODEL.ACCOUNT.ORDER');
+            }
+
+            // customer push notitification end
+        }
+
+        /* customer mail/sms/notificaiton end */
     }
 
 }
