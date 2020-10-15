@@ -99,6 +99,11 @@ class ControllerPaymentCod extends Controller {
         if ($order_id != NULL) {
             $this->model_checkout_order->UpdateParentApprovalAPI($order_id,$Approver_assigned['order_approval_access'],$Approver_assigned['order_approval_access_role']);
         }
+
+        if ($parent_approval=="Pending") {
+            $this->load->model('checkout/order');
+            $this->model_checkout_order->SendMailToParentUser($order_id);
+        }
     }
 
 }
