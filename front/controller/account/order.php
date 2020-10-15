@@ -2573,6 +2573,7 @@ class ControllerAccountOrder extends Controller {
             if (($sub_users_order_details['head_chef'] == 'Rejected' || $sub_users_order_details['head_chef'] == 'Approved') && $sub_users_order_details['procurement'] == 'Rejected') {
                 $comment = 'Order Rejected By ' . $user_role . ' User';
                 $this->model_account_order->UpdateOrderStatus($order_id, 16, $comment);
+                $this->SubUserOrderReject($order_id, 16);
 
                 $sub_users_order_details = $this->model_account_order->getSubUserOrderDetails($order_id, $customer_id);
                 if ($sub_users_order_details['order_status_id'] == 14) {
