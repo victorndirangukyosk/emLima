@@ -918,9 +918,9 @@ class ModelCheckoutOrder extends Model {
                             $notification_id = $this->saveVendorNotification($temporaryVendorInfo['vendor_id'], $vendorData['device_id'], $order_id, $mobile_notification_template, $mobile_notification_title);
 
                             $sen['notification_id'] = $notification_id;
-                            $log->write('title:'.$mobile_notification_title);
-                            $log->write('template:'.$mobile_notification_template);
-                            $log->write('order status id:'.$order_status_id);
+                            $log->write('title:' . $mobile_notification_title);
+                            $log->write('template:' . $mobile_notification_template);
+                            $log->write('order status id:' . $order_status_id);
 
                             $ret = $this->emailtemplate->sendOrderVendorPushNotification($temporaryVendorInfo['vendor_id'], $vendorData['device_id'], $order_id, $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, $sen);
                         } else {
@@ -1776,21 +1776,22 @@ class ModelCheckoutOrder extends Model {
                 if ($order_approval_access_use['order_approval_access_role'] == 'head_chef' && $order_approval_access_use['order_approval_access'] > 0) {
                     $head_chef = 'Pending';
 
-                    //$log->write('Order Approval Access');
-                    //$log->write($order_approval_access_user);
-                    //$log->write('Order Approval Access');
+                    $log->write('Order Approval Access');
+                    $log->write($order_approval_access_user);
+                    $log->write('Order Approval Access');
                 }
 
                 if ($order_approval_access_use['order_approval_access_role'] == 'procurement_person' && $order_approval_access_use['order_approval_access'] > 0) {
                     $procurement = 'Pending';
 
-                    //$log->write('Order Approval Access');
-                    //$log->write($order_approval_access_user);
-                    //$log->write('Order Approval Access');
+                    $log->write('Order Approval Access');
+                    $log->write($order_approval_access_user);
+                    $log->write('Order Approval Access');
                 }
             }
         }
 
+        $log->write('UPDATING SUB USER ORDER' . $order_id);
         $parent_approval = $is_he_parents == NULL || $order_appoval_access == TRUE ? 'Approved' : 'Pending';
         $order_status_id = $is_he_parents == NULL || $order_appoval_access == TRUE ? $this->config->get('cod_order_status_id') : 15;
         $this->db->query('UPDATE `' . DB_PREFIX . "order` SET parent_approval = '" . $parent_approval . "',head_chef = '" . $head_chef . "',procurement = '" . $procurement . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
