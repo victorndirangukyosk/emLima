@@ -1227,7 +1227,10 @@ class ModelAccountOrder extends Model {
 
         $order_id = $order_info['order_id'];
         $customer_id = $order_info['customer_id'];
-
+        
+        $customer_info['firstname'] = $customer_info['firstname'];
+        $customer_info['lastname'] = $customer_info['lastname'];
+        $customer_info['email'] = $sub_customer_info['email'];
         $customer_info['subuserfirstname'] = $sub_customer_info['firstname'];
         $customer_info['subuserlastname'] = $sub_customer_info['lastname'];
         $customer_info['subuserorderid'] = $order_info['order_id'];
@@ -1241,7 +1244,7 @@ class ModelAccountOrder extends Model {
         $message = $this->emailtemplate->getMessage('Customer', 'customer_14', $customer_info);
 
         $mail = new Mail($this->config->get('config_mail'));
-        $mail->setTo($customer_info['email']);
+        $mail->setTo($sub_customer_info['email']);
         $mail->setFrom($this->config->get('config_from_email'));
         $mail->setSender($this->config->get('config_name'));
         $mail->setSubject($subject);
