@@ -45,6 +45,7 @@ class ModelAccountApi extends Model
                 $data['order_approval_access_role'] = $user_query->row['order_approval_access_role'];
 
                 $data['customer_email'] = $user_query->row['email'];
+                $data['parent'] = $user_query->row['parent'];
             } else {
                 $data['status'] = false;
                 $data['not_verified'] = true;
@@ -70,6 +71,7 @@ class ModelAccountApi extends Model
 
                 $data['customer_phone'] = $user_query->row['telephone'];
                 $data['customer_email'] = $user_query->row['email'];
+                $data['parent'] = $user_query->row['parent'];
             } else {
                 $data['status'] = false;
                 $data['not_verified'] = true;
