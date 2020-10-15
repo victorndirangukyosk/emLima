@@ -918,9 +918,9 @@ class ModelCheckoutOrder extends Model {
                             $notification_id = $this->saveVendorNotification($temporaryVendorInfo['vendor_id'], $vendorData['device_id'], $order_id, $mobile_notification_template, $mobile_notification_title);
 
                             $sen['notification_id'] = $notification_id;
-                            $log->write('title:'.$mobile_notification_title);
-                            $log->write('template:'.$mobile_notification_template);
-                            $log->write('order status id:'.$order_status_id);
+                            $log->write('title:' . $mobile_notification_title);
+                            $log->write('template:' . $mobile_notification_template);
+                            $log->write('order status id:' . $order_status_id);
 
                             $ret = $this->emailtemplate->sendOrderVendorPushNotification($temporaryVendorInfo['vendor_id'], $vendorData['device_id'], $order_id, $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, $sen);
                         } else {
@@ -1790,8 +1790,8 @@ class ModelCheckoutOrder extends Model {
                 }
             }
         }
-        
-        $log->write('UPDATING SUB USER ORDER');
+
+        $log->write('UPDATING SUB USER ORDER' . $order_id);
         $parent_approval = $is_he_parents == NULL || $order_appoval_access == TRUE ? 'Approved' : 'Pending';
         $order_status_id = $is_he_parents == NULL || $order_appoval_access == TRUE ? $this->config->get('cod_order_status_id') : 15;
         $this->db->query('UPDATE `' . DB_PREFIX . "order` SET parent_approval = '" . $parent_approval . "',head_chef = '" . $head_chef . "',procurement = '" . $procurement . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
