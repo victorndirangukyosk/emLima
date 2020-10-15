@@ -1129,6 +1129,7 @@ class ModelAccountOrder extends Model {
         }
 
         $log = new Log('error.log');
+        $log->write('MAIL SENDING');
 
         $this->load->model('account/order');
 
