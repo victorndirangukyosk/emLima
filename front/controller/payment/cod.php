@@ -47,10 +47,14 @@ class ControllerPaymentCod extends Controller {
 
             $order_id = NULL;
             foreach ($this->session->data['order_id'] as $order_id) {
+                $log->write('cod loop:2' . $order_id);
+
+                $this->model_checkout_order->UpdateParentApproval($order_id);
+            }
+            foreach ($this->session->data['order_id'] as $order_id) {
                 $log->write('cod loop' . $order_id);
 
                 $ret = $this->model_checkout_order->addOrderHistory($order_id, $order_status_id);
-                $this->model_checkout_order->UpdateParentApproval($order_id);
             }
             /* if ($order_id != NULL) {
               $this->model_checkout_order->UpdateParentApproval($order_id);
