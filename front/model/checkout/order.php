@@ -1665,6 +1665,7 @@ class ModelCheckoutOrder extends Model {
         $customer_info['subuserorderid'] = $order_info['order_id'];
         $customer_info['ip_address'] = $order_info['ip'];
         $customer_info['order_link'] = $this->url->link('account/login/checksubuserorder', 'order_token=' . $order_id . '&user_token=' . $customer_id . '&parent_user_token=' . $parent_id, 'SSL');
+        $customer_info['device_id'] = $customer_info['device_id'];
 
         $log->write('EMAIL SENDING');
         $log->write($customer_info);
@@ -1681,8 +1682,21 @@ class ModelCheckoutOrder extends Model {
         $mail->setHTML($message);
         $mail->send();
 
+        $log->write('status enabled of mobi noti');
+        $mobile_notification_template = $this->emailtemplate->getNotificationMessage('Customer', 'customer_7', $customer_info);
+
+        $mobile_notification_title = $this->emailtemplate->getNotificationTitle('Customer', 'customer_7', $customer_info);
+
+        if (isset($customer_info) && isset($customer_info['device_id']) && strlen($customer_info['device_id']) > 0) {
+
+            $log->write('customer device id set FRONT.MODEL.CHECKOUT.ORDER');
+            $ret = $this->emailtemplate->sendPushNotification($order_info['customer_id'], $customer_info['device_id'], $order_id, $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
+        } else {
+            $log->write('customer device id not set FRONT.MODEL.CHECKOUT.ORDER');
+        }
+
         if ($is_he_parents != NULL && $is_he_parents > 0) {
-            $order_approval_access = $this->db->query('SELECT c.customer_id, c.parent, c.order_approval_access_role, c.order_approval_access, c.email, c.firstname, c.lastname  FROM ' . DB_PREFIX . "customer c WHERE c.parent = '" . (int) $is_he_parents . "' AND c.order_approval_access = 1 AND (c.order_approval_access_role = 'head_chef' OR c.order_approval_access_role = 'procurement_person')");
+            $order_approval_access = $this->db->query('SELECT c.customer_id, c.parent, c.order_approval_access_role, c.order_approval_access, c.email, c.firstname, c.lastname, c.device_id  FROM ' . DB_PREFIX . "customer c WHERE c.parent = '" . (int) $is_he_parents . "' AND c.order_approval_access = 1 AND (c.order_approval_access_role = 'head_chef' OR c.order_approval_access_role = 'procurement_person')");
             $order_approval_access_user = $order_approval_access->rows;
 
             foreach ($order_approval_access_user as $order_approval_access_use) {
@@ -1697,6 +1711,7 @@ class ModelCheckoutOrder extends Model {
                     $order_approval_access_use['subuserfirstname'] = $sub_customer_info['firstname'];
                     $order_approval_access_use['subuserlastname'] = $sub_customer_info['lastname'];
                     $order_approval_access_use['order_link'] = $this->url->link('account/login/checksubuserorder', 'order_token=' . $order_id . '&user_token=' . $customer_id . '&parent_user_token=' . $parent_id, 'SSL');
+                    $order_approval_access_use['device_id'] = $order_approval_access_use['device_id'];
 
                     $log->write('EMAIL SENDING');
                     $log->write($customer_info);
@@ -1712,6 +1727,19 @@ class ModelCheckoutOrder extends Model {
                     $mail->setSubject($subject);
                     $mail->setHTML($message);
                     $mail->send();
+
+                    $log->write('status enabled of mobi noti');
+                    $mobile_notification_template = $this->emailtemplate->getNotificationMessage('Customer', 'customer_7', $order_approval_access_user);
+
+                    $mobile_notification_title = $this->emailtemplate->getNotificationTitle('Customer', 'customer_7', $order_approval_access_use);
+
+                    if (isset($order_approval_access_use) && isset($order_approval_access_use['device_id']) && strlen($order_approval_access_use['device_id']) > 0) {
+
+                        $log->write('customer device id set FRONT.MODEL.CHECKOUT.ORDER');
+                        $ret = $this->emailtemplate->sendPushNotification($order_info['customer_id'], $order_approval_access_use['device_id'], $order_id, $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
+                    } else {
+                        $log->write('customer device id not set FRONT.MODEL.CHECKOUT.ORDER');
+                    }
                 }
 
                 if ($order_approval_access_use['order_approval_access_role'] == 'procurement_person' && $order_approval_access_use['order_approval_access'] > 0) {
@@ -1724,6 +1752,7 @@ class ModelCheckoutOrder extends Model {
                     $order_approval_access_use['subuserfirstname'] = $sub_customer_info['firstname'];
                     $order_approval_access_use['subuserlastname'] = $sub_customer_info['lastname'];
                     $order_approval_access_use['order_link'] = $this->url->link('account/login/checksubuserorder', 'order_token=' . $order_id . '&user_token=' . $customer_id . '&parent_user_token=' . $parent_id, 'SSL');
+                    $order_approval_access_use['device_id'] = $order_approval_access_use['device_id'];
 
                     $log->write('EMAIL SENDING');
                     $log->write($customer_info);
@@ -1739,6 +1768,19 @@ class ModelCheckoutOrder extends Model {
                     $mail->setSubject($subject);
                     $mail->setHTML($message);
                     $mail->send();
+
+                    $log->write('status enabled of mobi noti');
+                    $mobile_notification_template = $this->emailtemplate->getNotificationMessage('Customer', 'customer_7', $order_approval_access_user);
+
+                    $mobile_notification_title = $this->emailtemplate->getNotificationTitle('Customer', 'customer_7', $order_approval_access_use);
+
+                    if (isset($order_approval_access_use) && isset($order_approval_access_use['device_id']) && strlen($order_approval_access_use['device_id']) > 0) {
+
+                        $log->write('customer device id set FRONT.MODEL.CHECKOUT.ORDER');
+                        $ret = $this->emailtemplate->sendPushNotification($order_info['customer_id'], $order_approval_access_use['device_id'], $order_id, $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
+                    } else {
+                        $log->write('customer device id not set FRONT.MODEL.CHECKOUT.ORDER');
+                    }
                 }
             }
         }
