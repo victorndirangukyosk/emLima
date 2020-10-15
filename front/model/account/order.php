@@ -1228,8 +1228,8 @@ class ModelAccountOrder extends Model {
         $order_id = $order_info['order_id'];
         $customer_id = $order_info['customer_id'];
         
-        $customer_info['firstname'] = $customer_info['firstname'];
-        $customer_info['lastname'] = $customer_info['lastname'];
+        $customer_info['firstname'] = $sub_customer_info['firstname'];
+        $customer_info['lastname'] = $sub_customer_info['lastname'];
         $customer_info['email'] = $sub_customer_info['email'];
         $customer_info['subuserfirstname'] = $sub_customer_info['firstname'];
         $customer_info['subuserlastname'] = $sub_customer_info['lastname'];
