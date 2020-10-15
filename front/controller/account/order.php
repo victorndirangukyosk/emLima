@@ -3345,6 +3345,7 @@ class ControllerAccountOrder extends Controller {
     public function SubUserOrderReject($order_id, $order_status_id) {
 
         $this->load->model('checkout/order');
+        $this->load->model('account/customer');
         $order_info = $this->model_checkout_order->getOrder($order_id);
 
         //this is solely used to send mails
