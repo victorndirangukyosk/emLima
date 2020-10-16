@@ -21,7 +21,7 @@ class ControllerApiLandingpagefaq extends Controller
             }
 
             $json['categories'][] = [
-                'category_id' => $category['name'],
+                'category_id' => $category['category_id'],
                 'category' => $category['name'],
                 'questions' => $categoryQuestions
             ];
