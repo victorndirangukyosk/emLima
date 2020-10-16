@@ -2,11 +2,14 @@
 
 class ModelInformationCareers extends Model {
 
-    public function createCareers($first_name, $last_name, $role, $yourself) {
+    public function createCareers($first_name, $last_name, $role, $yourself,$email,$phone,$job_id,$cover,$cv_path,$jobposition) {
 
-        $this->db->query('INSERT INTO `' . DB_PREFIX . "careers` SET `first_name` = '" . $first_name . "', `last_name` = '" . $last_name . "', `role` = '" . $role . "', `your_self` = '" . $yourself . "', `job_id` = '" . $job_id . "', `cover_letter` = '" . $cover_letter . "', `cv_path` = '" . $cv_path . "', created_at = NOW()");
+        $this->db->query('INSERT INTO `' . DB_PREFIX . "careers` SET `first_name` = '" . $first_name . "', `last_name` = '" . $last_name . "', `role` = '" . $role . "', `your_self` = '" . $yourself . "', `email` = '" . $email . "', `phone` = '" . $phone . "', `job_id` = '" . $job_id . "', `cover_letter` = '" . $cover . "', `cv_path` = '" . $cv_path . "', created_at = NOW()");
+        
+        $id=$this->db->getLastId();
+       
 
-        return $this->db->getLastId();
+        return $id;
     }
 
     public function addOrderApi($pesapal_refrence_id, $request_id, $checkout_request_id, $order_id) {
@@ -116,14 +119,14 @@ class ModelInformationCareers extends Model {
         $sql = 'SELECT distinct *  FROM '.DB_PREFIX.'jobposition where status=1';
         $implode = [];
 
-        if (!empty($data['job_category'])) {
-            $implode[] = " job_category LIKE '%".$this->db->escape($data['job_category'])."%'";
+        if (!empty($data['filter_category'])) {
+            $implode[] = " job_category LIKE '%".$this->db->escape($data['filter_category'])."%'";
         }
-        if (!empty($data['job_type'])) {
-            $implode[] = " job_type LIKE '%".$this->db->escape($data['job_type'])."%'";
+        if (!empty($data['filter_type'])) {
+            $implode[] = " job_type LIKE '%".$this->db->escape($data['filter_type'])."%'";
         }
-        if (!empty($data['job_location'])) {
-            $implode[] = " job_location LIKE '%".$this->db->escape($data['job_location'])."%'";
+        if (!empty($data['filter_location'])) {
+            $implode[] = " job_location LIKE '%".$this->db->escape($data['filter_location'])."%'";
         }
         if (!empty($data['id'])) {
             $implode[] = " job_id = ' ".$this->db->escape($data['id'])."'";

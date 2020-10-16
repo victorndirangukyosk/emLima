@@ -35,8 +35,8 @@
             <table class="table table-bordered table-hover">
               <thead>
                 <tr>
-                  <!-- <td style="width: 1px;" class="text-center">
-                     <input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" /></td>-->
+                   <td style="width: 1px;" class="text-center">
+                    <input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" /></td> 
                   <td class="text-left"><?= $column_job_category ?></td> 
                   <td class="text-left"><?= $column_job_type ?></td>
                   <td class="text-left"><?= $column_job_location ?></td>
@@ -48,11 +48,11 @@
                 <?php if ($jobpositions) { ?>
                 <?php foreach ($jobpositions as $jobposition) { ?>
                 <tr>
-                   <!--<td class="text-center"><?php if (in_array($testimonial['testimonial_id'], $selected)) { ?>
-                   <input type="checkbox" name="selected[]" value="<?php echo $testimonial['testimonial_id']; ?>" checked="checked" />
+                    <td class="text-center"><?php if (in_array($jobposition['job_id'], $selected)) { ?>
+                   <input type="checkbox" name="selected[]" value="<?php echo $jobposition['job_id']; ?>" checked="checked" />
                     <?php } else { ?>
-                    <input type="checkbox" name="selected[]" value="<?php echo $testimonial['testimonial_id']; ?>" />
-                    <?php } ?></td>-->
+                    <input type="checkbox" name="selected[]" value="<?php echo $jobposition['job_id']; ?>" />
+                    <?php } ?></td> 
                    <td class="text-left"><?php echo $jobposition['job_category']; ?></td> 
                   <td class="text-left"><?php echo $jobposition['job_type']; ?></td>
                   <td class="text-left"><?php echo $jobposition['job_location']; ?></td>
@@ -76,6 +76,11 @@
               </tbody>
             </table>
           </div>
+
+           <div class="row">
+          <div class="col-sm-6 text-left"><?php echo $pagination; ?></div>
+          <div class="col-sm-6 text-right"><?php echo $results; ?></div>
+        </div>
         </form>
       </div>
     </div>

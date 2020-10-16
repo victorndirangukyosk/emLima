@@ -123,7 +123,7 @@ class Controllercheckoutdeliverytime extends Controller
             $pmTimeslot = [];
             $inPmfirstTimeslot = [];
 
-            $temp = $this->get_all_time_slot($store_id, $shipping_method, $date);
+            $temp = $this->get_all_time_slot_admin($store_id, $shipping_method, $date);
 
             foreach ($temp as $temp1) {
                 $temp2 = explode('-', $temp1['timeslot']);
@@ -777,6 +777,28 @@ class Controllercheckoutdeliverytime extends Controller
         return $data['timeslot'];
     }
 
+    public function get_all_time_slot_Admin($store_id, $shipping_method, $date)
+    {
+        $log = new Log('error.log');
+        $log->write('get_all_time_slot');
+
+        $day = date('w', strtotime($date));
+        $log->write($day);
+
+        if (isset($date)) {
+            $delivery_date = $date;
+            //$this->session->data['dates'][$store_id] = $delivery_date;
+
+            $log->write($delivery_date);
+        } else {
+            $delivery_date = '';
+        }
+
+        $data['timeslot'] = $this->newGetStoreTimeSlotAdmin($store_id, $shipping_method, $day, $date);
+
+        return $data['timeslot'];
+    }
+
     public function getStoreDetail($store_id)
     {
         $this->load->model('tool/image');
@@ -1164,6 +1186,94 @@ class Controllercheckoutdeliverytime extends Controller
                 if ($is_enabled) {
                     array_push($time_slot_rows, $row);
                 }
+ 
+            }
+        }
+        $log->write('time_slot_rows row');
+        //$log->write($time_slot_rows);
+        //print_r($time_slot_rows);die;
+
+        return $time_slot_rows;
+        //return $is_enabled;
+    }
+
+    public function newGetStoreTimeSlotAdmin($store_id, $method, $day, $date)
+    {
+        $log = new Log('error.log');
+        $log->write('newGetStoreTimeSlot');
+
+        $storeDetail = $this->getStoreDetail($store_id);
+        $timeDiff = $storeDetail['delivery_time_diff'];
+
+        $shipping_method = explode('.', $method);
+
+        if ('normal' == $shipping_method[0]) {
+            $settings = $this->getSettings('normal', 0);
+            $timeDiff = $settings['normal_delivery_time_diff'];
+
+            //echo "<pre>";print_r($timeDiff);die;
+            $this->db->where('day', $day);
+            $this->db->select('timeslot', false);
+            $this->db->where('status', '1');
+            $rows = $this->db->get('normal_delivery_timeslot')->rows;
+        // return $rows;
+        } elseif ('express' == $shipping_method[0]) {
+            $settings = $this->getSettings('express', 0);
+            $timeDiff = $settings['express_delivery_time_diff'];
+
+            $this->db->where('day', $day);
+            $this->db->select('timeslot', false);
+            $this->db->where('status', '1');
+            $rows = $this->db->get('express_delivery_timeslot')->rows;
+        // return $rows;
+        } elseif ('pickup' == $shipping_method[0]) {
+            $this->db->where('day', $day);
+            $this->db->select('timeslot', false);
+            $this->db->where('status', '1');
+            $this->db->where('store_id', $store_id);
+            $rows = $this->db->get('store_pickup_timeslot')->rows;
+
+            return $rows;
+        } else {
+            $this->db->where('day', $day);
+            $this->db->select('timeslot', false);
+            $this->db->where('status', '1');
+            $this->db->where('store_id', $store_id);
+            $rows = $this->db->get('store_delivery_timeslot')->rows;
+            //echo "<pre>";print_r($timeDiff);die;
+            //return $rows;
+        }
+
+        $is_enabled = false;
+        $time_slot_rows = [];
+        /*echo "<pre>";
+        print_r($rows);*/
+        $log->write('newGetStoreTimeSlot rows');
+        $log->write(date('h:ia'));
+
+        //$log->write($rows);
+        foreach ($rows as $tslot) {
+            $row['timeslot'] = $tslot['timeslot'];
+            $temp = explode('-', $tslot['timeslot']);
+            $date = $date;
+
+            $log->write($date);
+
+            if ($date != date('d-m-Y')) {
+                $log->write($date);
+                array_push($time_slot_rows, $row);
+            } else {
+                // $log->write(date('d-m-Y'));
+
+                // $is_enabled = $this->timeIsBetween($temp[0], $temp[1], date('h:ia'), $timeDiff);
+                // //echo "<pre>";print_r($is_enabled);
+                // //echo "<pre>";print_r("er");die;
+                // if ($is_enabled) {
+                //     array_push($time_slot_rows, $row);
+                // }
+
+                $log->write($date);
+                array_push($time_slot_rows, $row);
             }
         }
         $log->write('time_slot_rows row');

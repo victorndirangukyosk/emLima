@@ -1594,6 +1594,19 @@ class ControllerSaleAccountManager extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+    public function unassigncustomer() {
+        $log = new Log('error.log');
+        $log->write($this->request->post['unassigncustomer']);
+        $log->write($this->request->post['account_manager_id']);
+        $this->load->model('user/accountmanager');
+        
+        $results = $this->model_user_accountmanager->UnAssignCustomersToAccountManager($this->request->post['unassigncustomer'], $this->request->post['account_manager_id']);
+            
+        $json = true;
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
     public function getAccountManagerCustomers($account_manager_id) {
         $this->load->model('user/accountmanager');
         $results = $this->model_user_accountmanager->getCustomerByAccountManagerId($account_manager_id);

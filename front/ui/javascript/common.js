@@ -969,7 +969,7 @@ $(document).delegate('.agree', 'click', function (e) {
 									data-store-id="${ json[i]['store_id'] }"
 									data-variation-id="0" 
 									data-id="${ json[i]['product_store_id'] }" 
-									data-producetype-id="" 
+									data-producetype-id="" data-product_notes=""
 									style="display: block">
 									<i style="color: #fff !important"; class="fas fa-cart-plus"></i>
 								</span>

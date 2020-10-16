@@ -341,7 +341,15 @@ $(document).delegate('#add-cart-btnnew', 'click', function() {
     $store_id = $(this).attr('data-store-id');
     $action = $(this).attr('data-action');
     $key = $(this).attr('data-key');
-    $product_notes =  $('#product_notes').val();
+    $productnotes = $(this).attr('data-product_notes');
+    console.log('product notes identification');
+    console.log($productnotes);
+    if(typeof $productnotes !== typeof undefined && $productnotes !== false)
+    {
+        $product_notes =$productnotes;
+    }
+    else{
+    $product_notes =  $('#product_notes').val();}
     $produce_type = $('select[name="produce-type"] option:selected').val();
     if($(".produce-type"). length)
     {

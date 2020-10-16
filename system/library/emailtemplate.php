@@ -447,7 +447,7 @@ class Emailtemplate
     // Customer
     public function getCustomerFind()
     {
-        $result = ['{firstname}', '{lastname}', '{branchname}', '{subuserfirstname}', '{subuserlastname}', '{date}', '{store_name}', '{email}', '{password}', '{account_href}', '{activate_href}', '{order_link}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}', '{amount}', '{transfer_type}', '{ip_address}'];
+        $result = ['{firstname}', '{lastname}', '{branchname}', '{subuserfirstname}', '{subuserlastname}', '{subuserorderid}', '{date}', '{store_name}', '{email}', '{password}', '{account_href}', '{activate_href}', '{order_link}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}', '{amount}', '{transfer_type}', '{ip_address}'];
 
         return $result;
     }
@@ -460,6 +460,7 @@ class Emailtemplate
             'branchname' => $data['branchname'],
             'subuserfirstname' => $data['subuserfirstname'],
             'subuserlastname' => $data['subuserlastname'],
+            'subuserorderid' => $data['subuserorderid'],
             'date' => date($this->language->get('date_format_short'), strtotime(date('Y-m-d H:i:s'))),
             'store_name' => $this->config->get('config_name'),
             'email' => $data['email'],
@@ -2312,11 +2313,12 @@ class Emailtemplate
         $log = new Log('error.log');
         $log->write('sendPushNotification');
 
-        $log->write($to);
-        $log->write($deviceId);
-        $log->write($order_id);
-        $log->write($message);
-        $log->write($title);
+        $log->write('TO :'.$to);
+        $log->write('DEVICE:'.$deviceId);
+        $log->write('ORDER ID :'.$order_id);
+        $log->write('STORE ID :'.$store_id);
+        $log->write('MESSAGE:'.$message);
+        $log->write('TITLE:'.$title);
 
         if (isset($to)) {
             if (isset($deviceId) && isset($to)) {

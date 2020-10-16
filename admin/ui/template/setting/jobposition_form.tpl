@@ -74,7 +74,7 @@
                       <div class="form-group required">
                         <label class="col-sm-2 control-label" for="input-experience"><?= $column_experience ?></label>
                         <div class="col-sm-4">
-                            <input type="text" name="experience" maxlength=250   placeholder="Enter experience"  value="<?php echo $experience; ?>"  id="input-experience" class="form-control"></input>
+                            <input type="number" name="experience" maxlength=250   placeholder="Enter experience"  value="<?php echo $experience; ?>"  id="input-experience" class="form-control"></input>
                             <?php if ($error_experience) { ?>
                             <div class="text-danger"><?php echo $error_experience; ?></div>
                             <?php } ?>
@@ -128,10 +128,11 @@
                         <label class="col-sm-2 control-label" for="input-currency"><?= $entry_status ?></label>
                         <div class="col-sm-4">
                             <select name="status" class="form-control">
-                                <?php if ($status==0) { ?>
+                                <?php if ($status == 0) { ?>
                                 <option value="1" ><?= $text_enable ?></option>
                                 <option value="0" selected="selected"><?= $text_disable ?></option>
-                                <?php } else { ?>
+                                <?php }
+                                 else { ?>
                                 <option value="1" selected="selected"><?= $text_enable ?></option>
                                 <option value="0"  ><?= $text_disable ?></option>
                                 <?php } ?>

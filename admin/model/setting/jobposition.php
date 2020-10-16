@@ -24,7 +24,9 @@ class ModelSettingJobPosition extends Model
 
     public function deleteJobPosition($job_id)
     {
-        $this->db->query('DELETE FROM '.DB_PREFIX."jobposition WHERE job_id = '".(int) $job_id."'");
+        // $sql='DELETE FROM '.DB_PREFIX."jobposition WHERE job_id = '".(int) $job_id."'";
+        // echo "<pre>";print_r($sql);die;
+          $this->db->query('DELETE FROM '.DB_PREFIX."jobposition WHERE job_id = '".(int) $job_id."'");
     }
 
     public function getJobPosition($job_id)
@@ -34,11 +36,24 @@ class ModelSettingJobPosition extends Model
         return $query->row;
     }
 
-    public function getJobPositions()
+    public function getJobPositions($data = [])
     {
-        $query = $this->db->query('SELECT * FROM '.DB_PREFIX.'jobposition ORDER BY job_id');
-        //echo "<pre>";print_r($query->rows);die;
-        return  $query->rows;
+         
+        $sql = 'SELECT * FROM '.DB_PREFIX.'jobposition ORDER BY job_id DESC';
+
+        if (isset($data['start']) || isset($data['limit'])) {
+            if ($data['start'] < 0) {
+                $data['start'] = 0;
+            }
+
+            if ($data['limit'] < 1) {
+                $data['limit'] = 20;
+            }
+
+            $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
+        }
+        $query = $this->db->query($sql);
+        return $query->rows;
     }
 
     public function getTotalJobPositions()

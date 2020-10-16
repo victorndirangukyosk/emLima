@@ -61,7 +61,7 @@
                   <td class="text-left"><?php echo $newfeature['customer_name']; ?></td>
 
                  <!-- <td class="text-left">
-                      <?php if($testimonial['status']){ ?>
+                      <?php if($newfeature['status']){ ?>
                         <?= $text_enable ?>
                       <?php }else{ ?>
                         <?= $text_disable ?>

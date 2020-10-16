@@ -3,7 +3,7 @@
 class ModelUserAccountmanager extends Model {
 
     public function addAccountManager($data) {
-        $this->db->query('INSERT INTO `' . DB_PREFIX . "user` SET username = '" . $this->db->escape($data['username']) . "', user_group_id = 17, salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', status = '" . (int) $data['status'] . "', date_added = NOW()");
+        $this->db->query('INSERT INTO `' . DB_PREFIX . "user` SET username = '" . $this->db->escape($data['username']) . "', user_group_id = 18, salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', status = '" . (int) $data['status'] . "', date_added = NOW()");
 
         return $this->db->getLastId();
     }
@@ -384,6 +384,10 @@ class ModelUserAccountmanager extends Model {
 
     public function AssignCustomersToAccountManager($customer_id, $account_manager_id) {
         $this->db->query('UPDATE `' . DB_PREFIX . "customer` SET account_manager_id = '" . (int) $account_manager_id . "' WHERE customer_id = '" . (int) $customer_id . "'");
+    }
+
+    public function UnAssignCustomersToAccountManager($customer_id, $account_manager_id) {
+        $this->db->query('UPDATE `' . DB_PREFIX . "customer` SET account_manager_id = NULL WHERE customer_id = '" . (int) $customer_id . "' AND account_manager_id = '" . (int) $account_manager_id . "'");
     }
 
     public function getCustomerByAccountManagerId($account_manager_id) {

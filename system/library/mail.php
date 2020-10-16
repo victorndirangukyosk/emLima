@@ -201,16 +201,34 @@ class mail
             $mailgun_domain = $this->get('config_mail_mailgun_domain');
 
             // First, instantiate the SDK with your API credentials
-
+           
+             // echo "<pre>";print_r($this->attachments[0]);
             $mg = Mailgun::create($mailgun_key);
+            if(is_array($this->attachments) && count($this->attachments) > 0 && $this->attachments[0])
+            {
             $mg->messages()->send($mailgun_domain, [
               'from' => $this->from,
               'to' => $this->to,
              // 'bcc'     => BCC_MAILS,
              'bcc' => 'email.kbtest@gmail.com',
               'subject' => $this->subject,
-              'html' => $this->html,
-            ]);
+               'html' => $this->html,
+               'attachment' => [
+                ['filePath'=> $this->attachments[0]]
+              ]
+            ] );
+               }
+               else
+               {
+                $mg->messages()->send($mailgun_domain, [
+                    'from' => $this->from,
+                    'to' => $this->to,
+                   // 'bcc'     => BCC_MAILS,
+                   'bcc' => 'email.kbtest@gmail.com',
+                    'subject' => $this->subject,
+                     'html' => $this->html,                      
+                  ] );
+               }
 
             return true;
         } elseif ('aws' == $this->get('config_mail_protocol')) {

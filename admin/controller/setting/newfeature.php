@@ -22,14 +22,29 @@ class ControllerSettingNewfeature extends Controller {
             $file_upload_status = $this->FeatureFileUpload($this->request->files);
             $log = new Log('error.log');
             $log->write($file_upload_status);
-            if ($file_upload_status != NULL && $file_upload_status['status'] == TRUE && $file_upload_status['file_name'] != NULL) {
-                $newfeature_id = $this->model_setting_newfeature->addNewfeature($this->request->post, $file_upload_status['file_name']);
+            //  echo "<pre>";print_r($this->request->files);die;
+            if(isset($this->request->files['additional_requirement']) && (is_uploaded_file($file_data['additional_requirement']['tmp_name'])))
+            {
+                if ($file_upload_status != NULL && $file_upload_status['status'] == TRUE && $file_upload_status['file_name'] != NULL) {
+                    $newfeature_id = $this->model_setting_newfeature->addNewfeature($this->request->post, $file_upload_status['file_name']);
+
+                    $this->load->model('setting/setting');
+
+                    $this->session->data['success'] = $this->language->get('text_success');
+                } else {
+
+                    $this->session->data['success'] = $this->language->get('text_error');
+                }
+            }
+            else
+            {
+
+               
+                $newfeature_id = $this->model_setting_newfeature->addNewfeature($this->request->post, NULL);
 
                 $this->load->model('setting/setting');
 
                 $this->session->data['success'] = $this->language->get('text_success');
-            } else {
-                $this->session->data['success'] = $this->language->get('text_error');
             }
 
             $this->response->redirect($this->url->link('setting/newfeature', 'token=' . $this->session->data['token'], 'SSL'));
@@ -41,6 +56,16 @@ class ControllerSettingNewfeature extends Controller {
     public function FeatureFileUpload($file_data) {
         $status = array();
         if ((isset($file_data['additional_requirement'])) && (is_uploaded_file($file_data['additional_requirement']['tmp_name']))) {
+            if($file_data['additional_requirement']['type']!="application/msword")
+            {
+                return $status = array('status' => FALSE, 'file_name' => '');
+            }
+            if($file_data['additional_requirement']['size']> 1000000)
+            {
+                return $status = array('status' => FALSE, 'file_name' => '');
+            }
+            
+            
             if (!file_exists(DIR_UPLOAD . 'newfeature/')) {
                 mkdir(DIR_UPLOAD . 'newfeature/', 0777, true);
             }
