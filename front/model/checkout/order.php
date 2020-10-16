@@ -128,7 +128,7 @@ class ModelCheckoutOrder extends Model {
 
 
                 $this->db->query("UPDATE `" . DB_PREFIX . "order` SET "
-                        . "shipping_city_id = '" . $this->db->escape($data['shipping_city_id']) . "', "
+                        . "shipping_city_id = '" . $this->db->escape(array_key_exists('shipping_city_id', $data) ? $data['shipping_city_id'] : '') . "', "
                         . "shipping_contact_no = '" . $this->db->escape($data['shipping_contact_no']) . "', "
                         . "shipping_address = '" . $this->db->escape($data['shipping_address']) . "', "
                         . "shipping_flat_number = '" . $this->db->escape($data['shipping_flat_number']) . "', "
@@ -141,8 +141,10 @@ class ModelCheckoutOrder extends Model {
                 if (isset($data['products'])) {
                     foreach ($data['products'] as $product) {
                         $produce_type = '';
-                        foreach ($product['produce_type'] as $producttype) {
-                            $produce_type = $produce_type . ' ' . $producttype['type'] . '-' . $producttype['value'];
+                        if (is_array($product) && array_key_exists('produce_type', $product) && is_array($product['produce_type'])) {
+                            foreach ($product['produce_type'] as $producttype) {
+                                $produce_type = $produce_type . ' ' . $producttype['type'] . '-' . $producttype['value'];
+                            }
                         }
                         $log = new Log('error.log');
                         $log->write('PRODUCT NOTE FRONT.MODEL.CHECKOUT.ORDER');
