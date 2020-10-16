@@ -813,7 +813,7 @@ class ControllerApiOrder extends Controller
                 if ($sub_users_order_details['parent_approval'] == 'Rejected' || $sub_users_order_details['head_chef'] == 'Rejected') {
                     $comment = 'Order Rejected By Parent User';
                      $this->model_account_order->UpdateOrderStatus($order_id, 16,$comment);
-                    
+                     $this->model_account_order->SubUserOrderReject($order_id, 16);
                     $sub_users_order_details = $this->model_account_order->getSubUserOrderDetailsapi($order_id);
                     if ($sub_users_order_details['order_status_id'] == 14) {
                         $json['success'] = 'Order Recieved';

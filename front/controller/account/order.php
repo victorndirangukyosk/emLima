@@ -2435,7 +2435,7 @@ class ControllerAccountOrder extends Controller {
                     $json['success'] = 'Order Rejected';
                 }
 
-                if (($sub_users_order_details['parent_approval'] == 'Approved') && ($sub_users_order_details['head_chef'] == 'Approved' && $sub_users_order_details['procurement'] == 'Approved')) {
+                if (($sub_users_order_details['parent_approval'] == 'Approved') || ($sub_users_order_details['head_chef'] == 'Approved' && $sub_users_order_details['procurement'] == 'Approved')) {
                     $this->model_account_order->SubUserOrderApproved($order_id, 14);
                 }
             }
