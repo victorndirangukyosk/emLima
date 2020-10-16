@@ -96,14 +96,19 @@ class ControllerPaymentCod extends Controller {
 
         $order_id = NULL;
         foreach ($orders as $order_id) {
+            $log->write('cod loop:2' . $order_id);
+
+            $this->model_checkout_order->UpdateParentApproval($order_id);
+        }
+        foreach ($orders as $order_id) {
             $log->write('cod loop' . $order_id);
 
             // $ret = $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('cod_order_status_id'));
             $ret = $this->model_checkout_order->addOrderHistory($order_id, $order_status_id);
         }
-        if ($order_id != NULL) {
+       /* if ($order_id != NULL) {
             $this->model_checkout_order->UpdateParentApprovalAPI($order_id, $Approver_assigned['order_approval_access'], $Approver_assigned['order_approval_access_role']);
-        }
+        }*/
 
         if ($parent_approval == "Pending") {
             $this->load->model('checkout/order');

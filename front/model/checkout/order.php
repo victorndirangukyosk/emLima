@@ -1869,17 +1869,17 @@ class ModelCheckoutOrder extends Model {
                 if ($order_approval_access_use['order_approval_access_role'] == 'head_chef' && $order_approval_access_use['order_approval_access'] > 0) {
                     $head_chef = 'Pending';
 
-                    //$log->write('Order Approval Access');
-                    //$log->write($order_approval_access_user);
-                    //$log->write('Order Approval Access');
+                    $log->write('Order Approval Access');
+                    $log->write($order_approval_access_user);
+                    $log->write('Order Approval Access');
                 }
 
                 if ($order_approval_access_use['order_approval_access_role'] == 'procurement_person' && $order_approval_access_use['order_approval_access'] > 0) {
                     $procurement = 'Pending';
 
-                    //$log->write('Order Approval Access');
-                    //$log->write($order_approval_access_user);
-                    //$log->write('Order Approval Access');
+                    $log->write('Order Approval Access');
+                    $log->write($order_approval_access_user);
+                    $log->write('Order Approval Access');
                 }
             }
         }
