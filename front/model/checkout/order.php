@@ -35,7 +35,7 @@ class ModelCheckoutOrder extends Model {
 
 
                 $this->db->query("UPDATE `" . DB_PREFIX . "order` SET "
-                        . "shipping_city_id = '" . $this->db->escape($data['shipping_city_id']) . "', "
+                        . "shipping_city_id = '" . $this->db->escape((array_key_exists('shipping_city_id', $data) ? $data['shipping_city_id'] : '')) . "', "
                         . "shipping_contact_no = '" . $this->db->escape($data['shipping_contact_no']) . "', "
                         . "shipping_address = '" . $this->db->escape($data['shipping_address']) . "', "
                         . "shipping_flat_number = '" . $this->db->escape($data['shipping_flat_number']) . "', "
@@ -128,7 +128,7 @@ class ModelCheckoutOrder extends Model {
 
 
                 $this->db->query("UPDATE `" . DB_PREFIX . "order` SET "
-                        . "shipping_city_id = '" . $this->db->escape($data['shipping_city_id']) . "', "
+                        . "shipping_city_id = '" . $this->db->escape((array_key_exists('shipping_city_id', $data) ? $data['shipping_city_id'] : '')) . "', "
                         . "shipping_contact_no = '" . $this->db->escape($data['shipping_contact_no']) . "', "
                         . "shipping_address = '" . $this->db->escape($data['shipping_address']) . "', "
                         . "shipping_flat_number = '" . $this->db->escape($data['shipping_flat_number']) . "', "
@@ -141,8 +141,10 @@ class ModelCheckoutOrder extends Model {
                 if (isset($data['products'])) {
                     foreach ($data['products'] as $product) {
                         $produce_type = '';
-                        foreach ($product['produce_type'] as $producttype) {
-                            $produce_type = $produce_type . ' ' . $producttype['type'] . '-' . $producttype['value'];
+                        if (is_array($product) && array_key_exists('produce_type', $product) && is_array($product['produce_type'])) {
+                            foreach ($product['produce_type'] as $producttype) {
+                                $produce_type = $produce_type . ' ' . $producttype['type'] . '-' . $producttype['value'];
+                            }
                         }
                         $log = new Log('error.log');
                         $log->write('PRODUCT NOTE FRONT.MODEL.CHECKOUT.ORDER');
@@ -175,7 +177,7 @@ class ModelCheckoutOrder extends Model {
 
 
                 $this->db->query("UPDATE `" . DB_PREFIX . "order` SET "
-                        . "shipping_city_id = '" . $this->db->escape($data['shipping_city_id']) . "', "
+                        . "shipping_city_id = '" . $this->db->escape((array_key_exists('shipping_city_id', $data) ? $data['shipping_city_id'] : '')) . "', "
                         . "shipping_contact_no = '" . $this->db->escape($data['shipping_contact_no']) . "', "
                         . "shipping_address = '" . $this->db->escape($data['shipping_address']) . "', "
                         . "shipping_flat_number = '" . $this->db->escape($data['shipping_flat_number']) . "', "
@@ -188,8 +190,10 @@ class ModelCheckoutOrder extends Model {
                 if (isset($data['products'])) {
                     foreach ($data['products'] as $product) {
                         $produce_type = '';
-                        foreach ($product['produce_type'] as $producttype) {
-                            $produce_type = $produce_type . ' ' . $producttype['type'] . '-' . $producttype['value'];
+                        if (is_array($product) && array_key_exists('produce_type', $product) && is_array($product['produce_type'])) {
+                            foreach ($product['produce_type'] as $producttype) {
+                                $produce_type = $produce_type . ' ' . $producttype['type'] . '-' . $producttype['value'];
+                            }
                         }
                         $log = new Log('error.log');
                         $log->write('PRODUCT NOTE FRONT.MODEL.CHECKOUT.ORDER');
@@ -918,9 +922,9 @@ class ModelCheckoutOrder extends Model {
                             $notification_id = $this->saveVendorNotification($temporaryVendorInfo['vendor_id'], $vendorData['device_id'], $order_id, $mobile_notification_template, $mobile_notification_title);
 
                             $sen['notification_id'] = $notification_id;
-                            $log->write('title:'.$mobile_notification_title);
-                            $log->write('template:'.$mobile_notification_template);
-                            $log->write('order status id:'.$order_status_id);
+                            $log->write('title:' . $mobile_notification_title);
+                            $log->write('template:' . $mobile_notification_template);
+                            $log->write('order status id:' . $order_status_id);
 
                             $ret = $this->emailtemplate->sendOrderVendorPushNotification($temporaryVendorInfo['vendor_id'], $vendorData['device_id'], $order_id, $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, $sen);
                         } else {
@@ -1662,7 +1666,10 @@ class ModelCheckoutOrder extends Model {
         $customer_info['branchname'] = $sub_customer_info['company_name'];
         $customer_info['subuserfirstname'] = $sub_customer_info['firstname'];
         $customer_info['subuserlastname'] = $sub_customer_info['lastname'];
+        $customer_info['subuserorderid'] = $order_info['order_id'];
+        $customer_info['ip_address'] = $order_info['ip'];
         $customer_info['order_link'] = $this->url->link('account/login/checksubuserorder', 'order_token=' . $order_id . '&user_token=' . $customer_id . '&parent_user_token=' . $parent_id, 'SSL');
+        $customer_info['device_id'] = $customer_info['device_id'];
 
         $log->write('EMAIL SENDING');
         $log->write($customer_info);
@@ -1679,8 +1686,21 @@ class ModelCheckoutOrder extends Model {
         $mail->setHTML($message);
         $mail->send();
 
+        $log->write('status enabled of mobi noti');
+        $mobile_notification_template = $this->emailtemplate->getNotificationMessage('Customer', 'customer_7', $customer_info);
+
+        $mobile_notification_title = $this->emailtemplate->getNotificationTitle('Customer', 'customer_7', $customer_info);
+
+        if (isset($customer_info) && isset($customer_info['device_id']) && strlen($customer_info['device_id']) > 0) {
+
+            $log->write('customer device id set FRONT.MODEL.CHECKOUT.ORDER');
+            $ret = $this->emailtemplate->sendPushNotification($order_info['customer_id'], $customer_info['device_id'], $order_id, $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
+        } else {
+            $log->write('customer device id not set FRONT.MODEL.CHECKOUT.ORDER');
+        }
+
         if ($is_he_parents != NULL && $is_he_parents > 0) {
-            $order_approval_access = $this->db->query('SELECT c.customer_id, c.parent, c.order_approval_access_role, c.order_approval_access, c.email, c.firstname, c.lastname  FROM ' . DB_PREFIX . "customer c WHERE c.parent = '" . (int) $is_he_parents . "' AND c.order_approval_access = 1 AND (c.order_approval_access_role = 'head_chef' OR c.order_approval_access_role = 'procurement_person')");
+            $order_approval_access = $this->db->query('SELECT c.customer_id, c.parent, c.order_approval_access_role, c.order_approval_access, c.email, c.firstname, c.lastname, c.device_id  FROM ' . DB_PREFIX . "customer c WHERE c.parent = '" . (int) $is_he_parents . "' AND c.order_approval_access = 1 AND (c.order_approval_access_role = 'head_chef' OR c.order_approval_access_role = 'procurement_person')");
             $order_approval_access_user = $order_approval_access->rows;
 
             foreach ($order_approval_access_user as $order_approval_access_use) {
@@ -1695,6 +1715,7 @@ class ModelCheckoutOrder extends Model {
                     $order_approval_access_use['subuserfirstname'] = $sub_customer_info['firstname'];
                     $order_approval_access_use['subuserlastname'] = $sub_customer_info['lastname'];
                     $order_approval_access_use['order_link'] = $this->url->link('account/login/checksubuserorder', 'order_token=' . $order_id . '&user_token=' . $customer_id . '&parent_user_token=' . $parent_id, 'SSL');
+                    $order_approval_access_use['device_id'] = $order_approval_access_use['device_id'];
 
                     $log->write('EMAIL SENDING');
                     $log->write($customer_info);
@@ -1710,6 +1731,19 @@ class ModelCheckoutOrder extends Model {
                     $mail->setSubject($subject);
                     $mail->setHTML($message);
                     $mail->send();
+
+                    $log->write('status enabled of mobi noti');
+                    $mobile_notification_template = $this->emailtemplate->getNotificationMessage('Customer', 'customer_7', $order_approval_access_user);
+
+                    $mobile_notification_title = $this->emailtemplate->getNotificationTitle('Customer', 'customer_7', $order_approval_access_use);
+
+                    if (isset($order_approval_access_use) && isset($order_approval_access_use['device_id']) && strlen($order_approval_access_use['device_id']) > 0) {
+
+                        $log->write('customer device id set FRONT.MODEL.CHECKOUT.ORDER');
+                        $ret = $this->emailtemplate->sendPushNotification($order_info['customer_id'], $order_approval_access_use['device_id'], $order_id, $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
+                    } else {
+                        $log->write('customer device id not set FRONT.MODEL.CHECKOUT.ORDER');
+                    }
                 }
 
                 if ($order_approval_access_use['order_approval_access_role'] == 'procurement_person' && $order_approval_access_use['order_approval_access'] > 0) {
@@ -1722,6 +1756,7 @@ class ModelCheckoutOrder extends Model {
                     $order_approval_access_use['subuserfirstname'] = $sub_customer_info['firstname'];
                     $order_approval_access_use['subuserlastname'] = $sub_customer_info['lastname'];
                     $order_approval_access_use['order_link'] = $this->url->link('account/login/checksubuserorder', 'order_token=' . $order_id . '&user_token=' . $customer_id . '&parent_user_token=' . $parent_id, 'SSL');
+                    $order_approval_access_use['device_id'] = $order_approval_access_use['device_id'];
 
                     $log->write('EMAIL SENDING');
                     $log->write($customer_info);
@@ -1737,6 +1772,19 @@ class ModelCheckoutOrder extends Model {
                     $mail->setSubject($subject);
                     $mail->setHTML($message);
                     $mail->send();
+
+                    $log->write('status enabled of mobi noti');
+                    $mobile_notification_template = $this->emailtemplate->getNotificationMessage('Customer', 'customer_7', $order_approval_access_user);
+
+                    $mobile_notification_title = $this->emailtemplate->getNotificationTitle('Customer', 'customer_7', $order_approval_access_use);
+
+                    if (isset($order_approval_access_use) && isset($order_approval_access_use['device_id']) && strlen($order_approval_access_use['device_id']) > 0) {
+
+                        $log->write('customer device id set FRONT.MODEL.CHECKOUT.ORDER');
+                        $ret = $this->emailtemplate->sendPushNotification($order_info['customer_id'], $order_approval_access_use['device_id'], $order_id, $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
+                    } else {
+                        $log->write('customer device id not set FRONT.MODEL.CHECKOUT.ORDER');
+                    }
                 }
             }
         }
@@ -1776,21 +1824,22 @@ class ModelCheckoutOrder extends Model {
                 if ($order_approval_access_use['order_approval_access_role'] == 'head_chef' && $order_approval_access_use['order_approval_access'] > 0) {
                     $head_chef = 'Pending';
 
-                    //$log->write('Order Approval Access');
-                    //$log->write($order_approval_access_user);
-                    //$log->write('Order Approval Access');
+                    $log->write('Order Approval Access');
+                    $log->write($order_approval_access_user);
+                    $log->write('Order Approval Access');
                 }
 
                 if ($order_approval_access_use['order_approval_access_role'] == 'procurement_person' && $order_approval_access_use['order_approval_access'] > 0) {
                     $procurement = 'Pending';
 
-                    //$log->write('Order Approval Access');
-                    //$log->write($order_approval_access_user);
-                    //$log->write('Order Approval Access');
+                    $log->write('Order Approval Access');
+                    $log->write($order_approval_access_user);
+                    $log->write('Order Approval Access');
                 }
             }
         }
 
+        $log->write('UPDATING SUB USER ORDER' . $order_id);
         $parent_approval = $is_he_parents == NULL || $order_appoval_access == TRUE ? 'Approved' : 'Pending';
         $order_status_id = $is_he_parents == NULL || $order_appoval_access == TRUE ? $this->config->get('cod_order_status_id') : 15;
         $this->db->query('UPDATE `' . DB_PREFIX . "order` SET parent_approval = '" . $parent_approval . "',head_chef = '" . $head_chef . "',procurement = '" . $procurement . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
@@ -1820,17 +1869,17 @@ class ModelCheckoutOrder extends Model {
                 if ($order_approval_access_use['order_approval_access_role'] == 'head_chef' && $order_approval_access_use['order_approval_access'] > 0) {
                     $head_chef = 'Pending';
 
-                    //$log->write('Order Approval Access');
-                    //$log->write($order_approval_access_user);
-                    //$log->write('Order Approval Access');
+                    $log->write('Order Approval Access');
+                    $log->write($order_approval_access_user);
+                    $log->write('Order Approval Access');
                 }
 
                 if ($order_approval_access_use['order_approval_access_role'] == 'procurement_person' && $order_approval_access_use['order_approval_access'] > 0) {
                     $procurement = 'Pending';
 
-                    //$log->write('Order Approval Access');
-                    //$log->write($order_approval_access_user);
-                    //$log->write('Order Approval Access');
+                    $log->write('Order Approval Access');
+                    $log->write($order_approval_access_user);
+                    $log->write('Order Approval Access');
                 }
             }
         }
