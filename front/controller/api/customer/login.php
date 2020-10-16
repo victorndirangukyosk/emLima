@@ -72,6 +72,16 @@ class ControllerApiCustomerLogin extends Controller
             $unencodedArray = ['jwt' => $jwt];
 
             $this->session->data['customer_id'] = $api_info['customer_id'];
+            // echo "<pre>";print_r($api_info);die; 
+            
+            if ($api_info['parent'] != NULL && $api_info['parent']>0) {
+                $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $api_info['parent'] . "' AND status = '1'");
+            } else {
+                $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $api_info['customer_id']. "' AND status = '1'");
+            }
+            $this->session->data['customer_category'] = isset($customer_details->row['customer_category']) ? $customer_details->row['customer_category'] : null;
+            // echo "<pre>";print_r($customer_details);die; 
+ 
 
             //echo  "{'status' : 'success','resp':".json_encode($unencodedArray)."}"
             $this->load->model('account/customer');
