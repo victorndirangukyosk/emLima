@@ -12,7 +12,7 @@
                         <i class="fa fa-clock-o"></i> <?= $text_placed_on?> <span><strong><?php echo $order['date_added']; ?></strong></span>, <?php echo $order['time_added']; ?> <span>
 
                             <div class="pull-right">
-                                <button type="button" style="height:25px" onclick="excel(<?=$order["order_id"] ?>,'<?=$order["order_company"] ?>');" data-toggle="tooltip" title="Download Ordered Products"
+                                <button type="button" style="height:25px" onclick="excel( < ? = $order["order_id"] ?>,'<?=$order["order_company"] ?>');" data-toggle="tooltip" title="Download Ordered Products"
                                         class="btn btn-success " data-original-title="Download Excel"><i class="fa fa-download"></i></button>
                             </div>
 
@@ -465,6 +465,9 @@
                 parent_div.html(approved);
                 $('#orderstatus' + order_id).text(json.success);
                 $('#editorder' + order_id).remove();
+                setTimeout(function () {
+                    window.location.reload(false);
+                }, 100);
             }
         });
     });
@@ -495,6 +498,9 @@
                 parent_div.html(approved);
                 $('#orderstatus' + order_id).text(json.success);
                 $('#editorder' + order_id).remove();
+                setTimeout(function () {
+                    window.location.reload(false);
+                }, 100);
             }
         });
     });
@@ -528,6 +534,9 @@
                 parent_div.html(approved);
                 $('#orderstatus' + order_id).text(json.success);
                 $('#editorder' + order_id).remove();
+                setTimeout(function () {
+                    window.location.reload(false);
+                }, 100);
             }
         });
     });
@@ -561,6 +570,9 @@
                 parent_div.html(approved);
                 $('#orderstatus' + order_id).text(json.success);
                 $('#editorder' + order_id).remove();
+                setTimeout(function () {
+                    window.location.reload(false);
+                }, 100);
             }
         });
     });
@@ -590,6 +602,9 @@
                 parent_div.html(approved);
                 $('#orderstatus' + order_id).text(json.success);
                 $('#editorder' + order_id).remove();
+                setTimeout(function () {
+                    window.location.reload(false);
+                }, 100);
             }
         });
     });
