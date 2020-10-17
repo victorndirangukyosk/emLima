@@ -1694,7 +1694,7 @@ class ModelCheckoutOrder extends Model {
         if (isset($customer_info) && isset($customer_info['device_id']) && strlen($customer_info['device_id']) > 0) {
 
             $log->write('customer device id set FRONT.MODEL.CHECKOUT.ORDER');
-            $ret = $this->emailtemplate->sendPushNotification($order_info['customer_id'], $customer_info['device_id'], $order_id, $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
+            $ret = $this->emailtemplate->sendPushNotification($order_info['customer_id'], $customer_info['device_id'], $order_info['order_id'], $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
         } else {
             $log->write('customer device id not set FRONT.MODEL.CHECKOUT.ORDER');
         }
@@ -1740,7 +1740,7 @@ class ModelCheckoutOrder extends Model {
                     if (isset($order_approval_access_use) && isset($order_approval_access_use['device_id']) && strlen($order_approval_access_use['device_id']) > 0) {
 
                         $log->write('customer device id set FRONT.MODEL.CHECKOUT.ORDER');
-                        $ret = $this->emailtemplate->sendPushNotification($order_info['customer_id'], $order_approval_access_use['device_id'], $order_id, $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
+                        $ret = $this->emailtemplate->sendPushNotification($order_info['customer_id'], $order_approval_access_use['device_id'], $order_info['order_id'], $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
                     } else {
                         $log->write('customer device id not set FRONT.MODEL.CHECKOUT.ORDER');
                     }
@@ -1781,7 +1781,7 @@ class ModelCheckoutOrder extends Model {
                     if (isset($order_approval_access_use) && isset($order_approval_access_use['device_id']) && strlen($order_approval_access_use['device_id']) > 0) {
 
                         $log->write('customer device id set FRONT.MODEL.CHECKOUT.ORDER');
-                        $ret = $this->emailtemplate->sendPushNotification($order_info['customer_id'], $order_approval_access_use['device_id'], $order_id, $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
+                        $ret = $this->emailtemplate->sendPushNotification($order_info['customer_id'], $order_approval_access_use['device_id'], $order_info['order_id'], $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
                     } else {
                         $log->write('customer device id not set FRONT.MODEL.CHECKOUT.ORDER');
                     }
