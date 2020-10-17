@@ -2350,8 +2350,10 @@ class Emailtemplate
                         ->setData(['order_id' => $order_id, 'store_id' => $store_id]);
 
                 $response = $client->send($message);
-
+                
+                $log->write('FCM');
                 $log->write($response);
+                $log->write('FCM');
                 //var_dump($response);die;
                 if ($response->getStatusCode()) {
                     $json['success'] = 'Success: push notification sent.';
