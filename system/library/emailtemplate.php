@@ -2331,7 +2331,7 @@ class Emailtemplate
                 $client = new FCMClient();
                 $client->setApiKey($apiKey);
                 $client->injectHttpClient(new \GuzzleHttp\Client());
-
+                $log->write('FCM INJECT');
                 $note = new Notification($title, $message);
                 $note->setIcon('notification_icon_resource_name')
                         ->setColor('#3ca826')
