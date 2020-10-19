@@ -954,12 +954,18 @@ class ModelReportExcel extends Model {
                 )
             );
             // $objPHPExcel->getActiveSheet()->getStyle('A1:D')->applyFromArray($styleArray);
-            foreach (range('A', 'L') as $columnID) {
-                $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
-                        ->setAutoSize(true);
-                // $objPHPExcel->getActiveSheet()->getStyle($columnID)->applyFromArray($styleArray);
-            }
+            // foreach (range('A', 'F') as $columnID) {
+            //     $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+            //             ->setAutoSize(true);
+            //     // $objPHPExcel->getActiveSheet()->getStyle($columnID)->applyFromArray($styleArray);
+            // }
 
+            $objPHPExcel->getActiveSheet()->getColumnDimension("A")->setWidth(20);
+            $objPHPExcel->getActiveSheet()->getColumnDimension("B")->setWidth(11);
+            $objPHPExcel->getActiveSheet()->getColumnDimension("C")->setWidth(20);
+            $objPHPExcel->getActiveSheet()->getColumnDimension("D")->setWidth(10);
+
+            
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 4, 'Product Name');
             //$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'Produce Type');
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'Quantity');
@@ -983,6 +989,8 @@ class ModelReportExcel extends Model {
                 ++$row;
             }
             $objPHPExcel->getActiveSheet()->getStyle('A1:D' . $row)->applyFromArray($styleArray);
+            $objPHPExcel->getActiveSheet()->getStyle('A1:E'. $row)->getAlignment()->setWrapText(true); 
+            
             // Individual customer orders
             $sheetIndex = 1;
             foreach ($data['orders'] as $order) {
@@ -1064,11 +1072,16 @@ class ModelReportExcel extends Model {
 
                 $objPHPExcel->getActiveSheet()->getStyle('A1:E4')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
 
-                foreach (range('A', 'L') as $columnID) {
-                    $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
-                            ->setAutoSize(true);
-                }
-
+                // foreach (range('A', 'L') as $columnID) {
+                //     if($columnID!='B')
+                //     $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+                //             ->setAutoSize(true);
+                // }
+                $objPHPExcel->getActiveSheet()->getColumnDimension("A")->setWidth(20);
+                $objPHPExcel->getActiveSheet()->getColumnDimension("B")->setWidth(11);
+                $objPHPExcel->getActiveSheet()->getColumnDimension("C")->setWidth(20);
+                $objPHPExcel->getActiveSheet()->getColumnDimension("D")->setWidth(25);
+                $objPHPExcel->getActiveSheet()->getColumnDimension("E")->setWidth(10);
 
 
                 foreach ($order['products'] as $product) {
@@ -1083,13 +1096,17 @@ class ModelReportExcel extends Model {
                     ++$row;
                 }
                 $objPHPExcel->getActiveSheet()->getStyle('A1:E' . $row)->applyFromArray($styleArray);
-
+                $objPHPExcel->getActiveSheet()->getStyle('A1:E' . $row)->getAlignment()->setWrapText(true); 
 
                 ++$sheetIndex;
             }
 
             $objPHPExcel->setActiveSheetIndex(0);
-
+            // $objPHPExcel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_PORTRAIT);
+            // $objPHPExcel->getActiveSheet()->getPageSetup()->setPaperSize(PHPExcel_Worksheet_PageSetup::PAPERSIZE_A4);
+            // $objPHPExcel->getActiveSheet()->getPageSetup()->setFitToPage(true);
+            // $objPHPExcel->getActiveSheet()->getPageSetup()->setFitToWidth(1);
+            // $objPHPExcel->getActiveSheet()->getPageSetup()->setFitToHeight(0);
             $deliveryDate = $data['orders'][0]['delivery_date'];
             $filename = 'KB_Order_Sheet_' . $deliveryDate . '.xlsx';
 
@@ -1100,7 +1117,7 @@ class ModelReportExcel extends Model {
             $objWriter->save('php://output');
             exit;
         } catch (Exception $e) {
-//            echo "<pre>";print_r($e);die;
+       //            echo "<pre>";print_r($e);die;
             $errstr = $e->getMessage();
             $errline = $e->getLine();
             $errfile = $e->getFile();
@@ -1279,7 +1296,7 @@ class ModelReportExcel extends Model {
             $objWriter->save('php://output');
             exit;
         } catch (Exception $e) {
-//            echo "<pre>";print_r($e);
+              //            echo "<pre>";print_r($e);
             $errstr = $e->getMessage();
             $errline = $e->getLine();
             $errfile = $e->getFile();
