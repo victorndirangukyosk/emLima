@@ -444,8 +444,6 @@ class ControllerCommonHome extends Controller {
     }
 
     public function index() {
-        $this->response->redirect($this->url->link('account/login/customer'));
-
         if (!isset($this->session->data['customer_id'])) {
             if (isset($_REQUEST['action']) && ('shop' == $_REQUEST['action'])) {
                 $this->response->redirect($this->url->link('account/login/customer'));
