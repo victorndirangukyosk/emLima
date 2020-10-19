@@ -49,12 +49,7 @@ class ControllerAccountLogout extends Controller {
                 $this->response->redirect(BASE_URL);
             }
 
-            // $this->response->redirect($server);
-            
-            /* Redirect to login page
-            TODO: Remove all landing page routes
-            */
-            $this->response->redirect($this->url->link('account/login/customer'));
+            $this->response->redirect($server);
         }
 
         $this->load->language('account/logout');
