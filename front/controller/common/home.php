@@ -114,11 +114,6 @@ class ControllerCommonHome extends Controller {
     }
 
     public function homepage() {
-        /* Redirect to login page
-            TODO: Remove all landing page routes
-        */
-        $this->response->redirect($this->url->link('account/login/customer'));
-
         if ($this->request->server['HTTPS']) {
             $server = $this->config->get('config_ssl');
         } else {
@@ -449,9 +444,6 @@ class ControllerCommonHome extends Controller {
     }
 
     public function index() {
-        /* Redirect to login page
-            TODO: Remove all landing page routes
-        */
         $this->response->redirect($this->url->link('account/login/customer'));
 
         if (!isset($this->session->data['customer_id'])) {
