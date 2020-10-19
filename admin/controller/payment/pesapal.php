@@ -106,6 +106,12 @@ class ControllerPaymentPesapal extends Controller
         } else {
             $data['pesapal_failed_order_status_id'] = $this->config->get('pesapal_failed_order_status_id');
         }
+        
+        if (isset($this->request->post['pesapal_pending_order_status_id'])) {
+            $data['pesapal_pending_order_status_id'] = $this->request->post['pesapal_pending_order_status_id'];
+        } else {
+            $data['pesapal_pending_order_status_id'] = $this->config->get('pesapal_pending_order_status_id');
+        }
 
         if (isset($this->request->post['pesapal_total'])) {
             $data['pesapal_total'] = $this->request->post['pesapal_total'];
