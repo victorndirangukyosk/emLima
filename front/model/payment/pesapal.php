@@ -135,7 +135,7 @@ class ModelPaymentPesapal extends Model {
             $log = new Log('error.log');
             $log->write('PESAPAL ORDER HISTORY');
             $log->write($order_history);
-            $this->db->query('UPDATE `' . DB_PREFIX . "order_history SET `notify` = '" . (int) $notify . "', comment = '" . $this->db->escape($comment) . "', date_added = NOW()");
+            $this->db->query('UPDATE `' . DB_PREFIX . "order_history` SET notify = '" . (int) $notify . "', comment = '" . $this->db->escape($comment) . "', date_added = NOW()");
         }
         $this->insertOrderTransactionFee($order_id, $order_status_id);
     }
