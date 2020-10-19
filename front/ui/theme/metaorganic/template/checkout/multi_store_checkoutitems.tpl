@@ -84,10 +84,12 @@
      <span ><?= $product['name']?></span> 
 <div style="font-size:13px;">
       <?php  $fpt ='';
+      if(is_array($product) && array_key_exists('produce_type', $product) && is_array($product['produce_type'])) {
        foreach ($product['produce_type'] as $pt) {
            if($pt['type']!= null &&  $pt['type']!= 'null')
        $fpt.=' '.  $pt['type'].'-'.$pt['value'] ;
-        }    
+        }
+        }
          ?><?= $fpt?></div>  
 
      <?php if(isset($product['product_note']) && ($product['product_note'] != null) && ($product['product_note'] != 'null')){?>
