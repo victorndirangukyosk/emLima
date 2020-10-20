@@ -868,7 +868,23 @@ class ModelAccountOrder extends Model {
 
     public function UpdateOrderStatus($order_id, $order_status_id, $comment) {
         $this->db->query('UPDATE `' . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
-        $this->db->query('INSERT INTO ' . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', order_status_id = '" . (int) $order_status_id . "', notify = 1, comment = '" . $comment . "', date_added = NOW()");
+
+        $order_customer_id = NULL;
+        $order_role_id = NULL;
+        $log = new Log('error.log');
+        $log->write('order_customer_id' . $order_customer_id);
+        if ($this->customer->getId() != NULL) {
+            $order_customer_id = $this->customer->getId();
+            $order_role_id = 'customer';
+            $log->write('order_customer_id' . $order_customer_id);
+            $log->write('order_role_id' . $order_role_id);
+        } elseif ($this->user->getId() != NULL) {
+            $order_customer_id = $this->user->getId();
+            $order_role_id = $this->user->getGroupName();
+            $log->write('order_customer_id2' . $order_customer_id);
+            $log->write('order_role_id2' . $order_role_id);
+        }
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', added_by = '" . (int) $order_customer_id . "', role = '" . $order_role_id . "', order_status_id = '" . (int) $order_status_id . "', notify = 1, comment = '" . $comment . "', date_added = NOW()");
     }
 
     public function ApproveOrRejectSubUserOrderApi($order_id, $order_status) {
@@ -1227,7 +1243,7 @@ class ModelAccountOrder extends Model {
 
         $order_id = $order_info['order_id'];
         $customer_id = $order_info['customer_id'];
-        
+
         $customer_info['firstname'] = $sub_customer_info['firstname'];
         $customer_info['lastname'] = $sub_customer_info['lastname'];
         $customer_info['email'] = $sub_customer_info['email'];
