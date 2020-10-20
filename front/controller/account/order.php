@@ -1359,7 +1359,11 @@ class ControllerAccountOrder extends Controller {
             $log->write($order_status_id);
             if ($order_info && $order_status_id) {
                 $log->write('if order his');
-                $this->model_checkout_order->addOrderHistory($order_id, $order_status_id, $comment, $notify);
+                
+                $this->load->model('account/customer');
+                $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+                
+                $this->model_checkout_order->addOrderHistory($order_id, $order_status_id, $comment, $notify, $customer_info['customer_id'], 'customer');
 
                 $data['status'] = true;
             } else {
