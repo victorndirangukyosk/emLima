@@ -534,26 +534,10 @@ class ModelCheckoutOrder extends Model {
                 }
             }
 
-            $order_customer_id = NULL;
-            $order_role_id = NULL;
-            $log->write('order_customer_id' . $order_customer_id);
-            if ($this->customer->getId() != NULL) {
-                $order_customer_id = $this->customer->getId();
-                $order_role_id = 'customer';
-                $log = new Log('error.log');
-                $log->write('order_customer_id' . $order_customer_id);
-                $log->write('order_role_id' . $order_role_id);
-            } elseif ($this->user->getId() != NULL) {
-                $order_customer_id = $this->user->getId();
-                $order_role_id = $this->user->getGroupName();
-                $log = new Log('error.log');
-                $log->write('order_customer_id2' . $order_customer_id);
-                $log->write('order_role_id2' . $order_role_id);
-            }
 
             $this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', order_pdf_link ='" . $pdf_link . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
 
-            $this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', added_by = '" . (int) $order_customer_id . "', role = '" . $order_role_id . "', order_status_id = '" . (int) $order_status_id . "', notify = '" . (int) $notify . "', comment = '" . $this->db->escape($comment) . "', date_added = NOW()");
+            $this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', order_status_id = '" . (int) $order_status_id . "', notify = '" . (int) $notify . "', comment = '" . $this->db->escape($comment) . "', date_added = NOW()");
 
 
             // If current order status is not processing or complete but new status is processing or complete then commence completing the order
