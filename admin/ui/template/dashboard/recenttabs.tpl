@@ -11,6 +11,7 @@
             <span class="hidden-inline-xs"><?php echo $text_last_order; ?></span>
           </a>
         </li>
+        <?php if (!$this->user->isAccountManager()) { ?>
         <li class="">
           <a data-toggle="tab" href="#dash_best_sellers">
             <i class="fa fa-trophy"></i>
@@ -23,6 +24,7 @@
             <span class="hidden-inline-xs"><?php echo $text_less_sellers; ?></span>
           </a>
         </li>
+        <?php } ?>
       </ul>
     </nav>
     <div class="tab-content panel">
