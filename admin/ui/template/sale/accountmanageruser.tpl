@@ -43,7 +43,7 @@
 
                         <div class="col-sm-3">
                             <div class="form-group">
-                                <label class="control-label" for="input-company">Account Manager Name</label>
+                                <label class="control-label" for="input-company">Customer Name</label>
                                 <input type="text" name="filter_name" value="<?php echo $filter_name; ?>" placeholder="<?php echo $entry_name; ?>" id="input-name" class="form-control" />
                             </div>
 
