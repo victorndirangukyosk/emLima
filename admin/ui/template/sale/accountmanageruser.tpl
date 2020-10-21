@@ -50,7 +50,7 @@
                             <div class="form-group">
                                 <div class="form-group">
                                     <label class="control-label" for="input-company">Company Name</label>
-                                    <input type="text" name="filter_company" value="<?php echo $filter_company; ?>" placeholder="<?php echo $entry_company; ?>" id="input-name" class="form-control" />
+                                    <input type="text" name="filter_company_name" value="<?php echo $filter_company_name; ?>" placeholder="<?php echo $entry_company; ?>" id="input-name" class="form-control" />
                                 </div>
                             </div>
                         </div>
@@ -215,6 +215,12 @@
             if (filter_name) {
                 url += '&filter_name=' + encodeURIComponent(filter_name);
             }
+            
+            var filter_company_name = $('input[name=\'filter_company_name\']').val();
+
+            if (filter_company_name) {
+                url += '&filter_company_name=' + encodeURIComponent(filter_company_name);
+            }
 
             var filter_email = $('input[name=\'filter_email\']').val();
 
@@ -255,7 +261,7 @@
         $('input[name=\'filter_name\']').autocomplete({
             'source': function (request, response) {
                 $.ajax({
-                    url: 'index.php?path=sale/accountmanageruser/autocompletebyCompany&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request) + '&filter_company=' + $companyName,
+                    url: 'index.php?path=sale/accountmanageruser/autocompletebyCompany&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request) + '&filter_company_name=' + $companyName,
                     dataType: 'json',
                     success: function (json) {
                         response($.map(json, function (item) {
@@ -272,7 +278,7 @@
             }
         });
 
-        $('input[name=\'filter_company\']').autocomplete({
+        $('input[name=\'filter_company_name\']').autocomplete({
             'source': function (request, response) {
                 $.ajax({
                     url: 'index.php?path=sale/accountmanageruser/autocompletecompany&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
@@ -291,8 +297,8 @@
                 $companyName = "";
             },
             'select': function (item) {
-                $('input[name=\'filter_company\']').val(item['label']);
-                $('input[name=\'filter_customer\']').val('');
+                $('input[name=\'filter_company_name\']').val(item['label']);
+                $('input[name=\'filter_customer_name\']').val('');
                 $companyName = item['label'];
             }
         });
