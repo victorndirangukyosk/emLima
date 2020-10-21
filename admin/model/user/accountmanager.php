@@ -267,6 +267,10 @@ class ModelUserAccountmanager extends Model {
         if (!empty($data['filter_name'])) {
             $implode[] = "CONCAT(firstname, ' ', lastname) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
         }
+        
+        if (!empty($data['filter_company_name'])) {
+            $implode[] = "company_name LIKE '%" . $this->db->escape($data['filter_company_name']) . "%'";
+        }
 
         if (!empty($data['filter_email'])) {
             $implode[] = "email LIKE '" . $this->db->escape($data['filter_email']) . "%'";
@@ -408,6 +412,10 @@ class ModelUserAccountmanager extends Model {
 
         if (!empty($data['filter_name'])) {
             $implode[] = "CONCAT(c.firstname, ' ', c.lastname) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+        }
+        
+        if (!empty($data['filter_company_name'])) {
+            $implode[] = "company_name LIKE '%" . $this->db->escape($data['filter_company_name']) . "%'";
         }
 
         if (!empty($data['filter_email'])) {

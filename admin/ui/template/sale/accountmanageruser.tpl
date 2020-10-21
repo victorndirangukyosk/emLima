@@ -236,7 +236,7 @@
 
             var filter_telephone = $('input[name=\'filter_telephone\']').val();
 
-            if (filter_telephone != '*') {
+            if (filter_telephone != '*' && filter_telephone != '') {
                 url += '&filter_telephone=' + encodeURIComponent(filter_telephone);
             }
 
