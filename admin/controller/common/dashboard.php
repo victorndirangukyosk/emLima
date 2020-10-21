@@ -56,7 +56,7 @@ class ControllerCommonDashboard extends Controller
         if ($this->user->isVendor()) {
             $this->vendor($data);
         } elseif($this->user->isAccountManager()) {
-            $this->isAccountManager($data);
+            $this->accountmanager($data);
         } else {
             $this->admin($data);
         }
@@ -79,6 +79,24 @@ class ControllerCommonDashboard extends Controller
 
         $this->response->setOutput($this->load->view('common/vendor_dashboard.tpl', $data));
     }
+    
+    private function accountmanager($data)
+    {
+        $data['error_install'] = '';
+
+        $data['order'] = $this->load->controller('dashboard/order/accountmanager');
+        $data['sale'] = $this->load->controller('dashboard/sale/accountmanager');
+        $data['customer'] = $this->load->controller('dashboard/customer');
+        $data['online'] = $this->load->controller('dashboard/online');
+        $data['chart'] = $this->load->controller('dashboard/chart');
+        $data['charts'] = $this->load->controller('dashboard/charts');
+
+        $data['actualSales'] = $this->load->controller('dashboard/sale/accountmanagerActualSales');
+
+        $data['recenttabs'] = $this->load->controller('dashboard/recenttabs');
+
+        $this->response->setOutput($this->load->view('common/vendor_dashboard.tpl', $data));
+    }    
 
     private function admin($data)
     {
