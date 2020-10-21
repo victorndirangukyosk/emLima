@@ -55,6 +55,8 @@ class ControllerCommonDashboard extends Controller
 
         if ($this->user->isVendor()) {
             $this->vendor($data);
+        } elseif($this->user->isAccountManager()) {
+            $this->isAccountManager($data);
         } else {
             $this->admin($data);
         }

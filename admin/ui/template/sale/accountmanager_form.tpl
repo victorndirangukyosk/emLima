@@ -56,7 +56,7 @@
                                     <?php } ?>
                                 </div>
                             </div>
-                            <input type="hidden"  name="user_group_id" id="input-user-group" value="18">
+                            <input type="hidden"  name="user_group_id" id="input-user-group" value="<?php echo $this->config->get('config_account_manager_group_id'); ?>">
                             <!--<div class="form-group">
                               <label class="col-sm-2 control-label" for="input-user-group"><?php echo $entry_user_group; ?></label>
                               <div class="col-sm-10">

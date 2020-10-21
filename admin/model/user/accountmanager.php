@@ -3,13 +3,13 @@
 class ModelUserAccountmanager extends Model {
 
     public function addAccountManager($data) {
-        $this->db->query('INSERT INTO `' . DB_PREFIX . "user` SET username = '" . $this->db->escape($data['username']) . "', user_group_id = '" . (int) $data['user_group_id'] . "', salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', status = '" . (int) $data['status'] . "', date_added = NOW()");
+        $this->db->query('INSERT INTO `' . DB_PREFIX . "user` SET username = '" . $this->db->escape($data['username']) . "', user_group_id = '" . (int) $this->config->get('config_account_manager_group_id') . "', salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', status = '" . (int) $data['status'] . "', date_added = NOW()");
 
         return $this->db->getLastId();
     }
 
     public function editUser($user_id, $data) {
-        $this->db->query('UPDATE `' . DB_PREFIX . "user` SET username = '" . $this->db->escape($data['username']) . "', user_group_id = '" . (int) $data['user_group_id'] . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', image = '" . $this->db->escape($data['image']) . "', status = '" . (int) $data['status'] . "' WHERE user_id = '" . (int) $user_id . "'");
+        $this->db->query('UPDATE `' . DB_PREFIX . "user` SET username = '" . $this->db->escape($data['username']) . "', user_group_id = '" . (int) $this->config->get('config_account_manager_group_id') . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', image = '" . $this->db->escape($data['image']) . "', status = '" . (int) $data['status'] . "' WHERE user_id = '" . (int) $user_id . "'");
 
         if ($data['password']) {
             $this->db->query('UPDATE `' . DB_PREFIX . "user` SET salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "' WHERE user_id = '" . (int) $user_id . "'");
@@ -234,7 +234,7 @@ class ModelUserAccountmanager extends Model {
             $implode[] = "telephone LIKE '" . $this->db->escape($data['filter_telephone']) . "%'";
         }
 
-        $implode[] = "user_group_id = 18";
+        $implode[] = "user_group_id = '" . $this->config->get('config_account_manager_group_id') . "'";
 
         if (!empty($data['filter_ip'])) {
             $implode[] = "ip = '" . $this->db->escape($data['filter_ip']) . "'";
@@ -267,7 +267,7 @@ class ModelUserAccountmanager extends Model {
         if (!empty($data['filter_name'])) {
             $implode[] = "CONCAT(firstname, ' ', lastname) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
         }
-        
+
         if (!empty($data['filter_company_name'])) {
             $implode[] = "company_name LIKE '%" . $this->db->escape($data['filter_company_name']) . "%'";
         }
@@ -322,7 +322,7 @@ class ModelUserAccountmanager extends Model {
             $implode[] = "c.telephone LIKE '" . $this->db->escape($data['filter_telephone']) . "%'";
         }
 
-        $implode[] = "c.user_group_id = 18";
+        $implode[] = "c.user_group_id = '" . $this->config->get('config_account_manager_group_id') . "'";
 
         if (!empty($data['filter_ip'])) {
             $implode[] = "c.ip = '" . $this->db->escape($data['filter_ip']) . "'";
@@ -385,7 +385,7 @@ class ModelUserAccountmanager extends Model {
 
         return $query->rows;
     }
-    
+
     public function getUnassignedCompany($name) {
         $query = $this->db->query('SELECT * FROM `' . DB_PREFIX . "customer` WHERE company_name LIKE '" . $this->db->escape($name) . "%' AND (account_manager_id IS NULL OR account_manager_id = 0)");
 
@@ -413,7 +413,7 @@ class ModelUserAccountmanager extends Model {
         if (!empty($data['filter_name'])) {
             $implode[] = "CONCAT(c.firstname, ' ', c.lastname) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
         }
-        
+
         if (!empty($data['filter_company_name'])) {
             $implode[] = "company_name LIKE '%" . $this->db->escape($data['filter_company_name']) . "%'";
         }
