@@ -1572,7 +1572,7 @@ class ControllerSaleAccountManager extends Controller {
         $json = NULL;
         if ($name != NULL) {
             $this->load->model('user/accountmanager');
-            $results = $this->model_user_accountmanager->getUnassignedCustomers($name);
+            $results = $this->model_user_accountmanager->getUnassignedCompany($name);
             $json = $results;
         }
         $this->response->addHeader('Content-Type: application/json');
