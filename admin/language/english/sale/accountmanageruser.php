@@ -31,6 +31,7 @@ $_['column_user_added'] = 'Signup User';
 $_['column_amount'] = 'Amount';
 $_['column_points'] = 'Points';
 $_['column_ip'] = 'IP';
+$_['column_company_name'] = 'Company Name';
 $_['column_total'] = 'Total Accounts';
 $_['column_action'] = 'Action';
 $_['column_telephone'] = 'Phone No.';

@@ -155,6 +155,11 @@
                                         <?php } else { ?>
                                         <a href="<?php echo $sort_ip; ?>"><?php echo $column_ip; ?></a>
                                         <?php } ?></td>
+                                    <td class="text-left"><?php if ($sort == 'c.company_name') { ?>
+                                        <a href="<?php echo $sort_company_name; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_company_name; ?></a>
+                                        <?php } else { ?>
+                                        <a href="<?php echo $sort_company_name; ?>"><?php echo $column_company_name; ?></a>
+                                        <?php } ?></td>
                                     <td class="text-left"><?php if ($sort == 'c.date_added') { ?>
                                         <a href="<?php echo $sort_date_added; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_date_added; ?></a>
                                         <?php } else { ?>
@@ -177,6 +182,7 @@
                                     <td class="text-left"><?php echo $customer['telephone']; ?></td>
                                     <td class="text-left"><?php echo $customer['status']; ?></td>
                                     <td class="text-left"><?php echo $customer['ip']; ?></td>
+                                    <td class="text-left"><?php echo $customer['company_name']; ?></td>
                                     <td class="text-left"><?php echo $customer['date_added']; ?></td>
                                     <td class="text-right">
                                         <a target="_blank" class="btn btn-info" data-toggle="tooltip" title="<?php echo 'Login as customer'; ?>" href="index.php?path=sale/accountmanager/login&token=<?php echo $token; ?>&customer_id=<?php echo $customer['user_id']; ?>&store_id=0">

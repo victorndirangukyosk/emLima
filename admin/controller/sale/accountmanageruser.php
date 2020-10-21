@@ -200,6 +200,7 @@ class ControllerSaleAccountManagerUser extends Controller {
                 'telephone' => $country_code . $result['telephone'],
                 'status' => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
                 'ip' => $result['ip'],
+                'company_name' => $result['company_name'],
                 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
                 'edit' => $this->url->link('sale/accountmanageruser/edit', 'token=' . $this->session->data['token'] . '&user_id=' . $result['customer_id'] . $url, 'SSL'),
             ];
@@ -223,6 +224,7 @@ class ControllerSaleAccountManagerUser extends Controller {
         $data['column_status'] = $this->language->get('column_status');
         $data['column_approved'] = $this->language->get('column_approved');
         $data['column_ip'] = $this->language->get('column_ip');
+        $data['column_company_name'] = $this->language->get('column_company_name');
         $data['column_date_added'] = $this->language->get('column_date_added');
         $data['column_action'] = $this->language->get('column_action');
 
@@ -327,6 +329,7 @@ class ControllerSaleAccountManagerUser extends Controller {
         $data['sort_email'] = $this->url->link('sale/accountmanageruser', 'token=' . $this->session->data['token'] . '&sort=c.email' . $url, 'SSL');
         $data['sort_status'] = $this->url->link('sale/accountmanageruser', 'token=' . $this->session->data['token'] . '&sort=c.status' . $url, 'SSL');
         $data['sort_ip'] = $this->url->link('sale/accountmanageruser', 'token=' . $this->session->data['token'] . '&sort=c.ip' . $url, 'SSL');
+        $data['sort_company_name'] = $this->url->link('sale/accountmanageruser', 'token=' . $this->session->data['token'] . '&sort=c.company_name' . $url, 'SSL');
         $data['sort_date_added'] = $this->url->link('sale/accountmanageruser', 'token=' . $this->session->data['token'] . '&sort=c.date_added' . $url, 'SSL');
 
         $url = '';
