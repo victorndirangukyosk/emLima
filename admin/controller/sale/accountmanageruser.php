@@ -32,10 +32,10 @@ class ControllerSaleAccountManagerUser extends Controller {
         $this->load->language('sale/accountmanageruser');
 
 
-        if (isset($this->request->get['filter_company'])) {
-            $filter_company = $this->request->get['filter_company'];
+        if (isset($this->request->get['filter_company_name'])) {
+            $filter_company_name = $this->request->get['filter_company_name'];
         } else {
-            $filter_company = null;
+            $filter_company_name = null;
         }
 
         if (isset($this->request->get['filter_name'])) {
@@ -106,8 +106,8 @@ class ControllerSaleAccountManagerUser extends Controller {
 
         $url = '';
 
-        if (isset($this->request->get['filter_company'])) {
-            $url .= '&filter_company=' . urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
+        if (isset($this->request->get['filter_company_name'])) {
+            $url .= '&filter_company_name=' . urlencode(html_entity_decode($this->request->get['filter_company_name'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_name'])) {
@@ -172,7 +172,7 @@ class ControllerSaleAccountManagerUser extends Controller {
         $data['customers'] = [];
 
         $filter_data = [
-            'filter_company' => $filter_company,
+            'filter_company_name' => $filter_company_name,
             'filter_name' => $filter_name,
             'filter_email' => $filter_email,
             'filter_telephone' => $filter_telephone,
@@ -200,6 +200,7 @@ class ControllerSaleAccountManagerUser extends Controller {
                 'telephone' => $country_code . $result['telephone'],
                 'status' => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
                 'ip' => $result['ip'],
+                'company_name' => $result['company_name'],
                 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
                 'edit' => $this->url->link('sale/accountmanageruser/edit', 'token=' . $this->session->data['token'] . '&user_id=' . $result['customer_id'] . $url, 'SSL'),
             ];
@@ -223,10 +224,12 @@ class ControllerSaleAccountManagerUser extends Controller {
         $data['column_status'] = $this->language->get('column_status');
         $data['column_approved'] = $this->language->get('column_approved');
         $data['column_ip'] = $this->language->get('column_ip');
+        $data['column_company_name'] = $this->language->get('column_company_name');
         $data['column_date_added'] = $this->language->get('column_date_added');
         $data['column_action'] = $this->language->get('column_action');
 
         $data['entry_name'] = $this->language->get('entry_name');
+        $data['entry_company'] = $this->language->get('entry_company');
         $data['entry_email'] = $this->language->get('entry_email');
 
         $data['entry_company_address'] = $this->language->get('entry_company_address');
@@ -276,8 +279,8 @@ class ControllerSaleAccountManagerUser extends Controller {
 
 
 
-        if (isset($this->request->get['filter_company'])) {
-            $url .= '&filter_company=' . urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
+        if (isset($this->request->get['filter_company_name'])) {
+            $url .= '&filter_company_name=' . urlencode(html_entity_decode($this->request->get['filter_company_name'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_name'])) {
@@ -326,12 +329,13 @@ class ControllerSaleAccountManagerUser extends Controller {
         $data['sort_email'] = $this->url->link('sale/accountmanageruser', 'token=' . $this->session->data['token'] . '&sort=c.email' . $url, 'SSL');
         $data['sort_status'] = $this->url->link('sale/accountmanageruser', 'token=' . $this->session->data['token'] . '&sort=c.status' . $url, 'SSL');
         $data['sort_ip'] = $this->url->link('sale/accountmanageruser', 'token=' . $this->session->data['token'] . '&sort=c.ip' . $url, 'SSL');
+        $data['sort_company_name'] = $this->url->link('sale/accountmanageruser', 'token=' . $this->session->data['token'] . '&sort=c.company_name' . $url, 'SSL');
         $data['sort_date_added'] = $this->url->link('sale/accountmanageruser', 'token=' . $this->session->data['token'] . '&sort=c.date_added' . $url, 'SSL');
 
         $url = '';
 
-        if (isset($this->request->get['filter_company'])) {
-            $url .= '&filter_company=' . urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
+        if (isset($this->request->get['filter_company_name'])) {
+            $url .= '&filter_company_name=' . urlencode(html_entity_decode($this->request->get['filter_company_name'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_name'])) {
@@ -384,7 +388,7 @@ class ControllerSaleAccountManagerUser extends Controller {
 
         $data['results'] = sprintf($this->language->get('text_pagination'), ($customer_total) ? (($page - 1) * $this->config->get('config_limit_admin')) + 1 : 0, ((($page - 1) * $this->config->get('config_limit_admin')) > ($customer_total - $this->config->get('config_limit_admin'))) ? $customer_total : ((($page - 1) * $this->config->get('config_limit_admin')) + $this->config->get('config_limit_admin')), $customer_total, ceil($customer_total / $this->config->get('config_limit_admin')));
 
-        $data['filter_company'] = $filter_company;
+        $data['filter_company_name'] = $filter_company_name;
         $data['filter_name'] = $filter_name;
         $data['filter_email'] = $filter_email;
         $data['filter_telephone'] = $filter_telephone;

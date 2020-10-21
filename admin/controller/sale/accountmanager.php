@@ -675,6 +675,7 @@ class ControllerSaleAccountManager extends Controller {
         $data['entry_firstname'] = $this->language->get('entry_firstname');
         $data['entry_lastname'] = $this->language->get('entry_lastname');
         $data['entry_email'] = $this->language->get('entry_email');
+        $data['entry_telephone'] = $this->language->get('entry_telephone');
         $data['entry_image'] = $this->language->get('entry_image');
         $data['entry_status'] = $this->language->get('entry_status');
 
@@ -736,6 +737,18 @@ class ControllerSaleAccountManager extends Controller {
             $data['error_lastname'] = '';
         }
 
+        if (isset($this->error['email'])) {
+            $data['error_email'] = $this->error['email'];
+        } else {
+            $data['error_email'] = '';
+        }
+
+        if (isset($this->error['telephone'])) {
+            $data['error_telephone'] = $this->error['telephone'];
+        } else {
+            $data['error_telephone'] = '';
+        }
+
         $url = '';
 
         if (isset($this->request->get['sort'])) {
@@ -770,7 +783,7 @@ class ControllerSaleAccountManager extends Controller {
 
         $data['cancel'] = $this->url->link('sale/accountmanager', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
-        if (isset($this->request->get['user_id']) && ('POST' != $this->request->server['REQUEST_METHOD'])) {
+        if (isset($this->request->get['user_id'])) {
             $user_info = $this->model_user_accountmanager->getUser($this->request->get['user_id']);
             $data['user_id'] = $user_info['user_id'];
         }
@@ -831,6 +844,14 @@ class ControllerSaleAccountManager extends Controller {
             $data['email'] = '';
         }
 
+        if (isset($this->request->post['telephone'])) {
+            $data['telephone'] = $this->request->post['telephone'];
+        } elseif (!empty($user_info)) {
+            $data['telephone'] = $user_info['telephone'];
+        } else {
+            $data['telephone'] = '';
+        }
+
         if (isset($this->request->post['image'])) {
             $data['image'] = $this->request->post['image'];
         } elseif (!empty($user_info)) {
@@ -887,12 +908,20 @@ class ControllerSaleAccountManager extends Controller {
             }
         }
 
+        if ((utf8_strlen($this->request->post['email']) > 96) || !filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL)) {
+            $this->error['email'] = $this->language->get('error_email');
+        }
+
         if ((utf8_strlen(trim($this->request->post['firstname'])) < 1) || (utf8_strlen(trim($this->request->post['firstname'])) > 32)) {
             $this->error['firstname'] = $this->language->get('error_firstname');
         }
 
         if ((utf8_strlen(trim($this->request->post['lastname'])) < 1) || (utf8_strlen(trim($this->request->post['lastname'])) > 32)) {
             $this->error['lastname'] = $this->language->get('error_lastname');
+        }
+
+        if ((utf8_strlen($this->request->post['telephone']) < 3) || (utf8_strlen($this->request->post['telephone']) > 32)) {
+            $this->error['telephone'] = $this->language->get('error_telephone');
         }
 
         if ($this->request->post['password'] || (!isset($this->request->get['user_id']))) {
@@ -1572,7 +1601,7 @@ class ControllerSaleAccountManager extends Controller {
         $json = NULL;
         if ($name != NULL) {
             $this->load->model('user/accountmanager');
-            $results = $this->model_user_accountmanager->getUnassignedCustomers($name);
+            $results = $this->model_user_accountmanager->getUnassignedCompany($name);
             $json = $results;
         }
         $this->response->addHeader('Content-Type: application/json');
@@ -1599,9 +1628,9 @@ class ControllerSaleAccountManager extends Controller {
         $log->write($this->request->post['unassigncustomer']);
         $log->write($this->request->post['account_manager_id']);
         $this->load->model('user/accountmanager');
-        
+
         $results = $this->model_user_accountmanager->UnAssignCustomersToAccountManager($this->request->post['unassigncustomer'], $this->request->post['account_manager_id']);
-            
+
         $json = true;
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));

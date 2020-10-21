@@ -56,7 +56,7 @@
                                     <?php } ?>
                                 </div>
                             </div>
-                            <input type="hidden"  name="user_group_id" id="input-user-group" value="17">
+                            <input type="hidden"  name="user_group_id" id="input-user-group" value="18">
                             <!--<div class="form-group">
                               <label class="col-sm-2 control-label" for="input-user-group"><?php echo $entry_user_group; ?></label>
                               <div class="col-sm-10">
@@ -93,6 +93,15 @@
                                 <label class="col-sm-2 control-label" for="input-email"><?php echo $entry_email; ?></label>
                                 <div class="col-sm-10">
                                     <input type="text" name="email" value="<?php echo $email; ?>" placeholder="<?php echo $entry_email; ?>" id="input-email" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-telephone"><?php echo $entry_telephone; ?></label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="telephone" value="<?php echo $telephone; ?>" placeholder="<?php echo $entry_telephone; ?>" id="input-telephone" class="form-control" maxlength=10 onkeypress="return isNumberKey(event)"  />
+                                    <?php if ($error_telephone) { ?>
+                                    <div class="text-danger"><?php echo $error_telephone; ?></div>
+                                    <?php  } ?>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -137,7 +146,7 @@
                         <?php if ($user_id) { ?>
                         <div class="tab-pane" id="tab-assign-customers">
                             <div class="form-group required">
-                                <label class="col-sm-2 control-label" for="input-assign-username">Assign Customers</label>
+                                <label class="col-sm-2 control-label" for="input-assign-username">Assign Company</label>
                                 <div class="col-sm-10">
                                     <input type="text" name="assign_customers" value="" placeholder="Type Company Name" id="input-assign-customer" class="form-control" />
                                     <div id="assign_customers_select" class="well well-sm" style="height: 150px; overflow: auto;">
