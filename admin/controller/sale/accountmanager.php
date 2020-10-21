@@ -736,6 +736,18 @@ class ControllerSaleAccountManager extends Controller {
         } else {
             $data['error_lastname'] = '';
         }
+        
+        if (isset($this->error['email'])) {
+            $data['error_email'] = $this->error['email'];
+        } else {
+            $data['error_email'] = '';
+        }
+        
+        if (isset($this->error['telephone'])) {
+            $data['error_telephone'] = $this->error['telephone'];
+        } else {
+            $data['error_telephone'] = '';
+        }
 
         $url = '';
 
