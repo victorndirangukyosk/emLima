@@ -109,7 +109,7 @@ class User extends SmartObject {
 
     public function isAccountManager() {
         $account_namager_group_id = $this->config->get('config_account_manager_group_id');
-        if (in_array($this->user_group_id, $account_namager_group_id)) {
+        if ($this->user_group_id == $account_namager_group_id) {
             return true;
         } else {
             return false;
