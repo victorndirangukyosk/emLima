@@ -296,7 +296,13 @@ function save(type) {
             complete: function () {
             },
             success: function (json) {
-
+                $('.alert').html('Customer un assigned successfully!');
+                $(".alert").attr('class', 'alert alert-success');
+                $(".alert").show();
+                console.log(json);
+                setTimeout(function () {
+                    location.reload(true);
+                }, 1000);
             }
         });
     });
