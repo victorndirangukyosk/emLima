@@ -797,12 +797,16 @@ class ControllerSaleAccountManager extends Controller {
 
         if (isset($this->request->post['password'])) {
             $data['password'] = $this->request->post['password'];
+        } elseif (!empty($user_info)) {
+            $data['password'] = 'default';
         } else {
             $data['password'] = '';
         }
 
         if (isset($this->request->post['confirm'])) {
             $data['confirm'] = $this->request->post['confirm'];
+        } elseif (!empty($user_info)) {
+            $data['confirm'] = 'default';
         } else {
             $data['confirm'] = '';
         }
@@ -1599,9 +1603,9 @@ class ControllerSaleAccountManager extends Controller {
         $log->write($this->request->post['unassigncustomer']);
         $log->write($this->request->post['account_manager_id']);
         $this->load->model('user/accountmanager');
-        
+
         $results = $this->model_user_accountmanager->UnAssignCustomersToAccountManager($this->request->post['unassigncustomer'], $this->request->post['account_manager_id']);
-            
+
         $json = true;
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
