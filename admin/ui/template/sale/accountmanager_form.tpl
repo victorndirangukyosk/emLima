@@ -95,6 +95,15 @@
                                     <input type="text" name="email" value="<?php echo $email; ?>" placeholder="<?php echo $entry_email; ?>" id="input-email" class="form-control" />
                                 </div>
                             </div>
+                            <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-telephone"><?php echo $entry_telephone; ?></label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="telephone" value="<?php echo $telephone; ?>" placeholder="<?php echo $entry_telephone; ?>" id="input-telephone" class="form-control" maxlength=10 onkeypress="return isNumberKey(event)"  />
+                                    <?php if ($error_telephone) { ?>
+                                    <div class="text-danger"><?php echo $error_telephone; ?></div>
+                                    <?php  } ?>
+                                </div>
+                            </div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="input-image"><?php echo $entry_image; ?></label>
                                 <div class="col-sm-10"><a href="" id="thumb-image" data-toggle="image" class="img-thumbnail"><img src="<?php echo $thumb; ?>" alt="" title="" data-placeholder="<?php echo $placeholder; ?>" /></a>
