@@ -73,6 +73,7 @@ class ControllerErrorPermission extends Controller
                 'dashboard/recent',
                 'dashboard/recenttabs',
                 'dashboard/sale',
+                'common/scheduler',
             ];
 
             if (!in_array($path, $ignore) && !$this->user->hasPermission('access', $path)) {

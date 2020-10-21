@@ -188,6 +188,8 @@ class ControllerCommonLogin extends Controller
             'common/login',
             'common/forgotten',
             'common/reset',
+            'common/scheduler',
+
         ];
 
         if (!$this->user->isLogged() && !in_array($path, $ignore)) {
@@ -202,6 +204,7 @@ class ControllerCommonLogin extends Controller
                 'common/reset',
                 'error/not_found',
                 'error/permission',
+                'common/scheduler',
             ];
 
             if (!in_array($path, $ignore) && (!isset($this->request->get['token']) || !isset($this->session->data['token']) || ($this->request->get['token'] != $this->session->data['token']))) {
