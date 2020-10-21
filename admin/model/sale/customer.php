@@ -363,6 +363,10 @@ class ModelSaleCustomer extends Model
         if (!empty($data['filter_date_added'])) {
             $implode[] = "DATE(date_added) = DATE('".$this->db->escape($data['filter_date_added'])."')";
         }
+        
+        if ($this->user->isAccountManager()) {
+            $implode[] = "account_manager_id = '".(int) $this->user->getId()."'";
+        }
 
         if ($implode) {
             $sql .= ' WHERE '.implode(' AND ', $implode);

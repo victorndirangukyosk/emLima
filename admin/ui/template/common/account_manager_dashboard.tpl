@@ -20,7 +20,7 @@
       <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $sale; ?></div>
       <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $order; ?></div>
       <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $actualSales; ?></div>
-      <!-- <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $customer; ?></div> -->
+      <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $customer; ?></div>
       
     </div>
     <div class="row">
