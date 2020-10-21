@@ -185,7 +185,7 @@
                                     <td class="text-left"><?php echo $customer['company_name']; ?></td>
                                     <td class="text-left"><?php echo $customer['date_added']; ?></td>
                                     <td class="text-right">
-                                        <a target="_blank" class="btn btn-info" data-toggle="tooltip" title="<?php echo 'Login as customer'; ?>" href="index.php?path=sale/accountmanager/login&token=<?php echo $token; ?>&customer_id=<?php echo $customer['user_id']; ?>&store_id=0">
+                                        <a target="_blank" class="btn btn-info" data-toggle="tooltip" title="<?php echo 'Login as customer'; ?>" href="<?php echo $customer['login_customer']; ?>">
                                             <i class="fa fa-lock"></i>
                                         </a>
                                 </tr>

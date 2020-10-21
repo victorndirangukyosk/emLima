@@ -203,6 +203,7 @@ class ControllerSaleAccountManagerUser extends Controller {
                 'company_name' => $result['company_name'],
                 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
                 'edit' => $this->url->link('sale/accountmanageruser/edit', 'token=' . $this->session->data['token'] . '&user_id=' . $result['customer_id'] . $url, 'SSL'),
+                'login_customer' => $this->url->link('sale/accountmanageruser/login', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'] . '&store_id=0', 'SSL'),
             ];
         }
 
@@ -492,6 +493,68 @@ class ControllerSaleAccountManagerUser extends Controller {
     public function getAccountManagerCustomers($account_manager_id) {
         $this->load->model('user/accountmanager');
         $results = $this->model_user_accountmanager->getCustomerByAccountManagerId($account_manager_id);
+    }
+
+    public function login() {
+        $json = [];
+
+        if (isset($this->request->get['customer_id'])) {
+            $customer_id = $this->request->get['customer_id'];
+        } else {
+            $customer_id = 0;
+        }
+
+        $this->load->model('sale/customer');
+
+        $customer_info = $this->model_sale_customer->getCustomer($customer_id);
+
+        if ($customer_info) {
+            $token = md5(mt_rand());
+
+            $this->model_sale_customer->editToken($customer_id, $token);
+
+            if (isset($this->request->get['store_id'])) {
+                $store_id = $this->request->get['store_id'];
+            } else {
+                $store_id = 0;
+            }
+
+            $this->load->model('setting/store');
+
+            $store_info = $this->model_setting_store->getStore($store_id);
+
+            if ($store_info) {
+                $this->response->redirect($store_info['url'] . 'index.php?path=account/login/adminRedirectLogin&token=' . $token);
+            } else {
+                $this->response->redirect(HTTP_CATALOG . 'index.php?path=account/login/adminRedirectLogin&token=' . $token);
+            }
+        } else {
+            $this->load->language('error/not_found');
+
+            $this->document->setTitle($this->language->get('heading_title'));
+
+            $data['heading_title'] = $this->language->get('heading_title');
+
+            $data['text_not_found'] = $this->language->get('text_not_found');
+
+            $data['breadcrumbs'] = [];
+
+            $data['breadcrumbs'][] = [
+                'text' => $this->language->get('text_home'),
+                'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL'),
+            ];
+
+            $data['breadcrumbs'][] = [
+                'text' => $this->language->get('heading_title'),
+                'href' => $this->url->link('error/not_found', 'token=' . $this->session->data['token'], 'SSL'),
+            ];
+
+            $data['header'] = $this->load->controller('common/header');
+            $data['column_left'] = $this->load->controller('common/column_left');
+            $data['footer'] = $this->load->controller('common/footer');
+
+            $this->response->setOutput($this->load->view('error/not_found.tpl', $data));
+        }
     }
 
 }
