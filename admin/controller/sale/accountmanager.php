@@ -684,8 +684,8 @@ class ControllerSaleAccountManager extends Controller {
         $data['button_saveclose'] = $this->language->get('button_saveclose');
         $data['button_cancel'] = $this->language->get('button_cancel');
         $data['tab_general'] = $this->language->get('tab_general');
-        $data['tab_assign_customers'] = 'Assign Customers';
-        $data['tab_assigned_customers'] = 'Assigned Customers';
+        $data['tab_assign_customers'] = 'Assign Comapny';
+        $data['tab_assigned_customers'] = 'Assigned Comapny';
         $data['assigned_customers'] = NULL;
         if (isset($this->request->get['user_id'])) {
             $data['assigned_customers'] = $this->model_user_accountmanager->getCustomerByAccountManagerId($this->request->get['user_id']);
