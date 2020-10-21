@@ -95,7 +95,7 @@ class ControllerCommonDashboard extends Controller
 
         $data['recenttabs'] = $this->load->controller('dashboard/recenttabs');
 
-        $this->response->setOutput($this->load->view('common/vendor_dashboard.tpl', $data));
+        $this->response->setOutput($this->load->view('common/account_manager_dashboard.tpl', $data));
     }    
 
     private function admin($data)
