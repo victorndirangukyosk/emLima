@@ -556,5 +556,5 @@ class ControllerSaleAccountManagerUser extends Controller {
             $this->response->setOutput($this->load->view('error/not_found.tpl', $data));
         }
     }
-
+    
 }
