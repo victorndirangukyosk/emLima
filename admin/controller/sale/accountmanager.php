@@ -736,13 +736,13 @@ class ControllerSaleAccountManager extends Controller {
         } else {
             $data['error_lastname'] = '';
         }
-        
+
         if (isset($this->error['email'])) {
             $data['error_email'] = $this->error['email'];
         } else {
             $data['error_email'] = '';
         }
-        
+
         if (isset($this->error['telephone'])) {
             $data['error_telephone'] = $this->error['telephone'];
         } else {
@@ -810,16 +810,12 @@ class ControllerSaleAccountManager extends Controller {
 
         if (isset($this->request->post['password'])) {
             $data['password'] = $this->request->post['password'];
-        } elseif (!empty($user_info)) {
-            $data['password'] = 'default';
         } else {
             $data['password'] = '';
         }
 
         if (isset($this->request->post['confirm'])) {
             $data['confirm'] = $this->request->post['confirm'];
-        } elseif (!empty($user_info)) {
-            $data['confirm'] = 'default';
         } else {
             $data['confirm'] = '';
         }
@@ -847,7 +843,7 @@ class ControllerSaleAccountManager extends Controller {
         } else {
             $data['email'] = '';
         }
-        
+
         if (isset($this->request->post['telephone'])) {
             $data['telephone'] = $this->request->post['telephone'];
         } elseif (!empty($user_info)) {
