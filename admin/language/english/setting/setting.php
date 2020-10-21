@@ -504,6 +504,7 @@ $_['error_error_filename'] = 'Error Log Filename required!';
 $_['error_encryption'] = 'Encryption Key must be between 3 and 32 characters!';
 $_['error_cache_not_cleared'] = 'Cache Not Cleaned';
 $_['error_vendor_group_ids'] = 'Vendor Group IDs required!';
+$_['error_account_manager_group_id'] = 'Account Manager Group ID required!';
 $_['error_shopper_group_ids'] = 'Shopper Group IDs required!';
 $_['error_member_account_fee'] = 'Member account fee not valid!';
 
