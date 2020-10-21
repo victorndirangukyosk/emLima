@@ -61,6 +61,7 @@ $_['entry_description'] = 'Description';
 $_['entry_amount'] = 'Amount';
 $_['entry_points'] = 'Points';
 $_['entry_name'] = 'Customer Name';
+$_['entry_company'] = 'Company Name';
 $_['entry_ip'] = 'IP';
 $_['entry_date_added'] = 'Date Added';
 $_['entry_send_email'] = 'Send Mail';

@@ -227,6 +227,7 @@ class ControllerSaleAccountManagerUser extends Controller {
         $data['column_action'] = $this->language->get('column_action');
 
         $data['entry_name'] = $this->language->get('entry_name');
+        $data['entry_company'] = $this->language->get('entry_company');
         $data['entry_email'] = $this->language->get('entry_email');
 
         $data['entry_company_address'] = $this->language->get('entry_company_address');

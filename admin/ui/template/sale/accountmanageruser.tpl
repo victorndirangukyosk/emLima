@@ -48,12 +48,10 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="control-label" for="input-date-added"><?php echo $entry_date_added; ?></label>
-                                <div class="input-group date" style="max-width: 321px;">
-                                    <input type="text" name="filter_date_added" value="<?php echo $filter_date_added; ?>" placeholder="<?php echo $entry_date_added; ?>" data-date-format="YYYY-MM-DD" id="input-date-added" class="form-control" />
-                                    <span class="input-group-btn">
-                                        <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
-                                    </span></div>
+                                <div class="form-group">
+                                    <label class="control-label" for="input-company">Company Name</label>
+                                    <input type="text" name="filter_company" value="<?php echo $filter_company; ?>" placeholder="<?php echo $entry_company; ?>" id="input-name" class="form-control" />
+                                </div>
                             </div>
                         </div>
                         <div class="col-sm-3">
@@ -76,22 +74,12 @@
                                 <label class="control-label" for="input-email"><?php echo $entry_email; ?></label>
                                 <input type="text" name="filter_email" value="<?php echo $filter_email; ?>" placeholder="<?php echo $entry_email; ?>" id="input-email" class="form-control" />
                             </div>
-                            <!--<div class="form-group">
-                                <label class="control-label" for="input-status"><?php echo $entry_status; ?></label>
-                                <select name="filter_status" id="input-status" class="form-control">
-                                    <option value="*"></option>
-                                    <?php if ($filter_status) { ?>
-                                    <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
-                                    <?php } else { ?>
-                                    <option value="1"><?php echo $text_enabled; ?></option>
-                                    <?php } ?>
-                                    <?php if (!$filter_status && !is_null($filter_status)) { ?>
-                                    <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
-                                    <?php } else { ?>
-                                    <option value="0"><?php echo $text_disabled; ?></option>
-                                    <?php } ?>
-                                </select>
-                            </div>-->
+                            <label class="control-label" for="input-date-added"><?php echo $entry_date_added; ?></label>
+                            <div class="input-group date" style="max-width: 321px;">
+                                <input type="text" name="filter_date_added" value="<?php echo $filter_date_added; ?>" placeholder="<?php echo $entry_date_added; ?>" data-date-format="YYYY-MM-DD" id="input-date-added" class="form-control" />
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                                </span></div>
                         </div>
                         <div class="col-sm-3">
                             <!-- <div class="form-group">
