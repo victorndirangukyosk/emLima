@@ -2751,7 +2751,7 @@ class ControllerSaleAccountManagerUserOrders extends Controller {
 
         $data['token'] = $this->session->data['token'];
 
-        $data['sale_order_link'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'], 'SSL');
+        $data['sale_order_link'] = $this->url->link('sale/accountmanageruserorders', 'token=' . $this->session->data['token'], 'SSL');
 
         $data['direction'] = $this->language->get('direction');
         $data['lang'] = $this->language->get('code');
