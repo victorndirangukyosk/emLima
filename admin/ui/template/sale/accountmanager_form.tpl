@@ -137,7 +137,7 @@
                         <?php if ($user_id) { ?>
                         <div class="tab-pane" id="tab-assign-customers">
                             <div class="form-group required">
-                                <label class="col-sm-2 control-label" for="input-assign-username">Assign Customers</label>
+                                <label class="col-sm-2 control-label" for="input-assign-username">Assign Company</label>
                                 <div class="col-sm-10">
                                     <input type="text" name="assign_customers" value="" placeholder="Type Company Name" id="input-assign-customer" class="form-control" />
                                     <div id="assign_customers_select" class="well well-sm" style="height: 150px; overflow: auto;">
