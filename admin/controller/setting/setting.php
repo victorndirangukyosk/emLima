@@ -2292,6 +2292,31 @@ class ControllerSettingSetting extends Controller
         return !$this->error;
     }
 
+    protected function validateEmail()
+    {
+        if (!$this->user->hasPermission('modify', 'setting/setting')) {
+            $this->error['warning'] = $this->language->get('error_permission');
+        }
+ 
+
+        if ((utf8_strlen($this->request->post['config_consolidatedorder']) > 96) || !filter_var($this->request->post['config_consolidatedorder'], FILTER_VALIDATE_EMAIL)) {
+            $this->error['email'] = "Please enter correct Email";
+        }
+
+        if ((utf8_strlen($this->request->post['config_careers']) > 96) || !filter_var($this->request->post['config_careers'], FILTER_VALIDATE_EMAIL)) {
+            $this->error['email'] = "Please enter correct Email";
+        }
+ 
+
+        if ($this->error && !isset($this->error['warning'])) {
+            $this->error['warning'] = $this->language->get('error_warning');
+        }
+
+        //echo "<pre>";print_r($this->error);die;
+
+        return !$this->error;
+    }
+
     public function template()
     {
         if ($this->request->server['HTTPS']) {
@@ -2578,4 +2603,99 @@ class ControllerSettingSetting extends Controller
             var_dump($e);
         }
     }
+
+    public function setting_email()
+    {   
+        if (('POST' == $this->request->server['REQUEST_METHOD'])) {// 
+            if( $this->validateEmail())
+            {
+            $this->load->model('setting/setting');             
+            // echo "<pre>";print_r($this->request->post);die;
+            $this->model_setting_setting->editEmailSettings($this->request->post);
+            $this->session->data['success'] =  "success : You have modified settings";
+
+            if (isset($this->request->post['button']) and 'save' == $this->request->post['button']) {
+                $this->response->redirect($this->url->link('setting/setting/setting_email', 'token='.$this->session->data['token'], 'SSL'));
+            }   
+            $this->response->redirect($this->url->link('setting/setting/setting_cancel', 'token='.$this->session->data['token'], 'SSL'));
+
+        }
+        else{
+            if (isset($this->error['warning'])) {
+                $data['error_warning'] = $this->error['warning'];
+            } else {
+                $data['error_warning'] = '';
+            }          
+    
+    
+            if (isset($this->error['email'])) {
+                $data['error_warning'] = $this->error['email'];
+            } else {
+                $data['error_warning'] = '';
+            }   
+        }
+            
+        }
+       
+       
+        $data['token'] = $this->session->data['token'];
+        $data['breadcrumbs'] = [];         
+        $data['breadcrumbs'][] = [
+            'text' => $this->language->get('heading_title'),
+            'href' => $this->url->link('setting/setting/setting_email', 'token='.$this->session->data['token'], 'SSL'),
+        ];
+            
+       $this->getEmailForm();         
+       
+    }
+
+
+    public function getEmailForm()
+    {
+        if (isset($this->session->data['success'])) {
+            $data['success'] = $this->session->data['success'];
+            unset($this->session->data['success']);
+        } else {
+            $data['success'] = '';
+        }   
+        $this->document->setTitle("Email Settings");
+        $this->load->model('setting/setting');
+        $email_info = $this->model_setting_setting->getEmailSettings();
+        // echo "<pre>";print_r($email_info);die;
+        if (isset($this->request->post['config_consolidatedorder'])) {
+            $data['config_consolidatedorder'] = $this->request->post['config_consolidatedorder'];
+        } elseif (isset($email_info[0]['value'])) {
+            $data['config_consolidatedorder'] = $email_info[0]['value'];
+        } else {
+            $data['config_consolidatedorder'] = '';
+        }
+
+        if (isset($this->request->post['config_careers'])) {
+            $data['config_careers'] = $this->request->post['config_careers'];
+        } elseif (isset($email_info[1]['value'])) {
+            $data['config_careers'] =$email_info[1]['value'];
+        } else {
+            $data['config_careers'] = '';
+        }
+        $this->document->setTitle("Email Settings");
+        $this->load->model('setting/setting');
+
+        $data['action'] = $this->url->link('setting/setting/setting_email', 'token='.$this->session->data['token'], 'SSL');
+
+        $data['cancel'] = $this->url->link('setting/setting/setting_cancel', 'token='.$this->session->data['token'], 'SSL');
+
+        $data['token'] = $this->session->data['token'];
+        $data['heading_title'] = $this->language->get('heading_title');
+        $data['header'] = $this->load->controller('common/header');
+        $data['column_left'] = $this->load->controller('common/column_left');
+        $data['footer'] = $this->load->controller('common/footer');
+        $this->response->setOutput($this->load->view('setting/setting_email.tpl', $data));
+    }
+    public function setting_cancel()
+    { 
+        $this->getEmailForm();
+        
+
+    }
+
 }

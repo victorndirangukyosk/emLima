@@ -129,4 +129,24 @@ class ModelSettingSetting extends Model
 			status = '1',
 			date_added = NOW()");
     }
+
+    public function editEmailSettings($data)
+    {
+        if($this->db->escape($data['config_consolidatedorder']))
+        // $query='UPDATE '.DB_PREFIX."setting_email SET `value` = '".$this->db->escape($data['config_consolidatedorder'])."' WHERE `code` = 'consolidatedorder' AND `key` =  'consolidatedorder' ";
+        // echo "<pre>";print_r($query);die;
+        $this->db->query('UPDATE '.DB_PREFIX."setting_email SET `value` = '".$this->db->escape($data['config_consolidatedorder'])."' WHERE `code` = 'consolidatedorder' AND `key` =  'consolidatedorder' ");
+        if($this->db->escape($data['config_careers']))         
+        $this->db->query('UPDATE '.DB_PREFIX."setting_email SET `value` = '".$this->db->escape($data['config_careers'])."' WHERE `code` = 'careers' AND `key` =  'careers' ");
+       
+    }
+
+    
+    public function getEmailSettings()
+    {
+        
+        $query = $this->db->query('SELECT * FROM '.DB_PREFIX."setting_email WHERE  `code` =  'consolidatedorder' or `code` =  'careers' ");
+       
+        return $query->rows;
+    }
 }

@@ -162,6 +162,7 @@ class ControllerCommonMenu extends Controller
         $data['return_status'] = $this->url->link('localisation/return_status', 'token='.$this->session->data['token'], 'SSL');
         $data['shipping'] = $this->url->link('extension/shipping', 'token='.$this->session->data['token'], 'SSL');
         $data['setting'] = $this->url->link('setting/setting', 'token='.$this->session->data['token'], 'SSL');
+        $data['setting_email'] = $this->url->link('setting/setting/setting_email', 'token='.$this->session->data['token'], 'SSL');
 
         $data['setting_seo'] = $this->url->link('setting/seo', 'token='.$this->session->data['token'], 'SSL');
 

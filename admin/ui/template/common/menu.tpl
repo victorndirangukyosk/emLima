@@ -580,9 +580,20 @@
     <li id="system"><a class="parent"><i class="fa fa-cog fa-fw"></i> <span><?php echo $text_system; ?></span></a>
         <ul class="collapse">
 
-            <?php if($preturn_setting != false) { ?>
-            <li><a href="<?php echo $setting; ?>"><?php echo $text_setting; ?></a></li>
+             
+              <?php if( $preturn_setting != false  ) { ?>
+            <li><a class="parent">Settings</a>
+                <ul>
+                     <?php if($preturn_setting) { ?> 
+                    <li><a href="<?php echo $setting; ?>"><?php echo $text_setting; ?></a></li>
+                      <?php } ?>
+                      <?php if($preturn_setting) { ?>                     
+                    <li><a href="<?php echo $setting_email; ?>">Email Settings</a></li>
+                     <!--<?php } ?>-->
+                </ul>
+            </li>
             <?php } ?>
+
 
             <?php if($preturn_setting_seo != false) { ?>
             <li><a href="<?php echo $setting_seo; ?>">SEO Setting</a></li>
