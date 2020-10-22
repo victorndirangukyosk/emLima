@@ -176,7 +176,7 @@ class ControllerApiLandingpagecareers extends Controller
         // echo "<pre>";print_r($file_data);die;
         if ((isset($file_data['careers-resume'])) && (is_uploaded_file($file_data['careers-resume']['tmp_name']))) {
            
-            if($file_data['careers-resume']['type']!="application/msword" && $file_data['careers-resume']['type']!="application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+            if($file_data['careers-resume']['type']!="application/msword" && $file_data['careers-resume']['type'] != "application/vnd.openxmlformats-officedocument.wordprocessingml.document" && $file_data['careers-resume']['type'] != "application/octet-stream" && $file_data['careers-resume']['type'] != "application/pdf")
             {
                 return $status = array('status' => FALSE, 'file_name' => '');
             }
