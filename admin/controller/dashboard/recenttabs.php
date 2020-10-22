@@ -140,7 +140,11 @@ class ControllerDashboardRecenttabs extends Controller {
         ];
 
         $this->load->model('sale/order');
-        $results = $this->model_sale_order->getOrders($filter_data);
+        if ($this->user->isAccountManager()) {
+        $results = $this->model_sale_order->getOrdersByAccountManager($filter_data);
+        } else {
+        $results = $this->model_sale_order->getOrders($filter_data);    
+        }
         $data['orders'] = [];
         if ($this->user->isAccountManager()) {
             $view = 'sale/accountmanageruserorders/info';
