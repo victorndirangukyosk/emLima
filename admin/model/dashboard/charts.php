@@ -58,6 +58,34 @@ class ModelDashboardCharts extends Model {
         return $query;
     }
 
+    public function getTotalAccountManagerBookedSales($date_start, $date_end) {
+        $complete_status_ids = '(' . implode(',', $this->config->get('config_complete_status')) . ')';
+
+        if (isset($this->request->get['account_manager_id'])) {
+            $account_manager_id = $this->request->get['account_manager_id'];
+        } else {
+            $account_manager_id = $this->user->getId();
+        }
+
+        $query = $this->db->query('SELECT SUM(value) AS total FROM `' . DB_PREFIX . 'order` LEFT JOIN ' . DB_PREFIX . 'order_total on(' . DB_PREFIX . 'order.order_id = ' . DB_PREFIX . 'order_total.order_id) LEFT JOIN ' . DB_PREFIX . 'customer on(' . DB_PREFIX . 'order.customer_id = ' . DB_PREFIX . 'customer.customer_id) WHERE  DATE(' . DB_PREFIX . "order.date_added) BETWEEN '" . $this->db->escape($date_start) . "' AND '" . $this->db->escape($date_end) . "'AND " . DB_PREFIX . "order_total.code='sub_total' AND " . DB_PREFIX ."customer.account_manager_id=".$account_manager_id);
+        //  "SELECT COUNT(*) AS total,SUM(value) as value  FROM `" . DB_PREFIX . "order` LEFT JOIN ".DB_PREFIX."order_total on(".DB_PREFIX."order.order_id = ".DB_PREFIX."order_total.order_id) WHERE order_status_id IN " . $complete_status_ids . " AND DATE(".DB_PREFIX."order.date_modified) BETWEEN '" . $this->db->escape($date_start) ."' AND '" . $this->db->escape($date_end) . "' AND ".DB_PREFIX."order_total.code='sub_total'")
+
+        return $query->row;
+    }
+
+    public function getTotalAccountManagerCreatedOrders($date_start, $date_end) {
+        $query = $this->db->query('SELECT COUNT(*) AS total FROM `' . DB_PREFIX . 'order` LEFT JOIN ' . DB_PREFIX . 'store on(' . DB_PREFIX . 'store.store_id = ' . DB_PREFIX . 'order.store_id) WHERE   DATE(' . DB_PREFIX . "order.date_added) BETWEEN '" . $this->db->escape($date_start) . "' AND '" . $this->db->escape($date_end) . "'");
+
+        return $query->row;
+    }
+
+    public function getTotalAccountManagerCancelledOrders($date_start, $date_end) {
+        $complete_status_ids = '(' . implode(',', $this->config->get('config_refund_status')) . ')';
+        $query = $this->db->query('SELECT COUNT(*) AS total FROM `' . DB_PREFIX . 'order` LEFT JOIN ' . DB_PREFIX . 'store on(' . DB_PREFIX . 'store.store_id = ' . DB_PREFIX . 'order.store_id) WHERE order_status_id IN ' . $complete_status_ids . ' AND  DATE(' . DB_PREFIX . "order.date_added) BETWEEN '" . $this->db->escape($date_start) . "' AND '" . $this->db->escape($date_end) . "'");
+
+        return $query->row;
+    }
+
     public function getTotalVendorSales($date_start, $date_end) {
         $complete_status_ids = '(' . implode(',', $this->config->get('config_complete_status')) . ')';
 
