@@ -908,7 +908,7 @@ class ControllerSaleAccountManager extends Controller {
             }
         }
 
-        if ((utf8_strlen($this->request->post['email']) > 96) || !filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL)) {
+        if ((utf8_strlen($this->request->post['email']) <= 0) || (utf8_strlen($this->request->post['email']) > 96) || !filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL)) {
             $this->error['email'] = $this->language->get('error_email');
         }
 
