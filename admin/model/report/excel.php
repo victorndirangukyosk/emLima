@@ -1370,18 +1370,15 @@ class ModelReportExcel extends Model {
                 $subject = "Today's Consolidated Order Sheet";                 
                 $message = "Please find the attachment.  <br>";
                 // $message = $message ."<li> Full Name :".$first_name ."</li><br><li> Email :".$email ."</li><br><li> Phone :".$phone ."</li><br>";
-               
-                if(strpos(Career_Mail_ID,"@")==true)//if mail Id not set in define.php
+                $this->load->model('setting/setting');
+                $email = $this->model_setting_setting->getEmailSetting('consolidatedorder');
+                 
+                if(strpos( $email,"@")==false)//if mail Id not set in define.php
                {
-                $email = Career_Mail_ID;
-               } 
-               else
-               {
-                $email = "sridivya.talluri@technobraingroup.com";
-
+               $email = "sridivya.talluri@technobraingroup.com";
                }
                 // $bccemail = "sridivya.talluri@technobraingroup.com";
-                //  echo "<pre>";print_r($file_data);die;
+                //   echo "<pre>";print_r($email);die;
                 $filepath = DIR_UPLOAD . 'schedulertemp/' .$filename;
                 $mail = new Mail($this->config->get('config_mail'));
                 $mail->setTo($email);
@@ -1676,7 +1673,7 @@ class ModelReportExcel extends Model {
             $objWriter->save('php://output');
             exit;
         } catch (Exception $e) {
-//            echo "<pre>";print_r($e);
+              //            echo "<pre>";print_r($e);
             $errstr = $e->getMessage();
             $errline = $e->getLine();
             $errfile = $e->getFile();
@@ -5014,5 +5011,11 @@ class ModelReportExcel extends Model {
             return;
         }
     }
+
+
+
+
+
+
 
 }
