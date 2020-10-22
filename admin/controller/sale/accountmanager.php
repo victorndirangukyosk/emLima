@@ -897,14 +897,29 @@ class ControllerSaleAccountManager extends Controller {
         }
 
         $user_info = $this->model_user_accountmanager->getUserByUsername($this->request->post['username']);
+        $user_email_info = $this->model_user_accountmanager->getUserByEmail($this->request->post['email']);
 
         if (!isset($this->request->get['user_id'])) {
             if ($user_info) {
-                $this->error['warning'] = $this->language->get('error_exists');
+                $this->error['warning'] = $this->language->get('error_username_exists');
+                $this->error['username'] = $this->language->get('error_username_exist');
             }
         } else {
             if ($user_info && ($this->request->get['user_id'] != $user_info['user_id'])) {
+                $this->error['warning'] = $this->language->get('error_username_exists');
+                $this->error['username'] = $this->language->get('error_username_exist');
+            }
+        }
+        
+        if (!isset($this->request->get['user_id'])) {
+            if ($user_email_info) {
                 $this->error['warning'] = $this->language->get('error_exists');
+                $this->error['email'] = $this->language->get('error_exist');
+            }
+        } else {
+            if ($user_email_info && ($this->request->get['user_id'] != $user_email_info['user_id'])) {
+                $this->error['warning'] = $this->language->get('error_exists');
+                $this->error['email'] = $this->language->get('error_exist');
             }
         }
 

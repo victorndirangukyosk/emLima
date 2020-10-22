@@ -40,6 +40,12 @@ class ModelUserAccountmanager extends Model {
         return $query->row;
     }
 
+    public function getUserByEmail($email) {
+        $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "user WHERE LOWER(email) = '" . $this->db->escape(utf8_strtolower($email)) . "'");
+
+        return $query->row;
+    }
+
     public function getUserByCode($code) {
         $query = $this->db->query('SELECT * FROM `' . DB_PREFIX . "user` WHERE code = '" . $this->db->escape($code) . "' AND code != ''");
 
