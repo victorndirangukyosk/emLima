@@ -2663,4 +2663,19 @@ class Emailtemplate
 
         return $maskedhref;
     }
+
+    public function getConsolidatedOrderSheetFind()
+    {
+        $result = ['{deliverydate}'];
+        return $result;
+    }
+
+    public function getConsolidatedOrderSheetReplace($data)
+    {
+        $result = [
+            'deliverydate' => $data['deliverydate'],
+        ];
+
+        return $result;
+    }
 }

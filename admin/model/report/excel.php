@@ -1367,8 +1367,12 @@ class ModelReportExcel extends Model {
               $objWriter->save(DIR_UPLOAD . 'schedulertemp/' .$filename);            
 
                 #region mail sending 
-                $subject = "Today's Consolidated Order Sheet";                 
-                $message = "Please find the attachment.  <br>";
+                $maildata['deliverydate']=$deliveryDate;
+                $subject = $this->emailtemplate->getSubject('ConsolidatedOrderSheet', 'ConsolidatedOrderSheet_1', $maildata);
+                $message = $this->emailtemplate->getMessage('ConsolidatedOrderSheet', 'ConsolidatedOrderSheet_1', $maildata);
+                
+                // $subject = "Consolidated Order Sheet";                 
+                // $message = "Please find the attachment.  <br>";
                 // $message = $message ."<li> Full Name :".$first_name ."</li><br><li> Email :".$email ."</li><br><li> Phone :".$phone ."</li><br>";
                 $this->load->model('setting/setting');
                 $email = $this->model_setting_setting->getEmailSetting('consolidatedorder');
