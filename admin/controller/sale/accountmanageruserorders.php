@@ -1474,25 +1474,25 @@ class ControllerSaleAccountManagerUserOrders extends Controller {
 
             $data['breadcrumbs'][] = [
                 'text' => $this->language->get('heading_title'),
-                'href' => $this->url->link('sale/order', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+                'href' => $this->url->link('sale/accountmanageruserorders', 'token=' . $this->session->data['token'] . $url, 'SSL'),
             ];
 
             if (isset($this->request->get['store_id'])) {
                 $store_id = $this->request->get['store_id'];
-                $data['shipping'] = $this->url->link('sale/order/shipping', 'store_id=' . $store_id . '&token=' . $this->session->data['token'] . '&order_id=' . (int) $this->request->get['order_id'], 'SSL');
+                $data['shipping'] = $this->url->link('sale/accountmanageruserorders/shipping', 'store_id=' . $store_id . '&token=' . $this->session->data['token'] . '&order_id=' . (int) $this->request->get['order_id'], 'SSL');
 
                 if ($this->model_sale_order->hasRealOrderProducts($order_id)) {
-                    $data['invoice'] = $this->url->link('sale/order/newinvoice', 'store_id=' . $store_id . '&token=' . $this->session->data['token'] . '&order_id=' . (int) $this->request->get['order_id'], 'SSL');
+                    $data['invoice'] = $this->url->link('sale/accountmanageruserorders/newinvoice', 'store_id=' . $store_id . '&token=' . $this->session->data['token'] . '&order_id=' . (int) $this->request->get['order_id'], 'SSL');
                 } else {
-                    $data['invoice'] = $this->url->link('sale/order/invoice', 'store_id=' . $store_id . '&token=' . $this->session->data['token'] . '&order_id=' . (int) $this->request->get['order_id'], 'SSL');
+                    $data['invoice'] = $this->url->link('sale/accountmanageruserorders/invoice', 'store_id=' . $store_id . '&token=' . $this->session->data['token'] . '&order_id=' . (int) $this->request->get['order_id'], 'SSL');
                 }
             } else {
-                $data['shipping'] = $this->url->link('sale/order/shipping', 'token=' . $this->session->data['token'] . '&order_id=' . (int) $this->request->get['order_id'], 'SSL');
+                $data['shipping'] = $this->url->link('sale/accountmanageruserorders/shipping', 'token=' . $this->session->data['token'] . '&order_id=' . (int) $this->request->get['order_id'], 'SSL');
 
                 if ($this->model_sale_order->hasRealOrderProducts($order_id)) {
-                    $data['invoice'] = $this->url->link('sale/order/newinvoice', 'token=' . $this->session->data['token'] . '&order_id=' . (int) $this->request->get['order_id'], 'SSL');
+                    $data['invoice'] = $this->url->link('sale/accountmanageruserorders/newinvoice', 'token=' . $this->session->data['token'] . '&order_id=' . (int) $this->request->get['order_id'], 'SSL');
                 } else {
-                    $data['invoice'] = $this->url->link('sale/order/invoice', 'token=' . $this->session->data['token'] . '&order_id=' . (int) $this->request->get['order_id'], 'SSL');
+                    $data['invoice'] = $this->url->link('sale/accountmanageruserorders/invoice', 'token=' . $this->session->data['token'] . '&order_id=' . (int) $this->request->get['order_id'], 'SSL');
                 }
             }
 
@@ -1500,11 +1500,11 @@ class ControllerSaleAccountManagerUserOrders extends Controller {
             $data['edit'] = '';
             if (!$this->user->isVendor()) {
                 if (!in_array($order_info['order_status_id'], $this->config->get('config_complete_status'))) {
-                    $data['edit'] = $this->url->link('sale/order/EditInvoice', 'token=' . $this->session->data['token'] . '&order_id=' . $this->request->get['order_id'], 'SSL');
+                    $data['edit'] = $this->url->link('sale/accountmanageruserorders/EditInvoice', 'token=' . $this->session->data['token'] . '&order_id=' . $this->request->get['order_id'], 'SSL');
                 }
             }
 
-            $data['cancel'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $data['cancel'] = $this->url->link('sale/accountmanageruserorders', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
             $data['order_id'] = $this->request->get['order_id'];
 
@@ -2751,7 +2751,7 @@ class ControllerSaleAccountManagerUserOrders extends Controller {
 
         $data['token'] = $this->session->data['token'];
 
-        $data['sale_order_link'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'], 'SSL');
+        $data['sale_order_link'] = $this->url->link('sale/accountmanageruserorders', 'token=' . $this->session->data['token'], 'SSL');
 
         $data['direction'] = $this->language->get('direction');
         $data['lang'] = $this->language->get('code');

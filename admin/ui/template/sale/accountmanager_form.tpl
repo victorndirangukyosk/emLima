@@ -56,7 +56,7 @@
                                     <?php } ?>
                                 </div>
                             </div>
-                            <input type="hidden"  name="user_group_id" id="input-user-group" value="18">
+                            <input type="hidden"  name="user_group_id" id="input-user-group" value="<?php echo $this->config->get('config_account_manager_group_id'); ?>">
                             <!--<div class="form-group">
                               <label class="col-sm-2 control-label" for="input-user-group"><?php echo $entry_user_group; ?></label>
                               <div class="col-sm-10">
@@ -154,7 +154,7 @@
                                 </div>
                             </div>
                             <div class="text-right">
-                                <button id="button-assign-customer" class="btn btn-primary"><i class="fa fa-plus-circle"></i>Assign Customers</button>
+                                <button id="button-assign-customer" class="btn btn-primary"><i class="fa fa-plus-circle"></i> Assign Company</button>
                             </div>
                         </div>
                         <div class="tab-pane" id="tab-assigned-customers">
@@ -296,7 +296,13 @@ function save(type) {
             complete: function () {
             },
             success: function (json) {
-
+                $('.alert').html('Company un assigned successfully!');
+                $(".alert").attr('class', 'alert alert-success');
+                $(".alert").show();
+                console.log(json);
+                setTimeout(function () {
+                    location.reload(true);
+                }, 1000);
             }
         });
     });

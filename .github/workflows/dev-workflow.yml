@@ -27,9 +27,9 @@ jobs:
       uses: appleboy/ssh-action@master
       with:
         host: dev.kwikbasket.com
-        username: emlimadev
+        username: ubuntu
         key: ${{ secrets.DEV_SERVER_KEY }}
         port : 22
         script: |
-          cd /var/www/html/dev.kwikbasket.com
+          cd /var/www/store
           git pull origin develop

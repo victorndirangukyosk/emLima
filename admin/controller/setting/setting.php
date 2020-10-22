@@ -134,6 +134,12 @@ class ControllerSettingSetting extends Controller
         } else {
             $data['error_vendor_group_ids'] = '';
         }
+        
+        if (isset($this->error['account_manager_group_ids'])) {
+            $data['error_account_manager_group_id'] = $this->error['account_manager_group_id'];
+        } else {
+            $data['error_account_manager_group_id'] = '';
+        }
 
         if (isset($this->error['owner'])) {
             $data['error_owner'] = $this->error['owner'];
@@ -504,6 +510,12 @@ class ControllerSettingSetting extends Controller
             $data['config_vendor_group_ids'] = $this->request->post['config_vendor_group_ids'];
         } else {
             $data['config_vendor_group_ids'] = $this->config->get('config_vendor_group_ids');
+        }
+        
+        if (isset($this->request->post['config_account_namager_group_id'])) {
+            $data['config_account_manager_group_id'] = $this->request->post['config_account_manager_group_id'];
+        } else {
+            $data['config_account_manager_group_id'] = $this->config->get('config_account_manager_group_id');
         }
 
         if (isset($this->request->post['config_owner'])) {
@@ -2147,6 +2159,10 @@ class ControllerSettingSetting extends Controller
 
         if (!$this->request->post['config_vendor_group_ids']) {
             $this->error['vendor_group_ids'] = $this->language->get('error_vendor_group_ids');
+        }
+        
+        if (!$this->request->post['config_account_manager_group_id']) {
+            $this->error['account_manager_group_id'] = $this->language->get('error_account_manager_group_id');
         }
 
         if ((utf8_strlen($this->request->post['config_owner']) < 3) || (utf8_strlen($this->request->post['config_owner']) > 64)) {

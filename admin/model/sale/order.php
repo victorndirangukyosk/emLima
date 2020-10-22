@@ -1137,6 +1137,9 @@ class ModelSaleOrder extends Model
         if ($this->user->isVendor()) {
             $sql .= ' AND vendor_id="'.$this->user->getId().'"';
         }
+        if ($this->user->isAccountManager()) {
+            $sql .= ' AND cust.account_manager_id="'.$this->user->getId().'"';
+        }
         if (!empty($data['filter_city'])) {
             $sql .= " AND c.name LIKE '".$data['filter_city']."%'";
         }
