@@ -345,11 +345,10 @@ class ControllerCommonHome extends Controller {
 
                     $this->load->model('setting/setting');
                     $email = $this->model_setting_setting->getEmailSetting('careers');
-                     
-                    if(strpos( $email,"@")==false)//if mail Id not set in define.php
-                   {
-                   $email = "sridivya.talluri@technobraingroup.com";
-                   }
+
+                    if (strpos($email, "@") == false) {//if mail Id not set in define.php
+                        $email = "sridivya.talluri@technobraingroup.com";
+                    }
 
                     // $bccemail = "sridivya.talluri@technobraingroup.com";
                     //  echo "<pre>";print_r($file_data);die;
@@ -383,15 +382,15 @@ class ControllerCommonHome extends Controller {
     public function FeatureFileUpload($file_data) {
         $status = array();
 
-        // echo "<pre>";print_r($file_data);die;
+        //echo "<pre>";print_r($file_data);die;
         if ((isset($file_data['careers-resume'])) && (is_uploaded_file($file_data['careers-resume']['tmp_name']))) {
 
-            // if ($file_data['careers-resume']['type'] != "application/msword" && $file_data['careers-resume']['type'] != "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
-            //     return $status = array('status' => FALSE, 'file_name' => '');
-            // }
-            // if ($file_data['careers-resume']['size'] > 5000000) {
-            //     return $status = array('status' => FALSE, 'file_name' => '');
-            // }
+            if ($file_data['careers-resume']['type'] != "application/msword" && $file_data['careers-resume']['type'] != "application/vnd.openxmlformats-officedocument.wordprocessingml.document" && $file_data['careers-resume']['type'] != "application/octet-stream" && $file_data['careers-resume']['type'] != "application/pdf") {
+                return $status = array('status' => FALSE, 'file_name' => '');
+            }
+            if ($file_data['careers-resume']['size'] > 5000000) {
+                return $status = array('status' => FALSE, 'file_name' => '');
+            }
 
 
             if (!file_exists(DIR_UPLOAD . 'careers/')) {
