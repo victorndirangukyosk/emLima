@@ -920,6 +920,10 @@ class ModelReportSale extends Model {
     
     public function getActualAccountManagerSales() {
         $complete_status_ids = '(' . implode(',', $this->config->get('config_complete_status')) . ')';
+        $log = new Log('error.log');
+        $log->write('config_complete_status');
+        $log->write($complete_status_ids);
+        $log->write('config_complete_status');
 
         if (isset($this->request->get['account_manager_id'])) {
             $account_manager_id = $this->request->get['account_manager_id'];
