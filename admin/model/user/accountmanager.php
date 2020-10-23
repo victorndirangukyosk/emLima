@@ -26,6 +26,7 @@ class ModelUserAccountmanager extends Model {
 
     public function deleteUser($user_id) {
         $this->db->query('DELETE FROM `' . DB_PREFIX . "user` WHERE user_id = '" . (int) $user_id . "'");
+        $this->db->query('UPDATE `' . DB_PREFIX . "customer` SET account_manager_id = NULL WHERE account_manager_id = '" . (int) $user_id . "'");
     }
 
     public function getUser($user_id) {
