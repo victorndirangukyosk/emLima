@@ -184,7 +184,7 @@
                                     <?php } ?>
                                     <?php } else { ?>
                                     <tr style="text-align:center">
-                                        <td colspan="5">No Customers found</td>
+                                        <td colspan="5">No Companies found</td>
                                     </tr>
                                     <?php } ?>
                                 </tbody>
