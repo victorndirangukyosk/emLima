@@ -576,6 +576,7 @@ class ControllerSaleAccountManagerUser extends Controller {
             $this->load->model('sale/customer');
 
             $filter_data = [
+                'filter_account_manager_id' => $this->user->getId(),
                 'filter_name' => $filter_name,
                 'filter_company' => $filter_company,
                 'start' => 0,
@@ -630,6 +631,7 @@ class ControllerSaleAccountManagerUser extends Controller {
             $this->load->model('sale/customer');
 
             $filter_data = [
+                'filter_account_manager_id' => $this->user->getId(),
                 'filter_name' => $filter_name,
                 'start' => 0,
                 'limit' => 5,
@@ -674,6 +676,7 @@ class ControllerSaleAccountManagerUser extends Controller {
             $this->load->model('sale/customer');
 
             $filter_data = [
+                'filter_account_manager_id' => $this->user->getId(),
                 'filter_name' => $filter_name,
                 'filter_email' => $filter_email,
                 'start' => 0,
