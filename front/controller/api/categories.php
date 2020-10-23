@@ -63,6 +63,15 @@ class ControllerApiCategories extends Controller
             }
             */
 
+              
+            if ($args['parent'] != NULL && $args['parent']>0) {
+                $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $args['parent'] . "' AND status = '1'");
+            } else {
+                $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $args['customer_id']. "' AND status = '1'");
+            }
+            $this->session->data['customer_category'] = isset($customer_details->row['customer_category']) ? $customer_details->row['customer_category'] : null;
+
+            // echo "<pre>";print_r($_SESSION['customer_category']);die; 
             $newCat = [];
 
             $categories = $this->model_api_products->getCategories($args);
