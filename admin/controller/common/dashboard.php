@@ -89,7 +89,7 @@ class ControllerCommonDashboard extends Controller
         $data['customer'] = $this->load->controller('dashboard/customer');
         $data['online'] = $this->load->controller('dashboard/online');
         $data['chart'] = $this->load->controller('dashboard/chart');
-        $data['charts'] = $this->load->controller('dashboard/charts');
+        $data['charts'] = $this->load->controller('dashboard/accountmanagercharts');
 
         $data['actualSales'] = $this->load->controller('dashboard/sale/accountmanagerActualSales');
 
