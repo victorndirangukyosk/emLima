@@ -4,7 +4,7 @@
         <div class="container-fluid">
             <div class="pull-right">
                 <button type="submit" onclick="save('save')" form="form-user" data-toggle="tooltip" title="<?php echo $button_save; ?>" class="btn btn-success"><i class="fa fa-check"></i></button>
-                <button type="submit" form="form-user" data-toggle="tooltip" title="<?php echo $button_saveclose; ?>" class="btn btn-default" data-original-title="Save & Close"><i class="fa fa-save text-success"></i></button>
+                <button type="submit" onclick="save('new')" form="form-user" data-toggle="tooltip" title="<?php echo $button_saveclose; ?>" class="btn btn-default" data-original-title="Save & Close"><i class="fa fa-save text-success"></i></button>
                 <button type="submit" onclick="save('new')" form="form-user" data-toggle="tooltip" title="<?php echo $button_savenew; ?>" class="btn btn-default" data-original-title="Save & New"><i class="fa fa-plus text-success"></i></button>			
                 <a href="<?php echo $cancel; ?>" data-toggle="tooltip" title="<?php echo $button_cancel; ?>" class="btn btn-default"><i class="fa fa-times-circle text-danger"></i></a></div>
             <h1><?php echo $heading_title; ?></h1>
@@ -165,6 +165,7 @@
                                 <thead>
                                     <tr>
                                         <th>Customer Name </th>
+                                        <th>Company Name </th>
                                         <th>E-Mail</th>
                                         <th>Phone No</th>
                                         <th>Action</th>
@@ -175,6 +176,7 @@
                                     <?php foreach($assigned_customers as $user) { ?>
                                     <tr>
                                         <td><?php echo $user['firstname'].' '.$user['lastname'];?></td>
+                                        <td><?php echo $user['company_name'];?></td>
                                         <td><?php echo $user['email'];?></td>
                                         <td><?php echo $user['telephone'];?></td>
                                         <td><a href="#" data-toggle="tooltip" title="Un Assign Customer" id="unassigncustomer" data-accountmanager="<?php echo $user_id; ?>" data-customer="<?php echo $user['customer_id']; ?>" class="btn btn-primary"><i class="fa fa-minus"></i></a></td>
@@ -201,6 +203,7 @@ function save(type) {
         input.type = 'hidden';
         input.name = 'button';
         input.value = type;
+        assign_customers();
         form = $("form[id^='form-']").append(input);
         form.submit();
     }
@@ -309,5 +312,36 @@ function save(type) {
             }
         });
     });
+    function assign_customers() {
+        var val = [];
+        $('input[name=\'assign_customers_select[]\']').each(function (i) {
+            val[i] = $(this).val();
+        });
+        if (val.length == 0) {
+            /*$(".alert").show();
+             $('.alert').html('Please select atleast one customer!');
+             $('.alert').delay(5000).fadeOut('slow');*/
+            return false;
+        }
+        console.log(val);
+        $.ajax({
+            url: 'index.php?path=sale/accountmanager/assigncustomer&token=<?php echo $token; ?>',
+            type: 'post',
+            dataType: 'json',
+            data: {assigncustomer: val, account_manager_id: <?php echo $user_id; ?> },
+            beforeSend: function () {
+                $('#button-assign-customer').button('loading');
+            },
+            complete: function () {
+                $('#button-assign-customer').button('reset');
+            },
+            success: function (json) {
+                $('.alert').html('Customer assigned successfully!');
+                $(".alert").attr('class', 'alert alert-success');
+                $(".alert").show();
+                console.log(json);
+            }
+        });
+    }
 //--></script>
 <?php echo $footer; ?> 
