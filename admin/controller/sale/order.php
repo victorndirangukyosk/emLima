@@ -3710,13 +3710,13 @@ class ControllerSaleOrder extends Controller
             $user_name = NULL;
             if ($result['role'] != NULL && $result['role'] == 'customer') {
                 $history_user_info = $this->model_account_customer->getCustomer($result['added_by']);
-                $user_name = $history_user_info['firstname'] . '' . $history_user_info['lastname'];
+                $user_name = $history_user_info['firstname'] . ' ' . $history_user_info['lastname'];
                 //$log->write($history_user_info);
             }
 
             if ($result['role'] != NULL && $result['role'] != 'customer') {
                 $history_user_info = $this->model_user_user->getUser($result['added_by']);
-                $user_name = $history_user_info['firstname'] . '' . $history_user_info['lastname'];
+                $user_name = $history_user_info['firstname'] . ' ' . $history_user_info['lastname'];
                 //$log->write($history_user_info);
             }
             
