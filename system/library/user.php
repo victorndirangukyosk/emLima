@@ -37,6 +37,8 @@ class User extends SmartObject {
                         $this->permission[$key] = $value;
                     }
                 }
+                $user_group_details = $this->db->query('SELECT * FROM ' . DB_PREFIX . "user_group WHERE user_group_id = '" . (int) $user_query->row['user_group_id'] . "'");
+                $this->user_group_name = $user_group_details->row['name'];
             } else {
                 $this->logout();
             }
@@ -72,7 +74,10 @@ class User extends SmartObject {
                     $this->permission[$key] = $value;
                 }
             }
-
+            
+            $user_group_details = $this->db->query('SELECT * FROM ' . DB_PREFIX . "user_group WHERE user_group_id = '" . (int) $user_query->row['user_group_id'] . "'");
+            $this->user_group_name = $user_group_details->row['name'];
+            
             return true;
         } else {
             return false;
@@ -126,6 +131,10 @@ class User extends SmartObject {
 
     public function getGroupId() {
         return $this->user_group_id;
+    }
+
+    public function getGroupName() {
+        return $this->user_group_name;
     }
 
     public function loginAsVendor($username) {
