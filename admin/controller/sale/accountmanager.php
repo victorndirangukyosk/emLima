@@ -910,7 +910,7 @@ class ControllerSaleAccountManager extends Controller {
                 $this->error['username'] = $this->language->get('error_username_exist');
             }
         }
-        
+
         if (!isset($this->request->get['user_id'])) {
             if ($user_email_info) {
                 $this->error['warning'] = $this->language->get('error_exists');
@@ -1592,6 +1592,58 @@ class ControllerSaleAccountManager extends Controller {
     public function getAccountManagerCustomers($account_manager_id) {
         $this->load->model('user/accountmanager');
         $results = $this->model_user_accountmanager->getCustomerByAccountManagerId($account_manager_id);
+    }
+
+    public function getassignedcustomers() {
+        $this->load->language('sale/customer');
+
+        $this->load->model('user/accountmanager');
+
+        $data['text_no_results'] = $this->language->get('text_no_results');
+        $data['text_add_ban_ip'] = $this->language->get('text_add_ban_ip');
+        $data['text_remove_ban_ip'] = $this->language->get('text_remove_ban_ip');
+        $data['text_loading'] = $this->language->get('text_loading');
+
+        $data['column_ip'] = $this->language->get('column_ip');
+        $data['column_total'] = $this->language->get('column_total');
+        $data['column_date_added'] = $this->language->get('column_date_added');
+        $data['column_action'] = $this->language->get('column_action');
+
+        if (isset($this->request->get['page'])) {
+            $page = $this->request->get['page'];
+        } else {
+            $page = 1;
+        }
+
+        $data['assignedcustomers'] = [];
+
+        $results = $this->model_user_accountmanager->getCustomerByAccountManagerIdPagination($this->request->get['account_manager_id'], ($page - 1) * 10, 10);
+
+        foreach ($results as $result) {
+
+            $data['assignedcustomers'][] = [
+                'customer_id' => $result['customer_id'],
+                'name' => $result['firstname'].' '.$result['lastname'],
+                'company_name' => $result['company_name'],
+                'email' => $result['email'],
+                'telephone' => $result['telephone'],
+                'account_manager_id' => $this->request->get['account_manager_id'],
+            ];
+        }
+
+        $assigned_customers_total = $this->model_user_accountmanager->getTotalAssignedCustomers($this->request->get['account_manager_id']);
+
+        $pagination = new Pagination();
+        $pagination->total = $assigned_customers_total;
+        $pagination->page = $page;
+        $pagination->limit = 10;
+        $pagination->url = $this->url->link('sale/accountmanager/getassignedcustomers', 'token=' . $this->session->data['token'] . '&account_manager_id=' . $this->request->get['account_manager_id'] . '&page={page}', 'SSL');
+
+        $data['pagination'] = $pagination->render();
+
+        $data['results'] = sprintf($this->language->get('text_pagination'), ($assigned_customers_total) ? (($page - 1) * 10) + 1 : 0, ((($page - 1) * 10) > ($assigned_customers_total - 10)) ? $assigned_customers_total : ((($page - 1) * 10) + 10), $assigned_customers_total, ceil($assigned_customers_total / 10));
+
+        $this->response->setOutput($this->load->view('sale/assigned_customers.tpl', $data));
     }
 
 }

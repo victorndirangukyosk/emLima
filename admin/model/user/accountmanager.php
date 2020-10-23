@@ -412,6 +412,17 @@ class ModelUserAccountmanager extends Model {
         return $query->rows;
     }
 
+    public function getCustomerByAccountManagerIdPagination($account_manager_id, $start = 0, $limit = 10) {
+        $query = $this->db->query('SELECT * FROM `' . DB_PREFIX . "customer` WHERE account_manager_id = '" . (int) $account_manager_id . "' ORDER BY date_added DESC LIMIT " . (int) $start . ',' . (int) $limit);
+        return $query->rows;
+    }
+
+    public function getTotalAssignedCustomers($account_manager_id) {
+        $query = $this->db->query('SELECT COUNT(*) AS total FROM ' . DB_PREFIX . "customer WHERE account_manager_id = '" . (int) $account_manager_id . "'");
+
+        return $query->row['total'];
+    }
+
     public function getAccountManagersCustomers($data = [], $account_manager_id) {
         $sql = "SELECT *, CONCAT(c.firstname, ' ', c.lastname) AS name FROM " . DB_PREFIX . 'customer c';
 

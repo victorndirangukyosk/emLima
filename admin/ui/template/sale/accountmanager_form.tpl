@@ -161,34 +161,8 @@
                             </div>
                         </div>
                         <div class="tab-pane" id="tab-assigned-customers">
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>Customer Name </th>
-                                        <th>Company Name </th>
-                                        <th>E-Mail</th>
-                                        <th>Phone No</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php if(count($assigned_customers)) { ?>
-                                    <?php foreach($assigned_customers as $user) { ?>
-                                    <tr>
-                                        <td><?php echo $user['firstname'].' '.$user['lastname'];?></td>
-                                        <td><?php echo $user['company_name'];?></td>
-                                        <td><?php echo $user['email'];?></td>
-                                        <td><?php echo $user['telephone'];?></td>
-                                        <td><a href="#" data-toggle="tooltip" title="Un Assign Customer" id="unassigncustomer" data-accountmanager="<?php echo $user_id; ?>" data-customer="<?php echo $user['customer_id']; ?>" class="btn btn-primary"><i class="fa fa-minus"></i></a></td>
-                                    </tr>
-                                    <?php } ?>
-                                    <?php } else { ?>
-                                    <tr style="text-align:center">
-                                        <td colspan="5">No Companies found</td>
-                                    </tr>
-                                    <?php } ?>
-                                </tbody>
-                            </table>
+                            <div id="assignedcustomers"></div>
+                            <br />
                         </div>
                         <?php } ?>
                     </div>
@@ -315,6 +289,14 @@ function save(type) {
             }
         });
     });
+    
+$('#assignedcustomers').delegate('.pagination a', 'click', function(e) {
+e.preventDefault();
+
+$('#assignedcustomers').load(this.href);
+});
+
+$('#assignedcustomers').load('index.php?path=sale/accountmanager/getassignedcustomers&token=<?php echo $token; ?>&account_manager_id=<?php echo $user_id; ?>');
     function assign_customers() {
         var val = [];
         $('input[name=\'assign_customers_select[]\']').each(function (i) {
