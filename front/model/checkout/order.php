@@ -230,7 +230,7 @@ class ModelCheckoutOrder extends Model {
         $this->trigger->fire('pre.order.edit', $data);
 
         // Void the order first
-        $this->addOrderHistory($order_id, 0);
+        $this->addOrderHistory($order_id, 0, '', true, '', '');
 
         $store_id = 0;
 
@@ -299,7 +299,7 @@ class ModelCheckoutOrder extends Model {
         // Void the order first
         $log->write('deleteorder 1');
         $log->write($order_id);
-        $this->addOrderHistory($order_id, 0);
+        $this->addOrderHistory($order_id, 0, '', true, '', '');
 
         $this->db->query("DELETE FROM `" . DB_PREFIX . "order` WHERE order_id = '" . (int) $order_id . "'");
         $this->db->query("DELETE FROM `" . DB_PREFIX . "order_custom_field` WHERE order_id = '" . (int) $order_id . "'");

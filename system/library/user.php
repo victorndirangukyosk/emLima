@@ -74,10 +74,10 @@ class User extends SmartObject {
                     $this->permission[$key] = $value;
                 }
             }
-            
+
             $user_group_details = $this->db->query('SELECT * FROM ' . DB_PREFIX . "user_group WHERE user_group_id = '" . (int) $user_query->row['user_group_id'] . "'");
             $this->user_group_name = $user_group_details->row['name'];
-            
+
             return true;
         } else {
             return false;
@@ -106,15 +106,6 @@ class User extends SmartObject {
     public function isVendor() {
         $vendor_group_ids = explode(',', $this->config->get('config_vendor_group_ids'));
         if (in_array($this->user_group_id, $vendor_group_ids)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public function isAccountManager() {
-        $account_namager_group_id = $this->config->get('config_account_manager_group_id');
-        if ($this->user_group_id == $account_namager_group_id) {
             return true;
         } else {
             return false;

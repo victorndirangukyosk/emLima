@@ -962,16 +962,16 @@ class ControllerPaymentPesapal extends Controller {
             curl_close($ch);
 
             if ($response != null && $status != null && $status == 'FAILED') {
-                $this->model_payment_pesapal->addOrderHistory($order_id, $this->config->get('pesapal_failed_order_status_id'));
+                $this->model_payment_pesapal->addOrderHistory($order_id, $this->config->get('pesapal_failed_order_status_id'), $customer_info['customer_id'], 'customer');
                 $this->model_payment_pesapal->updateorderstatusipn($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
             } elseif ($response != null && $status != null && $status == 'PENDING') {
-                $this->model_payment_pesapal->addOrderHistory($order_id, $this->config->get('pesapal_pending_order_status_id'));
+                $this->model_payment_pesapal->addOrderHistory($order_id, $this->config->get('pesapal_pending_order_status_id'), $customer_info['customer_id'], 'customer');
                 $this->model_payment_pesapal->updateorderstatusipn($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
             } elseif ($response != null && $status != null && $status == 'COMPLETED') {
-                $this->model_payment_pesapal->addOrderHistory($order_id, $this->config->get('pesapal_order_status_id'));
+                $this->model_payment_pesapal->addOrderHistory($order_id, $this->config->get('pesapal_order_status_id'), $customer_info['customer_id'], 'customer');
                 $this->model_payment_pesapal->updateorderstatusipn($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
             } else {
-                $this->model_payment_pesapal->addOrderHistory($order_id, $this->config->get('pesapal_pending_order_status_id'));
+                $this->model_payment_pesapal->addOrderHistory($order_id, $this->config->get('pesapal_pending_order_status_id'), $customer_info['customer_id'], 'customer');
                 $this->model_payment_pesapal->updateorderstatusipn($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
             }
         }
