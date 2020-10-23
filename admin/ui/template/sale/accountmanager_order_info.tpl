@@ -1674,13 +1674,13 @@ $('#history').delegate('.pagination a', 'click', function(e) {
 	$('#history').load(this.href);
 });			
 
-$('#history').load('index.php?path=sale/accountmanageruserorders/history&token=<?php echo $token; ?>&order_id=<?php echo $order_id; ?>');
+$('#history').load('index.php?path=sale/accountmanageruserorders/history&token=<?php echo $token; ?>&order_id=<?php echo $order_id; ?>&added_by=<?php echo $this->user->getId(); ?>&added_by_role=<?php echo $this->user->getGroupName(); ?>');
 
 
 $('#button-not-fraud').on('click', function() {
   
 	$.ajax({
-		url: 'index.php?path=sale/accountmanageruserorders/notFraudApi&token=<?php echo $token; ?>&api=api/order/history&order_id=<?php echo $order_id; ?>',
+		url: 'index.php?path=sale/accountmanageruserorders/notFraudApi&token=<?php echo $token; ?>&api=api/order/history&order_id=<?php echo $order_id; ?>&added_by=<?php echo $this->user->getId(); ?>&added_by_role=<?php echo $this->user->getGroupName(); ?>',
 		type: 'post',
 		dataType: 'json',
 		data: 'order_status_id=' + encodeURIComponent($('select[name=\'order_status_id\']').val()) + '&notify=' + ($('input[name=\'notify\']').prop('checked') ? 1 : 0) + '&append=' + ($('input[name=\'append\']').prop('checked') ? 1 : 0) + '&comment=' + encodeURIComponent($('textarea[name=\'comment\']').val()),
@@ -1698,7 +1698,7 @@ $('#button-not-fraud').on('click', function() {
 			} 
 		
 			if (json['success']) {
-				$('#history').load('index.php?path=sale/accountmanageruserorders/history&token=<?php echo $token; ?>&order_id=<?php echo $order_id; ?>');
+				$('#history').load('index.php?path=sale/accountmanageruserorders/history&token=<?php echo $token; ?>&order_id=<?php echo $order_id; ?>&added_by=<?php echo $this->user->getId(); ?>&added_by_role=<?php echo $this->user->getGroupName(); ?>');
 				
 				$('#history').before('<div class="alert alert-success"><i class="fa fa-check-circle"></i> ' + json['success'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
 				
@@ -1719,7 +1719,7 @@ $('#button-not-fraud').on('click', function() {
 $('#button-reverse-payment').on('click', function() {
   
 	$.ajax({
-		url: 'index.php?path=sale/accountmanageruserorders/reversePaymentApi&token=<?php echo $token; ?>&api=api/order/history&order_id=<?php echo $order_id; ?>',
+		url: 'index.php?path=sale/accountmanageruserorders/reversePaymentApi&token=<?php echo $token; ?>&api=api/order/history&order_id=<?php echo $order_id; ?>&added_by=<?php echo $this->user->getId(); ?>&added_by_role=<?php echo $this->user->getGroupName(); ?>',
 		type: 'post',
 		dataType: 'json',
 		data: 'order_status_id=' + encodeURIComponent($('select[name=\'order_status_id\']').val()) + '&notify=' + ($('input[name=\'notify\']').prop('checked') ? 1 : 0) + '&append=' + ($('input[name=\'append\']').prop('checked') ? 1 : 0) + '&comment=' + encodeURIComponent($('textarea[name=\'comment\']').val()),
@@ -1738,7 +1738,7 @@ $('#button-reverse-payment').on('click', function() {
 			} 
 		
 			if (json['success']) {
-				$('#history').load('index.php?path=sale/accountmanageruserorders/history&token=<?php echo $token; ?>&order_id=<?php echo $order_id; ?>');
+				$('#history').load('index.php?path=sale/accountmanageruserorders/history&token=<?php echo $token; ?>&order_id=<?php echo $order_id; ?>&added_by=<?php echo $this->user->getId(); ?>&added_by_role=<?php echo $this->user->getGroupName(); ?>');
 				
 				$('#history').before('<div class="alert alert-success"><i class="fa fa-check-circle"></i> ' + json['success'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
 				
@@ -1790,7 +1790,7 @@ if($('select[name=\'order_status_id\'] option:selected').text()=='Delivered')
 	});
 }
 	$.ajax({
-		url: 'index.php?path=sale/accountmanageruserorders/api&token=<?php echo $token; ?>&api=api/accountmanageruserorders/history&order_id=<?php echo $order_id; ?>',
+		url: 'index.php?path=sale/accountmanageruserorders/api&token=<?php echo $token; ?>&api=api/accountmanageruserorders/history&order_id=<?php echo $order_id; ?>&added_by=<?php echo $this->user->getId(); ?>&added_by_role=<?php echo $this->user->getGroupName(); ?>',
 		type: 'post',
 		dataType: 'json',
 		data: 'order_status_id=' + encodeURIComponent($('select[name=\'order_status_id\']').val()) + '&notify=0' + ($('input[name=\'notify\']').prop('checked') ? 1 : 0) + '&append=' + ($('input[name=\'append\']').prop('checked') ? 1 : 0) + '&comment=' + encodeURIComponent($('textarea[name=\'comment\']').val()),
@@ -1808,7 +1808,7 @@ if($('select[name=\'order_status_id\'] option:selected').text()=='Delivered')
 			} 
 		
 			if (json['success']) {
-				$('#history').load('index.php?path=sale/accountmanageruserorders/history&token=<?php echo $token; ?>&order_id=<?php echo $order_id; ?>');
+				$('#history').load('index.php?path=sale/accountmanageruserorders/history&token=<?php echo $token; ?>&order_id=<?php echo $order_id; ?>&added_by=<?php echo $this->user->getId(); ?>&added_by_role=<?php echo $this->user->getGroupName(); ?>');
 				
 				$('#history').before('<div class="alert alert-success"><i class="fa fa-check-circle"></i> ' + json['success'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
 				
@@ -1822,7 +1822,7 @@ if($('select[name=\'order_status_id\'] option:selected').text()=='Delivered')
 		},			
 		error: function(xhr, ajaxOptions, thrownError) {
 			//alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
-			$('#history').load('index.php?path=sale/accountmanageruserorders/history&token=<?php echo $token; ?>&order_id=<?php echo $order_id; ?>');
+			$('#history').load('index.php?path=sale/accountmanageruserorders/history&token=<?php echo $token; ?>&order_id=<?php echo $order_id; ?>&added_by=<?php echo $this->user->getId(); ?>&added_by_role=<?php echo $this->user->getGroupName(); ?>');
 				 $('#button-history').button('reset');			
 
 			 

@@ -3005,6 +3005,8 @@ class ControllerSaleAccountManagerUserOrders extends Controller {
                 'order_status_color' => $result['color'],
                 'comment' => nl2br($result['comment']),
                 'date_added' => date($this->language->get('datetime_format'), strtotime($result['date_added'])),
+                'added_by' => $result['added_by'],
+                'role' => $result['role'],
             ];
         }
 

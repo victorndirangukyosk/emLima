@@ -5,6 +5,8 @@
       <td class="text-left"><?php echo $column_comment; ?></td>
       <td class="text-left"><?php echo $column_status; ?></td>
       <td class="text-left"><?php echo $column_notify; ?></td>
+      <td class="text-left">Added By</td>
+      <td class="text-left">Role</td>
     </tr>
   </thead>
   <tbody>
@@ -15,6 +17,8 @@
       <td class="text-left"><?php echo $history['comment']; ?></td>
       <td class="text-left"><h3 class="my-order-title label" style="background-color: #<?= $history['order_status_color']; ?>;display: block;line-height: 2;" id="order-status" ><?php echo $history['status']; ?></h3></td>
       <td class="text-left"><?php echo $history['notify']; ?></td>
+      <td class="text-left"><?php echo $history['added_by']; ?></td>
+      <td class="text-left"><?php echo $history['role']; ?></td>
     </tr>
     <?php } ?>
     <?php } else { ?>
