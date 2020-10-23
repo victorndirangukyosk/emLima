@@ -99,6 +99,53 @@ class ControllerApiLandingpagecareers extends Controller
     
     }
 
+    public function getcareersbyid($id=0,$successmessage="",$errormessage="") {
+        $json = [];
+        try{
+            $json['status'] = 200;
+            $json['site_key'] = $this->config->get('config_google_captcha_public');
+            $json['action'] = $this->url->link('common/home/savecareers','','SSL');
+            $json['message'] = $successmessage;
+            $json['errormessage'] = $errormessage;
+
+            $log = new Log('error.log');
+            $log->write($this->request->get['id']);
+             
+            if (isset($this->request->get['id'])) {
+                $filter_data['id'] = $this->request->get['id'];
+            } else {
+                $filter_data['id'] = $id;
+            } 
+            $this->load->model('information/careers');
+
+
+            $json['jobpositions'] = $this->model_information_careers->getJobPositions($filter_data);
+            // $json['job_categories'] =$this->model_information_careers->getJobCategories();
+            // $json['job_types']=$this->model_information_careers->getJobTypes();
+            // $json['job_locations']=$this->model_information_careers->getJobLocations();
+ 
+            // if($filter_data['filter_category']!=null)
+            // $json['job_category_name'] = $filter_data['filter_category'];
+            // if($filter_data['filter_type']!=null)
+            // $json['job_type_name'] = $filter_data['filter_type'];
+            // if($filter_data['filter_location']!=null)
+            // $json['job_location_name'] = $filter_data['filter_location'];
+        }
+        catch(Exception $ex)
+        {
+            $json['status'] = 500;
+            $json['error'] =$ex;
+        }
+        finally{
+
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($json));
+        }
+       
+        //   echo "<pre>";print_r($json);die;
+    
+    }
+
     public function addcareer() {
         $json = [];
         try{
