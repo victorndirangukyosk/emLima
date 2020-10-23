@@ -404,7 +404,7 @@ class ModelCheckoutOrder extends Model {
         }
     }
 
-    public function addOrderHistory($order_id, $order_status_id, $comment = '', $notify = true) {
+    public function addOrderHistory($order_id, $order_status_id, $comment = '', $notify = true, $added_by = '', $added_by_role = '') {
 
         //$notify = true;
 
@@ -537,7 +537,7 @@ class ModelCheckoutOrder extends Model {
 
             $this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', order_pdf_link ='" . $pdf_link . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
 
-            $this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', order_status_id = '" . (int) $order_status_id . "', notify = '" . (int) $notify . "', comment = '" . $this->db->escape($comment) . "', date_added = NOW()");
+            $this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', added_by = '" . (int) $added_by . "', role = '" . $added_by_role . "', order_status_id = '" . (int) $order_status_id . "', notify = '" . (int) $notify . "', comment = '" . $this->db->escape($comment) . "', date_added = NOW()");
 
 
             // If current order status is not processing or complete but new status is processing or complete then commence completing the order

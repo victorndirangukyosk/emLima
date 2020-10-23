@@ -660,6 +660,8 @@ class ControllerApiAccountManagerUserOrders extends Controller
 
             if (isset($this->request->get['order_id'])) {
                 $order_id = $this->request->get['order_id'];
+                $added_by = $this->request->get['added_by'];
+                $added_by_role = $this->request->get['added_by_role'];
             } else {
                 $order_id = 0;
             }
@@ -669,7 +671,7 @@ class ControllerApiAccountManagerUserOrders extends Controller
             $log->write($order_id);
 
             if ($order_info) {
-                $this->model_checkout_order->addOrderHistory($order_id, $this->request->post['order_status_id'], $this->request->post['comment'], $this->request->post['notify']);
+                $this->model_checkout_order->addOrderHistory($order_id, $this->request->post['order_status_id'], $this->request->post['comment'], $this->request->post['notify'], $added_by, $added_by_role);
 
                 //$this->createDeliveryRequest($order_id);
 
