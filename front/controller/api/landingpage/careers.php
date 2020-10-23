@@ -120,16 +120,8 @@ class ControllerApiLandingpagecareers extends Controller
 
 
             $json['jobpositions'] = $this->model_information_careers->getJobPositions($filter_data);
-            // $json['job_categories'] =$this->model_information_careers->getJobCategories();
-            // $json['job_types']=$this->model_information_careers->getJobTypes();
-            // $json['job_locations']=$this->model_information_careers->getJobLocations();
- 
-            // if($filter_data['filter_category']!=null)
-            // $json['job_category_name'] = $filter_data['filter_category'];
-            // if($filter_data['filter_type']!=null)
-            // $json['job_type_name'] = $filter_data['filter_type'];
-            // if($filter_data['filter_location']!=null)
-            // $json['job_location_name'] = $filter_data['filter_location'];
+            $description = htmlspecialchars_decode($json['jobpositions']['roles_responsibilities']);
+            $json['jobpositions']['roles_responsibilities'] = $description;
         }
         catch(Exception $ex)
         {
