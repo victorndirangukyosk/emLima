@@ -281,6 +281,9 @@ function save(type) {
                 $(".alert").attr('class', 'alert alert-success');
                 $(".alert").show();
                 console.log(json);
+                setTimeout(function () {
+                    location.reload(true);
+                }, 1000);
             }
         });
     });
