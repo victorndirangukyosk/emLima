@@ -3006,13 +3006,13 @@ class ControllerSaleAccountManagerUserOrders extends Controller {
             if ($result['role'] != NULL && $result['role'] == 'customer') {
                 $history_user_info = $this->model_account_customer->getCustomer($result['added_by']);
                 $user_name = $history_user_info['firstname'] . '' . $history_user_info['lastname'];
-                $log->write($history_user_info);
+                //$log->write($history_user_info);
             }
 
             if ($result['role'] != NULL && $result['role'] != 'customer') {
                 $history_user_info = $this->model_user_user->getUser($result['added_by']);
                 $user_name = $history_user_info['firstname'] . '' . $history_user_info['lastname'];
-                $log->write($history_user_info);
+                //$log->write($history_user_info);
             }
             $data['histories'][] = [
                 'notify' => $result['notify'] ? $this->language->get('text_yes') : $this->language->get('text_no'),
