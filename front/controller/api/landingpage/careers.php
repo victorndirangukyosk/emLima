@@ -120,8 +120,8 @@ class ControllerApiLandingpagecareers extends Controller
 
 
             $json['jobpositions'] = $this->model_information_careers->getJobPositions($filter_data);
-            $description = htmlspecialchars_decode($json['jobpositions']['roles_responsibilities']);
-            $json['jobpositions']['roles_responsibilities'] = $description;
+            $description = htmlspecialchars_decode($json['jobpositions'][0]['roles_responsibilities']);
+            $json['jobpositions'][0]['roles_responsibilities'] = $description;
         }
         catch(Exception $ex)
         {
