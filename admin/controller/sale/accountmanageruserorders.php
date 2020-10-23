@@ -2995,17 +2995,32 @@ class ControllerSaleAccountManagerUserOrders extends Controller {
         $data['histories'] = [];
 
         $this->load->model('sale/order');
+        $this->load->model('account/customer');
+        $this->load->model('user/user');
+        $log = new Log('error.log');
 
         $results = $this->model_sale_order->getOrderHistories($this->request->get['order_id'], ($page - 1) * 10, 10);
 
         foreach ($results as $result) {
+            $user_name = NULL;
+            if ($result['role'] != NULL && $result['role'] == 'customer') {
+                $history_user_info = $this->model_account_customer->getCustomer($result['added_by']);
+                $user_name = $history_user_info['firstname'] . '' . $history_user_info['lastname'];
+                $log->write($history_user_info);
+            }
+
+            if ($result['role'] != NULL && $result['role'] != 'customer') {
+                $history_user_info = $this->model_user_user->getUser($result['added_by']);
+                $user_name = $history_user_info['firstname'] . '' . $history_user_info['lastname'];
+                $log->write($history_user_info);
+            }
             $data['histories'][] = [
                 'notify' => $result['notify'] ? $this->language->get('text_yes') : $this->language->get('text_no'),
                 'status' => $result['status'],
                 'order_status_color' => $result['color'],
                 'comment' => nl2br($result['comment']),
                 'date_added' => date($this->language->get('datetime_format'), strtotime($result['date_added'])),
-                'added_by' => $result['added_by'],
+                'added_by' => $user_name,
                 'role' => $result['role'],
             ];
         }
