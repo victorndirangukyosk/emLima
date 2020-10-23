@@ -50,7 +50,7 @@
                             <div class="form-group required">
                                 <label class="col-sm-2 control-label" for="input-username"><?php echo $entry_username; ?></label>
                                 <div class="col-sm-10">
-                                    <input type="text" name="username" value="<?php echo $username; ?>" placeholder="<?php echo $entry_username; ?>" id="input-username" class="form-control" />
+                                    <input type="text" name="username" value="<?php echo $username; ?>" placeholder="<?php echo $entry_username; ?>" id="input-username" class="form-control" autocomplete="off" />
                                     <?php if ($error_username) { ?>
                                     <div class="text-danger"><?php echo $error_username; ?></div>
                                     <?php } ?>
