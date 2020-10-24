@@ -116,16 +116,15 @@ $('#button-filter').on('click', function() {
 	location = url;
 });
 
-$companyName="";
 $('input[name=\'filter_user\']').autocomplete({
             'source': function (request, response) {
                 $.ajax({
-                    url: 'index.php?path=sale/user/autocompletebyCompany&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request)+'&filter_company=' +$companyName,
+                    url: 'index.php?path=user/user/autocomplete&token=<?php echo $token; ?>&filter_user_name=' + encodeURIComponent(request),
                     dataType: 'json',
                     success: function (json) {
                         response($.map(json, function (item) {
                             return {
-                                label: item['name'],
+                                label: item['username'],
                                 value: item['user_id']
                             }
                         }));
