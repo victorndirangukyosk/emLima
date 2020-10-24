@@ -98,7 +98,7 @@ class ControllerReportUserActivity extends Controller
             ];
 
             $replace = [
-                $this->url->link('sale/user/edit', 'token='.$this->session->data['token'].'&user_id=', 'SSL'),
+                $this->url->link('user/user/edit', 'token='.$this->session->data['token'].'&user_id=', 'SSL'),
                 $this->url->link('sale/order/info', 'token='.$this->session->data['token'].'&order_id=', 'SSL'),
             ];
 
