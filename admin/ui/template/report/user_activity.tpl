@@ -42,8 +42,8 @@
             </div>
             <div class="col-sm-6">
               <div class="form-group">
-                <label class="control-label" for="input-customer"><?php echo $entry_customer; ?></label>
-                <input type="text" name="filter_customer" value="<?php echo $filter_customer; ?>" id="input-customer" class="form-control" />
+                <label class="control-label" for="input-user"><?php echo $entry_user; ?></label>
+                <input type="text" name="filter_user" value="<?php echo $filter_user; ?>" id="input-user" class="form-control" />
               </div>
               <div class="form-group">
                 <label class="control-label" for="input-ip"><?php echo $entry_ip; ?></label>
@@ -88,12 +88,12 @@
   </div>
   <script type="text/javascript"><!--
 $('#button-filter').on('click', function() {
-	url = 'index.php?path=report/customer_activity&token=<?php echo $token; ?>';
+	url = 'index.php?path=report/user_activity&token=<?php echo $token; ?>';
 	
-	var filter_customer = $('input[name=\'filter_customer\']').val();
+	var filter_user = $('input[name=\'filter_user\']').val();
 	
-	if (filter_customer) {
-		url += '&filter_customer=' + encodeURIComponent(filter_customer);
+	if (filter_user) {
+		url += '&filter_user=' + encodeURIComponent(filter_user);
 	}
 	var filter_ip = $('input[name=\'filter_ip\']').val();
 	
@@ -117,23 +117,23 @@ $('#button-filter').on('click', function() {
 });
 
 $companyName="";
-$('input[name=\'filter_customer\']').autocomplete({
+$('input[name=\'filter_user\']').autocomplete({
             'source': function (request, response) {
                 $.ajax({
-                    url: 'index.php?path=sale/customer/autocompletebyCompany&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request)+'&filter_company=' +$companyName,
+                    url: 'index.php?path=sale/user/autocompletebyCompany&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request)+'&filter_company=' +$companyName,
                     dataType: 'json',
                     success: function (json) {
                         response($.map(json, function (item) {
                             return {
                                 label: item['name'],
-                                value: item['customer_id']
+                                value: item['user_id']
                             }
                         }));
                     }
                 });
             },
             'select': function (item) {
-                $('input[name=\'filter_customer\']').val(item['label']);
+                $('input[name=\'filter_user\']').val(item['label']);
             }
         });
 //--></script> 

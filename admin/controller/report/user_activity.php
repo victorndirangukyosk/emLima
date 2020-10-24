@@ -8,10 +8,10 @@ class ControllerReportUserActivity extends Controller
 
         $this->document->setTitle($this->language->get('heading_title'));
 
-        if (isset($this->request->get['filter_customer'])) {
-            $filter_customer = $this->request->get['filter_customer'];
+        if (isset($this->request->get['filter_user'])) {
+            $filter_user = $this->request->get['filter_user'];
         } else {
-            $filter_customer = null;
+            $filter_user = null;
         }
 
         if (isset($this->request->get['filter_ip'])) {
@@ -40,8 +40,8 @@ class ControllerReportUserActivity extends Controller
 
         $url = '';
 
-        if (isset($this->request->get['filter_customer'])) {
-            $url .= '&filter_customer='.urlencode($this->request->get['filter_customer']);
+        if (isset($this->request->get['filter_user'])) {
+            $url .= '&filter_user='.urlencode($this->request->get['filter_user']);
         }
 
         if (isset($this->request->get['filter_ip'])) {
@@ -68,16 +68,16 @@ class ControllerReportUserActivity extends Controller
         ];
 
         $data['breadcrumbs'][] = [
-            'href' => $this->url->link('report/customer_activity', 'token='.$this->session->data['token'].$url, 'SSL'),
+            'href' => $this->url->link('report/user_activity', 'token='.$this->session->data['token'].$url, 'SSL'),
             'text' => $this->language->get('heading_title'),
         ];
 
-        $this->load->model('report/customer');
+        $this->load->model('report/user');
 
         $data['activities'] = [];
 
         $filter_data = [
-            'filter_customer' => $filter_customer,
+            'filter_user' => $filter_user,
             'filter_ip' => $filter_ip,
             'filter_date_start' => $filter_date_start,
             'filter_date_end' => $filter_date_end,
@@ -85,20 +85,20 @@ class ControllerReportUserActivity extends Controller
             'limit' => 20,
         ];
 
-        $activity_total = $this->model_report_customer->getTotalCustomerActivities($filter_data);
+        $activity_total = $this->model_report_user->getTotalUserActivities($filter_data);
 
-        $results = $this->model_report_customer->getCustomerActivities($filter_data);
+        $results = $this->model_report_user->getUserActivities($filter_data);
 
         foreach ($results as $result) {
             $comment = vsprintf($this->language->get('text_'.$result['key']), unserialize($result['data']));
 
             $find = [
-                'customer_id=',
+                'user_id=',
                 'order_id=',
             ];
 
             $replace = [
-                $this->url->link('sale/customer/edit', 'token='.$this->session->data['token'].'&customer_id=', 'SSL'),
+                $this->url->link('sale/user/edit', 'token='.$this->session->data['token'].'&user_id=', 'SSL'),
                 $this->url->link('sale/order/info', 'token='.$this->session->data['token'].'&order_id=', 'SSL'),
             ];
 
@@ -119,7 +119,7 @@ class ControllerReportUserActivity extends Controller
         $data['column_ip'] = $this->language->get('column_ip');
         $data['column_date_added'] = $this->language->get('column_date_added');
 
-        $data['entry_customer'] = $this->language->get('entry_customer');
+        $data['entry_user'] = $this->language->get('entry_user');
         $data['entry_ip'] = $this->language->get('entry_ip');
         $data['entry_date_start'] = $this->language->get('entry_date_start');
         $data['entry_date_end'] = $this->language->get('entry_date_end');
@@ -132,8 +132,8 @@ class ControllerReportUserActivity extends Controller
 
         $url = '';
 
-        if (isset($this->request->get['filter_customer'])) {
-            $url .= '&filter_customer='.urlencode($this->request->get['filter_customer']);
+        if (isset($this->request->get['filter_user'])) {
+            $url .= '&filter_user='.urlencode($this->request->get['filter_user']);
         }
 
         if (isset($this->request->get['filter_ip'])) {
@@ -152,13 +152,13 @@ class ControllerReportUserActivity extends Controller
         $pagination->total = $activity_total;
         $pagination->page = $page;
         $pagination->limit = $this->config->get('config_limit_admin');
-        $pagination->url = $this->url->link('report/customer_activity', 'token='.$this->session->data['token'].$url.'&page={page}', 'SSL');
+        $pagination->url = $this->url->link('report/user_activity', 'token='.$this->session->data['token'].$url.'&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
         $data['results'] = sprintf($this->language->get('text_pagination'), ($activity_total) ? (($page - 1) * $this->config->get('config_limit_admin')) + 1 : 0, ((($page - 1) * $this->config->get('config_limit_admin')) > ($activity_total - $this->config->get('config_limit_admin'))) ? $activity_total : ((($page - 1) * $this->config->get('config_limit_admin')) + $this->config->get('config_limit_admin')), $activity_total, ceil($activity_total / $this->config->get('config_limit_admin')));
 
-        $data['filter_customer'] = $filter_customer;
+        $data['filter_user'] = $filter_user;
         $data['filter_ip'] = $filter_ip;
         $data['filter_date_start'] = $filter_date_start;
         $data['filter_date_end'] = $filter_date_end;
@@ -167,6 +167,6 @@ class ControllerReportUserActivity extends Controller
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
 
-        $this->response->setOutput($this->load->view('report/customer_activity.tpl', $data));
+        $this->response->setOutput($this->load->view('report/user_activity.tpl', $data));
     }
 }
