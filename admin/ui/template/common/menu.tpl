@@ -63,11 +63,11 @@
     <?php } ?>
     <?php if($preturn_vendor_product) { ?>  
     <li id="simple-blog">
-    <a class="parent"><i class="fa fa-tags fa-fw"></i> <span>Category Prices</span></a>
-    <ul>
-    <li><a href="<?php echo $category_prices; ?>"><span>Category Prices</span></a></li>
-    <li><a href="<?php echo $export_import; ?>"><span><?php echo $text_export_import; ?></span></a></li>
-    </ul>
+        <a class="parent"><i class="fa fa-tags fa-fw"></i> <span>Category Prices</span></a>
+        <ul>
+            <li><a href="<?php echo $category_prices; ?>"><span>Category Prices</span></a></li>
+            <li><a href="<?php echo $export_import; ?>"><span><?php echo $text_export_import; ?></span></a></li>
+        </ul>
     </li>
     <?php } ?>
     <?php
@@ -435,6 +435,18 @@
             </li>
             <?php }?>
 
+            <?php if( $preturn_user_activity != false ) { ?>
+            <li><a class="parent"><?php echo $text_user; ?></a>
+                <ul>
+
+                    <?php if($preturn_user_activity) { ?>
+                    <li><a href="<?php echo $report_user_activity; ?>"><?php echo $text_report_user_activity; ?></a></li>
+                    <?php } ?>
+
+                </ul>
+            </li>
+            <?php }?>
+
         </ul>
     </li>
     <?php } ?>
@@ -580,16 +592,16 @@
     <li id="system"><a class="parent"><i class="fa fa-cog fa-fw"></i> <span><?php echo $text_system; ?></span></a>
         <ul class="collapse">
 
-             
-              <?php if( $preturn_setting != false  ) { ?>
+
+            <?php if( $preturn_setting != false  ) { ?>
             <li><a class="parent">Settings</a>
                 <ul>
-                     <?php if($preturn_setting) { ?> 
+                    <?php if($preturn_setting) { ?> 
                     <li><a href="<?php echo $setting; ?>"><?php echo $text_setting; ?></a></li>
-                      <?php } ?>
-                      <?php if($preturn_setting) { ?>                     
+                    <?php } ?>
+                    <?php if($preturn_setting) { ?>                     
                     <li><a href="<?php echo $setting_email; ?>">Email Settings</a></li>
-                     <!--<?php } ?>-->
+                    <!--<?php } ?>-->
                 </ul>
             </li>
             <?php } ?>
@@ -622,11 +634,11 @@
             <?php } ?>
 
 
-             <?php if($preturn_newfeature != false) { ?>
+            <?php if($preturn_newfeature != false) { ?>
             <li><a href="<?php echo $newfeature; ?>">New Feature Request</a></li>
             <?php } ?>
 
-             <?php if($preturn_jobposition != false) { ?>
+            <?php if($preturn_jobposition != false) { ?>
             <li><a href="<?php echo $jobposition; ?>">Job Positions</a></li>
             <?php } ?>
 
