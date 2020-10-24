@@ -8,7 +8,8 @@ class ModelReportUser extends Model {
         $implode = [];
 
         if (!empty($data['filter_user'])) {
-            $implode[] = "CONCAT(c.firstname, ' ', c.lastname) LIKE '" . $this->db->escape($data['filter_user']) . "'";
+            //$implode[] = "CONCAT(c.firstname, ' ', c.lastname) LIKE '" . $this->db->escape($data['filter_user']) . "'";
+            $implode[] = "c.username LIKE '" . $this->db->escape($data['filter_user']) . "'";
         }
 
         if (!empty($data['filter_ip'])) {
@@ -52,7 +53,8 @@ class ModelReportUser extends Model {
         $implode = [];
 
         if (!empty($data['filter_user'])) {
-            $implode[] = "CONCAT(c.firstname, ' ', c.lastname) LIKE '" . $this->db->escape($data['filter_user']) . "'";
+            //$implode[] = "CONCAT(c.firstname, ' ', c.lastname) LIKE '" . $this->db->escape($data['filter_user']) . "'";
+            $implode[] = "c.username LIKE '" . $this->db->escape($data['filter_user']) . "'";
         }
 
         if (!empty($data['filter_ip'])) {
