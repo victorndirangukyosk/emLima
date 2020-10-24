@@ -7,6 +7,19 @@ class ControllerApiCustomerProducts extends Controller
     public function getProducts()
     {
         $json = [];
+        if (!isset($this->session->data['api_id']) ) {
+            $json['error'] = $this->language->get('error_permission');
+        } else {
+
+            
+             if ($this->request->get['parent'] != NULL && $this->request->get['parent']>0) {
+                $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->request->get['parent'] . "' AND status = '1'");
+            } else {
+                $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->request->get['customer_id']. "' AND status = '1'");
+            }
+            $this->session->data['customer_category'] = isset($customer_details->row['customer_category']) ? $customer_details->row['customer_category'] : null;
+
+            //  echo "<pre>";print_r($_SESSION['customer_category']);die;
 
         $this->load->language('information/locations');
 
@@ -349,7 +362,7 @@ class ControllerApiCustomerProducts extends Controller
             http_response_code(400);
             */
         }
-
+    }
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
