@@ -1,6 +1,6 @@
 <?php
 
-class ModelUserActivity extends Model {
+class ModelUserUserActivity extends Model {
 
     public function addActivity($key, $data) {
         if (isset($data['user_id'])) {
