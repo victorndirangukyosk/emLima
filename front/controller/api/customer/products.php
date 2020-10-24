@@ -7,9 +7,10 @@ class ControllerApiCustomerProducts extends Controller
     public function getProducts()
     {
         $json = [];
-        if (!isset($this->session->data['api_id']) ) {
-            $json['error'] = $this->language->get('error_permission');
-        } else {
+        // if (!isset($this->session->data['api_id']) ) {
+        //     $json['error'] = $this->language->get('error_permission');
+        // } else
+         {
 
             
              if ($this->request->get['parent'] != NULL && $this->request->get['parent']>0) {

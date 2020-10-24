@@ -172,9 +172,9 @@ class ControllerApiProducts extends Controller
         //echo "<pre>";print_r($args);die;
         $json = [];
 
-        // if (!isset($this->session->data['api_id']) || !isset($args['store_id'])) {
-        //     $json['error'] = $this->language->get('error_permission');
-        // } else
+        if (!isset($this->session->data['api_id']) || !isset($args['store_id'])) {
+            $json['error'] = $this->language->get('error_permission');
+        } else
          {
             $this->load->model('api/products');
 
