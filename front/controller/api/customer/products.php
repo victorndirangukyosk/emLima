@@ -1303,13 +1303,14 @@ class ControllerApiCustomerProducts extends Controller
 
 
                         $cachePrice_data = $this->cache->get('category_price_data');
-
-                        if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$r['product_store_id'].'_'.$_SESSION['customer_category'].'_'.ACTIVE_STORE_ID])) {
+                        // echo "<pre>";print_r($_SESSION['customer_category']);die;
+                        if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$result['product_store_id'].'_'.$_SESSION['customer_category'].'_'.ACTIVE_STORE_ID])) {
                             //echo $cachePrice_data[$product_info['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$store_id];//exit;
-                            $s_price = $cachePrice_data[$r['product_store_id'].'_'.$_SESSION['customer_category'].'_'.ACTIVE_STORE_ID];
-                            $o_price = $cachePrice_data[$r['product_store_id'].'_'.$_SESSION['customer_category'].'_'.ACTIVE_STORE_ID];
+                            $s_price = $cachePrice_data[$result['product_store_id'].'_'.$_SESSION['customer_category'].'_'.ACTIVE_STORE_ID];
+                            $o_price = $cachePrice_data[$result['product_store_id'].'_'.$_SESSION['customer_category'].'_'.ACTIVE_STORE_ID];
                             $special_price = $s_price;
                             $price = $o_price;
+                            // echo "<pre>";print_r($special_price);die;
                         }
 
                         //get qty in cart
