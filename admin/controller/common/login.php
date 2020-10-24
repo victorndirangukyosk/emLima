@@ -1,11 +1,10 @@
 <?php
 
-class ControllerCommonLogin extends Controller
-{
+class ControllerCommonLogin extends Controller {
+
     private $error = [];
 
-    public function index()
-    {
+    public function index() {
         $this->load->language('common/login');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -14,9 +13,9 @@ class ControllerCommonLogin extends Controller
 
         if ($this->user->isLogged() && isset($this->request->get['token']) && ($this->request->get['token'] == $this->session->data['token'])) {
             if ($shopper_group_id == $this->user->getGroupId()) {
-                $this->response->redirect($this->url->link('shopper/request', 'token='.$this->session->data['token'], 'SSL'));
+                $this->response->redirect($this->url->link('shopper/request', 'token=' . $this->session->data['token'], 'SSL'));
             } else {
-                $this->response->redirect($this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'));
+                $this->response->redirect($this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL'));
             }
         }
 
@@ -49,15 +48,30 @@ class ControllerCommonLogin extends Controller
                     $mail->setHtml($message);
                     $mail->send();
                 } catch (Exception $e) {
+                    
                 }
             }
+            // Add to activity log
+            $log = new Log('error.log');
+            $this->load->model('user/user_activity');
+
+            $activity_data = [
+                'user_id' => $this->user->getId(),
+                'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+                'user_group_id' => $this->user->getGroupId(),
+            ];
+            $log->write('user login');
+
+            $this->model_user_user_activity->addActivity('login', $activity_data);
+
+            $log->write('user login');
 
             if ($shopper_group_id == $this->user->getGroupId()) {
-                $this->response->redirect($this->url->link('shopper/request', 'token='.$this->session->data['token'], 'SSL'));
+                $this->response->redirect($this->url->link('shopper/request', 'token=' . $this->session->data['token'], 'SSL'));
             } elseif (isset($this->request->post['redirect']) && (0 === strpos($this->request->post['redirect'], HTTP_SERVER) || 0 === strpos($this->request->post['redirect'], HTTPS_SERVER))) {
-                $this->response->redirect($this->request->post['redirect'].'&token='.$this->session->data['token']);
+                $this->response->redirect($this->request->post['redirect'] . '&token=' . $this->session->data['token']);
             } else {
-                $this->response->redirect($this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'));
+                $this->response->redirect($this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL'));
             }
         }
 
@@ -129,7 +143,7 @@ class ControllerCommonLogin extends Controller
 
         $this->load->model('tool/image');
 
-        if ($this->config->get('config_image') && is_file(DIR_IMAGE.$this->config->get('config_image'))) {
+        if ($this->config->get('config_image') && is_file(DIR_IMAGE . $this->config->get('config_image'))) {
             $data['thumb'] = $this->model_tool_image->resize($this->config->get('config_image'), 200, 110);
         } else {
             $data['thumb'] = $this->model_tool_image->resize('no_image.png', 200, 110);
@@ -159,8 +173,7 @@ class ControllerCommonLogin extends Controller
         $this->response->setOutput($this->load->view('common/login.tpl', $data));
     }
 
-    protected function validate()
-    {
+    protected function validate() {
         if (!isset($this->request->post['username']) || !isset($this->request->post['password']) || !$this->user->login($this->request->post['username'], $this->request->post['password'])) {
             $this->error['warning'] = $this->language->get('error_login');
         }
@@ -168,8 +181,7 @@ class ControllerCommonLogin extends Controller
         return !$this->error;
     }
 
-    public function check()
-    {
+    public function check() {
         $path = '';
 
         if (isset($this->request->get['path'])) {
@@ -180,7 +192,7 @@ class ControllerCommonLogin extends Controller
             }
 
             if (isset($part[1])) {
-                $path .= '/'.$part[1];
+                $path .= '/' . $part[1];
             }
         }
 
@@ -189,7 +201,6 @@ class ControllerCommonLogin extends Controller
             'common/forgotten',
             'common/reset',
             'common/scheduler',
-
         ];
 
         if (!$this->user->isLogged() && !in_array($path, $ignore)) {
@@ -216,4 +227,5 @@ class ControllerCommonLogin extends Controller
             }
         }
     }
+
 }

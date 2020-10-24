@@ -39,6 +39,8 @@ class User extends SmartObject {
                 }
                 $user_group_details = $this->db->query('SELECT * FROM ' . DB_PREFIX . "user_group WHERE user_group_id = '" . (int) $user_query->row['user_group_id'] . "'");
                 $this->user_group_name = $user_group_details->row['name'];
+                $this->firstname = $user_query->row['firstname'];
+                $this->lastname = $user_query->row['lastname'];
             } else {
                 $this->logout();
             }
@@ -77,6 +79,8 @@ class User extends SmartObject {
 
             $user_group_details = $this->db->query('SELECT * FROM ' . DB_PREFIX . "user_group WHERE user_group_id = '" . (int) $user_query->row['user_group_id'] . "'");
             $this->user_group_name = $user_group_details->row['name'];
+            $this->firstname = $user_query->row['firstname'];
+            $this->lastname = $user_query->row['lastname'];
 
             return true;
         } else {
@@ -135,6 +139,14 @@ class User extends SmartObject {
 
     public function getGroupName() {
         return $this->user_group_name;
+    }
+
+    public function getFirstName() {
+        return $this->firstname;
+    }
+
+    public function getLastName() {
+        return $this->lastname;
     }
 
     public function loginAsVendor($username) {
