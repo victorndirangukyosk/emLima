@@ -34,7 +34,7 @@ class ControllerApiCategories extends Controller
     {
         $this->load->model('tool/image');
         $this->load->language('api/categories');
-
+        unset($this->session->data['customer_category']);  
         $json = [];
 
         if (!isset($this->session->data['api_id'])) {

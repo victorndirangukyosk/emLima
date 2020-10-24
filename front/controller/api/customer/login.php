@@ -12,6 +12,7 @@ class ControllerApiCustomerLogin extends Controller
         //echo "<pre>";print_r($this->request->post);die;
         // Delete old login so not to cause any issues if there is an error
         unset($this->session->data['customer_id']);
+        unset($this->session->data['customer_category']);
 
         $keys = [
             'username',
@@ -125,6 +126,8 @@ class ControllerApiCustomerLogin extends Controller
 
         // Delete old login so not to cause any issues if there is an error
         unset($this->session->data['customer_id']);
+        unset($this->session->data['customer_category']);
+
 
         $keys = [
             'username',
