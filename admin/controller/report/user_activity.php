@@ -98,12 +98,14 @@ class ControllerReportUserActivity extends Controller {
                 'user_id=',
                 'order_id=',
                 'account_manager_id=',
+                'customer_id=',
             ];
 
             $replace = [
                 $this->url->link('user/user/edit', 'token=' . $this->session->data['token'] . '&user_id=', 'SSL'),
                 $this->url->link('sale/order/info', 'token=' . $this->session->data['token'] . '&order_id=', 'SSL'),
                 $this->url->link('sale/accountmanager/edit', 'token=' . $this->session->data['token'] . '&user_id=', 'SSL'),
+                $this->url->link('sale/customer/edit', 'token=' . $this->session->data['token'] . '&customer_id=', 'SSL'),
             ];
 
             $data['activities'][] = [

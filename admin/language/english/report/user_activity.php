@@ -22,6 +22,10 @@ $_['text_account_manager_add'] = '<a href="user_id=%d">%s</a> created a <a href=
 $_['text_account_manager_edit'] = '<a href="user_id=%d">%s</a> edited a <a href="account_manager_id=%d">account manager</a>.';
 $_['text_account_manager_delete'] = '<a href="user_id=%d">%s</a> deleted a <a href="account_manager_id=%d">account manager</a>.';
 $_['text_order_guest'] = '%s created a <a href="order_id=%d">new order</a>.';
+$_['text_customer_edit'] = '<a href="user_id=%d">%s</a> edited a <a href="customer_id=%d">customer</a>.';
+$_['text_customer_add'] = '<a href="user_id=%d">%s</a> added a <a href="customer_id=%d">customer</a>.';
+$_['text_customer_delete'] = '<a href="user_id=%d">%s</a> deleted a <a href="customer_id=%d">customer</a>.';
+
 
 // Column
 $_['column_user'] = 'User';
