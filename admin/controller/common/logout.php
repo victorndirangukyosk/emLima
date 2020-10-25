@@ -3,9 +3,6 @@
 class ControllerCommonLogout extends Controller {
 
     public function index() {
-        $this->user->logout();
-
-        unset($this->session->data['token']);
 
         $log = new Log('error.log');
         $this->load->model('user/user_activity');
@@ -20,6 +17,9 @@ class ControllerCommonLogout extends Controller {
         $this->model_user_user_activity->addActivity('logout', $activity_data);
 
         $log->write('user logout');
+        $this->user->logout();
+
+        unset($this->session->data['token']);
 
         $this->response->redirect($this->url->link('common/login', '', 'SSL'));
     }

@@ -18,6 +18,8 @@ $_['text_return_account'] = '<a href="user_id=%d">%s</a> submitted a product ret
 $_['text_return_guest'] = '%s submitted a product return.';
 $_['text_order_account'] = '<a href="user_id=%d">%s</a> created a <a href="order_id=%d">new order</a>.';
 $_['text_order_update'] = '<a href="user_id=%d">%s</a> created a <a href="order_id=%d">order updated</a>.';
+$_['text_account_manager_add'] = '<a href="user_id=%d">%s</a> created a <a href="account_manager_id=%d">new account manager</a>.';
+$_['text_account_manager_edit'] = '<a href="user_id=%d">%s</a> edited a <a href="account_manager_id=%d">account manager</a>.';
 $_['text_order_guest'] = '%s created a <a href="order_id=%d">new order</a>.';
 
 // Column

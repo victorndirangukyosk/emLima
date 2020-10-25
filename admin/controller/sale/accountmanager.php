@@ -37,6 +37,22 @@ class ControllerSaleAccountManager extends Controller {
             $user_id = $this->model_user_accountmanager->addAccountManager($this->request->post);
 
             $this->session->data['success'] = $this->language->get('text_success');
+            
+            // Add to activity log
+            $log = new Log('error.log');
+            $this->load->model('user/user_activity');
+
+            $activity_data = [
+                'user_id' => $this->user->getId(),
+                'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+                'user_group_id' => $this->user->getGroupId(),
+                'account_manager_id' => $user_id,
+            ];
+            $log->write('account manager add');
+
+            $this->model_user_user_activity->addActivity('account_manager_add', $activity_data);
+
+            $log->write('account manager add');
 
             $url = '';
 
@@ -77,6 +93,22 @@ class ControllerSaleAccountManager extends Controller {
             $this->model_user_accountmanager->editUser($this->request->get['user_id'], $this->request->post);
 
             $this->session->data['success'] = $this->language->get('text_success');
+
+            // Add to activity log
+            $log = new Log('error.log');
+            $this->load->model('user/user_activity');
+
+            $activity_data = [
+                'user_id' => $this->user->getId(),
+                'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+                'user_group_id' => $this->user->getGroupId(),
+                'account_manager_id' => $this->request->get['user_id'],
+            ];
+            $log->write('account manager edit');
+
+            $this->model_user_user_activity->addActivity('account_manager_edit', $activity_data);
+
+            $log->write('account manager edit');
 
             $url = '';
 
@@ -1623,7 +1655,7 @@ class ControllerSaleAccountManager extends Controller {
 
             $data['assignedcustomers'][] = [
                 'customer_id' => $result['customer_id'],
-                'name' => $result['firstname'].' '.$result['lastname'],
+                'name' => $result['firstname'] . ' ' . $result['lastname'],
                 'company_name' => $result['company_name'],
                 'email' => $result['email'],
                 'telephone' => $result['telephone'],
