@@ -3533,6 +3533,21 @@ class ControllerSaleOrder extends Controller {
             }
 
             $json['success'] = $this->language->get('text_reward_added');
+            // Add to activity log
+            $log = new Log('error.log');
+            $this->load->model('user/user_activity');
+
+            $activity_data = [
+                'user_id' => $this->user->getId(),
+                'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+                'user_group_id' => $this->user->getGroupId(),
+                'order_id' => $order_id,
+            ];
+            $log->write('order transaction id added');
+
+            $this->model_user_user_activity->addActivity('order_transaction_id_added', $activity_data);
+
+            $log->write('order transaction id added');
         }
 
         $this->response->addHeader('Content-Type: application/json');
