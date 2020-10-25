@@ -37,7 +37,7 @@ class ControllerSaleAccountManager extends Controller {
             $user_id = $this->model_user_accountmanager->addAccountManager($this->request->post);
 
             $this->session->data['success'] = $this->language->get('text_success');
-            
+
             // Add to activity log
             $log = new Log('error.log');
             $this->load->model('user/user_activity');
@@ -148,6 +148,22 @@ class ControllerSaleAccountManager extends Controller {
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
             foreach ($this->request->post['selected'] as $user_id) {
                 $this->model_user_accountmanager->deleteUser($user_id);
+
+                // Add to activity log
+                $log = new Log('error.log');
+                $this->load->model('user/user_activity');
+
+                $activity_data = [
+                    'user_id' => $this->user->getId(),
+                    'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+                    'user_group_id' => $this->user->getGroupId(),
+                    'account_manager_id' => $user_id,
+                ];
+                $log->write('account manager delete');
+
+                $this->model_user_user_activity->addActivity('account_manager_delete', $activity_data);
+
+                $log->write('account manager delete');
             }
 
             $this->session->data['success'] = $this->language->get('text_success');
