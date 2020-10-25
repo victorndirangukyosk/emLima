@@ -1,9 +1,8 @@
 <?php
 
-class ControllerReportUserActivity extends Controller
-{
-    public function index()
-    {
+class ControllerReportUserActivity extends Controller {
+
+    public function index() {
         $this->load->language('report/user_activity');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -41,34 +40,34 @@ class ControllerReportUserActivity extends Controller
         $url = '';
 
         if (isset($this->request->get['filter_user'])) {
-            $url .= '&filter_user='.urlencode($this->request->get['filter_user']);
+            $url .= '&filter_user=' . urlencode($this->request->get['filter_user']);
         }
 
         if (isset($this->request->get['filter_ip'])) {
-            $url .= '&filter_ip='.$this->request->get['filter_ip'];
+            $url .= '&filter_ip=' . $this->request->get['filter_ip'];
         }
 
         if (isset($this->request->get['filter_date_start'])) {
-            $url .= '&filter_date_start='.$this->request->get['filter_date_start'];
+            $url .= '&filter_date_start=' . $this->request->get['filter_date_start'];
         }
 
         if (isset($this->request->get['filter_date_end'])) {
-            $url .= '&filter_date_end='.$this->request->get['filter_date_end'];
+            $url .= '&filter_date_end=' . $this->request->get['filter_date_end'];
         }
 
         if (isset($this->request->get['page'])) {
-            $url .= '&page='.$this->request->get['page'];
+            $url .= '&page=' . $this->request->get['page'];
         }
 
         $data['breadcrumbs'] = [];
 
         $data['breadcrumbs'][] = [
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
+            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL'),
             'text' => $this->language->get('text_home'),
         ];
 
         $data['breadcrumbs'][] = [
-            'href' => $this->url->link('report/user_activity', 'token='.$this->session->data['token'].$url, 'SSL'),
+            'href' => $this->url->link('report/user_activity', 'token=' . $this->session->data['token'] . $url, 'SSL'),
             'text' => $this->language->get('heading_title'),
         ];
 
@@ -90,8 +89,11 @@ class ControllerReportUserActivity extends Controller
         $results = $this->model_report_user->getUserActivities($filter_data);
 
         foreach ($results as $result) {
-            $comment = vsprintf($this->language->get('text_'.$result['key']), unserialize($result['data']));
+            $comment = vsprintf($this->language->get('text_' . $result['key']), unserialize($result['data']));
 
+            /* $log = new Log('error.log');
+              $log->write($this->language->get('text_'.$result['key']));
+              $log->write(unserialize($result['data'])); */
             $find = [
                 'user_id=',
                 'order_id=',
@@ -99,9 +101,9 @@ class ControllerReportUserActivity extends Controller
             ];
 
             $replace = [
-                $this->url->link('user/user/edit', 'token='.$this->session->data['token'].'&user_id=', 'SSL'),
-                $this->url->link('sale/order/info', 'token='.$this->session->data['token'].'&order_id=', 'SSL'),
-                $this->url->link('sale/accountmanager/edit', 'token='.$this->session->data['token'].'&account_manager_id=', 'SSL'),
+                $this->url->link('user/user/edit', 'token=' . $this->session->data['token'] . '&user_id=', 'SSL'),
+                $this->url->link('sale/order/info', 'token=' . $this->session->data['token'] . '&order_id=', 'SSL'),
+                $this->url->link('sale/accountmanager/edit', 'token=' . $this->session->data['token'] . '&user_id=', 'SSL'),
             ];
 
             $data['activities'][] = [
@@ -135,26 +137,26 @@ class ControllerReportUserActivity extends Controller
         $url = '';
 
         if (isset($this->request->get['filter_user'])) {
-            $url .= '&filter_user='.urlencode($this->request->get['filter_user']);
+            $url .= '&filter_user=' . urlencode($this->request->get['filter_user']);
         }
 
         if (isset($this->request->get['filter_ip'])) {
-            $url .= '&filter_ip='.$this->request->get['filter_ip'];
+            $url .= '&filter_ip=' . $this->request->get['filter_ip'];
         }
 
         if (isset($this->request->get['filter_date_start'])) {
-            $url .= '&filter_date_start='.$this->request->get['filter_date_start'];
+            $url .= '&filter_date_start=' . $this->request->get['filter_date_start'];
         }
 
         if (isset($this->request->get['filter_date_end'])) {
-            $url .= '&filter_date_end='.$this->request->get['filter_date_end'];
+            $url .= '&filter_date_end=' . $this->request->get['filter_date_end'];
         }
 
         $pagination = new Pagination();
         $pagination->total = $activity_total;
         $pagination->page = $page;
         $pagination->limit = $this->config->get('config_limit_admin');
-        $pagination->url = $this->url->link('report/user_activity', 'token='.$this->session->data['token'].$url.'&page={page}', 'SSL');
+        $pagination->url = $this->url->link('report/user_activity', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
@@ -171,4 +173,5 @@ class ControllerReportUserActivity extends Controller
 
         $this->response->setOutput($this->load->view('report/user_activity.tpl', $data));
     }
+
 }
