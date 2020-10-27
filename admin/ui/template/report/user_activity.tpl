@@ -43,7 +43,7 @@
             <div class="col-sm-6">
               <div class="form-group">
                 <label class="control-label" for="input-user"><?php echo $entry_user; ?></label>
-                <input type="text" name="filter_user" value="<?php echo $filter_user; ?>" id="input-user" class="form-control" />
+                <input type="text" name="filter_name" value="<?php echo $filter_name; ?>" id="input-user" class="form-control" />
               </div>
               <div class="form-group">
                 <label class="control-label" for="input-ip"><?php echo $entry_ip; ?></label>
@@ -123,15 +123,15 @@ $('#button-filter').on('click', function() {
 	location = url;
 });
 
-$('input[name=\'filter_user\']').autocomplete({
+$('input[name=\'filter_name\']').autocomplete({
             'source': function (request, response) {
                 $.ajax({
-                    url: 'index.php?path=user/user/autocomplete&token=<?php echo $token; ?>&filter_user_name=' + encodeURIComponent(request),
+                    url: 'index.php?path=user/user/autocomplete&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
                     dataType: 'json',
                     success: function (json) {
                         response($.map(json, function (item) {
                             return {
-                                label: item['username'],
+                                label: item['name'],
                                 value: item['user_id']
                             }
                         }));
@@ -139,7 +139,7 @@ $('input[name=\'filter_user\']').autocomplete({
                 });
             },
             'select': function (item) {
-                $('input[name=\'filter_user\']').val(item['label']);
+                $('input[name=\'filter_name\']').val(item['label']);
             }
         });
 //--></script> 

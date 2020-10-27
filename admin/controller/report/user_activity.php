@@ -152,6 +152,10 @@ class ControllerReportUserActivity extends Controller {
         if (isset($this->request->get['filter_user'])) {
             $url .= '&filter_user=' . urlencode($this->request->get['filter_user']);
         }
+        
+        if (isset($this->request->get['filter_name'])) {
+            $url .= '&filter_name=' . urlencode($this->request->get['filter_name']);
+        }
 
         if (isset($this->request->get['filter_ip'])) {
             $url .= '&filter_ip=' . $this->request->get['filter_ip'];
@@ -176,6 +180,7 @@ class ControllerReportUserActivity extends Controller {
         $data['results'] = sprintf($this->language->get('text_pagination'), ($activity_total) ? (($page - 1) * $this->config->get('config_limit_admin')) + 1 : 0, ((($page - 1) * $this->config->get('config_limit_admin')) > ($activity_total - $this->config->get('config_limit_admin'))) ? $activity_total : ((($page - 1) * $this->config->get('config_limit_admin')) + $this->config->get('config_limit_admin')), $activity_total, ceil($activity_total / $this->config->get('config_limit_admin')));
 
         $data['filter_user'] = $filter_user;
+        $data['filter_name'] = $filter_name;
         $data['filter_ip'] = $filter_ip;
         $data['filter_date_start'] = $filter_date_start;
         $data['filter_date_end'] = $filter_date_end;

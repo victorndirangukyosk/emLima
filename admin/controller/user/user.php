@@ -640,7 +640,7 @@ class ControllerUserUser extends Controller
     {
         $json = [];
 
-        if (isset($this->request->get['filter_user_name']) || isset($this->request->get['filter_user_group']) || isset($this->request->get['filter_first_name']) || isset($this->request->get['filter_last_name']) || isset($this->request->get['filter_email'])) {
+        if (isset($this->request->get['filter_name']) || isset($this->request->get['filter_user_name']) || isset($this->request->get['filter_user_group']) || isset($this->request->get['filter_first_name']) || isset($this->request->get['filter_last_name']) || isset($this->request->get['filter_email'])) {
             $this->load->model('user/user');
 
             if (isset($this->request->get['filter_user_name'])) {
