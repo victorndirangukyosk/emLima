@@ -648,6 +648,12 @@ class ControllerUserUser extends Controller
             } else {
                 $filter_user_name = '';
             }
+            
+            if (isset($this->request->get['filter_name'])) {
+                $filter_name = $this->request->get['filter_name'];
+            } else {
+                $filter_name = '';
+            }
 
             if (isset($this->request->get['filter_user_group'])) {
                 $filter_user_group = $this->request->get['filter_user_group'];
@@ -683,6 +689,7 @@ class ControllerUserUser extends Controller
             }
 
             $filter_data = [
+                'filter_name' => $filter_name,
                 'filter_user_name' => $filter_user_name,
                 'filter_user_group' => $filter_user_group,
                 'filter_first_name' => $filter_first_name,

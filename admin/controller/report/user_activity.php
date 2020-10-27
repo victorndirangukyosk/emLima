@@ -12,6 +12,12 @@ class ControllerReportUserActivity extends Controller {
         } else {
             $filter_user = null;
         }
+        
+        if (isset($this->request->get['filter_name'])) {
+            $filter_name = $this->request->get['filter_name'];
+        } else {
+            $filter_name = null;
+        }
 
         if (isset($this->request->get['filter_ip'])) {
             $filter_ip = $this->request->get['filter_ip'];
@@ -41,6 +47,10 @@ class ControllerReportUserActivity extends Controller {
 
         if (isset($this->request->get['filter_user'])) {
             $url .= '&filter_user=' . urlencode($this->request->get['filter_user']);
+        }
+        
+        if (isset($this->request->get['filter_name'])) {
+            $url .= '&filter_name=' . urlencode($this->request->get['filter_name']);
         }
 
         if (isset($this->request->get['filter_ip'])) {
@@ -77,6 +87,7 @@ class ControllerReportUserActivity extends Controller {
 
         $filter_data = [
             'filter_user' => $filter_user,
+            'filter_name' => $filter_name,
             'filter_ip' => $filter_ip,
             'filter_date_start' => $filter_date_start,
             'filter_date_end' => $filter_date_end,

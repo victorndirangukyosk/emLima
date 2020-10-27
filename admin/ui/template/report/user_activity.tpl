@@ -95,6 +95,13 @@ $('#button-filter').on('click', function() {
 	if (filter_user) {
 		url += '&filter_user=' + encodeURIComponent(filter_user);
 	}
+        
+        var filter_name = $('input[name=\'filter_name\']').val();
+	
+	if (filter_name) {
+		url += '&filter_name=' + encodeURIComponent(filter_name);
+	}
+        
 	var filter_ip = $('input[name=\'filter_ip\']').val();
 	
 	if (filter_ip) {

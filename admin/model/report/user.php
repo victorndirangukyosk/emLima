@@ -11,6 +11,10 @@ class ModelReportUser extends Model {
             //$implode[] = "CONCAT(c.firstname, ' ', c.lastname) LIKE '" . $this->db->escape($data['filter_user']) . "'";
             $implode[] = "c.username LIKE '" . $this->db->escape($data['filter_user']) . "'";
         }
+        
+        if (!empty($data['filter_name'])) {
+            $implode[] = "CONCAT(c.firstname, ' ', c.lastname) LIKE '" . $this->db->escape($data['filter_name']) . "'";
+        }
 
         if (!empty($data['filter_ip'])) {
             $implode[] = "ca.ip LIKE '" . $this->db->escape($data['filter_ip']) . "'";
@@ -55,6 +59,10 @@ class ModelReportUser extends Model {
         if (!empty($data['filter_user'])) {
             //$implode[] = "CONCAT(c.firstname, ' ', c.lastname) LIKE '" . $this->db->escape($data['filter_user']) . "'";
             $implode[] = "c.username LIKE '" . $this->db->escape($data['filter_user']) . "'";
+        }
+        
+        if (!empty($data['filter_name'])) {
+            $implode[] = "CONCAT(c.firstname, ' ', c.lastname) LIKE '" . $this->db->escape($data['filter_name']) . "'";
         }
 
         if (!empty($data['filter_ip'])) {
