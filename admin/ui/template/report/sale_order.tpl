@@ -71,7 +71,11 @@
                 <div class="form-group">
                     <label class="control-label"><?= $entry_city ?></label>  
                     <input name="filter_city" class="form-control" value="<?= $filter_city ?>" />
-                </div>                  
+                </div>
+                <div class="form-group">
+                    <label class="control-label"><?= $entry_customer ?></label>  
+                    <input name="filter_customer" class="form-control" value="<?= $filter_customer ?>" />
+                </div>
                 <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
               </div>
           </div>
@@ -139,6 +143,26 @@
 	}
     });
     
+    $('input[name=\'filter_customer\']').autocomplete({
+	'source': function(request, response) {
+		$.ajax({
+			url: 'index.php?path=sale/customer/autocompletebyCompany&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request),
+			dataType: 'json',
+			success: function(json) {
+				response($.map(json, function(item) {
+					return {
+						label: item['name'],
+						value: item['customer_id']
+					}
+				}));
+			}
+		});
+	},
+	'select': function(item) {
+		$('input[name=\'filter_customer\']').val(item['label']);
+	}
+    });
+    
 $('#button-filter').on('click', function() {
 	url = 'index.php?path=report/sale_order&token=<?php echo $token; ?>';
 	
@@ -146,6 +170,12 @@ $('#button-filter').on('click', function() {
 	
 	if (filter_city) {
 		url += '&filter_city=' + encodeURIComponent(filter_city);
+	}
+        
+        var filter_customer = $('input[name=\'filter_customer\']').val();
+	
+	if (filter_customer) {
+		url += '&filter_customer=' + encodeURIComponent(filter_customer);
 	}
         
         var filter_date_start = $('input[name=\'filter_date_start\']').val();

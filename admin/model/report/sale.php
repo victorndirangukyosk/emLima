@@ -1087,6 +1087,10 @@ class ModelReportSale extends Model {
         if (!empty($data['filter_city'])) {
             $sql .= ' LEFT JOIN `' . DB_PREFIX . 'city` c on c.city_id = o.shipping_city_id ';
         }
+        
+        if (!empty($data['filter_customer'])) {
+            $sql .= ' LEFT JOIN `' . DB_PREFIX . 'customer` cr on cr.customer_id = o.customer_id ';
+        }
 
         if ($this->user->isVendor()) {
             $sql .= ' AND st.vendor_id = "' . $this->user->getId() . '"';
@@ -1100,6 +1104,10 @@ class ModelReportSale extends Model {
 
         if (!empty($data['filter_city'])) {
             $sql .= ' AND c.name LIKE "' . $data['filter_city'] . '%"';
+        }
+        
+        if (!empty($data['filter_customer'])) {
+            $sql .= " AND CONCAT(cr.firstname,' ',cr.lastname) LIKE '" . $this->db->escape($data['filter_customer']) . "%'";
         }
 
         if (!empty($data['filter_date_start'])) {
@@ -1407,6 +1415,10 @@ class ModelReportSale extends Model {
         if (!empty($data['filter_city'])) {
             $sql .= ' LEFT JOIN `' . DB_PREFIX . 'city` c on c.city_id = o.shipping_city_id ';
         }
+        
+        if (!empty($data['filter_customer'])) {
+            $sql .= ' LEFT JOIN `' . DB_PREFIX . 'customer` cr on cr.customer_id = o.customer_id ';
+        }
 
         $sql .= ' INNER JOIN `' . DB_PREFIX . 'store` st on st.store_id = o.store_id ';
 
@@ -1422,6 +1434,10 @@ class ModelReportSale extends Model {
 
         if (!empty($data['filter_city'])) {
             $sql .= " AND c.name LIKE '" . $this->db->escape($data['filter_city']) . "%'";
+        }
+        
+        if (!empty($data['filter_customer'])) {
+            $sql .= " AND CONCAT(cr.firstname,' ',cr.lastname) LIKE '" . $this->db->escape($data['filter_customer']) . "%'";
         }
 
         if (!empty($data['filter_date_start'])) {
