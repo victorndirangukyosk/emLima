@@ -103,7 +103,7 @@
                 <td class="text-right"><?php echo $order['products']; ?></td>
                 <td class="text-right"><?php echo $order['tax']; ?></td>
                 <td class="text-right"><?php echo $order['total']; ?></td>
-                 <td class="text-center"><a class="download" id="download-order-products"  data-toggle="tooltip" order_startdate="<?php echo $order['date_starto']; ?>" order_enddate="<?php echo $order['date_endo']; ?>"  title="Download Individual Order Summary" class="btn btn-info"><i  style="cursor: pointer;height:20px;width:20px" class="fa fa-file-excel-o"></i></a></td>
+                 <td class="text-center"><a class="download" id="download-order-products"  data-toggle="tooltip" order_startdate="<?php echo $order['date_starto']; ?>" order_enddate="<?php echo $order['date_endo']; ?>" filter_customer="<?= $filter_customer ?>" filter_city="<?= $filter_city ?>" filter_order_status_id="<?= $filter_order_status_id ?>"  title="Download Individual Order Summary" class="btn btn-info"><i  style="cursor: pointer;height:20px;width:20px" class="fa fa-file-excel-o"></i></a></td>
               </tr>
               <?php } ?>
               <?php } else { ?>
@@ -221,9 +221,13 @@ $('.date').datetimepicker({
   
             e.preventDefault();            
             $orderstartdate = $(this).attr('order_startdate');
-            $orderenddate = $(this).attr('order_enddate');            
-            url = 'index.php?path=sale/order/consolidatedOrdersSummary&token=<?php echo $token; ?>&orderenddate=' + $orderenddate+'&orderstartdate='+$orderstartdate;               
+            $orderenddate = $(this).attr('order_enddate');   
+            $filter_customer = $(this).attr('filter_customer');
+            $filter_order_status_id = $(this).attr('filter_order_status_id');  
+            $filter_city = $(this).attr('filter_city');            
+            url = 'index.php?path=sale/order/consolidatedOrdersSummary&token=<?php echo $token; ?>&orderenddate=' + $orderenddate+'&orderstartdate='+$orderstartdate+'&filter_customer='+$filter_customer+'&filter_order_status_id='+$filter_order_status_id+'&filter_city='+$filter_city;               
             var filter_order_status_id = $('select[name=\'filter_order_status_id\']').val();
+            var filter_customer = $('select[name=\'filter_customer\']').val();
 	
                            
               if (filter_order_status_id != 0) {
@@ -234,6 +238,10 @@ $('.date').datetimepicker({
               
               if (filter_city) {
                 url += '&filter_city=' + encodeURIComponent(filter_city);
+              }
+              
+              if (filter_customer) {
+                url += '&filter_customer=' + encodeURIComponent(filter_customer);
               }
                 location = url;
              

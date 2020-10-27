@@ -7142,12 +7142,14 @@ class ControllerSaleOrder extends Controller {
         $filter_date_start = $this->request->get['orderstartdate'];
         $filter_date_end = $this->request->get['orderenddate'];
         $filter_order_status_id = $this->request->get['filter_order_status_id'];
+        $filter_customer = $this->request->get['filter_customer'];
 
         $filter_data = [
             'filter_city' => $filter_city,
             'filter_date_start' => $filter_date_start,
             'filter_date_end' => $filter_date_end,
-            'filter_order_status_id' => $filter_order_status_id
+            'filter_order_status_id' => $filter_order_status_id,
+            'filter_customer' => $filter_customer,
         ];
 
 

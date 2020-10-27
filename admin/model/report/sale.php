@@ -2199,6 +2199,10 @@ class ModelReportSale extends Model {
         // $sql .= 'left join `'.DB_PREFIX.'city` c on c.city_id = o.shipping_city_id';
         // $sql .= ' LEFT JOIN '.DB_PREFIX.'store on('.DB_PREFIX.'store.store_id = o.store_id) ';
 //o.order_status_id != '6'  And o.order_status_id != '15'  And
+        if (!empty($data['filter_customer'])) {
+            $sql .= ' LEFT JOIN `' . DB_PREFIX . 'customer` cr on cr.customer_id = o.customer_id ';
+        }
+        
         if (isset($data['filter_order_status_id'])) {
             $sql .= " WHERE  o.order_status_id > '0'";
         } else {
@@ -2212,6 +2216,11 @@ class ModelReportSale extends Model {
         if (!empty($data['filter_city'])) {
             $sql .= " AND c.name LIKE '" . $data['filter_city'] . "%'";
         }
+        
+        if (!empty($data['filter_customer'])) {
+            $sql .= " AND CONCAT(cr.firstname,' ',cr.lastname) LIKE '" . $this->db->escape($data['filter_customer']) . "%'";
+        }
+        
 
         if (DATE($data['filter_date_start']) != DATE($data['filter_date_end'])) {
             if (!empty($data['filter_date_start'])) {
