@@ -707,6 +707,7 @@ class ControllerUserUser extends Controller
                         'username' => $result['username'],
                         'firstname' => $result['firstname'],
                         'lastname' => $result['lastname'],
+                        'name' => $result['name'],
                         'email' => $result['email'],
                     ];
                 }

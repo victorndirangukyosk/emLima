@@ -56,7 +56,7 @@ class ModelUserUser extends Model
 
     public function getUsers($data = [])
     {
-        $sql = 'SELECT * FROM `'.DB_PREFIX.'user`';
+        $sql = 'SELECT *, CONCAT(firstname, " ", lastname) AS name FROM `'.DB_PREFIX.'user`';
 
         $isWhere = 1;
         $_sql = [];
@@ -89,6 +89,12 @@ class ModelUserUser extends Model
             $isWhere = 1;
 
             $_sql[] = "lastname LIKE '".$this->db->escape($data['filter_last_name'])."%'";
+        }
+        
+        if (isset($data['filter_name']) && !is_null($data['filter_name'])) {
+            $isWhere = 1;
+
+            $_sql[] = "CONCAT(firstname, ' ', lastname) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
         }
 
         if (isset($data['filter_email']) && !is_null($data['filter_email'])) {
