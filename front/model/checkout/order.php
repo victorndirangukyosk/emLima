@@ -230,7 +230,7 @@ class ModelCheckoutOrder extends Model {
         $this->trigger->fire('pre.order.edit', $data);
 
         // Void the order first
-        $this->addOrderHistory($order_id, 0);
+        $this->addOrderHistory($order_id, 0, '', true, '', '');
 
         $store_id = 0;
 
@@ -299,7 +299,7 @@ class ModelCheckoutOrder extends Model {
         // Void the order first
         $log->write('deleteorder 1');
         $log->write($order_id);
-        $this->addOrderHistory($order_id, 0);
+        $this->addOrderHistory($order_id, 0, '', true, '', '');
 
         $this->db->query("DELETE FROM `" . DB_PREFIX . "order` WHERE order_id = '" . (int) $order_id . "'");
         $this->db->query("DELETE FROM `" . DB_PREFIX . "order_custom_field` WHERE order_id = '" . (int) $order_id . "'");
@@ -404,7 +404,7 @@ class ModelCheckoutOrder extends Model {
         }
     }
 
-    public function addOrderHistory($order_id, $order_status_id, $comment = '', $notify = true) {
+    public function addOrderHistory($order_id, $order_status_id, $comment = '', $notify = true, $added_by = '', $added_by_role = '') {
 
         //$notify = true;
 
@@ -537,7 +537,7 @@ class ModelCheckoutOrder extends Model {
 
             $this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', order_pdf_link ='" . $pdf_link . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
 
-            $this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', order_status_id = '" . (int) $order_status_id . "', notify = '" . (int) $notify . "', comment = '" . $this->db->escape($comment) . "', date_added = NOW()");
+            $this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', added_by = '" . (int) $added_by . "', role = '" . $added_by_role . "', order_status_id = '" . (int) $order_status_id . "', notify = '" . (int) $notify . "', comment = '" . $this->db->escape($comment) . "', date_added = NOW()");
 
 
             // If current order status is not processing or complete but new status is processing or complete then commence completing the order
@@ -1694,7 +1694,7 @@ class ModelCheckoutOrder extends Model {
         if (isset($customer_info) && isset($customer_info['device_id']) && strlen($customer_info['device_id']) > 0) {
 
             $log->write('customer device id set FRONT.MODEL.CHECKOUT.ORDER');
-            $ret = $this->emailtemplate->sendPushNotification($order_info['customer_id'], $customer_info['device_id'], $order_id, $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
+            $ret = $this->emailtemplate->sendPushNotification($order_info['customer_id'], $customer_info['device_id'], $order_info['order_id'], $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
         } else {
             $log->write('customer device id not set FRONT.MODEL.CHECKOUT.ORDER');
         }
@@ -1740,7 +1740,7 @@ class ModelCheckoutOrder extends Model {
                     if (isset($order_approval_access_use) && isset($order_approval_access_use['device_id']) && strlen($order_approval_access_use['device_id']) > 0) {
 
                         $log->write('customer device id set FRONT.MODEL.CHECKOUT.ORDER');
-                        $ret = $this->emailtemplate->sendPushNotification($order_info['customer_id'], $order_approval_access_use['device_id'], $order_id, $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
+                        $ret = $this->emailtemplate->sendPushNotification($order_info['customer_id'], $order_approval_access_use['device_id'], $order_info['order_id'], $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
                     } else {
                         $log->write('customer device id not set FRONT.MODEL.CHECKOUT.ORDER');
                     }
@@ -1781,7 +1781,7 @@ class ModelCheckoutOrder extends Model {
                     if (isset($order_approval_access_use) && isset($order_approval_access_use['device_id']) && strlen($order_approval_access_use['device_id']) > 0) {
 
                         $log->write('customer device id set FRONT.MODEL.CHECKOUT.ORDER');
-                        $ret = $this->emailtemplate->sendPushNotification($order_info['customer_id'], $order_approval_access_use['device_id'], $order_id, $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
+                        $ret = $this->emailtemplate->sendPushNotification($order_info['customer_id'], $order_approval_access_use['device_id'], $order_info['order_id'], $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
                     } else {
                         $log->write('customer device id not set FRONT.MODEL.CHECKOUT.ORDER');
                     }

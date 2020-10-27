@@ -650,6 +650,20 @@
                                     <?php } ?>
                                 </div>
                             </div>
+                            
+                            <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-account-manager-group-id">
+                                    <span data-toggle="tooltip" data-container="#tab-general" title="Add Account Manager Group ID">
+                                        Account Manager Group ID
+                                    </span>    
+                                </label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="config_account_manager_group_id" value="<?php echo $config_account_manager_group_id; ?>" placeholder="Enter Account Manager Group ID" id="input-account-manager-group-id" class="form-control" />
+                                    <?php if ($error_account_manager_group_id) { ?>
+                                    <div class="text-danger"><?php echo $error_account_manager_group_id; ?></div>
+                                    <?php } ?>
+                                </div>
+                            </div>
 
 
                             <div class="form-group required">

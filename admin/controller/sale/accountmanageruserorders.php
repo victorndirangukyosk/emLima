@@ -1474,25 +1474,25 @@ class ControllerSaleAccountManagerUserOrders extends Controller {
 
             $data['breadcrumbs'][] = [
                 'text' => $this->language->get('heading_title'),
-                'href' => $this->url->link('sale/order', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+                'href' => $this->url->link('sale/accountmanageruserorders', 'token=' . $this->session->data['token'] . $url, 'SSL'),
             ];
 
             if (isset($this->request->get['store_id'])) {
                 $store_id = $this->request->get['store_id'];
-                $data['shipping'] = $this->url->link('sale/order/shipping', 'store_id=' . $store_id . '&token=' . $this->session->data['token'] . '&order_id=' . (int) $this->request->get['order_id'], 'SSL');
+                $data['shipping'] = $this->url->link('sale/accountmanageruserorders/shipping', 'store_id=' . $store_id . '&token=' . $this->session->data['token'] . '&order_id=' . (int) $this->request->get['order_id'], 'SSL');
 
                 if ($this->model_sale_order->hasRealOrderProducts($order_id)) {
-                    $data['invoice'] = $this->url->link('sale/order/newinvoice', 'store_id=' . $store_id . '&token=' . $this->session->data['token'] . '&order_id=' . (int) $this->request->get['order_id'], 'SSL');
+                    $data['invoice'] = $this->url->link('sale/accountmanageruserorders/newinvoice', 'store_id=' . $store_id . '&token=' . $this->session->data['token'] . '&order_id=' . (int) $this->request->get['order_id'], 'SSL');
                 } else {
-                    $data['invoice'] = $this->url->link('sale/order/invoice', 'store_id=' . $store_id . '&token=' . $this->session->data['token'] . '&order_id=' . (int) $this->request->get['order_id'], 'SSL');
+                    $data['invoice'] = $this->url->link('sale/accountmanageruserorders/invoice', 'store_id=' . $store_id . '&token=' . $this->session->data['token'] . '&order_id=' . (int) $this->request->get['order_id'], 'SSL');
                 }
             } else {
-                $data['shipping'] = $this->url->link('sale/order/shipping', 'token=' . $this->session->data['token'] . '&order_id=' . (int) $this->request->get['order_id'], 'SSL');
+                $data['shipping'] = $this->url->link('sale/accountmanageruserorders/shipping', 'token=' . $this->session->data['token'] . '&order_id=' . (int) $this->request->get['order_id'], 'SSL');
 
                 if ($this->model_sale_order->hasRealOrderProducts($order_id)) {
-                    $data['invoice'] = $this->url->link('sale/order/newinvoice', 'token=' . $this->session->data['token'] . '&order_id=' . (int) $this->request->get['order_id'], 'SSL');
+                    $data['invoice'] = $this->url->link('sale/accountmanageruserorders/newinvoice', 'token=' . $this->session->data['token'] . '&order_id=' . (int) $this->request->get['order_id'], 'SSL');
                 } else {
-                    $data['invoice'] = $this->url->link('sale/order/invoice', 'token=' . $this->session->data['token'] . '&order_id=' . (int) $this->request->get['order_id'], 'SSL');
+                    $data['invoice'] = $this->url->link('sale/accountmanageruserorders/invoice', 'token=' . $this->session->data['token'] . '&order_id=' . (int) $this->request->get['order_id'], 'SSL');
                 }
             }
 
@@ -1500,11 +1500,11 @@ class ControllerSaleAccountManagerUserOrders extends Controller {
             $data['edit'] = '';
             if (!$this->user->isVendor()) {
                 if (!in_array($order_info['order_status_id'], $this->config->get('config_complete_status'))) {
-                    $data['edit'] = $this->url->link('sale/order/EditInvoice', 'token=' . $this->session->data['token'] . '&order_id=' . $this->request->get['order_id'], 'SSL');
+                    $data['edit'] = $this->url->link('sale/accountmanageruserorders/EditInvoice', 'token=' . $this->session->data['token'] . '&order_id=' . $this->request->get['order_id'], 'SSL');
                 }
             }
 
-            $data['cancel'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $data['cancel'] = $this->url->link('sale/accountmanageruserorders', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
             $data['order_id'] = $this->request->get['order_id'];
 
@@ -2751,7 +2751,7 @@ class ControllerSaleAccountManagerUserOrders extends Controller {
 
         $data['token'] = $this->session->data['token'];
 
-        $data['sale_order_link'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'], 'SSL');
+        $data['sale_order_link'] = $this->url->link('sale/accountmanageruserorders', 'token=' . $this->session->data['token'], 'SSL');
 
         $data['direction'] = $this->language->get('direction');
         $data['lang'] = $this->language->get('code');
@@ -2995,16 +2995,33 @@ class ControllerSaleAccountManagerUserOrders extends Controller {
         $data['histories'] = [];
 
         $this->load->model('sale/order');
+        $this->load->model('account/customer');
+        $this->load->model('user/user');
+        $log = new Log('error.log');
 
         $results = $this->model_sale_order->getOrderHistories($this->request->get['order_id'], ($page - 1) * 10, 10);
 
         foreach ($results as $result) {
+            $user_name = NULL;
+            if ($result['role'] != NULL && $result['role'] == 'customer') {
+                $history_user_info = $this->model_account_customer->getCustomer($result['added_by']);
+                $user_name = $history_user_info['firstname'] . ' ' . $history_user_info['lastname'];
+                //$log->write($history_user_info);
+            }
+
+            if ($result['role'] != NULL && $result['role'] != 'customer') {
+                $history_user_info = $this->model_user_user->getUser($result['added_by']);
+                $user_name = $history_user_info['firstname'] . ' ' . $history_user_info['lastname'];
+                //$log->write($history_user_info);
+            }
             $data['histories'][] = [
                 'notify' => $result['notify'] ? $this->language->get('text_yes') : $this->language->get('text_no'),
                 'status' => $result['status'],
                 'order_status_color' => $result['color'],
                 'comment' => nl2br($result['comment']),
                 'date_added' => date($this->language->get('datetime_format'), strtotime($result['date_added'])),
+                'added_by' => $user_name,
+                'role' => $result['role'],
             ];
         }
 

@@ -315,11 +315,11 @@ class Controlleraccounttransactions extends Controller {
                         if (is_array($order) && array_key_exists('value', $order)) {
                             $order['total_currency'] = $this->currency->format($order['value']);
                         }
-                        /*$log = new Log('error.log');
-                        $log->write('NON NUMERIC');
-                        $log->write($totalPendingAmount);
-                        $log->write($order['total']);
-                        $log->write('NON NUMERIC');*/
+                        /* $log = new Log('error.log');
+                          $log->write('NON NUMERIC');
+                          $log->write($totalPendingAmount);
+                          $log->write($order['total']);
+                          $log->write('NON NUMERIC'); */
                         $totalPendingAmount = $totalPendingAmount + $order['value'];
                         //$totalPendingAmount = $this->currency->format($totalPendingAmount);
                         $data['pending_order_id'][] = $order['order_id'];
@@ -717,20 +717,23 @@ class Controlleraccounttransactions extends Controller {
             curl_close($ch);
 
             if (strpos($order_id, 'KBCUST') !== false) {
-                if ('COMPLETED' != $status || null == $response || null == $status) {
+                if ($response != null && $status != null && $status == 'FAILED') {
                     $this->model_payment_pesapal->updateorderstatusipnOther($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
-                }
-
-                if ('COMPLETED' == $status) {
+                } elseif ($response != null && $status != null && $status == 'PENDING') {
+                    $this->model_payment_pesapal->updateorderstatusipnOther($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
+                } elseif ($response != null && $status != null && $status == 'COMPLETED') {
+                    $this->model_payment_pesapal->updateorderstatusipnOther($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
+                } else {
                     $this->model_payment_pesapal->updateorderstatusipnOther($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
                 }
             } else {
-                if ('COMPLETED' != $status || null == $response || null == $status) {
+                if ($response != null && $status != null && $status == 'FAILED') {
                     $this->model_payment_pesapal->addOrderHistory($order_id, $this->config->get('pesapal_failed_order_status_id'));
                     $this->model_payment_pesapal->updateorderstatusipn($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
-                }
-
-                if ('COMPLETED' == $status) {
+                } elseif ($response != null && $status != null && $status == 'PENDING') {
+                    $this->model_payment_pesapal->addOrderHistory($order_id, $this->config->get('pesapal_pending_order_status_id'));
+                    $this->model_payment_pesapal->updateorderstatusipn($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
+                } elseif ($response != null && $status != null && $status == 'COMPLETED') {
                     $this->model_payment_pesapal->addOrderHistory($order_id, $this->config->get('pesapal_order_status_id'));
                     $this->model_payment_pesapal->updateorderstatusipn($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
                 }

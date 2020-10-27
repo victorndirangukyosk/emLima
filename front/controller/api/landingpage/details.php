@@ -77,15 +77,24 @@ class ControllerApiLandingpagedetails extends Controller
                 $message = "Following farmer details are received.  <br>";
                 $message = $message ."<li> First Name :".$first_name ."</li><br><li> Last Name :".$last_name ."</li><br><li> Email :".$email ."</li><br><li> Phone :".$phone ."</li><br><li> Type :".$type ."</li><br><li> Location :".$location ."</li><br><li> Produce Grown :".$produce ."</li><br>";
                
-                if(strpos(Career_Mail_ID,"@")==true)//if mail Id not set in define.php
-               {
-                $email = Career_Mail_ID;
-               } 
-               else
-               {
-                $email = "sridivya.talluri@technobraingroup.com";
+            //     if(strpos(Career_Mail_ID,"@")==true)//if mail Id not set in define.php
+            //    {
+            //     $email = Career_Mail_ID;
+            //    } 
+            //    else
+            //    {
+            //     $email = "sridivya.talluri@technobraingroup.com";
 
-               }
+            //    }
+
+                   $this->load->model('setting/setting');
+                    $email = $this->model_setting_setting->getEmailSetting('careers');
+                     
+                    if(strpos( $email,"@")==false)//if mail Id not set in define.php
+                   {
+                   $email = "sridivya.talluri@technobraingroup.com";
+                   }
+
                 $mail = new Mail($this->config->get('config_mail'));
                 $mail->setTo($email);
                 $mail->setBCC($bccemail);

@@ -2331,7 +2331,7 @@ class Emailtemplate
                 $client = new FCMClient();
                 $client->setApiKey($apiKey);
                 $client->injectHttpClient(new \GuzzleHttp\Client());
-
+                $log->write('FCM INJECT');
                 $note = new Notification($title, $message);
                 $note->setIcon('notification_icon_resource_name')
                         ->setColor('#3ca826')
@@ -2350,8 +2350,10 @@ class Emailtemplate
                         ->setData(['order_id' => $order_id, 'store_id' => $store_id]);
 
                 $response = $client->send($message);
-
+                
+                $log->write('FCM');
                 $log->write($response);
+                $log->write('FCM');
                 //var_dump($response);die;
                 if ($response->getStatusCode()) {
                     $json['success'] = 'Success: push notification sent.';
@@ -2660,5 +2662,33 @@ class Emailtemplate
         $maskedhref = $this->url->link('account/order/info', 'order_id='.$decodedOrderId);
 
         return $maskedhref;
+    }
+
+    public function getConsolidatedOrderSheetFind()
+    {
+        $result = ['{deliverydate}','{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}'];
+        return $result;
+    }
+
+    public function getConsolidatedOrderSheetReplace($data)
+    {
+        $result = [
+            'deliverydate' => $data['deliverydate'],
+            'site_url' => HTTPS_CATALOG,
+            //'logo'=> HTTPS_CATALOG.'image/' . $this->config->get('config_logo'),
+            'logo' => $this->resize($this->config->get('config_logo'), 197, 34),
+            //'site_url'=>$this->config->get('config_url'),
+            'system_name' => $this->config->get('config_name'),
+            'year' => date('Y'),    
+            'help_center' => $this->url->adminLink('information/help'),
+            //'white_logo'=> HTTPS_CATALOG.'image/'. $this->config->get('config_white_logo'),
+            'white_logo' => $this->resize($this->config->get('config_white_logo'), 197, 34),
+            'terms' => $this->url->adminLink('information/information', 'information_id='.$this->config->get('config_account_id'), 'SSL'),
+            'privacy_policy' => $this->url->adminLink('information/information', 'information_id='.$this->config->get('config_privacy_policy_id'), 'SSL'),
+            'system_email' => $this->config->get('config_email'),
+            'system_phone' => '+'.$this->config->get('config_telephone_code').' '.$this->config->get('config_telephone'),
+        ];
+
+        return $result;
     }
 }

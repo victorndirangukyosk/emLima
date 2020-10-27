@@ -56,7 +56,7 @@ class ModelUserUser extends Model
 
     public function getUsers($data = [])
     {
-        $sql = 'SELECT * FROM `'.DB_PREFIX.'user`';
+        $sql = 'SELECT *, CONCAT(firstname, " ", lastname) AS name FROM `'.DB_PREFIX.'user`';
 
         $isWhere = 1;
         $_sql = [];
@@ -65,7 +65,7 @@ class ModelUserUser extends Model
         //filter vendor groups
         $sql .= ' WHERE user_group_id NOT IN ('.$this->db->escape($this->config->get('config_vendor_group_ids')).') ';
         $sql .= ' AND user_group_id NOT IN ('.$this->db->escape($this->config->get('config_shopper_group_ids')).') ';
-        $sql .= ' AND user_group_id NOT IN ('.$config_account_manager_group_id.') ';
+        $sql .= ' AND user_group_id NOT IN ('.$this->db->escape($this->config->get('config_account_manager_group_id')).') ';
 
         if (isset($data['filter_user_name']) && !is_null($data['filter_user_name'])) {
             $isWhere = 1;
@@ -73,7 +73,7 @@ class ModelUserUser extends Model
             $_sql[] = "username LIKE '".$this->db->escape($data['filter_user_name'])."%'";
         }
 
-        if (isset($data['filter_user_group']) && !is_null($data['filter_user_group'])) {
+        if (isset($data['filter_user_group']) && !is_null($data['filter_user_group']) && $data['filter_user_group'] != NULL) {
             $isWhere = 1;
 
             $_sql[] = 'user_group_id LIKE ( SELECT ug.user_group_id FROM `'.DB_PREFIX."user_group` ug WHERE ug.name LIKE '".$this->db->escape($data['filter_user_group'])."%') ";
@@ -89,6 +89,12 @@ class ModelUserUser extends Model
             $isWhere = 1;
 
             $_sql[] = "lastname LIKE '".$this->db->escape($data['filter_last_name'])."%'";
+        }
+        
+        if (isset($data['filter_name']) && !is_null($data['filter_name'])) {
+            $isWhere = 1;
+
+            $_sql[] = "CONCAT(firstname, ' ', lastname) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
         }
 
         if (isset($data['filter_email']) && !is_null($data['filter_email'])) {

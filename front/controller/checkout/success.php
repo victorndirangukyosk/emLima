@@ -15,10 +15,10 @@ class ControllerCheckoutSuccess extends Controller {
         $this->load->model('account/customer');
         $parent_info = $this->model_account_customer->getCustomer($_SESSION['parent']);
         $this->load->language('checkout/success');
-        /*$log = new Log('error.log');
-        $log->write('parent_info');
-        $log->write($parent_info);
-        $log->write('parent_info');*/
+        /* $log = new Log('error.log');
+          $log->write('parent_info');
+          $log->write($parent_info);
+          $log->write('parent_info'); */
 
         $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_checkout.css');
 
@@ -694,7 +694,11 @@ class ControllerCheckoutSuccess extends Controller {
 
                         $log->write($order_status_id);
                         if ('no' != $order_status_id) {
-                            $this->model_checkout_order->addOrderHistory($order_id, $order_status_id, $comment);
+                            
+                            $this->load->model('account/customer');
+                            $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+                            
+                            $this->model_checkout_order->addOrderHistory($order_id, $order_status_id, $comment, true, $customer_info['customer_id'], 'customer');
                         } else {
                             $log->write('order_status_id no match');
                         }

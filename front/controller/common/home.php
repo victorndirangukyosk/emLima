@@ -343,11 +343,13 @@ class ControllerCommonHome extends Controller {
                         $message = "Following details are received.  <br>";
                     $message = $message . "<li> Full Name :" . $first_name . "</li><br><li> Email :" . $email . "</li><br><li> Phone :" . $phone . "</li><br>";
 
-                    if (strpos(Career_Mail_ID, "@") == true) {//if mail Id not set in define.php
-                        $email = Career_Mail_ID;
-                    } else {
+                    $this->load->model('setting/setting');
+                    $email = $this->model_setting_setting->getEmailSetting('careers');
+
+                    if (strpos($email, "@") == false) {//if mail Id not set in define.php
                         $email = "sridivya.talluri@technobraingroup.com";
                     }
+
                     // $bccemail = "sridivya.talluri@technobraingroup.com";
                     //  echo "<pre>";print_r($file_data);die;
                     $filepath = DIR_UPLOAD . "careers/" . $file_upload_status['file_name'];
@@ -380,10 +382,10 @@ class ControllerCommonHome extends Controller {
     public function FeatureFileUpload($file_data) {
         $status = array();
 
-        // echo "<pre>";print_r($file_data);die;
+        //echo "<pre>";print_r($file_data);die;
         if ((isset($file_data['careers-resume'])) && (is_uploaded_file($file_data['careers-resume']['tmp_name']))) {
 
-            if ($file_data['careers-resume']['type'] != "application/msword" && $file_data['careers-resume']['type'] != "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
+            if ($file_data['careers-resume']['type'] != "application/msword" && $file_data['careers-resume']['type'] != "application/vnd.openxmlformats-officedocument.wordprocessingml.document" && $file_data['careers-resume']['type'] != "application/octet-stream" && $file_data['careers-resume']['type'] != "application/pdf") {
                 return $status = array('status' => FALSE, 'file_name' => '');
             }
             if ($file_data['careers-resume']['size'] > 5000000) {

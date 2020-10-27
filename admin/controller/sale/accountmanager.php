@@ -38,6 +38,22 @@ class ControllerSaleAccountManager extends Controller {
 
             $this->session->data['success'] = $this->language->get('text_success');
 
+            // Add to activity log
+            $log = new Log('error.log');
+            $this->load->model('user/user_activity');
+
+            $activity_data = [
+                'user_id' => $this->user->getId(),
+                'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+                'user_group_id' => $this->user->getGroupId(),
+                'account_manager_id' => $user_id,
+            ];
+            $log->write('account manager add');
+
+            $this->model_user_user_activity->addActivity('account_manager_add', $activity_data);
+
+            $log->write('account manager add');
+
             $url = '';
 
             if (isset($this->request->get['sort'])) {
@@ -78,6 +94,22 @@ class ControllerSaleAccountManager extends Controller {
 
             $this->session->data['success'] = $this->language->get('text_success');
 
+            // Add to activity log
+            $log = new Log('error.log');
+            $this->load->model('user/user_activity');
+
+            $activity_data = [
+                'user_id' => $this->user->getId(),
+                'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+                'user_group_id' => $this->user->getGroupId(),
+                'account_manager_id' => $this->request->get['user_id'],
+            ];
+            $log->write('account manager edit');
+
+            $this->model_user_user_activity->addActivity('account_manager_edit', $activity_data);
+
+            $log->write('account manager edit');
+
             $url = '';
 
             if (isset($this->request->get['sort'])) {
@@ -116,6 +148,22 @@ class ControllerSaleAccountManager extends Controller {
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
             foreach ($this->request->post['selected'] as $user_id) {
                 $this->model_user_accountmanager->deleteUser($user_id);
+
+                // Add to activity log
+                $log = new Log('error.log');
+                $this->load->model('user/user_activity');
+
+                $activity_data = [
+                    'user_id' => $this->user->getId(),
+                    'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+                    'user_group_id' => $this->user->getGroupId(),
+                    'account_manager_id' => $user_id,
+                ];
+                $log->write('account manager delete');
+
+                $this->model_user_user_activity->addActivity('account_manager_delete', $activity_data);
+
+                $log->write('account manager delete');
             }
 
             $this->session->data['success'] = $this->language->get('text_success');
@@ -675,6 +723,7 @@ class ControllerSaleAccountManager extends Controller {
         $data['entry_firstname'] = $this->language->get('entry_firstname');
         $data['entry_lastname'] = $this->language->get('entry_lastname');
         $data['entry_email'] = $this->language->get('entry_email');
+        $data['entry_telephone'] = $this->language->get('entry_telephone');
         $data['entry_image'] = $this->language->get('entry_image');
         $data['entry_status'] = $this->language->get('entry_status');
 
@@ -683,8 +732,8 @@ class ControllerSaleAccountManager extends Controller {
         $data['button_saveclose'] = $this->language->get('button_saveclose');
         $data['button_cancel'] = $this->language->get('button_cancel');
         $data['tab_general'] = $this->language->get('tab_general');
-        $data['tab_assign_customers'] = 'Assign Customers';
-        $data['tab_assigned_customers'] = 'Assigned Customers';
+        $data['tab_assign_customers'] = 'Assign Comapny';
+        $data['tab_assigned_customers'] = 'Assigned Comapny';
         $data['assigned_customers'] = NULL;
         if (isset($this->request->get['user_id'])) {
             $data['assigned_customers'] = $this->model_user_accountmanager->getCustomerByAccountManagerId($this->request->get['user_id']);
@@ -736,6 +785,18 @@ class ControllerSaleAccountManager extends Controller {
             $data['error_lastname'] = '';
         }
 
+        if (isset($this->error['email'])) {
+            $data['error_email'] = $this->error['email'];
+        } else {
+            $data['error_email'] = '';
+        }
+
+        if (isset($this->error['telephone'])) {
+            $data['error_telephone'] = $this->error['telephone'];
+        } else {
+            $data['error_telephone'] = '';
+        }
+
         $url = '';
 
         if (isset($this->request->get['sort'])) {
@@ -770,7 +831,7 @@ class ControllerSaleAccountManager extends Controller {
 
         $data['cancel'] = $this->url->link('sale/accountmanager', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
-        if (isset($this->request->get['user_id']) && ('POST' != $this->request->server['REQUEST_METHOD'])) {
+        if (isset($this->request->get['user_id'])) {
             $user_info = $this->model_user_accountmanager->getUser($this->request->get['user_id']);
             $data['user_id'] = $user_info['user_id'];
         }
@@ -831,6 +892,14 @@ class ControllerSaleAccountManager extends Controller {
             $data['email'] = '';
         }
 
+        if (isset($this->request->post['telephone'])) {
+            $data['telephone'] = $this->request->post['telephone'];
+        } elseif (!empty($user_info)) {
+            $data['telephone'] = $user_info['telephone'];
+        } else {
+            $data['telephone'] = '';
+        }
+
         if (isset($this->request->post['image'])) {
             $data['image'] = $this->request->post['image'];
         } elseif (!empty($user_info)) {
@@ -876,15 +945,34 @@ class ControllerSaleAccountManager extends Controller {
         }
 
         $user_info = $this->model_user_accountmanager->getUserByUsername($this->request->post['username']);
+        $user_email_info = $this->model_user_accountmanager->getUserByEmail($this->request->post['email']);
 
         if (!isset($this->request->get['user_id'])) {
             if ($user_info) {
-                $this->error['warning'] = $this->language->get('error_exists');
+                $this->error['warning'] = $this->language->get('error_username_exists');
+                $this->error['username'] = $this->language->get('error_username_exist');
             }
         } else {
             if ($user_info && ($this->request->get['user_id'] != $user_info['user_id'])) {
-                $this->error['warning'] = $this->language->get('error_exists');
+                $this->error['warning'] = $this->language->get('error_username_exists');
+                $this->error['username'] = $this->language->get('error_username_exist');
             }
+        }
+
+        if (!isset($this->request->get['user_id'])) {
+            if ($user_email_info) {
+                $this->error['warning'] = $this->language->get('error_exists');
+                $this->error['email'] = $this->language->get('error_exist');
+            }
+        } else {
+            if ($user_email_info && ($this->request->get['user_id'] != $user_email_info['user_id'])) {
+                $this->error['warning'] = $this->language->get('error_exists');
+                $this->error['email'] = $this->language->get('error_exist');
+            }
+        }
+
+        if ((utf8_strlen($this->request->post['email']) <= 0) || (utf8_strlen($this->request->post['email']) > 96) || !filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL)) {
+            $this->error['email'] = $this->language->get('error_email');
         }
 
         if ((utf8_strlen(trim($this->request->post['firstname'])) < 1) || (utf8_strlen(trim($this->request->post['firstname'])) > 32)) {
@@ -893,6 +981,10 @@ class ControllerSaleAccountManager extends Controller {
 
         if ((utf8_strlen(trim($this->request->post['lastname'])) < 1) || (utf8_strlen(trim($this->request->post['lastname'])) > 32)) {
             $this->error['lastname'] = $this->language->get('error_lastname');
+        }
+
+        if ((utf8_strlen($this->request->post['telephone']) < 3) || (utf8_strlen($this->request->post['telephone']) > 32)) {
+            $this->error['telephone'] = $this->language->get('error_telephone');
         }
 
         if ($this->request->post['password'] || (!isset($this->request->get['user_id']))) {
@@ -946,68 +1038,6 @@ class ControllerSaleAccountManager extends Controller {
         }
 
         return !$this->error;
-    }
-
-    public function login() {
-        $json = [];
-
-        if (isset($this->request->get['customer_id'])) {
-            $customer_id = $this->request->get['customer_id'];
-        } else {
-            $customer_id = 0;
-        }
-
-        $this->load->model('sale/customer');
-
-        $customer_info = $this->model_sale_customer->getCustomer($customer_id);
-
-        if ($customer_info) {
-            $token = md5(mt_rand());
-
-            $this->model_sale_customer->editToken($customer_id, $token);
-
-            if (isset($this->request->get['store_id'])) {
-                $store_id = $this->request->get['store_id'];
-            } else {
-                $store_id = 0;
-            }
-
-            $this->load->model('setting/store');
-
-            $store_info = $this->model_setting_store->getStore($store_id);
-
-            if ($store_info) {
-                $this->response->redirect($store_info['url'] . 'index.php?path=account/login/adminRedirectLogin&token=' . $token);
-            } else {
-                $this->response->redirect(HTTP_CATALOG . 'index.php?path=account/login/adminRedirectLogin&token=' . $token);
-            }
-        } else {
-            $this->load->language('error/not_found');
-
-            $this->document->setTitle($this->language->get('heading_title'));
-
-            $data['heading_title'] = $this->language->get('heading_title');
-
-            $data['text_not_found'] = $this->language->get('text_not_found');
-
-            $data['breadcrumbs'] = [];
-
-            $data['breadcrumbs'][] = [
-                'text' => $this->language->get('text_home'),
-                'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL'),
-            ];
-
-            $data['breadcrumbs'][] = [
-                'text' => $this->language->get('heading_title'),
-                'href' => $this->url->link('error/not_found', 'token=' . $this->session->data['token'], 'SSL'),
-            ];
-
-            $data['header'] = $this->load->controller('common/header');
-            $data['column_left'] = $this->load->controller('common/column_left');
-            $data['footer'] = $this->load->controller('common/footer');
-
-            $this->response->setOutput($this->load->view('error/not_found.tpl', $data));
-        }
     }
 
     public function history() {
@@ -1572,7 +1602,7 @@ class ControllerSaleAccountManager extends Controller {
         $json = NULL;
         if ($name != NULL) {
             $this->load->model('user/accountmanager');
-            $results = $this->model_user_accountmanager->getUnassignedCustomers($name);
+            $results = $this->model_user_accountmanager->getUnassignedCompany($name);
             $json = $results;
         }
         $this->response->addHeader('Content-Type: application/json');
@@ -1599,9 +1629,9 @@ class ControllerSaleAccountManager extends Controller {
         $log->write($this->request->post['unassigncustomer']);
         $log->write($this->request->post['account_manager_id']);
         $this->load->model('user/accountmanager');
-        
+
         $results = $this->model_user_accountmanager->UnAssignCustomersToAccountManager($this->request->post['unassigncustomer'], $this->request->post['account_manager_id']);
-            
+
         $json = true;
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
@@ -1610,6 +1640,58 @@ class ControllerSaleAccountManager extends Controller {
     public function getAccountManagerCustomers($account_manager_id) {
         $this->load->model('user/accountmanager');
         $results = $this->model_user_accountmanager->getCustomerByAccountManagerId($account_manager_id);
+    }
+
+    public function getassignedcustomers() {
+        $this->load->language('sale/customer');
+
+        $this->load->model('user/accountmanager');
+
+        $data['text_no_results'] = $this->language->get('text_no_results');
+        $data['text_add_ban_ip'] = $this->language->get('text_add_ban_ip');
+        $data['text_remove_ban_ip'] = $this->language->get('text_remove_ban_ip');
+        $data['text_loading'] = $this->language->get('text_loading');
+
+        $data['column_ip'] = $this->language->get('column_ip');
+        $data['column_total'] = $this->language->get('column_total');
+        $data['column_date_added'] = $this->language->get('column_date_added');
+        $data['column_action'] = $this->language->get('column_action');
+
+        if (isset($this->request->get['page'])) {
+            $page = $this->request->get['page'];
+        } else {
+            $page = 1;
+        }
+
+        $data['assignedcustomers'] = [];
+
+        $results = $this->model_user_accountmanager->getCustomerByAccountManagerIdPagination($this->request->get['account_manager_id'], ($page - 1) * 10, 10);
+
+        foreach ($results as $result) {
+
+            $data['assignedcustomers'][] = [
+                'customer_id' => $result['customer_id'],
+                'name' => $result['firstname'] . ' ' . $result['lastname'],
+                'company_name' => $result['company_name'],
+                'email' => $result['email'],
+                'telephone' => $result['telephone'],
+                'account_manager_id' => $this->request->get['account_manager_id'],
+            ];
+        }
+
+        $assigned_customers_total = $this->model_user_accountmanager->getTotalAssignedCustomers($this->request->get['account_manager_id']);
+
+        $pagination = new Pagination();
+        $pagination->total = $assigned_customers_total;
+        $pagination->page = $page;
+        $pagination->limit = 10;
+        $pagination->url = $this->url->link('sale/accountmanager/getassignedcustomers', 'token=' . $this->session->data['token'] . '&account_manager_id=' . $this->request->get['account_manager_id'] . '&page={page}', 'SSL');
+
+        $data['pagination'] = $pagination->render();
+
+        $data['results'] = sprintf($this->language->get('text_pagination'), ($assigned_customers_total) ? (($page - 1) * 10) + 1 : 0, ((($page - 1) * 10) > ($assigned_customers_total - 10)) ? $assigned_customers_total : ((($page - 1) * 10) + 10), $assigned_customers_total, ceil($assigned_customers_total / 10));
+
+        $this->response->setOutput($this->load->view('sale/assigned_customers.tpl', $data));
     }
 
 }

@@ -7,6 +7,20 @@ class ControllerApiCustomerProducts extends Controller
     public function getProducts()
     {
         $json = [];
+        // if (!isset($this->session->data['api_id']) ) {
+        //     $json['error'] = $this->language->get('error_permission');
+        // } else
+         {
+
+            
+             if ($this->request->get['parent'] != NULL && $this->request->get['parent']>0) {
+                $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->request->get['parent'] . "' AND status = '1'");
+            } else {
+                $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->request->get['customer_id']. "' AND status = '1'");
+            }
+            $this->session->data['customer_category'] = isset($customer_details->row['customer_category']) ? $customer_details->row['customer_category'] : null;
+
+            //  echo "<pre>";print_r($_SESSION['customer_category']);die;
 
         $this->load->language('information/locations');
 
@@ -349,7 +363,7 @@ class ControllerApiCustomerProducts extends Controller
             http_response_code(400);
             */
         }
-
+    }
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
@@ -1042,6 +1056,13 @@ class ControllerApiCustomerProducts extends Controller
     public function getProductSearch()
     {
         $json = [];
+ 
+        if ($this->request->get['parent'] != NULL && $this->request->get['parent']>0) {
+            $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->request->get['parent'] . "' AND status = '1'");
+        } else {
+            $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->request->get['customer_id']. "' AND status = '1'");
+        }
+        $this->session->data['customer_category'] = isset($customer_details->row['customer_category']) ? $customer_details->row['customer_category'] : null;
 
         $log = new Log('error.log');
         $log->write('api/getProductSearch');
@@ -1270,6 +1291,28 @@ class ControllerApiCustomerProducts extends Controller
                             $o_price = $result['price'];
                         }
 
+                        $percent_off = null;
+                        if (isset($s_price) && isset($o_price) && 0 != $o_price && 0 != $s_price) {
+                            $percent_off = (($o_price - $s_price) / $o_price) * 100;
+                        }
+
+                        if (is_null($special_price) || !($special_price + 0)) {
+                            //$special_price = 0;
+                            $special_price = $price;
+                        }
+
+
+                        $cachePrice_data = $this->cache->get('category_price_data');
+                        // echo "<pre>";print_r($_SESSION['customer_category']);die;
+                        if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$result['product_store_id'].'_'.$_SESSION['customer_category'].'_'.ACTIVE_STORE_ID])) {
+                            //echo $cachePrice_data[$product_info['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$store_id];//exit;
+                            $s_price = $cachePrice_data[$result['product_store_id'].'_'.$_SESSION['customer_category'].'_'.ACTIVE_STORE_ID];
+                            $o_price = $cachePrice_data[$result['product_store_id'].'_'.$_SESSION['customer_category'].'_'.ACTIVE_STORE_ID];
+                            $special_price = $s_price;
+                            $price = $o_price;
+                            // echo "<pre>";print_r($special_price);die;
+                        }
+
                         //get qty in cart
                         $key = base64_encode(serialize(['product_store_id' => (int) $result['product_store_id'], 'store_id' => $store_id]));
 
@@ -1285,15 +1328,7 @@ class ControllerApiCustomerProducts extends Controller
 
                         $unit = $result['unit'] ? $result['unit'] : false;
 
-                        $percent_off = null;
-                        if (isset($s_price) && isset($o_price) && 0 != $o_price && 0 != $s_price) {
-                            $percent_off = (($o_price - $s_price) / $o_price) * 100;
-                        }
-
-                        if (is_null($special_price) || !($special_price + 0)) {
-                            //$special_price = 0;
-                            $special_price = $price;
-                        }
+                       
 
                         $productNames = array_column($data['products'], 'name');
                         if (false !== array_search($result['name'], $productNames)) {

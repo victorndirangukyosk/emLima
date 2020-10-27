@@ -43,17 +43,15 @@
 
                         <div class="col-sm-3">
                             <div class="form-group">
-                                <label class="control-label" for="input-company">Account Manager Name</label>
+                                <label class="control-label" for="input-company">Customer Name</label>
                                 <input type="text" name="filter_name" value="<?php echo $filter_name; ?>" placeholder="<?php echo $entry_name; ?>" id="input-name" class="form-control" />
                             </div>
 
                             <div class="form-group">
-                                <label class="control-label" for="input-date-added"><?php echo $entry_date_added; ?></label>
-                                <div class="input-group date" style="max-width: 321px;">
-                                    <input type="text" name="filter_date_added" value="<?php echo $filter_date_added; ?>" placeholder="<?php echo $entry_date_added; ?>" data-date-format="YYYY-MM-DD" id="input-date-added" class="form-control" />
-                                    <span class="input-group-btn">
-                                        <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
-                                    </span></div>
+                                <div class="form-group">
+                                    <label class="control-label" for="input-company">Company Name</label>
+                                    <input type="text" name="filter_company_name" value="<?php echo $filter_company_name; ?>" placeholder="<?php echo $entry_company; ?>" id="input-name" class="form-control" />
+                                </div>
                             </div>
                         </div>
                         <div class="col-sm-3">
@@ -76,22 +74,12 @@
                                 <label class="control-label" for="input-email"><?php echo $entry_email; ?></label>
                                 <input type="text" name="filter_email" value="<?php echo $filter_email; ?>" placeholder="<?php echo $entry_email; ?>" id="input-email" class="form-control" />
                             </div>
-                            <!--<div class="form-group">
-                                <label class="control-label" for="input-status"><?php echo $entry_status; ?></label>
-                                <select name="filter_status" id="input-status" class="form-control">
-                                    <option value="*"></option>
-                                    <?php if ($filter_status) { ?>
-                                    <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
-                                    <?php } else { ?>
-                                    <option value="1"><?php echo $text_enabled; ?></option>
-                                    <?php } ?>
-                                    <?php if (!$filter_status && !is_null($filter_status)) { ?>
-                                    <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
-                                    <?php } else { ?>
-                                    <option value="0"><?php echo $text_disabled; ?></option>
-                                    <?php } ?>
-                                </select>
-                            </div>-->
+                            <label class="control-label" for="input-date-added"><?php echo $entry_date_added; ?></label>
+                            <div class="input-group date" style="max-width: 321px;">
+                                <input type="text" name="filter_date_added" value="<?php echo $filter_date_added; ?>" placeholder="<?php echo $entry_date_added; ?>" data-date-format="YYYY-MM-DD" id="input-date-added" class="form-control" />
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                                </span></div>
                         </div>
                         <div class="col-sm-3">
                             <!-- <div class="form-group">
@@ -167,6 +155,11 @@
                                         <?php } else { ?>
                                         <a href="<?php echo $sort_ip; ?>"><?php echo $column_ip; ?></a>
                                         <?php } ?></td>
+                                    <td class="text-left"><?php if ($sort == 'c.company_name') { ?>
+                                        <a href="<?php echo $sort_company_name; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_company_name; ?></a>
+                                        <?php } else { ?>
+                                        <a href="<?php echo $sort_company_name; ?>"><?php echo $column_company_name; ?></a>
+                                        <?php } ?></td>
                                     <td class="text-left"><?php if ($sort == 'c.date_added') { ?>
                                         <a href="<?php echo $sort_date_added; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_date_added; ?></a>
                                         <?php } else { ?>
@@ -189,9 +182,10 @@
                                     <td class="text-left"><?php echo $customer['telephone']; ?></td>
                                     <td class="text-left"><?php echo $customer['status']; ?></td>
                                     <td class="text-left"><?php echo $customer['ip']; ?></td>
+                                    <td class="text-left"><?php echo $customer['company_name']; ?></td>
                                     <td class="text-left"><?php echo $customer['date_added']; ?></td>
                                     <td class="text-right">
-                                        <a target="_blank" class="btn btn-info" data-toggle="tooltip" title="<?php echo 'Login as customer'; ?>" href="index.php?path=sale/accountmanager/login&token=<?php echo $token; ?>&customer_id=<?php echo $customer['user_id']; ?>&store_id=0">
+                                        <a target="_blank" class="btn btn-info" data-toggle="tooltip" title="<?php echo 'Login as customer'; ?>" href="<?php echo $customer['login_customer']; ?>">
                                             <i class="fa fa-lock"></i>
                                         </a>
                                 </tr>
@@ -221,6 +215,12 @@
             if (filter_name) {
                 url += '&filter_name=' + encodeURIComponent(filter_name);
             }
+            
+            var filter_company_name = $('input[name=\'filter_company_name\']').val();
+
+            if (filter_company_name) {
+                url += '&filter_company_name=' + encodeURIComponent(filter_company_name);
+            }
 
             var filter_email = $('input[name=\'filter_email\']').val();
 
@@ -236,7 +236,7 @@
 
             var filter_telephone = $('input[name=\'filter_telephone\']').val();
 
-            if (filter_telephone != '*') {
+            if (filter_telephone != '*' && filter_telephone != '') {
                 url += '&filter_telephone=' + encodeURIComponent(filter_telephone);
             }
 
@@ -261,7 +261,7 @@
         $('input[name=\'filter_name\']').autocomplete({
             'source': function (request, response) {
                 $.ajax({
-                    url: 'index.php?path=sale/accountmanageruser/autocompletebyCompany&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request) + '&filter_company=' + $companyName,
+                    url: 'index.php?path=sale/accountmanageruser/autocompletebyCompany&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request) + '&filter_company_name=' + $companyName,
                     dataType: 'json',
                     success: function (json) {
                         response($.map(json, function (item) {
@@ -278,7 +278,7 @@
             }
         });
 
-        $('input[name=\'filter_company\']').autocomplete({
+        $('input[name=\'filter_company_name\']').autocomplete({
             'source': function (request, response) {
                 $.ajax({
                     url: 'index.php?path=sale/accountmanageruser/autocompletecompany&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
@@ -297,8 +297,8 @@
                 $companyName = "";
             },
             'select': function (item) {
-                $('input[name=\'filter_company\']').val(item['label']);
-                $('input[name=\'filter_customer\']').val('');
+                $('input[name=\'filter_company_name\']').val(item['label']);
+                $('input[name=\'filter_customer_name\']').val('');
                 $companyName = item['label'];
             }
         });

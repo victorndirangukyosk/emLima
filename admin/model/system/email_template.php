@@ -329,6 +329,10 @@ class ModelSystemEmailtemplate extends Model
             case 'comingsoon':
             $codes = $this->emailtemplate->getComingSoonFind();
             break;
+
+            case 'ConsolidatedOrderSheet':
+                $codes = $this->emailtemplate->getConsolidatedOrderSheetFind();
+                break;
         }
 
         foreach ($codes as $code) {
