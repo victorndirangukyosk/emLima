@@ -450,6 +450,10 @@ class ControllerSaleAccountManagerUserOrders extends Controller {
         if (isset($this->request->get['filter_date_added'])) {
             $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
         }
+        
+        if (isset($this->request->get['filter_date_added_end'])) {
+            $url .= '&filter_date_added_end=' . $this->request->get['filter_date_added_end'];
+        }
 
         if (isset($this->request->get['filter_date_modified'])) {
             $url .= '&filter_date_modified=' . $this->request->get['filter_date_modified'];
