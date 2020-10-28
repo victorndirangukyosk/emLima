@@ -3866,7 +3866,7 @@ class ControllerSaleAccountManagerUserOrders extends Controller {
         //echo "<pre>";print_r($filter_data);die;
 
         $this->load->model('report/sale');
-        $results = $this->model_report_sale->getNonCancelledOrders($filter_data);
+        $results = $this->model_report_sale->getAccountManagerNonCancelledOrders($filter_data);
         //  echo "<pre>";print_r($results);die;
 
         $data = [];
