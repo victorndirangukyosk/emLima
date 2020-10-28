@@ -3832,4 +3832,18 @@ class ControllerSaleAccountManagerUserOrders extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+    public function vendor_autocomplete() {
+        if (isset($this->request->get['filter_name'])) {
+            $filter_name = $this->request->get['filter_name'];
+        } else {
+            $filter_name = '';
+        }
+
+        $this->load->model('sale/order');
+
+        $json = $this->model_sale_order->getVendorUserData($filter_name);
+
+        echo json_encode($json);
+    }
+
 }
