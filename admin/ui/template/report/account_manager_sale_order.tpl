@@ -108,7 +108,7 @@
               <?php } ?>
               <?php } else { ?>
               <tr>
-                <td class="text-center" colspan="6"><?php echo $text_no_results; ?></td>
+                <td class="text-center" colspan="7"><?php echo $text_no_results; ?></td>
               </tr>
               <?php } ?>
             </tbody>
@@ -126,7 +126,7 @@
     $('input[name=\'filter_city\']').autocomplete({
 	'source': function(request, response) {
 		$.ajax({
-			url: 'index.php?path=report/sale_order/city_autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request),
+			url: 'index.php?path=sale/accountmanageruserorders/city_autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request),
 			dataType: 'json',
 			success: function(json) {
 				response($.map(json, function(item) {
@@ -146,7 +146,7 @@
     $('input[name=\'filter_customer\']').autocomplete({
 	'source': function(request, response) {
 		$.ajax({
-			url: 'index.php?path=sale/customer/autocompletebyCompany&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request),
+			url: 'index.php?path=sale/accountmanageruser/autocompletebyCompany&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request),
 			dataType: 'json',
 			success: function(json) {
 				response($.map(json, function(item) {
