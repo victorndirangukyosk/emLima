@@ -89,7 +89,7 @@ class ControllerReportAccountManagerSaleOrder extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('report/sale_order', 'token='.$this->session->data['token'].$url, 'SSL'),
+            'href' => $this->url->link('report/account_manager_sale_order', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         $this->load->model('report/sale');
@@ -203,7 +203,7 @@ class ControllerReportAccountManagerSaleOrder extends Controller
         $pagination->total = $order_total;
         $pagination->page = $page;
         $pagination->limit = $this->config->get('config_limit_admin');
-        $pagination->url = $this->url->link('report/sale_order', 'token='.$this->session->data['token'].$url.'&page={page}', 'SSL');
+        $pagination->url = $this->url->link('report/account_manager_sale_order', 'token='.$this->session->data['token'].$url.'&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
@@ -220,7 +220,7 @@ class ControllerReportAccountManagerSaleOrder extends Controller
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
 
-        $this->response->setOutput($this->load->view('report/sale_order.tpl', $data));
+        $this->response->setOutput($this->load->view('report/account_manager_sale_order.tpl', $data));
     }
 
     public function city_autocomplete()
