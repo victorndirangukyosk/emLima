@@ -302,7 +302,24 @@
             <li><a href="<?php echo $email_groups; ?>">Email Groups</a></li>
         </ul>
     </li> -->
-
+    <?php
+    if( $preturn_account_manager_sale_order != false ) {
+    ?>
+    <li id="reports"><a class="parent"><i class="fa fa-bar-chart-o fa-fw"></i> <span><?php echo $text_reports; ?></span></a>
+        <ul class="collapse">
+            <?php if( $preturn_account_manager_sale_order != false ) { ?>
+            <li><a class="parent"><?php echo $text_sale; ?></a>
+                <ul>
+                    <?php if($preturn_account_manager_sale_order) { ?>
+                    <li><a href="<?php echo $report_account_manager_sale_order; ?>"><?php echo $text_report_sale_order; ?></a></li>
+                    <?php }?>
+                </ul>
+            </li>
+            <?php } ?>
+        </ul>
+    </li>
+    <?php } ?>
+    
     <?php
     if( $preturn_report_shopper_order!= false || $preturn_report_shopper!= false || $preturn_report_vendor != false || $preturn_report_vendor_order != false || $preturn_sale_order != false || $preturn_sale_advanced != false  || $preturn_sale_tax != false || $preturn_sale_payment != false || $preturn_sale_transaction != false  || $preturn_sale_shipping != false || $preturn_sale_return != false || $preturn_sale_coupon != false || $preturn_product_viewed != false || $preturn_product_purchased != false || $preturn_customer_online != false || $preturn_customer_activity != false || $preturn_customer_order != false || $preturn_customer_reward != false || $preturn_customer_credit != false || $preturn_marketing != false  ) {
     ?>

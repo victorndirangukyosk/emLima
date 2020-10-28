@@ -126,7 +126,8 @@ class ControllerCommonMenu extends Controller
         $data['product'] = $this->url->link('catalog/product', 'token='.$this->session->data['token'], 'SSL');
         $data['report_shopper_order'] = $this->url->link('report/shopper_order', 'token='.$this->session->data['token'], 'SSL');
         $data['report_sale_order'] = $this->url->link('report/sale_order', 'token='.$this->session->data['token'], 'SSL');
-
+        $data['report_account_manager_sale_order'] = $this->url->link('report/account_manager_sale_order', 'token='.$this->session->data['token'], 'SSL');
+        
         $data['report_sale_advanced'] = $this->url->link('report/sale_advanced', 'token='.$this->session->data['token'].'&filter_order_status_id=5', 'SSL');
 
         $data['report_sale_productmissing'] = $this->url->link('report/sale_productmissing', 'token='.$this->session->data['token'].'&filter_order_status_id=5', 'SSL');
@@ -381,6 +382,7 @@ class ControllerCommonMenu extends Controller
         $data['preturn_report_shopper'] = $this->user->hasPermission('access', 'report/shopper');
         $data['preturn_report_income'] = $this->user->hasPermission('access', 'report/income');
         $data['preturn_sale_order'] = $this->user->hasPermission('access', 'report/sale_order');
+        $data['preturn_account_manager_sale_order'] = $this->user->hasPermission('access', 'report/account_manager_sale_order');
         $data['preturn_sale_advanced'] = $this->user->hasPermission('access', 'report/sale_advanced');
 
         $data['preturn_sale_productmissing'] = $this->user->hasPermission('access', 'report/sale_productmissing');
@@ -453,6 +455,7 @@ class ControllerCommonMenu extends Controller
         $data['fast_order'] = $this->url->link('sale/fast_order', 'token='.$this->session->data['token'].'&filter_order_status=2,15,18,3,5&filter_order_day=today', 'SSL');
 
         $data['report_sale_order'] = $this->url->link('report/sale_order', 'token='.$this->session->data['token'], 'SSL');
+        $data['report_account_manager_sale_order'] = $this->url->link('report/account_manager_sale_order', 'token='.$this->session->data['token'], 'SSL');
 
         $data['report_sale_advanced'] = $this->url->link('report/sale_advanced', 'token='.$this->session->data['token'].'&filter_order_status_id=5', 'SSL');
 
@@ -534,6 +537,7 @@ class ControllerCommonMenu extends Controller
         //Reports
         $data['preturn_report_income'] = $this->user->hasPermission('access', 'report/income');
         $data['preturn_sale_order'] = $this->user->hasPermission('access', 'report/sale_order');
+        $data['preturn_account_manager_sale_order'] = $this->user->hasPermission('access', 'report/account_manager_sale_order');
         $data['preturn_sale_advanced'] = $this->user->hasPermission('access', 'report/sale_advanced');
 
         $data['preturn_sale_productmissing'] = $this->user->hasPermission('access', 'report/sale_productmissing');
