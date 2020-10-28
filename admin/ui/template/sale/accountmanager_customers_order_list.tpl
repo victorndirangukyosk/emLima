@@ -328,7 +328,7 @@
     $('input[name=\'filter_store_name\']').autocomplete({
             'source': function (request, response) {
                 $.ajax({
-                    url: 'index.php?path=setting/store/autocomplete&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
+                    url: 'index.php?path=sale/accountmanageruserorders/storeautocomplete&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
                     dataType: 'json',
                     success: function (json) {
                         response($.map(json, function (item) {

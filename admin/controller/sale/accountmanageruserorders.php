@@ -81,7 +81,7 @@ class ControllerSaleAccountManagerUserOrders extends Controller {
         } else {
             $filter_date_added = null;
         }
-        
+
         if (isset($this->request->get['filter_date_added_end'])) {
             $filter_date_added_end = $this->request->get['filter_date_added_end'];
         } else {
@@ -156,7 +156,7 @@ class ControllerSaleAccountManagerUserOrders extends Controller {
         if (isset($this->request->get['filter_date_added'])) {
             $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
         }
-        
+
         if (isset($this->request->get['filter_date_added_end'])) {
             $url .= '&filter_date_added_end=' . $this->request->get['filter_date_added_end'];
         }
@@ -379,7 +379,7 @@ class ControllerSaleAccountManagerUserOrders extends Controller {
         if (isset($this->request->get['filter_date_added'])) {
             $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
         }
-        
+
         if (isset($this->request->get['filter_date_added_end'])) {
             $url .= '&filter_date_added_end=' . $this->request->get['filter_date_added_end'];
         }
@@ -450,7 +450,7 @@ class ControllerSaleAccountManagerUserOrders extends Controller {
         if (isset($this->request->get['filter_date_added'])) {
             $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
         }
-        
+
         if (isset($this->request->get['filter_date_added_end'])) {
             $url .= '&filter_date_added_end=' . $this->request->get['filter_date_added_end'];
         }
@@ -3810,6 +3810,26 @@ class ControllerSaleAccountManagerUserOrders extends Controller {
         return !$this->error;
 
         //        return true;
+    }
+
+    public function city_autocomplete() {
+        $this->load->model('sale/order');
+
+        $json = $this->model_sale_order->getCities();
+
+        header('Content-type: text/json');
+        echo json_encode($json);
+    }
+
+    public function storeautocomplete() {
+        $q = $this->request->get['filter_name'];
+
+        $this->load->model('sale/order');
+
+        $json = $this->model_sale_order->getStoreDetails($q);
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
     }
 
 }
