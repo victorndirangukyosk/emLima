@@ -252,7 +252,7 @@ class ModelReportCustomer extends Model {
         }
 
         if ($this->user->isAccountManager()) {
-            $sql .= " AND c.account_manager_id = '" . (int) $this->user->getId . "'";
+            $sql .= " AND c.account_manager_id = '" . (int) $this->user->getId() . "'";
         }
 
         if (!empty($data['filter_date_start'])) {
