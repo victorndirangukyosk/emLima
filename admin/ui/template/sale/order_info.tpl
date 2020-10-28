@@ -1882,7 +1882,8 @@ $(".datepicker" ).datepicker({
             shipping_building_name : $('#shipping_building_name').val(),
             shipping_flat_number : $('#shipping-flat-number').val(),
             shipping_landmark: $('#shipping-address').val(),
-						shipping_zipcode: $("#shipping-zip").val()
+	    shipping_zipcode: $("#shipping-zip").val(),
+            user_id : '<?=$this->user->getId() ?>'
         }
 
         $.ajax({
@@ -2014,7 +2015,8 @@ $('.delivery_timeslot').change(function(){
 
         data = {
             order_id : '<?=$order_id ?>',
-            shipping_flat_number : $('#shipping_flat_number').val()
+            shipping_flat_number : $('#shipping_flat_number').val(),
+            user_id : '<?=$this->user->getId() ?>'
         }
 
         console.log(data);
