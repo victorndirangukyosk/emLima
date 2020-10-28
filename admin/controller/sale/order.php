@@ -984,7 +984,7 @@ class ControllerSaleOrder extends Controller {
         } else {
             $filter_date_added = null;
         }
-        
+
         if (isset($this->request->get['filter_date_added_end'])) {
             $filter_date_added_end = $this->request->get['filter_date_added_end'];
         } else {
@@ -1059,7 +1059,7 @@ class ControllerSaleOrder extends Controller {
         if (isset($this->request->get['filter_date_added'])) {
             $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
         }
-        
+
         if (isset($this->request->get['filter_date_added_end'])) {
             $url .= '&filter_date_added_end=' . $this->request->get['filter_date_added_end'];
         }
@@ -1282,7 +1282,7 @@ class ControllerSaleOrder extends Controller {
         if (isset($this->request->get['filter_date_added'])) {
             $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
         }
-        
+
         if (isset($this->request->get['filter_date_added_end'])) {
             $url .= '&filter_date_added_end=' . $this->request->get['filter_date_added_end'];
         }
@@ -1353,7 +1353,7 @@ class ControllerSaleOrder extends Controller {
         if (isset($this->request->get['filter_date_added'])) {
             $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
         }
-        
+
         if (isset($this->request->get['filter_date_added_end'])) {
             $url .= '&filter_date_added_end=' . $this->request->get['filter_date_added_end'];
         }
@@ -5451,6 +5451,22 @@ class ControllerSaleOrder extends Controller {
         }
 
         $json = json_encode($json);
+
+        // Add to activity log
+        $log = new Log('error.log');
+        $this->load->model('user/user_activity');
+
+        $activity_data = [
+            'user_id' => $this->user->getId(),
+            'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+            'user_group_id' => $this->user->getGroupId(),
+            'order_id' => $order_id,
+        ];
+        $log->write('user update_invoice');
+
+        $this->model_user_user_activity->addActivity('update_invoice', $activity_data);
+
+        $log->write('user update_invoice');
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput($json);
