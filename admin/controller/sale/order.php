@@ -5492,6 +5492,22 @@ class ControllerSaleOrder extends Controller {
 
         $json = json_encode($json);
 
+        // Add to activity log
+        $log = new Log('error.log');
+        $this->load->model('user/user_activity');
+
+        $activity_data = [
+            'user_id' => $this->user->getId(),
+            'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+            'user_group_id' => $this->user->getGroupId(),
+            'order_id' => $order_id,
+        ];
+        $log->write('user notify_invoice');
+
+        $this->model_user_user_activity->addActivity('notify_invoice', $activity_data);
+
+        $log->write('user notify_invoice');
+
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput($json);
     }
