@@ -225,7 +225,7 @@ $('.date').datetimepicker({
             $filter_customer = $(this).attr('filter_customer');
             $filter_order_status_id = $(this).attr('filter_order_status_id');  
             $filter_city = $(this).attr('filter_city');            
-            url = 'index.php?path=sale/order/consolidatedOrdersSummary&token=<?php echo $token; ?>&orderenddate=' + $orderenddate+'&orderstartdate='+$orderstartdate+'&filter_customer='+$filter_customer+'&filter_order_status_id='+$filter_order_status_id+'&filter_city='+$filter_city;               
+            url = 'index.php?path=sale/accountmanageruserorders/accountmanagerconsolidatedOrdersSummary&token=<?php echo $token; ?>&orderenddate=' + $orderenddate+'&orderstartdate='+$orderstartdate+'&filter_customer='+$filter_customer+'&filter_order_status_id='+$filter_order_status_id+'&filter_city='+$filter_city;               
             var filter_order_status_id = $('select[name=\'filter_order_status_id\']').val();
             var filter_customer = $('select[name=\'filter_customer\']').val();
 	
