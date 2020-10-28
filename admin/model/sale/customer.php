@@ -87,6 +87,19 @@ class ModelSaleCustomer extends Model {
         }
     }
 
+    public function getCustomerAccountManagerDetails($customer_id) {
+        $customer_account_manager_details = NULL;
+        $customer_details = $this->getCustomer($customer_id);
+        if ($customer_details != NULL && $customer_details['account_manager_id'] > 0 && $customer_details['account_manager_id'] != NULL) {
+            //$log = new Log('error.log');
+            //$log->write($customer_details);
+            $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "user WHERE user_id = '" . (int) $customer_details['account_manager_id'] . "'");
+            return $query->row;
+        } else {
+            return $customer_account_manager_details;
+        }
+    }
+
     public function getCustomerByEmail($email) {
         $query = $this->db->query('SELECT DISTINCT * FROM ' . DB_PREFIX . "customer WHERE LCASE(email) = '" . $this->db->escape(utf8_strtolower($email)) . "'");
 
