@@ -700,8 +700,12 @@ class ModelSaleOrder extends Model
             $sql .= " AND DATE(o.delivery_date) = DATE('".$this->db->escape($data['filter_delivery_date'])."')";
         }
 
-        if (!empty($data['filter_date_added'])) {
+        if (!empty($data['filter_date_added']) && empty($data['filter_date_added_end'])) {
             $sql .= " AND DATE(o.date_added) = DATE('".$this->db->escape($data['filter_date_added'])."')";
+        }
+        
+        if (!empty($data['filter_date_added']) && !empty($data['filter_date_added_end'])) {
+            $sql .= " AND DATE(o.date_added) BETWEEN DATE('".$this->db->escape($data['filter_date_added'])."') AND DATE('".$this->db->escape($data['filter_date_added_end'])."')";
         }
 
         if (!empty($data['filter_date_modified'])) {
@@ -1258,8 +1262,12 @@ class ModelSaleOrder extends Model
             $sql .= " AND CONCAT(o.firstname, ' ', o.lastname) LIKE '%".$this->db->escape($data['filter_customer'])."%'";
         }
 
-        if (!empty($data['filter_date_added'])) {
+        if (!empty($data['filter_date_added']) && empty($data['filter_date_added_end'])) {
             $sql .= " AND DATE(o.date_added) = DATE('".$this->db->escape($data['filter_date_added'])."')";
+        }
+        
+        if (!empty($data['filter_date_added']) && !empty($data['filter_date_added_end'])) {
+            $sql .= " AND DATE(o.date_added) BETWEEN DATE('".$this->db->escape($data['filter_date_added'])."') AND DATE('".$this->db->escape($data['filter_date_added_end'])."')";
         }
 
         if (!empty($data['filter_date_modified'])) {
