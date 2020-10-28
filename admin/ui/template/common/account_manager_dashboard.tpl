@@ -21,6 +21,7 @@
       <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $order; ?></div>
       <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $actualSales; ?></div>
       <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $customer; ?></div>
+      <div class="col-lg-3 col-md-3 col-sm-6"><?php echo $online; ?></div>
       
     </div>
     <div class="row">

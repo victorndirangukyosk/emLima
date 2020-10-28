@@ -430,6 +430,32 @@ class ModelReportCustomer extends Model {
         return $query->row['total'];
     }
 
+    public function getTotalAccountManagerCustomersOnline($data = []) {
+        $sql = 'SELECT COUNT(*) AS total FROM `' . DB_PREFIX . 'customer_online` co LEFT JOIN ' . DB_PREFIX . 'customer c ON (co.customer_id = c.customer_id)';
+
+        $implode = [];
+
+        if (!empty($data['filter_ip'])) {
+            $implode[] = "co.ip LIKE '" . $this->db->escape($data['filter_ip']) . "'";
+        }
+
+        if ($this->user->isAccountManager()) {
+            $implode[] = "c.account_manager_id = '" . (int) $this->user->getId() . "'";
+        }
+
+        if (!empty($data['filter_customer'])) {
+            $implode[] = "co.customer_id > 0 AND CONCAT(c.firstname, ' ', c.lastname) LIKE '" . $this->db->escape($data['filter_customer']) . "'";
+        }
+
+        if ($implode) {
+            $sql .= ' WHERE ' . implode(' AND ', $implode);
+        }
+
+        $query = $this->db->query($sql);
+
+        return $query->row['total'];
+    }
+
     public function getCustomerActivities($data = []) {
         $sql = 'SELECT ca.activity_id, ca.customer_id, ca.key, ca.data, ca.ip, ca.date_added FROM ' . DB_PREFIX . 'customer_activity ca LEFT JOIN ' . DB_PREFIX . 'customer c ON (ca.customer_id = c.customer_id)';
 
