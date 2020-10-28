@@ -303,7 +303,7 @@
         </ul>
     </li> -->
     <?php
-    if( $preturn_account_manager_sale_order != false ) {
+    if( $preturn_account_manager_sale_order != false || $preturn_account_manager_customer_order != false) {
     ?>
     <li id="reports"><a class="parent"><i class="fa fa-bar-chart-o fa-fw"></i> <span><?php echo $text_reports; ?></span></a>
         <ul class="collapse">
@@ -313,6 +313,18 @@
                     <?php if($preturn_account_manager_sale_order) { ?>
                     <li><a href="<?php echo $report_account_manager_sale_order; ?>"><?php echo $text_report_sale_order; ?></a></li>
                     <?php }?>
+                </ul>
+            </li>
+            <?php } ?>
+            <?php if( $preturn_account_manager_customer_order != false ) { ?>
+            <li><a class="parent"><?php echo $text_customer; ?></a>
+                <ul>
+                    <?php if($preturn_customer_activity) { ?>
+                    <li><a href="<?php echo $report_customer_activity; ?>"><?php echo $text_report_customer_activity; ?></a></li>
+                    <?php } ?>
+                    <?php if($preturn_account_manager_customer_order) { ?>
+                    <li><a href="<?php echo $report_account_manager_customer_order; ?>"><?php echo $text_report_customer_order; ?></a></li>
+                    <?php } ?>
                 </ul>
             </li>
             <?php } ?>

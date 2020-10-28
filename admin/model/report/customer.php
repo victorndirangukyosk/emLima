@@ -154,7 +154,7 @@ class ModelReportCustomer extends Model
         }
         
         if ($this->user->isAccountManager()) {
-            $sql .= " AND c.account_manager_id = '" . (int) $this->user->isAccountManager() . "'";
+            $sql .= " AND c.account_manager_id = '" . (int) $this->user->getId() . "'";
         }
 
         if (!empty($data['filter_date_start'])) {
@@ -252,7 +252,7 @@ class ModelReportCustomer extends Model
     
     public function getAccountManagerTotalOrders($data = [])
     {
-        $sql = 'SELECT COUNT(DISTINCT o.customer_id) AS total FROM `'.DB_PREFIX."order` o WHERE o.customer_id > '0'";
+        $sql = 'SELECT COUNT(DISTINCT o.customer_id) AS total FROM `'.DB_PREFIX."order` o LEFT JOIN `".DB_PREFIX."customer` c ON (o.customer_id = c.customer_id) WHERE o.customer_id > '0'";
 
         if (!empty($data['filter_order_status_id'])) {
             $sql .= " AND o.order_status_id = '".(int) $data['filter_order_status_id']."'";
@@ -261,7 +261,7 @@ class ModelReportCustomer extends Model
         }
         
         if ($this->user->isAccountManager()) {
-            $sql .= " AND c.account_manager_id = '" . (int) $this->user->isAccountManager() . "'";
+            $sql .= " AND c.account_manager_id = '" . (int) $this->user->getId . "'";
         }
 
         if (!empty($data['filter_date_start'])) {

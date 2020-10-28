@@ -104,7 +104,7 @@
   </div>
   <script type="text/javascript"><!--
 $('#button-filter').on('click', function() {
-	url = 'index.php?path=report/customer_order&token=<?php echo $token; ?>';
+	url = 'index.php?path=report/account_manager_customer_order&token=<?php echo $token; ?>';
 	
 	var filter_date_start = $('input[name=\'filter_date_start\']').val();
 	
@@ -130,7 +130,7 @@ $('#button-filter').on('click', function() {
 
 
 function excel() {
-      	url = 'index.php?path=report/customer_order/orderexcel&token=<?php echo $token; ?>';
+      	url = 'index.php?path=report/account_manager_customer_order/orderexcel&token=<?php echo $token; ?>';
         
      	var filter_date_start = $('input[name=\'filter_date_start\']').val();
 	

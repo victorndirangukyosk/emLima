@@ -59,7 +59,7 @@ class ControllerReportAccountManagerCustomerOrder extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('report/customer_order', 'token='.$this->session->data['token'].$url, 'SSL'),
+            'href' => $this->url->link('report/account_manager_customer_order', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         $this->load->model('report/customer');
@@ -140,7 +140,7 @@ class ControllerReportAccountManagerCustomerOrder extends Controller
         $pagination->total = $customer_total;
         $pagination->page = $page;
         $pagination->limit = $this->config->get('config_limit_admin');
-        $pagination->url = $this->url->link('report/customer_order', 'token='.$this->session->data['token'].$url.'&page={page}', 'SSL');
+        $pagination->url = $this->url->link('report/account_manager_customer_order', 'token='.$this->session->data['token'].$url.'&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
@@ -234,7 +234,7 @@ class ControllerReportAccountManagerCustomerOrder extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('report/customer_order/statement', 'token='.$this->session->data['token'].$url, 'SSL'),
+            'href' => $this->url->link('report/account_manager_customer_order/statement', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         $this->load->model('report/customer');
@@ -359,7 +359,7 @@ class ControllerReportAccountManagerCustomerOrder extends Controller
         $pagination->total = $customer_total;
         $pagination->page = $page;
         $pagination->limit = $this->config->get('config_limit_admin');
-        $pagination->url = $this->url->link('report/customer_order/statement', 'token='.$this->session->data['token'].$url.'&page={page}', 'SSL');
+        $pagination->url = $this->url->link('report/account_manager_customer_order/statement', 'token='.$this->session->data['token'].$url.'&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
@@ -375,7 +375,7 @@ class ControllerReportAccountManagerCustomerOrder extends Controller
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
 
-        $this->response->setOutput($this->load->view('report/customer_statement.tpl', $data));
+        $this->response->setOutput($this->load->view('report/account_manager_customer_statement.tpl', $data));
     }
 
     public function statementexcel()
