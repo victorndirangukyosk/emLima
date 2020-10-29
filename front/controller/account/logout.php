@@ -6,6 +6,17 @@ class ControllerAccountLogout extends Controller {
         $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_login.css');
 
         if ($this->customer->isLogged()) {
+
+            // Add to activity log
+            $this->load->model('account/activity');
+
+            $activity_data = [
+                'customer_id' => $this->customer->getId(),
+                'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
+            ];
+
+            $this->model_account_activity->addActivity('logout', $activity_data);
+            
             $this->trigger->fire('pre.customer.logout');
 
             $this->customer->logout();
