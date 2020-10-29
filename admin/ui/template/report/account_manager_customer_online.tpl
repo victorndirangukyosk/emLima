@@ -46,7 +46,7 @@
                 <td class="text-left"><?php echo $column_url; ?></td>
                 <td class="text-left"><?php echo $column_referer; ?></td>
                 <td class="text-left"><?php echo $column_date_added; ?></td>
-                <td class="text-right"><?php echo $column_action; ?></td>
+                <!--<td class="text-right"><?php //echo $column_action; ?></td>-->
               </tr>
             </thead>
             <tbody>
@@ -60,11 +60,11 @@
                   <a href="<?php echo $customer['referer']; ?>" target="_blank"><?php echo implode('<br/>', str_split($customer['referer'], 30)); ?></a>
                   <?php } ?></td>
                 <td class="text-left"><?php echo $customer['date_added']; ?></td>
-                <td class="text-right"><?php if ($customer['customer_id']) { ?>
+                <!--<td class="text-right"><?php if ($customer['customer_id']) { ?>
                   <a href="<?php echo $customer['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a></td>
                 <?php } else { ?>
                 <button type="button" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary" disabled="disabled"><i class="fa fa-pencil"></i></button>
-                <?php } ?>
+                <?php } ?>-->
               </tr>
               <?php } ?>
               <?php } else { ?>
