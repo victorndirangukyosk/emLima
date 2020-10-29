@@ -145,6 +145,7 @@ class ControllerCommonMenu extends Controller
         $data['report_product_purchased'] = $this->url->link('report/product_purchased', 'token='.$this->session->data['token'], 'SSL');
         $data['report_customer_activity'] = $this->url->link('report/customer_activity', 'token='.$this->session->data['token'], 'SSL');
         $data['report_account_manager_customer_activity'] = $this->url->link('report/account_manager_customer_activity', 'token='.$this->session->data['token'], 'SSL');
+        $data['report_account_manager_customer_online'] = $this->url->link('report/account_manager_customer_online', 'token='.$this->session->data['token'], 'SSL');
         $data['report_user_activity'] = $this->url->link('report/user_activity', 'token='.$this->session->data['token'], 'SSL');
         $data['report_customer_online'] = $this->url->link('report/customer_online', 'token='.$this->session->data['token'], 'SSL');
         $data['report_customer_order'] = $this->url->link('report/customer_order', 'token='.$this->session->data['token'], 'SSL');
@@ -402,6 +403,7 @@ class ControllerCommonMenu extends Controller
         $data['preturn_customer_online'] = $this->user->hasPermission('access', 'report/customer_online');
         $data['preturn_customer_activity'] = $this->user->hasPermission('access', 'report/customer_activity');
         $data['preturn_account_manager_customer_activity'] = $this->user->hasPermission('access', 'report/account_manager_customer_activity');
+        $data['preturn_account_manager_customer_online'] = $this->user->hasPermission('access', 'report/account_manager_customer_online');
         $data['preturn_user_activity'] = $this->user->hasPermission('access', 'report/user_activity');
         $data['preturn_customer_order'] = $this->user->hasPermission('access', 'report/customer_order');
         $data['preturn_account_manager_customer_order'] = $this->user->hasPermission('access', 'report/account_manager_customer_order');
@@ -478,6 +480,7 @@ class ControllerCommonMenu extends Controller
         $data['report_product_purchased'] = $this->url->link('report/product_purchased', 'token='.$this->session->data['token'], 'SSL');
         $data['report_customer_activity'] = $this->url->link('report/customer_activity', 'token='.$this->session->data['token'], 'SSL');
         $data['report_account_manager_customer_activity'] = $this->url->link('report/account_manager_customer_activity', 'token='.$this->session->data['token'], 'SSL');
+        $data['report_account_manager_customer_online'] = $this->url->link('report/account_manager_customer_online', 'token='.$this->session->data['token'], 'SSL');
         $data['report_user_activity'] = $this->url->link('report/user_activity', 'token='.$this->session->data['token'], 'SSL');
         $data['report_customer_online'] = $this->url->link('report/customer_online', 'token='.$this->session->data['token'], 'SSL');
         $data['report_customer_order'] = $this->url->link('report/customer_order', 'token='.$this->session->data['token'], 'SSL');
@@ -561,6 +564,7 @@ class ControllerCommonMenu extends Controller
         $data['preturn_customer_online'] = $this->user->hasPermission('access', 'report/customer_online');
         $data['preturn_customer_activity'] = $this->user->hasPermission('access', 'report/customer_activity');
         $data['preturn_account_manager_customer_activity'] = $this->user->hasPermission('access', 'report/account_manager_customer_activity');
+        $data['preturn_account_manager_customer_online'] = $this->user->hasPermission('access', 'report/account_manager_customer_online');
         $data['preturn_user_activity'] = $this->user->hasPermission('access', 'report/user_activity');
         $data['preturn_customer_order'] = $this->user->hasPermission('access', 'report/customer_order');
         $data['preturn_account_manager_customer_order'] = $this->user->hasPermission('access', 'report/account_manager_customer_order');
