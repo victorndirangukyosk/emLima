@@ -446,6 +446,9 @@
                     <?php if($preturn_customer_activity) { ?>
                     <li><a href="<?php echo $report_customer_activity; ?>"><?php echo $text_report_customer_activity; ?></a></li>
                     <?php } ?>
+                    <?php if($preturn_customer_online) { ?>
+                    <li><a href="<?php echo $report_customer_online; ?>"><?php echo $text_report_customer_online; ?></a></li>
+                    <?php } ?>
                     <?php if($preturn_customer_order) { ?>
                     <li><a href="<?php echo $report_customer_order; ?>"><?php echo $text_report_customer_order; ?></a></li>
                     <?php } ?>
