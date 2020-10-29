@@ -63,6 +63,7 @@ $_['text_forwarded_ip'] = 'Forwarded IP:';
 $_['text_user_agent'] = 'User Agent:';
 $_['text_accept_language'] = 'Accept Language:';
 $_['text_date_added'] = 'Date Added:';
+$_['text_date_added_end'] = 'Date Added End:';
 $_['text_date_modified'] = 'Date Modified:';
 $_['text_firstname'] = 'First Name:';
 $_['text_lastname'] = 'Last Name:';
@@ -226,7 +227,8 @@ $_['entry_voucher'] = 'Voucher';
 $_['entry_reward'] = 'Reward';
 $_['entry_order_id'] = 'Order ID';
 $_['entry_total'] = 'Total';
-$_['entry_date_added'] = 'Date Added';
+$_['entry_date_added'] = 'From Date Added';
+$_['entry_date_added_end'] = 'To Date Added';
 $_['entry_date_modified'] = 'Date Modified';
 
 //button

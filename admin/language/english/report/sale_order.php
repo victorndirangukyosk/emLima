@@ -25,3 +25,4 @@ $_['entry_date_end'] = 'Date End';
 $_['entry_group'] = 'Group By';
 $_['entry_status'] = 'Order Status';
 $_['entry_city'] = 'City';
+$_['entry_customer'] = 'Customer';

@@ -140,6 +140,15 @@
                                     </span>
                                 </div>
                             </div>
+                            <div class="form-group">    
+                                <label class="control-label" for="input-date-added-end"><?php echo $entry_date_added_end; ?></label>
+                                <div class="input-group date">
+                                    <input type="text" name="filter_date_added_end" value="<?php echo $filter_date_added_end; ?>" placeholder="<?php echo $entry_date_added_end; ?>" data-date-format="YYYY-MM-DD" id="input-date-end" class="form-control" />
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </div>
                             <div class="form-group">
                                 <label class="control-label" for="input-date-modified"><?php echo $entry_date_modified; ?></label>
                                 <div class="input-group date">
@@ -319,7 +328,7 @@
     $('input[name=\'filter_store_name\']').autocomplete({
             'source': function (request, response) {
                 $.ajax({
-                    url: 'index.php?path=setting/store/autocomplete&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
+                    url: 'index.php?path=sale/accountmanageruserorders/storeautocomplete&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
                     dataType: 'json',
                     success: function (json) {
                         response($.map(json, function (item) {
@@ -340,7 +349,7 @@
         $('input[name=\'filter_vendor\']').autocomplete({
             'source': function (request, response) {
                 $.ajax({
-                    url: 'index.php?path=setting/store/vendor_autocomplete&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
+                    url: 'index.php?path=sale/accountmanageruserorders/vendor_autocomplete&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
                     dataType: 'json',
                     success: function (json) {
                         response($.map(json, function (item) {
@@ -458,6 +467,12 @@
             if (filter_date_added) {
                 url += '&filter_date_added=' + encodeURIComponent(filter_date_added);
             }
+            
+            var filter_date_added_end = $('input[name=\'filter_date_added_end\']').val();
+
+            if (filter_date_added_end) {
+                url += '&filter_date_added_end=' + encodeURIComponent(filter_date_added_end);
+            }
 
             var filter_vendor = $('input[name=\'filter_vendor\']').val();
 
@@ -499,7 +514,7 @@
         $('input[name=\'filter_customer\']').autocomplete({
             'source': function (request, response) {
                 $.ajax({
-                    url: 'index.php?path=sale/customer/autocompletebyCompany&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request) + '&filter_company=' + $companyName,
+                    url: 'index.php?path=sale/accountmanageruser/autocompletebyCompany&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request) + '&filter_company=' + $companyName,
                     dataType: 'json',
                     success: function (json) {
                         response($.map(json, function (item) {
@@ -520,7 +535,7 @@
         $('input[name=\'filter_company\']').autocomplete({
             'source': function (request, response) {
                 $.ajax({
-                    url: 'index.php?path=sale/customer/autocompletecompany&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
+                    url: 'index.php?path=sale/accountmanageruser/autocompletecompany&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
                     dataType: 'json',
                     success: function (json) {
                         response($.map(json, function (item) {

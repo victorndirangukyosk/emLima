@@ -100,5 +100,25 @@ $('#button-filter').on('click', function() {
 				
 	location = url;
 });
+$companyName="";
+$('input[name=\'filter_customer\']').autocomplete({
+            'source': function (request, response) {
+                $.ajax({
+                    url: 'index.php?path=sale/customer/autocompletebyCompany&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request)+'&filter_company=' +$companyName,
+                    dataType: 'json',
+                    success: function (json) {
+                        response($.map(json, function (item) {
+                            return {
+                                label: item['name'],
+                                value: item['customer_id']
+                            }
+                        }));
+                    }
+                });
+            },
+            'select': function (item) {
+                $('input[name=\'filter_customer\']').val(item['label']);
+            }
+        });
 //--></script></div>
 <?php echo $footer; ?>

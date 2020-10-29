@@ -1097,10 +1097,17 @@ class ControllerSaleCustomer extends Controller {
         if (isset($this->request->get['customer_id']) && ('POST' != $this->request->server['REQUEST_METHOD'])) {
             $customer_info = $this->model_sale_customer->getCustomer($this->request->get['customer_id']);
             $customer_parent_info = $this->model_sale_customer->getCustomerParentDetails($this->request->get['customer_id']);
+            $customer_account_manager_info = $this->model_sale_customer->getCustomerAccountManagerDetails($this->request->get['customer_id']);
             if ($customer_parent_info != NULL) {
                 $data['parent_user_name'] = $customer_parent_info['firstname'] . '' . $customer_parent_info['lastname'];
                 $data['parent_user_email'] = $customer_parent_info['email'];
                 $data['parent_user_phone'] = $customer_parent_info['telephone'];
+            }
+            
+            if ($customer_account_manager_info != NULL) {
+                $data['account_manager_name'] = $customer_account_manager_info['firstname'] . '' . $customer_account_manager_info['lastname'];
+                $data['account_manager_email'] = $customer_account_manager_info['email'];
+                $data['account_manager_phone'] = $customer_account_manager_info['telephone'];
             }
 
             //$log = new Log('error.log');

@@ -299,7 +299,30 @@ class Controllercheckoutdeliverytime extends Controller
                 }
             }
         }
+        
+        if ($this->request->post['user_id'] != NULL && $this->request->post['user_id'] > 0) {
+            $user_id = $this->request->post['user_id'];
+            $this->load->model('user/user');
+            $user_info = $this->model_user_user->getUser($user_id);
+            if ($user_info != NULL) {
+                // Add to activity log
+                $log = new Log('error.log');
+                $this->load->model('user/user_activity');
 
+                $activity_data = [
+                    'user_id' => $user_info['user_id'],
+                    'name' => $user_info['firstname'] . ' ' . $user_info['lastname'],
+                    'user_group_id' => $user_info['user_group_id'],
+                    'order_id' => $order_id,
+                ];
+                $log->write('save order edit raw timeslot from admin');
+
+                $this->model_user_user_activity->addActivity('order_time_slots_updated', $activity_data);
+
+                $log->write('save order edit raw timeslot from admin');
+            }
+        }
+        
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
@@ -415,7 +438,30 @@ class Controllercheckoutdeliverytime extends Controller
                 }
             }
         }
+        
+        if ($this->request->post['user_id'] != NULL && $this->request->post['user_id'] > 0) {
+            $user_id = $this->request->post['user_id'];
+            $this->load->model('user/user');
+            $user_info = $this->model_user_user->getUser($user_id);
+            if ($user_info != NULL) {
+                // Add to activity log
+                $log = new Log('error.log');
+                $this->load->model('user/user_activity');
 
+                $activity_data = [
+                    'user_id' => $user_info['user_id'],
+                    'name' => $user_info['firstname'] . ' ' . $user_info['lastname'],
+                    'user_group_id' => $user_info['user_group_id'],
+                    'order_id' => $order_id,
+                ];
+                $log->write('save order edit raw timeslot override from admin');
+
+                $this->model_user_user_activity->addActivity('order_time_slots_updated', $activity_data);
+
+                $log->write('save order edit raw timeslot override from admin');
+            }
+        }
+        
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }

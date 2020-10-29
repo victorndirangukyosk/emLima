@@ -83,11 +83,11 @@ class ControllerCommonDashboard extends Controller
     private function accountmanager($data)
     {
         $data['error_install'] = '';
-
+        $data['online_customers_url'] = $this->url->link('report/account_manager_customer_online', 'token='.$this->session->data['token'], 'SSL');
         $data['order'] = $this->load->controller('dashboard/order/accountmanager');
         $data['sale'] = $this->load->controller('dashboard/sale/accountmanager');
         $data['customer'] = $this->load->controller('dashboard/customer');
-        $data['online'] = $this->load->controller('dashboard/online');
+        $data['online'] = $this->load->controller('dashboard/accountmanagercustomersonline');
         $data['chart'] = $this->load->controller('dashboard/chart');
         $data['charts'] = $this->load->controller('dashboard/accountmanagercharts');
 
@@ -106,7 +106,8 @@ class ControllerCommonDashboard extends Controller
         } else {
             $data['error_install'] = '';
         }
-
+        
+        $data['online_customers_url'] = $this->url->link('report/customer_online', 'token='.$this->session->data['token'], 'SSL');
         $data['order'] = $this->load->controller('dashboard/order');
         $data['sale'] = $this->load->controller('dashboard/sale');
         $data['customer'] = $this->load->controller('dashboard/customer');

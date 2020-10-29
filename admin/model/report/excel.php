@@ -4874,9 +4874,12 @@ class ModelReportExcel extends Model {
         $this->load->library('iofactory');
         $this->load->model('report/customer');
         //$customer_total = $this->model_report_customer->getTotalCustomerOrders($filter_data);
-
+        
+        if($this->user->isAccountManager()) {
+        $results = $this->model_report_customer->getAccountManagerOrders($data);    
+        } else {
         $results = $this->model_report_customer->getOrders($data);
-
+        }
 
         foreach ($results as $result) {
             $data['customers'][] = [

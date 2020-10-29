@@ -985,6 +985,12 @@ class ControllerSaleOrder extends Controller {
             $filter_date_added = null;
         }
 
+        if (isset($this->request->get['filter_date_added_end'])) {
+            $filter_date_added_end = $this->request->get['filter_date_added_end'];
+        } else {
+            $filter_date_added_end = null;
+        }
+
         if (isset($this->request->get['filter_date_modified'])) {
             $filter_date_modified = $this->request->get['filter_date_modified'];
         } else {
@@ -1054,6 +1060,10 @@ class ControllerSaleOrder extends Controller {
             $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
         }
 
+        if (isset($this->request->get['filter_date_added_end'])) {
+            $url .= '&filter_date_added_end=' . $this->request->get['filter_date_added_end'];
+        }
+
         if (isset($this->request->get['filter_date_modified'])) {
             $url .= '&filter_date_modified=' . $this->request->get['filter_date_modified'];
         }
@@ -1100,6 +1110,7 @@ class ControllerSaleOrder extends Controller {
             'filter_order_status' => $filter_order_status,
             'filter_total' => $filter_total,
             'filter_date_added' => $filter_date_added,
+            'filter_date_added_end' => $filter_date_added_end,
             'filter_date_modified' => $filter_date_modified,
             'sort' => $sort,
             'order' => $order,
@@ -1193,6 +1204,7 @@ class ControllerSaleOrder extends Controller {
         $data['entry_total'] = $this->language->get('entry_total');
         $data['entry_city'] = $this->language->get('entry_city');
         $data['entry_date_added'] = $this->language->get('entry_date_added');
+        $data['entry_date_added_end'] = $this->language->get('entry_date_added_end');
         $data['entry_date_modified'] = $this->language->get('entry_date_modified');
         $data['entry_store_name'] = $this->language->get('entry_store_name');
         $data['button_invoice_print'] = $this->language->get('button_invoice_print');
@@ -1271,6 +1283,10 @@ class ControllerSaleOrder extends Controller {
             $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
         }
 
+        if (isset($this->request->get['filter_date_added_end'])) {
+            $url .= '&filter_date_added_end=' . $this->request->get['filter_date_added_end'];
+        }
+
         if (isset($this->request->get['filter_date_modified'])) {
             $url .= '&filter_date_modified=' . $this->request->get['filter_date_modified'];
         }
@@ -1338,6 +1354,10 @@ class ControllerSaleOrder extends Controller {
             $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
         }
 
+        if (isset($this->request->get['filter_date_added_end'])) {
+            $url .= '&filter_date_added_end=' . $this->request->get['filter_date_added_end'];
+        }
+
         if (isset($this->request->get['filter_date_modified'])) {
             $url .= '&filter_date_modified=' . $this->request->get['filter_date_modified'];
         }
@@ -1372,6 +1392,7 @@ class ControllerSaleOrder extends Controller {
         $data['filter_order_status'] = $filter_order_status;
         $data['filter_total'] = $filter_total;
         $data['filter_date_added'] = $filter_date_added;
+        $data['filter_date_added_end'] = $filter_date_added_end;
         $data['filter_date_modified'] = $filter_date_modified;
 
         $this->load->model('localisation/order_status');
@@ -5431,6 +5452,22 @@ class ControllerSaleOrder extends Controller {
 
         $json = json_encode($json);
 
+        // Add to activity log
+        $log = new Log('error.log');
+        $this->load->model('user/user_activity');
+
+        $activity_data = [
+            'user_id' => $this->user->getId(),
+            'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+            'user_group_id' => $this->user->getGroupId(),
+            'order_id' => $order_id,
+        ];
+        $log->write('user update_invoice');
+
+        $this->model_user_user_activity->addActivity('update_invoice', $activity_data);
+
+        $log->write('user update_invoice');
+
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput($json);
     }
@@ -5454,6 +5491,22 @@ class ControllerSaleOrder extends Controller {
         }
 
         $json = json_encode($json);
+
+        // Add to activity log
+        $log = new Log('error.log');
+        $this->load->model('user/user_activity');
+
+        $activity_data = [
+            'user_id' => $this->user->getId(),
+            'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+            'user_group_id' => $this->user->getGroupId(),
+            'order_id' => $order_id,
+        ];
+        $log->write('user notify_invoice');
+
+        $this->model_user_user_activity->addActivity('notify_invoice', $activity_data);
+
+        $log->write('user notify_invoice');
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput($json);
@@ -7121,12 +7174,14 @@ class ControllerSaleOrder extends Controller {
         $filter_date_start = $this->request->get['orderstartdate'];
         $filter_date_end = $this->request->get['orderenddate'];
         $filter_order_status_id = $this->request->get['filter_order_status_id'];
+        $filter_customer = $this->request->get['filter_customer'];
 
         $filter_data = [
             'filter_city' => $filter_city,
             'filter_date_start' => $filter_date_start,
             'filter_date_end' => $filter_date_end,
-            'filter_order_status_id' => $filter_order_status_id
+            'filter_order_status_id' => $filter_order_status_id,
+            'filter_customer' => $filter_customer,
         ];
 
 
