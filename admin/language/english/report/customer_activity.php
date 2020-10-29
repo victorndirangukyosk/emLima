@@ -11,6 +11,7 @@ $_['text_address_delete'] = '<a href="customer_id=%d">%s</a> deleted one of thei
 $_['text_edit'] = '<a href="customer_id=%d">%s</a> updated their account details.';
 $_['text_forgotten'] = '<a href="customer_id=%d">%s</a> requested a new password.';
 $_['text_login'] = '<a href="customer_id=%d">%s</a> logged in.';
+$_['text_logout'] = '<a href="customer_id=%d">%s</a> logged out.';
 $_['text_password'] = '<a href="customer_id=%d">%s</a> updated their account password.';
 $_['text_register'] = '<a href="customer_id=%d">%s</a> registered for an account.';
 $_['text_return_account'] = '<a href="customer_id=%d">%s</a> submitted a product return.';
