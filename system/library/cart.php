@@ -817,8 +817,10 @@ class Cart
     {
         $total = 0;
         //echo '<pre>';print_r($this->getProducts());exit;
-        foreach ($this->getProducts() as $product) {
-            $total += $this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')) * $product['quantity'];
+        if (is_array($this->getProducts())) {
+            foreach ($this->getProducts() as $product) {
+                $total += $this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')) * $product['quantity'];
+            }
         }
         //echo '<pre>';echo $total;exit;
         return $total;
@@ -855,11 +857,12 @@ class Cart
         $product_total = 0;
 
         $products = $this->getProducts();
-
-        foreach ($products as $product) {
-            $product_total += $product['quantity'];
+        
+        if (is_array($products)) {
+            foreach ($products as $product) {
+                $product_total += $product['quantity'];
+            }
         }
-
         return count($products);
     }
 
