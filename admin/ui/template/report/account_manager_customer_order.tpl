@@ -70,7 +70,7 @@
                 <td class="text-right"><?php echo $column_orders; ?></td>
                 <td class="text-right"><?php echo $column_products; ?></td>
                 <td class="text-right"><?php echo $column_total; ?></td>
-                <td class="text-right"><?php echo $column_action; ?></td>
+                <!--<td class="text-right"><?php echo $column_action; ?></td>-->
               </tr>
             </thead>
             <tbody>
@@ -84,7 +84,7 @@
                 <td class="text-right"><?php echo $customer['orders']; ?></td>
                 <td class="text-right"><?php echo $customer['products']; ?></td>
                 <td class="text-right"><?php echo $customer['total']; ?></td>
-                <td class="text-right"><a href="<?php echo $customer['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a></td>
+                <!--<td class="text-right"><a href="<?php echo $customer['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a></td>-->
               </tr>
               <?php } ?>
               <?php } else { ?>
