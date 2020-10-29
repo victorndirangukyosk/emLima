@@ -380,7 +380,7 @@ class ModelReportCustomer extends Model {
         if (!empty($data['filter_ip'])) {
             $implode[] = "co.ip LIKE '" . $this->db->escape($data['filter_ip']) . "'";
         }
-
+        $implode[] = "c.customer_id > 0";
         if (!empty($data['filter_customer'])) {
             $implode[] = "co.customer_id > 0 AND CONCAT(c.firstname, ' ', c.lastname) LIKE '" . $this->db->escape($data['filter_customer']) . "'";
         }
@@ -456,7 +456,7 @@ class ModelReportCustomer extends Model {
         if (!empty($data['filter_ip'])) {
             $implode[] = "co.ip LIKE '" . $this->db->escape($data['filter_ip']) . "'";
         }
-
+        $implode[] = "c.customer_id > 0";
         if (!empty($data['filter_customer'])) {
             $implode[] = "co.customer_id > 0 AND CONCAT(c.firstname, ' ', c.lastname) LIKE '" . $this->db->escape($data['filter_customer']) . "'";
         }
