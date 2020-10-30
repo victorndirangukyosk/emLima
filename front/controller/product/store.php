@@ -131,9 +131,9 @@ class ControllerProductStore extends Controller
             $this->response->redirect($this->url->link('common/home'));
         }
 
-        $title = $store_info['name'];
+        $title = isset($store_info['name']) ? $store_info['name'] : '';
         $data['current_store'] = $store_id;
-        $data['heading_title'] = $store_info['name'];
+        $data['heading_title'] = isset($store_info['name']) ? $store_info['name'] : '';
         $data['store_info'] = $store_info;
         //echo '<pre>';print_r($store_info);exit;
 
@@ -212,20 +212,20 @@ class ControllerProductStore extends Controller
         }
 
         //echo "<pre>";print_r($data['lists']);die;
-        if ($store_info['logo']) {
+        if (isset($store_info['logo'])) {
             $data['thumb'] = $this->model_tool_image->resize($store_info['logo'], $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height'));
         } else {
             $data['thumb'] = '';
         }
 
-        if ($store_info['banner_logo']) {
+        if (isset($store_info['banner_logo'])) {
             $data['banner_logo'] = $this->model_tool_image->resize($store_info['banner_logo'], 800, 450);
         } else {
             $data['banner_logo'] = $this->model_tool_image->resize('placeholder.png', 800, 450);
         }
 
         //echo "<pre>";print_r($store_info);die;
-        if ($store_info['banner_logo_status']) {
+        if (isset($store_info['banner_logo_status'])) {
             //echo "<pre>";print_r("Ce");die;
             if (isset($this->session->data['show_banner']) && !$this->session->data['show_banner']) {
             } else {
