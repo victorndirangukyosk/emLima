@@ -898,7 +898,7 @@ class ControllerCommonHome extends Controller {
             $tempStore = $store;
             $tempStore['href'] = $this->model_setting_store->getSeoUrl('store_id=' . $store['store_id']);
             $tempStore['thumb'] = $this->model_tool_image->resize($store['logo'], 300, 300);
-            $tempStore['categorycount'] = $this->model_setting_store->getStoreCategoriesbyStoreId($store['store_id'], $_REQUEST['category']);
+            $tempStore['categorycount'] = $this->model_setting_store->getStoreCategoriesbyStoreId($store['store_id'], isset($_REQUEST['category']) ? $_REQUEST['category'] : '');
             if (!empty($store['store_type_ids'])) {
                 $arrayStoretypes = explode(',', $store['store_type_ids']);
                 $tempStoretypename = '';
@@ -947,7 +947,7 @@ class ControllerCommonHome extends Controller {
 
         foreach ($best_products as $products) {
             $product_detail = $this->model_assets_product->getDetailproduct($products['product_id']);
-            $product_detail['thumb'] = $this->model_tool_image->resize($product_detail['image'], 100, 100);
+            $product_detail['thumb'] = $this->model_tool_image->resize(isset($product_detail['image']) ? $product_detail['image'] : '', 100, 100);
             $data['bestseller'][] = $product_detail;
         }
 

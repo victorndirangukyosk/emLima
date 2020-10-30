@@ -45,7 +45,7 @@
                     </div>
                     <div class="modal-footer">
                         <!-- <p><?= isset($text_verify_number) ? $text_verify_number : ''  ?></p> -->
-                        <a href="<?php echo $checkout; ?>" id="proceed_to_checkout">
+                        <a href="<?php echo isset($checkout) ? $checkout : ''; ?>" id="proceed_to_checkout">
                         
                             <button type="button" class="btn btn-primary btn-block btn-lg" id="proceed_to_checkout_button">
                                 <span class="checkout-modal-text"><?= isset($text_proceed_to_checkout) ? $text_proceed_to_checkout : '' ?> </span>

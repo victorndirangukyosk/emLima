@@ -54,10 +54,12 @@
     		                            <h3 style="display: inline-block;"> <?php echo $product['name']; ?> </h3>
                                         <div style="font-size:13px;">
                                                 <?php  $fpt ='';
+                                                if(is_array($product['produce_type'])) {
                                                 foreach ($product['produce_type'] as $pt) {
                                                     if($pt['type']!= null && $pt['type']!= 'null' )
                                                 $fpt.=' '.  $pt['type'].'-'.$pt['value'] ;
-                                                    }    
+                                                    }
+                                                    }
                                                     ?><?= $fpt?></div> 
     		                            <p class="product-info">
                                             <span class="small-info"><?php echo ( isset($product['unit']) ? $product['unit'] : ''); ?></span>                        

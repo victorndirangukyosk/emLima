@@ -94,7 +94,7 @@ class Cart
 
                 $product_query = $this->db->get('product_to_store');
                 $log->write('pro 2');
-                $log->write($product_query);
+                //$log->write($product_query);
 
                 if ($product_query->num_rows) {
                     //override if cateogry discount defined
@@ -192,7 +192,7 @@ class Cart
                 }
             }
         }
-        $log->write($this->data);
+        //$log->write($this->data);
         $res['products'] = $this->data;
         $res['quantity'] = $totalQuantity;
 
