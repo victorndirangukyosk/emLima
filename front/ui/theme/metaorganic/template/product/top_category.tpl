@@ -9,7 +9,7 @@
             </div>
             <div class="col-md-9 col-sm-9 col-xs-12">
                 <div class="col-md-12 col-sm-12 mainheadingname color-white margin25">
-                <?= $store_info['name']?>
+                <?= isset($store_info['name']) ? $store_info['name'] : '' ?>
                 </div>
 				<?php 
 				$catArray = array();
@@ -19,7 +19,7 @@
 				$categoyText = implode(',',$catArray);
 				?>
                 <div class="col-md-12 col-sm-12 detailsheader"><i><?= $categoyText?></i></div>
-                <div class="col-md-12 col-sm-12 addressdetail"><?= $store_info['address']?>
+                <div class="col-md-12 col-sm-12 addressdetail"><?= isset($store_info['address']) ? $store_info['address'] : '' ?>
                 </div>
                  <div class="col-md-12 col-sm-12 mt20">
                     <div class="col-md-2 col-sm-2 col-xs-5 border-right pl0">
@@ -44,11 +44,11 @@
                     <div class="cart-panel-content">
                     </div>
                     <div class="modal-footer">
-                        <!-- <p><?= $text_verify_number ?></p> -->
+                        <!-- <p><?= isset($text_verify_number) ? $text_verify_number : ''  ?></p> -->
                         <a href="<?php echo $checkout; ?>" id="proceed_to_checkout">
                         
                             <button type="button" class="btn btn-primary btn-block btn-lg" id="proceed_to_checkout_button">
-                                <span class="checkout-modal-text"><?= $text_proceed_to_checkout?> </span>
+                                <span class="checkout-modal-text"><?= isset($text_proceed_to_checkout) ? $text_proceed_to_checkout : '' ?> </span>
                                 <div class="checkout-loader" style="display: none;"></div>
                                 
                             </button>
@@ -849,7 +849,7 @@
 
                         <b> <?= $text_change_location_name ?> : <?= $zipcode ?></b>
                     <?php } else { ?>
-                        <b><?= $text_change_location_name ?> : <?= $location_name_full ?></b>
+                        <b><?= $text_change_location_name ?> : <?= isset($location_name_full) ? $location_name_full : ''  ?></b>
                         
                     <?php } ?>
                     
