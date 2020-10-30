@@ -548,7 +548,7 @@ class ControllerAccountLogin extends Controller {
 
         $this->load->language('common/login_modal');
         $this->load->model('tool/image');
-
+        $data['base'] = '';
         $data['text_find_account'] = $this->language->get('text_find_account');
         $data['text_forget'] = $this->language->get('text_forget');
         $data['text_enter_email_address'] = $this->language->get('text_enter_email_address');

@@ -496,7 +496,7 @@ class ModelAssetsProduct extends Model
 
     public function getProducts($data = [])
     {
-        if ($this->session->data['config_store_id']) {
+        if (isset($this->session->data['config_store_id'])) {
             $store_id = $this->session->data['config_store_id'];
         } else {
             $store_id = $data['store_id'];
