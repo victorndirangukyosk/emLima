@@ -896,7 +896,7 @@ class ControllerProductStore extends Controller
                 }
 
                 //get qty in cart
-                $key = base64_encode(serialize(['product_store_id' => (int) $result['product_store_id'], 'store_id' => $this->session->data['config_store_id']]));
+                $key = base64_encode(serialize(['product_store_id' => (int) $result['product_store_id'], 'store_id' => isset($this->session->data['config_store_id']) ? $this->session->data['config_store_id'] : '']));
 
                 if (isset($this->session->data['cart'][$key])) {
                     $qty_in_cart = $this->session->data['cart'][$key]['quantity'];

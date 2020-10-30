@@ -805,8 +805,8 @@ class ModelAssetsProduct extends Model
 
     public function getOfferProductsBySpecialPrice($data = [])
     {
-        $store_id = $this->session->data['config_store_id'];
-        if($store_id == NULL) {
+        $store_id = isset($this->session->data['config_store_id']) ? $this->session->data['config_store_id'] : '';
+        if($store_id == NULL || $store_id = '') {
         $store_id = 75;    
         }
         $language_id = (int) $this->config->get('config_language_id');
