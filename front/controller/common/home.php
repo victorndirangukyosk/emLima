@@ -908,19 +908,19 @@ class ControllerCommonHome extends Controller {
                 $tempStore['storeTypes'] = $tempStoretypename;
             }
 
-            if ($_REQUEST['location'] && $_REQUEST['category']) {
+            if (isset($_REQUEST['location']) && isset($_REQUEST['category'])) {
                 //echo 'locat';exit;
                 $res = $this->model_setting_store->getDistance($userSearch[0], $userSearch[1], $store['latitude'], $store['longitude'], $store['serviceable_radius']);
                 if ($res && ($tempStore['categorycount'] > 0)) {
                     $data['stores'][] = $tempStore;
                 }
-            } elseif ($_REQUEST['location']) {
+            } elseif (isset($_REQUEST['location'])) {
                 //echo 'loc';exit;
                 $res = $this->model_setting_store->getDistance($userSearch[0], $userSearch[1], $store['latitude'], $store['longitude'], $store['serviceable_radius']);
                 if ($res) {
                     $data['stores'][] = $tempStore;
                 }
-            } elseif ($_REQUEST['category']) {
+            } elseif (isset($_REQUEST['category'])) {
                 //echo 'cat';exit;
                 // $categorycount = $this->model_setting_store->getStoreCategoriesbyStoreId($store['store_id'],$_REQUEST['category']);
                 if ($tempStore['categorycount'] > 0) {
