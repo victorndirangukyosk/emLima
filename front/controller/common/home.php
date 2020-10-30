@@ -869,16 +869,16 @@ class ControllerCommonHome extends Controller {
             }
         }
         //	   echo "<pre>";print_r($data['categories']);die;
-        $data['page'] = $_REQUEST['page'];
+        $data['page'] = isset($_REQUEST['page']) ? $_REQUEST['page'] : '';
         //$this->load->language('module/store');
         $this->load->model('setting/store');
         $filter = [];
         $filter['filter_status'] = 1;
-        if ($_REQUEST['location']) {
+        if (isset($_REQUEST['location'])) {
             $userSearch = explode(',', $_REQUEST['location']);
             $filter['filter_location'] = $_REQUEST['location'];
         }
-        if ($_REQUEST['category']) {
+        if (isset($_REQUEST['category'])) {
             $filter['filter_category'] = $_REQUEST['category'];
         }
         //echo'<pre>';print_r($filter);exit;
