@@ -629,11 +629,6 @@ class ControllerAccountRegister extends Controller
                     $log = new Log('error.log');
                     $log = $log->write($subject);
                     $log = $log->write($message);
-                    $log = $log->write($this->config->get('config_mail'));
-                    $log = $log->write($this->request->post['email']);
-                    $log = $log->write($this->config->get('config_from_email'));
-                    $log = $log->write($this->config->get('config_name'));
-
 
                     $mail = new mail($this->config->get('config_mail'));
                     $mail->setTo($this->request->post['email']);
