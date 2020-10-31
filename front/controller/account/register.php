@@ -620,10 +620,11 @@ class ControllerAccountRegister extends Controller
 
                     $data['success_message'] = $this->language->get('text_otp_sent_email').' '.$this->request->post['email'];
                 }
-
+                
+                $log = new Log('error.log');
+                $log = $log->write('registerOTP');
                 if ($this->emailtemplate->getEmailEnabled('registerOTP', 'registerotp_2')) {
-                    $log = new Log('error.log');
-                    $log = $log->write('registerOTP');
+                    $log = $log->write('registerOTPEmail');
                     $subject = $this->emailtemplate->getSubject('registerOTP', 'registerotp_2', $data);
                     $message = $this->emailtemplate->getMessage('registerOTP', 'registerotp_2', $data);
 
