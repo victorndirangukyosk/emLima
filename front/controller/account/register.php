@@ -625,9 +625,10 @@ class ControllerAccountRegister extends Controller
                 $log = $log->write('registerOTP');
                 if ($this->emailtemplate->getEmailEnabled('registerOTP', 'registerotp_2')) {
                     $log = new Log('error.log');
-                    $log = $log->write('registerOTPEmail');
                     $subject = $this->emailtemplate->getSubject('registerOTP', 'registerotp_2', $data);
                     $message = $this->emailtemplate->getMessage('registerOTP', 'registerotp_2', $data);
+                    $log = $log->write($subject);
+                    $log = $log->write($message);
 
                     $mail = new mail($this->config->get('config_mail'));
                     $mail->setTo($this->request->post['email']);
