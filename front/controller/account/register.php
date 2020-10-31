@@ -621,14 +621,10 @@ class ControllerAccountRegister extends Controller
                     $data['success_message'] = $this->language->get('text_otp_sent_email').' '.$this->request->post['email'];
                 }
                 
-                $log = new Log('error.log');
-                $log = $log->write('registerOTP');
+                try{
                 if ($this->emailtemplate->getEmailEnabled('registerOTP', 'registerotp_2')) {
                     $subject = $this->emailtemplate->getSubject('registerOTP', 'registerotp_2', $data);
                     $message = $this->emailtemplate->getMessage('registerOTP', 'registerotp_2', $data);
-                    $log = new Log('error.log');
-                    $log = $log->write($subject);
-                    $log = $log->write($message);
 
                     $mail = new mail($this->config->get('config_mail'));
                     $mail->setTo($this->request->post['email']);
@@ -637,6 +633,9 @@ class ControllerAccountRegister extends Controller
                     $mail->setSender($this->config->get('config_name'));
                     $mail->setHtml($message);
                     $mail->send();
+                }
+                } catch(Exception $e) {
+                    
                 }
             } else {
                 // enter valid number throw error
