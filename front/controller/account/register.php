@@ -627,7 +627,7 @@ class ControllerAccountRegister extends Controller
                     $subject = $this->emailtemplate->getSubject('registerOTP', 'registerotp_2', $data);
                     $message = $this->emailtemplate->getMessage('registerOTP', 'registerotp_2', $data);
                     $log = new Log('error.log');
-                    $log = $log->write('registerOTP');
+                    $log = $log->write($subject);
 
                     $mail = new mail($this->config->get('config_mail'));
                     $mail->setTo($this->request->post['email']);
