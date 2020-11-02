@@ -160,7 +160,7 @@ class ControllerCheckoutSuccess extends Controller {
                   } */
                 if (!empty($_SESSION['parent'])) {
                     $this->load->model('checkout/order');
-                    $this->model_checkout_order->SendMailToParentUser($order_id);
+                    $this->model_checkout_order->SendMailToParentUser($order_info['order_id']);
                 }
                 unset($this->session->data['shipping_method']);
                 unset($this->session->data['shipping_methods']);

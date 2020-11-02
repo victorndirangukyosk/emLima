@@ -175,7 +175,7 @@
                             }
                         }, period);
                     })(visitorID);
-                    var page_category = 'my-account-page';
+                    var page_category = 'my-transactions-page';
                     (function () {
                         var period = 300;
                         var limit = 20 * 1e3;

@@ -270,6 +270,16 @@
                                                     <i class="fa fa-money"></i><?= $text_cash ?> </a>
                                                 </li>
                                             <?php } ?>
+                                            
+                                            <li role="presentation">
+
+                                                    <?php if(strpos( $user_product_notes,$_SERVER["REQUEST_URI"]) !== false) { ?>
+                                                        <a href="<?php echo $user_product_notes; ?>" class="active">
+                                                    <?php } else { ?>
+                                                        <a href="<?php echo $user_product_notes; ?>">
+                                                    <?php } ?>
+                                                    <i class="fa fa-sticky-note"></i><?= $text_user_product_notes ?> </a>
+                                                </li>
 
                                           <!--  <?php if($this->config->get('config_reward_enabled')) { ?>
 
@@ -314,11 +324,11 @@
           <div class="cart-panel-content">
           </div>
           <div class="modal-footer">
-            <!-- <p><?= $text_verify_number ?></p> -->
+            <!-- <p><?= isset($text_verify_number) ? $text_verify_number : '' ?></p> -->
             <a href="<?php echo $checkout; ?>" id="proceed_to_checkout">
 
               <button type="button" class="btn btn-primary btn-block btn-lg" id="proceed_to_checkout_button">
-                <span class="checkout-modal-text"><?= $text_proceed_to_checkout?> </span>
+                <span class="checkout-modal-text"><?= isset($text_proceed_to_checkout) ? $text_proceed_to_checkout : '' ?> </span>
                 <div class="checkout-loader" style="display: none;"></div>
 
               </button>
