@@ -42,6 +42,47 @@
 </div>
 </div>
 <?php echo $footer; ?>
+
+<div class="addressModal">
+        <div class="modal fade" id="addressModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h2>Add new user product notes</h2>
+                            </div>
+                            <div id="address-message" class="col-md-12" style="color: red">
+                            </div>
+                            <div id="address-success-message" style="color: green">
+                            </div>
+                            <div class="addnews-address-form">
+                                    <!-- Multiple Radios (inline) -->
+                                <form id="new-address-form">
+                                    <!-- Text input-->
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <label class="control-label" for="name">Choose Product</label>
+                                            <input id="name" name="modal_product_name" type="text"  value="" class="form-control input-md" required="">
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Button -->
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <button id="singlebutton" name="singlebutton" type="button" class="btn btn-primary">SAVE</button>
+                                            <button type="button" class="btn btn-grey" data-dismiss="modal">CLOSE</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="<?= $base?>front/ui/theme/mvgv2/js/bootstrap.min.js"></script>
