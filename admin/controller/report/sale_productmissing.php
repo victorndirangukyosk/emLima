@@ -196,9 +196,9 @@ class ControllerReportSaleProductMissing extends Controller
                 //     if(!empty($OrignalProduct['name']) && $OrignalProduct['name'] == $EditedProduct['name'] && $OrignalProduct['unit'] == $EditedProduct['unit']) {
                 //         $present = true;
                 //     }
-                // }
+                // }!$present &&
 
-                if (!$present && !empty($OrignalProduct['name'])) {
+                if ( !empty($OrignalProduct['name'])) {
                     $data['torders'][] = [
                         'store' => $result['store_name'],
                         'model' => $OrignalProduct['model'],
@@ -211,12 +211,12 @@ class ControllerReportSaleProductMissing extends Controller
             }
         }
 
-        // echo "<pre>";print_r($data['torders']);die;
+        //  echo "<pre>";print_r($data['torders']);die;
         foreach ($data['torders'] as $torders1) {
             $ex = false;
 
             foreach ($data['orders'] as $value1) {
-                if ($value1['product_name'] == $torders1['product_name'] && $value1['store'] == $torders1['store']) {
+                if ($value1['product_name'] == $torders1['product_name'] && $value1['store'] == $torders1['store'] &&  $value1['unit'] == $torders1['unit']) {
                     $ex = true;
                 }
             }
@@ -225,7 +225,7 @@ class ControllerReportSaleProductMissing extends Controller
                 $sum = (float) 0.0;
 
                 foreach ($data['torders'] as $key => $torders2) {
-                    if ($torders1['product_name'] == $torders2['product_name'] && $torders1['store'] == $torders2['store']) {
+                    if ($torders1['product_name'] == $torders2['product_name'] && $torders1['store'] == $torders2['store'] && $torders1['unit'] == $torders2['unit']) {
                         $sum += (float) $torders2['product_qty'];
 
                         unset($data['torders'][$key]);
