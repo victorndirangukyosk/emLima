@@ -68,6 +68,13 @@
                                         </div>
                                     </div>
                                     
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <label class="control-label" for="name">Product Note</label>
+                                            <textarea name="modal_product_note" id="modal_product_note" class="form-control input-md" required=""></textarea>
+                                        </div>
+                                    </div>
+                                    
                                     <!-- Button -->
                                     <div class="form-group">
                                         <div class="col-md-12">
