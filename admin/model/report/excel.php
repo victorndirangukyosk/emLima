@@ -2573,7 +2573,7 @@ class ModelReportExcel extends Model {
         //$rows = $this->model_report_sale->getOrdersCommission($data);
         //echo "<pre>";print_r($data);die;
 
-        $results = $this->model_report_sale->getproductmissingOrders($data);
+        $results = $this->model_report_sale->getstockoutOrders($data);
 
         $data['orders'] = [];
         $data['torders'] = [];
@@ -2657,7 +2657,7 @@ class ModelReportExcel extends Model {
         foreach ($results as $result) {
             $is_edited = $this->model_sale_order->hasRealOrderProducts($result['order_id']);
 
-            if (!$is_edited) {
+            if ($is_edited) {
                 //continue;
                 $OrignalProducts  = $this->model_sale_order->getRealOrderProducts($result['order_id']);
             } else {

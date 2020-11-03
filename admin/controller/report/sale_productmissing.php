@@ -172,13 +172,13 @@ class ControllerReportSaleProductMissing extends Controller
 
         $order_total = 0;
 
-        $results = $this->model_report_sale->getproductmissingOrders($filter_data);
+        $results = $this->model_report_sale->getstockoutOrders($filter_data);
 
-        //echo "<pre>";print_r($results);die;
+        //  echo "<pre>";print_r($results);die;
         foreach ($results as $result) {
             $is_edited = $this->model_sale_order->hasRealOrderProducts($result['order_id']);
 
-            if (!$is_edited) {
+            if ($is_edited) {
                 //continue;
                 $OrignalProducts = $EditedProducts = $this->model_sale_order->getRealOrderProducts($result['order_id']);
             } else {
