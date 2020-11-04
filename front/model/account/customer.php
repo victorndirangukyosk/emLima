@@ -104,17 +104,17 @@ class ModelAccountCustomer extends Model {
             try {
 //Customer Registration Register
 
-            $subject = $this->emailtemplate->getSubject('Customer', 'customer_1', $data);
-            $message = $this->emailtemplate->getMessage('Customer', 'customer_1', $data);
-            $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_1', $data);
+                $subject = $this->emailtemplate->getSubject('Customer', 'customer_1', $data);
+                $message = $this->emailtemplate->getMessage('Customer', 'customer_1', $data);
+                $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_1', $data);
 
-            $mail = new Mail($this->config->get('config_mail'));
-            $mail->setTo($data['email']);
-            $mail->setFrom($this->config->get('config_from_email'));
-            $mail->setSender($this->config->get('config_name'));
-            $mail->setSubject($subject);
-            $mail->setHTML($message);
-            $mail->send();
+                $mail = new Mail($this->config->get('config_mail'));
+                $mail->setTo($data['email']);
+                $mail->setFrom($this->config->get('config_from_email'));
+                $mail->setSender($this->config->get('config_name'));
+                $mail->setSubject($subject);
+                $mail->setHTML($message);
+                $mail->send();
             } catch (Exception $e) {
                 
             }
@@ -353,10 +353,8 @@ class ModelAccountCustomer extends Model {
         }
     }
 
-    
-    public function addLoginHistory($data) {        
-            $this->db->query('INSERT INTO ' . DB_PREFIX . "login_history SET customer_id = '" . $this->db->escape($data['customer_id']) . "', login_latitude = '" . $this->db->escape($data['login_latitude']) . "', login_longitude = '" . $this->db->escape($data['login_longitude']) . "', login_mode = '" . $this->db->escape($data['login_mode']) . "', login_date = '" . $this->db->escape(date('Y-m-d H:i:s')) . "', login_ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']). "'");
-        
+    public function addLoginHistory($data) {
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "login_history SET customer_id = '" . $this->db->escape($data['customer_id']) . "', login_latitude = '" . $this->db->escape($data['login_latitude']) . "', login_longitude = '" . $this->db->escape($data['login_longitude']) . "', login_mode = '" . $this->db->escape($data['login_mode']) . "', login_date = '" . $this->db->escape(date('Y-m-d H:i:s')) . "', login_ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "'");
     }
 
     public function getLoginAttempts($email) {
@@ -448,6 +446,22 @@ class ModelAccountCustomer extends Model {
 
         if ($customer_info) {
             $this->db->query('UPDATE ' . DB_PREFIX . "customer SET approved = '" . (int) $approve_id . "', token = '' WHERE customer_id = '" . (int) $customer_id . "'");
+        }
+    }
+
+    public function customernotifications($user_id, $active_status, $notification_id) {
+        $customer_info = $this->getCustomer($user_id);
+
+        if ($customer_info && $notification_id == 'sms') {
+            $this->db->query('UPDATE ' . DB_PREFIX . "customer SET sms_notification = '" . (int) $active_status . "' WHERE customer_id = '" . (int) $user_id . "'");
+        }
+        
+        if ($customer_info && $notification_id == 'mobile') {
+            $this->db->query('UPDATE ' . DB_PREFIX . "customer SET mobile_notification = '" . (int) $active_status . "' WHERE customer_id = '" . (int) $user_id . "'");
+        }
+        
+        if ($customer_info && $notification_id == 'email') {
+            $this->db->query('UPDATE ' . DB_PREFIX . "customer SET email_notification = '" . (int) $active_status . "' WHERE customer_id = '" . (int) $user_id . "'");
         }
     }
 
@@ -550,16 +564,14 @@ class ModelAccountCustomer extends Model {
         return $parent;
     }
 
-
     public function CheckApprover() {
-        
+
         $query = $this->db->query('SELECT c.order_approval_access,c.order_approval_access_role FROM ' . DB_PREFIX . "customer c WHERE customer_id = '" . (int) $this->customer->getId() . "'");
-          
-        
+
+
         // echo '<pre>';print_r($query->row);exit;
         return $query->row;
     }
-
 
     public function getCustomerParentDetails($customer_id) {
         $customer_parent_details = NULL;
