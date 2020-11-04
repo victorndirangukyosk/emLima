@@ -310,15 +310,15 @@ $(document).ready(function() {
                                                 </li>
                                             <?php } ?>
                                             
-                                            <li role="presentation">
+                                            <!--<li role="presentation">
 
-                                                    <?php if(strpos( $user_product_notes,$_SERVER["REQUEST_URI"]) !== false) { ?>
-                                                        <a href="<?php echo $user_product_notes; ?>" class="active">
+                                                <?php if(strpos( $user_product_notes,$_SERVER["REQUEST_URI"]) !== false) { ?>
+                                                <a href="<?php echo $user_product_notes; ?>" class="active">
                                                     <?php } else { ?>
-                                                        <a href="<?php echo $user_product_notes; ?>">
-                                                    <?php } ?>
-                                                    <i class="fa fa-sticky-note"></i><?= $text_user_product_notes ?> </a>
-                                                </li>
+                                                    <a href="<?php echo $user_product_notes; ?>">
+                                                        <?php } ?>
+                                                        <i class="fa fa-sticky-note"></i><?= $text_user_product_notes ?> </a>
+                                            </li>-->
 
                                           <!--  <?php if($this->config->get('config_reward_enabled')) { ?>
 
