@@ -51,7 +51,7 @@
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <div class="row">
                             <div class="col-md-12">
-                                <h2>Add new user product notes</h2>
+                                <h2>Add product notes</h2>
                             </div>
                             <div id="address-message" class="col-md-12" style="color: red">
                             </div>
@@ -65,6 +65,13 @@
                                         <div class="col-md-12">
                                             <label class="control-label" for="name">Choose Product</label>
                                             <select id="modal_product_name" name="modal_product_name" class="form-control input-md" required=""></select>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <label class="control-label" for="name">Product Unit of Sale</label>
+                                            <input type="text" id="modal_product_uos" name="modal_product_uos" class="form-control input-md" value="" required="">
                                         </div>
                                     </div>
                                     
