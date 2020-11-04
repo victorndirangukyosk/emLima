@@ -44,7 +44,7 @@
 <?php echo $footer; ?>
 
 <div class="addressModal">
-        <div class="modal fade" id="addressModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal fade" id="addressModal" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-body">
@@ -64,7 +64,7 @@
                                     <div class="form-group">
                                         <div class="col-md-12">
                                             <label class="control-label" for="name">Choose Product</label>
-                                            <input id="name" name="modal_product_name" type="text"  value="" class="form-control input-md" required="">
+                                            <select id="modal_product_name" name="modal_product_name" class="form-control input-md" required=""></select>
                                         </div>
                                     </div>
                                     

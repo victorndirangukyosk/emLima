@@ -61,6 +61,45 @@
 	<link rel="stylesheet" type="text/css" href="<?= $base ?>front/ui/theme/organic/stylesheet/responsive.min.css" media="all">
     <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/theme/metaorganic/assets/css/list.min.css">
     <script src="<?= $base;?>front/ui/javascript/easyzoom.js"></script>
+    <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/theme/metaorganic/assets/css/select2.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/js/select2.full.min.js"></script>
+    <script>
+$(document).ready(function() {
+    $("#modal_product_name").select2({
+        ajax: {
+            url: "index.php?path=product/search/product_search",
+            dataType: 'json',
+            delay: 25,
+            data: function(params) {
+                return {
+                    q: params.term // search term
+                };
+            },
+            processResults: function(data, params) {
+                // parse the results into the format expected by Select2
+                // since we are using custom formatting functions we do not need to
+                // alter the remote JSON data, except to indicate that infinite
+                // scrolling can be used
+                var resData = [];
+                data.forEach(function(value) {
+                    if (value.name.indexOf(params.term) != -1)
+                        resData.push(value)
+                })
+                return {
+                    results: $.map(resData, function(item) {
+                        return {
+                            text: item.name,
+                            id: item.product_store_id
+                        }
+                    })
+                };
+            },
+            cache: true
+        },
+        minimumInputLength: 1
+    })
+});
+    </script>
 </head>
 
 <body>
