@@ -88,7 +88,27 @@ class ControllerApiCustomerLogin extends Controller
             $this->load->model('account/customer');
 
             $customer_info = $this->model_account_customer->getCustomer($api_info['customer_id']);
+            #region login history
+            $logindata['customer_id'] = $api_info['customer_id'];
+            if (isset($this->request->post['login_latitude']) ) {
+                $logindata['login_latitude'] = $this->request->post['login_latitude'];
+            } else {
+                $logindata['login_latitude'] = 0;
+            }
 
+            if (isset($this->request->post['login_longitude'])) {
+                $logindata['login_longitude'] = $this->request->post['login_longitude'];
+            } else {
+                $logindata['login_longitude'] = 0;
+            }        
+            
+            if (isset($this->request->post['login_mode'])) {
+                $logindata['login_mode'] = $this->request->post['login_mode'];
+            } else {
+                $logindata['login_mode'] = '';
+            }                 
+            $this->model_account_customer->addLoginHistory($logindata);
+           #endregion login history
             if (!empty($customer_info['dob'])) {
                 $customer_info['dob'] = date('d/m/Y', strtotime($customer_info['dob']));
             } else {
