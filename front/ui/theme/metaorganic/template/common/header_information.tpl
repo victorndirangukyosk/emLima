@@ -69,7 +69,7 @@ $(document).ready(function() {
         ajax: {
             url: "index.php?path=product/search/product_search",
             dataType: 'json',
-            delay: 25,
+            delay: 5,
             data: function(params) {
                 return {
                     q: params.term // search term
