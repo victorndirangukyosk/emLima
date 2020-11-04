@@ -16,8 +16,8 @@ class Sms {
 
     	
         $sender_id = $this->config->get('config_sms_sender_id');
-        $username  = $this->config->get('config_sms_username')
-        $password  = $this->config->get('config_sms_password')
+        $username  = $this->config->get('config_sms_username');
+        $password  = $this->config->get('config_sms_password');
 
        	/*$url= 'http://login.smsgatewayhub.com/smsapi/pushsms.aspx?user='.$username.'&pwd='.$password.'&to='.$to.'&sid='.$sender_id.'&msg='.urlencode($message).'&fl=0&gwid=2'; 
         
