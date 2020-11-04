@@ -32,6 +32,19 @@ class ControllerReportCustomerActivity extends Controller
             $filter_date_end = '';
         }
 
+        if (isset($this->request->get['filter_company'])) {
+            $filter_company = $this->request->get['filter_company'];
+        } else {
+            $filter_company = null;
+        }
+
+        if (isset($this->request->get['filter_key'])) {
+            $filter_key = $this->request->get['filter_key'];
+        } else {
+            $filter_key = null;
+        }
+
+
         if (isset($this->request->get['page'])) {
             $page = $this->request->get['page'];
         } else {
@@ -55,6 +68,13 @@ class ControllerReportCustomerActivity extends Controller
         if (isset($this->request->get['filter_date_end'])) {
             $url .= '&filter_date_end='.$this->request->get['filter_date_end'];
         }
+        if (isset($this->request->get['filter_company'])) {
+            $url .= '&filter_company='.urlencode($this->request->get['filter_company']);
+        }
+        if (isset($this->request->get['filter_key'])) {
+            $url .= '&filter_key='.urlencode($this->request->get['filter_key']);
+        }
+
 
         if (isset($this->request->get['page'])) {
             $url .= '&page='.$this->request->get['page'];
@@ -81,6 +101,8 @@ class ControllerReportCustomerActivity extends Controller
             'filter_ip' => $filter_ip,
             'filter_date_start' => $filter_date_start,
             'filter_date_end' => $filter_date_end,
+            'filter_company' => $filter_company,
+            'filter_key' => $filter_key,
             'start' => ($page - 1) * 20,
             'limit' => 20,
         ];
@@ -103,6 +125,8 @@ class ControllerReportCustomerActivity extends Controller
             ];
 
             $data['activities'][] = [
+                'company_name' => $result['company_name'],
+                'email' => $result['email'],
                 'comment' => str_replace($find, $replace, $comment),
                 'ip' => $result['ip'],
                 'date_added' => date($this->language->get('datetime_format'), strtotime($result['date_added'])),
@@ -129,6 +153,8 @@ class ControllerReportCustomerActivity extends Controller
         $data['button_hide_filter'] = $this->language->get('button_hide_filter');
 
         $data['token'] = $this->session->data['token'];
+        $data['activity_key'] = $this->model_report_customer->getActivityKeys();
+        
 
         $url = '';
 
@@ -147,6 +173,12 @@ class ControllerReportCustomerActivity extends Controller
         if (isset($this->request->get['filter_date_end'])) {
             $url .= '&filter_date_end='.$this->request->get['filter_date_end'];
         }
+        if (isset($this->request->get['filter_company'])) {
+            $url .= '&filter_company='.urlencode($this->request->get['filter_company']);
+        }
+        if (isset($this->request->get['filter_key'])) {
+            $url .= '&filter_key='.urlencode($this->request->get['filter_key']);
+        }
 
         $pagination = new Pagination();
         $pagination->total = $activity_total;
@@ -162,6 +194,9 @@ class ControllerReportCustomerActivity extends Controller
         $data['filter_ip'] = $filter_ip;
         $data['filter_date_start'] = $filter_date_start;
         $data['filter_date_end'] = $filter_date_end;
+        $data['filter_company'] = $filter_company;
+        $data['filter_key'] = $filter_key;
+
 
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
@@ -169,4 +204,61 @@ class ControllerReportCustomerActivity extends Controller
 
         $this->response->setOutput($this->load->view('report/customer_activity.tpl', $data));
     }
+
+
+    public function customeractivityexcel()
+    {
+        $this->load->language('report/customer_activity');
+
+        $this->document->setTitle($this->language->get('heading_title'));
+
+        if (isset($this->request->get['filter_customer'])) {
+            $filter_customer = $this->request->get['filter_customer'];
+        } else {
+            $filter_customer = null;
+        }
+
+        if (isset($this->request->get['filter_ip'])) {
+            $filter_ip = $this->request->get['filter_ip'];
+        } else {
+            $filter_ip = null;
+        }
+
+        if (isset($this->request->get['filter_date_start'])) {
+            $filter_date_start = $this->request->get['filter_date_start'];
+        } else {
+            $filter_date_start = '';
+        }
+
+        if (isset($this->request->get['filter_date_end'])) {
+            $filter_date_end = $this->request->get['filter_date_end'];
+        } else {
+            $filter_date_end = '';
+        }
+
+        if (isset($this->request->get['filter_company'])) {
+            $filter_company = $this->request->get['filter_company'];
+        } else {
+            $filter_company = null;
+        }
+
+        if (isset($this->request->get['filter_key'])) {
+            $filter_key = $this->request->get['filter_key'];
+        } else {
+            $filter_key = null;
+        }
+
+        $filter_data = [
+            'filter_customer' => $filter_customer,
+            'filter_ip' => $filter_ip,
+            'filter_date_start' => $filter_date_start,
+            'filter_date_end' => $filter_date_end,
+            'filter_company' => $filter_company,
+            'filter_key' => $filter_key,
+        ];
+
+        $this->load->model('report/excel');
+        $this->model_report_excel->download_customer_activity_excel($filter_data);
+    }
+
 }

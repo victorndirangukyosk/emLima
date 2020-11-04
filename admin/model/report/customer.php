@@ -497,7 +497,7 @@ class ModelReportCustomer extends Model {
     }
 
     public function getCustomerActivities($data = []) {
-        $sql = 'SELECT ca.activity_id, ca.customer_id, ca.key, ca.data, ca.ip, ca.date_added FROM ' . DB_PREFIX . 'customer_activity ca LEFT JOIN ' . DB_PREFIX . 'customer c ON (ca.customer_id = c.customer_id)';
+        $sql = 'SELECT c.company_name ,c.email, ca.activity_id, ca.customer_id, ca.key, ca.data, ca.ip, ca.date_added FROM ' . DB_PREFIX . 'customer_activity ca LEFT JOIN ' . DB_PREFIX . 'customer c ON (ca.customer_id = c.customer_id)';
 
         $implode = [];
 
@@ -519,6 +519,15 @@ class ModelReportCustomer extends Model {
 
         if (!empty($data['filter_date_end'])) {
             $implode[] = "DATE(ca.date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
+        }
+
+        if (!empty($data['filter_company'])) {
+            $implode[] = "c.company_name LIKE '" . $this->db->escape($data['filter_company']) . "'";
+             }
+
+
+        if (!empty($data['filter_key'])) {
+            $implode[] = "ca.key LIKE '" . $this->db->escape($data['filter_key']) . "'";
         }
 
         if ($implode) {
@@ -569,6 +578,15 @@ class ModelReportCustomer extends Model {
             $implode[] = "DATE(ca.date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
         }
 
+        if (!empty($data['filter_company'])) {
+            $implode[] = "c.company_name LIKE '" . $this->db->escape($data['filter_company']) . "'";
+             }
+
+
+        if (!empty($data['filter_key'])) {
+            $implode[] = "ca.key LIKE '" . $this->db->escape($data['filter_key']) . "'";
+        }
+
         if ($implode) {
             $sql .= ' WHERE ' . implode(' AND ', $implode);
         }
@@ -577,6 +595,18 @@ class ModelReportCustomer extends Model {
 
         return $query->row['total'];
     }
+
+    public function getActivityKeys()
+    {
+         
+            $sql = 'SELECT distinct ca.key  FROM '.DB_PREFIX."customer_activity ca";
+  
+            $query = $this->db->query($sql);
+
+            return $query->rows;
+        
+    }
+
 
     public function getTotalCustomerOrders($data = []) {
         $sql = 'SELECT COUNT(DISTINCT o.order_id) AS total FROM `' . DB_PREFIX . 'order` o  LEFT JOIN `' . DB_PREFIX . "customer` c ON (o.customer_id = c.customer_id) WHERE o.customer_id > '0'";
