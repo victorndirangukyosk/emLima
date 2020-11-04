@@ -2114,6 +2114,11 @@ class Emailtemplate
     }
 
     public function sendmessage($to, $message) {
+        
+        $log = new Log('error.log');
+        $log->write('SMS SENDING');
+        $log->write($to);
+        $log->write('SMS SENDING');
         $number = '734000006';
         if (strpos($to, $number) !== false) {
             $log = new Log('error.log');
