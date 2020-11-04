@@ -588,6 +588,30 @@ class ControllerAccountLogin extends Controller {
                     if ($logged_in) {
                         $this->model_account_customer->addLoginAttempt($this->customer->getEmail());
 
+
+
+                        $logindata['customer_id'] = $user_query->row['customer_id'];
+                        if (isset($this->request->post['login_latitude']) ) {
+                            $logindata['login_latitude'] = $this->request->post['login_latitude'];
+                        } else {
+                            $logindata['login_latitude'] = 0;
+                        }
+        
+                        if (isset($this->request->post['login_longitude'])) {
+                            $logindata['login_longitude'] = $this->request->post['login_longitude'];
+                        } else {
+                            $logindata['login_longitude'] = 0;
+                        }        
+                        
+                        if (isset($this->request->post['login_mode'])) {
+                            $logindata['login_mode'] = $this->request->post['login_mode'];
+                        } else {
+                            $logindata['login_mode'] = '';
+                        }                        
+                        // $logindata['login_date'] = "";
+                        // $logindata['login_ip'] = "";
+                        $this->model_account_customer->addLoginHistory($logindata);
+
                         if ('shipping' == $this->config->get('config_tax_customer')) {
                             $this->session->data['shipping_address'] = $this->model_account_address->getAddress($this->customer->getAddressId());
                         }

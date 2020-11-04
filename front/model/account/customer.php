@@ -353,6 +353,12 @@ class ModelAccountCustomer extends Model {
         }
     }
 
+    
+    public function addLoginHistory($data) {        
+            $this->db->query('INSERT INTO ' . DB_PREFIX . "login_history SET customer_id = '" . $this->db->escape($data['customer_id']) . "', login_latitude = '" . $this->db->escape($data['login_latitude']) . "', login_longitude = '" . $this->db->escape($data['login_longitude']) . "', login_mode = '" . $this->db->escape($data['login_mode']) . "', login_date = '" . $this->db->escape(date('Y-m-d H:i:s')) . "', login_ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']). "'");
+        
+    }
+
     public function getLoginAttempts($email) {
         $query = $this->db->query('SELECT * FROM `' . DB_PREFIX . "customer_login` WHERE email = '" . $this->db->escape(utf8_strtolower($email)) . "'");
 
