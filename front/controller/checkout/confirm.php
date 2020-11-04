@@ -938,6 +938,25 @@ class ControllerCheckoutConfirm extends Controller
                     $order_data[$store_id]['comment'] = '';
                 }
 
+                if (isset($this->request->post['login_latitude']) ) {
+                    $order_data[$store_id]['login_latitude'] = $this->request->post['login_latitude'];
+                } else {
+                    $order_data[$store_id]['login_latitude'] = 0;
+                }
+
+                if (isset($this->request->post['login_longitude'])) {
+                    $order_data[$store_id]['login_longitude'] = $this->request->post['login_longitude'];
+                } else {
+                    $order_data[$store_id]['login_longitude'] = 0;
+                }
+
+                
+                if (isset($this->request->post['login_mode'])) {
+                    $order_data[$store_id]['login_mode'] = $this->request->post['login_mode'];
+                } else {
+                    $order_data[$store_id]['login_mode'] = '';
+                }
+                 
                 if (isset($this->session->data['payment_method']['title'])) {
                     $order_data[$store_id]['payment_method'] = $this->session->data['payment_method']['title'];
                 } else {
