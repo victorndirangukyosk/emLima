@@ -496,7 +496,7 @@ class ModelAssetsProduct extends Model
 
     public function getProducts($data = [])
     {
-        if ($this->session->data['config_store_id']) {
+        if (isset($this->session->data['config_store_id'])) {
             $store_id = $this->session->data['config_store_id'];
         } else {
             $store_id = $data['store_id'];
@@ -564,13 +564,13 @@ class ModelAssetsProduct extends Model
             $this->db->where_not_in('product_to_store.product_store_id', $data['selectedProducts']);
         }
 
-        if ($data['start'] < 0) {
+        if (isset($data['start']) ? $data['start'] : ''  < 0) {
             $data['start'] = 0;
             $offset = $data['start'];
         } else {
-            $offset = $data['start'];
+            $offset = isset($data['start']) ? $data['start'] : '';
         }
-        if ($data['limit'] < 1) {
+        if (isset($data['limit']) ? $data['limit'] : ''  < 1) {
             $data['limit'] = 20;
             $limit = $data['limit'];
         } else {
@@ -648,6 +648,7 @@ class ModelAssetsProduct extends Model
         }
         // echo "<pre>";print_r($where_in); ;
         $array = array_column($where_in, 'general_product_id');
+        $array = array_filter($array);
         // echo "<pre>";print_r($array); ;
         $this->db->select('product_to_store.*,product_to_category.category_id,product.*,product_description.*,product_description.name as pd_name', false);
         $this->db->join('product', 'product.product_id = product_to_store.product_id', 'left');
@@ -805,7 +806,10 @@ class ModelAssetsProduct extends Model
 
     public function getOfferProductsBySpecialPrice($data = [])
     {
-        $store_id = $this->session->data['config_store_id'];
+        $store_id = isset($this->session->data['config_store_id']) ? $this->session->data['config_store_id'] : '';
+        if($store_id == NULL || $store_id = '') {
+        $store_id = 75;    
+        }
         $language_id = (int) $this->config->get('config_language_id');
 
         if ($data['start'] < 0) {

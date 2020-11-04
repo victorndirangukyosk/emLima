@@ -424,6 +424,9 @@ class ControllerApiCustomerOrder extends Controller
                     }
                 }
             }
+            $order_data[$store_id]['login_latitude']=$args['login_latitude'];
+            $order_data[$store_id]['login_longitude']=$args['login_longitude'];
+            $order_data[$store_id]['login_mode']=$args['login_mode'];
 
             $log->write('addMultiOrder call');
             //echo "<pre>";print_r($order_data);die;
@@ -1017,6 +1020,9 @@ class ControllerApiCustomerOrder extends Controller
                 }
             }
 
+            $order_data[$store_id]['login_latitude']=$args['login_latitude'];
+            $order_data[$store_id]['login_longitude']=$args['login_longitude'];
+            $order_data[$store_id]['login_mode']=$args['login_mode'];
             $log->write('addMultiOrder call');
             //echo "<pre>";print_r($order_data);die;
             //$log->write($order_data);

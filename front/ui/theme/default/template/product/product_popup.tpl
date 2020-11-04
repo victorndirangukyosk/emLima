@@ -109,7 +109,7 @@
                                 <?php if($this->customer->isLogged()) { ?>
                                 
 
-                                <a href="#" class="add-to-list list_button<?= $product['product_store_id'] ?>-<?= $product['store_product_variation_id'] ?>" id="list-btn" data-id="<?= $product['product_id'] ?>"
+                                <a href="#" class="add-to-list list_button<?= $product['product_store_id'] ?>-<?= $product['store_product_variation_id'] ?>" id="list-btn" data-id="<?= isset($product['product_id']) ? $product['product_id'] : '' ?>"
                                  type="button" data-toggle="modal" data-target="#listModal"  ><img class="add-list-png"   src="<?= $base;?>front/ui/theme/mvgv2/images/list-icon.png">
                                  </a>
 

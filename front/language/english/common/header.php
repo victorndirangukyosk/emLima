@@ -28,6 +28,7 @@ $_['text_register'] = 'Register';
 $_['text_login'] = 'Login';
 $_['text_order'] = 'Order History';
 $_['text_credit'] = 'My Wallet';
+$_['text_user_product_notes'] = 'My Product Notes';
 $_['text_download'] = 'Downloads';
 $_['text_checkout'] = 'Checkout';
 $_['text_search'] = 'Search';

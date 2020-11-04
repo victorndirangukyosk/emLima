@@ -278,7 +278,7 @@
                           <div class="col-md-8">
                             <div class="my-order-info text-right">
                               <h3 class="my-order-title">
-                                <?php echo ($wishlist['product_count'] > 0 ?  '<a href="'.$wishlist['href'].'" class="btn btn-default btn-accept-reject">' .Process .' '. Order . ' (' .$wishlist['product_count'].' Products)' .'</a>' : $text_products_count. ' ' .$wishlist['product_count']); ?>
+                                <?php echo ($wishlist['product_count'] > 0 ?  '<a href="'.$wishlist['href'].'" class="btn btn-default btn-accept-reject">' .'Process '.' '.' Order '. ' (' .$wishlist['product_count'].' Products)' .'</a>' : $text_products_count. ' ' .$wishlist['product_count']); ?>
                               </h3>
                               <span class="my-order-id"></span>
 
@@ -417,10 +417,10 @@
                                                         <?= $product['variations'][0]['special'];?></div>
                                                     <div class="_1I1Wt">
 
-                                                    <div class="GeySM"><span class="_2g_QW">Unit:</span> <span class="_3TIJT"><?= $product['unit']?></span></div>
+                                                    <div class="GeySM"><span class="_2g_QW">Unit:</span> <span class="_3TIJT"><?= isset($product['unit']) ? $product['unit'] : '' ?></span></div>
                                                 </section>
-                                                <section data-id="<?= $product['product_store_id'] ?>" class="VRlLl"><a class="_3tfm8 _3ePxY  product-detail-bnt product-img product-description open-popup" role="button" data-store=<?= $current_store;?> data-id="<?= $product['product_store_id'] ?>" target="_blank" rel="noopener noreferrer">Preview</a>
-                                                    <div class="pro-qty-addbtn" data-store-id="<?= $current_store ?>"data-variation-id="<?= $product['product_variation_store_id'] ?>" id="action_<?= $product['product_variation_store_id'] ?>">
+                                                <section data-id="<?= $product['product_store_id'] ?>" class="VRlLl"><a class="_3tfm8 _3ePxY  product-detail-bnt product-img product-description open-popup" role="button" data-store=<?= isset($current_store) ? $current_store : '' ;?> data-id="<?= $product['product_store_id'] ?>" target="_blank" rel="noopener noreferrer">Preview</a>
+                                                    <div class="pro-qty-addbtn" data-store-id="<?= isset($current_store) ? $current_store : '' ?>"data-variation-id="<?= isset($product['product_variation_store_id']) ? $product['product_variation_store_id'] : '' ?>" id="action_<?= isset($product['product_variation_store_id']) ? $product['product_variation_store_id'] : ''  ?>">
 
 													 <?php require 'action.tpl'; ?>
 
@@ -489,7 +489,7 @@
                         <a class="product-title"><?= $product['name']?></a>
                       </h3>
 
-                      <?php if(trim($product['unit'])){ ?>
+                      <?php if(trim(isset($product['unit']))){ ?>
                       <p class="product-info open-popup" data-id="<?= $product['product_store_id'] ?>"><span
                           class="small-info"><?= $product['unit'] ?></span></p>
                       <?php } else { ?>
@@ -513,7 +513,7 @@
                           <?php echo $product['variations'][0]['special']; ?>
                         </span>
                         <?php } ?>
-                        <div class="pro-qty-addbtn" data-store-id="<?= $current_store ?>"
+                        <div class="pro-qty-addbtn" data-store-id="<?= isset($current_store) ? $current_store : '' ?>"
                           data-variation-id="<?= $product['store_product_variation_id'] ?>"
                           id="action_<?= $product['product_store_id'] ?>">
 
@@ -717,11 +717,11 @@
           <div class="cart-panel-content">
           </div>
           <div class="modal-footer">
-            <!-- <p><?= $text_verify_number ?></p> -->
+            <!-- <p><?= isset($text_verify_number) ? $text_verify_number : '' ?></p> -->
             <a href="<?php echo $checkout; ?>" id="proceed_to_checkout">
 
               <button type="button" class="btn btn-primary btn-block btn-lg" id="proceed_to_checkout_button">
-                <span class="checkout-modal-text"><?= $text_proceed_to_checkout?> </span>
+                <span class="checkout-modal-text"><?= isset($text_proceed_to_checkout) ? $text_proceed_to_checkout : '' ?> </span>
                 <div class="checkout-loader" style="display: none;"></div>
 
               </button>

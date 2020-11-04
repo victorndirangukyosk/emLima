@@ -1466,6 +1466,16 @@ class ControllerSaleCustomer extends Controller {
             $this->load->model('setting/store');
 
             $store_info = $this->model_setting_store->getStore($store_id);
+            
+            // Add to activity log
+            $this->load->model('account/activity');
+
+            $activity_data = [
+                'customer_id' => $customer_info['customer_id'],
+                'name' => $customer_info['firstname'] . ' ' . $customer_info['lastname'],
+            ];
+
+            $this->model_account_activity->addActivity('login', $activity_data);
 
             if ($store_info) {
                 $this->response->redirect($store_info['url'] . 'index.php?path=account/login/adminRedirectLogin&token=' . $token);

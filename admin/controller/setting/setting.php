@@ -2434,7 +2434,7 @@ class ControllerSettingSetting extends Controller
                 'message' => $message,
             ]);
 
-            $log->write("Africa's Talking Sending SMS ".$message.' to '.$to);
+            $log->write("setting.php Africa's Talking Sending SMS ".$message.' to '.$to);
         } elseif ('twilio' == $this->config->get('config_sms_protocol')) {
             $sid = $this->config->get('config_sms_sender_id');
             $token = $this->config->get('config_sms_token');

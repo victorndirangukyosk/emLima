@@ -462,7 +462,7 @@ class ControllerCommonHome extends Controller {
         if ($is_he_parents != NULL) {
             $customer_details = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->db->escape($is_he_parents) . "' AND status = '1'");
         } else {
-            $customer_details = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->db->escape($this->session->data['customer_id']) . "' AND status = '1'");
+            $customer_details = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->customer->getId() . "' AND status = '1'");
         }
         $this->session->data['customer_category'] = isset($customer_details->row['customer_category']) ? $customer_details->row['customer_category'] : null;
 
@@ -869,16 +869,16 @@ class ControllerCommonHome extends Controller {
             }
         }
         //	   echo "<pre>";print_r($data['categories']);die;
-        $data['page'] = $_REQUEST['page'];
+        $data['page'] = isset($_REQUEST['page']) ? $_REQUEST['page'] : '';
         //$this->load->language('module/store');
         $this->load->model('setting/store');
         $filter = [];
         $filter['filter_status'] = 1;
-        if ($_REQUEST['location']) {
+        if (isset($_REQUEST['location'])) {
             $userSearch = explode(',', $_REQUEST['location']);
             $filter['filter_location'] = $_REQUEST['location'];
         }
-        if ($_REQUEST['category']) {
+        if (isset($_REQUEST['category'])) {
             $filter['filter_category'] = $_REQUEST['category'];
         }
         //echo'<pre>';print_r($filter);exit;
@@ -898,7 +898,7 @@ class ControllerCommonHome extends Controller {
             $tempStore = $store;
             $tempStore['href'] = $this->model_setting_store->getSeoUrl('store_id=' . $store['store_id']);
             $tempStore['thumb'] = $this->model_tool_image->resize($store['logo'], 300, 300);
-            $tempStore['categorycount'] = $this->model_setting_store->getStoreCategoriesbyStoreId($store['store_id'], $_REQUEST['category']);
+            $tempStore['categorycount'] = $this->model_setting_store->getStoreCategoriesbyStoreId($store['store_id'], isset($_REQUEST['category']) ? $_REQUEST['category'] : '');
             if (!empty($store['store_type_ids'])) {
                 $arrayStoretypes = explode(',', $store['store_type_ids']);
                 $tempStoretypename = '';
@@ -908,19 +908,19 @@ class ControllerCommonHome extends Controller {
                 $tempStore['storeTypes'] = $tempStoretypename;
             }
 
-            if ($_REQUEST['location'] && $_REQUEST['category']) {
+            if (isset($_REQUEST['location']) && isset($_REQUEST['category'])) {
                 //echo 'locat';exit;
                 $res = $this->model_setting_store->getDistance($userSearch[0], $userSearch[1], $store['latitude'], $store['longitude'], $store['serviceable_radius']);
                 if ($res && ($tempStore['categorycount'] > 0)) {
                     $data['stores'][] = $tempStore;
                 }
-            } elseif ($_REQUEST['location']) {
+            } elseif (isset($_REQUEST['location'])) {
                 //echo 'loc';exit;
                 $res = $this->model_setting_store->getDistance($userSearch[0], $userSearch[1], $store['latitude'], $store['longitude'], $store['serviceable_radius']);
                 if ($res) {
                     $data['stores'][] = $tempStore;
                 }
-            } elseif ($_REQUEST['category']) {
+            } elseif (isset($_REQUEST['category'])) {
                 //echo 'cat';exit;
                 // $categorycount = $this->model_setting_store->getStoreCategoriesbyStoreId($store['store_id'],$_REQUEST['category']);
                 if ($tempStore['categorycount'] > 0) {
@@ -947,7 +947,7 @@ class ControllerCommonHome extends Controller {
 
         foreach ($best_products as $products) {
             $product_detail = $this->model_assets_product->getDetailproduct($products['product_id']);
-            $product_detail['thumb'] = $this->model_tool_image->resize($product_detail['image'], 100, 100);
+            $product_detail['thumb'] = $this->model_tool_image->resize(isset($product_detail['image']) ? $product_detail['image'] : '', 100, 100);
             $data['bestseller'][] = $product_detail;
         }
 

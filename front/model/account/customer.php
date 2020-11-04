@@ -101,6 +101,7 @@ class ModelAccountCustomer extends Model {
 //update refree id end
 //Get Email Template
         if (!$customer_group_info['approval']) {
+            try {
 //Customer Registration Register
 
             $subject = $this->emailtemplate->getSubject('Customer', 'customer_1', $data);
@@ -114,6 +115,9 @@ class ModelAccountCustomer extends Model {
             $mail->setSubject($subject);
             $mail->setHTML($message);
             $mail->send();
+            } catch (Exception $e) {
+                
+            }
         } else {
 //Customer Registration Approve
 

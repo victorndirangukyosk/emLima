@@ -2573,7 +2573,7 @@ class ModelReportExcel extends Model {
         //$rows = $this->model_report_sale->getOrdersCommission($data);
         //echo "<pre>";print_r($data);die;
 
-        $results = $this->model_report_sale->getproductmissingOrders($data);
+        $results = $this->model_report_sale->getstockoutOrders($data);
 
         $data['orders'] = [];
         $data['torders'] = [];
@@ -2657,9 +2657,9 @@ class ModelReportExcel extends Model {
         foreach ($results as $result) {
             $is_edited = $this->model_sale_order->hasRealOrderProducts($result['order_id']);
 
-            if (!$is_edited) {
+            if ($is_edited) {
                 //continue;
-                $OrignalProducts = $EditedProducts = $this->model_sale_order->getRealOrderProducts($result['order_id']);
+                $OrignalProducts  = $this->model_sale_order->getRealOrderProducts($result['order_id']);
             } else {
                 $OrignalProducts = $this->model_sale_order->getOrderProducts($result['order_id']);
             }
@@ -2675,9 +2675,9 @@ class ModelReportExcel extends Model {
                 //     if(!empty($OrignalProduct['name']) && $OrignalProduct['name'] == $EditedProduct['name'] && $OrignalProduct['unit'] == $EditedProduct['unit']) {
                 //         $present = true;
                 //     }
-                // }
+                // }!$present &&
 
-                if (!$present && !empty($OrignalProduct['name'])) {
+                if ( !empty($OrignalProduct['name'])) {
                     $data['torders'][] = [
                         'store' => $result['store_name'],
                         'model' => $OrignalProduct['model'],
@@ -2694,7 +2694,7 @@ class ModelReportExcel extends Model {
             $ex = false;
 
             foreach ($data['orders'] as $value1) {
-                if ($value1['product_name'] == $torders1['product_name'] && $value1['store'] == $torders1['store']) {
+                if ($value1['product_name'] == $torders1['product_name'] && $value1['store'] == $torders1['store'] && $value1['unit'] == $torders1['unit']) {
                     $ex = true;
                 }
             }
@@ -2703,17 +2703,13 @@ class ModelReportExcel extends Model {
                 $sum = (float) 0.00;
 
                 foreach ($data['torders'] as $key => $torders2) {
-                    if ($torders1['product_name'] == $torders2['product_name'] && $torders1['store'] == $torders2['store']) {
+                    if ($torders1['product_name'] == $torders2['product_name'] && $torders1['store'] == $torders2['store']  &&  $torders1['unit'] == $torders2['unit']) {
                         $sum += (float) $torders2['product_qty'];
-
                         unset($data['torders'][$key]);
                     }
                 }
-
                 $torders1['product_qty'] = (float) $sum;
-
                 ++$order_total;
-
                 array_push($data['orders'], $torders1);
             }
         }

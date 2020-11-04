@@ -112,7 +112,7 @@
                 <label for="name" class="col-sm-3 control-label"><?= $entry_fax ?></label>
                 <div class="col-sm-6">
                     <input type="text" value="<?php echo $fax; ?>" size="30" placeholder="Tax No" name="fax" maxlength="100" id="name" class="form-control input-lg" />
-                     <?php if($error_fax) { ?>
+                     <?php if(isset($error_fax) && $error_fax) { ?>
                       <div class="text-danger"><?php echo $error_fax; ?></div>
                       <?php } ?>
                 </div>
