@@ -98,6 +98,19 @@ class ControllerAccountUserNotificationSettings extends Controller {
         $this->load->model('account/customer');
         $this->model_account_customer->customernotifications($user_id, $active_status, $notification_id);
 
+        // Add to activity log
+        $this->load->model('account/activity');
+
+        $activity_data = [
+            'customer_id' => $this->customer->getId(),
+            'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
+        ];
+        $log->write('notification edit');
+
+        $this->model_account_activity->addActivity($notification_id . ' notifiction ' . $active_status_text, $activity_data);
+
+        $log->write('notification edit');
+
         $json['success'] = 'Customer ' . $notification_id . ' Notfications ' . $active_status_text . '!';
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
