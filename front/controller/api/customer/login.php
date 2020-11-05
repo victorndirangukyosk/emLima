@@ -418,6 +418,41 @@ class ControllerApiCustomerLogin extends Controller
             $json['status'] = true;
 
             $json['data'] = $customer_info;
+
+             #region login history
+             try{
+             $logindata['customer_id'] = $customer_info['customer_id'];
+             if (isset($this->request->post['login_latitude']) ) {
+                 $logindata['login_latitude'] = $this->request->post['login_latitude'];
+             } else {
+                 $logindata['login_latitude'] = 0;
+             }
+ 
+             if (isset($this->request->post['login_longitude'])) {
+                 $logindata['login_longitude'] = $this->request->post['login_longitude'];
+             } else {
+                 $logindata['login_longitude'] = 0;
+             }        
+             
+             if (isset($this->request->post['login_mode'])) {
+                 $logindata['login_mode'] = $this->request->post['login_mode'];
+             } else {
+                 $logindata['login_mode'] = '';
+             }                 
+             $this->model_account_customer->addLoginHistory($logindata);
+            }
+            catch(exception $ex)
+            {
+                $log = new Log('error.log');              
+                $log->write('Login History not saved');
+            }
+            finally{
+                $this->response->addHeader('Content-Type: application/json');
+                $this->response->setOutput(json_encode($json));
+            }
+            #endregion login history
+           
+            
         } else {
             //$json['error'] = $this->language->get('error_login');
             $json['status'] = 10031; //user not found
