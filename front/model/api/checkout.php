@@ -729,7 +729,7 @@ class ModelApiCheckout extends Model
 
                     $log->write('vendro end');
                     /* vendor mail end */
-
+                    if($customer_info['email_notification'] == 1) {
                     $subject = $this->emailtemplate->getSubject('OrderAll', 'order_'.(int) $order_status_id, $data);
                     $message = $this->emailtemplate->getMessage('OrderAll', 'order_'.(int) $order_status_id, $data);
                     //$log->write($message);
@@ -752,8 +752,9 @@ class ModelApiCheckout extends Model
                     $mail->send();
 
                     $log->write('mail end');
+                    }
 
-                    if ($this->emailtemplate->getSmsEnabled('OrderAll', 'order_'.(int) $order_status_id)) {
+                    if ($customer_info['sms_notification'] == 1 && $this->emailtemplate->getSmsEnabled('OrderAll', 'order_'.(int) $order_status_id)) {
                         $ret = $this->emailtemplate->sendmessage($order_info['telephone'], $sms_message);
                     }
 
