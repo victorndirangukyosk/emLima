@@ -463,4 +463,34 @@ class ControllerApiCustomerLogin extends Controller
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
+
+    public function addNewCustomerDevice()
+    {
+        //echo "<pre>";print_r( $this->request->post);die;
+        try{
+        $json = [];
+        $json['status'] = 200;
+        // $json['data'] = [];
+        // $json['message'] = []; 
+            if (isset($this->request->post['customer_id']) && isset($this->request->post['device_id'])) {
+                $this->load->model('account/api');
+                $this->model_account_api->addCustomerDevice($this->request->post['customer_id'], $this->request->post['device_id']);
+                $json['message']="Success";
+            } else {
+                $json['status'] = 10010;
+                $json['message']="Error";
+                http_response_code(400);
+            }
+        }
+        catch(exception $ex)
+        {
+            $json['status'] = 500;
+            $json['message']="Device Mapping Failed";
+            http_response_code(400);
+        }
+        finally{
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+        }
+    }
 }

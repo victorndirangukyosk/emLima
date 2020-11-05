@@ -585,4 +585,10 @@ class ModelAccountApi extends Model
 
         return $data;
     }
+
+
+    public function addCustomerDevice($customer_id, $device_id)
+    {        
+        $this->db->query('INSERT INTO `'.DB_PREFIX."customer_devices` SET `customer_id` = '".(int) $customer_id."', `device_id` = '".$this->db->escape($device_id)."', `date_added` = NOW()");
+    }
 }
