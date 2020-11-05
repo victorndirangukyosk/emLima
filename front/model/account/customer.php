@@ -616,5 +616,10 @@ class ModelAccountCustomer extends Model {
         $order_approval_access = $this->db->query('SELECT COUNT(*) AS total FROM ' . DB_PREFIX . "customer c WHERE c.customer_id = '" . (int) $customer_id . "' AND c.parent = '" . (int) $parent_id . "' AND c.order_approval_access = 1 AND (c.order_approval_access_role = 'head_chef' OR c.order_approval_access_role = 'procurement_person')");
         return $order_approval_access->row['total'];
     }
+    public function getCustomerDevices($customer_id) {
+        $query = $this->db->query('SELECT device_id,date_added FROM ' . DB_PREFIX . "customer_devices WHERE customer_id = '" . (int) $customer_id . "' order by date_added desc");
+
+        return $query->rows;
+    }
 
 }
