@@ -6989,7 +6989,7 @@ class ControllerSaleOrder extends Controller {
 
             $sms_message = $this->emailtemplate->getSmsMessage('OrderAll', 'invoice_1', $data);
 
-            if ($this->emailtemplate->getEmailEnabled('OrderAll', 'invoice_1')) {
+            if ($customer_info['email_notification'] == 1 && $this->emailtemplate->getEmailEnabled('OrderAll', 'invoice_1')) {
                 $mail = new mail($this->config->get('config_mail'));
                 //$mail->setTo( 'chaurasia.abhi09@gmail.com');
                 $mail->setTo($order_info['email']);
@@ -7001,11 +7001,11 @@ class ControllerSaleOrder extends Controller {
                 $mail->send();
             }
 
-            if ($this->emailtemplate->getSmsEnabled('OrderAll', 'invoice_1')) {
+            if ($customer_info['sms_notification'] == 1 && $this->emailtemplate->getSmsEnabled('OrderAll', 'invoice_1')) {
                 $ret = $this->emailtemplate->sendmessage($order_info['telephone'], $sms_message);
             }
 
-            if ($this->emailtemplate->getNotificationEnabled('OrderAll', 'invoice_1')) {
+            if ($customer_info['mobile_notification'] == 1 && $this->emailtemplate->getNotificationEnabled('OrderAll', 'invoice_1')) {
                 $mobile_notification_template = $this->emailtemplate->getNotificationMessage('OrderAll', 'invoice_1', $data);
                 $mobile_notification_title = $this->emailtemplate->getNotificationTitle('OrderAll', 'invoice_1', $data);
                 // customer push notitification start
@@ -7056,7 +7056,7 @@ class ControllerSaleOrder extends Controller {
                 // customer push notitification start
 
                 if (isset($vendorDetail) && isset($vendorDetail['device_id']) && strlen($vendorDetail['device_id']) > 0) {
-                    $log->write('customer device id set');
+                    $log->write('VENDOR device id set');
 
                     $notification_id = $this->saveVendorNotification($temporaryVendorInfo['vendor_id'], $vendorDetail['device_id'], $order_id, $mobile_notification_template, $mobile_notification_title);
 

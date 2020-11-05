@@ -428,7 +428,8 @@ class ModelCheckoutOrder extends Model
 
                     //die;
                     $sms_message = $this->emailtemplate->getSmsMessage('OrderAll', 'order_'.(int) $order_status_id, $data);
-
+                    
+                    if($customer_info['email_notification'] == 1) {
                     $mail = new mail($this->config->get('config_mail'));
                     $mail->setTo($order_info['email']);
                     $mail->setFrom($this->config->get('config_from_email'));
@@ -437,12 +438,13 @@ class ModelCheckoutOrder extends Model
                     $mail->setHtml($message);
                     $mail->setText($text);
                     $mail->send();
+                    }
 
-                    if ($this->emailtemplate->getSmsEnabled('OrderAll', 'order_'.(int) $order_status_id)) {
+                    if ($customer_info['sms_notification'] == 1 && $this->emailtemplate->getSmsEnabled('OrderAll', 'order_'.(int) $order_status_id)) {
                         $ret = $this->emailtemplate->sendmessage($order_info['telephone'], $sms_message);
                     }
 
-                    if ($this->config->get('config_order_mail')) {
+                    if ($customer_info['email_notification'] == 1 && $this->config->get('config_order_mail')) {
                         if (!isset($mail)) {
                             $mail = new mail($this->config->get('config_mail'));
                             $mail->setTo($order_info['email']);
