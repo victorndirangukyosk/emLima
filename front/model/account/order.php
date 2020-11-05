@@ -1161,7 +1161,7 @@ class ModelAccountOrder extends Model {
 
         //$log->write($message);
         //echo "<pre>";print_r($message);die;
-        if ($this->emailtemplate->getEmailEnabled('OrderAll', 'order_' . (int) $order_status_id)) {
+        if ($customer_info['email_notification'] == 1 && $this->emailtemplate->getEmailEnabled('OrderAll', 'order_' . (int) $order_status_id)) {
 
 
             $mail = new mail($this->config->get('config_mail'));
@@ -1176,13 +1176,13 @@ class ModelAccountOrder extends Model {
             $log->write('mail end');
         }
 
-        if ($this->emailtemplate->getSmsEnabled('OrderAll', 'order_' . (int) $order_status_id)) {
+        if ($customer_info['sms_notification'] == 1 && $this->emailtemplate->getSmsEnabled('OrderAll', 'order_' . (int) $order_status_id)) {
 
             $ret = $this->emailtemplate->sendmessage($order_info['telephone'], $sms_message);
         }
 
         $log->write('outside mobi noti');
-        if ($this->emailtemplate->getNotificationEnabled('OrderAll', 'order_' . (int) $order_status_id)) {
+        if ($customer_info['mobile_notification'] == 1 && $this->emailtemplate->getNotificationEnabled('OrderAll', 'order_' . (int) $order_status_id)) {
 
             $log->write('status enabled of mobi noti');
             $mobile_notification_template = $this->emailtemplate->getNotificationMessage('OrderAll', 'order_' . (int) $order_status_id, $data);
@@ -1241,7 +1241,8 @@ class ModelAccountOrder extends Model {
         $log->write('EMAIL SENDING');
         $log->write($customer_info);
         $log->write('EMAIL SENDING');
-
+        
+    if ($sub_customer_info['email_notification'] == 1) {
         $subject = $this->emailtemplate->getSubject('Customer', 'customer_14', $customer_info);
         $message = $this->emailtemplate->getMessage('Customer', 'customer_14', $customer_info);
 
@@ -1252,16 +1253,17 @@ class ModelAccountOrder extends Model {
         $mail->setSubject($subject);
         $mail->setHTML($message);
         $mail->send();
+    }
 
         $log->write('SMS SENDING');
         $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_14', $customer_info);
         // send message here
-        if ($this->emailtemplate->getSmsEnabled('Customer', 'customer_14')) {
+        if ($sub_customer_info['sms_notification'] == 1 && $this->emailtemplate->getSmsEnabled('Customer', 'customer_14')) {
             $ret = $this->emailtemplate->sendmessage($customer_info['telephone'], $sms_message);
         }
 
         $log->write('outside mobi noti');
-        if ($this->emailtemplate->getNotificationEnabled('Customer', 'customer_14')) {
+        if ($sub_customer_info['mobile_notification'] == 1 && $this->emailtemplate->getNotificationEnabled('Customer', 'customer_14')) {
 
             $log->write('status enabled of mobi noti');
             $mobile_notification_template = $this->emailtemplate->getNotificationMessage('Customer', 'customer_14', $customer_info);
