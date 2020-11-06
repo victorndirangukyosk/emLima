@@ -333,6 +333,9 @@ class ModelSystemEmailtemplate extends Model
             case 'ConsolidatedOrderSheet':
                 $codes = $this->emailtemplate->getConsolidatedOrderSheetFind();
                 break;
+                case 'NewDeviceLogin':
+                    $codes = $this->emailtemplate->getLoginFind();
+                    break;
         }
 
         foreach ($codes as $code) {
