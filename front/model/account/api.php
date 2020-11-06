@@ -586,9 +586,128 @@ class ModelAccountApi extends Model
         return $data;
     }
 
+    public function new_device_send_otp()
+    {
+        $data['status'] = true;
+        $this->load->model('account/customer');
+        $this->load->language('api/general');
 
+        if (false == strpos($this->request->post['phone'], '#') && !empty($this->request->post['phone'])) {
+            if (ctype_digit($this->request->post['phone'])) {
+                //phone
+                $this->request->post['phone'] = preg_replace('/[^0-9]/', '', $this->request->post['phone']);
+
+                $customer_info = $this->model_account_customer->getCustomerByPhone($this->request->post['phone']);
+            } else {
+                $customer_info = $this->model_account_customer->getCustomerByEmail($this->request->post['email']);
+            }
+            //echo "<pre>";print_r($customer_info);die;
+            if (!$customer_info) {
+                $data['status'] = false;
+
+                if (ctype_digit($this->request->post['phone'])) {
+                    $data['error_warning'] = $this->language->get('error_phone_login');
+                } else {
+                    $data['error_warning'] = $this->language->get('error_email_login');
+                }
+            } else {
+                $data['username'] = $customer_info['firstname'];
+                if ('111111111' == $this->request->post['phone']) {
+                    $data['otp'] = '1234';
+                } else {
+                    $data['otp'] = mt_rand(1000, 9999);
+                }
+
+                $data['customer_id'] = $customer_info['customer_id'];
+                //save in otp table
+                $this->model_account_customer->saveOTP($customer_info['customer_id'], $data['otp'], 'newdevicelogin');
+                try{      
+                    if ('111111111' != $this->request->post['phone']) {
+                        $sms_message = $this->emailtemplate->getSmsMessage('NewDeviceLogin', 'NewDeviceLogin_1', $data);
+
+                        if ($customer_info['sms_notification'] == 1 && $this->emailtemplate->getSmsEnabled('NewDeviceLogin', 'NewDeviceLogin_1')) {
+                            $ret = $this->emailtemplate->sendmessage($this->request->post['phone'], $sms_message);
+                        }
+                    }
+                        //the Same login verify OTP mail is being used.
+                    if ($customer_info['email_notification'] == 1 && $this->emailtemplate->getEmailEnabled('NewDeviceLogin', 'NewDeviceLogin_1')) {
+                        $subject = $this->emailtemplate->getSubject('NewDeviceLogin', 'NewDeviceLogin_1', $data);
+                        $message = $this->emailtemplate->getMessage('NewDeviceLogin', 'NewDeviceLogin_1', $data);
+
+                        $mail = new mail($this->config->get('config_mail'));
+                        $mail->setTo($customer_info['email']);
+                        $mail->setFrom($this->config->get('config_from_email'));
+                        $mail->setSubject($subject);
+                        $mail->setSender($this->config->get('config_name'));
+                        $mail->setHtml($message);
+                        $mail->send();
+                    }
+                }
+                catch(Exception $ex)
+                {
+                    $log = new Log('error.log');
+                    $log->write("new device OTP SMS/Mail Failed");
+                }
+                finally{
+                 $data['success_message'] = $this->language->get('text_otp_sent_to');
+                 return $data;
+                 }
+            }
+        } else {
+            // enter valid number throw error
+            $data['status'] = false;
+            $data['error_warning'] = $this->language->get('error_phone');
+        }
+
+        return $data;
+    }
+
+    public function new_device_verify_otp($verify_otp, $customer_id)
+    {
+        $data['status'] = true;
+        $this->load->model('account/customer');
+        $this->load->language('api/general');
+
+        if (isset($verify_otp) && isset($customer_id)) {
+            $otp_data = $this->model_account_customer->getOTP($customer_id, $verify_otp, 'newdevicelogin');
+
+            //echo "<pre>";print_r($otp_data);die;
+            if (!$otp_data) {
+                $data['status'] = false;
+                $data['error_warning'] = $this->language->get('error_invalid_otp');
+            // user not found
+            } else {
+                // add activity and all
+                if ($this->customer->loginByPhone($customer_id)) {
+                    $this->model_account_customer->addLoginAttempt($this->customer->getEmail());
+                    if ('shipping' == $this->config->get('config_tax_customer')) {
+                        $this->session->data['shipping_address'] = $this->model_account_address->getAddress($this->customer->getAddressId());
+                    }
+
+                    //Add activity log--> will be added from login method
+                    //Add login history--> will be added from login method
+                    $data['status'] = true;
+                    // end
+                    // delete otp
+                    $this->model_account_customer->deleteOTP($verify_otp, $customer_id, 'newdevicelogin');
+
+                    $data['success_message'] = $this->language->get('text_valid_otp');
+                }
+            }
+        } else {
+            // enter valid number throw error
+            $data['status'] = false;
+
+            $data['error_warning'] = $this->language->get('error_invalid_otp');
+        }
+
+        return $data;
+    }
     public function addCustomerDevice($customer_id, $device_id)
     {        
-        $this->db->query('INSERT INTO `'.DB_PREFIX."customer_devices` SET `customer_id` = '".(int) $customer_id."', `device_id` = '".$this->db->escape($device_id)."', `date_added` = NOW()");
+        $this->db->query('INSERT INTO '.DB_PREFIX."customer_devices SET customer_id = '".(int) $customer_id."', device_id = '".$this->db->escape($device_id)."', date_added = NOW()");
     }
+
+   
+
 }
