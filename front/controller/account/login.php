@@ -564,7 +564,7 @@ class ControllerAccountLogin extends Controller {
 
         $data['forget_link'] = $this->url->link('account/forgotten');
 
-//          echo '<pre>';print_r($data);exit;
+        //          echo '<pre>';print_r($data);exit;
         $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/login.tpl', $data));
     }
 
@@ -1069,5 +1069,102 @@ class ControllerAccountLogin extends Controller {
             $this->response->redirect($this->url->link('account/login/customer', '', 'SSL'));
         }
     }
+    public function addSendNewIPotp()
+    {
+        //echo "<pre>";print_r( "addLoginByOtp");die;
+        $json = [];
 
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
+
+        $this->load->language('api/login');
+
+        $this->load->language('api/general');
+
+        if (isset($this->request->post['phone']) && isset($this->request->post['email'])) {
+            $this->load->model('account/customer');
+            $api_info = $this->model_account_customer->new_ip_send_otp();
+
+            //echo "<pre>";print_r($api_info);die;
+            if ($api_info['status']) {
+                $data['customer_id'] = $api_info['customer_id'];
+                $json['data'] = $data;
+                //$json['success'] = $this->language->get('text_success');
+                $json['message'][] = ['type' => $api_info['success_message'], 'body' => $api_info['success_message']];
+            } else {
+                $json['status'] = 10029; //user not found
+
+                $json['message'][] = ['type' => '', 'body' => $api_info['error_warning']];
+
+                http_response_code(400);
+            }
+        } else {
+            $json['status'] = 10010;
+
+            $json['message'][] = ['type' => '', 'body' => "Params not passed properly"];
+
+            http_response_code(400);
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function addVerifyNewIPotp()
+    {
+        //echo "<pre>";print_r( "addLoginVerifyOtp");die;
+
+        $json = [];
+
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
+
+        $this->load->language('api/login');
+
+        $this->load->language('api/general');
+
+        if (isset($this->request->post['otp'])  && isset($this->request->post['customer_id'])) {
+          
+            $this->load->model('account/customer');
+
+            $api_info = $this->model_account_customer->new_ip_verify_otp($this->request->post['otp'], $this->request->post['customer_id']);
+
+            //echo "<pre>";print_r($api_info);die;
+            if ($api_info['status']) {
+                 
+                $customer_info = $this->model_account_customer->getCustomer($this->request->post['customer_id']);
+
+                // if (!empty($customer_info['dob'])) {
+                //     $customer_info['dob'] = date('d/m/Y', strtotime($customer_info['dob']));
+                // } else {
+                //     $customer_info['dob'] = '01/01/1990';
+                // }
+                //$json['success'] = $this->language->get('text_valid_otp');
+
+                //$json['status'] = true;
+
+                $json['data'] = $customer_info;
+
+                $json['message'][] = ['type' => '', 'body' => $api_info['success_message']];
+            } else {
+                //$json['error'] = $this->language->get('error_login');
+                $json['status'] = 10031; //user not found
+
+                $json['message'][] = ['type' => '', 'body' => $api_info['error_warning']];
+
+                http_response_code(400);
+            }
+        } else {
+            $json['status'] = 10010;
+
+            $json['message'][] = ['type' => '', 'body' => "Params not sent properly"];
+
+            http_response_code(400);
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
 }
