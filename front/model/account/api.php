@@ -622,18 +622,16 @@ class ModelAccountApi extends Model
                 //save in otp table
                 $this->model_account_customer->saveOTP($customer_info['customer_id'], $data['otp'], 'newdevicelogin');
                 try{      
-                    if ('111111111' != $this->request->post['phone']) {
-                        $sms_message = $this->emailtemplate->getSmsMessage('NewDeviceLogin', 'NewDeviceLogin_1', $data);
-
-                        if ($customer_info['sms_notification'] == 1 && $this->emailtemplate->getSmsEnabled('NewDeviceLogin', 'NewDeviceLogin_1')) {
-                            $ret = $this->emailtemplate->sendmessage($this->request->post['phone'], $sms_message);
-                        }
-                    }
+                   
                         //the Same login verify OTP mail is being used.
+                        $log = new Log('error.log');
+                      
                     if ($customer_info['email_notification'] == 1 && $this->emailtemplate->getEmailEnabled('NewDeviceLogin', 'NewDeviceLogin_1')) {
+                        
                         $subject = $this->emailtemplate->getSubject('NewDeviceLogin', 'NewDeviceLogin_1', $data);
+                        
                         $message = $this->emailtemplate->getMessage('NewDeviceLogin', 'NewDeviceLogin_1', $data);
-
+                        
                         $mail = new mail($this->config->get('config_mail'));
                         $mail->setTo($customer_info['email']);
                         $mail->setFrom($this->config->get('config_from_email'));
@@ -641,6 +639,14 @@ class ModelAccountApi extends Model
                         $mail->setSender($this->config->get('config_name'));
                         $mail->setHtml($message);
                         $mail->send();
+                    }
+
+                    if ('111111111' != $this->request->post['phone']) {
+                        $sms_message = $this->emailtemplate->getSmsMessage('NewDeviceLogin', 'NewDeviceLogin_1', $data);
+
+                        if ($customer_info['sms_notification'] == 1 && $this->emailtemplate->getSmsEnabled('NewDeviceLogin', 'NewDeviceLogin_1')) {
+                            $ret = $this->emailtemplate->sendmessage($this->request->post['phone'], $sms_message);
+                        }
                     }
                 }
                 catch(Exception $ex)

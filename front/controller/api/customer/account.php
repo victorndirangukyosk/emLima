@@ -613,7 +613,7 @@ class ControllerApiCustomerAccount extends Controller
         } else {
             $json['status'] = 10010;
 
-            $json['message'][] = ['type' => '', 'body' => $this->language->get('error_login')];
+            $json['message'][] = ['type' => '', 'body' => "Params not passed properly"];
 
             http_response_code(400);
         }
@@ -670,7 +670,7 @@ class ControllerApiCustomerAccount extends Controller
         } else {
             $json['status'] = 10010;
 
-            $json['message'][] = ['type' => '', 'body' => $this->language->get('error_login')];
+            $json['message'][] = ['type' => '', 'body' => "Params not sent properly"];
 
             http_response_code(400);
         }
