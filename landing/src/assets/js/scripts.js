@@ -492,8 +492,8 @@
     });
     
     
-        var lat = document.getElementById("lat");
-    var lng = document.getElementById("lng");
+    var lat = $("#lat");
+    var lng = $("#lng");
 
          function getLocationOnly() {
              
@@ -537,8 +537,8 @@
          function showPositionOnly(position) {
              console.log('showPositionOnly');
              console.log(position);
-             lat.innerHTML = position.coords.latitude;
-             lng.innerHTML = position.coords.longitude;
+             $("#lat").val(position.coords.latitude);
+             $("#lng").val(position.coords.latitude);
              console.log(position.coords.latitude);
              console.log(position.coords.longitude);
          }
