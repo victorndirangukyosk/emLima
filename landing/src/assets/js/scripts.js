@@ -538,7 +538,7 @@
              console.log('showPositionOnly');
              console.log(position);
              $("#lat").val(position.coords.latitude);
-             $("#lng").val(position.coords.latitude);
+             $("#lng").val(position.coords.longitude);
              console.log(position.coords.latitude);
              console.log(position.coords.longitude);
          }
