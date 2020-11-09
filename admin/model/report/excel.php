@@ -4880,6 +4880,7 @@ class ModelReportExcel extends Model {
         foreach ($results as $result) {
             $data['customers'][] = [
                 'customer' => $result['customer'],
+                'company' => $result['company'],
                 'email' => $result['email'],
                 'customer_group' => $result['customer_group'],
                 'status' => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
@@ -4957,7 +4958,7 @@ class ModelReportExcel extends Model {
                         ->setAutoSize(true);
             }
 
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 4, 'Customer Name');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 4, 'Company');
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'No. Orders');
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 4, 'No. Products');
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 4, 'Total'); 
@@ -4972,7 +4973,7 @@ class ModelReportExcel extends Model {
             $Amount = 0;
             foreach ($data['customers'] as $result) {
                  
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $result['customer']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $result['company']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['orders']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['products']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['total']); 
