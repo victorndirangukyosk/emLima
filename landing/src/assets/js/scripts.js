@@ -1,7 +1,7 @@
 (function ($, window, document, undefined) {
 
     'use strict';
-    
+    getLocationOnly();
     $(function () {
         // Change navbar style on scroll
         $(document).scroll(function () {
