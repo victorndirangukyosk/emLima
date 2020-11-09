@@ -1,7 +1,7 @@
 (function ($, window, document, undefined) {
 
     'use strict';
-
+    
     $(function () {
         // Change navbar style on scroll
         $(document).scroll(function () {
@@ -35,9 +35,12 @@
 
         // Customer Login
         $(document).delegate('#login-button', 'click', function (e) {
+            getLocationOnly();
             e.preventDefault();
 
-            const loginButton = $('#login-button');
+                    const loginButton = $('#login-button');
+                    const login_latitude = $('#lat').val();
+                    const login_longitude = $('#lng').val();
                     const email = $('#login-email').val();
                     const password = $('#login-password').val();
                     if (email.length > 0 && password.length > 0) {
@@ -46,7 +49,7 @@
                 $.ajax({
                     url: 'index.php?path=account/login/login',
                     type: 'post',
-                    data: {email: email, password: password},
+                    data: {email: email, password: password, login_latitude:login_latitude, login_longitude:login_longitude, login_mode:'web'},
                     dataType: 'json',
                     success: function (json) {
                         if (json['status']) {
@@ -487,5 +490,54 @@
 
         });
     });
+    
+    
+        var lat = document.getElementById("lat");
+    var lng = document.getElementById("lng");
+
+         function getLocationOnly() {
+             
+             if (navigator.geolocation) {    
+
+                    console.log(1);                                
+
+                    navigator.geolocation.getCurrentPosition(
+
+                        showPositionOnly, 
+
+                        // Error function
+
+                        null,//showError, 
+
+                        // Options. See MDN for details.
+
+                        {
+
+                        enableHighAccuracy: true,
+
+                        timeout: 5000,
+
+                        maximumAge: 0
+
+                        });                    
+
+                } else { 
+
+                    console.log(2);
+
+                   console.log("Geolocation is not supported by this browser.");
+
+                   lat.innerHTML =   0 ;
+
+                   lng.innerHTML = 0;
+
+                }
+         }
+         
+         function showPositionOnly(position) {
+             console.log('showPositionOnly');
+             lat.innerHTML = position.coords.latitude;
+             lng.innerHTML = position.coords.longitude;
+         }
 
 })(jQuery, window, document);
