@@ -951,7 +951,11 @@ class ControllerProductProduct extends Controller
                 'variations' => $this->model_assets_product->getProductVariationsNew($product_info['name'], $store_id),
                 'isWishListID' => $isWishListID,
             ];
-
+            
+            $log = new Log('error.log');
+            /*$log->write('product popup');
+            $log->write($data['product']);
+            $log->write('product popup');*/
             //echo '<pre>';print_r( $data['product']);exit;
             if (isset($this->session->data['cart'][$key])) {
                 $data['product']['qty_in_cart'] = $this->session->data['cart'][$key]['quantity'];

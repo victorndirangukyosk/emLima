@@ -351,7 +351,8 @@ class ModelAssetsProduct extends Model
                     $r['special_price'] = $s_price;
                     $r['price'] = $o_price;
                 }
-
+                $category_price_data = $this->getCategoryPriceStatusByProductStoreId($r['product_store_id']);
+                $r['category_pricing_variant_status'] = is_array($category_price_data) && array_key_exists('status', $category_price_data) ? $category_price_data['status'] : 1;
                 $res = [
                         'variation_id' => $r['product_store_id'],
                         'unit' => $r['unit'],
@@ -360,6 +361,7 @@ class ModelAssetsProduct extends Model
                         'special' => $r['special_price'],
                         'percent_off' => number_format($percent_off, 0),
                         'max_qty' => $r['min_quantity'] > 0 ? $r['min_quantity'] : $r['quantity'],
+                        'category_pricing_variant_status' => is_array($category_price_data) && array_key_exists('status', $category_price_data) ? $category_price_data['status'] : 1
                     ];
 
                 // $r['variation_id'] => $result['product_store_id'],
@@ -376,6 +378,10 @@ class ModelAssetsProduct extends Model
         }
 
         return $returnData;
+    }
+    public function getCategoryPriceStatusByProductStoreId($product_store_id) {
+        $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "product_category_prices WHERE product_store_id = '" . $product_store_id . "' AND price_category ='" . $_SESSION['customer_category'] . "'");
+        return $query->row;
     }
 
     public function getProductVariationsNew($product_name, $store_id, $formated = false)
@@ -432,7 +438,13 @@ class ModelAssetsProduct extends Model
                     $r['price'] = $o_price;
                 }
                 $isWishListID = $this->model_account_wishlist->getWishlistIDCustomerProduct($r['product_id']);
+                $category_price_data = $this->getCategoryPriceStatusByProductStoreId($r['product_store_id']);
+                $log = new Log('error.log');
+                /*$log->write('category_price_data model_assets_product');
+                $log->write($category_price_data);
+                $log->write('category_price_data product model_assets_product');*/
                 $r['isWishListID'] = $isWishListID;
+                $r['category_pricing_variant_status'] = is_array($category_price_data) && array_key_exists('status', $category_price_data) ? $category_price_data['status'] : 1;
                 $res = [
                         'variation_id' => $r['product_store_id'],
                         'unit' => $r['unit'],
@@ -444,6 +456,7 @@ class ModelAssetsProduct extends Model
                         'qty_in_cart' => $r['qty_in_cart'],
                         'key' => $key,
                         'isWishListID' => $isWishListID,
+                        'category_pricing_variant_status' => is_array($category_price_data) && array_key_exists('status', $category_price_data) ? $category_price_data['status'] : 1
                     ];
 
                 // $r['variation_id'] => $result['product_store_id'],
