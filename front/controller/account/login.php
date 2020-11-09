@@ -584,6 +584,11 @@ class ControllerAccountLogin extends Controller {
                     $data['customer_id'] = $user_query->row['customer_id'];
                     $data['customer_email'] = $user_query->row['email'];
                     $data['temppassword'] = $user_query->row['tempPassword'];
+
+                    
+                    //echo '<pre>';print_r($isIPexist);
+                    //echo '<pre>';var_dump($data['isnewIP']);exit;
+
                     $logged_in = $this->customer->loginByPhone($data['customer_id']);
                     if ($logged_in) {
                         $this->model_account_customer->addLoginAttempt($this->customer->getEmail());
@@ -591,23 +596,23 @@ class ControllerAccountLogin extends Controller {
 
 
                         $logindata['customer_id'] = $user_query->row['customer_id'];
-                        if (isset($this->request->post['login_latitude']) ) {
+                        if (isset($this->request->post['login_latitude'])) {
                             $logindata['login_latitude'] = $this->request->post['login_latitude'];
                         } else {
                             $logindata['login_latitude'] = 0;
                         }
-        
+
                         if (isset($this->request->post['login_longitude'])) {
                             $logindata['login_longitude'] = $this->request->post['login_longitude'];
                         } else {
                             $logindata['login_longitude'] = 0;
-                        }        
-                        
+                        }
+
                         if (isset($this->request->post['login_mode'])) {
                             $logindata['login_mode'] = $this->request->post['login_mode'];
                         } else {
                             $logindata['login_mode'] = '';
-                        }                        
+                        }
                         // $logindata['login_date'] = "";
                         // $logindata['login_ip'] = "";
                         $this->model_account_customer->addLoginHistory($logindata);
@@ -1069,24 +1074,23 @@ class ControllerAccountLogin extends Controller {
             $this->response->redirect($this->url->link('account/login/customer', '', 'SSL'));
         }
     }
-    public function addSendNewIPotp()
-    {
+
+    public function addSendNewIPotp() {
         //echo "<pre>";print_r( "addLoginByOtp");die;
         // $json = [];
-
         // $json['status'] = 200;
         // $json['data'] = [];
         // $json['message'] = [];
         $data['status'] = false;
         $this->load->language('api/login');
         $this->load->language('api/general');
- 
-         
+
+
         $this->document->addScript('front/ui/javascript/jquery/datetimepicker/moment.js');
         $this->document->addScript('front/ui/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.js');
         $this->document->addStyle('front/ui/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.css');
-        $this->document->addStyle('front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_login.css');
- 
+        $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_login.css');
+
         $log = new Log('error.log');
         // $data['telephone_mask'] = $this->config->get('config_telephone_mask');
         // $data['taxnumber_mask'] = $this->config->get('config_taxnumber_mask');
@@ -1104,28 +1108,22 @@ class ControllerAccountLogin extends Controller {
                 //$json['success'] = $this->language->get('text_success');
                 // $json['message'][] = ['type' => $api_info['success_message'], 'body' => $api_info['success_message']];
                 $data['message'] = $this->language->get('verify_mail_sent');
-
             } else {
                 // $json['status'] = 10029; //user not found
-
                 // $json['message'][] = ['type' => '', 'body' => $api_info['error_warning']];
-
                 // http_response_code(400);
                 $data['status'] = false;
-                $data['message'] ="Error";
+                $data['message'] = "Error";
                 $data['warning'] = "Error";
-
             }
         } else {
             // $json['status'] = 10010;
-
             // $json['message'][] = ['type' => '', 'body' => "Params not passed properly"];
-
             // http_response_code(400);
 
             $data['status'] = false;
-                $data['warning'] = "Error";
-                $data['message'] ="Error";
+            $data['warning'] = "Error";
+            $data['message'] = "Error";
         }
 
         $this->response->addHeader('Content-Type: application/json');
@@ -1133,8 +1131,7 @@ class ControllerAccountLogin extends Controller {
         $this->response->setOutput(json_encode($data));
     }
 
-    public function addVerifyNewIPotp()
-    {
+    public function addVerifyNewIPotp() {
         //echo "<pre>";print_r( "addLoginVerifyOtp");die;
 
         $json = [];
@@ -1147,22 +1144,23 @@ class ControllerAccountLogin extends Controller {
         $this->document->addScript('front/ui/javascript/jquery/datetimepicker/moment.js');
         $this->document->addScript('front/ui/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.js');
         $this->document->addStyle('front/ui/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.css');
-        $this->document->addStyle('front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_login.css');
+        $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_login.css');
 
         $this->load->language('api/login');
         $this->load->language('api/general');
-       ;
+        $this->load->model('account/customer');
+        $customer_info = $this->model_account_customer->getCustomerByEmail($this->request->post['email']);
 
-        if (isset($this->request->post['otp'])  && isset($this->request->post['customer_id'])) {
-          
+        if (isset($this->request->post['otp']) && isset($customer_info['customer_id'])) {
+
             $this->load->model('account/customer');
 
-            $api_info = $this->model_account_customer->new_ip_verify_otp($this->request->post['otp'], $this->request->post['customer_id']);
+            $api_info = $this->model_account_customer->new_ip_verify_otp($this->request->post['otp'], $this->request->post['email']);
 
             //echo "<pre>";print_r($api_info);die;
             if ($api_info['status']) {
-                 
-                $customer_info = $this->model_account_customer->getCustomer($this->request->post['customer_id']);
+
+                $customer_info = $this->model_account_customer->getCustomer($customer_info['customer_id']);
 
                 // if (!empty($customer_info['dob'])) {
                 //     $customer_info['dob'] = date('d/m/Y', strtotime($customer_info['dob']));
@@ -1170,7 +1168,6 @@ class ControllerAccountLogin extends Controller {
                 //     $customer_info['dob'] = '01/01/1990';
                 // }
                 //$json['success'] = $this->language->get('text_valid_otp');
-
                 //$json['status'] = true;
 
                 $json['data'] = $customer_info;
@@ -1178,15 +1175,72 @@ class ControllerAccountLogin extends Controller {
                 $data['message'] = "verification mail sent";
                 $json['message'][] = ['type' => '', 'body' => $api_info['success_message']];
             } else {
-                 $data['error_warning'] = "Invalid OTP";
-                $data["status"]=false;
+                $data['error_warning'] = "Invalid OTP";
+                $data["status"] = false;
             }
         } else {
-            $data['error_warning'] = "Invalid OTP";$data["status"]=false;
+            $data['error_warning'] = "Invalid OTP";
+            $data["status"] = false;
         }
 
         $this->response->addHeader('Content-Type: application/json');
         // $this->response->setOutput(json_encode($json));
         $this->response->setOutput(json_encode($data));
     }
+
+    public function checkipaddress() {
+
+        if (isset($this->request->post['email']) && isset($this->request->post['password'])) {
+            $this->load->model('account/customer');
+
+            $user_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE email = '" . $this->db->escape($this->request->post['email']) . "' AND (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape($this->request->post['password']) . "'))))) OR password = '" . $this->db->escape(md5($this->request->post['password'])) . "')");
+
+            //print_r($user_query);
+            if ($user_query->num_rows) {
+                $customer_info = $user_query->row;
+                $isIPexist = $this->model_account_customer->getCustomerIpAddresses($customer_info['customer_id'], $_SERVER['REMOTE_ADDR']);
+                    //$isIPexist = array_search($_SERVER['REMOTE_ADDR'], array_column($all_IPAddress, 'ip'));
+                    if (is_array($isIPexist) && count($isIPexist) > 0) {
+                        $isnewIP = false;
+                    } else {
+                        $isnewIP = true;
+                    }
+                    $isnewIP = true;
+                    $data['isnewIP'] = $isnewIP;
+            } else {
+                $data['message'] = 'Username And Password Doest Match!';
+            }
+
+
+            //echo "<pre>";print_r($api_info);die;
+            if ($api_info['status']) {
+                $data['customer_id'] = $api_info['customer_id'];
+                // $json['data'] = $data;
+                $data['status'] = true;
+                //$json['success'] = $this->language->get('text_success');
+                // $json['message'][] = ['type' => $api_info['success_message'], 'body' => $api_info['success_message']];
+                $data['message'] = $this->language->get('verify_mail_sent');
+            } else {
+                // $json['status'] = 10029; //user not found
+                // $json['message'][] = ['type' => '', 'body' => $api_info['error_warning']];
+                // http_response_code(400);
+                $data['status'] = false;
+                $data['message'] = "Error";
+                $data['warning'] = "Error";
+            }
+        } else {
+            // $json['status'] = 10010;
+            // $json['message'][] = ['type' => '', 'body' => "Params not passed properly"];
+            // http_response_code(400);
+
+            $data['status'] = false;
+            $data['warning'] = "Error";
+            $data['message'] = "Error";
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        // $this->response->setOutput(json_encode($json));
+        $this->response->setOutput(json_encode($data));
+    }
+
 }

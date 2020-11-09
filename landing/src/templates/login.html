@@ -1,4 +1,6 @@
 @@include('./_partials/header.html')
+<link rel="stylesheet" type="text/css" href="<?= $base; ?>front/ui/theme/metaorganic/assets_landing_page/css/iziToast.min.css">
+<script src="<?= $base; ?>front/ui/theme/metaorganic/assets_landing_page/js/iziToast.min.js" async defer="defer"></script>
 <main>
     <div class="auth-layout-wrap">
         <div class="auth-content">
@@ -51,6 +53,28 @@
                         </div>
                     </div>
                 </div>
+                
+                <div id="otp-view" class="row">
+                    <div class="col-md-12">
+                        <div class="p-4">
+                            <div class="auth-logo text-center mb-4">
+                                <a class="base_url" href='<?= BASE_URL."/index.php" ?>'>
+                                    <img src="assets/img/logo.svg" class="logo" alt="KwikBasket Logo">
+                                </a>
+                            </div>
+                            <h1 class="mb-2 auth-card-header">Verify OTP</h1>
+                            <p class="text-muted">As you logged in from new IP address, We sent you an email with an OTP</p>
+                            <form>
+                                <div class="form-group">
+                                    <label for="otp">Enter OTP</label>
+                                    <input required type="text" class="form-control" id="otp-value">
+                                </div>
+                                <button id="ip-otp-verify-button" class="btn btn-primary mt-1 btn-block">VERIFY</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
             </div>
 
             <div class="container mt-5">

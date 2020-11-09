@@ -275,6 +275,8 @@ class ModelAccountCustomer extends Model {
     }
 
     public function getCustomerByEmail($email) {
+        $log = new Log('error.log');
+        $log->write($email);
         $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE LOWER(email) = '" . $this->db->escape(utf8_strtolower($email)) . "'");
 
         return $query->row;
@@ -628,15 +630,9 @@ class ModelAccountCustomer extends Model {
         // $this->load->model('account/customer');
         $this->load->language('api/general');
 
-        if (false == strpos($this->request->post['phone'], '#') && !empty($this->request->post['phone'])) {
-            if (ctype_digit($this->request->post['phone'])) {
-                //phone
-                $this->request->post['phone'] = preg_replace('/[^0-9]/', '', $this->request->post['phone']);
-
-                $customer_info = $this->model_account_customer->getCustomerByPhone($this->request->post['phone']);
-            } else {
-                $customer_info = $this->model_account_customer->getCustomerByEmail($this->request->post['email']);
-            }
+        if (!empty($this->request->post['email'])) {
+            
+            $customer_info = $this->model_account_customer->getCustomerByEmail($this->request->post['email']);
             //echo "<pre>";print_r($customer_info);die;
             if (!$customer_info) {
                 $data['status'] = false;
@@ -704,14 +700,17 @@ class ModelAccountCustomer extends Model {
         return $data;
     }
 
-    public function new_ip_verify_otp($verify_otp, $customer_id)
+    public function new_ip_verify_otp($verify_otp, $email)
     {
         $data['status'] = true;
         $this->load->model('account/customer');
         $this->load->language('api/general');
 
-        if (isset($verify_otp) && isset($customer_id)) {
-            $otp_data = $this->model_account_customer->getOTP($customer_id, $verify_otp, 'newiplogin');
+        if (isset($verify_otp) && isset($email)) {
+            $customer_info = $this->model_account_customer->getCustomerByEmail($email);
+            $log = new Log('error.log');
+            $log->write($customer_info);
+            $otp_data = $this->model_account_customer->getOTP($customer_info['customer_id'], $verify_otp, 'newiplogin');
 
             //echo "<pre>";print_r($otp_data);die;
             if (!$otp_data) {
@@ -719,22 +718,9 @@ class ModelAccountCustomer extends Model {
                 $data['error_warning'] = $this->language->get('error_invalid_otp');
             // user not found
             } else {
-                // add activity and all
-                if ($this->customer->loginByPhone($customer_id)) {
-                    $this->model_account_customer->addLoginAttempt($this->customer->getEmail());
-                    // if ('shipping' == $this->config->get('config_tax_customer')) {
-                    //     $this->session->data['shipping_address'] = $this->model_account_address->getAddress($this->customer->getAddressId());
-                    // }
+             $data['status'] = true;
 
-                    //Add activity log--> will be added from login method
-                    //Add login history--> will be added from login method
-                    $data['status'] = true;
-                    // end
-                    // delete otp
-                    $this->model_account_customer->deleteOTP($verify_otp, $customer_id, 'newiplogin');
-
-                    $data['success_message'] = $this->language->get('text_valid_otp');
-                }
+            $data['error_warning'] = '';
             }
         } else {
             // enter valid number throw error
@@ -746,9 +732,12 @@ class ModelAccountCustomer extends Model {
         return $data;
     }
 
-    public function getCustomerIpAddresses($customer_id) {
-        $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer_id WHERE customer_id = '" . (int) $customer_id . "'");
-
+    public function getCustomerIpAddresses($customer_id, $ip = NULL) {
+        if ($ip == NULL) {
+            $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer_ip WHERE customer_id = '" . (int) $customer_id . "'");
+        } else {
+            $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer_ip WHERE customer_id = '" . (int) $customer_id . "' AND ip = '" . $ip . "'");
+        }
         return $query->rows;
     }
 
