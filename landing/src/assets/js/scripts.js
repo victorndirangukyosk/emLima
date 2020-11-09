@@ -39,8 +39,8 @@
             e.preventDefault();
 
                     const loginButton = $('#login-button');
-                    const login_latitude = $('#lat').val();
-                    const login_longitude = $('#lng').val();
+                    var login_latitude = $('#lat').val();
+                    var login_longitude = $('#lng').val();
                     const email = $('#login-email').val();
                     const password = $('#login-password').val();
                     if (email.length > 0 && password.length > 0) {
@@ -527,9 +527,9 @@
 
                    console.log("Geolocation is not supported by this browser.");
 
-                   lat.innerHTML =   0 ;
+                   /*lat.innerHTML =   0;
 
-                   lng.innerHTML = 0;
+                   lng.innerHTML = 0;*/
 
                 }
          }
