@@ -536,6 +536,7 @@
          
          function showPositionOnly(position) {
              console.log('showPositionOnly');
+             console.log(position);
              lat.innerHTML = position.coords.latitude;
              lng.innerHTML = position.coords.longitude;
              console.log(position.coords.latitude);
