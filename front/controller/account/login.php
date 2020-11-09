@@ -1072,43 +1072,65 @@ class ControllerAccountLogin extends Controller {
     public function addSendNewIPotp()
     {
         //echo "<pre>";print_r( "addLoginByOtp");die;
-        $json = [];
+        // $json = [];
 
-        $json['status'] = 200;
-        $json['data'] = [];
-        $json['message'] = [];
-
+        // $json['status'] = 200;
+        // $json['data'] = [];
+        // $json['message'] = [];
+        $data['status'] = false;
         $this->load->language('api/login');
-
         $this->load->language('api/general');
+ 
+         
+        $this->document->addScript('front/ui/javascript/jquery/datetimepicker/moment.js');
+        $this->document->addScript('front/ui/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.js');
+        $this->document->addStyle('front/ui/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.css');
+        $this->document->addStyle('front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_login.css');
+ 
+        $log = new Log('error.log');
+        // $data['telephone_mask'] = $this->config->get('config_telephone_mask');
+        // $data['taxnumber_mask'] = $this->config->get('config_taxnumber_mask');
 
-        if (isset($this->request->post['phone']) && isset($this->request->post['email'])) {
+
+        if (isset($this->request->post['email'])) {
             $this->load->model('account/customer');
             $api_info = $this->model_account_customer->new_ip_send_otp();
 
             //echo "<pre>";print_r($api_info);die;
             if ($api_info['status']) {
                 $data['customer_id'] = $api_info['customer_id'];
-                $json['data'] = $data;
+                // $json['data'] = $data;
+                $data['status'] = true;
                 //$json['success'] = $this->language->get('text_success');
-                $json['message'][] = ['type' => $api_info['success_message'], 'body' => $api_info['success_message']];
+                // $json['message'][] = ['type' => $api_info['success_message'], 'body' => $api_info['success_message']];
+                $data['message'] = $this->language->get('verify_mail_sent');
+
             } else {
-                $json['status'] = 10029; //user not found
+                // $json['status'] = 10029; //user not found
 
-                $json['message'][] = ['type' => '', 'body' => $api_info['error_warning']];
+                // $json['message'][] = ['type' => '', 'body' => $api_info['error_warning']];
 
-                http_response_code(400);
+                // http_response_code(400);
+                $data['status'] = false;
+                $data['message'] ="Error";
+                $data['warning'] = "Error";
+
             }
         } else {
-            $json['status'] = 10010;
+            // $json['status'] = 10010;
 
-            $json['message'][] = ['type' => '', 'body' => "Params not passed properly"];
+            // $json['message'][] = ['type' => '', 'body' => "Params not passed properly"];
 
-            http_response_code(400);
+            // http_response_code(400);
+
+            $data['status'] = false;
+                $data['warning'] = "Error";
+                $data['message'] ="Error";
         }
 
         $this->response->addHeader('Content-Type: application/json');
-        $this->response->setOutput(json_encode($json));
+        // $this->response->setOutput(json_encode($json));
+        $this->response->setOutput(json_encode($data));
     }
 
     public function addVerifyNewIPotp()
@@ -1116,14 +1138,20 @@ class ControllerAccountLogin extends Controller {
         //echo "<pre>";print_r( "addLoginVerifyOtp");die;
 
         $json = [];
+        $data['status'] = false;
 
         $json['status'] = 200;
         $json['data'] = [];
         $json['message'] = [];
 
-        $this->load->language('api/login');
+        $this->document->addScript('front/ui/javascript/jquery/datetimepicker/moment.js');
+        $this->document->addScript('front/ui/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.js');
+        $this->document->addStyle('front/ui/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.css');
+        $this->document->addStyle('front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_login.css');
 
+        $this->load->language('api/login');
         $this->load->language('api/general');
+       ;
 
         if (isset($this->request->post['otp'])  && isset($this->request->post['customer_id'])) {
           
@@ -1146,25 +1174,19 @@ class ControllerAccountLogin extends Controller {
                 //$json['status'] = true;
 
                 $json['data'] = $customer_info;
-
+                $data['status'] = true;
+                $data['message'] = "verification mail sent";
                 $json['message'][] = ['type' => '', 'body' => $api_info['success_message']];
             } else {
-                //$json['error'] = $this->language->get('error_login');
-                $json['status'] = 10031; //user not found
-
-                $json['message'][] = ['type' => '', 'body' => $api_info['error_warning']];
-
-                http_response_code(400);
+                 $data['error_warning'] = "Invalid OTP";
+                $data["status"]=false;
             }
         } else {
-            $json['status'] = 10010;
-
-            $json['message'][] = ['type' => '', 'body' => "Params not sent properly"];
-
-            http_response_code(400);
+            $data['error_warning'] = "Invalid OTP";$data["status"]=false;
         }
 
         $this->response->addHeader('Content-Type: application/json');
-        $this->response->setOutput(json_encode($json));
+        // $this->response->setOutput(json_encode($json));
+        $this->response->setOutput(json_encode($data));
     }
 }

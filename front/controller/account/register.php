@@ -608,7 +608,7 @@ class ControllerAccountRegister extends Controller
 
                 $sms_message = $this->emailtemplate->getSmsMessage('registerOTP', 'registerotp_2', $data);
 
-//                echo "<pre>";print_r($sms_message);die;
+                //                echo "<pre>";print_r($sms_message);die;
                 if ($this->emailtemplate->getSmsEnabled('registerOTP', 'registerotp_2')) {
                     $ret = $this->emailtemplate->sendmessage($this->request->post['phone'], $sms_message);
 
