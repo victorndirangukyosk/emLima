@@ -538,6 +538,8 @@
              console.log('showPositionOnly');
              lat.innerHTML = position.coords.latitude;
              lng.innerHTML = position.coords.longitude;
+             console.log(position.coords.latitude);
+             console.log(position.coords.longitude);
          }
 
 })(jQuery, window, document);
