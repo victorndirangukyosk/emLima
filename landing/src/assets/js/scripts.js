@@ -341,6 +341,7 @@
                                         position: 'topRight',
                                                 message: json['error_warning']
                                         });
+                                        location = $('.base_url').attr('href');
                                                 loginButton.text('LOGIN');
                                                 loginButton.toggleClass('disabled');
                                         }
@@ -357,7 +358,7 @@
                                 location = $('.base_url').attr('href');
                                 }*/
                                 }
-                                }, 3000)
+                                }, 1500)
                         } else {
                             iziToast.warning({
                                 position: 'topRight',
