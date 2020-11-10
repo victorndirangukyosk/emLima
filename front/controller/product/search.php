@@ -631,8 +631,9 @@ class ControllerProductSearch extends Controller
             'filter_name' => $filter_name,
             'filter_category_id' => $filter_category,
         ];
-
-        $json = $this->model_assets_product->getProducts($filter_data_product);
+        
+        //$json = $this->model_assets_product->getProducts($filter_data_product);
+        $json = $this->model_assets_product->getProductsForHeaderSearch($filter_data_product);
         //echo "<pre>";print_r($json);die;
         //$json = array_unique($json);
         $products = [];
