@@ -1199,7 +1199,12 @@ class ControllerAccountLogin extends Controller {
             if ($user_query->num_rows) {
                 $customer_info = $user_query->row;
                 $isIPexist = $this->model_account_customer->getCustomerIpAddresses($customer_info['customer_id'], $_SERVER['REMOTE_ADDR']);
-                    //$isIPexist = array_search($_SERVER['REMOTE_ADDR'], array_column($all_IPAddress, 'ip'));
+                $log = new Log('error.log');
+                $log->write('isIPexist');
+                $log->write($isIPexist);
+                $log->write($customer_info['customer_id']);
+                $log->write('isIPexist');
+                //$isIPexist = array_search($_SERVER['REMOTE_ADDR'], array_column($all_IPAddress, 'ip'));
                     if (is_array($isIPexist) && count($isIPexist) > 0) {
                         $isnewIP = false;
                     } else {
