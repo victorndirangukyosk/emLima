@@ -743,4 +743,15 @@ class ModelAccountCustomer extends Model {
         return $query->rows;
     }
 
+    public function addregisterIP($customer_id)
+    {
+
+        $query = $this->db->query('SELECT * FROM '.DB_PREFIX."customer_ip WHERE customer_id = '".(int) $customer_id ."' AND ip = '".$this->db->escape($this->request->server['REMOTE_ADDR'])."'");
+
+        if (!$query->num_rows) {
+            $this->db->query('INSERT INTO '.DB_PREFIX."customer_ip SET customer_id = '".(int) $customer_id."', ip = '".$this->db->escape($this->request->server['REMOTE_ADDR'])."', date_added = NOW()");
+        }
+    }
+
+
 }
