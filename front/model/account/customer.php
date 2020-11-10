@@ -738,6 +738,8 @@ class ModelAccountCustomer extends Model {
         } else {
             $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer_ip WHERE customer_id = '" . (int) $customer_id . "' AND ip = '" . $ip . "'");
         }
+
+        // echo '<pre>';print_r('SELECT * FROM ' . DB_PREFIX . "customer_ip WHERE customer_id = '" . (int) $customer_id . "' AND ip = '" . $ip . "'");exit;
         return $query->rows;
     }
 

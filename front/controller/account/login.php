@@ -1205,7 +1205,7 @@ class ControllerAccountLogin extends Controller {
                     } else {
                         $isnewIP = true;
                     }
-                    $isnewIP = true;
+                    // $isnewIP = true;
                     $data['isnewIP'] = $isnewIP;
             } else {
                 $data['message'] = 'Username And Password Doest Match!';
