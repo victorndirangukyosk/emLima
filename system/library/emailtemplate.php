@@ -2321,6 +2321,7 @@ class Emailtemplate
 
     public function sendPushNotification($to, $deviceId, $order_id, $store_id, $message, $title, $app_action = 'com.instagolocal.showorder')
     {
+        try {
         $log = new Log('error.log');
         $log->write('sendPushNotification');
 
@@ -2379,6 +2380,12 @@ class Emailtemplate
         }
 
         return true;
+        } catch (Exception $e) {
+        $log = new Log('error.log');
+        $log->write('sendPushNotification Log');
+        $log->write($e);
+        $log->write('sendPushNotification Log');        
+        }
     }
 
     public function sendReturnPushNotification($to, $deviceId, $return_id, $store_id, $message, $title, $app_action = 'com.instagolocal.showorder')
@@ -2702,4 +2709,37 @@ class Emailtemplate
 
         return $result;
     }
+
+
+    public function getNewDeviceLoginFind()
+    {
+        $result = ['{username}', '{otp}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}'];
+
+        return $result;
+    }
+
+    public function getNewDeviceLoginReplace($data)
+    {
+        $result = [
+            'username' => $data['username'],
+            'otp' => $data['otp'],
+            //common replace
+            'site_url' => HTTPS_CATALOG,
+            //'logo'=> HTTPS_CATALOG.'image/' . $this->config->get('config_logo'),
+            'logo' => $this->resize($this->config->get('config_logo'), 197, 34),
+            //'site_url'=>$this->config->get('config_url'),
+            'system_name' => $this->config->get('config_name'),
+            'year' => date('Y'),
+            'help_center' => $this->url->adminLink('information/help'),
+            //'white_logo'=> HTTPS_CATALOG.'image/'. $this->config->get('config_white_logo'),
+            'white_logo' => $this->resize($this->config->get('config_white_logo'), 197, 34),
+            'terms' => $this->url->adminLink('information/information', 'information_id='.$this->config->get('config_account_id'), 'SSL'),
+            'privacy_policy' => $this->url->adminLink('information/information', 'information_id='.$this->config->get('config_privacy_policy_id'), 'SSL'),
+            'system_email' => $this->config->get('config_email'),
+            'system_phone' => '+'.$this->config->get('config_telephone_code').' '.$this->config->get('config_telephone'),
+        ];
+
+        return $result;
+    }
+
 }

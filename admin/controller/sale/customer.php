@@ -322,6 +322,22 @@ class ControllerSaleCustomer extends Controller {
 
         if ($customers && $this->validateApprove()) {
             $this->model_sale_customer->approve($this->request->get['customer_id']);
+            
+            // Add to activity log
+            $log = new Log('error.log');
+            $this->load->model('user/user_activity');
+
+            $activity_data = [
+                'user_id' => $this->user->getId(),
+                'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+                'user_group_id' => $this->user->getGroupId(),
+                'customer_id' => $this->request->get['customer_id'],
+            ];
+            $log->write('customer approve');
+
+            $this->model_user_user_activity->addActivity('customer_account_approved', $activity_data);
+
+            $log->write('customer approve');
 
             $this->session->data['success'] = $this->language->get('text_success');
 

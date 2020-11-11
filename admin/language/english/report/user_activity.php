@@ -32,6 +32,8 @@ $_['text_notify_invoice'] = '<a href="user_id=%d">%s</a> notified <a href="order
 $_['text_order_flat_number_changed'] = '<a href="user_id=%d">%s</a> Order House No. and Building Name <a href="order_id=%d"> Updated</a>.';
 $_['text_order_shipping_address_changed'] = '<a href="user_id=%d">%s</a> Order Location<a href="order_id=%d"> Updated</a>.';
 $_['text_order_time_slots_updated'] = '<a href="user_id=%d">%s</a> Order Time Slots <a href="order_id=%d"> Updated</a>.';
+$_['text_customer_account_approved'] = '<a href="user_id=%d">%s</a> approved a new <a href="customer_id=%d">customer</a>.';
+
 
 
 // Column

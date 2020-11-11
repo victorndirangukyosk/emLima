@@ -63,7 +63,7 @@
           <table class="table table-bordered table-hover">
             <thead>
               <tr>
-                <td class="text-left"><?php echo $column_customer; ?></td>
+                <td class="text-left">Company</td>
                 <!--<td class="text-left"><?php echo $column_email; ?></td>
                 <td class="text-left"><?php echo $column_customer_group; ?></td>
                 <td class="text-left"><?php echo $column_status; ?></td>-->
@@ -77,7 +77,7 @@
               <?php if ($customers) { ?>
               <?php foreach ($customers as $customer) { ?>
               <tr>
-                <td class="text-left"><?php echo $customer['customer']; ?></td>
+                <td class="text-left"><?php echo $customer['company']; ?></td>
                <!-- <td class="text-left"><?php echo $customer['email']; ?></td>
                 <td class="text-left"><?php echo $customer['customer_group']; ?></td>
                 <td class="text-left"><?php echo $customer['status']; ?></td>-->

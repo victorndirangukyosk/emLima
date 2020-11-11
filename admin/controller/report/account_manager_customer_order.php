@@ -81,6 +81,7 @@ class ControllerReportAccountManagerCustomerOrder extends Controller
         foreach ($results as $result) {
             $data['customers'][] = [
                 'customer' => $result['customer'],
+                'company' => $result['company'],
                 'email' => $result['email'],
                 'customer_group' => $result['customer_group'],
                 'status' => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),

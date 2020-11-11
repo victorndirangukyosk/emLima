@@ -12,6 +12,10 @@ class Customer
     private $customer_group_id;
     private $address_id;
     private $member_upto;
+    private $sms_notification;
+    private $mobile_notification;
+    private $email_notification;
+
 
     public function __construct($registry)
     {
@@ -34,6 +38,10 @@ class Customer
                 $this->customer_group_id = $customer_query->row['customer_group_id'];
                 $this->address_id = $customer_query->row['address_id'];
                 $this->member_upto = $customer_query->row['member_upto'];
+                $this->sms_notification = $customer_query->row['sms_notification'];
+                $this->mobile_notification = $customer_query->row['mobile_notification'];
+                $this->email_notification = $customer_query->row['email_notification'];
+
 
                 $this->db->query('UPDATE '.DB_PREFIX."customer SET cart = '".$this->db->escape(isset($this->session->data['cart']) ? serialize($this->session->data['cart']) : '')."', wishlist = '".$this->db->escape(isset($this->session->data['wishlist']) ? serialize($this->session->data['wishlist']) : '')."', ip = '".$this->db->escape($this->request->server['REMOTE_ADDR'])."' WHERE customer_id = '".(int) $this->customer_id."'");
 
@@ -94,6 +102,9 @@ class Customer
             $this->newsletter = $customer_query->row['newsletter'];
             $this->customer_group_id = $customer_query->row['customer_group_id'];
             $this->address_id = $customer_query->row['address_id'];
+            $this->sms_notification = $customer_query->row['sms_notification'];
+            $this->mobile_notification = $customer_query->row['mobile_notification'];
+            $this->email_notification = $customer_query->row['email_notification'];
 
             $this->db->query('UPDATE '.DB_PREFIX."customer SET ip = '".$this->db->escape($this->request->server['REMOTE_ADDR'])."' WHERE customer_id = '".(int) $this->customer_id."'");
 
@@ -150,6 +161,9 @@ class Customer
             $this->newsletter = $customer_query->row['newsletter'];
             $this->customer_group_id = $customer_query->row['customer_group_id'];
             $this->address_id = $customer_query->row['address_id'];
+            $this->sms_notification = $customer_query->row['sms_notification'];
+            $this->mobile_notification = $customer_query->row['mobile_notification'];
+            $this->email_notification = $customer_query->row['email_notification'];
 
             $this->db->query('UPDATE '.DB_PREFIX."customer SET ip = '".$this->db->escape($this->request->server['REMOTE_ADDR'])."' WHERE customer_id = '".(int) $this->customer_id."'");
 
@@ -174,6 +188,9 @@ class Customer
         $this->newsletter = '';
         $this->customer_group_id = '';
         $this->address_id = '';
+        $this->sms_notification = '';
+        $this->mobile_notification = '';
+        $this->email_notification = '';
     }
 
     public function isLogged()
@@ -244,7 +261,22 @@ class Customer
 
         return $query->row['total'];
     }
-
+    
+    public function getSmsNotification()
+    {
+        return $this->sms_notification;
+    }
+    
+    public function getMobileNotification()
+    {
+        return $this->mobile_notification;
+    }
+    
+    public function getEmailNotification()
+    {
+        return $this->email_notification;
+    }
+    
     public function setVariables($data)
     {
         $this->customer_id = $data['customer_id'];
@@ -257,5 +289,8 @@ class Customer
         $this->customer_group_id = $data['customer_group_id'];
         $this->address_id = $data['address_id'];
         $this->member_upto = $data['member_upto'];
+        $this->sms_notification = $data['sms_notification'];
+        $this->mobile_notification = $data['mobile_notification'];
+        $this->email_notification = $data['email_notification'];
     }
 }

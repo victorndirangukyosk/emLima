@@ -333,6 +333,16 @@ $(document).ready(function() {
                                                 </li>
 
                                             <?php } ?>-->
+                                            
+                                            <li role="presentation">
+
+                                                <?php if(strpos( $user_notification_settings,$_SERVER["REQUEST_URI"]) !== false) { ?>
+                                                <a href="<?php echo $user_notification_settings; ?>" class="active">
+                                                    <?php } else { ?>
+                                                    <a href="<?php echo $user_notification_settings; ?>">
+                                                        <?php } ?>
+                                                        <i class="fa fa-bell"></i><?= $text_user_notification_settings ?> </a>
+                                            </li>
 
                                             <li role="presentation" >
 

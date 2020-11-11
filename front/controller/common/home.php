@@ -1400,7 +1400,8 @@ class ControllerCommonHome extends Controller {
 
         $cachePrice_data = $this->cache->get('category_price_data');
         //echo '<pre>';print_r($cachePrice_data);exit;
-        $results = $this->model_assets_product->getProducts($filter_data);
+        //$results = $this->model_assets_product->getProducts($filter_data);
+        $results = $this->model_assets_product->getProductsForHomePage($filter_data);
 
         $data['products'] = [];
 

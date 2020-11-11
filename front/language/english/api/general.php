@@ -46,3 +46,6 @@ $_['text_online_paid'] = 'You have paid %s already';
 $_['text_return_submited'] = 'Product Return successfully placed.';
 $_['date_format_short'] = 'd/m/Y';
 $_['error_email_login'] = 'Your email id is not registered with us';
+
+$_['error_phone'] = 'Please check the phone number or contact us';
+

@@ -18,7 +18,12 @@ $_['text_return_account'] = '<a href="customer_id=%d">%s</a> submitted a product
 $_['text_return_guest'] = '%s submitted a product return.';
 $_['text_order_account'] = '<a href="customer_id=%d">%s</a> created a <a href="order_id=%d">new order</a>.';
 $_['text_order_guest'] = '%s created a <a href="order_id=%d">new order</a>.';
-
+$_['text_sms notifiction Disabled'] = '<a href="customer_id=%d">%s</a> Customer Sms Notification Disabled.';
+$_['text_sms notifiction Enabled'] = '<a href="customer_id=%d">%s</a> Customer Sms Notification Enabled.';
+$_['text_mobile notifiction Disabled'] = '<a href="customer_id=%d">%s</a> Customer Mobile Notification Disabled.';
+$_['text_mobile notifiction Enabled'] = '<a href="customer_id=%d">%s</a> Customer Mobile Notification Enabled.';
+$_['text_email notifiction Disabled'] = '<a href="customer_id=%d">%s</a> Customer Email Notification Disabled.';
+$_['text_email notifiction Enabled'] = '<a href="customer_id=%d">%s</a> Customer Email Notification Enabled.';
 // Column
 $_['column_customer'] = 'Customer';
 $_['column_comment'] = 'Comment';

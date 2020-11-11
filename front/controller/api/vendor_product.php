@@ -90,7 +90,13 @@ class ControllerApiVendorProduct extends Controller
         }
 
         $results = $query = $conn->query($sql);
+
+        
+       
+
         foreach ($results as $result) {
+            
+                // echo "<pre>";print_r($result);die;
             $result['index'] = $result['name'];
             if (strpos($result['name'], '&nbsp;&nbsp;&gt;&nbsp;&nbsp;')) {
                 $result['name'] = explode('&nbsp;&nbsp;&gt;&nbsp;&nbsp;', $result['name']);
@@ -104,6 +110,7 @@ class ControllerApiVendorProduct extends Controller
                 'unit' => $result['unit'],
             ];
         }
+        
         $sort_order = [];
 
         foreach ($json as $key => $value) {
@@ -120,4 +127,6 @@ class ControllerApiVendorProduct extends Controller
 
        // $query = $this->db->query($sql);
     }
+
+   
 }

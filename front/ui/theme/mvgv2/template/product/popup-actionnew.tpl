@@ -18,7 +18,8 @@
                                                       data-key="<?php echo isset($variation['key']) ? $variation['key'] : ''; ?>"
                                                        data-productid="<?= $variation['product_id'] ?>"
                                                        data-isWl="<?= $variation['isWishListID'] ?>"
-                                                      data-special="<?php echo isset($variation['special_price']) ? $variation['special_price'] : ''; ?>">
+                                                      data-special="<?php echo isset($variation['special_price']) ? $variation['special_price'] : ''; ?>"
+                                                      <?php if(isset($variation['category_pricing_variant_status']) && $variation['category_pricing_variant_status'] == 0) { echo "disabled"; } ?> >
                                                       <?php  echo 'Per ' . $variation['unit']; ?>
                                                       </option>
                                                       <?php } ?>

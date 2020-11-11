@@ -731,7 +731,7 @@ class ModelCheckoutOrder extends Model {
 
                     //$log->write($message);
                     //echo "<pre>";print_r($message);die;
-                    if ($this->emailtemplate->getEmailEnabled('OrderAll', 'order_' . (int) $order_status_id)) {
+                    if ($customer_info['email_notification'] == 1 && $this->emailtemplate->getEmailEnabled('OrderAll', 'order_' . (int) $order_status_id)) {
 
 
                         $mail = new mail($this->config->get('config_mail'));
@@ -748,7 +748,7 @@ class ModelCheckoutOrder extends Model {
 
 
 
-                    if ($this->emailtemplate->getSmsEnabled('OrderAll', 'order_' . (int) $order_status_id)) {
+                    if ($customer_info['sms_notification'] == 1 && $this->emailtemplate->getSmsEnabled('OrderAll', 'order_' . (int) $order_status_id)) {
 
                         $ret = $this->emailtemplate->sendmessage($order_info['telephone'], $sms_message);
                     }
@@ -766,7 +766,7 @@ class ModelCheckoutOrder extends Model {
                         //$log->write($mobile_notification_title);
                         // customer push notitification start
 
-                        if (isset($customer_info) && isset($customer_info['device_id']) && strlen($customer_info['device_id']) > 0) {
+                        if (isset($customer_info) && isset($customer_info['device_id']) && $customer_info['mobile_notification'] == 1 && strlen($customer_info['device_id']) > 0) {
 
                             $log->write('customer device id set FRONT.MODEL.CHECKOUT.ORDER');
                             $ret = $this->emailtemplate->sendPushNotification($order_info['customer_id'], $customer_info['device_id'], $order_id, $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
@@ -1674,7 +1674,8 @@ class ModelCheckoutOrder extends Model {
         $log->write('EMAIL SENDING');
         $log->write($customer_info);
         $log->write('EMAIL SENDING');
-
+        
+        if($customer_info['email_notification'] == 1) {
         $subject = $this->emailtemplate->getSubject('Customer', 'customer_7', $customer_info);
         $message = $this->emailtemplate->getMessage('Customer', 'customer_7', $customer_info);
 
@@ -1685,13 +1686,14 @@ class ModelCheckoutOrder extends Model {
         $mail->setSubject($subject);
         $mail->setHTML($message);
         $mail->send();
+        }
 
         $log->write('status enabled of mobi noti');
         $mobile_notification_template = $this->emailtemplate->getNotificationMessage('Customer', 'customer_7', $customer_info);
 
         $mobile_notification_title = $this->emailtemplate->getNotificationTitle('Customer', 'customer_7', $customer_info);
 
-        if (isset($customer_info) && isset($customer_info['device_id']) && strlen($customer_info['device_id']) > 0) {
+        if (isset($customer_info) && isset($customer_info['device_id']) && $customer_info['mobile_notification'] == 1 && strlen($customer_info['device_id']) > 0) {
 
             $log->write('customer device id set FRONT.MODEL.CHECKOUT.ORDER');
             $ret = $this->emailtemplate->sendPushNotification($order_info['customer_id'], $customer_info['device_id'], $order_info['order_id'], $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
@@ -1700,7 +1702,7 @@ class ModelCheckoutOrder extends Model {
         }
 
         if ($is_he_parents != NULL && $is_he_parents > 0) {
-            $order_approval_access = $this->db->query('SELECT c.customer_id, c.parent, c.order_approval_access_role, c.order_approval_access, c.email, c.firstname, c.lastname, c.device_id  FROM ' . DB_PREFIX . "customer c WHERE c.parent = '" . (int) $is_he_parents . "' AND c.order_approval_access = 1 AND (c.order_approval_access_role = 'head_chef' OR c.order_approval_access_role = 'procurement_person')");
+            $order_approval_access = $this->db->query('SELECT c.customer_id, c.parent, c.order_approval_access_role, c.order_approval_access, c.email, c.firstname, c.lastname, c.device_id, c.sms_notification, c.mobile_notification, c.email_notification  FROM ' . DB_PREFIX . "customer c WHERE c.parent = '" . (int) $is_he_parents . "' AND c.order_approval_access = 1 AND (c.order_approval_access_role = 'head_chef' OR c.order_approval_access_role = 'procurement_person')");
             $order_approval_access_user = $order_approval_access->rows;
 
             foreach ($order_approval_access_user as $order_approval_access_use) {
@@ -1723,7 +1725,8 @@ class ModelCheckoutOrder extends Model {
 
                     $subject = $this->emailtemplate->getSubject('Customer', 'customer_7', $order_approval_access_use);
                     $message = $this->emailtemplate->getMessage('Customer', 'customer_7', $order_approval_access_use);
-
+                    
+                    if($order_approval_access_use['email_notification'] == 1) {
                     $mail = new Mail($this->config->get('config_mail'));
                     $mail->setTo($order_approval_access_use['email']);
                     $mail->setFrom($this->config->get('config_from_email'));
@@ -1731,13 +1734,14 @@ class ModelCheckoutOrder extends Model {
                     $mail->setSubject($subject);
                     $mail->setHTML($message);
                     $mail->send();
+                    }
 
                     $log->write('status enabled of mobi noti');
                     $mobile_notification_template = $this->emailtemplate->getNotificationMessage('Customer', 'customer_7', $order_approval_access_user);
 
                     $mobile_notification_title = $this->emailtemplate->getNotificationTitle('Customer', 'customer_7', $order_approval_access_use);
 
-                    if (isset($order_approval_access_use) && isset($order_approval_access_use['device_id']) && strlen($order_approval_access_use['device_id']) > 0) {
+                    if (isset($order_approval_access_use) && isset($order_approval_access_use['device_id']) && $order_approval_access_use['mobile_notification'] && strlen($order_approval_access_use['device_id']) > 0) {
 
                         $log->write('customer device id set FRONT.MODEL.CHECKOUT.ORDER');
                         $ret = $this->emailtemplate->sendPushNotification($order_info['customer_id'], $order_approval_access_use['device_id'], $order_info['order_id'], $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
@@ -1761,7 +1765,8 @@ class ModelCheckoutOrder extends Model {
                     $log->write('EMAIL SENDING');
                     $log->write($customer_info);
                     $log->write('EMAIL SENDING');
-
+                    
+                    if($order_approval_access_use['email_notification'] == 1) {
                     $subject = $this->emailtemplate->getSubject('Customer', 'customer_7', $order_approval_access_use);
                     $message = $this->emailtemplate->getMessage('Customer', 'customer_7', $order_approval_access_use);
 
@@ -1772,13 +1777,14 @@ class ModelCheckoutOrder extends Model {
                     $mail->setSubject($subject);
                     $mail->setHTML($message);
                     $mail->send();
+                    }
 
                     $log->write('status enabled of mobi noti');
                     $mobile_notification_template = $this->emailtemplate->getNotificationMessage('Customer', 'customer_7', $order_approval_access_user);
 
                     $mobile_notification_title = $this->emailtemplate->getNotificationTitle('Customer', 'customer_7', $order_approval_access_use);
 
-                    if (isset($order_approval_access_use) && isset($order_approval_access_use['device_id']) && strlen($order_approval_access_use['device_id']) > 0) {
+                    if (isset($order_approval_access_use) && isset($order_approval_access_use['device_id']) && $order_approval_access_use['mobile_notification'] == 1 && strlen($order_approval_access_use['device_id']) > 0) {
 
                         $log->write('customer device id set FRONT.MODEL.CHECKOUT.ORDER');
                         $ret = $this->emailtemplate->sendPushNotification($order_info['customer_id'], $order_approval_access_use['device_id'], $order_info['order_id'], $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
@@ -1792,7 +1798,7 @@ class ModelCheckoutOrder extends Model {
         $log->write('SMS SENDING');
         $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_7', $customer_info);
         // send message here
-        if ($this->emailtemplate->getSmsEnabled('Customer', 'customer_7')) {
+        if ($customer_info['sms_notification'] == 1 && $this->emailtemplate->getSmsEnabled('Customer', 'customer_7')) {
             $ret = $this->emailtemplate->sendmessage($customer_info['telephone'], $sms_message);
         }
     }

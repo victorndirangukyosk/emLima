@@ -88,7 +88,29 @@ class ControllerApiCustomerLogin extends Controller
             $this->load->model('account/customer');
 
             $customer_info = $this->model_account_customer->getCustomer($api_info['customer_id']);
+            $customer_info['devices'] = $this->model_account_customer->getCustomerDevices($api_info['customer_id']);
 
+            #region login history
+            $logindata['customer_id'] = $api_info['customer_id'];
+            if (isset($this->request->post['login_latitude']) ) {
+                $logindata['login_latitude'] = $this->request->post['login_latitude'];
+            } else {
+                $logindata['login_latitude'] = 0;
+            }
+
+            if (isset($this->request->post['login_longitude'])) {
+                $logindata['login_longitude'] = $this->request->post['login_longitude'];
+            } else {
+                $logindata['login_longitude'] = 0;
+            }        
+            
+            if (isset($this->request->post['login_mode'])) {
+                $logindata['login_mode'] = $this->request->post['login_mode'];
+            } else {
+                $logindata['login_mode'] = '';
+            }                 
+            $this->model_account_customer->addLoginHistory($logindata);
+           #endregion login history
             if (!empty($customer_info['dob'])) {
                 $customer_info['dob'] = date('d/m/Y', strtotime($customer_info['dob']));
             } else {
@@ -398,6 +420,41 @@ class ControllerApiCustomerLogin extends Controller
             $json['status'] = true;
 
             $json['data'] = $customer_info;
+
+             #region login history
+             try{
+             $logindata['customer_id'] = $customer_info['customer_id'];
+             if (isset($this->request->post['login_latitude']) ) {
+                 $logindata['login_latitude'] = $this->request->post['login_latitude'];
+             } else {
+                 $logindata['login_latitude'] = 0;
+             }
+ 
+             if (isset($this->request->post['login_longitude'])) {
+                 $logindata['login_longitude'] = $this->request->post['login_longitude'];
+             } else {
+                 $logindata['login_longitude'] = 0;
+             }        
+             
+             if (isset($this->request->post['login_mode'])) {
+                 $logindata['login_mode'] = $this->request->post['login_mode'];
+             } else {
+                 $logindata['login_mode'] = '';
+             }                 
+             $this->model_account_customer->addLoginHistory($logindata);
+            }
+            catch(exception $ex)
+            {
+                $log = new Log('error.log');              
+                $log->write('Login History not saved');
+            }
+            finally{
+                $this->response->addHeader('Content-Type: application/json');
+                $this->response->setOutput(json_encode($json));
+            }
+            #endregion login history
+           
+            
         } else {
             //$json['error'] = $this->language->get('error_login');
             $json['status'] = 10031; //user not found
@@ -407,5 +464,35 @@ class ControllerApiCustomerLogin extends Controller
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
+    }
+
+    public function addNewCustomerDevice()
+    {
+        //echo "<pre>";print_r( $this->request->post);die;
+        try{
+        $json = [];
+        $json['status'] = 200;
+        // $json['data'] = [];
+        // $json['message'] = []; 
+            if (isset($this->request->post['customer_id']) && isset($this->request->post['device_id'])) {
+                $this->load->model('account/api');
+                $this->model_account_api->addCustomerDevice($this->request->post['customer_id'], $this->request->post['device_id']);
+                $json['message']="Success";
+            } else {
+                $json['status'] = 10010;
+                $json['message']="Error";
+                http_response_code(400);
+            }
+        }
+        catch(exception $ex)
+        {
+            $json['status'] = 500;
+            $json['message']="Device Mapping Failed";
+            http_response_code(400);
+        }
+        finally{
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+        }
     }
 }

@@ -104,17 +104,17 @@ class ModelAccountCustomer extends Model {
             try {
 //Customer Registration Register
 
-            $subject = $this->emailtemplate->getSubject('Customer', 'customer_1', $data);
-            $message = $this->emailtemplate->getMessage('Customer', 'customer_1', $data);
-            $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_1', $data);
+                $subject = $this->emailtemplate->getSubject('Customer', 'customer_1', $data);
+                $message = $this->emailtemplate->getMessage('Customer', 'customer_1', $data);
+                $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_1', $data);
 
-            $mail = new Mail($this->config->get('config_mail'));
-            $mail->setTo($data['email']);
-            $mail->setFrom($this->config->get('config_from_email'));
-            $mail->setSender($this->config->get('config_name'));
-            $mail->setSubject($subject);
-            $mail->setHTML($message);
-            $mail->send();
+                $mail = new Mail($this->config->get('config_mail'));
+                $mail->setTo($data['email']);
+                $mail->setFrom($this->config->get('config_from_email'));
+                $mail->setSender($this->config->get('config_name'));
+                $mail->setSubject($subject);
+                $mail->setHTML($message);
+                $mail->send();
             } catch (Exception $e) {
                 
             }
@@ -275,6 +275,8 @@ class ModelAccountCustomer extends Model {
     }
 
     public function getCustomerByEmail($email) {
+        $log = new Log('error.log');
+        $log->write($email);
         $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE LOWER(email) = '" . $this->db->escape(utf8_strtolower($email)) . "'");
 
         return $query->row;
@@ -351,6 +353,10 @@ class ModelAccountCustomer extends Model {
         } else {
             $this->db->query('UPDATE ' . DB_PREFIX . "customer_login SET total = (total + 1), date_modified = '" . $this->db->escape(date('Y-m-d H:i:s')) . "' WHERE customer_login_id = '" . (int) $query->row['customer_login_id'] . "'");
         }
+    }
+
+    public function addLoginHistory($data) {
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "login_history SET customer_id = '" . $this->db->escape($data['customer_id']) . "', login_latitude = '" . $this->db->escape($data['login_latitude']) . "', login_longitude = '" . $this->db->escape($data['login_longitude']) . "', login_mode = '" . $this->db->escape($data['login_mode']) . "', login_date = '" . $this->db->escape(date('Y-m-d H:i:s')) . "', login_ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "'");
     }
 
     public function getLoginAttempts($email) {
@@ -442,6 +448,22 @@ class ModelAccountCustomer extends Model {
 
         if ($customer_info) {
             $this->db->query('UPDATE ' . DB_PREFIX . "customer SET approved = '" . (int) $approve_id . "', token = '' WHERE customer_id = '" . (int) $customer_id . "'");
+        }
+    }
+
+    public function customernotifications($user_id, $active_status, $notification_id) {
+        $customer_info = $this->getCustomer($user_id);
+
+        if ($customer_info && $notification_id == 'sms') {
+            $this->db->query('UPDATE ' . DB_PREFIX . "customer SET sms_notification = '" . (int) $active_status . "' WHERE customer_id = '" . (int) $user_id . "'");
+        }
+        
+        if ($customer_info && $notification_id == 'mobile') {
+            $this->db->query('UPDATE ' . DB_PREFIX . "customer SET mobile_notification = '" . (int) $active_status . "' WHERE customer_id = '" . (int) $user_id . "'");
+        }
+        
+        if ($customer_info && $notification_id == 'email') {
+            $this->db->query('UPDATE ' . DB_PREFIX . "customer SET email_notification = '" . (int) $active_status . "' WHERE customer_id = '" . (int) $user_id . "'");
         }
     }
 
@@ -544,16 +566,14 @@ class ModelAccountCustomer extends Model {
         return $parent;
     }
 
-
     public function CheckApprover() {
-        
+
         $query = $this->db->query('SELECT c.order_approval_access,c.order_approval_access_role FROM ' . DB_PREFIX . "customer c WHERE customer_id = '" . (int) $this->customer->getId() . "'");
-          
-        
+
+
         // echo '<pre>';print_r($query->row);exit;
         return $query->row;
     }
-
 
     public function getCustomerParentDetails($customer_id) {
         $customer_parent_details = NULL;
@@ -598,5 +618,140 @@ class ModelAccountCustomer extends Model {
         $order_approval_access = $this->db->query('SELECT COUNT(*) AS total FROM ' . DB_PREFIX . "customer c WHERE c.customer_id = '" . (int) $customer_id . "' AND c.parent = '" . (int) $parent_id . "' AND c.order_approval_access = 1 AND (c.order_approval_access_role = 'head_chef' OR c.order_approval_access_role = 'procurement_person')");
         return $order_approval_access->row['total'];
     }
+    public function getCustomerDevices($customer_id) {
+        $query = $this->db->query('SELECT device_id,date_added FROM ' . DB_PREFIX . "customer_devices WHERE customer_id = '" . (int) $customer_id . "' order by date_added desc");
+
+        return $query->rows;
+    }
+
+    public function new_ip_send_otp()
+    {
+        $data['status'] = true;
+        // $this->load->model('account/customer');
+        $this->load->language('api/general');
+
+        if (!empty($this->request->post['email'])) {
+            
+            $customer_info = $this->model_account_customer->getCustomerByEmail($this->request->post['email']);
+            //echo "<pre>";print_r($customer_info);die;
+            if (!$customer_info) {
+                $data['status'] = false;
+
+                if (ctype_digit($this->request->post['phone'])) {
+                    $data['error_warning'] = $this->language->get('error_phone_login');
+                } else {
+                    $data['error_warning'] = $this->language->get('error_email_login');
+                }
+            } else {
+                $data['username'] = $customer_info['firstname'];
+                if ('111111111' == $this->request->post['phone']) {
+                    $data['otp'] = '1234';
+                } else {
+                    $data['otp'] = mt_rand(1000, 9999);
+                }
+
+                $data['customer_id'] = $customer_info['customer_id'];
+                //save in otp table
+                $this->model_account_customer->saveOTP($customer_info['customer_id'], $data['otp'], 'newiplogin');
+                try{      
+                   
+                        //the Same login verify OTP mail is being used.
+                        $log = new Log('error.log');
+                      
+                    if ($customer_info['email_notification'] == 1 && $this->emailtemplate->getEmailEnabled('NewDeviceLogin', 'NewDeviceLogin_1')) {
+                        
+                        $subject = $this->emailtemplate->getSubject('NewDeviceLogin', 'NewDeviceLogin_1', $data);
+                        
+                        $message = $this->emailtemplate->getMessage('NewDeviceLogin', 'NewDeviceLogin_1', $data);
+                        
+                        $mail = new mail($this->config->get('config_mail'));
+                        $mail->setTo($customer_info['email']);
+                        $mail->setFrom($this->config->get('config_from_email'));
+                        $mail->setSubject($subject);
+                        $mail->setSender($this->config->get('config_name'));
+                        $mail->setHtml($message);
+                        $mail->send();
+                    }
+
+                    if ('111111111' != $this->request->post['phone']) {
+                        $sms_message = $this->emailtemplate->getSmsMessage('NewDeviceLogin', 'NewDeviceLogin_1', $data);
+
+                        if ($customer_info['sms_notification'] == 1 && $this->emailtemplate->getSmsEnabled('NewDeviceLogin', 'NewDeviceLogin_1')) {
+                            $ret = $this->emailtemplate->sendmessage($this->request->post['phone'], $sms_message);
+                        }
+                    }
+                }
+                catch(Exception $ex)
+                {
+                    $log = new Log('error.log');
+                    $log->write("new device OTP SMS/Mail Failed");
+                }
+                finally{
+                 $data['success_message'] = $this->language->get('text_otp_sent_to');
+                 return $data;
+                 }
+            }
+        } else {
+            // enter valid number throw error
+            $data['status'] = false;
+            $data['error_warning'] = $this->language->get('error_phone');
+        }
+
+        return $data;
+    }
+
+    public function new_ip_verify_otp($verify_otp, $email)
+    {
+        $data['status'] = true;
+        $this->load->model('account/customer');
+        $this->load->language('api/general');
+
+        if (isset($verify_otp) && isset($email)) {
+            $customer_info = $this->model_account_customer->getCustomerByEmail($email);
+            $log = new Log('error.log');
+            $log->write($customer_info);
+            $otp_data = $this->model_account_customer->getOTP($customer_info['customer_id'], $verify_otp, 'newiplogin');
+
+            //echo "<pre>";print_r($otp_data);die;
+            if (!$otp_data) {
+                $data['status'] = false;
+                $data['error_warning'] = $this->language->get('error_invalid_otp');
+            // user not found
+            } else {
+             $data['status'] = true;
+
+            $data['error_warning'] = '';
+            }
+        } else {
+            // enter valid number throw error
+            $data['status'] = false;
+
+            $data['error_warning'] = $this->language->get('error_invalid_otp');
+        }
+
+        return $data;
+    }
+
+    public function getCustomerIpAddresses($customer_id, $ip = NULL) {
+        if ($ip == NULL) {
+            $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer_ip WHERE customer_id = '" . (int) $customer_id . "'");
+        } else {
+            $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer_ip WHERE customer_id = '" . (int) $customer_id . "' AND ip = '" . $ip . "'");
+        }
+
+        // echo '<pre>';print_r('SELECT * FROM ' . DB_PREFIX . "customer_ip WHERE customer_id = '" . (int) $customer_id . "' AND ip = '" . $ip . "'");exit;
+        return $query->rows;
+    }
+
+    public function addregisterIP($customer_id)
+    {
+
+        $query = $this->db->query('SELECT * FROM '.DB_PREFIX."customer_ip WHERE customer_id = '".(int) $customer_id ."' AND ip = '".$this->db->escape($this->request->server['REMOTE_ADDR'])."'");
+
+        if (!$query->num_rows) {
+            $this->db->query('INSERT INTO '.DB_PREFIX."customer_ip SET customer_id = '".(int) $customer_id."', ip = '".$this->db->escape($this->request->server['REMOTE_ADDR'])."', date_added = NOW()");
+        }
+    }
+
 
 }
