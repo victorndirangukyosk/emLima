@@ -279,9 +279,26 @@ class ModelAssetsProduct extends Model
             foreach ($result->rows as $res) {
                     if ($disabled_products_string != NULL && isset($_SESSION['customer_category']) && $_SESSION['customer_category'] != NULL)  
                     {
-                        if (in_array($res['product_store_id'], $disabled_products_string)) {
-                    continue;
-                        } 
+                    //     if (in_array($res['product_store_id'], $disabled_products_string)) {
+                    // continue;
+                    //     } 
+
+                    $avaialble=false;
+                    foreach($disabled_products as $key=>$value)
+                    {
+                       
+                            if($value==$res['product_store_id'] )
+                            {
+                            $avaialble=true;
+                            $res['quantity']=0;
+                            }
+                        
+                    }
+                   
+                     if ($avaialble==true) {
+                         continue;
+                    } 
+
                     }
 
                 if ($res['quantity'] <= 0 || !$res['status'] || !$res['vendor_status']) {
