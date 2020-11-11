@@ -2117,7 +2117,7 @@ class ControllerApiCustomerProducts extends Controller
             $this->load->model('setting/store');
             $this->load->model('assets/product');
 
-            $autocompleteData = $this->model_assets_product->getProductsByApi($args);
+            $autocompleteData = $this->model_assets_product->getProductsByApiNew($args);
 
             //echo "<pre>";print_r($autocompleteData);die;
             if ($autocompleteData) {
