@@ -389,10 +389,10 @@ class ModelAssetsProduct extends Model
                 //      continue;
                 // } 
                 $avaialble=false;
-                foreach($disabled_products as $ds)
+                foreach($disabled_products as $key=>$value)
                 {
                    
-                        if($ds['variation_id']==$r['product_store_id'] )
+                        if($value==$r['product_store_id'] )
                         {
                         $avaialble=true;
                         $r['quantity']=0;
