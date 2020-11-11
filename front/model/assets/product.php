@@ -385,7 +385,19 @@ class ModelAssetsProduct extends Model
 
             if ($disabled_products_string != NULL && isset($_SESSION['customer_category']) && $_SESSION['customer_category'] != NULL)  
             {
-                if (in_array($r['product_store_id'], $disabled_products_string)) {
+                 // if (in_array($r['product_store_id'], $disabled_products_string)) {
+                //      continue;
+                // } 
+                $avaialble=false;
+                foreach($disabled_products as $ds)
+                {
+                   
+                        if($ds['variation_id']==$r['product_store_id'] )
+                        $avaialble=true;
+
+                }
+                $r['quantity']=0;
+                 if ( $avaialble==true) {
                      continue;
                 } 
             }
