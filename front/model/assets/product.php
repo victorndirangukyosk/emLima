@@ -393,11 +393,14 @@ class ModelAssetsProduct extends Model
                 {
                    
                         if($ds['variation_id']==$r['product_store_id'] )
+                        {
                         $avaialble=true;
-
+                        $r['quantity']=0;
+                        }
+                    
                 }
-                $r['quantity']=0;
-                 if ( $avaialble==true) {
+               
+                 if ($avaialble==true) {
                      continue;
                 } 
             }
