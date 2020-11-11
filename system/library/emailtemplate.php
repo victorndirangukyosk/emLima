@@ -2321,6 +2321,7 @@ class Emailtemplate
 
     public function sendPushNotification($to, $deviceId, $order_id, $store_id, $message, $title, $app_action = 'com.instagolocal.showorder')
     {
+        try {
         $log = new Log('error.log');
         $log->write('sendPushNotification');
 
@@ -2379,6 +2380,12 @@ class Emailtemplate
         }
 
         return true;
+        } catch (Exception $e) {
+        $log = new Log('error.log');
+        $log->write('sendPushNotification Log');
+        $log->write($e);
+        $log->write('sendPushNotification Log');        
+        }
     }
 
     public function sendReturnPushNotification($to, $deviceId, $return_id, $store_id, $message, $title, $app_action = 'com.instagolocal.showorder')

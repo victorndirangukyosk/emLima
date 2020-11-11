@@ -1245,7 +1245,8 @@ class ModelAccountOrder extends Model {
     if ($sub_customer_info['email_notification'] == 1) {
         $subject = $this->emailtemplate->getSubject('Customer', 'customer_14', $customer_info);
         $message = $this->emailtemplate->getMessage('Customer', 'customer_14', $customer_info);
-
+        
+        try {
         $mail = new Mail($this->config->get('config_mail'));
         $mail->setTo($sub_customer_info['email']);
         $mail->setFrom($this->config->get('config_from_email'));
@@ -1253,6 +1254,9 @@ class ModelAccountOrder extends Model {
         $mail->setSubject($subject);
         $mail->setHTML($message);
         $mail->send();
+        } catch (Exception $e) {
+                
+        }
     }
 
         $log->write('SMS SENDING');
