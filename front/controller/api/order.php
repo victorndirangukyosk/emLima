@@ -660,6 +660,9 @@ class ControllerApiOrder extends Controller
 
             if (isset($this->request->get['order_id'])) {
                 $order_id = $this->request->get['order_id'];
+                $added_by = $this->request->get['added_by'];
+                $added_by_role = $this->request->get['added_by_role'];
+
             } else {
                 $order_id = 0;
             }
@@ -669,7 +672,7 @@ class ControllerApiOrder extends Controller
             $log->write($order_id);
 
             if ($order_info) {
-                $this->model_checkout_order->addOrderHistory($order_id, $this->request->post['order_status_id'], $this->request->post['comment'], $this->request->post['notify']);
+                $this->model_checkout_order->addOrderHistory($order_id, $this->request->post['order_status_id'], $this->request->post['comment'], $this->request->post['notify'], $added_by, $added_by_role);
 
                 //$this->createDeliveryRequest($order_id);
 
@@ -805,7 +808,7 @@ class ControllerApiOrder extends Controller
                         $json['success'] = 'Order Rejected';
                     }
 
-                    if (($sub_users_order_details['parent_approval'] == 'Approved') && ($sub_users_order_details['head_chef'] == 'Approved' && $sub_users_order_details['procurement'] == 'Approved')) {
+                    if (($sub_users_order_details['parent_approval'] == 'Approved') || ($sub_users_order_details['head_chef'] == 'Approved' && $sub_users_order_details['procurement'] == 'Approved')) {
                         $this->model_account_order->SubUserOrderApproved($order_id, 14);
                     }
                 }
@@ -813,7 +816,7 @@ class ControllerApiOrder extends Controller
                 if ($sub_users_order_details['parent_approval'] == 'Rejected' || $sub_users_order_details['head_chef'] == 'Rejected') {
                     $comment = 'Order Rejected By Parent User';
                      $this->model_account_order->UpdateOrderStatus($order_id, 16,$comment);
-                    
+                     $this->model_account_order->SubUserOrderReject($order_id, 16);
                     $sub_users_order_details = $this->model_account_order->getSubUserOrderDetailsapi($order_id);
                     if ($sub_users_order_details['order_status_id'] == 14) {
                         $json['success'] = 'Order Recieved';

@@ -12,13 +12,14 @@
                                                       <p class="variations-title" style="margin-left: -10px; display: none;"> variants</p>
                                                       <select class="product-variation">
                                                       <?php foreach($product['variations'] as $variation) { ?>
-                                                      <option value="<?php echo $variation[variation_id]; ?>"
-                                                      data-price="<?php echo $variation[price]; ?>"
-                                                      data-quantity="<?php echo $variation[qty_in_cart]; ?>"
-                                                      data-key="<?php echo $variation[key]; ?>"
+                                                      <option value="<?php echo isset($variation['variation_id']) ? $variation['variation_id'] : ''; ?>"
+                                                      data-price="<?php echo isset($variation['price']) ? $variation['price'] : ''; ?>"
+                                                      data-quantity="<?php echo isset($variation['qty_in_cart']) ? $variation['qty_in_cart'] : ''; ?>"
+                                                      data-key="<?php echo isset($variation['key']) ? $variation['key'] : ''; ?>"
                                                        data-productid="<?= $variation['product_id'] ?>"
                                                        data-isWl="<?= $variation['isWishListID'] ?>"
-                                                      data-special="<?php echo $variation[special_price]; ?>">
+                                                      data-special="<?php echo isset($variation['special_price']) ? $variation['special_price'] : ''; ?>"
+                                                      <?php if(isset($variation['category_pricing_variant_status']) && $variation['category_pricing_variant_status'] == 0) { echo "disabled"; } ?> >
                                                       <?php  echo 'Per ' . $variation['unit']; ?>
                                                       </option>
                                                       <?php } ?>
@@ -26,7 +27,7 @@
                                                   </div>
 												  <?php 
 												  //echo '<pre>';echo count($product['produce_type']);exit;
-												  if(count($product['produce_type'])>0){?>
+												  if(is_array($product['produce_type']) && count($product['produce_type'])>0){?>
 												  <div class="variation-selector-container" style="width: 295px;">
                                                       <p class="variations-title" style="margin-left: -10px; display: none;"> variants</p>
                                                       <select name="produce-type" class="produce-type" data-defaultquantity="<?php echo $product['qty_in_cart']?>">
@@ -76,7 +77,7 @@
 
 
  <div class="variation-selector-container" style="width: 275px;">
-	<textarea name="product_notes" class="form-control" maxlength="200" placeholder="Product Notes" id="product_notes" style="height: 50px; margin-top:10px;"><?php if($product['product_note'] != NULL){echo $product['product_note'];}?></textarea>
+	<textarea name="product_notes" class="form-control" maxlength="200" placeholder="Product Notes" id="product_notes" style="height: 50px; margin-top:10px;"><?php if(isset($product['product_note']) && $product['product_note'] != NULL){echo $product['product_note'];}?></textarea>
  </div>
 
 

@@ -131,9 +131,9 @@ class ControllerProductStore extends Controller
             $this->response->redirect($this->url->link('common/home'));
         }
 
-        $title = $store_info['name'];
+        $title = isset($store_info['name']) ? $store_info['name'] : '';
         $data['current_store'] = $store_id;
-        $data['heading_title'] = $store_info['name'];
+        $data['heading_title'] = isset($store_info['name']) ? $store_info['name'] : '';
         $data['store_info'] = $store_info;
         //echo '<pre>';print_r($store_info);exit;
 
@@ -212,20 +212,20 @@ class ControllerProductStore extends Controller
         }
 
         //echo "<pre>";print_r($data['lists']);die;
-        if ($store_info['logo']) {
+        if (isset($store_info['logo'])) {
             $data['thumb'] = $this->model_tool_image->resize($store_info['logo'], $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height'));
         } else {
             $data['thumb'] = '';
         }
 
-        if ($store_info['banner_logo']) {
+        if (isset($store_info['banner_logo'])) {
             $data['banner_logo'] = $this->model_tool_image->resize($store_info['banner_logo'], 800, 450);
         } else {
             $data['banner_logo'] = $this->model_tool_image->resize('placeholder.png', 800, 450);
         }
 
         //echo "<pre>";print_r($store_info);die;
-        if ($store_info['banner_logo_status']) {
+        if (isset($store_info['banner_logo_status'])) {
             //echo "<pre>";print_r("Ce");die;
             if (isset($this->session->data['show_banner']) && !$this->session->data['show_banner']) {
             } else {
@@ -696,8 +696,8 @@ class ControllerProductStore extends Controller
         $this->load->model('assets/product');
         $this->load->model('tool/image');
 
-        $results = $this->model_assets_product->getProducts($filter_data);
-
+        //$results = $this->model_assets_product->getProducts($filter_data);
+        $results = $this->model_assets_product->getProductsForHomePage($filter_data);
 //        echo '<pre>';print_r($results); die;
 
         $data['products'] = [];
@@ -843,102 +843,103 @@ class ControllerProductStore extends Controller
 
         //echo "<pre>";print_r($results);die;
         $data['products'] = [];
-
-        foreach ($results as $result) {
-            if ($result['quantity'] <= 0) {
-                continue;
-            }
-
-            if (file_exists(DIR_IMAGE.$result['image'])) {
-                $image = $this->model_tool_image->resize($result['image'], $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
-            } else {
-                $image = $this->model_tool_image->resize('placeholder.png', $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
-            }
-
-            //if category discount define override special price
-            $discount = '';
-
-            $s_price = 0;
-            $o_price = 0;
-
-            if (!$this->config->get('config_inclusiv_tax')) {
-                //get price html
-                if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-                    $price = $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')));
-
-                    $o_price = $this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax'));
-                } else {
-                    $price = false;
-                }
-                if ((float) $result['special_price']) {
-                    $special_price = $this->currency->format($this->tax->calculate($result['special_price'], $result['tax_class_id'], $this->config->get('config_tax')));
-
-                    $s_price = $this->tax->calculate($result['special_price'], $result['tax_class_id'], $this->config->get('config_tax'));
-                } else {
-                    $special_price = false;
-                }
-            } else {
-                if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-                    $price = $this->currency->format($result['price']);
-                } else {
-                    $price = $result['price'];
+        
+        if (is_array($results)) {
+            foreach ($results as $result) {
+                if ($result['quantity'] <= 0) {
+                    continue;
                 }
 
-                if ((float) $result['special_price']) {
-                    $special_price = $this->currency->format($result['special_price']);
+                if (file_exists(DIR_IMAGE . $result['image'])) {
+                    $image = $this->model_tool_image->resize($result['image'], $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
                 } else {
-                    $special_price = $result['special_price'];
+                    $image = $this->model_tool_image->resize('placeholder.png', $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
                 }
 
-                $s_price = $result['special_price'];
-                $o_price = $result['price'];
+                //if category discount define override special price
+                $discount = '';
+
+                $s_price = 0;
+                $o_price = 0;
+
+                if (!$this->config->get('config_inclusiv_tax')) {
+                    //get price html
+                    if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+                        $price = $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')));
+
+                        $o_price = $this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax'));
+                    } else {
+                        $price = false;
+                    }
+                    if ((float) $result['special_price']) {
+                        $special_price = $this->currency->format($this->tax->calculate($result['special_price'], $result['tax_class_id'], $this->config->get('config_tax')));
+
+                        $s_price = $this->tax->calculate($result['special_price'], $result['tax_class_id'], $this->config->get('config_tax'));
+                    } else {
+                        $special_price = false;
+                    }
+                } else {
+                    if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+                        $price = $this->currency->format($result['price']);
+                    } else {
+                        $price = $result['price'];
+                    }
+
+                    if ((float) $result['special_price']) {
+                        $special_price = $this->currency->format($result['special_price']);
+                    } else {
+                        $special_price = $result['special_price'];
+                    }
+
+                    $s_price = $result['special_price'];
+                    $o_price = $result['price'];
+                }
+
+                //get qty in cart
+                $key = base64_encode(serialize(['product_store_id' => (int) $result['product_store_id'], 'store_id' => isset($this->session->data['config_store_id']) ? $this->session->data['config_store_id'] : '']));
+
+                if (isset($this->session->data['cart'][$key])) {
+                    $qty_in_cart = $this->session->data['cart'][$key]['quantity'];
+                } else {
+                    $qty_in_cart = 0;
+                }
+
+                //$result['name'] = strlen($result['name']) > 27 ? substr($result['name'],0,27)."..." : $result['name'];
+                $name = $result['name'];
+
+                if (isset($result['pd_name'])) {
+                    $name = $result['pd_name'];
+                }
+
+                //$name .= str_repeat('&nbsp;',30 - strlen($result['name']));
+
+                $percent_off = null;
+                if (isset($s_price) && isset($o_price) && 0 != $o_price && 0 != $s_price) {
+                    $percent_off = (($o_price - $s_price) / $o_price) * 100;
+                }
+
+                $data['products'][] = [
+                    'key' => $key,
+                    'qty_in_cart' => $qty_in_cart,
+                    'variations' => $this->model_assets_product->getVariations($result['product_store_id']),
+                    'store_product_variation_id' => 0,
+                    'product_id' => $result['product_id'],
+                    'product_store_id' => $result['product_store_id'],
+                    'default_variation_name' => $result['default_variation_name'],
+                    'thumb' => $image,
+                    'name' => $name,
+                    'unit' => $result['unit'],
+                    'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('config_product_description_length')) . '..',
+                    'price' => $price,
+                    'special' => $special_price,
+                    'percent_off' => number_format($percent_off, 0),
+                    'tax' => $result['tax_percentage'],
+                    'minimum' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity'],
+                    'rating' => 0,
+                    'href' => $this->url->link('product/product', '&product_store_id=' . $result['product_store_id']),
+                ];
             }
-
-            //get qty in cart
-            $key = base64_encode(serialize(['product_store_id' => (int) $result['product_store_id'], 'store_id' => $this->session->data['config_store_id']]));
-
-            if (isset($this->session->data['cart'][$key])) {
-                $qty_in_cart = $this->session->data['cart'][$key]['quantity'];
-            } else {
-                $qty_in_cart = 0;
-            }
-
-            //$result['name'] = strlen($result['name']) > 27 ? substr($result['name'],0,27)."..." : $result['name'];
-            $name = $result['name'];
-
-            if (isset($result['pd_name'])) {
-                $name = $result['pd_name'];
-            }
-
-            //$name .= str_repeat('&nbsp;',30 - strlen($result['name']));
-
-            $percent_off = null;
-            if (isset($s_price) && isset($o_price) && 0 != $o_price && 0 != $s_price) {
-                $percent_off = (($o_price - $s_price) / $o_price) * 100;
-            }
-
-            $data['products'][] = [
-                'key' => $key,
-                'qty_in_cart' => $qty_in_cart,
-                'variations' => $this->model_assets_product->getVariations($result['product_store_id']),
-                'store_product_variation_id' => 0,
-                'product_id' => $result['product_id'],
-                'product_store_id' => $result['product_store_id'],
-                'default_variation_name' => $result['default_variation_name'],
-                'thumb' => $image,
-                'name' => $name,
-                'unit' => $result['unit'],
-                'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('config_product_description_length')).'..',
-                'price' => $price,
-                'special' => $special_price,
-                'percent_off' => number_format($percent_off, 0),
-                'tax' => $result['tax_percentage'],
-                'minimum' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity'],
-                'rating' => 0,
-                'href' => $this->url->link('product/product', '&product_store_id='.$result['product_store_id']),
-            ];
         }
-
         return $data['products'];
     }
 

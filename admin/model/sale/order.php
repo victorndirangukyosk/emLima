@@ -576,8 +576,12 @@ class ModelSaleOrder extends Model
             $sql .= " AND DATE(o.delivery_date) = DATE('".$this->db->escape($data['filter_delivery_date'])."')";
         }
 
-        if (!empty($data['filter_date_added'])) {
+        if (!empty($data['filter_date_added']) && empty($data['filter_date_added_end'])) {
             $sql .= " AND DATE(o.date_added) = DATE('".$this->db->escape($data['filter_date_added'])."')";
+        }
+        
+        if (!empty($data['filter_date_added']) && !empty($data['filter_date_added_end'])) {
+            $sql .= " AND DATE(o.date_added) BETWEEN DATE('".$this->db->escape($data['filter_date_added'])."') AND DATE('".$this->db->escape($data['filter_date_added_end'])."')";
         }
 
         if (!empty($data['filter_date_modified'])) {
@@ -696,8 +700,12 @@ class ModelSaleOrder extends Model
             $sql .= " AND DATE(o.delivery_date) = DATE('".$this->db->escape($data['filter_delivery_date'])."')";
         }
 
-        if (!empty($data['filter_date_added'])) {
+        if (!empty($data['filter_date_added']) && empty($data['filter_date_added_end'])) {
             $sql .= " AND DATE(o.date_added) = DATE('".$this->db->escape($data['filter_date_added'])."')";
+        }
+        
+        if (!empty($data['filter_date_added']) && !empty($data['filter_date_added_end'])) {
+            $sql .= " AND DATE(o.date_added) BETWEEN DATE('".$this->db->escape($data['filter_date_added'])."') AND DATE('".$this->db->escape($data['filter_date_added_end'])."')";
         }
 
         if (!empty($data['filter_date_modified'])) {
@@ -1137,6 +1145,9 @@ class ModelSaleOrder extends Model
         if ($this->user->isVendor()) {
             $sql .= ' AND vendor_id="'.$this->user->getId().'"';
         }
+        if ($this->user->isAccountManager()) {
+            $sql .= ' AND cust.account_manager_id="'.$this->user->getId().'"';
+        }
         if (!empty($data['filter_city'])) {
             $sql .= " AND c.name LIKE '".$data['filter_city']."%'";
         }
@@ -1170,8 +1181,12 @@ class ModelSaleOrder extends Model
             $sql .= " AND CONCAT(o.firstname, ' ', o.lastname) LIKE '%".$this->db->escape($data['filter_customer'])."%'";
         }
 
-        if (!empty($data['filter_date_added'])) {
+        if (!empty($data['filter_date_added']) && empty($data['filter_date_added_end'])) {
             $sql .= " AND DATE(o.date_added) = DATE('".$this->db->escape($data['filter_date_added'])."')";
+        }
+        
+        if (!empty($data['filter_date_added']) && !empty($data['filter_date_added_end'])) {
+            $sql .= " AND DATE(o.date_added) BETWEEN DATE('".$this->db->escape($data['filter_date_added'])."') AND DATE('".$this->db->escape($data['filter_date_added_end'])."')";
         }
 
         if (!empty($data['filter_date_modified'])) {
@@ -1247,8 +1262,12 @@ class ModelSaleOrder extends Model
             $sql .= " AND CONCAT(o.firstname, ' ', o.lastname) LIKE '%".$this->db->escape($data['filter_customer'])."%'";
         }
 
-        if (!empty($data['filter_date_added'])) {
+        if (!empty($data['filter_date_added']) && empty($data['filter_date_added_end'])) {
             $sql .= " AND DATE(o.date_added) = DATE('".$this->db->escape($data['filter_date_added'])."')";
+        }
+        
+        if (!empty($data['filter_date_added']) && !empty($data['filter_date_added_end'])) {
+            $sql .= " AND DATE(o.date_added) BETWEEN DATE('".$this->db->escape($data['filter_date_added'])."') AND DATE('".$this->db->escape($data['filter_date_added_end'])."')";
         }
 
         if (!empty($data['filter_date_modified'])) {
@@ -1360,7 +1379,7 @@ class ModelSaleOrder extends Model
             $limit = 10;
         }
 
-        $query = $this->db->query('SELECT oh.date_added, os.name AS status, os.color AS color, oh.comment, oh.notify FROM '.DB_PREFIX.'order_history oh LEFT JOIN '.DB_PREFIX."order_status os ON oh.order_status_id = os.order_status_id WHERE oh.order_id = '".(int) $order_id."' AND os.language_id = '".(int) $this->config->get('config_language_id')."' ORDER BY oh.date_added ASC LIMIT ".(int) $start.','.(int) $limit);
+        $query = $this->db->query('SELECT oh.date_added, oh.added_by, oh.role, os.name AS status, os.color AS color, oh.comment, oh.notify FROM '.DB_PREFIX.'order_history oh LEFT JOIN '.DB_PREFIX."order_status os ON oh.order_status_id = os.order_status_id WHERE oh.order_id = '".(int) $order_id."' AND os.language_id = '".(int) $this->config->get('config_language_id')."' ORDER BY oh.date_added ASC LIMIT ".(int) $start.','.(int) $limit);
 
         return $query->rows;
     }

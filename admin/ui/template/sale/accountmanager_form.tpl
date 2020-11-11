@@ -4,7 +4,7 @@
         <div class="container-fluid">
             <div class="pull-right">
                 <button type="submit" onclick="save('save')" form="form-user" data-toggle="tooltip" title="<?php echo $button_save; ?>" class="btn btn-success"><i class="fa fa-check"></i></button>
-                <button type="submit" form="form-user" data-toggle="tooltip" title="<?php echo $button_saveclose; ?>" class="btn btn-default" data-original-title="Save & Close"><i class="fa fa-save text-success"></i></button>
+                <button type="submit" onclick="save('new')" form="form-user" data-toggle="tooltip" title="<?php echo $button_saveclose; ?>" class="btn btn-default" data-original-title="Save & Close"><i class="fa fa-save text-success"></i></button>
                 <button type="submit" onclick="save('new')" form="form-user" data-toggle="tooltip" title="<?php echo $button_savenew; ?>" class="btn btn-default" data-original-title="Save & New"><i class="fa fa-plus text-success"></i></button>			
                 <a href="<?php echo $cancel; ?>" data-toggle="tooltip" title="<?php echo $button_cancel; ?>" class="btn btn-default"><i class="fa fa-times-circle text-danger"></i></a></div>
             <h1><?php echo $heading_title; ?></h1>
@@ -50,13 +50,13 @@
                             <div class="form-group required">
                                 <label class="col-sm-2 control-label" for="input-username"><?php echo $entry_username; ?></label>
                                 <div class="col-sm-10">
-                                    <input type="text" name="username" value="<?php echo $username; ?>" placeholder="<?php echo $entry_username; ?>" id="input-username" class="form-control" />
+                                    <input type="text" name="username" value="<?php echo $username; ?>" placeholder="<?php echo $entry_username; ?>" id="input-username" class="form-control" autocomplete="off" />
                                     <?php if ($error_username) { ?>
                                     <div class="text-danger"><?php echo $error_username; ?></div>
                                     <?php } ?>
                                 </div>
                             </div>
-                            <input type="hidden"  name="user_group_id" id="input-user-group" value="17">
+                            <input type="hidden"  name="user_group_id" id="input-user-group" value="<?php echo $this->config->get('config_account_manager_group_id'); ?>">
                             <!--<div class="form-group">
                               <label class="col-sm-2 control-label" for="input-user-group"><?php echo $entry_user_group; ?></label>
                               <div class="col-sm-10">
@@ -89,10 +89,22 @@
                                     <?php } ?>
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group required">
                                 <label class="col-sm-2 control-label" for="input-email"><?php echo $entry_email; ?></label>
                                 <div class="col-sm-10">
                                     <input type="text" name="email" value="<?php echo $email; ?>" placeholder="<?php echo $entry_email; ?>" id="input-email" class="form-control" />
+                                    <?php if ($error_email) { ?>
+                                    <div class="text-danger"><?php echo $error_email; ?></div>
+                                    <?php  } ?>
+                                </div>
+                            </div>
+                            <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-telephone"><?php echo $entry_telephone; ?></label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="telephone" value="<?php echo $telephone; ?>" placeholder="<?php echo $entry_telephone; ?>" id="input-telephone" class="form-control" maxlength=10 onkeypress="return isNumberKey(event)"  />
+                                    <?php if ($error_telephone) { ?>
+                                    <div class="text-danger"><?php echo $error_telephone; ?></div>
+                                    <?php  } ?>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -137,7 +149,7 @@
                         <?php if ($user_id) { ?>
                         <div class="tab-pane" id="tab-assign-customers">
                             <div class="form-group required">
-                                <label class="col-sm-2 control-label" for="input-assign-username">Assign Customers</label>
+                                <label class="col-sm-2 control-label" for="input-assign-username">Assign Company</label>
                                 <div class="col-sm-10">
                                     <input type="text" name="assign_customers" value="" placeholder="Type Company Name" id="input-assign-customer" class="form-control" />
                                     <div id="assign_customers_select" class="well well-sm" style="height: 150px; overflow: auto;">
@@ -145,36 +157,12 @@
                                 </div>
                             </div>
                             <div class="text-right">
-                                <button id="button-assign-customer" class="btn btn-primary"><i class="fa fa-plus-circle"></i>Assign Customers</button>
+                                <button id="button-assign-customer" class="btn btn-primary"><i class="fa fa-plus-circle"></i> Assign Company</button>
                             </div>
                         </div>
                         <div class="tab-pane" id="tab-assigned-customers">
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>Customer Name </th>
-                                        <th>E-Mail</th>
-                                        <th>Phone No</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php if(count($assigned_customers)) { ?>
-                                    <?php foreach($assigned_customers as $user) { ?>
-                                    <tr>
-                                        <td><?php echo $user['firstname'].' '.$user['lastname'];?></td>
-                                        <td><?php echo $user['email'];?></td>
-                                        <td><?php echo $user['telephone'];?></td>
-                                        <td><a href="#" data-toggle="tooltip" title="Un Assign Customer" id="unassigncustomer" data-accountmanager="<?php echo $user_id; ?>" data-customer="<?php echo $user['customer_id']; ?>" class="btn btn-primary"><i class="fa fa-minus"></i></a></td>
-                                    </tr>
-                                    <?php } ?>
-                                    <?php } else { ?>
-                                    <tr style="text-align:center">
-                                        <td colspan="5">No Customers found</td>
-                                    </tr>
-                                    <?php } ?>
-                                </tbody>
-                            </table>
+                            <div id="assignedcustomers"></div>
+                            <br />
                         </div>
                         <?php } ?>
                     </div>
@@ -189,6 +177,7 @@ function save(type) {
         input.type = 'hidden';
         input.name = 'button';
         input.value = type;
+        assign_customers();
         form = $("form[id^='form-']").append(input);
         form.submit();
     }
@@ -266,6 +255,9 @@ function save(type) {
                 $(".alert").attr('class', 'alert alert-success');
                 $(".alert").show();
                 console.log(json);
+                setTimeout(function () {
+                    location.reload(true);
+                }, 1000);
             }
         });
     });
@@ -287,9 +279,54 @@ function save(type) {
             complete: function () {
             },
             success: function (json) {
-
+                $('.alert').html('Company un assigned successfully!');
+                $(".alert").attr('class', 'alert alert-success');
+                $(".alert").show();
+                console.log(json);
+                setTimeout(function () {
+                    location.reload(true);
+                }, 1000);
             }
         });
     });
+    
+$('#assignedcustomers').delegate('.pagination a', 'click', function(e) {
+e.preventDefault();
+
+$('#assignedcustomers').load(this.href);
+});
+
+$('#assignedcustomers').load('index.php?path=sale/accountmanager/getassignedcustomers&token=<?php echo $token; ?>&account_manager_id=<?php echo $user_id; ?>');
+    function assign_customers() {
+        var val = [];
+        $('input[name=\'assign_customers_select[]\']').each(function (i) {
+            val[i] = $(this).val();
+        });
+        if (val.length == 0) {
+            /*$(".alert").show();
+             $('.alert').html('Please select atleast one customer!');
+             $('.alert').delay(5000).fadeOut('slow');*/
+            return false;
+        }
+        console.log(val);
+        $.ajax({
+            url: 'index.php?path=sale/accountmanager/assigncustomer&token=<?php echo $token; ?>',
+            type: 'post',
+            dataType: 'json',
+            data: {assigncustomer: val, account_manager_id: <?php echo $user_id; ?> },
+            beforeSend: function () {
+                $('#button-assign-customer').button('loading');
+            },
+            complete: function () {
+                $('#button-assign-customer').button('reset');
+            },
+            success: function (json) {
+                $('.alert').html('Customer assigned successfully!');
+                $(".alert").attr('class', 'alert alert-success');
+                $(".alert").show();
+                console.log(json);
+            }
+        });
+    }
 //--></script>
 <?php echo $footer; ?> 

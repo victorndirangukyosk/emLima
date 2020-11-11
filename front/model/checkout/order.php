@@ -123,7 +123,7 @@ class ModelCheckoutOrder extends Model {
                 $this->deleteOrder($this->session->data['order_id'][$key]);
                 $order_id = $this->session->data['order_id'][$key];
 
-                $this->db->query("INSERT INTO `" . DB_PREFIX . "order` SET order_id='" . $order_id . "', invoice_prefix = '" . $this->db->escape($data['invoice_prefix']) . "', store_id = '" . (int) $data['store_id'] . "', store_name = '" . $this->db->escape($data['store_name']) . "', store_url = '" . $this->db->escape($data['store_url']) . "', customer_id = '" . (int) $data['customer_id'] . "', customer_group_id = '" . (int) $data['customer_group_id'] . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']) ? serialize($data['custom_field']) : '') . "', payment_method = '" . $this->db->escape($data['payment_method']) . "', payment_code = '" . $this->db->escape($data['payment_code']) . "',shipping_method = '" . $this->db->escape($data['shipping_method']) . "', shipping_code = '" . $this->db->escape($data['shipping_code']) . "', comment = '" . $this->db->escape($data['comment']) . "', total = '" . (float) $data['total'] . "', latitude = '" . $data['latitude'] . "',longitude = '" . $data['longitude'] . "', affiliate_id = '" . (int) $data['affiliate_id'] . "',marketing_id = '" . (int) $data['marketing_id'] . "', tracking = '" . $this->db->escape($data['tracking']) . "', language_id = '" . (int) $data['language_id'] . "', currency_id = '" . (int) $data['currency_id'] . "', currency_code = '" . $this->db->escape($data['currency_code']) . "', currency_value = '" . (float) $data['currency_value'] . "', ip = '" . $this->db->escape($data['ip']) . "', forwarded_ip = '" . $this->db->escape($data['forwarded_ip']) . "', user_agent = '" . $this->db->escape($data['user_agent']) . "', accept_language = '" . $this->db->escape($data['accept_language']) . "', fixed_commission = '" . $this->db->escape($data['fixed_commission']) . "', commission = '" . $this->db->escape($data['commission']) . "',delivery_date = '" . $this->db->escape(date('Y-m-d', strtotime($data['delivery_date']))) . "',delivery_timeslot = '" . $this->db->escape($data['delivery_timeslot']) . "',  date_added = NOW(), date_modified = NOW()");
+                $this->db->query("INSERT INTO `" . DB_PREFIX . "order` SET order_id='" . $order_id . "', invoice_prefix = '" . $this->db->escape($data['invoice_prefix']) . "', store_id = '" . (int) $data['store_id'] . "', store_name = '" . $this->db->escape($data['store_name']) . "', store_url = '" . $this->db->escape($data['store_url']) . "', customer_id = '" . (int) $data['customer_id'] . "', customer_group_id = '" . (int) $data['customer_group_id'] . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']) ? serialize($data['custom_field']) : '') . "', payment_method = '" . $this->db->escape($data['payment_method']) . "', payment_code = '" . $this->db->escape($data['payment_code']) . "',shipping_method = '" . $this->db->escape($data['shipping_method']) . "', shipping_code = '" . $this->db->escape($data['shipping_code']) . "', comment = '" . $this->db->escape($data['comment']) . "', total = '" . (float) $data['total'] . "', latitude = '" . $data['latitude'] . "',longitude = '" . $data['longitude'] . "', affiliate_id = '" . (int) $data['affiliate_id'] . "',marketing_id = '" . (int) $data['marketing_id'] . "', tracking = '" . $this->db->escape($data['tracking']) . "', language_id = '" . (int) $data['language_id'] . "', currency_id = '" . (int) $data['currency_id'] . "', currency_code = '" . $this->db->escape($data['currency_code']) . "', currency_value = '" . (float) $data['currency_value'] . "', ip = '" . $this->db->escape($data['ip']) . "', forwarded_ip = '" . $this->db->escape($data['forwarded_ip']) . "', user_agent = '" . $this->db->escape($data['user_agent']) . "', accept_language = '" . $this->db->escape($data['accept_language']) . "', fixed_commission = '" . $this->db->escape($data['fixed_commission']) . "', commission = '" . $this->db->escape($data['commission']) . "',delivery_date = '" . $this->db->escape(date('Y-m-d', strtotime($data['delivery_date']))) . "',delivery_timeslot = '" . $this->db->escape($data['delivery_timeslot']) . "',  date_added = NOW(), date_modified = NOW(), login_latitude = '" . $this->db->escape($data['login_latitude']) . "', login_longitude = '" . $this->db->escape($data['login_longitude']) . "', login_mode = '" . $this->db->escape($data['login_mode']) . "'");
 
 
 
@@ -230,7 +230,7 @@ class ModelCheckoutOrder extends Model {
         $this->trigger->fire('pre.order.edit', $data);
 
         // Void the order first
-        $this->addOrderHistory($order_id, 0);
+        $this->addOrderHistory($order_id, 0, '', true, '', '');
 
         $store_id = 0;
 
@@ -299,7 +299,7 @@ class ModelCheckoutOrder extends Model {
         // Void the order first
         $log->write('deleteorder 1');
         $log->write($order_id);
-        $this->addOrderHistory($order_id, 0);
+        $this->addOrderHistory($order_id, 0, '', true, '', '');
 
         $this->db->query("DELETE FROM `" . DB_PREFIX . "order` WHERE order_id = '" . (int) $order_id . "'");
         $this->db->query("DELETE FROM `" . DB_PREFIX . "order_custom_field` WHERE order_id = '" . (int) $order_id . "'");
@@ -404,7 +404,7 @@ class ModelCheckoutOrder extends Model {
         }
     }
 
-    public function addOrderHistory($order_id, $order_status_id, $comment = '', $notify = true) {
+    public function addOrderHistory($order_id, $order_status_id, $comment = '', $notify = true, $added_by = '', $added_by_role = '') {
 
         //$notify = true;
 
@@ -537,7 +537,7 @@ class ModelCheckoutOrder extends Model {
 
             $this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', order_pdf_link ='" . $pdf_link . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
 
-            $this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', order_status_id = '" . (int) $order_status_id . "', notify = '" . (int) $notify . "', comment = '" . $this->db->escape($comment) . "', date_added = NOW()");
+            $this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', added_by = '" . (int) $added_by . "', role = '" . $added_by_role . "', order_status_id = '" . (int) $order_status_id . "', notify = '" . (int) $notify . "', comment = '" . $this->db->escape($comment) . "', date_added = NOW()");
 
 
             // If current order status is not processing or complete but new status is processing or complete then commence completing the order
@@ -731,7 +731,7 @@ class ModelCheckoutOrder extends Model {
 
                     //$log->write($message);
                     //echo "<pre>";print_r($message);die;
-                    if ($this->emailtemplate->getEmailEnabled('OrderAll', 'order_' . (int) $order_status_id)) {
+                    if ($customer_info['email_notification'] == 1 && $this->emailtemplate->getEmailEnabled('OrderAll', 'order_' . (int) $order_status_id)) {
 
 
                         $mail = new mail($this->config->get('config_mail'));
@@ -748,7 +748,7 @@ class ModelCheckoutOrder extends Model {
 
 
 
-                    if ($this->emailtemplate->getSmsEnabled('OrderAll', 'order_' . (int) $order_status_id)) {
+                    if ($customer_info['sms_notification'] == 1 && $this->emailtemplate->getSmsEnabled('OrderAll', 'order_' . (int) $order_status_id)) {
 
                         $ret = $this->emailtemplate->sendmessage($order_info['telephone'], $sms_message);
                     }
@@ -766,7 +766,7 @@ class ModelCheckoutOrder extends Model {
                         //$log->write($mobile_notification_title);
                         // customer push notitification start
 
-                        if (isset($customer_info) && isset($customer_info['device_id']) && strlen($customer_info['device_id']) > 0) {
+                        if (isset($customer_info) && isset($customer_info['device_id']) && $customer_info['mobile_notification'] == 1 && strlen($customer_info['device_id']) > 0) {
 
                             $log->write('customer device id set FRONT.MODEL.CHECKOUT.ORDER');
                             $ret = $this->emailtemplate->sendPushNotification($order_info['customer_id'], $customer_info['device_id'], $order_id, $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
@@ -1674,7 +1674,8 @@ class ModelCheckoutOrder extends Model {
         $log->write('EMAIL SENDING');
         $log->write($customer_info);
         $log->write('EMAIL SENDING');
-
+        
+        if($customer_info['email_notification'] == 1) {
         $subject = $this->emailtemplate->getSubject('Customer', 'customer_7', $customer_info);
         $message = $this->emailtemplate->getMessage('Customer', 'customer_7', $customer_info);
 
@@ -1685,22 +1686,23 @@ class ModelCheckoutOrder extends Model {
         $mail->setSubject($subject);
         $mail->setHTML($message);
         $mail->send();
+        }
 
         $log->write('status enabled of mobi noti');
         $mobile_notification_template = $this->emailtemplate->getNotificationMessage('Customer', 'customer_7', $customer_info);
 
         $mobile_notification_title = $this->emailtemplate->getNotificationTitle('Customer', 'customer_7', $customer_info);
 
-        if (isset($customer_info) && isset($customer_info['device_id']) && strlen($customer_info['device_id']) > 0) {
+        if (isset($customer_info) && isset($customer_info['device_id']) && $customer_info['mobile_notification'] == 1 && strlen($customer_info['device_id']) > 0) {
 
             $log->write('customer device id set FRONT.MODEL.CHECKOUT.ORDER');
-            $ret = $this->emailtemplate->sendPushNotification($order_info['customer_id'], $customer_info['device_id'], $order_id, $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
+            $ret = $this->emailtemplate->sendPushNotification($order_info['customer_id'], $customer_info['device_id'], $order_info['order_id'], $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
         } else {
             $log->write('customer device id not set FRONT.MODEL.CHECKOUT.ORDER');
         }
 
         if ($is_he_parents != NULL && $is_he_parents > 0) {
-            $order_approval_access = $this->db->query('SELECT c.customer_id, c.parent, c.order_approval_access_role, c.order_approval_access, c.email, c.firstname, c.lastname, c.device_id  FROM ' . DB_PREFIX . "customer c WHERE c.parent = '" . (int) $is_he_parents . "' AND c.order_approval_access = 1 AND (c.order_approval_access_role = 'head_chef' OR c.order_approval_access_role = 'procurement_person')");
+            $order_approval_access = $this->db->query('SELECT c.customer_id, c.parent, c.order_approval_access_role, c.order_approval_access, c.email, c.firstname, c.lastname, c.device_id, c.sms_notification, c.mobile_notification, c.email_notification  FROM ' . DB_PREFIX . "customer c WHERE c.parent = '" . (int) $is_he_parents . "' AND c.order_approval_access = 1 AND (c.order_approval_access_role = 'head_chef' OR c.order_approval_access_role = 'procurement_person')");
             $order_approval_access_user = $order_approval_access->rows;
 
             foreach ($order_approval_access_user as $order_approval_access_use) {
@@ -1723,7 +1725,8 @@ class ModelCheckoutOrder extends Model {
 
                     $subject = $this->emailtemplate->getSubject('Customer', 'customer_7', $order_approval_access_use);
                     $message = $this->emailtemplate->getMessage('Customer', 'customer_7', $order_approval_access_use);
-
+                    
+                    if($order_approval_access_use['email_notification'] == 1) {
                     $mail = new Mail($this->config->get('config_mail'));
                     $mail->setTo($order_approval_access_use['email']);
                     $mail->setFrom($this->config->get('config_from_email'));
@@ -1731,16 +1734,17 @@ class ModelCheckoutOrder extends Model {
                     $mail->setSubject($subject);
                     $mail->setHTML($message);
                     $mail->send();
+                    }
 
                     $log->write('status enabled of mobi noti');
                     $mobile_notification_template = $this->emailtemplate->getNotificationMessage('Customer', 'customer_7', $order_approval_access_user);
 
                     $mobile_notification_title = $this->emailtemplate->getNotificationTitle('Customer', 'customer_7', $order_approval_access_use);
 
-                    if (isset($order_approval_access_use) && isset($order_approval_access_use['device_id']) && strlen($order_approval_access_use['device_id']) > 0) {
+                    if (isset($order_approval_access_use) && isset($order_approval_access_use['device_id']) && $order_approval_access_use['mobile_notification'] && strlen($order_approval_access_use['device_id']) > 0) {
 
                         $log->write('customer device id set FRONT.MODEL.CHECKOUT.ORDER');
-                        $ret = $this->emailtemplate->sendPushNotification($order_info['customer_id'], $order_approval_access_use['device_id'], $order_id, $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
+                        $ret = $this->emailtemplate->sendPushNotification($order_info['customer_id'], $order_approval_access_use['device_id'], $order_info['order_id'], $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
                     } else {
                         $log->write('customer device id not set FRONT.MODEL.CHECKOUT.ORDER');
                     }
@@ -1761,7 +1765,8 @@ class ModelCheckoutOrder extends Model {
                     $log->write('EMAIL SENDING');
                     $log->write($customer_info);
                     $log->write('EMAIL SENDING');
-
+                    
+                    if($order_approval_access_use['email_notification'] == 1) {
                     $subject = $this->emailtemplate->getSubject('Customer', 'customer_7', $order_approval_access_use);
                     $message = $this->emailtemplate->getMessage('Customer', 'customer_7', $order_approval_access_use);
 
@@ -1772,16 +1777,17 @@ class ModelCheckoutOrder extends Model {
                     $mail->setSubject($subject);
                     $mail->setHTML($message);
                     $mail->send();
+                    }
 
                     $log->write('status enabled of mobi noti');
                     $mobile_notification_template = $this->emailtemplate->getNotificationMessage('Customer', 'customer_7', $order_approval_access_user);
 
                     $mobile_notification_title = $this->emailtemplate->getNotificationTitle('Customer', 'customer_7', $order_approval_access_use);
 
-                    if (isset($order_approval_access_use) && isset($order_approval_access_use['device_id']) && strlen($order_approval_access_use['device_id']) > 0) {
+                    if (isset($order_approval_access_use) && isset($order_approval_access_use['device_id']) && $order_approval_access_use['mobile_notification'] == 1 && strlen($order_approval_access_use['device_id']) > 0) {
 
                         $log->write('customer device id set FRONT.MODEL.CHECKOUT.ORDER');
-                        $ret = $this->emailtemplate->sendPushNotification($order_info['customer_id'], $order_approval_access_use['device_id'], $order_id, $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
+                        $ret = $this->emailtemplate->sendPushNotification($order_info['customer_id'], $order_approval_access_use['device_id'], $order_info['order_id'], $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
                     } else {
                         $log->write('customer device id not set FRONT.MODEL.CHECKOUT.ORDER');
                     }
@@ -1792,7 +1798,7 @@ class ModelCheckoutOrder extends Model {
         $log->write('SMS SENDING');
         $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_7', $customer_info);
         // send message here
-        if ($this->emailtemplate->getSmsEnabled('Customer', 'customer_7')) {
+        if ($customer_info['sms_notification'] == 1 && $this->emailtemplate->getSmsEnabled('Customer', 'customer_7')) {
             $ret = $this->emailtemplate->sendmessage($customer_info['telephone'], $sms_message);
         }
     }

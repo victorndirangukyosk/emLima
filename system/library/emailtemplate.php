@@ -2113,187 +2113,198 @@ class Emailtemplate
         return true;
     }
 
-    public function sendmessage($to, $message)
-    {
+    public function sendmessage($to, $message) {
+        
         $log = new Log('error.log');
+        $log->write('SMS SENDING');
+        $log->write($to);
+        $log->write('SMS SENDING');
+        $number = '734000006';
+        if (strpos($to, $number) !== false) {
+            $log = new Log('error.log');
+            $log->write('sms not sending for RR Corporate Ltd Customer ID : 301');
+        } else {
+            $log = new Log('error.log');
 
-        $result['status'] = false;
-        $result['message'] = 'Failed';
-        //zenvia,twilio
+            $result['status'] = false;
+            $result['message'] = 'Failed';
+            //zenvia,twilio
 
-        $country_prefix = $this->config->get('config_telephone_code');
+            $country_prefix = $this->config->get('config_telephone_code');
 
-        $to = $country_prefix.''.$to;
+            $to = $country_prefix . '' . $to;
 
-        if ('africastalking' == $this->config->get('config_sms_protocol')) {
-            $username = $this->config->get('config_africastalking_sms_username');
-            $apiKey = $this->config->get('config_africastalking_sms_api_key');
-            $AT = new AfricasTalking($username, $apiKey);
-            $sms = $AT->sms();
+            if ('africastalking' == $this->config->get('config_sms_protocol')) {
+                $username = $this->config->get('config_africastalking_sms_username');
+                $apiKey = $this->config->get('config_africastalking_sms_api_key');
+                $AT = new AfricasTalking($username, $apiKey);
+                $sms = $AT->sms();
 
-            $sms->send([
-                'to' => $this->formatPhoneNumber($to),
-                'message' => $message,
-                'from' => 'KWIKBASKET'
-            ]);
-            
-            $log->write("Africa's Talking Sending SMS ".$message.' to '.$to);
-        } elseif ('twilio' == $this->config->get('config_sms_protocol')) {
-            $sid = $this->config->get('config_sms_sender_id');
-            $token = $this->config->get('config_sms_token');
-            $from = $this->config->get('config_sms_number');
+                $sms->send([
+                    'to' => $this->formatPhoneNumber($to),
+                    'message' => $message,
+                    'from' => 'KWIKBASKET'
+                ]);
 
-            // Your Account Sid and Auth Token from twilio.com/user/account
-            //$sid = "AC75111c89124c19fffb2538524b8701ae";
-            //$token = "e4231d69832c9c7c65ecc78512d9ec1c";
-            //$sid = "ACe596b1c5068a7076d1a05552a66503f3";
-            //$token = "a15911012556c6795359cba517bb7328";
+                $log->write("email template Africa's Talking Sending SMS " . $message . ' to ' . $to);
+            } elseif ('twilio' == $this->config->get('config_sms_protocol')) {
+                $sid = $this->config->get('config_sms_sender_id');
+                $token = $this->config->get('config_sms_token');
+                $from = $this->config->get('config_sms_number');
 
-            $log->write('sms twilio 2');
-            $log->write($to);
-            if ('+' != substr($to, 0, 1)) {
-                $to = '+'.$to;
-            }
-            //$log->write($to);
-            $client = new Client($sid, $token);
+                // Your Account Sid and Auth Token from twilio.com/user/account
+                //$sid = "AC75111c89124c19fffb2538524b8701ae";
+                //$token = "e4231d69832c9c7c65ecc78512d9ec1c";
+                //$sid = "ACe596b1c5068a7076d1a05552a66503f3";
+                //$token = "a15911012556c6795359cba517bb7328";
 
-            try {
-                $sms = $client->messages->create(
-                        $to, [
-                    'from' => $from,
-                    //'from' => '+19789864215',
-                    'body' => $message,
-                        ]
-                );
-            } catch (Exception $exception) {
-                return $result;
-            }
-        } elseif ('zenvia' == $this->config->get('config_sms_protocol')) {
-            $from = $this->config->get('config_zenvia_sms_sender_id');
-            $authToken = $this->config->get('config_zenvia_sms_token');
-            $apiEndPoint = $this->config->get('config_zenvia_sms_number');
-
-            $log->write('zenvia sms  2ss');
-
-            $postData = [
-                'sendSmsRequest' => [
-                    'from' => $from,
-                    'to' => $to,
-                    'msg' => $message,
-                    'callbackOption' => 'NONE',
-                    'id' => uniqid(),
-                    'aggregateId' => '1111',
-                ],
-            ];
-
-            $log->write($postData);
-            //c3VwZXIub25saW5lLndlYjpydFdjSVVZUENO
-
-            $curl = curl_init();
-
-            curl_setopt($curl, CURLOPT_URL, $apiEndPoint);
-            //curl_setopt($curl, CURLOPT_URL,"https://api-rest.zenvia360.com.br/services/send-sms");
-            //https://api-rest.zenvia360.com.br/services/send-sms
-            curl_setopt($curl, CURLOPT_HTTPHEADER, ['Accept: application/json', 'Content-type: application/json', 'Authorization: Basic '.$authToken]);
-
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($curl, CURLOPT_POST, 1);
-            curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($postData));
-
-            $response = curl_exec($curl);
-
-            $log->write($response);
-
-            $response = json_decode($response, true);
-
-            if (isset($response['sendSmsResponse'])) {
-                if (is_array($response['sendSmsResponse'])) {
-                    if (00 == $response['sendSmsResponse']['statusCode']) {
-                    } else {
-                        return false;
-                    }
+                $log->write('sms twilio 2');
+                $log->write($to);
+                if ('+' != substr($to, 0, 1)) {
+                    $to = '+' . $to;
                 }
-            }
-            curl_close($curl);
-        } elseif ('uwaziimobile' == $this->config->get('config_sms_protocol')) {
-            $curl = curl_init();
-            //$authToken = 'VlNMVEQ6VlNMVEQxMjM0NQ==';
+                //$log->write($to);
+                $client = new Client($sid, $token);
 
-            $from = $this->config->get('config_uwaziimobile_sms_number');
-            //$from = 'cer';
-            $username = $this->config->get('config_uwaziimobile_sms_token');
-            $password = $this->config->get('config_uwaziimobile_sms_sender_id');
+                try {
+                    $sms = $client->messages->create(
+                            $to, [
+                        'from' => $from,
+                        //'from' => '+19789864215',
+                        'body' => $message,
+                            ]
+                    );
+                } catch (Exception $exception) {
+                    return $result;
+                }
+            } elseif ('zenvia' == $this->config->get('config_sms_protocol')) {
+                $from = $this->config->get('config_zenvia_sms_sender_id');
+                $authToken = $this->config->get('config_zenvia_sms_token');
+                $apiEndPoint = $this->config->get('config_zenvia_sms_number');
 
-            //echo "<pre>";print_r($from."c".$username."d".$password);die;
-            $str = $username.':'.$password;
+                $log->write('zenvia sms  2ss');
 
-            $authToken = base64_encode($str);
+                $postData = [
+                    'sendSmsRequest' => [
+                        'from' => $from,
+                        'to' => $to,
+                        'msg' => $message,
+                        'callbackOption' => 'NONE',
+                        'id' => uniqid(),
+                        'aggregateId' => '1111',
+                    ],
+                ];
 
-            $apiEndPoint = 'http://107.20.199.106/restapi/sms/1/text/single';
-            $postData = [
-                'from' => $from,
-                'to' => $to,
-                'text' => $message, ];
+                $log->write($postData);
+                //c3VwZXIub25saW5lLndlYjpydFdjSVVZUENO
 
-            curl_setopt($curl, CURLOPT_URL, $apiEndPoint);
-            //curl_setopt($curl, CURLOPT_URL,"https://api-rest.zenvia360.com.br/services/send-sms");
-            //https://api-rest.zenvia360.com.br/services/send-sms
-            curl_setopt($curl, CURLOPT_HTTPHEADER, ['Accept: application/json', 'Content-type: application/json', 'Authorization: Basic '.$authToken]);
+                $curl = curl_init();
 
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($curl, CURLOPT_POST, 1);
-            curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($postData));
+                curl_setopt($curl, CURLOPT_URL, $apiEndPoint);
+                //curl_setopt($curl, CURLOPT_URL,"https://api-rest.zenvia360.com.br/services/send-sms");
+                //https://api-rest.zenvia360.com.br/services/send-sms
+                curl_setopt($curl, CURLOPT_HTTPHEADER, ['Accept: application/json', 'Content-type: application/json', 'Authorization: Basic ' . $authToken]);
 
-            try {
-                //$response = $request->send();
+                curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($curl, CURLOPT_POST, 1);
+                curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($postData));
+
                 $response = curl_exec($curl);
+
+                $log->write($response);
 
                 $response = json_decode($response, true);
 
-                //echo "<pre>";print_r($response);die;
-                if (isset($response['messages']) && isset($response['messages'][0]['status']) && 0 == $response['messages'][0]['status']['id']) {
-                    $result['status'] = true;
-                } else {
-                    $result['status'] = false;
-                    $result['message'] = $response['messages'][0]['status']['description'];
+                if (isset($response['sendSmsResponse'])) {
+                    if (is_array($response['sendSmsResponse'])) {
+                        if (00 == $response['sendSmsResponse']['statusCode']) {
+                            
+                        } else {
+                            return false;
+                        }
+                    }
                 }
-            } catch (HttpException $ex) {
-                // echo $ex;
+                curl_close($curl);
+            } elseif ('uwaziimobile' == $this->config->get('config_sms_protocol')) {
+                $curl = curl_init();
+                //$authToken = 'VlNMVEQ6VlNMVEQxMjM0NQ==';
 
-                $result['status'] = false;
+                $from = $this->config->get('config_uwaziimobile_sms_number');
+                //$from = 'cer';
+                $username = $this->config->get('config_uwaziimobile_sms_token');
+                $password = $this->config->get('config_uwaziimobile_sms_sender_id');
+
+                //echo "<pre>";print_r($from."c".$username."d".$password);die;
+                $str = $username . ':' . $password;
+
+                $authToken = base64_encode($str);
+
+                $apiEndPoint = 'http://107.20.199.106/restapi/sms/1/text/single';
+                $postData = [
+                    'from' => $from,
+                    'to' => $to,
+                    'text' => $message,];
+
+                curl_setopt($curl, CURLOPT_URL, $apiEndPoint);
+                //curl_setopt($curl, CURLOPT_URL,"https://api-rest.zenvia360.com.br/services/send-sms");
+                //https://api-rest.zenvia360.com.br/services/send-sms
+                curl_setopt($curl, CURLOPT_HTTPHEADER, ['Accept: application/json', 'Content-type: application/json', 'Authorization: Basic ' . $authToken]);
+
+                curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($curl, CURLOPT_POST, 1);
+                curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($postData));
+
+                try {
+                    //$response = $request->send();
+                    $response = curl_exec($curl);
+
+                    $response = json_decode($response, true);
+
+                    //echo "<pre>";print_r($response);die;
+                    if (isset($response['messages']) && isset($response['messages'][0]['status']) && 0 == $response['messages'][0]['status']['id']) {
+                        $result['status'] = true;
+                    } else {
+                        $result['status'] = false;
+                        $result['message'] = $response['messages'][0]['status']['description'];
+                    }
+                } catch (HttpException $ex) {
+                    // echo $ex;
+
+                    $result['status'] = false;
+                }
+
+                return $result;
+            } else {
+                //wayhub
+                // $sender_id = 'KRAFTY';
+                // $username  = 'krafty';
+                // $password  = 'krafty@123';
+
+                $sender_id = $this->config->get('config_wayhub_sms_sender_id');
+                $username = $this->config->get('config_wayhub_sms_token');
+                $password = $this->config->get('config_wayhub_sms_number');
+
+                $msg = $message;
+
+                $url = 'http://login.smsgatewayhub.com/smsapi/pushsms.aspx?user=' . $username . '&pwd=' . $password . '&to=' . $to . '&sid=' . $sender_id . '&msg=' . urlencode($msg) . '&fl=0&gwid=2';
+
+                // Get cURL resource
+                $curl = curl_init();
+                // Set some options - we are passing in a useragent too here
+                curl_setopt_array($curl, [
+                    CURLOPT_RETURNTRANSFER => 1,
+                    CURLOPT_URL => $url,
+                    CURLOPT_USERAGENT => 'Codular Sample cURL Request',
+                ]);
+                // Send the request & save response to $resp
+                $resp = curl_exec($curl);
+
+                // Close request to clear up some resources
+                curl_close($curl);
             }
 
-            return $result;
-        } else {
-            //wayhub
-            // $sender_id = 'KRAFTY';
-            // $username  = 'krafty';
-            // $password  = 'krafty@123';
-
-            $sender_id = $this->config->get('config_wayhub_sms_sender_id');
-            $username = $this->config->get('config_wayhub_sms_token');
-            $password = $this->config->get('config_wayhub_sms_number');
-
-            $msg = $message;
-
-            $url = 'http://login.smsgatewayhub.com/smsapi/pushsms.aspx?user='.$username.'&pwd='.$password.'&to='.$to.'&sid='.$sender_id.'&msg='.urlencode($msg).'&fl=0&gwid=2';
-
-            // Get cURL resource
-            $curl = curl_init();
-            // Set some options - we are passing in a useragent too here
-            curl_setopt_array($curl, [
-                CURLOPT_RETURNTRANSFER => 1,
-                CURLOPT_URL => $url,
-                CURLOPT_USERAGENT => 'Codular Sample cURL Request',
-            ]);
-            // Send the request & save response to $resp
-            $resp = curl_exec($curl);
-
-            // Close request to clear up some resources
-            curl_close($curl);
+            return true;
         }
-
-        return true;
     }
 
     public function formatPhoneNumber($phoneNumber)
@@ -2310,6 +2321,7 @@ class Emailtemplate
 
     public function sendPushNotification($to, $deviceId, $order_id, $store_id, $message, $title, $app_action = 'com.instagolocal.showorder')
     {
+        try {
         $log = new Log('error.log');
         $log->write('sendPushNotification');
 
@@ -2331,7 +2343,7 @@ class Emailtemplate
                 $client = new FCMClient();
                 $client->setApiKey($apiKey);
                 $client->injectHttpClient(new \GuzzleHttp\Client());
-
+                $log->write('FCM INJECT');
                 $note = new Notification($title, $message);
                 $note->setIcon('notification_icon_resource_name')
                         ->setColor('#3ca826')
@@ -2350,8 +2362,10 @@ class Emailtemplate
                         ->setData(['order_id' => $order_id, 'store_id' => $store_id]);
 
                 $response = $client->send($message);
-
+                
+                $log->write('FCM');
                 $log->write($response);
+                $log->write('FCM');
                 //var_dump($response);die;
                 if ($response->getStatusCode()) {
                     $json['success'] = 'Success: push notification sent.';
@@ -2366,6 +2380,12 @@ class Emailtemplate
         }
 
         return true;
+        } catch (Exception $e) {
+        $log = new Log('error.log');
+        $log->write('sendPushNotification Log');
+        $log->write($e);
+        $log->write('sendPushNotification Log');        
+        }
     }
 
     public function sendReturnPushNotification($to, $deviceId, $return_id, $store_id, $message, $title, $app_action = 'com.instagolocal.showorder')
@@ -2661,4 +2681,65 @@ class Emailtemplate
 
         return $maskedhref;
     }
+
+    public function getConsolidatedOrderSheetFind()
+    {
+        $result = ['{deliverydate}','{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}'];
+        return $result;
+    }
+
+    public function getConsolidatedOrderSheetReplace($data)
+    {
+        $result = [
+            'deliverydate' => $data['deliverydate'],
+            'site_url' => HTTPS_CATALOG,
+            //'logo'=> HTTPS_CATALOG.'image/' . $this->config->get('config_logo'),
+            'logo' => $this->resize($this->config->get('config_logo'), 197, 34),
+            //'site_url'=>$this->config->get('config_url'),
+            'system_name' => $this->config->get('config_name'),
+            'year' => date('Y'),    
+            'help_center' => $this->url->adminLink('information/help'),
+            //'white_logo'=> HTTPS_CATALOG.'image/'. $this->config->get('config_white_logo'),
+            'white_logo' => $this->resize($this->config->get('config_white_logo'), 197, 34),
+            'terms' => $this->url->adminLink('information/information', 'information_id='.$this->config->get('config_account_id'), 'SSL'),
+            'privacy_policy' => $this->url->adminLink('information/information', 'information_id='.$this->config->get('config_privacy_policy_id'), 'SSL'),
+            'system_email' => $this->config->get('config_email'),
+            'system_phone' => '+'.$this->config->get('config_telephone_code').' '.$this->config->get('config_telephone'),
+        ];
+
+        return $result;
+    }
+
+
+    public function getNewDeviceLoginFind()
+    {
+        $result = ['{username}', '{otp}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}'];
+
+        return $result;
+    }
+
+    public function getNewDeviceLoginReplace($data)
+    {
+        $result = [
+            'username' => $data['username'],
+            'otp' => $data['otp'],
+            //common replace
+            'site_url' => HTTPS_CATALOG,
+            //'logo'=> HTTPS_CATALOG.'image/' . $this->config->get('config_logo'),
+            'logo' => $this->resize($this->config->get('config_logo'), 197, 34),
+            //'site_url'=>$this->config->get('config_url'),
+            'system_name' => $this->config->get('config_name'),
+            'year' => date('Y'),
+            'help_center' => $this->url->adminLink('information/help'),
+            //'white_logo'=> HTTPS_CATALOG.'image/'. $this->config->get('config_white_logo'),
+            'white_logo' => $this->resize($this->config->get('config_white_logo'), 197, 34),
+            'terms' => $this->url->adminLink('information/information', 'information_id='.$this->config->get('config_account_id'), 'SSL'),
+            'privacy_policy' => $this->url->adminLink('information/information', 'information_id='.$this->config->get('config_privacy_policy_id'), 'SSL'),
+            'system_email' => $this->config->get('config_email'),
+            'system_phone' => '+'.$this->config->get('config_telephone_code').' '.$this->config->get('config_telephone'),
+        ];
+
+        return $result;
+    }
+
 }

@@ -1790,7 +1790,7 @@ if($('select[name=\'order_status_id\'] option:selected').text()=='Delivered')
 	});
 }
 	$.ajax({
-		url: 'index.php?path=sale/accountmanageruserorders/api&token=<?php echo $token; ?>&api=api/accountmanageruserorders/history&order_id=<?php echo $order_id; ?>',
+		url: 'index.php?path=sale/accountmanageruserorders/api&token=<?php echo $token; ?>&api=api/accountmanageruserorders/history&order_id=<?php echo $order_id; ?>&added_by=<?php echo $this->user->getId(); ?>&added_by_role=<?php echo $this->user->getGroupName(); ?>',
 		type: 'post',
 		dataType: 'json',
 		data: 'order_status_id=' + encodeURIComponent($('select[name=\'order_status_id\']').val()) + '&notify=0' + ($('input[name=\'notify\']').prop('checked') ? 1 : 0) + '&append=' + ($('input[name=\'append\']').prop('checked') ? 1 : 0) + '&comment=' + encodeURIComponent($('textarea[name=\'comment\']').val()),

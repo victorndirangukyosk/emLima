@@ -47,6 +47,22 @@ class ControllerSaleCustomer extends Controller {
             //$this->session->data['success'] = $this->language->get('text_success');
             $this->session->data['success'] = 'Success : Customer created successfully!';
 
+            // Add to activity log
+            $log = new Log('error.log');
+            $this->load->model('user/user_activity');
+
+            $activity_data = [
+                'user_id' => $this->user->getId(),
+                'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+                'user_group_id' => $this->user->getGroupId(),
+                'customer_id' => $customer_id,
+            ];
+            $log->write('customer add');
+
+            $this->model_user_user_activity->addActivity('customer_add', $activity_data);
+
+            $log->write('customer add');
+
             $url = '';
 
             if (isset($this->request->get['filter_company'])) {
@@ -130,6 +146,21 @@ class ControllerSaleCustomer extends Controller {
             $this->model_sale_customer->editCustomer($this->request->get['customer_id'], $this->request->post);
 
             $this->session->data['success'] = $this->language->get('text_success');
+            // Add to activity log
+            $log = new Log('error.log');
+            $this->load->model('user/user_activity');
+
+            $activity_data = [
+                'user_id' => $this->user->getId(),
+                'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+                'user_group_id' => $this->user->getGroupId(),
+                'customer_id' => $this->request->get['customer_id'],
+            ];
+            $log->write('customer edit');
+
+            $this->model_user_user_activity->addActivity('customer_edit', $activity_data);
+
+            $log->write('customer edit');
 
             $url = '';
 
@@ -201,6 +232,22 @@ class ControllerSaleCustomer extends Controller {
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
             foreach ($this->request->post['selected'] as $customer_id) {
                 $this->model_sale_customer->deleteCustomer($customer_id);
+
+                // Add to activity log
+                $log = new Log('error.log');
+                $this->load->model('user/user_activity');
+
+                $activity_data = [
+                    'user_id' => $this->user->getId(),
+                    'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+                    'user_group_id' => $this->user->getGroupId(),
+                    'customer_id' => $customer_id,
+                ];
+                $log->write('customer delete');
+
+                $this->model_user_user_activity->addActivity('customer_delete', $activity_data);
+
+                $log->write('customer delete');
             }
 
             //$this->session->data['success'] = $this->language->get('text_success');
@@ -275,6 +322,22 @@ class ControllerSaleCustomer extends Controller {
 
         if ($customers && $this->validateApprove()) {
             $this->model_sale_customer->approve($this->request->get['customer_id']);
+            
+            // Add to activity log
+            $log = new Log('error.log');
+            $this->load->model('user/user_activity');
+
+            $activity_data = [
+                'user_id' => $this->user->getId(),
+                'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+                'user_group_id' => $this->user->getGroupId(),
+                'customer_id' => $this->request->get['customer_id'],
+            ];
+            $log->write('customer approve');
+
+            $this->model_user_user_activity->addActivity('customer_account_approved', $activity_data);
+
+            $log->write('customer approve');
 
             $this->session->data['success'] = $this->language->get('text_success');
 
@@ -1050,10 +1113,17 @@ class ControllerSaleCustomer extends Controller {
         if (isset($this->request->get['customer_id']) && ('POST' != $this->request->server['REQUEST_METHOD'])) {
             $customer_info = $this->model_sale_customer->getCustomer($this->request->get['customer_id']);
             $customer_parent_info = $this->model_sale_customer->getCustomerParentDetails($this->request->get['customer_id']);
-            if($customer_parent_info != NULL) {
-            $data['parent_user_name'] = $customer_parent_info['firstname'].''.$customer_parent_info['lastname'];
-            $data['parent_user_email'] = $customer_parent_info['email'];
-            $data['parent_user_phone'] = $customer_parent_info['telephone'];
+            $customer_account_manager_info = $this->model_sale_customer->getCustomerAccountManagerDetails($this->request->get['customer_id']);
+            if ($customer_parent_info != NULL) {
+                $data['parent_user_name'] = $customer_parent_info['firstname'] . '' . $customer_parent_info['lastname'];
+                $data['parent_user_email'] = $customer_parent_info['email'];
+                $data['parent_user_phone'] = $customer_parent_info['telephone'];
+            }
+            
+            if ($customer_account_manager_info != NULL) {
+                $data['account_manager_name'] = $customer_account_manager_info['firstname'] . '' . $customer_account_manager_info['lastname'];
+                $data['account_manager_email'] = $customer_account_manager_info['email'];
+                $data['account_manager_phone'] = $customer_account_manager_info['telephone'];
             }
 
             //$log = new Log('error.log');
@@ -1412,6 +1482,16 @@ class ControllerSaleCustomer extends Controller {
             $this->load->model('setting/store');
 
             $store_info = $this->model_setting_store->getStore($store_id);
+            
+            // Add to activity log
+            $this->load->model('account/activity');
+
+            $activity_data = [
+                'customer_id' => $customer_info['customer_id'],
+                'name' => $customer_info['firstname'] . ' ' . $customer_info['lastname'],
+            ];
+
+            $this->model_account_activity->addActivity('login', $activity_data);
 
             if ($store_info) {
                 $this->response->redirect($store_info['url'] . 'index.php?path=account/login/adminRedirectLogin&token=' . $token);
@@ -1568,7 +1648,7 @@ class ControllerSaleCustomer extends Controller {
         $this->load->language('sale/customer');
 
         $this->load->model('sale/customer');
-        
+
         if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->user->hasPermission('modify', 'sale/customer')) {
             $this->model_sale_customer->addReward($this->request->get['customer_id'], $this->request->post['description'], $this->request->post['points']);
 

@@ -640,13 +640,19 @@ class ControllerUserUser extends Controller
     {
         $json = [];
 
-        if (isset($this->request->get['filter_user_name']) || isset($this->request->get['filter_user_group']) || isset($this->request->get['filter_first_name']) || isset($this->request->get['filter_last_name']) || isset($this->request->get['filter_email'])) {
+        if (isset($this->request->get['filter_name']) || isset($this->request->get['filter_user_name']) || isset($this->request->get['filter_user_group']) || isset($this->request->get['filter_first_name']) || isset($this->request->get['filter_last_name']) || isset($this->request->get['filter_email'])) {
             $this->load->model('user/user');
 
             if (isset($this->request->get['filter_user_name'])) {
                 $filter_user_name = $this->request->get['filter_user_name'];
             } else {
                 $filter_user_name = '';
+            }
+            
+            if (isset($this->request->get['filter_name'])) {
+                $filter_name = $this->request->get['filter_name'];
+            } else {
+                $filter_name = '';
             }
 
             if (isset($this->request->get['filter_user_group'])) {
@@ -683,6 +689,7 @@ class ControllerUserUser extends Controller
             }
 
             $filter_data = [
+                'filter_name' => $filter_name,
                 'filter_user_name' => $filter_user_name,
                 'filter_user_group' => $filter_user_group,
                 'filter_first_name' => $filter_first_name,
@@ -707,6 +714,7 @@ class ControllerUserUser extends Controller
                         'username' => $result['username'],
                         'firstname' => $result['firstname'],
                         'lastname' => $result['lastname'],
+                        'name' => $result['name'],
                         'email' => $result['email'],
                     ];
                 }

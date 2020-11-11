@@ -1,7 +1,7 @@
 (function ($, window, document, undefined) {
 
     'use strict';
-
+    getLocationOnly();
     $(function () {
         // Change navbar style on scroll
         $(document).scroll(function () {
@@ -35,39 +35,87 @@
 
         // Customer Login
         $(document).delegate('#login-button', 'click', function (e) {
+            getLocationOnly();
             e.preventDefault();
 
-            const loginButton = $('#login-button');
+                    const loginButton = $('#login-button');
+                    var login_latitude = $('#lat').val();
+                    var login_longitude = $('#lng').val();
                     const email = $('#login-email').val();
                     const password = $('#login-password').val();
                     if (email.length > 0 && password.length > 0) {
                 loginButton.text('PLEASE WAIT');
                 loginButton.toggleClass('disabled');
-                $.ajax({
-                    url: 'index.php?path=account/login/login',
+                $.ajax({​​​​​​​​  
+                    url : 'index.php?path=account/login/checkipaddress',
                     type: 'post',
-                    data: {email: email, password: password},
+                    data: {email: email, password:password},
                     dataType: 'json',
                     success: function (json) {
-                        if (json['status']) {
-                            if (json['redirect'] != null) {
+                        console.log(json);
+                        if(json.message == 'Username And Password Doest Match!') {
+                        iziToast.success({
+                        position: 'topRight',
+                                message: 'Username And Password Doest Match!'
+                        });
+                        }
+                        else if (json['isnewIP'] == true) {
+                        $.ajax({​​​​​​​​
+                                url: 'index.php?path=account/login/addSendNewIPotp',
+                                type: 'POST',
+                                dataType: 'json',
+                                data: {​​​​​​​​email:email }​​​​​​​​,
+                                success: function (json) {
+                                    if (json['status']) {
+                                    iziToast.success({
+                                        position: 'topRight',
+                                        message: 'OTP Is Sent To Mail!'
+                                    });
+ 
+                                    $('#login-view').hide();
+                                    $('#otp-view').show();
+                                } else {
+                                    iziToast.warning({
+                                        position: 'topRight',
+                                        title: 'Oops',
+                                        message: 'Something Went Wrong!'
+                                    });
+                                }
+                                }
+                        });
+                        }
+                        else {
+                        $.ajax({
+                        url: 'index.php?path=account/login/login',
+                                type: 'post',
+                                data: {email: email, password: password, login_latitude:login_latitude, login_longitude:login_longitude, login_mode:'web'},
+                                dataType: 'json',
+                                success: function (json) {
+                                if (json['status']) {
+                                if (json['redirect'] != null) {
                                 window.location.href = json['redirect'];
-                            } else if (json['temppassword'] == '1') {
+                                } else if (json['temppassword'] == '1') {
                                 location = $('.base_url').attr('href') + '/changepass';
-                                console.log($('.base_url'));
-                            } else {
+                                        console.log($('.base_url'));
+                                } else {
                                 location = $('.base_url').attr('href');
-                            }
-                        } else {
-                            iziToast.error({
+                                }
+                                } else {
+                                iziToast.error({
                                 position: 'topRight',
-                                message: json['error_warning']
-                            });
-                            loginButton.text('LOGIN');
-                            loginButton.toggleClass('disabled');
+                                        message: json['error_warning']
+                                });
+                                        loginButton.text('LOGIN');
+                                        loginButton.toggleClass('disabled');
+                                }
+                                }
+                        });
                         }
                     }
+                    
                 });
+
+                
             } else {
                 iziToast.warning({
                     position: 'topRight',
@@ -221,6 +269,96 @@
                             setTimeout(function () {
                                 window.location = $('.base_url').attr('href');
                             }, 3000)
+                        } else {
+                            iziToast.warning({
+                                position: 'topRight',
+                                message: 'We couldn\'t verify your account. Please check the OTP'
+                            });
+                        }
+                    }
+                });
+            } else {
+                iziToast.error({
+                    position: 'topRight',
+                    message: 'Please enter a valid OTP'
+                });
+            }
+        });
+        
+        // OTP Verification
+        $(document).delegate('#ip-otp-verify-button', 'click', function (e) {
+            e.preventDefault();
+
+                    const email = $('#login-email').val();
+                    const otp = $('#otp-value').val();
+                    var login_latitude = $('#lat').val();
+                    var login_longitude = $('#lng').val();
+                    const password = $('#login-password').val();
+                    const verifyButton = $('#otp-verify-button');
+                    if (otp.length > 3) {
+                verifyButton.text('PLEASE WAIT');
+                verifyButton.toggleClass('disabled');
+
+                $.ajax({
+                    url: 'index.php?path=account/login/addVerifyNewIPotp',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        email: email,
+                        otp: otp
+                    },
+                    success: function (json) {
+                        verifyButton.text('VERIFY');
+                        verifyButton.toggleClass('disabled');
+                        $('#otp-value').val('');
+
+                        if (json['status']) {
+                            iziToast.success({
+                                timeout: false,
+                                position: 'topRight',
+                                message: 'Will be redirecting to login page!'
+                            });
+
+                                setTimeout(function () {
+                                if (json['status']) {
+                                $.ajax({
+                                url: 'index.php?path=account/login/login',
+                                        type: 'post',
+                                        data: {email: email, password: password, login_latitude:login_latitude, login_longitude:login_longitude, login_mode:'web'},
+                                        dataType: 'json',
+                                        success: function (json) {
+                                        if (json['status']) {
+                                        if (json['redirect'] != null) {
+                                        window.location.href = json['redirect'];
+                                        } else if (json['temppassword'] == '1') {
+                                        location = $('.base_url').attr('href') + '/changepass';
+                                                console.log($('.base_url'));
+                                        } else {
+                                        location = $('.base_url').attr('href');
+                                        }
+                                        } else {
+                                        iziToast.error({
+                                        position: 'topRight',
+                                                message: json['error_warning']
+                                        });
+                                        location = $('.base_url').attr('href');
+                                                loginButton.text('LOGIN');
+                                                loginButton.toggleClass('disabled');
+                                        }
+                                        }
+                                });    
+                                /*if (json['redirect'] != null) {
+                                window.location.href = json['redirect'];
+                                } else if (json['temppassword'] == '1') {
+                                location = $('.base_url').attr('href') + '/changepass';
+                                        console.log($('.base_url'));
+                                } 
+                                
+                                else {
+                                location = $('.base_url').attr('href');
+                                }*/
+                                }
+                                }, 1500)
                         } else {
                             iziToast.warning({
                                 position: 'topRight',
@@ -487,5 +625,57 @@
 
         });
     });
+    
+    
+    var lat = $("#lat");
+    var lng = $("#lng");
+
+         function getLocationOnly() {
+             
+             if (navigator.geolocation) {    
+
+                    console.log(1);                                
+
+                    navigator.geolocation.getCurrentPosition(
+
+                        showPositionOnly, 
+
+                        // Error function
+
+                        null,//showError, 
+
+                        // Options. See MDN for details.
+
+                        {
+
+                        enableHighAccuracy: true,
+
+                        timeout: 5000,
+
+                        maximumAge: 0
+
+                        });                    
+
+                } else { 
+
+                    console.log(2);
+
+                   console.log("Geolocation is not supported by this browser.");
+
+                   /*lat.innerHTML =   0;
+
+                   lng.innerHTML = 0;*/
+
+                }
+         }
+         
+         function showPositionOnly(position) {
+             console.log('showPositionOnly');
+             console.log(position);
+             $("#lat").val(position.coords.latitude);
+             $("#lng").val(position.coords.longitude);
+             console.log(position.coords.latitude);
+             console.log(position.coords.longitude);
+         }
 
 })(jQuery, window, document);

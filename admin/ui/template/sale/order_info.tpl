@@ -1680,7 +1680,7 @@ $('#history').load('index.php?path=sale/order/history&token=<?php echo $token; ?
 $('#button-not-fraud').on('click', function() {
   
 	$.ajax({
-		url: 'index.php?path=sale/order/notFraudApi&token=<?php echo $token; ?>&api=api/order/history&order_id=<?php echo $order_id; ?>',
+		url: 'index.php?path=sale/order/notFraudApi&token=<?php echo $token; ?>&api=api/order/history&order_id=<?php echo $order_id; ?>&added_by=<?php echo $this->user->getId(); ?>&added_by_role=<?php echo $this->user->getGroupName(); ?>',
 		type: 'post',
 		dataType: 'json',
 		data: 'order_status_id=' + encodeURIComponent($('select[name=\'order_status_id\']').val()) + '&notify=' + ($('input[name=\'notify\']').prop('checked') ? 1 : 0) + '&append=' + ($('input[name=\'append\']').prop('checked') ? 1 : 0) + '&comment=' + encodeURIComponent($('textarea[name=\'comment\']').val()),
@@ -1719,7 +1719,7 @@ $('#button-not-fraud').on('click', function() {
 $('#button-reverse-payment').on('click', function() {
   
 	$.ajax({
-		url: 'index.php?path=sale/order/reversePaymentApi&token=<?php echo $token; ?>&api=api/order/history&order_id=<?php echo $order_id; ?>',
+		url: 'index.php?path=sale/order/reversePaymentApi&token=<?php echo $token; ?>&api=api/order/history&order_id=<?php echo $order_id; ?>&added_by=<?php echo $this->user->getId(); ?>&added_by_role=<?php echo $this->user->getGroupName(); ?>',
 		type: 'post',
 		dataType: 'json',
 		data: 'order_status_id=' + encodeURIComponent($('select[name=\'order_status_id\']').val()) + '&notify=' + ($('input[name=\'notify\']').prop('checked') ? 1 : 0) + '&append=' + ($('input[name=\'append\']').prop('checked') ? 1 : 0) + '&comment=' + encodeURIComponent($('textarea[name=\'comment\']').val()),
@@ -1790,7 +1790,7 @@ if($('select[name=\'order_status_id\'] option:selected').text()=='Delivered')
 	});
 }
 	$.ajax({
-		url: 'index.php?path=sale/order/api&token=<?php echo $token; ?>&api=api/order/history&order_id=<?php echo $order_id; ?>',
+		url: 'index.php?path=sale/order/api&token=<?php echo $token; ?>&api=api/order/history&order_id=<?php echo $order_id; ?>&added_by=<?php echo $this->user->getId(); ?>&added_by_role=<?php echo $this->user->getGroupName(); ?>',
 		type: 'post',
 		dataType: 'json',
 		data: 'order_status_id=' + encodeURIComponent($('select[name=\'order_status_id\']').val()) + '&notify=0' + ($('input[name=\'notify\']').prop('checked') ? 1 : 0) + '&append=' + ($('input[name=\'append\']').prop('checked') ? 1 : 0) + '&comment=' + encodeURIComponent($('textarea[name=\'comment\']').val()),
@@ -1882,7 +1882,8 @@ $(".datepicker" ).datepicker({
             shipping_building_name : $('#shipping_building_name').val(),
             shipping_flat_number : $('#shipping-flat-number').val(),
             shipping_landmark: $('#shipping-address').val(),
-						shipping_zipcode: $("#shipping-zip").val()
+	    shipping_zipcode: $("#shipping-zip").val(),
+            user_id : '<?=$this->user->getId() ?>'
         }
 
         $.ajax({
@@ -2014,7 +2015,8 @@ $('.delivery_timeslot').change(function(){
 
         data = {
             order_id : '<?=$order_id ?>',
-            shipping_flat_number : $('#shipping_flat_number').val()
+            shipping_flat_number : $('#shipping_flat_number').val(),
+            user_id : '<?=$this->user->getId() ?>'
         }
 
         console.log(data);
@@ -2051,7 +2053,8 @@ $('.delivery_timeslot').change(function(){
         data = {
             order_id : '<?=$order_id ?>',
             delivery_timeslot : $('#shipping_delivery_timeslot').val(),
-            delivery_date : $('#delivery_date').val()
+            delivery_date : $('#delivery_date').val(),
+            user_id : '<?=$this->user->getId() ?>'
         }
 
         console.log(data);
@@ -2087,7 +2090,8 @@ $('.delivery_timeslot').change(function(){
         data = {
             order_id : order_id,
             delivery_timeslot : delivery_timeslot,
-            delivery_date : delivery_date
+            delivery_date : delivery_date,
+            user_id : '<?=$this->user->getId() ?>'
         }
 
         $.ajax({

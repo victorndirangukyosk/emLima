@@ -479,6 +479,8 @@
                 </div>
             </div>
         </div>
+        <p hidden id="latitudevalue"></p>
+        <p hidden id="longitudevalue"></p>
     </div>
     
     <?= $login_modal ?>
@@ -854,6 +856,23 @@
                 alert("Geolocation is not supported by this browser.");
             }
         }
+                var lat = document.getElementById("latitudevalue");
+                var lng = document.getElementById("longitudevalue");
+
+                function getLocationOnly() {
+                    
+                if (navigator.geolocation) {                                    
+                    navigator.geolocation.getCurrentPosition(showPositionOnly);                    
+                } else { 
+                   console.log("Geolocation is not supported by this browser.");
+                   lat.innerHTML =   0 ;
+                   lng.innerHTML = 0;
+                }
+                }
+                function showPositionOnly(position) {                                  
+                lat.innerHTML =   position.coords.latitude ;
+                 lng.innerHTML = position.coords.longitude;
+                }
 
         function showPosition(position) {
             //var latlon = position.coords.latitude + "," + position.coords.longitude;
@@ -961,6 +980,7 @@ __kdt.push({"post_on_load": false});
         $(".overlayed").hide();
     }
     $(document).ready(function() {
+          getLocationOnly();
 
         $('.replacable').on('click', function(){
             console.log("replacable");
@@ -1507,9 +1527,16 @@ var name="dropoff_notes";
     var sendData =  '&dropoff_notes=' + dropoff_notes+appendDataToSend;
     console.log("qwerty");
     console.log('sendData');
-    console.log(sendData);
+     
+    
     if (!$error) {
-
+     
+        
+       console.log(lat.innerHTML);
+       sendData=sendData+'&login_latitude=' + lat.innerHTML+'&login_longitude=' + lng.innerHTML+'&login_mode=web';
+    
+       console.log(sendData);
+      
         $valid_address = 0;
         $.ajax({
             url: 'index.php?path=checkout/confirm/multiStoreIndex',

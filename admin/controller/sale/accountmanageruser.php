@@ -32,10 +32,10 @@ class ControllerSaleAccountManagerUser extends Controller {
         $this->load->language('sale/accountmanageruser');
 
 
-        if (isset($this->request->get['filter_company'])) {
-            $filter_company = $this->request->get['filter_company'];
+        if (isset($this->request->get['filter_company_name'])) {
+            $filter_company_name = $this->request->get['filter_company_name'];
         } else {
-            $filter_company = null;
+            $filter_company_name = null;
         }
 
         if (isset($this->request->get['filter_name'])) {
@@ -106,8 +106,8 @@ class ControllerSaleAccountManagerUser extends Controller {
 
         $url = '';
 
-        if (isset($this->request->get['filter_company'])) {
-            $url .= '&filter_company=' . urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
+        if (isset($this->request->get['filter_company_name'])) {
+            $url .= '&filter_company_name=' . urlencode(html_entity_decode($this->request->get['filter_company_name'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_name'])) {
@@ -172,7 +172,7 @@ class ControllerSaleAccountManagerUser extends Controller {
         $data['customers'] = [];
 
         $filter_data = [
-            'filter_company' => $filter_company,
+            'filter_company_name' => $filter_company_name,
             'filter_name' => $filter_name,
             'filter_email' => $filter_email,
             'filter_telephone' => $filter_telephone,
@@ -200,8 +200,10 @@ class ControllerSaleAccountManagerUser extends Controller {
                 'telephone' => $country_code . $result['telephone'],
                 'status' => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
                 'ip' => $result['ip'],
+                'company_name' => $result['company_name'],
                 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
                 'edit' => $this->url->link('sale/accountmanageruser/edit', 'token=' . $this->session->data['token'] . '&user_id=' . $result['customer_id'] . $url, 'SSL'),
+                'login_customer' => $this->url->link('sale/accountmanageruser/login', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'] . '&store_id=0', 'SSL'),
             ];
         }
 
@@ -223,10 +225,12 @@ class ControllerSaleAccountManagerUser extends Controller {
         $data['column_status'] = $this->language->get('column_status');
         $data['column_approved'] = $this->language->get('column_approved');
         $data['column_ip'] = $this->language->get('column_ip');
+        $data['column_company_name'] = $this->language->get('column_company_name');
         $data['column_date_added'] = $this->language->get('column_date_added');
         $data['column_action'] = $this->language->get('column_action');
 
         $data['entry_name'] = $this->language->get('entry_name');
+        $data['entry_company'] = $this->language->get('entry_company');
         $data['entry_email'] = $this->language->get('entry_email');
 
         $data['entry_company_address'] = $this->language->get('entry_company_address');
@@ -276,8 +280,8 @@ class ControllerSaleAccountManagerUser extends Controller {
 
 
 
-        if (isset($this->request->get['filter_company'])) {
-            $url .= '&filter_company=' . urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
+        if (isset($this->request->get['filter_company_name'])) {
+            $url .= '&filter_company_name=' . urlencode(html_entity_decode($this->request->get['filter_company_name'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_name'])) {
@@ -326,12 +330,13 @@ class ControllerSaleAccountManagerUser extends Controller {
         $data['sort_email'] = $this->url->link('sale/accountmanageruser', 'token=' . $this->session->data['token'] . '&sort=c.email' . $url, 'SSL');
         $data['sort_status'] = $this->url->link('sale/accountmanageruser', 'token=' . $this->session->data['token'] . '&sort=c.status' . $url, 'SSL');
         $data['sort_ip'] = $this->url->link('sale/accountmanageruser', 'token=' . $this->session->data['token'] . '&sort=c.ip' . $url, 'SSL');
+        $data['sort_company_name'] = $this->url->link('sale/accountmanageruser', 'token=' . $this->session->data['token'] . '&sort=c.company_name' . $url, 'SSL');
         $data['sort_date_added'] = $this->url->link('sale/accountmanageruser', 'token=' . $this->session->data['token'] . '&sort=c.date_added' . $url, 'SSL');
 
         $url = '';
 
-        if (isset($this->request->get['filter_company'])) {
-            $url .= '&filter_company=' . urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
+        if (isset($this->request->get['filter_company_name'])) {
+            $url .= '&filter_company_name=' . urlencode(html_entity_decode($this->request->get['filter_company_name'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_name'])) {
@@ -384,7 +389,7 @@ class ControllerSaleAccountManagerUser extends Controller {
 
         $data['results'] = sprintf($this->language->get('text_pagination'), ($customer_total) ? (($page - 1) * $this->config->get('config_limit_admin')) + 1 : 0, ((($page - 1) * $this->config->get('config_limit_admin')) > ($customer_total - $this->config->get('config_limit_admin'))) ? $customer_total : ((($page - 1) * $this->config->get('config_limit_admin')) + $this->config->get('config_limit_admin')), $customer_total, ceil($customer_total / $this->config->get('config_limit_admin')));
 
-        $data['filter_company'] = $filter_company;
+        $data['filter_company_name'] = $filter_company_name;
         $data['filter_name'] = $filter_name;
         $data['filter_email'] = $filter_email;
         $data['filter_telephone'] = $filter_telephone;
@@ -488,6 +493,239 @@ class ControllerSaleAccountManagerUser extends Controller {
     public function getAccountManagerCustomers($account_manager_id) {
         $this->load->model('user/accountmanager');
         $results = $this->model_user_accountmanager->getCustomerByAccountManagerId($account_manager_id);
+    }
+
+    public function login() {
+        $json = [];
+
+        if (isset($this->request->get['customer_id'])) {
+            $customer_id = $this->request->get['customer_id'];
+        } else {
+            $customer_id = 0;
+        }
+
+        $this->load->model('sale/customer');
+
+        $customer_info = $this->model_sale_customer->getCustomer($customer_id);
+
+        if ($customer_info) {
+            $token = md5(mt_rand());
+
+            $this->model_sale_customer->editToken($customer_id, $token);
+
+            if (isset($this->request->get['store_id'])) {
+                $store_id = $this->request->get['store_id'];
+            } else {
+                $store_id = 0;
+            }
+
+            $this->load->model('setting/store');
+
+            $store_info = $this->model_setting_store->getStore($store_id);
+
+            // Add to activity log
+            $this->load->model('account/activity');
+
+            $activity_data = [
+                'customer_id' => $customer_info['customer_id'],
+                'name' => $customer_info['firstname'] . ' ' . $customer_info['lastname'],
+            ];
+
+            $this->model_account_activity->addActivity('login', $activity_data);
+
+            if ($store_info) {
+                $this->response->redirect($store_info['url'] . 'index.php?path=account/login/adminRedirectLogin&token=' . $token);
+            } else {
+                $this->response->redirect(HTTP_CATALOG . 'index.php?path=account/login/adminRedirectLogin&token=' . $token);
+            }
+        } else {
+            $this->load->language('error/not_found');
+
+            $this->document->setTitle($this->language->get('heading_title'));
+
+            $data['heading_title'] = $this->language->get('heading_title');
+
+            $data['text_not_found'] = $this->language->get('text_not_found');
+
+            $data['breadcrumbs'] = [];
+
+            $data['breadcrumbs'][] = [
+                'text' => $this->language->get('text_home'),
+                'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL'),
+            ];
+
+            $data['breadcrumbs'][] = [
+                'text' => $this->language->get('heading_title'),
+                'href' => $this->url->link('error/not_found', 'token=' . $this->session->data['token'], 'SSL'),
+            ];
+
+            $data['header'] = $this->load->controller('common/header');
+            $data['column_left'] = $this->load->controller('common/column_left');
+            $data['footer'] = $this->load->controller('common/footer');
+
+            $this->response->setOutput($this->load->view('error/not_found.tpl', $data));
+        }
+    }
+
+    public function autocompletebyCompany() {
+        $json = [];
+
+        if (isset($this->request->get['filter_name']) || isset($this->request->get['filter_email'])) {
+            if (isset($this->request->get['filter_name'])) {
+                $filter_name = $this->request->get['filter_name'];
+            } else {
+                $filter_name = '';
+            }
+
+            if (isset($this->request->get['filter_company'])) {
+                $filter_company = $this->request->get['filter_company'];
+            } else {
+                $filter_company = '';
+            }
+
+            $this->load->model('sale/customer');
+
+            $filter_data = [
+                'filter_account_manager_id' => $this->user->getId(),
+                'filter_name' => $filter_name,
+                'filter_company' => $filter_company,
+                'start' => 0,
+                'limit' => 5,
+            ];
+
+            $results = $this->model_sale_customer->getCustomers($filter_data);
+
+            foreach ($results as $result) {
+                if ($this->user->isVendor()) {
+                    $result['name'] = $result['firstname'];
+                }
+
+                $json[] = [
+                    'customer_id' => $result['customer_id'],
+                    'customer_group_id' => $result['customer_group_id'],
+                    'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')),
+                    'customer_group' => $result['customer_group'],
+                    'firstname' => $result['firstname'],
+                    'lastname' => $result['lastname'],
+                    'email' => $result['email'],
+                    'telephone' => $result['telephone'],
+                    'fax' => $result['fax'],
+                    'custom_field' => unserialize($result['custom_field']),
+                    'address' => $this->model_sale_customer->getAddresses($result['customer_id']),
+                ];
+            }
+        }
+
+        $sort_order = [];
+
+        foreach ($json as $key => $value) {
+            $sort_order[$key] = $value['name'];
+        }
+
+        array_multisort($sort_order, SORT_ASC, $json);
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function autocompletecompany() {
+        $json = [];
+
+        if (isset($this->request->get['filter_name'])) {
+            if (isset($this->request->get['filter_name'])) {
+                $filter_name = $this->request->get['filter_name'];
+            } else {
+                $filter_name = '';
+            }
+
+            $this->load->model('sale/customer');
+
+            $filter_data = [
+                'filter_account_manager_id' => $this->user->getId(),
+                'filter_name' => $filter_name,
+                'start' => 0,
+                'limit' => 5,
+            ];
+
+            $results = $this->model_sale_customer->getCompanies($filter_data);
+            foreach ($results as $result) {
+                $json[] = [
+                    'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')),
+                ];
+            }
+        }
+
+        $sort_order = [];
+
+        foreach ($json as $key => $value) {
+            $sort_order[$key] = $value['name'];
+        }
+
+        array_multisort($sort_order, SORT_ASC, $json);
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function autocomplete() {
+        $json = [];
+
+        if (isset($this->request->get['filter_name']) || isset($this->request->get['filter_email'])) {
+            if (isset($this->request->get['filter_name'])) {
+                $filter_name = $this->request->get['filter_name'];
+            } else {
+                $filter_name = '';
+            }
+
+            if (isset($this->request->get['filter_email'])) {
+                $filter_email = $this->request->get['filter_email'];
+            } else {
+                $filter_email = '';
+            }
+
+            $this->load->model('sale/customer');
+
+            $filter_data = [
+                'filter_account_manager_id' => $this->user->getId(),
+                'filter_name' => $filter_name,
+                'filter_email' => $filter_email,
+                'start' => 0,
+                'limit' => 5,
+            ];
+
+            $results = $this->model_sale_customer->getCustomers($filter_data);
+
+            foreach ($results as $result) {
+                if ($this->user->isVendor()) {
+                    $result['name'] = $result['firstname'];
+                }
+
+                $json[] = [
+                    'customer_id' => $result['customer_id'],
+                    'customer_group_id' => $result['customer_group_id'],
+                    'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')),
+                    'customer_group' => $result['customer_group'],
+                    'firstname' => $result['firstname'],
+                    'lastname' => $result['lastname'],
+                    'email' => $result['email'],
+                    'telephone' => $result['telephone'],
+                    'fax' => $result['fax'],
+                    'custom_field' => unserialize($result['custom_field']),
+                    'address' => $this->model_sale_customer->getAddresses($result['customer_id']),
+                ];
+            }
+        }
+
+        $sort_order = [];
+
+        foreach ($json as $key => $value) {
+            $sort_order[$key] = $value['name'];
+        }
+
+        array_multisort($sort_order, SORT_ASC, $json);
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
     }
 
 }

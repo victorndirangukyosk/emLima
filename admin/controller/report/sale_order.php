@@ -13,6 +13,12 @@ class ControllerReportSaleOrder extends Controller
         } else {
             $filter_city = '';
         }
+        
+        if (isset($this->request->get['filter_customer'])) {
+            $filter_customer = $this->request->get['filter_customer'];
+        } else {
+            $filter_customer = '';
+        }
 
         if (isset($this->request->get['filter_date_start'])) {
             $filter_date_start = $this->request->get['filter_date_start'];
@@ -48,6 +54,10 @@ class ControllerReportSaleOrder extends Controller
 
         if (isset($this->request->get['filter_city'])) {
             $url .= '&filter_city='.$this->request->get['filter_city'];
+        }
+        
+        if (isset($this->request->get['filter_customer'])) {
+            $url .= '&filter_customer='.$this->request->get['filter_customer'];
         }
 
         if (isset($this->request->get['filter_date_start'])) {
@@ -88,6 +98,7 @@ class ControllerReportSaleOrder extends Controller
 
         $filter_data = [
             'filter_city' => $filter_city,
+            'filter_customer' => $filter_customer,
             'filter_date_start' => $filter_date_start,
             'filter_date_end' => $filter_date_end,
             'filter_group' => $filter_group,
@@ -132,6 +143,7 @@ class ControllerReportSaleOrder extends Controller
         $data['entry_group'] = $this->language->get('entry_group');
         $data['entry_status'] = $this->language->get('entry_status');
         $data['entry_city'] = $this->language->get('entry_city');
+        $data['entry_customer'] = $this->language->get('entry_customer');
 
         $data['button_filter'] = $this->language->get('button_filter');
         $data['button_show_filter'] = $this->language->get('button_show_filter');
@@ -166,6 +178,10 @@ class ControllerReportSaleOrder extends Controller
         if (isset($this->request->get['filter_city'])) {
             $url .= '&filter_city='.$this->request->get['filter_city'];
         }
+        
+        if (isset($this->request->get['filter_customer'])) {
+            $url .= '&filter_customer='.$this->request->get['filter_customer'];
+        }
 
         if (isset($this->request->get['filter_date_start'])) {
             $url .= '&filter_date_start='.$this->request->get['filter_date_start'];
@@ -194,6 +210,7 @@ class ControllerReportSaleOrder extends Controller
         $data['results'] = sprintf($this->language->get('text_pagination'), ($order_total) ? (($page - 1) * $this->config->get('config_limit_admin')) + 1 : 0, ((($page - 1) * $this->config->get('config_limit_admin')) > ($order_total - $this->config->get('config_limit_admin'))) ? $order_total : ((($page - 1) * $this->config->get('config_limit_admin')) + $this->config->get('config_limit_admin')), $order_total, ceil($order_total / $this->config->get('config_limit_admin')));
 
         $data['filter_city'] = $filter_city;
+        $data['filter_customer'] = $filter_customer;
         $data['filter_date_start'] = $filter_date_start;
         $data['filter_date_end'] = $filter_date_end;
         $data['filter_group'] = $filter_group;

@@ -269,7 +269,7 @@ class ModelCheckoutOrder extends Model
                 $order_product_query = $this->db->query('SELECT * FROM '.DB_PREFIX."order_product WHERE order_id = '".(int) $order_id."'");
 
                 foreach ($order_product_query->rows as $order_product) {
-                    $this->db->query('UPDATE '.DB_PREFIX.'product_to_store SET quantity = (quantity - '.(int) $order_product['quantity'].") WHERE product_store_id = '".(int) $order_product['product_id']."' AND subtract_quantity = '1'");
+                    $this->db->query('UPDATE '.DB_PREFIX.'product_to_store SET quantity = (quantity - '.(float) $order_product['quantity'].") WHERE product_store_id = '".(int) $order_product['product_id']."' AND subtract_quantity = '1'");
                 }
 
                 // Redeem coupon, vouchers and reward points
@@ -303,7 +303,7 @@ class ModelCheckoutOrder extends Model
                 $product_query = $this->db->query('SELECT * FROM '.DB_PREFIX."order_product WHERE order_id = '".(int) $order_id."'");
 
                 foreach ($product_query->rows as $product) {
-                    $this->db->query('UPDATE `'.DB_PREFIX.'product_to_store` SET quantity = (quantity + '.(int) $product['quantity'].") WHERE product_store_id = '".(int) $product['product_id']."' AND subtract_quantity = '1'");
+                    $this->db->query('UPDATE `'.DB_PREFIX.'product_to_store` SET quantity = (quantity + '.(float) $product['quantity'].") WHERE product_store_id = '".(int) $product['product_id']."' AND subtract_quantity = '1'");
                 }
 
                 // Remove coupon, vouchers and reward points history
@@ -428,7 +428,8 @@ class ModelCheckoutOrder extends Model
 
                     //die;
                     $sms_message = $this->emailtemplate->getSmsMessage('OrderAll', 'order_'.(int) $order_status_id, $data);
-
+                    
+                    if($customer_info['email_notification'] == 1) {
                     $mail = new mail($this->config->get('config_mail'));
                     $mail->setTo($order_info['email']);
                     $mail->setFrom($this->config->get('config_from_email'));
@@ -437,12 +438,13 @@ class ModelCheckoutOrder extends Model
                     $mail->setHtml($message);
                     $mail->setText($text);
                     $mail->send();
+                    }
 
-                    if ($this->emailtemplate->getSmsEnabled('OrderAll', 'order_'.(int) $order_status_id)) {
+                    if ($customer_info['sms_notification'] == 1 && $this->emailtemplate->getSmsEnabled('OrderAll', 'order_'.(int) $order_status_id)) {
                         $ret = $this->emailtemplate->sendmessage($order_info['telephone'], $sms_message);
                     }
 
-                    if ($this->config->get('config_order_mail')) {
+                    if ($customer_info['email_notification'] == 1 && $this->config->get('config_order_mail')) {
                         if (!isset($mail)) {
                             $mail = new mail($this->config->get('config_mail'));
                             $mail->setTo($order_info['email']);

@@ -4,21 +4,6 @@ on:
     branches: [ develop ]
 
 jobs:
-  # codestyle:
-  #   name: Codestyle
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@master
-  #       with:
-  #           ref: ${{ github.head_ref }}
-
-  #     - name: Run php-cs-fixer
-  #       uses: docker://oskarstark/php-cs-fixer-ga
-
-  #     - uses: stefanzweifel/git-auto-commit-action@v4
-  #       with:
-  #           commit_message: Apply php-cs-fixer changes
-
   deployment:
     name: Deployment
     runs-on: ubuntu-latest
@@ -27,9 +12,9 @@ jobs:
       uses: appleboy/ssh-action@master
       with:
         host: dev.kwikbasket.com
-        username: emlimadev
+        username: ubuntu
         key: ${{ secrets.DEV_SERVER_KEY }}
         port : 22
         script: |
-          cd /var/www/html/dev.kwikbasket.com
+          cd /extras/store
           git pull origin develop

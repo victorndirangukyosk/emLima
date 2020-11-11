@@ -343,11 +343,13 @@ class ControllerCommonHome extends Controller {
                         $message = "Following details are received.  <br>";
                     $message = $message . "<li> Full Name :" . $first_name . "</li><br><li> Email :" . $email . "</li><br><li> Phone :" . $phone . "</li><br>";
 
-                    if (strpos(Career_Mail_ID, "@") == true) {//if mail Id not set in define.php
-                        $email = Career_Mail_ID;
-                    } else {
+                    $this->load->model('setting/setting');
+                    $email = $this->model_setting_setting->getEmailSetting('careers');
+
+                    if (strpos($email, "@") == false) {//if mail Id not set in define.php
                         $email = "sridivya.talluri@technobraingroup.com";
                     }
+
                     // $bccemail = "sridivya.talluri@technobraingroup.com";
                     //  echo "<pre>";print_r($file_data);die;
                     $filepath = DIR_UPLOAD . "careers/" . $file_upload_status['file_name'];
@@ -380,10 +382,10 @@ class ControllerCommonHome extends Controller {
     public function FeatureFileUpload($file_data) {
         $status = array();
 
-        // echo "<pre>";print_r($file_data);die;
+        //echo "<pre>";print_r($file_data);die;
         if ((isset($file_data['careers-resume'])) && (is_uploaded_file($file_data['careers-resume']['tmp_name']))) {
 
-            if ($file_data['careers-resume']['type'] != "application/msword" && $file_data['careers-resume']['type'] != "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
+            if ($file_data['careers-resume']['type'] != "application/msword" && $file_data['careers-resume']['type'] != "application/vnd.openxmlformats-officedocument.wordprocessingml.document" && $file_data['careers-resume']['type'] != "application/octet-stream" && $file_data['careers-resume']['type'] != "application/pdf") {
                 return $status = array('status' => FALSE, 'file_name' => '');
             }
             if ($file_data['careers-resume']['size'] > 5000000) {
@@ -460,7 +462,7 @@ class ControllerCommonHome extends Controller {
         if ($is_he_parents != NULL) {
             $customer_details = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->db->escape($is_he_parents) . "' AND status = '1'");
         } else {
-            $customer_details = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->db->escape($this->session->data['customer_id']) . "' AND status = '1'");
+            $customer_details = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->customer->getId() . "' AND status = '1'");
         }
         $this->session->data['customer_category'] = isset($customer_details->row['customer_category']) ? $customer_details->row['customer_category'] : null;
 
@@ -867,16 +869,16 @@ class ControllerCommonHome extends Controller {
             }
         }
         //	   echo "<pre>";print_r($data['categories']);die;
-        $data['page'] = $_REQUEST['page'];
+        $data['page'] = isset($_REQUEST['page']) ? $_REQUEST['page'] : '';
         //$this->load->language('module/store');
         $this->load->model('setting/store');
         $filter = [];
         $filter['filter_status'] = 1;
-        if ($_REQUEST['location']) {
+        if (isset($_REQUEST['location'])) {
             $userSearch = explode(',', $_REQUEST['location']);
             $filter['filter_location'] = $_REQUEST['location'];
         }
-        if ($_REQUEST['category']) {
+        if (isset($_REQUEST['category'])) {
             $filter['filter_category'] = $_REQUEST['category'];
         }
         //echo'<pre>';print_r($filter);exit;
@@ -896,7 +898,7 @@ class ControllerCommonHome extends Controller {
             $tempStore = $store;
             $tempStore['href'] = $this->model_setting_store->getSeoUrl('store_id=' . $store['store_id']);
             $tempStore['thumb'] = $this->model_tool_image->resize($store['logo'], 300, 300);
-            $tempStore['categorycount'] = $this->model_setting_store->getStoreCategoriesbyStoreId($store['store_id'], $_REQUEST['category']);
+            $tempStore['categorycount'] = $this->model_setting_store->getStoreCategoriesbyStoreId($store['store_id'], isset($_REQUEST['category']) ? $_REQUEST['category'] : '');
             if (!empty($store['store_type_ids'])) {
                 $arrayStoretypes = explode(',', $store['store_type_ids']);
                 $tempStoretypename = '';
@@ -906,19 +908,19 @@ class ControllerCommonHome extends Controller {
                 $tempStore['storeTypes'] = $tempStoretypename;
             }
 
-            if ($_REQUEST['location'] && $_REQUEST['category']) {
+            if (isset($_REQUEST['location']) && isset($_REQUEST['category'])) {
                 //echo 'locat';exit;
                 $res = $this->model_setting_store->getDistance($userSearch[0], $userSearch[1], $store['latitude'], $store['longitude'], $store['serviceable_radius']);
                 if ($res && ($tempStore['categorycount'] > 0)) {
                     $data['stores'][] = $tempStore;
                 }
-            } elseif ($_REQUEST['location']) {
+            } elseif (isset($_REQUEST['location'])) {
                 //echo 'loc';exit;
                 $res = $this->model_setting_store->getDistance($userSearch[0], $userSearch[1], $store['latitude'], $store['longitude'], $store['serviceable_radius']);
                 if ($res) {
                     $data['stores'][] = $tempStore;
                 }
-            } elseif ($_REQUEST['category']) {
+            } elseif (isset($_REQUEST['category'])) {
                 //echo 'cat';exit;
                 // $categorycount = $this->model_setting_store->getStoreCategoriesbyStoreId($store['store_id'],$_REQUEST['category']);
                 if ($tempStore['categorycount'] > 0) {
@@ -945,7 +947,7 @@ class ControllerCommonHome extends Controller {
 
         foreach ($best_products as $products) {
             $product_detail = $this->model_assets_product->getDetailproduct($products['product_id']);
-            $product_detail['thumb'] = $this->model_tool_image->resize($product_detail['image'], 100, 100);
+            $product_detail['thumb'] = $this->model_tool_image->resize(isset($product_detail['image']) ? $product_detail['image'] : '', 100, 100);
             $data['bestseller'][] = $product_detail;
         }
 
@@ -1398,7 +1400,8 @@ class ControllerCommonHome extends Controller {
 
         $cachePrice_data = $this->cache->get('category_price_data');
         //echo '<pre>';print_r($cachePrice_data);exit;
-        $results = $this->model_assets_product->getProducts($filter_data);
+        //$results = $this->model_assets_product->getProducts($filter_data);
+        $results = $this->model_assets_product->getProductsForHomePage($filter_data);
 
         $data['products'] = [];
 

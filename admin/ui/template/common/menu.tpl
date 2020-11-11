@@ -63,11 +63,11 @@
     <?php } ?>
     <?php if($preturn_vendor_product) { ?>  
     <li id="simple-blog">
-    <a class="parent"><i class="fa fa-tags fa-fw"></i> <span>Category Prices</span></a>
-    <ul>
-    <li><a href="<?php echo $category_prices; ?>"><span>Category Prices</span></a></li>
-    <li><a href="<?php echo $export_import; ?>"><span><?php echo $text_export_import; ?></span></a></li>
-    </ul>
+        <a class="parent"><i class="fa fa-tags fa-fw"></i> <span>Category Prices</span></a>
+        <ul>
+            <li><a href="<?php echo $category_prices; ?>"><span>Category Prices</span></a></li>
+            <li><a href="<?php echo $export_import; ?>"><span><?php echo $text_export_import; ?></span></a></li>
+        </ul>
     </li>
     <?php } ?>
     <?php
@@ -302,7 +302,39 @@
             <li><a href="<?php echo $email_groups; ?>">Email Groups</a></li>
         </ul>
     </li> -->
-
+    <?php
+    if( $preturn_account_manager_sale_order != false || $preturn_account_manager_customer_order != false) {
+    ?>
+    <li id="reports"><a class="parent"><i class="fa fa-bar-chart-o fa-fw"></i> <span><?php echo $text_reports; ?></span></a>
+        <ul class="collapse">
+            <?php if( $preturn_account_manager_sale_order != false || $preturn_account_manager_customer_order != false || $preturn_account_manager_customer_activity != false || $preturn_account_manager_customer_online != false ) { ?>
+            <li><a class="parent"><?php echo $text_sale; ?></a>
+                <ul>
+                    <?php if($preturn_account_manager_sale_order) { ?>
+                    <li><a href="<?php echo $report_account_manager_sale_order; ?>"><?php echo $text_report_sale_order; ?></a></li>
+                    <?php }?>
+                </ul>
+            </li>
+            <?php } ?>
+            <?php if( $preturn_account_manager_customer_order != false || $preturn_account_manager_customer_activity != false || $preturn_account_manager_customer_online != false) { ?>
+            <li><a class="parent"><?php echo $text_customer; ?></a>
+                <ul>
+                    <?php if($preturn_account_manager_customer_activity) { ?>
+                    <li><a href="<?php echo $report_account_manager_customer_activity; ?>"><?php echo $text_report_customer_activity; ?></a></li>
+                    <?php } ?>
+                    <?php if($preturn_account_manager_customer_online) { ?>
+                    <li><a href="<?php echo $report_account_manager_customer_online; ?>"><?php echo $text_report_customer_online; ?></a></li>
+                    <?php } ?>
+                    <?php if($preturn_account_manager_customer_order) { ?>
+                    <li><a href="<?php echo $report_account_manager_customer_order; ?>"><?php echo $text_report_customer_order; ?></a></li>
+                    <?php } ?>
+                </ul>
+            </li>
+            <?php } ?>
+        </ul>
+    </li>
+    <?php } ?>
+    
     <?php
     if( $preturn_report_shopper_order!= false || $preturn_report_shopper!= false || $preturn_report_vendor != false || $preturn_report_vendor_order != false || $preturn_sale_order != false || $preturn_sale_advanced != false  || $preturn_sale_tax != false || $preturn_sale_payment != false || $preturn_sale_transaction != false  || $preturn_sale_shipping != false || $preturn_sale_return != false || $preturn_sale_coupon != false || $preturn_product_viewed != false || $preturn_product_purchased != false || $preturn_customer_online != false || $preturn_customer_activity != false || $preturn_customer_order != false || $preturn_customer_reward != false || $preturn_customer_credit != false || $preturn_marketing != false  ) {
     ?>
@@ -414,6 +446,9 @@
                     <?php if($preturn_customer_activity) { ?>
                     <li><a href="<?php echo $report_customer_activity; ?>"><?php echo $text_report_customer_activity; ?></a></li>
                     <?php } ?>
+                    <?php if($preturn_customer_online) { ?>
+                    <li><a href="<?php echo $report_customer_online; ?>"><?php echo $text_report_customer_online; ?></a></li>
+                    <?php } ?>
                     <?php if($preturn_customer_order) { ?>
                     <li><a href="<?php echo $report_customer_order; ?>"><?php echo $text_report_customer_order; ?></a></li>
                     <?php } ?>
@@ -429,6 +464,18 @@
 
                     <?php if($preturn_customer_order_pattern) { ?>
                     <li><a href="<?php echo $report_customer_order_pattern; ?>"><?php echo $text_report_customer_order_pattern; ?></a></li>
+                    <?php } ?>
+
+                </ul>
+            </li>
+            <?php }?>
+
+            <?php if( $preturn_user_activity != false ) { ?>
+            <li><a class="parent"><?php echo $text_user; ?></a>
+                <ul>
+
+                    <?php if($preturn_user_activity) { ?>
+                    <li><a href="<?php echo $report_user_activity; ?>"><?php echo $text_report_user_activity; ?></a></li>
                     <?php } ?>
 
                 </ul>
@@ -580,9 +627,20 @@
     <li id="system"><a class="parent"><i class="fa fa-cog fa-fw"></i> <span><?php echo $text_system; ?></span></a>
         <ul class="collapse">
 
-            <?php if($preturn_setting != false) { ?>
-            <li><a href="<?php echo $setting; ?>"><?php echo $text_setting; ?></a></li>
+
+            <?php if( $preturn_setting != false  ) { ?>
+            <li><a class="parent">Settings</a>
+                <ul>
+                    <?php if($preturn_setting) { ?> 
+                    <li><a href="<?php echo $setting; ?>"><?php echo $text_setting; ?></a></li>
+                    <?php } ?>
+                    <?php if($preturn_setting) { ?>                     
+                    <li><a href="<?php echo $setting_email; ?>">Email Settings</a></li>
+                    <!--<?php } ?>-->
+                </ul>
+            </li>
             <?php } ?>
+
 
             <?php if($preturn_setting_seo != false) { ?>
             <li><a href="<?php echo $setting_seo; ?>">SEO Setting</a></li>
@@ -611,11 +669,11 @@
             <?php } ?>
 
 
-             <?php if($preturn_newfeature != false) { ?>
+            <?php if($preturn_newfeature != false) { ?>
             <li><a href="<?php echo $newfeature; ?>">New Feature Request</a></li>
             <?php } ?>
 
-             <?php if($preturn_jobposition != false) { ?>
+            <?php if($preturn_jobposition != false) { ?>
             <li><a href="<?php echo $jobposition; ?>">Job Positions</a></li>
             <?php } ?>
 

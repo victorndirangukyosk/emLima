@@ -53,7 +53,7 @@ class ModelApiCheckout extends Model
 
                 if (isset($data['products'])) {
                     foreach ($data['products'] as $product) {
-                        $this->db->query('INSERT INTO '.DB_PREFIX."order_product SET vendor_id='".(int) $product['vendor_id']."', store_id='".(int) $product['store_id']."', product_type='".$product['product_type']."', general_product_id='".$product['product_id']."', unit='".$product['unit']."', order_id = '".(int) $order_id."', variation_id = '".(int) $product['store_product_variation_id']."', product_id = '".(int) $product['product_store_id']."', name = '".$this->db->escape($product['name'])."', model = '".$this->db->escape($product['model'])."', quantity = '".(int) $product['quantity']."', price = '".(float) $product['price']."', total = '".(float) $product['total']."', tax = '".(float) $product['tax']."', reward = '".(int) $product['reward']."'");
+                        $this->db->query('INSERT INTO '.DB_PREFIX."order_product SET vendor_id='".(int) $product['vendor_id']."', store_id='".(int) $product['store_id']."', product_type='".$product['product_type']."', general_product_id='".$product['product_id']."', unit='".$product['unit']."', order_id = '".(int) $order_id."', variation_id = '".(int) $product['store_product_variation_id']."', product_id = '".(int) $product['product_store_id']."', name = '".$this->db->escape($product['name'])."', model = '".$this->db->escape($product['model'])."', quantity = '". $product['quantity']."', price = '".(float) $product['price']."', total = '".(float) $product['total']."', tax = '".(float) $product['tax']."', reward = '".(int) $product['reward']."'");
                     }
                 }
                 if (isset($data['totals'])) {
@@ -82,7 +82,7 @@ class ModelApiCheckout extends Model
 
                 if (isset($data['products'])) {
                     foreach ($data['products'] as $product) {
-                        $this->db->query('INSERT INTO '.DB_PREFIX."order_product SET vendor_id='".(int) $product['vendor_id']."', store_id='".(int) $product['store_id']."', product_type='".$product['product_type']."', general_product_id='".$product['product_id']."', unit='".$product['unit']."', order_id = '".(int) $order_id."', variation_id = '".(int) $product['store_product_variation_id']."', product_id = '".(int) $product['product_store_id']."', name = '".$this->db->escape($product['name'])."', model = '".$this->db->escape($product['model'])."', quantity = '".(int) $product['quantity']."', price = '".(float) $product['price']."', total = '".(float) $product['total']."', tax = '".(float) $product['tax']."', reward = '".(int) $product['reward']."'");
+                        $this->db->query('INSERT INTO '.DB_PREFIX."order_product SET vendor_id='".(int) $product['vendor_id']."', store_id='".(int) $product['store_id']."', product_type='".$product['product_type']."', general_product_id='".$product['product_id']."', unit='".$product['unit']."', order_id = '".(int) $order_id."', variation_id = '".(int) $product['store_product_variation_id']."', product_id = '".(int) $product['product_store_id']."', name = '".$this->db->escape($product['name'])."', model = '".$this->db->escape($product['model'])."', quantity = '". $product['quantity']."', price = '".(float) $product['price']."', total = '".(float) $product['total']."', tax = '".(float) $product['tax']."', reward = '".(int) $product['reward']."'");
                     }
                 }
 
@@ -130,8 +130,15 @@ class ModelApiCheckout extends Model
             foreach ($stores as $data) {
                 $log->write('loop stores');
                 $log->write($data);
-
+                if($data['login_longitude']==NULL)
+                {
                 $this->db->query('INSERT INTO `'.DB_PREFIX."order` SET invoice_prefix = '".$this->db->escape($data['invoice_prefix'])."', parent_approval='".$parent_approval."', order_status_id='0', store_id = '".(int) $data['store_id']."', store_name = '".$this->db->escape($data['store_name'])."', store_url = '".$this->db->escape($data['store_url'])."', customer_id = '".(int) $data['customer_id']."', customer_group_id = '".(int) $data['customer_group_id']."', firstname = '".$this->db->escape($data['firstname'])."', lastname = '".$this->db->escape($data['lastname'])."', email = '".$this->db->escape($data['email'])."', telephone = '".$this->db->escape($data['telephone'])."', fax = '".$this->db->escape($data['fax'])."', custom_field = '".$this->db->escape(isset($data['custom_field']) ? serialize($data['custom_field']) : '')."', payment_method = '".$this->db->escape($data['payment_method'])."', payment_code = '".$this->db->escape($data['payment_code'])."',shipping_method = '".$this->db->escape($data['shipping_method'])."', shipping_code = '".$this->db->escape($data['shipping_code'])."', comment = '".$this->db->escape($data['comment'])."', total = '".(float) $data['total']."', affiliate_id = '".(int) $data['affiliate_id']."',marketing_id = '".(int) $data['marketing_id']."', latitude = '".$data['latitude']."',longitude = '".$data['longitude']."', tracking = '".$this->db->escape($data['tracking'])."', language_id = '".(int) $data['language_id']."', currency_id = '".(int) $data['currency_id']."', currency_code = '".$this->db->escape($data['currency_code'])."', currency_value = '".(float) $data['currency_value']."', ip = '".$this->db->escape($data['ip'])."', forwarded_ip = '".$this->db->escape($data['forwarded_ip'])."', user_agent = '".$this->db->escape($data['user_agent'])."', fixed_commission = '".$this->db->escape($data['fixed_commission'])."',commission = '".$this->db->escape($data['commission'])."',delivery_date = '".$this->db->escape(date('Y-m-d', strtotime($data['delivery_date'])))."',delivery_timeslot = '".$this->db->escape($data['delivery_timeslot'])."',  order_reference_number = '".$this->db->escape($data['order_reference_number'])."',  accept_language = '".$this->db->escape($data['accept_language'])."', date_added = NOW(), date_modified = NOW()");
+                }
+                else
+                {
+                $this->db->query('INSERT INTO `'.DB_PREFIX."order` SET invoice_prefix = '".$this->db->escape($data['invoice_prefix'])."', parent_approval='".$parent_approval."', order_status_id='0', store_id = '".(int) $data['store_id']."', store_name = '".$this->db->escape($data['store_name'])."', store_url = '".$this->db->escape($data['store_url'])."', customer_id = '".(int) $data['customer_id']."', customer_group_id = '".(int) $data['customer_group_id']."', firstname = '".$this->db->escape($data['firstname'])."', lastname = '".$this->db->escape($data['lastname'])."', email = '".$this->db->escape($data['email'])."', telephone = '".$this->db->escape($data['telephone'])."', fax = '".$this->db->escape($data['fax'])."', custom_field = '".$this->db->escape(isset($data['custom_field']) ? serialize($data['custom_field']) : '')."', payment_method = '".$this->db->escape($data['payment_method'])."', payment_code = '".$this->db->escape($data['payment_code'])."',shipping_method = '".$this->db->escape($data['shipping_method'])."', shipping_code = '".$this->db->escape($data['shipping_code'])."', comment = '".$this->db->escape($data['comment'])."', total = '".(float) $data['total']."', affiliate_id = '".(int) $data['affiliate_id']."',marketing_id = '".(int) $data['marketing_id']."', latitude = '".$data['latitude']."',longitude = '".$data['longitude']."', tracking = '".$this->db->escape($data['tracking'])."', language_id = '".(int) $data['language_id']."', currency_id = '".(int) $data['currency_id']."', currency_code = '".$this->db->escape($data['currency_code'])."', currency_value = '".(float) $data['currency_value']."', ip = '".$this->db->escape($data['ip'])."', forwarded_ip = '".$this->db->escape($data['forwarded_ip'])."', user_agent = '".$this->db->escape($data['user_agent'])."', fixed_commission = '".$this->db->escape($data['fixed_commission'])."',commission = '".$this->db->escape($data['commission'])."',delivery_date = '".$this->db->escape(date('Y-m-d', strtotime($data['delivery_date'])))."',delivery_timeslot = '".$this->db->escape($data['delivery_timeslot'])."',  order_reference_number = '".$this->db->escape($data['order_reference_number'])."',  accept_language = '".$this->db->escape($data['accept_language'])."', date_added = NOW(), date_modified = NOW() , login_latitude = '".$data['login_latitude']."',login_longitude = '".$data['login_longitude']."', login_mode = '".$this->db->escape($data['login_mode'])."'");
+                }
+                
                 $order_id = $this->db->getLastId();
 
                 $order_ids[] = $order_id;
@@ -149,7 +156,7 @@ class ModelApiCheckout extends Model
 
                 if (isset($data['products'])) {
                     foreach ($data['products'] as $product) {
-                        $this->db->query('INSERT INTO '.DB_PREFIX."order_product SET vendor_id='".(int) $product['vendor_id']."', store_id='".(int) $product['store_id']."', product_type='".$product['product_type']."', product_note='".$product['product_note']."', produce_type='".$product['produce_type']."', general_product_id='".$product['product_id']."', unit='".$product['unit']."', order_id = '".(int) $order_id."', variation_id = '".(int) $product['store_product_variation_id']."', product_id = '".(int) $product['product_store_id']."', name = '".$this->db->escape($product['name'])."', model = '".$this->db->escape($product['model'])."', quantity = '".(int) $product['quantity']."', price = '".(float) $product['price']."', total = '".(float) $product['total']."', tax = '".(float) $product['tax']."', reward = '".(int) $product['reward']."'");
+                        $this->db->query('INSERT INTO '.DB_PREFIX."order_product SET vendor_id='".(int) $product['vendor_id']."', store_id='".(int) $product['store_id']."', product_type='".$product['product_type']."', product_note='".$product['product_note']."', produce_type='".$product['produce_type']."', general_product_id='".$product['product_id']."', unit='".$product['unit']."', order_id = '".(int) $order_id."', variation_id = '".(int) $product['store_product_variation_id']."', product_id = '".(int) $product['product_store_id']."', name = '".$this->db->escape($product['name'])."', model = '".$this->db->escape($product['model'])."', quantity = '". $product['quantity']."', price = '".(float) $product['price']."', total = '".(float) $product['total']."', tax = '".(float) $product['tax']."', reward = '".(int) $product['reward']."'");
                     }
                 }
 
@@ -217,7 +224,7 @@ class ModelApiCheckout extends Model
         // Products
         if (isset($data['products'])) {
             foreach ($data['products'] as $product) {
-                $this->db->query('INSERT INTO '.DB_PREFIX."order_product SET vendor_id='".(int) $product['vendor_id']."', store_id='".(int) $product['store_id']."', product_type='".$product['product_type']."', order_id = '".(int) $order_id."', variation_id = '".(int) $product['store_product_variation_id']."', product_id = '".(int) $product['product_store_id']."', name = '".$this->db->escape($product['name'])."', model = '".$this->db->escape($product['model'])."', quantity = '".(int) $product['quantity']."', price = '".(float) $product['price']."', total = '".(float) $product['total']."', tax = '".(float) $product['tax']."', reward = '".(int) $product['reward']."'");
+                $this->db->query('INSERT INTO '.DB_PREFIX."order_product SET vendor_id='".(int) $product['vendor_id']."', store_id='".(int) $product['store_id']."', product_type='".$product['product_type']."', order_id = '".(int) $order_id."', variation_id = '".(int) $product['store_product_variation_id']."', product_id = '".(int) $product['product_store_id']."', name = '".$this->db->escape($product['name'])."', model = '".$this->db->escape($product['model'])."', quantity = '". $product['quantity']."', price = '".(float) $product['price']."', total = '".(float) $product['total']."', tax = '".(float) $product['tax']."', reward = '".(int) $product['reward']."'");
             }
         }
 
@@ -517,7 +524,7 @@ class ModelApiCheckout extends Model
                 $order_product_query = $this->db->query('SELECT * FROM '.DB_PREFIX."order_product WHERE order_id = '".(int) $order_id."'");
 
                 foreach ($order_product_query->rows as $order_product) {
-                    $this->db->query('UPDATE '.DB_PREFIX.'product_to_store SET quantity = (quantity - '.(int) $order_product['quantity'].") WHERE product_store_id = '".(int) $order_product['product_id']."' AND subtract_quantity = '1'");
+                    $this->db->query('UPDATE '.DB_PREFIX.'product_to_store SET quantity = (quantity - '.(float) $order_product['quantity'].") WHERE product_store_id = '".(int) $order_product['product_id']."' AND subtract_quantity = '1'");
                 }
 
                 // Redeem coupon, vouchers and reward points
@@ -548,7 +555,7 @@ class ModelApiCheckout extends Model
                 $product_query = $this->db->query('SELECT * FROM '.DB_PREFIX."order_product WHERE order_id = '".(int) $order_id."'");
 
                 foreach ($product_query->rows as $product) {
-                    $this->db->query('UPDATE `'.DB_PREFIX.'product_to_store` SET quantity = (quantity + '.(int) $product['quantity'].") WHERE product_store_id = '".(int) $product['product_id']."' AND subtract_quantity = '1'");
+                    $this->db->query('UPDATE `'.DB_PREFIX.'product_to_store` SET quantity = (quantity + '.(float) $product['quantity'].") WHERE product_store_id = '".(int) $product['product_id']."' AND subtract_quantity = '1'");
                 }
                 // Remove coupon, vouchers and reward points history
                 $this->load->model('account/order');
@@ -722,7 +729,7 @@ class ModelApiCheckout extends Model
 
                     $log->write('vendro end');
                     /* vendor mail end */
-
+                    if($customer_info['email_notification'] == 1) {
                     $subject = $this->emailtemplate->getSubject('OrderAll', 'order_'.(int) $order_status_id, $data);
                     $message = $this->emailtemplate->getMessage('OrderAll', 'order_'.(int) $order_status_id, $data);
                     //$log->write($message);
@@ -745,8 +752,9 @@ class ModelApiCheckout extends Model
                     $mail->send();
 
                     $log->write('mail end');
+                    }
 
-                    if ($this->emailtemplate->getSmsEnabled('OrderAll', 'order_'.(int) $order_status_id)) {
+                    if ($customer_info['sms_notification'] == 1 && $this->emailtemplate->getSmsEnabled('OrderAll', 'order_'.(int) $order_status_id)) {
                         $ret = $this->emailtemplate->sendmessage($order_info['telephone'], $sms_message);
                     }
 

@@ -608,7 +608,7 @@ class ControllerAccountRegister extends Controller
 
                 $sms_message = $this->emailtemplate->getSmsMessage('registerOTP', 'registerotp_2', $data);
 
-//                echo "<pre>";print_r($sms_message);die;
+                //                echo "<pre>";print_r($sms_message);die;
                 if ($this->emailtemplate->getSmsEnabled('registerOTP', 'registerotp_2')) {
                     $ret = $this->emailtemplate->sendmessage($this->request->post['phone'], $sms_message);
 
@@ -620,7 +620,8 @@ class ControllerAccountRegister extends Controller
 
                     $data['success_message'] = $this->language->get('text_otp_sent_email').' '.$this->request->post['email'];
                 }
-
+                
+                try{
                 if ($this->emailtemplate->getEmailEnabled('registerOTP', 'registerotp_2')) {
                     $subject = $this->emailtemplate->getSubject('registerOTP', 'registerotp_2', $data);
                     $message = $this->emailtemplate->getMessage('registerOTP', 'registerotp_2', $data);
@@ -632,6 +633,9 @@ class ControllerAccountRegister extends Controller
                     $mail->setSender($this->config->get('config_name'));
                     $mail->setHtml($message);
                     $mail->send();
+                }
+                } catch(Exception $e) {
+                    
                 }
             } else {
                 // enter valid number throw error
@@ -835,6 +839,9 @@ class ControllerAccountRegister extends Controller
                     $this->model_account_customer->deleteLoginAttempts($this->request->post['email']);
                     /* Commented Login for change flow */
                     // $logged_in = $this->customer->loginByPhone( $customer_id );
+                    //Add ip address from where user registered.
+                    //this will prevent , the new IP OTP 
+                    $this->model_account_customer->addregisterIP($customer_id);
 
                     unset($this->session->data['guest']);
 

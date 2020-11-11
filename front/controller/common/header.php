@@ -163,6 +163,8 @@ class ControllerCommonHeader extends Controller
         $data['text_login'] = $this->language->get('text_login');
         $data['text_order'] = $this->language->get('text_order');
         $data['text_credit'] = $this->language->get('text_credit');
+        $data['text_user_product_notes'] = $this->language->get('text_user_product_notes');
+        $data['text_user_notification_settings'] = $this->language->get('text_user_notification_settings');
         $data['text_download'] = $this->language->get('text_download');
         $data['text_logout'] = $this->language->get('text_logout');
         $data['text_checkout'] = $this->language->get('text_checkout');
@@ -178,6 +180,8 @@ class ControllerCommonHeader extends Controller
         $data['login'] = $this->url->link('account/login', '', 'SSL');
         $data['order'] = $this->url->link('account/order', '', 'SSL');
         $data['credit'] = $this->url->link('account/credit', '', 'SSL');
+        $data['user_product_notes'] = $this->url->link('account/user_product_notes', '', 'SSL');
+        $data['user_notification_settings'] = $this->url->link('account/user_notification_settings', '', 'SSL');
         $data['download'] = $this->url->link('account/download', '', 'SSL');
         $data['logout'] = $this->url->link('account/logout', '', 'SSL');
         $data['shopping_cart'] = $this->url->link('checkout/cart');
@@ -377,6 +381,8 @@ class ControllerCommonHeader extends Controller
         $data['text_transactions'] = 'My Transactions';
         $data['text_sub_customer'] = 'Sub Users';
         $data['text_credit'] = $this->language->get('text_credit');
+        $data['text_user_product_notes'] = $this->language->get('text_user_product_notes');
+        $data['text_user_notification_settings'] = $this->language->get('text_user_notification_settings');
         $data['text_download'] = $this->language->get('text_download');
         $data['text_logout'] = $this->language->get('text_logout');
         $data['text_checkout'] = $this->language->get('text_checkout');
@@ -401,6 +407,8 @@ class ControllerCommonHeader extends Controller
         $data['order'] = $this->url->link('account/order', '', 'SSL');
         $data['return'] = $this->url->link('account/return', '', 'SSL');
         $data['credit'] = $this->url->link('account/credit', '', 'SSL');
+        $data['user_product_notes'] = $this->url->link('account/user_product_notes', '', 'SSL');
+        $data['user_notification_settings'] = $this->url->link('account/user_notification_settings', '', 'SSL');
         $data['download'] = $this->url->link('account/download', '', 'SSL');
         $data['logout'] = $this->url->link('account/logout', '', 'SSL');
         $data['shopping_cart'] = $this->url->link('checkout/cart');
@@ -610,6 +618,8 @@ class ControllerCommonHeader extends Controller
         $data['text_login'] = $this->language->get('text_login');
         $data['text_order'] = $this->language->get('text_order');
         $data['text_credit'] = $this->language->get('text_credit');
+        $data['text_user_product_notes'] = $this->language->get('text_user_product_notes');
+        $data['text_user_notification_settings'] = $this->language->get('text_user_notification_settings');
         $data['text_download'] = $this->language->get('text_download');
         $data['text_logout'] = $this->language->get('text_logout');
         $data['text_checkout'] = $this->language->get('text_checkout');
