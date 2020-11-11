@@ -1234,14 +1234,14 @@ class ControllerApiCustomerProducts extends Controller
 
                     $filter_data['store_id'] = $store_id;
 
-                    $product_total = $this->model_assets_product->getTotalProductsByApi($filter_data);
+                    $product_total = $this->model_assets_product->getTotalProductsByApiNew($filter_data);
 
                     $log = new Log('error.log');
                     $log->write('api/search');
                     $log->write($filter_data);
 
                     $results = $this->model_assets_product->getProductsByApiNew($filter_data);
-                        //  echo "<pre>";print_r($results);die;
+                        //    echo "<pre>";print_r($product_total);die;
                     foreach ($results as $result) {
                         if (file_exists(DIR_IMAGE.$result['image'])) {
                             $image = $this->model_tool_image->resize($result['image'], $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
