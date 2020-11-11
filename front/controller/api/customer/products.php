@@ -170,7 +170,7 @@ class ControllerApiCustomerProducts extends Controller
 
                             $data['categories'][] = [
                                 'name' => htmlspecialchars_decode($result['name']),
-                                'products' => $this->getProductsFn($filter_data, $store_id),
+                                'products' => $this->getProductsFnNew($filter_data, $store_id),
                                 'href' => $this->url->link('product/category', 'category='.$this->request->get['category'].'_'.$result['category_id'].$url),
                                 'next_category_call_id' => $this->request->get['category'].'_'.$result['category_id'],
                                 'thumb' => $image,
@@ -191,9 +191,9 @@ class ControllerApiCustomerProducts extends Controller
 
                         $filter_data['store_id'] = $store_id;
 
-                        $product_total = $this->model_assets_product->getTotalProductsByApi($filter_data);
+                        $product_total = $this->model_assets_product->getTotalProductsByApiNew($filter_data);
 
-                        $data['products'] = $this->getProductsFn($filter_data, $store_id, $groupByName = true);
+                        $data['products'] = $this->getProductsFnNew($filter_data, $store_id, $groupByName = true);
 
                         $url = '';
 
@@ -352,7 +352,7 @@ class ControllerApiCustomerProducts extends Controller
             $store_id = $this->request->get['store_id'];
             $filter_data['store_id'] = $this->request->get['store_id'];
             $filter_data['limit'] = $this->request->get['limit'];
-            $data['products'] = $this->getProductsFn($filter_data, $store_id);
+            $data['products'] = $this->getProductsFnNew($filter_data, $store_id);
             $json['status'] = 200;
             $json['data'] = $data;
 
@@ -1348,7 +1348,7 @@ class ControllerApiCustomerProducts extends Controller
                             $data['products'][] = [
                             'key' => $key,
                             'qty_in_cart' => $qty_in_cart,
-                            'variations' => $this->model_assets_product->getApiVariations($result['product_store_id']),
+                            'variations' => $this->model_assets_product->getApiVariationsNew($result['product_store_id']),
                             'store_product_variation_id' => 0,
                             'product_id' => $result['product_id'],
                             'product_store_id' => $result['product_store_id'],
@@ -1691,6 +1691,170 @@ class ControllerApiCustomerProducts extends Controller
 
         return $data['products'];
     }
+
+
+    public function getProductsFnNew($filter_data, $store_id)
+    {
+        $this->load->model('assets/product');
+        $this->load->model('tool/image');
+
+        $filter_data['store_id'] = $store_id;
+        if (isset($filter_data['group_by']) && ('name' == $filter_data['group_by'])) {
+            $filter_data['group_by'] = 'name';
+        }
+
+        // $results = $this->model_assets_product->getProductsByApi($filter_data);
+        if (isset($filter_data['filter_category_id'])) {
+            $results = $this->model_assets_product->getProductsByApiNew($filter_data);
+        } else {
+            $limit = 10;
+            if (isset($filter_data['limit'])) {
+                $limit = $filter_data['limit'];
+            }
+            $results = $this->model_assets_product->getLatestProductsByStoreId($filter_data['store_id'], $limit);
+        }
+
+        //echo "<pre>";print_r($results);die;
+        $data['products'] = [];
+
+        foreach ($results as $result) {
+            // if qty less then 1 dont show product
+            if ($result['quantity'] <= 0) {
+                continue;
+            }
+
+            if (file_exists(DIR_IMAGE.$result['image'])) {
+                $image = $this->model_tool_image->resize($result['image'], $this->config->get('config_app_image_product_width'), $this->config->get('config_app_image_product_height'));
+            } else {
+                $image = $this->model_tool_image->resize('placeholder.png', $this->config->get('config_app_image_product_width'), $this->config->get('config_app_image_product_height'));
+            }
+
+            //$result['special_price'] = 10;
+
+            $s_price = 0;
+            $o_price = 0;
+
+            if (!$this->config->get('config_inclusiv_tax')) {
+                //get price html
+                if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+                    $price = $this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax'));
+
+                    $o_price = $this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax'));
+                } else {
+                    $price = false;
+                }
+                if ((float) $result['special_price']) {
+                    $special_price = $this->tax->calculate($result['special_price'], $result['tax_class_id'], $this->config->get('config_tax'));
+
+                    $s_price = $this->tax->calculate($result['special_price'], $result['tax_class_id'], $this->config->get('config_tax'));
+                } else {
+                    $special_price = false;
+                }
+            } else {
+                if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+                    //$price = $result['price'];
+                    $price = $this->currency->formatWithoutCurrency($result['price']);
+                } else {
+                    $price = $result['price'];
+                }
+
+                if ((float) $result['special_price']) {
+                    //$special_price = $result['special_price'];
+                    $special_price = $this->currency->formatWithoutCurrency($result['special_price']);
+                } else {
+                    $special_price = $result['special_price'];
+                }
+
+                $s_price = $result['special_price'];
+                $o_price = $result['price'];
+            }
+
+            //get qty in cart
+            $key = base64_encode(serialize(['product_store_id' => (int) $result['product_store_id'], 'store_id' => $store_id]));
+
+            if (isset($this->session->data['cart'][$key])) {
+                $qty_in_cart = $this->session->data['cart'][$key]['quantity'];
+            } else {
+                $qty_in_cart = 0;
+            }
+
+            //$result['name'] = strlen($result['name']) > 27 ? substr($result['name'],0,27)."..." : $result['name'];
+            $name = $result['name'];
+            //$name .= str_repeat('&nbsp;',30 - strlen($result['name']));
+
+            $percent_off = null;
+            if (isset($s_price) && isset($o_price) && 0 != $o_price && 0 != $s_price) {
+                $percent_off = (($o_price - $s_price) / $o_price) * 100;
+            }
+
+            if (is_null($special_price) || !($special_price + 0)) {
+                //$special_price = 0;
+                $special_price = $price;
+            }
+
+            /*$productNames = array_column($data['products'], 'name');
+            if (array_search($result['name'], $productNames) !== false) {
+                // Add variation to existing product
+                $productIndex = array_search($result['name'], $productNames);
+                // TODO: Check for product variation duplicates
+                $data['products'][$productIndex]['variations'][] = array(
+                    'variation_id' => $result['product_store_id'],
+                    'unit' => $result['unit'],
+                    'weight' => floatval($result['weight']),
+                    'price' => $price,
+                    'special' => $special_price,
+                    'percent_off' => number_format($percent_off,0),
+                    'max_qty' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity']
+                );
+            } else { */
+            $formatted = false;
+            if (isset($filter_data['group_by']) && ('name' == $filter_data['group_by'])) {
+                $formatted = true;
+            }
+            $data['products'][] = [
+                'key' => $key,
+                'qty_in_cart' => $qty_in_cart,
+                'variations' => $this->model_assets_product->getApiVariationsNew($result['product_store_id']),
+                'store_product_variation_id' => 0,
+                'product_id' => $result['product_id'],
+                'model' => $result['model'],
+                'product_store_id' => $result['product_store_id'],
+                'default_variation_name' => $result['default_variation_name'],
+                'thumb' => $image,
+                'name' => htmlspecialchars_decode($name),
+                'unit' => $result['unit'],
+                'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('config_product_description_length')).'..',
+                'price' => $price,
+                'special' => $special_price,
+                'percent_off' => number_format($percent_off, 0),
+                'left_symbol_currency' => $this->currency->getSymbolLeft(),
+                'right_symbol_currency' => $this->currency->getSymbolRight(),
+                'tax' => $result['tax_percentage'],
+                //'minimum' => $result['min_quantity'] > 0 ? $result['min_quantity'] : 1,
+                'max_qty' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity'],
+                'rating' => 0,
+                'href' => $this->url->link('product/product', '&product_store_id='.$result['product_store_id']),
+                'variations' => $this->model_assets_product->getProductVariationsAPI($name, $formatted),
+                'produce_type' => $result['produce_type'],
+               
+                /*'variations' => array(
+                    array(
+                        'variation_id' => $result['product_store_id'],
+                        'unit' => $result['unit'],
+                        'weight' => floatval($result['weight']),
+                        'price' => $price,
+                        'special' => $special_price,
+                        'percent_off' => number_format($percent_off,0),
+                        'max_qty' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity']
+                    )
+                )*/
+            ];
+            /*}*/
+        }
+
+        return $data['products'];
+    }
+
 
     public function getProductDetails($args = [])
     {
@@ -2041,4 +2205,7 @@ class ControllerApiCustomerProducts extends Controller
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
+
+
+    
 }

@@ -242,6 +242,208 @@ class ModelAssetsProduct extends Model
         }
     }
 
+
+    public function getApiVariationsNew($product_store_id)
+    {
+        $this->load->model('tool/image');
+        
+
+            $disabled_products_string = NULL;
+            if(isset($_SESSION['customer_category']) && $_SESSION['customer_category'] != NULL) {
+            $category_pricing_disabled_products = $this->getCategoryPriceStatusByCategoryName($_SESSION['customer_category'], 0);   
+            //$log = new Log('error.log');
+            //$log->write('category_pricing_disabled_products');
+            $disabled_products = array_column($category_pricing_disabled_products, 'product_store_id');
+            $disabled_products_string = implode(',', $disabled_products);
+            //$log->write($disabled_products_string);
+            //$log->write('category_pricing_disabled_products');
+            }
+
+        $query = 'SELECT * FROM '.DB_PREFIX."product_to_store pv WHERE product_store_id ='".(int) $product_store_id."'";
+
+        $query = $this->db->query($query);
+        
+        if (!empty($query->row['product_to_store_ids'])) {
+            $all_variations = 'SELECT *,ps.status as vendor_status FROM '.DB_PREFIX.'product_to_store ps LEFT JOIN '.DB_PREFIX.'product p ON (ps.product_id = p.product_id) WHERE product_store_id IN ('.$query->row['product_to_store_ids'].')';
+
+
+
+                    // if ($disabled_products_string != NULL && isset($_SESSION['customer_category']) && $_SESSION['customer_category'] != NULL) {
+                    //     $this->db->where_not_in('product_to_store.product_store_id', $disabled_products_string);
+                    // }
+
+
+            $new_result = [];
+
+            $result = $this->db->query($all_variations);           
+            foreach ($result->rows as $res) {
+                    if ($disabled_products_string != NULL && isset($_SESSION['customer_category']) && $_SESSION['customer_category'] != NULL)  
+                    {
+                        if (in_array($res['product_store_id'], $disabled_products_string)) {
+                    continue;
+                        } 
+                    }
+
+                if ($res['quantity'] <= 0 || !$res['status'] || !$res['vendor_status']) {
+                    continue;
+                }
+
+                if (file_exists(DIR_IMAGE.$res['image'])) {
+                    $res['image'] = $this->model_tool_image->resize($res['image'], 362, 317);
+                } else {
+                    $res['image'] = $this->model_tool_image->resize('placeholder.png', 362, 317);
+                }
+
+                $s_price = 0;
+                $o_price = 0;
+
+                if (!$this->config->get('config_inclusiv_tax')) {
+                    //get price html
+                    if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+                        $res['price'] = $this->tax->calculate($res['price'], $res['tax_class_id'], $this->config->get('config_tax'));
+
+                        $o_price = $this->tax->calculate($res['price'], $res['tax_class_id'], $this->config->get('config_tax'));
+                    } else {
+                        $res['price'] = false;
+                    }
+                    if ((float) $res['special_price']) {
+                        $res['special_price'] = $this->tax->calculate($res['special_price'], $res['tax_class_id'], $this->config->get('config_tax'));
+
+                        $s_price = $this->tax->calculate($res['special_price'], $res['tax_class_id'], $this->config->get('config_tax'));
+                    } else {
+                        $res['special_price'] = false;
+                    }
+                } else {
+                    $s_price = $res['special_price'];
+                    $o_price = $res['price'];
+
+                    if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+                        //$res['price'] = $res['price'];
+                        $res['price'] = $this->currency->formatWithoutCurrency($res['price']);
+                    } else {
+                        $res['price'] = $res['price'];
+                    }
+
+                    if ((float) $res['special_price']) {
+                        //$res['special_price'] = $res['special_price'];
+                        $res['special_price'] = $this->currency->formatWithoutCurrency($res['special_price']);
+                    } else {
+                        $res['special_price'] = $res['special_price'];
+                    }
+                }
+
+                if ($res['name'] && isset($res['pd_name'])) {
+                    $res['name'] = $res['pd_name'];
+                }
+
+                $percent_off = null;
+                if (isset($s_price) && isset($o_price) && 0 != $o_price && 0 != $s_price) {
+                    $percent_off = (($o_price - $s_price) / $o_price) * 100;
+                }
+
+                /*if(is_null($res['special_price'])) {
+                    $res['special_price'] = $res['price'];
+                }*/
+                if (is_null($res['special_price']) || !($res['special_price'] + 0)) {
+                    $res['special_price'] = $res['price'];
+                }
+
+                $res['max_qty'] = $res['min_quantity'] > 0 ? $res['min_quantity'] : $res['quantity'];
+
+                $res['percent_off'] = number_format($percent_off, 0);
+
+                $new_result[] = $res;
+            }
+
+            return $new_result;
+        }
+    }
+
+    public function getProductVariationsAPI($product_name, $formated = false)
+    {
+        $returnData = [];
+
+        
+        $disabled_products_string = NULL;
+        if(isset($_SESSION['customer_category']) && $_SESSION['customer_category'] != NULL) {
+        $category_pricing_disabled_products = $this->getCategoryPriceStatusByCategoryName($_SESSION['customer_category'], 0);   
+        //$log = new Log('error.log');
+        //$log->write('category_pricing_disabled_products');
+        $disabled_products = array_column($category_pricing_disabled_products, 'product_store_id');
+        $disabled_products_string = implode(',', $disabled_products);
+        //$log->write($disabled_products_string);
+        //$log->write('category_pricing_disabled_products');
+        }
+
+
+        $all_variations = 'SELECT * ,product_store_id as variation_id FROM '.DB_PREFIX.'product_to_store ps LEFT JOIN '.DB_PREFIX."product p ON (ps.product_id = p.product_id) WHERE name = '$product_name'";
+
+        //echo $all_variations;die;
+        $result = $this->db->query($all_variations);
+
+        foreach ($result->rows as $r) {
+
+            if ($disabled_products_string != NULL && isset($_SESSION['customer_category']) && $_SESSION['customer_category'] != NULL)  
+            {
+                if (in_array($r['product_store_id'], $disabled_products_string)) {
+                     continue;
+                } 
+            }
+            if ($r['quantity'] > 0 && $r['status']) {
+                $percent_off = null;
+                if (isset($r['special_price']) && isset($r['price']) && 0 != $r['price'] && 0 != $r['special_price']) {
+                    $percent_off = (($r['price'] - $r['special_price']) / $r['price']) * 100;
+                }
+
+                if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+                    //$price = $result['price'];
+                    $r['price'] = $this->currency->formatWithoutCurrency($r['price']);
+                }
+
+                if ((float) $r['special_price']) {
+                    $r['special_price'] = $this->currency->formatWithoutCurrency((float) $r['special_price']);
+                } else {
+                    $r['special_price'] = false;
+                }
+
+                $cachePrice_data = $this->cache->get('category_price_data');
+
+                if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$r['product_store_id'].'_'.$_SESSION['customer_category'].'_'.ACTIVE_STORE_ID])) {
+                    //echo $cachePrice_data[$product_info['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$store_id];//exit;
+                    $s_price = $cachePrice_data[$r['product_store_id'].'_'.$_SESSION['customer_category'].'_'.ACTIVE_STORE_ID];
+                    $o_price = $cachePrice_data[$r['product_store_id'].'_'.$_SESSION['customer_category'].'_'.ACTIVE_STORE_ID];
+                    $r['special_price'] = $s_price;
+                    $r['price'] = $o_price;
+                }
+                $category_price_data = $this->getCategoryPriceStatusByProductStoreId($r['product_store_id']);
+                $r['category_pricing_variant_status'] = is_array($category_price_data) && array_key_exists('status', $category_price_data) ? $category_price_data['status'] : 1;
+                $res = [
+                        'variation_id' => $r['product_store_id'],
+                        'unit' => $r['unit'],
+                        'weight' => floatval($r['weight']),
+                        'price' => $r['price'],
+                        'special' => $r['special_price'],
+                        'percent_off' => number_format($percent_off, 0),
+                        'max_qty' => $r['min_quantity'] > 0 ? $r['min_quantity'] : $r['quantity'],
+                        'category_pricing_variant_status' => is_array($category_price_data) && array_key_exists('status', $category_price_data) ? $category_price_data['status'] : 1
+                    ];
+
+                // $r['variation_id'] => $result['product_store_id'],
+                //         'unit' => $result['unit'],
+                //         'weight' => floatval($result['weight']),
+                //         'price' => $price,
+                //         'special' => $special_price
+                if (true == $formated) {
+                    array_push($returnData, $res);
+                } else {
+                    array_push($returnData, $r);
+                }
+            }
+        }
+
+        return $returnData;
+    }
+
     public function getVariation($store_product_variation_id)
     {
         $this->db->select('variation_to_product_store.*,product.*', false);
