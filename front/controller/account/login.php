@@ -1210,34 +1210,17 @@ class ControllerAccountLogin extends Controller {
                     } else {
                         $isnewIP = true;
                     }
-                    // $isnewIP = true;
+                     $isnewIP = false;//as some times , Ip not working properly, for deployment, returning false
                     $data['isnewIP'] = $isnewIP;
+                    $data['status'] = true;
             } else {
                 $data['message'] = 'Username And Password Doest Match!';
-            }
-
-
-            //echo "<pre>";print_r($api_info);die;
-            if ($api_info['status']) {
-                $data['customer_id'] = $api_info['customer_id'];
-                // $json['data'] = $data;
                 $data['status'] = true;
-                //$json['success'] = $this->language->get('text_success');
-                // $json['message'][] = ['type' => $api_info['success_message'], 'body' => $api_info['success_message']];
-                $data['message'] = $this->language->get('verify_mail_sent');
-            } else {
-                // $json['status'] = 10029; //user not found
-                // $json['message'][] = ['type' => '', 'body' => $api_info['error_warning']];
-                // http_response_code(400);
-                $data['status'] = false;
-                $data['message'] = "Error";
-                $data['warning'] = "Error";
             }
-        } else {
-            // $json['status'] = 10010;
-            // $json['message'][] = ['type' => '', 'body' => "Params not passed properly"];
-            // http_response_code(400);
 
+ 
+        } else {
+           
             $data['status'] = false;
             $data['warning'] = "Error";
             $data['message'] = "Error";
