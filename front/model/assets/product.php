@@ -2322,6 +2322,18 @@ class ModelAssetsProduct extends Model
     /** Get Latest products by StoreId **/
     public function getLatestProductsByStoreId($store_id, $limit)
     {
+
+                    
+            $disabled_products_string = NULL;
+            if(isset($_SESSION['customer_category']) && $_SESSION['customer_category'] != NULL) {
+            $category_pricing_disabled_products = $this->getCategoryPriceStatusByCategoryName($_SESSION['customer_category'], 0);   
+            //$log = new Log('error.log');
+            //$log->write('category_pricing_disabled_products');
+            $disabled_products = array_column($category_pricing_disabled_products, 'product_store_id');
+            $disabled_products_string = implode(',', $disabled_products);
+            //$log->write($disabled_products_string);
+            //$log->write('category_pricing_disabled_products');
+            }
         $categories = $this->model_assets_category->getCategoriesByStoreId($store_id);
         $this->db->select('product_to_store.*,product.*,product_description.*', false);
         $this->db->join('product', 'product.product_id = product_to_store.product_id', 'left');
@@ -2333,6 +2345,11 @@ class ModelAssetsProduct extends Model
             $cat_array = array_column($categories, 'category_id');
             $this->db->where_in('product_to_category.category_id', $cat_array);
         }
+
+
+            if ($disabled_products_string != NULL && isset($_SESSION['customer_category']) && $_SESSION['customer_category'] != NULL) {
+                $this->db->where_not_in('product_to_store.product_store_id', $disabled_products_string);
+            }
         $this->db->where('product_to_store.status', 1);
         $this->db->where('product_to_store.quantity >=', 1);
         $this->db->where('product.status', 1);
