@@ -1240,8 +1240,8 @@ class ControllerApiCustomerProducts extends Controller
                     $log->write('api/search');
                     $log->write($filter_data);
 
-                    $results = $this->model_assets_product->getProductsByApi($filter_data);
-
+                    $results = $this->model_assets_product->getProductsByApiNew($filter_data);
+                        //  echo "<pre>";print_r($results);die;
                     foreach ($results as $result) {
                         if (file_exists(DIR_IMAGE.$result['image'])) {
                             $image = $this->model_tool_image->resize($result['image'], $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
