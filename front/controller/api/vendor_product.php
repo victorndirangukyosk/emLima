@@ -90,7 +90,39 @@ class ControllerApiVendorProduct extends Controller
         }
 
         $results = $query = $conn->query($sql);
+
+        
+        $disabled_products_string = NULL;
+        if(isset($_SESSION['customer_category']) && $_SESSION['customer_category'] != NULL) {
+        $category_pricing_disabled_products = $this->getCategoryPriceStatusByCategoryName($_SESSION['customer_category'], 0);   
+        //$log = new Log('error.log');
+        //$log->write('category_pricing_disabled_products');
+        $disabled_products = array_column($category_pricing_disabled_products, 'product_id');
+        $disabled_products_string = implode(',', $disabled_products);
+        //$log->write($disabled_products_string);
+        //$log->write('category_pricing_disabled_products');
+        }
+
+
         foreach ($results as $result) {
+            $avaialble=0;
+            if ($disabled_products_string != NULL && isset($_SESSION['customer_category']) && $_SESSION['customer_category'] != NULL)  
+            {
+                 // if (in_array($r['product_store_id'], $disabled_products_string)) {
+                //      continue;
+                // } 
+                    
+                foreach($disabled_products as $key=>$value)
+                {                   
+                        if($value==$result['product_id'] )
+                        {
+                        $avaialble=1;                       
+                        }                   
+                }               
+                
+            }            
+            if($avaialble==0){
+                // echo "<pre>";print_r($result);die;
             $result['index'] = $result['name'];
             if (strpos($result['name'], '&nbsp;&nbsp;&gt;&nbsp;&nbsp;')) {
                 $result['name'] = explode('&nbsp;&nbsp;&gt;&nbsp;&nbsp;', $result['name']);
@@ -103,6 +135,7 @@ class ControllerApiVendorProduct extends Controller
                 'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')).' - '.$result['unit'],
                 'unit' => $result['unit'],
             ];
+        }
         }
         $sort_order = [];
 
@@ -119,5 +152,10 @@ class ControllerApiVendorProduct extends Controller
         //echo $sql;ext;
 
        // $query = $this->db->query($sql);
+    }
+
+    public function getCategoryPriceStatusByCategoryName($category_name, $status) {
+        $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "product_category_prices WHERE price_category ='" . $category_name . "' AND status ='" . $status . "'");
+        return $query->rows;
     }
 }
