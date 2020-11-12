@@ -752,6 +752,17 @@ class ModelAccountCustomer extends Model {
             $this->db->query('INSERT INTO '.DB_PREFIX."customer_ip SET customer_id = '".(int) $customer_id."', ip = '".$this->db->escape($this->request->server['REMOTE_ADDR'])."', date_added = NOW()");
         }
     }
+    
+    public function getAllCustomers() {
+        $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer");
 
+        return $query->rows;
+    }
+    
+    public function getCustomerById($customer_id) {
+        $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . (int) $customer_id . "'");
+
+        return $query->rows;
+    }
 
 }

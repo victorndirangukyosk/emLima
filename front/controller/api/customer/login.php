@@ -495,4 +495,21 @@ class ControllerApiCustomerLogin extends Controller
         $this->response->setOutput(json_encode($json));
         }
     }
+
+    public function addSendpushnotificationtoallcustomer() {
+        
+        $log = new Log('error.log');
+        $log->write('addsendpushnotificationtoallcustomers');
+        $this->load->model('account/customer');
+        $customers = $this->model_account_customer->getAllCustomers();
+        //$customers = $this->model_account_customer->getCustomerById($this->request->post['customer_id']);
+        foreach ($customers as $customer) {
+            $sen['customer_id'] = '';
+            $log->write($customer['customer_id'].' '.$customer['device_id']);
+            $ret = $this->emailtemplate->sendDynamicPushNotification($customer['customer_id'], $customer['device_id'], $this->request->post['message'], $this->request->post['title'], $sen);
+        }
+        $json['response'] = $ret;
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
 }
