@@ -61,20 +61,7 @@ class ControllerApiLogin extends Controller {
     }
 
     public function addsendpushnotification() {
-        $this->load->model('account/customer');
-        $customers = $this->model_account_customer->getCustomerById($this->request->post['customer_id']);
-        $log = new Log('error.log');
-        $log->write('customers');
-        $log->write($customers);
-        $log->write('customers');
-        
-        foreach ($customers as $customer) {
-            $sen['customer_id'] = '';
-            $log->write($customer['customer_id'].' '.$customer['device_id']);
-            $ret = $this->emailtemplate->sendDynamicPushNotification($customer['customer_id'], $customer['device_id'], $this->request->post['message'], $this->request->post['title'], $sen);
-        }
-        
-        //$ret = $this->emailtemplate->sendPushNotification($this->request->post['vendor_id'], $this->request->post['device_id'], $this->request->post['order_id'], $this->request->post['store_id'], $this->request->post['message'], $this->request->post['title']);
+        $ret = $this->emailtemplate->sendPushNotification($this->request->post['vendor_id'], $this->request->post['device_id'], $this->request->post['order_id'], $this->request->post['store_id'], $this->request->post['message'], $this->request->post['title']);
         $json['response'] = $ret;
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));

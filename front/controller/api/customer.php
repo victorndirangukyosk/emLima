@@ -102,8 +102,8 @@ class ControllerApiCustomer extends Controller
         $log = new Log('error.log');
         $log->write('addsendpushnotificationtoallcustomers');
         $this->load->model('account/customer');
-        //$customers = $this->model_account_customer->getAllCustomers();
-        $customers = $this->model_account_customer->getCustomerById($this->request->post['customer_id']);
+        $customers = $this->model_account_customer->getAllCustomers();
+        //$customers = $this->model_account_customer->getCustomerById($this->request->post['customer_id']);
         foreach ($customers as $customer) {
             $sen['customer_id'] = '';
             $log->write($customer['customer_id'].' '.$customer['device_id']);
