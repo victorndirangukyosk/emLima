@@ -103,6 +103,8 @@ class ControllerApiCustomer extends Controller
         $customers = $this->model_account_customer->getCustomerById($this->request->post['customer_id']);
         foreach ($customers as $customer) {
             $sen['customer_id'] = '';
+            $log = new Log('error.log');
+            $log->write($customer['customer_id'].' '.$customer['device_id']);
             $ret = $this->emailtemplate->sendDynamicPushNotification($customer['customer_id'], $customer['device_id'], $this->request->post['message'], $this->request->post['title'], $sen);
         }
         $json['response'] = $ret;
