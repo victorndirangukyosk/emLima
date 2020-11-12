@@ -98,12 +98,13 @@ class ControllerApiCustomer extends Controller
     }
     
     public function addsendpushnotificationtoallcustomers() {
-
+        
+        $log = new Log('error.log');
+        $log->write('addsendpushnotificationtoallcustomers');
         //$customers = $this->model_account_customer->getAllCustomers();
         $customers = $this->model_account_customer->getCustomerById($this->request->post['customer_id']);
         foreach ($customers as $customer) {
             $sen['customer_id'] = '';
-            $log = new Log('error.log');
             $log->write($customer['customer_id'].' '.$customer['device_id']);
             $ret = $this->emailtemplate->sendDynamicPushNotification($customer['customer_id'], $customer['device_id'], $this->request->post['message'], $this->request->post['title'], $sen);
         }
