@@ -697,7 +697,8 @@ class ControllerProductStore extends Controller
         $this->load->model('tool/image');
 
         //$results = $this->model_assets_product->getProducts($filter_data);
-        $results = $this->model_assets_product->getProductsForHomePage($filter_data);
+        //$results = $this->model_assets_product->getProductsForHomePage($filter_data);
+        $results = $this->model_assets_product->getProductsForCategoryPage($filter_data);
 //        echo '<pre>';print_r($results); die;
 
         $data['products'] = [];
