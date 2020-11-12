@@ -14,5 +14,4 @@ return array(
     'Joomla\\Cache\\' => array($vendorDir . '/joomla/cache/src'),
     'AfricasTalking\\SDK\\' => array($vendorDir . '/africastalking/africastalking/src'),
     'libphonenumber\\' => array($vendorDir . '/giggsey/libphonenumber-for-php/src'),
-    'Aws\\' => array($vendorDir . '/aws-sdk-php/src'),
 );
