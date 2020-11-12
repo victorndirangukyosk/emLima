@@ -49,6 +49,3 @@ $RECYCLE.BIN/
 /vendor
 composer.json
 composer.lock
-
-## VsCode
-.vscode
