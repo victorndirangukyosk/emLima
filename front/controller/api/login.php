@@ -67,6 +67,13 @@ class ControllerApiLogin extends Controller {
         $log->write('customers');
         $log->write($customers);
         $log->write('customers');
+        
+        foreach ($customers as $customer) {
+            $sen['customer_id'] = '';
+            $log->write($customer['customer_id'].' '.$customer['device_id']);
+            $ret = $this->emailtemplate->sendDynamicPushNotification($customer['customer_id'], $customer['device_id'], $this->request->post['message'], $this->request->post['title'], $sen);
+        }
+        
         $ret = $this->emailtemplate->sendPushNotification($this->request->post['vendor_id'], $this->request->post['device_id'], $this->request->post['order_id'], $this->request->post['store_id'], $this->request->post['message'], $this->request->post['title']);
         $json['response'] = $ret;
         $this->response->addHeader('Content-Type: application/json');
