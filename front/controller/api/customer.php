@@ -96,4 +96,17 @@ class ControllerApiCustomer extends Controller
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
+    
+    public function addsendpushnotificationtoallcustomers() {
+
+        $customers = $this->model_account_customer->getAllCustomers();
+        foreach ($customers as $customer) {
+            $sen['customer_id'] = '';
+            $ret = $this->emailtemplate->sendDynamicPushNotification($customer['customer_id'], $customer['device_id'], $this->request->post['message'], $this->request->post['title'], $sen);
+        }
+        $json['response'] = $ret;
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
 }
