@@ -22,8 +22,8 @@ class Log
     {
         if (self::$cloudWatchClient == null) {
             self::$cloudWatchClient = new CloudWatchLogsClient([
-                'version'     => 'latest',
-                'region'      => AWS_CLOUDWATCH_LOGS_REGION,
+                'version'    => '2014-03-28',
+                'region'     => AWS_CLOUDWATCH_LOGS_REGION,
                 'credentials' => [
                     'key'    => AWS_ACCESS_KEY,
                     'secret' => AWS_SECRET_ACCESS_KEY,
