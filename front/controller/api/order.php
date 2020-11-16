@@ -772,7 +772,7 @@ class ControllerApiOrder extends Controller
             //     $order_id = 0;
             // }
             $order_id = $this->request->post['order_id'];
-            // $customer_id = $this->request->post['customer_id'];
+            $customer_id = $this->request->post['customer_id'];
             $order_status = $this->request->post['order_status'];
             $log = new Log('error.log');
             $log->write($order_id);
@@ -792,7 +792,7 @@ class ControllerApiOrder extends Controller
                 if (($sub_users_order_details['parent_approval'] == 'Approved') || ($sub_users_order_details['head_chef'] == 'Approved' && $sub_users_order_details['procurement'] == 'Approved')) {
                     $comment = 'Order Approved By Parent User';
                     // $this->model_account_order->UpdateOrderStatus($order_id, 14, $comment);
-                    $this->model_account_order->UpdateOrderStatus($order_id, 14, $comment, $this->customer->getId(), 'customer');
+                    $this->model_account_order->UpdateOrderStatus($order_id, 14, $comment,$customer_id, 'customer');
                     
                     $sub_users_order_details = $this->model_account_order->getSubUserOrderDetailsapi($order_id);
                    
@@ -817,7 +817,7 @@ class ControllerApiOrder extends Controller
                 if ($sub_users_order_details['parent_approval'] == 'Rejected' || $sub_users_order_details['head_chef'] == 'Rejected') {
                     $comment = 'Order Rejected By Parent User';
                     //  $this->model_account_order->UpdateOrderStatus($order_id, 16,$comment);
-                $this->model_account_order->UpdateOrderStatus($order_id, 16, $comment, $this->customer->getId(), 'customer');
+                $this->model_account_order->UpdateOrderStatus($order_id, 16, $comment, $customer_id, 'customer');
                 $this->model_account_order->SubUserOrderReject($order_id, 16);
                     $sub_users_order_details = $this->model_account_order->getSubUserOrderDetailsapi($order_id);
                     if ($sub_users_order_details['order_status_id'] == 14) {
@@ -851,7 +851,7 @@ class ControllerApiOrder extends Controller
                 if (($sub_users_order_details['head_chef'] == 'Rejected' || $sub_users_order_details['head_chef'] == 'Approved') && $sub_users_order_details['procurement'] == 'Rejected') {
                     $comment = 'Order Rejected By Parent User';
                     // $this->model_account_order->UpdateOrderStatus($order_id, 16,$comment);
-                    $this->model_account_order->UpdateOrderStatus($order_id, 16, $comment, $this->customer->getId(), 'customer');
+                    $this->model_account_order->UpdateOrderStatus($order_id, 16, $comment,$customer_id, 'customer');
                     
                     $sub_users_order_details = $this->model_account_order->getSubUserOrderDetailsapi($order_id);
                     if ($sub_users_order_details['order_status_id'] == 14) {
@@ -902,7 +902,7 @@ class ControllerApiOrder extends Controller
             if (($sub_users_order_details['parent_approval'] == 'Approved') || ($sub_users_order_details['head_chef'] == 'Approved' && $sub_users_order_details['procurement'] == 'Approved')) {
                 $comment = 'Order Approved By ' . $user_role . ' User';
                 // $this->model_account_order->UpdateOrderStatus($order_id, 14, $comment);
-                $this->model_account_order->UpdateOrderStatus($order_id, 14, $comment, $this->customer->getId(), 'customer');
+                $this->model_account_order->UpdateOrderStatus($order_id, 14, $comment, $customer_id, 'customer');
                 
                 $sub_users_order_details = $this->model_account_order->getSubUserOrderDetails($order_id, $customer_id);
                 if ($sub_users_order_details['order_status_id'] == 14) {
@@ -927,7 +927,7 @@ class ControllerApiOrder extends Controller
                
                 $comment = 'Order Rejected By ' .$user_role.' User';
                 // $this->model_account_order->UpdateOrderStatus($order_id, 16, $comment);
-                $this->model_account_order->UpdateOrderStatus($order_id, 16, $comment, $this->customer->getId(), 'customer');
+                $this->model_account_order->UpdateOrderStatus($order_id, 16, $comment, $customer_id, 'customer');
                 
                 $sub_users_order_details = $this->model_account_order->getSubUserOrderDetails($order_id, $customer_id);
                 if ($sub_users_order_details['order_status_id'] == 14) {
@@ -964,7 +964,7 @@ class ControllerApiOrder extends Controller
             if (($sub_users_order_details['head_chef'] == 'Rejected' || $sub_users_order_details['head_chef'] == 'Approved') && $sub_users_order_details['procurement'] == 'Rejected') {
                 $comment = 'Order Rejected By ' .$user_role.' User';
                 // $this->model_account_order->UpdateOrderStatus($order_id, 16, $comment);
-                $this->model_account_order->UpdateOrderStatus($order_id, 16, $comment, $this->customer->getId(), 'customer');
+                $this->model_account_order->UpdateOrderStatus($order_id, 16, $comment, $customer_id, 'customer');
                 
                 $sub_users_order_details = $this->model_account_order->getSubUserOrderDetails($order_id, $customer_id);
                 if ($sub_users_order_details['order_status_id'] == 14) {
