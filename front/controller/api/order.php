@@ -772,7 +772,13 @@ class ControllerApiOrder extends Controller
             //     $order_id = 0;
             // }
             $order_id = $this->request->post['order_id'];
-            $customer_id = $this->request->post['customer_id'];
+            // $customer_id = $this->request->post['customer_id'];
+            if (isset($this->request->get['customer_id'])) {
+                $customer_id = $this->request->get['customer_id'];
+            } else {
+                $customer_id = $this->model_account_order->getCustomerParentByOrderId($order_id);
+                
+            }
             $order_status = $this->request->post['order_status'];
             $log = new Log('error.log');
             $log->write($order_id);
