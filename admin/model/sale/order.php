@@ -1138,6 +1138,13 @@ class ModelSaleOrder extends Model
 
         $query = $this->db->query($sql);
     }
+    
+    public function deleteCustomerOrderProduct($order_id, $product_id)
+    {
+        $sql = 'DELETE FROM '.DB_PREFIX."order_product WHERE order_id = '".(int) $order_id."' and product_id = '".(int) $product_id."'";
+
+        $query = $this->db->query($sql);
+    }    
 
     public function getOrderProductsIds($order_id)
     {
