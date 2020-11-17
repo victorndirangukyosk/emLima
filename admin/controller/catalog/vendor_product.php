@@ -437,9 +437,24 @@ class ControllerCatalogVendorProduct extends Controller {
             }
 
             $results = $modified_res;
-            $product_total = count($results);
+            //$product_total = count($results);
         }
-
+        
+        $results_count = $this->model_catalog_vendor_product->getProductsCount($filter_data);
+        if (isset($this->request->get['filter_category_price'])) {
+            $modified_res_count = [];
+            if (count($results_count) > 0) {
+                foreach ($results_count as $results_cou) {
+                    if (isset($category_prices[$results_cou['product_store_id'] . '_' . $this->request->get['filter_category_price'] . '_75'])) {
+                        $modified_res_count[] = $results_cou;
+                    }
+                }
+            }
+            
+            $results_count = $modified_res_count;
+            $product_total = count($results_count);
+        }
+        
         $this->load->model('catalog/category');
         $data['categories'] = $this->model_catalog_category->getCategories(0);
 
@@ -685,6 +700,10 @@ class ControllerCatalogVendorProduct extends Controller {
 
         if (isset($this->request->get['filter_quantity'])) {
             $url .= '&filter_quantity=' . $this->request->get['filter_quantity'];
+        }
+        
+        if (isset($this->request->get['filter_category_price'])) {
+            $url .= '&filter_category_price=' . $this->request->get['filter_category_price'];
         }
 
         if (isset($this->request->get['sort'])) {
