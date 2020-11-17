@@ -689,6 +689,8 @@ class ModelSaleOrder extends Model
                 'latitude' => $order_query->row['latitude'],
                 'longitude' => $order_query->row['longitude'],
                 'po_number' => $order_query->row['po_number'],
+                'login_latitude' => $order_query->row['login_latitude'],
+                'login_longitude' => $order_query->row['login_longitude'],
             ];
         } else {
             return;

@@ -259,6 +259,16 @@
 				<td><?php echo $text_date_modified; ?></td>
 				<td><?php echo $date_modified; ?></td>
 			  </tr>
+
+			  <tr>
+					<td>Latitude:</td>
+					<td><?php echo $login_latitude; ?></td>
+				  </tr>
+
+				   <tr>
+					<td>Longitude:</td>
+					<td><?php echo $login_longitude; ?></td>
+				  </tr>
 			</table>
 		  </div>
 		  <?php if(!$this->user->isVendor()){ ?>

@@ -2806,14 +2806,15 @@ class ControllerSaleOrder extends Controller {
                 $data['order_status'] = '';
                 $data['order_status_color'] = '';
             }
-
+            //echo '<pre>';print_r($order_info);exit;
             $data['ip'] = $order_info['ip'];
             $data['forwarded_ip'] = $order_info['forwarded_ip'];
             $data['user_agent'] = $order_info['user_agent'];
             $data['accept_language'] = $order_info['accept_language'];
             $data['date_added'] = date($this->language->get('date_format_short'), strtotime($order_info['date_added']));
             $data['date_modified'] = date($this->language->get('date_format_short'), strtotime($order_info['date_modified']));
-
+            $data['login_latitude'] = $order_info['login_latitude']??'NA';
+            $data['login_longitude'] = $order_info['login_longitude']??'NA';
             // Custom fields
             $data['payment_custom_fields'] = [];
 
