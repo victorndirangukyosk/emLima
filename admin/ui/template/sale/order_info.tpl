@@ -269,6 +269,21 @@
 					<td>Longitude:</td>
 					<td><?php echo $login_longitude; ?></td>
 				  </tr>
+				  <?php if($login_longitude !='NA' &&  $login_latitude !='NA' && $login_longitude !='0' &&  $login_latitude !='0') { ?>
+ 					<tr>
+					<td>Orderd Location:</td>
+					<td>
+					<input type="button" class="btn btn-primary" onclick="initOrderedLocationMapLoad()" value="View Map">
+					</td>
+					</tr>
+					<tr>
+					<td colspan=2>
+					<div class="" id="orderdlocationmap" style="height: 100%; min-height: 600px;">
+		    		</div>		    		  
+					</td>
+				  </tr>
+				  <?php } ?>
+				 
 			</table>
 		  </div>
 		  <?php if(!$this->user->isVendor()){ ?>
@@ -2138,5 +2153,18 @@ $('.delivery_timeslot').change(function(){
       	//initMap(<?= $pointB ?>,<?= $pointA ?>);
     });
     
+	function initOrderedLocationMapLoad () {
+		const myLatLng = { lat: <?php echo $login_latitude ?>, lng:<?php echo $login_longitude ?> };
+		const map = new google.maps.Map(document.getElementById("orderdlocationmap"), {
+			zoom: 4,
+			center: myLatLng,
+		});
+		new google.maps.Marker({
+			position: myLatLng,
+			map,
+			title: "Ordered Location!",
+		});
+		}
+
 </script>
 <?php echo $footer; ?> 
