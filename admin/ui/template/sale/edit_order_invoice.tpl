@@ -123,7 +123,17 @@
           <!--<input type="number" min="1" step="1" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57" class="form-control changeTotal text-right" name="products[<?php echo $product['product_id'] ?>][quantity]" value="<?php echo $product['quantity']; ?>"/>-->
           <input type="number" disabled min="1" step="1" class="form-control  text-right" name="products[<?php echo $product['product_id'] ?>][quantity]" value="<?php echo $product['quantity']; ?>"/>
           </td>
-		  <td class="text-right"><input type="text" class="form-control" name="products[<?php echo $product['product_id']?>][unit]" value="<?php echo $product['unit']; ?>"/></td>
+		  <td class="text-right">
+                      <select name="products[<?php echo $product['product_id']?>][unit]" class="form-control changeUnit" data-product_id="<?php echo $product['product_id']?>">
+                          <?php foreach($product['variations'] as $variant) { ?>
+                          <?php if($variant['variation_id'] == $product['product_id']) { ?>
+                          <option data-model="<?php echo $variant['model'] ?>" data-categoryprice="<?php echo $variant['category_price'] ?>" data-price="<?php echo $variant['price'] ?>" data-product_id="<?php echo $variant['variation_id'] ?>" <?php echo $variant['category_price_variant'] ?> selected><?php echo $variant['unit']; ?></option>
+                          <?php } else { ?>
+                          <option data-model="<?php echo $variant['model'] ?>" data-categoryprice="<?php echo $variant['category_price'] ?>" data-price="<?php echo $variant['price'] ?>" data-product_id="<?php echo $variant['variation_id'] ?>" <?php echo $variant['category_price_variant'] ?> ><?php echo $variant['unit']; ?></option>
+                          <?php } } ?>
+                      </select>
+                      <!--<input type="text" class="form-control" name="products[<?php echo $product['product_id']?>][unit]" value="<?php echo $product['unit']; ?>"/>-->
+                  </td>
           <td class="text-right">
 
           <!--<input type="number" min="1" step="1" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57" class="form-control changeTotal text-right" name="products[<?php echo $product['product_id'] ?>][quantity]" value="<?php echo $product['quantity']; ?>"/>-->
@@ -344,6 +354,83 @@ $(document).delegate('.changeTotal','change', function() {
 
   $('#total').val(inbetweensum + Number(sum));
 
+});
+
+$(document).delegate('.changeUnit','change', function() {
+  
+  console.log("changeUnit");
+  console.log($(this).val());
+  console.log($(this).find(':selected').attr('data-price'));
+  console.log($(this).find(':selected').attr('data-product_id')+'data-product_id');
+  var old_product_id = $(this).attr('data-product_id');
+  var new_product_id = $(this).find(':selected').attr('data-product_id');
+
+  var q = $(this).parent().parent().children().eq(5).children().val();
+  var p = $(this).parent().parent().children().eq(6).children().val();
+  var qo = $(this).parent().parent().children().eq(3).children().val();
+  var uo = $(this).parent().parent().children().eq(2).children().val();
+  
+  //Assign Values
+  $(this).parent().parent().children().eq(2).children().val($(this).val());
+  if($(this).find(':selected').attr('data-categoryprice').toString().replace(/,/g, '') > 0) {
+  $(this).parent().parent().children().eq(6).children().val($(this).find(':selected').attr('data-categoryprice').toString().replace(/,/g, ''));
+  $(this).parent().parent().children().eq(7).children().val($(this).find(':selected').attr('data-categoryprice').toString().replace(/,/g, '')*q);
+  } else {
+  $(this).parent().parent().children().eq(6).children().val($(this).find(':selected').attr('data-price').toString().replace(/,/g, ''));
+  $(this).parent().parent().children().eq(7).children().val($(this).find(':selected').attr('data-price').toString().replace(/,/g, '')*q);
+  }
+  //$(this).parent().parent().children().eq(8).children().val($(this).find(':selected').attr('data-product_id'));
+  
+  $(this).parent().parent().children().eq(8).children('input[name="products['+old_product_id+'][product_id]"]').val($(this).find(':selected').attr('data-product_id'));
+  $(this).parent().parent().children().eq(8).children('input[name="products['+old_product_id+'][model]"]').val($(this).find(':selected').attr('data-model'));
+  
+  
+  $(this).parent().parent().children().eq(0).children('input[name="products['+old_product_id+'][name]"]').attr('name', 'products['+new_product_id+'][name]');
+  $(this).parent().parent().children().eq(1).children('input[name="products['+old_product_id+'][produce_type]"]').attr('name', 'products['+new_product_id+'][produce_type]');
+  $(this).parent().parent().children().eq(2).children('input[name="products['+old_product_id+'][unit]"]').attr('name', 'products['+new_product_id+'][unit]');
+  $(this).parent().parent().children().eq(3).children('input[name="products['+old_product_id+'][quantity]"]').attr('name', 'products['+new_product_id+'][quantity]');
+  $(this).parent().parent().children().eq(4).children('select[name="products['+old_product_id+'][unit]"]').attr('name', 'products['+new_product_id+'][unit]');
+  $(this).parent().parent().children().eq(5).children('input[name="products['+old_product_id+'][quantity]"]').attr('name', 'products['+new_product_id+'][quantity]');
+  $(this).parent().parent().children().eq(6).children('input[name="products['+old_product_id+'][price]"]').attr('name', 'products['+new_product_id+'][price]');
+  
+  $(this).parent().parent().children().eq(8).children('input[name="products['+old_product_id+'][product_id]"]').attr('name', 'products['+new_product_id+'][product_id]');
+  $(this).parent().parent().children().eq(8).children('input[name="products['+old_product_id+'][model]"]').attr('name', 'products['+new_product_id+'][model]');
+  $(this).parent().parent().children().eq(8).children('input[name="products['+old_product_id+'][product_note]"]').attr('name', 'products['+new_product_id+'][product_note]');
+  $(this).parent().parent().children().eq(8).children('input[name="products['+old_product_id+'][produce_type]"]').attr('name', 'products['+new_product_id+'][produce_type]');
+  
+  console.log($(this).parent().parent().children().eq(8).children('input[name="products['+old_product_id+'][product_id]"]').val($(this).find(':selected').attr('data-product_id')));
+
+  
+  var sum =0;
+  var inbetweensum =0;
+  $('.totalPrice').each(function() {
+    console.log("value");
+
+    console.log(this.value);
+
+    sum += Number($(this).val());
+  });
+
+  $('.inBetween').each(function() {
+    console.log("inBetween");
+
+    console.log(this.value);
+
+    inbetweensum += Number($(this).val());
+  });
+
+
+  
+
+  $('#sub_total').val(sum);
+
+  $('#total').val(inbetweensum + Number(sum));
+  
+  console.log($(this).find(':selected').attr('data-price').replace(/,/g, '')+'  '+q);
+  console.log(q);
+  console.log(p);
+  console.log(qo);
+  console.log(uo);  
 });
 
 $(document).delegate('.changeTotalValue','blur', function() {
@@ -596,7 +683,8 @@ function add() {
   $html += '</td>';
   
   $html += '<td class="text-right">';
-  $html += '<input type="text" class="form-control" name="products['+noProduct+'][unit]" value=""/>';
+  /*$html += '<input type="text" class="form-control" name="products['+noProduct+'][unit]" value=""/>';*/
+  $html += '<select name="products['+noProduct+'][unit]" class="form-control changeUnit"></select>';
   $html += '</td>';
 
   $html += '<td class="text-right">';
@@ -686,14 +774,26 @@ function addInBetween() {
                 dataType: 'json',     
                 success: function(json) {
                     response($.map(json, function(item) {
+                        console.log(item['category_price'].toString().replace(/,/g, ""));
+                        if(item['category_price'].toString().replace(/,/g, "") > 0) {
                         return {
+                            label: item['name']+' - '+item['unit'],
+                            value: item['name'],
+                            unit: item['unit'],
+                            price: item['category_price'],
+                            model: item['model'],
+                            product_id: item['product_store_id'],
+                        }
+                    } else {
+                      return {
                             label: item['name']+' - '+item['unit'],
                             value: item['name'],
                             unit: item['unit'],
                             price: item['price'],
                             model: item['model'],
                             product_id: item['product_store_id'],
-                        }
+                        }  
+                    }
                     }));
 
                     console.log(json);
@@ -706,6 +806,22 @@ function addInBetween() {
         select: function (event, ui) {
           console.log("ui");
           console.log(ui);
+          console.log(ui.item.product_id);
+          
+          $.ajax({
+                url: 'index.php?path=sale/order/getProductVariantsInfo&order_id=<?php echo $order_id; ?>&product_store_id='+ui.item.product_id+'&token=<?php echo $token; ?>',
+                dataType: 'json',     
+                success: function(json) {
+                    console.log(json);
+                    var option = '';
+                    for (var i=0;i<json.length;i++){
+                           option += '<option data-model="'+ json[i].model +'" data-product_id="'+ json[i].product_store_id +'" data-categoryprice="'+ json[i].category_price +'" data-price="'+ json[i].special_price +'" value="'+ json[i].unit + '"  '+ json[i].category_price_variant + '>' + json[i].unit + '</option>';
+                    }
+                    console.log(option);
+                    $('select[name=\'products['+noProduct+'][unit]').append(option);
+                }
+            });
+          
           //console.log(item['label']);
             //$('.product_name').val(item['label']).focus();
             //$('.product_name').val(item['value']);
