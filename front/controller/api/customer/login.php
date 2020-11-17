@@ -123,7 +123,8 @@ class ControllerApiCustomerLogin extends Controller
             $json['data'] = $customer_info;
         } else {
             if ($api_info['not_verified']) {
-                $json['error'] = $this->language->get('error_not_approved');
+                // $json['error'] = $this->language->get('error_not_approved');
+                $json['error'] = $this->language->get('error_approved');
             } else {
                 $json['error'] = $this->language->get('error_login');
             }
