@@ -50,7 +50,7 @@
 		  	<li><a href="#tab-delivery" data-toggle="tab"><?php echo $tab_delivery; ?></a></li>
 		  <?php } ?>
 		  
-		  <li><a href="#tab-product" data-toggle="tab"><?php echo $tab_product; ?></a></li>
+		  <li><a href="#tab-product" data-toggle="tab">Updated Products<?php //echo $tab_product; ?></a></li>
 		  <li><a href="#tab-original-product" data-toggle="tab">Ordered Products</a></li>
 
 		 <!-- <?php if($is_edited) {?>-->
