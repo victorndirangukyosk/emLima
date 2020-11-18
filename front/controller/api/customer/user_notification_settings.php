@@ -23,13 +23,13 @@ class Controllerapicustomerusernotificationsettings extends Controller {
         //   echo "<pre>";print_r($this->customer->getId());die; 
         try{
              
-            if (!$this->customer->isLogged()) {
-                // $this->session->data['redirect'] = $this->url->link('account/profileinfo', '', 'SSL');
-                // $this->response->redirect($this->url->link('account/login', '', 'SSL'));
-                $json['status'] = 10014;
-                $json['error'] = "Customer not Logged In";
-                return;
-            }
+            // if (!$this->customer->isLogged()) {
+            //     // $this->session->data['redirect'] = $this->url->link('account/profileinfo', '', 'SSL');
+            //     // $this->response->redirect($this->url->link('account/login', '', 'SSL'));
+            //     $json['status'] = 10014;
+            //     $json['error'] = "Customer not Logged In";
+            //     return;
+            // }
              
             
         $log = new Log('error.log');
