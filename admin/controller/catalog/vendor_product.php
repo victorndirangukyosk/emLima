@@ -428,15 +428,31 @@ class ControllerCatalogVendorProduct extends Controller {
         //echo '<pre>';print_r($results);
         if (isset($this->request->get['filter_category_price'])) {
             $modified_res = [];
+            $modified_res_new = [];
             if (count($results) > 0) {
                 foreach ($results as $res) {
                     if (isset($category_prices[$res['product_store_id'] . '_' . $this->request->get['filter_category_price'] . '_75'])) {
                         $modified_res[] = $res;
                     }
                 }
+                if (count($modified_res) > 0) {
+                    foreach ($modified_res as $modified) {
+                        //$log = new Log('error.log');
+                        //$log->write($modified);
+                        $category_price_details = $this->model_catalog_vendor_product->getCategoryPriceDetails($modified['product_store_id'], $modified['product_id'], $modified['product_name'], $modified['store_id'], $this->request->get['filter_category_price']);
+                        //$log->write($category_price_details);
+                        if(is_array($category_price_details) && count($category_price_details) > 0 && array_key_exists('status', $category_price_details)) {
+                        $modified['category_price_status'] = $category_price_details['status'];
+                        } else {
+                        $modified['category_price_status'] = 1;    
+                        }
+                        $modified_res_new[] = $modified;
+                    }
+                }
             }
-
-            $results = $modified_res;
+            
+            $results = $modified_res_new;
+            //$results = $modified_res;
             //$product_total = count($results);
         }
         
@@ -484,6 +500,7 @@ class ControllerCatalogVendorProduct extends Controller {
                 //'weight' => $result['weight'],
                 'model' => $result['model'],
                 'category' => $category,
+                'category_price_status' => array_key_exists('category_price_status', $result) ? $result['category_price_status'] : '',
                 'status' => ($result['sts']) ? $this->language->get('text_enabled') : $this->language->get('text_disabled'),
                 'edit' => $this->url->link('catalog/vendor_product/edit', 'token=' . $this->session->data['token'] . '&store_product_id=' . $result['product_store_id'] . $url, 'SSL'),
             ];

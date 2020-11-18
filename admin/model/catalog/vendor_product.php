@@ -757,4 +757,11 @@ class ModelCatalogVendorProduct extends Model
 
         return $query->rows;
     }
+    
+    public function getCategoryPriceDetails($product_store_id, $product_id, $product_name, $store_id, $price_category) {
+        $category_price = 'SELECT * FROM ' . DB_PREFIX . "product_category_prices WHERE product_store_id ='" . (int) $product_store_id . "' AND price_category='" . $price_category . "' AND product_id='" . $product_id . "' AND product_name='" . $product_name . "' AND store_id='" . $store_id . "'";
+        $res = $this->db->query($category_price);
+        return $res->row;
+    }
+
 }
