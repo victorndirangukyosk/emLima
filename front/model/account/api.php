@@ -626,8 +626,8 @@ class ModelAccountApi extends Model
                    
                         //the Same login verify OTP mail is being used.
                         $log = new Log('error.log');
-                      
-                    if ($customer_info['email_notification'] == 1 && $this->emailtemplate->getEmailEnabled('NewDeviceLogin', 'NewDeviceLogin_1')) {
+                    if ($this->emailtemplate->getEmailEnabled('NewDeviceLogin', 'NewDeviceLogin_1')) {
+                    //if ($customer_info['email_notification'] == 1 && $this->emailtemplate->getEmailEnabled('NewDeviceLogin', 'NewDeviceLogin_1')) {
                         
                         $subject = $this->emailtemplate->getSubject('NewDeviceLogin', 'NewDeviceLogin_1', $data);
                         
