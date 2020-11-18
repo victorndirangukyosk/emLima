@@ -428,16 +428,47 @@ class ControllerCatalogVendorProduct extends Controller {
         //echo '<pre>';print_r($results);
         if (isset($this->request->get['filter_category_price'])) {
             $modified_res = [];
+            $modified_res_new = [];
             if (count($results) > 0) {
                 foreach ($results as $res) {
                     if (isset($category_prices[$res['product_store_id'] . '_' . $this->request->get['filter_category_price'] . '_75'])) {
                         $modified_res[] = $res;
                     }
                 }
+                if (count($modified_res) > 0) {
+                    foreach ($modified_res as $modified) {
+                        //$log = new Log('error.log');
+                        //$log->write($modified);
+                        $category_price_details = $this->model_catalog_vendor_product->getCategoryPriceDetails($modified['product_store_id'], $modified['product_id'], $modified['product_name'], $modified['store_id'], $this->request->get['filter_category_price']);
+                        //$log->write($category_price_details);
+                        if (is_array($category_price_details) && count($category_price_details) > 0 && array_key_exists('status', $category_price_details)) {
+                            $modified['category_price_status'] = $category_price_details['status'];
+                        } else {
+                            $modified['category_price_status'] = 1;
+                        }
+                        $modified_res_new[] = $modified;
+                    }
+                }
             }
 
-            $results = $modified_res;
-            $product_total = count($results);
+            $results = $modified_res_new;
+            //$results = $modified_res;
+            //$product_total = count($results);
+        }
+
+        $results_count = $this->model_catalog_vendor_product->getProductsCount($filter_data);
+        if (isset($this->request->get['filter_category_price'])) {
+            $modified_res_count = [];
+            if (count($results_count) > 0) {
+                foreach ($results_count as $results_cou) {
+                    if (isset($category_prices[$results_cou['product_store_id'] . '_' . $this->request->get['filter_category_price'] . '_75'])) {
+                        $modified_res_count[] = $results_cou;
+                    }
+                }
+            }
+
+            $results_count = $modified_res_count;
+            $product_total = count($results_count);
         }
 
         $this->load->model('catalog/category');
@@ -469,6 +500,7 @@ class ControllerCatalogVendorProduct extends Controller {
                 //'weight' => $result['weight'],
                 'model' => $result['model'],
                 'category' => $category,
+                'category_price_status' => array_key_exists('category_price_status', $result) ? $result['category_price_status'] : '',
                 'status' => ($result['sts']) ? $this->language->get('text_enabled') : $this->language->get('text_disabled'),
                 'edit' => $this->url->link('catalog/vendor_product/edit', 'token=' . $this->session->data['token'] . '&store_product_id=' . $result['product_store_id'] . $url, 'SSL'),
             ];
@@ -685,6 +717,10 @@ class ControllerCatalogVendorProduct extends Controller {
 
         if (isset($this->request->get['filter_quantity'])) {
             $url .= '&filter_quantity=' . $this->request->get['filter_quantity'];
+        }
+
+        if (isset($this->request->get['filter_category_price'])) {
+            $url .= '&filter_category_price=' . $this->request->get['filter_category_price'];
         }
 
         if (isset($this->request->get['sort'])) {
@@ -1594,6 +1630,21 @@ class ControllerCatalogVendorProduct extends Controller {
 
         return $cache_price_data;
         //$this->cache->set('category_price_data',$cache_price_data);
+    }
+
+    public function updateCategoryPricesStatus() {
+        $log = new Log('error.log');
+        $this->load->model('catalog/vendor_product');
+        $log->write($this->request->get['product_id']);
+        $product_store_id = $this->request->get['product_store_id'];
+        $product_id = $this->request->get['product_id'];
+        $product_name = $this->request->get['product_name'];
+        $status = $this->request->get['status'];
+
+        $this->model_catalog_vendor_product->updateCategoryPricesStatus($product_store_id, $product_id, $product_name, $status);
+        $json['warning'] = 'Product Category Pricing Status Updated!';
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
     }
 
 }

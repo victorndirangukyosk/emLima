@@ -190,6 +190,7 @@
                                         <a href="<?php echo $sort_name; ?>"><?php echo $column_name; ?></a>
                                         <?php } ?>
                                     </td>
+                                    <td>Unit</td>
                                     <?php if(count($price_categories)>0){
 										foreach($price_categories as $price_cat){
 										?>
@@ -255,6 +256,7 @@
                                     <td class="text-left"><?php echo $product['product_id']; ?></td>
                                     <td class="text-left"><?php echo $product['product_store_id']; ?></td>
                                     <td class="text-left"><?php echo $product['name']; ?></td>
+                                    <td class="text-left"><?php echo $product['unit']; ?></td>
 									<?php //echo '<pre>';print_r($category_prices);exit;?>
                                     <?php if(count($price_categories)>0){
 										foreach($price_categories as $price_cat){
@@ -266,7 +268,14 @@
 									<?php }?>
 									<?php }?>
                                  
-                                <td class="text-right"><button type="button" onclick="ChangeCategoryPrices('<?php echo $product['product_store_id'];?>','<?php echo $product['product_id'];?>','<?php echo $product['name']; ?>')" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="Save"><i class="fa fa-check-circle text-success"></i></button>
+                                <td class="text-right">
+                                    <?php if(isset($product['category_price_status']) && $product['category_price_status'] != NULL && $product['category_price_status'] == 1) { ?>
+                                    <button type="button" onclick="ChangeCategoryPricesStatus('<?php echo $product['product_store_id'];?>','<?php echo $product['product_id'];?>','<?php echo $product['name']; ?>', 0)" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="Disable Product Category Price Status"><i class="fa fa-check-circle text-success"></i></button>
+                                    <?php } ?>
+                                    <?php if(isset($product['category_price_status']) && $product['category_price_status'] != NULL && $product['category_price_status'] == 0) { ?>
+                                    <button type="button" onclick="ChangeCategoryPricesStatus('<?php echo $product['product_store_id'];?>','<?php echo $product['product_id'];?>','<?php echo $product['name']; ?>', 1)" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="Enable Product Category Price Status"><i class="fa fa-times-circle text-danger"></i></button>
+                                    <?php } ?>
+                                    <button type="button" onclick="ChangeCategoryPrices('<?php echo $product['product_store_id'];?>','<?php echo $product['product_id'];?>','<?php echo $product['name']; ?>')" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="Save"><i class="fa fa-check-circle text-success"></i></button>
 									<button type="button" onclick="getProductInventoryHistory('<?php echo $product['product_store_id']; ?>');" 
 									data-toggle="modal" data-target="#<?php echo $product['product_store_id']; ?>historyModal"
 								    title="" class="btn btn-default" data-original-title="History"><i class="fa fa-history text-success"></i></button>
@@ -580,7 +589,23 @@ function ChangeCategoryPrices(product_store_id,product_id,product_name){
 
 }
 
+function ChangeCategoryPricesStatus(product_store_id,product_id,product_name,status){
+	
+        $.ajax({
+                    url: 'index.php?path=catalog/vendor_product/updateCategoryPricesStatus&token=<?= $token ?>',
+                    dataType: 'json',
+                    data: { product_store_id :product_store_id, product_id : product_id, product_name : product_name, status : status },
+                    success: function(json) {
+                        if (json) {
+                            $('.panel.panel-default').before('<div class="alert alert-success"><i class="fa fa-check"></i> ' + json.warning + '<button type="button" class="close" data-dismiss="alert">×</button></div>');
+                         setTimeout(function(){ location.reload(); }, 1500);
+                                                        
+                    }
+                    }
+        });
 
+
+}
 
 $('input.procured_qty').keyup(function(){
 

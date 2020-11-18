@@ -13,8 +13,9 @@ class ModelAccountCustomer extends Model {
 
         $log->write('customer add');
         $this->trigger->fire('pre.customer.add', $data);
-
-        if (isset($data['customer_group_id']) && is_array($this->config->get('config_customer_group_display')) && in_array($data['customer_group_id'], $this->config->get('config_customer_group_display'))) {
+        //below line commented,as the settings are not checking through out the application.
+        if (isset($data['customer_group_id']))// && is_array($this->config->get('config_customer_group_display')) && in_array($data['customer_group_id'], $this->config->get('config_customer_group_display')))
+        {
             $customer_group_id = $data['customer_group_id'];
         } else {
             $customer_group_id = $this->config->get('config_customer_group_id');
@@ -37,6 +38,7 @@ class ModelAccountCustomer extends Model {
 
         $customer_group_info = $this->model_account_customer_group->getCustomerGroup($customer_group_id);
 
+        // echo "<pre>";print_r($customer_group_info);die;
         $log->write($customer_group_info);
 
         if ($override) {
@@ -51,7 +53,7 @@ class ModelAccountCustomer extends Model {
         }
 
         if (isset($data['telephone'])) {
-//(21) 42353-5255
+          //(21) 42353-5255
             $data['telephone'] = preg_replace('/[^0-9]/', '', $data['telephone']);
         }
 

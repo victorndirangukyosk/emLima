@@ -40,8 +40,12 @@ class ControllerSaleOrder extends Controller {
 
         if (!empty($order_info)) {
             $data['store_id'] = $order_info['store_id'];
-            $json = $this->model_sale_order->getProductDataByStoreFilter($filter_name, $data['store_id']);
-
+            //$json = $this->model_sale_order->getProductDataByStoreFilter($filter_name, $data['store_id']);
+              $json = $this->model_sale_order->getProductsForEditInvoice($filter_name, $data['store_id'], $this->request->get['order_id']);
+              $log = new Log('error.log');
+              //$log->write('json');
+              //$log->write($json);
+              //$log->write('json');
             //$send = $json;
 
             foreach ($json as $j) {
@@ -333,7 +337,8 @@ class ControllerSaleOrder extends Controller {
                             'value' => $value,
                         ];
                     }
-
+                    
+                    $variations = $this->model_sale_order->getProductVariationsNew($product['name'], 75, $order_id);
                     $product_data[] = [
                         'name' => $product['name'],
                         'product_id' => $product['product_id'],
@@ -346,6 +351,7 @@ class ControllerSaleOrder extends Controller {
                         'price' => $product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0),
                         //'total' => $product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0)
                         'total' => ($product['price'] * $product['quantity']) + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0),
+                        'variations' => $variations
                     ];
                 }
 
@@ -402,6 +408,22 @@ class ControllerSaleOrder extends Controller {
 
         //echo "<pre>";print_r($data);die;
         $this->response->setOutput($this->load->view('sale/edit_order_invoice.tpl', $data));
+    }
+    
+    public function getProductVariantsInfo() {
+        
+        $this->load->model('sale/order');
+        $log = new Log('error.log');
+        $log->write($this->request->get['order_id']);
+        $log->write($this->request->get['product_store_id']);
+        $product_info = $this->model_sale_order->getProductForPopup($this->request->get['product_store_id'], false, 75);
+        $variations = $this->model_sale_order->getProductVariationsNew($product_info['name'], 75, $this->request->get['order_id']);
+        //$log->write($variations);
+        $json = $variations;
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+        
     }
 
     public function EditTransactionInvoice() {
@@ -2784,14 +2806,15 @@ class ControllerSaleOrder extends Controller {
                 $data['order_status'] = '';
                 $data['order_status_color'] = '';
             }
-
+            //echo '<pre>';print_r($order_info);exit;
             $data['ip'] = $order_info['ip'];
             $data['forwarded_ip'] = $order_info['forwarded_ip'];
             $data['user_agent'] = $order_info['user_agent'];
             $data['accept_language'] = $order_info['accept_language'];
             $data['date_added'] = date($this->language->get('date_format_short'), strtotime($order_info['date_added']));
             $data['date_modified'] = date($this->language->get('date_format_short'), strtotime($order_info['date_modified']));
-
+            $data['login_latitude'] = $order_info['login_latitude']??'NA';
+            $data['login_longitude'] = $order_info['login_longitude']??'NA';
             // Custom fields
             $data['payment_custom_fields'] = [];
 
@@ -5142,7 +5165,11 @@ class ControllerSaleOrder extends Controller {
         $datas = $this->request->post;
 
         $allp_id = true;
-
+        
+        $log = new Log('error.log');
+        $log->write('products');
+        $log->write($datas['products']);
+        $log->write('products');
         //  echo "<pre>";print_r($datas);die;
 
         $this->model_sale_order->updatePO($this->request->get['order_id'], $datas['po_number']);

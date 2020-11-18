@@ -1290,5 +1290,14 @@ class ModelAccountOrder extends Model {
             // customer push notitification end
         }
     }
+    public function getCustomerParentByOrderId($OrderId) {
+        $row = $this->db->query('select parent as customer_id from ' . DB_PREFIX . 'order o  join ' . DB_PREFIX . 'customer c  on o.customer_id =c.customer_id  where order_id="' . $OrderId . '"')->row;
+        
+        // echo "<pre>";print_r('select parent as customer_id from ' . DB_PREFIX . 'order o  join ' . DB_PREFIX . 'customer c  on o.customer_id =c.customer_id  where order_id="' . $OrderId . '"');die; 
+        
+        if ($row) {
+            return $row['customer_id'];
+        }
 
+    }
 }
