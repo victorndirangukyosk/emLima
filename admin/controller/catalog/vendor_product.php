@@ -441,21 +441,21 @@ class ControllerCatalogVendorProduct extends Controller {
                         //$log->write($modified);
                         $category_price_details = $this->model_catalog_vendor_product->getCategoryPriceDetails($modified['product_store_id'], $modified['product_id'], $modified['product_name'], $modified['store_id'], $this->request->get['filter_category_price']);
                         //$log->write($category_price_details);
-                        if(is_array($category_price_details) && count($category_price_details) > 0 && array_key_exists('status', $category_price_details)) {
-                        $modified['category_price_status'] = $category_price_details['status'];
+                        if (is_array($category_price_details) && count($category_price_details) > 0 && array_key_exists('status', $category_price_details)) {
+                            $modified['category_price_status'] = $category_price_details['status'];
                         } else {
-                        $modified['category_price_status'] = 1;    
+                            $modified['category_price_status'] = 1;
                         }
                         $modified_res_new[] = $modified;
                     }
                 }
             }
-            
+
             $results = $modified_res_new;
             //$results = $modified_res;
             //$product_total = count($results);
         }
-        
+
         $results_count = $this->model_catalog_vendor_product->getProductsCount($filter_data);
         if (isset($this->request->get['filter_category_price'])) {
             $modified_res_count = [];
@@ -466,11 +466,11 @@ class ControllerCatalogVendorProduct extends Controller {
                     }
                 }
             }
-            
+
             $results_count = $modified_res_count;
             $product_total = count($results_count);
         }
-        
+
         $this->load->model('catalog/category');
         $data['categories'] = $this->model_catalog_category->getCategories(0);
 
@@ -718,7 +718,7 @@ class ControllerCatalogVendorProduct extends Controller {
         if (isset($this->request->get['filter_quantity'])) {
             $url .= '&filter_quantity=' . $this->request->get['filter_quantity'];
         }
-        
+
         if (isset($this->request->get['filter_category_price'])) {
             $url .= '&filter_category_price=' . $this->request->get['filter_category_price'];
         }
@@ -1630,6 +1630,21 @@ class ControllerCatalogVendorProduct extends Controller {
 
         return $cache_price_data;
         //$this->cache->set('category_price_data',$cache_price_data);
+    }
+
+    public function updateCategoryPricesStatus() {
+        $log = new Log('error.log');
+        $this->load->model('catalog/vendor_product');
+        $log->write($this->request->get['product_id']);
+        $product_store_id = $this->request->get['product_store_id'];
+        $product_id = $this->request->get['product_id'];
+        $product_name = $this->request->get['product_name'];
+        $status = $this->request->get['status'];
+
+        $this->model_catalog_vendor_product->updateCategoryPricesStatus($product_store_id, $product_id, $product_name, $status);
+        $json['warning'] = 'Product Category Pricing Status Updated!';
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
     }
 
 }
