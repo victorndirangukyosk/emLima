@@ -190,6 +190,7 @@
                                         <a href="<?php echo $sort_name; ?>"><?php echo $column_name; ?></a>
                                         <?php } ?>
                                     </td>
+                                    <td>Unit</td>
                                     <?php if(count($price_categories)>0){
 										foreach($price_categories as $price_cat){
 										?>
@@ -255,6 +256,7 @@
                                     <td class="text-left"><?php echo $product['product_id']; ?></td>
                                     <td class="text-left"><?php echo $product['product_store_id']; ?></td>
                                     <td class="text-left"><?php echo $product['name']; ?></td>
+                                    <td class="text-left"><?php echo $product['unit']; ?></td>
 									<?php //echo '<pre>';print_r($category_prices);exit;?>
                                     <?php if(count($price_categories)>0){
 										foreach($price_categories as $price_cat){
