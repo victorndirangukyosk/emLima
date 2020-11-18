@@ -595,11 +595,10 @@ function ChangeCategoryPricesStatus(product_store_id,product_id,product_name,sta
                     data: { product_store_id :product_store_id, product_id : product_id, product_name : product_name, status : status },
                     success: function(json) {
                         if (json) {
-                            $('.panel.panel-default').before('<div class="alert alert-warning"><i class="fa fa-warning"></i> ' + json.warning + '<button type="button" class="close" data-dismiss="alert">×</button></div>');
-                        }
-                        else {
-                            location.reload();
-                        }
+                            $('.panel.panel-default').before('<div class="alert alert-success"><i class="fa fa-check"></i> ' + json.warning + '<button type="button" class="close" data-dismiss="alert">×</button></div>');
+                         setTimeout(function(){ location.reload(); }, 1500);
+                                                        
+                    }
                     }
         });
 
