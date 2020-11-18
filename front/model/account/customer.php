@@ -660,7 +660,7 @@ class ModelAccountCustomer extends Model {
                         //the Same login verify OTP mail is being used.
                         $log = new Log('error.log');
                       
-                    if ($customer_info['email_notification'] == 1 && $this->emailtemplate->getEmailEnabled('NewDeviceLogin', 'NewDeviceLogin_1')) {
+                    if ($this->emailtemplate->getEmailEnabled('NewDeviceLogin', 'NewDeviceLogin_1')) {
                         
                         $subject = $this->emailtemplate->getSubject('NewDeviceLogin', 'NewDeviceLogin_1', $data);
                         
@@ -678,7 +678,7 @@ class ModelAccountCustomer extends Model {
                     if ('111111111' != $this->request->post['phone']) {
                         $sms_message = $this->emailtemplate->getSmsMessage('NewDeviceLogin', 'NewDeviceLogin_1', $data);
 
-                        if ($customer_info['sms_notification'] == 1 && $this->emailtemplate->getSmsEnabled('NewDeviceLogin', 'NewDeviceLogin_1')) {
+                        if ( $this->emailtemplate->getSmsEnabled('NewDeviceLogin', 'NewDeviceLogin_1')) {
                             $ret = $this->emailtemplate->sendmessage($this->request->post['phone'], $sms_message);
                         }
                     }
