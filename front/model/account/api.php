@@ -125,7 +125,7 @@ class ModelAccountApi extends Model
                 if ('111111111' != $this->request->post['phone']) {
                     $sms_message = $this->emailtemplate->getSmsMessage('LoginOTP', 'loginotp_2', $data);
 
-                    if ($customer_info['sms_notification'] == 1 && $this->emailtemplate->getSmsEnabled('LoginOTP', 'loginotp_2')) {
+                    if ($this->emailtemplate->getSmsEnabled('LoginOTP', 'loginotp_2')) {
                         $ret = $this->emailtemplate->sendmessage($this->request->post['phone'], $sms_message);
                     }
                 }
@@ -189,7 +189,7 @@ class ModelAccountApi extends Model
 
                 $sms_message = $this->emailtemplate->getSmsMessage('LoginOTP', 'loginotp_2', $data);
 
-                if ($customer_info['sms_notification'] == 1 && $this->emailtemplate->getSmsEnabled('LoginOTP', 'loginotp_2')) {
+                if ($this->emailtemplate->getSmsEnabled('LoginOTP', 'loginotp_2')) {
                     $ret = $this->emailtemplate->sendmessage($this->request->post['new_phone'], $sms_message);
 
                     //save in otp table
