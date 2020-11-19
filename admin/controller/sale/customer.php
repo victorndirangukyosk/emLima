@@ -1328,7 +1328,7 @@ class ControllerSaleCustomer extends Controller {
         } else {
             $data['address_id'] = '';
         }
-
+        $data['source'] = $customer_info['source'];
         $this->load->model('sale/customer_group');
 
         //echo "<pre>";print_r($data);die;
