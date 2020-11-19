@@ -588,8 +588,8 @@ class ControllerAccountRegister extends Controller
         $this->load->model('account/customer');
 
         $log = new Log('error.log');
-        $log->writee($this->request->post['login_latitude']);
-        $log->writee($this->request->post['login_longitude']);
+        $log->write($this->request->post['login_latitude']);
+        $log->write($this->request->post['login_longitude']);
         //$log->write("outside form");
 
         $data['telephone_mask'] = $this->config->get('config_telephone_mask');
@@ -833,8 +833,8 @@ class ControllerAccountRegister extends Controller
                         $this->request->post['dob'] = null;
                     }
                     $this->request->post['source'] = 'WEB';
-                    $log->writee($this->request->post['login_latitude']);
-                    $log->writee($this->request->post['login_longitude']);
+                    $log->write($this->request->post['login_latitude']);
+                    $log->write($this->request->post['login_longitude']);
                     //$this->request->post['password'] = mt_rand(1000,9999);
 
                     $customer_id = $this->model_account_customer->addCustomer($this->request->post, true);
