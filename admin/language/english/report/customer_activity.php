@@ -24,6 +24,7 @@ $_['text_mobile notifiction Disabled'] = '<a href="customer_id=%d">%s</a> Custom
 $_['text_mobile notifiction Enabled'] = '<a href="customer_id=%d">%s</a> Customer Mobile Notification Enabled.';
 $_['text_email notifiction Disabled'] = '<a href="customer_id=%d">%s</a> Customer Email Notification Disabled.';
 $_['text_email notifiction Enabled'] = '<a href="customer_id=%d">%s</a> Customer Email Notification Enabled.';
+$_['text_sub_user_deactivated'] = '<a href="customer_id=%d">%s</a> activated a <a href="user_id=%d">sub customer</a>.';
 // Column
 $_['column_customer'] = 'Customer';
 $_['column_comment'] = 'Comment';
