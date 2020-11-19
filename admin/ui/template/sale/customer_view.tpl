@@ -93,11 +93,11 @@
                                   </tr>
                                   <tr>
                                       <th>Verified</th>
-                                      <td><?php if ($approved == 0) { echo 'Disabled'; } else { echo 'Enabled'; }?></td>
+                                      <td><?php if ($approved == 0) { echo 'No'; } else { echo 'Yes'; }?></td>
                                   </tr>
                                   <tr>
                                       <th>Safe</th>
-                                      <td><?php if ($safe == 0) { echo 'Disabled'; } else { echo 'Enabled'; }?></td>
+                                      <td><?php if ($safe == 0) { echo 'No'; } else { echo 'Yes'; }?></td>
                                   </tr>
                                   <tr>
                                       <th>Price Category</th>
