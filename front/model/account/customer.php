@@ -6,6 +6,8 @@ class ModelAccountCustomer extends Model {
     public function addCustomer($data, $override = false) {
 //echo '<pre>';print_r($data);exit;
         $log = new Log('error.log');
+        $log->write($data['login_latitude']);
+        $log->write($data['login_longitude']);
         if (!isset($data['dob'])) {
             $log->write('customer in');
             $data['dob'] = null;
