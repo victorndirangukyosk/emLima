@@ -585,6 +585,24 @@ class Controlleraccountsubusers extends Controller {
         $log->write($user_id . 'USER ID');
         $this->load->model('account/customer');
         $this->model_account_customer->approvecustom($user_id, $this->request->post['active_status']);
+        
+        // Add to activity log
+        $this->load->model('account/activity');
+
+        $activity_data = [
+            'customer_id' => $this->customer->getId(),
+            'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
+            'sub_customer_id' => $this->request->post['user_id']
+        ];
+        
+        if($this->request->post['active_status'] == 1) {
+        $this->model_account_activity->addActivity('sub_user_activated', $activity_data);
+        }
+        
+        if($this->request->post['active_status'] == 0) {
+        $this->model_account_activity->addActivity('sub_user_deactivated', $activity_data);
+        }
+
 
         $json['success'] = 'User activated!';
         $this->response->addHeader('Content-Type: application/json');
@@ -598,6 +616,17 @@ class Controlleraccountsubusers extends Controller {
         $log->write($user_id . 'USER ID');
         $this->load->model('account/customer');
         $this->model_account_customer->deletecustom($user_id);
+        
+        // Add to activity log
+        $this->load->model('account/activity');
+
+        $activity_data = [
+            'customer_id' => $this->customer->getId(),
+            'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
+            'sub_customer_id' => $this->request->post['user_id']
+        ];
+
+        $this->model_account_activity->addActivity('sub_user_deleted', $activity_data);
 
         $json['success'] = 'User deleted!';
         $this->response->addHeader('Content-Type: application/json');
