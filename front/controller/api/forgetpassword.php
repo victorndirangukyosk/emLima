@@ -161,6 +161,17 @@ class ControllerApiForgetPassword extends Controller
                // $this->response->redirect($this->url->link('account/account', '', 'SSL'));
 
                 // $this->response->redirect($this->url->link('account/changepass/success'));
+                 // Add to activity log
+                $this->load->model('account/activity');
+
+                $activity_data = [
+                    'customer_id' => $this->customer->getId(),
+                    'name' => $this->customer->getFirstName().' '.$this->customer->getLastName(),
+                ];
+
+                $this->model_account_activity->addActivity('password', $activity_data);
+
+            
             }
         }
 
