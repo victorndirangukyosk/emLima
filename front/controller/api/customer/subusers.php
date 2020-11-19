@@ -776,10 +776,36 @@ class ControllerApiCustomerSubusers extends Controller
         if ($this->request->post['button'] == 'assign_head_chef') {
             // $this->model_account_customer->UpdateOrderApprovalAccess($this->customer->getId(), $this->request->post['head_chef'], 1, 'head_chef');
             $this->model_account_customer->UpdateOrderApprovalAccess($this->request->post['customer_id'], $this->request->post['head_chef'], 1, 'head_chef');
+        
+            $customer_info = $this->model_account_customer->getCustomer($this->request->post['customer_id']);
+            // echo '<pre>';print_r($customer_info);exit;
+            $this->load->model('account/activity');
+            $activity_data = [
+                'customer_id' => $customer_info['customer_id'],
+                'name' => $customer_info['firstname'] . ' ' . $customer_info['lastname'],
+                'sub_customer_id' => $this->request->post['head_chef']
+            ];
+
+            $this->model_account_activity->addActivity('assign_head_chef', $activity_data);
+
+        
         }
 
         if ($this->request->post['button'] == 'assign_procurement_person') {
             $this->model_account_customer->UpdateOrderApprovalAccess($this->request->post['customer_id'], $this->request->post['procurement_person'], 1, 'procurement_person');
+            $customer_info = $this->model_account_customer->getCustomer($this->request->post['customer_id']);
+           
+            $this->load->model('account/activity');
+            $activity_data = [
+                'customer_id' => $customer_info['customer_id'],
+                'name' => $customer_info['firstname'] . ' ' . $customer_info['lastname'],
+                'sub_customer_id' => $this->request->post['procurement_person']
+            ];
+
+            $this->model_account_activity->addActivity('assign_procurement_person', $activity_data);
+       
+        
+        
         }
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
