@@ -134,8 +134,11 @@
         });
 
         $(document).delegate('#register-button', 'click', function (e) {
+            getLocationOnly();
             e.preventDefault();
-
+            
+            var login_latitude = $('#lat').val();
+            var login_longitude = $('#lng').val();
             const firstName = $('#register-first-name').val();
                     const lastName = $('#register-last-name').val();
                     const email = $('#register-email').val();
