@@ -2362,6 +2362,7 @@ class ControllerSaleCustomer extends Controller {
         $data['status'] = $customer_info['status'];
         $data['approved'] = $customer_info['approved'];
         $data['safe'] = $customer_info['safe'];
+        $data['source'] = $customer_info['source'];
         
         $data['addresses'] = $this->model_sale_customer->getAddresses($this->request->get['customer_id']);
         $data['address_id'] = $customer_info['address_id'];

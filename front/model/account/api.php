@@ -460,7 +460,7 @@ class ModelAccountApi extends Model
                     } else {
                         $this->request->post['dob'] = null;
                     }
-
+                    $this->request->post['source'] = 'MOBILE';
                     //$this->request->post['password'] = mt_rand(1000,9999);
                     // echo "<pre>";print_r($this->request->post);die;
                     $customer_id = $this->model_account_customer->addCustomer($this->request->post,true);
