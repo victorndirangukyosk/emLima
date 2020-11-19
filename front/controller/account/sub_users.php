@@ -666,6 +666,7 @@ class Controlleraccountsubusers extends Controller {
         if ($this->request->post['button'] == 'assign_head_chef') {
             $this->model_account_customer->UpdateOrderApprovalAccess($this->customer->getId(), $this->request->post['head_chef'], 1, 'head_chef');
 
+            $this->load->model('user/user_activity');
             $activity_data = [
                 'customer_id' => $this->customer->getId(),
                 'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
@@ -677,7 +678,8 @@ class Controlleraccountsubusers extends Controller {
 
         if ($this->request->post['button'] == 'assign_procurement_person') {
             $this->model_account_customer->UpdateOrderApprovalAccess($this->customer->getId(), $this->request->post['procurement_person'], 1, 'procurement_person');
-
+            
+            $this->load->model('user/user_activity');
             $activity_data = [
                 'customer_id' => $this->customer->getId(),
                 'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
