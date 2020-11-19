@@ -2119,11 +2119,11 @@ class Emailtemplate
         $log->write('SMS SENDING');
         $log->write($to);
         $log->write('SMS SENDING');
-        $number = '734000006';
+        /*$number = '734000006';
         if (strpos($to, $number) !== false) {
             $log = new Log('error.log');
             $log->write('sms not sending for RR Corporate Ltd Customer ID : 301');
-        } else {
+        } else {*/
             $log = new Log('error.log');
 
             $result['status'] = false;
@@ -2304,7 +2304,7 @@ class Emailtemplate
             }
 
             return true;
-        }
+        //}
     }
 
     public function formatPhoneNumber($phoneNumber)

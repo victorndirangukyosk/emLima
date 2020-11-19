@@ -90,6 +90,17 @@ class ControllerApiCustomerLogin extends Controller
             $customer_info = $this->model_account_customer->getCustomer($api_info['customer_id']);
             $customer_info['devices'] = $this->model_account_customer->getCustomerDevices($api_info['customer_id']);
 
+               // Add to activity log
+               $this->load->model('account/activity');
+
+               $activity_data = [
+                   'customer_id' => $customer_info['customer_id'],
+                   'name' => $customer_info['firstname'] . ' ' . $customer_info['lastname'],
+               ];
+
+               $this->model_account_activity->addActivity('login', $activity_data);
+
+               
             #region login history
             $logindata['customer_id'] = $api_info['customer_id'];
             if (isset($this->request->post['login_latitude']) ) {

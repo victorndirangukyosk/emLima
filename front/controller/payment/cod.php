@@ -114,8 +114,17 @@ class ControllerPaymentCod extends Controller {
                 else
                 $ret = $this->model_checkout_order->addOrderHistory($order_id, $order_status_id, $comment, true, 0, 'customer');
 
+                $this->load->model('account/activity');
+                $activity_data = [
+                    'customer_id' => $this->customer->getId(),
+                    'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
+                    'order_id' => $order_id,
+                ];
 
-        }
+                $this->model_account_activity->addActivity('order_account', $activity_data);
+
+        } 
+       
         /* if ($order_id != NULL) {
           $this->model_checkout_order->UpdateParentApprovalAPI($order_id, $Approver_assigned['order_approval_access'], $Approver_assigned['order_approval_access_role']);
           } */

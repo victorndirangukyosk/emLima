@@ -561,7 +561,22 @@ class ControllerApiCustomerAccount extends Controller
 
                 $this->load->model('setting/store');
 
+                // Add to activity log
+                $this->load->model('account/activity');
+
+                $activity_data = [
+                    'customer_id' =>  $customer_info['customer_id'],
+                    'name' =>  $customer_info['firstname'] . ' ' . $customer_info['lastname'],
+                ];
+
+                $this->model_account_activity->addActivity('logout', $activity_data);
+                
+                
+
                 $this->model_setting_store->removeDeviceIdAll($args);
+
+                
+                
 
                 $this->customer->logout();
             }

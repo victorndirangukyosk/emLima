@@ -125,12 +125,13 @@ class ModelAccountApi extends Model
                 if ('111111111' != $this->request->post['phone']) {
                     $sms_message = $this->emailtemplate->getSmsMessage('LoginOTP', 'loginotp_2', $data);
 
-                    if ($customer_info['sms_notification'] == 1 && $this->emailtemplate->getSmsEnabled('LoginOTP', 'loginotp_2')) {
+                    if ($this->emailtemplate->getSmsEnabled('LoginOTP', 'loginotp_2')) {
                         $ret = $this->emailtemplate->sendmessage($this->request->post['phone'], $sms_message);
                     }
                 }
-
-                if ($customer_info['email_notification'] == 1 && $this->emailtemplate->getEmailEnabled('LoginOTP', 'loginotp_2')) {
+                
+                if ($this->emailtemplate->getEmailEnabled('LoginOTP', 'loginotp_2')) {
+                //if ($customer_info['email_notification'] == 1 && $this->emailtemplate->getEmailEnabled('LoginOTP', 'loginotp_2')) {
                     $subject = $this->emailtemplate->getSubject('LoginOTP', 'loginotp_2', $data);
                     $message = $this->emailtemplate->getMessage('LoginOTP', 'loginotp_2', $data);
 
@@ -188,7 +189,7 @@ class ModelAccountApi extends Model
 
                 $sms_message = $this->emailtemplate->getSmsMessage('LoginOTP', 'loginotp_2', $data);
 
-                if ($customer_info['sms_notification'] == 1 && $this->emailtemplate->getSmsEnabled('LoginOTP', 'loginotp_2')) {
+                if ($this->emailtemplate->getSmsEnabled('LoginOTP', 'loginotp_2')) {
                     $ret = $this->emailtemplate->sendmessage($this->request->post['new_phone'], $sms_message);
 
                     //save in otp table
@@ -459,7 +460,7 @@ class ModelAccountApi extends Model
                     } else {
                         $this->request->post['dob'] = null;
                     }
-
+                    $this->request->post['source'] = 'MOBILE';
                     //$this->request->post['password'] = mt_rand(1000,9999);
                     // echo "<pre>";print_r($this->request->post);die;
                     $customer_id = $this->model_account_customer->addCustomer($this->request->post,true);
@@ -625,8 +626,8 @@ class ModelAccountApi extends Model
                    
                         //the Same login verify OTP mail is being used.
                         $log = new Log('error.log');
-                      
-                    if ($customer_info['email_notification'] == 1 && $this->emailtemplate->getEmailEnabled('NewDeviceLogin', 'NewDeviceLogin_1')) {
+                    if ($this->emailtemplate->getEmailEnabled('NewDeviceLogin', 'NewDeviceLogin_1')) {
+                    //if ($customer_info['email_notification'] == 1 && $this->emailtemplate->getEmailEnabled('NewDeviceLogin', 'NewDeviceLogin_1')) {
                         
                         $subject = $this->emailtemplate->getSubject('NewDeviceLogin', 'NewDeviceLogin_1', $data);
                         

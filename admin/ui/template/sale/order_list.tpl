@@ -63,14 +63,25 @@
                             
                             
                             
-                            <div class="form-group">
+                            <!--<div class="form-group">
                                 <label class="control-label" for="input-customer"><?= $entry_city ?></label>
                                 <input type="text" name="filter_city" value="<?php echo $filter_city; ?>" class="form-control" />
-                            </div>
+                            </div>-->
 
                              <div class="form-group">
                                 <label class="control-label" for="input-name"><?= $column_delivery_method ?></label>
                                 <input type="text" name="filter_delivery_method" value="<?php echo $filter_delivery_method; ?>" placeholder="<?php echo $column_delivery_method; ?>" id="input-name" class="form-control" />
+                            </div>
+                            
+                            
+                            <div class="form-group">
+                                <label class="control-label" for="input-delivery-date">Delivery Date</label>
+                                <div class="input-group date">
+                                    <input type="text" name="filter_delivery_date" value="<?php echo $filter_delivery_date; ?>" placeholder="<?php echo $column_delivery_date; ?>" data-date-format="YYYY-MM-DD" id="input-delivery-date" class="form-control" />
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
                             </div>
 
                             
@@ -99,10 +110,10 @@
                                 <input type="text" name="filter_total" value="<?php echo $filter_total; ?>" placeholder="<?php echo $entry_total; ?>" id="input-total" class="form-control" />
                             </div>
 
-                            <div class="form-group">
+                            <!--<div class="form-group">
                                 <label class="control-label" for="input-name"><?= $entry_store_name ?></label>
                                 <input type="text" name="filter_store_name" value="<?php echo $filter_store_name; ?>" placeholder="<?php echo $entry_store_name; ?>" id="input-name" class="form-control" />
-                            </div>
+                            </div>-->
 
                             <?php if (!$this->user->isVendor()): ?>
                                 <div class="form-group">
@@ -124,10 +135,10 @@
                             </div>
 
                             <?php if(!$this->user->isVendor()){ ?>  
-                            <div class="form-group">
+                            <!--<div class="form-group">
                                 <label class="control-label" for="input-model"><?= $text_vendor ?></label>
                                 <input type="text" name="filter_vendor" value="<?php echo $filter_vendor; ?>" placeholder="<?php echo $text_vendor; ?>" id="input-model" class="form-control" />
-                            </div>
+                            </div>-->
                             <?php } ?>
 
 
@@ -149,7 +160,7 @@
                                     </span>
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <!--<div class="form-group">
                                 <label class="control-label" for="input-date-modified"><?php echo $entry_date_modified; ?></label>
                                 <div class="input-group date">
                                     <input type="text" name="filter_date_modified" value="<?php echo $filter_date_modified; ?>" placeholder="<?php echo $entry_date_modified; ?>" data-date-format="YYYY-MM-DD" id="input-date-modified" class="form-control" />
@@ -157,7 +168,7 @@
                                         <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
                                     </span>
                                 </div>
-                            </div>
+                            </div>-->
                             
                             <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
 
@@ -450,6 +461,12 @@
 
             if (filter_delivery_method) {
                 url += '&filter_delivery_method=' + encodeURIComponent(filter_delivery_method);
+            }
+            
+            var filter_delivery_date = $('input[name=\'filter_delivery_date\']').val();
+
+            if (filter_delivery_date) {
+                url += '&filter_delivery_date=' + encodeURIComponent(filter_delivery_date);
             }
 
             var filter_payment = $('input[name=\'filter_payment\']').val();

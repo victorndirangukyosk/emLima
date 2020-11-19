@@ -167,6 +167,7 @@
                     <?php } else { ?>
                     <a href="<?php echo $sort_status; ?>"><?php echo $column_status; ?></a>
                     <?php } ?></td>
+                  <td class="text-left">Source</td>
                   <td class="text-left"><?php if ($sort == 'c.ip') { ?>
                     <a href="<?php echo $sort_ip; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_ip; ?></a>
                     <?php } else { ?>
@@ -190,11 +191,12 @@
                     <input type="checkbox" name="selected[]" value="<?php echo $customer['customer_id']; ?>" />
                     <?php } ?></td>
                   <td class="text-left"><?php echo $customer['name']; ?>
-                   <br/> <?php echo $customer['company_name']  ; ?></td>
+                   <br/> <?php echo $customer['company_name']; ?></td>
                   <td class="text-left"><?php echo $customer['email']; ?></td>
                   <td class="text-left"><?php echo $customer['telephone']; ?></td>
                   <td class="text-left"><?php echo $customer['customer_group']; ?></td>
                   <td class="text-left"><?php echo $customer['status']; ?></td>
+                  <td class="text-left"><?php echo $customer['source']; ?></td>
                   <td class="text-left"><?php echo $customer['ip']; ?></td>
                   <td class="text-left"><?php echo $customer['date_added']; ?></td>
                   <td class="text-right"><?php if ($customer['approve']) { ?>
@@ -212,7 +214,9 @@
                     <?php } else { ?>
                     <button type="button" class="btn btn-warning" disabled><i class="fa fa-unlock"></i></button>
                     <?php } ?>
-                    <a href="<?php echo $customer['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a></td>
+                    <a href="<?php echo $customer['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a>
+                    <a href="<?php echo $customer['customer_view']; ?>" data-toggle="tooltip" title="View" class="btn btn-primary"><i class="fa fa-eye"></i></a>
+                  </td>
                 </tr>
                 <?php } ?>
                 <?php } else { ?>

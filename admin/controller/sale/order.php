@@ -901,6 +901,10 @@ class ControllerSaleOrder extends Controller {
             if (isset($this->request->get['filter_delivery_method'])) {
                 $url .= '&filter_delivery_method=' . urlencode(html_entity_decode($this->request->get['filter_delivery_method'], ENT_QUOTES, 'UTF-8'));
             }
+            
+            if (isset($this->request->get['filter_delivery_date'])) {
+                $url .= '&filter_delivery_date=' . urlencode(html_entity_decode($this->request->get['filter_delivery_date'], ENT_QUOTES, 'UTF-8'));
+            }
 
             if (isset($this->request->get['filter_payment'])) {
                 $url .= '&filter_payment=' . urlencode(html_entity_decode($this->request->get['filter_payment'], ENT_QUOTES, 'UTF-8'));
@@ -981,6 +985,12 @@ class ControllerSaleOrder extends Controller {
             $filter_delivery_method = $this->request->get['filter_delivery_method'];
         } else {
             $filter_delivery_method = null;
+        }
+        
+        if (isset($this->request->get['filter_delivery_date'])) {
+            $filter_delivery_date = $this->request->get['filter_delivery_date'];
+        } else {
+            $filter_delivery_date = null;
         }
 
         if (isset($this->request->get['filter_payment'])) {
@@ -1065,7 +1075,11 @@ class ControllerSaleOrder extends Controller {
         if (isset($this->request->get['filter_delivery_method'])) {
             $url .= '&filter_delivery_method=' . urlencode(html_entity_decode($this->request->get['filter_delivery_method'], ENT_QUOTES, 'UTF-8'));
         }
-
+        
+        if (isset($this->request->get['filter_delivery_date'])) {
+            $url .= '&filter_delivery_date=' . urlencode(html_entity_decode($this->request->get['filter_delivery_date'], ENT_QUOTES, 'UTF-8'));
+        }
+        
         if (isset($this->request->get['filter_payment'])) {
             $url .= '&filter_payment=' . urlencode(html_entity_decode($this->request->get['filter_payment'], ENT_QUOTES, 'UTF-8'));
         }
@@ -1128,6 +1142,7 @@ class ControllerSaleOrder extends Controller {
             'filter_vendor' => $this->getUserByName($filter_vendor),
             'filter_store_name' => $filter_store_name,
             'filter_delivery_method' => $filter_delivery_method,
+            'filter_delivery_date' => $filter_delivery_date,
             'filter_payment' => $filter_payment,
             'filter_order_status' => $filter_order_status,
             'filter_total' => $filter_total,
@@ -1217,6 +1232,7 @@ class ControllerSaleOrder extends Controller {
 
         $data['column_payment'] = $this->language->get('column_payment');
         $data['column_delivery_method'] = $this->language->get('column_delivery_method');
+        $data['column_delivery_date'] = $this->language->get('column_delivery_date');
 
         $data['column_sub_total'] = $this->language->get('column_sub_total');
         $data['entry_return_id'] = $this->language->get('entry_return_id');
@@ -1287,6 +1303,10 @@ class ControllerSaleOrder extends Controller {
 
         if (isset($this->request->get['filter_delivery_method'])) {
             $url .= '&filter_delivery_method=' . urlencode(html_entity_decode($this->request->get['filter_delivery_method'], ENT_QUOTES, 'UTF-8'));
+        }
+        
+        if (isset($this->request->get['filter_delivery_date'])) {
+            $url .= '&filter_delivery_date=' . urlencode(html_entity_decode($this->request->get['filter_delivery_date'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_payment'])) {
@@ -1359,6 +1379,10 @@ class ControllerSaleOrder extends Controller {
         if (isset($this->request->get['filter_delivery_method'])) {
             $url .= '&filter_delivery_method=' . urlencode(html_entity_decode($this->request->get['filter_delivery_method'], ENT_QUOTES, 'UTF-8'));
         }
+        
+        if (isset($this->request->get['filter_delivery_date'])) {
+            $url .= '&filter_delivery_date=' . urlencode(html_entity_decode($this->request->get['filter_delivery_date'], ENT_QUOTES, 'UTF-8'));
+        }
 
         if (isset($this->request->get['filter_payment'])) {
             $url .= '&filter_payment=' . urlencode(html_entity_decode($this->request->get['filter_payment'], ENT_QUOTES, 'UTF-8'));
@@ -1409,6 +1433,7 @@ class ControllerSaleOrder extends Controller {
         $data['filter_vendor'] = $filter_vendor;
         $data['filter_store_name'] = $filter_store_name;
         $data['filter_delivery_method'] = $filter_delivery_method;
+        $data['filter_delivery_date'] = $filter_delivery_date;
         $data['filter_payment'] = $filter_payment;
 
         $data['filter_order_status'] = $filter_order_status;
@@ -1573,6 +1598,10 @@ class ControllerSaleOrder extends Controller {
 
         if (isset($this->request->get['filter_delivery_method'])) {
             $url .= '&filter_delivery_method=' . urlencode(html_entity_decode($this->request->get['filter_delivery_method'], ENT_QUOTES, 'UTF-8'));
+        }
+        
+        if (isset($this->request->get['filter_delivery_date'])) {
+            $url .= '&filter_delivery_date=' . urlencode(html_entity_decode($this->request->get['filter_delivery_date'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_payment'])) {
@@ -2122,6 +2151,10 @@ class ControllerSaleOrder extends Controller {
 
             if (isset($this->request->get['filter_delivery_method'])) {
                 $url .= '&filter_delivery_method=' . urlencode(html_entity_decode($this->request->get['filter_delivery_method'], ENT_QUOTES, 'UTF-8'));
+            }
+            
+            if (isset($this->request->get['filter_delivery_date'])) {
+                $url .= '&filter_delivery_date=' . urlencode(html_entity_decode($this->request->get['filter_delivery_date'], ENT_QUOTES, 'UTF-8'));
             }
 
             if (isset($this->request->get['filter_payment'])) {
