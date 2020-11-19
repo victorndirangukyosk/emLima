@@ -1031,6 +1031,18 @@ class ControllerApiCustomerOrder extends Controller
 
             $order_ids = $this->model_api_checkout->addMultiOrder($order_data);
 
+            foreach ($order_ids as $order_id) {
+                 
+                    $this->load->model('account/activity');
+                    $activity_data = [
+                        'customer_id' => $this->customer->getId(),
+                        'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
+                        'order_id' => $order_id,
+                    ]; 
+                    $this->model_account_activity->addActivity('order_account', $activity_data);
+     
+            } 
+
             $tot = 0;
 
             foreach ($stores as $store_id) {
