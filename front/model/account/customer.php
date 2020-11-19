@@ -772,4 +772,10 @@ class ModelAccountCustomer extends Model {
         return $query->rows;
     }
 
+    public function getCustomerbyFirebaseDeviceID($device_id) {
+        $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE device_id = '" .   $device_id . "'");
+
+        return $query->row;
+    }
+
 }
