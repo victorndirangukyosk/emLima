@@ -555,7 +555,7 @@ class ControllerApiCustomerAccount extends Controller
         //if( $this->customer->isLogged()) {
         if (isset($args['device_id'])) {
             // $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
-            $customer_info = $this->model_account_customer->getCustomerbyFirebaseDeviceID($this->customer->getId());
+            $customer_info = $this->model_account_customer->getCustomerbyFirebaseDeviceID($args['device_id']);
             // echo $customer_info;exit;
             if ($customer_info) {
                 $log->write('of');
