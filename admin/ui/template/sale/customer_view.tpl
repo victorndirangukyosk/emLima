@@ -115,6 +115,10 @@
                                       <th>Parent User Phone</th>
                                       <td><?php echo '+254 '.$parent_user_phone; ?></td>
                                   </tr>
+                                  <tr>
+                                      <th>Source</th>
+                                      <td><?php echo $source; ?></td>
+                                  </tr>
                               </tbody>
                           </table>  
                       </div>
