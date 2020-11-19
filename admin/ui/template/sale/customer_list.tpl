@@ -167,6 +167,7 @@
                     <?php } else { ?>
                     <a href="<?php echo $sort_status; ?>"><?php echo $column_status; ?></a>
                     <?php } ?></td>
+                  <td class="text-left">Source</td>
                   <td class="text-left"><?php if ($sort == 'c.ip') { ?>
                     <a href="<?php echo $sort_ip; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_ip; ?></a>
                     <?php } else { ?>
@@ -195,6 +196,7 @@
                   <td class="text-left"><?php echo $customer['telephone']; ?></td>
                   <td class="text-left"><?php echo $customer['customer_group']; ?></td>
                   <td class="text-left"><?php echo $customer['status']; ?></td>
+                  <td class="text-left"><?php echo $customer['source']; ?></td>
                   <td class="text-left"><?php echo $customer['ip']; ?></td>
                   <td class="text-left"><?php echo $customer['date_added']; ?></td>
                   <td class="text-right"><?php if ($customer['approve']) { ?>
