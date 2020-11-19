@@ -162,11 +162,14 @@ class ControllerApiForgetPassword extends Controller
 
                 // $this->response->redirect($this->url->link('account/changepass/success'));
                  // Add to activity log
+                 $this->load->model('account/customer');
+                 $customer_info = $this->model_account_customer->getCustomer($this->request->post['customerid']);
+                 
                 $this->load->model('account/activity');
 
                 $activity_data = [
-                    'customer_id' => $this->customer->getId(),
-                    'name' => $this->customer->getFirstName().' '.$this->customer->getLastName(),
+                    'customer_id' => $customer_info['customer_id'],
+                    'name' =>  $customer_info['firstname'] . ' ' . $customer_info['lastname'],
                 ];
 
                 $this->model_account_activity->addActivity('password', $activity_data);
