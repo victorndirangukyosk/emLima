@@ -665,10 +665,26 @@ class Controlleraccountsubusers extends Controller {
         $this->load->model('account/customer');
         if ($this->request->post['button'] == 'assign_head_chef') {
             $this->model_account_customer->UpdateOrderApprovalAccess($this->customer->getId(), $this->request->post['head_chef'], 1, 'head_chef');
+
+            $activity_data = [
+                'customer_id' => $this->customer->getId(),
+                'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
+                'sub_customer_id' => $this->request->post['head_chef']
+            ];
+
+            $this->model_account_activity->addActivity('assign_head_chef', $activity_data);
         }
 
         if ($this->request->post['button'] == 'assign_procurement_person') {
             $this->model_account_customer->UpdateOrderApprovalAccess($this->customer->getId(), $this->request->post['procurement_person'], 1, 'procurement_person');
+
+            $activity_data = [
+                'customer_id' => $this->customer->getId(),
+                'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
+                'sub_customer_id' => $this->request->post['procurement_person']
+            ];
+
+            $this->model_account_activity->addActivity('assign_procurement_person', $activity_data);
         }
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
