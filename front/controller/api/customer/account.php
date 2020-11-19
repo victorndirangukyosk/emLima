@@ -561,8 +561,6 @@ class ControllerApiCustomerAccount extends Controller
 
                 $this->load->model('setting/store');
 
-                $this->model_setting_store->removeDeviceIdAll($args);
-
                 // Add to activity log
                 $this->load->model('account/activity');
 
@@ -572,6 +570,11 @@ class ControllerApiCustomerAccount extends Controller
                 ];
 
                 $this->model_account_activity->addActivity('logout', $activity_data);
+                
+                
+
+                $this->model_setting_store->removeDeviceIdAll($args);
+
                 
                 
 
