@@ -469,7 +469,6 @@ $('.time').datetimepicker({
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="../front/ui/theme/mvgv2/js/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="../front/ui/theme/mvgv2/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../front/ui/theme/mvgv2/js/side-menu-script.js"></script>
     <script src="../front/ui/theme/mvgv2/js/jquery.maskedinput.js" type="text/javascript"></script>
     <script type="text/javascript" src="../front/ui/theme/mvgv2/js/html5lightbox.js"></script>
