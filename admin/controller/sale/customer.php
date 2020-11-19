@@ -652,6 +652,7 @@ class ControllerSaleCustomer extends Controller {
                 'telephone' => $country_code . $result['telephone'],
                 'customer_group' => $result['customer_group'],
                 'status' => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
+                'source' => $result['source'],
                 'ip' => $result['ip'],
                 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
                 'approve' => $approve,
