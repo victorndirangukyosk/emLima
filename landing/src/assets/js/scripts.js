@@ -177,6 +177,8 @@
                             type: 'POST',
                             dataType: 'json',
                             data: {
+                                login_latitude : login_latitude,
+                                login_longitude : login_longitude,
                                 firstname: firstName,
                                 lastname: lastName,
                                 email: email,
@@ -219,7 +221,9 @@
         // OTP Verification
         $(document).delegate('#otp-verify-button', 'click', function (e) {
             e.preventDefault();
-
+            
+            var login_latitude = $('#lat').val();
+            var login_longitude = $('#lng').val();
             const firstName = $('#register-first-name').val();
                     const lastName = $('#register-last-name').val();
                     const email = $('#register-email').val();
@@ -243,6 +247,8 @@
                     type: 'POST',
                     dataType: 'json',
                     data: {
+                        login_latitude : login_latitude,
+                        login_longitude : login_longitude,
                         firstname: firstName,
                         lastname: lastName,
                         email: email,
