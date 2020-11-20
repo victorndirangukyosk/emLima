@@ -669,8 +669,8 @@ class ControllerApiCustomerSubusers extends Controller
             $this->load->model('account/activity');
 
             $activity_data = [
-                'customer_id' => $customer_id,
-                'name' => $this->request->post['firstname'].' '.$this->request->post['lastname'],
+                'customer_id' => $this->request->post['logged_customer_id'],
+                'name' => $this->request->post['logged_customer_firstname'] . ' ' . $this->request->post['logged_customer_lastname'],                
                 'sub_customers_id' => $sub_customer_id,
             ];
 
