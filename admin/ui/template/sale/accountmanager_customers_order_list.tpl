@@ -63,10 +63,10 @@
 
 
 
-                            <div class="form-group">
+                            <!--<div class="form-group">
                                 <label class="control-label" for="input-customer"><?= $entry_city ?></label>
                                 <input type="text" name="filter_city" value="<?php echo $filter_city; ?>" class="form-control" />
-                            </div>
+                            </div>-->
 
                             <div class="form-group">
                                 <label class="control-label" for="input-name"><?= $column_delivery_method ?></label>
