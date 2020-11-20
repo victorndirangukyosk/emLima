@@ -1028,5 +1028,66 @@ class ControllerSaleAccountManagerUser extends Controller {
 
         $this->response->setOutput($this->load->view('sale/customer_history.tpl', $data));
     }
+    
+    public function credit() {
+        $this->load->language('sale/customer');
+
+        $this->load->model('sale/customer');
+
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->user->hasPermission('modify', 'sale/customer')) {
+            $this->model_sale_customer->addCredit($this->request->get['customer_id'], $this->request->post['description'], $this->request->post['amount']);
+
+            $data['success'] = $this->language->get('text_success');
+        } else {
+            $data['success'] = '';
+        }
+
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && !$this->user->hasPermission('modify', 'sale/customer')) {
+            $data['error_warning'] = $this->language->get('error_permission');
+        } else {
+            $data['error_warning'] = '';
+        }
+
+        $data['text_no_results'] = $this->language->get('text_no_results');
+        $data['text_balance'] = $this->language->get('text_balance');
+
+        $data['column_date_added'] = $this->language->get('column_date_added');
+        $data['column_description'] = $this->language->get('column_description');
+        $data['column_amount'] = $this->language->get('column_amount');
+
+        if (isset($this->request->get['page'])) {
+            $page = $this->request->get['page'];
+        } else {
+            $page = 1;
+        }
+
+        $data['credits'] = [];
+
+        $results = $this->model_sale_customer->getCredits($this->request->get['customer_id'], ($page - 1) * 10, 10);
+
+        foreach ($results as $result) {
+            $data['credits'][] = [
+                'amount' => $this->currency->format($result['amount'], $this->config->get('config_currency')),
+                'description' => $result['description'],
+                'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
+            ];
+        }
+
+        $data['balance'] = $this->currency->format($this->model_sale_customer->getCreditTotal($this->request->get['customer_id']), $this->config->get('config_currency'));
+
+        $credit_total = $this->model_sale_customer->getTotalCredits($this->request->get['customer_id']);
+
+        $pagination = new Pagination();
+        $pagination->total = $credit_total;
+        $pagination->page = $page;
+        $pagination->limit = 10;
+        $pagination->url = $this->url->link('sale/customer/credit', 'token=' . $this->session->data['token'] . '&customer_id=' . $this->request->get['customer_id'] . '&page={page}', 'SSL');
+
+        $data['pagination'] = $pagination->render();
+
+        $data['results'] = sprintf($this->language->get('text_pagination'), ($credit_total) ? (($page - 1) * 10) + 1 : 0, ((($page - 1) * 10) > ($credit_total - 10)) ? $credit_total : ((($page - 1) * 10) + 10), $credit_total, ceil($credit_total / 10));
+
+        $this->response->setOutput($this->load->view('sale/customer_credit.tpl', $data));
+    }
 
 }

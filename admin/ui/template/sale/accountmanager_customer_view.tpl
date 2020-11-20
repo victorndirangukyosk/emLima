@@ -300,7 +300,7 @@ $('#credit').delegate('.pagination a', 'click', function(e) {
   $('#credit').load(this.href);
 });
 
-$('#credit').load('index.php?path=sale/customer/credit&token=<?php echo $token; ?>&customer_id=<?php echo $customer_id; ?>');
+$('#credit').load('index.php?path=sale/accountmanageruser/credit&token=<?php echo $token; ?>&customer_id=<?php echo $customer_id; ?>');
 
 $('#button-credit').on('click', function(e) {
 
@@ -312,7 +312,7 @@ $('#button-credit').on('click', function(e) {
   e.preventDefault();
 
         $.ajax({
-    url: 'index.php?path=sale/customer/credit&token=<?php echo $token; ?>&customer_id=<?php echo $customer_id; ?>',
+    url: 'index.php?path=sale/accountmanageruser/credit&token=<?php echo $token; ?>&customer_id=<?php echo $customer_id; ?>',
     type: 'post',
     dataType: 'html',
     data: 'description=' + encodeURIComponent($('#tab-credit input[name=\'description\']').val()) + '&amount=' + encodeURIComponent($('#tab-credit input[name=\'amount\']').val()),
