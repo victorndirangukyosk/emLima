@@ -659,7 +659,12 @@ class ControllerApiCustomerSubusers extends Controller
         // } else 
         //{
          $this->request->post['dob'] = null;
+         $this->request->post['source'] = 'Mobile';
          $this->request->post['parent'] = $this->request->post['parent_customer_id'];//$this->customer->getId();           
+         $parentcustomer_info = $this->model_account_customer->getCustomer($this->request->post['parent']);
+         if($parentcustomer_info!=null)
+         {$this->request->post['customer_group_id']=$parentcustomer_info['customer_group_id'];
+         }
          $sub_customer_id = $this->model_account_customer->addCustomer($this->request->post, true);
             // Clear any previous login attempts for unregistered accounts.
         $this->model_account_customer->deleteLoginAttempts($this->request->post['email']);
