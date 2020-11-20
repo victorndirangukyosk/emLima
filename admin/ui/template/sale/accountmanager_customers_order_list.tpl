@@ -99,10 +99,10 @@
                                 <input type="text" name="filter_total" value="<?php echo $filter_total; ?>" placeholder="<?php echo $entry_total; ?>" id="input-total" class="form-control" />
                             </div>
 
-                            <div class="form-group">
+                            <!--<div class="form-group">
                                 <label class="control-label" for="input-name"><?= $entry_store_name ?></label>
                                 <input type="text" name="filter_store_name" value="<?php echo $filter_store_name; ?>" placeholder="<?php echo $entry_store_name; ?>" id="input-name" class="form-control" />
-                            </div>
+                            </div>-->
 
                             <?php if (!$this->user->isVendor()): ?>
                             <div class="form-group">
