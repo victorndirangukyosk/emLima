@@ -341,7 +341,7 @@ $('#reward').delegate('.pagination a', 'click', function(e) {
   $('#reward').load(this.href);
 });
 
-$('#reward').load('index.php?path=sale/customer/reward&token=<?php echo $token; ?>&customer_id=<?php echo $customer_id; ?>');
+$('#reward').load('index.php?path=sale/accountmanageruser/reward&token=<?php echo $token; ?>&customer_id=<?php echo $customer_id; ?>');
 
 $('#referral').delegate('.pagination a', 'click', function(e) {
   e.preventDefault();
@@ -349,7 +349,7 @@ $('#referral').delegate('.pagination a', 'click', function(e) {
  $('#referral').load(this.href);
 });
 
-$('#referral').load('index.php?path=sale/customer/referral&token=<?php echo $token; ?>&customer_id=<?php echo $customer_id; ?>');
+$('#referral').load('index.php?path=sale/accountmanageruser/referral&token=<?php echo $token; ?>&customer_id=<?php echo $customer_id; ?>');
 
 $('#button-reward').on('click', function(e) {
   if(encodeURIComponent($('#tab-reward input[name=\'description\']').val())=='')
@@ -365,7 +365,7 @@ $('#button-reward').on('click', function(e) {
   e.preventDefault();
 
   $.ajax({
-    url: 'index.php?path=sale/customer/reward&token=<?php echo $token; ?>&customer_id=<?php echo $customer_id; ?>',
+    url: 'index.php?path=sale/accountmanageruser/reward&token=<?php echo $token; ?>&customer_id=<?php echo $customer_id; ?>',
     type: 'post',
     dataType: 'html',
     data: 'description=' + encodeURIComponent($('#tab-reward input[name=\'description\']').val()) + '&points=' + encodeURIComponent($('#tab-reward input[name=\'points\']').val()),
@@ -393,7 +393,7 @@ $('#ip').delegate('.pagination a', 'click', function(e) {
 });
 
 
-$('#ip').load('index.php?path=sale/customer/customerviewip&token=<?php echo $token; ?>&customer_id=<?php echo $customer_id; ?>');
+$('#ip').load('index.php?path=sale/accountmanageruser/customerviewip&token=<?php echo $token; ?>&customer_id=<?php echo $customer_id; ?>');
 
 $('body').delegate('.button-ban-add', 'click', function() {
   var element = this;
