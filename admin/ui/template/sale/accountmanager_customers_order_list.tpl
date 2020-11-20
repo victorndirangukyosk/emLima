@@ -149,7 +149,7 @@
                                     </span>
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <!--<div class="form-group">
                                 <label class="control-label" for="input-date-modified"><?php echo $entry_date_modified; ?></label>
                                 <div class="input-group date">
                                     <input type="text" name="filter_date_modified" value="<?php echo $filter_date_modified; ?>" placeholder="<?php echo $entry_date_modified; ?>" data-date-format="YYYY-MM-DD" id="input-date-modified" class="form-control" />
@@ -157,7 +157,7 @@
                                         <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
                                     </span>
                                 </div>
-                            </div>
+                            </div>-->
 
                             <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
 
