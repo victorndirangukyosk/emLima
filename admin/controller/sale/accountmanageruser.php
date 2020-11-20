@@ -972,5 +972,61 @@ class ControllerSaleAccountManagerUser extends Controller {
 
         $this->response->setOutput($this->load->view('sale/accountmanager_customer_view.tpl', $data));
     }
+    
+    public function history() {
+        $this->load->language('sale/customer');
+
+        $this->load->model('sale/customer');
+
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateHistory()) {
+            $this->model_sale_customer->addHistory($this->request->get['customer_id'], $this->request->post['comment']);
+
+            $data['success'] = $this->language->get('text_success');
+        } else {
+            $data['success'] = '';
+        }
+
+        if (isset($this->error['warning'])) {
+            $data['error_warning'] = $this->error['warning'];
+        } else {
+            $data['error_warning'] = '';
+        }
+
+        $data['text_no_results'] = $this->language->get('text_no_results');
+
+        $data['column_date_added'] = $this->language->get('column_date_added');
+        $data['column_comment'] = $this->language->get('column_comment');
+
+        if (isset($this->request->get['page'])) {
+            $page = $this->request->get['page'];
+        } else {
+            $page = 1;
+        }
+
+        $data['histories'] = [];
+
+        $results = $this->model_sale_customer->getHistories($this->request->get['customer_id'], ($page - 1) * 10, 10);
+
+        foreach ($results as $result) {
+            $data['histories'][] = [
+                'comment' => $result['comment'],
+                'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
+            ];
+        }
+
+        $history_total = $this->model_sale_customer->getTotalHistories($this->request->get['customer_id']);
+
+        $pagination = new Pagination();
+        $pagination->total = $history_total;
+        $pagination->page = $page;
+        $pagination->limit = 10;
+        $pagination->url = $this->url->link('sale/customer/history', 'token=' . $this->session->data['token'] . '&customer_id=' . $this->request->get['customer_id'] . '&page={page}', 'SSL');
+
+        $data['pagination'] = $pagination->render();
+
+        $data['results'] = sprintf($this->language->get('text_pagination'), ($history_total) ? (($page - 1) * 10) + 1 : 0, ((($page - 1) * 10) > ($history_total - 10)) ? $history_total : ((($page - 1) * 10) + 10), $history_total, ceil($history_total / 10));
+
+        $this->response->setOutput($this->load->view('sale/customer_history.tpl', $data));
+    }
 
 }

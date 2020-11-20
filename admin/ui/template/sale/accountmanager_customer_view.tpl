@@ -267,13 +267,13 @@ $('#history').delegate('.pagination a', 'click', function(e) {
   $('#history').load(this.href);
 });
 
-$('#history').load('index.php?path=sale/customer/history&token=<?php echo $token; ?>&customer_id=<?php echo $customer_id; ?>');
+$('#history').load('index.php?path=sale/accountmanageruser/history&token=<?php echo $token; ?>&customer_id=<?php echo $customer_id; ?>');
 
 $('#button-history').on('click', function(e) {
   e.preventDefault();
 
   $.ajax({
-    url: 'index.php?path=sale/customer/history&token=<?php echo $token; ?>&customer_id=<?php echo $customer_id; ?>',
+    url: 'index.php?path=sale/accountmanageruser/history&token=<?php echo $token; ?>&customer_id=<?php echo $customer_id; ?>',
     type: 'post',
     dataType: 'html',
     data: 'comment=' + encodeURIComponent($('#tab-history textarea[name=\'comment\']').val()),
