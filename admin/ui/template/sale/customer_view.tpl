@@ -127,6 +127,20 @@
                                       <th>Longitude</th>
                                       <td><?php echo $longitude; ?></td>
                                   </tr>
+                                  <?php if($longitude !='NA' &&  $latitude !='NA' && $longitude !='0' &&  $latitude !='0') { ?>
+ 					<tr>
+					<th>Location:</th>
+					<td>
+					<input type="button" class="btn btn-primary" onclick="initOrderedLocationMapLoad()" value="View Map">
+					</td>
+					</tr>
+					<tr>
+					<td colspan=2>
+					<div class="" id="orderdlocationmap" style="height: 100%; min-height: 600px;">
+		    		</div>		    		  
+					</td>
+				  </tr>
+				  <?php } ?>
                               </tbody>
                           </table>  
                       </div>
@@ -493,6 +507,8 @@ $('.time').datetimepicker({
 <?php if ($kondutoStatus) { ?>
 
 <script src="https://i.k-analytix.com/konduto.min.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gmaps.js/0.4.25/gmaps.min.js"></script>
+<script type="text/javascript" src="ui/javascript/app-maps-google-delivery.js"></script>
 
 <script type="text/javascript">
 
@@ -555,6 +571,18 @@ $('.time').datetimepicker({
             })(page_category);
 
 
+	function initOrderedLocationMapLoad () {
+		const myLatLng = { lat: <?php echo $latitude ?>, lng:<?php echo $longitude ?> };
+		const map = new google.maps.Map(document.getElementById("orderdlocationmap"), {
+			zoom: 4,
+			center: myLatLng,
+		});
+		new google.maps.Marker({
+			position: myLatLng,
+			map,
+			title: "Ordered Location!",
+		});
+		}
 </script>
 
 <?php } ?>
