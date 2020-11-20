@@ -568,6 +568,7 @@ class ControllerAccountAccount extends Controller
 
         $this->request->post['dob'] = null;
         $this->request->post['parent'] = $this->customer->getId();
+        $this->request->post['source'] = 'WEB';
         $sub_customer_id = $this->model_account_customer->addCustomer($this->request->post, true);
         $_SESSION['success_msg'] = 'User added successfully!';
 
