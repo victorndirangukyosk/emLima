@@ -610,6 +610,25 @@ class ControllerApiCustomerSubusers extends Controller
                 $json['success'] = 'User activated!';
 
         }
+        if(isset($this->request->post['logged_customer_id']))// $this->request->post['parent_customer_id'];
+        
+        {// Add to activity log
+            $this->load->model('account/activity');
+
+            $activity_data = [
+                'customer_id' => $this->request->post['logged_customer_id'],
+                'name' => $this->request->post['logged_customer_firstname'] . ' ' . $this->request->post['logged_customer_lastname'],
+                'sub_customers_id' => $this->request->post['user_id']
+            ];
+            
+            if($this->request->post['active_status'] == 1) {
+            $this->model_account_activity->addActivity('sub_user_activated', $activity_data);
+            }
+            
+            if($this->request->post['active_status'] == 0) {
+            $this->model_account_activity->addActivity('sub_user_deactivated', $activity_data);
+            }
+        }
                 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
@@ -640,8 +659,13 @@ class ControllerApiCustomerSubusers extends Controller
         // } else 
         //{
          $this->request->post['dob'] = null;
+         $this->request->post['source'] = 'Mobile';
          $this->request->post['parent'] = $this->request->post['parent_customer_id'];//$this->customer->getId();           
-         $customer_id = $this->model_account_customer->addCustomer($this->request->post, true);
+         $parentcustomer_info = $this->model_account_customer->getCustomer($this->request->post['parent']);
+         if($parentcustomer_info!=null)
+         {$this->request->post['customer_group_id']=$parentcustomer_info['customer_group_id'];
+         }
+         $sub_customer_id = $this->model_account_customer->addCustomer($this->request->post, true);
             // Clear any previous login attempts for unregistered accounts.
         $this->model_account_customer->deleteLoginAttempts($this->request->post['email']);
         //$logged_in = $this->customer->login($this->request->post['email'], $this->request->post['password']);
@@ -650,11 +674,13 @@ class ControllerApiCustomerSubusers extends Controller
             $this->load->model('account/activity');
 
             $activity_data = [
-                'customer_id' => $customer_id,
-                'name' => $this->request->post['firstname'].' '.$this->request->post['lastname'],
+                'customer_id' => $this->request->post['logged_customer_id'],
+                'name' => $this->request->post['logged_customer_firstname'] . ' ' . $this->request->post['logged_customer_lastname'],                
+                'sub_customers_id' => $sub_customer_id,
             ];
 
-            $this->model_account_activity->addActivity('register', $activity_data);
+            // $this->model_account_activity->addActivity('register', $activity_data);
+            $this->model_account_activity->addActivity('sub_customer_created', $activity_data);
 
             /* If not able to login*/
             $data['status'] = true;
@@ -714,6 +740,22 @@ class ControllerApiCustomerSubusers extends Controller
         $this->model_account_customer->deletecustom($user_id);
 
         $json['success'] = 'User deleted!';
+
+        if(isset($this->request->post['logged_customer_id']))// $this->request->post['parent_customer_id'];
+        
+        {// Add to activity log
+            $this->load->model('account/activity');
+
+            $activity_data = [
+                'customer_id' => $this->request->post['logged_customer_id'],
+                'name' => $this->request->post['logged_customer_firstname'] . ' ' . $this->request->post['logged_customer_lastname'],
+                'sub_customers_id' => $this->request->post['user_id']
+            ]; 
+
+        $this->model_account_activity->addActivity('sub_user_deleted', $activity_data);
+        }
+
+        
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
@@ -776,10 +818,36 @@ class ControllerApiCustomerSubusers extends Controller
         if ($this->request->post['button'] == 'assign_head_chef') {
             // $this->model_account_customer->UpdateOrderApprovalAccess($this->customer->getId(), $this->request->post['head_chef'], 1, 'head_chef');
             $this->model_account_customer->UpdateOrderApprovalAccess($this->request->post['customer_id'], $this->request->post['head_chef'], 1, 'head_chef');
+        
+            $customer_info = $this->model_account_customer->getCustomer($this->request->post['customer_id']);
+            // echo '<pre>';print_r($customer_info);exit;
+            $this->load->model('account/activity');
+            $activity_data = [
+                'customer_id' => $customer_info['customer_id'],
+                'name' => $customer_info['firstname'] . ' ' . $customer_info['lastname'],
+                'sub_customers_id' => $this->request->post['head_chef']
+            ];
+
+            $this->model_account_activity->addActivity('assign_head_chef', $activity_data);
+
+        
         }
 
         if ($this->request->post['button'] == 'assign_procurement_person') {
             $this->model_account_customer->UpdateOrderApprovalAccess($this->request->post['customer_id'], $this->request->post['procurement_person'], 1, 'procurement_person');
+            $customer_info = $this->model_account_customer->getCustomer($this->request->post['customer_id']);
+           
+            $this->load->model('account/activity');
+            $activity_data = [
+                'customer_id' => $customer_info['customer_id'],
+                'name' => $customer_info['firstname'] . ' ' . $customer_info['lastname'],
+                'sub_customers_id' => $this->request->post['procurement_person']
+            ];
+
+            $this->model_account_activity->addActivity('assign_procurement_person', $activity_data);
+       
+        
+        
         }
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));

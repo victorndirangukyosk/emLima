@@ -592,7 +592,7 @@ class Controlleraccountsubusers extends Controller {
         $activity_data = [
             'customer_id' => $this->customer->getId(),
             'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
-            'sub_customer_id' => $this->request->post['user_id']
+            'sub_customers_id' => $this->request->post['user_id']
         ];
         
         if($this->request->post['active_status'] == 1) {
@@ -623,7 +623,7 @@ class Controlleraccountsubusers extends Controller {
         $activity_data = [
             'customer_id' => $this->customer->getId(),
             'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
-            'sub_customer_id' => $this->request->post['user_id']
+            'sub_customers_id' => $this->request->post['user_id']
         ];
 
         $this->model_account_activity->addActivity('sub_user_deleted', $activity_data);
@@ -670,7 +670,7 @@ class Controlleraccountsubusers extends Controller {
             $activity_data = [
                 'customer_id' => $this->customer->getId(),
                 'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
-                'sub_customer_id' => $this->request->post['head_chef']
+                'sub_customers_id' => $this->request->post['head_chef']
             ];
 
             $this->model_account_activity->addActivity('assign_head_chef', $activity_data);
@@ -683,7 +683,7 @@ class Controlleraccountsubusers extends Controller {
             $activity_data = [
                 'customer_id' => $this->customer->getId(),
                 'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
-                'sub_customer_id' => $this->request->post['procurement_person']
+                'sub_customers_id' => $this->request->post['procurement_person']
             ];
 
             $this->model_account_activity->addActivity('assign_procurement_person', $activity_data);

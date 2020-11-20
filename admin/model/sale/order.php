@@ -99,9 +99,15 @@ class ModelSaleOrder extends Model
         $this->load->model('account/customer');
         $order_info = $this->model_sale_order->getOrder($order_id);
         $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
+        
+        /* IF CUSTOMER SUB CUSTOMER */
+        $parent_customer_info = NULL;
+        if (isset($customer_info) && $customer_info['parent'] > 0) {
+            $parent_customer_info = $this->model_account_customer->getCustomer($customer_info['parent']);
+        }
 
         $disabled_products_string = NULL;
-        if (isset($customer_info['customer_category']) && $customer_info['customer_category'] != NULL) {
+        if ($parent_customer_info == NULL && isset($customer_info['customer_category']) && $customer_info['customer_category'] != NULL) {
             $category_pricing_disabled_products = $this->getCategoryPriceStatusByCategoryName($customer_info['customer_category'], 0);
             //$log = new Log('error.log');
             //$log->write('category_pricing_disabled_products');
@@ -109,6 +115,14 @@ class ModelSaleOrder extends Model
             $disabled_products_string = implode(',', $disabled_products);
             //$log->write($disabled_products_string);
             //$log->write('category_pricing_disabled_products');
+        } elseif ($parent_customer_info != NULL && isset($parent_customer_info) && isset($parent_customer_info['customer_category']) && $parent_customer_info['customer_category'] != NULL) {
+            $category_pricing_disabled_products = $this->getCategoryPriceStatusByCategoryName($parent_customer_info['customer_category'], 0);
+            //$log = new Log('error.log');
+            //$log->write('category_pricing_disabled_products');
+            $disabled_products = array_column($category_pricing_disabled_products, 'product_store_id');
+            $disabled_products_string = implode(',', $disabled_products);
+            //$log->write($disabled_products_string);
+            //$log->write('category_pricing_disabled_products');  
         }
 
         $store_id = $store_id;
@@ -146,8 +160,13 @@ class ModelSaleOrder extends Model
         $ret = $this->db->get('product_to_store', $limit, $offset)->rows;
         $ret2 = array();
         foreach ($ret as $re) {
-            if (isset($customer_info['customer_category']) && $customer_info['customer_category'] != NULL) {
+            if ($parent_customer_info == NULL && isset($customer_info['customer_category']) && $customer_info['customer_category'] != NULL) {
                 $category_price_data = $this->getCategoryPrices($re['product_store_id'], $store_id, $customer_info['customer_category']);
+                $re['category_price'] = is_array($category_price_data) && count($category_price_data) > 0 && array_key_exists('price', $category_price_data) && $category_price_data['price'] > 0 ? $category_price_data['price'] : 0;
+                //$log = new Log('error.log');
+                //$log->write('category_price');
+            } elseif ($parent_customer_info != NULL && isset($parent_customer_info['customer_category']) && $parent_customer_info['customer_category'] != NULL) {
+                $category_price_data = $this->getCategoryPrices($re['product_store_id'], $store_id, $parent_customer_info['customer_category']);
                 $re['category_price'] = is_array($category_price_data) && count($category_price_data) > 0 && array_key_exists('price', $category_price_data) && $category_price_data['price'] > 0 ? $category_price_data['price'] : 0;
                 //$log = new Log('error.log');
                 //$log->write('category_price');
@@ -192,6 +211,12 @@ class ModelSaleOrder extends Model
         $this->load->model('account/customer');
         $order_info = $this->model_sale_order->getOrder($order_id);
         $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
+        
+        /* IF CUSTOMER SUB CUSTOMER */
+        $parent_customer_info = NULL;
+        if (isset($customer_info) && $customer_info['parent'] > 0) {
+            $parent_customer_info = $this->model_account_customer->getCustomer($customer_info['parent']);
+        }
 
         $all_variations = 'SELECT * ,product_store_id as variation_id FROM ' . DB_PREFIX . 'product_to_store ps LEFT JOIN ' . DB_PREFIX . "product p ON (ps.product_id = p.product_id) WHERE name = '$product_name' and ps.status=1";
 
@@ -218,7 +243,7 @@ class ModelSaleOrder extends Model
                     $r['special_price'] = false;
                 }
 
-                if ($customer_info != NULL && array_key_exists('customer_category', $customer_info) && $customer_info['customer_category'] != NULL) {
+                if ($parent_customer_info == NULL && $customer_info != NULL && array_key_exists('customer_category', $customer_info) && $customer_info['customer_category'] != NULL) {
                     $category_price_data = $this->getCategoryPrices($r['product_store_id'], $store_id, $customer_info['customer_category']);
                     $log = new Log('error.log');
                     $log->write($category_price_data);
@@ -230,6 +255,18 @@ class ModelSaleOrder extends Model
                         $category_price = 0;
                         $category_price_status = 1;
                     }
+                } elseif($parent_customer_info != NULL && array_key_exists('customer_category', $parent_customer_info) && $parent_customer_info['customer_category'] != NULL) {
+                   $category_price_data = $this->getCategoryPrices($r['product_store_id'], $store_id, $parent_customer_info['customer_category']);
+                    $log = new Log('error.log');
+                    $log->write($category_price_data);
+
+                    if (is_array($category_price_data) && count($category_price_data) > 0) {
+                        $category_price = $this->currency->formatWithoutCurrency((float) $category_price_data['price']);
+                        $category_price_status = $category_price_data['status'];
+                    } else {
+                        $category_price = 0;
+                        $category_price_status = 1;
+                    } 
                 } else {
                     $category_price = 0;
                     $category_price_status = 1;
@@ -899,6 +936,10 @@ class ModelSaleOrder extends Model
         if (!empty($data['filter_date_modified'])) {
             $sql .= " AND DATE(o.date_modified) = DATE('".$this->db->escape($data['filter_date_modified'])."')";
         }
+        
+        if (!empty($data['filter_delivery_date'])) {
+            $sql .= " AND DATE(o.delivery_date) = DATE('".$this->db->escape($data['filter_delivery_date'])."')";
+        }
 
         if (!empty($data['filter_total'])) {
             $sql .= " AND o.total = '".(float) $data['filter_total']."'";
@@ -1471,6 +1512,10 @@ class ModelSaleOrder extends Model
 
         if (!empty($data['filter_date_modified'])) {
             $sql .= " AND DATE(o.date_modified) = DATE('".$this->db->escape($data['filter_date_modified'])."')";
+        }
+        
+        if (!empty($data['filter_delivery_date'])) {
+            $sql .= " AND DATE(o.delivery_date) = DATE('".$this->db->escape($data['filter_delivery_date'])."')";
         }
 
         if (!empty($data['filter_total'])) {
