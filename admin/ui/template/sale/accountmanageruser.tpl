@@ -190,6 +190,7 @@
                                         <a target="_blank" class="btn btn-info" data-toggle="tooltip" title="<?php echo 'Login as customer'; ?>" href="<?php echo $customer['login_customer']; ?>">
                                             <i class="fa fa-lock"></i>
                                         </a>
+                                        <a href="<?php echo $customer['customer_view']; ?>" data-toggle="tooltip" title="View" class="btn btn-primary"><i class="fa fa-eye"></i></a>
                                 </tr>
                                 <?php } ?>
                                 <?php } else { ?>
