@@ -72,6 +72,15 @@
                                 <label class="control-label" for="input-name"><?= $column_delivery_method ?></label>
                                 <input type="text" name="filter_delivery_method" value="<?php echo $filter_delivery_method; ?>" placeholder="<?php echo $column_delivery_method; ?>" id="input-name" class="form-control" />
                             </div>
+                            <div class="form-group">    
+                                <label class="control-label" for="input-delivery-date"><?php echo $entry_delivery_date; ?></label>
+                                <div class="input-group date">
+                                    <input type="text" name="filter_delivery_date" value="<?php echo $filter_delivery_date; ?>" placeholder="<?php echo $entry_delivery_date; ?>" data-date-format="YYYY-MM-DD" id="input-delivery-date" class="form-control" />
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </div>
 
 
                         </div>
@@ -144,15 +153,6 @@
                                 <label class="control-label" for="input-date-added-end"><?php echo $entry_date_added_end; ?></label>
                                 <div class="input-group date">
                                     <input type="text" name="filter_date_added_end" value="<?php echo $filter_date_added_end; ?>" placeholder="<?php echo $entry_date_added_end; ?>" data-date-format="YYYY-MM-DD" id="input-date-end" class="form-control" />
-                                    <span class="input-group-btn">
-                                        <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="form-group">    
-                                <label class="control-label" for="input-delivery-date"><?php echo $entry_delivery_date; ?></label>
-                                <div class="input-group date">
-                                    <input type="text" name="filter_delivery_date" value="<?php echo $filter_delivery_date; ?>" placeholder="<?php echo $entry_delivery_date; ?>" data-date-format="YYYY-MM-DD" id="input-delivery-date" class="form-control" />
                                     <span class="input-group-btn">
                                         <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
                                     </span>
