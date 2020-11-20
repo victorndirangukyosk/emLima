@@ -568,7 +568,7 @@ class ControllerAccountAccount extends Controller
 
         $this->request->post['dob'] = null;
         $this->request->post['parent'] = $this->customer->getId();
-        $this->model_account_customer->addCustomer($this->request->post, true);
+        $sub_customer_id = $this->model_account_customer->addCustomer($this->request->post, true);
         $_SESSION['success_msg'] = 'User added successfully!';
 
         // Add to activity log
@@ -577,12 +577,13 @@ class ControllerAccountAccount extends Controller
         $activity_data = [
                 'customer_id' => $this->customer->getId(),
                 'name' => $this->customer->getFirstName().' '.$this->customer->getLastName(),
+                'sub_customer_id' => $sub_customer_id,
             ];
         $log->write('Add sub user account1');
 
-        $this->model_account_activity->addActivity('edit', $activity_data);
+        $this->model_account_activity->addActivity('sub_customer_created', $activity_data);
 
-        $log->write('Add sub user account2');
+        $log->write('Add sub user account1');
 
         /*if(isset($this->session->data['checkout_redirect']) ) {
             $redirectTo = $this->session->data['checkout_redirect'];
