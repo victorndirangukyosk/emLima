@@ -127,7 +127,7 @@
                                       <th>Longitude</th>
                                       <td><?php echo $longitude; ?></td>
                                   </tr>
-                                  <?php if($longitude !='NA' &&  $latitude !='NA' && $longitude !='0' &&  $latitude !='0') { ?>
+                                  <?php if($longitude != '' &&  $latitude != '' && $longitude != NULL &&  $latitude != NULL && $longitude != 0 &&  $latitude != 0) { ?>
  					<tr>
 					<th>Location:</th>
 					<td>
