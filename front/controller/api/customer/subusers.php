@@ -618,7 +618,7 @@ class ControllerApiCustomerSubusers extends Controller
             $activity_data = [
                 'customer_id' => $this->request->post['logged_customer_id'],
                 'name' => $this->request->post['logged_customer_firstname'] . ' ' . $this->request->post['logged_customer_lastname'],
-                'sub_customer_id' => $this->request->post['user_id']
+                'sub_customers_id' => $this->request->post['user_id']
             ];
             
             if($this->request->post['active_status'] == 1) {
@@ -660,7 +660,7 @@ class ControllerApiCustomerSubusers extends Controller
         //{
          $this->request->post['dob'] = null;
          $this->request->post['parent'] = $this->request->post['parent_customer_id'];//$this->customer->getId();           
-         $customer_id = $this->model_account_customer->addCustomer($this->request->post, true);
+         $sub_customer_id = $this->model_account_customer->addCustomer($this->request->post, true);
             // Clear any previous login attempts for unregistered accounts.
         $this->model_account_customer->deleteLoginAttempts($this->request->post['email']);
         //$logged_in = $this->customer->login($this->request->post['email'], $this->request->post['password']);
@@ -671,9 +671,11 @@ class ControllerApiCustomerSubusers extends Controller
             $activity_data = [
                 'customer_id' => $customer_id,
                 'name' => $this->request->post['firstname'].' '.$this->request->post['lastname'],
+                'sub_customers_id' => $sub_customer_id,
             ];
 
-            $this->model_account_activity->addActivity('register', $activity_data);
+            // $this->model_account_activity->addActivity('register', $activity_data);
+            $this->model_account_activity->addActivity('sub_customer_created', $activity_data);
 
             /* If not able to login*/
             $data['status'] = true;
@@ -742,7 +744,7 @@ class ControllerApiCustomerSubusers extends Controller
             $activity_data = [
                 'customer_id' => $this->request->post['logged_customer_id'],
                 'name' => $this->request->post['logged_customer_firstname'] . ' ' . $this->request->post['logged_customer_lastname'],
-                'sub_customer_id' => $this->request->post['user_id']
+                'sub_customers_id' => $this->request->post['user_id']
             ]; 
 
         $this->model_account_activity->addActivity('sub_user_deleted', $activity_data);
@@ -818,7 +820,7 @@ class ControllerApiCustomerSubusers extends Controller
             $activity_data = [
                 'customer_id' => $customer_info['customer_id'],
                 'name' => $customer_info['firstname'] . ' ' . $customer_info['lastname'],
-                'sub_customer_id' => $this->request->post['head_chef']
+                'sub_customers_id' => $this->request->post['head_chef']
             ];
 
             $this->model_account_activity->addActivity('assign_head_chef', $activity_data);
@@ -834,7 +836,7 @@ class ControllerApiCustomerSubusers extends Controller
             $activity_data = [
                 'customer_id' => $customer_info['customer_id'],
                 'name' => $customer_info['firstname'] . ' ' . $customer_info['lastname'],
-                'sub_customer_id' => $this->request->post['procurement_person']
+                'sub_customers_id' => $this->request->post['procurement_person']
             ];
 
             $this->model_account_activity->addActivity('assign_procurement_person', $activity_data);
