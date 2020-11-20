@@ -199,6 +199,7 @@ class ControllerSaleAccountManagerUser extends Controller {
                 'email' => $result['email'],
                 'telephone' => $country_code . $result['telephone'],
                 'status' => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
+                'source' => $result['source'],
                 'ip' => $result['ip'],
                 'company_name' => $result['company_name'],
                 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
