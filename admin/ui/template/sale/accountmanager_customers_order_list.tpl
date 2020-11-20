@@ -149,6 +149,15 @@
                                     </span>
                                 </div>
                             </div>
+                            <div class="form-group">    
+                                <label class="control-label" for="input-delivery-date"><?php echo $entry_delivery_date; ?></label>
+                                <div class="input-group date">
+                                    <input type="text" name="filter_delivery_date" value="<?php echo $filter_delivery_date; ?>" placeholder="<?php echo $entry_delivery_date; ?>" data-date-format="YYYY-MM-DD" id="input-delivery-date" class="form-control" />
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </div>
                             <!--<div class="form-group">
                                 <label class="control-label" for="input-date-modified"><?php echo $entry_date_modified; ?></label>
                                 <div class="input-group date">
@@ -472,6 +481,12 @@
 
             if (filter_date_added_end) {
                 url += '&filter_date_added_end=' + encodeURIComponent(filter_date_added_end);
+            }
+            
+            var filter_delivery_date = $('input[name=\'filter_delivery_date\']').val();
+
+            if (filter_delivery_date) {
+                url += '&filter_delivery_date=' + encodeURIComponent(filter_delivery_date);
             }
 
             var filter_vendor = $('input[name=\'filter_vendor\']').val();

@@ -1182,7 +1182,8 @@ class ControllerSaleOrder extends Controller {
             } else {
                 // $result['company_name'] = "(NA)";
             }
-
+            
+            $this->load->model('localisation/order_status');
             $data['orders'][] = [
                 'order_id' => $result['order_id'],
                 'customer' => $result['customer'],
@@ -1211,6 +1212,7 @@ class ControllerSaleOrder extends Controller {
                 'po_number' => $result['po_number'],
                 'SAP_customer_no' => $result['SAP_customer_no'],
                 'SAP_doc_no' => $result['SAP_doc_no'],
+                'all_order_statuses' => $this->model_localisation_order_status->getOrderStatuses()
             ];
         }
 
@@ -2846,8 +2848,8 @@ class ControllerSaleOrder extends Controller {
             $data['accept_language'] = $order_info['accept_language'];
             $data['date_added'] = date($this->language->get('date_format_short'), strtotime($order_info['date_added']));
             $data['date_modified'] = date($this->language->get('date_format_short'), strtotime($order_info['date_modified']));
-            $data['login_latitude'] = $order_info['login_latitude']??'NA';
-            $data['login_longitude'] = $order_info['login_longitude']??'NA';
+            $data['login_latitude'] = $order_info['login_latitude'] == NULL || $order_info['login_latitude'] == 0 || $order_info['login_latitude'] == '' ? 'NA' : $order_info['login_latitude'];
+            $data['login_longitude'] = $order_info['login_longitude'] == NULL || $order_info['login_longitude'] > 0 || $order_info['login_longitude'] == '' ?'NA' : $order_info['login_longitude'];
             // Custom fields
             $data['payment_custom_fields'] = [];
 
