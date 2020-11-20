@@ -577,7 +577,7 @@ class ControllerAccountAccount extends Controller
         $activity_data = [
                 'customer_id' => $this->customer->getId(),
                 'name' => $this->customer->getFirstName().' '.$this->customer->getLastName(),
-                'sub_customer_id' => $sub_customer_id,
+                'sub_customers_id' => $sub_customer_id,
             ];
         $log->write('Add sub user account1');
 
