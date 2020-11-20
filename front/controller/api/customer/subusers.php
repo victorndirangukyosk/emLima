@@ -610,6 +610,25 @@ class ControllerApiCustomerSubusers extends Controller
                 $json['success'] = 'User activated!';
 
         }
+        if(isset($this->request->post['logged_customer_id']))// $this->request->post['parent_customer_id'];
+        
+        {// Add to activity log
+            $this->load->model('account/activity');
+
+            $activity_data = [
+                'customer_id' => $this->request->post['logged_customer_id'],
+                'name' => $this->request->post['logged_customer_firstname'] . ' ' . $this->request->post['logged_customer_lastname'],
+                'sub_customer_id' => $this->request->post['user_id']
+            ];
+            
+            if($this->request->post['active_status'] == 1) {
+            $this->model_account_activity->addActivity('sub_user_activated', $activity_data);
+            }
+            
+            if($this->request->post['active_status'] == 0) {
+            $this->model_account_activity->addActivity('sub_user_deactivated', $activity_data);
+            }
+        }
                 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
@@ -714,6 +733,22 @@ class ControllerApiCustomerSubusers extends Controller
         $this->model_account_customer->deletecustom($user_id);
 
         $json['success'] = 'User deleted!';
+
+        if(isset($this->request->post['logged_customer_id']))// $this->request->post['parent_customer_id'];
+        
+        {// Add to activity log
+            $this->load->model('account/activity');
+
+            $activity_data = [
+                'customer_id' => $this->request->post['logged_customer_id'],
+                'name' => $this->request->post['logged_customer_firstname'] . ' ' . $this->request->post['logged_customer_lastname'],
+                'sub_customer_id' => $this->request->post['user_id']
+            ]; 
+
+        $this->model_account_activity->addActivity('sub_user_deleted', $activity_data);
+        }
+
+        
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
