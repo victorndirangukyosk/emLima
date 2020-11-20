@@ -119,6 +119,14 @@
                                       <th>Source</th>
                                       <td><?php echo $source; ?></td>
                                   </tr>
+                                  <tr>
+                                      <th>Latitude</th>
+                                      <td><?php echo $latitude; ?></td>
+                                  </tr>
+                                  <tr>
+                                      <th>Longitude</th>
+                                      <td><?php echo $longitude; ?></td>
+                                  </tr>
                               </tbody>
                           </table>  
                       </div>
