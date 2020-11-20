@@ -233,6 +233,7 @@ $_['entry_total'] = 'Total';
 $_['entry_date_added'] = 'From Date Added';
 $_['entry_date_added_end'] = 'To Date Added';
 $_['entry_date_modified'] = 'Date Modified';
+$_['entry_delivery_date'] = 'Delivery Date';
 
 //button
 $_['button_commision_pay'] = 'Pay to vendor';
