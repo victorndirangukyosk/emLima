@@ -569,23 +569,23 @@ $('.time').datetimepicker({
             },
             period);
             })(page_category);
-
-
-	function initOrderedLocationMapLoad () {
-		const myLatLng = { lat: <?php echo $latitude ?>, lng:<?php echo $longitude ?> };
-		const map = new google.maps.Map(document.getElementById("orderdlocationmap"), {
-			zoom: 4,
-			center: myLatLng,
-		});
-		new google.maps.Marker({
-			position: myLatLng,
-			map,
-			title: "Ordered Location!",
-		});
-		}
 </script>
 
 <?php } ?>
+<script type="text/javascript">
+        function initOrderedLocationMapLoad () {
+                const myLatLng = { lat: <?php echo $latitude ?>, lng:<?php echo $longitude ?> };
+                const map = new google.maps.Map(document.getElementById("orderdlocationmap"), {
+                        zoom: 4,
+                        center: myLatLng,
+                });
+                new google.maps.Marker({
+                        position: myLatLng,
+                        map,
+                        title: "Ordered Location!",
+                });
+                }
+</script>
 </body>
 
 </html>
