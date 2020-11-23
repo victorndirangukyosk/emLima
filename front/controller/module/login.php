@@ -41,6 +41,19 @@ class ControllerModuleLogin extends Controller
         $data['register'] = $this->url->link('account/register', '', 'SSL');
         $data['logout'] = $this->url->link('account/logout', '', 'SSL');
         $data['action'] = $this->url->link('account/login');
+        
+        if ($this->request->server['HTTPS']) {
+            $server = $this->config->get('config_ssl');
+        } else {
+            $server = $this->config->get('config_url');
+        }
+        
+        if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
+            //$data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'),200,110);
+            $data['logo'] = $server . 'image/' . $this->config->get('config_logo');
+        } else {
+            $data['logo'] = 'assets/img/logo.svg';
+        }
 
         if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/module/login.tpl')) {
             return $this->load->view($this->config->get('config_template').'/template/module/login.tpl', $data);
