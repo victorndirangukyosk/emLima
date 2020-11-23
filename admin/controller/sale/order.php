@@ -5152,7 +5152,14 @@ class ControllerSaleOrder extends Controller {
                         'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
                     ];
                 }
-
+                
+                $this->load->model('sale/customer');
+                $order_customer_detials = $this->model_sale_customer->getCustomer($order_info['customer_id']);
+                $company_name = NULL;
+                if($order_customer_detials != NULL && is_array($order_customer_detials)) {
+                $company_name = $order_customer_detials['company_name'];    
+                }
+                
                 $data['orders'][] = [
                     'order_id' => $order_id,
                     'date_added' => date($this->language->get('date_format_short'), strtotime($order_info['date_added'])),
@@ -5170,7 +5177,7 @@ class ControllerSaleOrder extends Controller {
                     'shipping_contact_no' => $order_info['shipping_contact_no'],
                     'shipping_address' => $order_info['shipping_address'],
                     'shipping_name' => $order_info['shipping_name'],
-                    'customer_company_name' => $order_info['customer_company_name'],
+                    'customer_company_name' => $company_name == NULL ? $order_info['customer_company_name'] : $company_name,
                     'shipping_city' => $order_info['shipping_city'],
                     'totals' => $totalData,
                     'products' => $orderProducts,
