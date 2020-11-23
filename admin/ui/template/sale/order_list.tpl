@@ -36,6 +36,9 @@
             <button type="button" class="close" data-dismiss="alert">&times;</button>
         </div>
         <?php } ?>
+        <div class="alert alert-danger" style="display: none;"><i class="fa fa-exclamation-circle"></i>
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+        </div>
         
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -283,8 +286,16 @@
                                     <!-- <td class="text-left"><?php echo $order['city']; ?></td> -->
                                     <!-- <td class="text-left"><?php echo $order['status']; ?></td> -->
                                     <td class="text-left">
-
-                                    <h3 class="my-order-title label" style="background-color: #<?= $order['order_status_color']; ?>;display: block;line-height: 2;" id="order-status" ><?php echo $order['status']; ?></h3>
+						<select name="order_status_id" id="input-order-status<?php echo $order['order_id']; ?>" class="form-control col-sm-12">
+						  <?php foreach ($order['all_order_statuses'] as $order_statuses) { ?>
+						  <?php if ($order_statuses['order_status_id'] == $order['order_status_id']) { ?>
+						  <option value="<?php echo $order_statuses['order_status_id']; ?>" selected="selected"><?php echo $order_statuses['name']; ?></option>
+						  <?php } else { ?>
+						  <option value="<?php echo $order_statuses['order_status_id']; ?>"><?php echo $order_statuses['name']; ?></option>
+						  <?php } ?>
+						  <?php } ?>
+						</select>
+                                    <!--<h3 class="my-order-title label" style="background-color: #<?= $order['order_status_color']; ?>;display: block;line-height: 2;" id="order-status" ><?php echo $order['status']; ?></h3>-->
                                     </td>
                                    
 
@@ -323,7 +334,8 @@
                                         <!-- <a href="<?php echo $order['delete']; ?>" id="button-delete<?php echo $order['order_id']; ?>" data-toggle="tooltip" title="<?php echo $button_delete; ?>" class="btn btn-danger"><i class="fa fa-trash-o"></i></a> -->
                                        
                                        <a href="#" onclick="getPO(<?= $order['order_id'] ?>)"   data-toggle="modal" data-dismiss="modal" data-target="#poModal"    class="btn btn-info" style="border-radius: 0px;"  >PO</a>
-                                        </td>
+                                       <a href="#" data-toggle="tooltip" title="Update Order Status" data-orderid="<?= $order['order_id'] ?>" id="update_order_status" class="btn btn-info"><i class="fa fa-refresh"></i></a> 
+                                    </td>
                                         
                                 </tr>
                                 <?php } ?>
@@ -718,7 +730,7 @@
 <script  type="text/javascript">
 
 
-  function getPO($order_id) {
+function getPO($order_id) {
                
                 $('#poModal-message').html('');
                $('#poModal-success-message').html('');
@@ -761,7 +773,7 @@
             }
 
 
- function savePO() { 
+function savePO() { 
  
     $('#poModal-message').html('');
                $('#poModal-success-message').html('');
@@ -804,8 +816,62 @@
                
             }
 
+$('a[id^=\'update_order_status\']').on('click', function (e) {
+e.preventDefault();
+console.log($(this).data('orderid'));
+var clicked_orderid = $(this).data('orderid');
+var selected_order_status_id = $('select[id=\'input-order-status'+clicked_orderid+'\']').val();
+console.log($('select[id=\'input-order-status'+clicked_orderid+'\']').val());
+//return false;
+
+if($.isNumeric(clicked_orderid) && clicked_orderid > 0 && $.isNumeric(selected_order_status_id) && selected_order_status_id > 0)  {
+console.log(clicked_orderid);
+console.log(selected_order_status_id);
+$(this).find('i').toggleClass('fa fa-refresh fa fa-spinner');
+$(this).attr("disabled","disabled");   
+//return false;
+
+if(typeof verifyStatusChange == 'function'){
+if(verifyStatusChange() == false){
+return false;
+}
+}
+
+if($('select[id=\'input-order-status'+clicked_orderid+'\'] option:selected').text()=='Delivered')
+{
+	 
+	$.ajax({
+		url: 'index.php?path=sale/order/createinvoiceno&token=<?php echo $token; ?>&order_id='+clicked_orderid,
+		dataType: 'json',
+		success: function(json) {
+			console.log(json);
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {
+			//alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+	});
+}
+
+$.ajax({
+		url: 'index.php?path=sale/order/api&token=<?php echo $token; ?>&api=api/order/history&order_id='+clicked_orderid+'&added_by=<?php echo $this->user->getId(); ?>&added_by_role=<?php echo $this->user->getGroupName(); ?>',
+		type: 'post',
+		dataType: 'json',
+		data: 'order_status_id=' + encodeURIComponent($('select[id=\'input-order-status'+clicked_orderid+'\']').val()) + '&notify=1',
+		success: function(json) {	 
+                    console.log(json);
+                    $('.alert').html('Order status updated successfully!');
+                    $(".alert").attr('class', 'alert alert-success');
+                    $(".alert").show();
+                    setTimeout(function(){ window.location.reload(false); }, 1500);
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {		
+			 
+		}
+	});    
+}	
+});
             
-            </script>
+</script>
 
 
 
