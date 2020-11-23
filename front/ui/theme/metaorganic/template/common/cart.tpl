@@ -73,7 +73,7 @@
 
                                                 <div class="product-price-combo">
                                                      <?php if(isset($product['original_price'])) { ?>
-                                                    <span class="price-cancelled"><?= $product['original_price'] ?></span>
+                                                    <!--<span class="price-cancelled"><?= $product['original_price'] ?></span>-->
                                                     <?php } else { ?>
                                                         <span class="price-cancelled"></span>
                                                     <?php } ?>
