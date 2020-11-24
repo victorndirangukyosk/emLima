@@ -396,8 +396,9 @@ class ControllerAccountLogin extends Controller {
         }
 
         if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
-            $data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'), 200, 110);
+            //$data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'), 200, 110);
             //$data['logo'] = $server . 'image/' . $this->config->get('config_logo');
+            $data['logo'] = $server . 'image/' . $this->config->get('config_logo');
         } else {
             $data['logo'] = 'assets/img/logo.svg';
         }
@@ -531,6 +532,8 @@ class ControllerAccountLogin extends Controller {
         } else {
             $data['site_key'] = '';
         }
+        
+        $data['store_name'] = $this->config->get('config_name');
 
         $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/register.tpl', $data));
     }
@@ -568,6 +571,7 @@ class ControllerAccountLogin extends Controller {
         $data['text_welcome_message'] = $this->language->get('text_welcome_message');
         $data['text_have_account'] = $this->language->get('text_have_account');
         $data['text_forget_password'] = $this->language->get('text_forget_password');
+        $data['store_name'] = $this->config->get('config_name');
 
         $data['forget_link'] = $this->url->link('account/forgotten');
 

@@ -50,7 +50,7 @@ class ControllerCommonFileManager extends Controller
         }
 
         // Get files
-        $files = glob($directory.'/'.$filter_name.'*.{jpg,jpeg,png,gif,JPG,JPEG,PNG,GIF}', GLOB_BRACE);
+        $files = glob($directory.'/'.$filter_name.'*.{jpg,jpeg,png,gif,JPG,JPEG,PNG,GIF,svg}', GLOB_BRACE);
 
         if (!$files) {
             $files = [];
@@ -274,6 +274,7 @@ class ControllerCommonFileManager extends Controller
                     'jpeg',
                     'gif',
                     'png',
+                    'svg',
                 ];
 
                 if (!in_array(utf8_strtolower(utf8_substr(strrchr($filename, '.'), 1)), $allowed)) {
@@ -287,6 +288,7 @@ class ControllerCommonFileManager extends Controller
                     'image/png',
                     'image/x-png',
                     'image/gif',
+                    'image/svg+xml',
                 ];
 
                 if (!in_array($this->request->files['file']['type'], $allowed)) {
@@ -310,6 +312,8 @@ class ControllerCommonFileManager extends Controller
         }
 
         if (!$json) {
+            $log = new Log('error.log');
+            $log->write($directory);
             move_uploaded_file($this->request->files['file']['tmp_name'], $directory.'/'.$filename);
 
             $json['success'] = $this->language->get('text_uploaded');
