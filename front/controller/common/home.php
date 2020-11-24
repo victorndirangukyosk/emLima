@@ -119,6 +119,13 @@ class ControllerCommonHome extends Controller {
         } else {
             $server = $this->config->get('config_url');
         }
+        
+        if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
+            //$data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'),200,110);
+            $data['logo'] = $server . 'image/' . $this->config->get('config_logo');
+        } else {
+            $data['logo'] = 'assets/img/logo.svg';
+        }
 
         $data['base'] = $server;
         $data['is_login'] = $this->customer->isLogged();
@@ -152,6 +159,7 @@ class ControllerCommonHome extends Controller {
         $data['login'] = $this->url->link('account/login', '', 'SSL');
         $data['register'] = $this->url->link('account/register', '', 'SSL');
         $data['forgotten'] = $this->url->link('account/forgotten', '', 'SSL');
+        $data['store_name'] = $this->config->get('config_name');
 
 //    echo "<pre>";print_r($data);die;
 
@@ -177,7 +185,24 @@ class ControllerCommonHome extends Controller {
     }
 
     public function covid19() {
-        $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/covid19.tpl'));
+        
+        if ($this->request->server['HTTPS']) {
+            $server = $this->config->get('config_ssl');
+        } else {
+            $server = $this->config->get('config_url');
+        }
+        
+        if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
+            //$data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'),200,110);
+            $data['logo'] = $server . 'image/' . $this->config->get('config_logo');
+        } else {
+            $data['logo'] = 'assets/img/logo.svg';
+        }
+        
+        $data['base'] = '';
+        $data['store_name'] = $this->config->get('config_name');
+        
+        $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/covid19.tpl', $data));
     }
 
     public function blog() {
@@ -416,12 +441,46 @@ class ControllerCommonHome extends Controller {
     }
 
     public function farmers() {
-        $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/farmer-engagement.tpl'));
+        
+        if ($this->request->server['HTTPS']) {
+            $server = $this->config->get('config_ssl');
+        } else {
+            $server = $this->config->get('config_url');
+        }
+        
+        if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
+            //$data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'),200,110);
+            $data['logo'] = $server . 'image/' . $this->config->get('config_logo');
+        } else {
+            $data['logo'] = 'assets/img/logo.svg';
+        }
+        
+        $data['base'] = '';
+        $data['store_name'] = $this->config->get('config_name');
+        
+        $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/farmer-engagement.tpl', $data));
     }
 
     public function partners() {
         $data['register'] = $this->request->post['register'];
         $data['site_key'] = $this->config->get('config_google_captcha_public');
+        
+        if ($this->request->server['HTTPS']) {
+            $server = $this->config->get('config_ssl');
+        } else {
+            $server = $this->config->get('config_url');
+        }
+        
+        if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
+            //$data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'),200,110);
+            $data['logo'] = $server . 'image/' . $this->config->get('config_logo');
+        } else {
+            $data['logo'] = 'assets/img/logo.svg';
+        }
+        
+        $data['base'] = '';
+        $data['store_name'] = $this->config->get('config_name');
+        
         $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/partners.tpl', $data));
     }
 
@@ -1003,6 +1062,7 @@ class ControllerCommonHome extends Controller {
             $data['login'] = $this->url->link('account/login', '', 'SSL');
             $data['register'] = $this->url->link('account/register', '', 'SSL');
             $data['forgotten'] = $this->url->link('account/forgotten', '', 'SSL');
+            $data['store_name'] = $this->config->get('config_name');
 
 //    echo "<pre>";print_r($data);die;
 

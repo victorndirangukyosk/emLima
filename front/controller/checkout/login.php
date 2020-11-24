@@ -148,6 +148,8 @@ class ControllerCheckoutLogin extends Controller
         } else {
             $data['logo'] = 'assets/img/logo.svg';
         }
+        
+        $data['store_name'] = $this->config->get('config_name');
 
         if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/checkout/login.tpl')) {
             $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/checkout/login.tpl', $data));
