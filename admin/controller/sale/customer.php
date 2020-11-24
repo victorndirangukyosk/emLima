@@ -652,11 +652,13 @@ class ControllerSaleCustomer extends Controller {
                 'telephone' => $country_code . $result['telephone'],
                 'customer_group' => $result['customer_group'],
                 'status' => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
+                'source' => $result['source'],
                 'ip' => $result['ip'],
                 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
                 'approve' => $approve,
                 'unlock' => $unlock,
                 'edit' => $this->url->link('sale/customer/edit', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'] . $url, 'SSL'),
+                'customer_view' => $this->url->link('sale/customer/view_customer', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'] . $url, 'SSL'),
             ];
         }
 
@@ -1326,7 +1328,7 @@ class ControllerSaleCustomer extends Controller {
         } else {
             $data['address_id'] = '';
         }
-
+        $data['source'] = $customer_info['source'];
         $this->load->model('sale/customer_group');
 
         //echo "<pre>";print_r($data);die;
@@ -1756,6 +1758,58 @@ class ControllerSaleCustomer extends Controller {
 
         $this->response->setOutput($this->load->view('sale/customer_ip.tpl', $data));
     }
+    
+    public function customerviewip() {
+        $this->load->language('sale/customer');
+
+        $this->load->model('sale/customer');
+
+        $data['text_no_results'] = $this->language->get('text_no_results');
+        $data['text_add_ban_ip'] = $this->language->get('text_add_ban_ip');
+        $data['text_remove_ban_ip'] = $this->language->get('text_remove_ban_ip');
+        $data['text_loading'] = $this->language->get('text_loading');
+
+        $data['column_ip'] = $this->language->get('column_ip');
+        $data['column_total'] = $this->language->get('column_total');
+        $data['column_date_added'] = $this->language->get('column_date_added');
+        $data['column_action'] = $this->language->get('column_action');
+
+        if (isset($this->request->get['page'])) {
+            $page = $this->request->get['page'];
+        } else {
+            $page = 1;
+        }
+
+        $data['ips'] = [];
+
+        $results = $this->model_sale_customer->getIps($this->request->get['customer_id'], ($page - 1) * 10, 10);
+
+        foreach ($results as $result) {
+            $ban_ip_total = $this->model_sale_customer->getTotalBanIpsByIp($result['ip']);
+
+            $data['ips'][] = [
+                'ip' => $result['ip'],
+                'total' => $this->model_sale_customer->getTotalCustomersByIp($result['ip']),
+                'date_added' => date('d/m/y', strtotime($result['date_added'])),
+                'filter_ip' => $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_ip=' . $result['ip'], 'SSL'),
+                'ban_ip' => $ban_ip_total,
+            ];
+        }
+
+        $ip_total = $this->model_sale_customer->getTotalIps($this->request->get['customer_id']);
+
+        $pagination = new Pagination();
+        $pagination->total = $ip_total;
+        $pagination->page = $page;
+        $pagination->limit = 10;
+        $pagination->url = $this->url->link('sale/customer/ip', 'token=' . $this->session->data['token'] . '&customer_id=' . $this->request->get['customer_id'] . '&page={page}', 'SSL');
+
+        $data['pagination'] = $pagination->render();
+
+        $data['results'] = sprintf($this->language->get('text_pagination'), ($ip_total) ? (($page - 1) * 10) + 1 : 0, ((($page - 1) * 10) > ($ip_total - 10)) ? $ip_total : ((($page - 1) * 10) + 10), $ip_total, ceil($ip_total / 10));
+
+        $this->response->setOutput($this->load->view('sale/customer_view_ip.tpl', $data));
+    }
 
     public function addBanIp() {
         $this->load->language('sale/customer');
@@ -2082,6 +2136,249 @@ class ControllerSaleCustomer extends Controller {
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
+    }
+    
+    public function view_customer() {
+        $this->load->language('sale/customer');
+
+        $this->document->setTitle($this->language->get('heading_title'));
+
+        $this->load->model('sale/customer');
+
+        $data['heading_title'] = $this->language->get('heading_title');
+
+        $data['entry_referred_by'] = $this->language->get('entry_referred_by');
+
+        $data['text_form'] = $this->language->get('text_view');
+        $data['text_enabled'] = $this->language->get('text_enabled');
+        $data['text_disabled'] = $this->language->get('text_disabled');
+        $data['text_yes'] = $this->language->get('text_yes');
+        $data['text_no'] = $this->language->get('text_no');
+        $data['text_select'] = $this->language->get('text_select');
+        $data['text_none'] = $this->language->get('text_none');
+        $data['text_loading'] = $this->language->get('text_loading');
+        $data['text_add_ban_ip'] = $this->language->get('text_add_ban_ip');
+        $data['text_remove_ban_ip'] = $this->language->get('text_remove_ban_ip');
+
+        $data['text_male'] = $this->language->get('text_male');
+        $data['text_female'] = $this->language->get('text_female');
+        $data['text_other'] = $this->language->get('text_other');
+        $data['entry_dob'] = $this->language->get('entry_dob');
+        $data['entry_gender'] = $this->language->get('entry_gender');
+
+        $data['entry_customer_group'] = $this->language->get('entry_customer_group');
+        $data['entry_firstname'] = $this->language->get('entry_firstname');
+        $data['entry_lastname'] = $this->language->get('entry_lastname');
+        $data['entry_email'] = $this->language->get('entry_email');
+
+        $data['entry_company_name'] = $this->language->get('entry_company_name');
+        $data['entry_company_address'] = $this->language->get('entry_company_address');
+
+        $data['entry_telephone'] = $this->language->get('entry_telephone');
+        $data['entry_fax'] = $this->language->get('entry_fax');
+        $data['entry_password'] = $this->language->get('entry_password');
+        $data['entry_confirm'] = $this->language->get('entry_confirm');
+        $data['entry_newsletter'] = $this->language->get('entry_newsletter');
+        $data['entry_status'] = $this->language->get('entry_status');
+        $data['entry_approved'] = $this->language->get('entry_approved');
+        $data['entry_safe'] = $this->language->get('entry_safe');
+        $data['entry_company'] = $this->language->get('entry_company');
+        $data['entry_address_1'] = $this->language->get('entry_address_1');
+        $data['entry_address_2'] = $this->language->get('entry_address_2');
+        $data['entry_city'] = $this->language->get('entry_city');
+        $data['entry_postcode'] = $this->language->get('entry_postcode');
+        $data['entry_zone'] = $this->language->get('entry_zone');
+        $data['entry_country'] = $this->language->get('entry_country');
+        $data['entry_default'] = $this->language->get('entry_default');
+        $data['entry_comment'] = $this->language->get('entry_comment');
+        $data['entry_description'] = $this->language->get('entry_description');
+        $data['entry_amount'] = $this->language->get('entry_amount');
+        $data['entry_points'] = $this->language->get('entry_points');
+        $data['entry_send_email'] = $this->language->get('entry_send_email');
+        $data['entry_name'] = $this->language->get('entry_name');
+        $data['entry_contact_no'] = $this->language->get('entry_contact_no');
+        $data['entry_address'] = $this->language->get('entry_address');
+
+        $data['help_safe'] = $this->language->get('help_safe');
+        $data['help_points'] = $this->language->get('help_points');
+
+        $data['button_cancel'] = $this->language->get('button_cancel');
+        $data['button_address_add'] = $this->language->get('button_address_add');
+        $data['button_history_add'] = $this->language->get('button_history_add');
+        $data['button_credit_add'] = $this->language->get('button_credit_add');
+        $data['button_reward_add'] = $this->language->get('button_reward_add');
+        $data['button_remove'] = $this->language->get('button_remove');
+        $data['button_upload'] = $this->language->get('button_upload');
+
+        $data['tab_general'] = $this->language->get('tab_general');
+        $data['tab_address'] = $this->language->get('tab_address');
+        $data['tab_history'] = $this->language->get('tab_history');
+        $data['tab_credit'] = $this->language->get('tab_credit');
+        $data['tab_reward'] = $this->language->get('tab_reward');
+        $data['tab_referral'] = $this->language->get('tab_referral');
+        $data['tab_sub_customer'] = $this->language->get('tab_sub_customer');
+        $data['tab_ip'] = $this->language->get('tab_ip');
+
+        $data['token'] = $this->session->data['token'];
+
+        $data['text_flat_house_office'] = $this->language->get('text_flat_house_office');
+        $data['text_stree_society_office'] = $this->language->get('text_stree_society_office');
+        $data['label_zipcode'] = $this->language->get('label_zipcode');
+        $data['text_locality'] = $this->language->get('text_locality');
+
+        if (isset($this->request->get['customer_id'])) {
+            $data['customer_id'] = $this->request->get['customer_id'];
+        } else {
+            $data['customer_id'] = 0;
+        }
+
+        if (isset($this->error['warning'])) {
+            $data['error_warning'] = $this->error['warning'];
+        } else {
+            $data['error_warning'] = '';
+        }
+
+        if (isset($this->session->data['success'])) {
+            $data['success'] = $this->session->data['success'];
+            unset($this->session->data['success']);
+        } else {
+            $data['success'] = '';
+        }
+
+        $url = '';
+
+        if (isset($this->request->get['filter_company'])) {
+            $url .= '&filter_company=' . urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
+        }
+
+
+        if (isset($this->request->get['filter_name'])) {
+            $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+        }
+
+        if (isset($this->request->get['filter_email'])) {
+            $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
+        }
+
+        if (isset($this->request->get['filter_customer_group_id'])) {
+            $url .= '&filter_customer_group_id=' . $this->request->get['filter_customer_group_id'];
+        }
+
+        if (isset($this->request->get['filter_status'])) {
+            $url .= '&filter_status=' . $this->request->get['filter_status'];
+        }
+
+        if (isset($this->request->get['filter_approved'])) {
+            $url .= '&filter_approved=' . $this->request->get['filter_approved'];
+        }
+
+        if (isset($this->request->get['filter_date_added'])) {
+            $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
+        }
+
+        if (isset($this->request->get['sort'])) {
+            $url .= '&sort=' . $this->request->get['sort'];
+        }
+
+        if (isset($this->request->get['order'])) {
+            $url .= '&order=' . $this->request->get['order'];
+        }
+
+        if (isset($this->request->get['page'])) {
+            $url .= '&page=' . $this->request->get['page'];
+        }
+
+        $data['breadcrumbs'] = [];
+
+        $data['breadcrumbs'][] = [
+            'text' => $this->language->get('text_home'),
+            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL'),
+        ];
+
+        $data['breadcrumbs'][] = [
+            'text' => $this->language->get('heading_title'),
+            'href' => $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+        ];
+
+        if (!isset($this->request->get['customer_id'])) {
+            $data['action'] = $this->url->link('sale/customer/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        } else {
+            $data['action'] = $this->url->link('sale/customer/edit', 'token=' . $this->session->data['token'] . '&customer_id=' . $this->request->get['customer_id'] . $url, 'SSL');
+        }
+
+        $data['cancel'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['parent_user_name'] = NULL;
+        $data['parent_user_email'] = NULL;
+        $data['parent_user_phone'] = NULL;
+        if (isset($this->request->get['customer_id']) && ('POST' != $this->request->server['REQUEST_METHOD'])) {
+            $customer_info = $this->model_sale_customer->getCustomer($this->request->get['customer_id']);
+            $customer_parent_info = $this->model_sale_customer->getCustomerParentDetails($this->request->get['customer_id']);
+            $customer_account_manager_info = $this->model_sale_customer->getCustomerAccountManagerDetails($this->request->get['customer_id']);
+            if ($customer_parent_info != NULL) {
+                $data['parent_user_name'] = $customer_parent_info['firstname'] . '' . $customer_parent_info['lastname'];
+                $data['parent_user_email'] = $customer_parent_info['email'];
+                $data['parent_user_phone'] = $customer_parent_info['telephone'];
+            }
+
+            if ($customer_account_manager_info != NULL) {
+                $data['account_manager_name'] = $customer_account_manager_info['firstname'] . '' . $customer_account_manager_info['lastname'];
+                $data['account_manager_email'] = $customer_account_manager_info['email'];
+                $data['account_manager_phone'] = $customer_account_manager_info['telephone'];
+            }
+
+            //$log = new Log('error.log');
+            //$log->write($customer_parent_info);
+        }
+
+        $this->load->model('sale/customer_group');
+        $filter_data = [
+            'filter_parent' => $this->request->get['customer_id'],
+            'order' => 'DESC',
+            'start' => 0,
+            'limit' => 1000,
+        ];
+        $data['sub_users'] = $this->model_sale_customer->getCustomers($filter_data);
+        $data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups();
+        $data['price_categories'] = $this->model_sale_customer_group->getPriceCategories();
+        
+        $data['company_name'] = $customer_info['company_name'];
+        $data['company_address'] = $customer_info['company_address'];
+        
+        $this->load->model('sale/customer_group');
+        $customer_group_info = $this->model_sale_customer_group->getCustomerGroup($customer_info['customer_group_id']);
+        $data['customer_group_id'] = $customer_info['customer_group_id'];
+        $data['customer_group_info'] = $customer_group_info;
+        $data['customer_category'] = $customer_info['customer_category'];
+        $data['firstname'] = $customer_info['firstname'];
+        $data['lastname'] = $customer_info['lastname'];
+        $data['email'] = $customer_info['email'];        
+        $data['telephone'] = $customer_info['telephone'];
+        $data['fax'] = $customer_info['fax'];
+        $data['gender'] = $customer_info['gender'];        
+        $data['dob'] = date('d/m/Y', strtotime($customer_info['dob']));
+        $data['send_email'] = $customer_info['email'];
+        $data['show_send_email'] = true;
+        $data['account_custom_field'] = unserialize($customer_info['custom_field']);
+        $data['newsletter'] = $customer_info['newsletter'];
+        $data['status'] = $customer_info['status'];
+        $data['approved'] = $customer_info['approved'];
+        $data['safe'] = $customer_info['safe'];
+        $data['source'] = $customer_info['source'];
+        $data['latitude'] = $customer_info['latitude'];
+        $data['longitude'] = $customer_info['longitude'];
+        
+        $data['addresses'] = $this->model_sale_customer->getAddresses($this->request->get['customer_id']);
+        $data['address_id'] = $customer_info['address_id'];
+
+        $this->load->model('sale/customer_group');
+
+        $data['cities'] = $this->model_sale_customer_group->getCities();
+
+        $data['header'] = $this->load->controller('common/header');
+        $data['column_left'] = $this->load->controller('common/column_left');
+        $data['footer'] = $this->load->controller('common/footer');
+
+        $this->response->setOutput($this->load->view('sale/customer_view.tpl', $data));
     }
 
 }

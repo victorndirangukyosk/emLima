@@ -150,6 +150,7 @@
                                         <?php } else { ?>
                                         <a href="<?php echo $sort_status; ?>"><?php echo $column_status; ?></a>
                                         <?php } ?></td>
+                                    <td class="text-left">Source</td>
                                     <td class="text-left"><?php if ($sort == 'c.ip') { ?>
                                         <a href="<?php echo $sort_ip; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_ip; ?></a>
                                         <?php } else { ?>
@@ -181,6 +182,7 @@
                                     <td class="text-left"><?php echo $customer['email']; ?></td>
                                     <td class="text-left"><?php echo $customer['telephone']; ?></td>
                                     <td class="text-left"><?php echo $customer['status']; ?></td>
+                                    <td class="text-left"><?php echo $customer['source']; ?></td>
                                     <td class="text-left"><?php echo $customer['ip']; ?></td>
                                     <td class="text-left"><?php echo $customer['company_name']; ?></td>
                                     <td class="text-left"><?php echo $customer['date_added']; ?></td>
@@ -188,6 +190,7 @@
                                         <a target="_blank" class="btn btn-info" data-toggle="tooltip" title="<?php echo 'Login as customer'; ?>" href="<?php echo $customer['login_customer']; ?>">
                                             <i class="fa fa-lock"></i>
                                         </a>
+                                        <a href="<?php echo $customer['customer_view']; ?>" data-toggle="tooltip" title="View" class="btn btn-primary"><i class="fa fa-eye"></i></a>
                                 </tr>
                                 <?php } ?>
                                 <?php } else { ?>

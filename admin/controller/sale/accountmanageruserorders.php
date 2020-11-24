@@ -87,6 +87,12 @@ class ControllerSaleAccountManagerUserOrders extends Controller {
         } else {
             $filter_date_added_end = null;
         }
+        
+        if (isset($this->request->get['filter_delivery_date'])) {
+            $filter_delivery_date = $this->request->get['filter_delivery_date'];
+        } else {
+            $filter_delivery_date = null;
+        }
 
         if (isset($this->request->get['filter_date_modified'])) {
             $filter_date_modified = $this->request->get['filter_date_modified'];
@@ -160,6 +166,10 @@ class ControllerSaleAccountManagerUserOrders extends Controller {
         if (isset($this->request->get['filter_date_added_end'])) {
             $url .= '&filter_date_added_end=' . $this->request->get['filter_date_added_end'];
         }
+        
+        if (isset($this->request->get['filter_delivery_date'])) {
+            $url .= '&filter_delivery_date=' . $this->request->get['filter_delivery_date'];
+        }
 
         if (isset($this->request->get['filter_date_modified'])) {
             $url .= '&filter_date_modified=' . $this->request->get['filter_date_modified'];
@@ -208,6 +218,7 @@ class ControllerSaleAccountManagerUserOrders extends Controller {
             'filter_total' => $filter_total,
             'filter_date_added' => $filter_date_added,
             'filter_date_added_end' => $filter_date_added_end,
+            'filter_delivery_date' => $filter_delivery_date,
             'filter_date_modified' => $filter_date_modified,
             'sort' => $sort,
             'order' => $order,
@@ -302,6 +313,7 @@ class ControllerSaleAccountManagerUserOrders extends Controller {
         $data['entry_city'] = $this->language->get('entry_city');
         $data['entry_date_added'] = $this->language->get('entry_date_added');
         $data['entry_date_added_end'] = $this->language->get('entry_date_added_end');
+        $data['entry_delivery_date'] = $this->language->get('entry_delivery_date');
         $data['entry_date_modified'] = $this->language->get('entry_date_modified');
         $data['entry_store_name'] = $this->language->get('entry_store_name');
         $data['button_invoice_print'] = $this->language->get('button_invoice_print');
@@ -383,6 +395,10 @@ class ControllerSaleAccountManagerUserOrders extends Controller {
         if (isset($this->request->get['filter_date_added_end'])) {
             $url .= '&filter_date_added_end=' . $this->request->get['filter_date_added_end'];
         }
+        
+        if (isset($this->request->get['filter_delivery_date'])) {
+            $url .= '&filter_delivery_date=' . $this->request->get['filter_delivery_date'];
+        }
 
         if (isset($this->request->get['filter_date_modified'])) {
             $url .= '&filter_date_modified=' . $this->request->get['filter_date_modified'];
@@ -454,6 +470,10 @@ class ControllerSaleAccountManagerUserOrders extends Controller {
         if (isset($this->request->get['filter_date_added_end'])) {
             $url .= '&filter_date_added_end=' . $this->request->get['filter_date_added_end'];
         }
+        
+        if (isset($this->request->get['filter_delivery_date'])) {
+            $url .= '&filter_delivery_date=' . $this->request->get['filter_delivery_date'];
+        }
 
         if (isset($this->request->get['filter_date_modified'])) {
             $url .= '&filter_date_modified=' . $this->request->get['filter_date_modified'];
@@ -490,6 +510,7 @@ class ControllerSaleAccountManagerUserOrders extends Controller {
         $data['filter_total'] = $filter_total;
         $data['filter_date_added'] = $filter_date_added;
         $data['filter_date_added_end'] = $filter_date_added_end;
+        $data['filter_delivery_date'] = $filter_delivery_date;
         $data['filter_date_modified'] = $filter_date_modified;
 
         $this->load->model('localisation/order_status');

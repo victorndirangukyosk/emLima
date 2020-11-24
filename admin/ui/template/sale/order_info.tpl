@@ -50,7 +50,7 @@
 		  	<li><a href="#tab-delivery" data-toggle="tab"><?php echo $tab_delivery; ?></a></li>
 		  <?php } ?>
 		  
-		  <li><a href="#tab-product" data-toggle="tab"><?php echo $tab_product; ?></a></li>
+		  <li><a href="#tab-product" data-toggle="tab">Updated Products<?php //echo $tab_product; ?></a></li>
 		  <li><a href="#tab-original-product" data-toggle="tab">Ordered Products</a></li>
 
 		 <!-- <?php if($is_edited) {?>-->
@@ -259,6 +259,31 @@
 				<td><?php echo $text_date_modified; ?></td>
 				<td><?php echo $date_modified; ?></td>
 			  </tr>
+
+			  <tr>
+					<td>Latitude:</td>
+					<td><?php echo $login_latitude; ?></td>
+				  </tr>
+
+				   <tr>
+					<td>Longitude:</td>
+					<td><?php echo $login_longitude; ?></td>
+				  </tr>
+				  <?php if($login_longitude !='NA' &&  $login_latitude !='NA' && $login_longitude !='0' &&  $login_latitude !='0') { ?>
+ 					<tr>
+					<td>Orderd Location:</td>
+					<td>
+					<input type="button" class="btn btn-primary" onclick="initOrderedLocationMapLoad()" value="View Map">
+					</td>
+					</tr>
+					<tr>
+					<td colspan=2>
+					<div class="" id="orderdlocationmap" style="height: 100%; min-height: 600px;">
+		    		</div>		    		  
+					</td>
+				  </tr>
+				  <?php } ?>
+				 
 			</table>
 		  </div>
 		  <?php if(!$this->user->isVendor()){ ?>
@@ -2128,5 +2153,18 @@ $('.delivery_timeslot').change(function(){
       	//initMap(<?= $pointB ?>,<?= $pointA ?>);
     });
     
+	function initOrderedLocationMapLoad () {
+		const myLatLng = { lat: <?php echo $login_latitude ?>, lng:<?php echo $login_longitude ?> };
+		const map = new google.maps.Map(document.getElementById("orderdlocationmap"), {
+			zoom: 4,
+			center: myLatLng,
+		});
+		new google.maps.Marker({
+			position: myLatLng,
+			map,
+			title: "Ordered Location!",
+		});
+		}
+
 </script>
 <?php echo $footer; ?> 

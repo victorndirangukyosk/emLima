@@ -385,10 +385,19 @@ class ControllerApiCustomerAddress extends Controller
                     $address_id = $this->model_account_address->addAddress($data);
                 }
 
-                if ($save) {
+                if ($save) { 
                     // saved address
                     //$json['status'] = 10015;
+                     // Add to activity log
+                    $this->load->model('account/activity');
 
+                    $activity_data = [
+                        'customer_id' => $this->customer->getId(),
+                        'name' => $this->customer->getFirstName().' '.$this->customer->getLastName(),
+                    ];
+
+                    $this->model_account_activity->addActivity('address_add', $activity_data);
+ 
                     $json['data']['address_id'] = $address_id;
 
                     $json['message'][] = ['type' => '', 'body' => $this->language->get('text_added_successfully')];
@@ -582,6 +591,14 @@ class ControllerApiCustomerAddress extends Controller
                 if ($save) {
                     // saved address
                     //$json['status'] = 10018;
+
+                    $this->load->model('account/activity');
+                    $activity_data = [
+                        'customer_id' => $this->customer->getId(),
+                        'name' => $this->customer->getFirstName().' '.$this->customer->getLastName(),
+                    ];        
+                    $this->model_account_activity->addActivity('address_edit', $activity_data);
+        
 
                     $json['message'][] = ['type' => '', 'body' => $this->language->get('text_edited_successfully')];
                 } else {

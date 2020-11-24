@@ -117,11 +117,13 @@ class ControllerReportCustomerActivity extends Controller
             $find = [
                 'customer_id=',
                 'order_id=',
+                'sub_customers_id='
             ];
 
             $replace = [
-                $this->url->link('sale/customer/edit', 'token='.$this->session->data['token'].'&customer_id=', 'SSL'),
+                $this->url->link('sale/customer/view_customer', 'token='.$this->session->data['token'].'&customer_id=', 'SSL'),
                 $this->url->link('sale/order/info', 'token='.$this->session->data['token'].'&order_id=', 'SSL'),
+                $this->url->link('sale/customer/view_customer', 'token='.$this->session->data['token'].'&sub_customers_id=', 'SSL'),
             ];
 
             $data['activities'][] = [

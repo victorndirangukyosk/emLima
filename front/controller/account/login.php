@@ -278,11 +278,11 @@ class ControllerAccountLogin extends Controller {
 
                 $sms_message = $this->emailtemplate->getSmsMessage('LoginOTP', 'loginotp_2', $data);
 
-                if ($customer_info['sms_notification'] == 1 && $this->emailtemplate->getSmsEnabled('LoginOTP', 'loginotp_2')) {
+                if ($this->emailtemplate->getSmsEnabled('LoginOTP', 'loginotp_2')) {
                     $ret = $this->emailtemplate->sendmessage($this->request->post['phone'], $sms_message);
                 }
 
-                if ($customer_info['email_notification'] == 1 && $this->emailtemplate->getEmailEnabled('LoginOTP', 'loginotp_2')) {
+                if ($this->emailtemplate->getEmailEnabled('LoginOTP', 'loginotp_2')) {
                     $subject = $this->emailtemplate->getSubject('LoginOTP', 'loginotp_2', $data);
                     $message = $this->emailtemplate->getMessage('LoginOTP', 'loginotp_2', $data);
 

@@ -4,7 +4,7 @@
   
   <div class="_2D2lC">
                                                             <div class="price-popup" id="content-container">
-                                                                 <?= "KES " . $product['variations'][0]['special_price'];?></div>
+                                                                 <?= $this->session->data['currency']." " . $product['variations'][0]['special_price'];?></div>
                                                         </div>
 
 

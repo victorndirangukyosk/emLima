@@ -207,7 +207,116 @@ class ModelCatalogVendorProduct extends Model
 
         return $query->rows;
     }
+    
+    public function getProductsCount($data = [])
+    {
+        $sql = 'SELECT ps.*,p2c.product_id,pd.name as product_name ,p.*,st.name as store_name,v.firstname as fs,v.lastname as ls,ps.status as sts,v.user_id as vendor_id from '.DB_PREFIX.'product_to_store ps LEFT JOIN '.DB_PREFIX.'product_to_category p2c ON (ps.product_id = p2c.product_id) LEFT JOIN '.DB_PREFIX.'product p ON (p.product_id = ps.product_id) LEFT JOIN '.DB_PREFIX.'product_description pd ON (p.product_id = pd.product_id) LEFT JOIN '.DB_PREFIX.'store st ON (st.store_id = ps.store_id) LEFT JOIN '.DB_PREFIX.'user v ON (v.user_id = st.vendor_id)';
 
+        $sql .= " WHERE pd.language_id = '".(int) $this->config->get('config_language_id')."'";
+
+        if (!empty($data['filter_store_id'])) {
+            $sql .= " AND st.name LIKE '".$this->db->escape($data['filter_store_id'])."%'";
+        }
+
+        if ($this->user->isVendor()) {
+            $sql .= ' AND v.user_id="'.$this->user->getId().'"';
+        }
+
+        if (!empty($data['filter_vendor_name'])) {
+            $sql .= " AND v.firstname LIKE '".$this->db->escape($data['filter_vendor_name'])."%'";
+            $sql .= " OR v.lastname LIKE '".$this->db->escape($data['filter_vendor_name'])."%'";
+        }
+
+        if (!empty($data['filter_model'])) {
+            $sql .= " AND p.model LIKE '".$this->db->escape($data['filter_model'])."%'";
+        }
+
+        if (!empty($data['filter_name'])) {
+            $sql .= " AND pd.name LIKE '%".$this->db->escape($data['filter_name'])."%'";
+        }
+
+        if (isset($data['filter_price']) && !is_null($data['filter_price'])) {
+            if (!$data['filter_price']) {
+                $sql .= " AND ps.price = '".$this->db->escape($data['filter_price'])."'";
+            } else {
+                $sql .= " AND (ps.price = '".$this->db->escape($data['filter_price'])."' or ps.special_price = '".$this->db->escape($data['filter_price'])."' )";
+            }
+        }
+
+        if (!empty($data['filter_product_id_from'])) {
+            $sql .= " AND ps.product_store_id >= '".(int) $data['filter_product_id_from']."'";
+        }
+
+        if (!empty($data['filter_product_id_to'])) {
+            $sql .= " AND ps.product_store_id <= '".(int) $data['filter_product_id_to']."'";
+        }
+
+        if (isset($data['filter_category']) && !is_null($data['filter_category'])) {
+            $sql .= " AND p2c.category_id = '".$this->db->escape($data['filter_category'])."'";
+        }
+
+        if (isset($data['filter_category']) && !is_null($data['filter_category'])) {
+            $lGroup = false;
+            $sql .= " AND p2c.category_id = '".$this->db->escape($data['filter_category'])."'";
+        } else {
+            $lGroup = true;
+        }
+
+        if (isset($data['filter_quantity']) && !is_null($data['filter_quantity'])) {
+            if (0 == $data['filter_quantity']) {
+                $sql .= " AND ps.quantity = '".(int) $data['filter_quantity']."'";
+            } else {
+                $sql .= " AND ps.quantity <= '".(int) $data['filter_quantity']."' AND ps.quantity > '0'";
+            }
+        }
+
+        if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
+            $sql .= " AND ps.status = '".(int) $data['filter_status']."'";
+        }
+
+        $sort_data = [
+            'pd.name',
+            'p.price',
+            'p.product_id',
+            'ps.product_store_id',
+            'p2c.category_id',
+            'ps.quantity',
+            'p.model',
+            'ps.status',
+            'st.name',
+        ];
+
+        $sql .= ' GROUP BY ps.product_store_id';
+        if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
+            $sql .= ' ORDER BY '.$data['sort'];
+        } else {
+            $sql .= ' ORDER BY pd.name';
+        }
+
+        if (isset($data['order']) && ('DESC' == $data['order'])) {
+            $sql .= ' DESC';
+        } else {
+            $sql .= ' ASC';
+        }
+
+        /*if (isset($data['start']) || isset($data['limit'])) {
+            if ($data['start'] < 0) {
+                $data['start'] = 0;
+            }
+
+            if ($data['limit'] < 1) {
+                $data['limit'] = 20;
+            }
+
+            $sql .= ' LIMIT '.(int) $data['start'].','.(int) $data['limit'];
+        }*/
+
+        // echo $sql;die;
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
+    
     public function getTotalProducts($data = [])
     {
         $sql = 'SELECT Distinct product_store_id from '.DB_PREFIX.'product_to_store ps LEFT JOIN '.DB_PREFIX.'product_to_category p2c ON (ps.product_id = p2c.product_id) LEFT JOIN '.DB_PREFIX.'product p ON (p.product_id = ps.product_id) LEFT JOIN '.DB_PREFIX.'product_description pd ON (p.product_id = pd.product_id) LEFT JOIN '.DB_PREFIX.'store st ON (st.store_id = ps.store_id) LEFT JOIN '.DB_PREFIX.'user v ON (v.user_id = st.vendor_id)';
@@ -648,4 +757,17 @@ class ModelCatalogVendorProduct extends Model
 
         return $query->rows;
     }
+    
+    public function getCategoryPriceDetails($product_store_id, $product_id, $product_name, $store_id, $price_category) {
+        $category_price = 'SELECT * FROM ' . DB_PREFIX . "product_category_prices WHERE product_store_id ='" . (int) $product_store_id . "' AND price_category='" . $price_category . "' AND product_id='" . $product_id . "' AND product_name='" . $product_name . "' AND store_id='" . $store_id . "'";
+        $res = $this->db->query($category_price);
+        return $res->row;
+    }
+    
+    public function updateCategoryPricesStatus($product_store_id, $product_id, $product_name, $status) {
+        $query = 'UPDATE ' . DB_PREFIX . "product_category_prices SET status = '" . $status . "' WHERE product_store_id = '" . (int) $product_store_id . "' AND product_id='" . (int) $product_id . "' AND product_name='" . $product_name . "' AND store_id=75";
+
+        $this->db->query($query);
+    }
+
 }

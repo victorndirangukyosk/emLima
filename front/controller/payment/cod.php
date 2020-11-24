@@ -102,12 +102,29 @@ class ControllerPaymentCod extends Controller {
 
             $this->model_checkout_order->UpdateParentApproval($order_id);
         }
+        $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+        $comment="";                
         foreach ($orders as $order_id) {
             $log->write('cod loop' . $order_id);
 
             // $ret = $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('cod_order_status_id'));
-            $ret = $this->model_checkout_order->addOrderHistory($order_id, $order_status_id);
-        }
+            // $ret = $this->model_checkout_order->addOrderHistory($order_id, $order_status_id);
+               if($customer_info!=null)
+                $ret = $this->model_checkout_order->addOrderHistory($order_id, $order_status_id, $comment, true, $customer_info['customer_id'], 'customer');
+                else
+                $ret = $this->model_checkout_order->addOrderHistory($order_id, $order_status_id, $comment, true, 0, 'customer');
+
+                $this->load->model('account/activity');
+                $activity_data = [
+                    'customer_id' => $this->customer->getId(),
+                    'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
+                    'order_id' => $order_id,
+                ];
+
+                $this->model_account_activity->addActivity('order_account', $activity_data);
+
+        } 
+       
         /* if ($order_id != NULL) {
           $this->model_checkout_order->UpdateParentApprovalAPI($order_id, $Approver_assigned['order_approval_access'], $Approver_assigned['order_approval_access_role']);
           } */

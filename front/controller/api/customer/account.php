@@ -554,14 +554,30 @@ class ControllerApiCustomerAccount extends Controller
 
         //if( $this->customer->isLogged()) {
         if (isset($args['device_id'])) {
-            $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
-
+            // $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+            $customer_info = $this->model_account_customer->getCustomerbyFirebaseDeviceID($args['device_id']);
+            // echo $customer_info;exit;
             if ($customer_info) {
                 $log->write('of');
 
                 $this->load->model('setting/store');
 
+                // Add to activity log
+                $this->load->model('account/activity');
+
+                $activity_data = [
+                    'customer_id' =>  $customer_info['customer_id'],
+                    'name' =>  $customer_info['firstname'] . ' ' . $customer_info['lastname'],
+                ];
+
+                $this->model_account_activity->addActivity('logout', $activity_data);
+                
+                
+
                 $this->model_setting_store->removeDeviceIdAll($args);
+
+                
+                
 
                 $this->customer->logout();
             }

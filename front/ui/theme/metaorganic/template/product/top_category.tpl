@@ -866,7 +866,7 @@
 
 <!-- Start store banner -->
 
-<div class="bannerModal_popup">
+<!--<div class="bannerModal_popup">
     <div class="modal fade" id="bannermodal"  tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
@@ -878,7 +878,7 @@
             </div>
         </div>
     </div>
-</div>
+</div>-->
 
 <script type="text/javascript">
     

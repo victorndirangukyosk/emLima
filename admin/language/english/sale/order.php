@@ -64,6 +64,7 @@ $_['text_user_agent'] = 'User Agent:';
 $_['text_accept_language'] = 'Accept Language:';
 $_['text_date_added'] = 'Date Added:';
 $_['text_date_added_end'] = 'Date Added End:';
+$_['text_delivery_date'] = 'Delivery Date:';
 $_['text_date_modified'] = 'Date Modified:';
 $_['text_firstname'] = 'First Name:';
 $_['text_lastname'] = 'Last Name:';
@@ -183,6 +184,8 @@ $_['column_weight'] = 'Product weight';
 
 $_['column_payment'] = 'Payment Method';
 $_['column_delivery_method'] = 'Delivery Method';
+$_['column_delivery_date'] = 'Delivery Date';
+
 
 // Entry
 $_['entry_store'] = 'Store';
@@ -230,6 +233,7 @@ $_['entry_total'] = 'Total';
 $_['entry_date_added'] = 'From Date Added';
 $_['entry_date_added_end'] = 'To Date Added';
 $_['entry_date_modified'] = 'Date Modified';
+$_['entry_delivery_date'] = 'Delivery Date';
 
 //button
 $_['button_commision_pay'] = 'Pay to vendor';

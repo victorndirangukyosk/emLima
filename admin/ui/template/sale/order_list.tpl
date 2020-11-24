@@ -36,6 +36,9 @@
             <button type="button" class="close" data-dismiss="alert">&times;</button>
         </div>
         <?php } ?>
+        <div class="alert alert-danger" style="display: none;"><i class="fa fa-exclamation-circle"></i>
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+        </div>
         
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -63,14 +66,25 @@
                             
                             
                             
-                            <div class="form-group">
+                            <!--<div class="form-group">
                                 <label class="control-label" for="input-customer"><?= $entry_city ?></label>
                                 <input type="text" name="filter_city" value="<?php echo $filter_city; ?>" class="form-control" />
-                            </div>
+                            </div>-->
 
                              <div class="form-group">
                                 <label class="control-label" for="input-name"><?= $column_delivery_method ?></label>
                                 <input type="text" name="filter_delivery_method" value="<?php echo $filter_delivery_method; ?>" placeholder="<?php echo $column_delivery_method; ?>" id="input-name" class="form-control" />
+                            </div>
+                            
+                            
+                            <div class="form-group">
+                                <label class="control-label" for="input-delivery-date">Delivery Date</label>
+                                <div class="input-group date">
+                                    <input type="text" name="filter_delivery_date" value="<?php echo $filter_delivery_date; ?>" placeholder="<?php echo $column_delivery_date; ?>" data-date-format="YYYY-MM-DD" id="input-delivery-date" class="form-control" />
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
                             </div>
 
                             
@@ -99,10 +113,10 @@
                                 <input type="text" name="filter_total" value="<?php echo $filter_total; ?>" placeholder="<?php echo $entry_total; ?>" id="input-total" class="form-control" />
                             </div>
 
-                            <div class="form-group">
+                            <!--<div class="form-group">
                                 <label class="control-label" for="input-name"><?= $entry_store_name ?></label>
                                 <input type="text" name="filter_store_name" value="<?php echo $filter_store_name; ?>" placeholder="<?php echo $entry_store_name; ?>" id="input-name" class="form-control" />
-                            </div>
+                            </div>-->
 
                             <?php if (!$this->user->isVendor()): ?>
                                 <div class="form-group">
@@ -124,10 +138,10 @@
                             </div>
 
                             <?php if(!$this->user->isVendor()){ ?>  
-                            <div class="form-group">
+                            <!--<div class="form-group">
                                 <label class="control-label" for="input-model"><?= $text_vendor ?></label>
                                 <input type="text" name="filter_vendor" value="<?php echo $filter_vendor; ?>" placeholder="<?php echo $text_vendor; ?>" id="input-model" class="form-control" />
-                            </div>
+                            </div>-->
                             <?php } ?>
 
 
@@ -149,7 +163,7 @@
                                     </span>
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <!--<div class="form-group">
                                 <label class="control-label" for="input-date-modified"><?php echo $entry_date_modified; ?></label>
                                 <div class="input-group date">
                                     <input type="text" name="filter_date_modified" value="<?php echo $filter_date_modified; ?>" placeholder="<?php echo $entry_date_modified; ?>" data-date-format="YYYY-MM-DD" id="input-date-modified" class="form-control" />
@@ -157,7 +171,7 @@
                                         <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
                                     </span>
                                 </div>
-                            </div>
+                            </div>-->
                             
                             <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
 
@@ -272,8 +286,16 @@
                                     <!-- <td class="text-left"><?php echo $order['city']; ?></td> -->
                                     <!-- <td class="text-left"><?php echo $order['status']; ?></td> -->
                                     <td class="text-left">
-
-                                    <h3 class="my-order-title label" style="background-color: #<?= $order['order_status_color']; ?>;display: block;line-height: 2;" id="order-status" ><?php echo $order['status']; ?></h3>
+						<select name="order_status_id" id="input-order-status<?php echo $order['order_id']; ?>" class="form-control col-sm-12">
+						  <?php foreach ($order['all_order_statuses'] as $order_statuses) { ?>
+						  <?php if ($order_statuses['order_status_id'] == $order['order_status_id']) { ?>
+						  <option value="<?php echo $order_statuses['order_status_id']; ?>" selected="selected"><?php echo $order_statuses['name']; ?></option>
+						  <?php } else { ?>
+						  <option value="<?php echo $order_statuses['order_status_id']; ?>"><?php echo $order_statuses['name']; ?></option>
+						  <?php } ?>
+						  <?php } ?>
+						</select>
+                                    <!--<h3 class="my-order-title label" style="background-color: #<?= $order['order_status_color']; ?>;display: block;line-height: 2;" id="order-status" ><?php echo $order['status']; ?></h3>-->
                                     </td>
                                    
 
@@ -312,7 +334,8 @@
                                         <!-- <a href="<?php echo $order['delete']; ?>" id="button-delete<?php echo $order['order_id']; ?>" data-toggle="tooltip" title="<?php echo $button_delete; ?>" class="btn btn-danger"><i class="fa fa-trash-o"></i></a> -->
                                        
                                        <a href="#" onclick="getPO(<?= $order['order_id'] ?>)"   data-toggle="modal" data-dismiss="modal" data-target="#poModal"    class="btn btn-info" style="border-radius: 0px;"  >PO</a>
-                                        </td>
+                                       <a href="#" data-toggle="tooltip" title="Update Order Status" data-orderid="<?= $order['order_id'] ?>" id="update_order_status" class="btn btn-info"><i class="fa fa-refresh"></i></a> 
+                                    </td>
                                         
                                 </tr>
                                 <?php } ?>
@@ -450,6 +473,12 @@
 
             if (filter_delivery_method) {
                 url += '&filter_delivery_method=' + encodeURIComponent(filter_delivery_method);
+            }
+            
+            var filter_delivery_date = $('input[name=\'filter_delivery_date\']').val();
+
+            if (filter_delivery_date) {
+                url += '&filter_delivery_date=' + encodeURIComponent(filter_delivery_date);
             }
 
             var filter_payment = $('input[name=\'filter_payment\']').val();
@@ -701,7 +730,7 @@
 <script  type="text/javascript">
 
 
-  function getPO($order_id) {
+function getPO($order_id) {
                
                 $('#poModal-message').html('');
                $('#poModal-success-message').html('');
@@ -744,7 +773,7 @@
             }
 
 
- function savePO() { 
+function savePO() { 
  
     $('#poModal-message').html('');
                $('#poModal-success-message').html('');
@@ -787,8 +816,62 @@
                
             }
 
+$('a[id^=\'update_order_status\']').on('click', function (e) {
+e.preventDefault();
+console.log($(this).data('orderid'));
+var clicked_orderid = $(this).data('orderid');
+var selected_order_status_id = $('select[id=\'input-order-status'+clicked_orderid+'\']').val();
+console.log($('select[id=\'input-order-status'+clicked_orderid+'\']').val());
+//return false;
+
+if($.isNumeric(clicked_orderid) && clicked_orderid > 0 && $.isNumeric(selected_order_status_id) && selected_order_status_id > 0)  {
+console.log(clicked_orderid);
+console.log(selected_order_status_id);
+$(this).find('i').toggleClass('fa fa-refresh fa fa-spinner');
+$(this).attr("disabled","disabled");   
+//return false;
+
+if(typeof verifyStatusChange == 'function'){
+if(verifyStatusChange() == false){
+return false;
+}
+}
+
+if($('select[id=\'input-order-status'+clicked_orderid+'\'] option:selected').text()=='Delivered')
+{
+	 
+	$.ajax({
+		url: 'index.php?path=sale/order/createinvoiceno&token=<?php echo $token; ?>&order_id='+clicked_orderid,
+		dataType: 'json',
+		success: function(json) {
+			console.log(json);
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {
+			//alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+	});
+}
+
+$.ajax({
+		url: 'index.php?path=sale/order/api&token=<?php echo $token; ?>&api=api/order/history&order_id='+clicked_orderid+'&added_by=<?php echo $this->user->getId(); ?>&added_by_role=<?php echo $this->user->getGroupName(); ?>',
+		type: 'post',
+		dataType: 'json',
+		data: 'order_status_id=' + encodeURIComponent($('select[id=\'input-order-status'+clicked_orderid+'\']').val()) + '&notify=1',
+		success: function(json) {	 
+                    console.log(json);
+                    $('.alert').html('Order status updated successfully!');
+                    $(".alert").attr('class', 'alert alert-success');
+                    $(".alert").show();
+                    setTimeout(function(){ window.location.reload(false); }, 1500);
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {		
+			 
+		}
+	});    
+}	
+});
             
-            </script>
+</script>
 
 
 

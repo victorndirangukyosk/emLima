@@ -90,6 +90,17 @@ class ControllerApiCustomerLogin extends Controller
             $customer_info = $this->model_account_customer->getCustomer($api_info['customer_id']);
             $customer_info['devices'] = $this->model_account_customer->getCustomerDevices($api_info['customer_id']);
 
+               // Add to activity log
+               $this->load->model('account/activity');
+
+               $activity_data = [
+                   'customer_id' => $customer_info['customer_id'],
+                   'name' => $customer_info['firstname'] . ' ' . $customer_info['lastname'],
+               ];
+
+               $this->model_account_activity->addActivity('login', $activity_data);
+
+               
             #region login history
             $logindata['customer_id'] = $api_info['customer_id'];
             if (isset($this->request->post['login_latitude']) ) {
@@ -123,7 +134,8 @@ class ControllerApiCustomerLogin extends Controller
             $json['data'] = $customer_info;
         } else {
             if ($api_info['not_verified']) {
-                $json['error'] = $this->language->get('error_not_approved');
+                // $json['error'] = $this->language->get('error_not_approved');
+                $json['error'] = $this->language->get('error_approved');
             } else {
                 $json['error'] = $this->language->get('error_login');
             }
