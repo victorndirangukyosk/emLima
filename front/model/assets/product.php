@@ -634,6 +634,9 @@ class ModelAssetsProduct extends Model
         $result = $this->db->query($all_variations);
 
         foreach ($result->rows as $r) {
+            $category_price_data = $this->getCategoryPriceStatusByProductStoreId($r['product_store_id']);
+            $category_pricing_variant_status = is_array($category_price_data) && array_key_exists('status', $category_price_data) ? $category_price_data['status'] : 1;
+            if($category_pricing_variant_status == 1) {
             if ($r['quantity'] > 0 && $r['status']) {
                 //$key = base64_encode( serialize( array( 'product_store_id' => (int) $r['product_store_id'], 'store_id'=>($this->session->data['config_store_id'])  ) ) );
                 //  $key = base64_encode(serialize(array('product_store_id' => (int)$r['product_store_id'], 'store_id' => $this->session->data['config_store_id'])));
@@ -710,6 +713,7 @@ class ModelAssetsProduct extends Model
                 }
             }
         }
+    }
 
         return $returnData;
     }
