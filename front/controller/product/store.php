@@ -51,6 +51,14 @@ class ControllerProductStore extends Controller
                 $data['login'] = $this->url->link('account/login', '', 'SSL');
                 $data['register'] = $this->url->link('account/register', '', 'SSL');
                 $data['forgotten'] = $this->url->link('account/forgotten', '', 'SSL');
+                $data['store_name'] = $this->config->get('config_name');
+                
+                if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
+                    //$data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'),200,110);
+                    $data['logo'] = $server . 'image/' . $this->config->get('config_logo');
+                } else {
+                    $data['logo'] = 'assets/img/logo.svg';
+                }
 
 //    echo "<pre>";print_r($data);die;
 

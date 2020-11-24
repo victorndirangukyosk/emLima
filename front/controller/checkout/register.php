@@ -279,6 +279,13 @@ class ControllerCheckoutRegister extends Controller
         } else {
             $server = $this->config->get('config_url');
         }
+        
+        if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
+            //$data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'),200,110);
+            $data['logo'] = $server . 'image/' . $this->config->get('config_logo');
+        } else {
+            $data['logo'] = 'assets/img/logo.svg';
+        }
 
         $data['facebook'] = $helper->getLoginUrl($server.'index.php?path=account/facebook', ['email']);
 
