@@ -210,7 +210,24 @@ class ControllerCommonHome extends Controller {
     }
 
     public function technology() {
-        $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/technology.tpl'));
+        
+        if ($this->request->server['HTTPS']) {
+            $server = $this->config->get('config_ssl');
+        } else {
+            $server = $this->config->get('config_url');
+        }
+        
+        if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
+            //$data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'),200,110);
+            $data['logo'] = $server . 'image/' . $this->config->get('config_logo');
+        } else {
+            $data['logo'] = 'assets/img/logo.svg';
+        }
+        
+        $data['base'] = '';
+        $data['store_name'] = $this->config->get('config_name');
+        
+        $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/technology.tpl', $data));
     }
 
     public function careers($id = 0, $successmessage = "", $errormessage = "") {
