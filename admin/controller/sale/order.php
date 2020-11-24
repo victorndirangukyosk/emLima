@@ -4404,8 +4404,10 @@ class ControllerSaleOrder extends Controller {
                 $this->load->model('sale/customer');
                 $order_customer_detials = $this->model_sale_customer->getCustomer($order_info['customer_id']);
                 $order_customer_first_last_name = NULL;
+                $company_name = NULL;
                 if($order_customer_detials != NULL && is_array($order_customer_detials)) {
                 $order_customer_first_last_name = $order_customer_detials['firstname'].' '.$order_customer_detials['lastname'];    
+                $company_name = $order_customer_detials['company_name'];    
                 }
 
                 $data['orders'][] = [
@@ -4430,7 +4432,7 @@ class ControllerSaleOrder extends Controller {
                     'shipping_contact_no' => ($order_info['shipping_contact_no']) ? $order_info['shipping_contact_no'] : $order_info['telephone'],
                     /*'shipping_name' => ($order_info['shipping_name']) ? $order_info['shipping_name'] : $order_info['firstname'] . ' ' . $order_info['lastname'],*/
                     'shipping_name' => $order_customer_first_last_name == NULL ? $order_info['firstname'] . ' ' . $order_info['lastname'] : $order_customer_first_last_name,
-                    'customer_company_name' => $order_info['customer_company_name'],
+                    'customer_company_name' => $company_name == NULL ? $order_info['customer_company_name'] : $company_name,
                     'shipping_method' => $order_info['shipping_method'],
                     'po_number' => $order_info['po_number'],
                     'payment_method' => $order_info['payment_method'],
