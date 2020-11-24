@@ -399,7 +399,7 @@ class ControllerAccountLogin extends Controller {
             $data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'), 200, 110);
             //$data['logo'] = $server . 'image/' . $this->config->get('config_logo');
         } else {
-            $data['logo'] = '';
+            $data['logo'] = 'assets/img/logo.svg';
         }
 
         /* forget  Variables */
@@ -540,6 +540,13 @@ class ControllerAccountLogin extends Controller {
             $server = $this->config->get('config_ssl');
         } else {
             $server = $this->config->get('config_url');
+        }
+        
+        if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
+            //$data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'),200,110);
+            $data['logo'] = $server . 'image/' . $this->config->get('config_logo');
+        } else {
+            $data['logo'] = 'assets/img/logo.svg';
         }
 
         if (isset($this->session->data['customer_id'])) {

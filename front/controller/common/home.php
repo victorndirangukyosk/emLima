@@ -773,7 +773,7 @@ class ControllerCommonHome extends Controller {
             //$data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'),200,110);
             $data['logo'] = $server . 'image/' . $this->config->get('config_logo');
         } else {
-            $data['logo'] = '';
+            $data['logo'] = 'assets/img/logo.svg';
         }
 
         $data['playStorelogo'] = $this->model_tool_image->resize('play-store-logo.png', 200, 60);
