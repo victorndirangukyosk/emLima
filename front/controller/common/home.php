@@ -214,6 +214,23 @@ class ControllerCommonHome extends Controller {
     }
 
     public function careers($id = 0, $successmessage = "", $errormessage = "") {
+        
+        if ($this->request->server['HTTPS']) {
+            $server = $this->config->get('config_ssl');
+        } else {
+            $server = $this->config->get('config_url');
+        }
+        
+        if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
+            //$data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'),200,110);
+            $data['logo'] = $server . 'image/' . $this->config->get('config_logo');
+        } else {
+            $data['logo'] = 'assets/img/logo.svg';
+        }
+        
+        $data['base'] = '';
+        $data['store_name'] = $this->config->get('config_name');
+        
         $data['site_key'] = $this->config->get('config_google_captcha_public');
         $data['action'] = $this->url->link('common/home/savecareers', '', 'SSL');
         $data['message'] = $successmessage;
