@@ -400,6 +400,16 @@ class ControllerCatalogVendorProduct extends Controller {
         $data['delete'] = $this->url->link('catalog/vendor_product/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
         $data['products'] = [];
+        $this->load->model('catalog/vendor_product');
+        $category_price_prods = NULL;
+        if(isset($this->request->get['filter_category_price'])) {
+        $category_price_prods = $this->model_catalog_vendor_product->getCategoryPriceDetailsByCategoryName(75, $this->request->get['filter_category_price']);    
+        $category_price_prods = array_column($category_price_prods, 'product_store_id');
+        /*$log = new Log('error.log');
+        $log->write('category_price_prods');
+        $log->write($category_price_prods);
+        $log->write('category_price_prods');*/
+        }
 
         $filter_data = [
             'filter_name' => $filter_name,
@@ -417,9 +427,9 @@ class ControllerCatalogVendorProduct extends Controller {
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
             'limit' => $this->config->get('config_limit_admin'),
+            'filter_category_price_prods' => isset($this->request->get['filter_category_price']) ? $category_price_prods : NULL,
         ];
 
-        $this->load->model('catalog/vendor_product');
         $this->load->model('tool/image');
 
         $product_total = $this->model_catalog_vendor_product->getTotalProducts($filter_data);

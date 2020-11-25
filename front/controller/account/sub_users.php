@@ -551,6 +551,8 @@ class Controlleraccountsubusers extends Controller {
           $data['total_pending_amount'] = $totalPendingAmount;
           $data['pending_order_id'] = implode('--',$data['pending_order_id']); */
         $data['sub_users'] = $result_customers;
+        $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+        $data['sub_customer_order_approval'] = $customer_info['sub_customer_order_approval'];
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/my_sub_users.tpl')) {
             $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/my_sub_users.tpl', $data));
         } else {
@@ -691,5 +693,20 @@ class Controlleraccountsubusers extends Controller {
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
-
+    
+    public function assignsubcustomerorderapproval() {
+        $log = new Log('error.log');
+        $json['success'] = true;
+        $this->load->model('account/customer');
+        
+        $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+        
+        if(isset($customer_info) && $customer_info != NULL) {
+        $this->model_account_customer->UpdateCustomerOrderApproval($this->customer->getId(), $this->request->post['sub_customer_order_approval']);
+        }
+        
+        $log->write($this->request->post['sub_customer_order_approval']);
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
 }
