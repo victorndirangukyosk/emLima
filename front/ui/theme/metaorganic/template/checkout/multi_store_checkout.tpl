@@ -119,9 +119,9 @@
                                                             <?php }?>
                                                             </h3>
                                                             <h4 class="address-name"><?= $address['name'] ?></h4>
-                                                            <p><?php echo $address['flat_number'].', ' ?><br>
-                                                            <?php echo $address['building_name'] ?><br>
-                                                            <?php echo $address['street_address'] ?>
+                                                            <p><?php echo $address['address'].', ' ?><br>
+                                                            <?php //echo $address['flat_number'].', ' ?><br>
+                                                            <?php //echo $address['building_name'] ?><br>
                                                             <br><?php echo $address['city']; ?>
                                                             </p>
 
