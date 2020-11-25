@@ -106,6 +106,7 @@ class ModelAccountAddress extends Model
                 'city_id' => $result['city_id'],
                 'flat_number' => $result['flat_number'],
                 'building_name' => $result['building_name'],
+                'street_address' => $result['street_address'],
                 'landmark' => $result['landmark'],
                 'city' => $city,
                 'zipcode' => $result['zipcode'],
