@@ -78,7 +78,12 @@
                                                 <div class="col-md-2 product-price" >
 
                                                     <?php if($product['is_from_active_store']) { ?>
-
+                                                    
+                                                    <?php if(is_array($product['category_price']) && count($product['category_price']) > 0 && $product['category_price']['price'] > 0) { ?>
+                                                    <span class="price open-popup" data-id="<?= $product['product_store_id'] ?>">
+                                                        <?php echo $this->currency->getCode().' '.$product['category_price']['price']; ?>
+                                                    </span>
+                                                    <?php } else { ?>
                                                     <?php if ( $product['special_price'] == '0.00' || empty(trim($product['special_price']))) { ?>
                                                     <span class="price-cancelled open-popup" data-id="<?= $product['product_store_id'] ?>" style="display: none";>
                                                     </span>
@@ -92,7 +97,7 @@
                                                     <span class="price open-popup" data-id="<?= $product['product_store_id'] ?>">
                                                         <?php echo $product['special_price']; ?>
                                                     </span>
-                                                    <?php } ?>
+                                                    <?php } } ?>
 
                                                     <?php } ?>
 
