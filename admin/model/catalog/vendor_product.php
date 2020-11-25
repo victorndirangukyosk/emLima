@@ -137,6 +137,11 @@ class ModelCatalogVendorProduct extends Model
         if (!empty($data['filter_product_id_from'])) {
             $sql .= " AND ps.product_store_id >= '".(int) $data['filter_product_id_from']."'";
         }
+        
+        if (!empty($data['filter_category_price_prods'])) {
+            $filter_category_price_prods = implode(',', $data['filter_category_price_prods']);
+            $sql .= ' AND ps.product_store_id IN (' . $filter_category_price_prods . ') ';
+        }
 
         if (!empty($data['filter_product_id_to'])) {
             $sql .= " AND ps.product_store_id <= '".(int) $data['filter_product_id_to']."'";
@@ -207,7 +212,7 @@ class ModelCatalogVendorProduct extends Model
 
         return $query->rows;
     }
-    
+        
     public function getProductsCount($data = [])
     {
         $sql = 'SELECT ps.*,p2c.product_id,pd.name as product_name ,p.*,st.name as store_name,v.firstname as fs,v.lastname as ls,ps.status as sts,v.user_id as vendor_id from '.DB_PREFIX.'product_to_store ps LEFT JOIN '.DB_PREFIX.'product_to_category p2c ON (ps.product_id = p2c.product_id) LEFT JOIN '.DB_PREFIX.'product p ON (p.product_id = ps.product_id) LEFT JOIN '.DB_PREFIX.'product_description pd ON (p.product_id = pd.product_id) LEFT JOIN '.DB_PREFIX.'store st ON (st.store_id = ps.store_id) LEFT JOIN '.DB_PREFIX.'user v ON (v.user_id = st.vendor_id)';
@@ -764,6 +769,12 @@ class ModelCatalogVendorProduct extends Model
         return $res->row;
     }
     
+    public function getCategoryPriceDetailsByCategoryName($store_id, $price_category) {
+        $category_price = 'SELECT * FROM ' . DB_PREFIX . "product_category_prices WHERE price_category='" . $price_category . "' AND store_id='" . $store_id . "'";
+        $res = $this->db->query($category_price);
+        return $res->rows;
+    }
+
     public function updateCategoryPricesStatus($product_store_id, $product_id, $product_name, $status) {
         $query = 'UPDATE ' . DB_PREFIX . "product_category_prices SET status = '" . $status . "' WHERE product_store_id = '" . (int) $product_store_id . "' AND product_id='" . (int) $product_id . "' AND product_name='" . $product_name . "' AND store_id=75";
 

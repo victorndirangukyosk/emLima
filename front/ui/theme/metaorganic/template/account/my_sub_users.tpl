@@ -342,6 +342,18 @@
                                         <button type="submit" data-style="zoom-out" id="assign_procurement_person" class="btn btn-default"><span class="ladda-label"><?= $button_save ?></span><span class="ladda-spinner"></span></button>
                                     </div>
                                 </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="input-subcustomerorderapproval">Sub Customer Order Approval</label>
+                                    <div class="col-sm-4">
+                                        <select class="form-control input-lg" id="sub_customer_order_approval" name="sub_customer_order_approval">
+                                            <option value="1" <?php if($sub_customer_order_approval == 1) { echo 'selected'; } ?>>Required</option>
+                                            <option value="0" <?php if($sub_customer_order_approval == 0) { echo 'selected'; } ?>>Not Required</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-2 col-sm-pull-2 secion-row text-center" style="margin-bottom: 20px; float: right; margin-right: 63px">
+                                        <button type="submit" data-style="zoom-out" id="assign_sub_customer_order_approval" class="btn btn-default"><span class="ladda-label"><?= $button_save ?></span><span class="ladda-spinner"></span></button>
+                                    </div>
+                                </div>
                             </fieldset>
 
                         </div>
@@ -854,6 +866,26 @@
                         }
                     }
                 });
+            }
+        });
+    });
+    
+    $(document).delegate('#assign_sub_customer_order_approval', 'click', function (e) {
+        e.preventDefault();
+        console.log('Hi');
+        console.log($('#sub_customer_order_approval').val());
+        
+        $.ajax({
+            url: 'index.php?path=account/sub_users/assignsubcustomerorderapproval',
+            type: 'post',
+            data: { sub_customer_order_approval : $('#sub_customer_order_approval').val() },
+            dataType: 'json',
+            success: function (json) {
+                console.log(json);
+                console.log(json.success);
+                console.log(json.data);
+                $(".alerter").show();
+                $('.alerter').delay(5000).fadeOut('slow');
             }
         });
     });
