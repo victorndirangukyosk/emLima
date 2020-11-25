@@ -24,9 +24,9 @@
                                                         </h3>
 
                                                         <h4 class="address-name"><?= $address['name'] ?></h4>
-                                                        <p><?php echo $address['flat_number'].', ' ?><br>
+                                                        <p><?php echo $address['address'] ?><br>
+                                                            <?php echo $address['flat_number'].', ' ?><br>
                                                             <?php echo $address['building_name'] ?><br>
-                                                            <?php echo $address['street_address'] ?><br>
                                                             <?php echo $address['city']; ?>
                                                             </p>
                                                             <a  href="#" onclick="editAddressModal(<?= $address['address_id'] ?>)" type="button" data-toggle="modal" data-target="#editAddressModal" class="btn btn-default"> <?php echo $button_edit; ?></a>
