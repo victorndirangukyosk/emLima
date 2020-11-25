@@ -150,14 +150,14 @@
                     <?php } else { ?>
                     <a href="<?php echo $sort_name; ?>"><?php echo $column_name; ?></a>
                     <?php } ?></td>
-                  <td class="text-left"><?php if ($sort == 'c.email') { ?>
+                  <td style="width: 3px;" class="text-left"><?php if ($sort == 'c.email') { ?>
                     <a href="<?php echo $sort_email; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_email; ?></a>
                     <?php } else { ?>
                     <a href="<?php echo $sort_email; ?>"><?php echo $column_email; ?></a>
                     <?php } ?></td>
                   <td class="text-left"><?php echo $column_telephone; ?></td>
 
-                  <td class="text-left"><?php if ($sort == 'customer_group') { ?>
+                  <td style="width: 3px;" class="text-left"><?php if ($sort == 'customer_group') { ?>
                     <a href="<?php echo $sort_customer_group; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_customer_group; ?></a>
                     <?php } else { ?>
                     <a href="<?php echo $sort_customer_group; ?>"><?php echo $column_customer_group; ?></a>
