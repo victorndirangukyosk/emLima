@@ -10,6 +10,10 @@ class ModelTotalSubTotal extends Model
 
         /*echo "sub";
         echo $sub_total;*/
+        $log = new Log('error.log');
+        $log->write('sub_total front_model_total_sub_total.php');
+        $log->write($sub_total);
+        $log->write('sub_total front_model_total_sub_total.php');
         if (isset($this->session->data['vouchers']) && $this->session->data['vouchers']) {
             foreach ($this->session->data['vouchers'] as $voucher) {
                 $sub_total += $voucher['amount'];
