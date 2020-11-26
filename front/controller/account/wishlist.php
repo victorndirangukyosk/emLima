@@ -356,6 +356,7 @@ class ControllerAccountWishList extends Controller
                     'unit' => $product['unit'],
                     'price' => $price,
                     'special_price' => $special_price,
+                    'category_price' => $this->model_assets_product->getCategoryPriceStatusByProductStoreId($product_store_id),
                        /* 'store_id'     => $product['store_id'],
                     'model'    => $product['model'],*/
 
