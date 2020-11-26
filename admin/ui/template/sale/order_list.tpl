@@ -196,7 +196,7 @@
 
                                     <?php if (!$this->user->isVendor()): ?>
 
-                                        <td class="text-left">
+                                        <td style="width: 3px;" class="text-left">
                                             <?php if ($sort == 'customer') { ?>
                                             <a href="<?php echo $sort_customer; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_customer; ?></a>
                                             <?php } else { ?>

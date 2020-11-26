@@ -127,9 +127,9 @@
                       <select name="products[<?php echo $product['product_id']?>][unit]" class="form-control changeUnit" data-product_id="<?php echo $product['product_id']?>">
                           <?php foreach($product['variations'] as $variant) { ?>
                           <?php if($variant['variation_id'] == $product['product_id']) { ?>
-                          <option data-model="<?php echo $variant['model'] ?>" data-categoryprice="<?php echo $variant['category_price'] ?>" data-price="<?php echo $variant['price'] ?>" data-product_id="<?php echo $variant['variation_id'] ?>" <?php echo $variant['category_price_variant'] ?> selected><?php echo $variant['unit']; ?></option>
+                          <option data-model="<?php echo $variant['model'] ?>" data-categoryprice="<?php echo $variant['category_price'] ?>" data-price="<?php echo $variant['price'] ?>" data-special="<?php echo $variant['special_price'] ?>" data-product_id="<?php echo $variant['variation_id'] ?>" <?php echo $variant['category_price_variant'] ?> selected><?php echo $variant['unit']; ?></option>
                           <?php } else { ?>
-                          <option data-model="<?php echo $variant['model'] ?>" data-categoryprice="<?php echo $variant['category_price'] ?>" data-price="<?php echo $variant['price'] ?>" data-product_id="<?php echo $variant['variation_id'] ?>" <?php echo $variant['category_price_variant'] ?> ><?php echo $variant['unit']; ?></option>
+                          <option data-model="<?php echo $variant['model'] ?>" data-categoryprice="<?php echo $variant['category_price'] ?>" data-price="<?php echo $variant['price'] ?>" data-special="<?php echo $variant['special_price'] ?>" data-product_id="<?php echo $variant['variation_id'] ?>" <?php echo $variant['category_price_variant'] ?> ><?php echo $variant['unit']; ?></option>
                           <?php } } ?>
                       </select>
                       <!--<input type="text" class="form-control" name="products[<?php echo $product['product_id']?>][unit]" value="<?php echo $product['unit']; ?>"/>-->
@@ -375,9 +375,12 @@ $(document).delegate('.changeUnit','change', function() {
   if($(this).find(':selected').attr('data-categoryprice').toString().replace(/,/g, '') > 0) {
   $(this).parent().parent().children().eq(6).children().val($(this).find(':selected').attr('data-categoryprice').toString().replace(/,/g, ''));
   $(this).parent().parent().children().eq(7).children().val($(this).find(':selected').attr('data-categoryprice').toString().replace(/,/g, '')*q);
+  } else if($(this).find(':selected').attr('data-special').toString().replace(/,/g, '') > 0) {
+  $(this).parent().parent().children().eq(6).children().val($(this).find(':selected').attr('data-special').toString().replace(/,/g, ''));
+  $(this).parent().parent().children().eq(7).children().val($(this).find(':selected').attr('data-special').toString().replace(/,/g, '')*q);
   } else {
   $(this).parent().parent().children().eq(6).children().val($(this).find(':selected').attr('data-price').toString().replace(/,/g, ''));
-  $(this).parent().parent().children().eq(7).children().val($(this).find(':selected').attr('data-price').toString().replace(/,/g, '')*q);
+  $(this).parent().parent().children().eq(7).children().val($(this).find(':selected').attr('data-price').toString().replace(/,/g, '')*q);    
   }
   //$(this).parent().parent().children().eq(8).children().val($(this).find(':selected').attr('data-product_id'));
   
@@ -784,15 +787,24 @@ function addInBetween() {
                             model: item['model'],
                             product_id: item['product_store_id'],
                         }
-                    } else {
+                    } else if(item['special_price'].toString().replace(/,/g, "") > 0){
                       return {
+                            label: item['name']+' - '+item['unit'],
+                            value: item['name'],
+                            unit: item['unit'],
+                            price: item['special_price'],
+                            model: item['model'],
+                            product_id: item['product_store_id'],
+                        }  
+                    } else {
+                    return {
                             label: item['name']+' - '+item['unit'],
                             value: item['name'],
                             unit: item['unit'],
                             price: item['price'],
                             model: item['model'],
                             product_id: item['product_store_id'],
-                        }  
+                        }    
                     }
                     }));
 
@@ -815,7 +827,7 @@ function addInBetween() {
                     console.log(json);
                     var option = '';
                     for (var i=0;i<json.length;i++){
-                           option += '<option data-model="'+ json[i].model +'" data-product_id="'+ json[i].product_store_id +'" data-categoryprice="'+ json[i].category_price +'" data-price="'+ json[i].special_price +'" value="'+ json[i].unit + '"  '+ json[i].category_price_variant + '>' + json[i].unit + '</option>';
+                           option += '<option data-model="'+ json[i].model +'" data-product_id="'+ json[i].product_store_id +'" data-categoryprice="'+ json[i].category_price +'" data-price="'+ json[i].price +'" data-special="'+ json[i].special_price +'" value="'+ json[i].unit + '"  '+ json[i].category_price_variant + '>' + json[i].unit + '</option>';
                     }
                     console.log(option);
                     $('select[name=\'products['+noProduct+'][unit]').append(option);
@@ -825,7 +837,6 @@ function addInBetween() {
           //console.log(item['label']);
             //$('.product_name').val(item['label']).focus();
             //$('.product_name').val(item['value']);
-            
             $('input[name=\'products['+noProduct+'][unit]').val(ui.item.unit);
             $('input[name=\'products['+noProduct+'][price]').val(ui.item.price);
             $('input[name=\'products['+noProduct+'][total]').val(ui.item.price);
