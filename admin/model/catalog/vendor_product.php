@@ -725,10 +725,34 @@ class ModelCatalogVendorProduct extends Model
 
         return $product_id;
     }
+    
+    public function updateProductInventoryPricing($store_product_id, $data)
+    {
+        $this->trigger->fire('pre.admin.product.edit', $data);
+        
+
+        $query = 'UPDATE '.DB_PREFIX."product_to_store SET buying_price = '".$data['buying_price']."', source = '".$data['source']."' WHERE product_store_id = '".(int) $store_product_id."'";
+        //echo $query;
+        $this->db->query($query);
+
+        $this->db->query('INSERT INTO '.DB_PREFIX."product_inventory_price_history SET  product_id = '".$data['product_id']."', product_store_id = '".$store_product_id."', store_id = '".$data['store_id']."', buying_price = '".$data['buying_price']."', prev_buying_price = '".$data['current_buying_price']."', source = '".$data['source']."', prev_source = '".$data['current_source']."', product_name = '".$data['product_name']."', added_by = '".$data['added_by']."', added_user_role = '".$this->user->getGroupName()."', added_user = '".$this->user->getFirstName().' '.$this->user->getLastName()."', date_added = '".$this->db->escape(date('Y-m-d H:i:s'))."'");
+
+        $this->trigger->fire('post.admin.product.edit', $store_product_id);
+
+        return $product_id;
+    }
 
     public function productInventoryHistory($store_product_id)
     {
         $query = 'SELECT * FROM '.DB_PREFIX."product_inventory_history WHERE product_store_id ='".(int) $store_product_id."'";
+        $query = $this->db->query($query);
+
+        return $query->rows;
+    }
+    
+    public function productInventoryPriceHistory($store_product_id)
+    {
+        $query = 'SELECT * FROM '.DB_PREFIX."product_inventory_price_history WHERE product_store_id ='".(int) $store_product_id."'";
         $query = $this->db->query($query);
 
         return $query->rows;
