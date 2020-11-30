@@ -925,8 +925,6 @@
             dataType: 'json',
             success: function (json) {
                 console.log(json);
-                console.log(json.success);
-                console.log(json.data);
                 $(".alerter").show();
                 $('.alerter').delay(5000).fadeOut('slow');
             }
