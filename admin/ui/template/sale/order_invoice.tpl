@@ -50,7 +50,7 @@
                                     <li><?= $order['telephone'] ?></li>
                                     <li class="mb-2"><?= $order['email'] ?></li>
                                     <li>
-                                        <p class="bold"><?= $order['shipping_address'] ?></p>
+                                        <p class="bold"><?= $order['shipping_name_original'] ?></br> <?= $order['shipping_address'] ?></p>
                                     </li>
                                 </ul>
 
