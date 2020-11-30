@@ -709,4 +709,20 @@ class Controlleraccountsubusers extends Controller {
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
+    
+        public function assignsubcustomerorderapprovalbysubcustomerid() {
+        $log = new Log('error.log');
+        $json['success'] = true;
+        $this->load->model('account/customer');
+        
+        $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+        $sub_customer_info = $this->model_account_customer->getCustomer($this->request->post['sub_customer_id']);
+        
+        if(isset($customer_info) && $customer_info != NULL && isset($sub_customer_info) && $sub_customer_info != NULL) {
+        $this->model_account_customer->UpdateCustomerOrderApprovalBySubCustomerId($this->customer->getId(), $this->request->post['sub_customer_id'], $this->request->post['status']);
+        }
+        
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
 }
