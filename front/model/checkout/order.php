@@ -1867,18 +1867,29 @@ class ModelCheckoutOrder extends Model {
         $this->load->model('account/customer');
         $is_he_parents = $this->model_account_customer->CheckHeIsParent();
         $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+          
+        $parent_customer_info = NULL;
+        if ($is_he_parents != NULL && $is_he_parents > 0) {
+            $parent_customer_info = $this->model_account_customer->getCustomer($is_he_parents);
+        }
+        
+        $sub_customer_order_approval_required = 1;
+        if(isset($parent_customer_info) && $parent_customer_info != NULL && is_array($parent_customer_info)) {
+        $sub_customer_order_approval_required = $parent_customer_info['sub_customer_order_approval'];    
+        }
+        
         $order_appoval_access = FALSE;
         // if ($this->session->data['order_approval_access'] > 0 && $this->session->data['order_approval_access_role'] != NULL) {
-        if ($order_approval_access > 0 && $order_approval_access_role != NULL) {
+        if ($order_approval_access > 0 && $order_approval_access_role != NULL  && $sub_customer_order_approval_required == 1) {
             $order_appoval_access = TRUE;
-        }
-        $log->write('Order Confirm In COD');
+        } 
+        $log->write('Order Confirm In COD FRONT/MODEL/CHECKOUT/ORDER.PHP');
         $log->write($is_he_parents);
-        $log->write('Order Confirm In COD');
+        $log->write('Order Confirm In COD FRONT/MODEL/CHECKOUT/ORDER.PHP');
 
         $head_chef = 'Approved';
         $procurement = 'Approved';
-        if ($is_he_parents != NULL && $is_he_parents > 0 && $order_appoval_access == FALSE) {
+        if ($is_he_parents != NULL && $is_he_parents > 0 && $order_appoval_access == FALSE  && $sub_customer_order_approval_required == 1) {
             $order_approval_access = $this->db->query('SELECT c.customer_id, c.parent, c.order_approval_access_role, c.order_approval_access FROM ' . DB_PREFIX . "customer c WHERE c.parent = '" . (int) $is_he_parents . "' AND c.order_approval_access = 1 AND (c.order_approval_access_role = 'head_chef' OR c.order_approval_access_role = 'procurement_person')");
             $order_approval_access_user = $order_approval_access->rows;
 
@@ -1900,9 +1911,9 @@ class ModelCheckoutOrder extends Model {
                 }
             }
         }
-
-        $parent_approval = $is_he_parents == NULL || $order_appoval_access == TRUE ? 'Approved' : 'Pending';
-        $order_status_id = $is_he_parents == NULL || $order_appoval_access == TRUE ? $this->config->get('cod_order_status_id') : 15;
+        $log->write('UPDATING SUB USER ORDER' . $order_id);
+        $parent_approval = $is_he_parents == NULL || $order_appoval_access == TRUE  || $sub_customer_order_approval_required == 0 ? 'Approved' : 'Pending';
+        $order_status_id = $is_he_parents == NULL || $order_appoval_access == TRUE  || $sub_customer_order_approval_required == 0 ? $this->config->get('cod_order_status_id') : 15;
         $this->db->query('UPDATE `' . DB_PREFIX . "order` SET parent_approval = '" . $parent_approval . "',head_chef = '" . $head_chef . "',procurement = '" . $procurement . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
     }
 
