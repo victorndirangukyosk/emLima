@@ -230,6 +230,16 @@
                                         </label>
                                     </div>
                                 </div>
+                                
+                               <div class="form-group required">
+                                  <label class="col-sm-3 control-label" for="input-orderapproval">Order Approval</label>
+                                  <div class="col-sm-6 col-xs-12">
+                                        <select class="form-control input-lg" id="sub_customer_order_approval" name="sub_customer_order_approval">
+                                            <option value="1">Required</option>
+                                            <option value="0">Not Required</option>
+                                        </select>
+                                    </div> 
+                               </div>
 
                                 <div class="form-group required">
                                     <label class="col-sm-3 control-label" for="input-telephone"><?php echo $entry_password; ?></label>
