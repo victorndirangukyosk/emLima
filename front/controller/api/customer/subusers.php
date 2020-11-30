@@ -805,7 +805,7 @@ class ControllerApiCustomerSubusers extends Controller
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
-//Same method copied from web
+    //Same method copied from web
     public function addAssignorderapproval() {
 
         $json = [];
@@ -855,7 +855,7 @@ class ControllerApiCustomerSubusers extends Controller
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
-
+    //not using
     public function addassignsubcustomerorderapproval() {
         $log = new Log('error.log');
         $json['success'] = true;
@@ -871,5 +871,32 @@ class ControllerApiCustomerSubusers extends Controller
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
+    //Approval required or not required.
+    public function addassignsubcustomerorderapprovalbysubcustomerid($args = [])
+    {
+        $log = new Log('error.log');
+        $log->write($args);
+        $customer_id = $args['customer_id'];
+        $log->write($customer_id.'Login customer_id');
+        $json = [];
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
+
+        $this->load->model('account/customer');
+                  
+        $customer_info = $this->model_account_customer->getCustomer($customer_id);
+        $sub_customer_info = $this->model_account_customer->getCustomer($this->request->post['sub_customer_id']);
+        
+        if(isset($customer_info) && $customer_info != NULL && isset($sub_customer_info) && $sub_customer_info != NULL) {
+        $this->model_account_customer->UpdateCustomerOrderApprovalBySubCustomerId($customer_id, $this->request->post['sub_customer_id'], $this->request->post['status']);
+        $json['message'][] = ['type' => '', 'body' => 'success'];
+        $json['success'] = 'success'; 
+        }
+                
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
 
 }
