@@ -59,7 +59,17 @@
     <?php } ?>
 
     <?php if($preturn_vendor_product) { ?>    
-    <li><a href="<?php echo $inventory_management; ?>"><i class="fa inventory"></i> <span>Inventory</span></a></li>
+    <li id="simple-blog">
+        <a class="parent"><i class="fa fa-cubes fa-fw"></i> <span>Inventory</span></a>
+        <ul>
+          <?php if($preturn_vendor_product != false){ ?>
+            <li><a href="<?php echo $inventory_management; ?>">Inventory</a></li>
+          <?php } ?>
+          <?php if($preturn_vendor_product != false){ ?>
+            <li><a href="<?php echo $inventory_management_update; ?>">Inventory Management</a></li>
+          <?php } ?>
+        </ul>
+    </li>
     <?php } ?>
     <?php if($preturn_vendor_product) { ?>  
     <li id="simple-blog">

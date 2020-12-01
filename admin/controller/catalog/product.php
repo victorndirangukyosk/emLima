@@ -270,6 +270,26 @@ class ControllerCatalogProduct extends Controller
         echo 0;
         exit();
     }
+    
+    public function updateInventoryPricing()
+    {
+        $this->load->language('catalog/product');
+        $update_products = $this->request->get['updated_products'];
+        //echo'<pre>';print_r($this->request->get);exit;
+        $this->document->setTitle($this->language->get('heading_title'));
+
+        $this->load->model('catalog/product');
+        $this->load->model('catalog/vendor_product');
+
+        if (count($update_products) > 0) {
+            foreach ($update_products as $product) {
+                $data[] = $this->model_catalog_vendor_product->updateProductInventoryPricing($product['product_store_id'], $product);
+            }
+        }
+        $this->session->data['success'] = 'Products prices modified successfully!';
+        echo 0;
+        exit();
+    }
 
     public function getProductInventoryHistory()
     {
@@ -305,6 +325,51 @@ class ControllerCatalogProduct extends Controller
 					<th>'.$product_history['prev_qty'].'</th>
 					<th>'.$product_history['current_qty'].'</th>
 					<th>'.$product_history['date_added'].'</th>
+			   </tr>';
+            }
+
+            $html .= '</tbody></table><div>';
+        }
+        echo $html;
+        exit();
+    }
+    
+    public function getProductInventoryPriceHistory()
+    {
+        $this->load->model('catalog/vendor_product');
+        $product_store_id = $this->request->get['product_store_id'];
+        $res = $this->model_catalog_vendor_product->productInventoryPriceHistory($product_store_id);
+        $html = '';
+        if (count($res) > 0) {
+            $html .= '<div class="container"><table style="width:48%;" class="table table-bordered table-striped table-responsive">
+	   <thead>
+       <tr class="info">
+        <th>Product Name</th>
+        <th>Product Store Id</th>
+        <th>Buying Price</th>
+        <th>Source</th>
+        <th>Prev Buying Price</th>
+        <th>Prev Source</th>
+	<th>Updation Date</th>
+        <th>Updated By</th>
+      </tr>
+      </thead>';
+        } else {
+            $html .= '<span>No History Found</span>';
+        }
+
+        if (count($res) > 0) {
+            $html .= '<tbody>';
+            foreach ($res as $product_history) {
+                $html .= '<tr>
+				    <th>'.$product_history['product_name'].'</th>
+                                        <th>'.$product_history['product_store_id'].'</th>
+					<th>'.$product_history['buying_price'].'</th>
+					<th>'.$product_history['source'].'</th>
+					<th>'.$product_history['prev_buying_price'].'</th>
+					<th>'.$product_history['prev_source'].'</th>
+					<th>'.$product_history['date_added'].'</th>
+					<th>'.$product_history['added_user'].'</th>
 			   </tr>';
             }
 
