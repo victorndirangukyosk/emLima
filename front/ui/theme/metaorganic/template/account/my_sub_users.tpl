@@ -23,7 +23,7 @@
         </div>
         <?php $_SESSION['success_msg'] ='';?>
         <?php }?>
-                <div id="allsubusers" class="tab-pane fade">
+                <div id="allsubusers" class="tab-pane fade" style="overflow:auto;">
                     <?php //echo'<pre>';print_r($_SESSION);exit;?>
 
                     <table class="table table-bordered">
