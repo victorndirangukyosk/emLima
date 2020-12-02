@@ -31,6 +31,8 @@
             <div class="panel-heading">
                 <h3 class="panel-title"><i class="fa fa-list"></i> <?php echo $text_list; ?></h3>
                 <div class="pull-right">
+      <button type="button" onclick="excel();" data-toggle="tooltip" title="" class="btn btn-success btn-sm" data-original-title="Download Excel"><i class="fa fa-download"></i></button>
+                   
                     <button type="button" data-toggle="tooltip" title="<?php echo $button_show_filter; ?>" class="btn btn-primary btn-sm" id="showFilter"><i class="fa fa-eye"></i></button>
                     <button type="button" data-toggle="tooltip" title="<?php echo $button_hide_filter; ?>" class="btn btn-primary btn-sm" id="hideFilter"><i class="fa fa-eye-slash"></i></button>
                 </div>		
@@ -127,6 +129,15 @@
                                     
                                 </tr>
                                 <?php } ?>
+                                <!-- <tr>
+                                 <td  colspan="3" class="text-right">
+                                     <b>Grand Total</b>
+                                    </td>
+                                    
+                                    <td class="text-right"><?php echo $order['grand_total']; ?></td>
+                                    
+                                    
+                                </tr>-->
                                 <?php } else { ?>
                                 <tr>
                                     <td class="text-center" colspan="9"><?php echo $text_no_results; ?></td>
@@ -212,6 +223,46 @@
   $('.date').datetimepicker({
             pickTime: false
         });
-        //--></script>
+        //-->
+        
+        
+        
+        
+function excel() {
+   
+      	url = 'index.php?path=sale/transactions/ordertransactionexcel&token=<?php echo $token; ?>';
+        
+     	  var filter_order_id = $('input[name=\'filter_order_id\']').val();
+
+            if (filter_order_id) {
+                url += '&filter_order_id=' + encodeURIComponent(filter_order_id);
+            }
+
+            var filter_customer = $('input[name=\'filter_customer\']').val();
+
+            if (filter_customer) {
+                url += '&filter_customer=' + encodeURIComponent(filter_customer);
+            }
+
+
+
+            var filter_total = $('input[name=\'filter_total\']').val();
+
+            if (filter_total) {
+                url += '&filter_total=' + encodeURIComponent(filter_total);
+            }
+
+            var filter_date_added = $('input[name=\'filter_date_added\']').val();
+
+            if (filter_date_added) {
+                url += '&filter_date_added=' + encodeURIComponent(filter_date_added);
+            }
+
+    
+    location = url;
+    
+}
+
+</script>
 </div>
 <?php echo $footer; ?>
