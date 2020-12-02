@@ -637,7 +637,9 @@ class ModelAssetsProduct extends Model
             $category_price_data = $this->getCategoryPriceStatusByProductStoreId($r['product_store_id']);
             $category_pricing_variant_status = is_array($category_price_data) && array_key_exists('status', $category_price_data) ? $category_price_data['status'] : 1;
             if($category_pricing_variant_status == 1) {
-            if ($r['quantity'] > 0 && $r['status']) {
+            if ($r['status']) {
+            //REMOVE QUANTITY VALIDATION
+            //if ($r['quantity'] > 0 && $r['status']) {
                 //$key = base64_encode( serialize( array( 'product_store_id' => (int) $r['product_store_id'], 'store_id'=>($this->session->data['config_store_id'])  ) ) );
                 //  $key = base64_encode(serialize(array('product_store_id' => (int)$r['product_store_id'], 'store_id' => $this->session->data['config_store_id'])));
                 //$key = base64_encode( serialize( array( 'product_store_id' => (int) $product_info['product_store_id'], 'store_id'=>($this->session->data['config_store_id']) ? $this->session->data['config_store_id'] : $store_id ) ) );
@@ -989,7 +991,8 @@ class ModelAssetsProduct extends Model
         $this->db->group_by('product_description.name');
         //$this->db->where('product_to_store.store_id', $store_id);
         $this->db->where('product_to_store.status', 1);
-        $this->db->where('product_to_store.quantity >=', 1);
+        //REMOVED QUANTITY CHECK CONDITION
+        //$this->db->where('product_to_store.quantity >=', 1);
         $this->db->where('product_description.language_id', $this->config->get('config_language_id'));
         $this->db->where('product.status', 1);
         // $this->db->order_by('product_description.name','asc');
@@ -1120,7 +1123,8 @@ class ModelAssetsProduct extends Model
         $this->db->group_by('product_description.name');
         //$this->db->where('product_to_store.store_id', $store_id);
         $this->db->where('product_to_store.status', 1);
-        $this->db->where('product_to_store.quantity >=', 1);
+        //REMOVED QUANTITY CHECK CONDITION
+        //$this->db->where('product_to_store.quantity >=', 1);
         $this->db->where('product_description.language_id', $this->config->get('config_language_id'));
         $this->db->where('product.status', 1);
         // $this->db->order_by('product_description.name','asc');
@@ -1254,7 +1258,8 @@ class ModelAssetsProduct extends Model
         $this->db->group_by('product_description.name');
         //$this->db->where('product_to_store.store_id', $store_id);
         $this->db->where('product_to_store.status', 1);
-        $this->db->where('product_to_store.quantity >=', 1);
+        //REMOVED QUANTITY CHECK CONDITION
+        //$this->db->where('product_to_store.quantity >=', 1);
         $this->db->where('product_description.language_id', $this->config->get('config_language_id'));
         $this->db->where('product.status', 1);
         // $this->db->order_by('product_description.name','asc');
