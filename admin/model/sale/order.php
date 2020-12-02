@@ -223,7 +223,9 @@ class ModelSaleOrder extends Model
         $result = $this->db->query($all_variations);
 
         foreach ($result->rows as $r) {
-            if ($r['quantity'] > 0 && $r['status']) {
+            if ($r['status']) {
+            //REMOVED QUANTITY VALIDATION
+            //if ($r['quantity'] > 0 && $r['status']) {
                 $key = base64_encode(serialize(['product_store_id' => (int) $r['product_store_id'], 'store_id' => $store_id]));
 
                 $r['key'] = $key;
