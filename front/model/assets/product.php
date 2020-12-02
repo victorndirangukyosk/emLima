@@ -167,7 +167,9 @@ class ModelAssetsProduct extends Model
             $result = $this->db->query($all_variations);
 
             foreach ($result->rows as $res) {
-                if ($res['quantity'] <= 0 || !$res['status'] || !$res['vendor_status']) {
+                 //REMOVED QUANTITY CHECK CONDITION
+                // $res['quantity'] <= 0 ||
+                if (!$res['status'] || !$res['vendor_status']) {
                     continue;
                 }
 
@@ -290,7 +292,7 @@ class ModelAssetsProduct extends Model
                             if($value==$res['product_store_id'] )
                             {
                             $avaialble=true;
-                            $res['quantity']=0;
+                            $res['quantity']=9.99905;//dummy value, to hit condition
                             }
                         
                     }
@@ -300,8 +302,8 @@ class ModelAssetsProduct extends Model
                     } 
 
                     }
-
-                if ($res['quantity'] <= 0 || !$res['status'] || !$res['vendor_status']) {
+                    // $res['quantity'] <=0//REMOVED QUANTITY CHECK CONDITION
+                if ($res['quantity'] == 9.99905 || !$res['status'] || !$res['vendor_status']) {
                     continue;
                 }
 
@@ -412,7 +414,8 @@ class ModelAssetsProduct extends Model
                         if($value==$r['product_store_id'] )
                         {
                         $avaialble=true;
-                        $r['quantity']=0;
+                        // $r['quantity']=0;
+                        $r['quantity']=9.99905;//dummy value, to hit condition
                         }
                     
                 }
@@ -420,8 +423,8 @@ class ModelAssetsProduct extends Model
                  if ($avaialble==true) {
                      continue;
                 } 
-            }
-            if ($r['quantity'] > 0 && $r['status']) {
+            }//REMOVED QUANTITY CHECK CONDITION $r['quantity'] > 0 &&
+            if ( $r['status'] && $r['quantity']!=9.99905) {
                 $percent_off = null;
                 if (isset($r['special_price']) && isset($r['price']) && 0 != $r['price'] && 0 != $r['special_price']) {
                     $percent_off = (($r['price'] - $r['special_price']) / $r['price']) * 100;
@@ -858,7 +861,8 @@ class ModelAssetsProduct extends Model
         $this->db->group_by('product_description.name');
         //$this->db->where('product_to_store.store_id', $store_id);
         $this->db->where('product_to_store.status', 1);
-        $this->db->where('product_to_store.quantity >=', 1);
+        //REMOVED QUANTITY CHECK CONDITION
+        //$this->db->where('product_to_store.quantity >=', 1);
         $this->db->where('product_description.language_id', $this->config->get('config_language_id'));
         $this->db->where('product.status', 1);
         // $this->db->order_by('product_description.name','asc');
@@ -1317,7 +1321,8 @@ class ModelAssetsProduct extends Model
         $this->db->group_by('product_description.name');
         $this->db->where('product_to_store.store_id', $store_id);
         $this->db->where('product_to_store.status', 1);
-        $this->db->where('product_to_store.quantity >=', 1);
+        //REMOVED QUANTITY CHECK CONDITION
+        //$this->db->where('product_to_store.quantity >=', 1);
         $this->db->where('product_description.language_id', $this->config->get('config_language_id'));
         $this->db->where('product.status', 1);
         $this->db->where_in('product.product_id', $array);
@@ -1634,7 +1639,8 @@ class ModelAssetsProduct extends Model
         $this->db->group_by('product_to_store.product_store_id');
         $this->db->where('product_to_store.store_id', $store_id);
         $this->db->where('product_to_store.status', 1);
-        $this->db->where('product_to_store.quantity >=', 1);
+        //REMOVED QUANTITY CHECK CONDITION
+        //$this->db->where('product_to_store.quantity >=', 1);
         //$this->db->where('product_description.language_id', 1);
         $this->db->where('product.status', 1);
 
@@ -1671,8 +1677,8 @@ class ModelAssetsProduct extends Model
         $this->db->group_by('product_to_store.product_store_id');
         $this->db->where('product_to_store.store_id', $store_id);
         $this->db->where('product_to_store.status', 1);
-        $this->db->where('product_to_store.quantity >=', 1);
-
+        //REMOVED QUANTITY CHECK CONDITION
+        //$this->db->where('product_to_store.quantity >=', 1);
         $this->db->where('product.status', 1);
         $this->db->where_in('product.product_id', implode(',', $product_collection_product_ids));
         $ret = $this->db->get('product_to_store')->rows;
@@ -1751,7 +1757,8 @@ class ModelAssetsProduct extends Model
         //$this->db->group_by('product_to_store.product_store_id');
         $this->db->where('product_to_store.store_id', $store_id);
         $this->db->where('product_to_store.status', 1);
-        $this->db->where('product_to_store.quantity >=', 1);
+         //REMOVED QUANTITY CHECK CONDITION
+        //$this->db->where('product_to_store.quantity >=', 1);
         $this->db->where('product.status', 1);
         $ret = $this->db->get('product_to_store')->rows;
 
@@ -1810,7 +1817,8 @@ class ModelAssetsProduct extends Model
         //$this->db->group_by('product_to_store.product_store_id');
         $this->db->where('product_to_store.store_id', $store_id);
         $this->db->where('product_to_store.status', 1);
-        $this->db->where('product_to_store.quantity >=', 1);
+        //REMOVED QUANTITY CHECK CONDITION
+        //$this->db->where('product_to_store.quantity >=', 1);
         $this->db->where('product.status', 1);
         $ret = $this->db->get('product_to_store')->rows;
 
@@ -2272,7 +2280,8 @@ class ModelAssetsProduct extends Model
 
         $this->db->where('product_to_store.store_id', $store_id);
         $this->db->where('product_to_store.status', 1);
-        $this->db->where('product_to_store.quantity >=', 1);
+         //REMOVED QUANTITY CHECK CONDITION
+        //$this->db->where('product_to_store.quantity >=', 1);
         $this->db->where('product.status', 1);
         $ret = $this->db->get('product_to_store', $limit, $offset)->rows;
         //echo '<pre>';print_r($ret);exit;
@@ -2366,7 +2375,8 @@ class ModelAssetsProduct extends Model
 
         $this->db->where('product_to_store.store_id', $store_id);
         $this->db->where('product_to_store.status', 1);
-        $this->db->where('product_to_store.quantity >=', 1);
+        //REMOVED QUANTITY CHECK CONDITION
+        //$this->db->where('product_to_store.quantity >=', 1);
         $this->db->where('product.status', 1);
         $ret = $this->db->get('product_to_store', $limit, $offset)->rows;
         //echo '<pre>';print_r($ret);exit;
@@ -2423,7 +2433,8 @@ class ModelAssetsProduct extends Model
         $this->db->group_by('product_to_store.product_store_id');
         $this->db->where('product_to_store.store_id', $store_id);
         $this->db->where('product_to_store.status', 1);
-        $this->db->where('product_to_store.quantity >=', 1);
+        //REMOVED QUANTITY CHECK CONDITION
+        //$this->db->where('product_to_store.quantity >=', 1);
         $this->db->where('product_description.language_id', $language_id);
         $this->db->where('product.status', 1);
         $ret = $this->db->get('product_to_store', $limit)->rows;
@@ -2482,7 +2493,8 @@ class ModelAssetsProduct extends Model
         $this->db->group_by('product_to_store.product_store_id');
         $this->db->where('product_to_store.store_id', $store_id);
         $this->db->where('product_to_store.status', 1);
-        $this->db->where('product_to_store.quantity >=', 1);
+        //REMOVED QUANTITY CHECK CONDITION
+        //$this->db->where('product_to_store.quantity >=', 1);
         $this->db->where('product_description.language_id', $language_id);
         $this->db->where('product.status', 1);
         $ret = $this->db->get('product_to_store', $limit)->rows;
@@ -2523,7 +2535,8 @@ class ModelAssetsProduct extends Model
                 $this->db->where_not_in('product_to_store.product_store_id', $disabled_products_string);
             }
         $this->db->where('product_to_store.status', 1);
-        $this->db->where('product_to_store.quantity >=', 1);
+        //REMOVED QUANTITY CHECK CONDITION
+        //$this->db->where('product_to_store.quantity >=', 1);
         $this->db->where('product.status', 1);
         $ret = $this->db->get('product_to_store', $limit)->rows;
 
