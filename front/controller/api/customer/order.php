@@ -2370,12 +2370,12 @@ class ControllerApiCustomerOrder extends Controller
 
                     $log->write('quantity_available'.$quantity_available.'p_quantity_available'.$product['quantity']);
                     // Stock
-                    if ((int) $quantity_available < (int) $product['quantity']) {
-                        $log->write('if');
+                    // if ((int) $quantity_available < (int) $product['quantity']) {
+                    //     $log->write('if');
 
-                        $stock = false;
-                        $valid_cart = false;
-                    }
+                    //     $stock = false;
+                    //     $valid_cart = false;
+                    // }
                 } else {
                     $stock = false;
                     $valid_cart = false;
