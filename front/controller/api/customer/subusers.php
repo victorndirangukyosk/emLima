@@ -554,6 +554,9 @@ class ControllerApiCustomerSubusers extends Controller
         $data['total_pending_amount'] = $totalPendingAmount;
         $data['pending_order_id'] = implode('--',$data['pending_order_id']);*/
         $data['sub_users'] = $result_customers;
+        $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+        $data['sub_customer_order_approval'] = $customer_info['sub_customer_order_approval'];
+        
 
         $json['success'] = $this->language->get('text_success');
 
@@ -802,7 +805,7 @@ class ControllerApiCustomerSubusers extends Controller
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
-//Same method copied from web
+    //Same method copied from web
     public function addAssignorderapproval() {
 
         $json = [];
@@ -852,5 +855,48 @@ class ControllerApiCustomerSubusers extends Controller
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
+    //not using
+    public function addassignsubcustomerorderapproval() {
+        $log = new Log('error.log');
+        $json['success'] = true;
+        $this->load->model('account/customer');
+        
+        $customer_info = $this->model_account_customer->getCustomer($this->request->post['customer_id']);
+        
+        if(isset($customer_info) && $customer_info != NULL) {
+        $this->model_account_customer->UpdateCustomerOrderApproval($this->request->post['customer_id'], $this->request->post['sub_customer_order_approval']);
+        }
+        
+        $log->write($this->request->post['sub_customer_order_approval']);
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+    //Approval required or not required.
+    public function addassignsubcustomerorderapprovalbysubcustomerid($args = [])
+    {
+        $log = new Log('error.log');
+        $log->write($args);
+        $customer_id = $args['customer_id'];
+        $log->write($customer_id.'Login customer_id');
+        $json = [];
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
+
+        $this->load->model('account/customer');
+                  
+        $customer_info = $this->model_account_customer->getCustomer($customer_id);
+        $sub_customer_info = $this->model_account_customer->getCustomer($this->request->post['sub_customer_id']);
+        
+        if(isset($customer_info) && $customer_info != NULL && isset($sub_customer_info) && $sub_customer_info != NULL) {
+        $this->model_account_customer->UpdateCustomerOrderApprovalBySubCustomerId($customer_id, $this->request->post['sub_customer_id'], $this->request->post['status']);
+        $json['message'][] = ['type' => '', 'body' => 'success'];
+        $json['success'] = 'success'; 
+        }
+                
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
 
 }

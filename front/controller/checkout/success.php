@@ -19,7 +19,8 @@ class ControllerCheckoutSuccess extends Controller {
         $parent_customer_info = $this->model_account_customer->getCustomer($is_he_parents);
         $sub_customer_order_approval_required = 1;
         if(isset($parent_customer_info) && $parent_customer_info != NULL && is_array($parent_customer_info)) {
-        $sub_customer_order_approval_required = $parent_customer_info['sub_customer_order_approval'];    
+        $sub_customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+        $sub_customer_order_approval_required = $sub_customer_info['sub_customer_order_approval'];    
         }
         
         $this->load->language('checkout/success');

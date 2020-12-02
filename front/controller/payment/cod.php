@@ -44,7 +44,8 @@ class ControllerPaymentCod extends Controller {
 
             $sub_customer_order_approval_required = 1;
             if (isset($parent_customer_info) && $parent_customer_info != NULL && is_array($parent_customer_info)) {
-                $sub_customer_order_approval_required = $parent_customer_info['sub_customer_order_approval'];
+                $sub_customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+                $sub_customer_order_approval_required = $sub_customer_info['sub_customer_order_approval'];
             }
 
             $order_appoval_access = FALSE;
@@ -89,6 +90,19 @@ class ControllerPaymentCod extends Controller {
         $log->write($this->config->get('cod_order_status_id'));
         $is_he_parents = $this->model_account_customer->CheckHeIsParent();
 
+
+        $parent_customer_info = NULL;
+        if ($is_he_parents != NULL && $is_he_parents > 0) {
+            $parent_customer_info = $this->model_account_customer->getCustomer($is_he_parents);
+        }
+
+        $sub_customer_order_approval_required = 1;
+        if (isset($parent_customer_info) && $parent_customer_info != NULL && is_array($parent_customer_info)) {
+            // $sub_customer_order_approval_required = $parent_customer_info['sub_customer_order_approval'];
+            $sub_customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+            $sub_customer_order_approval_required = $sub_customer_info['sub_customer_order_approval'];
+        }
+
         $order_appoval_access = FALSE;
         //session values are not getting
         // if ($this->session->data['order_approval_access'] > 0 && $this->session->data['order_approval_access_role'] != NULL) {
@@ -103,8 +117,10 @@ class ControllerPaymentCod extends Controller {
             $order_appoval_access = TRUE;
         }
 
-        $parent_approval = $is_he_parents == NULL || $order_appoval_access == TRUE ? 'Approved' : 'Pending';
-        $order_status_id = $is_he_parents == NULL || $order_appoval_access == TRUE ? $this->config->get('cod_order_status_id') : 15;
+       
+ 
+        $parent_approval = $is_he_parents == NULL || $order_appoval_access == TRUE || $sub_customer_order_approval_required == 0 ? 'Approved' : 'Pending';
+        $order_status_id = $is_he_parents == NULL || $order_appoval_access == TRUE || $sub_customer_order_approval_required == 0 ? $this->config->get('cod_order_status_id') : 15;
 
         $order_id = NULL;
         foreach ($orders as $order_id) {
@@ -139,7 +155,7 @@ class ControllerPaymentCod extends Controller {
           $this->model_checkout_order->UpdateParentApprovalAPI($order_id, $Approver_assigned['order_approval_access'], $Approver_assigned['order_approval_access_role']);
           } */
 
-        if ($parent_approval == "Pending") {
+        if ($parent_approval == "Pending") {//&& $sub_customer_order_approval_required == 1
             $this->load->model('checkout/order');
             $this->model_checkout_order->SendMailToParentUser($order_id);
         }

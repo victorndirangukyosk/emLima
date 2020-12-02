@@ -4439,6 +4439,7 @@ class ControllerSaleOrder extends Controller {
                     'products' => $product_data,
                     'totals' => $total_data,
                     'comment' => nl2br($order_info['comment']),
+                    'shipping_name_original' => $order_info['shipping_name'],
                 ];
             }
         }

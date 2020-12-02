@@ -23,7 +23,7 @@
         </div>
         <?php $_SESSION['success_msg'] ='';?>
         <?php }?>
-                <div id="allsubusers" class="tab-pane fade">
+                <div id="allsubusers" class="tab-pane fade" style="overflow:auto;">
                     <?php //echo'<pre>';print_r($_SESSION);exit;?>
 
                     <table class="table table-bordered">
@@ -32,8 +32,9 @@
                                 <th>Contact Person Name</th>
                                 <th>Branch Email</th>
                                 <th>Phone No</th>
-                                <th>Customer Group</th>
+                                <!--<th>Customer Group</th>-->
                                 <th>Branch Name</th>
+                                <th>Order Approval</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
@@ -45,8 +46,9 @@
                                 <td><?php echo $user['firstname'].' '.$user['lastname'];?></td>
                                 <td><?php echo $user['email'];?></td>
                                 <td><?php echo $user['telephone'];?></td>
-                                <td><?php echo $user['customer_group'];?></td>
+                                <!--<td><?php echo $user['customer_group'];?></td>-->
                                 <td><?php echo $user['company_name'];?></td>
+                                <td><input type="checkbox" class="" id="order_approval_required" name="order_approval_required" data-customerid="<?php echo $user['customer_id']; ?>" title="Order Approval <?php if($user['sub_customer_order_approval'] == 0) { echo 'Not'; } ?> Required" <?php if($user['sub_customer_order_approval'] == 1) { echo 'checked'; } ?>></td>
                                 <td class="status<?php echo $user['customer_id']; ?>"><?php echo ($user['approved']==0) ? 'Unverified': 'Verified'?></td>
                                 <td><?php if($user['approved'] == 0) { ?> <a data-confirm="Activate sub user!" class="btn btn-success useractivate" data-active="1" data-store-id="<?php echo $user['customer_id']; ?>" data-toggle="tooltip" title="Activate user"><i class="fa fa-check"></i></a> <?php } ?>
                                     <?php if($user['approved'] == 1) { ?> <a data-confirm="De activate sub user!" class="btn btn-success useractivate" data-active="0" data-store-id="<?php echo $user['customer_id']; ?>" data-toggle="tooltip" title="De activate user"><i class="fa fa-times"></i></a> <?php } ?>
@@ -230,6 +232,16 @@
                                         </label>
                                     </div>
                                 </div>
+                                
+                               <div class="form-group required">
+                                  <label class="col-sm-3 control-label" for="input-orderapproval">Order Approval</label>
+                                  <div class="col-sm-6 col-xs-12">
+                                        <select class="form-control input-lg" id="sub_customer_order_approval" name="sub_customer_order_approval">
+                                            <option value="1">Required</option>
+                                            <option value="0">Not Required</option>
+                                        </select>
+                                    </div> 
+                               </div>
 
                                 <div class="form-group required">
                                     <label class="col-sm-3 control-label" for="input-telephone"><?php echo $entry_password; ?></label>
@@ -342,7 +354,7 @@
                                         <button type="submit" data-style="zoom-out" id="assign_procurement_person" class="btn btn-default"><span class="ladda-label"><?= $button_save ?></span><span class="ladda-spinner"></span></button>
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <!--<div class="form-group">
                                     <label class="col-sm-3 control-label" for="input-subcustomerorderapproval">Sub Customer Order Approval</label>
                                     <div class="col-sm-4">
                                         <select class="form-control input-lg" id="sub_customer_order_approval" name="sub_customer_order_approval">
@@ -353,7 +365,7 @@
                                     <div class="col-sm-2 col-sm-pull-2 secion-row text-center" style="margin-bottom: 20px; float: right; margin-right: 63px">
                                         <button type="submit" data-style="zoom-out" id="assign_sub_customer_order_approval" class="btn btn-default"><span class="ladda-label"><?= $button_save ?></span><span class="ladda-spinner"></span></button>
                                     </div>
-                                </div>
+                                </div>-->
                             </fieldset>
 
                         </div>
@@ -888,6 +900,36 @@
                 $('.alerter').delay(5000).fadeOut('slow');
             }
         });
+    });
+    
+    $(document).delegate('#order_approval_required', 'change', function (e) {
+    e.preventDefault();
+    if(this.checked) {
+    console.log('checked');
+    console.log($(this).attr('data-customerid'));
+    var status = 1;
+    $(this).attr('title', 'Order Approval Required');
+    var sub_customer_id = $(this).attr('data-customerid');
+    } else {
+    console.log('unchecked');
+    console.log($(this).attr('data-customerid')); 
+    $(this).attr('title', 'Order Approval Not Required');
+    var status = 0;
+    var sub_customer_id = $(this).attr('data-customerid');
+    }
+    
+            $.ajax({
+            url: 'index.php?path=account/sub_users/assignsubcustomerorderapprovalbysubcustomerid',
+            type: 'post',
+            data: { status : status, sub_customer_id : sub_customer_id },
+            dataType: 'json',
+            success: function (json) {
+                console.log(json);
+                $(".alerter").show();
+                $('.alerter').delay(5000).fadeOut('slow');
+            }
+        });
+    
     });
 </script>
 </body>
