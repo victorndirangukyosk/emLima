@@ -50,7 +50,7 @@
               <dd class="data_value size_l"><span id="orders_score"></span></dd>
           </dl>
 
-          <?php if(!$this->user->isAccountManager()) { ?>
+          <?php if($this->user->isAccountManager() > 0) { ?>
                     <dl onclick="getChart(this, 'customers');" class="col-xs-4 col-lg-4 passive" style="background-color: #d9534f">
                       <dt><?php echo $text_customer . ' Onboarded' ; ?></dt>
                       <dd class="data_value size_l"><span id="customers_score"></span></dd>

@@ -713,9 +713,10 @@ class ControllerProductStore extends Controller
 
         foreach ($results as $result) {
             // if qty less then 1 dont show product
-            if ($result['quantity'] <= 0) {
+            //REMOVED QUANTITY CHECK CONDITION
+            /*if ($result['quantity'] <= 0) {
                 continue;
-            }
+            }*/
 
             $log = new Log('error.log');
             if ($result['image'] != NULL && file_exists(DIR_IMAGE.$result['image'])) {
