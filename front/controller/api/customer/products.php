@@ -1556,9 +1556,10 @@ class ControllerApiCustomerProducts extends Controller
 
         foreach ($results as $result) {
             // if qty less then 1 dont show product
-            if ($result['quantity'] <= 0) {
-                continue;
-            }
+            //REMOVED QUANTITY CHECK CONDITION
+            // if ($result['quantity'] <= 0) {
+            //     continue;
+            // }
 
             if (file_exists(DIR_IMAGE.$result['image'])) {
                 $image = $this->model_tool_image->resize($result['image'], $this->config->get('config_app_image_product_width'), $this->config->get('config_app_image_product_height'));
@@ -1719,9 +1720,10 @@ class ControllerApiCustomerProducts extends Controller
 
         foreach ($results as $result) {
             // if qty less then 1 dont show product
-            if ($result['quantity'] <= 0) {
-                continue;
-            }
+            //REMOVED QUANTITY CHECK CONDITION
+            // if ($result['quantity'] <= 0) {
+            //     continue;
+            // }
 
             if (file_exists(DIR_IMAGE.$result['image'])) {
                 $image = $this->model_tool_image->resize($result['image'], $this->config->get('config_app_image_product_width'), $this->config->get('config_app_image_product_height'));
