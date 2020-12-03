@@ -125,12 +125,18 @@ class ControllerSaleTransactions extends Controller
             'limit' => $this->config->get('config_limit_admin'),
         ];
 
-        $order_total = $this->model_sale_transactions->getTotaltransactions($filter_data);
-
+        // $order_total = $this->model_sale_transactions->getTotaltransactions($filter_data);
+        $order_total_grandTotal = $this->model_sale_transactions->getTotalTransactionsAndGrandTotal($filter_data);
+        
+        //    echo'<pre>';print_r($order_total_grandTotal['total']);exit;
+        
+        $order_total =$order_total_grandTotal['total'];
+        $amount =$order_total_grandTotal['GrandTotal'];
         $results = $this->model_sale_transactions->getTransactions($filter_data);
-        $amount=0;
+        // $amount=0;
+        $totalPages = ceil($order_total / $this->config->get('config_limit_admin'));
         foreach ($results as $result) {
-            $amount=$amount+$result['total'];
+            // $amount=$amount+$result['total'];
             $data['orders'][] = [
                 'order_id' => $result['order_ids'],
                 'no_of_products' => $result['no_of_products'],
@@ -138,10 +144,12 @@ class ControllerSaleTransactions extends Controller
                 'total' => $this->currency->format($result['total']),
                 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
                 'grand_total' => $this->currency->format($amount),
+                'total_pages' => $totalPages,
+
 
             ];
         }
-
+        // echo'<pre>';print_r($data['orders']);exit;
         $data['heading_title'] = $this->language->get('heading_title');
 
         $data['text_list'] = $this->language->get('text_list');
