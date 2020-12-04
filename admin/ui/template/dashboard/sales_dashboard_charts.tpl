@@ -318,10 +318,36 @@ function getCharts(){
     totalordervalue();
     totalorders();
     actualsale();
+    recentorders();
 }
 
 function getChartsX(){
     
+}
+
+function recentorders() {
+        $('#recent_orders').html('');
+        $('#recent_orders').html('<img src="ui/image/loader.gif">');
+        $.ajax({
+        type: 'get',
+        url: 'index.php?path=dashboard/recenttabs/getRecentOrders&start='+ start_date +'&end='+ end_date +'&token=<?php echo $token; ?>&range=' + block_range +'&account_manager=' + account_manager,
+        dataType: 'json',
+        success: function(json) {
+            console.log(json.data.orders.length);
+            var content = '';
+            if(json.data.orders.length > 0) {
+            for(i=0; i<json.data.orders.length; i++){
+            content += '<tr><td>' + json.data.orders[i].order_id + '</td><td>' + json.data.orders[i].customer + '</td><td>' + json.data.orders[i].status + '</td><td>' + json.data.orders[i].date_added + '</td><td>' + json.data.orders[i].total + '</td><td class="text-center"><a href="' + json.data.orders[i].view + '" class="btn btn-success" data-toggle="tooltip" title="View"><i class="fa fa-eye"></i></a></td></tr>';
+            }
+            } else {
+            content = '<tr><td class="text-center" colspan="6">No orders found</td></tr>';
+            }
+            $('#recent_orders').html(content);
+        },
+        error: function(xhr, ajaxOptions, thrownError) {
+            //alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+        }
+    });
 }
 
 function actualsale() {

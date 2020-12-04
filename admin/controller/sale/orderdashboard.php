@@ -58,7 +58,7 @@ class ControllerSaleOrderDashBoard extends Controller {
         $data['chart'] = $this->load->controller('dashboard/chart');
         $data['charts'] = $this->load->controller('dashboard/charts/salesdashboard');
         $data['recent'] = $this->load->controller('dashboard/recent');
-        $data['recenttabs'] = $this->load->controller('dashboard/recenttabs');
+        $data['recenttabs'] = $this->load->controller('dashboard/recenttabs/custom_index');
         $data['actualSales'] = $this->load->controller('dashboard/sale/accountmanagerActualSales');
 
         // Run currency update
