@@ -930,9 +930,12 @@ class ModelReportSale extends Model {
         } else {
             $account_manager_id = $this->user->getId();
         }
-
+        
+        if($account_manager_id != NULL && $this->user->isAccountManager() == 1) {
         $query = $this->db->query('SELECT SUM(total) AS total FROM `' . DB_PREFIX . 'order` LEFT JOIN ' . DB_PREFIX . 'customer on(' . DB_PREFIX . 'customer.customer_id = ' . DB_PREFIX . "order.customer_id) WHERE account_manager_id='" . $account_manager_id . "' AND order_status_id IN " . $complete_status_ids);
-
+        } else {
+        $query = $this->db->query('SELECT SUM(total) AS total FROM `' . DB_PREFIX . 'order` LEFT JOIN ' . DB_PREFIX . 'customer on(' . DB_PREFIX . 'customer.customer_id = ' . DB_PREFIX . "order.customer_id) WHERE order_status_id IN " . $complete_status_ids);    
+        }
         /* echo "SELECT SUM(total) AS total FROM `".DB_PREFIX."order` LEFT JOIN ".DB_PREFIX."store on(".DB_PREFIX."store.store_id = ".DB_PREFIX."order.store_id) WHERE vendor_id='".$vendor_id."' AND order_status_id IN " . $complete_status_ids ; */
         return $query->row['total'];
     }    
@@ -950,6 +953,17 @@ class ModelReportSale extends Model {
 
         return $query->row['total'];
     }
+    
+    public function getTotalSalesCustom($data = []) {
+        $sql = 'SELECT SUM(total) AS total FROM `' . DB_PREFIX . "order` WHERE order_status_id > '0'";
+
+        if (!empty($data['filter_date_start']) && !empty($data['filter_date_end'])) {
+            $sql .= " AND DATE(date_added) BETWEEN DATE('".$this->db->escape($data['filter_date_start'])."') AND DATE('".$this->db->escape($data['filter_date_end'])."')";
+        }
+        $query = $this->db->query($sql);
+
+        return $query->row['total'];
+    }    
 
     // Map
 

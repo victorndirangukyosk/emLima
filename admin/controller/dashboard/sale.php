@@ -45,6 +45,20 @@ class ControllerDashboardSale extends Controller
 
         return $this->load->view('dashboard/sale.tpl', $data);
     }
+    
+    public function index_custom()
+    {
+        $data['token'] = $this->session->data['token'];
+        $this->load->model('report/sale');
+        //$sale_total = $this->model_report_sale->getTotalSales();
+        $data['filter_date_start'] = $this->request->get['start'];
+        $data['filter_date_end'] = $this->request->get['end'];
+        $sale_total = $this->model_report_sale->getTotalSalesCustom($data);
+        $data['total'] = 'KSh  '.number_format($sale_total, 2);
+        $data['sale'] = $this->url->link('sale/order', 'token='.$this->session->data['token'], 'SSL');
+        $json['data'] = $data;
+        $this->response->setOutput(json_encode($json));
+    }
 
     public function vendor()
     {

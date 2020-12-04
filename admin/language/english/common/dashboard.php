@@ -2,6 +2,7 @@
 
 // Heading
 $_['heading_title'] = 'Dashboard';
+$_['sales_heading_title'] = 'Sales Dashboard';
 
 // Text
 $_['text_order_total'] = 'Total Orders';

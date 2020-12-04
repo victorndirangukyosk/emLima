@@ -1445,6 +1445,94 @@ class ModelSaleOrder extends Model
         return $query->row['total'];
     }
     
+    public function getTotalOrdersCustom($data = [])
+    {
+        $log = new Log('error.log');
+        $log->write('Check For Orders');
+        $sql = 'SELECT COUNT(*) AS total FROM `'.DB_PREFIX.'order` o ';
+
+        $sql .= 'left join `'.DB_PREFIX.'city` c on c.city_id = o.shipping_city_id ';
+        $sql .= 'LEFT JOIN '.DB_PREFIX.'store on('.DB_PREFIX.'store.store_id = o.store_id)';
+        $sql .= 'LEFT JOIN '.DB_PREFIX.'customer cust on(cust.customer_id = o.customer_id)';
+        if (!empty($data['filter_order_status'])) {
+            $implode = [];
+
+            $order_statuses = explode(',', $data['filter_order_status']);
+
+            foreach ($order_statuses as $order_status_id) {
+                $implode[] = "o.order_status_id = '".(int) $order_status_id."'";
+            }
+
+            if ($implode) {
+                $sql .= ' WHERE ('.implode(' OR ', $implode).')';
+            }
+        } else {
+            $sql .= " WHERE o.order_status_id > '0'";
+        }
+        if ($this->user->isVendor()) {
+            $sql .= ' AND vendor_id="'.$this->user->getId().'"';
+        }
+        if ($this->user->isAccountManager()) {
+            $sql .= ' AND cust.account_manager_id="'.$this->user->getId().'"';
+        }
+        if (!empty($data['filter_city'])) {
+            $sql .= " AND c.name LIKE '".$data['filter_city']."%'";
+        }
+
+        if (!empty($data['filter_order_id'])) {
+            $sql .= " AND o.order_id = '".(int) $data['filter_order_id']."'";
+        }
+
+        if (!empty($data['filter_vendor'])) {
+            $sql .= ' AND vendor_id="'.$data['filter_vendor'].'"';
+        }
+
+        if (!empty($data['filter_store_name'])) {
+            $sql .= " AND o.store_name = '".$data['filter_store_name']."'";
+        }
+
+        if (!empty($data['filter_payment'])) {
+            $sql .= " AND o.payment_method LIKE '%".$data['filter_payment']."%'";
+        }
+
+        if (!empty($data['filter_delivery_method'])) {
+            $sql .= " AND o.shipping_method LIKE '%".$data['filter_delivery_method']."%'";
+        }
+
+        
+        if (!empty($data['filter_company'])) {
+            $sql .= " AND cust.company_name LIKE '%".$this->db->escape($data['filter_company'])."%'";
+        }
+
+        if (!empty($data['filter_customer'])) {
+            $sql .= " AND CONCAT(o.firstname, ' ', o.lastname) LIKE '%".$this->db->escape($data['filter_customer'])."%'";
+        }
+
+        if (!empty($data['filter_date_added']) && empty($data['filter_date_added_end'])) {
+            $sql .= " AND DATE(o.date_added) = DATE('".$this->db->escape($data['filter_date_added'])."')";
+        }
+        
+        if (!empty($data['filter_date_added']) && !empty($data['filter_date_added_end'])) {
+            $sql .= " AND DATE(o.date_added) BETWEEN DATE('".$this->db->escape($data['filter_date_added'])."') AND DATE('".$this->db->escape($data['filter_date_added_end'])."')";
+        }
+
+        if (!empty($data['filter_date_modified'])) {
+            $sql .= " AND DATE(o.date_modified) = DATE('".$this->db->escape($data['filter_date_modified'])."')";
+        }
+        
+        if (!empty($data['filter_delivery_date'])) {
+            $sql .= " AND DATE(o.delivery_date) = DATE('".$this->db->escape($data['filter_delivery_date'])."')";
+        }
+
+        if (!empty($data['filter_total'])) {
+            $sql .= " AND o.total = '".(float) $data['filter_total']."'";
+        }
+
+        $query = $this->db->query($sql);
+
+        return $query->row['total'];
+    }    
+    
     public function getTotalOrdersByAccountManager($data = [])
     {
         $log = new Log('error.log');
