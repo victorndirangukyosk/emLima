@@ -246,7 +246,7 @@ class ControllerDashboardSale extends Controller
         
         $data['filter_date_start'] = $this->request->get['start'];
         $data['filter_date_end'] = $this->request->get['end'];
-        $data['account_manager'] = $this->request->get['account_manager'];
+        $data['account_manager'] = isset($this->request->get['account_manager']) && $this->request->get['account_manager'] > 0 ? $this->request->get['account_manager'] : '';
         $sale_total = $this->model_report_sale->getActualSales($data);
 
         if ($sale_total > 1000000000000) {

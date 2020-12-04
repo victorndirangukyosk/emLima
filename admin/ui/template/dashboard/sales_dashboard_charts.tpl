@@ -328,7 +328,7 @@ function actualsale() {
         $('#actual_sales').html('<img src="ui/image/loader.gif">');
         $.ajax({
         type: 'get',
-        url: 'index.php?path=dashboard/sale/ActualSales&start='+ start_date +'&end='+ end_date +'&token=<?php echo $token; ?>&range=' + block_range +'&account_manager=' + account_manager,
+        url: 'index.php?path=dashboard/sale/ActualSales&start='+ start_date +'&end='+ end_date +'&token=<?php echo $token; ?>&range=' + block_range,
         dataType: 'json',
         success: function(json) {
             console.log(json);
@@ -344,7 +344,7 @@ function totalordervalue() {
     $('#total_order_value').html('<img src="ui/image/loader.gif">');
     $.ajax({
         type: 'get',
-        url: 'index.php?path=dashboard/sale/index_custom&start='+ start_date +'&end='+ end_date +'&token=<?php echo $token; ?>&range=' + block_range +'&account_manager=' + account_manager,
+        url: 'index.php?path=dashboard/sale/index_custom&start='+ start_date +'&end='+ end_date +'&token=<?php echo $token; ?>&range=' + block_range,
         dataType: 'json',
         success: function(json) {
             console.log(json);
@@ -360,7 +360,7 @@ function totalorders() {
     $('#total_orders').html('<img src="ui/image/loader.gif">');
     $.ajax({
         type: 'get',
-        url: 'index.php?path=dashboard/order/custom_index&start='+ start_date +'&end='+ end_date +'&token=<?php echo $token; ?>&range=' + block_range +'&account_manager=' + account_manager,
+        url: 'index.php?path=dashboard/order/custom_index&start='+ start_date +'&end='+ end_date +'&token=<?php echo $token; ?>&range=' + block_range,
         dataType: 'json',
         success: function(json) {
             console.log(json);
