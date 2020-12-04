@@ -229,6 +229,41 @@ class ControllerDashboardSale extends Controller
 
         $data['sale'] = $this->url->link('sale/order', 'token='.$this->session->data['token'], 'SSL');
 
-        return $this->load->view('dashboard/sale.tpl', $data);
+        return $this->load->view('dashboard/actual_sale.tpl', $data);
+    }
+    
+    public function ActualSales()
+    {
+        $this->load->language('dashboard/sale');
+
+        $data['heading_title'] = $this->language->get('actual_heading_title');
+
+        $data['text_view'] = $this->language->get('text_view');
+
+        $data['token'] = $this->session->data['token'];
+
+        $this->load->model('report/sale');
+        
+        $data['filter_date_start'] = $this->request->get['start'];
+        $data['filter_date_end'] = $this->request->get['end'];
+        $data['account_manager'] = $this->request->get['account_manager'];
+        $sale_total = $this->model_report_sale->getActualSales($data);
+
+        if ($sale_total > 1000000000000) {
+            $data['total'] = round($sale_total / 1000000000000, 1).'T';
+        } elseif ($sale_total > 1000000000) {
+            $data['total'] = round($sale_total / 1000000000, 1).'B';
+        } elseif ($sale_total > 1000000) {
+            $data['total'] = round($sale_total / 1000000, 1).'M';
+        } elseif ($sale_total > 1000) {
+            $data['total'] = round($sale_total / 1000, 1).'K';
+        } else {
+            $data['total'] = round($sale_total);
+        }
+
+        $data['sale'] = $this->url->link('sale/order', 'token='.$this->session->data['token'], 'SSL');
+
+        $json['data'] = $data;
+        $this->response->setOutput(json_encode($json));
     }
 }

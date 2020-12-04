@@ -317,10 +317,27 @@ function getCharts(){
     rewards();
     totalordervalue();
     totalorders();
+    actualsale();
 }
 
 function getChartsX(){
     
+}
+
+function actualsale() {
+        $('#actual_sales').html('<img src="ui/image/loader.gif">');
+        $.ajax({
+        type: 'get',
+        url: 'index.php?path=dashboard/sale/ActualSales&start='+ start_date +'&end='+ end_date +'&token=<?php echo $token; ?>&range=' + block_range +'&account_manager=' + account_manager,
+        dataType: 'json',
+        success: function(json) {
+            console.log(json);
+            $('#actual_sales').html('<span>'+json.data.total+'</span>');
+        },
+        error: function(xhr, ajaxOptions, thrownError) {
+            //alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+        }
+    });
 }
 
 function totalordervalue() {
