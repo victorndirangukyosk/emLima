@@ -4,7 +4,7 @@
         <i class="fa fa-bar-chart-o"></i> <?php echo $heading_title; ?></h3>
       <div class="pull-right" id="chart-date-range">
           <?php if(isset($account_managers)) { ?>
-          <div class="pull-left" style="margin-right:8px;">
+          <div class="pull-left" style="margin-right:10px;">
               <select class="form-control" id="account_manager">
                   <option value="">Select Account Manager</option>
                   <?php foreach($account_managers as $account_manager) { ?>
