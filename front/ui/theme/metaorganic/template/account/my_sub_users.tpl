@@ -48,7 +48,11 @@
                                 <td><?php echo $user['telephone'];?></td>
                                 <!--<td><?php echo $user['customer_group'];?></td>-->
                                 <td><?php echo $user['company_name'];?></td>
+                                <?php if($user['order_approval_access_role'] == 'procurement_person' || $user['order_approval_access_role'] == 'head_chef') { ?>
+                                <td><input type="checkbox" class="" id="order_approval_required" name="order_approval_required" data-customerid="<?php echo $user['customer_id']; ?>" title="Order Approval Not Required" disabled=""></td>
+                                <?php } else { ?>
                                 <td><input type="checkbox" class="" id="order_approval_required" name="order_approval_required" data-customerid="<?php echo $user['customer_id']; ?>" title="Order Approval <?php if($user['sub_customer_order_approval'] == 0) { echo 'Not'; } ?> Required" <?php if($user['sub_customer_order_approval'] == 1) { echo 'checked'; } ?>></td>
+                                <?php } ?>
                                 <td class="status<?php echo $user['customer_id']; ?>"><?php echo ($user['approved']==0) ? 'Unverified': 'Verified'?></td>
                                 <td><?php if($user['approved'] == 0) { ?> <a data-confirm="Activate sub user!" class="btn btn-success useractivate" data-active="1" data-store-id="<?php echo $user['customer_id']; ?>" data-toggle="tooltip" title="Activate user"><i class="fa fa-check"></i></a> <?php } ?>
                                     <?php if($user['approved'] == 1) { ?> <a data-confirm="De activate sub user!" class="btn btn-success useractivate" data-active="0" data-store-id="<?php echo $user['customer_id']; ?>" data-toggle="tooltip" title="De activate user"><i class="fa fa-times"></i></a> <?php } ?>
