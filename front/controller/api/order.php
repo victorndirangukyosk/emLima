@@ -1144,19 +1144,23 @@ class ControllerApiOrder extends Controller
             $log->write('Order Edit new functionality');          
         $this->load->model('account/order');
         $order_info = $this->model_account_order->getOrder($order_id, true);
+
+        // echo "<pre>";print_r( $order_info);die;
         if (null != $order_info && (15 == $order_info['order_status_id']||14 == $order_info['order_status_id'])) {
             $order_products = $this->model_account_order->getOrderProducts($order_id);
-            // $log->write($order_products);
+              $log->write($order_products);
             foreach ($args['products'] as $product) {
-                $product_id=$product['product_id'];
+                // $product_id=$product['product_id'];
+                $product_id=$product['product_store_id'];
                 $quantity = $product['quantity'];
                 $unit = $product['unit'];
                 $isExistingProduct = $product['isExistingProduct'];
                     $key = array_search($product_id, array_column($order_products, 'product_id'));
 
                     $this->load->model('assets/product');
+                    
                     $product_info = $this->model_assets_product->getProductForPopup($order_products[$key]['product_id'], false, $order_products[$key]['store_id']);
-                    $s_price = 0;
+                     $s_price = 0;
                     $o_price = 0;
 
                     if (!$this->config->get('config_inclusiv_tax')) {
@@ -1212,10 +1216,11 @@ class ControllerApiOrder extends Controller
                     $special_price[1] = str_replace( ',', '', $special_price[1]);
                     $total = $special_price[1] * $quantity + ($this->config->get('config_tax') ? ($order_products[$key]['tax'] * $quantity) : 0);
                     // $log->write($total);
-                    $log->write($product_id);
-                    $log->write($product_id);
-                    if( $isExistingProduct ==true ) //existing product quantity is modified.
+                    $log->write($isExistingProduct);
+                    if($isExistingProduct == "true" ) //existing product quantity is modified.
                     {
+                    $log->write('Quantity change');
+
                         $this->db->query('UPDATE '.DB_PREFIX.'order_product SET quantity = '.$quantity.', total = '.$total." WHERE order_product_id = '".(int) $order_products[$key]['order_product_id']."' AND order_id  = '".(int) $order_id."' AND product_id = '".(int) $product_id."'");
                         // $this->db->query('UPDATE '.DB_PREFIX.'real_order_product SET quantity = '.$quantity.', total = '.$total." WHERE order_product_id = '".(int) $order_products[$key]['order_product_id']."' AND order_id  = '".(int) $order_id."' AND product_id = '".(int) $product_id."'");
                         $order_totals = $this->db->query('SELECT SUM(total) AS total FROM '.DB_PREFIX."order_product WHERE order_id = '".(int) $order_id."'");
@@ -1244,9 +1249,13 @@ class ControllerApiOrder extends Controller
                     }
                     else { //IF NEW PRODUCT IS ADDED 
                         # code...
+                        $this->load->model('extension/extension');
+                        $product['vendor_id'] = $this->model_extension_extension->getVendorId($product['store_id']);
 
+                        $log->write('Product  change');
                         // $this->db->query('UPDATE '.DB_PREFIX.'order_product SET quantity = '.$quantity.', total = '.$total." WHERE order_product_id = '".(int) $order_products[$key]['order_product_id']."' AND order_id  = '".(int) $order_id."' AND product_id = '".(int) $product_id."'");
                         // $this->db->query('UPDATE '.DB_PREFIX.'real_order_product SET quantity = '.$quantity.', total = '.$total." WHERE order_product_id = '".(int) $order_products[$key]['order_product_id']."' AND order_id  = '".(int) $order_id."' AND product_id = '".(int) $product_id."'");
+                    //    echo 'INSERT INTO '.DB_PREFIX."order_product SET vendor_id='".(int) $product['vendor_id']."', store_id='".(int) $product['store_id']."', product_type='".$product['product_type']."', order_id = '".(int) $order_id."', variation_id = '".(int) $product['store_product_variation_id']."', product_id = '".(int) $product['product_store_id']."', name = '".$this->db->escape($product['name'])."', model = '".$this->db->escape($product['model'])."', quantity = '". $product['quantity']."', price = '".(float) $product['price']."', total = '".(float) $product['total']."', tax = '".(float) $product['tax']."', reward = '".(int) $product['reward']."'"; exit;
                         $this->db->query('INSERT INTO '.DB_PREFIX."order_product SET vendor_id='".(int) $product['vendor_id']."', store_id='".(int) $product['store_id']."', product_type='".$product['product_type']."', order_id = '".(int) $order_id."', variation_id = '".(int) $product['store_product_variation_id']."', product_id = '".(int) $product['product_store_id']."', name = '".$this->db->escape($product['name'])."', model = '".$this->db->escape($product['model'])."', quantity = '". $product['quantity']."', price = '".(float) $product['price']."', total = '".(float) $product['total']."', tax = '".(float) $product['tax']."', reward = '".(int) $product['reward']."'");
                         $order_totals = $this->db->query('SELECT SUM(total) AS total FROM '.DB_PREFIX."order_product WHERE order_id = '".(int) $order_id."'");
                         $order_product_details = $this->db->query('SELECT * FROM '.DB_PREFIX."order_product WHERE order_product_id = '".(int) $order_products[$key]['order_product_id']."' AND order_id  = '".(int) $order_id."' AND product_id = '".(int) $product_id."'");
