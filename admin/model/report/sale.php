@@ -927,11 +927,11 @@ class ModelReportSale extends Model {
 
         if (isset($this->request->get['account_manager_id'])) {
             $account_manager_id = $this->request->get['account_manager_id'];
-        } else {
+        } else if($this->user->isAccountManager() == 1) {
             $account_manager_id = $this->user->getId();
         }
         
-        if($account_manager_id != NULL && $this->user->isAccountManager() == 1) {
+        if($account_manager_id != NULL) {
         $query = $this->db->query('SELECT SUM(total) AS total FROM `' . DB_PREFIX . 'order` LEFT JOIN ' . DB_PREFIX . 'customer on(' . DB_PREFIX . 'customer.customer_id = ' . DB_PREFIX . "order.customer_id) WHERE account_manager_id='" . $account_manager_id . "' AND order_status_id IN " . $complete_status_ids);
         } else {
         $query = $this->db->query('SELECT SUM(total) AS total FROM `' . DB_PREFIX . 'order` LEFT JOIN ' . DB_PREFIX . 'customer on(' . DB_PREFIX . 'customer.customer_id = ' . DB_PREFIX . "order.customer_id) WHERE order_status_id IN " . $complete_status_ids);    
