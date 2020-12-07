@@ -247,7 +247,7 @@
                                     </div> 
                                </div>
                                
-                               <div class="form-group">
+                               <!--<div class="form-group">
                                   <label class="col-sm-3 control-label" for="input-orderapproval">Assign Order Approvals</label>
                                   <div class="col-sm-6 col-xs-12">
                                         <select class="form-control input-lg" id="assign_order_approval" name="assign_order_approval">
@@ -256,7 +256,7 @@
                                             <option value="procurement_person">Second Level Approver</option>
                                         </select>
                                     </div> 
-                               </div>
+                               </div>-->
 
                                 <div class="form-group required">
                                     <label class="col-sm-3 control-label" for="input-telephone"><?php echo $entry_password; ?></label>
