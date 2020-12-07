@@ -102,7 +102,112 @@ class ControllerDashboardCharts extends Controller
 
         return $this->load->view('dashboard/charts.tpl', $data);
     }
+    
+    public function salesdashboard()
+    {
+        $this->load->language('dashboard/charts');
 
+        $data['heading_title'] = $this->language->get('heading_title');
+
+        $data['text_welcome'] = sprintf($this->language->get('text_welcome'), $this->user->getUsername());
+        $data['text_new_order'] = $this->language->get('text_new_order');
+        $data['text_new_customer'] = $this->language->get('text_new_customer');
+        $data['text_total_sale'] = $this->language->get('text_total_sale');
+        $data['text_marketing'] = $this->language->get('text_marketing');
+        $data['text_analytics'] = $this->language->get('text_analytics');
+        $data['text_online'] = $this->language->get('text_online');
+        $data['text_activity'] = $this->language->get('text_activity');
+        $data['text_last_order'] = $this->language->get('text_last_order');
+        $data['text_day'] = $this->language->get('text_day_home');
+        $data['text_week'] = $this->language->get('text_week_home');
+        $data['text_month'] = $this->language->get('text_month_home');
+        $data['text_year'] = $this->language->get('text_year_home');
+        $data['text_no_results'] = $this->language->get('text_no_results');
+        $data['text_event_summary'] = $this->language->get('text_event_summary');
+        $data['text_sale'] = $this->language->get('text_sale');
+        $data['text_order'] = $this->language->get('text_order');
+        $data['text_customer'] = $this->language->get('text_customer');
+        $data['text_affiliates'] = $this->language->get('text_affiliates');
+        $data['text_reviews'] = $this->language->get('text_reviews');
+        $data['text_rewards'] = $this->language->get('text_rewards');
+        $data['text_shop_info'] = $this->language->get('text_shop_info');
+        $data['text_products_and_sales'] = $this->language->get('text_products_and_sales');
+        $data['text_best_sellers'] = $this->language->get('text_best_sellers');
+        $data['text_less_sellers'] = $this->language->get('text_less_sellers');
+        $data['text_most_viewed'] = $this->language->get('text_most_viewed');
+
+        $data['text_total_sale'] = $this->language->get('text_total_sale');
+        $data['text_total_sale_year'] = $this->language->get('text_total_sale_year');
+        $data['text_total_order'] = $this->language->get('text_total_order');
+        $data['text_total_customer'] = $this->language->get('text_total_customer');
+        $data['text_total_customer_approval'] = $this->language->get('text_total_customer_approval');
+        $data['text_total_review_approval'] = $this->language->get('text_total_review_approval');
+        $data['text_total_affiliate'] = $this->language->get('text_total_affiliate');
+        $data['text_total_affiliate_approval'] = $this->language->get('text_total_affiliate_approval');
+
+        $data['column_order_id'] = $this->language->get('column_order_id');
+        $data['column_customer'] = $this->language->get('column_customer');
+        $data['column_status'] = $this->language->get('column_status');
+        $data['column_date_added'] = $this->language->get('column_date_added');
+        $data['column_total'] = $this->language->get('column_total');
+        $data['column_action'] = $this->language->get('column_action');
+        $data['column_product_name'] = $this->language->get('column_product_name');
+        $data['column_product_id'] = $this->language->get('column_product_id');
+
+        $data['token'] = $this->session->data['token'];
+
+        $this->load->model('localisation/currency');
+
+        $currency = $this->model_localisation_currency->getCurrencyByCode($this->config->get('config_currency'));
+        $data['symbol_left'] = $currency['symbol_left'];
+        $data['symbol_right'] = $currency['symbol_right'];
+
+        $data['todaysCreatedOrders'] = $this->getTodayOrderChartData('xyz', 'day', true);
+        $data['todaysDeliveredOrders'] = $this->getTodayOrderChartData('complete', 'day', true);
+        $data['todaysCancelledOrders'] = $this->getTodayOrderChartData('cancelled', 'day', true);
+
+        if (count($data['todaysCreatedOrders']) <= 0) {
+            $data['todaysCreatedOrders']['total'] = 0;
+            $data['todaysCreatedOrders']['value'] = 0;
+        }
+
+        if (count($data['todaysDeliveredOrders']) <= 0) {
+            $data['todaysDeliveredOrders']['total'] = 0;
+            $data['todaysDeliveredOrders']['value'] = 0;
+        }
+
+        if (count($data['todaysCancelledOrders']) <= 0) {
+            $data['todaysCancelledOrders']['total'] = 0;
+            $data['todaysCancelledOrders']['value'] = 0;
+        }
+
+        $data['todaysCreatedOrders']['value'] = $this->currency->format($data['todaysCreatedOrders']['value']);
+        $data['todaysDeliveredOrders']['value'] = $this->currency->format($data['todaysDeliveredOrders']['value']);
+        $data['todaysCancelledOrders']['value'] = $this->currency->format($data['todaysCancelledOrders']['value']);
+
+        $this->load->model('setting/store');
+
+        $data['store_count'] = $this->model_setting_store->getTotalStores();
+
+        //echo "<pre>";print_r($data['store_count']);die;
+        //echo "<pre>";print_r($data['todaysCreatedOrders']);print_r($data['todaysDeliveredOrders']);print_r($data['todaysCancelledOrders']);die;
+
+        // links
+        $data['link_review_waiting'] = $this->url->link('catalog/review', 'token='.$this->session->data['token'].'&sort=r.status&order=ASC', 'SSL');
+        $data['link_customer_waiting'] = $this->url->link('sale/customer', 'token='.$this->session->data['token'].'&filter_approved=0', 'SSL');
+        $data['link_customers'] = $this->url->link('sale/customer', 'token='.$this->session->data['token'], 'SSL');
+        $data['link_sales'] = $this->url->link('report/sale_order', 'token='.$this->session->data['token'], 'SSL');
+        $data['link_orders'] = $this->url->link('sale/order', 'token='.$this->session->data['token'], 'SSL');
+        $data['link_affiliates'] = $this->url->link('sale/affiliate', 'token='.$this->session->data['token'], 'SSL');
+        $data['link_affiliate_waiting'] = $this->url->link('sale/affiliate', 'token='.$this->session->data['token'].'&filter_approved=0', 'SSL');
+        
+        if($this->user->getGroupId() == 1) {
+        $this->load->model('user/accountmanager');
+        $data['account_managers'] = $this->model_user_accountmanager->getAccountManagers();
+        }
+        
+        return $this->load->view('dashboard/sales_dashboard_charts.tpl', $data);
+    }
     // Ajax Functions
 
     public function vendorsales()
@@ -181,8 +286,12 @@ class ControllerDashboardCharts extends Controller
     public function orders()
     {
         $this->load->language('dashboard/charts');
-
+        
+        if(isset($this->request->get['account_manager']) && $this->request->get['account_manager'] != NULL) {
+        $json = $this->getChartData('getAccountManagerOrders');
+        } else {
         $json = $this->getChartData('getOrders');
+        }
         $json['order']['label'] = $this->language->get('text_order');
 
         $json['created_orders'] = $this->getTodayOrderChartData('xyz', 'day', true);
@@ -214,8 +323,12 @@ class ControllerDashboardCharts extends Controller
     public function Createdorders()
     {
         $this->load->language('dashboard/charts');
-
+        
+        if(isset($this->request->get['account_manager']) && $this->request->get['account_manager'] != NULL) {
+        $json = $this->getChartData('getAccountManagerCreatedOrders');
+        } else {
         $json = $this->getChartData('getCreatedOrders');
+        }
         $json['order']['label'] = $this->language->get('text_order');
 
         $this->response->setOutput(json_encode($json));
@@ -224,8 +337,12 @@ class ControllerDashboardCharts extends Controller
     public function Cancelledorders()
     {
         $this->load->language('dashboard/charts');
-
+        
+        if(isset($this->request->get['account_manager']) && $this->request->get['account_manager'] != NULL) {
+        $json = $this->getChartData('getAccountManagerCancelledOrders');
+        } else {
         $json = $this->getChartData('getCancelledOrders');
+        }
         $json['order']['label'] = $this->language->get('text_order');
 
         $this->response->setOutput(json_encode($json));
@@ -235,8 +352,12 @@ class ControllerDashboardCharts extends Controller
     {
         $this->load->language('dashboard/charts');
         $this->load->model('dashboard/charts');
-
+        
+        if(isset($this->request->get['account_manager']) && $this->request->get['account_manager'] != NULL) {
+        $json = $this->getChartData('getAccountManagerCustomers');
+        } else {
         $json = $this->getChartData('getCustomers');
+        }
         $json['order']['label'] = $this->language->get('text_customer');
 
         $this->response->setOutput(json_encode($json));
@@ -246,8 +367,12 @@ class ControllerDashboardCharts extends Controller
     {
         $this->load->language('dashboard/charts');
         $this->load->model('dashboard/charts');
-
+        
+        if(isset($this->request->get['account_manager']) && $this->request->get['account_manager'] != NULL) {
+        $json = $this->getChartData('getAccountManagerSales', true);    
+        } else {
         $json = $this->getChartData('getSales', true);
+        }
         $json['order']['label'] = $this->language->get('text_sale');
 
         $this->response->setOutput(json_encode($json));
@@ -257,8 +382,12 @@ class ControllerDashboardCharts extends Controller
     {
         $this->load->language('dashboard/charts');
         $this->load->model('dashboard/charts');
-
+        
+        if(isset($this->request->get['account_manager']) && $this->request->get['account_manager'] != NULL) {
+        $json = $this->getChartData('getAccountManagerBookedSales', true);
+        } else {
         $json = $this->getChartData('getBookedSales', true);
+        }
         $json['order']['label'] = $this->language->get('text_sale');
 
         $this->response->setOutput(json_encode($json));
@@ -314,6 +443,12 @@ class ControllerDashboardCharts extends Controller
         } else {
             $end = '';
         }
+        
+        if (!empty($this->request->get['account_manager'])) {
+            $account_manager = $this->request->get['account_manager'];
+        } else {
+            $account_manager = '';
+        }
 
         $date_start = date_create($start)->format('Y-m-d H:i:s');
         $date_end = date_create($end)->format('Y-m-d H:i:s');
@@ -325,7 +460,7 @@ class ControllerDashboardCharts extends Controller
 
         switch ($range) {
             case 'hour':
-                $results = $this->model_dashboard_charts->{$modelFunction}($date_start, $date_end, 'HOUR');
+                $results = $this->model_dashboard_charts->{$modelFunction}($date_start, $date_end, 'HOUR', $account_manager);
                 $order_data = [];
 
                 for ($i = 0; $i < 24; ++$i) {
@@ -351,7 +486,7 @@ class ControllerDashboardCharts extends Controller
                 break;
             default:
             case 'day':
-                $results = $this->model_dashboard_charts->{$modelFunction}($date_start, $date_end, 'DAY');
+                $results = $this->model_dashboard_charts->{$modelFunction}($date_start, $date_end, 'DAY', $account_manager);
                 $str_date = substr($date_start, 0, 10);
                 $order_data = [];
 
@@ -387,7 +522,7 @@ class ControllerDashboardCharts extends Controller
 
                 break;
             case 'month':
-                $results = $this->model_dashboard_charts->{$modelFunction}($date_start, $date_end, 'MONTH');
+                $results = $this->model_dashboard_charts->{$modelFunction}($date_start, $date_end, 'MONTH', $account_manager);
                 $months = $this->getMonths($date_start, $date_end);
                 $order_data = [];
 
@@ -413,7 +548,7 @@ class ControllerDashboardCharts extends Controller
                 }
                 break;
             case 'year':
-                $results = $this->model_dashboard_charts->{$modelFunction}($date_start, $date_end, 'YEAR');
+                $results = $this->model_dashboard_charts->{$modelFunction}($date_start, $date_end, 'YEAR', $account_manager);
                 $str_date = substr($date_start, 0, 10);
                 $order_data = [];
                 $diff = floor($diff / 365) + 1;
@@ -444,7 +579,7 @@ class ControllerDashboardCharts extends Controller
         }
 
         $modelFunction = str_replace('get', 'getTotal', $modelFunction);
-        $result = $this->model_dashboard_charts->{$modelFunction}($date_start, $date_end);
+        $result = $this->model_dashboard_charts->{$modelFunction}($date_start, $date_end, $account_manager);
 
         $total = $result['total'];
         if ($currency_format) {

@@ -721,7 +721,23 @@ class Controlleraccountsubusers extends Controller {
         if(isset($customer_info) && $customer_info != NULL && isset($sub_customer_info) && $sub_customer_info != NULL) {
         $this->model_account_customer->UpdateCustomerOrderApprovalBySubCustomerId($this->customer->getId(), $this->request->post['sub_customer_id'], $this->request->post['status']);
         }
+    
+        $this->load->model('account/activity');
+        $activity_data = [
+            'customer_id' => $this->customer->getId(),
+            'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
+            'sub_customers_id' => $this->request->post['sub_customer_id']
+        ];
         
+        if($this->request->post['status'] == 1) {
+        $this->model_account_activity->addActivity('sub_customer_order_approval_required', $activity_data);
+        } 
+        
+        if($this->request->post['status'] == 0) {
+        $this->model_account_activity->addActivity('sub_customer_order_approval_not_required', $activity_data);    
+        }
+
+
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }

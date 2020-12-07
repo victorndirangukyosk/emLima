@@ -3,10 +3,17 @@
     <h3 class="panel-title">
         <i class="fa fa-bar-chart-o"></i> <?php echo $heading_title; ?></h3>
       <div class="pull-right" id="chart-date-range">
-
+          <?php if(isset($account_managers)) { ?>
+          <div class="pull-left" style="margin-right:10px;">
+              <select class="form-control" id="account_manager">
+                  <option value="">Select Account Manager</option>
+                  <?php foreach($account_managers as $account_manager) { ?>
+                  <option value="<?php echo $account_manager['user_id']; ?>"><?php echo $account_manager['username']; ?></option>
+                  <?php } ?>
+              </select>
+          </div>
+          <?php } ?>          
           <div id="block-range" class="btn-group">
-           
-
             <li class="btn btn-default active" id="day"><?php echo $text_day; ?></li>
             <li class="btn btn-default" id="month"><?php echo $text_month; ?></li>
             <li class="btn btn-default " id="year"><?php echo $text_year; ?></li>
@@ -25,7 +32,7 @@
   <div class="panel-body">
       <div id="tab_toolbar" class="panel-body" style="width: 100%; display: table; color: #555555;">
 
-            <?php if($this->user->isAccountManager()) { ?>
+            <?php if($this->user->isVendor()) { ?>
                     <dl onclick="getChart(this, 'sales');" class="col-xs-4 col-lg-4 active" style="background-color: #008db9;border-left-width: 1px;border-left-style: solid;border-left-color: rgb(221, 221, 221);">
             <?php } else { ?>
 
@@ -38,7 +45,7 @@
               <dd class="data_value size_l"><span id="sales_score"></span></dd>
           </dl>
 
-          <?php if($this->user->isAccountManager()) { ?>
+          <?php if($this->user->isVendor()) { ?>
                     <dl onclick="getChart(this, 'orders');" class="col-xs-4 col-lg-4 passive" style="background-color: #5cb85c">
             <?php } else { ?>
 
@@ -50,7 +57,7 @@
               <dd class="data_value size_l"><span id="orders_score"></span></dd>
           </dl>
 
-          <?php if($this->user->isAccountManager() > 0) { ?>
+          <?php if(!$this->user->isVendor()) { ?>
                     <dl onclick="getChart(this, 'customers');" class="col-xs-4 col-lg-4 passive" style="background-color: #d9534f">
                       <dt><?php echo $text_customer . ' Onboarded' ; ?></dt>
                       <dd class="data_value size_l"><span id="customers_score"></span></dd>
@@ -69,7 +76,7 @@
             
 
           
- <?php if($this->user->isAccountManager()) { ?>
+ <?php if($this->user->isVendor()) { ?>
                     <dl onclick="getChart(this, 'bookedsales');" class="col-xs-4 col-lg-4 passive" style="background-color: #5b0060;border-left-width: 1px;border-left-style: solid;border-left-color: rgb(221, 221, 221);">
             <?php } else { ?>
 
@@ -87,7 +94,7 @@
  
 
           
-          <?php if($this->user->isAccountManager()) { ?>
+          <?php if($this->user->isVendor()) { ?>
                     <dl onclick="getChart(this, 'createdorders');" class="col-xs-4 col-lg-4 passive" style="background-color: #585a00">
             <?php } else { ?>
 
@@ -170,6 +177,7 @@
 var start_date = '';
 var end_date = '';
 var block_range = 'day';
+var account_manager = '';
 
 jQuery(document).ready(function() {
     var cb = function(start, end, label) { /* date range picker callback */
@@ -229,6 +237,7 @@ jQuery(document).ready(function() {
 
     
     block_range = $('#block-range li.active').attr('id');
+    account_manager = $('#account_manager').find('option:selected').attr('value');
 
     getCharts();
 });
@@ -240,6 +249,15 @@ $('#block-range li').on('click', function(e) {
     $(this).addClass('active');
 
     block_range = $(this).attr('id');
+    account_manager = $('#account_manager').find('option:selected').attr('value');
+
+    getCharts();
+});
+
+$('#account_manager').on('change', function(e) {
+    e.preventDefault();
+
+    account_manager = $('#account_manager').find('option:selected').attr('value');
 
     getCharts();
 });
@@ -297,12 +315,88 @@ function getCharts(){
     ///affiliates();
     reviews();
     rewards();
+    totalordervalue();
+    totalorders();
+    actualsale();
+    recentorders();
 }
 
 function getChartsX(){
     
 }
 
+function recentorders() {
+        $('#recent_orders').html('');
+        $('#recent_orders').html('<img src="ui/image/loader.gif">');
+        $.ajax({
+        type: 'get',
+        url: 'index.php?path=dashboard/recenttabs/getRecentOrders&start='+ start_date +'&end='+ end_date +'&token=<?php echo $token; ?>&range=' + block_range +'&account_manager=' + account_manager,
+        dataType: 'json',
+        success: function(json) {
+            console.log(json.data.orders.length);
+            var content = '';
+            if(json.data.orders.length > 0) {
+            for(i=0; i<json.data.orders.length; i++){
+            content += '<tr><td>' + json.data.orders[i].order_id + '</td><td>' + json.data.orders[i].customer + '</td><td>' + json.data.orders[i].status + '</td><td>' + json.data.orders[i].date_added + '</td><td>' + json.data.orders[i].total + '</td><td class="text-center"><a href="' + json.data.orders[i].view + '" class="btn btn-success" data-toggle="tooltip" title="View"><i class="fa fa-eye"></i></a></td></tr>';
+            }
+            } else {
+            content = '<tr><td class="text-center" colspan="6">No orders found</td></tr>';
+            }
+            $('#recent_orders').html(content);
+        },
+        error: function(xhr, ajaxOptions, thrownError) {
+            //alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+        }
+    });
+}
+
+function actualsale() {
+        $('#actual_sales').html('<img src="ui/image/loader.gif">');
+        $.ajax({
+        type: 'get',
+        url: 'index.php?path=dashboard/sale/ActualSales&start='+ start_date +'&end='+ end_date +'&token=<?php echo $token; ?>&range=' + block_range,
+        dataType: 'json',
+        success: function(json) {
+            console.log(json);
+            $('#actual_sales').html('<span>'+json.data.total+'</span>');
+        },
+        error: function(xhr, ajaxOptions, thrownError) {
+            //alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+        }
+    });
+}
+
+function totalordervalue() {
+    $('#total_order_value').html('<img src="ui/image/loader.gif">');
+    $.ajax({
+        type: 'get',
+        url: 'index.php?path=dashboard/sale/index_custom&start='+ start_date +'&end='+ end_date +'&token=<?php echo $token; ?>&range=' + block_range,
+        dataType: 'json',
+        success: function(json) {
+            console.log(json);
+            $('#total_order_value').html('<span>'+json.data.total+'</span>');
+        },
+        error: function(xhr, ajaxOptions, thrownError) {
+            //alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+        }
+    });
+}
+
+function totalorders() {
+    $('#total_orders').html('<img src="ui/image/loader.gif">');
+    $.ajax({
+        type: 'get',
+        url: 'index.php?path=dashboard/order/custom_index&start='+ start_date +'&end='+ end_date +'&token=<?php echo $token; ?>&range=' + block_range,
+        dataType: 'json',
+        success: function(json) {
+            console.log(json);
+            $('#total_orders').html('<span>'+json.data.total+'</span>');
+        },
+        error: function(xhr, ajaxOptions, thrownError) {
+            //alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+        }
+    });
+}
 
 function sales() {
     $('#sales_score').html('<img src="ui/image/loader.gif">');
@@ -310,10 +404,10 @@ function sales() {
 
     $.ajax({
         type: 'get',
-        <?php if($this->user->isAccountManager()){ ?>
-        url: 'index.php?path=dashboard/accountmanagercharts/accountmanagersales&start='+ start_date +'&end='+ end_date +'&token=<?php echo $token; ?>&range=' + block_range,
+        <?php if($this->user->isVendor()){ ?>
+        url: 'index.php?path=dashboard/charts/vendorsales&start='+ start_date +'&end='+ end_date +'&token=<?php echo $token; ?>&range=' + block_range,
         <?php }else{ ?>
-        url: 'index.php?path=dashboard/charts/sales&start='+ start_date +'&end='+ end_date +'&token=<?php echo $token; ?>&range=' + block_range,
+        url: 'index.php?path=dashboard/charts/sales&start='+ start_date +'&end='+ end_date +'&token=<?php echo $token; ?>&range=' + block_range +'&account_manager=' + account_manager,
         <?php } ?>
         dataType: 'json',
         success: function(json) {
@@ -383,10 +477,10 @@ function bookedsales() {
 
     $.ajax({
         type: 'get',
-        <?php if($this->user->isAccountManager()){ ?>
-        url: 'index.php?path=dashboard/accountmanagercharts/accountmanagerbookedsales&start='+ start_date +'&end='+ end_date +'&token=<?php echo $token; ?>&range=' + block_range,
+        <?php if($this->user->isVendor()){ ?>
+        url: 'index.php?path=dashboard/charts/vendorbookedsales&start='+ start_date +'&end='+ end_date +'&token=<?php echo $token; ?>&range=' + block_range,
         <?php }else{ ?>
-        url: 'index.php?path=dashboard/charts/bookedsales&start='+ start_date +'&end='+ end_date +'&token=<?php echo $token; ?>&range=' + block_range,
+        url: 'index.php?path=dashboard/charts/bookedsales&start='+ start_date +'&end='+ end_date +'&token=<?php echo $token; ?>&range=' + block_range +'&account_manager=' + account_manager,
         <?php } ?>
         dataType: 'json',
         success: function(json) {
@@ -454,10 +548,10 @@ function orders() {
 
     $.ajax({
         type: 'get',
-        <?php if($this->user->isAccountManager()){ ?>
-        url: 'index.php?path=dashboard/accountmanagercharts/AccountManagerOrders&start='+ start_date +'&end='+ end_date +'&token=<?php echo $token; ?>&range=' + block_range,
+        <?php if($this->user->isVendor()){ ?>
+        url: 'index.php?path=dashboard/charts/VendorOrders&start='+ start_date +'&end='+ end_date +'&token=<?php echo $token; ?>&range=' + block_range,
         <?php }else{ ?>
-        url: 'index.php?path=dashboard/charts/orders&start='+ start_date +'&end='+ end_date +'&token=<?php echo $token; ?>&range=' + block_range,    
+        url: 'index.php?path=dashboard/charts/orders&start='+ start_date +'&end='+ end_date +'&token=<?php echo $token; ?>&range=' + block_range +'&account_manager=' + account_manager,    
         <?php } ?>
         dataType: 'json',
         success: function(json) {
@@ -538,10 +632,10 @@ function createdorders() {
 
     $.ajax({
         type: 'get',
-        <?php if($this->user->isAccountManager()){ ?>
-        url: 'index.php?path=dashboard/accountmanagercharts/AccountManagerCreatedOrders&start='+ start_date +'&end='+ end_date +'&token=<?php echo $token; ?>&range=' + block_range,
+        <?php if($this->user->isVendor()){ ?>
+        url: 'index.php?path=dashboard/charts/VendorCreatedOrders&start='+ start_date +'&end='+ end_date +'&token=<?php echo $token; ?>&range=' + block_range,
         <?php }else{ ?>
-        url: 'index.php?path=dashboard/charts/Createdorders&start='+ start_date +'&end='+ end_date +'&token=<?php echo $token; ?>&range=' + block_range,    
+        url: 'index.php?path=dashboard/charts/Createdorders&start='+ start_date +'&end='+ end_date +'&token=<?php echo $token; ?>&range=' + block_range +'&account_manager=' + account_manager,    
         <?php } ?>
         dataType: 'json',
         success: function(json) {
@@ -613,10 +707,10 @@ function cancelledorders() {
 
     $.ajax({
         type: 'get',
-        <?php if($this->user->isAccountManager()){ ?>
-        url: 'index.php?path=dashboard/accountmanagercharts/AccountManagerCancelledOrders&start='+ start_date +'&end='+ end_date +'&token=<?php echo $token; ?>&range=' + block_range,
+        <?php if($this->user->isVendor()){ ?>
+        url: 'index.php?path=dashboard/charts/VendorCancelledOrders&start='+ start_date +'&end='+ end_date +'&token=<?php echo $token; ?>&range=' + block_range,
         <?php }else{ ?>
-        url: 'index.php?path=dashboard/charts/Cancelledorders&start='+ start_date +'&end='+ end_date +'&token=<?php echo $token; ?>&range=' + block_range,    
+        url: 'index.php?path=dashboard/charts/Cancelledorders&start='+ start_date +'&end='+ end_date +'&token=<?php echo $token; ?>&range=' + block_range +'&account_manager=' + account_manager,    
         <?php } ?>
         dataType: 'json',
         success: function(json) {
@@ -684,7 +778,7 @@ function customers() {
 
     $.ajax({
         type: 'get',
-        url: 'index.php?path=dashboard/accountmanagercharts/customers&start='+ start_date +'&end='+ end_date +'&token=<?php echo $token; ?>&range=' + block_range,
+        url: 'index.php?path=dashboard/charts/customers&start='+ start_date +'&end='+ end_date +'&token=<?php echo $token; ?>&range=' + block_range +'&account_manager=' + account_manager,
         dataType: 'json',
         success: function(json) {
             var option = {

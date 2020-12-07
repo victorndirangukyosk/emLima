@@ -276,10 +276,10 @@
 				    <td class="text-left">
                                         <input name="source" type="text" class="source" id="source_<?php echo $product['product_store_id'];?>" data-current-source="<?php echo $product['source']; ?>" value="<?php echo $product['source']; ?>">
                                     </td>
-                                    <td class="text-right"><button type="button" onclick="ChangeProductInventoryBuyingPrice('<?php echo $product['product_store_id']; ?>');" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="Save"><i class="fa fa-check-circle text-success"></i></button>
+                                    <td class="text-right"><button type="button" onclick="ChangeProductInventoryBuyingPrice('<?php echo $product['product_store_id']; ?>');" data-toggle="tooltip" title="Save" class="btn btn-default" data-original-title="Save"><i class="fa fa-check-circle text-success"></i></button>
 									<button type="button" onclick="getProductInventoryHistory('<?php echo $product['product_store_id']; ?>');" 
 									data-toggle="modal" data-target="#<?php echo $product['product_store_id']; ?>historyModal"
-								    title="" class="btn btn-default" data-original-title="History"><i class="fa fa-history text-success"></i></button>
+								    title="History" class="btn btn-default" data-original-title="History"><i class="fa fa-history text-success"></i></button>
 									</td>
                                     
                                 </tr>

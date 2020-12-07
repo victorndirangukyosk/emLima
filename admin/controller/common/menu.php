@@ -108,6 +108,7 @@ class ControllerCommonMenu extends Controller
         $data['marketplace'] = $this->url->link('extension/marketplace', 'token='.$this->session->data['token'], 'SSL');
         $data['module'] = $this->url->link('extension/module', 'token='.$this->session->data['token'], 'SSL');
         $data['order'] = $this->url->link('sale/order', 'token='.$this->session->data['token'], 'SSL');
+        $data['order_dashboard'] = $this->url->link('sale/orderdashboard', 'token='.$this->session->data['token'], 'SSL');
         $data['vendor_order'] = $this->url->link('sale/order', 'token='.$this->session->data['token'], 'SSL');
 
         $data['vendor_fast_order'] = $this->url->link('sale/fast_order', 'token='.$this->session->data['token'].'&filter_order_status=2,15,18,3,5&filter_order_day=today', 'SSL');
@@ -279,6 +280,7 @@ class ControllerCommonMenu extends Controller
 
         //Sales
         $data['preturn_vendor_order'] = $this->user->hasPermission('access', 'sale/vendor_order');
+        $data['preturn_order_dashboard'] = $this->user->hasPermission('access', 'sale/orderdashboard');
         $data['preturn_order'] = $this->user->hasPermission('access', 'sale/order');
         $data['preturn_order_recurring'] = $this->user->hasPermission('access', 'sale/recurring');
         $data['preturn_return'] = $this->user->hasPermission('access', 'sale/return');
@@ -457,6 +459,7 @@ class ControllerCommonMenu extends Controller
 
         $data['file_manager'] = $this->url->link('tool/file_manager', 'token='.$this->session->data['token'], 'SSL');
         $data['order'] = $this->url->link('sale/order', 'token='.$this->session->data['token'], 'SSL');
+        $data['order_dashboard'] = $this->url->link('sale/orderdashboard', 'token='.$this->session->data['token'], 'SSL');
 
         $data['product'] = $this->url->link('catalog/vendor_product', 'token='.$this->session->data['token'], 'SSL');
         $data['fast_order'] = $this->url->link('sale/fast_order', 'token='.$this->session->data['token'].'&filter_order_status=2,15,18,3,5&filter_order_day=today', 'SSL');
@@ -530,6 +533,7 @@ class ControllerCommonMenu extends Controller
         //Sales
         $data['preturn_fast_order'] = $this->user->hasPermission('access', 'sale/fast_order');
         $data['preturn_order'] = $this->user->hasPermission('access', 'sale/vendor_order');
+        $data['preturn_order_dashboard'] = $this->user->hasPermission('access', 'sale/orderdashboard');
         $data['preturn_order_recurring'] = $this->user->hasPermission('access', 'sale/recurring');
         $data['preturn_return'] = $this->user->hasPermission('access', 'sale/return');
 

@@ -46,6 +46,7 @@ $_['text_manufacturer'] = 'Manufacturers';
 $_['text_module'] = 'Modules';
 $_['text_option'] = 'Options';
 $_['text_order'] = 'Orders';
+$_['text_order_dashboard'] = 'Dashboard';
 $_['text_order_status'] = 'Order Statuses';
 $_['text_app_order_status'] = 'App Order Statuses';
 $_['text_app_order_status_mapping'] = 'App Order Statuses Mapping';

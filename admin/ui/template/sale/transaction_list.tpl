@@ -129,7 +129,7 @@
                                     
                                 </tr>
                                 <?php } ?>
-                                <!-- <tr>
+                                <tr>
                                  <td  colspan="3" class="text-right">
                                      <b>Grand Total</b>
                                     </td>
@@ -137,7 +137,7 @@
                                     <td class="text-right"><?php echo $order['grand_total']; ?></td>
                                     
                                     
-                                </tr>-->
+                                </tr>
                                 <?php } else { ?>
                                 <tr>
                                     <td class="text-center" colspan="9"><?php echo $text_no_results; ?></td>

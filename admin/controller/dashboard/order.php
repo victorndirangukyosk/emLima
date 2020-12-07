@@ -45,6 +45,22 @@ class ControllerDashboardOrder extends Controller
 
         return $this->load->view('dashboard/order.tpl', $data);
     }
+    
+    public function custom_index() {
+        $data['token'] = $this->session->data['token'];
+
+        // Total Orders
+        $this->load->model('sale/order');
+
+        //$order_total = $this->model_sale_order->getTotalOrders();
+        $data['filter_date_added'] = $this->request->get['start'];
+        $data['filter_date_added_end'] = $this->request->get['end'];
+        $order_total = $this->model_sale_order->getTotalOrdersCustom($data);
+        $data['total'] = $order_total;
+        $data['order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'], 'SSL');
+        $json['data'] = $data;
+        $this->response->setOutput(json_encode($json));
+    }
 
     public function vendor()
     {
