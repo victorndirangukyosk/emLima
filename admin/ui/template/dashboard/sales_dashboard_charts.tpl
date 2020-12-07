@@ -13,7 +13,7 @@
               </select>
           </div>
           <?php } ?>          
-          <div id="block-range" class="btn-group">
+          <div id="block-range" class="btn-group" style="margin-right:20px;">
             <li class="btn btn-default active" id="day"><?php echo $text_day; ?></li>
             <li class="btn btn-default" id="month"><?php echo $text_month; ?></li>
             <li class="btn btn-default " id="year"><?php echo $text_year; ?></li>
