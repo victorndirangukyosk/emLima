@@ -129,7 +129,7 @@ class ControllerCommonScheduler extends Controller
         if (isset($this->request->get['filter_date_end'])) {
             $filter_date_end = $this->request->get['filter_date_end'];
         } else {
-            $filter_date_end = date('Y-m-t',strtotime('last month')) . '<br/>';
+            $filter_date_end = date('Y-m-t',strtotime('last month'))  ;
 
         }
 
@@ -141,9 +141,9 @@ class ControllerCommonScheduler extends Controller
         $data['filter_date_end'] = $filter_date_end;
         $data['filter_order_status_id'] = $filter_order_status_id;
 
-        //echo "<pre>";print_r($data);die;
+        // echo "<pre>";print_r($data);die;
 
         $this->load->model('report/excel');
-        $this->model_report_excel->download_saleorderproductmissing($data);
+        $this->model_report_excel->mail_download_saleorderproductmissing($data);
     }
 }

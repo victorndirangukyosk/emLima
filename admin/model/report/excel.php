@@ -5513,12 +5513,16 @@ class ModelReportExcel extends Model {
             ]]);
 
             //subtitle
+
+        
+
             $from = date('d/m/Y', strtotime($data['filter_date_start']));
             $to = date('d/m/Y', strtotime($data['filter_date_end']));
+             
             $objPHPExcel->getActiveSheet()->mergeCells('A3:E3');
             $html1 = 'STOCK OUT PRODUCTS';
-
-            $html = 'FROM ' . $from . ' TO ' . $to;
+            //  echo "<pre>";print_r($to);die;
+            $html = 'FROM ' . $from . ' TO ' . $to ;
 
             $objPHPExcel->getActiveSheet()->setCellValue('A3', $html1);
 
