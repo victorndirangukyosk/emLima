@@ -55,6 +55,16 @@
                                 </div>
                             </div> 
 
+                             <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-stockout">Stock Out</label>
+                                <div class="col-sm-10">
+                                    <input type="email" name="config_stockout" value="<?php echo $config_stockout; ?>" placeholder="Email ID" id="input-stockout" class="form-control" />
+                                    <?php if ($error_stockout) { ?>
+                                    <div class="text-danger"><?php echo $error_stockout; ?></div>
+                                    <?php } ?>
+                                </div>
+                            </div> 
+
                       </div>
                        
                     </div>

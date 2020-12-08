@@ -2306,32 +2306,7 @@ class ControllerSettingSetting extends Controller
         //echo "<pre>";print_r($this->error);die;
 
         return !$this->error;
-    }
-
-    protected function validateEmail()
-    {
-        if (!$this->user->hasPermission('modify', 'setting/setting')) {
-            $this->error['warning'] = $this->language->get('error_permission');
-        }
- 
-
-        if ((utf8_strlen($this->request->post['config_consolidatedorder']) > 96) || !filter_var($this->request->post['config_consolidatedorder'], FILTER_VALIDATE_EMAIL)) {
-            $this->error['email'] = "Please enter correct Email";
-        }
-
-        if ((utf8_strlen($this->request->post['config_careers']) > 96) || !filter_var($this->request->post['config_careers'], FILTER_VALIDATE_EMAIL)) {
-            $this->error['email'] = "Please enter correct Email";
-        }
- 
-
-        if ($this->error && !isset($this->error['warning'])) {
-            $this->error['warning'] = $this->language->get('error_warning');
-        }
-
-        //echo "<pre>";print_r($this->error);die;
-
-        return !$this->error;
-    }
+    } 
 
     public function template()
     {
@@ -2668,6 +2643,20 @@ class ControllerSettingSetting extends Controller
 
     public function getEmailForm()
     {
+        // echo "<pre>";print_r($this->error);die;
+        if (isset($this->error['warning'])) {
+            $data['error_warning'] = $this->error['warning'];
+        } else {
+            $data['error_warning'] = '';
+        }          
+
+
+        if (isset($this->error['email'])) {
+            $data['error_warning'] = $this->error['email'];
+        } else {
+            $data['error_warning'] = '';
+        }   
+
         if (isset($this->session->data['success'])) {
             $data['success'] = $this->session->data['success'];
             unset($this->session->data['success']);
@@ -2693,6 +2682,15 @@ class ControllerSettingSetting extends Controller
         } else {
             $data['config_careers'] = '';
         }
+
+        if (isset($this->request->post['config_stockout'])) {
+            $data['config_stockout'] = $this->request->post['config_stockout'];
+        } elseif (isset($email_info[2]['value'])) {
+            $data['config_stockout'] =$email_info[2]['value'];
+        } else {
+            $data['config_stockout'] = '';
+        }
+
         $this->document->setTitle("Email Settings");
         $this->load->model('setting/setting');
 
@@ -2705,6 +2703,8 @@ class ControllerSettingSetting extends Controller
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
+        // echo "<pre>";print_r($data);die;
+
         $this->response->setOutput($this->load->view('setting/setting_email.tpl', $data));
     }
     public function setting_cancel()
@@ -2712,6 +2712,35 @@ class ControllerSettingSetting extends Controller
         $this->getEmailForm();
         
 
+    }
+
+    protected function validateEmail()
+    {
+        if (!$this->user->hasPermission('modify', 'setting/setting')) {
+            $this->error['warning'] = $this->language->get('error_permission');
+        }
+ 
+
+        if ((utf8_strlen($this->request->post['config_consolidatedorder']) > 96) || !filter_var($this->request->post['config_consolidatedorder'], FILTER_VALIDATE_EMAIL)) {
+            $this->error['email'] = "Please enter correct Email";
+        }
+
+        if ((utf8_strlen($this->request->post['config_careers']) > 96) || !filter_var($this->request->post['config_careers'], FILTER_VALIDATE_EMAIL)) {
+            $this->error['email'] = "Please enter correct Email";
+        }
+
+        if ((utf8_strlen($this->request->post['config_stockout']) > 96) || !filter_var($this->request->post['config_stockout'], FILTER_VALIDATE_EMAIL)) {
+            $this->error['email'] = "Please enter correct Email";
+        }
+ 
+
+        if ($this->error && !isset($this->error['warning'])) {
+            $this->error['warning'] = $this->language->get('error_warning');
+        }
+
+        //echo "<pre>";print_r($this->error);die;
+
+        return !$this->error;
     }
 
 }
