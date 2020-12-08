@@ -51,6 +51,8 @@ final class Tax
         $sql .= 'INNER JOIN '.DB_PREFIX.'tax_rate_to_customer_group tr2cg ON (tr2.tax_rate_id = tr2cg.tax_rate_id) ';
         $sql .= 'LEFT JOIN '.DB_PREFIX.'city c ON (tr2.city_id = c.city_id) ';
         $sql .= "WHERE tr2cg.customer_group_id = '".(int) $this->config->get('config_customer_group_id')."' ";
+        //echo $this->config->get('tax_status');exit;
+        
         if($this->config->get('tax_status') == 1) {
         $sql .= "AND c.city_id = 32 ORDER BY tr1.priority ASC";
         } else {
@@ -58,9 +60,7 @@ final class Tax
         }
 
         $tax_query = $this->db->query($sql);
-
         $this->tax_rates = [];
-
         foreach ($tax_query->rows as $result) {
             $this->tax_rates[$result['tax_class_id']][$result['tax_rate_id']] = [
                 'tax_rate_id' => $result['tax_rate_id'],
@@ -68,7 +68,9 @@ final class Tax
                 'rate' => $result['rate'],
                 'type' => $result['type'],
                 'priority' => $result['priority'],
+
             ];
+
         }
     }
 
