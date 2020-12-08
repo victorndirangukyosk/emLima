@@ -5323,6 +5323,318 @@ class ModelReportExcel extends Model {
         }
     }
 
+    public function mail_download_saleorderproductmissing($data) {
+        $this->load->library('excel');
+        $this->load->library('iofactory');
 
+        $this->load->model('sale/order');
+        $this->load->model('account/order');
+
+        $this->load->language('report/income');
+        $this->load->model('report/sale');
+        //$rows = $this->model_report_sale->getOrdersCommission($data);
+        //echo "<pre>";print_r($data);die;
+
+        $results = $this->model_report_sale->getstockoutOrders($data);
+
+        $data['orders'] = [];
+        $data['torders'] = [];
+
+        //echo "<pre>";print_r($results);die;
+        /* foreach ($results as $result) {
+
+
+
+          $is_edited = $this->model_sale_order->hasRealOrderProducts($result['order_id']);
+
+          if(!$is_edited) {
+          continue;
+          }
+
+          $EditedProducts = $this->model_sale_order->getRealOrderProducts($result['order_id']);
+
+          $OrignalProducts = $this->model_sale_order->getOrderProducts($result['order_id']);
+
+          foreach ($OrignalProducts as $OrignalProduct) {
+
+          $present = false;
+
+          foreach ($EditedProducts as $EditedProduct) {
+          if(!empty($OrignalProduct['name']) && $OrignalProduct['name'] == $EditedProduct['name']) {
+          $present = true;
+          }
+          }
+
+          if(!$present && !empty($OrignalProduct['name'])) {
+
+          $data['torders'][] = array(
+          'store' => $result['store_name'],
+          'model' => $OrignalProduct['model'],
+
+          'product_name' => $OrignalProduct['name'],
+          'unit' => $OrignalProduct['unit'],
+          'product_qty' => $OrignalProduct['quantity'],
+          );
+
+          }
+          }
+          }
+
+          foreach ($data['torders'] as $torders1) {
+
+          $ex = false;
+
+          foreach ($data['orders'] as $value1) {
+
+          if($value1['model'] == $torders1['model'] && $value1['store'] == $torders1['store']) {
+
+          $ex = true;
+
+          }
+
+          }
+
+          if(!$ex) {
+          $sum = 0;
+
+          foreach ($data['torders'] as $key => $torders2) {
+
+          if($torders1['model'] == $torders2['model'] && $torders1['store'] == $torders2['store']) {
+
+          $sum += $torders2['product_qty'];
+
+          unset($data['torders'][$key]);
+
+          }
+
+          }
+
+          $torders1['product_qty'] = $sum;
+
+          array_push($data['orders'], $torders1);
+          }
+          }
+         */
+
+        foreach ($results as $result) {
+            $is_edited = $this->model_sale_order->hasRealOrderProducts($result['order_id']);
+
+            if ($is_edited) {
+                //continue;
+                $OrignalProducts  = $this->model_sale_order->getRealOrderProducts($result['order_id']);
+            } else {
+                $OrignalProducts = $this->model_sale_order->getOrderProducts($result['order_id']);
+            }
+            // $EditedProducts = $this->model_sale_order->getRealOrderProducts($result['order_id']);
+            // $OrignalProducts = $this->model_sale_order->getOrderProducts($result['order_id']);
+
+            /* echo "<pre>";print_r($OrignalProducts);
+              echo "<pre>";print_r($EditedProducts);die; */
+
+            foreach ($OrignalProducts as $OrignalProduct) {
+                // $present = false;
+                // foreach ($EditedProducts as $EditedProduct) {
+                //     if(!empty($OrignalProduct['name']) && $OrignalProduct['name'] == $EditedProduct['name'] && $OrignalProduct['unit'] == $EditedProduct['unit']) {
+                //         $present = true;
+                //     }
+                // }!$present &&
+
+                if ( !empty($OrignalProduct['name'])) {
+                    $data['torders'][] = [
+                        'store' => $result['store_name'],
+                        'model' => $OrignalProduct['model'],
+                        'product_name' => $OrignalProduct['name'],
+                        'unit' => $OrignalProduct['unit'],
+                        'product_qty' => (float) ($OrignalProduct['quantity']),
+                    ];
+                }
+            }
+        }
+
+        //echo "<pre>";print_r($data['torders']);die;
+        foreach ($data['torders'] as $torders1) {
+            $ex = false;
+
+            foreach ($data['orders'] as $value1) {
+                if ($value1['product_name'] == $torders1['product_name'] && $value1['store'] == $torders1['store'] && $value1['unit'] == $torders1['unit']) {
+                    $ex = true;
+                }
+            }
+
+            if (!$ex) {
+                $sum = (float) 0.00;
+
+                foreach ($data['torders'] as $key => $torders2) {
+                    if ($torders1['product_name'] == $torders2['product_name'] && $torders1['store'] == $torders2['store']  &&  $torders1['unit'] == $torders2['unit']) {
+                        $sum += (float) $torders2['product_qty'];
+                        unset($data['torders'][$key]);
+                    }
+                }
+                $torders1['product_qty'] = (float) $sum;
+                ++$order_total;
+                array_push($data['orders'], $torders1);
+            }
+        }
+
+        $rows = $data['orders'];
+
+        //echo "<pre>";print_r($rows);die;
+
+        try {
+            // set appropriate timeout limit
+            set_time_limit(1800);
+
+            $objPHPExcel = new PHPExcel();
+            $objPHPExcel->getProperties()->setTitle('STOCK OUT PRODUCTS')->setDescription('none');
+            $objPHPExcel->setActiveSheetIndex(0);
+
+            // Field names in the first row
+            // ID, Photo, Name, Contact no., Reason, Valid from, Valid upto, Intime, Outtime
+            $title = [
+                'font' => [
+                    'bold' => true,
+                    'color' => [
+                        'rgb' => 'FFFFFF',
+                    ],
+                ],
+                'fill' => [
+                    'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                    'startcolor' => [
+                        'rgb' => '4390df',
+                    ],
+                ],
+            ];
+
+            //Company name, address
+            $objPHPExcel->getActiveSheet()->mergeCells('A1:E2');
+            $objPHPExcel->getActiveSheet()->setCellValue('A1', '');
+            $objPHPExcel->getActiveSheet()->getStyle('A1:E6')->applyFromArray(['font' => ['bold' => true], 'color' => [
+                    'rgb' => '4390df',
+            ]]);
+
+            //subtitle
+            $from = date('d/m/Y', strtotime($data['filter_date_start']));
+            $to = date('d/m/Y', strtotime($data['filter_date_end']));
+            $objPHPExcel->getActiveSheet()->mergeCells('A3:E3');
+            $html1 = 'STOCK OUT PRODUCTS';
+
+            $html = 'FROM ' . $from . ' TO ' . $to;
+
+            $objPHPExcel->getActiveSheet()->setCellValue('A3', $html1);
+
+            $objPHPExcel->getActiveSheet()->setCellValue('A4', $html);
+
+            $storename = $data['filter_store_name'];
+
+            if (empty($data['filter_store_name'])) {
+                $storename = 'Combined';
+            }
+
+            $objPHPExcel->getActiveSheet()->mergeCells('A4:E4');
+            $objPHPExcel->getActiveSheet()->mergeCells('A5:E5');
+
+            $objPHPExcel->getActiveSheet()->getStyle('A1:E3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $objPHPExcel->getActiveSheet()->getStyle('A4:E4')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+
+            foreach (range('A', 'L') as $columnID) {
+                $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+                        ->setAutoSize(true);
+            }
+
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 6, 'Store Name');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 6, 'Barcode');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 6, 'Product Name');
+
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 6, 'Unit');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 6, 'Ordered Qty');
+
+            // Fetching the table data
+
+            $row = 7;
+            foreach ($rows as $result) {
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $result['store']);
+                //$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['model']);
+                $objPHPExcel->getActiveSheet()->setCellValueExplicit('B' . $row, $result['model'], PHPExcel_Cell_DataType::TYPE_STRING);
+
+                //$worksheet->setCellValueExplicit('A'.$row, $val, PHPExcel_Cell_DataType::TYPE_STRING);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['product_name']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['unit']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['product_qty']);
+
+                ++$row;
+            }
+
+            $objPHPExcel->setActiveSheetIndex(0);
+            /* $objWriter = IOFactory::createWriter($objPHPExcel, 'Excel5');
+
+              // Sending headers to force the user to download the file
+              header('Content-Type: application/vnd.ms-excel'); */
+              $filename="stock_out_products.xlsx";
+            $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+            // header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+
+            // header('Content-Disposition: attachment;filename="stock_out_products.xlsx"');
+            // header('Cache-Control: max-age=0');
+            // $objWriter->save('php://output');
+            
+            
+            
+            if (!file_exists(DIR_UPLOAD . 'schedulertemp/')) {
+                mkdir(DIR_UPLOAD . 'schedulertemp/', 0777, true);
+            }
+            // unlink($filename);
+            $folder_path = DIR_UPLOAD . 'schedulertemp'; 
+            $files = glob($folder_path.'/*');    
+            // Deleting all the files in the list 
+            foreach($files as $file) {             
+                if(is_file($file)) 
+                    unlink($file); // Delete the given file  
+                } 
+                // echo "<pre>";print_r($file);;
+              $objWriter->save(DIR_UPLOAD . 'schedulertemp/' .$filename);            
+
+                #region mail sending 
+                // $maildata['deliverydate']=$deliveryDate;
+                $subject = $this->emailtemplate->getSubject('ConsolidatedOrderSheet', 'ConsolidatedOrderSheet_1', $maildata);
+                $message = $this->emailtemplate->getMessage('ConsolidatedOrderSheet', 'ConsolidatedOrderSheet_1', $maildata);
+                
+                // $subject = "Consolidated Order Sheet";                 
+                // $message = "Please find the attachment.  <br>";
+                // $message = $message ."<li> Full Name :".$first_name ."</li><br><li> Email :".$email ."</li><br><li> Phone :".$phone ."</li><br>";
+                $this->load->model('setting/setting');
+                $email = $this->model_setting_setting->getEmailSetting('consolidatedorder');
+                 
+                if(strpos( $email,"@")==false)//if mail Id not set in define.php
+               {
+               $email = "sridivya.talluri@technobraingroup.com";
+               }
+                // $bccemail = "sridivya.talluri@technobraingroup.com";
+                //   echo "<pre>";print_r($email);die;
+                $filepath = DIR_UPLOAD . 'schedulertemp/' .$filename;
+                $mail = new Mail($this->config->get('config_mail'));
+                $mail->setTo($email);
+                $mail->setBCC($bccemail);
+                $mail->setFrom($this->config->get('config_from_email'));
+                $mail->setSender($this->config->get('config_name'));
+                $mail->setSubject($subject);
+                $mail->setHTML($message);
+                $mail->addAttachment($filepath);
+                $mail->send();
+                #endregion
+            
+            exit;
+        } catch (Exception $e) {
+            $errstr = $e->getMessage();
+            $errline = $e->getLine();
+            $errfile = $e->getFile();
+            $errno = $e->getCode();
+            $this->session->data['export_import_error'] = ['errstr' => $errstr, 'errno' => $errno, 'errfile' => $errfile, 'errline' => $errline];
+            if ($this->config->get('config_error_log')) {
+                $this->log->write('PHP ' . get_class($e) . ':  ' . $errstr . ' in ' . $errfile . ' on line ' . $errline);
+            }
+
+            return;
+        }
+    }
 
 }
