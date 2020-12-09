@@ -2728,15 +2728,15 @@ class ControllerSettingSetting extends Controller
         //     }
         //   }
         // if ((utf8_strlen($this->request->post['config_consolidatedorder']) > 96) || !filter_var($this->request->post['config_consolidatedorder'], FILTER_VALIDATE_EMAIL)) {
-        if ((utf8_strlen($this->request->post['config_consolidatedorder']) > 96) ||(strpos( $this->request->post['config_consolidatedorder'],"@")==false) ) {
+        if ((strpos( $this->request->post['config_consolidatedorder'],"@")==false) ) {
             $this->error['email'] = "Please enter correct Email";
         }
 
-        if ((utf8_strlen($this->request->post['config_careers']) > 96) ||(strpos( $this->request->post['config_careers'],"@")==false) ) {
+        if ((strpos( $this->request->post['config_careers'],"@")==false) ) {
             $this->error['email'] = "Please enter correct Email";
         }
 
-        if ((utf8_strlen($this->request->post['config_stockout']) > 96) || (strpos( $this->request->post['config_stockout'],"@")==false) ) {
+        if ((strpos( $this->request->post['config_stockout'],"@")==false) ) {
             $this->error['email'] = "Please enter correct Email";
         }
  
