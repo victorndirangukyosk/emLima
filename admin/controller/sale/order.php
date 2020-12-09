@@ -349,7 +349,7 @@ class ControllerSaleOrder extends Controller {
                         'produce_type' => $product['produce_type'],
                         'product_note' => $product['product_note'],
                         /*OLD PRICE WITH TAX*///'price' => $product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0),
-                        'price' => $product['price'],
+                        'price' => number_format((float)$product['price'], 2, '.', ''),
                         //'total' => $product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0)
                         /*OLD TOTAL WITH TAX*///'total' => ($product['price'] * $product['quantity']) + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0),
                         'total' => ($product['price'] * $product['quantity']),
