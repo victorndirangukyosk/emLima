@@ -2720,16 +2720,23 @@ class ControllerSettingSetting extends Controller
             $this->error['warning'] = $this->language->get('error_permission');
         }
  
-
-        if ((utf8_strlen($this->request->post['config_consolidatedorder']) > 96) || !filter_var($this->request->post['config_consolidatedorder'], FILTER_VALIDATE_EMAIL)) {
+        // foreach($emails as $email){
+        //     if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
+        //        $error['Other'][] = "<div class=error>$email is not valid Email.</div>";
+        //     }else{
+        //        $filtered_emails[] = $email
+        //     }
+        //   }
+        // if ((utf8_strlen($this->request->post['config_consolidatedorder']) > 96) || !filter_var($this->request->post['config_consolidatedorder'], FILTER_VALIDATE_EMAIL)) {
+        if ((utf8_strlen($this->request->post['config_consolidatedorder']) > 96) ||(strpos( $this->request->post['config_consolidatedorder'],"@")==false) ) {
             $this->error['email'] = "Please enter correct Email";
         }
 
-        if ((utf8_strlen($this->request->post['config_careers']) > 96) || !filter_var($this->request->post['config_careers'], FILTER_VALIDATE_EMAIL)) {
+        if ((utf8_strlen($this->request->post['config_careers']) > 96) ||(strpos( $this->request->post['config_careers'],"@")==false) ) {
             $this->error['email'] = "Please enter correct Email";
         }
 
-        if ((utf8_strlen($this->request->post['config_stockout']) > 96) || !filter_var($this->request->post['config_stockout'], FILTER_VALIDATE_EMAIL)) {
+        if ((utf8_strlen($this->request->post['config_stockout']) > 96) || (strpos( $this->request->post['config_stockout'],"@")==false) ) {
             $this->error['email'] = "Please enter correct Email";
         }
  
