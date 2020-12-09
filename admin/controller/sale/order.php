@@ -348,9 +348,11 @@ class ControllerSaleOrder extends Controller {
                         'quantity' => $product['quantity'],
                         'produce_type' => $product['produce_type'],
                         'product_note' => $product['product_note'],
-                        'price' => $product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0),
+                        /*OLD PRICE WITH TAX*///'price' => $product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0),
+                        'price' => $product['price'],
                         //'total' => $product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0)
-                        'total' => ($product['price'] * $product['quantity']) + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0),
+                        /*OLD TOTAL WITH TAX*///'total' => ($product['price'] * $product['quantity']) + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0),
+                        'total' => ($product['price'] * $product['quantity']),
                         'variations' => $variations
                     ];
                 }
@@ -5325,7 +5327,24 @@ class ControllerSaleOrder extends Controller {
             $subTotal = $sumTotal;
 
             //$log->write("tax_total start ");
-            $tax_total = $this->model_tool_image->getTaxTotal($tempProds, $store_id);
+            $this->load->model('account/customer');
+            $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
+            /* IF CUSTOMER SUB CUSTOMER */
+            $parent_customer_info = NULL;
+            $pricing_category = NULL;
+            if (isset($customer_info) && $customer_info['parent'] > 0) {
+            $parent_customer_info = $this->model_account_customer->getCustomer($customer_info['parent']);
+            }
+            
+            if ($parent_customer_info == NULL && isset($customer_info['customer_category']) && $customer_info['customer_category'] != NULL) {
+            $pricing_category =  $customer_info['customer_category'];   
+            }
+            
+            if ($parent_customer_info != NULL && isset($parent_customer_info) && isset($parent_customer_info['customer_category']) && $parent_customer_info['customer_category'] != NULL) {
+            $pricing_category =  $parent_customer_info['customer_category'];       
+            }
+            
+            $tax_total = $this->model_tool_image->getTaxTotal($tempProds, $store_id, $pricing_category);
 
             //echo "<pre>";print_r($tax_total);die;
 
