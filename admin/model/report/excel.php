@@ -5471,7 +5471,7 @@ class ModelReportExcel extends Model {
                     }
                 }
                 $torders1['product_qty'] = (float) $sum;
-                ++$order_total;
+                // ++$order_total;
                 array_push($data['orders'], $torders1);
             }
         }
@@ -5598,19 +5598,23 @@ class ModelReportExcel extends Model {
               $objWriter->save(DIR_UPLOAD . 'schedulertemp/' .$filename);            
 
                 #region mail sending 
-                // $maildata['deliverydate']=$deliveryDate;
-                $subject = $this->emailtemplate->getSubject('ConsolidatedOrderSheet', 'ConsolidatedOrderSheet_1', $maildata);
-                $message = $this->emailtemplate->getMessage('ConsolidatedOrderSheet', 'ConsolidatedOrderSheet_1', $maildata);
+                 $maildata['fromdate']=$from;
+                 $maildata['todate']=$to;
+                $subject = $this->emailtemplate->getSubject('StockOut', 'StockOut_1', $maildata);
+                $message = $this->emailtemplate->getMessage('StockOut', 'StockOut_1', $maildata);
                 
                 // $subject = "Consolidated Order Sheet";                 
                 // $message = "Please find the attachment.  <br>";
                 // $message = $message ."<li> Full Name :".$first_name ."</li><br><li> Email :".$email ."</li><br><li> Phone :".$phone ."</li><br>";
                 $this->load->model('setting/setting');
-                $email = $this->model_setting_setting->getEmailSetting('consolidatedorder');
+                $email = $this->model_setting_setting->getEmailSetting('stockout');
                  
-                if(strpos( $email,"@")==false)//if mail Id not set in define.php
+                if(strpos( $email,"@")==false)//if mail Id not set
                {
-               $email = "sridivya.talluri@technobraingroup.com";
+                //$email = "sridivya.talluri@technobraingroup.com";
+                $log = new Log('error.log');
+                $this->log->write('Email Id not configured to send Stock out monthly report');
+
                }
                 // $bccemail = "sridivya.talluri@technobraingroup.com";
                 //   echo "<pre>";print_r($email);die;
