@@ -5305,28 +5305,7 @@ class ControllerSaleOrder extends Controller {
             //$log->write($datas['products']);
 
             $vendor_id = $this->model_sale_order->getVendorId($store_id);
-
-            //echo "<pre>";print_r($datas['products']);die;
-            foreach ($datas['products'] as $p_id_key => $updateProduct) {
-                $updateProduct['store_id'] = $store_id;
-                $updateProduct['vendor_id'] = $vendor_id;
-
-                if (is_numeric($p_id_key)) {
-                    //echo "<pre>";print_r($datas['products']);die;
-                    $products = $this->model_sale_order->updateOrderProduct($order_id, $p_id_key, $updateProduct);
-                } else {
-                    //echo "<pre>";print_r($updateProduct);die;
-                    $products = $this->model_sale_order->updateOrderNewProduct($order_id, $updateProduct['product_id'], $updateProduct);
-                }
-
-                $sumTotal += ($updateProduct['price'] * $updateProduct['quantity']);
-
-                array_push($tempProds['products'], $updateProduct);
-            }
-
-            $subTotal = $sumTotal;
-
-            //$log->write("tax_total start ");
+            
             $this->load->model('account/customer');
             $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
             /* IF CUSTOMER SUB CUSTOMER */
@@ -5343,7 +5322,32 @@ class ControllerSaleOrder extends Controller {
             if ($parent_customer_info != NULL && isset($parent_customer_info) && isset($parent_customer_info['customer_category']) && $parent_customer_info['customer_category'] != NULL) {
             $pricing_category =  $parent_customer_info['customer_category'];       
             }
-            
+
+            //echo "<pre>";print_r($datas['products']);die;
+            foreach ($datas['products'] as $p_id_key => $updateProduct) {
+                $updateProduct['store_id'] = $store_id;
+                $updateProduct['vendor_id'] = $vendor_id;
+                
+                if (is_numeric($p_id_key)) {
+                    $updateProduct_tax_total = NULL;
+                    //echo "<pre>";print_r($datas['products']);die;
+                    $updateProduct_tax_total = $this->model_tool_image->getTaxTotalCustom($updateProduct, $store_id, $pricing_category);
+                    $products = $this->model_sale_order->updateOrderProduct($order_id, $p_id_key, $updateProduct, $updateProduct_tax_total);
+                } else {
+                    $updateProduct_tax_total = NULL;
+                    //echo "<pre>";print_r($updateProduct);die;
+                    $updateProduct_tax_total = $this->model_tool_image->getTaxTotalCustom($updateProduct, $store_id, $pricing_category);
+                    $products = $this->model_sale_order->updateOrderNewProduct($order_id, $updateProduct['product_id'], $updateProduct, $updateProduct_tax_total);
+                }
+
+                $sumTotal += ($updateProduct['price'] * $updateProduct['quantity']);
+
+                array_push($tempProds['products'], $updateProduct);
+            }
+
+            $subTotal = $sumTotal;
+
+            //$log->write("tax_total start ");
             $tax_total = $this->model_tool_image->getTaxTotal($tempProds, $store_id, $pricing_category);
 
             //echo "<pre>";print_r($tax_total);die;
