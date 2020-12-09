@@ -5,7 +5,7 @@
         <div class="container-fluid">
             <div class="pull-right">
                 <?php if (!$this->user->isVendor()): ?>
-                <button type="" id="button-shipping" form="form-order" formaction="<?php echo $shipping; ?>" data-toggle="tooltip" title="<?php echo $button_shipping_print; ?>" class="btn btn-default"><i class="fa fa-truck"></i></button>
+                <!--<button type="" id="button-shipping" form="form-order" formaction="<?php echo $shipping; ?>" data-toggle="tooltip" title="<?php echo $button_shipping_print; ?>" class="btn btn-default"><i class="fa fa-truck"></i></button>-->
                 <?php endif ?>  
 
 
