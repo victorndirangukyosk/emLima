@@ -232,4 +232,85 @@ class ControllerReportSaleOrder extends Controller
         header('Content-type: text/json');
         echo json_encode($json);
     }
+
+    public function saleorderexcel()
+    {
+        $this->load->language('report/sale_order');
+
+        $this->document->setTitle($this->language->get('heading_title'));
+
+        if (isset($this->request->get['filter_city'])) {
+            $filter_city = $this->request->get['filter_city'];
+        } else {
+            $filter_city = '';
+        }
+        
+        if (isset($this->request->get['filter_customer'])) {
+            $filter_customer = $this->request->get['filter_customer'];
+        } else {
+            $filter_customer = '';
+        }
+
+        if (isset($this->request->get['filter_date_start'])) {
+            $filter_date_start = $this->request->get['filter_date_start'];
+        } else {
+            $filter_date_start = date('Y-m-d', strtotime(date('Y').'-'.date('m').'-01'));
+        }
+
+        if (isset($this->request->get['filter_date_end'])) {
+            $filter_date_end = $this->request->get['filter_date_end'];
+        } else {
+            $filter_date_end = date('Y-m-d');
+        }
+
+        if (isset($this->request->get['filter_group'])) {
+            $filter_group = $this->request->get['filter_group'];
+        } else {
+            $filter_group = 'week';
+        }
+
+        if (isset($this->request->get['filter_order_status_id'])) {
+            $filter_order_status_id = $this->request->get['filter_order_status_id'];
+        } else {
+            $filter_order_status_id = 0;
+        }
+
+         $this->load->model('report/sale');
+
+        $data['orders'] = [];
+
+        $filter_data = [
+            'filter_city' => $filter_city,
+            'filter_customer' => $filter_customer,
+            'filter_date_start' => $filter_date_start,
+            'filter_date_end' => $filter_date_end,
+            'filter_group' => $filter_group,
+            'filter_order_status_id' => $filter_order_status_id,
+            // 'start' => ($page - 1) * $this->config->get('config_limit_admin'),
+            // 'limit' => $this->config->get('config_limit_admin'),
+        ];
+
+        // $order_total = $this->model_report_sale->getTotalOrders($filter_data);
+
+        $results = $this->model_report_sale->getOrders($filter_data);
+
+        foreach ($results as $result) {
+            $data['orders'][] = [
+                'date_start' => date($this->language->get('date_format_short'), strtotime($result['date_start'])),
+                'date_end' => date($this->language->get('date_format_short'), strtotime($result['date_end'])),
+                'date_starto' => $result['date_start'],
+                'date_endo' => $result['date_end'],
+                'orders' => $result['orders'],
+                'products' => $result['products'],
+                'tax' => $this->currency->format($result['tax'], $this->config->get('config_currency')),
+                'total' => $this->currency->format($result['total'], $this->config->get('config_currency')),
+                'totalvalue' => $result['total'],
+            ];
+        }
+
+        $data['filter_date_start']=$filter_date_start;
+        $data['filter_date_end']=$filter_date_end;
+        $this->load->model('report/excel');
+        $this->model_report_excel->download_sale_order_excel($data);
+    }
 }

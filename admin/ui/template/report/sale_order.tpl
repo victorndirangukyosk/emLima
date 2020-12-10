@@ -15,6 +15,7 @@
       <div class="panel-heading">
         <h3 class="panel-title"><i class="fa fa-bar-chart"></i> <?php echo $text_list; ?></h3>
           <div class="pull-right">
+                    <button type="button" onclick="excel();" data-toggle="tooltip" title="" class="btn btn-success btn-sm" data-original-title="Download Excel"><i class="fa fa-download"></i></button>
                 <button type="button" data-toggle="tooltip" title="<?php echo $button_show_filter; ?>" class="btn btn-primary btn-sm" id="showFilter"><i class="fa fa-eye"></i></button>
                 <button type="button" data-toggle="tooltip" title="<?php echo $button_hide_filter; ?>" class="btn btn-primary btn-sm" id="hideFilter"><i class="fa fa-eye-slash"></i></button>
           </div>
@@ -246,6 +247,52 @@ $('.date').datetimepicker({
                 location = url;
              
         });
+
+
+
+        
+function excel() {
+       url = 'index.php?path=report/sale_order/saleorderexcel&token=<?php echo $token; ?>';
+      
+         	var filter_city = $('input[name=\'filter_city\']').val();
+	
+	if (filter_city) {
+		url += '&filter_city=' + encodeURIComponent(filter_city);
+	}
+        
+        var filter_customer = $('input[name=\'filter_customer\']').val();
+	
+	if (filter_customer) {
+		url += '&filter_customer=' + encodeURIComponent(filter_customer);
+	}
+        
+        var filter_date_start = $('input[name=\'filter_date_start\']').val();
+	
+	if (filter_date_start) {
+		url += '&filter_date_start=' + encodeURIComponent(filter_date_start);
+	}
+
+	var filter_date_end = $('input[name=\'filter_date_end\']').val();
+	
+	if (filter_date_end) {
+		url += '&filter_date_end=' + encodeURIComponent(filter_date_end);
+	}
+		
+	var filter_group = $('select[name=\'filter_group\']').val();
+	
+	if (filter_group) {
+		url += '&filter_group=' + encodeURIComponent(filter_group);
+	}
+	
+	var filter_order_status_id = $('select[name=\'filter_order_status_id\']').val();
+	
+	if (filter_order_status_id != 0) {
+		url += '&filter_order_status_id=' + encodeURIComponent(filter_order_status_id);
+	}	
+   
+    location = url;
+}
+
         </script>
 <style>
 
