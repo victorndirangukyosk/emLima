@@ -634,9 +634,11 @@ class ModelAccountCustomer extends Model {
     public function UpdateOrderApprovalAccess($parent_id, $customer_id, $status, $role) {
         $sql = 'UPDATE  ' . DB_PREFIX . "customer SET  order_approval_access = '0', order_approval_access_role = NULL WHERE parent = '" . (int) $parent_id . "' AND order_approval_access = 1 AND order_approval_access_role = '" . $role . "'";
         $this->db->query($sql);
-
+        
+        if($customer_id != NULL) {
         $sql2 = 'UPDATE  ' . DB_PREFIX . "customer SET  order_approval_access = '" . (int) $status . "', order_approval_access_role = '" . $role . "' WHERE parent = '" . (int) $parent_id . "' AND customer_id ='" . (int) $customer_id . "'";
         $this->db->query($sql2);
+        }
     }
     
     public function UpdateCustomerOrderApproval($customer_id, $status) {

@@ -835,13 +835,13 @@
         console.log($('#head_chef').val());
         console.log($('#procurement_person').val());
         if (this.id == 'assign_head_chef' && $('#head_chef').val() == '') {
-            alert('Please select option');
-            return false;
+            //alert('Please select option');
+            //return false;
         }
 
         if (this.id == 'assign_procurement_person' && $('#procurement_person').val() == '') {
-            alert('Please select option');
-            return false;
+            //alert('Please select option');
+            //return false;
         }
         $.ajax({
             url: 'index.php?path=account/sub_users/assignorderapprovals',
