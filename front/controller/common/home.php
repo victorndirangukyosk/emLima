@@ -859,6 +859,7 @@ class ControllerCommonHome extends Controller {
         $data['logged'] = $this->customer->isLogged();
         $data['account'] = $this->url->link('account/account', '', 'SSL');
         $data['dashboard'] = $this->url->link('account/dashboard', '', 'SSL');
+        $data['po_ocr'] = $this->url->link('account/ocr', '', 'SSL');
 
         $data['register'] = $this->url->link('account/register', '', 'SSL');
         $data['login'] = $this->url->link('account/login', '', 'SSL');

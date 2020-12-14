@@ -180,12 +180,14 @@
                 <?php }else{?>
                 <div>
                   <div class="menuset">
-                    <div class="newset" style="margin-top: 20px;"><a class="btn" href="<?= $dashboard ?>">
+                    <div class="newset" style="margin-top: 20px;"><a class="btn" href="#">
                         <span><?= $full_name ?></span> </a>
 
                       <div class="dropdownset" style="display:none;">
                         <div class="dropdownsetnew" style="margin-top: 10px;"><a class="header__upper-deck-item-link"
-                            href="<?= $dashboard ?>"><i class="fa fa-user"></i>Dashboard &nbsp;<span
+                            href="<?= $dashboard ?>"><i class="fa fa-user"></i>Dashboard</a></div>
+                        <div class="dropdownsetnew"><a class="header__upper-deck-item-link"
+                            href="<?= $po_ocr ?>"><i class="fa fa-file-text"></i>Purchase Order &nbsp;<span
                               class="badge badge-pill badge-light">New</span></a></div>
                                <div class="dropdownsetnew"  ><a class="header__upper-deck-item-link"
                                    href="<?= $wishlist ?>" ><i class="fa fa-shopping-basket"></i>My Basket</a></div>

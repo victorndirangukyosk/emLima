@@ -876,9 +876,10 @@ class ModelAssetsProduct extends Model
     
     public function getProductsForHomePage($data = [])
     {   
+        // echo "<pre>";print_r($_SESSION);die;
         $disabled_products_string = NULL;
         if(isset($_SESSION['customer_category']) && $_SESSION['customer_category'] != NULL) {
-        $category_pricing_disabled_products = $this->getCategoryPriceStatusByCategoryName($_SESSION['customer_category'], 0);   
+        $category_pricing_disabled_products = $this->getCategoryPriceStatusByCategoryName($_SESSION['customer_category'], 0);
         //$log = new Log('error.log');
         //$log->write('category_pricing_disabled_products');
         $disabled_products = array_column($category_pricing_disabled_products, 'product_store_id');
