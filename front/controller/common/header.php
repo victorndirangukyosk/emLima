@@ -1746,6 +1746,10 @@ class ControllerCommonHeader extends Controller
         } else {
             $data['class'] = 'common-home';
         }
+        
+        $this->load->model('assets/category');
+        $categories = $this->model_assets_category->getCategoryByStoreId(ACTIVE_STORE_ID, 0);
+        $data['categories'] = $categories;
 
         $data['language'] = $this->load->controller('common/language/dropdown');
         if (isset($this->session->data['config_store_id'])) {
