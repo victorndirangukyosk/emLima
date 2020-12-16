@@ -121,7 +121,7 @@
                                             <option value="">- Select categories-</option>
                                             <?php foreach($categories as $categoty){
                                             //print_r($categoty);exit;?>
-                                            <option value="<?=$categoty['id']?>"><?=$categoty['name']?></option>
+                                            <option value="<?=$categoty['category_id']?>"><?=$categoty['name']?></option>
                                             <?php } ?>
 
                                         </select>
