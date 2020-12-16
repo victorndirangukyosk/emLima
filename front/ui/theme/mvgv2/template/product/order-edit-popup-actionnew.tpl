@@ -214,7 +214,7 @@ $(function() {
     if($optionvalue>0)
          productQuantityInput.val($optionvalue); 
       let dataHolder = $('#editorderadd-cart-btnnew');
-     dataHolder.attr('data-action', 'add'); 
+     dataHolder.attr('data-action', 'editorderadd'); 
 
     }
 });
@@ -250,12 +250,12 @@ $(document).delegate('.product-variation', 'change', function() {
     {
       
  wishlistHolder.text("Added To List");
-  wishlistHolder.attr('data-action','delete');  
+  wishlistHolder.attr('data-action','editorderdelete');  
   wishlistbuttonHolder.attr('style','background-color:#ea7128');
     }
     else{
 wishlistHolder.text("Add To My List");
-  wishlistHolder.attr('data-action','add');  
+  wishlistHolder.attr('data-action','editorderadd');  
     wishlistbuttonHolder.attr('style','background-color:grey');
 
 
@@ -267,14 +267,14 @@ wishlistHolder.text("Add To My List");
     if(qty_in_cart1>0)
     {
     productQuantityInput.val(qty_in_cart1); 
-    dataHolder.attr('data-action', 'update');
+    dataHolder.attr('data-action', 'editorderupdate');
      newcartId.attr('style','background-color:#ea7128');
 
     }
     else{
     
     productQuantityInput.val(''); 
-    dataHolder.attr('data-action', 'add');
+    dataHolder.attr('data-action', 'editorderadd');
       newcartId.attr('style','');
 
     }    
@@ -285,7 +285,7 @@ wishlistHolder.text("Add To My List");
     
      if($(".produce-type"). length)
     {
-         dataHolder.attr('data-action', 'add');
+         dataHolder.attr('data-action', 'editorderadd');
     }
 
 
@@ -314,25 +314,25 @@ $(document).delegate('.produce-type', 'change', function() {
     if(oldquantity>0)   
     {
     productQuantityInput.val(oldquantity); 
-    // dataHolder.attr('data-action', 'update');
+    // dataHolder.attr('data-action', 'editorderupdate');
     newcartId.attr('style','background-color:#ea7128');
      }
      else{
     
      productQuantityInput.val(''); 
-     //dataHolder.attr('data-action', 'add');
+     //dataHolder.attr('data-action', 'editorderadd');
      newcartId.attr('style','');
 
      }    
-     dataHolder.attr('data-action', 'add'); 
+     dataHolder.attr('data-action', 'editorderadd'); 
     }
     else{
           
         productQuantityInput.val(mainquantity); 
         if(mainquantity>0)
-        dataHolder.attr('data-action', 'update');
+        dataHolder.attr('data-action', 'editorderupdate');
         else
-        dataHolder.attr('data-action', 'add');
+        dataHolder.attr('data-action', 'editorderadd');
 
     }
     
@@ -351,7 +351,7 @@ $('#add-wishlist').on('click', function() {
 if($action=='add')
 {
     $(this).text("Added To List");
-  $(this).attr('data-action','delete');
+  $(this).attr('data-action','editorderdelete');
   wishlistbuttonHolder.attr('style','background-color:#ea7128');
 
   $('.product-variation option:selected').attr("data-iswl",1);
@@ -375,7 +375,7 @@ if($action=='add')
 else{
   $(this).text("Add To My List");
 
-  $(this).attr('data-action','add');
+  $(this).attr('data-action','editorderadd');
   wishlistbuttonHolder.attr('style','background-color:grey');
 
 
