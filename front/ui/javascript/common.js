@@ -515,7 +515,7 @@ var cart = {
 
 		console.log("cart update api js file");
 		$.ajax({
-			url: 'index.php?path=checkout/cart/update',
+			url: 'index.php?path=account/order/edit_full_order',
 			type: 'post',
 			data: 'key=' + key + '&quantity=' + (typeof (quantity) != 'undefined' ? quantity : 1) + '&product_note=' + product_note + '&produce_type=' + produce_type,//+ '&ripe=' +ripe
 			dataType: 'json',
@@ -706,7 +706,7 @@ var cart = {
 		$('.checkout-loader').show();
 
 		$.ajax({
-			url: 'index.php?path=checkout/cart/remove',
+			url: 'index.php?path=account/order/edit_full_order',
 			type: 'post',
 			data: 'key=' + key,
 			dataType: 'json',
@@ -814,7 +814,7 @@ var cart = {
         'editorderupdate_product_type': function (key, value) {
 		console.log("update product_type");
 		$.ajax({
-			url: 'index.php?path=checkout/cart/updateProductType',
+			url: 'index.php?path=account/order/edit_full_order',
 			type: 'post',
 			data: 'key=' + key + '&product_type=' + value,
 			dataType: 'json',
