@@ -977,4 +977,223 @@ class ControllerProductProduct extends Controller
             return false;
         }
     }
+    
+    public function order_edit_view()
+    {
+        //echo "<pre>";print_r("erv");die;
+        // unset($this->session->data['temp_cart']);
+        // echo "<pre>";print_r("ss");die;
+        //$data['product']['store_product_variation_id'] = 0;
+        $this->load->language('product/product');
+
+        $this->load->model('tool/image');
+
+        if (isset($this->request->get['product_store_id'])) {
+            $product_store_id = $this->request->get['product_store_id'];
+        } else {
+            $product_store_id = 0;
+        }
+
+        if ($this->session->data['config_store_id']) {
+            $store_id = $this->session->data['config_store_id'];
+        } else {
+            $store_id = $this->request->get['store_id'];
+        }
+        $data['button_add'] = $this->language->get('button_add');
+        $data['text_incart'] = $this->language->get('text_incart');
+        //recipe
+        $this->load->model('assets/product');
+
+        $product_info = $this->model_assets_product->getProductForPopup($product_store_id, false, $store_id);
+
+        //echo "<pre>";print_r($product_info);die;
+        $data['text_unit'] = $this->language->get('text_unit');
+
+        $data['text_product_highlights'] = $this->language->get('text_product_highlights');
+
+        $data['text_description'] = $this->language->get('text_description');
+
+        $data['text_no_description'] = $this->language->get('text_no_description');
+
+        $data['text_add_to_list'] = $this->language->get('text_add_to_list');
+
+        $data['text_features'] = $this->language->get('text_features');
+
+        $data['text_disclaimer'] = $this->language->get('text_disclaimer');
+
+        if ($this->request->server['HTTPS']) {
+            $server = $this->config->get('config_ssl');
+        } else {
+            $server = $this->config->get('config_url');
+        }
+
+        $data['base'] = $server;
+
+        //echo "<pre>";print_r($product_info);die;
+
+        if ($product_info) {
+            if ($product_info['image'] != NULL && file_exists(DIR_IMAGE.$product_info['image'])) {
+                $thumb = $this->model_tool_image->resize($product_info['image'], $this->config->get('config_image_thumb_width'), $this->config->get('config_image_thumb_height'));
+            } else if($product_info['image'] == NULL || !file_exists(DIR_IMAGE.$product_info['image'])) {
+                $thumb = $this->model_tool_image->resize('placeholder.png', $this->config->get('config_image_thumb_width'), $this->config->get('config_image_thumb_height'));
+            }
+
+            if ($product_info['image'] != NULL && file_exists(DIR_IMAGE.$product_info['image'])) {
+                $zoom_thumb = $this->model_tool_image->resize($product_info['image'], $this->config->get('config_zoomimage_thumb_width'), $this->config->get('config_zoomimage_thumb_height'));
+            } else if($product_info['image'] == NULL || !file_exists(DIR_IMAGE.$product_info['image'])) {
+                $zoom_thumb = $this->model_tool_image->resize('placeholder.png', $this->config->get('config_zoomimage_thumb_width'), $this->config->get('config_zoomimage_thumb_height'));
+            }
+
+            $data['images'] = [];
+
+            $results = $this->model_assets_product->getProductImages($product_info['product_id']);
+            $this->load->model('account/wishlist');
+
+            $isWishListID = $this->model_account_wishlist->getWishlistIDCustomerProduct($product_info['product_id']);
+
+            foreach ($results as $result) {
+                $data['images'][] = [
+                    'popup' => $this->model_tool_image->resize($result['image'], $this->config->get('config_image_thumb_width'), $this->config->get('config_image_thumb_height')),
+                    'thumb' => $this->model_tool_image->resize($result['image'], $this->config->get('config_image_thumb_width'), $this->config->get('config_image_thumb_height')),
+                    'zoom_popup' => $this->model_tool_image->resize($result['image'], $this->config->get('config_zoomimage_thumb_width'), $this->config->get('config_zoomimage_thumb_height')),
+                ];
+            }
+            //get qty in cart
+            //$key = base64_encode( serialize( array( 'product_store_id' => (int) $product_info['product_store_id'], 'store_id'=>$this->session->data['config_store_id'] ) ) );
+            // $key = base64_encode( serialize( array( 'product_store_id' => (int) $product_info['product_store_id'], 'store_id'=>($this->session->data['config_store_id']) ? $this->session->data['config_store_id'] : $store_id ) ) );
+
+            $key = base64_encode(serialize(['product_store_id' => (int) $product_info['product_store_id'], 'store_id' => $store_id]));
+            $s_price = 0;
+            $o_price = 0;
+
+            if (!$this->config->get('config_inclusiv_tax')) {
+                //get price html
+                if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+                    $product_info['price'] = $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')));
+
+                    $o_price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
+                } else {
+                    $product_info['price'] = false;
+                }
+                if ((float) $product_info['special_price']) {
+                    $product_info['special_price'] = $this->currency->format($this->tax->calculate($product_info['special_price'], $product_info['tax_class_id'], $this->config->get('config_tax')));
+
+                    $s_price = $this->tax->calculate($product_info['special_price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
+                } else {
+                    $product_info['special_price'] = false;
+                }
+            } else {
+                $s_price = $product_info['special_price'];
+                $o_price = $product_info['price'];
+
+                if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+                    $product_info['price'] = $this->currency->format($product_info['price']);
+                } else {
+                    $product_info['price'] = $product_info['price'];
+                }
+
+                if ((float) $product_info['special_price']) {
+                    $product_info['special_price'] = $this->currency->format($product_info['special_price']);
+                } else {
+                    $product_info['special_price'] = $product_info['special_price'];
+                }
+            }
+
+            $cachePrice_data = $this->cache->get('category_price_data');
+            //echo $product_info['product_store_id'].'====>'.$_SESSION['customer_category'].'===>'.$store_id;
+            //echo '<pre>';print_r($cachePrice_data);
+            //exit;
+            if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$product_info['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$store_id])) {
+                //echo $cachePrice_data[$product_info['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$store_id];//exit;
+                $s_price = $cachePrice_data[$product_info['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$store_id];
+                $o_price = $cachePrice_data[$product_info['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$store_id];
+                $product_info['special_price'] = $this->currency->format($s_price);
+                $product_info['price'] = $this->currency->format($o_price);
+            }
+            //echo '<pre>';print_r($product_info);exit;
+
+            if (isset($product_info['pd_name'])) {
+                $product_info['name'] = $product_info['pd_name'];
+            }
+
+            /*echo $o_price;
+            echo "ce";
+            echo $s_price;*/
+            $percent_off = null;
+            if (isset($s_price) && isset($o_price) && 0 != $o_price && 0 != $s_price) {
+                $percent_off = (($o_price - $s_price) / $o_price) * 100;
+            }
+
+            if (null != $product_info['produce_type'] && '' != $product_info['produce_type']) {
+                $producetypes = explode(',', $product_info['produce_type']);
+                $producetypesupdated;
+                $i = 0;
+                foreach ($producetypes as $pt) {
+                    $producetypesupdated[$i]['type'] = $pt;
+                    $producetypesupdated[$i]['value'] = 0;
+
+                    foreach ($this->session->data['cart'][$key]['produce_type'] as $type) {
+                        if ($type['type'] == $pt) {
+                            $producetypesupdated[$i]['value'] = $type['value'];
+                        }
+                    }
+                    ++$i;
+                }
+            }
+
+            $data['product'] = [
+                'thumb' => $thumb,
+                'zoom_thumb' => $zoom_thumb,
+                'key' => $key,
+                'product_store_id' => $product_info['product_store_id'],
+                'store_id' => $product_info['store_id'],
+                'store_product_variation_id' => 0,
+                'images' => $data['images'],
+                'product_info' => $product_info,
+                'percent_off' => number_format($percent_off, 0),
+                'popup' => true,
+                'actualCart' => 0,
+                'default_variation_name' => $product_info['default_variation_name'],
+                'variations' => $this->model_assets_product->getVariations($product_info['product_store_id']),
+                'produce_type' => (isset($product_info['produce_type']) && ('' != $product_info['produce_type'])) ? $producetypesupdated : null,
+
+                'minimum' => $product_info['min_quantity'] > 0 ? $product_info['min_quantity'] : $product_info['quantity'],
+                // 'variations' => array(
+                // 	array(
+                // 		'variation_id' => $product_info['product_store_id'],
+                // 		'unit' => $product_info['unit'],
+                // 		'weight' => floatval($product_info['weight']),
+                // 		'price' => $price,
+                // 		'special' => $special_price
+                // 	)
+                // ),
+                'variations' => $this->model_assets_product->getProductVariationsNew($product_info['name'], $store_id),
+                'isWishListID' => $isWishListID,
+            ];
+            
+            $log = new Log('error.log');
+            /*$log->write('product popup');
+            $log->write($data['product']);
+            $log->write('product popup');*/
+            //echo '<pre>';print_r( $data['product']);exit;
+            if (isset($this->session->data['cart'][$key])) {
+                $data['product']['qty_in_cart'] = $this->session->data['cart'][$key]['quantity'];
+                $data['product']['actualCart'] = 1;
+                $data['product']['product_note'] = $this->session->data['cart'][$key]['product_note'];
+            } else {
+                $data['product']['qty_in_cart'] = 0;
+                if (isset($this->session->data['temp_cart'][$key])) {
+                    $data['product']['qty_in_cart'] = $this->session->data['temp_cart'][$key]['quantity'];
+                    $data['product']['product_note'] = $this->session->data['temp_cart'][$key]['product_note'];
+                }
+            }
+            if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/product/order_edit_product_popup.tpl')) {
+                $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/product/order_edit_product_popup.tpl', $data));
+            } else {
+                $this->response->setOutput($this->load->view('default/template/product/order_edit_product_popup.tpl', $data));
+            }
+        } else {
+            return false;
+        }
+    }
 }
