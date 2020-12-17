@@ -3289,6 +3289,7 @@ class ControllerAccountOrder extends Controller {
 
             $key = array_search($product_id, array_column($order_products, 'product_id'));
             if ($key !== false) {
+                $log->write('edit_order_quantity');
                 $this->load->model('assets/product');
                 $product_info = $this->model_assets_product->getProductForPopup($order_products[$key]['product_id'], false, $order_products[$key]['store_id']);
                 $s_price = 0;
@@ -3419,7 +3420,20 @@ class ControllerAccountOrder extends Controller {
                 $log->write($order_product_details);
                 $json['status'] = true;
                 $json['status'] = 'Your Order Updated!';
+
+                // Add to activity log
+                $this->load->model('account/activity');
+
+                $activity_data = [
+                    'customer_id' => $this->customer->getId(),
+                    'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
+                    'order_id' => $order_id,
+                ];
+                $log->write('account edit1');
+
+                $this->model_account_activity->addActivity('order_product_quaantity_changed', $activity_data);
             } else {
+                $log->write('edit_order_new_product_added');
                 $this->load->model('assets/product');
                 $new_product = $this->model_assets_product->getProductByProductStoreId($this->request->post['product_id']);
                 $product_info = $this->model_assets_product->getProductForPopup($new_product['product_store_id'], false, $new_product['store_id']);
@@ -3506,7 +3520,7 @@ class ControllerAccountOrder extends Controller {
                 $log->write($product_id);
                 $this->load->model('extension/extension');
                 $product_info['vendor_id'] = $this->model_extension_extension->getVendorId($product_info['store_id']);
-                $this->db->query('INSERT INTO '.DB_PREFIX."order_product SET vendor_id='".(int) $product_info['vendor_id']."', store_id='".(int) $product_info['store_id']."', order_id = '".(int) $this->request->post['order_id']."', variation_id = '".(int) $this->request->post['variation_id']."', product_id = '".(int) $product_info['product_store_id']."', general_product_id = '".(int) $product_info['product_id'] ."',  name = '".$this->db->escape($product_info['name'])."', model = '".$this->db->escape($product_info['model'])."', quantity = '". $quantity."', price = '".(float) $special_price[1]."', total = '".(float) $total_without_tax."', tax = '".(float)$single_product_tax."', product_type = 'replacable', unit = '".$this->db->escape($product_info['unit'])."'");
+                $this->db->query('INSERT INTO ' . DB_PREFIX . "order_product SET vendor_id='" . (int) $product_info['vendor_id'] . "', store_id='" . (int) $product_info['store_id'] . "', order_id = '" . (int) $this->request->post['order_id'] . "', variation_id = '" . (int) $this->request->post['variation_id'] . "', product_id = '" . (int) $product_info['product_store_id'] . "', general_product_id = '" . (int) $product_info['product_id'] . "',  name = '" . $this->db->escape($product_info['name']) . "', model = '" . $this->db->escape($product_info['model']) . "', quantity = '" . $quantity . "', price = '" . (float) $special_price[1] . "', total = '" . (float) $total_without_tax . "', tax = '" . (float) $single_product_tax . "', product_type = 'replacable', unit = '" . $this->db->escape($product_info['unit']) . "'");
 
                 $order_totals = $this->db->query('SELECT SUM(total) AS total FROM ' . DB_PREFIX . "order_product WHERE order_id = '" . (int) $order_id . "'");
 
@@ -3551,11 +3565,22 @@ class ControllerAccountOrder extends Controller {
                 $log->write($order_product_details);
                 $json['status'] = true;
                 $json['status'] = 'Your Order Updated!';
+
+                // Add to activity log
+                $this->load->model('account/activity');
+
+                $activity_data = [
+                    'customer_id' => $this->customer->getId(),
+                    'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
+                    'order_id' => $order_id,
+                ];
+                $log->write('account edit1');
+
+                $this->model_account_activity->addActivity('order_new_product_added', $activity_data);
             }
         } else {
             $json['status'] = 'You Cant Update Order In This Status!';
         }
-        $log->write('edit_order_quantity');
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
