@@ -96,5 +96,54 @@ class ControllerCommonScheduler extends Controller
     //     }
     //    echo "<pre>";print_r($file);die;
     }
+    public function stockout()
+    {
+        //echo "<pre>";print_r($this->request->get);die;
+        if (isset($this->request->get['filter_order_status_id'])) {
+            $filter_order_status_id = $this->request->get['filter_order_status_id'];
+        } else {
+            $filter_order_status_id = 0;
+        }
 
+        if (isset($this->request->get['filter_store'])) {
+            $filter_store = $this->request->get['filter_store'];
+        } else {
+            $filter_store = '';
+        }
+
+        if (isset($this->request->get['filter_store_id'])) {
+            $filter_store_id = $this->request->get['filter_store_id'];
+        } else {
+            $filter_store_id = '';
+        }
+
+        // echo date('Y-m-01',strtotime('last month')) . '<br/>';
+        // echo date('Y-m-t',strtotime('last month')) . '<br/>';exit;
+
+        if (isset($this->request->get['filter_date_start'])) {
+            $filter_date_start = $this->request->get['filter_date_start'];
+        } else {
+            $filter_date_start =date('Y-m-01',strtotime('last month'));
+        }
+
+        if (isset($this->request->get['filter_date_end'])) {
+            $filter_date_end = $this->request->get['filter_date_end'];
+        } else {
+            $filter_date_end = date('Y-m-t',strtotime('last month'))  ;
+
+        }
+
+        $data['filter_store'] = $filter_store_id;
+        $data['filter_store_name'] = $filter_store;
+
+        $data['filter_store_id'] = $filter_store_id;
+        $data['filter_date_start'] = $filter_date_start;
+        $data['filter_date_end'] = $filter_date_end;
+        $data['filter_order_status_id'] = $filter_order_status_id;
+
+        // echo "<pre>";print_r($data);die;
+
+        $this->load->model('report/excel');
+        $this->model_report_excel->mail_download_saleorderproductmissing($data);
+    }
 }

@@ -1218,5 +1218,30 @@ class ControllerCheckoutEditOrder extends Controller {
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
+    
+    public function index_new() {
+
+        if ($this->customer->isLogged()) {
+            $order_id = $this->request->get['order_id'];
+            $this->load->model('sale/order');
+            $this->load->model('account/order');
+            $this->load->model('account/order');
+            $order_info = $this->model_sale_order->getOrder($order_id);
+            if (is_array($order_info) && count($order_info) > 0 && $order_info['customer_id'] === $this->customer->getId()) {
+                $order_transaction_details_id = $this->model_sale_order->getOrderTransactionDetailsId($order_id);
+                $order_products = $this->model_account_order->getOrderProducts($order_id);
+                if (is_array($order_products) && count($order_products) > 0 && $order_info['customer_id'] === $this->customer->getId()) {
+                    foreach ($order_products as $order_product) {
+                        $this->cart->addCustom($order_product['product_id'], $order_product['quantity'], $option = [], $recurring_id = 0, $order_product['store_id'], $store_product_variation_id = false, $product_type = 'replacable', $product_note = null, $produce_type = null);
+                    }
+                }
+                $this->session->data['order_id'] = array($order_info['store_id'] => $order_info['order_id']);
+                $this->session->data['transaction_id'] = $order_transaction_details_id['transaction_details_id'];
+                $this->response->redirect($this->url->link('common/home'));
+            }
+        } else {
+            $this->response->redirect($this->url->link('error/not_found'));
+        }
+    }
 
 }

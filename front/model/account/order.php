@@ -623,6 +623,17 @@ class ModelAccountOrder extends Model {
 
         return $query->rows;
     }
+    
+    public function getOrderProductsByProductId($order_id, $product_store_id) {
+        /* $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int) $order_id . "'"); */
+        $query = $this->db->query('SELECT a.*,b.image as image,b.weight as weight
+        FROM `' . DB_PREFIX . 'order_product` a,`' . DB_PREFIX . 'product` b,`' . DB_PREFIX . "product_to_store` c
+        WHERE b.product_id=c.product_id
+        AND a.product_id=c.product_store_id
+        AND a.order_id='" . $order_id . "' AND a.product_id='" . $product_store_id . "'");
+
+        return $query->row;
+    }    
 
     public function getRealOrderProducts($order_id) {
         /* $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int) $order_id . "'"); */

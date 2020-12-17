@@ -1489,6 +1489,280 @@ class ControllerCommonHeader extends Controller
             return $this->load->view('default/template/common/only_header_information.tpl', $data);
         }
     }
+    
+    public function orderSummaryHeaders()
+    {
+        $this->load->language('common/header');
+        $this->load->model('tool/image');
+        $data['kondutoStatus'] = $this->config->get('config_konduto_status');
+
+        $data['title'] = $this->document->getTitle();
+
+        //echo "<pre>";print_r($data);die;
+        if (isset($this->session->data['language'])) {
+            $data['config_language'] = $this->session->data['language'];
+        } else {
+            $data['config_language'] = 'pt-BR';
+        }
+
+        if (!empty($this->request->get['path']) and ('common/home' != $this->request->get['path'])) {
+            if ('pre' == $this->config->get('config_meta_title_add', 0)) {
+                $data['title'] = $this->config->get('config_meta_title', '').' - '.$data['title'];
+            } elseif ('post' == $this->config->get('config_meta_title_add', 0)) {
+                $data['title'] = $data['title'].' - '.$this->config->get('config_meta_title', '');
+            }
+        }
+
+        if ($this->config->get('config_meta_generator')) {
+            $this->document->addMeta('generator', $this->config->get('config_meta_generator'));
+        }
+
+        if ($this->config->get('config_meta_googlekey')) {
+            $this->document->addMeta('google-site-verification', $this->config->get('config_meta_googlekey'));
+        }
+
+        if ($this->config->get('config_meta_alexakey')) {
+            $this->document->addMeta('alexaVerifyID', $this->config->get('config_meta_alexakey'));
+        }
+
+        if ($this->request->server['HTTPS']) {
+            $server = $this->config->get('config_ssl');
+        } else {
+            $server = $this->config->get('config_url');
+        }
+
+        if (isset($this->session->data['error'])) {
+            $data['error_warning'] = $this->session->data['error'];
+
+            unset($this->session->data['error']);
+        } else {
+            $data['error_warning'] = '';
+        }
+
+        if (isset($this->session->data['success'])) {
+            $data['success'] = $this->session->data['success'];
+
+            unset($this->session->data['success']);
+        } else {
+            $data['success'] = '';
+        }
+
+        //echo "<pre>";print_r($data['success']);die;
+        /*if(!$server){
+            $server = HTTP_SERVER;
+        }*/
+
+        if (is_file(DIR_APPLICATION.'view/theme/'.$this->config->get('config_template').'/stylesheet/customizer.css')) {
+            $this->document->addStyle('front/ui/theme/'.$this->config->get('config_template').'/stylesheet/customizer.css');
+            $this->checkFont();
+            $this->checkCustom();
+        }
+        //editk
+
+        $user_telephone = $this->formatTelephone($this->customer->getTelephone());
+
+        $is_login = $this->customer->isLogged();
+
+        $data['notices'] = [];
+
+        if (empty($user_telephone) && $is_login) {
+            $account_link = $this->url->link('account/account', '&redirect=checkout');
+
+            $data['text_profile_incomplete'] = $this->language->get('text_profile_incomplete');
+            $data['text_profile_incomplete_msg1'] = $this->language->get('text_profile_incomplete_msg1');
+            $data['text_profile_incomplete_msg2'] = $this->language->get('text_profile_incomplete_msg2');
+
+            $data['notices'][] = $data['text_profile_incomplete'].' <a href='.$account_link.' style="color: #fff;text-decoration: underline;"> '.$data['text_profile_incomplete_msg1'].' </a>'.$data['text_profile_incomplete_msg2'];
+        }
+
+        $this->document->setDescription($this->config->get('config_meta_description'));
+        $this->document->setKeywords($this->config->get('config_meta_keyword'));
+
+        $data['base'] = $server;
+        $data['description'] = $this->document->getDescription();
+        $data['keywords'] = $this->document->getKeywords();
+        $data['metas'] = $this->document->getMetas();
+        $data['links'] = $this->document->getLinks();
+        $data['styles'] = $this->document->getStyles();
+        $data['scripts'] = $this->document->getScripts();
+        $data['lang'] = $this->language->get('code');
+        $data['direction'] = $this->language->get('direction');
+
+        $this->load->model('assets/category');
+
+        if (isset($this->session->data['config_store_id'])) {
+            $data['store'] = $this->model_assets_category->getStoreData($this->session->data['config_store_id']);
+        } else {
+            $data['store'] = [];
+        }
+
+        if ($this->config->get('config_google_analytics_status')) {
+            $data['google_analytics'] = html_entity_decode($this->config->get('config_google_analytics'), ENT_QUOTES, 'UTF-8');
+        } else {
+            $data['google_analytics'] = '';
+        }
+
+        $data['name'] = $this->config->get('config_name');
+
+        if (is_file(DIR_IMAGE.$this->config->get('config_icon'))) {
+            //$data['icon'] = $server . 'image/' . $this->config->get('config_icon');
+            //24x30
+            $data['icon'] = $this->model_tool_image->resize($this->config->get('config_icon'), 30, 30);
+        } else {
+            $data['icon'] = '';
+        }
+
+        if (is_file(DIR_IMAGE.$this->config->get('config_small_icon'))) {
+            //$data['small_icon'] = $server . 'image/' . $this->config->get('config_small_icon');
+            $data['small_icon'] = $this->model_tool_image->resize($this->config->get('config_small_icon'), 30, 30);
+        } else {
+            $data['small_icon'] = '';
+        }
+
+        if (is_file(DIR_IMAGE.$this->config->get('config_logo'))) {
+            $data['logo'] = $server.'image/'.$this->config->get('config_logo');
+        //$data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'),197,34);
+        } else {
+            $data['logo'] = '';
+        }
+
+        $data['is_login'] = $this->customer->isLogged();
+        $data['name'] = $this->customer->getFirstName();
+
+        $data['user_telephone'] = $this->formatTelephone($this->customer->getTelephone());
+
+        $data['text_genuine_product'] = $this->language->get('text_genuine_product');
+        $data['text_secure_payments'] = $this->language->get('text_secure_payments');
+        $data['text_replacement_guarantee'] = $this->language->get('text_replacement_guarantee');
+
+        $data['text_shopping_cart'] = $this->language->get('text_shopping_cart');
+        $data['heading_title'] = $this->language->get('heading_title');
+        $data['text_home'] = $this->language->get('text_home');
+        $data['text_wishlist'] = $this->language->get('text_wishlist');
+        $data['text_logged'] = sprintf($this->language->get('text_logged'), $this->url->link('account/account', '', 'SSL'), $this->customer->getFirstName(), $this->url->link('account/logout', '', 'SSL'));
+
+        $data['label_address'] = $this->language->get('label_address');
+
+        $data['text_cash'] = $this->language->get('text_cash');
+        $data['text_signout'] = $this->language->get('text_signout');
+        $data['text_all_categories'] = $this->language->get('text_all_categories');
+        $data['list_products'] = $this->language->get('list_products');
+        $data['text_shopping_from'] = $this->language->get('text_shopping_from');
+        $data['text_menu'] = $this->language->get('text_menu');
+        $data['support'] = $this->language->get('support');
+        $data['faq'] = $this->language->get('faq');
+        $data['call'] = $this->language->get('call');
+        $data['text'] = $this->language->get('text');
+        $data['text_account'] = $this->language->get('text_account');
+        $data['text_rewards'] = $this->language->get('text_rewards');
+        $data['text_orders'] = $this->language->get('text_orders');
+        $data['text_refer'] = $this->language->get('text_refer');
+        $data['text_sign_out'] = $this->language->get('text_sign_out');
+        $data['text_sign_in'] = $this->language->get('text_sign_in');
+        $data['button_recipes'] = $this->language->get('button_recipes');
+
+        $data['text_account'] = $this->language->get('text_account');
+        $data['text_register'] = $this->language->get('text_register');
+        $data['text_login'] = $this->language->get('text_login');
+        $data['text_order'] = $this->language->get('text_order');
+        $data['text_credit'] = $this->language->get('text_credit');
+        $data['text_download'] = $this->language->get('text_download');
+        $data['text_logout'] = $this->language->get('text_logout');
+        $data['text_checkout'] = $this->language->get('text_checkout');
+        $data['text_category'] = $this->language->get('text_category');
+        $data['text_all'] = $this->language->get('text_all');
+
+        $data['address'] = $this->url->link('account/address', '', 'SSL');
+        $data['home'] = $this->url->link('common/home/toStore', '', 'SSL');
+        $data['wishlist'] = $this->url->link('account/wishlist', '', 'SSL');
+        $data['logged'] = $this->customer->isLogged();
+        $data['account'] = $this->url->link('account/account', '', 'SSL');
+        $data['dashboard'] = $this->url->link('account/dashboard', '', 'SSL');
+
+        $data['register'] = $this->url->link('account/register', '', 'SSL');
+        $data['login'] = $this->url->link('account/login', '', 'SSL');
+        $data['order'] = $this->url->link('account/order', '', 'SSL');
+        $data['credit'] = $this->url->link('account/credit', '', 'SSL');
+        $data['download'] = $this->url->link('account/download', '', 'SSL');
+        $data['logout'] = $this->url->link('account/logout', '', 'SSL');
+        $data['shopping_cart'] = $this->url->link('checkout/cart');
+        $data['checkout'] = $this->url->link('checkout/checkout', '', 'SSL');
+        $data['contact'] = $this->url->link('information/contact');
+        $data['telephone'] = $this->config->get('config_telephone');
+        $data['help'] = $this->url->link('information/help');
+        $data['refer'] = $this->url->link('account/refer', '', 'SSL');
+        $data['reward'] = $this->url->link('account/reward', '', 'SSL');
+        /* Added new params */
+        $data['is_login'] = $this->customer->isLogged();
+        $data['full_name'] = $this->customer->getFirstName();
+        $data['text_my_cash'] = $this->language->get('text_my_cash');
+        $data['text_my_wishlist'] = $this->language->get('text_my_wishlist');
+        $data['label_my_address'] = $this->language->get('label_my_address');
+        $data['contactus'] = $this->language->get('contactus');
+        $data['text_cash'] = $this->language->get('text_cash');
+        /***Sigup / register /contact modals **/
+        $data['contactus_modal'] = $this->load->controller('information/contact');
+        $data['login_modal'] = $this->load->controller('common/login_modal');
+        $data['signup_modal'] = $this->load->controller('common/signup_modal');
+        $data['forget_modal'] = $this->load->controller('common/forget_modal');
+        //$data['store'] = $this->url->link('product/store', '', 'SSL');
+
+        /* $data['store'] = $this->url->link('product/store','store_id='.$this->session->data['config_store_id'].'');*/
+
+        if (isset($this->session->data['config_store_id'])) {
+            $data['store'] = $this->url->link('product/store', 'store_id='.$this->session->data['config_store_id'].'');
+        } else {
+            $data['store'] = $this->url->link('product/store');
+        }
+        $status = true;
+
+        if (isset($this->request->server['HTTP_USER_AGENT'])) {
+            $robots = explode("\n", str_replace(["\r\n", "\r"], "\n", trim($this->config->get('config_robots'))));
+
+            foreach ($robots as $robot) {
+                if ($robot && false !== strpos($this->request->server['HTTP_USER_AGENT'], trim($robot))) {
+                    $status = false;
+
+                    break;
+                }
+            }
+        }
+
+        $data['cart'] = $this->load->controller('common/cart');
+
+        // For page specific css
+        if (isset($this->request->get['path'])) {
+            if (isset($this->request->get['product_id'])) {
+                $class = '-'.$this->request->get['product_id'];
+            } elseif (isset($this->request->get['category'])) {
+                $class = '-'.$this->request->get['category'];
+            } elseif (isset($this->request->get['manufacturer_id'])) {
+                $class = '-'.$this->request->get['manufacturer_id'];
+            } else {
+                $class = '';
+            }
+
+            $data['class'] = str_replace('/', '-', $this->request->get['path']).$class;
+        } else {
+            $data['class'] = 'common-home';
+        }
+        
+        $this->load->model('assets/category');
+        $categories = $this->model_assets_category->getCategoryByStoreId(ACTIVE_STORE_ID, 0);
+        $data['categories'] = $categories;
+
+        $data['language'] = $this->load->controller('common/language/dropdown');
+        if (isset($this->session->data['config_store_id'])) {
+            $data['go_to_store'] = $this->url->link('product/store', 'store_id='.$this->session->data['config_store_id'].'');
+        } else {
+            $data['go_to_store'] = $this->url->link('product/store');
+        }
+        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/common/order_summary_headers.tpl')) {
+            return $this->load->view($this->config->get('config_template').'/template/common/order_summary_headers.tpl', $data);
+        } else {
+            return $this->load->view('default/template/common/only_header_information.tpl', $data);
+        }
+    }
 
     public function storeHeader()
     {

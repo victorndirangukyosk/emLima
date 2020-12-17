@@ -35,8 +35,10 @@ class ModelAccountCustomer extends Model {
         if (isset($data['customer_group_id']))// && is_array($this->config->get('config_customer_group_display')) && in_array($data['customer_group_id'], $this->config->get('config_customer_group_display')))
         {
             $customer_group_id = $data['customer_group_id'];
-        } else {
+        } elseif($this->config->get('config_customer_group_id') > 0) {
             $customer_group_id = $this->config->get('config_customer_group_id');
+        } else {
+            $customer_group_id = 9; 
         }
 
         if (isset($data['company_name'])) {
@@ -634,9 +636,11 @@ class ModelAccountCustomer extends Model {
     public function UpdateOrderApprovalAccess($parent_id, $customer_id, $status, $role) {
         $sql = 'UPDATE  ' . DB_PREFIX . "customer SET  order_approval_access = '0', order_approval_access_role = NULL WHERE parent = '" . (int) $parent_id . "' AND order_approval_access = 1 AND order_approval_access_role = '" . $role . "'";
         $this->db->query($sql);
-
+        
+        if($customer_id != NULL) {
         $sql2 = 'UPDATE  ' . DB_PREFIX . "customer SET  order_approval_access = '" . (int) $status . "', order_approval_access_role = '" . $role . "' WHERE parent = '" . (int) $parent_id . "' AND customer_id ='" . (int) $customer_id . "'";
         $this->db->query($sql2);
+        }
     }
     
     public function UpdateCustomerOrderApproval($customer_id, $status) {

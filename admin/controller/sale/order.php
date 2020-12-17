@@ -348,9 +348,11 @@ class ControllerSaleOrder extends Controller {
                         'quantity' => $product['quantity'],
                         'produce_type' => $product['produce_type'],
                         'product_note' => $product['product_note'],
-                        'price' => $product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0),
+                        /*OLD PRICE WITH TAX*///'price' => $product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0),
+                        'price' => number_format((float)$product['price'], 2, '.', ''),
                         //'total' => $product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0)
-                        'total' => ($product['price'] * $product['quantity']) + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0),
+                        /*OLD TOTAL WITH TAX*///'total' => ($product['price'] * $product['quantity']) + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0),
+                        'total' => ($product['price'] * $product['quantity']),
                         'variations' => $variations
                     ];
                 }
@@ -5303,18 +5305,39 @@ class ControllerSaleOrder extends Controller {
             //$log->write($datas['products']);
 
             $vendor_id = $this->model_sale_order->getVendorId($store_id);
+            
+            $this->load->model('account/customer');
+            $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
+            /* IF CUSTOMER SUB CUSTOMER */
+            $parent_customer_info = NULL;
+            $pricing_category = NULL;
+            if (isset($customer_info) && $customer_info['parent'] > 0) {
+            $parent_customer_info = $this->model_account_customer->getCustomer($customer_info['parent']);
+            }
+            
+            if ($parent_customer_info == NULL && isset($customer_info['customer_category']) && $customer_info['customer_category'] != NULL) {
+            $pricing_category =  $customer_info['customer_category'];   
+            }
+            
+            if ($parent_customer_info != NULL && isset($parent_customer_info) && isset($parent_customer_info['customer_category']) && $parent_customer_info['customer_category'] != NULL) {
+            $pricing_category =  $parent_customer_info['customer_category'];       
+            }
 
             //echo "<pre>";print_r($datas['products']);die;
             foreach ($datas['products'] as $p_id_key => $updateProduct) {
                 $updateProduct['store_id'] = $store_id;
                 $updateProduct['vendor_id'] = $vendor_id;
-
+                
                 if (is_numeric($p_id_key)) {
+                    $updateProduct_tax_total = NULL;
                     //echo "<pre>";print_r($datas['products']);die;
-                    $products = $this->model_sale_order->updateOrderProduct($order_id, $p_id_key, $updateProduct);
+                    $updateProduct_tax_total = $this->model_tool_image->getTaxTotalCustom($updateProduct, $store_id, $pricing_category);
+                    $products = $this->model_sale_order->updateOrderProduct($order_id, $p_id_key, $updateProduct, $updateProduct_tax_total);
                 } else {
+                    $updateProduct_tax_total = NULL;
                     //echo "<pre>";print_r($updateProduct);die;
-                    $products = $this->model_sale_order->updateOrderNewProduct($order_id, $updateProduct['product_id'], $updateProduct);
+                    $updateProduct_tax_total = $this->model_tool_image->getTaxTotalCustom($updateProduct, $store_id, $pricing_category);
+                    $products = $this->model_sale_order->updateOrderNewProduct($order_id, $updateProduct['product_id'], $updateProduct, $updateProduct_tax_total);
                 }
 
                 $sumTotal += ($updateProduct['price'] * $updateProduct['quantity']);
@@ -5325,7 +5348,7 @@ class ControllerSaleOrder extends Controller {
             $subTotal = $sumTotal;
 
             //$log->write("tax_total start ");
-            $tax_total = $this->model_tool_image->getTaxTotal($tempProds, $store_id);
+            $tax_total = $this->model_tool_image->getTaxTotal($tempProds, $store_id, $pricing_category);
 
             //echo "<pre>";print_r($tax_total);die;
 

@@ -710,7 +710,7 @@ class Controlleraccountsubusers extends Controller {
         $this->response->setOutput(json_encode($json));
     }
     
-        public function assignsubcustomerorderapprovalbysubcustomerid() {
+    public function assignsubcustomerorderapprovalbysubcustomerid() {
         $log = new Log('error.log');
         $json['success'] = true;
         $this->load->model('account/customer');
