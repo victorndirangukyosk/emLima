@@ -3720,7 +3720,7 @@ class ControllerAccountOrder extends Controller {
 
         $data['cashback_condition'] = $this->language->get('cashback_condition');
 
-        if ($order_info) {
+        if ($order_info && $order_info['customer_id'] == $this->customer->getId()) {
             $data['cashbackAmount'] = $this->currency->format(0);
 
             $coupon_history_data = $this->model_account_order->getCashbackAmount($order_id);
