@@ -378,6 +378,8 @@ var cart = {
 
 				if (json['success']) {
 				}
+                                $(".alerter").show();
+                                $('.alerter').delay(2000).fadeOut('slow');
 				window.location.reload(true);
 			}
 		});
