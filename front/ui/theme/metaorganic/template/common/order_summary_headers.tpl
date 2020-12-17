@@ -49,7 +49,7 @@
      -->
     <script src="<?= $base;?>front/ui/theme/mvgv2/js/jquery.min.js"></script>
     <script src="<?= $base;?>front/ui/theme/mvgv2/js/bootstrap.min.js"></script>
-    <script src="<?= $base;?>front/ui/javascript/common.js" type="text/javascript"></script>
+    <script src="<?= $base;?>front/ui/javascript/editcommon.js" type="text/javascript"></script>
     <?php foreach ($scripts as $script) { ?>
     <script src="<?php echo $script; ?>" type="text/javascript"></script>
     <?php } ?>
