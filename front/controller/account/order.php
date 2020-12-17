@@ -3283,7 +3283,7 @@ class ControllerAccountOrder extends Controller {
         $this->load->model('account/order');
         $order_info = $this->model_account_order->getOrder($order_id, true);
         //$log->write($order_info);
-        if (null != $order_info && ($order_info['order_status_id'] == 15 || $order_info['order_status_id'] == 14)) {
+        if (null != $order_info && ($order_info['order_status_id'] == 15 || $order_info['order_status_id'] == 14) && $order_info['customer_id'] == $this->customer->getId()) {
             $order_products = $this->model_account_order->getOrderProducts($order_id);
             //$log->write($order_products);
 
