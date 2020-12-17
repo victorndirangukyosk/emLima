@@ -26,7 +26,7 @@
 
                             <?php } else { ?>
                             <a href="#" data-toggle="modal" data-target="#contactusModal"  class="btn btn-default btn-xs"><?= $text_report_issue ?></a>
-                            <?php if($order['customer_id'] == $this->customer->getId()) { ?>
+                            <?php if($order['customer_id'] == $this->customer->getId() && $order['edit_own_order'] != NULL) { ?>
                             <a href="<?php echo $order['edit_own_order'];?>" class="btn btn-success" title="Edit Your Order" style="margin-right: 4px !important; height: 27px;"><i class="fa fa-edit"></i></a>
                             <?php } ?>
                             <?php } ?>
