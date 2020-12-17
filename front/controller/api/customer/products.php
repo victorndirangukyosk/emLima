@@ -2218,7 +2218,7 @@ class ControllerApiCustomerProducts extends Controller
         } else {
             $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->request->get['customer_id']. "' AND status = '1'");
         }
-        $this->session->data['customer_category'] = isset($customer_details->row['customer_category']) ? $customer_details->row['customer_category'] : null;
+       $customercategory_new= $this->session->data['customer_category'] = isset($customer_details->row['customer_category']) ? $customer_details->row['customer_category'] : null;
 
         
 
@@ -2309,9 +2309,11 @@ class ControllerApiCustomerProducts extends Controller
 
         
         $disabled_products_string = NULL;
-        if(isset($_SESSION['customer_category']) && $_SESSION['customer_category'] != NULL) {
+        // if(isset($_SESSION['customer_category']) && $_SESSION['customer_category'] != NULL) 
+        if(isset($customercategory_new) && $customercategory_new != NULL) 
+        {
             $this->load->model('assets/product');
-            $category_pricing_disabled_products =$this->model_assets_product->getCategoryPriceStatusByCategoryName($_SESSION['customer_category'], 0);   
+            $category_pricing_disabled_products =$this->model_assets_product->getCategoryPriceStatusByCategoryName($customercategory_new, 0);   
         //$log = new Log('error.log');
         //$log->write('category_pricing_disabled_products');
         $disabled_products = array_column($category_pricing_disabled_products, 'product_id');
