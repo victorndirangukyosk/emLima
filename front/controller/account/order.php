@@ -3268,6 +3268,8 @@ class ControllerAccountOrder extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+    //if any code changed in this method ,need to implement same in mobile API
+    //controller/api/customer/order.php-addEditOrderWithNewitemAndQuantity()
     public function edit_full_order() {
         $log = new Log('error.log');
         $json = [];
