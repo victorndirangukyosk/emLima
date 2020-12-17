@@ -370,42 +370,15 @@ var cart = {
 			success: function (json) {
 				console.log(json);
 				console.log("jsonxxxxx");
-				//console.log($('.normalalert').html());
 				console.log("json");
-				//$('.alert, .text-danger').remove();
-
+                                
 				if (json['redirect']) {
-					location = json['redirect'];
+				location = json['redirect'];
 				}
 
 				if (json['success']) {
-
-					$('.plus-quantity[data-id="' + product_id + '"]').attr('data-key', json['key']);
-					$('.minus-quantity[data-id="' + product_id + '"]').attr('data-key', json['key']);
-
-					//$('#add-btn[data-id="'+product_id+'"]').css({ 'display': "none" });
-					//$('#add-btn[data-id="'+product_id+'"]').removeAttr('display');
-					$('#add-btn[data-id="' + product_id + '"]').css({ 'display': "none" });
-
-
-					$('.inc-dec-quantity[data-id="' + product_id + '"]').css({ 'display': "block" });
-
-
-					//$('html, body').animate({ scrollTop: 0 }, 'slow');
-					//update total count for mobile 
-					$('.shoppingitem-fig').html(json['count_products']);
-					$('.cart-panel-content').load('index.php?path=common/cart/newInfo');
-					$('#cart').load('index.php?path=common/cart/info');
-
-					$('.cart-count').html(json['count_products'] + " ITEMS IN CART");
-					$('.cart-total-amount').html(json['total_amount']);
-
-					$('.cart-total-amount').html(json['total_amount']);
 				}
-
-
-
-				//window.location.reload(true);
+				window.location.reload(true);
 			}
 		});
 	},
@@ -550,56 +523,6 @@ var cart = {
 					$('.cart-count').html(json['count_products'] + " ITEMS IN CART");
 					$('.cart-total-amount').html(json['total_amount']);
 				}
-
-				$.ajax({
-					url: 'index.php?path=common/home/cartDetails',
-					type: 'post',
-					dataType: 'json',
-
-					success: function (json) {
-						console.log(json);
-
-						for (var key in json['store_note']) {
-							//alert("User " + data[key] + " is #" + key); // "User john is #234"
-							$('.store_note' + key).html(json['store_note'][key]);
-
-							console.log(json['store_note'][key]);
-						}
-
-						if (json['status']) {
-							console.log("yesz");
-							console.log(text);
-							$("#proceed_to_checkout").removeAttr("disabled");
-							$("#proceed_to_checkout").attr("href", json['href']);
-							//$("#proceed_to_checkout_button").html(json['text_proceed_to_checkout']);
-							//$('.checkout-modal-text').html(json['text_proceed_to_checkout']);
-
-							$("#proceed_to_checkout_button").css({ 'background-color': '', 'border-color': '' });
-							$('.checkout-modal-text').html(json['text_proceed_to_checkout']);
-							$('.checkout-loader').hide();
-
-						} else {
-							console.log("no frm jsz");
-							$("#proceed_to_checkout").attr("disabled", "disabled");
-							$("#proceed_to_checkout").removeAttr("href");
-							//$("#proceed_to_checkout_button").html(json['amount']);
-							//$('.checkout-modal-text').html(json['amount']);
-							$('.checkout-loader').hide();
-							$('.checkout-modal-text').html(json['text_proceed_to_checkout']);
-							$("#proceed_to_checkout_button").css('background-color', '#ccc');
-							$("#proceed_to_checkout_button").css('border-color', '#ccc');
-
-
-
-						}
-
-
-					}
-				});
-
-
-
-
 			}
 		});
 
@@ -744,50 +667,6 @@ var cart = {
 					$('#action_' + json['product_store_id'] + ' .add-cart-btn').parent().parent().find('.middle-quantity').html('1')
 
 				}
-
-				$.ajax({
-					url: 'index.php?path=common/home/cartDetails',
-					type: 'post',
-					dataType: 'json',
-					success: function (json) {
-						console.log(json);
-
-						for (var key in json['store_note']) {
-							//alert("User " + data[key] + " is #" + key); // "User john is #234"
-							$('.store_note' + key).html(json['store_note'][key]);
-
-							console.log(json['store_note'][key]);
-						}
-
-						if (json['status']) {
-							console.log("yes");
-							$("#proceed_to_checkout").removeAttr("disabled");
-							$("#proceed_to_checkout").attr("href", json['href']);
-							//$("#proceed_to_checkout_button").html(json['text_proceed_to_checkout']);
-							//$('.checkout-modal-text').html(json['text_proceed_to_checkout']);
-
-							$("#proceed_to_checkout_button").css({ 'background-color': '', 'border-color': '' });
-							$('.checkout-loader').hide();
-							$('.checkout-modal-text').html(json['text_proceed_to_checkout']);
-						} else {
-							console.log("no frm jsx");
-							$("#proceed_to_checkout").attr("disabled", "disabled");
-							$("#proceed_to_checkout").removeAttr("href");
-							//$("#proceed_to_checkout_button").html(json['amount']);
-							//$('.checkout-modal-text').html(json['amount']);
-							$("#proceed_to_checkout_button").css('background-color', '#ccc');
-							$("#proceed_to_checkout_button").css('border-color', '#ccc');
-
-
-
-							$('.checkout-loader').hide();
-							$('.checkout-modal-text').html(json['text_proceed_to_checkout']);
-						}
-
-
-					}
-				});
-
 			}
 		});
 
