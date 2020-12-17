@@ -341,14 +341,23 @@
 
                                                     </div>
 
-                                                    <?php } else { ?>
+                                                    <?php } elseif($total['title'] == 'Sub-Total') { ?>
 
                                                     <div class="checkout-invoice">
                                                         <div class="checout-invoice-title"><?php echo $total['title']; ?></div>
                                                         <div class="checout-invoice-price" id="subtotal<?php echo $order_id; ?>"><?php echo $total['text']; ?></div>
                                                     </div>
-                                                    <?php } ?>
-                                                    <?php } }?>
+                                                    <?php } elseif($total['title'] == 'VAT14') { ?>
+                                                    <div class="checkout-invoice">
+                                                        <div class="checout-invoice-title"><?php echo $total['title']; ?></div>
+                                                        <div class="checout-invoice-price" id="vat<?php echo $order_id; ?>"><?php echo $total['text']; ?></div>
+                                                    </div>
+                                                    <?php } else { ?>
+                                                    <div class="checkout-invoice">
+                                                        <div class="checout-invoice-title"><?php echo $total['title']; ?></div>
+                                                        <div class="checout-invoice-price" id="subtotal<?php echo $order_id; ?>"><?php echo $total['text']; ?></div>
+                                                    </div>
+                                                    <?php } } }  ?>
                                                     <div class="checkout-invoice">
                                                         <div class="checkout-payable-price"><small>*<?= $cashback_condition; ?></small></div>
                                                     </div>
@@ -1002,6 +1011,7 @@
                     $("#producttotal" + product_id).text(json.product_total_price);
                     $("#subtotal" + order_id).text(json.sub_total_amount);
                     $("#subtotal" + order_id).text(json.sub_total_amount);
+                    $("#vat" + order_id).text(json.total_tax_amount);
                     $("#total" + order_id).text(json.total_amount);
                     $(".alerter").show();
                     $('.alerter').delay(5000).fadeOut('slow');
