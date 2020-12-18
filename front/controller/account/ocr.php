@@ -7,8 +7,8 @@ class ControllerAccountOcr extends Controller
 
         $this->load->model('account/address');
 
-
         $data['header'] = $this->load->controller('common/header/onlyheader');
+        $data['store_id'] = ACTIVE_STORE_ID;
         $data['customer_id'] = $_SESSION['customer_id'];
         $data['customer_category'] = $_SESSION['customer_category'];
         $data['addresses'] = array_column($this->model_account_address->getAddresses(),'name','address_id');

@@ -1543,7 +1543,7 @@ class ControllerCommonHome extends Controller {
         $this->load->model('tool/image');
 
         $cachePrice_data = $this->cache->get('category_price_data');
-        //echo '<pre>';print_r($cachePrice_data);exit;
+        // echo '<pre>';print_r($cachePrice_data);exit;
         //$results = $this->model_assets_product->getProducts($filter_data);
         $results = $this->model_assets_product->getProductsForHomePage($filter_data);
 
@@ -1603,7 +1603,7 @@ class ControllerCommonHome extends Controller {
                 $s_price = $result['special_price'];
                 $o_price = $result['price'];
 
-                //echo $s_price.'===>'.$o_price.'==>'.$special_price.'===>'.$price;//exit;
+                // echo $s_price.'===>'.$o_price.'==>'.$special_price.'===>'.$price.'</br>';//exit;
 
                 if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$result['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $filter_data['store_id']])) {
                     $s_price = $cachePrice_data[$result['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $filter_data['store_id']];

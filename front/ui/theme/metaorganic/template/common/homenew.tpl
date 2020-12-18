@@ -188,7 +188,7 @@
                             href="<?= $dashboard ?>"><i class="fa fa-user"></i>Dashboard</a></div>
                         <div class="dropdownsetnew"><a class="header__upper-deck-item-link"
                             href="<?= $po_ocr ?>"><i class="fa fa-file-text"></i>Purchase Order &nbsp;<span
-                              class="badge badge-pill badge-light">New</span></a></div>
+                              class="badge badge-pill badge-success">BETA</span></a></div>
                                <div class="dropdownsetnew"  ><a class="header__upper-deck-item-link"
                                    href="<?= $wishlist ?>" ><i class="fa fa-shopping-basket"></i>My Basket</a></div>
                         <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $account ?>"><i

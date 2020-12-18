@@ -7,11 +7,15 @@
     integrity="sha512-AIOTidJAcHBH2G/oZv9viEGXRqDNmfdPVPYOYKGy3fti0xIplnlgMHUGfuNRzC6FkzIo0iIxgFnr9RikFxK+sw=="
     crossorigin="anonymous"></script>
 <div class="container">
+    <div class="row" style="margin-bottom: 20px;">
+        <div id="ocr-errors" class="col-md-12"></div>
+    </div>
     <div class="row">
         <div class="col-md-12">
             <form method="POST" enctype="multipart/form-data" id="po_form">
-                <input type="hidden" name="customer_id" value=<?= $customer_id ?>>
-                <input type="hidden" name="customer_category" value=<?= $customer_category ?>>
+                <input type="hidden" name="store_id" value=<?=$store_id ?>>
+                <input type="hidden" name="customer_id" value=<?=$customer_id ?>>
+                <input type="hidden" name="customer_category" value=<?=$customer_category ?>>
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label for="delivery_address">Delivery Address</label>
@@ -56,27 +60,64 @@
     $(function () {
         $('#po_form').on('submit', function (e) {
             e.preventDefault();
-            
+
+            const submitButton = $('#submit');
+            submitButton.val('PLEASE WAIT');
+            submitButton.toggleClass('disabled');
+
             var data = new FormData();
-            $.each($("#po_form").serializeArray(), function(key, input) {
+            $.each($("#po_form").serializeArray(), function (key, input) {
                 data.append(input.name, input.value);
             });
             data.append('document', ($('input[name="po"]')[0].files[0]));
 
             $.ajax({
-                url: "http://localhost:3000/v1/ocr/po",
+                url: "https://ocr.kwikbasket.com/v1/ocr/po",
                 type: "POST",
                 data: data,
-                contentType: false,
                 cache: false,
+                contentType: false,
                 processData: false,
-                success: function(data) {
-                    console.log(data);
+                success: function (response) {
+                    submitButton.val('Process Order');
+                    submitButton.toggleClass('disabled');
+                    $('form#po_form').trigger('reset');
+
+                    if(response.products.length == 0 && response.errors.length == 0) {
+                        displayErrorParsingDocument();
+                        return;
+                    }
+
+                    for(const orderItem of response.errors) {
+                        displayUnrecognizedProduct(orderItem);
+                    }
+
+                    for (const orderItem of response.products) {
+                        cart.add(orderItem.product_id, orderItem.quantity, 0, 75, '', null);
+                    }
                 },
-                error: function(error) {
-                    console.log(error);
+                error: function (error) {
+                    submitButton.val('Process Order');
+                    submitButton.toggleClass('disabled');
+                    displayErrorParsingDocument();
                 }
             });
+
+            function displayUnrecognizedProduct(orderItem) {
+                $('#ocr-errors').append(`
+                    <div class="alert alert-warning alert-dismissible" role="alert">
+                        Couldn't add <strong>${orderItem.quantity} units</strong> of <strong>${orderItem.product}</strong> to the cart. Please check the PO document and add the product manually.
+                    </div>
+                `);
+            }
+
+            function displayErrorParsingDocument() {
+                $('#ocr-errors').append(`
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                        Sorry, we couldn't process the document. Contact support.
+                    </div>
+                `);
+            }
         });
     });
 </script>

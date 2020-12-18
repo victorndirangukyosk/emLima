@@ -870,12 +870,12 @@ class ModelAssetsProduct extends Model
         //die;
         //		echo $this->db->last_query();die;
 
-        //		echo "<pre>";print_r($ret);die;
+        		// echo "<pre>";print_r($ret);die;
         return $ret;
     }
     
     public function getProductsForHomePage($data = [])
-    {   
+    {
         // echo "<pre>";print_r($_SESSION);die;
         $disabled_products_string = NULL;
         if(isset($_SESSION['customer_category']) && $_SESSION['customer_category'] != NULL) {
@@ -1003,9 +1003,9 @@ class ModelAssetsProduct extends Model
         // $this->db->order_by('product_description.name','asc');
         $ret = $this->db->get('product_to_store', $limit, $offset)->rows;
         //die;
-        //		echo $this->db->last_query();die;
+        		// echo $this->db->last_query();die;
 
-        //		echo "<pre>";print_r($ret);die;
+        		// echo "<pre>";print_r($ret);die;
         return $ret;
     }
     
@@ -1137,7 +1137,7 @@ class ModelAssetsProduct extends Model
         $ret = $this->db->get('product_to_store')->rows;
         //die;
         //		echo $this->db->last_query();die;
-        //		echo "<pre>";print_r($ret);die;
+        		// echo "<pre>";print_r($ret);die;
         return $ret;
     }
 
