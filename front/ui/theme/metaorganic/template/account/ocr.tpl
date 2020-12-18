@@ -6,6 +6,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js"
     integrity="sha512-AIOTidJAcHBH2G/oZv9viEGXRqDNmfdPVPYOYKGy3fti0xIplnlgMHUGfuNRzC6FkzIo0iIxgFnr9RikFxK+sw=="
     crossorigin="anonymous"></script>
+<link rel="stylesheet" type="text/css" href="<?= $base; ?>front/ui/theme/metaorganic/assets_landing_page/css/iziToast.min.css">
+<script src="<?= $base; ?>front/ui/theme/metaorganic/assets_landing_page/js/iziToast.min.js" async defer="defer"></script>
 <div class="container">
     <div class="row" style="margin-bottom: 20px;">
         <div id="ocr-errors" class="col-md-12"></div>
@@ -95,6 +97,11 @@
                     for (const orderItem of response.products) {
                         cart.add(orderItem.product_id, orderItem.quantity, 0, 75, '', null);
                     }
+                    iziToast.success({
+                        position: 'topRight',
+                        title: 'Yaay',
+                        message: `${response.products.length} products added to cart!`;
+                    });
                 },
                 error: function (error) {
                     submitButton.val('Process Order');
@@ -112,6 +119,11 @@
             }
 
             function displayErrorParsingDocument() {
+                iziToast.error({
+                    position: 'topRight',
+                    title: 'Oops',
+                    message: 'We couldn\'t process the document';
+                });
                 $('#ocr-errors').append(`
                     <div class="alert alert-danger alert-dismissible" role="alert">
                         Sorry, we couldn't process the document. Contact support.
