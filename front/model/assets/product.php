@@ -626,6 +626,21 @@ class ModelAssetsProduct extends Model
         return $query->rows;
     }
 
+
+    public function getCategoryPriceStatusByCustomerID($parent_ID,$customer_ID, $status) {
+       if($parent_ID!=null && $parent_ID!=0)
+        $customerquery = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer  WHERE customer_id ='" . $parent_ID . "' ");
+        else
+        $customerquery = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer  WHERE customer_id ='" . $customer_ID . "' ");
+        $customer_category_name=$customerquery->row['customer_category'];
+
+        $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "product_category_prices WHERE price_category ='" . $customer_category_name . "' AND status ='" . $status . "'");
+        
+            //   echo '<pre>';print_r($customer_category_name);exit;
+            // echo '<pre>' . print_r($_SESSION, TRUE) . '</pre>';
+        return $query->rows;
+    }
+
     public function getProductVariationsNew($product_name, $store_id, $formated = false)
     {
         $returnData = [];

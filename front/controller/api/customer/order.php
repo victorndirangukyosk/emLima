@@ -2171,6 +2171,20 @@ class ControllerApiCustomerOrder extends Controller
         $store_id = false;
 
         if (isset($args['products']) && count($args['products']) > 0) {
+
+
+            if ($this->request->get['parent'] != NULL && $this->request->get['parent']>0) {
+                $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->request->get['parent'] . "' AND status = '1'");
+            } else {
+                $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->customer->getId(). "' AND status = '1'");
+            }
+            $this->session->data['customer_category'] = isset($customer_details->row['customer_category']) ? $customer_details->row['customer_category'] : null;
+
+            
+            $this->load->model( 'assets/product' );
+            $cachePrice_data = $this->model_assets_product->getCategoryPriceStatusByCategoryName($_SESSION['customer_category'],1);
+            
+
             foreach ($args['products'] as $product) {
                 $store_id = $product['store_id'];
                 // // // $order_products = $this->model_account_order->getOrderProducts($order_id);
@@ -2184,7 +2198,7 @@ class ControllerApiCustomerOrder extends Controller
 
                 $product_query = $this->db->get('product_to_store');
 
-                //echo "<pre>";print_r($product_query);die;
+                //  echo "<pre>";print_r($product_query);die;
 
                 $log->write($product_query->row);
 
@@ -2197,9 +2211,11 @@ class ControllerApiCustomerOrder extends Controller
                     $o_price = 0;
 
                     if (!$this->config->get('config_inclusiv_tax')) {
+
+                        // echo 1212;exit;
                         //get price html
                         if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-                            $product['price'] = $this->tax->calculate($product_query->row['price'], $product_query->row['tax_class_id'], $this->config->get('config_tax'));
+                            $product['price'] =  $this->currency->format($this->tax->calculate($product_query->row['price'], $product_query->row['tax_class_id'], $this->config->get('config_tax')));
 
                             $o_price = $this->tax->calculate($product['price'], $product_query->row['tax_class_id'], $this->config->get('config_tax'));
                         } else {
@@ -2207,7 +2223,7 @@ class ControllerApiCustomerOrder extends Controller
                         }
 
                         if ((float) $product_query->row['special_price']) {
-                            $product['special_price'] = $this->tax->calculate($product_query->row['special_price'], $product_query->row['tax_class_id'], $this->config->get('config_tax'));
+                            $product['special_price'] =  $this->currency->format($this->tax->calculate($product_query->row['special_price'], $product_query->row['tax_class_id'], $this->config->get('config_tax')));
 
                             $s_price = $this->tax->calculate($product['special_price'], $product_query->row['tax_class_id'], $this->config->get('config_tax'));
                         } else {
@@ -2218,23 +2234,32 @@ class ControllerApiCustomerOrder extends Controller
                         $o_price = $product_query->row['price'];
 
                         if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-                            //$product_query->row['price'] = $product_query->row['price'];
-                            $product['price'] = $this->currency->formatWithoutCurrency($product_query->row['price']);
+                            //$product_query->row['price'] = $product_query->row['price'];formatWithoutCurrency
+                            $product['price'] =  $this->currency->format($product_query->row['price']);
                         } else {
                             $product['price'] = $product_query->row['price'];
                         }
 
                         if ((float) $product_query->row['special_price']) {
                             //$product_query->row['special_price'] = $product_query->row['special_price'];
-                            $product['special_price'] = $this->currency->formatWithoutCurrency($product_query->row['special_price']);
+                            $product['special_price'] = $this->currency->format($product_query->row['special_price']);
                         } else {
                             $product['special_price'] = $product_query->row['special_price'];
                         }
                     }
-
+                    // $cachePrice_data = $this->cache->get('category_price_data');
+                    
                         //log customer category
-                    $cachePrice_data = $this->cache->get('category_price_data');
+
+                        // echo $_SESSION['customer_category'] ;exit;
+                        $log->write("category price checking in max Quantity API");
+                        $log->write($cachePrice_data);
+                        $log->write("above is cached price data");
+                        $log->write($product['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $product['store_id']);
+                        $log->write("check ID matching");
                     if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$product['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $product['store_id']])) {
+
+                        // echo 'divya';exit;
                         $s_price = $cachePrice_data[$product['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $product['store_id']];
                         $o_price = $cachePrice_data[$product['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $product['store_id']];
                         $product['special_price'] = $this->currency->format($s_price);
@@ -2252,29 +2277,33 @@ class ControllerApiCustomerOrder extends Controller
                     // }
 
                     $product['percent_off'] = number_format($percent_off, 0);
-                    // $special_price = explode(' ', $product_info['special_price']);
-                    // $log->write($special_price);
-                    // $special_price[1] = str_replace(',', '', $special_price[1]);
-                    // $total_without_tax = $special_price[1] * $quantity;
-
-                    // $total_with_tax = $this->config->get('config_tax') ? ($this->tax->calculate($special_price[1], $product_info['tax_class_id'], $this->config->get('config_tax')) * $quantity) : 0;
-                    // $tax = 0;
-                    // $single_product_tax = 0;
-                    // if ($total_with_tax > 0 && $this->config->get('config_tax') == true) {
-                    //     $tax = $total_with_tax - $total_without_tax;
-                    //     $log->write('TAX');
-                    //     $log->write($total_with_tax);
-                    //     $log->write($total_without_tax);
-                    //     $log->write($tax);
-                    //     $log->write('TAX');
-                    //     $single_product_tax = $tax / $quantity;
-                    //     $log->write('single_product_tax');
-                    //     $log->write($single_product_tax);
-                    //     $log->write('single_product_tax');
-                    // }
+                    $special_price = explode(' ', $product['special_price']);
+                    $log->write($special_price);
+                    $log->write("special_price");
+                    $special_price[1] = str_replace(',', '', $special_price[1]);
+                    $total_without_tax = $special_price[1] *  $product['quantity'];
+                            // echo $this->config->get('config_tax');exit; 
+                    $total_with_tax = $this->config->get('config_tax') ? ($this->tax->calculate($special_price[1], $product['tax_class_id'], $this->config->get('config_tax')) * $product['quantity']) : 0;
+                    $tax = 0;
+                    $single_product_tax = 0;
+                    if ($total_with_tax > 0 && $this->config->get('config_tax') == true) {
+                        $tax = $total_with_tax - $total_without_tax;
+                        $log->write('TAX');
+                        $log->write($total_with_tax);
+                        $log->write($total_without_tax);
+                        $log->write($tax);
+                        $log->write('TAX');
+                        $single_product_tax = $tax / $product['quantity'];
+                        $log->write('single_product_tax');
+                        $log->write($single_product_tax);
+                        $log->write('single_product_tax');
+                    }
     
-                    // $total = $special_price[1] * $quantity + ($this->config->get('config_tax') ? ($order_products[$key]['tax'] * $quantity) : 0);
-                   
+                    $total = $special_price[1] * $product['quantity'] + ($this->config->get('config_tax') ? ($order_products[$key]['tax'] * $quantity) : 0);
+                    $product['tax']=$total;
+                    $product['total_without_tax']=$total_without_tax;
+                    $product['total_with_tax']=$total_with_tax;
+
 
                     // new code end
 
