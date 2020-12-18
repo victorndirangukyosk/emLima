@@ -3281,7 +3281,6 @@ class ControllerAccountOrder extends Controller {
         $quantity = $this->request->post['quantity'];
         $unit = $this->request->post['unit'];
         $variation_id = $this->request->post['variation_id'];
-        $product_note = $this->request->post['product_note'];
 
         $this->load->model('account/order');
         $order_info = $this->model_account_order->getOrder($order_id, true);
@@ -3523,8 +3522,7 @@ class ControllerAccountOrder extends Controller {
                 $log->write($product_id);
                 $this->load->model('extension/extension');
                 $product_info['vendor_id'] = $this->model_extension_extension->getVendorId($product_info['store_id']);
-                $product_note = isset($this->request->post['product_note']) && $this->request->post['product_note'] != NULL ? $this->request->post['product_note'] : '';
-                $this->db->query('INSERT INTO ' . DB_PREFIX . "order_product SET vendor_id='" . (int) $product_info['vendor_id'] . "', store_id='" . (int) $product_info['store_id'] . "', order_id = '" . (int) $this->request->post['order_id'] . "', variation_id = '" . (int) $this->request->post['variation_id'] . "', product_id = '" . (int) $product_info['product_store_id'] . "', general_product_id = '" . (int) $product_info['product_id'] . "',  name = '" . $this->db->escape($product_info['name']) . "', model = '" . $this->db->escape($product_info['model']) . "', quantity = '" . $quantity . "', price = '" . (float) $special_price[1] . "', total = '" . (float) $total_without_tax . "', tax = '" . (float) $single_product_tax . "', product_type = 'replacable', product_note = '".$product_note."', unit = '" . $this->db->escape($product_info['unit']) . "'");
+                $this->db->query('INSERT INTO ' . DB_PREFIX . "order_product SET vendor_id='" . (int) $product_info['vendor_id'] . "', store_id='" . (int) $product_info['store_id'] . "', order_id = '" . (int) $this->request->post['order_id'] . "', variation_id = '" . (int) $this->request->post['variation_id'] . "', product_id = '" . (int) $product_info['product_store_id'] . "', general_product_id = '" . (int) $product_info['product_id'] . "',  name = '" . $this->db->escape($product_info['name']) . "', model = '" . $this->db->escape($product_info['model']) . "', quantity = '" . $quantity . "', price = '" . (float) $special_price[1] . "', total = '" . (float) $total_without_tax . "', tax = '" . (float) $single_product_tax . "', product_type = 'replacable', unit = '" . $this->db->escape($product_info['unit']) . "'");
 
                 $order_totals = $this->db->query('SELECT SUM(total) AS total FROM ' . DB_PREFIX . "order_product WHERE order_id = '" . (int) $order_id . "'");
 
