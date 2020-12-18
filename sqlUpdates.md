@@ -88,3 +88,12 @@ ALTER TABLE `hf7_customer_email_group` ADD CONSTRAINT `EMAIL_GROUP_ID_FOREIGN_KE
 
 /** OCR Service Updates **/
 ALTER TABLE `hf7_product_category_prices` ADD FULLTEXT (`product_name`);
+ALTER TABLE `hf7_product` ADD FULLTEXT (`name`);
+
+UPDATE `hf7_product_category_prices` SET product_name = 'Baby Marrow (Zucchini)' WHERE product_name = 'Baby Marrow'; 
+UPDATE `hf7_product` SET name = 'Baby Marrow (Zucchini)' WHERE name = 'Baby Marrow';
+UPDATE `hf7_product_description` SET name = 'Baby Marrow (Zucchini)' WHERE name = 'Baby Marrow';
+
+UPDATE `hf7_product_category_prices` SET product_name = 'Imported Grapefruit' WHERE product_name = 'Imported Grape Fruit';
+UPDATE `hf7_product` SET name = 'Imported Grapefruit' WHERE name = 'Imported Grape Fruit';
+UPDATE `hf7_product_description` SET name = 'Imported Grapefruit' WHERE name = 'Imported Grape Fruit';

@@ -54,7 +54,7 @@
                     success: function (json) {
                         console.log(json);
                         if(json.message == 'Username And Password Doest Match!') {
-                        iziToast.success({
+                        iziToast.error({
                         position: 'topRight',
                                 message: 'Username And Password Doest Match!'
                         });
