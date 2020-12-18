@@ -100,7 +100,7 @@
                     iziToast.success({
                         position: 'topRight',
                         title: 'Yaay',
-                        message: `${response.products.length} products added to cart!`;
+                        message: `${response.products.length} products added to cart!`
                     });
                 },
                 error: function (error) {
@@ -122,7 +122,7 @@
                 iziToast.error({
                     position: 'topRight',
                     title: 'Oops',
-                    message: 'We couldn\'t process the document';
+                    message: 'We couldn\'t process the document'
                 });
                 $('#ocr-errors').append(`
                     <div class="alert alert-danger alert-dismissible" role="alert">
