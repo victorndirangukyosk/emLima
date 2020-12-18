@@ -2173,7 +2173,7 @@ class ControllerApiCustomerOrder extends Controller
         if (isset($args['products']) && count($args['products']) > 0) {
             foreach ($args['products'] as $product) {
                 $store_id = $product['store_id'];
-
+                // $order_products = $this->model_account_order->getOrderProducts($order_id);
                 $stock = true;
 
                 $this->db->join('product', 'product.product_id = product_to_store.product_id', 'left');
@@ -2232,16 +2232,49 @@ class ControllerApiCustomerOrder extends Controller
                         }
                     }
 
+                        //log customer category
+                    $cachePrice_data = $this->cache->get('category_price_data');
+                    if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$product['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $product['store_id']])) {
+                        $s_price = $cachePrice_data[$product['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $product['store_id']];
+                        $o_price = $cachePrice_data[$product['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $product['store_id']];
+                        $product['special_price'] = $this->currency->format($s_price);
+                        $product['price'] = $this->currency->format($o_price);
+                    }
+
+
                     $percent_off = null;
                     if (isset($s_price) && isset($o_price) && 0 != $o_price && 0 != $s_price) {
                         $percent_off = (($o_price - $s_price) / $o_price) * 100;
                     }
 
-                    if (is_null($product_query->row['special_price']) || !($product_query->row['special_price'] + 0)) {
-                        $product['special_price'] = $product_query->row['price'];
-                    }
+                    // if (is_null($product_query->row['special_price']) || !($product_query->row['special_price'] + 0)) {
+                    //     $product['special_price'] = $product_query->row['price'];
+                    // }
 
                     $product['percent_off'] = number_format($percent_off, 0);
+                    // $special_price = explode(' ', $product_info['special_price']);
+                    // $log->write($special_price);
+                    // $special_price[1] = str_replace(',', '', $special_price[1]);
+                    // $total_without_tax = $special_price[1] * $quantity;
+
+                    // $total_with_tax = $this->config->get('config_tax') ? ($this->tax->calculate($special_price[1], $product_info['tax_class_id'], $this->config->get('config_tax')) * $quantity) : 0;
+                    // $tax = 0;
+                    // $single_product_tax = 0;
+                    // if ($total_with_tax > 0 && $this->config->get('config_tax') == true) {
+                    //     $tax = $total_with_tax - $total_without_tax;
+                    //     $log->write('TAX');
+                    //     $log->write($total_with_tax);
+                    //     $log->write($total_without_tax);
+                    //     $log->write($tax);
+                    //     $log->write('TAX');
+                    //     $single_product_tax = $tax / $quantity;
+                    //     $log->write('single_product_tax');
+                    //     $log->write($single_product_tax);
+                    //     $log->write('single_product_tax');
+                    // }
+    
+                    // $total = $special_price[1] * $quantity + ($this->config->get('config_tax') ? ($order_products[$key]['tax'] * $quantity) : 0);
+                   
 
                     // new code end
 
@@ -2480,7 +2513,7 @@ class ControllerApiCustomerOrder extends Controller
         }
     }
 
-    //public function edit_full_order()
+    //public function edit_full_order() //addMaxOfProduct
     public function addEditOrderWithNewitemAndQuantity($args = [])
     {    
     //     if ($this->customer->isLogged()) {
