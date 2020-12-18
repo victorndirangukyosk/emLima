@@ -993,6 +993,12 @@ class ControllerProductProduct extends Controller
         } else {
             $product_store_id = 0;
         }
+        
+        if (isset($this->request->get['edit_order_id'])) {
+            $edit_order_id = $this->request->get['edit_order_id'];
+        } else {
+            $edit_order_id = 0;
+        }
 
         if ($this->session->data['config_store_id']) {
             $store_id = $this->session->data['config_store_id'];
@@ -1003,8 +1009,10 @@ class ControllerProductProduct extends Controller
         $data['text_incart'] = $this->language->get('text_incart');
         //recipe
         $this->load->model('assets/product');
+        $this->load->model('account/order');
 
         $product_info = $this->model_assets_product->getProductForPopup($product_store_id, false, $store_id);
+        $order_product = $this->model_account_order->getOrderProductsByProductId($edit_order_id, $product_store_id);
 
         //echo "<pre>";print_r($product_info);die;
         $data['text_unit'] = $this->language->get('text_unit');
@@ -1176,10 +1184,10 @@ class ControllerProductProduct extends Controller
             $log->write($data['product']);
             $log->write('product popup');*/
             //echo '<pre>';print_r( $data['product']);exit;
-            if (isset($this->session->data['cart'][$key])) {
-                $data['product']['qty_in_cart'] = $this->session->data['cart'][$key]['quantity'];
+            if (isset($order_product) && array_key_exists('quantity', $order_product) && $order_product['quantity'] > 0) {
+                $data['product']['qty_in_cart'] = $order_product['quantity'];
                 $data['product']['actualCart'] = 1;
-                $data['product']['product_note'] = $this->session->data['cart'][$key]['product_note'];
+                $data['product']['product_note'] = $order_product['product_note'];
             } else {
                 $data['product']['qty_in_cart'] = 0;
                 if (isset($this->session->data['temp_cart'][$key])) {

@@ -949,7 +949,7 @@
         $(document).delegate('.open-popup', 'click', function () {
         $('.open-popup').prop('disabled', true);
         // console.log("product blocks" + $(this).attr('data-id'));
-        $.get('index.php?path=product/product/order_edit_view&product_store_id=' + $(this).attr('data-id') + '&store_id=' + $(this).attr('data-store'), function (data) {
+        $.get('index.php?path=product/product/order_edit_view&product_store_id=' + $(this).attr('data-id') + '&store_id=' + $(this).attr('data-store')+ '&edit_order_id=' + $('#edit_order_id').val(), function (data) {
         $('.open-popup').prop('disabled', false);
         $('.modal-wrapper').html(data);
         $('#popupmodal').modal('show');
