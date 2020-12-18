@@ -85,3 +85,6 @@ CREATE TABLE `kwikbasket`.`hf7_customer_email_group` ( `customer_id` INT NOT NUL
 ALTER TABLE `hf7_customer_email_group` ADD `id` INT NOT NULL AUTO_INCREMENT FIRST, ADD PRIMARY KEY (`id`); 
 ALTER TABLE `hf7_customer_email_group` ADD CONSTRAINT `CUSTOMER_ID_FOREIGN_KEY` FOREIGN KEY (`customer_id`) REFERENCES `hf7_customer`(`customer_id`) ON DELETE CASCADE ON UPDATE CASCADE; 
 ALTER TABLE `hf7_customer_email_group` ADD CONSTRAINT `EMAIL_GROUP_ID_FOREIGN_KEY` FOREIGN KEY (`group_id`) REFERENCES `hf7_email_groups`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+/** OCR Service Updates **/
+ALTER TABLE `hf7_product_category_prices` ADD FULLTEXT (`product_name`);
