@@ -2173,7 +2173,7 @@ class ControllerApiCustomerOrder extends Controller
         if (isset($args['products']) && count($args['products']) > 0) {
             foreach ($args['products'] as $product) {
                 $store_id = $product['store_id'];
-                // $order_products = $this->model_account_order->getOrderProducts($order_id);
+                // // // $order_products = $this->model_account_order->getOrderProducts($order_id);
                 $stock = true;
 
                 $this->db->join('product', 'product.product_id = product_to_store.product_id', 'left');
