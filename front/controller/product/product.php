@@ -1140,11 +1140,11 @@ class ControllerProductProduct extends Controller
                     $producetypesupdated[$i]['type'] = $pt;
                     $producetypesupdated[$i]['value'] = 0;
 
-                    foreach ($this->session->data['cart'][$key]['produce_type'] as $type) {
+                    /*foreach ($this->session->data['cart'][$key]['produce_type'] as $type) {
                         if ($type['type'] == $pt) {
                             $producetypesupdated[$i]['value'] = $type['value'];
                         }
-                    }
+                    }*/
                     ++$i;
                 }
             }
@@ -1175,7 +1175,7 @@ class ControllerProductProduct extends Controller
                 // 		'special' => $special_price
                 // 	)
                 // ),
-                'variations' => $this->model_assets_product->getProductVariationsNew($product_info['name'], $store_id),
+                'variations' => $this->model_assets_product->getEditOrderProductVariationsNew($product_info['name'], $store_id, '', $edit_order_id),
                 'isWishListID' => $isWishListID,
             ];
             
@@ -1190,10 +1190,11 @@ class ControllerProductProduct extends Controller
                 $data['product']['product_note'] = $order_product['product_note'];
             } else {
                 $data['product']['qty_in_cart'] = 0;
-                if (isset($this->session->data['temp_cart'][$key])) {
+                $data['product']['product_note'] = '';
+                /*if (isset($this->session->data['temp_cart'][$key])) {
                     $data['product']['qty_in_cart'] = $this->session->data['temp_cart'][$key]['quantity'];
                     $data['product']['product_note'] = $this->session->data['temp_cart'][$key]['product_note'];
-                }
+                }*/
             }
             if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/product/order_edit_product_popup.tpl')) {
                 $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/product/order_edit_product_popup.tpl', $data));
