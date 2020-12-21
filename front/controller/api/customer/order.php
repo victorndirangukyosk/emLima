@@ -2190,7 +2190,7 @@ class ControllerApiCustomerOrder extends Controller
             $json['parent_id']= $this->request->get['parent'];
             $json['customer_category']=$customer_category;
             $json['cachePricedata']=$cachePrice_data;
-//end
+            //end
             //   echo "<pre>";print_r($cachePrice_data);die;
             foreach ($args['products'] as $product) {
                 $store_id = $product['store_id'];   
@@ -2272,14 +2272,18 @@ class ControllerApiCustomerOrder extends Controller
                 $log->write($product['store_id']);
                 $log->write($cachePrice_data);
 
-
                     if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$product['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $product['store_id']])) {
-
+                        $json['CATEGORY_PRICE_ENABLED']=true;
+                        $product['testprice']=$product['product_store_id']. '_' . $customer_category . '_' . $product['store_id'];
+                        $product['testprice2']=$cachePrice_data[$product['product_store_id']. '_' . $customer_category . '_' . $product['store_id']];
                         //  echo 'divya';exit;
-                        $s_price = $cachePrice_data[$product['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $product['store_id']];
-                        $o_price = $cachePrice_data[$product['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $product['store_id']];
+                        $s_price = $cachePrice_data[$product['product_store_id'] . '_' . $customer_category . '_' . $product['store_id']];
+                        $o_price = $cachePrice_data[$product['product_store_id'] . '_' . $customer_category . '_' . $product['store_id']];
                         $product['special_price'] = $this->currency->format($s_price);
                         $product['price'] = $this->currency->format($o_price);
+                    }
+                    else{
+                        $json['CATEGORY_PRICE_ENABLED']=false;
                     }
 
 
