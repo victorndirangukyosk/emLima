@@ -2253,7 +2253,7 @@ class ControllerApiCustomerOrder extends Controller
                             $product['special_price'] = $product_query->row['special_price'];
                         }
                     }
-                    //  $cachePrice_data = $this->cache->get('category_price_data');
+                       $cachePrice_dataNew = $this->cache->get('category_price_data');
                     
                         //log customer category
 
@@ -2274,6 +2274,7 @@ class ControllerApiCustomerOrder extends Controller
                 $product['testprice']=$product['product_store_id']. '_' . $customer_category . '_' . $product['store_id'];
                 $product['testprice2']=$cachePrice_data[$product['product_store_id']. '_' . $customer_category . '_' . $product['store_id']];
                 $product['testprice3']=$cachePrice_dataNew[$product['product_store_id']. '_' . $customer_category . '_' . $product['store_id']];
+               
                
                     if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$product['product_store_id'] . '_' . $customer_category . '_' . $product['store_id']])) {
                         $json['CATEGORY_PRICE_ENABLED']=true;
