@@ -163,8 +163,7 @@
             data.append('document', ($('input[name="po"]')[0].files[0]));
 
             $.ajax({
-                url: "http://localhost:4000/v1/ocr/po",
-                // url: "https://ocr.kwikbasket.com/v1/ocr/po",
+                url: "https://ocr.kwikbasket.com/v1/ocr/po",
                 type: "POST",
                 data: data,
                 cache: false,
