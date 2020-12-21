@@ -771,10 +771,12 @@ class ModelAssetsProduct extends Model
                 //if (isset($this->session->data['cart'][$key])) {
                 if(is_array($order_product) && array_key_exists('product_id', $order_product) && array_key_exists('store_id', $order_product) && $order_product['product_id'] == $r['product_store_id'] && $order_product['quantity'] > 0) {
                     $r['qty_in_cart'] = $order_product['quantity'];
+                    $r['product_note'] = $order_product['product_note'];
                     //$r['qty_in_cart'] = $this->session->data['cart'][$key]['quantity'];
                     $r['actualCart'] = 1;
                 } else {
                     $r['qty_in_cart'] = 0;
+                    $r['product_note'] = NULL;
                     // if ( isset( $this->session->data['temp_cart'][$key] ) ) {
                 // 	$r['qty_in_cart'] = $this->session->data['temp_cart'][$key]['quantity'];
                 // }
