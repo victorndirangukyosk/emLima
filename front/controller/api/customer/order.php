@@ -2158,7 +2158,7 @@ class ControllerApiCustomerOrder extends Controller
         $json['message'] = [];
         $json['valid_cart'] = false;
 
-        $json['tax'] = 0;
+        // $json['tax'] = 0;
 
         $log = new Log('error.log');
         $log->write($args['products']);
@@ -2178,13 +2178,13 @@ class ControllerApiCustomerOrder extends Controller
             } else {
                 $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->customer->getId(). "' AND status = '1'");
             }
-            $this->session->data['customer_category'] = isset($customer_details->row['customer_category']) ? $customer_details->row['customer_category'] : null;
+            $customer_category=$this->session->data['customer_category'] = isset($customer_details->row['customer_category']) ? $customer_details->row['customer_category'] : null;
             // echo "<pre>";print_r($this->session->data['customer_category']);die;
             // echo "<pre>";print_r($customer_details->row['customer_category']);die;
 
             
             $this->load->model( 'assets/product' );
-            $cachePrice_data = $this->model_assets_product->getCategoryPriceStatusByCategoryNameNew($_SESSION['customer_category'],1);
+            $cachePrice_data = $this->model_assets_product->getCategoryPriceStatusByCategoryNameNew($customer_category,1,75);
             
             //   echo "<pre>";print_r($cachePrice_data);die;
             foreach ($args['products'] as $product) {
@@ -2309,7 +2309,7 @@ class ControllerApiCustomerOrder extends Controller
                         $tax = $total_with_tax - $total_without_tax;
                         $log->write('TAX');
                         $log->write($total_with_tax);
-                        $log->write('sri divya');
+                        // $log->write('sri divya');
                         $log->write($total_without_tax);
                         $log->write($tax);
                         $log->write('TAX');
@@ -2329,8 +2329,10 @@ class ControllerApiCustomerOrder extends Controller
                     // $log->write($product_id);
                     // $log->write($product_id);
                     $product['tax']=$tax;
+                    $product['total']=$total;
                     $product['total_without_tax']=$total_without_tax;
                     $product['total_with_tax']=$total_with_tax;
+                    $product['single_product_tax']=$single_product_tax;
 
 
                     // new code end

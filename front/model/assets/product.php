@@ -627,7 +627,7 @@ class ModelAssetsProduct extends Model
     }
 
 
-    public function getCategoryPriceStatusByCategoryNameNew($category_name, $status) {
+    public function getCategoryPriceStatusByCategoryNameNew($category_name, $status,$store_id) {
         $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "product_category_prices WHERE price_category like'%" . $category_name . "' AND status ='" . $status . "'");
         // return $query->rows;
 
