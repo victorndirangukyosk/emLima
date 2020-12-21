@@ -2184,7 +2184,7 @@ class ControllerApiCustomerOrder extends Controller
 
             
             $this->load->model( 'assets/product' );
-            $cachePrice_data = $this->model_assets_product->getCategoryPriceStatusByCategoryNameNew($customer_category,1,ACTIVE_STORE_ID);
+            $cachePrice_data = $cachePrice_dataNew= $this->model_assets_product->getCategoryPriceStatusByCategoryNameNew($customer_category,1,ACTIVE_STORE_ID);
            //for testing purpose
             $json['customer_id']= $this->customer->getId();
             $json['parent_id']= $this->request->get['parent'];
@@ -2269,12 +2269,11 @@ class ControllerApiCustomerOrder extends Controller
                 $log->write($this->customer->getId());
 
                 $log->write($product['store_id']);
-                $log->write($cachePrice_data);
-            $json['cachePricedata']=$cachePrice_datanew=$cachePrice_data;
+                $log->write($cachePrice_data);                
 
                 $product['testprice']=$product['product_store_id']. '_' . $customer_category . '_' . $product['store_id'];
                 $product['testprice2']=$cachePrice_data[$product['product_store_id']. '_' . $customer_category . '_' . $product['store_id']];
-                $product['testprice3']=$cachePrice_datanew[$product['product_store_id']. '_' . $customer_category . '_' . $product['store_id']];
+                $product['testprice3']=$cachePrice_dataNew[$product['product_store_id']. '_' . $customer_category . '_' . $product['store_id']];
                
                     if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$product['product_store_id'] . '_' . $customer_category . '_' . $product['store_id']])) {
                         $json['CATEGORY_PRICE_ENABLED']=true;
@@ -2369,7 +2368,7 @@ class ControllerApiCustomerOrder extends Controller
 
                 $data['cart_products_with_stock_status'][] = $product;
             }
-
+            $json['cachePricedata']=$cachePrice_data;
             $json['valid_cart'] = $valid_cart;
             $json['data'] = $data['cart_products_with_stock_status'];
 
