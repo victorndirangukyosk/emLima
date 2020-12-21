@@ -2184,7 +2184,8 @@ class ControllerApiCustomerOrder extends Controller
 
             
             $this->load->model( 'assets/product' );
-            $cachePrice_data = $cachePrice_dataNew= $this->model_assets_product->getCategoryPriceStatusByCategoryNameNew($customer_category,1,ACTIVE_STORE_ID);
+            //the below data is directly from model, not cache data
+            $cachePrice_data =   $this->model_assets_product->getCategoryPriceStatusByCategoryNameNew($customer_category,1,ACTIVE_STORE_ID);
            //for testing purpose
             $json['customer_id']= $this->customer->getId();
             $json['parent_id']= $this->request->get['parent'];
@@ -2253,6 +2254,7 @@ class ControllerApiCustomerOrder extends Controller
                             $product['special_price'] = $product_query->row['special_price'];
                         }
                     }
+                    //for testing purpose, calling cache data,but sometimes, the cache is not loading for mobile users
                        $cachePrice_dataNew = $this->cache->get('category_price_data');
                     
                         //log customer category
@@ -2270,11 +2272,11 @@ class ControllerApiCustomerOrder extends Controller
 
                 $log->write($product['store_id']);
                 $log->write($cachePrice_data);                
-
+                    //Test Data
                 $product['testprice']=$product['product_store_id']. '_' . $customer_category . '_' . $product['store_id'];
                 $product['testprice2']=$cachePrice_data[$product['product_store_id']. '_' . $customer_category . '_' . $product['store_id']];
                 $product['testprice3']=$cachePrice_dataNew[$product['product_store_id']. '_' . $customer_category . '_' . $product['store_id']];
-               
+                    //end
                
                     if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$product['product_store_id'] . '_' . $customer_category . '_' . $product['store_id']])) {
                         $json['CATEGORY_PRICE_ENABLED']=true;
