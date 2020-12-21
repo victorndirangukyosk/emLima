@@ -2270,10 +2270,11 @@ class ControllerApiCustomerOrder extends Controller
 
                 $log->write($product['store_id']);
                 $log->write($cachePrice_data);
-            $json['cachePricedata']=$cachePrice_data;
+            $json['cachePricedata']=$cachePrice_datanew=$cachePrice_data;
 
                 $product['testprice']=$product['product_store_id']. '_' . $customer_category . '_' . $product['store_id'];
                 $product['testprice2']=$cachePrice_data[$product['product_store_id']. '_' . $customer_category . '_' . $product['store_id']];
+                $product['testprice3']=$cachePrice_datanew[$product['product_store_id']. '_' . $customer_category . '_' . $product['store_id']];
                
                     if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$product['product_store_id'] . '_' . $customer_category . '_' . $product['store_id']])) {
                         $json['CATEGORY_PRICE_ENABLED']=true;
