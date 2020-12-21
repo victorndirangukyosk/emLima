@@ -72,6 +72,7 @@ class EventAppApi extends Event
                     else {
                         $resp['message']="Please Login again.";
                         $resp['data']="";
+                        $resp['status']="10022";
                         $this->response->addHeader('Content-Type: application/json');
                         $this->response->setOutput(json_encode($resp));
                     }
