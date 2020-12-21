@@ -2257,7 +2257,10 @@ class ControllerApiCustomerOrder extends Controller
                         
  
                 $log->write($_SESSION['customer_category']);
-                $log->write('product info');
+                if(!isset($_SESSION['customer_category']))
+                $log->write('customer category not loaded in session in max quantity for user ');
+                $log->write($this->customer->getId());
+
                 $log->write($product['store_id']);
                 $log->write($cachePrice_data);
 
