@@ -60,11 +60,29 @@ class EventAppApi extends Event
 
                 //echo "<pre>";print_r($resp);die;
                 if (1 == $resp['status']) {
+
+                     // check customer ID
+                $cust_id =$this->customer->getId();
+                if(isset($cust_id) && $cust_id>0)
+                {
                     $this->load->controller($route, $args);
+
+                }
+
+                    else {
+                        $resp['message']="Please Login again.";
+                        $resp['data']="";
+                        $this->response->addHeader('Content-Type: application/json');
+                        $this->response->setOutput(json_encode($resp));
+                    }
                 } else {
                     $this->response->addHeader('Content-Type: application/json');
                     $this->response->setOutput(json_encode($resp));
                 }
+
+               
+
+
             } elseif ('api/customer/login/addLogin' == $route) {
                 // Authorize
                 $this->load->controller('api/customer/login');

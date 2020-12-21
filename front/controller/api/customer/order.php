@@ -2179,12 +2179,14 @@ class ControllerApiCustomerOrder extends Controller
                 $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->customer->getId(). "' AND status = '1'");
             }
             $this->session->data['customer_category'] = isset($customer_details->row['customer_category']) ? $customer_details->row['customer_category'] : null;
+            // echo "<pre>";print_r($this->session->data['customer_category']);die;
+            // echo "<pre>";print_r($customer_details->row['customer_category']);die;
 
             
             $this->load->model( 'assets/product' );
             $cachePrice_data = $this->model_assets_product->getCategoryPriceStatusByCategoryNameNew($_SESSION['customer_category'],1);
             
-
+            //   echo "<pre>";print_r($cachePrice_data);die;
             foreach ($args['products'] as $product) {
                 $store_id = $product['store_id'];   
                 // // // $order_products = $this->model_account_order->getOrderProducts($order_id);
