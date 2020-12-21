@@ -2185,7 +2185,12 @@ class ControllerApiCustomerOrder extends Controller
             
             $this->load->model( 'assets/product' );
             $cachePrice_data = $this->model_assets_product->getCategoryPriceStatusByCategoryNameNew($customer_category,1,ACTIVE_STORE_ID);
-            
+           //for testing purpose
+            $json['customer_id']= $this->customer->getId();
+            $json['parent_id']= $this->request->get['parent'];
+            $json['customer_category']=$customer_category;
+            $json['cachePricedata']=$cachePrice_data;
+//end
             //   echo "<pre>";print_r($cachePrice_data);die;
             foreach ($args['products'] as $product) {
                 $store_id = $product['store_id'];   
@@ -2333,7 +2338,7 @@ class ControllerApiCustomerOrder extends Controller
                     $product['total_without_tax']=$total_without_tax;
                     $product['total_with_tax']=$total_with_tax;
                     $product['single_product_tax']=$single_product_tax;
-
+                   
 
                     // new code end
 
