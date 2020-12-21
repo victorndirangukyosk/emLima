@@ -2184,7 +2184,7 @@ class ControllerApiCustomerOrder extends Controller
 
             
             $this->load->model( 'assets/product' );
-            $cachePrice_data = $this->model_assets_product->getCategoryPriceStatusByCategoryNameNew($customer_category,1,75);
+            $cachePrice_data = $this->model_assets_product->getCategoryPriceStatusByCategoryNameNew($customer_category,1,ACTIVE_STORE_ID);
             
             //   echo "<pre>";print_r($cachePrice_data);die;
             foreach ($args['products'] as $product) {
