@@ -187,7 +187,17 @@ class ControllerAccountOrder extends Controller {
             //$log->write($is_he_parents);
             //$log->write($customer_parent_info);
             //$log->write('IS HE PARENT USER');
-
+            $t1 = strtotime(date('Y-m-d H:i:s'));
+            $t2 = strtotime($result['date_added']);
+            $diff = $t1 - $t2;
+            $hours = $diff / ( 60 * 60 );
+            $log->write('hours');
+            $log->write(date('Y-m-d H:i:s'));
+            $log->write($result['date_added']);
+            $log->write(date_default_timezone_get());
+            $log->write($hours);
+            $log->write('hours');
+            
             $data['orders'][] = [
                 'order_id' => $result['order_id'],
                 'name' => $result['firstname'] . ' ' . $result['lastname'],
