@@ -2189,7 +2189,6 @@ class ControllerApiCustomerOrder extends Controller
             $json['customer_id']= $this->customer->getId();
             $json['parent_id']= $this->request->get['parent'];
             $json['customer_category']=$customer_category;
-            $json['cachePricedata']=$cachePrice_data;
             //end
             //   echo "<pre>";print_r($cachePrice_data);die;
             foreach ($args['products'] as $product) {
@@ -2271,6 +2270,8 @@ class ControllerApiCustomerOrder extends Controller
 
                 $log->write($product['store_id']);
                 $log->write($cachePrice_data);
+            $json['cachePricedata']=$cachePrice_data;
+
                 $product['testprice']=$product['product_store_id']. '_' . $customer_category . '_' . $product['store_id'];
                 $product['testprice2']=$cachePrice_data[$product['product_store_id']. '_' . $customer_category . '_' . $product['store_id']];
                
