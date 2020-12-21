@@ -19,6 +19,10 @@ class ControllerApiCustomerProducts extends Controller
                 $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->request->get['customer_id']. "' AND status = '1'");
             }
             $this->session->data['customer_category'] = isset($customer_details->row['customer_category']) ? $customer_details->row['customer_category'] : null;
+            $log = new Log('error.log');
+            $log->write('Session category check');
+            $log->write($this->session->data['customer_category']);
+            $log->write('Session category check');
 
             //  echo "<pre>";print_r($_SESSION['customer_category']);die;
 
