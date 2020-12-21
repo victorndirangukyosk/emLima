@@ -6,13 +6,74 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js"
     integrity="sha512-AIOTidJAcHBH2G/oZv9viEGXRqDNmfdPVPYOYKGy3fti0xIplnlgMHUGfuNRzC6FkzIo0iIxgFnr9RikFxK+sw=="
     crossorigin="anonymous"></script>
-<link rel="stylesheet" type="text/css" href="<?= $base; ?>front/ui/theme/metaorganic/assets_landing_page/css/iziToast.min.css">
-<script src="<?= $base; ?>front/ui/theme/metaorganic/assets_landing_page/js/iziToast.min.js" async defer="defer"></script>
+<link rel="stylesheet" type="text/css"
+    href="<?= $base; ?>front/ui/theme/metaorganic/assets_landing_page/css/iziToast.min.css">
+<script src="<?= $base; ?>front/ui/theme/metaorganic/assets_landing_page/js/iziToast.min.js" async
+    defer="defer"></script>
+
 <div class="container">
+    <div class="row" style="margin-bottom: 40px;">
+        <div class="col-md-12" style="display: flex;justify-content: center;align-items: center;">
+            <div class="header__search-bar-wrapper">
+                <div id="search-form-wrapper" class="header__search-bar search-form-wrapper">
+                    <div class="header__search-title">
+                        Search
+                        <div class="header__mobile-search-close j-mobile-close-search-trigger"></div>
+                    </div>
+
+                    <form id="search-form-form"
+                        class="search-form c-position-relative search-form--switch-category-position" action="#"
+                        method="get">
+                        <ul class="header__search-bar-list header__search-bar-item--before-keyword-field">
+
+                            <li
+                                class="header__search-bar-item header__search-bar-item--category search-category-container">
+                                <div>
+                                    <select class="form-control" id="selectedCategory">
+                                        <option value="">- Select categories-</option>
+                                        <option value="1359">Fruits</option>
+                                        <option value="1">Vegetables</option>
+                                        <option value="1369">Herbs</option>
+                                        <option value="1370">Leafy Vegetables</option>
+                                        <option value="1371">Asian Vegetables</option>
+                                        <option value="1373">Vegan</option>
+
+                                    </select>
+                                </div>
+                            </li>
+                            <li class="header__search-bar-item header__search-bar-item--location search-location-all">
+                                <div class="header__search-location search-location">
+                                    <i class="fa fa-map-marker header__search-location-icon" aria-hidden="true"></i>
+
+                                    <!-- SuggestionWidget  start -->
+                                    <div id="search-area-wrp" class="c-sggstnbx header__search-input-wrapper">
+
+                                        <div class="input-group">
+                                            <input type="text" name="product_name" id="product_name"
+                                                class="header__search-input zipcode-enter"
+                                                placeholder="Search for your product" autocomplete="off">
+                                            <ul class="dropdown-menu search-dropdown"></ul>
+                                            <span class="input-group-btn">
+                                                <div class="resp-searchresult">
+                                                    <div></div>
+                                                </div>
+                                            </span>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="row" style="margin-bottom: 20px;">
         <div id="ocr-errors" class="col-md-12"></div>
     </div>
-    <div class="row">
+    <div class="row" id="ocr-input">
         <div class="col-md-12">
             <form method="POST" enctype="multipart/form-data" id="po_form">
                 <input type="hidden" name="store_id" value=<?=$store_id ?>>
@@ -49,8 +110,36 @@
             </form>
         </div>
     </div>
+    <div class="row" style="margin-top: 20px;" id="ocr-assumptions">
+    </div>
 </div>
 
+<!--Cart HTML Start-->
+<div class="store-cart-panel">
+    <div class="modal right fade" id="store-cart-side" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="cart-panel-content">
+                </div>
+                <div class="modal-footer">
+                    <!-- <p><?= isset($text_verify_number) ? $text_verify_number : '' ?></p> -->
+                    <a href="<?php echo $checkout; ?>" id="proceed_to_checkout">
+
+                        <button type="button" class="btn btn-primary btn-block btn-lg" id="proceed_to_checkout_button">
+                            <span class="checkout-modal-text">
+                                <?= isset($text_proceed_to_checkout) ? $text_proceed_to_checkout : '' ?>
+                            </span>
+                            <div class="checkout-loader" style="display: none;"></div>
+
+                        </button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!--Cart HTML End-->
 <script>
     jQuery('#delivery_time').datetimepicker({
         format: 'd.m.Y H:i',
@@ -74,7 +163,8 @@
             data.append('document', ($('input[name="po"]')[0].files[0]));
 
             $.ajax({
-                url: "https://ocr.kwikbasket.com/v1/ocr/po",
+                url: "http://localhost:4000/v1/ocr/po",
+                // url: "https://ocr.kwikbasket.com/v1/ocr/po",
                 type: "POST",
                 data: data,
                 cache: false,
@@ -83,24 +173,32 @@
                 success: function (response) {
                     submitButton.val('Process Order');
                     submitButton.toggleClass('disabled');
+
+                    $('#ocr-input').remove();
                     $('form#po_form').trigger('reset');
 
-                    if(response.products.length == 0 && response.errors.length == 0) {
+                    if (response.products.length == 0 && response.assumptions.length == 0 && response.errors.length == 0) {
                         displayErrorParsingDocument();
                         return;
                     }
 
-                    for(const orderItem of response.errors) {
+                    for (const orderItem of response.errors) {
                         displayUnrecognizedProduct(orderItem);
                     }
 
                     for (const orderItem of response.products) {
                         cart.add(orderItem.product_id, orderItem.quantity, 0, 75, '', null);
                     }
+
+                    for (const orderItem of response.assumptions) {
+                        cart.add(orderItem.product_id, orderItem.quantity, 0, 75, '', null);
+                        displayAssumedProduct(orderItem);
+                    }
+
                     iziToast.success({
                         position: 'topRight',
-                        title: 'Yaay',
-                        message: `${response.products.length} products added to cart!`
+                        title: 'Success',
+                        message: `Adding ${response.products.length + response.assumptions.length} products to the cart!`
                     });
                 },
                 error: function (error) {
@@ -109,6 +207,18 @@
                     displayErrorParsingDocument();
                 }
             });
+
+            function displayAssumedProduct(orderItem) {
+                $('#ocr-assumptions').append(`
+                    <div class="col-md-4 form-group">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <h3><strong>${orderItem.original_product}</strong> assumed to be <strong>${orderItem.product}</strong></h3>
+                            </div>
+                        </div>  
+                    </div>
+                `);
+            }
 
             function displayUnrecognizedProduct(orderItem) {
                 $('#ocr-errors').append(`
