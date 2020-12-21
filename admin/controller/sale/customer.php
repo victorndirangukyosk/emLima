@@ -144,7 +144,11 @@ class ControllerSaleCustomer extends Controller {
 
             //echo "<pre>";print_r($this->request->post);die;
             $this->model_sale_customer->editCustomer($this->request->get['customer_id'], $this->request->post);
-
+            $customer_device_info = $this->model_sale_customer->getCustomer($this->request->get['customer_id']);
+            if(is_array($customer_device_info) && array_key_exists('customer_id', $customer_device_info) && array_key_exists('device_id', $customer_device_info) && $customer_device_info['customer_id'] > 0 && $customer_device_info['device_id'] != NULL) {
+            $sen['customer_id'] = '';
+            $ret = $this->emailtemplate->sendDynamicPushNotification($customer_device_info['customer_id'], $customer_device_info['device_id'], 'Customer Category Prices Updated', 'Customer Category Prices Updated', $sen);
+            }
             $this->session->data['success'] = $this->language->get('text_success');
             // Add to activity log
             $log = new Log('error.log');
