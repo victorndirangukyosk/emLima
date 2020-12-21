@@ -2186,7 +2186,7 @@ class ControllerApiCustomerOrder extends Controller
             
 
             foreach ($args['products'] as $product) {
-                $store_id = $product['store_id'];
+                $store_id = $product['store_id'];   
                 // // // $order_products = $this->model_account_order->getOrderProducts($order_id);
                 $stock = true;
 
@@ -2198,7 +2198,7 @@ class ControllerApiCustomerOrder extends Controller
 
                 $product_query = $this->db->get('product_to_store');
 
-                //  echo "<pre>";print_r($product_query);die;
+                //    echo "<pre>";print_r($product_query);die;
 
                 $log->write($product_query->row);
 
@@ -2209,7 +2209,7 @@ class ControllerApiCustomerOrder extends Controller
 
                     $s_price = 0;
                     $o_price = 0;
-
+                    $product['tax_class_id']=$product_query->row['tax_class_id'];
                     if (!$this->config->get('config_inclusiv_tax')) {
 
                         // echo 1212;exit;
@@ -2247,19 +2247,24 @@ class ControllerApiCustomerOrder extends Controller
                             $product['special_price'] = $product_query->row['special_price'];
                         }
                     }
-                    // $cachePrice_data = $this->cache->get('category_price_data');
+                     $cachePrice_data = $this->cache->get('category_price_data');
                     
                         //log customer category
 
                         // echo $_SESSION['customer_category'] ;exit;
-                        $log->write("category price checking in max Quantity API");
-                        $log->write($cachePrice_data);
-                        $log->write("above is cached price data");
-                        $log->write($product['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $product['store_id']);
-                        $log->write("check ID matching");
+                        if(!isset($cachePrice_data))
+                        $log->write("cachePrice_data not coming  in max Quantity API");
+                        
+ 
+                $log->write($_SESSION['customer_category']);
+                $log->write('product info');
+                $log->write($product['store_id']);
+                $log->write($cachePrice_data);
+
+
                     if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$product['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $product['store_id']])) {
 
-                        // echo 'divya';exit;
+                        //  echo 'divya';exit;
                         $s_price = $cachePrice_data[$product['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $product['store_id']];
                         $o_price = $cachePrice_data[$product['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $product['store_id']];
                         $product['special_price'] = $this->currency->format($s_price);
@@ -2277,12 +2282,20 @@ class ControllerApiCustomerOrder extends Controller
                     // }
 
                     $product['percent_off'] = number_format($percent_off, 0);
-                    $special_price = explode(' ', $product['special_price']);
+                    $log->write('product info');
+                    $log->write($product);
+                    $log->write('product info');
+                     $special_price = explode(' ', $product['special_price']);
                     $log->write($special_price);
                     $log->write("special_price");
                     $special_price[1] = str_replace(',', '', $special_price[1]);
                     $total_without_tax = $special_price[1] *  $product['quantity'];
-                            // echo $this->config->get('config_tax');exit; 
+                            //  echo $this->config->get('config_tax');
+                            //  echo $special_price[1];
+                            //  echo $this->config->get('config_tax');
+                            //  echo $this->config->get('config_tax');
+                            //  echo $this->config->get('config_tax');
+                            //  echo $this->config->get('config_tax');exit; 
                     $total_with_tax = $this->config->get('config_tax') ? ($this->tax->calculate($special_price[1], $product['tax_class_id'], $this->config->get('config_tax')) * $product['quantity']) : 0;
                     $tax = 0;
                     $single_product_tax = 0;
@@ -2290,6 +2303,7 @@ class ControllerApiCustomerOrder extends Controller
                         $tax = $total_with_tax - $total_without_tax;
                         $log->write('TAX');
                         $log->write($total_with_tax);
+                        $log->write('sri divya');
                         $log->write($total_without_tax);
                         $log->write($tax);
                         $log->write('TAX');
@@ -2299,8 +2313,16 @@ class ControllerApiCustomerOrder extends Controller
                         $log->write('single_product_tax');
                     }
     
-                    $total = $special_price[1] * $product['quantity'] + ($this->config->get('config_tax') ? ($order_products[$key]['tax'] * $quantity) : 0);
-                    $product['tax']=$total;
+                    $total = $special_price[1] * $product['quantity'] + ($this->config->get('config_tax') ? ($order_products[$key]['tax'] * $product['quantity']) : 0);
+                    
+                    $log->write('TOTAL');
+                    $log->write($total);
+                    $log->write('TOTAL');
+                    $log->write($special_price[1]);
+                    $log->write($this->tax->calculate($special_price[1], $product['tax_class_id'], $this->config->get('config_tax')));
+                    // $log->write($product_id);
+                    // $log->write($product_id);
+                    $product['tax']=$tax;
                     $product['total_without_tax']=$total_without_tax;
                     $product['total_with_tax']=$total_with_tax;
 
