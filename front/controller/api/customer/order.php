@@ -2182,7 +2182,7 @@ class ControllerApiCustomerOrder extends Controller
 
             
             $this->load->model( 'assets/product' );
-            $cachePrice_data = $this->model_assets_product->getCategoryPriceStatusByCategoryName($_SESSION['customer_category'],1);
+            $cachePrice_data = $this->model_assets_product->getCategoryPriceStatusByCategoryNameNew($_SESSION['customer_category'],1);
             
 
             foreach ($args['products'] as $product) {
@@ -2195,7 +2195,7 @@ class ControllerApiCustomerOrder extends Controller
                 $this->db->where('product.status', 1);
                 $this->db->where('product_description.language_id', (int) $this->config->get('config_language_id'));
                 $this->db->where('product_to_store.product_store_id', $product['product_store_id']);
-
+                // echo $_SESSION['customer_category'] ;exit;
                 $product_query = $this->db->get('product_to_store');
 
                 //    echo "<pre>";print_r($product_query);die;
@@ -2247,11 +2247,12 @@ class ControllerApiCustomerOrder extends Controller
                             $product['special_price'] = $product_query->row['special_price'];
                         }
                     }
-                     $cachePrice_data = $this->cache->get('category_price_data');
+                    //  $cachePrice_data = $this->cache->get('category_price_data');
                     
                         //log customer category
 
                         // echo $_SESSION['customer_category'] ;exit;
+                        //   echo $cachePrice_data ;exit;
                         if(!isset($cachePrice_data))
                         $log->write("cachePrice_data not coming  in max Quantity API");
                         

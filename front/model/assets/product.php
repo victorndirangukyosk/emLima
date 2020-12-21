@@ -627,6 +627,27 @@ class ModelAssetsProduct extends Model
     }
 
 
+    public function getCategoryPriceStatusByCategoryNameNew($category_name, $status) {
+        $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "product_category_prices WHERE price_category like'%" . $category_name . "' AND status ='" . $status . "'");
+        // return $query->rows;
+
+    //    echo 'SELECT * FROM ' . DB_PREFIX . "product_category_prices WHERE price_category like'%" . $category_name . "' AND status ='" . $status . "'";
+        $resultsdata = $query ; 
+        $cache_price_data = [];
+        //    echo '<pre>'; print_r(count($resultsdata->rows));exit;
+        if (count($resultsdata->rows) > 0) {
+            // echo '<pre>'; print_r($resultsdata);exit;
+            foreach ($resultsdata->rows as $result) {
+                $cache_price_data[$result['product_store_id'].'_'.$result['price_category'].'_'.$store_id] = $result['price'];
+            }
+        }
+        // $this->cache->set('category_price_data', $cache_price_data);
+            // echo '<pre>'; print_r($cache_price_data);exit;
+
+        return $cache_price_data;
+    }
+
+
     public function getCategoryPriceStatusByCustomerID($parent_ID,$customer_ID, $status) {
        if($parent_ID!=null && $parent_ID!=0)
         $customerquery = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer  WHERE customer_id ='" . $parent_ID . "' ");
