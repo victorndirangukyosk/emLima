@@ -187,6 +187,7 @@ class ControllerAccountOrder extends Controller {
             //$log->write($is_he_parents);
             //$log->write($customer_parent_info);
             //$log->write('IS HE PARENT USER');
+            $hours = 0;
             $t1 = strtotime(date('Y-m-d H:i:s'));
             $t2 = strtotime($result['date_added']);
             $diff = $t1 - $t2;
@@ -236,7 +237,7 @@ class ControllerAccountOrder extends Controller {
                 'edit_order' => 15 == $result['order_status_id'] && (empty($_SESSION['parent']) || $order_appoval_access) ? $this->url->link('account/order/edit_order', 'order_id=' . $result['order_id'], 'SSL') : '',
                 'order_company' => isset($customer_info) && null != $customer_info['company_name'] ? $customer_info['company_name'] : null,
                 //'edit_own_order' => $this->url->link('checkout/edit_order/index_new', 'order_id=' . $result['order_id'], 'SSL'),
-                'edit_own_order' => ($result['order_status_id'] == 15 || $result['order_status_id'] == 14) ? $this->url->link('account/order/edit_your_order', 'order_id=' . $result['order_id'], 'SSL') : NULL,
+                'edit_own_order' => (($result['order_status_id'] == 15 || $result['order_status_id'] == 14) && $hours < 24) ? $this->url->link('account/order/edit_your_order', 'order_id=' . $result['order_id'], 'SSL') : NULL,
             ];
         }
 
