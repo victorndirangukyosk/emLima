@@ -3747,11 +3747,11 @@ class ControllerAccountOrder extends Controller {
             $hours = $diff / ( 60 * 60 );
             $log->write('hours');
             $log->write(date('Y-m-d H:i:s'));
-            $log->write($order_info['date_added']);
+            $log->write($order_info['order_date']);
             $log->write($hours);
             $log->write('hours');        
         
-        if ($order_info && $order_info['customer_id'] == $this->customer->getId() /*&& ($order_info['order_status_id'] == 15 || $order_info['order_status_id'] == 14) && $hours < 24 && $order_info['payment_code'] == 'cod'*/) {
+        if ($order_info && $order_info['customer_id'] == $this->customer->getId() && ($order_info['order_status_id'] == 15 || $order_info['order_status_id'] == 14) && $hours < 24 && $order_info['payment_code'] == 'cod') {
             $data['cashbackAmount'] = $this->currency->format(0);
 
             $coupon_history_data = $this->model_account_order->getCashbackAmount($order_id);
