@@ -3742,7 +3742,7 @@ class ControllerAccountOrder extends Controller {
             $log = new Log('error.log');
             $hours = 0;
             $t1 = strtotime(date('Y-m-d H:i:s'));
-            $t2 = strtotime($order_info['date_added']);
+            $t2 = strtotime($order_info['order_date']);
             $diff = $t1 - $t2;
             $hours = $diff / ( 60 * 60 );
             $log->write('hours');
