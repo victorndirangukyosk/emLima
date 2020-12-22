@@ -1120,12 +1120,16 @@ class ControllerSaleCustomer extends Controller {
         $data['parent_user_phone'] = NULL;
         if (isset($this->request->get['customer_id']) && ('POST' != $this->request->server['REQUEST_METHOD'])) {
             $customer_info = $this->model_sale_customer->getCustomer($this->request->get['customer_id']);
+            $data['customer_category'] = $customer_info['customer_category'];
+            $data['customer_category_disabled'] = '';
             $customer_parent_info = $this->model_sale_customer->getCustomerParentDetails($this->request->get['customer_id']);
             $customer_account_manager_info = $this->model_sale_customer->getCustomerAccountManagerDetails($this->request->get['customer_id']);
             if ($customer_parent_info != NULL) {
                 $data['parent_user_name'] = $customer_parent_info['firstname'] . '' . $customer_parent_info['lastname'];
                 $data['parent_user_email'] = $customer_parent_info['email'];
                 $data['parent_user_phone'] = $customer_parent_info['telephone'];
+                $data['customer_category'] = $customer_parent_info['customer_category'];
+                $data['customer_category_disabled'] = 'disabled';
             }
             
             if ($customer_account_manager_info != NULL) {
@@ -2318,12 +2322,16 @@ class ControllerSaleCustomer extends Controller {
         $data['parent_user_phone'] = NULL;
         if (isset($this->request->get['customer_id']) && ('POST' != $this->request->server['REQUEST_METHOD'])) {
             $customer_info = $this->model_sale_customer->getCustomer($this->request->get['customer_id']);
+            $data['customer_category'] = $customer_info['customer_category'];
+            $data['customer_category_disabled'] = '';
             $customer_parent_info = $this->model_sale_customer->getCustomerParentDetails($this->request->get['customer_id']);
             $customer_account_manager_info = $this->model_sale_customer->getCustomerAccountManagerDetails($this->request->get['customer_id']);
             if ($customer_parent_info != NULL) {
                 $data['parent_user_name'] = $customer_parent_info['firstname'] . '' . $customer_parent_info['lastname'];
                 $data['parent_user_email'] = $customer_parent_info['email'];
                 $data['parent_user_phone'] = $customer_parent_info['telephone'];
+                $data['customer_category'] = $customer_parent_info['customer_category'];
+                $data['customer_category_disabled'] = 'disabled';
             }
 
             if ($customer_account_manager_info != NULL) {
@@ -2354,7 +2362,6 @@ class ControllerSaleCustomer extends Controller {
         $customer_group_info = $this->model_sale_customer_group->getCustomerGroup($customer_info['customer_group_id']);
         $data['customer_group_id'] = $customer_info['customer_group_id'];
         $data['customer_group_info'] = $customer_group_info;
-        $data['customer_category'] = $customer_info['customer_category'];
         $data['firstname'] = $customer_info['firstname'];
         $data['lastname'] = $customer_info['lastname'];
         $data['email'] = $customer_info['email'];        
