@@ -4101,6 +4101,14 @@ class ControllerAccountOrder extends Controller {
             }
 
             $data['comment'] = nl2br($order_info['comment']);
+            $this->load->model('account/address');
+            $store_info = $this->model_account_address->getStoreData($order_info['store_id']);
+            $log->write($store_info);
+            $data['store_warning'] = '';
+            if ($store_info['min_order_amount'] > $data['subtotal']) {
+            $currentprice = $store_info['min_order_amount'] - $data['subtotal'];
+            $data['store_warning'] = "<center style='background-color:#ee4054;color:#fff'>" . $this->currency->format($currentprice) . ' away from minimum order value </center>';    
+            }
 
             // History
             $data['histories'] = [];

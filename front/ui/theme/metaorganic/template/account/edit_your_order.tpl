@@ -11,7 +11,16 @@
                                     <p class="notice-text">Order updated successfully!</p>
                                 </div>
                             </div>
-                        </div>                           
+                        </div>
+                        <?php if($store_warning != NULL) { ?>
+                        <div class="col-md-12">
+                            <div class="alerter">
+                                <div>
+                                    <p class="notice-text"><?php echo $store_warning; ?></p>
+                                </div>
+                            </div>
+                        </div>
+                        <?php } ?>
                         <div class="col-md-12">
                             <div class="back-link-block"><a href="<?php echo $continue; ?>"> <span class="back-arrow"><i class="fa fa-long-arrow-left"></i> </span> <?= $text_go_back ?></a></div>
                         </div>
