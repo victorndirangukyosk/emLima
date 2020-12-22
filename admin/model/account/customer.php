@@ -148,13 +148,13 @@ class ModelAccountCustomer extends Model
         $customer_device_info = $this->getCustomer($customer_info['customer_id']);
         $sub_customer_device_info = $this->getSubCustomers($customer_info['customer_id']);
         if ($customer_device_info != NULL && is_array($customer_device_info)) {
-            $sen['customer_id'] = '';
+            $sen['isCategoryPriceUpdated'] = true;
             $ret = $this->emailtemplate->sendDynamicPushNotification($customer_device_info['customer_id'], $customer_device_info['device_id'], 'Customer Category Prices Updated', 'Customer Category Prices Updated', $sen);
         }
         
         if(is_array($sub_customer_device_info) && count($sub_customer_device_info) > 0) {
             foreach($sub_customer_device_info as $sub_customer_device_inf) {
-            $sen['customer_id'] = '';
+            $sen['isCategoryPriceUpdated'] = true;
             $ret = $this->emailtemplate->sendDynamicPushNotification($sub_customer_device_inf['customer_id'], $sub_customer_device_inf['device_id'], 'Customer Category Prices Updated', 'Customer Category Prices Updated', $sen);    
             }
         }
