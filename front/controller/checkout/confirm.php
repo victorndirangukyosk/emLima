@@ -408,11 +408,13 @@ class ControllerCheckoutConfirm extends Controller
             foreach ($stores as $store_id) {
                 $data['totals'] = [];
                 foreach ($order_data[$store_id]['totals'] as $total) {
+                    if($total['code'] != 'total') {
                     $data['totals'][] = [
                         'title' => $total['title'],
                         'text' => $this->currency->format($total['value']),
                     ];
                     $tot += $total['value'];
+                    }
                 }
             }
             $transactionData = [
@@ -1171,11 +1173,13 @@ class ControllerCheckoutConfirm extends Controller
             foreach ($stores as $store_id) {
                 $data['totals'] = [];
                 foreach ($order_data[$store_id]['totals'] as $total) {
+                    if($total['code'] != 'total') {
                     $data['totals'][] = [
                         'title' => $total['title'],
                         'text' => $this->currency->format($total['value']),
                     ];
                     $tot += $total['value'];
+                    }
                 }
             }
 

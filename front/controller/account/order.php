@@ -187,7 +187,18 @@ class ControllerAccountOrder extends Controller {
             //$log->write($is_he_parents);
             //$log->write($customer_parent_info);
             //$log->write('IS HE PARENT USER');
-
+            $hours = 0;
+            $t1 = strtotime(date('Y-m-d H:i:s'));
+            $t2 = strtotime($result['date_added']);
+            $diff = $t1 - $t2;
+            $hours = $diff / ( 60 * 60 );
+            $log->write('hours');
+            $log->write(date('Y-m-d H:i:s'));
+            $log->write($result['date_added']);
+            $log->write(date_default_timezone_get());
+            $log->write($hours);
+            $log->write('hours');
+            
             $data['orders'][] = [
                 'order_id' => $result['order_id'],
                 'name' => $result['firstname'] . ' ' . $result['lastname'],
@@ -226,7 +237,7 @@ class ControllerAccountOrder extends Controller {
                 'edit_order' => 15 == $result['order_status_id'] && (empty($_SESSION['parent']) || $order_appoval_access) ? $this->url->link('account/order/edit_order', 'order_id=' . $result['order_id'], 'SSL') : '',
                 'order_company' => isset($customer_info) && null != $customer_info['company_name'] ? $customer_info['company_name'] : null,
                 //'edit_own_order' => $this->url->link('checkout/edit_order/index_new', 'order_id=' . $result['order_id'], 'SSL'),
-                'edit_own_order' => $this->url->link('account/order/edit_your_order', 'order_id=' . $result['order_id'], 'SSL'),
+                'edit_own_order' => (($result['order_status_id'] == 15 || $result['order_status_id'] == 14) && $hours < 24) ? $this->url->link('account/order/edit_your_order', 'order_id=' . $result['order_id'], 'SSL') : NULL,
             ];
         }
 
@@ -3268,6 +3279,8 @@ class ControllerAccountOrder extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+    //if any code changed in this method ,need to implement same in mobile API
+    //controller/api/customer/order.php-addEditOrderWithNewitemAndQuantity()
     public function edit_full_order() {
         $log = new Log('error.log');
         $json = [];
@@ -3279,6 +3292,7 @@ class ControllerAccountOrder extends Controller {
         $quantity = $this->request->post['quantity'];
         $unit = $this->request->post['unit'];
         $variation_id = $this->request->post['variation_id'];
+        $product_note = $this->request->post['product_note'];
 
         $this->load->model('account/order');
         $order_info = $this->model_account_order->getOrder($order_id, true);
@@ -3373,10 +3387,13 @@ class ControllerAccountOrder extends Controller {
                 $log->write($this->tax->calculate($special_price[1], $product_info['tax_class_id'], $this->config->get('config_tax')));
                 $log->write($product_id);
                 $log->write($product_id);
-
+                if(isset($this->request->post['product_note']) && $this->request->post['product_note'] != NULL) {
+                $this->db->query('UPDATE ' . DB_PREFIX . 'order_product SET product_note = "'. $product_note .'", quantity = ' . $quantity . ', tax = ' . $single_product_tax . ', total = ' . $total_without_tax . " WHERE order_product_id = '" . (int) $order_products[$key]['order_product_id'] . "' AND order_id  = '" . (int) $order_id . "' AND product_id = '" . (int) $product_id . "'");
+                $this->db->query('UPDATE ' . DB_PREFIX . 'real_order_product SET quantity = ' . $quantity . ', tax = ' . $single_product_tax . ', total = ' . $total_without_tax . " WHERE order_product_id = '" . (int) $order_products[$key]['order_product_id'] . "' AND order_id  = '" . (int) $order_id . "' AND product_id = '" . (int) $product_id . "'");
+                } else {
                 $this->db->query('UPDATE ' . DB_PREFIX . 'order_product SET quantity = ' . $quantity . ', tax = ' . $single_product_tax . ', total = ' . $total_without_tax . " WHERE order_product_id = '" . (int) $order_products[$key]['order_product_id'] . "' AND order_id  = '" . (int) $order_id . "' AND product_id = '" . (int) $product_id . "'");
                 $this->db->query('UPDATE ' . DB_PREFIX . 'real_order_product SET quantity = ' . $quantity . ', tax = ' . $single_product_tax . ', total = ' . $total_without_tax . " WHERE order_product_id = '" . (int) $order_products[$key]['order_product_id'] . "' AND order_id  = '" . (int) $order_id . "' AND product_id = '" . (int) $product_id . "'");
-
+                }
                 $order_totals = $this->db->query('SELECT SUM(total) AS total FROM ' . DB_PREFIX . "order_product WHERE order_id = '" . (int) $order_id . "'");
 
                 $order_products_updated = $this->model_account_order->getOrderProducts($order_id);
@@ -3520,7 +3537,8 @@ class ControllerAccountOrder extends Controller {
                 $log->write($product_id);
                 $this->load->model('extension/extension');
                 $product_info['vendor_id'] = $this->model_extension_extension->getVendorId($product_info['store_id']);
-                $this->db->query('INSERT INTO ' . DB_PREFIX . "order_product SET vendor_id='" . (int) $product_info['vendor_id'] . "', store_id='" . (int) $product_info['store_id'] . "', order_id = '" . (int) $this->request->post['order_id'] . "', variation_id = '" . (int) $this->request->post['variation_id'] . "', product_id = '" . (int) $product_info['product_store_id'] . "', general_product_id = '" . (int) $product_info['product_id'] . "',  name = '" . $this->db->escape($product_info['name']) . "', model = '" . $this->db->escape($product_info['model']) . "', quantity = '" . $quantity . "', price = '" . (float) $special_price[1] . "', total = '" . (float) $total_without_tax . "', tax = '" . (float) $single_product_tax . "', product_type = 'replacable', unit = '" . $this->db->escape($product_info['unit']) . "'");
+                $product_note = $this->request->post['product_note'];
+                $this->db->query('INSERT INTO ' . DB_PREFIX . "order_product SET product_note='" . $this->request->post['product_note'] . "', vendor_id='" . (int) $product_info['vendor_id'] . "', store_id='" . (int) $product_info['store_id'] . "', order_id = '" . (int) $this->request->post['order_id'] . "', variation_id = '" . (int) $this->request->post['variation_id'] . "', product_id = '" . (int) $product_info['product_store_id'] . "', general_product_id = '" . (int) $product_info['product_id'] . "',  name = '" . $this->db->escape($product_info['name']) . "', model = '" . $this->db->escape($product_info['model']) . "', quantity = '" . $quantity . "', price = '" . (float) $special_price[1] . "', total = '" . (float) $total_without_tax . "', tax = '" . (float) $single_product_tax . "', product_type = 'replacable', unit = '" . $this->db->escape($product_info['unit']) . "'");
 
                 $order_totals = $this->db->query('SELECT SUM(total) AS total FROM ' . DB_PREFIX . "order_product WHERE order_id = '" . (int) $order_id . "'");
 
@@ -4083,6 +4101,14 @@ class ControllerAccountOrder extends Controller {
             }
 
             $data['comment'] = nl2br($order_info['comment']);
+            $this->load->model('account/address');
+            $store_info = $this->model_account_address->getStoreData($order_info['store_id']);
+            $log->write($store_info);
+            $data['store_warning'] = '';
+            if ($store_info['min_order_amount'] > $data['subtotal']) {
+            $currentprice = $store_info['min_order_amount'] - $data['subtotal'];
+            $data['store_warning'] = "<center style='background-color:#ee4054;color:#fff'>" . $this->currency->format($currentprice) . ' away from minimum order value </center>';    
+            }
 
             // History
             $data['histories'] = [];

@@ -1,7 +1,4 @@
 <?php echo $header; ?> 
- 
-
-
     <div class="checkout-wrapper">
         <div class="container">
 

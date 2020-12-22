@@ -11,7 +11,16 @@
                                     <p class="notice-text">Order updated successfully!</p>
                                 </div>
                             </div>
-                        </div>                           
+                        </div>
+                        <?php if($store_warning != NULL) { ?>
+                        <div class="col-md-12">
+                            <div class="alerter">
+                                <div>
+                                    <p class="notice-text"><?php echo $store_warning; ?></p>
+                                </div>
+                            </div>
+                        </div>
+                        <?php } ?>
                         <div class="col-md-12">
                             <div class="back-link-block"><a href="<?php echo $continue; ?>"> <span class="back-arrow"><i class="fa fa-long-arrow-left"></i> </span> <?= $text_go_back ?></a></div>
                         </div>
@@ -949,7 +958,7 @@
         $(document).delegate('.open-popup', 'click', function () {
         $('.open-popup').prop('disabled', true);
         // console.log("product blocks" + $(this).attr('data-id'));
-        $.get('index.php?path=product/product/order_edit_view&product_store_id=' + $(this).attr('data-id') + '&store_id=' + $(this).attr('data-store'), function (data) {
+        $.get('index.php?path=product/product/order_edit_view&product_store_id=' + $(this).attr('data-id') + '&store_id=' + $(this).attr('data-store')+ '&edit_order_id=' + $('#edit_order_id').val(), function (data) {
         $('.open-popup').prop('disabled', false);
         $('.modal-wrapper').html(data);
         $('#popupmodal').modal('show');

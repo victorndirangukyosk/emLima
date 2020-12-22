@@ -993,6 +993,12 @@ class ControllerProductProduct extends Controller
         } else {
             $product_store_id = 0;
         }
+        
+        if (isset($this->request->get['edit_order_id'])) {
+            $edit_order_id = $this->request->get['edit_order_id'];
+        } else {
+            $edit_order_id = 0;
+        }
 
         if ($this->session->data['config_store_id']) {
             $store_id = $this->session->data['config_store_id'];
@@ -1003,8 +1009,10 @@ class ControllerProductProduct extends Controller
         $data['text_incart'] = $this->language->get('text_incart');
         //recipe
         $this->load->model('assets/product');
+        $this->load->model('account/order');
 
         $product_info = $this->model_assets_product->getProductForPopup($product_store_id, false, $store_id);
+        $order_product = $this->model_account_order->getOrderProductsByProductId($edit_order_id, $product_store_id);
 
         //echo "<pre>";print_r($product_info);die;
         $data['text_unit'] = $this->language->get('text_unit');
@@ -1132,11 +1140,11 @@ class ControllerProductProduct extends Controller
                     $producetypesupdated[$i]['type'] = $pt;
                     $producetypesupdated[$i]['value'] = 0;
 
-                    foreach ($this->session->data['cart'][$key]['produce_type'] as $type) {
+                    /*foreach ($this->session->data['cart'][$key]['produce_type'] as $type) {
                         if ($type['type'] == $pt) {
                             $producetypesupdated[$i]['value'] = $type['value'];
                         }
-                    }
+                    }*/
                     ++$i;
                 }
             }
@@ -1167,7 +1175,7 @@ class ControllerProductProduct extends Controller
                 // 		'special' => $special_price
                 // 	)
                 // ),
-                'variations' => $this->model_assets_product->getProductVariationsNew($product_info['name'], $store_id),
+                'variations' => $this->model_assets_product->getEditOrderProductVariationsNew($product_info['name'], $store_id, '', $edit_order_id),
                 'isWishListID' => $isWishListID,
             ];
             
@@ -1176,16 +1184,17 @@ class ControllerProductProduct extends Controller
             $log->write($data['product']);
             $log->write('product popup');*/
             //echo '<pre>';print_r( $data['product']);exit;
-            if (isset($this->session->data['cart'][$key])) {
-                $data['product']['qty_in_cart'] = $this->session->data['cart'][$key]['quantity'];
+            if (isset($order_product) && array_key_exists('quantity', $order_product) && $order_product['quantity'] > 0) {
+                $data['product']['qty_in_cart'] = $order_product['quantity'];
                 $data['product']['actualCart'] = 1;
-                $data['product']['product_note'] = $this->session->data['cart'][$key]['product_note'];
+                $data['product']['product_note'] = $order_product['product_note'];
             } else {
                 $data['product']['qty_in_cart'] = 0;
-                if (isset($this->session->data['temp_cart'][$key])) {
+                $data['product']['product_note'] = '';
+                /*if (isset($this->session->data['temp_cart'][$key])) {
                     $data['product']['qty_in_cart'] = $this->session->data['temp_cart'][$key]['quantity'];
                     $data['product']['product_note'] = $this->session->data['temp_cart'][$key]['product_note'];
-                }
+                }*/
             }
             if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/product/order_edit_product_popup.tpl')) {
                 $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/product/order_edit_product_popup.tpl', $data));

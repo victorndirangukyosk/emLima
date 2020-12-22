@@ -626,6 +626,42 @@ class ModelAssetsProduct extends Model
         return $query->rows;
     }
 
+
+    public function getCategoryPriceStatusByCategoryNameNew($category_name, $status,$store_id) {
+        $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "product_category_prices WHERE price_category like'%" . $category_name . "' AND status ='" . $status . "'");
+        // return $query->rows;
+
+    //    echo 'SELECT * FROM ' . DB_PREFIX . "product_category_prices WHERE price_category like'%" . $category_name . "' AND status ='" . $status . "'";
+        $resultsdata = $query ; 
+        $cache_price_data = [];
+        //    echo '<pre>'; print_r(count($resultsdata->rows));exit;
+        if (count($resultsdata->rows) > 0) {
+            // echo '<pre>'; print_r($resultsdata);exit;
+            foreach ($resultsdata->rows as $result) {
+                $cache_price_data[$result['product_store_id'].'_'.$result['price_category'].'_'.$store_id] = $result['price'];
+            }
+        }
+        // $this->cache->set('category_price_data', $cache_price_data);
+            // echo '<pre>'; print_r($cache_price_data);exit;
+
+        return $cache_price_data;
+    }
+
+
+    public function getCategoryPriceStatusByCustomerID($parent_ID,$customer_ID, $status) {
+       if($parent_ID!=null && $parent_ID!=0)
+        $customerquery = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer  WHERE customer_id ='" . $parent_ID . "' ");
+        else
+        $customerquery = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer  WHERE customer_id ='" . $customer_ID . "' ");
+        $customer_category_name=$customerquery->row['customer_category'];
+
+        $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "product_category_prices WHERE price_category ='" . $customer_category_name . "' AND status ='" . $status . "'");
+        
+            //   echo '<pre>';print_r($customer_category_name);exit;
+            // echo '<pre>' . print_r($_SESSION, TRUE) . '</pre>';
+        return $query->rows;
+    }
+
     public function getProductVariationsNew($product_name, $store_id, $formated = false)
     {
         $returnData = [];
@@ -654,6 +690,114 @@ class ModelAssetsProduct extends Model
                     $r['actualCart'] = 1;
                 } else {
                     $r['qty_in_cart'] = 0;
+                    // if ( isset( $this->session->data['temp_cart'][$key] ) ) {
+                // 	$r['qty_in_cart'] = $this->session->data['temp_cart'][$key]['quantity'];
+                // }
+                }
+
+                $percent_off = null;
+                if (isset($r['special_price']) && isset($r['price']) && 0 != $r['price'] && 0 != $r['special_price']) {
+                    $percent_off = (($r['price'] - $r['special_price']) / $r['price']) * 100;
+                }
+
+                if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+                    //$price = $result['price'];
+                    $r['price'] = $this->currency->formatWithoutCurrency($r['price']);
+                }
+
+                if ((float) $r['special_price']) {
+                    $r['special_price'] = $this->currency->formatWithoutCurrency((float) $r['special_price']);
+                } else {
+                    $r['special_price'] = false;
+                }
+
+                $cachePrice_data = $this->cache->get('category_price_data');
+
+                if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$r['product_store_id'].'_'.$_SESSION['customer_category'].'_'.ACTIVE_STORE_ID])) {
+                    //echo $cachePrice_data[$product_info['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$store_id];//exit;
+                    $s_price = $cachePrice_data[$r['product_store_id'].'_'.$_SESSION['customer_category'].'_'.ACTIVE_STORE_ID];
+                    $o_price = $cachePrice_data[$r['product_store_id'].'_'.$_SESSION['customer_category'].'_'.ACTIVE_STORE_ID];
+                    $r['special_price'] = $s_price;
+                    $r['price'] = $o_price;
+                }
+                $isWishListID = $this->model_account_wishlist->getWishlistIDCustomerProduct($r['product_id']);
+                $category_price_data = $this->getCategoryPriceStatusByProductStoreId($r['product_store_id']);
+                $log = new Log('error.log');
+                /*$log->write('category_price_data model_assets_product');
+                $log->write($category_price_data);
+                $log->write('category_price_data product model_assets_product');*/
+                $r['isWishListID'] = $isWishListID;
+                $r['category_pricing_variant_status'] = is_array($category_price_data) && array_key_exists('status', $category_price_data) ? $category_price_data['status'] : 1;
+                $res = [
+                        'variation_id' => $r['product_store_id'],
+                        'unit' => $r['unit'],
+                        'weight' => floatval($r['weight']),
+                        'price' => $r['price'],
+                        'special' => $r['special_price'],
+                        'percent_off' => number_format($percent_off, 0),
+                        'max_qty' => $r['min_quantity'] > 0 ? $r['min_quantity'] : $r['quantity'],
+                        'qty_in_cart' => $r['qty_in_cart'],
+                        'key' => $key,
+                        'isWishListID' => $isWishListID,
+                        'category_pricing_variant_status' => is_array($category_price_data) && array_key_exists('status', $category_price_data) ? $category_price_data['status'] : 1
+                    ];
+
+                // $r['variation_id'] => $result['product_store_id'],
+                //         'unit' => $result['unit'],
+                //         'weight' => floatval($result['weight']),
+                //         'price' => $price,
+                //         'special' => $special_price
+                if (true == $formated) {
+                    array_push($returnData, $res);
+                } else {
+                    array_push($returnData, $r);
+                }
+            }
+        }
+    }
+
+        return $returnData;
+    }
+    
+    public function getEditOrderProductVariationsNew($product_name, $store_id, $formated = false, $order_id)
+    {
+        $returnData = [];
+
+       // $all_variations = 'SELECT * ,product_store_id as variation_id FROM '.DB_PREFIX.'product_to_store ps LEFT JOIN '.DB_PREFIX."product p ON (ps.product_id = p.product_id) WHERE name = '$product_name'";
+        $all_variations = 'SELECT * ,product_store_id as variation_id FROM '.DB_PREFIX.'product_to_store ps LEFT JOIN '.DB_PREFIX."product p ON (ps.product_id = p.product_id) WHERE name = '$product_name' and ps.status=1";
+
+        //echo $all_variations;die;
+        $result = $this->db->query($all_variations);
+
+        foreach ($result->rows as $r) {
+            $category_price_data = $this->getCategoryPriceStatusByProductStoreId($r['product_store_id']);
+            $category_pricing_variant_status = is_array($category_price_data) && array_key_exists('status', $category_price_data) ? $category_price_data['status'] : 1;
+            if($category_pricing_variant_status == 1) {
+            if ($r['status']) {
+            //REMOVE QUANTITY VALIDATION
+            //if ($r['quantity'] > 0 && $r['status']) {
+                //$key = base64_encode( serialize( array( 'product_store_id' => (int) $r['product_store_id'], 'store_id'=>($this->session->data['config_store_id'])  ) ) );
+                //  $key = base64_encode(serialize(array('product_store_id' => (int)$r['product_store_id'], 'store_id' => $this->session->data['config_store_id'])));
+                //$key = base64_encode( serialize( array( 'product_store_id' => (int) $product_info['product_store_id'], 'store_id'=>($this->session->data['config_store_id']) ? $this->session->data['config_store_id'] : $store_id ) ) );
+                $key = base64_encode(serialize(['product_store_id' => (int) $r['product_store_id'], 'store_id' => $store_id]));
+                
+                $this->load->model('account/order');
+                $order_product = $this->model_account_order->getOrderProductsByProductId($order_id, $r['product_store_id']);
+                $log = new Log('error.log');
+                $log->write('order_product');
+                $log->write($order_product);
+                $log->write('order_product');
+                
+                $r['key'] = $key;
+                //if (isset($this->session->data['cart'][$key])) {
+                if(is_array($order_product) && array_key_exists('product_id', $order_product) && array_key_exists('store_id', $order_product) && $order_product['product_id'] == $r['product_store_id'] && $order_product['quantity'] > 0) {
+                    $r['qty_in_cart'] = $order_product['quantity'];
+                    $r['product_note'] = $order_product['product_note'];
+                    //$r['qty_in_cart'] = $this->session->data['cart'][$key]['quantity'];
+                    $r['actualCart'] = 1;
+                } else {
+                    $r['qty_in_cart'] = 0;
+                    $r['product_note'] = NULL;
                     // if ( isset( $this->session->data['temp_cart'][$key] ) ) {
                 // 	$r['qty_in_cart'] = $this->session->data['temp_cart'][$key]['quantity'];
                 // }
@@ -870,15 +1014,16 @@ class ModelAssetsProduct extends Model
         //die;
         //		echo $this->db->last_query();die;
 
-        //		echo "<pre>";print_r($ret);die;
+        		// echo "<pre>";print_r($ret);die;
         return $ret;
     }
     
     public function getProductsForHomePage($data = [])
-    {   
+    {
+        // echo "<pre>";print_r($_SESSION);die;
         $disabled_products_string = NULL;
         if(isset($_SESSION['customer_category']) && $_SESSION['customer_category'] != NULL) {
-        $category_pricing_disabled_products = $this->getCategoryPriceStatusByCategoryName($_SESSION['customer_category'], 0);   
+        $category_pricing_disabled_products = $this->getCategoryPriceStatusByCategoryName($_SESSION['customer_category'], 0);
         //$log = new Log('error.log');
         //$log->write('category_pricing_disabled_products');
         $disabled_products = array_column($category_pricing_disabled_products, 'product_store_id');
@@ -1002,9 +1147,9 @@ class ModelAssetsProduct extends Model
         // $this->db->order_by('product_description.name','asc');
         $ret = $this->db->get('product_to_store', $limit, $offset)->rows;
         //die;
-        //		echo $this->db->last_query();die;
+        		// echo $this->db->last_query();die;
 
-        //		echo "<pre>";print_r($ret);die;
+        		// echo "<pre>";print_r($ret);die;
         return $ret;
     }
     
@@ -1136,7 +1281,7 @@ class ModelAssetsProduct extends Model
         $ret = $this->db->get('product_to_store')->rows;
         //die;
         //		echo $this->db->last_query();die;
-        //		echo "<pre>";print_r($ret);die;
+        		// echo "<pre>";print_r($ret);die;
         return $ret;
     }
 

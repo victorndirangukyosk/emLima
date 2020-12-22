@@ -405,7 +405,7 @@ class ControllerCheckoutCart extends Controller
         $this->load->model('assets/product');
 
         $product_info = $this->model_assets_product->getProduct($product_store_id, false, $store_id);
-      
+
         $log->write('PROD INFO');
         $log->write($product_info);
         $log->write('PROD INFO');

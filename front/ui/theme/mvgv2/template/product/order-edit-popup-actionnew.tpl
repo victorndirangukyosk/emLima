@@ -58,7 +58,7 @@
 <div class="qtybtns-addbtnd addcart-block" id="add-btn-container">
  <input type="text" onkeypress="return validateFloatKeyPress(this, event);" autocomplete="off"  style="margin-left: -15px;" class="input-cart-qty" id="cart-qty-<?= $product['product_store_id'] ?>-<?= $product['store_product_variation_id'] ?>" value="<?php if($product['qty_in_cart']>0){echo $product['qty_in_cart'];}?>" placeholder="Add Qty">
  <a id="AtcButton-id-<?= $product['store_product_variation_id'] ?>" style="<?php if($product['qty_in_cart']>0){echo "background-color:#ea7128";}?>" class="AtcButton__container___1RZ9c AtcButton__with_counter___3YxLq atc_ AtcButton__small___1a1kH" >
- <span data-action="<?= $product['qty_in_cart'] ? 'editorderupdate' : 'editorderadd'; ?>"
+ <span data-action="<?= $product['qty_in_cart'] ? 'editorderadd' : 'editorderadd'; ?>"
        data-key='<?= $product["key"] ?>'
        class="AtcButton__button_text___VoXuy unique_add_button<?= $product['product_store_id'] ?>-<?= $product['store_product_variation_id'] ?>"
        id="editorderadd-cart-btnnew"
@@ -267,7 +267,7 @@ wishlistHolder.text("Add To My List");
     if(qty_in_cart1>0)
     {
     productQuantityInput.val(qty_in_cart1); 
-    dataHolder.attr('data-action', 'editorderupdate');
+    dataHolder.attr('data-action', 'editorderadd');
      newcartId.attr('style','background-color:#ea7128');
 
     }
@@ -314,7 +314,7 @@ $(document).delegate('.produce-type', 'change', function() {
     if(oldquantity>0)   
     {
     productQuantityInput.val(oldquantity); 
-    // dataHolder.attr('data-action', 'editorderupdate');
+    // dataHolder.attr('data-action', 'editorderadd');
     newcartId.attr('style','background-color:#ea7128');
      }
      else{
@@ -330,7 +330,7 @@ $(document).delegate('.produce-type', 'change', function() {
           
         productQuantityInput.val(mainquantity); 
         if(mainquantity>0)
-        dataHolder.attr('data-action', 'editorderupdate');
+        dataHolder.attr('data-action', 'editorderadd');
         else
         dataHolder.attr('data-action', 'editorderadd');
 

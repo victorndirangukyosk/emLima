@@ -1157,7 +1157,10 @@ class ModelCheckoutOrder extends Model {
 
     public function addTransaction($data) {
 
-
+        $log = new Log('error.log');
+        $log->write('addTransaction');
+        $log->write($data);
+        $log->write('addTransaction');
         $order_id = implode(',', $this->session->data['order_id']);
         //echo $this->session->data['transaction_id'];die;
         //unset($this->session->data['transaction_id']);
