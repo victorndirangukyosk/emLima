@@ -2827,7 +2827,8 @@ class ControllerApiCustomerOrder extends Controller
                         $log->write($special_price);
                         // $special_price[1] = str_replace(',', '', $special_price[1]);
                         $special_price[1]=$product['price'];
-                        $total_without_tax = $special_price[1] * $quantity;
+                        // $total_without_tax = $special_price[1] * $quantity;
+                        $total_without_tax = $product['price'] * $quantity;
         
                          $total_with_tax =0;// $this->config->get('config_tax') ? ($this->tax->calculate($special_price[1], $product_info['tax_class_id'], $this->config->get('config_tax')) * $quantity) : 0;
                         $tax = 0;
