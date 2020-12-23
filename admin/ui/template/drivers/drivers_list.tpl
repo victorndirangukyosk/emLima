@@ -124,19 +124,19 @@
                 </tr>
               </thead>
               <tbody>
-                <?php if ($customers) { ?>
-                <?php foreach ($customers as $customer) { ?>
+                <?php if ($drivers) { ?>
+                <?php foreach ($drivers as $driver) { ?>
                 <tr>
-                  <td class="text-center"><?php if (in_array($customer['customer_id'], $selected)) { ?>
-                    <input type="checkbox" name="selected[]" value="<?php echo $customer['customer_id']; ?>" checked="checked" />
+                  <td class="text-center"><?php if (in_array($driver['driver_id'], $selected)) { ?>
+                    <input type="checkbox" name="selected[]" value="<?php echo $driver['driver_id']; ?>" checked="checked" />
                     <?php } else { ?>
-                    <input type="checkbox" name="selected[]" value="<?php echo $customer['customer_id']; ?>" />
+                    <input type="checkbox" name="selected[]" value="<?php echo $driver['driver_id']; ?>" />
                     <?php } ?></td>
-                  <td class="text-left"><?php echo $customer['name']; ?></td>
-                  <td class="text-left"><?php echo $customer['email']; ?></td>
-                  <td class="text-left"><?php echo $customer['telephone']; ?></td>
-                  <td class="text-left"><?php echo $customer['status']; ?></td>
-                  <td class="text-left"><?php echo $customer['date_added']; ?></td>
+                  <td class="text-left"><?php echo $driver['name']; ?></td>
+                  <td class="text-left"><?php echo $driver['email']; ?></td>
+                  <td class="text-left"><?php echo $driver['telephone']; ?></td>
+                  <td class="text-left"><?php echo $driver['status']; ?></td>
+                  <td class="text-left"><?php echo $driver['date_added']; ?></td>
                 </tr>
                 <?php } ?>
                 <?php } else { ?>
