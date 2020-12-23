@@ -2309,13 +2309,15 @@ class ControllerApiCustomerOrder extends Controller
                     $log->write("special_price");
                     $special_price[1] = str_replace(',', '', $special_price[1]);
                     $total_without_tax = $special_price[1] *  $product['quantity'];
+                    // $total_without_tax = $special_price *  $product['quantity'];
                             //  echo $this->config->get('config_tax');
                             //  echo $special_price[1];
                             //  echo $this->config->get('config_tax');
                             //  echo $this->config->get('config_tax');
                             //  echo $this->config->get('config_tax');
                             //  echo $this->config->get('config_tax');exit; 
-                    $total_with_tax = $this->config->get('config_tax') ? ($this->tax->calculate($special_price[1], $product['tax_class_id'], $this->config->get('config_tax')) * $product['quantity']) : 0;
+                              $total_with_tax = $this->config->get('config_tax') ? ($this->tax->calculate($special_price[1], $product['tax_class_id'], $this->config->get('config_tax')) * $product['quantity']) : 0;
+                            // $total_with_tax = $this->config->get('config_tax') ? ($this->tax->calculate($special_price, $product['tax_class_id'], $this->config->get('config_tax')) * $product['quantity']) : 0;
                     $tax = 0;
                     $single_product_tax = 0;
                     if ($total_with_tax > 0 && $this->config->get('config_tax') == true) {
@@ -2332,7 +2334,8 @@ class ControllerApiCustomerOrder extends Controller
                         $log->write('single_product_tax');
                     }
     
-                    $total = $special_price[1] * $product['quantity'] + ($this->config->get('config_tax') ? ($order_products[$key]['tax'] * $product['quantity']) : 0);
+                 $total = $special_price[1] * $product['quantity'] + ($this->config->get('config_tax') ? ($order_products[$key]['tax'] * $product['quantity']) : 0);
+                    // $total = $special_price * $product['quantity'] + ($this->config->get('config_tax') ? ($order_products[$key]['tax'] * $product['quantity']) : 0);
                     
                     $log->write('TOTAL');
                     $log->write($total);
@@ -2691,7 +2694,7 @@ class ControllerApiCustomerOrder extends Controller
                     // $special_price = explode(' ', $product_info['special_price']);
                      $special_price =  $product_info['special_price'];
                     $log->write($special_price);
-                    $special_price[1] =$special_price;// str_replace( ',', '', $special_price[1]);
+                   // $special_price[1] =$special_price;// str_replace( ',', '', $special_price[1]);
                     // $total = $special_price[1] * $quantity + ($this->config->get('config_tax') ? ($order_products[$key]['tax'] * $quantity) : 0);
                     $total =$product['total'];
                     $log->write($total);
@@ -2826,7 +2829,7 @@ class ControllerApiCustomerOrder extends Controller
                         $special_price =$product['price'];
                         $log->write($special_price);
                         // $special_price[1] = str_replace(',', '', $special_price[1]);
-                        $special_price[1]=$product['price'];
+                        // $special_price[1]=$product['price'];
                         // $total_without_tax = $special_price[1] * $quantity;
                         $total_without_tax = $product['price'] * $quantity;
         
@@ -2866,7 +2869,8 @@ class ControllerApiCustomerOrder extends Controller
                     //    echo 'INSERT INTO '.DB_PREFIX."order_product SET vendor_id='".(int) $product['vendor_id']."', store_id='".(int) $product['store_id']."', product_type='".$product['product_type']."', order_id = '".(int) $order_id."', variation_id = '".(int) $product['store_product_variation_id']."', product_id = '".(int) $product['product_store_id']."', name = '".$this->db->escape($product['name'])."', model = '".$this->db->escape($product['model'])."', quantity = '". $product['quantity']."', price = '".(float) $product['price']."', total = '".(float) $product['total']."', tax = '".(float) $product['tax']."', reward = '".(int) $product['reward']."'"; exit;
                     // $this->db->query('INSERT INTO ' . DB_PREFIX . "order_product SET vendor_id='" . (int) $product_info['vendor_id'] . "', store_id='" . (int) $product_info['store_id'] . "', order_id = '" . (int) $this->request->post['order_id'] . "', variation_id = '" . (int) $this->request->post['variation_id'] . "', product_id = '" . (int) $product_info['product_store_id'] . "', general_product_id = '" . (int) $product_info['product_id'] . "',  name = '" . $this->db->escape($product_info['name']) . "', model = '" . $this->db->escape($product_info['model']) . "', quantity = '" . $quantity . "', price = '" . (float) $special_price[1] . "', total = '" . (float) $total_without_tax . "', tax = '" . (float) $single_product_tax . "', product_type = 'replacable', unit = '" . $this->db->escape($product_info['unit']) . "'");
                        
-                        $this->db->query('INSERT INTO '.DB_PREFIX."order_product SET vendor_id='".(int) $product_info['vendor_id']."', store_id='".(int) $product_info['store_id']."', product_type='".$product_info['product_type']."', order_id = '".(int) $order_id."', variation_id = '".(int)  $variation_id."', product_id = '".(int) $product_info['product_store_id']."', general_product_id = '" . (int) $product_info['product_id'] . "', name = '".$this->db->escape($product_info['name'])."', model = '".$this->db->escape($product_info['model'])."', quantity = '". $quantity."', price = '".(float) $special_price[1]."', total = '".(float) $total_without_tax."', tax = '".(float) $single_product_tax."', reward = '".(int) $product['reward']."', unit = '" . $this->db->escape($product_info['unit']) . "'");
+                    // $this->db->query('INSERT INTO '.DB_PREFIX."order_product SET vendor_id='".(int) $product_info['vendor_id']."', store_id='".(int) $product_info['store_id']."', product_type='".$product_info['product_type']."', order_id = '".(int) $order_id."', variation_id = '".(int)  $variation_id."', product_id = '".(int) $product_info['product_store_id']."', general_product_id = '" . (int) $product_info['product_id'] . "', name = '".$this->db->escape($product_info['name'])."', model = '".$this->db->escape($product_info['model'])."', quantity = '". $quantity."', price = '".(float) $special_price[1]."', total = '".(float) $total_without_tax."', tax = '".(float) $single_product_tax."', reward = '".(int) $product['reward']."', unit = '" . $this->db->escape($product_info['unit']) . "'");
+                    $this->db->query('INSERT INTO '.DB_PREFIX."order_product SET vendor_id='".(int) $product_info['vendor_id']."', store_id='".(int) $product_info['store_id']."', product_type='".$product_info['product_type']."', order_id = '".(int) $order_id."', variation_id = '".(int)  $variation_id."', product_id = '".(int) $product_info['product_store_id']."', general_product_id = '" . (int) $product_info['product_id'] . "', name = '".$this->db->escape($product_info['name'])."', model = '".$this->db->escape($product_info['model'])."', quantity = '". $quantity."', price = '".(float) $special_price."', total = '".(float) $total_without_tax."', tax = '".(float) $single_product_tax."', reward = '".(int) $product['reward']."', unit = '" . $this->db->escape($product_info['unit']) . "'");
                         $order_totals = $this->db->query('SELECT SUM(total) AS total FROM '.DB_PREFIX."order_product WHERE order_id = '".(int) $order_id."'");
                         
                         $order_products_updated = $this->model_account_order->getOrderProducts($order_id);
