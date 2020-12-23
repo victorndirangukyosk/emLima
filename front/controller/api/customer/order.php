@@ -1370,7 +1370,7 @@ class ControllerApiCustomerOrder extends Controller
 
             $data['driver_rating'] = null;
             $data['driver_review'] = null;
-            //echo "<pre>";print_r($order_info);die;
+            // echo "<pre>";print_r($order_info);die;
             if ($order_info) {
                 $data['cashbackAmount'] = $this->currency->format(0);
 
@@ -1804,7 +1804,27 @@ class ControllerApiCustomerOrder extends Controller
 
                 $data['total_quantity'] = 0;
                 $data['customer_parent_info'] = $this->model_account_customer->getCustomerParentEmail($order_info['customer_id']);
+                $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
+                $hours = 0;
+                $t1 = strtotime(date('Y-m-d H:i:s'));
+                // $t2 = strtotime($order_info['date_added']);
+                $t2 = strtotime($order_info['order_date']);
+                $diff = $t1 - $t2;
+                $hours = $diff / ( 60 * 60 );
+                $log->write('hours');
+                $log->write(date('Y-m-d H:i:s'));
+            $log->write($order_info['date_added']);
+            $log->write($order_info['payment_code']);
+            $log->write(date_default_timezone_get());
+            $log->write($hours);
+            $log->write('hours');
+                // $data['edit_order'] = ((15 == $order_info['order_status_id'] ) && (empty($_SESSION['parent']) || $order_appoval_access) )? true : false;
+                $data['order_company'] = isset($customer_info) && null != $customer_info['company_name'] ? $customer_info['company_name'] : null;
+               
+                $data['edit_own_order'] = (($order_info['order_status_id'] == 15 || $order_info['order_status_id'] == 14) && $hours < 24 && ($order_info['payment_code'] == 'cod'|| $order_info['payment_code'] == 'mod')) ?  true : false;
 
+                $data['driver'] =$order_info['driver'] ;
+                $data['vehicle']=$order_info['vehicle'] ;
 
                 foreach ($data['products'] as $product) {
                     $data['total_quantity'] += $product['quantity'];
