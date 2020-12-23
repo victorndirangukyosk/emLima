@@ -2,58 +2,14 @@
 
 class ModelDriversDrivers extends Model {
 
-    public function addCustomer($data) {
-
-// echo "<pre>";print_r($data);die;
-
-        $this->db->query('INSERT INTO ' . DB_PREFIX . "customer SET customer_group_id = '" . (int) $data['customer_group_id'] . "', firstname = '" . $this->db->escape($data['firstname']) . "', gender = '" . $this->db->escape($data['sex']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "',company_name = '" . $this->db->escape($data['company_name']) . "',company_address = '" . $this->db->escape($data['company_address']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']) ? serialize($data['custom_field']) : '') . "', newsletter = '" . (int) $data['newsletter'] . "', salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', status = '" . (int) $data['status'] . "', approved = '" . (int) $data['approved'] . "', safe = '" . (int) $data['safe'] . "', customer_category = '" . $data['customer_category'] . "', date_added = NOW()");
-        //echo "<pre>";print_r('INSERT INTO '.DB_PREFIX."customer SET customer_group_id = '".(int) $data['customer_group_id']."', firstname = '".$this->db->escape($data['firstname'])."', gender = '".$this->db->escape($data['sex'])."', lastname = '".$this->db->escape($data['lastname'])."', email = '".$this->db->escape($data['email'])."',company_name = '".$this->db->escape($data['company_name'])."',company_address = '".$this->db->escape($data['company_address'])."', telephone = '".$this->db->escape($data['telephone'])."', fax = '".$this->db->escape($data['fax'])."', custom_field = '".$this->db->escape(isset($data['custom_field']) ? serialize($data['custom_field']) : '')."', newsletter = '".(int) $data['newsletter']."', salt = '".$this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9))."', password = '".$this->db->escape(sha1($salt.sha1($salt.sha1($data['password']))))."', status = '".(int) $data['status']."', approved = '".(int) $data['approved']."', safe = '".(int) $data['safe']."', customer_category = '".$data['customer_category']."', date_added = NOW()");die;
-        $customer_id = $this->db->getLastId();
-
-        if (isset($data['address'])) {
-            foreach ($data['address'] as $address) {
-                $this->db->query('INSERT INTO ' . DB_PREFIX . "address SET customer_id = '" . (int) $customer_id . "', name = '" . $this->db->escape($address['name']) . "', address = '" . $this->db->escape($address['address']) . "', city_id = '" . $this->db->escape($address['city_id']) . "', contact_no = '" . $this->db->escape($address['contct_no']) . "'");
-
-                if (isset($address['default'])) {
-                    $address_id = $this->db->getLastId();
-
-                    $this->db->query('UPDATE ' . DB_PREFIX . "customer SET address_id = '" . (int) $address_id . "' WHERE customer_id = '" . (int) $customer_id . "'");
-                }
-            }
-        }
-//moved mail sending code to controller as , it is givin error from model
-
-        return $customer_id;
+    public function addDriver($data) {
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "drivers SET firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', status = '" . (int) $data['status'] . "', date_added = NOW()");
+        $driver_id = $this->db->getLastId();
+        return $driver_id;
     }
 
-    public function editCustomer($customer_id, $data) {
-        if (!isset($data['custom_field'])) {
-            $data['custom_field'] = [];
-        }
-
-        $this->db->query('UPDATE ' . DB_PREFIX . "customer SET customer_group_id = '" . (int) $data['customer_group_id'] . "', firstname = '" . $this->db->escape($data['firstname']) . "', dob = '" . $data['dob'] . "', gender = '" . $this->db->escape($data['sex']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "',company_name = '" . $this->db->escape($data['company_name']) . "',company_address = '" . $this->db->escape($data['company_address']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']) ? serialize($data['custom_field']) : '') . "', newsletter = '" . (int) $data['newsletter'] . "', status = '" . (int) $data['status'] . "', approved = '" . (int) $data['approved'] . "', safe = '" . (int) $data['safe'] . "', customer_category = '" . $data['customer_category'] . "' WHERE customer_id = '" . (int) $customer_id . "'");
-
-        if ($data['password'] && 'default' != $data['password']) {
-            $this->db->query('UPDATE ' . DB_PREFIX . "customer SET salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', tempPassword = '" . (int) 1 . "' WHERE customer_id = '" . (int) $customer_id . "'");
-        }
-
-        $this->db->query('DELETE FROM ' . DB_PREFIX . "address WHERE customer_id = '" . (int) $customer_id . "'");
-
-        if (isset($data['address'])) {
-            foreach ($data['address'] as $address) {
-                /* $this->db->query("INSERT INTO " . DB_PREFIX . "address SET address_id = '" . (int) $address['address_id'] . "', customer_id = '" . (int) $customer_id . "', name = '" . $this->db->escape($address['name']) . "', contact_no = '" . $this->db->escape($address['contact_no']) . "', address = '" . $this->db->escape($address['address']) . "', city_id = '" . $this->db->escape($address['city_id']) . "'"); */
-
-                $address['address'] = $address['flat_number'] . ', ' . $address['building_name'] . ', ' . $address['landmark'];
-
-                $this->db->query('INSERT INTO ' . DB_PREFIX . "address SET  address_id = '" . (int) $address['address_id'] . "', customer_id = '" . (int) $customer_id . "', name = '" . $this->db->escape($address['name']) . "', contact_no = '" . $this->db->escape($address['contact_no']) . "', city_id = '" . $this->db->escape($address['city_id']) . "', address_type = '" . $this->db->escape($address['address_type']) . "', flat_number = '" . $this->db->escape($address['flat_number']) . "', building_name = '" . $this->db->escape($address['building_name']) . "', landmark = '" . $this->db->escape($address['landmark']) . "', zipcode = '" . $this->db->escape($address['zipcode']) . "', address = '" . $this->db->escape($address['address']) . "'");
-
-                if (isset($address['default'])) {
-                    $address_id = $this->db->getLastId();
-
-                    $this->db->query('UPDATE ' . DB_PREFIX . "customer SET address_id = '" . (int) $address_id . "' WHERE customer_id = '" . (int) $customer_id . "'");
-                }
-            }
-        }
+    public function editCustomer($driver_id, $data) {
+        $this->db->query('UPDATE ' . DB_PREFIX . "drivers SET firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', status = '" . (int) $data['status'] . "' WHERE driver_id = '" . (int) $driver_id . "'");
     }
 
     public function editToken($customer_id, $token) {
@@ -68,8 +24,8 @@ class ModelDriversDrivers extends Model {
         $this->db->query('DELETE FROM ' . DB_PREFIX . "address WHERE customer_id = '" . (int) $customer_id . "'");
     }
 
-    public function getCustomer($customer_id) {
-        $query = $this->db->query('SELECT DISTINCT * FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . (int) $customer_id . "'");
+    public function getDriver($driver_id) {
+        $query = $this->db->query('SELECT DISTINCT * FROM ' . DB_PREFIX . "drivers WHERE driver_id = '" . (int) $driver_id . "'");
 
         return $query->row;
     }
@@ -100,8 +56,8 @@ class ModelDriversDrivers extends Model {
         }
     }
 
-    public function getCustomerByEmail($email) {
-        $query = $this->db->query('SELECT DISTINCT * FROM ' . DB_PREFIX . "customer WHERE LCASE(email) = '" . $this->db->escape(utf8_strtolower($email)) . "'");
+    public function getDriverByEmail($email) {
+        $query = $this->db->query('SELECT DISTINCT * FROM ' . DB_PREFIX . "drivers WHERE LCASE(email) = '" . $this->db->escape(utf8_strtolower($email)) . "'");
 
         return $query->row;
     }

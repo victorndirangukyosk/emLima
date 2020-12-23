@@ -17,6 +17,79 @@ class ControllerDriversDriversList extends Controller {
         $data['konduto_public_key'] = $this->config->get('config_konduto_public_key');
     }
 
+    public function add() {
+        $this->load->language('drivers/drivers');
+
+        $this->document->setTitle($this->language->get('heading_title'));
+
+        $this->load->model('drivers/drivers');
+
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
+            $driver_id = $this->model_drivers_drivers->addDriver($this->request->post);
+
+            //$this->session->data['success'] = $this->language->get('text_success');
+            $this->session->data['success'] = 'Success : Driver created successfully!';
+
+            // Add to activity log
+            $log = new Log('error.log');
+            $this->load->model('user/user_activity');
+
+            $activity_data = [
+                'user_id' => $this->user->getId(),
+                'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+                'user_group_id' => $this->user->getGroupId(),
+                'driver_id' => $driver_id,
+            ];
+            $log->write('driver add');
+
+            $this->model_user_user_activity->addActivity('driver_add', $activity_data);
+
+            $log->write('driver add');
+
+            $url = '';
+
+            if (isset($this->request->get['filter_name'])) {
+                $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+            }
+
+            if (isset($this->request->get['filter_email'])) {
+                $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
+            }
+
+            if (isset($this->request->get['filter_status'])) {
+                $url .= '&filter_status=' . $this->request->get['filter_status'];
+            }
+
+            if (isset($this->request->get['filter_date_added'])) {
+                $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
+            }
+
+            if (isset($this->request->get['sort'])) {
+                $url .= '&sort=' . $this->request->get['sort'];
+            }
+
+            if (isset($this->request->get['order'])) {
+                $url .= '&order=' . $this->request->get['order'];
+            }
+
+            if (isset($this->request->get['page'])) {
+                $url .= '&page=' . $this->request->get['page'];
+            }
+
+            if (isset($this->request->post['button']) and 'save' == $this->request->post['button']) {
+                $this->response->redirect($this->url->link('drivers/drivers_list/edit', 'driver_id=' . $driver_id . '&token=' . $this->session->data['token'] . $url, 'SSL'));
+            }
+
+            if (isset($this->request->post['button']) and 'new' == $this->request->post['button']) {
+                $this->response->redirect($this->url->link('drivers/drivers_list/add', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            }
+
+            $this->response->redirect($this->url->link('drivers/drivers_list', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+        }
+
+        $this->getForm();
+    }
+
     protected function getList() {
         $this->load->language('drivers/drivers');
 
@@ -306,6 +379,322 @@ class ControllerDriversDriversList extends Controller {
         $data['footer'] = $this->load->controller('common/footer');
 
         $this->response->setOutput($this->load->view('drivers/drivers_list.tpl', $data));
+    }
+
+    protected function getForm() {
+        $data['heading_title'] = $this->language->get('heading_title');
+
+        $data['entry_referred_by'] = $this->language->get('entry_referred_by');
+
+        $data['text_form'] = !isset($this->request->get['driver_id']) ? $this->language->get('text_add') : $this->language->get('text_edit');
+        $data['text_enabled'] = $this->language->get('text_enabled');
+        $data['text_disabled'] = $this->language->get('text_disabled');
+        $data['text_yes'] = $this->language->get('text_yes');
+        $data['text_no'] = $this->language->get('text_no');
+        $data['text_select'] = $this->language->get('text_select');
+        $data['text_none'] = $this->language->get('text_none');
+        $data['text_loading'] = $this->language->get('text_loading');
+        $data['text_add_ban_ip'] = $this->language->get('text_add_ban_ip');
+        $data['text_remove_ban_ip'] = $this->language->get('text_remove_ban_ip');
+
+        $data['text_male'] = $this->language->get('text_male');
+        $data['text_female'] = $this->language->get('text_female');
+        $data['text_other'] = $this->language->get('text_other');
+        $data['entry_dob'] = $this->language->get('entry_dob');
+        $data['entry_gender'] = $this->language->get('entry_gender');
+
+        $data['entry_firstname'] = $this->language->get('entry_firstname');
+        $data['entry_lastname'] = $this->language->get('entry_lastname');
+        $data['entry_email'] = $this->language->get('entry_email');
+
+        $data['entry_company_name'] = $this->language->get('entry_company_name');
+        $data['entry_company_address'] = $this->language->get('entry_company_address');
+
+        $data['entry_telephone'] = $this->language->get('entry_telephone');
+        $data['entry_fax'] = $this->language->get('entry_fax');
+        $data['entry_password'] = $this->language->get('entry_password');
+        $data['entry_confirm'] = $this->language->get('entry_confirm');
+        $data['entry_newsletter'] = $this->language->get('entry_newsletter');
+        $data['entry_status'] = $this->language->get('entry_status');
+        $data['entry_approved'] = $this->language->get('entry_approved');
+        $data['entry_safe'] = $this->language->get('entry_safe');
+        $data['entry_company'] = $this->language->get('entry_company');
+        $data['entry_address_1'] = $this->language->get('entry_address_1');
+        $data['entry_address_2'] = $this->language->get('entry_address_2');
+        $data['entry_city'] = $this->language->get('entry_city');
+        $data['entry_postcode'] = $this->language->get('entry_postcode');
+        $data['entry_zone'] = $this->language->get('entry_zone');
+        $data['entry_country'] = $this->language->get('entry_country');
+        $data['entry_default'] = $this->language->get('entry_default');
+        $data['entry_comment'] = $this->language->get('entry_comment');
+        $data['entry_description'] = $this->language->get('entry_description');
+        $data['entry_amount'] = $this->language->get('entry_amount');
+        $data['entry_points'] = $this->language->get('entry_points');
+        $data['entry_send_email'] = $this->language->get('entry_send_email');
+        $data['entry_name'] = $this->language->get('entry_name');
+        $data['entry_contact_no'] = $this->language->get('entry_contact_no');
+        $data['entry_address'] = $this->language->get('entry_address');
+
+        $data['help_safe'] = $this->language->get('help_safe');
+        $data['help_points'] = $this->language->get('help_points');
+
+        $data['button_save'] = $this->language->get('button_save');
+        $data['button_savenew'] = $this->language->get('button_savenew');
+        $data['button_saveclose'] = $this->language->get('button_saveclose');
+        $data['button_cancel'] = $this->language->get('button_cancel');
+        $data['button_address_add'] = $this->language->get('button_address_add');
+        $data['button_history_add'] = $this->language->get('button_history_add');
+        $data['button_credit_add'] = $this->language->get('button_credit_add');
+        $data['button_reward_add'] = $this->language->get('button_reward_add');
+        $data['button_remove'] = $this->language->get('button_remove');
+        $data['button_upload'] = $this->language->get('button_upload');
+
+        $data['tab_general'] = $this->language->get('tab_general');
+        $data['tab_address'] = $this->language->get('tab_address');
+        $data['tab_history'] = $this->language->get('tab_history');
+        $data['tab_credit'] = $this->language->get('tab_credit');
+        $data['tab_reward'] = $this->language->get('tab_reward');
+        $data['tab_referral'] = $this->language->get('tab_referral');
+
+        $data['token'] = $this->session->data['token'];
+
+        $data['text_flat_house_office'] = $this->language->get('text_flat_house_office');
+        $data['text_stree_society_office'] = $this->language->get('text_stree_society_office');
+        $data['label_zipcode'] = $this->language->get('label_zipcode');
+        $data['text_locality'] = $this->language->get('text_locality');
+
+        if (isset($this->request->get['driver_id'])) {
+            $data['driver_id'] = $this->request->get['driver_id'];
+        } else {
+            $data['driver_id'] = 0;
+        }
+
+        if (isset($this->error['warning'])) {
+            $data['error_warning'] = $this->error['warning'];
+        } else {
+            $data['error_warning'] = '';
+        }
+
+        if (isset($this->session->data['success'])) {
+            $data['success'] = $this->session->data['success'];
+            unset($this->session->data['success']);
+        } else {
+            $data['success'] = '';
+        }
+
+        if (isset($this->error['firstname'])) {
+            $data['error_firstname'] = $this->error['firstname'];
+        } else {
+            $data['error_firstname'] = '';
+        }
+
+        if (isset($this->error['lastname'])) {
+            $data['error_lastname'] = $this->error['lastname'];
+        } else {
+            $data['error_lastname'] = '';
+        }
+
+        if (isset($this->error['dob'])) {
+            $data['error_dob'] = $this->error['dob'];
+        } else {
+            $data['error_dob'] = '';
+        }
+
+        if (isset($this->error['gender'])) {
+            $data['error_gender'] = $this->error['gender'];
+        } else {
+            $data['error_gender'] = '';
+        }
+
+        if (isset($this->error['email'])) {
+            $data['error_email'] = $this->error['email'];
+        } else {
+            $data['error_email'] = '';
+        }
+
+        if (isset($this->error['company_name'])) {
+            $data['error_company_name'] = $this->error['company_name'];
+        } else {
+            $data['error_company_name'] = '';
+        }
+
+        if (isset($this->error['company_address'])) {
+            $data['error_company_address'] = $this->error['company_address'];
+        } else {
+            $data['error_company_address'] = '';
+        }
+
+        if (isset($this->error['telephone'])) {
+            $data['error_telephone'] = $this->error['telephone'];
+        } else {
+            $data['error_telephone'] = '';
+        }
+
+        if (isset($this->error['password'])) {
+            $data['error_password'] = $this->error['password'];
+        } else {
+            $data['error_password'] = '';
+        }
+
+        if (isset($this->error['confirm'])) {
+            $data['error_confirm'] = $this->error['confirm'];
+        } else {
+            $data['error_confirm'] = '';
+        }
+
+        if (isset($this->error['custom_field'])) {
+            $data['error_custom_field'] = $this->error['custom_field'];
+        } else {
+            $data['error_custom_field'] = [];
+        }
+
+        if (isset($this->error['address'])) {
+            $data['error_address'] = $this->error['address'];
+        } else {
+            $data['error_address'] = [];
+        }
+
+        $url = '';
+
+        if (isset($this->request->get['filter_name'])) {
+            $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+        }
+
+        if (isset($this->request->get['filter_email'])) {
+            $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
+        }
+
+        if (isset($this->request->get['filter_status'])) {
+            $url .= '&filter_status=' . $this->request->get['filter_status'];
+        }
+
+        if (isset($this->request->get['filter_date_added'])) {
+            $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
+        }
+
+        if (isset($this->request->get['sort'])) {
+            $url .= '&sort=' . $this->request->get['sort'];
+        }
+
+        if (isset($this->request->get['order'])) {
+            $url .= '&order=' . $this->request->get['order'];
+        }
+
+        if (isset($this->request->get['page'])) {
+            $url .= '&page=' . $this->request->get['page'];
+        }
+
+        $data['breadcrumbs'] = [];
+
+        $data['breadcrumbs'][] = [
+            'text' => $this->language->get('text_home'),
+            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL'),
+        ];
+
+        $data['breadcrumbs'][] = [
+            'text' => $this->language->get('heading_title'),
+            'href' => $this->url->link('drivers/drivers_list', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+        ];
+
+        if (!isset($this->request->get['driver_id'])) {
+            $data['action'] = $this->url->link('drivers/drivers_list/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        } else {
+            $data['action'] = $this->url->link('drivers/drivers_list/edit', 'token=' . $this->session->data['token'] . '&driver_id=' . $this->request->get['driver_id'] . $url, 'SSL');
+        }
+
+        $data['cancel'] = $this->url->link('drivers/drivers_list', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        if (isset($this->request->get['driver_id']) && ('POST' != $this->request->server['REQUEST_METHOD'])) {
+            $driver_info = $this->model_drivers_drivers->getDriver($this->request->get['driver_id']);
+        }
+        
+        if (isset($this->request->post['firstname'])) {
+            $data['firstname'] = $this->request->post['firstname'];
+        } elseif (!empty($driver_info)) {
+            $data['firstname'] = $driver_info['firstname'];
+        } else {
+            $data['firstname'] = '';
+        }
+
+        if (isset($this->request->post['lastname'])) {
+            $data['lastname'] = $this->request->post['lastname'];
+        } elseif (!empty($driver_info)) {
+            $data['lastname'] = $driver_info['lastname'];
+        } else {
+            $data['lastname'] = '';
+        }
+
+        if (isset($this->request->post['email'])) {
+            $data['email'] = $this->request->post['email'];
+        } elseif (!empty($driver_info)) {
+            $data['email'] = $driver_info['email'];
+        } else {
+            $data['email'] = '';
+        }
+
+        if (isset($this->request->post['telephone'])) {
+            $data['telephone'] = $this->request->post['telephone'];
+        } elseif (!empty($driver_info)) {
+            $data['telephone'] = $driver_info['telephone'];
+        } else {
+            $data['telephone'] = '';
+        }
+
+        //echo "<pre>";print_r($data);die;
+        if (isset($this->request->post['status'])) {
+            $data['status'] = $this->request->post['status'];
+        } elseif (!empty($driver_info)) {
+            $data['status'] = $driver_info['status'];
+        } else {
+            $data['status'] = true;
+        }
+
+        $data['header'] = $this->load->controller('common/header');
+        $data['column_left'] = $this->load->controller('common/column_left');
+        $data['footer'] = $this->load->controller('common/footer');
+        $data['kondutoStatus'] = $this->config->get('config_konduto_status');
+        $data['konduto_public_key'] = $this->config->get('config_konduto_public_key');
+
+        $this->response->setOutput($this->load->view('drivers/driver_form.tpl', $data));
+    }
+    
+    protected function validateForm() {
+        if (!$this->user->hasPermission('modify', 'drivers/drivers_list')) {
+            $this->error['warning'] = $this->language->get('error_permission');
+        }
+
+        if ((utf8_strlen($this->request->post['firstname']) < 1) || (utf8_strlen(trim($this->request->post['firstname'])) > 32)) {
+            $this->error['firstname'] = $this->language->get('error_firstname');
+        }
+
+        if ((utf8_strlen($this->request->post['lastname']) < 1) || (utf8_strlen(trim($this->request->post['lastname'])) > 32)) {
+            $this->error['lastname'] = $this->language->get('error_lastname');
+        }
+
+        if ((utf8_strlen($this->request->post['email']) > 96) || !filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL)) {
+            $this->error['email'] = $this->language->get('error_email');
+        }
+
+        $driver_info = $this->model_drivers_drivers->getDriverByEmail($this->request->post['email']);
+
+        if (!isset($this->request->get['driver_id'])) {
+            if ($driver_info) {
+                $this->error['warning'] = $this->language->get('error_exists');
+            }
+        } else {
+            if ($driver_info && ($this->request->get['driver_id'] != $driver_info['driver_id'])) {
+                $this->error['warning'] = $this->language->get('error_exists');
+            }
+        }
+
+        if ((utf8_strlen($this->request->post['telephone']) < 3) || (utf8_strlen($this->request->post['telephone']) > 32)) {
+            $this->error['telephone'] = $this->language->get('error_telephone');
+        }
+
+        if ($this->error && !isset($this->error['warning'])) {
+            $this->error['warning'] = $this->language->get('error_warning');
+        }
+
+        return !$this->error;
     }
 
 }
