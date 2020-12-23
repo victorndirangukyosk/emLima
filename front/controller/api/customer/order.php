@@ -2307,17 +2307,17 @@ class ControllerApiCustomerOrder extends Controller
                      $special_price = explode(' ', $product['special_price']);
                     $log->write($special_price);
                     $log->write("special_price");
-                    $special_price[1] = str_replace(',', '', $special_price[1]);
-                    $total_without_tax = $special_price[1] *  $product['quantity'];
-                    // $total_without_tax = $special_price *  $product['quantity'];
+                    // $special_price[1] = str_replace(',', '', $special_price[1]);
+                    // $total_without_tax = $special_price[1] *  $product['quantity'];
+                    $total_without_tax = $special_price *  $product['quantity'];
                             //  echo $this->config->get('config_tax');
                             //  echo $special_price[1];
                             //  echo $this->config->get('config_tax');
                             //  echo $this->config->get('config_tax');
                             //  echo $this->config->get('config_tax');
                             //  echo $this->config->get('config_tax');exit; 
-                              $total_with_tax = $this->config->get('config_tax') ? ($this->tax->calculate($special_price[1], $product['tax_class_id'], $this->config->get('config_tax')) * $product['quantity']) : 0;
-                            // $total_with_tax = $this->config->get('config_tax') ? ($this->tax->calculate($special_price, $product['tax_class_id'], $this->config->get('config_tax')) * $product['quantity']) : 0;
+                            //   $total_with_tax = $this->config->get('config_tax') ? ($this->tax->calculate($special_price[1], $product['tax_class_id'], $this->config->get('config_tax')) * $product['quantity']) : 0;
+                            $total_with_tax = $this->config->get('config_tax') ? ($this->tax->calculate($special_price, $product['tax_class_id'], $this->config->get('config_tax')) * $product['quantity']) : 0;
                     $tax = 0;
                     $single_product_tax = 0;
                     if ($total_with_tax > 0 && $this->config->get('config_tax') == true) {
@@ -2334,8 +2334,8 @@ class ControllerApiCustomerOrder extends Controller
                         $log->write('single_product_tax');
                     }
     
-                 $total = $special_price[1] * $product['quantity'] + ($this->config->get('config_tax') ? ($order_products[$key]['tax'] * $product['quantity']) : 0);
-                    // $total = $special_price * $product['quantity'] + ($this->config->get('config_tax') ? ($order_products[$key]['tax'] * $product['quantity']) : 0);
+                //  $total = $special_price[1] * $product['quantity'] + ($this->config->get('config_tax') ? ($order_products[$key]['tax'] * $product['quantity']) : 0);
+                    $total = $special_price * $product['quantity'] + ($this->config->get('config_tax') ? ($order_products[$key]['tax'] * $product['quantity']) : 0);
                     
                     $log->write('TOTAL');
                     $log->write($total);
