@@ -9,6 +9,13 @@ class ModelAccountCustomer extends Model {
         $log->write($data['login_latitude']);
         $log->write($data['login_longitude']);
         
+        if (isset($data['accountmanagerid'])) {
+            $accountmanagerid = $data['accountmanagerid'];
+            $log->write('accountmanagerid');
+            $log->write($accountmanagerid);
+            $log->write('accountmanagerid');
+        }
+        
         $login_latitude = NULL;
         if (isset($data['login_latitude'])) {
             $login_latitude = $data['login_latitude'];
