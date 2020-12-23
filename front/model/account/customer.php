@@ -837,7 +837,7 @@ class ModelAccountCustomer extends Model {
     }
 
     public function getAccountManagerId($account_manager_id) {
-        $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "user WHERE user_group_id = '" . (int) $this->config->get('config_account_manager_group_id') . "' AND user_id = '" . $account_manager_id . "'");
+        $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "user WHERE user_group_id = '" . (int) $this->config->get('config_account_manager_group_id') . "' AND user_id = '" . (int) $account_manager_id . "'");
         return $query->row;
     }
 
