@@ -463,6 +463,10 @@ class ModelAccountApi extends Model
                     $this->request->post['source'] = 'MOBILE';
                     //$this->request->post['password'] = mt_rand(1000,9999);
                     // echo "<pre>";print_r($this->request->post);die;
+                    // $accountmanagerid = NULL;
+                    // $accountmanagerid =$this->request->post['accountmanagerid'];
+                    // $log->write('accountmanagerid from API');
+                    // $log->write($accountmanagerid);
                     $customer_id = $this->model_account_customer->addCustomer($this->request->post,true);
 
                     // Clear any previous login attempts for unregistered accounts.
