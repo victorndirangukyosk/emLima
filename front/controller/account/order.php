@@ -195,6 +195,7 @@ class ControllerAccountOrder extends Controller {
             $log->write('hours');
             $log->write(date('Y-m-d H:i:s'));
             $log->write($result['date_added']);
+            $log->write($result['payment_code']);
             $log->write(date_default_timezone_get());
             $log->write($hours);
             $log->write('hours');
@@ -237,7 +238,7 @@ class ControllerAccountOrder extends Controller {
                 'edit_order' => 15 == $result['order_status_id'] && (empty($_SESSION['parent']) || $order_appoval_access) ? $this->url->link('account/order/edit_order', 'order_id=' . $result['order_id'], 'SSL') : '',
                 'order_company' => isset($customer_info) && null != $customer_info['company_name'] ? $customer_info['company_name'] : null,
                 //'edit_own_order' => $this->url->link('checkout/edit_order/index_new', 'order_id=' . $result['order_id'], 'SSL'),
-                'edit_own_order' => (($result['order_status_id'] == 15 || $result['order_status_id'] == 14) && $hours < 24 /*&& $result['payment_code'] == 'cod'*/) ? $this->url->link('account/order/edit_your_order', 'order_id=' . $result['order_id'], 'SSL') : NULL,
+                'edit_own_order' => (($result['order_status_id'] == 15 || $result['order_status_id'] == 14) && $hours < 24 && $result['payment_code'] == 'cod') ? $this->url->link('account/order/edit_your_order', 'order_id=' . $result['order_id'], 'SSL') : NULL,
             ];
         }
 
@@ -3741,16 +3742,16 @@ class ControllerAccountOrder extends Controller {
             $log = new Log('error.log');
             $hours = 0;
             $t1 = strtotime(date('Y-m-d H:i:s'));
-            $t2 = strtotime($order_info['date_added']);
+            $t2 = strtotime($order_info['order_date']);
             $diff = $t1 - $t2;
             $hours = $diff / ( 60 * 60 );
             $log->write('hours');
             $log->write(date('Y-m-d H:i:s'));
-            $log->write($order_info['date_added']);
+            $log->write($order_info['order_date']);
             $log->write($hours);
             $log->write('hours');        
         
-        if ($order_info && $order_info['customer_id'] == $this->customer->getId() && ($order_info['order_status_id'] == 15 || $order_info['order_status_id'] == 14) && $hours < 24 /*&& $order_info['payment_code'] == 'cod'*/) {
+        if ($order_info && $order_info['customer_id'] == $this->customer->getId() && ($order_info['order_status_id'] == 15 || $order_info['order_status_id'] == 14) && $hours < 24 && $order_info['payment_code'] == 'cod') {
             $data['cashbackAmount'] = $this->currency->format(0);
 
             $coupon_history_data = $this->model_account_order->getCashbackAmount($order_id);

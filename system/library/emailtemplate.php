@@ -164,11 +164,11 @@ class Emailtemplate
         $log = new Log('error.log');
         $log->write('sendDynamicPushNotification');
 
-        /* $log->write($to);
+          $log->write($to);
           $log->write($deviceId);
           $log->write($message);
           $log->write($title);
-          $log->write($sendData); */
+          $log->write($sendData);
 
         if (isset($to)) {
             if (isset($deviceId) && isset($to)) {
