@@ -309,12 +309,12 @@ class ControllerApiCustomerOrder extends Controller
                             'download' => $product['download'],
                             'quantity' => $product['quantity'],
                             'subtract' => $db_product_detail['subtract_quantity'],
-                            'price' => $db_product_detail['special_price'],
-                            //'price' => $product['price'],
-                            'total' => ($product['quantity'] * $db_product_detail['special_price']),
-                            //'total' => ($product['price'] * $product['quantity']),
-                            //'tax' => $this->tax->getTax( $product['price'], $db_product_detail['tax_class_id'] ),
-                            'tax' => $this->tax->getTax($db_product_detail['special_price'], $db_product_detail['tax_class_id']),
+                            // 'price' => $db_product_detail['special_price'],
+                            'price' => $product['price'],//check
+                            // 'total' => ($product['quantity'] * $db_product_detail['special_price']),
+                             'total' => ($product['price'] * $product['quantity']),
+                            'tax' => $this->tax->getTax($product['price'], $db_product_detail['tax_class_id'] ),
+                            // 'tax' => $this->tax->getTax($db_product_detail['special_price'], $db_product_detail['tax_class_id']),
                                'reward' => $product['reward'],
                         ];
                     }
@@ -429,7 +429,7 @@ class ControllerApiCustomerOrder extends Controller
             $order_data[$store_id]['login_mode']=$args['login_mode'];
 
             $log->write('addMultiOrder call');
-            //echo "<pre>";print_r($order_data);die;
+            //  echo "<pre>";print_r($order_data);die;
             //$log->write($order_data);
 
             $order_ids = [];
