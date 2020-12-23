@@ -2617,6 +2617,8 @@ class ControllerApiCustomerOrder extends Controller
     //     else{
     //         echo 1;exit;
     //     }
+    try
+    {
         $json = [];
         $json['success'] = 'Something went wrong!'; 
         $json['data'] = [];
@@ -2926,8 +2928,8 @@ class ControllerApiCustomerOrder extends Controller
                         $log->write($key);
                         $log->write($order_totals->row['total']);
                         $log->write($order_product_details);
-                        $json['status'] = true;
-                        $json['status'] = 'Your Order Updated!';
+                        // $json['status'] = true;
+                        // $json['status'] = 'Your Order Updated!';
         
                         // Add to activity log
                         $this->load->model('account/activity');
@@ -2943,15 +2945,23 @@ class ControllerApiCustomerOrder extends Controller
                    
                     }
                 }
-            // $json['status'] = 200;
+             $json['status'] = 200;
               $json['success'] =   'Your Order Updated!';
         } else {
             $json['success'] =   'You Cant Update Order In This Status!';
         }
+    }
+    catch(Exception $ex)
+    {
+        $json['status'] = 500;
+    }
+    finally
+    {
        
         // $log->write('edit_order_quantity');
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
+    }
     }
 
 }
