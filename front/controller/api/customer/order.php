@@ -1446,7 +1446,7 @@ class ControllerApiCustomerOrder extends Controller
 
                 $app_status_resp = $this->model_account_order->getAppOrderStatusMapping($order_info['order_status_id']);
 
-                //echo "<pre>";print_r($app_status_resp);die;
+                //  echo "<pre>";print_r($order_info);die;
                 $data['app_status'] = '';
                 $data['app_order_status_id'] = '';
                 if ($app_status_resp['status']) {
@@ -1823,8 +1823,9 @@ class ControllerApiCustomerOrder extends Controller
                
                 $data['edit_own_order'] = (($order_info['order_status_id'] == 15 || $order_info['order_status_id'] == 14) && $hours < 24 && ($order_info['payment_code'] == 'cod'|| $order_info['payment_code'] == 'mod')) ?  true : false;
 
-                $data['driver'] =$order_info['driver'] ;
-                $data['vehicle']=$order_info['vehicle'] ;
+                $data['driver']  =$this->model_account_order->getDriverName($order_info['driver_id']);
+                
+                $data['vehicle']=$order_info['vehicle_number'] ;
 
                 foreach ($data['products'] as $product) {
                     $data['total_quantity'] += $product['quantity'];

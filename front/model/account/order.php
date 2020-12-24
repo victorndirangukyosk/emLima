@@ -1321,4 +1321,9 @@ class ModelAccountOrder extends Model {
         $query = $this->db->query('SELECT DISTINCT * FROM ' . DB_PREFIX . "drivers WHERE driver_id = '" . (int) $driver_id . "'");
         return $query->row;
     }
+
+    public function getDriverName($driver_id) {
+        $query = $this->db->query('SELECT   CONCAT(firstname," ",lastname) as name , telephone FROM ' . DB_PREFIX . "drivers WHERE driver_id = '" . (int) $driver_id . "'");
+        return $query->row;
+    }
 }
