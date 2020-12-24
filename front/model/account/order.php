@@ -1315,4 +1315,10 @@ class ModelAccountOrder extends Model {
         }
 
     }
+
+
+    public function getDriver($driver_id) {
+        $query = $this->db->query('SELECT DISTINCT * FROM ' . DB_PREFIX . "drivers WHERE driver_id = '" . (int) $driver_id . "'");
+        return $query->row;
+    }
 }
