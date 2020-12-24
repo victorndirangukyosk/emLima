@@ -3424,9 +3424,9 @@ class ModelReportExcel extends Model {
             ];
 
             //Company name, address
-            $objPHPExcel->getActiveSheet()->mergeCells('A1:I2');
+            $objPHPExcel->getActiveSheet()->mergeCells('A1:G2');
             $objPHPExcel->getActiveSheet()->setCellValue('A1', 'Drivers ');
-            $objPHPExcel->getActiveSheet()->getStyle('A4:J4')->applyFromArray(['font' => ['bold' => true], 'color' => [
+            $objPHPExcel->getActiveSheet()->getStyle('A3:G3')->applyFromArray(['font' => ['bold' => true], 'color' => [
                     'rgb' => '4390df',
             ]]);
 
