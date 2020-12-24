@@ -2388,4 +2388,13 @@ class ModelSaleOrder extends Model
 
         return $query->row;
     }
+    
+    public function UpdateOrderVehicleDetails($order_id, $vehicle_details) {
+        $this->db->query('UPDATE `' . DB_PREFIX . 'order` SET vehicle_number="' . $vehicle_details . '", date_modified = NOW() WHERE order_id="' . $order_id . '"');
+    }
+
+    public function UpdateOrderDriverDetails($order_id, $driver_id) {
+        $this->db->query('UPDATE `' . DB_PREFIX . 'order` SET driver_id="' . $driver_id . '", date_modified = NOW() WHERE order_id="' . $order_id . '"');
+    }
+
 }
