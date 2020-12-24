@@ -428,11 +428,18 @@
 			  <?php } ?>
                           <tr>
                               <td>Driver</td>
-                              <td><input type="text" name="order_driver" id="order_driver" value="" data_order_id="<?=$order_id ?>">&nbsp;<button id="save_order_driver" class="btn btn-primary" type="button"> Save </button></td>
+                              <?php 
+                              $order_driver = NULL;
+                              $order_driver_id = NULL;
+                              if(is_array($order_driver_details) && $order_driver_details != NULL) {
+                              $order_driver = $order_driver_details['firstname'].' '.$order_driver_details['lastname'];
+                              $order_driver_id = $order_driver_details['driver_id'];
+                              } ?>
+                              <td><input type="text" name="order_driver" id="order_driver" value="<?=$order_driver ?>" data_order_id="<?=$order_id ?>" data_driver_id="<?=$order_driver_id ?>">&nbsp;<button id="save_order_driver" class="btn btn-primary" type="button"> Save </button></td>
                           </tr>
                           <tr>
                               <td>Vehicle Number</td>
-                              <td><input type="text" name="order_vehicle_number" id="order_vehicle_number" value="" data_order_id="<?=$order_id ?>">&nbsp;<button id="save_order_vehicle_number" class="btn btn-primary" type="button"> Save </button></td>
+                              <td><input type="text" name="order_vehicle_number" id="order_vehicle_number" value="<?=$order_vehicle_number ?>" data_order_id="<?=$order_id ?>">&nbsp;<button id="save_order_vehicle_number" class="btn btn-primary" type="button"> Save </button></td>
                           </tr>
 
 			</table>

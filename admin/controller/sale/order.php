@@ -2905,6 +2905,15 @@ class ControllerSaleOrder extends Controller {
             $data['shipping_city'] = $order_info['shipping_city'];
             $data['shipping_contact_no'] = $order_info['shipping_contact_no'];
             $data['shipping_address'] = $order_info['shipping_address'];
+            $data['order_vehicle_number'] = $order_info['vehicle_number'];
+            
+            $this->load->model('drivers/drivers');
+            $order_driver_details = $this->model_drivers_drivers->getDriver($order_info['driver_id']);
+            if(is_array($order_driver_details) && $order_driver_details != NULL) {
+            $data['order_driver_details'] = $order_driver_details;
+            } else {
+            $data['order_driver_details'] = NULL;    
+            }
 
             $data['shipping_custom_fields'] = [];
 
@@ -7371,25 +7380,37 @@ class ControllerSaleOrder extends Controller {
     public function SaveOrUpdateOrderDriverDetails() {
         $order_id = $this->request->post['order_id'];
         $driver_id = $this->request->post['driver_id'];
-        /*$log = new Log('error.log');
-        $log->write('SaveOrUpdateOrderDriverDetails');
-        $log->write($this->request->post['driver_id']);
-        $log->write($this->request->post['order_id']);*/
-        
+        /* $log = new Log('error.log');
+          $log->write('SaveOrUpdateOrderDriverDetails');
+          $log->write($this->request->post['driver_id']);
+          $log->write($this->request->post['order_id']); */
+
         $this->load->model('checkout/order');
         $this->load->model('sale/order');
         $order_info = $this->model_checkout_order->getOrder($order_id);
-        $this->model_sale_order->UpdateOrderDriverDetails($order_id, $driver_id);
+        if (is_array($order_info) && $order_info != NULL) {
+            $this->model_sale_order->UpdateOrderDriverDetails($order_id, $driver_id);
+        }
+        $json['status'] = 'success';
+        $json['message'] = 'Order Driver Details Updated!';
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
     }
 
     public function SaveOrUpdateOrderVehilceDetails() {
         $order_id = $this->request->post['order_id'];
         $vehicle_number = $this->request->post['vehicle_number'];
-        
+
         $this->load->model('checkout/order');
         $this->load->model('sale/order');
         $order_info = $this->model_checkout_order->getOrder($order_id);
-        $this->model_sale_order->UpdateOrderVehicleDetails($order_id, $vehicle_number);
+        if (is_array($order_info) && $order_info != NULL) {
+            $this->model_sale_order->UpdateOrderVehicleDetails($order_id, $vehicle_number);
+        }
+        $json['status'] = 'success';
+        $json['message'] = 'Order Vehicle Details Updated!';
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
     }
 
 }
