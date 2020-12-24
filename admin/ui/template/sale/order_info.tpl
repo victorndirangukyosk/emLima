@@ -426,7 +426,14 @@
 				<td><?php echo $shipping_method; ?></td>
 			  </tr>
 			  <?php } ?>
-
+                          <tr>
+                              <td>Driver</td>
+                              <td><input type="text" name="order_driver" id="order_driver" value="">&nbsp;<button id="save_order_driver" class="btn btn-primary" type="button"> Save </button></td>
+                          </tr>
+                          <tr>
+                              <td>Vehicle Number</td>
+                              <td><input type="text" name="order_vehicle_number" id="order_vehicle_number" value="">&nbsp;<button id="save_order_vehicle_number" class="btn btn-primary" type="button"> Save </button></td>
+                          </tr>
 
 			</table>
 		  </div>
