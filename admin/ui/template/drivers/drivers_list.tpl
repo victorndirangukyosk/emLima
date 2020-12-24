@@ -137,6 +137,8 @@
                   <td class="text-left"><?php echo $driver['telephone']; ?></td>
                   <td class="text-left"><?php echo $driver['status']; ?></td>
                   <td class="text-left"><?php echo $driver['date_added']; ?></td>
+                  <td class="text-right"><a href="<?php echo $driver['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a>
+</td>
                 </tr>
                 <?php } ?>
                 <?php } else { ?>

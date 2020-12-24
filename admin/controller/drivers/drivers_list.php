@@ -606,7 +606,7 @@ class ControllerDriversDriversList extends Controller {
         if (isset($this->request->get['driver_id']) && ('POST' != $this->request->server['REQUEST_METHOD'])) {
             $driver_info = $this->model_drivers_drivers->getDriver($this->request->get['driver_id']);
         }
-        
+
         if (isset($this->request->post['firstname'])) {
             $data['firstname'] = $this->request->post['firstname'];
         } elseif (!empty($driver_info)) {
@@ -656,7 +656,7 @@ class ControllerDriversDriversList extends Controller {
 
         $this->response->setOutput($this->load->view('drivers/driver_form.tpl', $data));
     }
-    
+
     protected function validateForm() {
         if (!$this->user->hasPermission('modify', 'drivers/drivers_list')) {
             $this->error['warning'] = $this->language->get('error_permission');
@@ -695,6 +695,76 @@ class ControllerDriversDriversList extends Controller {
         }
 
         return !$this->error;
+    }
+
+    public function edit() {
+        $this->load->language('drivers/drivers');
+
+        $this->document->setTitle($this->language->get('heading_title'));
+
+        $this->load->model('drivers/drivers');
+
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
+            $this->model_drivers_drivers->editDriver($this->request->get['driver_id'], $this->request->post);
+            $this->session->data['success'] = $this->language->get('text_success');
+            // Add to activity log
+            $log = new Log('error.log');
+            $this->load->model('user/user_activity');
+
+            $activity_data = [
+                'user_id' => $this->user->getId(),
+                'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+                'user_group_id' => $this->user->getGroupId(),
+                'driver_id' => $this->request->get['driver_id'],
+            ];
+            $log->write('driver edit');
+
+            $this->model_user_user_activity->addActivity('driver_edit', $activity_data);
+
+            $log->write('driver edit');
+
+            $url = '';
+
+            if (isset($this->request->get['filter_name'])) {
+                $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+            }
+
+            if (isset($this->request->get['filter_email'])) {
+                $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
+            }
+
+            if (isset($this->request->get['filter_status'])) {
+                $url .= '&filter_status=' . $this->request->get['filter_status'];
+            }
+
+            if (isset($this->request->get['filter_date_added'])) {
+                $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
+            }
+
+            if (isset($this->request->get['sort'])) {
+                $url .= '&sort=' . $this->request->get['sort'];
+            }
+
+            if (isset($this->request->get['order'])) {
+                $url .= '&order=' . $this->request->get['order'];
+            }
+
+            if (isset($this->request->get['page'])) {
+                $url .= '&page=' . $this->request->get['page'];
+            }
+
+            if (isset($this->request->post['button']) and 'save' == $this->request->post['button']) {
+                $this->response->redirect($this->url->link('drivers/drivers_list/edit', 'driver_id=' . $this->request->get['driver_id'] . '&token=' . $this->session->data['token'] . $url, 'SSL'));
+            }
+
+            if (isset($this->request->post['button']) and 'new' == $this->request->post['button']) {
+                $this->response->redirect($this->url->link('drivers/drivers_list/add', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            }
+
+            $this->response->redirect($this->url->link('drivers/drivers_list', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+        }
+
+        $this->getForm();
     }
 
 }

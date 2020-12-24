@@ -8,7 +8,7 @@ class ModelDriversDrivers extends Model {
         return $driver_id;
     }
 
-    public function editCustomer($driver_id, $data) {
+    public function editDriver($driver_id, $data) {
         $this->db->query('UPDATE ' . DB_PREFIX . "drivers SET firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', status = '" . (int) $data['status'] . "' WHERE driver_id = '" . (int) $driver_id . "'");
     }
 
