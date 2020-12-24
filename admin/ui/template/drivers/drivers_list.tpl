@@ -159,7 +159,7 @@
   </div>
   <script type="text/javascript"><!--
 $('#button-filter').on('click', function() {
-  url = 'index.php?path=sale/customer&token=<?php echo $token; ?>';
+  url = 'index.php?path=drivers/drivers_list&token=<?php echo $token; ?>';
   
   var filter_name = $('input[name=\'filter_name\']').val();
   
@@ -196,17 +196,17 @@ $('#button-filter').on('click', function() {
 //--></script> 
   <script type="text/javascript"><!--
 
-  $companyName="";
+  $driverName="";
 $('input[name=\'filter_name\']').autocomplete({
   'source': function(request, response) {
     $.ajax({
-      url: 'index.php?path=sale/customer/autocompletebyCompany&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request)+'&filter_company=' +$companyName,
+      url: 'index.php?path=drivers/drivers_list/autocompletebyDriverName&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request)+'&filter_company=' +$driverName,
       dataType: 'json',     
       success: function(json) {
         response($.map(json, function(item) {
           return {
             label: item['name'],
-            value: item['customer_id']
+            value: item['driver_id']
           }
         }));
       }
@@ -217,42 +217,16 @@ $('input[name=\'filter_name\']').autocomplete({
   } 
 });
 
- $('input[name=\'filter_company\']').autocomplete({
-            'source': function (request, response) {
-                $.ajax({
-                    url: 'index.php?path=sale/customer/autocompletecompany&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
-                    dataType: 'json',
-                    success: function (json) {
-                        response($.map(json, function (item) {
-                            return {
-                                label: item['name'],
-                                value: item['name']
-                            }
-                        }));
-
-                        
-                    }
-                });
-                $companyName="";
-            },
-            'select': function (item) {
-                $('input[name=\'filter_company\']').val(item['label']);
-                $('input[name=\'filter_customer\']').val('');
-                $companyName=item['label'];
-            }
-        });
-
-
 $('input[name=\'filter_email\']').autocomplete({
   'source': function(request, response) {
     $.ajax({
-      url: 'index.php?path=sale/customer/autocomplete&token=<?php echo $token; ?>&filter_email=' +  encodeURIComponent(request),
+      url: 'index.php?path=drivers/drivers_list/autocomplete&token=<?php echo $token; ?>&filter_email=' +  encodeURIComponent(request),
       dataType: 'json',     
       success: function(json) {
         response($.map(json, function(item) {
           return {
             label: item['email'],
-            value: item['customer_id']
+            value: item['driver_id']
           }
         }));
       }
@@ -271,7 +245,7 @@ $('.date').datetimepicker({
 
 function excel() {
             
-    url = 'index.php?path=sale/customer/export_excel&token=<?php echo $token; ?>';
+    url = 'index.php?path=drivers/drivers_list/export_excel&token=<?php echo $token; ?>';
     
     location = url;
 }
