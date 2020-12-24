@@ -1196,6 +1196,16 @@ class ControllerAccountOrder extends Controller {
             foreach ($data['products'] as $product) {
                 $data['total_quantity'] += $product['quantity'];
             }
+            
+            $this->load->model('drivers/drivers');
+            $order_driver_details = $this->model_drivers_drivers->getDriver($order_info['driver_id']);
+            if(is_array($order_driver_details) && $order_driver_details != NULL) {
+            $data['order_driver_details'] = $order_driver_details;
+            } else {
+            $data['order_driver_details'] = NULL;    
+            }
+            
+            $data['vehicle_number'] = $order_info['vehicle_number'];
 
             if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/real_order_info.tpl')) {
                 $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/real_order_info.tpl', $data));
