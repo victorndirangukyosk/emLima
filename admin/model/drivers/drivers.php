@@ -33,7 +33,7 @@ class ModelDriversDrivers extends Model {
     }
 
     public function getDrivers($data = []) {
-        $sql = "SELECT *, CONCAT(c.firstname, ' ', c.lastname) AS name FROM " . DB_PREFIX . 'drivers c WHERE c.status = 1';
+        $sql = "SELECT *, CONCAT(c.firstname, ' ', c.lastname) AS name FROM " . DB_PREFIX . 'drivers c';
 
         $implode = [];
 
@@ -62,7 +62,7 @@ class ModelDriversDrivers extends Model {
         }
 
         if ($implode) {
-            $sql .= ' AND ' . implode(' AND ', $implode);
+            $sql .= ' WHERE ' . implode(' AND ', $implode);
         }
 
         $sort_data = [

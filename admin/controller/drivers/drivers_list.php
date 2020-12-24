@@ -225,7 +225,6 @@ class ControllerDriversDriversList extends Controller {
                 'telephone' => $country_code . $result['telephone'],
                 'status' => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
                 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
-                'status' => $status,
                 'edit' => $this->url->link('drivers/drivers_list/edit', 'token=' . $this->session->data['token'] . '&driver_id=' . $result['driver_id'] . $url, 'SSL'),
                 'driver_view' => $this->url->link('drivers/drivers_list/view_driver', 'token=' . $this->session->data['token'] . '&driver_id=' . $result['driver_id'] . $url, 'SSL'),
             ];
