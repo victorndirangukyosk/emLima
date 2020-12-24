@@ -814,4 +814,10 @@ class ControllerDriversDriversList extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+    public function export_excel() {
+        $data = [];
+        $this->load->model('report/excel');
+        $this->model_report_excel->download_driver_excel($data);
+    }
+
 }
