@@ -181,7 +181,7 @@ $('#button-filter').on('click', function() {
   
   var filter_telephone = $('input[name=\'filter_telephone\']').val();
   
-  if (filter_telephone != '*') {
+  if (filter_telephone) {
     url += '&filter_telephone=' + encodeURIComponent(filter_telephone);
   } 
     
@@ -220,7 +220,7 @@ $('input[name=\'filter_name\']').autocomplete({
 $('input[name=\'filter_email\']').autocomplete({
   'source': function(request, response) {
     $.ajax({
-      url: 'index.php?path=drivers/drivers_list/autocomplete&token=<?php echo $token; ?>&filter_email=' +  encodeURIComponent(request),
+      url: 'index.php?path=drivers/drivers_list/autocompletebyDriverName&token=<?php echo $token; ?>&filter_email=' +  encodeURIComponent(request),
       dataType: 'json',     
       success: function(json) {
         response($.map(json, function(item) {
