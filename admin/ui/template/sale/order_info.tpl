@@ -2174,4 +2174,28 @@ $('.delivery_timeslot').change(function(){
 		}
 
 </script>
+<script>
+  $driverName="";
+$('input[name=\'order_driver\']').autocomplete({
+  'source': function(request, response) {
+    $.ajax({
+      url: 'index.php?path=drivers/drivers_list/autocompletebyDriverName&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request)+'&filter_company=' +$driverName,
+      dataType: 'json',     
+      success: function(json) {
+        response($.map(json, function(item) {
+          return {
+            label: item['name'],
+            value: item['driver_id']
+          }
+        }));
+      }
+    });
+  },
+  'select': function(item) {
+    $('input[name=\'order_driver\']').val(item['label']);
+    $('input[name=\'order_driver\']').attr('data_driver_id',item['value']);
+  } 
+});    
+    
+</script>
 <?php echo $footer; ?> 
