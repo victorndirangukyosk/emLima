@@ -33,7 +33,7 @@ class ModelDriversDrivers extends Model {
     }
 
     public function getDrivers($data = []) {
-        $sql = "SELECT *, CONCAT(c.firstname, ' ', c.lastname) AS name FROM " . DB_PREFIX . 'drivers c';
+        $sql = "SELECT *, CONCAT(c.firstname, ' ', c.lastname) AS name FROM " . DB_PREFIX . 'drivers c WHERE c.status = 1';
 
         $implode = [];
 
