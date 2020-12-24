@@ -223,7 +223,7 @@
                                                      <center> <?= $text_no_delivery_alloted ?></center>
                                                     <?php } else { ?>
                                                         <div class="checkout-invoice">
-                                                            <div class="checout-invoice-title">Drive Name</div>
+                                                            <div class="checout-invoice-title">Driver Name</div>
                                                             <div class="checout-invoice-price"><?= $order_driver ?></div>
                                                         </div>
                                                        <div class="checkout-invoice">
