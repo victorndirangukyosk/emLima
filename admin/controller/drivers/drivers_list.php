@@ -55,7 +55,7 @@ class ControllerDriversDriversList extends Controller {
             if (isset($this->request->get['filter_email'])) {
                 $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
             }
-            
+
             if (isset($this->request->get['filter_driving_licence'])) {
                 $url .= '&filter_driving_licence=' . urlencode(html_entity_decode($this->request->get['filter_driving_licence'], ENT_QUOTES, 'UTF-8'));
             }
@@ -108,7 +108,7 @@ class ControllerDriversDriversList extends Controller {
         } else {
             $filter_email = null;
         }
-        
+
         if (isset($this->request->get['filter_driving_licence'])) {
             $filter_driving_licence = $this->request->get['filter_driving_licence'];
         } else {
@@ -160,7 +160,7 @@ class ControllerDriversDriversList extends Controller {
         if (isset($this->request->get['filter_email'])) {
             $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
         }
-        
+
         if (isset($this->request->get['filter_driving_licence'])) {
             $url .= '&filter_driving_licence=' . urlencode(html_entity_decode($this->request->get['filter_driving_licence'], ENT_QUOTES, 'UTF-8'));
         }
@@ -315,7 +315,7 @@ class ControllerDriversDriversList extends Controller {
         if (isset($this->request->get['filter_email'])) {
             $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
         }
-        
+
         if (isset($this->request->get['filter_driving_licence'])) {
             $url .= '&filter_driving_licence=' . urlencode(html_entity_decode($this->request->get['filter_driving_licence'], ENT_QUOTES, 'UTF-8'));
         }
@@ -356,7 +356,7 @@ class ControllerDriversDriversList extends Controller {
         if (isset($this->request->get['filter_email'])) {
             $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
         }
-        
+
         if (isset($this->request->get['filter_driving_licence'])) {
             $url .= '&filter_driving_licence=' . urlencode(html_entity_decode($this->request->get['filter_driving_licence'], ENT_QUOTES, 'UTF-8'));
         }
@@ -415,80 +415,27 @@ class ControllerDriversDriversList extends Controller {
         $data['text_form'] = !isset($this->request->get['driver_id']) ? $this->language->get('text_add') : $this->language->get('text_edit');
         $data['text_enabled'] = $this->language->get('text_enabled');
         $data['text_disabled'] = $this->language->get('text_disabled');
-        $data['text_yes'] = $this->language->get('text_yes');
-        $data['text_no'] = $this->language->get('text_no');
-        $data['text_select'] = $this->language->get('text_select');
-        $data['text_none'] = $this->language->get('text_none');
         $data['text_loading'] = $this->language->get('text_loading');
-        $data['text_add_ban_ip'] = $this->language->get('text_add_ban_ip');
-        $data['text_remove_ban_ip'] = $this->language->get('text_remove_ban_ip');
-
-        $data['text_male'] = $this->language->get('text_male');
-        $data['text_female'] = $this->language->get('text_female');
-        $data['text_other'] = $this->language->get('text_other');
-        $data['entry_dob'] = $this->language->get('entry_dob');
-        $data['entry_gender'] = $this->language->get('entry_gender');
 
         $data['entry_firstname'] = $this->language->get('entry_firstname');
         $data['entry_lastname'] = $this->language->get('entry_lastname');
         $data['entry_email'] = $this->language->get('entry_email');
         $data['entry_driving_licence'] = $this->language->get('entry_driving_licence');
 
-        $data['entry_company_name'] = $this->language->get('entry_company_name');
-        $data['entry_company_address'] = $this->language->get('entry_company_address');
 
         $data['entry_telephone'] = $this->language->get('entry_telephone');
-        $data['entry_fax'] = $this->language->get('entry_fax');
-        $data['entry_password'] = $this->language->get('entry_password');
-        $data['entry_confirm'] = $this->language->get('entry_confirm');
-        $data['entry_newsletter'] = $this->language->get('entry_newsletter');
         $data['entry_status'] = $this->language->get('entry_status');
-        $data['entry_approved'] = $this->language->get('entry_approved');
-        $data['entry_safe'] = $this->language->get('entry_safe');
-        $data['entry_company'] = $this->language->get('entry_company');
-        $data['entry_address_1'] = $this->language->get('entry_address_1');
-        $data['entry_address_2'] = $this->language->get('entry_address_2');
-        $data['entry_city'] = $this->language->get('entry_city');
-        $data['entry_postcode'] = $this->language->get('entry_postcode');
-        $data['entry_zone'] = $this->language->get('entry_zone');
-        $data['entry_country'] = $this->language->get('entry_country');
-        $data['entry_default'] = $this->language->get('entry_default');
-        $data['entry_comment'] = $this->language->get('entry_comment');
-        $data['entry_description'] = $this->language->get('entry_description');
-        $data['entry_amount'] = $this->language->get('entry_amount');
-        $data['entry_points'] = $this->language->get('entry_points');
-        $data['entry_send_email'] = $this->language->get('entry_send_email');
         $data['entry_name'] = $this->language->get('entry_name');
-        $data['entry_contact_no'] = $this->language->get('entry_contact_no');
-        $data['entry_address'] = $this->language->get('entry_address');
-
-        $data['help_safe'] = $this->language->get('help_safe');
-        $data['help_points'] = $this->language->get('help_points');
 
         $data['button_save'] = $this->language->get('button_save');
         $data['button_savenew'] = $this->language->get('button_savenew');
         $data['button_saveclose'] = $this->language->get('button_saveclose');
         $data['button_cancel'] = $this->language->get('button_cancel');
-        $data['button_address_add'] = $this->language->get('button_address_add');
-        $data['button_history_add'] = $this->language->get('button_history_add');
-        $data['button_credit_add'] = $this->language->get('button_credit_add');
-        $data['button_reward_add'] = $this->language->get('button_reward_add');
-        $data['button_remove'] = $this->language->get('button_remove');
-        $data['button_upload'] = $this->language->get('button_upload');
 
         $data['tab_general'] = $this->language->get('tab_general');
-        $data['tab_address'] = $this->language->get('tab_address');
-        $data['tab_history'] = $this->language->get('tab_history');
-        $data['tab_credit'] = $this->language->get('tab_credit');
-        $data['tab_reward'] = $this->language->get('tab_reward');
-        $data['tab_referral'] = $this->language->get('tab_referral');
 
         $data['token'] = $this->session->data['token'];
 
-        $data['text_flat_house_office'] = $this->language->get('text_flat_house_office');
-        $data['text_stree_society_office'] = $this->language->get('text_stree_society_office');
-        $data['label_zipcode'] = $this->language->get('label_zipcode');
-        $data['text_locality'] = $this->language->get('text_locality');
 
         if (isset($this->request->get['driver_id'])) {
             $data['driver_id'] = $this->request->get['driver_id'];
@@ -521,40 +468,16 @@ class ControllerDriversDriversList extends Controller {
             $data['error_lastname'] = '';
         }
 
-        if (isset($this->error['dob'])) {
-            $data['error_dob'] = $this->error['dob'];
-        } else {
-            $data['error_dob'] = '';
-        }
-
-        if (isset($this->error['gender'])) {
-            $data['error_gender'] = $this->error['gender'];
-        } else {
-            $data['error_gender'] = '';
-        }
-
         if (isset($this->error['email'])) {
             $data['error_email'] = $this->error['email'];
         } else {
             $data['error_email'] = '';
         }
-        
+
         if (isset($this->error['driving_licence'])) {
             $data['error_driving_licence'] = $this->error['driving_licence'];
         } else {
             $data['error_driving_licence'] = '';
-        }
-
-        if (isset($this->error['company_name'])) {
-            $data['error_company_name'] = $this->error['company_name'];
-        } else {
-            $data['error_company_name'] = '';
-        }
-
-        if (isset($this->error['company_address'])) {
-            $data['error_company_address'] = $this->error['company_address'];
-        } else {
-            $data['error_company_address'] = '';
         }
 
         if (isset($this->error['telephone'])) {
@@ -563,28 +486,10 @@ class ControllerDriversDriversList extends Controller {
             $data['error_telephone'] = '';
         }
 
-        if (isset($this->error['password'])) {
-            $data['error_password'] = $this->error['password'];
-        } else {
-            $data['error_password'] = '';
-        }
-
         if (isset($this->error['confirm'])) {
             $data['error_confirm'] = $this->error['confirm'];
         } else {
             $data['error_confirm'] = '';
-        }
-
-        if (isset($this->error['custom_field'])) {
-            $data['error_custom_field'] = $this->error['custom_field'];
-        } else {
-            $data['error_custom_field'] = [];
-        }
-
-        if (isset($this->error['address'])) {
-            $data['error_address'] = $this->error['address'];
-        } else {
-            $data['error_address'] = [];
         }
 
         $url = '';
@@ -596,7 +501,7 @@ class ControllerDriversDriversList extends Controller {
         if (isset($this->request->get['filter_email'])) {
             $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
         }
-        
+
         if (isset($this->request->get['filter_driving_licence'])) {
             $url .= '&filter_driving_licence=' . urlencode(html_entity_decode($this->request->get['filter_driving_licence'], ENT_QUOTES, 'UTF-8'));
         }
@@ -667,7 +572,7 @@ class ControllerDriversDriversList extends Controller {
         } else {
             $data['email'] = '';
         }
-        
+
         if (isset($this->request->post['driving_licence'])) {
             $data['driving_licence'] = $this->request->post['driving_licence'];
         } elseif (!empty($driver_info)) {
@@ -715,10 +620,10 @@ class ControllerDriversDriversList extends Controller {
             $this->error['lastname'] = $this->language->get('error_lastname');
         }
 
-        if ((utf8_strlen($this->request->post['email']) > 96) || !filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL)) {
+        if (isset($this->request->post['email']) && $this->request->post['email'] != NULL && ((utf8_strlen($this->request->post['email']) > 96) || !filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL))) {
             $this->error['email'] = $this->language->get('error_email');
         }
-        
+
         if ((utf8_strlen($this->request->post['driving_licence']) < 1) || (utf8_strlen(trim($this->request->post['driving_licence'])) > 32)) {
             $this->error['driving_licence'] = $this->language->get('error_driving_licence');
         }
@@ -781,7 +686,7 @@ class ControllerDriversDriversList extends Controller {
             if (isset($this->request->get['filter_email'])) {
                 $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
             }
-            
+
             if (isset($this->request->get['filter_driving_licence'])) {
                 $url .= '&filter_driving_licence=' . urlencode(html_entity_decode($this->request->get['filter_driving_licence'], ENT_QUOTES, 'UTF-8'));
             }
