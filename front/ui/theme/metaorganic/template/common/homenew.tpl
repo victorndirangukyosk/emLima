@@ -16,37 +16,28 @@
   <?php if ($keywords) { ?>
   <meta name="keywords" content="<?php echo $keywords; ?>" />
   <?php } ?>
-  <title><?= $heading_title ?></title>
+  <title>
+    <?= $heading_title ?>
+  </title>
   <?php if ($icon) { ?>
   <link href="<?php echo $icon; ?>" rel="icon" />
   <?php } ?>
 
   <link href="<?= $base;?>front/ui/theme/metaorganic/assets/images/favicon.ico" rel="icon">
-  <!-- BEGIN CSS -->
   <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/theme/metaorganic/assets/css/style.min.css">
   <link href="<?= $base;?>front/ui/theme/metaorganic/assets/css/all.min.css" rel="stylesheet">
   <link href="<?= $base;?>front/ui/theme/metaorganic/assets/css/fontawesome.min.css" rel="stylesheet">
   <link href="<?= $base;?>front/ui/theme/metaorganic/assets/css/brands.min.css" rel="stylesheet">
-  <!-- END CSS -->
-
-  <!-- Bootstrap -->
   <link href="<?= $base;?>front/ui/theme/mvgv2/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Hind:300,400,500,600,700" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/theme/mvgv2/css/style.min.css?v=5.2.7">
-
-
   <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/theme/mvgv2/css/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href="<?= $base ?>front/ui/theme/mvgv2/css/mycart.min.css">
   <link rel="stylesheet" type="text/css" href="<?= $base; ?>front/ui/theme/mvgv2/css/custom.min.css?v=1.1.0">
   <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/theme/metaorganic/assets/css/list.min.css">
-
-  <!-- <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/theme/mvgv2/css/sweetalert.min.css">
-    <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/theme/mvgv2/css/drawer.min.css"> -->
   <link rel="stylesheet" type="text/css"
     href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.20.4/sweetalert2.min.css">
   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.1/css/drawer.min.css">
-
-
   <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/theme/mvgv2/css/drawer.min.css">
   <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/theme/metaorganic/css/owl.carousel.min.css">
   <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/theme/metaorganic/css/owl.theme.min.css">
@@ -70,13 +61,13 @@
     }
   </style>
 </head>
-<?php //echo $page;//exit;?>
 
 <body data-wrapper-optimized="" id="homenew" class="new-homepage-image-format drawer drawer--top">
-  <?php //echo '<pre>';print_r($data);exit; ?>
   <?php if ($error_warning) { ?>
   <div class="alert alert-danger">
-    <center><i class="fa fa-exclamation-circle"></i> <?php echo $error_warning; ?></center>
+    <center><i class="fa fa-exclamation-circle"></i>
+      <?php echo $error_warning; ?>
+    </center>
     <button type="button" class="close" data-dismiss="alert">&times;</button>
   </div>
   <?php } ?>
@@ -94,9 +85,7 @@
         <div class="header__logo-container">
           <a class="header__logo-link " href="<?= BASE_URL?>">
             <img src="<?=$logo?>" />
-
           </a>
-
         </div>
       </div>
       <div class="col-md-7">
@@ -115,9 +104,10 @@
                   <div>
                     <select class="form-control" id="selectedCategory">
                       <option value="">- Select categories-</option>
-                      <?php foreach($categories as $categoty){
-                                     //print_r($categoty);exit;?>
-                      <option value="<?=$categoty['id']?>"><?=$categoty['name']?></option>
+                      <?php foreach($categories as $category){ ?>
+                      <option value="<?=$categoty['id']?>">
+                        <?=$category['name']?>
+                      </option>
                       <?php } ?>
 
                     </select>
@@ -138,7 +128,8 @@
                             <div class="resp-searchresult">
                               <div></div>
                             </div>
-                          </span> </div>
+                          </span>
+                        </div>
                       </form>
                     </div>
                   </div>
@@ -171,32 +162,39 @@
                 <li class="header__upper-deck-item header__upper-deck-item setcartbtn">
                   <div class="butn setui"> <button class="btn btn-default mini-cart-button" role="button"
                       data-toggle="modal" data-target="#store-cart-side" id="mini-cart-button">
-                      <span class="badge cart-count"><?= $this->cart->countProducts(); ?></span>
+                      <span class="badge cart-count">
+                        <?= $this->cart->countProducts(); ?>
+                      </span>
                       <i class="fa fa-shopping-cart"></i>
-                      <span
-                        class="hidden-xs hidden-sm cart-total-amount"><?= $this->currency->format($this->cart->getTotal()); ?></span>
+                      <span class="hidden-xs hidden-sm cart-total-amount">
+                        <?= $this->currency->format($this->cart->getTotal()); ?>
+                      </span>
                     </button></div>
                 </li>
                 <?php }else{?>
                 <div>
                   <div class="menuset">
                     <div class="newset" style="margin-top: 20px;"><a class="btn" href="#">
-                        <span><?= $full_name ?></span> </a>
+                        <span>
+                          <?= $full_name ?>
+                        </span> </a>
 
                       <div class="dropdownset" style="display:none;">
                         <div class="dropdownsetnew" style="margin-top: 10px;"><a class="header__upper-deck-item-link"
                             href="<?= $dashboard ?>"><i class="fa fa-user"></i>Dashboard</a></div>
-                        <div class="dropdownsetnew"><a class="header__upper-deck-item-link"
-                            href="<?= $po_ocr ?>"><i class="fa fa-file-text"></i>Purchase Order &nbsp;<span
+                        <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $po_ocr ?>"><i
+                              class="fa fa-file-text"></i>Purchase Order &nbsp;<span
                               class="badge badge-pill badge-success">BETA</span></a></div>
-                               <div class="dropdownsetnew"  ><a class="header__upper-deck-item-link"
-                                   href="<?= $wishlist ?>" ><i class="fa fa-shopping-basket"></i>My Basket</a></div>
+                        <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $wishlist ?>"><i
+                              class="fa fa-shopping-basket"></i>My Basket</a></div>
                         <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $account ?>"><i
                               class="fa fa-user"></i>My Account</a></div>
                         <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $help ?>"><i
                               class="fa fa-question-circle"></i>Help</a></div>
                         <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $logout ?>"><i
-                              class="fa fa-power-off"></i><?= $text_logout ?></a></div>
+                              class="fa fa-power-off"></i>
+                            <?= $text_logout ?>
+                          </a></div>
                       </div>
                     </div>
                     <div class="butn setui" style="position:relative; z-index:-1000;">
@@ -205,11 +203,15 @@
                         style="margin-right:10px; margin-top:0px; display:flex; flex-flow: column nowrap;">
                         <div style="display:flex; align-items: center;">
                           <i class="fa fa-shopping-cart"></i>&nbsp;&nbsp;
-                          <span class="hidden-xs hidden-sm cart-total-amount"><?= $this->
-                          currency->format($this->cart->getTotal()); ?></span>
+                          <span class="hidden-xs hidden-sm cart-total-amount">
+                            <?= $this->
+                          currency->format($this->cart->getTotal()); ?>
+                          </span>
                         </div>
-                        <span class="badge cart-count" style="margin: 4px 0px;"><?= $this->cart->countProducts(); ?>
-                          items in cart</span>
+                        <span class="badge cart-count" style="margin: 4px 0px;">
+                          <?= $this->cart->countProducts(); ?>
+                          items in cart
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -217,89 +219,18 @@
                 <?php } ?>
               </ul>
             </div>
-
           </div>
-
-
-
         </div>
       </div>
     </div>
-
   </div>
-  </picture>
   </div>
-
-
-
   </div>
   </div>
   </div>
   </div>
 
   <div style="clear:both !important"> </div>
-  <!-- <?php if (isset($wishlists)) { ?>
-  <div class="container" style="padding-top: 24px;">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="panel-group" id="accordion" role="tablist">
-          <div class="panel panel-default">
-            <div class="panel-heading" role="tab" style="background-color: #ea7128">
-              <h4 class="panel-title">
-                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#my-lists"
-                   style="color: #fff !important; display: inline-block; width: 100%;">
-                  My Lists
-                </a>
-              </h4>
-            </div>
-            <div id="my-lists" class="panel-collapse collapse in" role="tabpanel">
-              <div class="panel-body">
-                <div class="order-details">
-                  <?php foreach ($wishlists as $wishlist) { ?>
-
-                  <div class="list-group my-order-group">
-                    <li class="list-group-item my-order-list-head">
-                      <i class="fa fa-clock-o"></i> Added On
-                      <span><strong><?php echo $wishlist['date_added']; ?></strong></span> 
-                      <span>
-                        <a href="#" id="addWishlisttocart" data-id='<?=$wishlist["wishlist_id"] ?>'
-                          style="margin-right:21px;" class="btn btn-info btn-xs">ADD TO CART</a>
-                        <a href="#" id="cancelWishlist" data-id='<?=$wishlist["wishlist_id"] ?>'
-                          style="margin-right:21px;"
-                          class="btn btn-danger btn-xs btn-custom-remove">DELETE</a>
-                      </span>
-                    </li>
-                    <li class="list-group-item">
-                      <div class="my-order-block">
-                        <div class="row">
-                          <div class="col-md-4">
-                            <div class="my-order-delivery">
-                              <h3 class="my-order-title"><?php echo $wishlist['name']; ?></h3>
-                            </div>
-                          </div>
-                          <div class="col-md-8">
-                            <div class="my-order-info text-right">
-                              <h3 class="my-order-title">
-                                <?php echo ($wishlist['product_count'] > 0 ?  '<a href="'.$wishlist['href'].'" class="btn btn-default btn-accept-reject">' .'Process '.' '.' Order '. ' (' .$wishlist['product_count'].' Products)' .'</a>' : $text_products_count. ' ' .$wishlist['product_count']); ?>
-                              </h3>
-                              <span class="my-order-id"></span>
-
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </li>
-                  </div>
-                  <?php } ?>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <?php } ?> -->
 
   <?php
 					$i=0;
@@ -311,57 +242,55 @@
 					  ?>
 
   <?php if(count($category['products'])>0){?>
-  <div class="container--full-width featured-categories <?php echo ($i==1) ? "first-feature-cat": "" ?>">
+  <div class="container--full-width featured-categories <?php echo ($i==1) ? " first-feature-cat": "" ?>">
     <div class="container" style="width:100%;">
       <div class="_47ahp" data-test-selector="search-results">
         <div style="margin-top: 16px" class="clearfix featured-categories__header">
-          <h2 class="featured-categories__header-title"><span><?=$category['name']?></span></h2>
+          <h2 class="featured-categories__header-title"><span>
+              <?=$category['name']?>
+            </span></h2>
 
         </div>
-        <ul id="items-ul" class="_2tY3C" data-test-selector="item-cards-layout-grid" style="width: 100%;">
+        <ul id="items-ul" class="row" data-test-selector="item-cards-layout-grid">
 
-          <?php
-													foreach($category['products'] as $product) {
-											//	 echo '<pre>';print_r($product);exit;
-												  ?>
-          <li class="col-md-2 ">
-
+          <?php foreach($category['products'] as $product) { ?>
+          <li class="col-md-2" style="min-height: 265px">
+            <a class="product-detail-bnt open-popup" role="button" data-store="<?= $product['store_id'] ?>"
+              data-id="<?= $product['product_store_id'] ?>" target="_blank" aria-label="<?=$product['name']?>">
+              <img class="_1xvs1" src="<?=$product['thumb']?>" title="<?=$product['name']?>"
+                alt="<?=$product['name']?>">
+              <div class="_25ygu">
+                <?=$product['name']?>
+                <br />
+                <div style="color:#6dbd46">
+                  <?= $product['variations'][0]['special'];?>
+                  <?php  echo '/ Per ' . $product['variations'][0]['unit']; ?>
+                </div>
+                <span id="flag-qty-id-<?= $product['product_store_id'] ?>-<?= $product['store_product_variation_id'] ?>"
+                  style="padding:5px;display: <?= $product['qty_in_cart'] ? 'block' : 'none'; ?>">
+                  <?php echo $product['qty_in_cart']?>
+                  items in cart <i class="fas fa-flag"></i>
+                </span>
+              </div>
+            </a>
+          </li>
+          <!-- <li class="col-md-2 ">
             <div class="_2sT86 _1fLGj">
               <a class="product-detail-bnt open-popup" role="button" data-store="<?= $product['store_id'] ?>"
                 data-id="<?= $product['product_store_id'] ?>" target="_blank" aria-label="<?=$product['name']?>">
-
-                <!--<article class="_3Oe1A">-->
 
                 <div class="col-md-12 col-sm-12 pl0 pr0">
                   <div class="col-md-12 col-sm-12 pl0 pr0">
                     <section class="_25Upe">
                       <section class="inner_sec">
-                        <!--<span class="discountuihome" style="color:red; font-weight:bold">Get <?= $product['percent_off'];?>% OFF <i class="fas fa-shopping-basket"></i></span>-->
-
-
                         <div class="_3XNMI">
                           <div class="_2_3rp">
-                            <div style="">
+                            <div>
                               <img class="_1xvs1" src="<?=$product['thumb']?>" title="<?=$product['name']?>"
                                 alt="<?=$product['name']?>" style="left: 0%;">
-
                             </div>
                           </div>
-
-
                         </div>
-
-
-                        <!--<section class="_1SQpT">
-
-
-                                            <a role="button" data-store="<?= ACTIVE_STORE_ID;?>" data-id="<?= $product['product_store_id'] ?>" target="_blank" rel="noopener noreferrer"
-										 class="KFSGT product-detail-bnt product-img product-description open-popup" role="toolbar" title="<?=$product['name']?>"></a>
-
-                                        </section>-->
-
-
-
                       </section>
                     </section>
                   </div>
@@ -369,10 +298,9 @@
                     <div class="vfsyA col-md-12 col-sm-12 pl0 pr0" style="margin-top:10px;">
                       <div class="_25ygu">
                         <div class="JHf2a">
-                          <!--<a class="R8zaM"><?= $heading_title;?></a>-->
+                         
 
                         </div>
-                        <!-- <a class="_2Pk9X" tabindex="0">-->
                         <?=$product['name']?>
                         <br />
                         <div style="color:#6dbd46">
@@ -384,64 +312,23 @@
                           style="padding:5px;display: <?= $product['qty_in_cart'] ? 'block' : 'none'; ?>"><?php echo $product['qty_in_cart']?>
                           items in cart <i class="fas fa-flag"></i></span>
 
-                        <!--</a>-->
                       </div>
                     </div>
-                    <div class="">
-                      <!--col-md-12 col-sm-12 pl0 pr0 setproductimg-->
-
+                    <div>
                       <div class="_2D2lC">
                         <div class="-DeRq">
                         </div>
                       </div>
                       <div>
                         <div class="_2xqFO">
-                          <!-- <div class="_3QV9M"><strike><?= $product['variations'][0]['price'];?></strike> </div>-->
                         </div>
                       </div>
-
-
-
                     </div>
-
                   </div>
                 </div>
-
-                <!-- <section class="_38ivw">
-                                            <section class="_9q1LS">
-                                                <section class="_3dJU8">
-                                                    <div class="oKU4K">
-
-                                                    </div>
-                                                </section>
-                                                <section class="_7H2LP">
-                                                    <div class="-DeRq">
-                                                        <?= $product['variations'][0]['special'];?></div>
-                                                    <div class="_1I1Wt">
-
-                                                    <div class="GeySM"><span class="_2g_QW">Unit:</span> <span class="_3TIJT"><?= isset($product['unit']) ? $product['unit'] : '' ?></span></div>
-                                                </section>
-                                                <section data-id="<?= $product['product_store_id'] ?>" class="VRlLl"><a class="_3tfm8 _3ePxY  product-detail-bnt product-img product-description open-popup" role="button" data-store=<?= isset($current_store) ? $current_store : '' ;?> data-id="<?= $product['product_store_id'] ?>" target="_blank" rel="noopener noreferrer">Preview</a>
-                                                    <div class="pro-qty-addbtn" data-store-id="<?= isset($current_store) ? $current_store : '' ?>"data-variation-id="<?= isset($product['product_variation_store_id']) ? $product['product_variation_store_id'] : '' ?>" id="action_<?= isset($product['product_variation_store_id']) ? $product['product_variation_store_id'] : ''  ?>">
-
-													 <?php require 'action.tpl'; ?>
-
-
-                                                </section>
-                                            </section>
-                                        </section>
-                                       </article>-->
               </a>
             </div>
-
-
-          </li>
-
-
-
-
-
-
+          </li> -->
           <!--- Product Details Modal Start --->
           <div id="product_<?=$product['product_id']?>" class="modal fade" role="dialog">
             <div class="modal-dialog">
@@ -457,7 +344,9 @@
 
                     <?php /*echo "<pre>";print_r($product);die;*/ if(isset($product['percent_off']) && $product['percent_off'] != '0.00') { ?>
 
-                    <span class="spacial-offer"> <?php echo $product['percent_off'].'% OFF';?></span>
+                    <span class="spacial-offer">
+                      <?php echo $product['percent_off'].'% OFF';?>
+                    </span>
                     <?php } ?>
 
 
@@ -488,12 +377,16 @@
 
                       <h3 class="open-popup" data-id="<?= $product['product_store_id'] ?>">
 
-                        <a class="product-title"><?= $product['name']?></a>
+                        <a class="product-title">
+                          <?= $product['name']?>
+                        </a>
                       </h3>
 
                       <?php if(trim(isset($product['unit']))){ ?>
                       <p class="product-info open-popup" data-id="<?= $product['product_store_id'] ?>"><span
-                          class="small-info"><?= $product['unit'] ?></span></p>
+                          class="small-info">
+                          <?= $product['unit'] ?>
+                        </span></p>
                       <?php } else { ?>
                       <p class="product-info open-popup" data-id="<?= $product['product_store_id'] ?>"><span
                           class="small-info">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p>
@@ -565,7 +458,8 @@
       <?php if(count($category['products'])>11){?>
       <span class="view-all-button"><a
           href="<?=$this->url->link('product/store', 'store_id='.ACTIVE_STORE_ID).'?cat='.$page_link?>">View All
-          <?=$category['name']?></a></span>
+          <?=$category['name']?>
+        </a></span>
       <?php } ?>
     </div>
 
@@ -586,7 +480,9 @@
         <!--<a href="<?=$this->url->link('product/store', 'store_id=2').'?cat='.$page_link?>"  class="featured-categories__item-link">-->
         <a href="<?=$base?>?page=stores" class="featured-categories__item-link">
           <div class="featured-categories__item-description featured-categories__item-description--cars">
-            <h4 class="featured-categories__item-description-title"><?=$categoty['name']?></h4>
+            <h4 class="featured-categories__item-description-title">
+              <?=$categoty['name']?>
+            </h4>
             <!--<p class="featured-categories__item-description-total-ads">122,700&nbsp;ads</p>-->
           </div>
           <img src="<?=$categoty['thumb']?>" alt="<?=$categoty['name']?>">
@@ -723,7 +619,9 @@
             <a href="<?php echo $checkout; ?>" id="proceed_to_checkout">
 
               <button type="button" class="btn btn-primary btn-block btn-lg" id="proceed_to_checkout_button">
-                <span class="checkout-modal-text"><?= isset($text_proceed_to_checkout) ? $text_proceed_to_checkout : '' ?> </span>
+                <span class="checkout-modal-text">
+                  <?= isset($text_proceed_to_checkout) ? $text_proceed_to_checkout : '' ?>
+                </span>
                 <div class="checkout-loader" style="display: none;"></div>
 
               </button>
@@ -913,14 +811,14 @@
   </script>
   <script type="text/javascript">
 
-    <?php if ($this -> config -> get('config_store_location') == 'zipcode') { ?>
+    <? php if ($this -> config -> get('config_store_location') == 'zipcode') { ?>
 
       jQuery(function ($) {
         console.log("mask");
         $("#searchTextField").mask("<?= $zipcode_mask_number ?>", { autoclear: false, placeholder: "<?= $zipcode_mask ?>" });
       });
 
-    <?php } ?>
+    <? php } ?>
   </script>
 </body>
 
