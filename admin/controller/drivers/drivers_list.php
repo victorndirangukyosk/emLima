@@ -780,4 +780,79 @@ class ControllerDriversDriversList extends Controller {
         $this->model_report_excel->download_driver_excel($data);
     }
 
+    public function delete() {
+        $this->load->language('drivers/drivers');
+
+        $this->document->setTitle($this->language->get('heading_title'));
+
+        $this->load->model('drivers/drivers');
+
+        if (isset($this->request->post['selected']) && $this->validateDelete()) {
+            foreach ($this->request->post['selected'] as $driver_id) {
+                $this->model_drivers_drivers->deleteDriver($driver_id);
+
+                // Add to activity log
+                $log = new Log('error.log');
+                $this->load->model('user/user_activity');
+
+                $activity_data = [
+                    'user_id' => $this->user->getId(),
+                    'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+                    'user_group_id' => $this->user->getGroupId(),
+                    'driver_id' => $driver_id,
+                ];
+                $log->write('driver delete');
+
+                $this->model_user_user_activity->addActivity('driver_delete', $activity_data);
+
+                $log->write('driver delete');
+            }
+
+            //$this->session->data['success'] = $this->language->get('text_success');
+            $this->session->data['success'] = 'Success : Driver(s) deleted successfully!';
+
+            $url = '';
+
+            if (isset($this->request->get['filter_name'])) {
+                $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+            }
+
+            if (isset($this->request->get['filter_email'])) {
+                $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
+            }
+
+            if (isset($this->request->get['filter_status'])) {
+                $url .= '&filter_status=' . $this->request->get['filter_status'];
+            }
+
+            if (isset($this->request->get['filter_date_added'])) {
+                $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
+            }
+
+            if (isset($this->request->get['sort'])) {
+                $url .= '&sort=' . $this->request->get['sort'];
+            }
+
+            if (isset($this->request->get['order'])) {
+                $url .= '&order=' . $this->request->get['order'];
+            }
+
+            if (isset($this->request->get['page'])) {
+                $url .= '&page=' . $this->request->get['page'];
+            }
+
+            $this->response->redirect($this->url->link('drivers/drivers_list', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+        }
+
+        $this->getList();
+    }
+
+    protected function validateDelete() {
+        if (!$this->user->hasPermission('modify', 'drivers/drivers_list')) {
+            $this->error['warning'] = $this->language->get('error_permission');
+        }
+
+        return !$this->error;
+    }
+
 }
