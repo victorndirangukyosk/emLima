@@ -7391,6 +7391,23 @@ class ControllerSaleOrder extends Controller {
         if (is_array($order_info) && $order_info != NULL) {
             $this->model_sale_order->UpdateOrderDriverDetails($order_id, $driver_id);
         }
+        
+        // Add to activity log
+        $log = new Log('error.log');
+        $this->load->model('user/user_activity');
+
+        $activity_data = [
+            'user_id' => $this->user->getId(),
+            'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+            'user_group_id' => $this->user->getGroupId(),
+            'order_id' => $order_id,
+        ];
+        $log->write('driver assigned to order');
+
+        $this->model_user_user_activity->addActivity('order_driver_assigned', $activity_data);
+
+        $log->write('driver assigned to order');
+        
         $json['status'] = 'success';
         $json['message'] = 'Order Driver Details Updated!';
         $this->response->addHeader('Content-Type: application/json');
@@ -7407,6 +7424,23 @@ class ControllerSaleOrder extends Controller {
         if (is_array($order_info) && $order_info != NULL) {
             $this->model_sale_order->UpdateOrderVehicleDetails($order_id, $vehicle_number);
         }
+        
+        // Add to activity log
+        $log = new Log('error.log');
+        $this->load->model('user/user_activity');
+
+        $activity_data = [
+            'user_id' => $this->user->getId(),
+            'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+            'user_group_id' => $this->user->getGroupId(),
+            'order_id' => $order_id,
+        ];
+        $log->write('vehicle assigned to order');
+
+        $this->model_user_user_activity->addActivity('order_vehicle_assigned', $activity_data);
+
+        $log->write('vehicle assigned to order');
+        
         $json['status'] = 'success';
         $json['message'] = 'Order Vehicle Details Updated!';
         $this->response->addHeader('Content-Type: application/json');
