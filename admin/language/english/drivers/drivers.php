@@ -22,6 +22,7 @@ $_['entry_gender'] = 'Gender';
 // Column
 $_['column_name'] = 'Driver Name';
 $_['column_email'] = 'E-Mail';
+$_['column_driving_licence'] = 'Driving Licence';
 $_['column_customer_group'] = 'Customer Group';
 $_['column_status'] = 'Status';
 $_['column_date_added'] = 'Date Added';
@@ -40,6 +41,7 @@ $_['entry_customer_group'] = 'Customer Group';
 $_['entry_firstname'] = 'First Name';
 $_['entry_lastname'] = 'Last Name';
 $_['entry_email'] = 'E-Mail';
+$_['entry_driving_licence'] = 'Driving Licence';
 
 $_['entry_telephone'] = 'Phone No.';
 $_['entry_fax'] = 'Tax No.';
@@ -83,6 +85,7 @@ $_['error_exists'] = 'Warning: E-Mail Address is already registered!';
 $_['error_firstname'] = 'First Name must be between 1 and 32 characters!';
 $_['error_lastname'] = 'Last Name must be between 1 and 32 characters!';
 $_['error_email'] = 'E-Mail Address does not appear to be valid!';
+$_['error_driving_licence'] = 'Driving Licence field required!';
 $_['error_telephone'] = 'Telephone must be between 3 and 32 characters!';
 $_['error_password'] = 'Password must be between 4 and 20 characters!';
 $_['error_confirm'] = 'Password and password confirmation do not match!';

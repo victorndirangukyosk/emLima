@@ -3,13 +3,13 @@
 class ModelDriversDrivers extends Model {
 
     public function addDriver($data) {
-        $this->db->query('INSERT INTO ' . DB_PREFIX . "drivers SET firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', status = '" . (int) $data['status'] . "', driving_licence = '" . (int) $data['driving_licence'] . "', date_added = NOW()");
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "drivers SET firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', status = '" . (int) $data['status'] . "', driving_licence = '" . $data['driving_licence'] . "', date_added = NOW()");
         $driver_id = $this->db->getLastId();
         return $driver_id;
     }
 
     public function editDriver($driver_id, $data) {
-        $this->db->query('UPDATE ' . DB_PREFIX . "drivers SET firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', status = '" . (int) $data['status'] . "', driving_licence = '" . (int) $data['driving_licence'] . "' WHERE driver_id = '" . (int) $driver_id . "'");
+        $this->db->query('UPDATE ' . DB_PREFIX . "drivers SET firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', status = '" . (int) $data['status'] . "', driving_licence = '" . $data['driving_licence'] . "' WHERE driver_id = '" . (int) $driver_id . "'");
     }
 
     public function editToken($customer_id, $token) {
