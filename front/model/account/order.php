@@ -461,6 +461,10 @@ class ModelAccountOrder extends Model {
                 'order_date' => $order_query->row['order_date'],
                 'delivery_id' => $order_query->row['delivery_id'],
                 'settlement_amount' => $order_query->row['settlement_amount'],
+                'driver_id' => $order_query->row['driver_id'],
+                'vehicle_number' => $order_query->row['vehicle_number'],
+
+
             ];
         } else {
             return false;
