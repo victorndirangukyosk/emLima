@@ -666,8 +666,10 @@ class ControllerProductSearch extends Controller
                     //echo $cachePrice_data[$product_info['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$store_id];//exit;
                     $s_price = $cachePrice_data[$value['product_store_id'].'_'.$_SESSION['customer_category'].'_'.ACTIVE_STORE_ID];
                     $o_price = $cachePrice_data[$value['product_store_id'].'_'.$_SESSION['customer_category'].'_'.ACTIVE_STORE_ID];
-                    $value['special_price'] = $this->currency->format($s_price);
-                    $value['price'] = $this->currency->format($o_price);
+                    /*$value['special_price'] = $this->currency->format($s_price);
+                    $value['price'] = $this->currency->format($o_price);*/
+                    $value['special_price'] = $s_price;
+                    $value['price'] = $o_price;
                 }
                 $products[] = $value;
             }

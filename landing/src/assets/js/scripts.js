@@ -151,6 +151,7 @@
                     const location = $('#register-location').val();
                     const password = $('#register-password').val();
                     const passwordConfirmation = $('#register-password-confirm').val();
+                    const accountmanagerid = $('#register-accountmanager-id').val();
                     const registrationView = $('#registration-view');
                     const otpView = $('#otp-view');
                     const registerButton = $('#register-button');
@@ -190,7 +191,8 @@
                                 address: addressLine,
                                 location: location,
                                 password: password,
-                                confirm: passwordConfirmation
+                                confirm: passwordConfirmation,
+                                accountmanagerid:accountmanagerid
                             },
                             success: function (json) {
                                 registerButton.text('SIGN UP');
@@ -236,6 +238,7 @@
                     const location = $('#register-location').val();
                     const password = $('#register-password').val();
                     const passwordConfirmation = $('#register-password-confirm').val();
+                    const accountmanagerid = $('#register-accountmanager-id').val();
                     const otp = $('#otp-value').val();
                     const verifyButton = $('#otp-verify-button');
                     if (otp.length > 3) {
@@ -261,6 +264,7 @@
                         location: location,
                         password: password,
                         confirm: passwordConfirmation,
+                        accountmanagerid: accountmanagerid,
                         signup_otp: otp
                     },
                     success: function (json) {

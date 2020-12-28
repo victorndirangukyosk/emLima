@@ -694,6 +694,8 @@ class ModelSaleOrder extends Model
                 'shipping_contact_no' => $order_query->row['shipping_contact_no'],
                 'shipping_method' => $order_query->row['shipping_method'],
                 'shipping_code' => $order_query->row['shipping_code'],
+                'driver_id' => $order_query->row['driver_id'],
+                'vehicle_number' => $order_query->row['vehicle_number'],
 
                 'shipping_flat_number' => $order_query->row['shipping_flat_number'],
                 'shipping_building_name' => $order_query->row['shipping_building_name'],
@@ -2388,4 +2390,13 @@ class ModelSaleOrder extends Model
 
         return $query->row;
     }
+    
+    public function UpdateOrderVehicleDetails($order_id, $vehicle_details) {
+        $this->db->query('UPDATE `' . DB_PREFIX . 'order` SET vehicle_number="' . $vehicle_details . '", date_modified = NOW() WHERE order_id="' . $order_id . '"');
+    }
+
+    public function UpdateOrderDriverDetails($order_id, $driver_id) {
+        $this->db->query('UPDATE `' . DB_PREFIX . 'order` SET driver_id="' . $driver_id . '", date_modified = NOW() WHERE order_id="' . $order_id . '"');
+    }
+
 }

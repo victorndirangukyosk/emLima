@@ -721,7 +721,19 @@
         </ul>
     </li>
     <?php } ?>
-
+    <?php
+    if( $preturn_drivers != false) {
+    ?>
+    <li id="system">
+        <a class="parent"><i class="fa fa-truck fa-fw"></i> <span>Drivers</span></a>
+        <ul class="collapse">
+            <li><a href="<?php echo $drivers_list; ?>">Drivers</a></li>
+        </ul>
+    </li>
+    <?php 
+    }
+    ?>
+    
     <?php
     if( $this->user->isVendor()){
     if( $preturn_acc_profile != false || $preturn_acc_settings != false || $preturn_acc_packages != false) {

@@ -41,11 +41,11 @@ class ControllerSaleOrder extends Controller {
         if (!empty($order_info)) {
             $data['store_id'] = $order_info['store_id'];
             //$json = $this->model_sale_order->getProductDataByStoreFilter($filter_name, $data['store_id']);
-              $json = $this->model_sale_order->getProductsForEditInvoice($filter_name, $data['store_id'], $this->request->get['order_id']);
-              $log = new Log('error.log');
-              //$log->write('json');
-              //$log->write($json);
-              //$log->write('json');
+            $json = $this->model_sale_order->getProductsForEditInvoice($filter_name, $data['store_id'], $this->request->get['order_id']);
+            $log = new Log('error.log');
+            //$log->write('json');
+            //$log->write($json);
+            //$log->write('json');
             //$send = $json;
 
             foreach ($json as $j) {
@@ -337,7 +337,7 @@ class ControllerSaleOrder extends Controller {
                             'value' => $value,
                         ];
                     }
-                    
+
                     $variations = $this->model_sale_order->getProductVariationsNew($product['name'], 75, $order_id);
                     $product_data[] = [
                         'name' => $product['name'],
@@ -348,10 +348,10 @@ class ControllerSaleOrder extends Controller {
                         'quantity' => $product['quantity'],
                         'produce_type' => $product['produce_type'],
                         'product_note' => $product['product_note'],
-                        /*OLD PRICE WITH TAX*///'price' => $product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0),
-                        'price' => number_format((float)$product['price'], 2, '.', ''),
+                        /* OLD PRICE WITH TAX *///'price' => $product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0),
+                        'price' => number_format((float) $product['price'], 2, '.', ''),
                         //'total' => $product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0)
-                        /*OLD TOTAL WITH TAX*///'total' => ($product['price'] * $product['quantity']) + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0),
+                        /* OLD TOTAL WITH TAX *///'total' => ($product['price'] * $product['quantity']) + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0),
                         'total' => ($product['price'] * $product['quantity']),
                         'variations' => $variations
                     ];
@@ -411,9 +411,9 @@ class ControllerSaleOrder extends Controller {
         //echo "<pre>";print_r($data);die;
         $this->response->setOutput($this->load->view('sale/edit_order_invoice.tpl', $data));
     }
-    
+
     public function getProductVariantsInfo() {
-        
+
         $this->load->model('sale/order');
         $log = new Log('error.log');
         $log->write($this->request->get['order_id']);
@@ -425,7 +425,6 @@ class ControllerSaleOrder extends Controller {
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
-        
     }
 
     public function EditTransactionInvoice() {
@@ -903,7 +902,7 @@ class ControllerSaleOrder extends Controller {
             if (isset($this->request->get['filter_delivery_method'])) {
                 $url .= '&filter_delivery_method=' . urlencode(html_entity_decode($this->request->get['filter_delivery_method'], ENT_QUOTES, 'UTF-8'));
             }
-            
+
             if (isset($this->request->get['filter_delivery_date'])) {
                 $url .= '&filter_delivery_date=' . urlencode(html_entity_decode($this->request->get['filter_delivery_date'], ENT_QUOTES, 'UTF-8'));
             }
@@ -988,7 +987,7 @@ class ControllerSaleOrder extends Controller {
         } else {
             $filter_delivery_method = null;
         }
-        
+
         if (isset($this->request->get['filter_delivery_date'])) {
             $filter_delivery_date = $this->request->get['filter_delivery_date'];
         } else {
@@ -1077,11 +1076,11 @@ class ControllerSaleOrder extends Controller {
         if (isset($this->request->get['filter_delivery_method'])) {
             $url .= '&filter_delivery_method=' . urlencode(html_entity_decode($this->request->get['filter_delivery_method'], ENT_QUOTES, 'UTF-8'));
         }
-        
+
         if (isset($this->request->get['filter_delivery_date'])) {
             $url .= '&filter_delivery_date=' . urlencode(html_entity_decode($this->request->get['filter_delivery_date'], ENT_QUOTES, 'UTF-8'));
         }
-        
+
         if (isset($this->request->get['filter_payment'])) {
             $url .= '&filter_payment=' . urlencode(html_entity_decode($this->request->get['filter_payment'], ENT_QUOTES, 'UTF-8'));
         }
@@ -1184,7 +1183,7 @@ class ControllerSaleOrder extends Controller {
             } else {
                 // $result['company_name'] = "(NA)";
             }
-            
+
             $this->load->model('localisation/order_status');
             $data['orders'][] = [
                 'order_id' => $result['order_id'],
@@ -1308,7 +1307,7 @@ class ControllerSaleOrder extends Controller {
         if (isset($this->request->get['filter_delivery_method'])) {
             $url .= '&filter_delivery_method=' . urlencode(html_entity_decode($this->request->get['filter_delivery_method'], ENT_QUOTES, 'UTF-8'));
         }
-        
+
         if (isset($this->request->get['filter_delivery_date'])) {
             $url .= '&filter_delivery_date=' . urlencode(html_entity_decode($this->request->get['filter_delivery_date'], ENT_QUOTES, 'UTF-8'));
         }
@@ -1383,7 +1382,7 @@ class ControllerSaleOrder extends Controller {
         if (isset($this->request->get['filter_delivery_method'])) {
             $url .= '&filter_delivery_method=' . urlencode(html_entity_decode($this->request->get['filter_delivery_method'], ENT_QUOTES, 'UTF-8'));
         }
-        
+
         if (isset($this->request->get['filter_delivery_date'])) {
             $url .= '&filter_delivery_date=' . urlencode(html_entity_decode($this->request->get['filter_delivery_date'], ENT_QUOTES, 'UTF-8'));
         }
@@ -1603,7 +1602,7 @@ class ControllerSaleOrder extends Controller {
         if (isset($this->request->get['filter_delivery_method'])) {
             $url .= '&filter_delivery_method=' . urlencode(html_entity_decode($this->request->get['filter_delivery_method'], ENT_QUOTES, 'UTF-8'));
         }
-        
+
         if (isset($this->request->get['filter_delivery_date'])) {
             $url .= '&filter_delivery_date=' . urlencode(html_entity_decode($this->request->get['filter_delivery_date'], ENT_QUOTES, 'UTF-8'));
         }
@@ -2156,7 +2155,7 @@ class ControllerSaleOrder extends Controller {
             if (isset($this->request->get['filter_delivery_method'])) {
                 $url .= '&filter_delivery_method=' . urlencode(html_entity_decode($this->request->get['filter_delivery_method'], ENT_QUOTES, 'UTF-8'));
             }
-            
+
             if (isset($this->request->get['filter_delivery_date'])) {
                 $url .= '&filter_delivery_date=' . urlencode(html_entity_decode($this->request->get['filter_delivery_date'], ENT_QUOTES, 'UTF-8'));
             }
@@ -2851,7 +2850,7 @@ class ControllerSaleOrder extends Controller {
             $data['date_added'] = date($this->language->get('date_format_short'), strtotime($order_info['date_added']));
             $data['date_modified'] = date($this->language->get('date_format_short'), strtotime($order_info['date_modified']));
             $data['login_latitude'] = $order_info['login_latitude'] == NULL || $order_info['login_latitude'] == 0 || $order_info['login_latitude'] == '' ? 'NA' : $order_info['login_latitude'];
-            $data['login_longitude'] = $order_info['login_longitude'] == NULL || $order_info['login_longitude'] > 0 || $order_info['login_longitude'] == '' ?'NA' : $order_info['login_longitude'];
+            $data['login_longitude'] = $order_info['login_longitude'] == NULL || $order_info['login_longitude'] > 0 || $order_info['login_longitude'] == '' ? 'NA' : $order_info['login_longitude'];
             // Custom fields
             $data['payment_custom_fields'] = [];
 
@@ -2906,6 +2905,15 @@ class ControllerSaleOrder extends Controller {
             $data['shipping_city'] = $order_info['shipping_city'];
             $data['shipping_contact_no'] = $order_info['shipping_contact_no'];
             $data['shipping_address'] = $order_info['shipping_address'];
+            $data['order_vehicle_number'] = $order_info['vehicle_number'];
+
+            $this->load->model('drivers/drivers');
+            $order_driver_details = $this->model_drivers_drivers->getDriver($order_info['driver_id']);
+            if (is_array($order_driver_details) && $order_driver_details != NULL) {
+                $data['order_driver_details'] = $order_driver_details;
+            } else {
+                $data['order_driver_details'] = NULL;
+            }
 
             $data['shipping_custom_fields'] = [];
 
@@ -4301,6 +4309,16 @@ class ControllerSaleOrder extends Controller {
             }
 
             if ($order_info) {
+                $this->load->model('drivers/drivers');
+                $driver_info = $this->model_drivers_drivers->getDriver($order_info['driver_id']);
+                $driver_name = NULL;
+                $driver_phone = NULL;
+                if ($driver_info) {
+                    $driver_name = $driver_info['firstname'] . ' ' . $driver_info['lastname'];
+                    $driver_phone = $driver_info['telephone'];
+                }
+                $data['driver_name'] = $driver_name;
+                $data['driver_phone'] = $driver_phone;
                 $store_info = $this->model_setting_setting->getSetting('config', $order_info['store_id']);
                 // if ($store_info) {
                 //     $store_address = $store_info['config_address'];
@@ -4402,16 +4420,27 @@ class ControllerSaleOrder extends Controller {
                         'amount_in_words' => ucwords($this->translateAmountToWords(floor(($total['value'] * 100) / 100))) . ' Kenyan Shillings',
                     ];
                 }
-                
+
                 $this->load->model('sale/customer');
                 $order_customer_detials = $this->model_sale_customer->getCustomer($order_info['customer_id']);
                 $order_customer_first_last_name = NULL;
                 $company_name = NULL;
-                if($order_customer_detials != NULL && is_array($order_customer_detials)) {
-                $order_customer_first_last_name = $order_customer_detials['firstname'].' '.$order_customer_detials['lastname'];    
-                $company_name = $order_customer_detials['company_name'];    
+                if ($order_customer_detials != NULL && is_array($order_customer_detials)) {
+                    $order_customer_first_last_name = $order_customer_detials['firstname'] . ' ' . $order_customer_detials['lastname'];
+                    $company_name = $order_customer_detials['company_name'];
                 }
-
+                
+                $this->load->model('drivers/drivers');
+                $driver_info = $this->model_drivers_drivers->getDriver($order_info['driver_id']);
+                $driver_name = NULL;
+                $driver_phone = NULL;
+                if ($driver_info) {
+                    $driver_name = $driver_info['firstname'] . ' ' . $driver_info['lastname'];
+                    $driver_phone = $driver_info['telephone'];
+                }
+                $data['driver_name'] = $driver_name;
+                $data['driver_phone'] = $driver_phone;
+                
                 $data['orders'][] = [
                     'order_id' => $order_id,
                     'invoice_no' => $invoice_no,
@@ -4432,7 +4461,7 @@ class ControllerSaleOrder extends Controller {
                     'shipping_city' => $order_info['shipping_city'],
                     'shipping_flat_number' => $order_info['shipping_flat_number'],
                     'shipping_contact_no' => ($order_info['shipping_contact_no']) ? $order_info['shipping_contact_no'] : $order_info['telephone'],
-                    /*'shipping_name' => ($order_info['shipping_name']) ? $order_info['shipping_name'] : $order_info['firstname'] . ' ' . $order_info['lastname'],*/
+                    /* 'shipping_name' => ($order_info['shipping_name']) ? $order_info['shipping_name'] : $order_info['firstname'] . ' ' . $order_info['lastname'], */
                     'shipping_name' => $order_customer_first_last_name == NULL ? $order_info['firstname'] . ' ' . $order_info['lastname'] : $order_customer_first_last_name,
                     'customer_company_name' => $company_name == NULL ? $order_info['customer_company_name'] : $company_name,
                     'shipping_method' => $order_info['shipping_method'],
@@ -4442,6 +4471,8 @@ class ControllerSaleOrder extends Controller {
                     'totals' => $total_data,
                     'comment' => nl2br($order_info['comment']),
                     'shipping_name_original' => $order_info['shipping_name'],
+                    'driver_name' => $driver_name,
+                    'driver_phone' => '+' . $this->config->get('config_telephone_code').' '.$driver_phone
                 ];
             }
         }
@@ -5165,14 +5196,14 @@ class ControllerSaleOrder extends Controller {
                         'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
                     ];
                 }
-                
+
                 $this->load->model('sale/customer');
                 $order_customer_detials = $this->model_sale_customer->getCustomer($order_info['customer_id']);
                 $company_name = NULL;
-                if($order_customer_detials != NULL && is_array($order_customer_detials)) {
-                $company_name = $order_customer_detials['company_name'];    
+                if ($order_customer_detials != NULL && is_array($order_customer_detials)) {
+                    $company_name = $order_customer_detials['company_name'];
                 }
-                
+
                 $data['orders'][] = [
                     'order_id' => $order_id,
                     'date_added' => date($this->language->get('date_format_short'), strtotime($order_info['date_added'])),
@@ -5220,7 +5251,7 @@ class ControllerSaleOrder extends Controller {
         $datas = $this->request->post;
 
         $allp_id = true;
-        
+
         $log = new Log('error.log');
         $log->write('products');
         $log->write($datas['products']);
@@ -5305,29 +5336,29 @@ class ControllerSaleOrder extends Controller {
             //$log->write($datas['products']);
 
             $vendor_id = $this->model_sale_order->getVendorId($store_id);
-            
+
             $this->load->model('account/customer');
             $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
             /* IF CUSTOMER SUB CUSTOMER */
             $parent_customer_info = NULL;
             $pricing_category = NULL;
             if (isset($customer_info) && $customer_info['parent'] > 0) {
-            $parent_customer_info = $this->model_account_customer->getCustomer($customer_info['parent']);
+                $parent_customer_info = $this->model_account_customer->getCustomer($customer_info['parent']);
             }
-            
+
             if ($parent_customer_info == NULL && isset($customer_info['customer_category']) && $customer_info['customer_category'] != NULL) {
-            $pricing_category =  $customer_info['customer_category'];   
+                $pricing_category = $customer_info['customer_category'];
             }
-            
+
             if ($parent_customer_info != NULL && isset($parent_customer_info) && isset($parent_customer_info['customer_category']) && $parent_customer_info['customer_category'] != NULL) {
-            $pricing_category =  $parent_customer_info['customer_category'];       
+                $pricing_category = $parent_customer_info['customer_category'];
             }
 
             //echo "<pre>";print_r($datas['products']);die;
             foreach ($datas['products'] as $p_id_key => $updateProduct) {
                 $updateProduct['store_id'] = $store_id;
                 $updateProduct['vendor_id'] = $vendor_id;
-                
+
                 if (is_numeric($p_id_key)) {
                     $updateProduct_tax_total = NULL;
                     //echo "<pre>";print_r($datas['products']);die;
@@ -7367,6 +7398,149 @@ class ControllerSaleOrder extends Controller {
 
         $this->load->model('report/excel');
         $this->model_report_excel->download_consolidated_order_products_excel($data);
+    }
+
+    public function SaveOrUpdateOrderDriverDetails() {
+        $order_id = $this->request->post['order_id'];
+        $driver_id = $this->request->post['driver_id'];
+        /* $log = new Log('error.log');
+          $log->write('SaveOrUpdateOrderDriverDetails');
+          $log->write($this->request->post['driver_id']);
+          $log->write($this->request->post['order_id']); */
+
+        $this->load->model('checkout/order');
+        $this->load->model('sale/order');
+        $order_info = $this->model_checkout_order->getOrder($order_id);
+        if (is_array($order_info) && $order_info != NULL) {
+            $this->model_sale_order->UpdateOrderDriverDetails($order_id, $driver_id);
+        }
+
+        $this->SendMailToCustomerWithDriverDetails($order_id);
+        // Add to activity log
+        $log = new Log('error.log');
+        $this->load->model('user/user_activity');
+
+        $activity_data = [
+            'user_id' => $this->user->getId(),
+            'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+            'user_group_id' => $this->user->getGroupId(),
+            'order_id' => $order_id,
+        ];
+        $log->write('driver assigned to order');
+
+        $this->model_user_user_activity->addActivity('order_driver_assigned', $activity_data);
+
+        $log->write('driver assigned to order');
+
+        $json['status'] = 'success';
+        $json['message'] = 'Order Driver Details Updated!';
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function SaveOrUpdateOrderVehilceDetails() {
+        $order_id = $this->request->post['order_id'];
+        $vehicle_number = $this->request->post['vehicle_number'];
+
+        $this->load->model('checkout/order');
+        $this->load->model('sale/order');
+        $order_info = $this->model_checkout_order->getOrder($order_id);
+        if (is_array($order_info) && $order_info != NULL) {
+            $this->model_sale_order->UpdateOrderVehicleDetails($order_id, $vehicle_number);
+        }
+
+        // Add to activity log
+        $log = new Log('error.log');
+        $this->load->model('user/user_activity');
+
+        $activity_data = [
+            'user_id' => $this->user->getId(),
+            'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+            'user_group_id' => $this->user->getGroupId(),
+            'order_id' => $order_id,
+        ];
+        $log->write('vehicle assigned to order');
+
+        $this->model_user_user_activity->addActivity('order_vehicle_assigned', $activity_data);
+
+        $log->write('vehicle assigned to order');
+
+        $json['status'] = 'success';
+        $json['message'] = 'Order Vehicle Details Updated!';
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function SendMailToCustomerWithDriverDetails($order_id) {
+        $log = new Log('error.log');
+        $log->write('SendMailToCustomerWithDriverDetails');
+        $log->write($order_id);
+        $this->load->model('checkout/order');
+        $this->load->model('account/customer');
+        $this->load->model('drivers/drivers');
+        $order_info = $this->model_checkout_order->getOrder($order_id);
+        $driver_info = $this->model_drivers_drivers->getDriver($order_info['driver_id']);
+        $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
+        if ($order_info) {
+            $store_name = $order_info['firstname'] . ' ' . $order_info['lastname'];
+            $store_url = $this->url->link('account/login/customer');
+        }
+
+        $driver_name = NULL;
+        $driver_phone = NULL;
+        if ($driver_info) {
+            $driver_name = $driver_info['firstname'] . ' ' . $driver_info['lastname'];
+            $driver_phone = $driver_info['telephone'];
+        }
+
+        $customer_info['store_name'] = $store_name;
+        $customer_info['subuserfirstname'] = $customer_info['firstname'];
+        $customer_info['subuserlastname'] = $customer_info['lastname'];
+        $customer_info['subuserorderid'] = $order_info['order_id'];
+        $customer_info['ip_address'] = $order_info['ip'];
+        $customer_info['order_link'] = $this->url->link('account/order/info', 'order_id=' . $order_info['order_id'], 'SSL');
+        $customer_info['device_id'] = $customer_info['device_id'];
+        $customer_info['drivername'] = $driver_name;
+        $customer_info['driverphone'] = $driver_phone;
+        $customer_info['vehicle'] = $order_info['vehicle_number'];
+
+
+        $log->write('EMAIL SENDING');
+        $log->write($customer_info);
+        $log->write('EMAIL SENDING');
+
+        if ($customer_info['email_notification'] == 1) {
+            $subject = $this->emailtemplate->getSubject('Customer', 'customer_8', $customer_info);
+            $message = $this->emailtemplate->getMessage('Customer', 'customer_8', $customer_info);
+
+            $mail = new Mail($this->config->get('config_mail'));
+            $mail->setTo($customer_info['email']);
+            $mail->setFrom($this->config->get('config_from_email'));
+            $mail->setSender($this->config->get('config_name'));
+            $mail->setSubject($subject);
+            $mail->setHTML($message);
+            $mail->send();
+        }
+
+        $log->write('status enabled of mobi noti');
+        $mobile_notification_template = $this->emailtemplate->getNotificationMessage('Customer', 'customer_8', $customer_info);
+
+        $mobile_notification_title = $this->emailtemplate->getNotificationTitle('Customer', 'customer_8', $customer_info);
+
+        if (isset($customer_info) && isset($customer_info['device_id']) && $customer_info['mobile_notification'] == 1 && strlen($customer_info['device_id']) > 0) {
+
+            $log->write('customer device id set FRONT.MODEL.CHECKOUT.ORDER');
+            $ret = $this->emailtemplate->sendPushNotification($order_info['customer_id'], $customer_info['device_id'], $order_info['order_id'], $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
+        } else {
+            $log->write('customer device id not set FRONT.MODEL.CHECKOUT.ORDER');
+        }
+
+        $log->write('SMS SENDING');
+        $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_8', $customer_info);
+        // send message here
+        if ($customer_info['sms_notification'] == 1 && $this->emailtemplate->getSmsEnabled('Customer', 'customer_8')) {
+            $ret = $this->emailtemplate->sendmessage($customer_info['telephone'], $sms_message);
+        }
     }
 
 }

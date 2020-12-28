@@ -364,6 +364,7 @@ $(document).delegate('.changeUnit','change', function() {
   console.log($(this).find(':selected').attr('data-product_id')+'data-product_id');
   var old_product_id = $(this).attr('data-product_id');
   var new_product_id = $(this).find(':selected').attr('data-product_id');
+  $(this).attr("data-product_id", new_product_id);
 
   var q = $(this).parent().parent().children().eq(5).children().val();
   var p = $(this).parent().parent().children().eq(6).children().val();
@@ -687,7 +688,7 @@ function add() {
   
   $html += '<td class="text-right">';
   /*$html += '<input type="text" class="form-control" name="products['+noProduct+'][unit]" value=""/>';*/
-  $html += '<select name="products['+noProduct+'][unit]" class="form-control changeUnit"></select>';
+  $html += '<select name="products['+noProduct+'][unit]" data-product_id="'+noProduct+'" class="form-control changeUnit"></select>';
   $html += '</td>';
 
   $html += '<td class="text-right">';

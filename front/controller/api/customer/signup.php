@@ -39,7 +39,10 @@ class ControllerApiCustomerSignup extends Controller
             } else {
                 $this->request->post['dob'] = null;
             }
-
+            $accountmanagerid = NULL;
+            $accountmanagerid =$this->request->post['accountmanagerid'];
+            $log->write('accountmanagerid from API');
+            $log->write($accountmanagerid);
             $customer_id = $this->model_account_customer->addCustomer($this->request->post);
 
             //$this->createCustomer($customer_id);

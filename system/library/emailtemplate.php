@@ -164,11 +164,11 @@ class Emailtemplate
         $log = new Log('error.log');
         $log->write('sendDynamicPushNotification');
 
-        /* $log->write($to);
+          $log->write($to);
           $log->write($deviceId);
           $log->write($message);
           $log->write($title);
-          $log->write($sendData); */
+          $log->write($sendData);
 
         if (isset($to)) {
             if (isset($deviceId) && isset($to)) {
@@ -447,7 +447,7 @@ class Emailtemplate
     // Customer
     public function getCustomerFind()
     {
-        $result = ['{firstname}', '{lastname}', '{branchname}', '{subuserfirstname}', '{subuserlastname}', '{subuserorderid}', '{date}', '{store_name}', '{email}', '{password}', '{account_href}', '{activate_href}', '{order_link}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}', '{amount}', '{transfer_type}', '{ip_address}'];
+        $result = ['{firstname}', '{lastname}', '{branchname}', '{subuserfirstname}', '{subuserlastname}', '{subuserorderid}', '{drivername}', '{driverphone}', '{vehicle}', '{date}', '{store_name}', '{email}', '{password}', '{account_href}', '{activate_href}', '{order_link}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}', '{amount}', '{transfer_type}', '{ip_address}'];
 
         return $result;
     }
@@ -461,6 +461,9 @@ class Emailtemplate
             'subuserfirstname' => $data['subuserfirstname'],
             'subuserlastname' => $data['subuserlastname'],
             'subuserorderid' => $data['subuserorderid'],
+            'drivername' => $data['drivername'],
+            'driverphone' => $data['driverphone'],
+            'vehicle' => $data['vehicle'],
             'date' => date($this->language->get('date_format_short'), strtotime(date('Y-m-d H:i:s'))),
             'store_name' => $this->config->get('config_name'),
             'email' => $data['email'],

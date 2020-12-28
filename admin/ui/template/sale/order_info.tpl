@@ -426,7 +426,21 @@
 				<td><?php echo $shipping_method; ?></td>
 			  </tr>
 			  <?php } ?>
-
+                          <tr>
+                              <td>Driver</td>
+                              <?php 
+                              $order_driver = NULL;
+                              $order_driver_id = NULL;
+                              if(is_array($order_driver_details) && $order_driver_details != NULL) {
+                              $order_driver = $order_driver_details['firstname'].' '.$order_driver_details['lastname'];
+                              $order_driver_id = $order_driver_details['driver_id'];
+                              } ?>
+                              <td><input type="text" name="order_driver" id="order_driver" value="<?=$order_driver ?>" data_order_id="<?=$order_id ?>" data_driver_id="<?=$order_driver_id ?>">&nbsp;<button id="save_order_driver" class="btn btn-primary" type="button"> Save </button></td>
+                          </tr>
+                          <tr>
+                              <td>Vehicle Number</td>
+                              <td><input type="text" name="order_vehicle_number" id="order_vehicle_number" value="<?=$order_vehicle_number ?>" data_order_id="<?=$order_id ?>">&nbsp;<button id="save_order_vehicle_number" class="btn btn-primary" type="button"> Save </button></td>
+                          </tr>
 
 			</table>
 		  </div>
@@ -2165,6 +2179,86 @@ $('.delivery_timeslot').change(function(){
 			title: "Ordered Location!",
 		});
 		}
+
+</script>
+<script>
+  $driverName="";
+$('input[name=\'order_driver\']').autocomplete({
+  'source': function(request, response) {
+    $.ajax({
+      url: 'index.php?path=drivers/drivers_list/autocompletebyDriverName&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request)+'&filter_company=' +$driverName,
+      dataType: 'json',     
+      success: function(json) {
+        response($.map(json, function(item) {
+          return {
+            label: item['name'],
+            value: item['driver_id']
+          }
+        }));
+      }
+    });
+  },
+  'select': function(item) {
+    $('input[name=\'order_driver\']').val(item['label']);
+    $('input[name=\'order_driver\']').attr('data_driver_id',item['value']);
+  } 
+});
+
+$(document).delegate('#save_order_driver', 'click', function() {
+    var driver_id = $('input[name=\'order_driver\']').attr('data_driver_id');
+    var order_id = $('input[name=\'order_driver\']').attr('data_order_id');
+    data = {
+            order_id : order_id,
+            driver_id : driver_id
+    }
+    $.ajax({
+            url: 'index.php?path=sale/order/SaveOrUpdateOrderDriverDetails&token=<?php echo $token; ?>',
+            type: 'post',
+            data: data,
+            dataType: 'json',
+            cache: false,
+            async: false,
+            beforeSend: function() {
+            },
+            success: function(html) {
+                console.log(html);
+                setTimeout(function(){ window.location.reload(false); }, 1000);
+               
+                
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                //alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+            }
+        });
+});
+
+$(document).delegate('#save_order_vehicle_number', 'click', function() {
+    var vehicle_number = $('input[name=\'order_vehicle_number\']').val();
+    var order_id = $('input[name=\'order_vehicle_number\']').attr('data_order_id');
+    data = {
+            order_id : order_id,
+            vehicle_number : vehicle_number
+    }
+    $.ajax({
+            url: 'index.php?path=sale/order/SaveOrUpdateOrderVehilceDetails&token=<?php echo $token; ?>',
+            type: 'post',
+            data: data,
+            dataType: 'json',
+            cache: false,
+            async: false,
+            beforeSend: function() {
+            },
+            success: function(html) {
+                console.log(html);
+                setTimeout(function(){ window.location.reload(false); }, 1000);
+               
+                
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                //alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+            }
+        });
+});    
 
 </script>
 <?php echo $footer; ?> 

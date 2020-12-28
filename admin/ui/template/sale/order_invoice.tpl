@@ -64,6 +64,15 @@
                                     <li>Delivered On <?= $order['delivery_date'] ?></li>
                                     <li><?= $order['shipping_method'] ?></li>
                                 </ul>
+                                <?php if($order['driver_name'] != NULL) { ?>
+                                <br>
+                                <h6 class="bold mb-3">DELIVERY EXECUTIVE DETAILS</h6>
+                                <ul class="list-block">
+                                    <li>Name <?= $order['driver_name'] ?></li>
+                                    <li>Phone <?= $order['driver_phone'] ?></li>
+                                </ul>
+                                <br>
+                                <?php } ?>
                             </div>
                         </div>
 

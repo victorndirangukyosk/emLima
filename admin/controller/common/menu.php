@@ -230,6 +230,7 @@ class ControllerCommonMenu extends Controller
         $data['customer_wallet'] = $this->url->link('wallets/customer_wallet', 'token='.$this->session->data['token'], 'SSL');
         $data['vendor_wallet'] = $this->url->link('wallets/vendor_wallet', 'token='.$this->session->data['token'], 'SSL');
         $data['admin_wallet'] = $this->url->link('wallets/admin_wallet', 'token='.$this->session->data['token'], 'SSL');
+        $data['drivers_list'] = $this->url->link('drivers/drivers_list', 'token='.$this->session->data['token'], 'SSL');
 
         //blog
         $data['preturn_simple_blog_author'] = $this->user->hasPermission('access', 'simple_blog/author');
@@ -421,7 +422,8 @@ class ControllerCommonMenu extends Controller
         $data['preturn_customer_wallet'] = $this->user->hasPermission('access', 'wallets/customer_wallet');
         $data['preturn_vendor_wallet'] = $this->user->hasPermission('access', 'wallets/vendor_wallet');
         $data['preturn_admin_wallet'] = $this->user->hasPermission('access', 'wallets/admin_wallet');
-
+        
+        $data['preturn_drivers'] = $this->user->hasPermission('access', 'drivers/drivers_list');
         return $this->load->view('common/menu.tpl', $data);
     }
 
