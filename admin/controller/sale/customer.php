@@ -1180,7 +1180,7 @@ class ControllerSaleCustomer extends Controller {
 
         if (isset($this->request->post['customer_category'])) {
             $data['customer_category'] = $this->request->post['customer_category'];
-        } elseif (!empty($customer_info)) {
+        } elseif (!empty($customer_info) && $customer_parent_info == NULL) {
             $data['customer_category'] = $customer_info['customer_category'];
         }
 
