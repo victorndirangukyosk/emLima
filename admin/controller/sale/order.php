@@ -4309,6 +4309,16 @@ class ControllerSaleOrder extends Controller {
             }
 
             if ($order_info) {
+                $this->load->model('drivers/drivers');
+                $driver_info = $this->model_drivers_drivers->getDriver($order_info['driver_id']);
+                $driver_name = NULL;
+                $driver_phone = NULL;
+                if ($driver_info) {
+                    $driver_name = $driver_info['firstname'] . ' ' . $driver_info['lastname'];
+                    $driver_phone = $driver_info['telephone'];
+                }
+                $data['driver_name'] = $driver_name;
+                $data['driver_phone'] = $driver_phone;
                 $store_info = $this->model_setting_setting->getSetting('config', $order_info['store_id']);
                 // if ($store_info) {
                 //     $store_address = $store_info['config_address'];
@@ -7391,7 +7401,7 @@ class ControllerSaleOrder extends Controller {
         if (is_array($order_info) && $order_info != NULL) {
             $this->model_sale_order->UpdateOrderDriverDetails($order_id, $driver_id);
         }
-        
+
         $this->SendMailToCustomerWithDriverDetails($order_id);
         // Add to activity log
         $log = new Log('error.log');
@@ -7462,11 +7472,11 @@ class ControllerSaleOrder extends Controller {
             $store_name = $order_info['firstname'] . ' ' . $order_info['lastname'];
             $store_url = $this->url->link('account/login/customer');
         }
-        
+
         $driver_name = NULL;
         $driver_phone = NULL;
-        if($driver_info) {
-            $driver_name = $driver_info['firstname'].' '.$driver_info['lastname'];
+        if ($driver_info) {
+            $driver_name = $driver_info['firstname'] . ' ' . $driver_info['lastname'];
             $driver_phone = $driver_info['telephone'];
         }
 
