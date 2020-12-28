@@ -7456,7 +7456,7 @@ class ControllerSaleOrder extends Controller {
         $this->load->model('account/customer');
         $this->load->model('drivers/drivers');
         $order_info = $this->model_checkout_order->getOrder($order_id);
-        $driver_info = $this->model_checkout_order->getDriver($order_info['driver_id']);
+        $driver_info = $this->model_drivers_drivers->getDriver($order_info['driver_id']);
         $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
         if ($order_info) {
             $store_name = $order_info['firstname'] . ' ' . $order_info['lastname'];
