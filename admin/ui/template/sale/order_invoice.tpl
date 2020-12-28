@@ -68,8 +68,8 @@
                                 <br>
                                 <h6 class="bold mb-3">DELIVERY EXECUTIVE DETAILS</h6>
                                 <ul class="list-block">
-                                    <li>Delivery Executive Name <?= $order['driver_name'] ?></li>
-                                    <li>Delivery Executive Phone <?= $order['driver_phone'] ?></li>
+                                    <li>Name <?= $order['driver_name'] ?></li>
+                                    <li>Phone <?= $order['driver_phone'] ?></li>
                                 </ul>
                                 <br>
                                 <?php } ?>

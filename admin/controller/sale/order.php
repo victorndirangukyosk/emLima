@@ -4429,7 +4429,18 @@ class ControllerSaleOrder extends Controller {
                     $order_customer_first_last_name = $order_customer_detials['firstname'] . ' ' . $order_customer_detials['lastname'];
                     $company_name = $order_customer_detials['company_name'];
                 }
-
+                
+                $this->load->model('drivers/drivers');
+                $driver_info = $this->model_drivers_drivers->getDriver($order_info['driver_id']);
+                $driver_name = NULL;
+                $driver_phone = NULL;
+                if ($driver_info) {
+                    $driver_name = $driver_info['firstname'] . ' ' . $driver_info['lastname'];
+                    $driver_phone = $driver_info['telephone'];
+                }
+                $data['driver_name'] = $driver_name;
+                $data['driver_phone'] = $driver_phone;
+                
                 $data['orders'][] = [
                     'order_id' => $order_id,
                     'invoice_no' => $invoice_no,
@@ -4460,6 +4471,8 @@ class ControllerSaleOrder extends Controller {
                     'totals' => $total_data,
                     'comment' => nl2br($order_info['comment']),
                     'shipping_name_original' => $order_info['shipping_name'],
+                    'driver_name' => $driver_name,
+                    'driver_phone' => '+' . $this->config->get('config_telephone_code').' '.$driver_phone
                 ];
             }
         }
