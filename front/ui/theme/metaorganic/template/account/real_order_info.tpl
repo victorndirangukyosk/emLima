@@ -223,11 +223,11 @@
                                                      <center> <?= $text_no_delivery_alloted ?></center>
                                                     <?php } else { ?>
                                                         <div class="checkout-invoice">
-                                                            <div class="checout-invoice-title">Driver Name</div>
+                                                            <div class="checout-invoice-title">Executive Name</div>
                                                             <div class="checout-invoice-price"><?= $order_driver ?></div>
                                                         </div>
                                                        <div class="checkout-invoice">
-                                                            <div class="checout-invoice-title">Driver Phone</div>
+                                                            <div class="checout-invoice-title">Executive Phone</div>
                                                             <div class="checout-invoice-price"><?= $order_driver_phone ?></div>
                                                         </div>
                                                         <div class="checkout-invoice">
