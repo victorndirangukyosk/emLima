@@ -7454,11 +7454,20 @@ class ControllerSaleOrder extends Controller {
         $log->write($order_id);
         $this->load->model('checkout/order');
         $this->load->model('account/customer');
+        $this->load->model('drivers/drivers');
         $order_info = $this->model_checkout_order->getOrder($order_id);
+        $driver_info = $this->model_checkout_order->getDriver($order_info['driver_id']);
         $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
         if ($order_info) {
             $store_name = $order_info['firstname'] . ' ' . $order_info['lastname'];
             $store_url = $this->url->link('account/login/customer');
+        }
+        
+        $driver_name = NULL;
+        $driver_phone = NULL;
+        if($driver_info) {
+            $driver_name = $driver_info['firstname'].' '.$driver_info['lastname'];
+            $driver_phone = $driver_info['telephone'];
         }
 
         $customer_info['store_name'] = $store_name;
@@ -7468,6 +7477,10 @@ class ControllerSaleOrder extends Controller {
         $customer_info['ip_address'] = $order_info['ip'];
         $customer_info['order_link'] = $this->url->link('account/order/info', 'order_id=' . $order_info['order_id'], 'SSL');
         $customer_info['device_id'] = $customer_info['device_id'];
+        $customer_info['drivername'] = $driver_name;
+        $customer_info['driverphone'] = $driver_phone;
+        $customer_info['vehicle'] = $order_info['vehicle_number'];
+
 
         $log->write('EMAIL SENDING');
         $log->write($customer_info);
