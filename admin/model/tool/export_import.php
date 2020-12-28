@@ -3056,7 +3056,7 @@ class ModelToolExportImport extends Model
         //echo "<pre>";print_r($result);
         if (count($result->rows)) {
             /* Update */
-            $sql = 'UPDATE `'.DB_PREFIX."product_category_prices` SET price='".$data['price']."',product_name='".$data['product_name']."' WHERE product_store_id = '".$product_store_id."' AND price_category = '".$price_category."' AND  store_id = '".$store_id."' ";
+            $sql = 'UPDATE `'.DB_PREFIX."product_category_prices` SET price='".$data['price']."',product_name='".$data['product_name']."',status='".$data['status']."' WHERE product_store_id = '".$product_store_id."' AND price_category = '".$price_category."' AND  store_id = '".$store_id."' ";
             $this->db->query($sql);
         //echo "<pre>";print_r($sql);
         } else {
