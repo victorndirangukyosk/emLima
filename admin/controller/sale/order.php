@@ -2906,13 +2906,13 @@ class ControllerSaleOrder extends Controller {
             $data['shipping_contact_no'] = $order_info['shipping_contact_no'];
             $data['shipping_address'] = $order_info['shipping_address'];
             $data['order_vehicle_number'] = $order_info['vehicle_number'];
-            
+
             $this->load->model('drivers/drivers');
             $order_driver_details = $this->model_drivers_drivers->getDriver($order_info['driver_id']);
-            if(is_array($order_driver_details) && $order_driver_details != NULL) {
-            $data['order_driver_details'] = $order_driver_details;
+            if (is_array($order_driver_details) && $order_driver_details != NULL) {
+                $data['order_driver_details'] = $order_driver_details;
             } else {
-            $data['order_driver_details'] = NULL;    
+                $data['order_driver_details'] = NULL;
             }
 
             $data['shipping_custom_fields'] = [];
@@ -7392,6 +7392,7 @@ class ControllerSaleOrder extends Controller {
             $this->model_sale_order->UpdateOrderDriverDetails($order_id, $driver_id);
         }
         
+        $this->SendMailToCustomerWithDriverDetails($order_id);
         // Add to activity log
         $log = new Log('error.log');
         $this->load->model('user/user_activity');
@@ -7407,7 +7408,7 @@ class ControllerSaleOrder extends Controller {
         $this->model_user_user_activity->addActivity('order_driver_assigned', $activity_data);
 
         $log->write('driver assigned to order');
-        
+
         $json['status'] = 'success';
         $json['message'] = 'Order Driver Details Updated!';
         $this->response->addHeader('Content-Type: application/json');
@@ -7424,7 +7425,7 @@ class ControllerSaleOrder extends Controller {
         if (is_array($order_info) && $order_info != NULL) {
             $this->model_sale_order->UpdateOrderVehicleDetails($order_id, $vehicle_number);
         }
-        
+
         // Add to activity log
         $log = new Log('error.log');
         $this->load->model('user/user_activity');
@@ -7440,11 +7441,70 @@ class ControllerSaleOrder extends Controller {
         $this->model_user_user_activity->addActivity('order_vehicle_assigned', $activity_data);
 
         $log->write('vehicle assigned to order');
-        
+
         $json['status'] = 'success';
         $json['message'] = 'Order Vehicle Details Updated!';
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
+    }
+
+    public function SendMailToCustomerWithDriverDetails($order_id) {
+        $log = new Log('error.log');
+        $log->write('SendMailToCustomerWithDriverDetails');
+        $log->write($order_id);
+        $this->load->model('checkout/order');
+        $this->load->model('account/customer');
+        $order_info = $this->model_checkout_order->getOrder($order_id);
+        $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
+        if ($order_info) {
+            $store_name = $order_info['firstname'] . ' ' . $order_info['lastname'];
+            $store_url = $this->url->link('account/login/customer');
+        }
+
+        $customer_info['store_name'] = $store_name;
+        $customer_info['subuserfirstname'] = $customer_info['firstname'];
+        $customer_info['subuserlastname'] = $customer_info['lastname'];
+        $customer_info['subuserorderid'] = $order_info['order_id'];
+        $customer_info['ip_address'] = $order_info['ip'];
+        $customer_info['order_link'] = $this->url->link('account/order/info', 'order_id=' . $order_info['order_id'], 'SSL');
+        $customer_info['device_id'] = $customer_info['device_id'];
+
+        $log->write('EMAIL SENDING');
+        $log->write($customer_info);
+        $log->write('EMAIL SENDING');
+
+        if ($customer_info['email_notification'] == 1) {
+            $subject = $this->emailtemplate->getSubject('Customer', 'customer_8', $customer_info);
+            $message = $this->emailtemplate->getMessage('Customer', 'customer_8', $customer_info);
+
+            $mail = new Mail($this->config->get('config_mail'));
+            $mail->setTo($customer_info['email']);
+            $mail->setFrom($this->config->get('config_from_email'));
+            $mail->setSender($this->config->get('config_name'));
+            $mail->setSubject($subject);
+            $mail->setHTML($message);
+            $mail->send();
+        }
+
+        $log->write('status enabled of mobi noti');
+        $mobile_notification_template = $this->emailtemplate->getNotificationMessage('Customer', 'customer_8', $customer_info);
+
+        $mobile_notification_title = $this->emailtemplate->getNotificationTitle('Customer', 'customer_8', $customer_info);
+
+        if (isset($customer_info) && isset($customer_info['device_id']) && $customer_info['mobile_notification'] == 1 && strlen($customer_info['device_id']) > 0) {
+
+            $log->write('customer device id set FRONT.MODEL.CHECKOUT.ORDER');
+            $ret = $this->emailtemplate->sendPushNotification($order_info['customer_id'], $customer_info['device_id'], $order_info['order_id'], $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
+        } else {
+            $log->write('customer device id not set FRONT.MODEL.CHECKOUT.ORDER');
+        }
+
+        $log->write('SMS SENDING');
+        $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_8', $customer_info);
+        // send message here
+        if ($customer_info['sms_notification'] == 1 && $this->emailtemplate->getSmsEnabled('Customer', 'customer_8')) {
+            $ret = $this->emailtemplate->sendmessage($customer_info['telephone'], $sms_message);
+        }
     }
 
 }
