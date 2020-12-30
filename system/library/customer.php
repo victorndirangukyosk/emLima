@@ -126,6 +126,8 @@ class Customer
             $this->session->data['customer_id'] = $customer_query->row['customer_id'];
             $this->session->data['customer_category'] = isset($customer_query->row['customer_category']) ? $customer_query->row['customer_category'] : null;
             $this->session->data['parent'] = $customer_query->row['parent'];
+            $log = new Log('error.log');
+            $log->write('FROM HERE PARENT CUSTOMER SESSION ASSIGN system_library_customer.php');
             /*if ($customer_query->row['cart'] && is_string($customer_query->row['cart'])) {
                 $cart = unserialize($customer_query->row['cart']);
 
