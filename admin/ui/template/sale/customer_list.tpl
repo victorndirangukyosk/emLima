@@ -294,7 +294,7 @@ $('#button-filter').on('click', function() {
   }
   
   var filter_parent_customer_id = $('input[name=\'filter_parent_customer\']').attr("data-parent-customer-id");
-  alert(filter_parent_customer_id);
+  //alert(filter_parent_customer_id);
   
   if (filter_parent_customer_id) {
     url += '&filter_parent_customer_id=' + encodeURIComponent(filter_parent_customer_id);
