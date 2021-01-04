@@ -251,6 +251,55 @@ class ModelSaleCustomer extends Model {
 
         return $query->rows;
     }
+    
+    public function getParentCustomers($data = []) {
+        $parent_customer_ids = array();
+        $parent_customer_query = $this->db->query('SELECT DISTINCT parent FROM ' . DB_PREFIX . "customer WHERE parent > 0");
+        $log = new Log('error.log');
+        //$log->write($parent_customer_query->num_rows);
+        //$log->write($parent_customer_query->rows);
+        if($parent_customer_query->num_rows > 0) {
+        $parent_customer_ids = array_column($parent_customer_query->rows, 'parent');   
+        //$log->write($parent_customer_ids);
+        $parent_customer_ids = implode(', ', $parent_customer_ids); 
+        //$log->write($parent_customer_ids);
+        }
+        $sql = 'SELECT distinct company_name AS name FROM ' . DB_PREFIX . 'customer WHERE customer_id IN('.$parent_customer_ids.') AND  status = 1';
+
+        $implode = [];
+        if (!empty($data['filter_name'])) {
+            $implode[] = " company_name LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+        }
+        if (!empty($data['filter_account_manager_id'])) {
+            $implode[] = " account_manager_id = '" . $this->db->escape($data['filter_account_manager_id']) . "'";
+        }
+        if ($implode) {
+            $sql .= ' AND ' . implode(' AND ', $implode);
+        }
+        $sql .= ' ORDER BY company_name';
+
+        if (isset($data['order']) && ('DESC' == $data['order'])) {
+            $sql .= ' DESC';
+        } else {
+            $sql .= ' ASC';
+        }
+
+        if (isset($data['start']) || isset($data['limit'])) {
+            if ($data['start'] < 0) {
+                $data['start'] = 0;
+            }
+
+            if ($data['limit'] < 1) {
+                $data['limit'] = 20;
+            }
+
+            $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
+        }
+
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
 
     public function approve($customer_id) {
         $customer_info = $this->getCustomer($customer_id);
