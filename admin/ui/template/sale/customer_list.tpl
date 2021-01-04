@@ -133,7 +133,7 @@
               <div class="col-sm-3">
                   <div class="form-group">
                       <label class="control-label" for="input-parent-customer">Parent Customer Name</label>
-                      <input type="text" name="filter_parent_customer" value="<?php echo $filter_parent_customer; ?>" placeholder="<?php echo $entry_parent_customer; ?>" id="input-parent-customer" class="form-control" data-parent-customer-id="<?php echo $filter_parent_customer_id; ?>" />
+                      <input type="text" name="filter_parent_customer" value="<?php if($filter_parent_customer != NULL && $filter_parent_customer_id != NULL) { echo $filter_parent_customer; } ?>" placeholder="<?php echo $entry_parent_customer; ?>" id="input-parent-customer" class="form-control" data-parent-customer-id="<?php if($filter_parent_customer != NULL && $filter_parent_customer_id != NULL) { echo $filter_parent_customer_id; } ?>" />
                   </div>
               </div>
             <div class="col-sm-3">

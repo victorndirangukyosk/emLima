@@ -123,7 +123,7 @@ class ModelSaleCustomer extends Model {
             }
         }
         
-        if (!empty($data['filter_parent_customer_id'])) {
+        if (!empty($data['filter_parent_customer_id']) && !empty($data['filter_parent_customer'])) {
                 $implode[] = "c.parent = '" . $this->db->escape($data['filter_parent_customer_id']) . "'";
         }
 
@@ -410,7 +410,7 @@ class ModelSaleCustomer extends Model {
             $implode[] = "ip = '" . $this->db->escape($data['filter_ip']) . "'";
         }
         
-        if (!empty($data['filter_parent_customer_id'])) {
+        if (!empty($data['filter_parent_customer_id']) && !empty($data['filter_parent_customer'])) {
             $implode[] = "parent = '" . $this->db->escape($data['filter_parent_customer_id']) . "'";
         }
 
