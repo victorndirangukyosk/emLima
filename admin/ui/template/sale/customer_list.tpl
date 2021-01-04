@@ -130,6 +130,12 @@
                 <input type="text" name="filter_ip" value="<?php echo $filter_ip; ?>" placeholder="<?php echo $entry_ip; ?>" id="input-ip" class="form-control" />
               </div>
             </div>
+              <div class="col-sm-3">
+                  <div class="form-group">
+                      <label class="control-label" for="input-parent-customer">Parent Customer Name</label>
+                      <input type="text" name="filter_parent_customer" value="<?php echo $filter_parent_customer; ?>" placeholder="<?php echo $entry_parent_customer; ?>" id="input-parent-customer" class="form-control" data-parent-customer-id="<?php echo $filter_parent_customer_id; ?>" />
+                  </div>
+              </div>
             <div class="col-sm-3">
              
               <div class="form-group">
@@ -280,6 +286,19 @@ $('#button-filter').on('click', function() {
   if (filter_ip) {
     url += '&filter_ip=' + encodeURIComponent(filter_ip);
   }
+  
+  var filter_parent_customer = $('input[name=\'filter_parent_customer\']').val();
+  
+  if (filter_parent_customer) {
+    url += '&filter_parent_customer=' + encodeURIComponent(filter_parent_customer);
+  }
+  
+  var filter_parent_customer_id = $('input[name=\'filter_parent_customer\']').attr("data-parent-customer-id");
+  alert(filter_parent_customer_id);
+  
+  if (filter_parent_customer_id) {
+    url += '&filter_parent_customer_id=' + encodeURIComponent(filter_parent_customer_id);
+  }
     
   var filter_date_added = $('input[name=\'filter_date_added\']').val();
   
@@ -310,6 +329,27 @@ $('input[name=\'filter_name\']').autocomplete({
   },
   'select': function(item) {
     $('input[name=\'filter_name\']').val(item['label']);
+  } 
+});
+
+$('input[name=\'filter_parent_customer\']').autocomplete({
+  'source': function(request, response) {
+    $.ajax({
+      url: 'index.php?path=sale/customer/autocompleteparentcustomer&token=<?php echo $token; ?>&filter_parent_customer=' +  encodeURIComponent(request),
+      dataType: 'json',     
+      success: function(json) {
+        response($.map(json, function(item) {
+          return {
+            label: item['name'],
+            value: item['customer_id']
+          }
+        }));
+      }
+    });
+  },
+  'select': function(item) {
+    $('input[name=\'filter_parent_customer\']').val(item['label']);
+    $('input[name=\'filter_parent_customer\']').attr("data-parent-customer-id", item['value']);
   } 
 });
 
