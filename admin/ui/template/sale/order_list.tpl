@@ -251,12 +251,12 @@
 
                                     <td class="text-left">Delivery Timeslot</td>
 
-                                    <?php if (!$this->user->isVendor()): ?>
+                                   <!--  <?php if (!$this->user->isVendor()): ?>
                                         <td class="text-right"><?php echo $column_payment; ?></td>
                                      <?php endif ?>  
 
                                     
-                                    <td class="text-right"><?php echo $column_delivery_method; ?></td>
+                                    <td class="text-right"><?php echo $column_delivery_method; ?></td>-->
 
                                     <td class="text-right"><?php echo $column_action; ?></td>
                                 </tr>
@@ -286,7 +286,7 @@
                                     <!-- <td class="text-left"><?php echo $order['city']; ?></td> -->
                                     <!-- <td class="text-left"><?php echo $order['status']; ?></td> -->
                                     <td class="text-left">
-						<select name="order_status_id" id="input-order-status<?php echo $order['order_id']; ?>" class="form-control col-sm-12">
+						<select name="order_status_id" id="input-order-status<?php echo $order['order_id']; ?>" class="form-control">
 						  <?php foreach ($order['all_order_statuses'] as $order_statuses) { ?>
 						  <?php if ($order_statuses['order_status_id'] == $order['order_status_id']) { ?>
 						  <option value="<?php echo $order_statuses['order_status_id']; ?>" selected="selected"><?php echo $order_statuses['name']; ?></option>
@@ -306,35 +306,47 @@
                                      <td class="text-right"><?php echo $order['delivery_date']; ?></td>
                                     <td class="text-left"><?php echo $order['delivery_timeslot']; ?></td>
                                     
-                                    <?php if (!$this->user->isVendor()): ?>
+                                    <!-- <?php if (!$this->user->isVendor()): ?>
                                         <td class="text-right"  style="width:120px"><?php echo $order['payment_method']; ?></td>
                                      <?php endif ?>  
 
                                     
-                                    <td class="text-right"><?php echo $order['shipping_method']; ?></td>
+                                    <td class="text-right"><?php echo $order['shipping_method']; ?></td> -->
 
                                     <td class="text-right">
-
+                                    <div style="width: 100%; display:flex; justify-content: space-between; flex-flow: row wrap; gap: 4px;">
                                     <?php if (!$this->user->isVendor()): ?>
                                         <!-- <a href="<?php echo $order['order_spreadsheet']; ?>" target="_blank" data-toggle="tooltip" title="Download Calculation Sheet" class="btn btn-info"><i class="fa fa-file-excel-o"></i></a> -->
                                         <!--<a href="<?php echo $order['shipping']; ?>" target="_blank" data-toggle="tooltip" title="Print Delivery Note" class="btn btn-info"><i class="fa fa-truck"></i></a>-->
                                     <?php endif ?>  
                 
                                        
-                                        <a href="<?php echo $order['invoice']; ?>" target="_blank" data-toggle="tooltip" title="Print Invoice" class="btn btn-info"><i class="fa fa-print"></i></a>
+
+                                        <a href="<?php echo $order['invoice']; ?>" target="_blank" data-toggle="tooltip" title="Print Invoice">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-printer"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                                        </a>
 
                                         
 
-                                        <a href="<?php echo $order['view']; ?>" data-toggle="tooltip" title="<?php echo $button_view; ?>" class="btn btn-info"><i class="fa fa-eye"></i></a> 
+                                        <a href="<?php echo $order['view']; ?>" data-toggle="tooltip" title="View Order Details">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                                        </a> 
                                        
                                             <?php if ( !in_array( $order['order_status_id'], array_merge( $this->config->get( 'config_refund_status' ), $this->config->get( 'config_complete_status' ) ) ) ) { ?>
-                                                <a href="<?php echo $order['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a> 
+                                                <a href="<?php echo $order['edit']; ?>" data-toggle="tooltip" title="Edit Invoice">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-3"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                                                </a> 
                                             <?php } ?>
                                         
                                         <!-- <a href="<?php echo $order['delete']; ?>" id="button-delete<?php echo $order['order_id']; ?>" data-toggle="tooltip" title="<?php echo $button_delete; ?>" class="btn btn-danger"><i class="fa fa-trash-o"></i></a> -->
                                        
-                                       <a href="#" onclick="getPO(<?= $order['order_id'] ?>)"   data-toggle="modal" data-dismiss="modal" data-target="#poModal"    class="btn btn-info" style="border-radius: 0px;"  >PO</a>
-                                       <a href="#" data-toggle="tooltip" title="Update Order Status" data-orderid="<?= $order['order_id'] ?>" id="update_order_status" class="btn btn-info"><i class="fa fa-refresh"></i></a> 
+                                       <a href="#" onclick="getPO(<?= $order['order_id'] ?>)" data-toggle="modal" data-dismiss="modal" data-target="#poModal" title="PO Details">
+                                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                                       </a>
+                                       <a href="#" data-toggle="tooltip" title="Update Order Status" data-orderid="<?= $order['order_id'] ?>" id="update_order_status">
+                                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-refresh-cw"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                                       </a> 
+                                       </div>
                                     </td>
                                         
                                 </tr>
