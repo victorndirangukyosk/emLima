@@ -4514,6 +4514,9 @@ class ControllerSaleOrder extends Controller {
                 'delivery_date' => $order['delivery_date'],
                 'customer' => $order['customer'] . ' Order#' . $order['order_id'],
                 'amount' => $order['total'],
+                'SAP_customer_no' => $order['SAP_customer_no'],
+                'invoice_no' => 'KB'.$order['order_id'],
+                'SAP_document_no' => '',
             ];
             // $totalOrdersAmount += $order['total'];
         }
@@ -4531,7 +4534,7 @@ class ControllerSaleOrder extends Controller {
             $totalOrdersAmount += $sum;
         }
         $data['consolidation']['total'] = $totalOrdersAmount;
-        // echo "<pre>";print_r($data);die;
+          echo "<pre>";print_r($data);die;
 
         $this->load->model('report/excel');
         $this->model_report_excel->download_consolidated_calculation_sheet_excel($data);
