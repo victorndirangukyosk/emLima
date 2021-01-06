@@ -4459,6 +4459,8 @@ class ModelReportExcel extends Model {
                 'subtotalvalue' => $sub_total,
                 'po_number' => $result['po_number'],
                 'subtotal' => str_replace('KES', ' ', $this->currency->format($sub_total)),
+                'SAP_customer_no' => $result['SAP_customer_no'],
+
             ];
         }
 
@@ -4497,26 +4499,45 @@ class ModelReportExcel extends Model {
             //$objPHPExcel->getActiveSheet()->mergeCells("A1:E2");
             if ($data['customers']) {
                 $sheet_subtitle = 'Company Name : ' . $data['customers'][0]['company'];
+                $sheet_subtitle_sap =  $data['customers'][0]['SAP_customer_no'];
+                $order_start_date =  $data['customers'][0]['date_added'];
             } else {
-                $sheet_subtitle = '';
+                $sheet_subtitle = $sheet_subtitle_sap='';
             }
 
-            $objPHPExcel->getActiveSheet()->mergeCells('A1:E1');
-            $objPHPExcel->getActiveSheet()->mergeCells('A2:E2');
+            $objPHPExcel->getActiveSheet()->mergeCells('A1:B1');
+            $objPHPExcel->getActiveSheet()->mergeCells('C1:D1');
+            $objPHPExcel->getActiveSheet()->mergeCells('A2:B2');
             $objPHPExcel->getActiveSheet()->setCellValue('A1', 'Customer Orders Statement');
+            $objPHPExcel->getActiveSheet()->setCellValue('C1', 'SAP Customer Number');
             $objPHPExcel->getActiveSheet()->setCellValue('A2', $sheet_subtitle);
+            $objPHPExcel->getActiveSheet()->setCellValue('E1', $sheet_subtitle_sap);
             $objPHPExcel->getActiveSheet()->getStyle('A1:E2')->applyFromArray(['font' => ['bold' => true], 'color' => [
                     'rgb' => '4390df',
             ]]);
 
             //subtitle
+            if(!empty($data['filter_date_start']))
             $from = date('d-m-Y', strtotime($data['filter_date_start']));
+            else
+            $from=str_replace("/","-",$order_start_date);
+            // try{
+            // if(strpos($data['filter_date_start'], '1990'))
+            
+            // $from=$order_start_date ;
+            // $from=str_replace("/","-",$order_start_date);
+            // }
+            // catch(Exception $ex)
+            // {
+
+            // }
             $to = date('d-m-Y', strtotime($data['filter_date_end']));
             $objPHPExcel->getActiveSheet()->mergeCells('A3:I3');
             $html = 'FROM ' . $from . ' TO ' . $to;
 
             $objPHPExcel->getActiveSheet()->setCellValue('A3', $html);
-            $objPHPExcel->getActiveSheet()->getStyle('A1:E3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $objPHPExcel->getActiveSheet()->getStyle('A1:E2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+            $objPHPExcel->getActiveSheet()->getStyle('A3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
             $objPHPExcel->getActiveSheet()->getStyle('E')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
             foreach (range('A', 'L') as $columnID) {
