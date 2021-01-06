@@ -127,6 +127,11 @@
                                       <th>Longitude</th>
                                       <td><?php echo $longitude; ?></td>
                                   </tr>
+                                  <tr>
+                                      <th>SAP Customer Number</th>
+                                      <td><?php echo $SAP_customer_no; ?></td>
+                                  </tr>
+
                                   <?php if($longitude != '' &&  $latitude != '' && $longitude != NULL &&  $latitude != NULL && $longitude != 0 &&  $latitude != 0) { ?>
  					<tr>
 					<th>Location:</th>
