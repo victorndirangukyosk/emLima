@@ -288,10 +288,10 @@
                                     <td class="text-left">
                                                 <?php 
                                                 $disabled = NULL;
-                                                if($order_statuses['order_status_id'] == 5) {
+                                                if($order['order_status_id'] == 5) {
                                                 $disabled = 'disabled';
                                                 } ?>
-                                                <select name="order_status_id" id="input-order-status<?php echo $order['order_id']; ?>" class="form-control" <?php echo $disabled; ?>>
+                                                <select name="order_status_id" id="input-order-status<?php echo $order['order_id']; ?>" class="form-control" <?php echo $disabled; ?> >
 						  <?php foreach ($order['all_order_statuses'] as $order_statuses) { ?>
 						  <?php if ($order_statuses['order_status_id'] == $order['order_status_id']) { ?>
 						  <option value="<?php echo $order_statuses['order_status_id']; ?>" selected="selected"><?php echo $order_statuses['name']; ?></option>
