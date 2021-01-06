@@ -929,7 +929,6 @@ class ModelReportExcel extends Model {
 
             $sheet_title = 'Consolidated Product Orders';
             $sheet_subtitle = 'To be delivered on: ' . $data['orders'][0]['delivery_date'];
-            
 
             // $objPHPExcel->getActiveSheet()->mergeCells('A1:C1');
             // $objPHPExcel->getActiveSheet()->mergeCells('A2:C2');
@@ -1173,6 +1172,8 @@ class ModelReportExcel extends Model {
             // $objPHPExcel->getActiveSheet()->mergeCells('A2:C2');
             $objPHPExcel->getActiveSheet()->setCellValue('A1', $sheet_title);
             $objPHPExcel->getActiveSheet()->setCellValue('A2', $sheet_subtitle);
+            $objPHPExcel->getActiveSheet()->setCellValue('C1', 'Delivery Timeslot');
+            $objPHPExcel->getActiveSheet()->setCellValue('D1', $data['orders'][0]['delivery_timeslot']);
             $objPHPExcel->getActiveSheet()->getStyle('A1:C1')->applyFromArray(['font' => ['bold' => true], 'color' => [
                     'rgb' => '51AB66',
             ]]);
@@ -1184,6 +1185,7 @@ class ModelReportExcel extends Model {
             ]]);
 
             // $objPHPExcel->getActiveSheet()->mergeCells('A3:C3');
+            $objPHPExcel->getActiveSheet()->mergeCells('A2:E2');
             $objPHPExcel->getActiveSheet()->getStyle('A1:C4')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
             $styleArray = array(
                 'borders' => array(
