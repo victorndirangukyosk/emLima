@@ -1428,6 +1428,17 @@ class ControllerSaleCustomer extends Controller {
             $data['address_id'] = '';
         }
         $data['source'] = $customer_info['source'];
+
+
+        if (isset($this->request->post['SAP_customer_no'])) {
+            $data['SAP_customer_no'] = $this->request->post['SAP_customer_no'];
+        } elseif (!empty($customer_info)) {
+            $data['SAP_customer_no'] = $customer_info['SAP_customer_no'];
+        } else {
+            $data['SAP_customer_no'] = '';
+        }
+
+        // $data['SAP_customer_no'] = $customer_info['SAP_customer_no'];
         $this->load->model('sale/customer_group');
 
         //echo "<pre>";print_r($data);die;
@@ -2513,6 +2524,7 @@ class ControllerSaleCustomer extends Controller {
         $data['approved'] = $customer_info['approved'];
         $data['safe'] = $customer_info['safe'];
         $data['source'] = $customer_info['source'];
+        $data['SAP_customer_no'] = $customer_info['SAP_customer_no'];
         $data['latitude'] = $customer_info['latitude'];
         $data['longitude'] = $customer_info['longitude'];
         
