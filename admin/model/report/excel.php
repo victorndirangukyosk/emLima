@@ -1473,7 +1473,7 @@ class ModelReportExcel extends Model {
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 4, 'Inv No.');
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 4, 'Amount');
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 4, 'SAP Customer No.');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 4, 'SAP Document No.');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 4, 'SAP Doc No.');
 
 
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 4)->applyFromArray($title);
