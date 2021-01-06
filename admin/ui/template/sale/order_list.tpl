@@ -697,10 +697,10 @@
                                                 <div class="form-row">
 
                                                  <div class="form-group">
-                                                    <label    > SAP Doc Number </label>
+                                                    <label hidden   > SAP Doc Number </label>
 
-                                                    <div class="col-md-12">
-                                                        <input id="SAP_doc_no" maxlength="30" required style="max-width:100% ;" name="SAP_doc_no" type="text" placeholder="SAP Doc Number" class="form-control input-md" required>
+                                                    <div hidden class="col-md-12">
+                                                        <input   id="SAP_doc_no" maxlength="30" required style="max-width:100% ;" name="SAP_doc_no" type="text" placeholder="SAP Doc Number" class="form-control input-md" required>
                                                     </div>
 
                                                     
