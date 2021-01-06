@@ -736,7 +736,69 @@
             </div>
         </div>
     </div>
+        
+                <div class="modal fade" id="driverModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content"  >
+                    <div class="modal-body"  style="height:315px;">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <div class="store-find-block">
+                            <div class="mydivsss">
+                                <div class="store-find">
+                                    <div class="store-head">
+                                        <h2>Save Driver Details</h2>
+                                          </br> 
+                                    </div>
+                                    <div id="driverModal-message" style="color: red;text-align:center; font-size: 15px;" >
+                                    </div>
+                                    <div id="driverModal-success-message" style="color: green; ; text-align:center; font-size: 15px;">
+                                    </div>  
+                                      </br>
+                                    <!-- Text input-->
+                                    <div class="store-form">
+                                        <form id="driverModal-form" action="" method="post" enctype="multipart/form-data">
+ 
 
+                                            <div class="form-row">
+                                                <div class="form-group">
+                                                    <label > Driver </label>
+                                                        <input id="order_id"   name="order_id" type="hidden"  class="form-control input-md" required>
+
+                                                    <div class="col-md-12">
+                                                        <input id="order_driver" maxlength="30" required style="max-width:100% ;" name="order_driver" type="text" placeholder="Driver" class="form-control" data_driver_id="" required>
+                                                    <br/></div>
+                                                </div>
+
+                                                 <div class="form-row">
+                                                <div class="form-group">
+                                                    <label> Vehicle Number </label>
+
+                                                    <div class="col-md-12">
+                                                        <input id="order_vehicle_number" maxlength="30" required style="max-width:100% ;" name="order_vehicle_number" type="text" placeholder="Vehicle Number" class="form-control input-md" required>
+                                                    <br/> </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <div class="col-md-12"> 
+                                                        <button type="button" class="btn btn-grey" data-dismiss="modal" style="width:30%; float: right; margin-top: 10px; height: 45px;border-radius:20px">Close</button>
+
+
+                                                        <button id="driver-button" name="driver-button" onclick="savedriverdetails()" type="button" class="btn btn-lg btn-success"  style="width:30%; float: right; margin-top: 10px; height: 45px;border-radius:20px">Save</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>  
+                                </div>
+                            </div>
+                           
+                            <!-- next div code -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 <script  type="text/javascript">
@@ -828,6 +890,52 @@ function savePO() {
                
             }
 
+function savedriverdetails() { 
+ 
+    $('#driverModal-message').html('');
+    $('#driverModal-success-message').html('');
+   var order_id = $('input[name="order_id"]').val();
+   var driver_id = $('input[name="order_driver"]').attr("data_driver_id");
+    var vehicle_number =  $('input[name="order_vehicle_number"]').val();
+    console.log(vehicle_number);
+    console.log(driver_id);
+
+              console.log($('#driverModal-form').serialize());
+ 
+                if (driver_id  < 0 || driver_id == '' || vehicle_number == '' || vehicle_number.length == 0 || order_id < 0 || order_id == '') {
+                   
+                      $('#driverModal-message').html("Please enter data");
+                       return false;
+                } 
+                else{  
+                  
+                    $.ajax({
+                    url: 'index.php?path=sale/order/SaveOrUpdateOrderDriverVehicleDetails&token=<?php echo $token; ?>',
+                    type: 'post',
+                    dataType: 'json',
+                    data:{ order_id : order_id, vehicle_number : vehicle_number, driver_id : driver_id },
+                    async: true,
+                    success: function(json) {
+                        console.log(json); 
+                        if (json['status']) {
+                            $('#driverModal-success-message').html('Saved Successfully');
+                            setTimeout(function(){ window.location.reload(false); }, 1500);
+                        }
+                        else {
+                            $('#driverModal-success-message').html('Please try again');
+                        }
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {    
+
+                                 // alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);                       
+                                $('#driverModal-message').html("Please try again");
+                                    return false;
+                                }
+                });
+                }
+               
+            }
+
 $('a[id^=\'update_order_status\']').on('click', function (e) {
 e.preventDefault();
 console.log($(this).data('orderid'));
@@ -864,6 +972,13 @@ if($('select[id=\'input-order-status'+clicked_orderid+'\'] option:selected').tex
 	});
 }
 
+if($('select[id=\'input-order-status'+clicked_orderid+'\'] option:selected').text()=='Ready for delivery')
+{
+$('input[name="order_id"]').val(clicked_orderid);
+$('#driverModal').modal('toggle');
+savedriverdetails();
+}
+
 $.ajax({
 		url: 'index.php?path=sale/order/api&token=<?php echo $token; ?>&api=api/order/history&order_id='+clicked_orderid+'&added_by=<?php echo $this->user->getId(); ?>&added_by_role=<?php echo $this->user->getGroupName(); ?>',
 		type: 'post',
@@ -874,7 +989,7 @@ $.ajax({
                     $('.alert').html('Order status updated successfully!');
                     $(".alert").attr('class', 'alert alert-success');
                     $(".alert").show();
-                    setTimeout(function(){ window.location.reload(false); }, 1500);
+                    //setTimeout(function(){ window.location.reload(false); }, 1500);
 		},			
 		error: function(xhr, ajaxOptions, thrownError) {		
 			 
@@ -899,5 +1014,27 @@ $.ajax({
      location = location;
     }, 300 * 1000); // 60 * 1000 milsec
     
-        //--></script></div>
+        //-->
+    $driverName="";
+$('input[name=\'order_driver\']').autocomplete({
+  'source': function(request, response) {
+    $.ajax({
+      url: 'index.php?path=drivers/drivers_list/autocompletebyDriverName&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request)+'&filter_company=' +$driverName,
+      dataType: 'json',     
+      success: function(json) {
+        response($.map(json, function(item) {
+          return {
+            label: item['name'],
+            value: item['driver_id']
+          }
+        }));
+      }
+    });
+  },
+  'select': function(item) {
+    $('input[name=\'order_driver\']').val(item['label']);
+    $('input[name=\'order_driver\']').attr('data_driver_id',item['value']);
+  } 
+});
+    </script></div>
 <?php echo $footer; ?>

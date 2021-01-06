@@ -7545,5 +7545,44 @@ class ControllerSaleOrder extends Controller {
             $ret = $this->emailtemplate->sendmessage($customer_info['telephone'], $sms_message);
         }
     }
+    
+    public function SaveOrUpdateOrderDriverVehicleDetails() {
+        $order_id = $this->request->post['order_id'];
+        $driver_id = $this->request->post['driver_id'];
+        $vehicle_number = $this->request->post['vehicle_number'];
+        /* $log = new Log('error.log');
+          $log->write('SaveOrUpdateOrderDriverDetails');
+          $log->write($this->request->post['driver_id']);
+          $log->write($this->request->post['order_id']); */
 
+        $this->load->model('checkout/order');
+        $this->load->model('sale/order');
+        $order_info = $this->model_checkout_order->getOrder($order_id);
+        if (is_array($order_info) && $order_info != NULL) {
+            $this->model_sale_order->UpdateOrderDriverDetails($order_id, $driver_id);
+            $this->model_sale_order->UpdateOrderVehicleDetails($order_id, $vehicle_number);
+        }
+
+        $this->SendMailToCustomerWithDriverDetails($order_id);
+        // Add to activity log
+        $log = new Log('error.log');
+        $this->load->model('user/user_activity');
+
+        $activity_data = [
+            'user_id' => $this->user->getId(),
+            'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+            'user_group_id' => $this->user->getGroupId(),
+            'order_id' => $order_id,
+        ];
+        $log->write('driver assigned to order');
+
+        $this->model_user_user_activity->addActivity('order_driver_assigned', $activity_data);
+
+        $log->write('driver assigned to order');
+
+        $json['status'] = 'success';
+        $json['message'] = 'Order Driver Details Updated!';
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }    
 }
