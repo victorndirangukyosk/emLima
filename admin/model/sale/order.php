@@ -2372,20 +2372,34 @@ class ModelSaleOrder extends Model
 
     public function updatePO($order_id, $po_number, $SAP_customer_no = '', $SAP_doc_no = '')
     {
+        
         //    echo "<pre>";print_r($this->db->escape($SAP_customer_no));die;
+        //sap customer number is moved to customer table, as it is unique for all orders of customer
         if ('' == $SAP_customer_no && '' == $SAP_doc_no) {
+            
             $this->db->query('update `'.DB_PREFIX.'order` SET po_number="'.$po_number.'" WHERE order_id="'.$order_id.'"');
         } else {
             $this->db->query('update `'.DB_PREFIX.'order` SET po_number="'.$po_number.'",SAP_customer_no="'.$SAP_customer_no.'",SAP_doc_no="'.$SAP_doc_no.'" WHERE order_id="'.$order_id.'"');
             // echo 'update `' . DB_PREFIX . 'order` SET po_number="' . $po_number . '", SAP_doc_no="' . $SAP_doc_no . '" ,SAP_customer_no="'.$SAP_customer_no.'" WHERE order_id="' . $order_id . '"';
+       
+            //get customerid
+           $custsql = 'select customer_id from `'.DB_PREFIX.'order` where order_id="'.$order_id.'"';
+
+             $customer_id=$this->db->query($custsql)->row['customer_id'];
+                // echo   "<pre>";print_r($customer_id);die;
+
+            $this->db->query('UPDATE ' . DB_PREFIX . "customer SET SAP_customer_no = '" . $SAP_customer_no. "' WHERE customer_id = '" . (int) $customer_id . "'");
+
         }
     }
 
     public function getPO($order_id)
     {
-        $sql = 'SELECT o.order_id,o.po_number,o.SAP_customer_no,o.SAP_doc_no FROM `'.DB_PREFIX."order` o  WHERE o.order_id = '$order_id'";
+        // $sql = 'SELECT o.order_id,o.po_number,o.SAP_customer_no,o.SAP_doc_no FROM `'.DB_PREFIX."order` o  WHERE o.order_id = '$order_id'";
+      
+        $sql = 'SELECT o.order_id,o.po_number,c.SAP_customer_no,o.SAP_doc_no FROM '.DB_PREFIX. 'order o   LEFT join '.DB_PREFIX."customer c ON (o.customer_id =c.customer_id)  WHERE o.order_id = '$order_id'";
 
-        // echo "<pre>";print_r($sql);die;
+        //   echo "<pre>";print_r($sql);die;
         $query = $this->db->query($sql);
 
         return $query->row;
