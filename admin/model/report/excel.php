@@ -1014,6 +1014,8 @@ class ModelReportExcel extends Model {
                 // $objPHPExcel->getActiveSheet()->mergeCells('A2:D2');
                 $objPHPExcel->getActiveSheet()->setCellValue('A1', 'Date of Delivery');
                 $objPHPExcel->getActiveSheet()->setCellValue('B1', $data['orders'][0]['delivery_date']);
+                $objPHPExcel->getActiveSheet()->setCellValue('C1', 'Delivery Timeslot');
+                $objPHPExcel->getActiveSheet()->setCellValue('D1', $data['orders'][0]['delivery_timeslot']);
                 $objPHPExcel->getActiveSheet()->setCellValue('A2', $sheet_title);
                 $objPHPExcel->getActiveSheet()->setCellValue('A3', $sheet_subtitle);
                 $objPHPExcel->getActiveSheet()->getStyle('A1:E1')->applyFromArray(['font' => ['bold' => true], 'color' => [
