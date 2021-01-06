@@ -1032,6 +1032,7 @@ class ModelReportExcel extends Model {
                         'rgb' => '51AB66',
                 ]]);
                 $row = 5;
+                $objPHPExcel->getActiveSheet()->mergeCells('A2:E2');
                 $objPHPExcel->getActiveSheet()->mergeCells('A3:E3');
 
                 if ($sheet_subtitle_1 != "" && $sheet_subtitle_1 != null) {
