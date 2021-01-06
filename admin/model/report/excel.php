@@ -1504,20 +1504,27 @@ class ModelReportExcel extends Model {
 
                 $sheet_title = $worksheetName . ' Order #' . $order['order_id'];
                 $sheet_subtitle = 'Calculation Sheet ' . $order['delivery_date'];
+                $delivery_timeslot = 'Delivery Timeslot ' . $order['delivery_timeslot'];
 
                 $objPHPExcel->getActiveSheet()->mergeCells('A1:G1');
                 $objPHPExcel->getActiveSheet()->mergeCells('A2:G2');
+                $objPHPExcel->getActiveSheet()->mergeCells('A3:G3');
                 $objPHPExcel->getActiveSheet()->setCellValue('A1', $sheet_title);
                 $objPHPExcel->getActiveSheet()->setCellValue('A2', $sheet_subtitle);
+                $objPHPExcel->getActiveSheet()->setCellValue('A3', $delivery_timeslot);
+                
                 $objPHPExcel->getActiveSheet()->getStyle('A1:G1')->applyFromArray(['font' => ['bold' => true], 'color' => [
                         'rgb' => '51AB66',
                 ]]);
                 $objPHPExcel->getActiveSheet()->getStyle('A2:G2')->applyFromArray(['font' => ['bold' => true], 'color' => [
                         'rgb' => '51AB66',
                 ]]);
+                $objPHPExcel->getActiveSheet()->getStyle('A3:G3')->applyFromArray(['font' => ['bold' => true], 'color' => [
+                        'rgb' => '51AB66',
+                ]]);
 
-                $objPHPExcel->getActiveSheet()->mergeCells('A3:G3');
-                $objPHPExcel->getActiveSheet()->getStyle('A1:G3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+                $objPHPExcel->getActiveSheet()->mergeCells('A4:G4');
+                $objPHPExcel->getActiveSheet()->getStyle('A1:G4')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 
                 foreach (range('A', 'L') as $columnID) {
                     $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
