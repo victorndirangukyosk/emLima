@@ -4512,7 +4512,7 @@ class ControllerSaleOrder extends Controller {
         foreach ($results as $order) {
             $data['consolidation'][] = [
                 'delivery_date' => $order['delivery_date'],
-                'customer' => $order['customer'] . ' Order#' . $order['order_id'],
+                'customer' => $order['customer'] ,//. ' Order#' . $order['order_id'],
                 'amount' => $order['total'],
                 'SAP_customer_no' => $order['SAP_customer_no'],
                 'invoice_no' => 'KB'.$order['order_id'],
