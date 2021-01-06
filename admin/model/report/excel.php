@@ -929,6 +929,7 @@ class ModelReportExcel extends Model {
 
             $sheet_title = 'Consolidated Product Orders';
             $sheet_subtitle = 'To be delivered on: ' . $data['orders'][0]['delivery_date'];
+            
 
             // $objPHPExcel->getActiveSheet()->mergeCells('A1:C1');
             // $objPHPExcel->getActiveSheet()->mergeCells('A2:C2');
