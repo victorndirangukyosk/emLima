@@ -7473,6 +7473,39 @@ class ControllerSaleOrder extends Controller {
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
+    
+    public function SaveOrUpdateOrderDeliveryExecutiveDetails() {
+        $order_id = $this->request->post['order_id'];
+        $delivery_executive_id = $this->request->post['delivery_executive_id'];
+
+        $this->load->model('checkout/order');
+        $this->load->model('sale/order');
+        $order_info = $this->model_checkout_order->getOrder($order_id);
+        if (is_array($order_info) && $order_info != NULL) {
+            $this->model_sale_order->UpdateOrderDeliveryExecutiveDetails($order_id, $delivery_executive_id);
+        }
+
+        // Add to activity log
+        $log = new Log('error.log');
+        $this->load->model('user/user_activity');
+
+        $activity_data = [
+            'user_id' => $this->user->getId(),
+            'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+            'user_group_id' => $this->user->getGroupId(),
+            'order_id' => $order_id,
+        ];
+        $log->write('delivery executive assigned to order');
+
+        $this->model_user_user_activity->addActivity('order_delivery_executive_assigned', $activity_data);
+
+        $log->write('delivery executive assigned to order');
+
+        $json['status'] = 'success';
+        $json['message'] = 'Order Delivery Executive Details Updated!';
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
 
     public function SendMailToCustomerWithDriverDetails($order_id) {
         $log = new Log('error.log');

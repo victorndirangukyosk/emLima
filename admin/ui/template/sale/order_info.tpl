@@ -2257,6 +2257,34 @@ $(document).delegate('#save_order_driver', 'click', function() {
         });
 });
 
+$(document).delegate('#save_order_delivery_executive', 'click', function() {
+    var delivery_executive_id = $('input[name=\'order_delivery_executive\']').attr('data_delivery_executive_id');
+    var order_id = $('input[name=\'order_delivery_executive\']').attr('data_order_id');
+    data = {
+            order_id : order_id,
+            delivery_executive_id : delivery_executive_id
+    }
+    $.ajax({
+            url: 'index.php?path=sale/order/SaveOrUpdateOrderDeliveryExecutiveDetails&token=<?php echo $token; ?>',
+            type: 'post',
+            data: data,
+            dataType: 'json',
+            cache: false,
+            async: false,
+            beforeSend: function() {
+            },
+            success: function(html) {
+                console.log(html);
+                setTimeout(function(){ window.location.reload(false); }, 1000);
+               
+                
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                //alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+            }
+        });
+});
+
 $(document).delegate('#save_order_vehicle_number', 'click', function() {
     var vehicle_number = $('input[name=\'order_vehicle_number\']').val();
     var order_id = $('input[name=\'order_vehicle_number\']').attr('data_order_id');
