@@ -724,10 +724,10 @@ class ControllerAccountOrder extends Controller {
             $data['take_rating'] = false;
 
             if (in_array($data['order_status_id'], $this->config->get('config_complete_status'))) {
-                $data['show_rating'] = true;
+                $data['show_rating'] = false;
 
                 if (is_null($data['rating']) || empty($data['rating'])) {
-                    $data['take_rating'] = true;
+                    $data['take_rating'] = false;
                 }
             }
 
@@ -1920,10 +1920,10 @@ class ControllerAccountOrder extends Controller {
             $data['take_rating'] = false;
 
             if (in_array($data['order_status_id'], $this->config->get('config_complete_status'))) {
-                $data['show_rating'] = true;
+                $data['show_rating'] = false;
 
                 if (is_null($data['rating']) || empty($data['rating'])) {
-                    $data['take_rating'] = true;
+                    $data['take_rating'] = false;
                 }
             }
 
@@ -3084,10 +3084,10 @@ class ControllerAccountOrder extends Controller {
             $data['take_rating'] = false;
 
             if (in_array($data['order_status_id'], $this->config->get('config_complete_status'))) {
-                $data['show_rating'] = true;
+                $data['show_rating'] = false;
 
                 if (is_null($data['rating']) || empty($data['rating'])) {
-                    $data['take_rating'] = true;
+                    $data['take_rating'] = false;
                 }
             }
 
@@ -4177,10 +4177,10 @@ class ControllerAccountOrder extends Controller {
             $data['take_rating'] = false;
 
             if (in_array($data['order_status_id'], $this->config->get('config_complete_status'))) {
-                $data['show_rating'] = true;
+                $data['show_rating'] = false;
 
                 if (is_null($data['rating']) || empty($data['rating'])) {
-                    $data['take_rating'] = true;
+                    $data['take_rating'] = false;
                 }
             }
 

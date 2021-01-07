@@ -363,7 +363,7 @@
                                         </div>
                                     </div>
                                     <?php if(htmlspecialchars($_GET["order_status"])=='Delivered') { ?>
-                                    <div class="row">
+                                    <!--<div class="row">
                                         <div class="col-md-12">
                                             <div class="my-order-view-sidebar">
                                                 <li class="list-group-item my-order-list-head">
@@ -391,7 +391,6 @@
                                                         <?php } ?>
                                                     </div>
 
-                                                    <!-- new start -->
 
 
                                                     <div class="row">
@@ -531,14 +530,13 @@
                                                     </div>
 
 
-                                                    <!-- end -->
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div>-->
                                     <?php }?>
                                     <?php if(isset($delivery_data->status) && $delivery_data->status == 441 && false) { ?>
-                                    <div class="row">
+                                    <!--<div class="row">
                                         <div class="col-md-12">
                                             <div class="my-order-view-sidebar">
                                                 <li class="list-group-item my-order-list-head">
@@ -688,7 +686,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div>-->
                                     <?php } ?>
                                 </div>
                             </div>
