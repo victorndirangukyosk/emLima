@@ -2413,5 +2413,9 @@ class ModelSaleOrder extends Model
     public function UpdateOrderDriverDetails($order_id, $driver_id) {
         $this->db->query('UPDATE `' . DB_PREFIX . 'order` SET driver_id="' . $driver_id . '", date_modified = NOW() WHERE order_id="' . $order_id . '"');
     }
+    
+    public function UpdateOrderDeliveryExecutiveDetails($order_id, $delivery_executive_id) {
+        $this->db->query('UPDATE `' . DB_PREFIX . 'order` SET delivery_executive_id="' . $delivery_executive_id . '", date_modified = NOW() WHERE order_id="' . $order_id . '"');
+    }
 
 }

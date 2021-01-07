@@ -751,7 +751,7 @@ class ControllerExecutivesExecutivesList extends Controller {
                 }
 
                 $json[] = [
-                    'executive_id' => $result['executive_id'],
+                    'executive_id' => $result['delivery_executive_id'],
                     'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')),
                     'firstname' => $result['firstname'],
                     'lastname' => $result['lastname'],
