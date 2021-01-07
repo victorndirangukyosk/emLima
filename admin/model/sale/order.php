@@ -696,6 +696,7 @@ class ModelSaleOrder extends Model
                 'shipping_code' => $order_query->row['shipping_code'],
                 'driver_id' => $order_query->row['driver_id'],
                 'vehicle_number' => $order_query->row['vehicle_number'],
+                'delivery_executive_id' => $order_query->row['delivery_executive_id'],
 
                 'shipping_flat_number' => $order_query->row['shipping_flat_number'],
                 'shipping_building_name' => $order_query->row['shipping_building_name'],

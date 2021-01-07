@@ -21,7 +21,7 @@ class ModelExecutivesExecutives extends Model {
     }
 
     public function getExecutive($driver_id) {
-        $query = $this->db->query('SELECT DISTINCT * FROM ' . DB_PREFIX . "delivery_executives WHERE driver_id = '" . (int) $driver_id . "'");
+        $query = $this->db->query('SELECT DISTINCT * FROM ' . DB_PREFIX . "delivery_executives WHERE delivery_executive_id = '" . (int) $driver_id . "'");
 
         return $query->row;
     }
