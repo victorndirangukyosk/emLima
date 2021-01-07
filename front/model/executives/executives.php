@@ -4,24 +4,24 @@ class ModelExecutivesExecutives extends Model {
 
     public function addExecutive($data) {
         $this->db->query('INSERT INTO ' . DB_PREFIX . "delivery_executives SET firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', status = '" . (int) $data['status'] . "', driving_licence = '" . $data['driving_licence'] . "', date_added = NOW()");
-        $driver_id = $this->db->getLastId();
-        return $driver_id;
+        $executive_id = $this->db->getLastId();
+        return $executive_id;
     }
 
-    public function editExecutive($driver_id, $data) {
-        $this->db->query('UPDATE ' . DB_PREFIX . "delivery_executives SET firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', status = '" . (int) $data['status'] . "', driving_licence = '" . $data['driving_licence'] . "' WHERE driver_id = '" . (int) $driver_id . "'");
+    public function editExecutive($executive_id, $data) {
+        $this->db->query('UPDATE ' . DB_PREFIX . "delivery_executives SET firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', status = '" . (int) $data['status'] . "', driving_licence = '" . $data['driving_licence'] . "' WHERE delivery_executive_id = '" . (int) $executive_id . "'");
     }
 
     public function editToken($customer_id, $token) {
         $this->db->query('UPDATE ' . DB_PREFIX . "customer SET token = '" . $this->db->escape($token) . "' WHERE customer_id = '" . (int) $customer_id . "'");
     }
 
-    public function deleteExecutive($driver_id) {
-        $this->db->query('DELETE FROM ' . DB_PREFIX . "delivery_executives WHERE driver_id = '" . (int) $driver_id . "'");
+    public function deleteExecutive($executive_id) {
+        $this->db->query('DELETE FROM ' . DB_PREFIX . "delivery_executives WHERE delivery_executive_id = '" . (int) $executive_id . "'");
     }
 
-    public function getExecutive($driver_id) {
-        $query = $this->db->query('SELECT DISTINCT * FROM ' . DB_PREFIX . "delivery_executives WHERE delivery_executive_id = '" . (int) $driver_id . "'");
+    public function getExecutive($executive_id) {
+        $query = $this->db->query('SELECT DISTINCT * FROM ' . DB_PREFIX . "delivery_executives WHERE delivery_executive_id = '" . (int) $executive_id . "'");
 
         return $query->row;
     }
