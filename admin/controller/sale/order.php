@@ -4459,6 +4459,17 @@ class ControllerSaleOrder extends Controller {
                 }
                 $data['driver_name'] = $driver_name;
                 $data['driver_phone'] = $driver_phone;
+
+                $delivery_executive_info = $this->model_executives_executives->getExecutive($order_info['delivery_executive_id']);
+                $delivery_executive_name = NULL;
+                $delivery_executive_phone = NULL;
+                if ($delivery_executive_info) {
+                    $delivery_executive_name = $delivery_executive_info['firstname'] . ' ' . $delivery_executive_info['lastname'];
+                    $delivery_executive_phone = $delivery_executive_info['telephone'];
+                }
+                $data['delivery_executive_name'] = $delivery_executive_name;
+                $data['delivery_executive_phone'] = $delivery_executive_phone;
+                
                 
                 $data['orders'][] = [
                     'order_id' => $order_id,
@@ -4491,7 +4502,9 @@ class ControllerSaleOrder extends Controller {
                     'comment' => nl2br($order_info['comment']),
                     'shipping_name_original' => $order_info['shipping_name'],
                     'driver_name' => $driver_name,
-                    'driver_phone' => '+' . $this->config->get('config_telephone_code').' '.$driver_phone
+                    'driver_phone' => '+' . $this->config->get('config_telephone_code').' '.$driver_phone,
+                    'delivery_executive_name' => $delivery_executive_name,
+                    'delivery_executive_phone' => '+' . $this->config->get('config_telephone_code').' '.$delivery_executive_phone
                 ];
             }
         }
