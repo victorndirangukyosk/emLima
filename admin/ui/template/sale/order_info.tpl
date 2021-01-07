@@ -427,6 +427,10 @@
 			  </tr>
 			  <?php } ?>
                           <tr>
+                          <td>Delivery Executive</td>
+                          <td><input type="text" name="order_delivery_executive" id="order_delivery_executive" value="<?=$order_delivery_executive; ?>" data_order_id="<?=$order_id ?>" data_delivery_executive_id="<?=$order_delivery_executive_id ?>">&nbsp;<button id="save_order_delivery_executive" class="btn btn-primary" type="button"> Save </button></td>
+                          </tr>
+                          <tr>
                               <td>Driver</td>
                               <?php 
                               $order_driver = NULL;
@@ -2201,6 +2205,27 @@ $('input[name=\'order_driver\']').autocomplete({
   'select': function(item) {
     $('input[name=\'order_driver\']').val(item['label']);
     $('input[name=\'order_driver\']').attr('data_driver_id',item['value']);
+  } 
+});
+
+$('input[name=\'order_delivery_executive\']').autocomplete({
+  'source': function(request, response) {
+    $.ajax({
+      url: 'index.php?path=executives/executives_list/autocompletebyExecutiveName&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request),
+      dataType: 'json',     
+      success: function(json) {
+        response($.map(json, function(item) {
+          return {
+            label: item['name'],
+            value: item['executive_id']
+          }
+        }));
+      }
+    });
+  },
+  'select': function(item) {
+    $('input[name=\'order_delivery_executive\']').val(item['label']);
+    $('input[name=\'order_delivery_executive\']').attr('data_delivery_executive_id',item['value']);
   } 
 });
 
