@@ -1057,5 +1057,26 @@ $('input[name=\'order_driver\']').autocomplete({
     $('input[name=\'order_driver\']').attr('data_driver_id',item['value']);
   } 
 });
-    </script></div>
+
+$('input[name=\'order_delivery_executive\']').autocomplete({
+  'source': function(request, response) {
+    $.ajax({
+      url: 'index.php?path=executives/executives_list/autocompletebyExecutiveName&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request),
+      dataType: 'json',     
+      success: function(json) {
+        response($.map(json, function(item) {
+          return {
+            label: item['name'],
+            value: item['executive_id']
+          }
+        }));
+      }
+    });
+  },
+  'select': function(item) {
+    $('input[name=\'order_delivery_executive\']').val(item['label']);
+    $('input[name=\'order_delivery_executive\']').attr('data_delivery_executive_id',item['value']);
+  } 
+});
+</script></div>
 <?php echo $footer; ?>
