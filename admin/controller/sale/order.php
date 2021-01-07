@@ -2914,6 +2914,14 @@ class ControllerSaleOrder extends Controller {
             } else {
                 $data['order_driver_details'] = NULL;
             }
+            
+            $this->load->model('executives/executives');
+            $order_delivery_executive_details = $this->model_executives_executives->getExecutive($order_info['delivery_executive_id']);
+            if (is_array($order_delivery_executive_details) && $order_delivery_executive_details != NULL) {
+                $data['order_delivery_executive_details'] = $order_delivery_executive_details;
+            } else {
+                $data['order_delivery_executive_details'] = NULL;
+            }
 
             $data['shipping_custom_fields'] = [];
 
@@ -4319,6 +4327,17 @@ class ControllerSaleOrder extends Controller {
                 }
                 $data['driver_name'] = $driver_name;
                 $data['driver_phone'] = $driver_phone;
+                
+                $this->load->model('executives/executives');
+                $executive_info = $this->model_executives_executives->getExecutive($order_info['delivery_executive_id']);
+                $executive_name = NULL;
+                $executive_phone = NULL;
+                if ($executive_info) {
+                    $executive_name = $executive_info['firstname'] . ' ' . $executive_info['lastname'];
+                    $executive_phone = $executive_info['telephone'];
+                }
+                $data['delivery_executive_name'] = $executive_name;
+                $data['delivery_executive_phone'] = $executive_phone;
                 $store_info = $this->model_setting_setting->getSetting('config', $order_info['store_id']);
                 // if ($store_info) {
                 //     $store_address = $store_info['config_address'];

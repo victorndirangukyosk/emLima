@@ -753,7 +753,7 @@
                 <div class="modal fade" id="driverModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog" role="document">
                 <div class="modal-content"  >
-                    <div class="modal-body"  style="height:315px;">
+                    <div class="modal-body"  style="height:400px;">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <div class="store-find-block">
                             <div class="mydivsss">
@@ -917,13 +917,14 @@ function savedriverdetails() {
    var order_id = $('input[name="order_id"]').val();
    var driver_id = $('input[name="order_driver"]').attr("data_driver_id");
    var vehicle_number =  $('input[name="order_vehicle_number"]').val();
-   var delivery_executive_id =  $('input[name="order_delivery_executive"]').val();
+   var delivery_executive_id =  $('input[name="order_delivery_executive"]').attr("data_delivery_executive_id");
     console.log(vehicle_number);
     console.log(driver_id);
+    console.log(delivery_executive_id);
 
               console.log($('#driverModal-form').serialize());
  
-                if (driver_id  < 0 || driver_id == '' || vehicle_number == '' || vehicle_number.length == 0 || order_id < 0 || order_id == '' || delivery_executive_id < 0 || delivery_executive_id != '') {
+                if (driver_id  < 0 || driver_id == '' || vehicle_number == '' || vehicle_number.length == 0 || order_id < 0 || order_id == '' || delivery_executive_id < 0 || delivery_executive_id == '') {
                    
                       $('#driverModal-message').html("Please enter data");
                        return false;

@@ -428,6 +428,13 @@
 			  <?php } ?>
                           <tr>
                           <td>Delivery Executive</td>
+                          <?php 
+                          $order_delivery_executive = NULL;
+                          $order_delivery_executive_id = NULL;
+                          if(is_array($order_delivery_executive_details) && $order_delivery_executive_details != NULL) {
+                          $order_delivery_executive = $order_delivery_executive_details['firstname'].' '.$order_delivery_executive_details['lastname'];
+                          $order_delivery_executive_id = $order_delivery_executive_details['delivery_executive_id'];
+                          } ?>
                           <td><input type="text" name="order_delivery_executive" id="order_delivery_executive" value="<?=$order_delivery_executive; ?>" data_order_id="<?=$order_id ?>" data_delivery_executive_id="<?=$order_delivery_executive_id ?>">&nbsp;<button id="save_order_delivery_executive" class="btn btn-primary" type="button"> Save </button></td>
                           </tr>
                           <tr>
