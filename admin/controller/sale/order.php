@@ -4504,14 +4504,15 @@ class ControllerSaleOrder extends Controller {
 
         $this->load->model('sale/order');
         // $results = $this->model_sale_order->getOrders($filter_data);
-        $results = $this->model_sale_order->getNonCancelledOrders($filter_data);
+        // $results = $this->model_sale_order->getNonCancelledOrders($filter_data);
+        $results = $this->model_sale_order->getNonCancelledOrderswithPending($filter_data);
 
         $data = [];
 
         $totalOrdersAmount = 0;
         foreach ($results as $order) {
             $data['consolidation'][] = [
-                'delivery_date' => $order['delivery_date'],
+                'delivery_date' => date("d-m-Y", strtotime($order['delivery_date'])),
                 'customer' => $order['customer'] ,//. ' Order#' . $order['order_id'],
                 'amount' => $order['total'],
                 'SAP_customer_no' => $order['SAP_customer_no'],
