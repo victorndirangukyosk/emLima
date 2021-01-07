@@ -463,6 +463,8 @@ class ModelAccountOrder extends Model {
                 'settlement_amount' => $order_query->row['settlement_amount'],
                 'driver_id' => $order_query->row['driver_id'],
                 'vehicle_number' => $order_query->row['vehicle_number'],
+                'delivery_executive_id' => $order_query->row['delivery_executive_id'],
+
 
 
             ];
@@ -1324,6 +1326,11 @@ class ModelAccountOrder extends Model {
 
     public function getDriverName($driver_id) {
         $query = $this->db->query('SELECT   CONCAT(firstname," ",lastname) as name , telephone FROM ' . DB_PREFIX . "drivers WHERE driver_id = '" . (int) $driver_id . "'");
+        return $query->row;
+    }
+
+    public function getExecutiveName($delivery_executive_id) {
+        $query = $this->db->query('SELECT   CONCAT(firstname," ",lastname) as name , telephone FROM ' . DB_PREFIX . "delivery_executives WHERE delivery_executive_id = '" . (int) $delivery_executive_id . "'");
         return $query->row;
     }
 }
