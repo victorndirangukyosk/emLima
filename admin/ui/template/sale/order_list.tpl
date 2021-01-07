@@ -917,7 +917,7 @@ function savedriverdetails() {
    var order_id = $('input[name="order_id"]').val();
    var driver_id = $('input[name="order_driver"]').attr("data_driver_id");
    var vehicle_number =  $('input[name="order_vehicle_number"]').val();
-   var delivery_executive_id =  $('input[name="order_delivery_executive"]').val();
+   var delivery_executive_id =  $('input[name="order_delivery_executive"]').attr("data_delivery_executive_id");
     console.log(vehicle_number);
     console.log(driver_id);
 
