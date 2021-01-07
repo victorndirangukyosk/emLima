@@ -35,11 +35,13 @@ $_['text_order_time_slots_updated'] = '<a href="user_id=%d">%s</a> Order Time Sl
 $_['text_customer_account_approved'] = '<a href="user_id=%d">%s</a> approved a new <a href="customer_id=%d">customer</a>.';
 $_['text_driver_edit'] = '<a href="user_id=%d">%s</a> edited a <a href="driver_id=%d">driver</a>.';
 $_['text_driver_add'] = '<a href="user_id=%d">%s</a> created a new <a href="driver_id=%d">driver</a>.';
+$_['text_driver_delete'] = '<a href="user_id=%d">%s</a> deleted a <a href="driver_id=%d">driver</a>.';
 $_['text_executive_edit'] = '<a href="user_id=%d">%s</a> edited a <a href="executive_id=%d">Delivery Exective</a>.';
 $_['text_executive_add'] = '<a href="user_id=%d">%s</a> created a new <a href="executive_id=%d">Delivery Exective</a>.';
 $_['text_executive_delete'] = '<a href="user_id=%d">%s</a> delete a <a href="executive_id=%d">Delivery Exective</a>.';
 $_['text_order_vehicle_assigned'] =  '<a href="user_id=%d">%s</a> assigned <a href="order_id=%d">vehicle to order</a>.';
 $_['text_order_driver_assigned'] =  '<a href="user_id=%d">%s</a> assigned <a href="order_id=%d">driver to order</a>.';
+$_['text_order_delivery_executive_assigned'] =  '<a href="user_id=%d">%s</a> assigned <a href="order_id=%d">delivery executive to order</a>.';
 
 
 
