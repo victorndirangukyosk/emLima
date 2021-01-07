@@ -7534,8 +7534,10 @@ class ControllerSaleOrder extends Controller {
         $this->load->model('checkout/order');
         $this->load->model('account/customer');
         $this->load->model('drivers/drivers');
+        $this->load->model('executives/executives');
         $order_info = $this->model_checkout_order->getOrder($order_id);
         $driver_info = $this->model_drivers_drivers->getDriver($order_info['driver_id']);
+        $executive_info = $this->model_executives_executives->getExecutive($order_info['delivery_executive_id']);
         $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
         if ($order_info) {
             $store_name = $order_info['firstname'] . ' ' . $order_info['lastname'];
@@ -7548,6 +7550,13 @@ class ControllerSaleOrder extends Controller {
             $driver_name = $driver_info['firstname'] . ' ' . $driver_info['lastname'];
             $driver_phone = $driver_info['telephone'];
         }
+        
+        $executive_name = NULL;
+        $executive_phone = NULL;
+        if ($executive_info) {
+            $executive_name = $executive_info['firstname'] . ' ' . $executive_info['lastname'];
+            $executive_phone = $executive_info['telephone'];
+        }
 
         $customer_info['store_name'] = $store_name;
         $customer_info['subuserfirstname'] = $customer_info['firstname'];
@@ -7558,6 +7567,8 @@ class ControllerSaleOrder extends Controller {
         $customer_info['device_id'] = $customer_info['device_id'];
         $customer_info['drivername'] = $driver_name;
         $customer_info['driverphone'] = $driver_phone;
+        $customer_info['deliveryexecutivename'] = $executive_name;
+        $customer_info['deliveryexecutivephone'] = $executive_phone;
         $customer_info['vehicle'] = $order_info['vehicle_number'];
 
 
