@@ -760,11 +760,19 @@ class ControllerAccountOrder extends Controller {
             //echo "<pre>";print_r($data);die;
             
             $this->load->model('drivers/drivers');
+            $this->load->model('executives/executives');
             $order_driver_details = $this->model_drivers_drivers->getDriver($order_info['driver_id']);
             if(is_array($order_driver_details) && $order_driver_details != NULL) {
             $data['order_driver_details'] = $order_driver_details;
             } else {
             $data['order_driver_details'] = NULL;    
+            }
+            
+            $order_delivery_executive_details = $this->model_executives_executives->getExecutive($order_info['delivery_executive_id']);
+            if(is_array($order_delivery_executive_details) && $order_delivery_executive_details != NULL) {
+            $data['order_delivery_executive_details'] = $order_delivery_executive_details;
+            } else {
+            $data['order_delivery_executive_details'] = NULL;    
             }
             
             $data['vehicle_number'] = $order_info['vehicle_number'];
@@ -1208,11 +1216,19 @@ class ControllerAccountOrder extends Controller {
             }
             
             $this->load->model('drivers/drivers');
+            $this->load->model('executives/executives');
             $order_driver_details = $this->model_drivers_drivers->getDriver($order_info['driver_id']);
             if(is_array($order_driver_details) && $order_driver_details != NULL) {
             $data['order_driver_details'] = $order_driver_details;
             } else {
             $data['order_driver_details'] = NULL;    
+            }
+            
+            $order_delivery_executive_details = $this->model_executives_executives->getExecutive($order_info['delivery_executive_id']);
+            if(is_array($order_delivery_executive_details) && $order_delivery_executive_details != NULL) {
+            $data['order_delivery_executive_details'] = $order_delivery_executive_details;
+            } else {
+            $data['order_delivery_executive_details'] = NULL;    
             }
             
             $data['vehicle_number'] = $order_info['vehicle_number'];
