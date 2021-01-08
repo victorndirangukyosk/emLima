@@ -4,10 +4,15 @@ class ModelSaleCustomer extends Model {
 
     public function addCustomer($data) {
 
-// echo "<pre>";print_r($data);die;
-
-        $this->db->query('INSERT INTO ' . DB_PREFIX . "customer SET customer_group_id = '" . (int) $data['customer_group_id'] . "', firstname = '" . $this->db->escape($data['firstname']) . "', gender = '" . $this->db->escape($data['sex']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "',company_name = '" . $this->db->escape($data['company_name']) . "',company_address = '" . $this->db->escape($data['company_address']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']) ? serialize($data['custom_field']) : '') . "', newsletter = '" . (int) $data['newsletter'] . "', salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', status = '" . (int) $data['status'] . "', approved = '" . (int) $data['approved'] . "', safe = '" . (int) $data['safe'] . "', customer_category = '" . $data['customer_category'] . "', date_added = NOW()");
-        //echo "<pre>";print_r('INSERT INTO '.DB_PREFIX."customer SET customer_group_id = '".(int) $data['customer_group_id']."', firstname = '".$this->db->escape($data['firstname'])."', gender = '".$this->db->escape($data['sex'])."', lastname = '".$this->db->escape($data['lastname'])."', email = '".$this->db->escape($data['email'])."',company_name = '".$this->db->escape($data['company_name'])."',company_address = '".$this->db->escape($data['company_address'])."', telephone = '".$this->db->escape($data['telephone'])."', fax = '".$this->db->escape($data['fax'])."', custom_field = '".$this->db->escape(isset($data['custom_field']) ? serialize($data['custom_field']) : '')."', newsletter = '".(int) $data['newsletter']."', salt = '".$this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9))."', password = '".$this->db->escape(sha1($salt.sha1($salt.sha1($data['password']))))."', status = '".(int) $data['status']."', approved = '".(int) $data['approved']."', safe = '".(int) $data['safe']."', customer_category = '".$data['customer_category']."', date_added = NOW()");die;
+        //  echo "<pre>";print_r($data); 
+        //   echo "<pre>";print_r('INSERT INTO ' . DB_PREFIX . "customer SET customer_group_id = '" . (int) $data['customer_group_id'] . "', firstname = '" . $this->db->escape($data['firstname']) . "', gender = '" . $this->db->escape($data['sex']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "',company_name = '" . $this->db->escape($data['company_name']) . "',company_address = '" . $this->db->escape($data['company_address']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']) ? serialize($data['custom_field']) : '') . "', newsletter = '" . (int) $data['newsletter'] . "', salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', status = '" . (int) $data['status'] . "', approved = '" . (int) $data['approved'] . "', safe = '" . (int) $data['safe'] . "', customer_category = '" . $data['customer_category'] . "', SAP_customer_no = '" . $data['SAP_customer_no'] . "', date_added = NOW()");die;
+        if ($data['SAP_customer_no'] && NULL != $data['SAP_customer_no']) {
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "customer SET customer_group_id = '" . (int) $data['customer_group_id'] . "', firstname = '" . $this->db->escape($data['firstname']) . "', gender = '" . $this->db->escape($data['sex']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "',company_name = '" . $this->db->escape($data['company_name']) . "',company_address = '" . $this->db->escape($data['company_address']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']) ? serialize($data['custom_field']) : '') . "', newsletter = '" . (int) $data['newsletter'] . "', salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', status = '" . (int) $data['status'] . "', approved = '" . (int) $data['approved'] . "', safe = '" . (int) $data['safe'] . "', customer_category = '" . $data['customer_category'] . "', SAP_customer_no = '" . $data['SAP_customer_no'] . "', date_added = NOW()");
+        }        
+        else
+        {
+            $this->db->query('INSERT INTO ' . DB_PREFIX . "customer SET customer_group_id = '" . (int) $data['customer_group_id'] . "', firstname = '" . $this->db->escape($data['firstname']) . "', gender = '" . $this->db->escape($data['sex']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "',company_name = '" . $this->db->escape($data['company_name']) . "',company_address = '" . $this->db->escape($data['company_address']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']) ? serialize($data['custom_field']) : '') . "', newsletter = '" . (int) $data['newsletter'] . "', salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', status = '" . (int) $data['status'] . "', approved = '" . (int) $data['approved'] . "', safe = '" . (int) $data['safe'] . "', customer_category = '" . $data['customer_category'] . "', date_added = NOW()");
+        }
         $customer_id = $this->db->getLastId();
 
         if (isset($data['address'])) {
@@ -30,11 +35,17 @@ class ModelSaleCustomer extends Model {
         if (!isset($data['custom_field'])) {
             $data['custom_field'] = [];
         }
+        // echo "<pre>";print_r($data);die;
 
         $this->db->query('UPDATE ' . DB_PREFIX . "customer SET customer_group_id = '" . (int) $data['customer_group_id'] . "', firstname = '" . $this->db->escape($data['firstname']) . "', dob = '" . $data['dob'] . "', gender = '" . $this->db->escape($data['sex']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "',company_name = '" . $this->db->escape($data['company_name']) . "',company_address = '" . $this->db->escape($data['company_address']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']) ? serialize($data['custom_field']) : '') . "', newsletter = '" . (int) $data['newsletter'] . "', status = '" . (int) $data['status'] . "', approved = '" . (int) $data['approved'] . "', safe = '" . (int) $data['safe'] . "', customer_category = '" . $data['customer_category'] . "' WHERE customer_id = '" . (int) $customer_id . "'");
 
         if ($data['password'] && 'default' != $data['password']) {
             $this->db->query('UPDATE ' . DB_PREFIX . "customer SET salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', tempPassword = '" . (int) 1 . "' WHERE customer_id = '" . (int) $customer_id . "'");
+        }
+
+
+        if ($data['SAP_customer_no'] && NULL != $data['SAP_customer_no']) {
+            $this->db->query('UPDATE ' . DB_PREFIX . "customer SET SAP_customer_no = '" . $data['SAP_customer_no']. "' WHERE customer_id = '" . (int) $customer_id . "'");
         }
 
         $this->db->query('DELETE FROM ' . DB_PREFIX . "address WHERE customer_id = '" . (int) $customer_id . "'");
@@ -121,6 +132,10 @@ class ModelSaleCustomer extends Model {
             } else {
                 $implode[] = "CONCAT(c.firstname, ' ', c.lastname) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
             }
+        }
+        
+        if (!empty($data['filter_parent_customer_id']) && !empty($data['filter_parent_customer'])) {
+                $implode[] = "c.parent = '" . $this->db->escape($data['filter_parent_customer_id']) . "'";
         }
 
         if (!empty($data['filter_email'])) {
@@ -228,6 +243,48 @@ class ModelSaleCustomer extends Model {
             $sql .= ' AND ' . implode(' AND ', $implode);
         }
         $sql .= ' ORDER BY company_name';
+
+        if (isset($data['order']) && ('DESC' == $data['order'])) {
+            $sql .= ' DESC';
+        } else {
+            $sql .= ' ASC';
+        }
+
+        if (isset($data['start']) || isset($data['limit'])) {
+            if ($data['start'] < 0) {
+                $data['start'] = 0;
+            }
+
+            if ($data['limit'] < 1) {
+                $data['limit'] = 20;
+            }
+
+            $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
+        }
+
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
+
+    public function getParentCustomers($data = []) {
+        $log = new Log('error.log');
+        $parent_customer_ids = array();
+        $parent_customer_query = $this->db->query('SELECT DISTINCT parent FROM ' . DB_PREFIX . "customer WHERE parent > 0");
+        if ($parent_customer_query->num_rows > 0) {
+            $parent_customer_ids = array_column($parent_customer_query->rows, 'parent');
+            $parent_customer_ids = implode(', ', $parent_customer_ids);
+        }
+        $sql = 'SELECT *, CONCAT(firstname, " ", lastname) AS name FROM ' . DB_PREFIX . 'customer WHERE customer_id IN(' . $parent_customer_ids . ') AND  status = 1';
+
+        $implode = [];
+        if (!empty($data['filter_parent_customer'])) {
+            $implode[] = "CONCAT(firstname, ' ', lastname) LIKE '%" . $this->db->escape($data['filter_parent_customer']) . "%'";
+        }
+        if ($implode) {
+            $sql .= ' AND ' . implode(' AND ', $implode);
+        }
+        $sql .= ' ORDER BY name';
 
         if (isset($data['order']) && ('DESC' == $data['order'])) {
             $sql .= ' DESC';
@@ -362,6 +419,10 @@ class ModelSaleCustomer extends Model {
 
         if (!empty($data['filter_ip'])) {
             $implode[] = "ip = '" . $this->db->escape($data['filter_ip']) . "'";
+        }
+        
+        if (!empty($data['filter_parent_customer_id']) && !empty($data['filter_parent_customer'])) {
+            $implode[] = "parent = '" . $this->db->escape($data['filter_parent_customer_id']) . "'";
         }
 
         if (isset($data['filter_status']) && !is_null($data['filter_status'])) {

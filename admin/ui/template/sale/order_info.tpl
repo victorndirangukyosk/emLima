@@ -427,6 +427,17 @@
 			  </tr>
 			  <?php } ?>
                           <tr>
+                          <td>Delivery Executive</td>
+                          <?php 
+                          $order_delivery_executive = NULL;
+                          $order_delivery_executive_id = NULL;
+                          if(is_array($order_delivery_executive_details) && $order_delivery_executive_details != NULL) {
+                          $order_delivery_executive = $order_delivery_executive_details['firstname'].' '.$order_delivery_executive_details['lastname'];
+                          $order_delivery_executive_id = $order_delivery_executive_details['delivery_executive_id'];
+                          } ?>
+                          <td><input type="text" name="order_delivery_executive" id="order_delivery_executive" value="<?=$order_delivery_executive; ?>" data_order_id="<?=$order_id ?>" data_delivery_executive_id="<?=$order_delivery_executive_id ?>">&nbsp;<button id="save_order_delivery_executive" class="btn btn-primary" type="button"> Save </button></td>
+                          </tr>
+                          <tr>
                               <td>Driver</td>
                               <?php 
                               $order_driver = NULL;
@@ -2204,6 +2215,27 @@ $('input[name=\'order_driver\']').autocomplete({
   } 
 });
 
+$('input[name=\'order_delivery_executive\']').autocomplete({
+  'source': function(request, response) {
+    $.ajax({
+      url: 'index.php?path=executives/executives_list/autocompletebyExecutiveName&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request),
+      dataType: 'json',     
+      success: function(json) {
+        response($.map(json, function(item) {
+          return {
+            label: item['name'],
+            value: item['executive_id']
+          }
+        }));
+      }
+    });
+  },
+  'select': function(item) {
+    $('input[name=\'order_delivery_executive\']').val(item['label']);
+    $('input[name=\'order_delivery_executive\']').attr('data_delivery_executive_id',item['value']);
+  } 
+});
+
 $(document).delegate('#save_order_driver', 'click', function() {
     var driver_id = $('input[name=\'order_driver\']').attr('data_driver_id');
     var order_id = $('input[name=\'order_driver\']').attr('data_order_id');
@@ -2213,6 +2245,34 @@ $(document).delegate('#save_order_driver', 'click', function() {
     }
     $.ajax({
             url: 'index.php?path=sale/order/SaveOrUpdateOrderDriverDetails&token=<?php echo $token; ?>',
+            type: 'post',
+            data: data,
+            dataType: 'json',
+            cache: false,
+            async: false,
+            beforeSend: function() {
+            },
+            success: function(html) {
+                console.log(html);
+                setTimeout(function(){ window.location.reload(false); }, 1000);
+               
+                
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                //alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+            }
+        });
+});
+
+$(document).delegate('#save_order_delivery_executive', 'click', function() {
+    var delivery_executive_id = $('input[name=\'order_delivery_executive\']').attr('data_delivery_executive_id');
+    var order_id = $('input[name=\'order_delivery_executive\']').attr('data_order_id');
+    data = {
+            order_id : order_id,
+            delivery_executive_id : delivery_executive_id
+    }
+    $.ajax({
+            url: 'index.php?path=sale/order/SaveOrUpdateOrderDeliveryExecutiveDetails&token=<?php echo $token; ?>',
             type: 'post',
             data: data,
             dataType: 'json',

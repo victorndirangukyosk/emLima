@@ -388,7 +388,7 @@ class ControllerReportCustomerOrder extends Controller
         if (isset($this->request->get['filter_date_start'])) {
             $filter_date_start = $this->request->get['filter_date_start'];
         } else {
-            $filter_date_start = '1990-01-01';
+            $filter_date_start ="";//  '1990-01-01'default date removed
         }
 
         if (isset($this->request->get['filter_date_end'])) {

@@ -31,20 +31,8 @@
                                         <li>www.kwikbasket.com</li>
                                         <li>KRA PIN Number P051904531E</li>
                                     </ul>
-                                </div>
-                            </div>
-                            <div class="col-md-4 offset-md-4 text-right">
-                                <h5 class="bold">TAX INVOICE #<?= $order['invoice_no'] ?></h5>
-                                <?php if($order['po_number']) { ?>
-                                    <h5 class="bold">P.O. NUMBER <?= $order['po_number'] ?></h5>
-                                <?php } ?>
-                                <h5><?= $order['delivery_date'] ?></h5>
-                                
-                            </div>
-                        </div>
-                        <div class="row mb-2">
-                            <div class="col-md-4">
-                                <h5 class="bold text-uppercase mb-3">TO <?= $order['customer_company_name'] ?></h5>
+                                    <br><br>
+                                       <h5 class="bold text-uppercase mb-3">TO <?= $order['customer_company_name'] ?></h5>
                                 <ul class="list-block">
                                     <li><?= $order['shipping_name'] ?></li>
                                     <li><?= $order['telephone'] ?></li>
@@ -54,10 +42,17 @@
                                     </li>
                                 </ul>
 
+                                </div>
                             </div>
-
                             <div class="col-md-4 offset-md-4 text-right">
-                                <h6 class="bold mb-3">ORDER INFO</h6>
+                                <h5 class="bold">TAX INVOICE #<?= $order['invoice_no'] ?></h5>
+                                <?php if($order['po_number']) { ?>
+                                    <h5 class="bold">P.O. NUMBER <?= $order['po_number'] ?></h5>
+                                <?php } ?>
+                                <h5><?= $order['delivery_date'] ?></h5>
+
+                                  <br>
+                                 <h6 class="bold mb-3">ORDER INFO</h6>
                                 <ul class="list-block">
                                     <li>Order # <?= $order['order_id'] ?></li>
                                     <li>Placed On <?= $order['date_added'] ?></li>
@@ -66,13 +61,35 @@
                                 </ul>
                                 <?php if($order['driver_name'] != NULL) { ?>
                                 <br>
-                                <h6 class="bold mb-3">DELIVERY EXECUTIVE DETAILS</h6>
+                                <h6 class="bold mb-3">DRIVER DETAILS</h6>
                                 <ul class="list-block">
-                                    <li>Name <?= $order['driver_name'] ?></li>
-                                    <li>Phone <?= $order['driver_phone'] ?></li>
+                                    <li>Name : <?= $order['driver_name'] ?></li>
+                                    <li>Phone : <?= $order['driver_phone'] ?></li>
                                 </ul>
                                 <br>
                                 <?php } ?>
+
+                                <?php if($order['delivery_executive_name'] != NULL) { ?>
+ 
+                                <h6 class="bold mb-3">DELIVERY EXECUTIVE DETAILS</h6>
+                                <ul class="list-block">
+                                    <li>Name : <?= $order['delivery_executive_name'] ?></li>
+                                    <li>Phone : <?= $order['delivery_executive_phone'] ?></li>
+                                </ul>
+                                <br>
+                                <?php } ?>
+
+                                
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-md-4">
+                             
+
+                            </div>
+
+                            <div class="col-md-4 offset-md-4 text-right">
+                               
                             </div>
                         </div>
 

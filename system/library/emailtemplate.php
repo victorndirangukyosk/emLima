@@ -447,7 +447,7 @@ class Emailtemplate
     // Customer
     public function getCustomerFind()
     {
-        $result = ['{firstname}', '{lastname}', '{branchname}', '{subuserfirstname}', '{subuserlastname}', '{subuserorderid}', '{drivername}', '{driverphone}', '{vehicle}', '{date}', '{store_name}', '{email}', '{password}', '{account_href}', '{activate_href}', '{order_link}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}', '{amount}', '{transfer_type}', '{ip_address}'];
+        $result = ['{firstname}', '{lastname}', '{branchname}', '{subuserfirstname}', '{subuserlastname}', '{subuserorderid}', '{drivername}', '{driverphone}', '{vehicle}', '{deliveryexecutivename}', '{deliveryexecutivephone}', '{date}', '{store_name}', '{email}', '{password}', '{account_href}', '{activate_href}', '{order_link}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}', '{amount}', '{transfer_type}', '{ip_address}'];
 
         return $result;
     }
@@ -464,6 +464,8 @@ class Emailtemplate
             'drivername' => $data['drivername'],
             'driverphone' => $data['driverphone'],
             'vehicle' => $data['vehicle'],
+            'deliveryexecutivename' => $data['deliveryexecutivename'],
+            'deliveryexecutivephone' => $data['deliveryexecutivephone'],
             'date' => date($this->language->get('date_format_short'), strtotime(date('Y-m-d H:i:s'))),
             'store_name' => $this->config->get('config_name'),
             'email' => $data['email'],

@@ -2914,6 +2914,14 @@ class ControllerSaleOrder extends Controller {
             } else {
                 $data['order_driver_details'] = NULL;
             }
+            
+            $this->load->model('executives/executives');
+            $order_delivery_executive_details = $this->model_executives_executives->getExecutive($order_info['delivery_executive_id']);
+            if (is_array($order_delivery_executive_details) && $order_delivery_executive_details != NULL) {
+                $data['order_delivery_executive_details'] = $order_delivery_executive_details;
+            } else {
+                $data['order_delivery_executive_details'] = NULL;
+            }
 
             $data['shipping_custom_fields'] = [];
 
@@ -4319,6 +4327,17 @@ class ControllerSaleOrder extends Controller {
                 }
                 $data['driver_name'] = $driver_name;
                 $data['driver_phone'] = $driver_phone;
+                
+                $this->load->model('executives/executives');
+                $executive_info = $this->model_executives_executives->getExecutive($order_info['delivery_executive_id']);
+                $executive_name = NULL;
+                $executive_phone = NULL;
+                if ($executive_info) {
+                    $executive_name = $executive_info['firstname'] . ' ' . $executive_info['lastname'];
+                    $executive_phone = $executive_info['telephone'];
+                }
+                $data['delivery_executive_name'] = $executive_name;
+                $data['delivery_executive_phone'] = $executive_phone;
                 $store_info = $this->model_setting_setting->getSetting('config', $order_info['store_id']);
                 // if ($store_info) {
                 //     $store_address = $store_info['config_address'];
@@ -4440,6 +4459,17 @@ class ControllerSaleOrder extends Controller {
                 }
                 $data['driver_name'] = $driver_name;
                 $data['driver_phone'] = $driver_phone;
+
+                $delivery_executive_info = $this->model_executives_executives->getExecutive($order_info['delivery_executive_id']);
+                $delivery_executive_name = NULL;
+                $delivery_executive_phone = NULL;
+                if ($delivery_executive_info) {
+                    $delivery_executive_name = $delivery_executive_info['firstname'] . ' ' . $delivery_executive_info['lastname'];
+                    $delivery_executive_phone = $delivery_executive_info['telephone'];
+                }
+                $data['delivery_executive_name'] = $delivery_executive_name;
+                $data['delivery_executive_phone'] = $delivery_executive_phone;
+                
                 
                 $data['orders'][] = [
                     'order_id' => $order_id,
@@ -4472,7 +4502,9 @@ class ControllerSaleOrder extends Controller {
                     'comment' => nl2br($order_info['comment']),
                     'shipping_name_original' => $order_info['shipping_name'],
                     'driver_name' => $driver_name,
-                    'driver_phone' => '+' . $this->config->get('config_telephone_code').' '.$driver_phone
+                    'driver_phone' => '+' . $this->config->get('config_telephone_code').' '.$driver_phone,
+                    'delivery_executive_name' => $delivery_executive_name,
+                    'delivery_executive_phone' => '+' . $this->config->get('config_telephone_code').' '.$delivery_executive_phone
                 ];
             }
         }
@@ -4504,16 +4536,20 @@ class ControllerSaleOrder extends Controller {
 
         $this->load->model('sale/order');
         // $results = $this->model_sale_order->getOrders($filter_data);
-        $results = $this->model_sale_order->getNonCancelledOrders($filter_data);
+        // $results = $this->model_sale_order->getNonCancelledOrders($filter_data);
+        $results = $this->model_sale_order->getNonCancelledOrderswithPending($filter_data);
 
         $data = [];
 
         $totalOrdersAmount = 0;
         foreach ($results as $order) {
             $data['consolidation'][] = [
-                'delivery_date' => $order['delivery_date'],
-                'customer' => $order['customer'] . ' Order#' . $order['order_id'],
+                'delivery_date' => date("d-m-Y", strtotime($order['delivery_date'])),
+                'customer' => $order['customer'] ,//. ' Order#' . $order['order_id'],
                 'amount' => $order['total'],
+                'SAP_customer_no' => $order['SAP_customer_no'],
+                'invoice_no' => 'KB'.$order['order_id'],
+                'SAP_document_no' => '',
             ];
             // $totalOrdersAmount += $order['total'];
         }
@@ -4531,7 +4567,7 @@ class ControllerSaleOrder extends Controller {
             $totalOrdersAmount += $sum;
         }
         $data['consolidation']['total'] = $totalOrdersAmount;
-        // echo "<pre>";print_r($data);die;
+        //   echo "<pre>";print_r($data);die;
 
         $this->load->model('report/excel');
         $this->model_report_excel->download_consolidated_calculation_sheet_excel($data);
@@ -7470,6 +7506,39 @@ class ControllerSaleOrder extends Controller {
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
+    
+    public function SaveOrUpdateOrderDeliveryExecutiveDetails() {
+        $order_id = $this->request->post['order_id'];
+        $delivery_executive_id = $this->request->post['delivery_executive_id'];
+
+        $this->load->model('checkout/order');
+        $this->load->model('sale/order');
+        $order_info = $this->model_checkout_order->getOrder($order_id);
+        if (is_array($order_info) && $order_info != NULL) {
+            $this->model_sale_order->UpdateOrderDeliveryExecutiveDetails($order_id, $delivery_executive_id);
+        }
+
+        // Add to activity log
+        $log = new Log('error.log');
+        $this->load->model('user/user_activity');
+
+        $activity_data = [
+            'user_id' => $this->user->getId(),
+            'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+            'user_group_id' => $this->user->getGroupId(),
+            'order_id' => $order_id,
+        ];
+        $log->write('delivery executive assigned to order');
+
+        $this->model_user_user_activity->addActivity('order_delivery_executive_assigned', $activity_data);
+
+        $log->write('delivery executive assigned to order');
+
+        $json['status'] = 'success';
+        $json['message'] = 'Order Delivery Executive Details Updated!';
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
 
     public function SendMailToCustomerWithDriverDetails($order_id) {
         $log = new Log('error.log');
@@ -7478,8 +7547,10 @@ class ControllerSaleOrder extends Controller {
         $this->load->model('checkout/order');
         $this->load->model('account/customer');
         $this->load->model('drivers/drivers');
+        $this->load->model('executives/executives');
         $order_info = $this->model_checkout_order->getOrder($order_id);
         $driver_info = $this->model_drivers_drivers->getDriver($order_info['driver_id']);
+        $executive_info = $this->model_executives_executives->getExecutive($order_info['delivery_executive_id']);
         $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
         if ($order_info) {
             $store_name = $order_info['firstname'] . ' ' . $order_info['lastname'];
@@ -7492,6 +7563,13 @@ class ControllerSaleOrder extends Controller {
             $driver_name = $driver_info['firstname'] . ' ' . $driver_info['lastname'];
             $driver_phone = $driver_info['telephone'];
         }
+        
+        $executive_name = NULL;
+        $executive_phone = NULL;
+        if ($executive_info) {
+            $executive_name = $executive_info['firstname'] . ' ' . $executive_info['lastname'];
+            $executive_phone = $executive_info['telephone'];
+        }
 
         $customer_info['store_name'] = $store_name;
         $customer_info['subuserfirstname'] = $customer_info['firstname'];
@@ -7502,6 +7580,8 @@ class ControllerSaleOrder extends Controller {
         $customer_info['device_id'] = $customer_info['device_id'];
         $customer_info['drivername'] = $driver_name;
         $customer_info['driverphone'] = $driver_phone;
+        $customer_info['deliveryexecutivename'] = $executive_name;
+        $customer_info['deliveryexecutivephone'] = $executive_phone;
         $customer_info['vehicle'] = $order_info['vehicle_number'];
 
 
@@ -7542,5 +7622,46 @@ class ControllerSaleOrder extends Controller {
             $ret = $this->emailtemplate->sendmessage($customer_info['telephone'], $sms_message);
         }
     }
+    
+    public function SaveOrUpdateOrderDriverVehicleDetails() {
+        $order_id = $this->request->post['order_id'];
+        $driver_id = $this->request->post['driver_id'];
+        $vehicle_number = $this->request->post['vehicle_number'];
+        $delivery_executive_id = $this->request->post['delivery_executive_id'];
+        /* $log = new Log('error.log');
+          $log->write('SaveOrUpdateOrderDriverDetails');
+          $log->write($this->request->post['driver_id']);
+          $log->write($this->request->post['order_id']); */
 
+        $this->load->model('checkout/order');
+        $this->load->model('sale/order');
+        $order_info = $this->model_checkout_order->getOrder($order_id);
+        if (is_array($order_info) && $order_info != NULL) {
+            $this->model_sale_order->UpdateOrderDriverDetails($order_id, $driver_id);
+            $this->model_sale_order->UpdateOrderVehicleDetails($order_id, $vehicle_number);
+            $this->model_sale_order->UpdateOrderDeliveryExecutiveDetails($order_id, $delivery_executive_id);
+        }
+
+        $this->SendMailToCustomerWithDriverDetails($order_id);
+        // Add to activity log
+        $log = new Log('error.log');
+        $this->load->model('user/user_activity');
+
+        $activity_data = [
+            'user_id' => $this->user->getId(),
+            'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+            'user_group_id' => $this->user->getGroupId(),
+            'order_id' => $order_id,
+        ];
+        $log->write('driver assigned to order');
+
+        $this->model_user_user_activity->addActivity('order_driver_assigned', $activity_data);
+
+        $log->write('driver assigned to order');
+
+        $json['status'] = 'success';
+        $json['message'] = 'Order Driver Details Updated!';
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }    
 }

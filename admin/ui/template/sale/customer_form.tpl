@@ -338,6 +338,13 @@
                                     <input type="text" value="<?php echo $source; ?>" readonly="" class="form-control" />
                                 </div>
                         </div>
+                           <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-SAP_customer_no">SAP Customer Number</label>
+                                <div class="col-sm-10">
+                                    <input type="text" maxlength=30  name="SAP_customer_no" value="<?php echo $SAP_customer_no; ?>"  placeholder="SAP Custumer Number"  id="input-SAP_customer_no" class="form-control" />
+                                </div>
+                        </div>
+
 
                       <?php if(count($referee) > 0) { ?>
                           <div class="form-group">
