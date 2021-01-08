@@ -118,8 +118,9 @@ class ControllerReportCustomerOrderCount extends Controller
                     // $data['customers'][$i][$monthname]=number_format($totalpermonth['Total'],2)??0;
                     $data['customers'][$i][$monthname]=number_format($totalpermonth['TotalOrders'],0)??0;
                }
-                $data['customers'][$i]['Total']= number_format($OrdersValue);
-                $data['customers'][$i]['Order Count']= $totalOrders;
+                $data['customers'][$i]['Total Order Count']= $totalOrders;
+                $data['customers'][$i]['Total Order Value']= number_format($OrdersValue);
+
                 if($OrdersValue>0 && $totalOrders>0)
                 {
                 $data['customers'][$i]['Avg. Order Value']= number_format(($OrdersValue/$totalOrders),2);
@@ -343,8 +344,9 @@ class ControllerReportCustomerOrderCount extends Controller
                     // $data['customers'][$i][$monthname]=number_format($totalpermonth['Total'],2);
                     $data['customers'][$i][$monthname]=number_format($totalpermonth['TotalOrders'],2);
                }
-                $data['customers'][$i]['Total']=number_format($OrdersValue);
-                $data['customers'][$i]['Order Count']= $totalOrders;
+               $data['customers'][$i]['Total Order Count']= $totalOrders;
+
+                $data['customers'][$i]['Total Order Value']=number_format($OrdersValue);
                 if($OrdersValue>0 && $totalOrders>0)
                 {
                 $data['customers'][$i]['Avg. Order Value']= number_format(($OrdersValue/$totalOrders),2);
