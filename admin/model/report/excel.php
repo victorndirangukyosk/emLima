@@ -3550,7 +3550,7 @@ class ModelReportExcel extends Model {
         $this->load->library('iofactory');
 
         $this->load->language('report/income');
-        $this->load->model('executive/executive');
+        $this->load->model('executives/executives');
         $rows = $this->model_executives_executives->getExecutives($data);
 
         //echo "<pre>";print_r($rows);die;
@@ -3581,7 +3581,7 @@ class ModelReportExcel extends Model {
             ];
 
             //Company name, address
-            $objPHPExcel->getActiveSheet()->mergeCells('A1:G2');
+            $objPHPExcel->getActiveSheet()->mergeCells('A1:F2');
             $objPHPExcel->getActiveSheet()->setCellValue('A1', 'Executives ');
             $objPHPExcel->getActiveSheet()->getStyle('A3:G3')->applyFromArray(['font' => ['bold' => true], 'color' => [
                     'rgb' => '4390df',
@@ -3606,9 +3606,9 @@ class ModelReportExcel extends Model {
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 4, 'Email');
 
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 4, 'Telephone');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 4, 'Driving Licence');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 4, 'Status');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, 4, 'Date Added');
+            //$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 4, 'Driving Licence');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 4, 'Status');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 4, 'Date Added');
 
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 4)->applyFromArray($title);
@@ -3616,7 +3616,7 @@ class ModelReportExcel extends Model {
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(3, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(4, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(5, 4)->applyFromArray($title);
-            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(6, 4)->applyFromArray($title);
+            //$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(6, 4)->applyFromArray($title);
 
 
             // Fetching the table data
@@ -3627,10 +3627,10 @@ class ModelReportExcel extends Model {
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['email']);
 
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['telephone']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['driving_licence']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $result['status'] ? 'Enabled' : 'Disabled');
+                //$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['driving_licence']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['status'] ? 'Enabled' : 'Disabled');
 
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, date($this->language->get('date_format_short'), strtotime($result['date_added'])));
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, date($this->language->get('date_format_short'), strtotime($result['date_added'])));
                 ++$row;
             }
 
