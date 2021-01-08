@@ -635,7 +635,7 @@ class ControllerExecutivesExecutivesList extends Controller {
                 $this->error['warning'] = $this->language->get('error_exists');
             }
         } else {
-            if ($executive_info && ($this->request->get['executive_id'] != $executive_info['executive_id'])) {
+            if ($executive_info && ($this->request->get['executive_id'] != $executive_info['delivery_executive_id'])) {
                 $this->error['warning'] = $this->language->get('error_exists');
             }
         }
