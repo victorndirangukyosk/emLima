@@ -234,15 +234,15 @@ class ControllerExecutivesExecutivesList extends Controller {
             $country_code = '+' . $this->config->get('config_telephone_code');
 
             $data['executives'][] = [
-                'executive_id' => $result['executive_id'],
+                'executive_id' => $result['delivery_executive_id'],
                 'name' => $result['name'],
                 'email' => $result['email'],
-                'driving_licence' => $result['driving_licence'],
+                /*'driving_licence' => $result['driving_licence'],*/
                 'telephone' => $country_code . $result['telephone'],
                 'status' => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
                 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
-                'edit' => $this->url->link('executives/executives_list/edit', 'token=' . $this->session->data['token'] . '&executive_id=' . $result['executive_id'] . $url, 'SSL'),
-                'executive_view' => $this->url->link('executives/executives_list/view_executive', 'token=' . $this->session->data['token'] . '&executive_id=' . $result['executive_id'] . $url, 'SSL'),
+                'edit' => $this->url->link('executives/executives_list/edit', 'token=' . $this->session->data['token'] . '&executive_id=' . $result['delivery_executive_id'] . $url, 'SSL'),
+                'executive_view' => $this->url->link('executives/executives_list/view_executive', 'token=' . $this->session->data['token'] . '&executive_id=' . $result['delivery_executive_id'] . $url, 'SSL'),
             ];
         }
 
@@ -259,7 +259,7 @@ class ControllerExecutivesExecutivesList extends Controller {
 
         $data['column_name'] = $this->language->get('column_name');
         $data['column_email'] = $this->language->get('column_email');
-        $data['column_driving_licence'] = $this->language->get('column_driving_licence');
+        /*$data['column_driving_licence'] = $this->language->get('column_driving_licence');*/
         $data['column_telephone'] = $this->language->get('column_telephone');
         $data['column_customer_group'] = $this->language->get('column_customer_group');
         $data['column_status'] = $this->language->get('column_status');
@@ -268,7 +268,7 @@ class ControllerExecutivesExecutivesList extends Controller {
 
         $data['entry_name'] = $this->language->get('entry_name');
         $data['entry_email'] = $this->language->get('entry_email');
-        $data['entry_driving_licence'] = $this->language->get('entry_driving_licence');
+        /*$data['entry_driving_licence'] = $this->language->get('entry_driving_licence');*/
 
 
         $data['entry_telephone'] = $this->language->get('entry_telephone');
@@ -420,7 +420,7 @@ class ControllerExecutivesExecutivesList extends Controller {
         $data['entry_firstname'] = $this->language->get('entry_firstname');
         $data['entry_lastname'] = $this->language->get('entry_lastname');
         $data['entry_email'] = $this->language->get('entry_email');
-        $data['entry_driving_licence'] = $this->language->get('entry_driving_licence');
+        /*$data['entry_driving_licence'] = $this->language->get('entry_driving_licence');*/
 
 
         $data['entry_telephone'] = $this->language->get('entry_telephone');
@@ -474,11 +474,11 @@ class ControllerExecutivesExecutivesList extends Controller {
             $data['error_email'] = '';
         }
 
-        if (isset($this->error['driving_licence'])) {
+        /*if (isset($this->error['driving_licence'])) {
             $data['error_driving_licence'] = $this->error['driving_licence'];
         } else {
             $data['error_driving_licence'] = '';
-        }
+        }*/
 
         if (isset($this->error['telephone'])) {
             $data['error_telephone'] = $this->error['telephone'];
@@ -573,13 +573,13 @@ class ControllerExecutivesExecutivesList extends Controller {
             $data['email'] = '';
         }
 
-        if (isset($this->request->post['driving_licence'])) {
+        /*if (isset($this->request->post['driving_licence'])) {
             $data['driving_licence'] = $this->request->post['driving_licence'];
         } elseif (!empty($executive_info)) {
             $data['driving_licence'] = $executive_info['driving_licence'];
         } else {
             $data['driving_licence'] = '';
-        }
+        }*/
 
         if (isset($this->request->post['telephone'])) {
             $data['telephone'] = $this->request->post['telephone'];
@@ -624,9 +624,9 @@ class ControllerExecutivesExecutivesList extends Controller {
             $this->error['email'] = $this->language->get('error_email');
         }
 
-        if ((utf8_strlen($this->request->post['driving_licence']) < 1) || (utf8_strlen(trim($this->request->post['driving_licence'])) > 32)) {
+        /*if ((utf8_strlen($this->request->post['driving_licence']) < 1) || (utf8_strlen(trim($this->request->post['driving_licence'])) > 32)) {
             $this->error['driving_licence'] = $this->language->get('error_driving_licence');
-        }
+        }*/
 
         $executive_info = $this->model_executives_executives->getExecutiveByEmail($this->request->post['email']);
 
@@ -756,7 +756,7 @@ class ControllerExecutivesExecutivesList extends Controller {
                     'firstname' => $result['firstname'],
                     'lastname' => $result['lastname'],
                     'email' => $result['email'],
-                    'driving_licence' => $result['driving_licence'],
+                    /*'driving_licence' => $result['driving_licence'],*/
                     'telephone' => $result['telephone'],
                 ];
             }
