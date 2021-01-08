@@ -5162,6 +5162,124 @@ class ModelReportExcel extends Model {
         }
     }
 
+
+    public function download_customer_order_count_excel($data) {
+        //	    echo "<pre>";print_r($data);die;
+
+        $this->load->library('excel');
+        $this->load->library('iofactory');
+
+        try {
+            set_time_limit(2500);
+
+            $objPHPExcel = new PHPExcel();
+            $objPHPExcel->getProperties()
+                    ->setTitle('Customer Orders Count')
+                    ->setDescription('none');
+
+            // Consolidated Customer Orders
+            $objPHPExcel->setActiveSheetIndex(0);
+            $objPHPExcel->getActiveSheet()->setTitle('Orders Count');
+
+            $title = [
+                'font' => [
+                    'bold' => true,
+                    'color' => [
+                        'rgb' => 'FFFFFF',
+                    ],
+                ],
+                'fill' => [
+                    'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                    'startcolor' => [
+                        'rgb' => '51AB66',
+                    ],
+                ],
+            ];
+
+            $sheet_title = 'Customer Orders Count';
+            // $sheet_title0 = 'Company Name: ' . $data['consolidation'][0]['company'];
+            // $sheet_subtitle = 'Customer Name: ' . $data['consolidation'][0]['customer'] . ' #  ' . 'Order Id :' . $data['consolidation'][0]['orderid'];
+            // $sheet_subtitle1 = 'Order Date: ' . $data['consolidation'][0]['date'];
+
+            // $objPHPExcel->getActiveSheet()->mergeCells('A1:D1');
+            // $objPHPExcel->getActiveSheet()->mergeCells('A2:D2');
+            // $objPHPExcel->getActiveSheet()->mergeCells('A3:D3');
+            // $objPHPExcel->getActiveSheet()->mergeCells('A4:D4');
+            $objPHPExcel->getActiveSheet()->setCellValue('A1', $sheet_title);
+            // $objPHPExcel->getActiveSheet()->setCellValue('A2', $sheet_title0);
+            // $objPHPExcel->getActiveSheet()->setCellValue('A3', $sheet_subtitle);
+            // $objPHPExcel->getActiveSheet()->setCellValue('A4', $sheet_subtitle1);
+            $objPHPExcel->getActiveSheet()->getStyle('A1:D1')->applyFromArray(['font' => ['bold' => true], 'color' => [
+                    'rgb' => '51AB66',
+            ]]);
+            // $objPHPExcel->getActiveSheet()->getStyle('A2:D2')->applyFromArray(['font' => ['bold' => true], 'color' => [
+            //         'rgb' => '51AB66',
+            // ]]);
+            // $objPHPExcel->getActiveSheet()->getStyle('A3:D3')->applyFromArray(['font' => ['bold' => true], 'color' => [
+            //         'rgb' => '51AB66',
+            // ]]);
+            // $objPHPExcel->getActiveSheet()->getStyle('A4:D4')->applyFromArray(['font' => ['bold' => true], 'color' => [
+            //         'rgb' => '51AB66',
+            // ]]);
+
+            $objPHPExcel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $objPHPExcel->getActiveSheet()->getStyle('B:Z')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+            
+               foreach(range('A','L') as $columnID) {
+            	   $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+            		   ->setAutoSize(true);
+               }
+            // $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(60);
+            $cellid=0;
+            foreach ($data[0] as $h_key=>$h_value) {               
+                // echo "<pre>";print_r($h_key);die;
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($cellid, 3, $h_key);
+                $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow($cellid, 3)->applyFromArray($title);
+
+                $cellid++;
+            }             
+            $row = 4;
+            
+            foreach ($data as  $b_key=>$b_value) {
+                $cellid=0;
+                foreach ($b_value as  $bb_key=>$bb_value) {
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($cellid, $row, $bb_value);
+                //$Amount = $Amount + $order['total_updatedvalue'];
+                $cellid++;
+                }
+                ++$row;
+            }
+            // $Amount = str_replace('KES', ' ', $this->currency->format($Amount));
+            // $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, $row)->applyFromArray($title);
+            // $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(3, $row)->applyFromArray($title);
+          
+
+            $objPHPExcel->setActiveSheetIndex(0);
+
+            $filename = 'Customer_Orders_Count.xlsx';
+
+            $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header('Content-Disposition: attachment;filename="' . $filename . '"');
+            header('Cache-Control: max-age=0');
+            $objWriter->save('php://output');
+            exit;
+        } catch (Exception $e) {
+            //            echo "<pre>";print_r($e);
+            $errstr = $e->getMessage();
+            $errline = $e->getLine();
+            $errfile = $e->getFile();
+            $errno = $e->getCode();
+            $this->session->data['export_import_error'] = ['errstr' => $errstr, 'errno' => $errno, 'errfile' => $errfile, 'errline' => $errline];
+            if ($this->config->get('config_error_log')) {
+                $this->log->write('PHP ' . get_class($e) . ':  ' . $errstr . ' in ' . $errfile . ' on line ' . $errline);
+            }
+
+            return;
+        }
+    }
+
+
     public function download_customer_order_excel($data) {
         $this->load->library('excel');
         $this->load->library('iofactory');
