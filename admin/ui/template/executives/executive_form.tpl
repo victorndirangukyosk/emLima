@@ -76,7 +76,7 @@
                           <?php  } ?>
                         </div>
                       </div>
-                      <div class="form-group required">
+                      <!--<div class="form-group required">
                         <label class="col-sm-2 control-label" for="input-driving-licence"><?php echo $entry_driving_licence; ?></label>
                         <div class="col-sm-10">
                           <input type="text" name="driving_licence" value="<?php echo $driving_licence; ?>" placeholder="<?php echo $entry_driving_licence; ?>" id="input-driving-licence" class="form-control" />
@@ -84,7 +84,7 @@
                           <div class="text-danger"><?php echo $error_driving_licence; ?></div>
                           <?php  } ?>
                         </div>
-                      </div>
+                      </div>-->
 
                       <!-- start -->
                       

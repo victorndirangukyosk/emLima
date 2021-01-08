@@ -3,13 +3,13 @@
 class ModelExecutivesExecutives extends Model {
 
     public function addExecutive($data) {
-        $this->db->query('INSERT INTO ' . DB_PREFIX . "delivery_executives SET firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', status = '" . (int) $data['status'] . "', driving_licence = '" . $data['driving_licence'] . "', date_added = NOW()");
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "delivery_executives SET firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', status = '" . (int) $data['status'] . "', date_added = NOW()");
         $executive_id = $this->db->getLastId();
         return $executive_id;
     }
 
     public function editExecutive($executive_id, $data) {
-        $this->db->query('UPDATE ' . DB_PREFIX . "delivery_executives SET firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', status = '" . (int) $data['status'] . "', driving_licence = '" . $data['driving_licence'] . "' WHERE delivery_executive_id = '" . (int) $executive_id . "'");
+        $this->db->query('UPDATE ' . DB_PREFIX . "delivery_executives SET firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', status = '" . (int) $data['status'] . "' WHERE delivery_executive_id = '" . (int) $executive_id . "'");
     }
 
     public function editToken($customer_id, $token) {
