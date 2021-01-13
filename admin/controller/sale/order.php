@@ -4550,6 +4550,7 @@ class ControllerSaleOrder extends Controller {
                 'SAP_customer_no' => $order['SAP_customer_no'],
                 'invoice_no' => 'KB'.$order['order_id'],
                 'SAP_document_no' => '',
+                'order_status' => $order['status'],
             ];
             // $totalOrdersAmount += $order['total'];
         }
