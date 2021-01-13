@@ -99,7 +99,7 @@ class ControllerDashboardAccountManagerCharts extends Controller
         $data['link_orders'] = $this->url->link('sale/order', 'token='.$this->session->data['token'], 'SSL');
         $data['link_affiliates'] = $this->url->link('sale/affiliate', 'token='.$this->session->data['token'], 'SSL');
         $data['link_affiliate_waiting'] = $this->url->link('sale/affiliate', 'token='.$this->session->data['token'].'&filter_approved=0', 'SSL');
-
+        
         return $this->load->view('dashboard/accountmanagercharts.tpl', $data);
     }
 
@@ -236,7 +236,7 @@ class ControllerDashboardAccountManagerCharts extends Controller
         $this->load->language('dashboard/charts');
         $this->load->model('dashboard/charts');
 
-        $json = $this->getChartData('getCustomers');
+        $json = $this->getChartData('getAccountManagerCustomers');
         $json['order']['label'] = $this->language->get('text_customer');
 
         $this->response->setOutput(json_encode($json));

@@ -570,6 +570,19 @@ class ControllerAccountAccount extends Controller
         $this->request->post['parent'] = $this->customer->getId();
         $this->request->post['source'] = 'WEB';
         $sub_customer_id = $this->model_account_customer->addCustomer($this->request->post, true);
+        
+        if ($this->request->post['assign_order_approval'] == 'head_chef') {
+        $log = new Log('error.log');
+        $log->write('sub customer head_chef');
+        $this->model_account_customer->UpdateOrderApprovalAccess($this->customer->getId(), $sub_customer_id, 1, 'head_chef');
+        }
+        
+        if ($this->request->post['assign_order_approval'] == 'procurement_person') {
+        $log = new Log('error.log');
+        $log->write('sub customer procurement_person');
+        $this->model_account_customer->UpdateOrderApprovalAccess($this->customer->getId(), $sub_customer_id, 1, 'procurement_person');
+        }
+        
         $_SESSION['success_msg'] = 'User added successfully!';
 
         // Add to activity log

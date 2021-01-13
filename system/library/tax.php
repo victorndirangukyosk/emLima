@@ -45,7 +45,13 @@ final class Tax
     }
 
     public function setShippingAddress($city_id)
-    {
+    {   
+        if($this->config->get('tax_status') == 1) {
+            
+        if($city_id == NULL || $city_id <= 0) {
+        $city_id = 32;    
+        }   
+        
         $sql = 'SELECT tr1.tax_class_id, tr2.tax_rate_id, tr2.name, tr2.rate, tr2.type, tr1.priority FROM '.DB_PREFIX.'tax_rule tr1 ';
         $sql .= 'LEFT JOIN '.DB_PREFIX.'tax_rate tr2 ON (tr1.tax_rate_id = tr2.tax_rate_id) ';
         $sql .= 'INNER JOIN '.DB_PREFIX.'tax_rate_to_customer_group tr2cg ON (tr2.tax_rate_id = tr2cg.tax_rate_id) ';
@@ -54,9 +60,7 @@ final class Tax
         $sql .= "AND c.city_id = '".(int) $city_id."' ORDER BY tr1.priority ASC";
 
         $tax_query = $this->db->query($sql);
-
         $this->tax_rates = [];
-
         foreach ($tax_query->rows as $result) {
             $this->tax_rates[$result['tax_class_id']][$result['tax_rate_id']] = [
                 'tax_rate_id' => $result['tax_rate_id'],
@@ -64,8 +68,13 @@ final class Tax
                 'rate' => $result['rate'],
                 'type' => $result['type'],
                 'priority' => $result['priority'],
+
             ];
+
         }
+    } else {
+    $this->tax_rates = [];    
+    }
     }
 
     public function calculate($value, $tax_class_id, $calculate = true)

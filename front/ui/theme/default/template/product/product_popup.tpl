@@ -1,6 +1,3 @@
-
-
-
 <div class="productModal_popup" id="testID"  style="width: 350px;">
     <div class="modal fade product-details" id="popupmodal" id="store-cart-side" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
         <div class="modal-dialog modal-lg" role="document" style="margin-top: 10rem;">

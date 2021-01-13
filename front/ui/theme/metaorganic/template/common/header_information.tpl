@@ -135,7 +135,7 @@ $(document).ready(function() {
 
                              <div class="newset" style="margin-top: 20px;"><a class="btn" href="<?= $dashboard ?>" > <span ><?= $full_name ?></span> </a>
 
-                           <div class="dropdownset" style="display:none; margin-top:-1px;">
+                           <div class="dropdownset" style="display:block; margin-top:-1px;">
                             <div class="dropdownsetnew" style="margin-top: 10px;"><a class="header__upper-deck-item-link"
                                 href="<?= $dashboard ?>"><i class="fa fa-user"></i>Dashboard &nbsp;<span class="badge badge-pill badge-light">New</span>
                                 </a></div>
@@ -446,9 +446,9 @@ width: 550px;
      margin-right: -220px;
  }
 
- .clear-cart {
-       margin-right: -180px;
- }
+ //.clear-cart {
+      // margin-right: -180px;
+ //}
 
 
 </style>

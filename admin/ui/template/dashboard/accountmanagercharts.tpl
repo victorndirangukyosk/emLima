@@ -3,7 +3,7 @@
     <h3 class="panel-title">
         <i class="fa fa-bar-chart-o"></i> <?php echo $heading_title; ?></h3>
       <div class="pull-right" id="chart-date-range">
-       
+
           <div id="block-range" class="btn-group">
            
 
@@ -50,7 +50,7 @@
               <dd class="data_value size_l"><span id="orders_score"></span></dd>
           </dl>
 
-          <?php if(!$this->user->isAccountManager()) { ?>
+          <?php if($this->user->isAccountManager() > 0) { ?>
                     <dl onclick="getChart(this, 'customers');" class="col-xs-4 col-lg-4 passive" style="background-color: #d9534f">
                       <dt><?php echo $text_customer . ' Onboarded' ; ?></dt>
                       <dd class="data_value size_l"><span id="customers_score"></span></dd>
@@ -684,7 +684,7 @@ function customers() {
 
     $.ajax({
         type: 'get',
-        url: 'index.php?path=dashboard/charts/customers&start='+ start_date +'&end='+ end_date +'&token=<?php echo $token; ?>&range=' + block_range,
+        url: 'index.php?path=dashboard/accountmanagercharts/customers&start='+ start_date +'&end='+ end_date +'&token=<?php echo $token; ?>&range=' + block_range,
         dataType: 'json',
         success: function(json) {
             var option = {

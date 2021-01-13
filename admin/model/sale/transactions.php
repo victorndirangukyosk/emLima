@@ -76,11 +76,14 @@ class ModelSaleTransactions extends Model
             $sql .= " AND o.order_ids LIKE '".$data['filter_order_id']."%'";
         }
         if (!empty($data['filter_customer'])) {
-            $sql .= " AND c.firstname LIKE '%".$this->db->escape($data['filter_customer'])."%'";
+            $sql .= " AND CONCAT(c.firstname, ' ', c.lastname)  LIKE '%".$this->db->escape($data['filter_customer'])."%'";
         }
-        if (!empty($data['filter_customer'])) {
-            $sql .= " AND c.lastname LIKE '%".$this->db->escape($data['filter_customer'])."%'";
-        }
+        // if (!empty($data['filter_customer'])) {
+        //     $sql .= " AND c.firstname LIKE '%".$this->db->escape($data['filter_customer'])."%'";
+        // }
+        // if (!empty($data['filter_customer'])) {
+        //     $sql .= " AND c.lastname LIKE '%".$this->db->escape($data['filter_customer'])."%'";
+        // }
         if (!empty($data['filter_date_added'])) {
             $sql .= " AND DATE(o.date_added) = DATE('".$this->db->escape($data['filter_date_added'])."')";
         }
@@ -91,5 +94,34 @@ class ModelSaleTransactions extends Model
         $query = $this->db->query($sql);
 
         return $query->row['total'];
+    }
+
+    public function getTotalTransactionsAndGrandTotal($data = [])
+    {
+        $sql = 'SELECT COUNT(*) as total,sum(o.total) as GrandTotal FROM `'.DB_PREFIX.'transaction_details` o inner join '.DB_PREFIX.'customer c on(c.customer_id = o.customer_id)';
+
+        if (!empty($data['filter_order_id'])) {
+            $sql .= " AND o.order_ids LIKE '".$data['filter_order_id']."%'";
+        }
+        if (!empty($data['filter_customer'])) {
+            $sql .= " AND CONCAT(c.firstname, ' ', c.lastname)  LIKE '%".$this->db->escape($data['filter_customer'])."%'";
+        }
+        // if (!empty($data['filter_customer'])) {
+        //     $sql .= " AND c.firstname LIKE '%".$this->db->escape($data['filter_customer'])."%'";
+        // }
+        // if (!empty($data['filter_customer'])) {
+        //     $sql .= " AND c.lastname LIKE '%".$this->db->escape($data['filter_customer'])."%'";
+        // }
+        if (!empty($data['filter_date_added'])) {
+            $sql .= " AND DATE(o.date_added) = DATE('".$this->db->escape($data['filter_date_added'])."')";
+        }
+        if (!empty($data['filter_total'])) {
+            $sql .= " AND o.total = '".(float) $data['filter_total']."'";
+        }
+
+        $query = $this->db->query($sql);
+
+        // return $query->row['total'];
+        return $query->row;
     }
 }

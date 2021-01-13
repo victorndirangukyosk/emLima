@@ -38,7 +38,7 @@
                             <div class="form-group required">
                                 <label class="col-sm-2 control-label" for="input-consolidatedorder">Consolidated Orders</label>
                                 <div class="col-sm-10">
-                                    <input type="Email" name="config_consolidatedorder" value="<?php echo $config_consolidatedorder; ?>" placeholder="Email ID" id="input-consolidatedorder" class="form-control" />
+                                    <input type="text" name="config_consolidatedorder" value="<?php echo $config_consolidatedorder; ?>" placeholder="Email ID" id="input-consolidatedorder" class="form-control" />
                                     <?php if ($error_consolidatedorder) { ?>
                                     <div class="text-danger"><?php echo $error_consolidatedorder; ?></div>
                                     <?php } ?>
@@ -48,9 +48,19 @@
                             <div class="form-group required">
                                 <label class="col-sm-2 control-label" for="input-careers">Careers</label>
                                 <div class="col-sm-10">
-                                    <input type="email" name="config_careers" value="<?php echo $config_careers; ?>" placeholder="Email ID" id="input-careers" class="form-control" />
+                                    <input type="text" name="config_careers" value="<?php echo $config_careers; ?>" placeholder="Email ID" id="input-careers" class="form-control" />
                                     <?php if ($error_careers) { ?>
                                     <div class="text-danger"><?php echo $error_careers; ?></div>
+                                    <?php } ?>
+                                </div>
+                            </div> 
+
+                             <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-stockout">Stock Out</label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="config_stockout" value="<?php echo $config_stockout; ?>" placeholder="Email ID" id="input-stockout" class="form-control" />
+                                    <?php if ($error_stockout) { ?>
+                                    <div class="text-danger"><?php echo $error_stockout; ?></div>
                                     <?php } ?>
                                 </div>
                             </div> 

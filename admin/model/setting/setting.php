@@ -138,6 +138,8 @@ class ModelSettingSetting extends Model
         $this->db->query('UPDATE '.DB_PREFIX."setting_email SET `value` = '".$this->db->escape($data['config_consolidatedorder'])."' WHERE `code` = 'consolidatedorder' AND `key` =  'consolidatedorder' ");
         if($this->db->escape($data['config_careers']))         
         $this->db->query('UPDATE '.DB_PREFIX."setting_email SET `value` = '".$this->db->escape($data['config_careers'])."' WHERE `code` = 'careers' AND `key` =  'careers' ");
+        if($this->db->escape($data['config_stockout']))         
+        $this->db->query('UPDATE '.DB_PREFIX."setting_email SET `value` = '".$this->db->escape($data['config_stockout'])."' WHERE `code` = 'stockout' AND `key` =  'stockout' ");
        
     }
 
@@ -145,7 +147,7 @@ class ModelSettingSetting extends Model
     public function getEmailSettings()
     {
         
-        $query = $this->db->query('SELECT * FROM '.DB_PREFIX."setting_email WHERE  `code` =  'consolidatedorder' or `code` =  'careers' ");
+        $query = $this->db->query('SELECT * FROM '.DB_PREFIX."setting_email WHERE  `code` =  'consolidatedorder' or `code` =  'careers'  or `code` =  'stockout' ");
        
         return $query->rows;
     }
@@ -155,7 +157,7 @@ class ModelSettingSetting extends Model
     {
         
         $query = $this->db->query('SELECT value FROM '.DB_PREFIX."setting_email WHERE  `code` =  '".$code."'   ");
-        //   echo "<pre>";print_r($query->row[value]);die;
+        //echo "<pre>";print_r($query->row[value]);die;
         return $query->row[value];
     }
 }

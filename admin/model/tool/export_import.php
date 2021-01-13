@@ -2980,6 +2980,7 @@ class ModelToolExportImport extends Model
         //echo '<pre>';print_r($data);exit;
         // $cache_price_data = array();
         // load the worksheet cells and store them to the database
+        $customer_categoy_price = [];
         $first_row = [];
         $i = 0;
         $k = $data->getHighestRow();
@@ -3018,9 +3019,25 @@ class ModelToolExportImport extends Model
             }*/
             $this->addUpdateCategoryProductPrice($product_store_id, $store_id, $price_category, $dataProduct);
             //$this->storeProductIntoDatabase( $product, $languages, $product_fields, $exist_table_product_tag, $exist_meta_title, $layout_ids, $available_store_ids, $manufacturers, $weight_class_ids, $length_class_ids, $url_alias_ids,$incremental );
+            $customer_categoy_price[] = $price_category;
         }
         //exit;
         $this->cacheProductPrices($store_id);
+        
+        $customer_categoy_price = array_unique($customer_categoy_price);
+        $log = new Log('error.log');
+        $log->write($customer_categoy_price);
+        if (is_array($customer_categoy_price) && count($customer_categoy_price) > 0) {
+            foreach ($customer_categoy_price as $customer_categoy_pri) {
+                $log->write($customer_categoy_pri);
+                $this->load->model('account/customer');
+                $customer_device_info = $this->model_account_customer->getCustomerByCategoryPrice($customer_categoy_pri);
+                $log->write($customer_device_info);
+                if (is_array($customer_device_info) && $customer_device_info != NULL) {
+                    $this->model_account_customer->sendCustomerByCategoryPriceNotification($customer_device_info);
+                }
+            }
+        }
         // $this->cache->delete('category_price_data');
         // $this->cache->set('category_price_data',$cache_price_data);
         return true;
@@ -3039,7 +3056,7 @@ class ModelToolExportImport extends Model
         //echo "<pre>";print_r($result);
         if (count($result->rows)) {
             /* Update */
-            $sql = 'UPDATE `'.DB_PREFIX."product_category_prices` SET price='".$data['price']."',product_name='".$data['product_name']."' WHERE product_store_id = '".$product_store_id."' AND price_category = '".$price_category."' AND  store_id = '".$store_id."' ";
+            $sql = 'UPDATE `'.DB_PREFIX."product_category_prices` SET price='".$data['price']."',product_name='".$data['product_name']."',status='".$data['status']."' WHERE product_store_id = '".$product_store_id."' AND price_category = '".$price_category."' AND  store_id = '".$store_id."' ";
             $this->db->query($sql);
         //echo "<pre>";print_r($sql);
         } else {

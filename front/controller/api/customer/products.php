@@ -19,6 +19,10 @@ class ControllerApiCustomerProducts extends Controller
                 $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->request->get['customer_id']. "' AND status = '1'");
             }
             $this->session->data['customer_category'] = isset($customer_details->row['customer_category']) ? $customer_details->row['customer_category'] : null;
+            $log = new Log('error.log');
+            $log->write('Session category check');
+            $log->write($this->session->data['customer_category']);
+            $log->write('Session category check');
 
             //  echo "<pre>";print_r($_SESSION['customer_category']);die;
 
@@ -1556,9 +1560,10 @@ class ControllerApiCustomerProducts extends Controller
 
         foreach ($results as $result) {
             // if qty less then 1 dont show product
-            if ($result['quantity'] <= 0) {
-                continue;
-            }
+            //REMOVED QUANTITY CHECK CONDITION
+            // if ($result['quantity'] <= 0) {
+            //     continue;
+            // }
 
             if (file_exists(DIR_IMAGE.$result['image'])) {
                 $image = $this->model_tool_image->resize($result['image'], $this->config->get('config_app_image_product_width'), $this->config->get('config_app_image_product_height'));
@@ -1719,9 +1724,10 @@ class ControllerApiCustomerProducts extends Controller
 
         foreach ($results as $result) {
             // if qty less then 1 dont show product
-            if ($result['quantity'] <= 0) {
-                continue;
-            }
+            //REMOVED QUANTITY CHECK CONDITION
+            // if ($result['quantity'] <= 0) {
+            //     continue;
+            // }
 
             if (file_exists(DIR_IMAGE.$result['image'])) {
                 $image = $this->model_tool_image->resize($result['image'], $this->config->get('config_app_image_product_width'), $this->config->get('config_app_image_product_height'));
@@ -2216,7 +2222,7 @@ class ControllerApiCustomerProducts extends Controller
         } else {
             $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->request->get['customer_id']. "' AND status = '1'");
         }
-        $this->session->data['customer_category'] = isset($customer_details->row['customer_category']) ? $customer_details->row['customer_category'] : null;
+       $customercategory_new= $this->session->data['customer_category'] = isset($customer_details->row['customer_category']) ? $customer_details->row['customer_category'] : null;
 
         
 
@@ -2307,9 +2313,11 @@ class ControllerApiCustomerProducts extends Controller
 
         
         $disabled_products_string = NULL;
-        if(isset($_SESSION['customer_category']) && $_SESSION['customer_category'] != NULL) {
+        // if(isset($_SESSION['customer_category']) && $_SESSION['customer_category'] != NULL) 
+        if(isset($customercategory_new) && $customercategory_new != NULL) 
+        {
             $this->load->model('assets/product');
-            $category_pricing_disabled_products =$this->model_assets_product->getCategoryPriceStatusByCategoryName($_SESSION['customer_category'], 0);   
+            $category_pricing_disabled_products =$this->model_assets_product->getCategoryPriceStatusByCategoryName($customercategory_new, 0);   
         //$log = new Log('error.log');
         //$log->write('category_pricing_disabled_products');
         $disabled_products = array_column($category_pricing_disabled_products, 'product_id');

@@ -108,6 +108,7 @@ class ControllerCommonMenu extends Controller
         $data['marketplace'] = $this->url->link('extension/marketplace', 'token='.$this->session->data['token'], 'SSL');
         $data['module'] = $this->url->link('extension/module', 'token='.$this->session->data['token'], 'SSL');
         $data['order'] = $this->url->link('sale/order', 'token='.$this->session->data['token'], 'SSL');
+        $data['order_dashboard'] = $this->url->link('sale/orderdashboard', 'token='.$this->session->data['token'], 'SSL');
         $data['vendor_order'] = $this->url->link('sale/order', 'token='.$this->session->data['token'], 'SSL');
 
         $data['vendor_fast_order'] = $this->url->link('sale/fast_order', 'token='.$this->session->data['token'].'&filter_order_status=2,15,18,3,5&filter_order_day=today', 'SSL');
@@ -229,6 +230,8 @@ class ControllerCommonMenu extends Controller
         $data['customer_wallet'] = $this->url->link('wallets/customer_wallet', 'token='.$this->session->data['token'], 'SSL');
         $data['vendor_wallet'] = $this->url->link('wallets/vendor_wallet', 'token='.$this->session->data['token'], 'SSL');
         $data['admin_wallet'] = $this->url->link('wallets/admin_wallet', 'token='.$this->session->data['token'], 'SSL');
+        $data['drivers_list'] = $this->url->link('drivers/drivers_list', 'token='.$this->session->data['token'], 'SSL');
+        $data['executives_list'] = $this->url->link('executives/executives_list', 'token='.$this->session->data['token'], 'SSL');
 
         //blog
         $data['preturn_simple_blog_author'] = $this->user->hasPermission('access', 'simple_blog/author');
@@ -279,6 +282,7 @@ class ControllerCommonMenu extends Controller
 
         //Sales
         $data['preturn_vendor_order'] = $this->user->hasPermission('access', 'sale/vendor_order');
+        $data['preturn_order_dashboard'] = $this->user->hasPermission('access', 'sale/orderdashboard');
         $data['preturn_order'] = $this->user->hasPermission('access', 'sale/order');
         $data['preturn_order_recurring'] = $this->user->hasPermission('access', 'sale/recurring');
         $data['preturn_return'] = $this->user->hasPermission('access', 'sale/return');
@@ -419,7 +423,9 @@ class ControllerCommonMenu extends Controller
         $data['preturn_customer_wallet'] = $this->user->hasPermission('access', 'wallets/customer_wallet');
         $data['preturn_vendor_wallet'] = $this->user->hasPermission('access', 'wallets/vendor_wallet');
         $data['preturn_admin_wallet'] = $this->user->hasPermission('access', 'wallets/admin_wallet');
-
+        
+        $data['preturn_drivers'] = $this->user->hasPermission('access', 'drivers/drivers_list');
+        $data['preturn_executives'] = $this->user->hasPermission('access', 'executives/executives_list');
         return $this->load->view('common/menu.tpl', $data);
     }
 
@@ -457,6 +463,7 @@ class ControllerCommonMenu extends Controller
 
         $data['file_manager'] = $this->url->link('tool/file_manager', 'token='.$this->session->data['token'], 'SSL');
         $data['order'] = $this->url->link('sale/order', 'token='.$this->session->data['token'], 'SSL');
+        $data['order_dashboard'] = $this->url->link('sale/orderdashboard', 'token='.$this->session->data['token'], 'SSL');
 
         $data['product'] = $this->url->link('catalog/vendor_product', 'token='.$this->session->data['token'], 'SSL');
         $data['fast_order'] = $this->url->link('sale/fast_order', 'token='.$this->session->data['token'].'&filter_order_status=2,15,18,3,5&filter_order_day=today', 'SSL');
@@ -530,6 +537,7 @@ class ControllerCommonMenu extends Controller
         //Sales
         $data['preturn_fast_order'] = $this->user->hasPermission('access', 'sale/fast_order');
         $data['preturn_order'] = $this->user->hasPermission('access', 'sale/vendor_order');
+        $data['preturn_order_dashboard'] = $this->user->hasPermission('access', 'sale/orderdashboard');
         $data['preturn_order_recurring'] = $this->user->hasPermission('access', 'sale/recurring');
         $data['preturn_return'] = $this->user->hasPermission('access', 'sale/return');
 

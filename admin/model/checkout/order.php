@@ -47,6 +47,9 @@ class ModelCheckoutOrder extends Model
                 'shipping_flat_number' => $order_query->row['shipping_flat_number'],
                 'shipping_building_name' => $order_query->row['shipping_building_name'],
                 'shipping_landmark' => $order_query->row['shipping_landmark'],
+                'driver_id' => $order_query->row['driver_id'],
+                'vehicle_number' => $order_query->row['vehicle_number'],
+                'delivery_executive_id' => $order_query->row['delivery_executive_id'],
 
                 'payment_method' => $order_query->row['payment_method'],
                 'payment_code' => $order_query->row['payment_code'],

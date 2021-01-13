@@ -357,6 +357,7 @@ class ControllerAccountWishList extends Controller
                     'price' => $price,
                     'special_price' => $special_price,
                     'category_price' => $this->model_assets_product->getCategoryPriceStatusByProductStoreId($product_store_id),
+                    'status' => isset($product_info['pd_name']) && count($product_info) > 0 ? 1 : 0,
                        /* 'store_id'     => $product['store_id'],
                     'model'    => $product['model'],*/
 
@@ -585,10 +586,13 @@ class ControllerAccountWishList extends Controller
                 $log->write('Wish List Products 2');
                 $this->load->model('assets/product');
                 $store_data = $this->model_assets_product->getProductStoreId($wishlist_product['product_id'], 75);
+                $product_info = $this->model_assets_product->getDetailproduct($store_data['product_store_id']);
+                if(isset($product_info) && count($product_info) > 0) {
                 $log->write('store details');
                 $log->write($store_data);
                 $log->write('store details');
                 $this->cart->addCustom($store_data['product_store_id'], $wishlist_product['quantity'], $option = [], $recurring_id = 0, $store_data['store_id'], $store_product_variation_id = false, $product_type = 'replacable', $product_note = null, $produce_type = null);
+                }
             }
         }
         // $this->model_account_wishlist->deleteWishlists($wishlist_id);

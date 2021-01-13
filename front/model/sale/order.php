@@ -444,6 +444,12 @@ class ModelSaleOrder extends Model
 
         return null;
     }
+    
+    public function getOrderTransactionDetailsId($order_id) {
+        $sql = 'SELECT * FROM '.DB_PREFIX."transaction_details WHERE order_ids = '".(int) $order_id."'";
+        $query = $this->db->query($sql);
+        return $query->row;
+    }
 
     public function getCustomers($data = [])
     {

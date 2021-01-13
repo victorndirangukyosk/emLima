@@ -563,7 +563,8 @@ var cart = {
 				console.log("update product_type");
 			}
 		});
-	}
+	},
+        
 }
 
 var voucher = {
@@ -1134,4 +1135,4 @@ function getCookie(cname) {
 	}
 	return "";
 }
-  /***  ****/
+  /***  ****/ 

@@ -340,7 +340,59 @@
 
 
 
-
+                              <?php 
+                              $order_driver = NULL;
+                              $order_driver_id = NULL;
+                              $order_driver_phone = NULL;
+                              
+                              $order_delivery_executive = NULL;
+                              $order_delivery_executive_id = NULL;
+                              $order_delivery_executive_phone = NULL;
+                              
+                              if(is_array($order_driver_details) && $order_driver_details != NULL) {
+                              $order_driver = $order_driver_details['firstname'].' '.$order_driver_details['lastname'];
+                              $order_driver_id = $order_driver_details['driver_id'];
+                              $order_driver_phone = $order_driver_details['telephone'];
+                              }
+                              
+                              if(is_array($order_delivery_executive_details) && $order_delivery_executive_details != NULL) {
+                              $order_delivery_executive = $order_delivery_executive_details['firstname'].' '.$order_delivery_executive_details['lastname'];
+                              $order_delivery_executive_id = $order_delivery_executive_details['delivery_executive_id'];
+                              $order_delivery_executive_phone = $order_delivery_executive_details['telephone'];
+                              }
+                              ?>                       
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="my-order-view-sidebar">
+                                            <li class="list-group-item my-order-list-head">
+                                                <h2 class="my-order-list-title">
+                                                    <?= $text_delivery_detail ?>
+                                                </h2>
+                                            </li>
+                                            <div class="checkout-sidebar">
+                                                <div class="">
+                                                 
+                                                    <?php if($order_driver == NULL) { ?>
+                                                     <center> <?= $text_no_delivery_alloted ?></center>
+                                                    <?php } else { ?>
+                                                        <div class="checkout-invoice">
+                                                            <div class="checout-invoice-title">Executive Name</div>
+                                                            <div class="checout-invoice-price"><?= $order_driver ?></div>
+                                                        </div>
+                                                       <div class="checkout-invoice">
+                                                            <div class="checout-invoice-title">Executive Phone</div>
+                                                            <div class="checout-invoice-price"><?= $order_driver_phone ?></div>
+                                                        </div>
+                                                        <div class="checkout-invoice">
+                                                            <div class="checout-invoice-title">Vehicle Number</div>
+                                                            <div class="checout-invoice-price"><?= $vehicle_number ?></div>
+                                                        </div>
+                                                    <?php } ?>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> 
                                                 <!-- <div class="checkout-sidebar-merchant-box-old">
                                                     <div class="my-order-list-title"> <span class="checkout-cart-merchant-name">Order Notes</span></div>
                                                     </br>
@@ -363,7 +415,7 @@
                                         </div>
                                     </div>
                                     <?php if(htmlspecialchars($_GET["order_status"])=='Delivered') { ?>
-                                    <div class="row">
+                                    <!--<div class="row">
                                         <div class="col-md-12">
                                             <div class="my-order-view-sidebar">
                                                 <li class="list-group-item my-order-list-head">
@@ -391,7 +443,6 @@
                                                         <?php } ?>
                                                     </div>
 
-                                                    <!-- new start -->
 
 
                                                     <div class="row">
@@ -531,14 +582,13 @@
                                                     </div>
 
 
-                                                    <!-- end -->
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div>-->
                                     <?php }?>
                                     <?php if(isset($delivery_data->status) && $delivery_data->status == 441 && false) { ?>
-                                    <div class="row">
+                                    <!--<div class="row">
                                         <div class="col-md-12">
                                             <div class="my-order-view-sidebar">
                                                 <li class="list-group-item my-order-list-head">
@@ -688,7 +738,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div>-->
                                     <?php } ?>
                                 </div>
                             </div>

@@ -859,6 +859,7 @@ class ControllerCommonHome extends Controller {
         $data['logged'] = $this->customer->isLogged();
         $data['account'] = $this->url->link('account/account', '', 'SSL');
         $data['dashboard'] = $this->url->link('account/dashboard', '', 'SSL');
+        $data['po_ocr'] = $this->url->link('account/ocr', '', 'SSL');
 
         $data['register'] = $this->url->link('account/register', '', 'SSL');
         $data['login'] = $this->url->link('account/login', '', 'SSL');
@@ -1542,7 +1543,7 @@ class ControllerCommonHome extends Controller {
         $this->load->model('tool/image');
 
         $cachePrice_data = $this->cache->get('category_price_data');
-        //echo '<pre>';print_r($cachePrice_data);exit;
+        // echo '<pre>';print_r($cachePrice_data);exit;
         //$results = $this->model_assets_product->getProducts($filter_data);
         $results = $this->model_assets_product->getProductsForHomePage($filter_data);
 
@@ -1551,9 +1552,10 @@ class ControllerCommonHome extends Controller {
         // echo "<pre>";print_r($results);die;
         foreach ($results as $result) {
             // if qty less then 1 dont show product
-            if ($result['quantity'] <= 0) {
+            //REMOVED QUANTITY CHECK CONDITION
+            /*if ($result['quantity'] <= 0) {
                 continue;
-            }
+            }*/
 
             $log = new Log('error.log');
             if ($result['image'] != NULL && file_exists(DIR_IMAGE . $result['image'])) {
@@ -1601,7 +1603,7 @@ class ControllerCommonHome extends Controller {
                 $s_price = $result['special_price'];
                 $o_price = $result['price'];
 
-                //echo $s_price.'===>'.$o_price.'==>'.$special_price.'===>'.$price;//exit;
+                // echo $s_price.'===>'.$o_price.'==>'.$special_price.'===>'.$price.'</br>';//exit;
 
                 if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$result['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $filter_data['store_id']])) {
                     $s_price = $cachePrice_data[$result['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $filter_data['store_id']];

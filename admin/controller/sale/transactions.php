@@ -125,20 +125,31 @@ class ControllerSaleTransactions extends Controller
             'limit' => $this->config->get('config_limit_admin'),
         ];
 
-        $order_total = $this->model_sale_transactions->getTotaltransactions($filter_data);
-
+        // $order_total = $this->model_sale_transactions->getTotaltransactions($filter_data);
+        $order_total_grandTotal = $this->model_sale_transactions->getTotalTransactionsAndGrandTotal($filter_data);
+        
+        //    echo'<pre>';print_r($order_total_grandTotal['total']);exit;
+        
+        $order_total =$order_total_grandTotal['total'];
+        $amount =$order_total_grandTotal['GrandTotal'];
         $results = $this->model_sale_transactions->getTransactions($filter_data);
-
+        // $amount=0;
+        $totalPages = ceil($order_total / $this->config->get('config_limit_admin'));
         foreach ($results as $result) {
+            // $amount=$amount+$result['total'];
             $data['orders'][] = [
                 'order_id' => $result['order_ids'],
                 'no_of_products' => $result['no_of_products'],
                 'customer' => $result['firstname'].' '.$result['lastname'],
                 'total' => $this->currency->format($result['total']),
                 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
+                'grand_total' => $this->currency->format($amount),
+                'total_pages' => $totalPages,
+
+
             ];
         }
-
+        // echo'<pre>';print_r($data['orders']);exit;
         $data['heading_title'] = $this->language->get('heading_title');
 
         $data['text_list'] = $this->language->get('text_list');
@@ -276,5 +287,63 @@ class ControllerSaleTransactions extends Controller
         $data['footer'] = $this->load->controller('common/footer');
 
         $this->response->setOutput($this->load->view('sale/transaction_list.tpl', $data));
+    }
+
+    public function ordertransactionexcel()
+    {
+        $this->load->language('sale/transaction');
+
+        $this->document->setTitle($this->language->get('heading_title'));
+
+        if (isset($this->request->get['filter_order_id'])) {
+            $filter_order_id = $this->request->get['filter_order_id'];
+        } else {
+            $filter_order_id = null;
+        }
+
+        if (isset($this->request->get['filter_customer'])) {
+            $filter_customer = $this->request->get['filter_customer'];
+        } else {
+            $filter_customer = null;
+        }
+
+        if (isset($this->request->get['filter_total'])) {
+            $filter_total = $this->request->get['filter_total'];
+        } else {
+            $filter_total = null;
+        }
+
+        if (isset($this->request->get['filter_date_added'])) {
+            $filter_date_added = $this->request->get['filter_date_added'];
+        } else {
+            $filter_date_added = null;
+        }
+
+        if (isset($this->request->get['sort'])) {
+            $sort  = $this->request->get['sort'];
+        }
+        else{
+            $sort='o.order_ids';
+        }
+
+        if (isset($this->request->get['order'])) {
+            $order  = $this->request->get['order'];
+        }
+        else{
+            $order='DESC';
+        }
+
+        $filter_data = [
+            'filter_order_id' => $filter_order_id,
+            'filter_customer' => $filter_customer,
+            'filter_total' => $filter_total,
+            'filter_date_added' => $filter_date_added,
+            // 'sort' => $sort,
+              'order' => $order,
+             
+        ];
+        
+        $this->load->model('report/excel');
+        $this->model_report_excel->download_sale_ordertransaction_excel($filter_data);
     }
 }

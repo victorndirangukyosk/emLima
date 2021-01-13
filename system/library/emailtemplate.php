@@ -164,11 +164,11 @@ class Emailtemplate
         $log = new Log('error.log');
         $log->write('sendDynamicPushNotification');
 
-        /* $log->write($to);
+          $log->write($to);
           $log->write($deviceId);
           $log->write($message);
           $log->write($title);
-          $log->write($sendData); */
+          $log->write($sendData);
 
         if (isset($to)) {
             if (isset($deviceId) && isset($to)) {
@@ -447,7 +447,7 @@ class Emailtemplate
     // Customer
     public function getCustomerFind()
     {
-        $result = ['{firstname}', '{lastname}', '{branchname}', '{subuserfirstname}', '{subuserlastname}', '{subuserorderid}', '{date}', '{store_name}', '{email}', '{password}', '{account_href}', '{activate_href}', '{order_link}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}', '{amount}', '{transfer_type}', '{ip_address}'];
+        $result = ['{firstname}', '{lastname}', '{branchname}', '{subuserfirstname}', '{subuserlastname}', '{subuserorderid}', '{drivername}', '{driverphone}', '{vehicle}', '{deliveryexecutivename}', '{deliveryexecutivephone}', '{date}', '{store_name}', '{email}', '{password}', '{account_href}', '{activate_href}', '{order_link}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}', '{amount}', '{transfer_type}', '{ip_address}'];
 
         return $result;
     }
@@ -461,6 +461,11 @@ class Emailtemplate
             'subuserfirstname' => $data['subuserfirstname'],
             'subuserlastname' => $data['subuserlastname'],
             'subuserorderid' => $data['subuserorderid'],
+            'drivername' => $data['drivername'],
+            'driverphone' => $data['driverphone'],
+            'vehicle' => $data['vehicle'],
+            'deliveryexecutivename' => $data['deliveryexecutivename'],
+            'deliveryexecutivephone' => $data['deliveryexecutivephone'],
             'date' => date($this->language->get('date_format_short'), strtotime(date('Y-m-d H:i:s'))),
             'store_name' => $this->config->get('config_name'),
             'email' => $data['email'],
@@ -2730,6 +2735,36 @@ class Emailtemplate
             //'site_url'=>$this->config->get('config_url'),
             'system_name' => $this->config->get('config_name'),
             'year' => date('Y'),
+            'help_center' => $this->url->adminLink('information/help'),
+            //'white_logo'=> HTTPS_CATALOG.'image/'. $this->config->get('config_white_logo'),
+            'white_logo' => $this->resize($this->config->get('config_white_logo'), 197, 34),
+            'terms' => $this->url->adminLink('information/information', 'information_id='.$this->config->get('config_account_id'), 'SSL'),
+            'privacy_policy' => $this->url->adminLink('information/information', 'information_id='.$this->config->get('config_privacy_policy_id'), 'SSL'),
+            'system_email' => $this->config->get('config_email'),
+            'system_phone' => '+'.$this->config->get('config_telephone_code').' '.$this->config->get('config_telephone'),
+        ];
+
+        return $result;
+    }
+
+
+    public function getStockOutFind()
+    {
+        $result = ['{fromdate}','{todate}','{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}'];
+        return $result;
+    }
+
+    public function getStockOutReplace($data)
+    {
+        $result = [
+            'fromdate' => $data['fromdate'],
+            'todate' => $data['todate'],
+            'site_url' => HTTPS_CATALOG,
+            //'logo'=> HTTPS_CATALOG.'image/' . $this->config->get('config_logo'),
+            'logo' => $this->resize($this->config->get('config_logo'), 197, 34),
+            //'site_url'=>$this->config->get('config_url'),
+            'system_name' => $this->config->get('config_name'),
+            'year' => date('Y'),    
             'help_center' => $this->url->adminLink('information/help'),
             //'white_logo'=> HTTPS_CATALOG.'image/'. $this->config->get('config_white_logo'),
             'white_logo' => $this->resize($this->config->get('config_white_logo'), 197, 34),

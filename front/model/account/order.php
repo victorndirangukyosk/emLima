@@ -461,6 +461,12 @@ class ModelAccountOrder extends Model {
                 'order_date' => $order_query->row['order_date'],
                 'delivery_id' => $order_query->row['delivery_id'],
                 'settlement_amount' => $order_query->row['settlement_amount'],
+                'driver_id' => $order_query->row['driver_id'],
+                'vehicle_number' => $order_query->row['vehicle_number'],
+                'delivery_executive_id' => $order_query->row['delivery_executive_id'],
+
+
+
             ];
         } else {
             return false;
@@ -550,10 +556,10 @@ class ModelAccountOrder extends Model {
             //$ord = $sub_users_orders->rows;
             //echo "<pre>";print_r($ord);die;
 
-            $query = $this->db->query('SELECT o.customer_id, o.parent_approval, o.head_chef, o.procurement, o.delivery_date,o.delivery_timeslot,o.shipping_zipcode,o.shipping_city_id,o.payment_method,o.shipping_address,o.shipping_flat_number,o.shipping_method,o.shipping_building_name,o.store_name,o.shipping_name, o.order_id, o.firstname, o.lastname, os.name as status , os.color as order_status_color ,o.order_status_id, o.date_modified , o.date_added, o.total, o.currency_code, o.currency_value, ot.value FROM `' . DB_PREFIX . 'order` o LEFT JOIN ' . DB_PREFIX . 'order_status os ON (o.order_status_id = os.order_status_id) LEFT JOIN ' . DB_PREFIX . 'order_total ot ON (o.order_id = ot.order_id) WHERE o.customer_id IN (' . $sub_users_od . ") AND o.order_status_id > '0' AND os.language_id = '" . (int) $this->config->get('config_language_id') . "' AND ot.code = 'total' AND ot.title = 'Total' ORDER BY o.order_id DESC LIMIT " . (int) $start . ',' . (int) $limit);
+            $query = $this->db->query('SELECT o.customer_id, o.parent_approval, o.head_chef, o.procurement, o.delivery_date,o.delivery_timeslot,o.shipping_zipcode,o.shipping_city_id,o.payment_method,o.payment_code,o.shipping_address,o.shipping_flat_number,o.shipping_method,o.shipping_building_name,o.store_name,o.shipping_name, o.order_id, o.firstname, o.lastname, os.name as status , os.color as order_status_color ,o.order_status_id, o.date_modified , o.date_added, o.total, o.currency_code, o.currency_value, ot.value FROM `' . DB_PREFIX . 'order` o LEFT JOIN ' . DB_PREFIX . 'order_status os ON (o.order_status_id = os.order_status_id) LEFT JOIN ' . DB_PREFIX . 'order_total ot ON (o.order_id = ot.order_id) WHERE o.customer_id IN (' . $sub_users_od . ") AND o.order_status_id > '0' AND os.language_id = '" . (int) $this->config->get('config_language_id') . "' AND ot.code = 'total' AND ot.title = 'Total' ORDER BY o.order_id DESC LIMIT " . (int) $start . ',' . (int) $limit);
             //$query = $this->db->query("SELECT o.delivery_date,o.delivery_timeslot,o.shipping_zipcode,o.shipping_city_id,o.payment_method,o.shipping_address,o.shipping_flat_number,o.shipping_method,o.shipping_building_name,o.store_name,o.shipping_name, o.order_id, o.firstname, o.lastname, os.name as status , os.color as order_status_color ,o.order_status_id, o.date_modified , o.date_added, o.total, o.currency_code, o.currency_value FROM `" . DB_PREFIX . "order` o LEFT JOIN " . DB_PREFIX . "order_status os ON (o.order_status_id = os.order_status_id) WHERE o.customer_id = '" . (int) $this->customer->getId() . "' AND o.order_status_id > '0' AND os.language_id = '" . (int) $this->config->get('config_language_id') . "' ORDER BY o.order_id DESC LIMIT " . (int) $start . "," . (int) $limit);
         } else {
-            $query = $this->db->query('SELECT o.customer_id, o.parent_approval, o.head_chef, o.procurement, o.delivery_date,o.delivery_timeslot,o.shipping_zipcode,o.shipping_city_id,o.payment_method,o.shipping_address,o.shipping_flat_number,o.shipping_method,o.shipping_building_name,o.store_name,o.shipping_name, o.order_id, o.firstname, o.lastname, os.name as status , os.color as order_status_color ,o.order_status_id, o.date_modified , o.date_added, o.total, o.currency_code, o.currency_value, ot.value FROM `' . DB_PREFIX . 'order` o LEFT JOIN ' . DB_PREFIX . 'order_status os ON (o.order_status_id = os.order_status_id) LEFT JOIN ' . DB_PREFIX . 'order_total ot ON (o.order_id = ot.order_id) WHERE o.customer_id IN (' . $sub_users_od . ") AND o.order_status_id > '0' AND os.language_id = '" . (int) $this->config->get('config_language_id') . "' AND ot.code = 'total' AND ot.title = 'Total' ORDER BY o.order_id DESC");
+            $query = $this->db->query('SELECT o.customer_id, o.parent_approval, o.head_chef, o.procurement, o.delivery_date,o.delivery_timeslot,o.shipping_zipcode,o.shipping_city_id,o.payment_method,o.payment_code,o.shipping_address,o.shipping_flat_number,o.shipping_method,o.shipping_building_name,o.store_name,o.shipping_name, o.order_id, o.firstname, o.lastname, os.name as status , os.color as order_status_color ,o.order_status_id, o.date_modified , o.date_added, o.total, o.currency_code, o.currency_value, ot.value FROM `' . DB_PREFIX . 'order` o LEFT JOIN ' . DB_PREFIX . 'order_status os ON (o.order_status_id = os.order_status_id) LEFT JOIN ' . DB_PREFIX . 'order_total ot ON (o.order_id = ot.order_id) WHERE o.customer_id IN (' . $sub_users_od . ") AND o.order_status_id > '0' AND os.language_id = '" . (int) $this->config->get('config_language_id') . "' AND ot.code = 'total' AND ot.title = 'Total' ORDER BY o.order_id DESC");
             //$query = $this->db->query("SELECT o.delivery_date,o.delivery_timeslot,o.shipping_zipcode,o.shipping_city_id,o.payment_method,o.shipping_address,o.shipping_flat_number,o.shipping_method,o.shipping_building_name,o.store_name,o.shipping_name, o.order_id, o.firstname, o.lastname, os.name as status , os.color as order_status_color ,o.order_status_id, o.date_modified , o.date_added, o.total, o.currency_code, o.currency_value FROM `" . DB_PREFIX . "order` o LEFT JOIN " . DB_PREFIX . "order_status os ON (o.order_status_id = os.order_status_id) WHERE o.customer_id = '" . (int) $this->customer->getId() . "' AND o.order_status_id > '0' AND os.language_id = '" . (int) $this->config->get('config_language_id') . "' ORDER BY o.order_id DESC");
         }
         /* if($statuses == null && $payment_methods == null){
@@ -623,6 +629,17 @@ class ModelAccountOrder extends Model {
 
         return $query->rows;
     }
+    
+    public function getOrderProductsByProductId($order_id, $product_store_id) {
+        /* $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int) $order_id . "'"); */
+        $query = $this->db->query('SELECT a.*,b.image as image,b.weight as weight
+        FROM `' . DB_PREFIX . 'order_product` a,`' . DB_PREFIX . 'product` b,`' . DB_PREFIX . "product_to_store` c
+        WHERE b.product_id=c.product_id
+        AND a.product_id=c.product_store_id
+        AND a.order_id='" . $order_id . "' AND a.product_id='" . $product_store_id . "'");
+
+        return $query->row;
+    }    
 
     public function getRealOrderProducts($order_id) {
         /* $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int) $order_id . "'"); */
@@ -1299,5 +1316,21 @@ class ModelAccountOrder extends Model {
             return $row['customer_id'];
         }
 
+    }
+
+
+    public function getDriver($driver_id) {
+        $query = $this->db->query('SELECT DISTINCT * FROM ' . DB_PREFIX . "drivers WHERE driver_id = '" . (int) $driver_id . "'");
+        return $query->row;
+    }
+
+    public function getDriverName($driver_id) {
+        $query = $this->db->query('SELECT   CONCAT(firstname," ",lastname) as name , telephone FROM ' . DB_PREFIX . "drivers WHERE driver_id = '" . (int) $driver_id . "'");
+        return $query->row;
+    }
+
+    public function getExecutiveName($delivery_executive_id) {
+        $query = $this->db->query('SELECT   CONCAT(firstname," ",lastname) as name , telephone FROM ' . DB_PREFIX . "delivery_executives WHERE delivery_executive_id = '" . (int) $delivery_executive_id . "'");
+        return $query->row;
     }
 }
