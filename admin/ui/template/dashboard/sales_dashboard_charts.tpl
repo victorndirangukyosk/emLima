@@ -1033,7 +1033,7 @@ function excel() {
  //alert( $('#sales_score').html()); 
 
 
-    url = 'index.php?path=dashboard/charts/export_excel&token=<?php echo $token; ?> '; 
+    url = 'index.php?path=dashboard/charts/account_manager_export_excel&token=<?php echo $token; ?> '; 
     url=url.trim();
 
                 url += '&start_date=' + encodeURIComponent(start_date); 
