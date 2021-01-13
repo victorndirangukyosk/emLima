@@ -121,14 +121,10 @@
     <?php } ?>
 
     <?php 
-    if( $preturn_order_dashboard != false || $preturn_order != false || $preturn_order_recurring != false || $preturn_return != false || $preturn_customer != false || $preturn_customer_group != false || $preturn_customer_ban_ip != false || $preturn_paypal != false ) {
+    if( $preturn_order != false || $preturn_order_recurring != false || $preturn_return != false || $preturn_customer != false || $preturn_customer_group != false || $preturn_customer_ban_ip != false || $preturn_paypal != false ) {
     ?>
     <li id="sale"><a class="parent"><i class="fa fa-shopping-cart fa-fw"></i> <span><?php echo $text_sale; ?></span></a>
         <ul class="collapse">
-            <?php if($preturn_order_dashboard) { ?>
-            <li><a href="<?php echo $order_dashboard; ?>"><?php echo $text_order_dashboard; ?></a></li>
-            <?php } ?>
-            
             <?php if($preturn_order) { ?>
             <li><a href="<?php echo $order; ?>"><?php echo $text_order; ?></a></li>
             <?php } ?>
@@ -167,10 +163,14 @@
     <?php } ?>
 
     <?php
-    if( $preturn_account_manager != false) {
+    if( $preturn_order_dashboard != false || $preturn_account_manager != false) {
     ?>
     <li><a class="parent"><i class="fa fa-user fa-fw"></i> <span><?php echo $text_account_managers; ?></span></a>
         <ul class="collapse">
+            <?php if($preturn_order_dashboard) { ?>
+            <li><a href="<?php echo $order_dashboard; ?>"><?php echo $text_order_dashboard; ?></a></li>
+            <?php } ?>
+            
             <?php if($preturn_account_manager) { ?>
             <li><a href="<?php echo $accountmanager; ?>"><?php echo $text_account_managers; ?></a></li>
             <?php } ?>
