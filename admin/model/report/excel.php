@@ -4388,7 +4388,7 @@ class ModelReportExcel extends Model {
     public function account_manager_download_dashboard_excel($data) {
         $this->load->library('excel');
         $this->load->library('iofactory');
-
+        
         // $rows = $data;
         // echo "<pre>";print_r($data);die;
         try {
@@ -4418,8 +4418,13 @@ class ModelReportExcel extends Model {
 
             //Company name, address
             $objPHPExcel->getActiveSheet()->mergeCells('A1:E2');
+            $objPHPExcel->getActiveSheet()->mergeCells('A3:E3');
+            $objPHPExcel->getActiveSheet()->setCellValue('A3', 'Account Manager Name : '.$data['account_manager_name']);
             $objPHPExcel->getActiveSheet()->setCellValue('A1', 'Dashboard Information ');
             $objPHPExcel->getActiveSheet()->getStyle('A1:E2')->applyFromArray(['font' => ['bold' => true], 'color' => [
+                    'rgb' => '4390df',
+            ]]);
+            $objPHPExcel->getActiveSheet()->getStyle('A3:E3')->applyFromArray(['font' => ['bold' => true], 'color' => [
                     'rgb' => '4390df',
             ]]);
 

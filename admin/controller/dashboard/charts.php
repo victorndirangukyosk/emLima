@@ -881,6 +881,11 @@ class ControllerDashboardCharts extends Controller
     
     public function account_manager_export_excel()
     {
+        $this->load->model('user/accountmanager');
+        $rows = $this->model_user_accountmanager->getUser($this->request->get['account_manager_id']);
+        
+        $account_manager_name = $rows['firstname'].' '.$rows['lastname'];
+        $account_manager_username = $rows['username'];
         if (isset($this->request->get['start_date'])) {
             $start_date = $this->request->get['start_date'];
         } else {
@@ -938,6 +943,7 @@ class ControllerDashboardCharts extends Controller
             'bs' => $bs,
             'cos' => $cos,
             'cns' => $cns,
+            'account_manager_name' => $account_manager_username,
         ];
 
         //echo "<pre>";print_r($data);die;
