@@ -878,4 +878,78 @@ class ControllerDashboardCharts extends Controller
 
         $this->model_report_excel->download_dashboard_excel($data);
     }
+    
+    public function account_manager_export_excel()
+    {
+        $this->load->model('user/accountmanager');
+        $rows = $this->model_user_accountmanager->getUser($this->request->get['account_manager_id']);
+        
+        $account_manager_name = $rows['firstname'].' '.$rows['lastname'];
+        $account_manager_username = $rows['username'];
+        if (isset($this->request->get['start_date'])) {
+            $start_date = $this->request->get['start_date'];
+        } else {
+            $start_date = null;
+        }
+
+        if (isset($this->request->get['end_date'])) {
+            $end_date = $this->request->get['end_date'];
+        } else {
+            $end_date = null;
+        }
+
+        if (isset($this->request->get['ss'])) {
+            $ss = $this->request->get['ss'];
+        } else {
+            $ss = null;
+        }
+
+        if (isset($this->request->get['os'])) {
+            $os = $this->request->get['os'];
+        } else {
+            $os = null;
+        }
+
+        if (isset($this->request->get['cs'])) {
+            $cs = $this->request->get['cs'];
+        } else {
+            $cs = null;
+        }
+
+        if (isset($this->request->get['bs'])) {
+            $bs = $this->request->get['bs'];
+        } else {
+            $bs = null;
+        }
+
+        if (isset($this->request->get['cos'])) {
+            $cos = $this->request->get['cos'];
+        } else {
+            $cos = null;
+        }
+
+        if (isset($this->request->get['cns'])) {
+            $cns = $this->request->get['cns'];
+        } else {
+            $cns = null;
+        }
+
+        $data = [
+            'start_date' => $start_date,
+            'end_date' => $end_date,
+            'ss' => $ss,
+            'os' => $os,
+            'cs' => $cs,
+            'bs' => $bs,
+            'cos' => $cos,
+            'cns' => $cns,
+            'account_manager_name' => $account_manager_username,
+        ];
+
+        //echo "<pre>";print_r($data);die;
+
+        $this->load->model('report/excel');
+
+        $this->model_report_excel->account_manager_download_dashboard_excel($data);
+    }
 }
