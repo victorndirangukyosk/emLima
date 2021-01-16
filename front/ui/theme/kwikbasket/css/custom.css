@@ -1,0 +1,25 @@
+@media screen and (min-width:767px) {
+.header .header-item-address {    
+    width: 255px;
+}
+}
+
+@media screen and (max-width:767px) {
+.header .header-item-address {    
+    width: 225px;
+}
+}
+
+@media screen and (min-width:992px) {
+.search {
+    left: 486px;    
+    width: calc(100% - 818px);   
+}
+}
+
+@media screen and (min-width:767px) and (max-width:991px) {
+.search {
+    left: 286px;    
+    width: calc(100% - 418px);   
+}
+}

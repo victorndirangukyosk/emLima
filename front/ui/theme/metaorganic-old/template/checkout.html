@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="This is an example of a meta description. This will often show up in search results.">
+    <meta name="keywords" content="HTML,CSS,XML,JavaScript">
+    <title>HyperLocal - A Grocery Market</title>
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Hind:300,400,500,600,700" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+    <div class="header-white">
+        <div class="header_left">
+            <div class="header_item">
+                <a href="#" class="header_item_content"><img src="images/logo.png"></a>
+                
+            </div>
+           
+        </div>
+         
+        <div class="header_right hidden-xs hidden-sm">
+           <div class="header_item">
+                <div class="header-checkout-item">
+                    <div class="checkout-promise-item"><i class="fa fa-retweet"></i> 100% Replacement Guarantee</div>
+                    <div class="checkout-promise-item"><i class="fa fa-calendar-check-o"></i> 100% Genuine Products</div>
+                    <div class="checkout-promise-item"><i class="fa fa-rupee"></i> Secure Payments</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="checkout-wrapper">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8">
+                    <div id="accordion" class="checkout">
+                        <div class="panel checkout-step">
+                            <div> <span class="checkout-step-number">1</span>
+                                <h4 class="checkout-step-title"> <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" > Phone Number Verification</a></h4>
+                            </div>
+                            <div id="collapseOne" class="collapse in">
+                                <div class="checkout-step-body">
+                                    <div class="mydivs">
+                                        <div>
+                                            <p class="checkout_login_msg">We need your phone number so that we can update you about your order.</p>
+                                            <div class="checkout-login">
+                                                <p>Your 10 digit mobile number</p>
+                                                <div class="row">
+                                                    <div class="col-lg-6">
+                                                        <div class="checkout-login">
+                                                            <form>
+                                                                <div class="login-phone">
+                                                                    <input type="text" class="form-control" placeholder="Phone Number" maxlength="10">
+                                                                </div>
+                                                                <!-- add class disabled to inactive button -->
+                                                            </form>
+                                                        </div>
+                                                        <!-- /input-group -->
+                                                    </div>
+                                                    <div class="col-lg-12">
+                                                        <button name="next" class="btn btn-default">Next</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="otp-verifaction">
+                                                <div class="row">
+                                                    <div class="checkout-login">
+                                                        <div class="col-lg-8">
+                                                            <p class="checkout_login_msg">Enter 4 digit code sent to your phone <strong>+91-9979097538</strong></p>
+                                                            <form>
+                                                                <div class="row">
+                                                                    <div class="form-group">
+                                                                        <label class="col-md-12 control-label sr-only" for="Phone">Phone</label>
+                                                                        <div class="col-md-3 col-sm-3 col-md-3 col-xs-3">
+                                                                            <input id="number" name="number" type="text" placeholder="0" class="form-control input-md" max="1" maxlength="1" required="">
+                                                                        </div>
+                                                                        <div class="col-md-3 col-sm-3 col-md-3 col-xs-3">
+                                                                            <input id="number" name="number" type="text" placeholder="0" class="form-control input-md" max="1" maxlength="1" required="">
+                                                                        </div>
+                                                                        <div class="col-md-3 col-sm-3 col-md-3 col-xs-3">
+                                                                            <input id="number" name="number" type="text" placeholder="0" class="form-control input-md" max="1" maxlength="1" required="">
+                                                                        </div>
+                                                                        <div class="col-md-3 col-sm-3 col-md-3 col-xs-3">
+                                                                            <input id="number" name="number" type="text" placeholder="0" class="form-control input-md" max="1" maxlength="1" required="">
+                                                                        </div>
+                                                                    </div>
+                                                                    <!-- Button -->
+                                                                    <div class="form-group">
+                                                                        <div class="col-md-12">
+                                                                            <a class="collapsed btn btn-default" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">Next</a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel checkout-step">
+                            <div role="tab" id="headingTwo"> <span class="checkout-step-number">2</span>
+                                <h4 class="checkout-step-title"> <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" > Delivery Address </a> </h4>
+                            </div>
+                            <div id="collapseTwo" class="panel-collapse collapse">
+                                <div class="checkout-step-body">
+                                    <div class="checout-address-step">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="address-block">
+                                                    <h3 class="address-locations">Other</h3>
+                                                    <h4 class="address-name">Bhavin</h4>
+                                                    <p>Plot 25, Setalc Tecnology Park,
+                                                        <br>Sector 31 , Gurgaon</p>
+                                                    <a href="#" class="btn btn-primary btn-block">Deliver Here</a>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="address-block">
+                                                    <h3 class="address-locations">Home</h3>
+                                                    <h4 class="address-name">Umesh</h4>
+                                                    <p>Plot 18, Shivanand Society,
+                                                        <br>Sector 14 , Gurgaon</p>
+                                                    <a href="#" class="btn btn-primary btn-block">Deliver Here</a>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="address-block">
+                                                    <h3 class="address-locations">Home</h3>
+                                                    <h4 class="address-name">Jitu</h4>
+                                                    <p>D 109 , South City Centre,
+                                                        <br>Kamatibag , Vadodara</p>
+                                                    <a href="#" class="btn btn-grey btn-block disabled" role="button">Not Deliver here</a>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12"><a href="#" type="button" class="btn-link" data-toggle="modal" data-target="#addressModal"><i class="fa fa-plus-circle"></i> Add new delivery address</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="goto-next">
+                                        <div class="row">
+                                            <div class="col-md-12"> <a class="collapsed btn btn-default" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree"> Next </a></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel checkout-step">
+                            <div role="tab" id="headingThree"> <span class="checkout-step-number">3</span>
+                                <h4 class="checkout-step-title"> <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree"  > Delivery Time &amp; Date </a> </h4>
+                            </div>
+                            <div id="collapseThree" class="panel-collapse collapse">
+                                <div class="checkout-step-body">
+                                    <div class="checkout-time-table">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div>
+                                                    <!-- Nav tabs -->
+                                                    <ul class="nav nav-tabs nav-justified" role="tablist">
+                                                        <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Mon 20, Feb</a></li>
+                                                        <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Mon 21, Feb</a></li>
+                                                        <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Mon 22, Feb</a></li>
+                                                        <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Mon 23, Feb</a></li>
+                                                    </ul>
+                                                    <!-- Tab panes -->
+                                                    <div class="tab-content">
+                                                        <div role="tabpanel" class="tab-pane active" id="home">
+                                                            <div class="time-slots">
+                                                                <ul class="list-group">
+                                                                    <li class="list-group-item">
+                                                                        <label class="control control--radio">05:00 PM - 07:00PM
+                                                                            <input type="radio" name="radio" checked="checked" />
+                                                                            <div class="control__indicator"></div>
+                                                                        </label>
+                                                                    </li>
+                                                                    <li class="list-group-item">
+                                                                        <label class="control control--radio">07:00 PM - 09:00PM
+                                                                            <input type="radio" name="radio" />
+                                                                            <div class="control__indicator"></div>
+                                                                        </label>
+                                                                    </li>
+                                                                    <li class="list-group-item">
+                                                                        <label class="control control--radio">08:00 PM - 11:00PM
+                                                                            <input type="radio" name="radio" />
+                                                                            <div class="control__indicator"></div>
+                                                                        </label>
+                                                                    </li>
+                                                                    <li class="list-group-item">
+                                                                        <label class="control control--radio">05:00 PM - 07:00PM
+                                                                            <input type="radio" name="radio" checked="checked" />
+                                                                            <div class="control__indicator"></div>
+                                                                        </label>
+                                                                    </li>
+                                                                    <li class="list-group-item">
+                                                                        <label class="control control--radio">07:00 PM - 09:00PM
+                                                                            <input type="radio" name="radio" />
+                                                                            <div class="control__indicator"></div>
+                                                                        </label>
+                                                                    </li>
+                                                                    <li class="list-group-item">
+                                                                        <label class="control control--radio">08:00 PM - 11:00PM
+                                                                            <input type="radio" name="radio" />
+                                                                            <div class="control__indicator"></div>
+                                                                        </label>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                        <div role="tabpanel" class="tab-pane" id="profile">
+                                                            <div class="time-slots">
+                                                                <ul class="list-group">
+                                                                    <li class="list-group-item">
+                                                                        <label class="control control--radio">05:00 PM - 07:00PM
+                                                                            <input type="radio" name="radio" checked="checked" />
+                                                                            <div class="control__indicator"></div>
+                                                                        </label>
+                                                                    </li>
+                                                                    <li class="list-group-item">
+                                                                        <label class="control control--radio">07:00 PM - 09:00PM
+                                                                            <input type="radio" name="radio" />
+                                                                            <div class="control__indicator"></div>
+                                                                        </label>
+                                                                    </li>
+                                                                    <li class="list-group-item">
+                                                                        <label class="control control--radio">08:00 PM - 11:00PM
+                                                                            <input type="radio" name="radio" />
+                                                                            <div class="control__indicator"></div>
+                                                                        </label>
+                                                                    </li>
+                                                                    <li class="list-group-item">
+                                                                        <label class="control control--radio">05:00 PM - 07:00PM
+                                                                            <input type="radio" name="radio" checked="checked" />
+                                                                            <div class="control__indicator"></div>
+                                                                        </label>
+                                                                    </li>
+                                                                    <li class="list-group-item">
+                                                                        <label class="control control--radio">07:00 PM - 09:00PM
+                                                                            <input type="radio" name="radio" />
+                                                                            <div class="control__indicator"></div>
+                                                                        </label>
+                                                                    </li>
+                                                                    <li class="list-group-item">
+                                                                        <label class="control control--radio">08:00 PM - 11:00PM
+                                                                            <input type="radio" name="radio" />
+                                                                            <div class="control__indicator"></div>
+                                                                        </label>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                        <div role="tabpanel" class="tab-pane" id="messages">
+                                                            <div class="time-slots">
+                                                                <ul class="list-group">
+                                                                    <li class="list-group-item">
+                                                                        <label class="control control--radio">05:00 PM - 07:00PM
+                                                                            <input type="radio" name="radio" checked="checked" />
+                                                                            <div class="control__indicator"></div>
+                                                                        </label>
+                                                                    </li>
+                                                                    <li class="list-group-item">
+                                                                        <label class="control control--radio">07:00 PM - 09:00PM
+                                                                            <input type="radio" name="radio" />
+                                                                            <div class="control__indicator"></div>
+                                                                        </label>
+                                                                    </li>
+                                                                    <li class="list-group-item">
+                                                                        <label class="control control--radio">08:00 PM - 11:00PM
+                                                                            <input type="radio" name="radio" />
+                                                                            <div class="control__indicator"></div>
+                                                                        </label>
+                                                                    </li>
+                                                                    <li class="list-group-item">
+                                                                        <label class="control control--radio">05:00 PM - 07:00PM
+                                                                            <input type="radio" name="radio" checked="checked" />
+                                                                            <div class="control__indicator"></div>
+                                                                        </label>
+                                                                    </li>
+                                                                    <li class="list-group-item">
+                                                                        <label class="control control--radio">07:00 PM - 09:00PM
+                                                                            <input type="radio" name="radio" />
+                                                                            <div class="control__indicator"></div>
+                                                                        </label>
+                                                                    </li>
+                                                                    <li class="list-group-item">
+                                                                        <label class="control control--radio">08:00 PM - 11:00PM
+                                                                            <input type="radio" name="radio" />
+                                                                            <div class="control__indicator"></div>
+                                                                        </label>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                        <div role="tabpanel" class="tab-pane" id="settings">
+                                                            <div class="time-slots">
+                                                                <ul class="list-group">
+                                                                    <li class="list-group-item">
+                                                                        <label class="control control--radio">05:00 PM - 07:00PM
+                                                                            <input type="radio" name="radio" checked="checked" />
+                                                                            <div class="control__indicator"></div>
+                                                                        </label>
+                                                                    </li>
+                                                                    <li class="list-group-item">
+                                                                        <label class="control control--radio">07:00 PM - 09:00PM
+                                                                            <input type="radio" name="radio" />
+                                                                            <div class="control__indicator"></div>
+                                                                        </label>
+                                                                    </li>
+                                                                    <li class="list-group-item">
+                                                                        <label class="control control--radio">08:00 PM - 11:00PM
+                                                                            <input type="radio" name="radio" />
+                                                                            <div class="control__indicator"></div>
+                                                                        </label>
+                                                                    </li>
+                                                                    <li class="list-group-item">
+                                                                        <label class="control control--radio">05:00 PM - 07:00PM
+                                                                            <input type="radio" name="radio" checked="checked" />
+                                                                            <div class="control__indicator"></div>
+                                                                        </label>
+                                                                    </li>
+                                                                    <li class="list-group-item">
+                                                                        <label class="control control--radio">07:00 PM - 09:00PM
+                                                                            <input type="radio" name="radio" />
+                                                                            <div class="control__indicator"></div>
+                                                                        </label>
+                                                                    </li>
+                                                                    <li class="list-group-item">
+                                                                        <label class="control control--radio">08:00 PM - 11:00PM
+                                                                            <input type="radio" name="radio" />
+                                                                            <div class="control__indicator"></div>
+                                                                        </label>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <a class="collapsed btn btn-default" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour"> Next </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel checkout-step">
+                            <div role="tab" id="headingFour"> <span class="checkout-step-number">4</span>
+                                <h4 class="checkout-step-title"> <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour"  > Payment </a> </h4>
+                            </div>
+                            <div id="collapseFour" class="panel-collapse collapse">
+                                <div class="checkout-step-body">
+                                    <div class="checkout-payment-mode">
+                                        <div class="select-locations">
+                                            <label class="control control--radio"><!--Cash on Delivery-->Corporate Account/ Cheque Payment
+                                                <input type="radio" name="radio" checked="checked" />
+                                                <div class="control__indicator"></div>
+                                            </label>
+                                            <label class="control control--radio">Online Payment
+                                                <input type="radio" name="radio" />
+                                                <div class="control__indicator"></div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <a href="#" class="btn btn-default">Proccess to payment</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="checkout-sidebar">
+                                <div class="checkout-total">
+                                    <div class="checkout-invoice">
+                                        <div class="checout-invoice-title">Subtotal</div>
+                                        <div class="checout-invoice-price">10</div>
+                                    </div>
+                                    <div class="checkout-charges">
+                                        <div class="checout-charges-title">Delivery Charges</div>
+                                        <div class="checout-charges-price charges-free">FREE</div>
+                                    </div>
+                                </div>
+                                <div class="checkout-payable">
+                                    <div class="checkout-payable-title">Delivery Charges <small>(incl. of all taxes)</small></div>
+                                    <div class="checkout-payable-price">39</div>
+                                </div>
+                            </div>
+                            <div class=" checkout-promo-code">
+                                <a href="#" class="checkout-promo-cta">Verify phone number to add promo code</a>
+                            </div>
+                            <div class="checkout-promocode-form">
+                                <form class="promo-form">
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <label class="control-label sr-only" for="firstname"></label>
+                                            <input type="text" class="form-control" placeholder="Promo Code" id="firstname" required="">
+                                            <span class="input-group-btn">
+                                        <button class="btn btn-primary" type="submit">Apply</button>
+                                      </span>
+                                        </div>
+                                        <!-- /input-group -->
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="checkout-sidebar-merchant-box">
+                                <div class="checkout-cart-merchant-box"> <span class="checkout-cart-merchant-name">Super Store - Science City</span> <span class="checkout-cart-merchant-item">4 item</span> </div>
+                                <div class="checkout-cart-products">
+                                    <div class="collapse" id="collapseExample">
+                                        <div class="checkout-item-list">
+                                            <div class="checkout-charges">
+                                                <div class="checout-charges-title">Delivery Charges</div>
+                                                <div class="checout-charges-price charges-free">FREE</div>
+                                            </div>
+                                            <div class="checkout-cart-item">
+                                                <div class="checkout-item-count">1</div>
+                                                <div class="checkout-item-img"><img src="images/product-img.png" alt="" class="img-responsive"></div>
+                                                <div class="checkout-item-name-box">
+                                                    <div class="checkout-item-title">Brooke Bond Taj Mahal Tea (Carton)</div>
+                                                    <div class="checkout-item-unit">150gm <span class="badge badge-danger">Not Replaceable</span></div>
+                                                </div>
+                                                <div class="checkout-item-price">$12</div>
+                                            </div>
+                                            <div class="checkout-cart-item">
+                                                <div class="checkout-item-count">2</div>
+                                                <div class="checkout-item-img"><img src="images/product-img.png" alt="" class="img-responsive"></div>
+                                                <div class="checkout-item-name-box">
+                                                    <div class="checkout-item-title">Brooke Bond Taj Mahal Tea (Carton)</div>
+                                                    <div class="checkout-item-unit">150gm <span class="badge badge-success">Replaceable</span></div>
+                                                </div>
+                                                <div class="checkout-item-price">$12</div>
+                                            </div>
+                                            <div class="checkout-cart-item">
+                                                <div class="checkout-item-count">3</div>
+                                                <div class="checkout-item-img"><img src="images/product-img.png" alt="" class="img-responsive"></div>
+                                                <div class="checkout-item-name-box">
+                                                    <div class="checkout-item-title">Brooke Bond Taj Mahal Tea (Carton)</div>
+                                                    <div class="checkout-item-unit">150gm</div>
+                                                </div>
+                                                <div class="checkout-item-price">$12</div>
+                                            </div>
+                                            <div class="checkout-cart-item">
+                                                <div class="checkout-item-count">4</div>
+                                                <div class="checkout-item-img"><img src="images/product-img.png" alt="" class="img-responsive"></div>
+                                                <div class="checkout-item-name-box">
+                                                    <div class="checkout-item-title">Brooke Bond Taj Mahal Tea (Carton)</div>
+                                                    <div class="checkout-item-unit">150gm</div>
+                                                </div>
+                                                <div class="checkout-item-price">$12</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="checkout-viewmore-btn"> <a class="btn-link" role="button" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">View 4 item</a> </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="space-small bg-default bdr-btm">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                    <!-- feature block start -->
+                    <div class="feature-block feature-left">
+                        <div class="feature-icon">
+                            <div class="feature-icon-bg"> <i class="fa fa-tags"></i> </div>
+                        </div>
+                        <div class="feature-content">
+                            <h3 class="feature-title">Best Prices &amp; Offers</h3>
+                            <p>Cheaper prices than your local supermarket, great cashback offers to top it off.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.feature block start -->
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                    <!-- feature block start -->
+                    <div class="feature-block feature-left">
+                        <div class="feature-icon">
+                            <div class="feature-icon-bg"> <i class="fa fa-calendar-check-o"></i> </div>
+                        </div>
+                        <div class="feature-content">
+                            <h3 class="feature-title">Wide Assortment</h3>
+                            <p>Choose from 5000+ products across food, personal care, household & other categories.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.feature block start -->
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                    <!-- feature block start -->
+                    <div class="feature-block feature-left">
+                        <div class="feature-icon">
+                            <div class="feature-icon-bg"> <i class="fa fa-refresh"></i> </div>
+                        </div>
+                        <div class="feature-content">
+                            <h3 class="feature-title">Easy Returns</h3>
+                            <p>Not satisfied with a product? Return it at the doorstep & get a refund within hours.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.feature block start -->
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-5 col-sm-5 col-md-5 col-xs-12">
+                    <div class="footer-block">
+                        <div class="about-info">
+                            <h3 class="footer-title">About Hyperlocal</h3>
+                            <p>'HYPERLOCAL' is owned & managed by <strong>“Hyperlocal India Private Limited”</strong> and is not related, linked or interconnected in whatsoever manner or nature,to “HyperlocaL” which is a real estate services business operated by “Consultancy Services Private Limited”.</p>
+                            <a href="#" class="btn-link">Read More</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                    <div class="footer-block">
+                        <h3 class="footer-title">Useful Links</h3>
+                        <ul class="listnone">
+                            <li><a href="#">Get Your Store Listed</a></li>
+                            <li><a href="#">Blog</a></li>
+                            <li><a href="#">FAQ</a></li>
+                            <li><a href="#">Terms & Conditions</a></li>
+                            <li><a href="#">Careers</a></li>
+                            <li><a href="#">About Us</a></li>
+                            <li><a href="#">Contact Us</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-3 col-md-3 col-xs-12">
+                    <div class="footer-block">
+                        <h3 class="footer-title">Download App</h3>
+                        <div class="app-action">
+                            <a href="#"><img src="images/playstore.png" class="app-btn"></a>
+                            <a href="#"><img src="images/app-store-logo.png" class="app-btn"></a>
+                        </div>
+                        <div class="footer-social">
+                            <a href="#" class="fa fa-facebook-square"></a>
+                            <a href="#" class="fa fa-twitter-square"></a>
+                            <a href="#" class="fa fa-instagram"></a>
+                            <a href="#" class="fa fa-youtube-square"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="tinyfooter">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <p class="footer-text">© Hyperlocal India Pvt. Ltd., 2016-2017</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Button trigger modal -->
+    <!-- Modal -->
+    <div class="addressModal">
+        <div class="modal fade" id="addressModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h2>Add New Delivery Address</h2></div>
+                            <div class="addnews-address-form">
+                                <form>
+                                    <!-- Multiple Radios (inline) -->
+                                    <div class="form-group">
+                                        <label class="col-md-12 control-label" for="address"></label>
+                                        <div class="col-md-12">
+                                            <div class="select-locations">
+                                                <label class="control control--radio">Home
+                                                    <input type="radio" name="radio" checked="checked" />
+                                                    <div class="control__indicator"></div>
+                                                </label>
+                                                <label class="control control--radio">Office
+                                                    <input type="radio" name="radio" />
+                                                    <div class="control__indicator"></div>
+                                                </label>
+                                                <label class="control control--radio">Other
+                                                    <input type="radio" name="radio" />
+                                                    <div class="control__indicator"></div>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Text input-->
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <label class="control-label" for="name">Name</label>
+                                            <input id="name" name="name" type="text" placeholder="Name" class="form-control input-md" required="">
+                                        </div>
+                                    </div>
+                                    <!-- Text input-->
+                                    <div class="form-group">
+                                        <label class="col-md-12 control-label" for="flat">Flat / House / Office No.</label>
+                                        <div class="col-md-12">
+                                            <input id="flat" name="flat" type="text" placeholder="address" class="form-control input-md" required="">
+                                        </div>
+                                    </div>
+                                    <!-- Text input-->
+                                    <div class="form-group">
+                                        <label class="col-md-12 control-label" for="street">Street / Society / Office Name</label>
+                                        <div class="col-md-12">
+                                            <input id="street" name="street" type="text" placeholder="Street Address" class="form-control input-md">
+                                        </div>
+                                    </div>
+                                    <!-- Text input-->
+                                    <div class="form-group">
+                                        <label class="col-md-12 control-label" for="Locality">Locality</label>
+                                        <div class="col-md-12">
+                                            <input id="Locality" name="Locality" type="text" placeholder="Ahmedabad" class="form-control input-md" required="">
+                                        </div>
+                                    </div>
+                                    <!-- Button -->
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <button id="singlebutton" name="singlebutton" class="btn btn-primary">Save</button>
+                                            <button type="button" class="btn btn-grey" data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="js/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/side-menu-script.js"></script>
+    <script type="text/javascript" src="js/jquery.validate.min.js"></script>
+    <script type="text/javascript">
+    $('form').validate({
+        rules: {
+            firstname: {
+                minlength: 3,
+                maxlength: 15,
+                required: true
+            }
+
+        },
+        highlight: function(element) {
+            $(element).closest('.form-group').addClass('has-error');
+        },
+        unhighlight: function(element) {
+            $(element).closest('.form-group').removeClass('has-error');
+        },
+        errorElement: 'span',
+        errorClass: 'help-block',
+        errorPlacement: function(error, element) {
+            if (element.parent('.input-group').length) {
+                error.insertAfter(element.parent());
+            } else {
+                error.insertAfter(element);
+            }
+        }
+    });
+    </script>
+    <script type="text/javascript">
+    $(document).ready(function() {
+        var divs = $('.mydivs>div');
+        var now = 0; // currently shown div
+        divs.hide().first().show();
+        $("button[name=next]").click(function(e) {
+            divs.eq(now).hide();
+            now = (now + 1 < divs.length) ? now + 1 : 0;
+            divs.eq(now).show(); // show next
+        });
+        $("button[name=prev]").click(function(e) {
+            divs.eq(now).hide();
+            now = (now > 0) ? now - 1 : divs.length - 1;
+            divs.eq(now).show(); // or .css('display','block');
+            //console.log(divs.length, now);
+        });
+    });
+    </script>
+    <script type="text/javascript" src="js/jquery.sticky.js"></script>
+    <script type="text/javascript" src="js/header-sticky.js"></script>
+</body>
+
+</html>

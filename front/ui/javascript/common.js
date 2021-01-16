@@ -696,7 +696,6 @@ $(document).delegate('.mini-cart-button', 'click', function (e) {
 			console.log(json);
 
 			for (var key in json['store_note']) {
-				//alert("User " + data[key] + " is #" + key); // "User john is #234"
 				$('.store_note' + key).html(json['store_note'][key]);
 
 				console.log(json['store_note'][key]);
