@@ -1038,6 +1038,9 @@ $.ajax({
 });   
 }        
 }
+setInterval(function() {
+$('#svg'+clicked_orderid).attr('stroke', '#51AB66');
+}, 4000); // 60 * 1000 milsec
 });
             
 </script>
