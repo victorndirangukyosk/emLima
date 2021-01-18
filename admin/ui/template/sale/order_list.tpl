@@ -774,10 +774,10 @@
 
                                             <div class="form-row">
                                                 <div class="form-group">
-                                                    <label > Delivery Executive </label>
+                                                    <label for="input-order-status" class="control-label"> Delivery Executive </label>
                                                     <div class="col-md-12">
                                                         <!--<input id="order_delivery_executive" maxlength="30" required style="max-width:100% ;" name="order_delivery_executive" type="text" placeholder="Delivery Executive" class="form-control" data_delivery_executive_id="" required>-->
-                                                        <select maxlength="30" required style="max-width:100%;" name="order_delivery_executives" id="order_delivery_executives" class="form-control" required="">
+                                                        <select name="order_delivery_executives" id="order_delivery_executives" class="form-control" required="">
                                                         <option>Select Delivery Executive</option>
                                                         <?php foreach ($delivery_executives as $delivery_executive) { ?>
                                                         <option value="<?php echo $delivery_executive['delivery_executive_id']; ?>"><?php echo $delivery_executive['name']; ?></option>
