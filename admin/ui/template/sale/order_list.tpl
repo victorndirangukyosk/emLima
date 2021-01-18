@@ -792,7 +792,7 @@
                                                     
                                                     <div class="col-md-12">
                                                         <!--<input id="order_driver" maxlength="30" required style="max-width:100% ;" name="order_driver" type="text" placeholder="Driver" class="form-control" data_driver_id="" required>-->
-                                                        <select maxlength="30" required style="max-width:100%;" name="order_drivers" id="order_drivers" class="form-control" required="">
+                                                        <select name="order_drivers" id="order_drivers" class="form-control" required="">
                                                         <option>Select Driver</option>
                                                         <?php foreach ($drivers as $driver) { ?>
                                                         <option value="<?php echo $driver['driver_id']; ?>"><?php echo $driver['name']; ?></option>
