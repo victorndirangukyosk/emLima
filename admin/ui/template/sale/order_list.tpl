@@ -794,7 +794,7 @@
                                                     <label> Vehicle Number </label>
 
                                                     <div class="col-md-12">
-                                                        <input id="order_vehicle_number" maxlength="30" required style="max-width:100% ;" name="order_vehicle_number" type="text" placeholder="Vehicle Number" class="form-control input-md" required>
+                                                        <input id="order_vehicle_number" maxlength="10" required style="max-width:100% ;" name="order_vehicle_number" type="text" placeholder="Vehicle Number" class="form-control input-md" required>
                                                     <br/> </div>
                                                 </div>
 
@@ -929,7 +929,24 @@ function savedriverdetails() {
                       $('#driverModal-message').html("Please enter data");
                        return false;
                 } 
-                else{  
+                else{
+            var clicked_orderid = order_id;        
+            $.ajax({
+		url: 'index.php?path=sale/order/api&token=<?php echo $token; ?>&api=api/order/history&order_id='+clicked_orderid+'&added_by=<?php echo $this->user->getId(); ?>&added_by_role=<?php echo $this->user->getGroupName(); ?>',
+		type: 'post',
+		dataType: 'json',
+		data: 'order_status_id=' + encodeURIComponent($('select[id=\'input-order-status'+clicked_orderid+'\']').val()) + '&notify=1',
+		success: function(json) {	 
+                    console.log(json);
+                    $('.alert').html('Order status updated successfully!');
+                    $(".alert").attr('class', 'alert alert-success');
+                    $(".alert").show();
+                    //setTimeout(function(){ window.location.reload(false); }, 1500);
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {		
+			 
+		}
+            });
                   
                     $.ajax({
                     url: 'index.php?path=sale/order/SaveOrUpdateOrderDriverVehicleDetails&token=<?php echo $token; ?>',
@@ -1001,6 +1018,7 @@ $('#driverModal').modal('toggle');
 savedriverdetails();
 }
 
+if(selected_order_status_id != 3) {
 $.ajax({
 		url: 'index.php?path=sale/order/api&token=<?php echo $token; ?>&api=api/order/history&order_id='+clicked_orderid+'&added_by=<?php echo $this->user->getId(); ?>&added_by_role=<?php echo $this->user->getGroupName(); ?>',
 		type: 'post',
@@ -1016,7 +1034,8 @@ $.ajax({
 		error: function(xhr, ajaxOptions, thrownError) {		
 			 
 		}
-	});    
+});   
+}        
 }	
 });
             
