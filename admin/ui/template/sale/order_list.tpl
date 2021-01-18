@@ -1118,3 +1118,11 @@ $('input[name=\'order_delivery_executive\']').autocomplete({
 });
 </script></div>
 <?php echo $footer; ?>
+
+<style>
+
+.bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn)
+{
+ width: 100%;
+}
+</style>
