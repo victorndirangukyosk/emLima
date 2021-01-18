@@ -855,4 +855,29 @@ class ControllerDriversDriversList extends Controller {
         return !$this->error;
     }
 
+    public function getAllDrivers() {
+        $this->load->model('drivers/drivers');
+
+        $results = $this->model_drivers_drivers->getDrivers();
+
+        foreach ($results as $result) {
+            if ($this->user->isVendor()) {
+                $result['name'] = $result['firstname'];
+            }
+
+            $json[] = [
+                'driver_id' => $result['driver_id'],
+                'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')),
+                'firstname' => $result['firstname'],
+                'lastname' => $result['lastname'],
+                'email' => $result['email'],
+                'driving_licence' => $result['driving_licence'],
+                'telephone' => $result['telephone'],
+            ];
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
 }

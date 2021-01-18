@@ -1455,6 +1455,14 @@ class ControllerSaleOrder extends Controller {
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
+        
+        $this->load->model('executives/executives');
+        $delivery_executives = $this->model_executives_executives->getExecutives();
+        $data['delivery_executives'] = $delivery_executives;
+        
+        $this->load->model('drivers/drivers');
+        $drivers = $this->model_drivers_drivers->getDrivers();
+        $data['drivers'] = $drivers;
 
         $this->response->setOutput($this->load->view('sale/order_list.tpl', $data));
     }

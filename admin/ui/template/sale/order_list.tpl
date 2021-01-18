@@ -776,16 +776,28 @@
                                                 <div class="form-group">
                                                     <label > Delivery Executive </label>
                                                     <div class="col-md-12">
-                                                        <input id="order_delivery_executive" maxlength="30" required style="max-width:100% ;" name="order_delivery_executive" type="text" placeholder="Delivery Executive" class="form-control" data_delivery_executive_id="" required>
+                                                        <!--<input id="order_delivery_executive" maxlength="30" required style="max-width:100% ;" name="order_delivery_executive" type="text" placeholder="Delivery Executive" class="form-control" data_delivery_executive_id="" required>-->
+                                                        <select maxlength="30" required style="max-width:100%;" name="order_delivery_executives" id="order_delivery_executives" class="form-control" required="">
+                                                        <option>Select Delivery Executive</option>
+                                                        <?php foreach ($delivery_executives as $delivery_executive) { ?>
+                                                        <option value="<?php echo $delivery_executive['delivery_executive_id']; ?>"><?php echo $delivery_executive['name']; ?></option>
+                                                        <?php } ?>
+                                                        </select>
                                                     <br/></div>
                                                 </div>
                                                 
                                                 <div class="form-group">
                                                     <label > Driver </label>
                                                         <input id="order_id"   name="order_id" type="hidden"  class="form-control input-md" required>
-
+                                                    
                                                     <div class="col-md-12">
-                                                        <input id="order_driver" maxlength="30" required style="max-width:100% ;" name="order_driver" type="text" placeholder="Driver" class="form-control" data_driver_id="" required>
+                                                        <!--<input id="order_driver" maxlength="30" required style="max-width:100% ;" name="order_driver" type="text" placeholder="Driver" class="form-control" data_driver_id="" required>-->
+                                                        <select maxlength="30" required style="max-width:100%;" name="order_drivers" id="order_drivers" class="form-control" required="">
+                                                        <option>Select Driver</option>
+                                                        <?php foreach ($drivers as $driver) { ?>
+                                                        <option value="<?php echo $driver['driver_id']; ?>"><?php echo $driver['name']; ?></option>
+                                                        <?php } ?>    
+                                                        </select>
                                                     <br/></div>
                                                 </div>
 
@@ -915,9 +927,11 @@ function savedriverdetails() {
     $('#driverModal-message').html('');
     $('#driverModal-success-message').html('');
    var order_id = $('input[name="order_id"]').val();
-   var driver_id = $('input[name="order_driver"]').attr("data_driver_id");
+   var driver_id = $('select[name="order_drivers"]').val();
+   //var driver_id = $('input[name="order_driver"]').attr("data_driver_id");
    var vehicle_number =  $('input[name="order_vehicle_number"]').val();
-   var delivery_executive_id =  $('input[name="order_delivery_executive"]').attr("data_delivery_executive_id");
+   var delivery_executive_id =  $('select[name="order_delivery_executives"]').val();
+   //var delivery_executive_id =  $('input[name="order_delivery_executive"]').attr("data_delivery_executive_id");
     console.log(vehicle_number);
     console.log(driver_id);
     console.log(delivery_executive_id);
