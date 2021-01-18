@@ -1038,7 +1038,6 @@ $.ajax({
 });   
 }        
 }
-$('#svg'+clicked_orderid).attr('stroke', '#51AB66');
 });
             
 </script>
