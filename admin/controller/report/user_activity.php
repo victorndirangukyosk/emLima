@@ -111,6 +111,7 @@ class ControllerReportUserActivity extends Controller {
                 'account_manager_id=',
                 'customer_id=',
                 'driver_id=',
+                'order_processing_group_id=',
             ];
 
             $replace = [
@@ -119,6 +120,7 @@ class ControllerReportUserActivity extends Controller {
                 $this->url->link('sale/accountmanager/edit', 'token=' . $this->session->data['token'] . '&user_id=', 'SSL'),
                 $this->url->link('sale/customer/edit', 'token=' . $this->session->data['token'] . '&customer_id=', 'SSL'),
                 $this->url->link('drivers/drivers_list/edit', 'token=' . $this->session->data['token'] . '&driver_id=', 'SSL'),
+                $this->url->link('orderprocessinggroup/orderprocessinggroup_list/edit', 'token=' . $this->session->data['token'] . '&order_processing_group_id=', 'SSL'),
             ];
 
             $data['activities'][] = [

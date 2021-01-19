@@ -42,8 +42,9 @@ $_['text_executive_delete'] = '<a href="user_id=%d">%s</a> delete a <a href="exe
 $_['text_order_vehicle_assigned'] =  '<a href="user_id=%d">%s</a> assigned <a href="order_id=%d">vehicle to order</a>.';
 $_['text_order_driver_assigned'] =  '<a href="user_id=%d">%s</a> assigned <a href="order_id=%d">driver to order</a>.';
 $_['text_order_delivery_executive_assigned'] =  '<a href="user_id=%d">%s</a> assigned <a href="order_id=%d">delivery executive to order</a>.';
-
-
+$_['text_order_processing_group_add'] = '<a href="user_id=%d">%s</a> created a new <a href="order_processing_group_id=%d">order processing group</a>.';
+$_['text_orderprocessinggroup_edit'] = '<a href="user_id=%d">%s</a> edited <a href="order_processing_group_id=%d">order processing group</a>.';
+$_['text_order_processing_group_delete'] = '<a href="user_id=%d">%s</a> deleted <a href="order_processing_group_id=%d">order processing group</a>.';
 
 // Column
 $_['column_user'] = 'User';

@@ -193,7 +193,7 @@ $('.date').datetimepicker({
 
 function excel() {
             
-    url = 'index.php?path=executives/executives_list/export_excel&token=<?php echo $token; ?>';
+    url = 'index.php?path=orderprocessinggroup/orderprocessinggroup_list/export_excel&token=<?php echo $token; ?>';
     
     location = url;
 }
