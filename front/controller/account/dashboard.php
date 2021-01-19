@@ -680,7 +680,7 @@ class ControllerAccountDashboard extends Controller
             $this->response->setOutput(json_encode(null));
         }
     }
-
+    //below method used in dashboard and reorder of order list
     public function addOrderProductToCart()
     {
         $this->load->model('account/wishlist');
