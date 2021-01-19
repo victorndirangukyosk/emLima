@@ -215,19 +215,11 @@ class ControllerOrderProcessingGroupOrderProcessingGroupList extends Controller 
 
         $data['column_name'] = $this->language->get('column_name');
         $data['column_email'] = $this->language->get('column_email');
-        /* $data['column_driving_licence'] = $this->language->get('column_driving_licence'); */
-        $data['column_telephone'] = $this->language->get('column_telephone');
-        $data['column_customer_group'] = $this->language->get('column_customer_group');
         $data['column_status'] = $this->language->get('column_status');
         $data['column_date_added'] = $this->language->get('column_date_added');
         $data['column_action'] = $this->language->get('column_action');
 
-        $data['entry_name'] = $this->language->get('entry_name');
-        $data['entry_email'] = $this->language->get('entry_email');
-        /* $data['entry_driving_licence'] = $this->language->get('entry_driving_licence'); */
-
-
-        $data['entry_telephone'] = $this->language->get('entry_telephone');
+        $data['entry_name'] = $this->language->get('short_entry_name');
         $data['entry_status'] = $this->language->get('entry_status');
         $data['entry_date_added'] = $this->language->get('entry_date_added');
 
@@ -346,11 +338,11 @@ class ControllerOrderProcessingGroupOrderProcessingGroupList extends Controller 
         $data['text_disabled'] = $this->language->get('text_disabled');
         $data['text_loading'] = $this->language->get('text_loading');
 
-        $data['entry_name'] = $this->language->get('entry_name');
+        $data['entry_name'] = $this->language->get('short_entry_name');
 
 
         $data['entry_status'] = $this->language->get('entry_status');
-        $data['entry_name'] = $this->language->get('entry_name');
+        $data['entry_name'] = $this->language->get('short_entry_name');
 
         $data['button_save'] = $this->language->get('button_save');
         $data['button_savenew'] = $this->language->get('button_savenew');
