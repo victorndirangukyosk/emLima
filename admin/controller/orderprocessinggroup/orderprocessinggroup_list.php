@@ -194,9 +194,9 @@ class ControllerOrderProcessingGroupOrderProcessingGroupList extends Controller 
 
             $data['orderprocessinggroups'][] = [
                 'order_processing_group_id' => $result['order_processing_group_id'],
-                'name' => $result['name'],
+                'order_processing_group_name' => $result['order_processing_group_name'],
                 'status' => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
-                'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
+                'created_at' => date($this->language->get('date_format_short'), strtotime($result['created_at'])),
                 'edit' => $this->url->link('orderprocessinggroup/orderprocessinggroup_list/edit', 'token=' . $this->session->data['token'] . '&order_processing_group_id=' . $result['order_processing_group_id'] . $url, 'SSL'),
                 'orderprocessinggroup_view' => $this->url->link('orderprocessinggroup/orderprocessinggroup_list/view_orderprocessinggroup', 'token=' . $this->session->data['token'] . '&order_processing_group_id=' . $result['order_processing_group_id'] . $url, 'SSL'),
             ];
@@ -281,7 +281,7 @@ class ControllerOrderProcessingGroupOrderProcessingGroupList extends Controller 
 
         $data['sort_name'] = $this->url->link('orderprocessinggroup/orderprocessinggroup_list', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
         $data['sort_status'] = $this->url->link('orderprocessinggroup/orderprocessinggroup_list', 'token=' . $this->session->data['token'] . '&sort=c.status' . $url, 'SSL');
-        $data['sort_date_added'] = $this->url->link('orderprocessinggroup/orderprocessinggroup_list', 'token=' . $this->session->data['token'] . '&sort=c.date_added' . $url, 'SSL');
+        $data['sort_date_added'] = $this->url->link('orderprocessinggroup/orderprocessinggroup_list', 'token=' . $this->session->data['token'] . '&sort=c.created_at' . $url, 'SSL');
 
         $url = '';
 
@@ -342,7 +342,7 @@ class ControllerOrderProcessingGroupOrderProcessingGroupList extends Controller 
 
 
         $data['entry_status'] = $this->language->get('entry_status');
-        $data['entry_name'] = $this->language->get('short_entry_name');
+        $data['entry_description'] = $this->language->get('entry_description');
 
         $data['button_save'] = $this->language->get('button_save');
         $data['button_savenew'] = $this->language->get('button_savenew');
@@ -434,12 +434,20 @@ class ControllerOrderProcessingGroupOrderProcessingGroupList extends Controller 
             $orderprocessinggroup_info = $this->model_orderprocessinggroup_orderprocessinggroup->getOrderProcessingGroup($this->request->get['order_processing_group_id']);
         }
 
-        if (isset($this->request->post['name'])) {
-            $data['name'] = $this->request->post['name'];
+        if (isset($this->request->post['order_processing_group_name'])) {
+            $data['order_processing_group_name'] = $this->request->post['order_processing_group_name'];
         } elseif (!empty($orderprocessinggroup_info)) {
-            $data['name'] = $orderprocessinggroup_info['name'];
+            $data['order_processing_group_name'] = $orderprocessinggroup_info['order_processing_group_name'];
         } else {
-            $data['name'] = '';
+            $data['order_processing_group_name'] = '';
+        }
+        
+        if (isset($this->request->post['description'])) {
+            $data['description'] = $this->request->post['description'];
+        } elseif (!empty($orderprocessinggroup_info)) {
+            $data['description'] = $orderprocessinggroup_info['description'];
+        } else {
+            $data['description'] = '';
         }
 
         //echo "<pre>";print_r($data);die;
@@ -465,11 +473,15 @@ class ControllerOrderProcessingGroupOrderProcessingGroupList extends Controller 
             $this->error['warning'] = $this->language->get('error_permission');
         }
 
-        if ((utf8_strlen($this->request->post['name']) < 1) || (utf8_strlen(trim($this->request->post['name'])) > 32)) {
-            $this->error['name'] = $this->language->get('error_name');
+        if ((utf8_strlen($this->request->post['order_processing_group_name']) < 1) || (utf8_strlen(trim($this->request->post['order_processing_group_name'])) > 32)) {
+            $this->error['order_processing_group_name'] = $this->language->get('error_name');
+        }
+        
+        if ((utf8_strlen($this->request->post['description']) < 1) || (utf8_strlen(trim($this->request->post['description'])) > 32)) {
+            $this->error['description'] = $this->language->get('error_description');
         }
 
-        $orderprocessinggroup_info = $this->model_executives_executives->getExecutiveByName($this->request->post['name']);
+        $orderprocessinggroup_info = $this->model_orderprocessinggroup_orderprocessinggroup->getOrderProcessingGroupByName($this->request->post['order_processing_group_name']);
 
         if (!isset($this->request->get['order_processing_group_id'])) {
             if ($orderprocessinggroup_info) {

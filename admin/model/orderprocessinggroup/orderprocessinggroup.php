@@ -9,7 +9,7 @@ class ModelOrderProcessingGroupOrderProcessingGroup extends Model {
     }
 
     public function editOrderProcessingGroup($order_processing_group_id, $data) {
-        $this->db->query('UPDATE ' . DB_PREFIX . "order_processing_groups SET order_processing_group_name = '" . $this->db->escape($data['order_processing_group_name']) . "', description = '" . $this->db->escape($data['description']) . "', updated_at = '" . NOW() . "' WHERE order_processing_group_id = '" . (int) $order_processing_group_id . "'");
+        $this->db->query('UPDATE ' . DB_PREFIX . "order_processing_groups SET order_processing_group_name = '" . $this->db->escape($data['order_processing_group_name']) . "', description = '" . $this->db->escape($data['description']) . "', updated_at = NOW() WHERE order_processing_group_id = '" . (int) $order_processing_group_id . "'");
     }
 
     public function deleteOrderProcessingGroup($order_processing_group_id) {
