@@ -590,7 +590,7 @@ class ControllerOrderProcessingGroupOrderProcessingGroupList extends Controller 
 
                 $json[] = [
                     'order_processing_group_id' => $result['order_processing_group_id'],
-                    'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')),
+                    'order_processing_group_name' => strip_tags(html_entity_decode($result['order_processing_group_name'], ENT_QUOTES, 'UTF-8')),
                 ];
             }
         }
@@ -598,7 +598,7 @@ class ControllerOrderProcessingGroupOrderProcessingGroupList extends Controller 
         $sort_order = [];
 
         foreach ($json as $key => $value) {
-            $sort_order[$key] = $value['name'];
+            $sort_order[$key] = $value['order_processing_group_name'];
         }
 
         array_multisort($sort_order, SORT_ASC, $json);

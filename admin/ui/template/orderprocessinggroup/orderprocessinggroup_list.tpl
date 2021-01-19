@@ -139,32 +139,20 @@
   </div>
   <script type="text/javascript"><!--
 $('#button-filter').on('click', function() {
-  url = 'index.php?path=executives/executives_list&token=<?php echo $token; ?>';
+  url = 'index.php?path=orderprocessinggroup/orderprocessinggroup_list&token=<?php echo $token; ?>';
   
   var filter_name = $('input[name=\'filter_name\']').val();
   
   if (filter_name) {
     url += '&filter_name=' + encodeURIComponent(filter_name);
   }
-  
-  var filter_email = $('input[name=\'filter_email\']').val();
-  
-  if (filter_email) {
-    url += '&filter_email=' + encodeURIComponent(filter_email);
-  } 
-  
+    
   var filter_status = $('select[name=\'filter_status\']').val();
   
   if (filter_status != '*') {
     url += '&filter_status=' + encodeURIComponent(filter_status); 
   } 
-  
-  var filter_telephone = $('input[name=\'filter_telephone\']').val();
-  
-  if (filter_telephone) {
-    url += '&filter_telephone=' + encodeURIComponent(filter_telephone);
-  } 
-    
+     
   var filter_date_added = $('input[name=\'filter_date_added\']').val();
   
   if (filter_date_added) {
@@ -180,13 +168,13 @@ $('#button-filter').on('click', function() {
 $('input[name=\'filter_name\']').autocomplete({
   'source': function(request, response) {
     $.ajax({
-      url: 'index.php?path=executives/executives_list/autocompletebyExecutiveName&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request)+'&filter_company=' +$executiveName,
+      url: 'index.php?path=orderprocessinggroup/orderprocessinggroup_list/autocompletebyOrderProcessingGroupName&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request)+'&filter_company=' +$executiveName,
       dataType: 'json',     
       success: function(json) {
         response($.map(json, function(item) {
           return {
-            label: item['name'],
-            value: item['executive_id']
+            label: item['order_processing_group_name'],
+            value: item['order_processing_group_id']
           }
         }));
       }
@@ -194,26 +182,6 @@ $('input[name=\'filter_name\']').autocomplete({
   },
   'select': function(item) {
     $('input[name=\'filter_name\']').val(item['label']);
-  } 
-});
-
-$('input[name=\'filter_email\']').autocomplete({
-  'source': function(request, response) {
-    $.ajax({
-      url: 'index.php?path=executives/executives_list/autocompletebyExecutiveName&token=<?php echo $token; ?>&filter_email=' +  encodeURIComponent(request),
-      dataType: 'json',     
-      success: function(json) {
-        response($.map(json, function(item) {
-          return {
-            label: item['email'],
-            value: item['executive_id']
-          }
-        }));
-      }
-    });
-  },
-  'select': function(item) {
-    $('input[name=\'filter_email\']').val(item['label']);
   } 
 });
 //--></script> 
