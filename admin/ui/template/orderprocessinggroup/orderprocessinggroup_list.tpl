@@ -109,7 +109,7 @@
                 <?php if ($orderprocessinggroups) { ?>
                 <?php foreach ($orderprocessinggroups as $orderprocessinggroup) { ?>
                 <tr>
-                  <td class="text-center"><?php if (in_array($orderprocessinggroup['order_processing_group_id '], $selected)) { ?>
+                  <td class="text-center"><?php if (in_array($orderprocessinggroup['order_processing_group_id'], $selected)) { ?>
                     <input type="checkbox" name="selected[]" value="<?php echo $orderprocessinggroup['order_processing_group_id']; ?>" checked="checked" />
                     <?php } else { ?>
                     <input type="checkbox" name="selected[]" value="<?php echo $orderprocessinggroup['order_processing_group_id']; ?>" />
