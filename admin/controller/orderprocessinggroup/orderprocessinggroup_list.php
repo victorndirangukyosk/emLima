@@ -341,18 +341,14 @@ class ControllerOrderProcessingGroupOrderProcessingGroupList extends Controller 
 
         $data['entry_referred_by'] = $this->language->get('entry_referred_by');
 
-        $data['text_form'] = !isset($this->request->get['executive_id']) ? $this->language->get('text_add') : $this->language->get('text_edit');
+        $data['text_form'] = !isset($this->request->get['order_processing_group_id']) ? $this->language->get('text_add') : $this->language->get('text_edit');
         $data['text_enabled'] = $this->language->get('text_enabled');
         $data['text_disabled'] = $this->language->get('text_disabled');
         $data['text_loading'] = $this->language->get('text_loading');
 
-        $data['entry_firstname'] = $this->language->get('entry_firstname');
-        $data['entry_lastname'] = $this->language->get('entry_lastname');
-        $data['entry_email'] = $this->language->get('entry_email');
-        /* $data['entry_driving_licence'] = $this->language->get('entry_driving_licence'); */
+        $data['entry_name'] = $this->language->get('entry_name');
 
 
-        $data['entry_telephone'] = $this->language->get('entry_telephone');
         $data['entry_status'] = $this->language->get('entry_status');
         $data['entry_name'] = $this->language->get('entry_name');
 
@@ -366,10 +362,10 @@ class ControllerOrderProcessingGroupOrderProcessingGroupList extends Controller 
         $data['token'] = $this->session->data['token'];
 
 
-        if (isset($this->request->get['executive_id'])) {
-            $data['executive_id'] = $this->request->get['executive_id'];
+        if (isset($this->request->get['order_processing_group_id'])) {
+            $data['order_processing_group_id'] = $this->request->get['order_processing_group_id'];
         } else {
-            $data['executive_id'] = 0;
+            $data['order_processing_group_id'] = 0;
         }
 
         if (isset($this->error['warning'])) {
@@ -385,34 +381,10 @@ class ControllerOrderProcessingGroupOrderProcessingGroupList extends Controller 
             $data['success'] = '';
         }
 
-        if (isset($this->error['firstname'])) {
-            $data['error_firstname'] = $this->error['firstname'];
+        if (isset($this->error['name'])) {
+            $data['error_name'] = $this->error['name'];
         } else {
-            $data['error_firstname'] = '';
-        }
-
-        if (isset($this->error['lastname'])) {
-            $data['error_lastname'] = $this->error['lastname'];
-        } else {
-            $data['error_lastname'] = '';
-        }
-
-        if (isset($this->error['email'])) {
-            $data['error_email'] = $this->error['email'];
-        } else {
-            $data['error_email'] = '';
-        }
-
-        /* if (isset($this->error['driving_licence'])) {
-          $data['error_driving_licence'] = $this->error['driving_licence'];
-          } else {
-          $data['error_driving_licence'] = '';
-          } */
-
-        if (isset($this->error['telephone'])) {
-            $data['error_telephone'] = $this->error['telephone'];
-        } else {
-            $data['error_telephone'] = '';
+            $data['error_name'] = '';
         }
 
         if (isset($this->error['confirm'])) {
@@ -426,14 +398,6 @@ class ControllerOrderProcessingGroupOrderProcessingGroupList extends Controller 
         if (isset($this->request->get['filter_name'])) {
             $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
         }
-
-        if (isset($this->request->get['filter_email'])) {
-            $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
-        }
-
-        /* if (isset($this->request->get['filter_driving_licence'])) {
-          $url .= '&filter_driving_licence=' . urlencode(html_entity_decode($this->request->get['filter_driving_licence'], ENT_QUOTES, 'UTF-8'));
-          } */
 
         if (isset($this->request->get['filter_status'])) {
             $url .= '&filter_status=' . $this->request->get['filter_status'];
@@ -464,65 +428,33 @@ class ControllerOrderProcessingGroupOrderProcessingGroupList extends Controller 
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('executives/executives_list', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+            'href' => $this->url->link('orderprocessinggroup/orderprocessinggroup_list', 'token=' . $this->session->data['token'] . $url, 'SSL'),
         ];
 
-        if (!isset($this->request->get['executive_id'])) {
-            $data['action'] = $this->url->link('executives/executives_list/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        if (!isset($this->request->get['order_processing_group_id'])) {
+            $data['action'] = $this->url->link('orderprocessinggroup/orderprocessinggroup_list/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
         } else {
-            $data['action'] = $this->url->link('executives/executives_list/edit', 'token=' . $this->session->data['token'] . '&executive_id=' . $this->request->get['executive_id'] . $url, 'SSL');
+            $data['action'] = $this->url->link('orderprocessinggroup/orderprocessinggroup_list/edit', 'token=' . $this->session->data['token'] . '&order_processing_group_id=' . $this->request->get['order_processing_group_id'] . $url, 'SSL');
         }
 
-        $data['cancel'] = $this->url->link('executives/executives_list', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        if (isset($this->request->get['executive_id']) && ('POST' != $this->request->server['REQUEST_METHOD'])) {
-            $executive_info = $this->model_executives_executives->getExecutive($this->request->get['executive_id']);
+        $data['cancel'] = $this->url->link('orderprocessinggroup/orderprocessinggroup_list', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        if (isset($this->request->get['order_processing_group_id']) && ('POST' != $this->request->server['REQUEST_METHOD'])) {
+            $orderprocessinggroup_info = $this->model_orderprocessinggroup_orderprocessinggroup->getOrderProcessingGroup($this->request->get['order_processing_group_id']);
         }
 
-        if (isset($this->request->post['firstname'])) {
-            $data['firstname'] = $this->request->post['firstname'];
-        } elseif (!empty($executive_info)) {
-            $data['firstname'] = $executive_info['firstname'];
+        if (isset($this->request->post['name'])) {
+            $data['name'] = $this->request->post['name'];
+        } elseif (!empty($orderprocessinggroup_info)) {
+            $data['name'] = $orderprocessinggroup_info['name'];
         } else {
-            $data['firstname'] = '';
-        }
-
-        if (isset($this->request->post['lastname'])) {
-            $data['lastname'] = $this->request->post['lastname'];
-        } elseif (!empty($executive_info)) {
-            $data['lastname'] = $executive_info['lastname'];
-        } else {
-            $data['lastname'] = '';
-        }
-
-        if (isset($this->request->post['email'])) {
-            $data['email'] = $this->request->post['email'];
-        } elseif (!empty($executive_info)) {
-            $data['email'] = $executive_info['email'];
-        } else {
-            $data['email'] = '';
-        }
-
-        /* if (isset($this->request->post['driving_licence'])) {
-          $data['driving_licence'] = $this->request->post['driving_licence'];
-          } elseif (!empty($executive_info)) {
-          $data['driving_licence'] = $executive_info['driving_licence'];
-          } else {
-          $data['driving_licence'] = '';
-          } */
-
-        if (isset($this->request->post['telephone'])) {
-            $data['telephone'] = $this->request->post['telephone'];
-        } elseif (!empty($executive_info)) {
-            $data['telephone'] = $executive_info['telephone'];
-        } else {
-            $data['telephone'] = '';
+            $data['name'] = '';
         }
 
         //echo "<pre>";print_r($data);die;
         if (isset($this->request->post['status'])) {
             $data['status'] = $this->request->post['status'];
-        } elseif (!empty($executive_info)) {
-            $data['status'] = $executive_info['status'];
+        } elseif (!empty($orderprocessinggroup_info)) {
+            $data['status'] = $orderprocessinggroup_info['status'];
         } else {
             $data['status'] = true;
         }
@@ -533,44 +465,28 @@ class ControllerOrderProcessingGroupOrderProcessingGroupList extends Controller 
         $data['kondutoStatus'] = $this->config->get('config_konduto_status');
         $data['konduto_public_key'] = $this->config->get('config_konduto_public_key');
 
-        $this->response->setOutput($this->load->view('executives/executive_form.tpl', $data));
+        $this->response->setOutput($this->load->view('executives/orderprocessinggroup_form.tpl', $data));
     }
 
     protected function validateForm() {
-        if (!$this->user->hasPermission('modify', 'executives/executives_list')) {
+        if (!$this->user->hasPermission('modify', 'orderprocessinggroup/orderprocessinggroup_list')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
 
-        if ((utf8_strlen($this->request->post['firstname']) < 1) || (utf8_strlen(trim($this->request->post['firstname'])) > 32)) {
-            $this->error['firstname'] = $this->language->get('error_firstname');
+        if ((utf8_strlen($this->request->post['name']) < 1) || (utf8_strlen(trim($this->request->post['name'])) > 32)) {
+            $this->error['name'] = $this->language->get('error_name');
         }
 
-        if ((utf8_strlen($this->request->post['lastname']) < 1) || (utf8_strlen(trim($this->request->post['lastname'])) > 32)) {
-            $this->error['lastname'] = $this->language->get('error_lastname');
-        }
+        $orderprocessinggroup_info = $this->model_executives_executives->getExecutiveByName($this->request->post['name']);
 
-        if (isset($this->request->post['email']) && $this->request->post['email'] != NULL && ((utf8_strlen($this->request->post['email']) > 96) || !filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL))) {
-            $this->error['email'] = $this->language->get('error_email');
-        }
-
-        /* if ((utf8_strlen($this->request->post['driving_licence']) < 1) || (utf8_strlen(trim($this->request->post['driving_licence'])) > 32)) {
-          $this->error['driving_licence'] = $this->language->get('error_driving_licence');
-          } */
-
-        $executive_info = $this->model_executives_executives->getExecutiveByEmail($this->request->post['email']);
-
-        if (!isset($this->request->get['executive_id'])) {
-            if ($executive_info) {
+        if (!isset($this->request->get['order_processing_group_id'])) {
+            if ($orderprocessinggroup_info) {
                 $this->error['warning'] = $this->language->get('error_exists');
             }
         } else {
-            if ($executive_info && ($this->request->get['executive_id'] != $executive_info['delivery_executive_id'])) {
+            if ($executive_info && ($this->request->get['order_processing_group_id'] != $orderprocessinggroup_info['order_processing_group_id'])) {
                 $this->error['warning'] = $this->language->get('error_exists');
             }
-        }
-
-        if ((utf8_strlen($this->request->post['telephone']) < 3) || (utf8_strlen($this->request->post['telephone']) > 32)) {
-            $this->error['telephone'] = $this->language->get('error_telephone');
         }
 
         if ($this->error && !isset($this->error['warning'])) {
@@ -581,14 +497,14 @@ class ControllerOrderProcessingGroupOrderProcessingGroupList extends Controller 
     }
 
     public function edit() {
-        $this->load->language('executives/executives');
+        $this->load->language('orderprocessinggroup/orderprocessinggroup');
 
         $this->document->setTitle($this->language->get('heading_title'));
 
-        $this->load->model('executives/executives');
+        $this->load->model('orderprocessinggroup/orderprocessinggroup');
 
         if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
-            $this->model_executives_executives->editExecutive($this->request->get['executive_id'], $this->request->post);
+            $this->model_orderprocessinggroup_orderprocessinggroup->editOrderProcessingGroup($this->request->get['order_processing_group_id'], $this->request->post);
             $this->session->data['success'] = $this->language->get('text_success');
             // Add to activity log
             $log = new Log('error.log');
@@ -598,27 +514,19 @@ class ControllerOrderProcessingGroupOrderProcessingGroupList extends Controller 
                 'user_id' => $this->user->getId(),
                 'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
                 'user_group_id' => $this->user->getGroupId(),
-                'executive_id' => $this->request->get['executive_id'],
+                'order_processing_group_id' => $this->request->get['order_processing_group_id'],
             ];
-            $log->write('executive edit');
+            $log->write('orderprocessinggroup edit');
 
-            $this->model_user_user_activity->addActivity('executive_edit', $activity_data);
+            $this->model_user_user_activity->addActivity('orderprocessinggroup_edit', $activity_data);
 
-            $log->write('executive edit');
+            $log->write('orderprocessinggroup edit');
 
             $url = '';
 
             if (isset($this->request->get['filter_name'])) {
                 $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
             }
-
-            if (isset($this->request->get['filter_email'])) {
-                $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
-            }
-
-            /* if (isset($this->request->get['filter_driving_licence'])) {
-              $url .= '&filter_driving_licence=' . urlencode(html_entity_decode($this->request->get['filter_driving_licence'], ENT_QUOTES, 'UTF-8'));
-              } */
 
             if (isset($this->request->get['filter_status'])) {
                 $url .= '&filter_status=' . $this->request->get['filter_status'];
@@ -641,30 +549,30 @@ class ControllerOrderProcessingGroupOrderProcessingGroupList extends Controller 
             }
 
             if (isset($this->request->post['button']) and 'save' == $this->request->post['button']) {
-                $this->response->redirect($this->url->link('executives/executives_list/edit', 'executive_id=' . $this->request->get['executive_id'] . '&token=' . $this->session->data['token'] . $url, 'SSL'));
+                $this->response->redirect($this->url->link('orderprocessinggroup/orderprocessinggroup_list/edit', 'order_processing_group_id=' . $this->request->get['order_processing_group_id'] . '&token=' . $this->session->data['token'] . $url, 'SSL'));
             }
 
             if (isset($this->request->post['button']) and 'new' == $this->request->post['button']) {
-                $this->response->redirect($this->url->link('executives/executives_list/add', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+                $this->response->redirect($this->url->link('orderprocessinggroup/orderprocessinggroup_list/add', 'token=' . $this->session->data['token'] . $url, 'SSL'));
             }
 
-            $this->response->redirect($this->url->link('executives/executives_list', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            $this->response->redirect($this->url->link('orderprocessinggroup/orderprocessinggroup_list', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
 
         $this->getForm();
     }
 
-    public function autocompletebyExecutiveName() {
+    public function autocompletebyOrderProcessingGroupName() {
         $json = [];
 
-        if (isset($this->request->get['filter_name']) || isset($this->request->get['filter_email'])) {
+        if (isset($this->request->get['filter_name'])) {
             if (isset($this->request->get['filter_name'])) {
                 $filter_name = $this->request->get['filter_name'];
             } else {
                 $filter_name = '';
             }
 
-            $this->load->model('executives/executives');
+            $this->load->model('orderprocessinggroup/orderprocessinggroup');
 
             $filter_data = [
                 'filter_name' => $filter_name,
@@ -672,21 +580,13 @@ class ControllerOrderProcessingGroupOrderProcessingGroupList extends Controller 
                 'limit' => 5,
             ];
 
-            $results = $this->model_executives_executives->getExecutives($filter_data);
+            $results = $this->model_orderprocessinggroup_orderprocessinggroup->getOrderProcessingGroups($filter_data);
 
             foreach ($results as $result) {
-                if ($this->user->isVendor()) {
-                    $result['name'] = $result['firstname'];
-                }
 
                 $json[] = [
-                    'executive_id' => $result['delivery_executive_id'],
+                    'order_processing_group_id' => $result['order_processing_group_id'],
                     'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')),
-                    'firstname' => $result['firstname'],
-                    'lastname' => $result['lastname'],
-                    'email' => $result['email'],
-                    /* 'driving_licence' => $result['driving_licence'], */
-                    'telephone' => $result['telephone'],
                 ];
             }
         }
@@ -706,7 +606,7 @@ class ControllerOrderProcessingGroupOrderProcessingGroupList extends Controller 
     public function export_excel() {
         $data = [];
         $this->load->model('report/excel');
-        $this->model_report_excel->download_executive_excel($data);
+        $this->model_report_excel->download_orderprocessinggroup_excel($data);
     }
 
     public function delete() {
@@ -714,11 +614,11 @@ class ControllerOrderProcessingGroupOrderProcessingGroupList extends Controller 
 
         $this->document->setTitle($this->language->get('heading_title'));
 
-        $this->load->model('executives/executives');
+        $this->load->model('orderprocessinggroup/orderprocessinggroup');
 
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
-            foreach ($this->request->post['selected'] as $executive_id) {
-                $this->model_executives_executives->deleteExecutive($executive_id);
+            foreach ($this->request->post['selected'] as $order_processing_group_id) {
+                $this->model_orderprocessinggroup_orderprocessinggroup->deleteOrderProcessingGroup($order_processing_group_id);
 
                 // Add to activity log
                 $log = new Log('error.log');
@@ -728,26 +628,22 @@ class ControllerOrderProcessingGroupOrderProcessingGroupList extends Controller 
                     'user_id' => $this->user->getId(),
                     'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
                     'user_group_id' => $this->user->getGroupId(),
-                    'executive_id' => $executive_id,
+                    'order_processing_group_id' => $order_processing_group_id,
                 ];
-                $log->write('executive delete');
+                $log->write('order processing group delete');
 
-                $this->model_user_user_activity->addActivity('executive_delete', $activity_data);
+                $this->model_user_user_activity->addActivity('order_processing_group_delete', $activity_data);
 
-                $log->write('executive delete');
+                $log->write('order processing group delete');
             }
 
             //$this->session->data['success'] = $this->language->get('text_success');
-            $this->session->data['success'] = 'Success : Delivery Executive(s) deleted successfully!';
+            $this->session->data['success'] = 'Success : Order Processing Group(s) Deleted Successfully!';
 
             $url = '';
 
             if (isset($this->request->get['filter_name'])) {
                 $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
-            }
-
-            if (isset($this->request->get['filter_email'])) {
-                $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
             }
 
             if (isset($this->request->get['filter_status'])) {
@@ -770,14 +666,14 @@ class ControllerOrderProcessingGroupOrderProcessingGroupList extends Controller 
                 $url .= '&page=' . $this->request->get['page'];
             }
 
-            $this->response->redirect($this->url->link('executives/executives_list', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            $this->response->redirect($this->url->link('orderprocessinggroup/orderprocessinggroup_list', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
 
         $this->getList();
     }
 
     protected function validateDelete() {
-        if (!$this->user->hasPermission('modify', 'executives/executives_list')) {
+        if (!$this->user->hasPermission('modify', 'orderprocessinggroup/orderprocessinggroup_list')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
 
