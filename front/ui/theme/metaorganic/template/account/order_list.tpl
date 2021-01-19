@@ -16,6 +16,21 @@
                                         class="btn btn-success " data-original-title="Download Excel"><i class="fa fa-download"></i></button>
                             </div>
 
+                            
+
+                            <div class="pull-right">
+                            <?php if($order['status'] == 'Delivered' ) { ?>
+                              <a data-confirm="Available products  in this order will be added to cart !!" class="btn btn-success download" style="margin-right: 4px !important; height: 27px;margin-left:4px;"
+                          data-store-id="<?= ACTIVE_STORE_ID ?>" data-toggle="tooltip"
+                          value="<?php echo $order['order_id']; ?>" title="Add To Cart/Reorder"><i
+                            class="fa fa-cart-plus"></i></a><?php } ?>
+                            </div>  
+
+                            <?php if($order['customer_id'] == $this->customer->getId() && $order['edit_own_order'] != NULL) { ?>
+                            <a href="<?php echo $order['edit_own_order'];?>" class="btn btn-success" title="Edit Your Order" style="margin-right: 4px !important; height: 27px;margin-left:4px;"><i class="fa fa-edit"></i></a>
+                            <?php } ?>
+
+
                             <?php if($order['status'] == 'Arrived for Delivery'){?>
                                                      <a href="<?php echo $order['accept_reject_href']?>"  class="btn btn-default btn-xs btn-accept-reject" >Accept Delivery</a>
                                                     <?php } ?>
@@ -27,9 +42,7 @@
                             <?php } else { ?>
                             <a href="#" data-toggle="modal" data-target="#contactusModal"  class="btn btn-default btn-xs"><?= $text_report_issue ?></a>
                             <?php } ?>
-                            <?php if($order['customer_id'] == $this->customer->getId() && $order['edit_own_order'] != NULL) { ?>
-                            <a href="<?php echo $order['edit_own_order'];?>" class="btn btn-success" title="Edit Your Order" style="margin-right: 4px !important; height: 27px;"><i class="fa fa-edit"></i></a>
-                            <?php } ?>
+                            
 
 
                         </span>
@@ -647,6 +660,56 @@
             }
         });
     });
+
+
+       $(document).delegate('.download', 'click', function (e) {
+    var baseurl = window.location.origin + window.location.pathname;
+    // alert(baseurl);
+    var choice = confirm($(this).attr('data-confirm'));
+    var added = "false";
+
+    if (choice) {
+      e.preventDefault();
+      $orderid = $(this).attr('value');
+      alert($orderid);
+      $store_id = $(this).attr('data-store-id');
+
+      $.ajax({
+        url: 'index.php?path=account/dashboard/getOrderProducts',
+        dataType: 'json',
+        type: 'POST',
+        data: { 'order_id': $orderid },
+        success: function (json) {
+          $(json).each(function (index, item) {
+
+            // each iteration
+            var product_id = item.product_id;
+            var quantity = item.quantity;
+             if (quantity > 0) {
+              added = "true";
+               cart.add(product_id, quantity, 0, $store_id, '', '');
+
+              console.log("added to cart");
+            }
+          });
+        },
+        complete: function () {
+
+          //baseurl = baseurl + "?path=checkout/checkoutitems";
+          //var win = window.open(baseurl, '_blank');
+         // if (win) {
+            //Browser has allowed it to be opened
+           // win.focus();
+         // } else {
+            //Browser has blocked it
+            //alert('Please allow popups for this website');
+          //}
+          //opening new window, showing few items, as the products are adding slowly
+          alert('Available products from the selected order added to cart!');
+        },
+      });
+    }
+  });
 
     setInterval(function () {
         location = location;
