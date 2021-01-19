@@ -640,6 +640,47 @@ class ControllerAccountDashboard extends Controller
         }
     }
 
+
+    public function getAndAddOrderProducts()
+    {
+        $order_id = $this->request->post['order_id'];
+        $order_query = $this->db->query('SELECT product_id,general_product_id,quantity,unit,name,order_id  FROM '.DB_PREFIX."order_product o WHERE o.order_id = '".(int) $order_id."'");
+
+        if ($order_query->num_rows) {
+            foreach ($order_query->rows   as $ra) {
+                $data[] = [
+                'order_id' => $ra['order_id'],
+                'product_id' => $ra['product_id'],
+                'general_product_id' => $ra['general_product_id'],
+                'quantity' => $ra['quantity'],
+                'unit' => $ra['unit'],
+                'name' => $ra['name'],
+                        ];
+            }
+
+            $log = new Log('error.log');
+            $log->write('Ordered Products');
+            $log->write($data);
+            $log->write('Ordered Products');
+            // echo "<pre>";print_r($data);die;
+            if (is_array($data) && count($data) > 0) {
+                foreach ($data as $order_product) {
+                    $log->write('Order Products 2');
+                    $log->write($order_product['product_id']);
+                    $log->write('Order Products 2');
+                    if ($order_product['quantity'] > 0)
+                    $this->cart->add($order_product['product_id'], $order_product['quantity'], [], $recurring_id = 0, $store_id = false, $store_product_variation_id = false, $product_type = 'replacable', $product_note = null, $produce_type = null);
+                }
+            }
+
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($data));
+        } else {
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode(null));
+        }
+    }
+
     public function addOrderProductToCart()
     {
         $this->load->model('account/wishlist');
