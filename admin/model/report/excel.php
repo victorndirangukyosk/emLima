@@ -1480,7 +1480,8 @@ class ModelReportExcel extends Model {
                         ->setAutoSize(true);
             }
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 4, 'Date');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'Customer');
+            // $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'Customer');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'Company');
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 4, 'Inv No.');
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 4, 'Order Status.');
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 4, 'SAP Customer No.');
@@ -1499,7 +1500,8 @@ class ModelReportExcel extends Model {
             $row = 5;
             foreach ($data['consolidation'] as $order) {
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $order['delivery_date']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $order['customer']);
+                // $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $order['customer']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $order['company_name']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $order['invoice_no']);
 
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $order['order_status']);
