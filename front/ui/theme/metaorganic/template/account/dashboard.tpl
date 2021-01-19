@@ -605,7 +605,7 @@
       $store_id = $(this).attr('data-store-id');
 
       $.ajax({
-        url: 'index.php?path=account/dashboard/getOrderProducts',
+        url: 'index.php?path=account/dashboard/getAndAddOrderProducts',
         dataType: 'json',
         type: 'POST',
         data: { 'order_id': $orderid },
@@ -613,11 +613,11 @@
           $(json).each(function (index, item) {
 
             // each iteration
-            var product_id = item.product_id;
-            var quantity = item.quantity;
-            if (quantity > 0) {
-              added = "true";
-              cart.add(product_id, quantity, 0, $store_id, '', '');
+            //var product_id = item.product_id;
+            //var quantity = item.quantity;
+            // if (quantity > 0) {
+            //  added = "true";
+            //  cart.add(product_id, quantity, 0, $store_id, '', '');
 
               console.log("added to cart");
             }
