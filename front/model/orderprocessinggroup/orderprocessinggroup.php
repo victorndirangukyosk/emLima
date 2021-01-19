@@ -33,8 +33,8 @@ class ModelOrderProcessingGroupOrderProcessingGroup extends Model {
 
         $implode = [];
 
-        if (!empty($data['name'])) {
-            $implode[] = "c.name LIKE '%" . $this->db->escape($data['name']) . "%'";
+        if (!empty($data['filter_name'])) {
+            $implode[] = "c.name LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
         }
 
         if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
@@ -91,7 +91,7 @@ class ModelOrderProcessingGroupOrderProcessingGroup extends Model {
 
         $implode = [];
 
-        if (!empty($data['name'])) {
+        if (!empty($data['filter_name'])) {
             $implode[] = "name LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
         }
 

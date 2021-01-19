@@ -233,7 +233,8 @@ class ControllerCommonMenu extends Controller
         $data['admin_wallet'] = $this->url->link('wallets/admin_wallet', 'token='.$this->session->data['token'], 'SSL');
         $data['drivers_list'] = $this->url->link('drivers/drivers_list', 'token='.$this->session->data['token'], 'SSL');
         $data['executives_list'] = $this->url->link('executives/executives_list', 'token='.$this->session->data['token'], 'SSL');
-
+        $data['orderprocessinggroup_list'] = $this->url->link('orderprocessinggroup/orderprocessinggroup_list', 'token='.$this->session->data['token'], 'SSL');
+        
         //blog
         $data['preturn_simple_blog_author'] = $this->user->hasPermission('access', 'simple_blog/author');
         $data['preturn_simple_blog_category'] = $this->user->hasPermission('access', 'simple_blog/category');
@@ -428,6 +429,7 @@ class ControllerCommonMenu extends Controller
         
         $data['preturn_drivers'] = $this->user->hasPermission('access', 'drivers/drivers_list');
         $data['preturn_executives'] = $this->user->hasPermission('access', 'executives/executives_list');
+        $data['preturn_orderprocessinggroups'] = $this->user->hasPermission('access', 'orderprocessinggroup/orderprocessinggroup_list');
         return $this->load->view('common/menu.tpl', $data);
     }
 
