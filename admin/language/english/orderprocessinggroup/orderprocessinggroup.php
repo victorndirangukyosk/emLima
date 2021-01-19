@@ -1,14 +1,14 @@
 <?php
 
 // Heading
-$_['heading_title'] = 'Executives';
+$_['heading_title'] = 'Order Processing Groups';
 
 // Text
-$_['text_success'] = 'Success: You have modified executives!';
-$_['text_list'] = 'Executives List';
-$_['text_add'] = 'Add Executive';
-$_['text_edit'] = 'Edit Executive';
-$_['text_view'] = 'View Executive';
+$_['text_success'] = 'Success: You have modified order processing groups!';
+$_['text_list'] = 'Order Processing Groups List';
+$_['text_add'] = 'Add Order Processing Group';
+$_['text_edit'] = 'Edit Order Processing Group';
+$_['text_view'] = 'View Order Processing Group';
 $_['text_default'] = 'Default';
 $_['text_balance'] = 'Balance';
 $_['text_add_ban_ip'] = 'Add Ban IP';
@@ -20,7 +20,7 @@ $_['entry_dob'] = 'DOB';
 
 $_['entry_gender'] = 'Gender';
 // Column
-$_['column_name'] = 'Executive Name';
+$_['column_name'] = 'Order Processing Group Name';
 $_['column_email'] = 'E-Mail';
 $_['column_driving_licence'] = 'Driving Licence';
 $_['column_customer_group'] = 'Customer Group';
@@ -63,7 +63,7 @@ $_['entry_comment'] = 'Comment';
 $_['entry_description'] = 'Description';
 $_['entry_amount'] = 'Amount';
 $_['entry_points'] = 'Points';
-$_['entry_name'] = 'Executive Name';
+$_['entry_name'] = 'Order Processing Group Name';
 $_['entry_ip'] = 'IP';
 $_['entry_date_added'] = 'Date Added';
 $_['entry_send_email'] = 'Send Mail';

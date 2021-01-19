@@ -42,22 +42,14 @@
                 <label class="control-label" for="input-name"><?php echo $entry_name; ?></label>
                 <input type="text" name="filter_name" value="<?php echo $filter_name; ?>" placeholder="<?php echo $entry_name; ?>" id="input-name" class="form-control" />
               </div>
-              <div class="form-group">
-                <label class="control-label" for="input-email"><?php echo $entry_email; ?></label>
-                <input type="text" name="filter_email" value="<?php echo $filter_email; ?>" placeholder="<?php echo $entry_email; ?>" id="input-email" class="form-control" />
-              </div>
+          <div class="form-group">
+            <div class="input-group date" style="max-width: 321px; margin-top:37px;">
+                  <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>    
+            </div>
+            </div>
             </div>
             <div class="col-sm-3">
              <div class="form-group">
-                <label class="control-label" for="input-telephone"><?php echo $column_telephone; ?></label>
-                <div class="input-group">
-                <span class="input-group-btn">
-                                        <button class="btn btn-default" type="button"><?php echo '+' . $this->config->get('config_telephone_code'); ?></button>                                      
-                </span>
-                <input type="text" name="filter_telephone" value="<?php echo $filter_telephone; ?>" placeholder="<?php echo $entry_telephone; ?>" id="input-telephone" class="form-control" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57"  minlength="9" maxlength="9"/>
-              </div>
-              </div>
-                            <div class="form-group">
                 <label class="control-label" for="input-status"><?php echo $entry_status; ?></label>
                 <select name="filter_status" id="input-status" class="form-control">
                   <option value="*"></option>
@@ -84,11 +76,6 @@
                   </span>
                 </div>
             </div>
-            <div class="form-group">
-            <div class="input-group date" style="max-width: 321px; margin-top:37px;">
-                  <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>    
-            </div>
-            </div>
            </div>
           </div>
         </div>
@@ -103,12 +90,7 @@
                     <?php } else { ?>
                     <a href="<?php echo $sort_name; ?>"><?php echo $column_name; ?></a>
                     <?php } ?></td>
-                  <td style="width: 3px;" class="text-left"><?php if ($sort == 'c.email') { ?>
-                    <a href="<?php echo $sort_email; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_email; ?></a>
-                    <?php } else { ?>
-                    <a href="<?php echo $sort_email; ?>"><?php echo $column_email; ?></a>
-                    <?php } ?></td>
-                  <td class="text-left"><?php echo $column_telephone; ?></td>
+                  
 
                   <td class="text-left"><?php if ($sort == 'c.status') { ?>
                     <a href="<?php echo $sort_status; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_status; ?></a>
@@ -133,8 +115,6 @@
                     <input type="checkbox" name="selected[]" value="<?php echo $executive['executive_id']; ?>" />
                     <?php } ?></td>
                   <td class="text-left"><?php echo $executive['name']; ?></td>
-                  <td class="text-left"><?php echo $executive['email']; ?></td>
-                  <td class="text-left"><?php echo $executive['telephone']; ?></td>
                   <td class="text-left"><?php echo $executive['status']; ?></td>
                   <td class="text-left"><?php echo $executive['date_added']; ?></td>
                   <td class="text-right"><a href="<?php echo $executive['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a>
