@@ -195,14 +195,14 @@
                   <li class="page_menu_item"> <a href="#">Purchase Order <span
                         class="badge badge-pill badge-success">BETA</span></i></a>
                   </li>
-                  <li class="page_menu_item has-children"> <a href="#">My Account<i class="fa fa-angle-down"></i></a>
+                  <li class="page_menu_item has-children"> <a href="<?= $account ?>">My Account<i class="fa fa-angle-down"></i></a>
                     <ul class="page_menu_selection">
-                      <li><a href="#">Profile<i class="fa fa-angle-down"></i></a></li>
-                      <li><a href="#">Transactions<i class="fa fa-angle-down"></i></a></li>
-                      <li><a href="#">Settings<i class="fa fa-angle-down"></i></a></li>
+                      <li><a href="<?= $account ?>">Profile<i class="fa fa-angle-down"></i></a></li>
+                      <li><a href="<?= $account ?>">Transactions<i class="fa fa-angle-down"></i></a></li>
+                      <li><a href="<?= $account ?>">Settings<i class="fa fa-angle-down"></i></a></li>
                     </ul>
                   </li>
-                  <li class="page_menu_item"><a href="#">Sign Out<i class="fa fa-angle-down"></i></a>
+                  <li class="page_menu_item"><a href="<?= $logout ?>">Sign Out<i class="fa fa-angle-down"></i></a>
                   </li>
                 </ul>
                 <div class="menu_contact">
@@ -295,7 +295,7 @@
         $.get('index.php?path=product/product/view&product_store_id=' + $(this).attr('data-id') + '&store_id=' + $(this).attr('data-store'), function (data) {
           $('.products-grid-item').prop('disabled', false);
           $('.modal-wrapper').html(data);
-          $('#popupmodal').modal('show');
+          $('#product-details-popup').modal('show');
         });
         $('#product_name').val('');
       });

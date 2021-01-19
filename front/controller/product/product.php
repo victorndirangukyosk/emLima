@@ -761,10 +761,6 @@ class ControllerProductProduct extends Controller
 
     public function view()
     {
-        //echo "<pre>";print_r("erv");die;
-        // unset($this->session->data['temp_cart']);
-        // echo "<pre>";print_r("ss");die;
-        //$data['product']['store_product_variation_id'] = 0;
         $this->load->language('product/product');
 
         $this->load->model('tool/image');
@@ -782,7 +778,7 @@ class ControllerProductProduct extends Controller
         }
         $data['button_add'] = $this->language->get('button_add');
         $data['text_incart'] = $this->language->get('text_incart');
-        //recipe
+
         $this->load->model('assets/product');
 
         $product_info = $this->model_assets_product->getProductForPopup($product_store_id, false, $store_id);
