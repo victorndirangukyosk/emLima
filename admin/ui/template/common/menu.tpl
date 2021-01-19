@@ -744,7 +744,20 @@
     <li id="system">
         <a class="parent"><i class="fa fa-truck fa-fw"></i> <span>Delivery Executives</span></a>
         <ul class="collapse">
-            <li><a href="<?php echo $executives_list; ?>">Executives</a></li>
+            <li><a href="<?php echo $orderprocessinggroup_list; ?>">Executives</a></li>
+        </ul>
+    </li>
+    <?php 
+    }
+    ?>
+    
+    <?php
+    if( $preturn_orderprocessinggroups != false) {
+    ?>
+    <li id="system">
+        <a class="parent"><i class="fa fa-truck fa-fw"></i> <span>Order Processing</span></a>
+        <ul class="collapse">
+            <li><a href="<?php echo $orderprocessing_list; ?>">Groups</a></li>
         </ul>
     </li>
     <?php 
