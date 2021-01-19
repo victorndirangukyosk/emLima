@@ -675,7 +675,7 @@
       $store_id = $(this).attr('data-store-id');
 
       $.ajax({
-        url: 'index.php?path=account/dashboard/getOrderProducts',
+        url: 'index.php?path=account/dashboard/getAvailableOrderProducts',
         dataType: 'json',
         type: 'POST',
         data: { 'order_id': $orderid },
