@@ -4549,11 +4549,14 @@ class ControllerSaleOrder extends Controller {
 
         $data = [];
 
+        
+
         $totalOrdersAmount = 0;
         foreach ($results as $order) {
             $data['consolidation'][] = [
                 'delivery_date' => date("d-m-Y", strtotime($order['delivery_date'])),
                 'customer' => $order['customer'] ,//. ' Order#' . $order['order_id'],
+                'company_name' => $order['company_name'] ,
                 'amount' => $order['total'],
                 'SAP_customer_no' => $order['SAP_customer_no'],
                 'invoice_no' => 'KB'.$order['order_id'],
