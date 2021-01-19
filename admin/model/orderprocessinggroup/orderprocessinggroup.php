@@ -23,7 +23,7 @@ class ModelOrderProcessingGroupOrderProcessingGroup extends Model {
     }
 
     public function getOrderProcessingGroupByName($name) {
-        $query = $this->db->query('SELECT DISTINCT * FROM ' . DB_PREFIX . "order_processing_groups WHERE name = '" . $this->db->escape(utf8_strtolower($name)) . "'");
+        $query = $this->db->query('SELECT DISTINCT * FROM ' . DB_PREFIX . "order_processing_groups WHERE order_processing_group_name = '" . $this->db->escape(utf8_strtolower($name)) . "'");
 
         return $query->row;
     }
@@ -34,7 +34,7 @@ class ModelOrderProcessingGroupOrderProcessingGroup extends Model {
         $implode = [];
 
         if (!empty($data['name'])) {
-            $implode[] = "c.name LIKE '%" . $this->db->escape($data['name']) . "%'";
+            $implode[] = "c.order_processing_group_name LIKE '%" . $this->db->escape($data['name']) . "%'";
         }
 
         if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
@@ -50,7 +50,7 @@ class ModelOrderProcessingGroupOrderProcessingGroup extends Model {
         }
 
         $sort_data = [
-            'name',
+            'order_processing_group_name',
             'c.status',
             'c.created_at',
         ];
@@ -58,7 +58,7 @@ class ModelOrderProcessingGroupOrderProcessingGroup extends Model {
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
             $sql .= ' ORDER BY ' . $data['sort'];
         } else {
-            $sql .= ' ORDER BY name';
+            $sql .= ' ORDER BY order_processing_group_name';
         }
 
         if (isset($data['order']) && ('DESC' == $data['order'])) {
@@ -92,7 +92,7 @@ class ModelOrderProcessingGroupOrderProcessingGroup extends Model {
         $implode = [];
 
         if (!empty($data['name'])) {
-            $implode[] = "name LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+            $implode[] = "order_processing_group_name LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
         }
 
         if (isset($data['filter_status']) && !is_null($data['filter_status'])) {

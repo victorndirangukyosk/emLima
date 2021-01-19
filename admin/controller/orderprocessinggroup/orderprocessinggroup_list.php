@@ -167,7 +167,7 @@ class ControllerOrderProcessingGroupOrderProcessingGroupList extends Controller 
         $data['add'] = $this->url->link('orderprocessinggroup/orderprocessinggroup_list/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
         $data['delete'] = $this->url->link('orderprocessinggroup/orderprocessinggroup_list/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
-        $data['customers'] = [];
+        $data['orderprocessinggroups'] = [];
 
         $filter_data = [
             'filter_name' => $filter_name,
@@ -198,7 +198,7 @@ class ControllerOrderProcessingGroupOrderProcessingGroupList extends Controller 
                 'status' => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
                 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
                 'edit' => $this->url->link('orderprocessinggroup/orderprocessinggroup_list/edit', 'token=' . $this->session->data['token'] . '&order_processing_group_id=' . $result['order_processing_group_id'] . $url, 'SSL'),
-                'executive_view' => $this->url->link('orderprocessinggroup/orderprocessinggroup_list/view_orderprocessinggroup', 'token=' . $this->session->data['token'] . '&order_processing_group_id=' . $result['order_processing_group_id'] . $url, 'SSL'),
+                'orderprocessinggroup_view' => $this->url->link('orderprocessinggroup/orderprocessinggroup_list/view_orderprocessinggroup', 'token=' . $this->session->data['token'] . '&order_processing_group_id=' . $result['order_processing_group_id'] . $url, 'SSL'),
             ];
         }
 
@@ -484,7 +484,7 @@ class ControllerOrderProcessingGroupOrderProcessingGroupList extends Controller 
                 $this->error['warning'] = $this->language->get('error_exists');
             }
         } else {
-            if ($executive_info && ($this->request->get['order_processing_group_id'] != $orderprocessinggroup_info['order_processing_group_id'])) {
+            if ($orderprocessinggroup_info && ($this->request->get['order_processing_group_id'] != $orderprocessinggroup_info['order_processing_group_id'])) {
                 $this->error['warning'] = $this->language->get('error_exists');
             }
         }
