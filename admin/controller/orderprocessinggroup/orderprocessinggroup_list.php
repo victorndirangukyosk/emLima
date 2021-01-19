@@ -465,7 +465,7 @@ class ControllerOrderProcessingGroupOrderProcessingGroupList extends Controller 
         $data['kondutoStatus'] = $this->config->get('config_konduto_status');
         $data['konduto_public_key'] = $this->config->get('config_konduto_public_key');
 
-        $this->response->setOutput($this->load->view('executives/orderprocessinggroup_form.tpl', $data));
+        $this->response->setOutput($this->load->view('orderprocessinggroup/orderprocessinggroup_form.tpl', $data));
     }
 
     protected function validateForm() {
