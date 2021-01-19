@@ -180,6 +180,7 @@
                     <p class="product-modal-price"></p>
                 </div>
             </div>
+            
             <!-- Modal footer -->
             <div class="modal-footer">
                 <div class="container">
