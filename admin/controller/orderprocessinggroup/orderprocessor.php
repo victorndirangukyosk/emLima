@@ -404,10 +404,22 @@ class ControllerOrderProcessingGroupOrderProcessor extends Controller {
             $data['success'] = '';
         }
 
-        if (isset($this->error['name'])) {
-            $data['error_name'] = $this->error['name'];
+        if (isset($this->error['firstname'])) {
+            $data['error_firstname'] = $this->error['firstname'];
         } else {
-            $data['error_name'] = '';
+            $data['error_firstname'] = '';
+        }
+        
+        if (isset($this->error['lastname'])) {
+            $data['error_lastname'] = $this->error['lastname'];
+        } else {
+            $data['error_lastname'] = '';
+        }
+        
+        if (isset($this->error['order_processing_group_name'])) {
+            $data['error_order_processing_group_name'] = $this->error['order_processing_group_name'];
+        } else {
+            $data['error_order_processing_group_name'] = '';
         }
 
         if (isset($this->error['confirm'])) {
@@ -515,6 +527,10 @@ class ControllerOrderProcessingGroupOrderProcessor extends Controller {
 
         if ((utf8_strlen($this->request->post['lastname']) < 1) || (utf8_strlen(trim($this->request->post['lastname'])) > 32)) {
             $this->error['lastname'] = $this->language->get('error_lastname');
+        }
+        
+        if ($this->request->post['order_processing_group_id'] <= 0 || $this->request->post['order_processing_group_id'] == '') {
+            $this->error['order_processing_group_name'] = $this->language->get('error_order_processing_group_name');
         }
 
         $orderprocessor_info = $this->model_orderprocessinggroup_orderprocessor->getOrderProcessorByName($this->request->post['firstname'] . ' ' . $this->request->post['lastname']);
