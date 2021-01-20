@@ -251,9 +251,7 @@
 
         // TODO: Update cart quantity
         // TODO: Add produce type selector (last null parameter)
-        // cart.add(productId, variationId, storeId, quantity, productNotes, "");
-
-        cart.addOld(variationId, quantity, 0, storeId, productNotes, null);
+        cart.add(productId, variationId, storeId, quantity, productNotes, "");
 
         $('#product-details-popup').modal('hide');
     });
