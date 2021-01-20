@@ -4291,4 +4291,47 @@ class ControllerAccountOrder extends Controller {
         }
     }
 
+    public function export_incomplete0rder_products_excel($order_id) {
+        $data = [];
+
+        $orderid = $this->request->get['order_id'];
+
+        $this->load->model('account/order');
+        $order_info = $this->model_account_order->getIncompleteOrder($orderid);
+        //    echo "<pre>";print_r($order_info);die;
+
+
+        $customer = $order_info['firstname'] . ' ' . $order_info['lastname'];
+        $company = $this->request->get['company'];
+        $date = $order_info['date_added'];
+        $deliverydate = $order_info['delivery_date'];
+        $shippingaddress = $order_info['shipping_address'] . ' . ' . $order_info['shipping_city'] . ' ' . $order_info['zipcode'];
+        $paymentmethod = $order_info['payment_method'];
+
+
+
+
+        $data['consolidation'][] = [
+            'orderid' => $orderid,
+            'customer' => $customer,
+            'company' => $company,
+            'date' => $date,
+            'deliverydate' => $deliverydate,
+            'shippingaddress' => $shippingaddress,
+            'paymentmethod' => $paymentmethod,
+        ];
+
+        $orderProducts = $this->getOrderProductsWithVariancesNew($orderid);
+        $data['products'] = $orderProducts;
+
+        // echo "<pre>";print_r($orderProducts);die;
+        // $sum = 0;
+        // foreach ($orderProducts as $item) {
+        //     $sum += $item['total_updatedvalue'];
+        // } 
+
+
+        $this->load->model('account/order');
+        $this->model_account_order->download_products_excel($data);
+    }
 }

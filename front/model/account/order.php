@@ -1453,4 +1453,110 @@ class ModelAccountOrder extends Model {
         //return $query;
         return $query->row['total'];
     }
+
+    public function getIncompleteOrder($order_id, $notLogin = false) {
+        $s_users = [];
+        $sub_users_od = [];
+        $parent_user_id = NULL;
+        $order_approval_access = $this->db->query('SELECT c.customer_id, c.parent FROM ' . DB_PREFIX . "customer c WHERE c.customer_id = '" . (int) $this->customer->getId() . "' AND c.order_approval_access = 1 AND (c.order_approval_access_role = 'head_chef' OR c.order_approval_access_role = 'procurement_person')");
+        $order_approval_access_user = $order_approval_access->row;
+
+        if (is_array($order_approval_access_user) && count($order_approval_access_user) > 0) {
+            //$log->write('order_approval_access_user');
+            //$log->write($order_approval_access_user);
+            //$log->write('order_approval_access_user');
+            $parent_user_id = $order_approval_access_user['parent'];
+        }
+
+        if ($parent_user_id != NULL) {
+            $sub_users_query = $this->db->query('SELECT c.customer_id FROM ' . DB_PREFIX . "customer c WHERE parent = '" . (int) $parent_user_id . "'");
+            $sub_users = $sub_users_query->rows;
+            //$log->write('SUB USERS ORDERS');
+            //$log->write($sub_users);
+            //$log->write('SUB USERS ORDERS');
+            $s_users = array_column($sub_users, 'customer_id');
+            array_push($s_users, $order_approval_access_user['parent']);
+            $sub_users_od = implode(',', $s_users);
+        } else {
+            $sub_users_query = $this->db->query('SELECT c.customer_id FROM ' . DB_PREFIX . "customer c WHERE parent = '" . (int) $this->customer->getId() . "'");
+            $sub_users = $sub_users_query->rows;
+            $s_users = array_column($sub_users, 'customer_id');
+
+            array_push($s_users, $this->customer->getId());
+            $sub_users_od = implode(',', $s_users);
+        }
+
+        if (false == $notLogin) {
+            $order_query = $this->db->query('SELECT * ,' . DB_PREFIX . 'order.date_added as order_date ,' . DB_PREFIX . 'order.email as order_email ,' . DB_PREFIX . 'order.telephone as order_telephone FROM `' . DB_PREFIX . 'order` LEFT JOIN ' . DB_PREFIX . 'store ON ( ' . DB_PREFIX . 'store.store_id = ' . DB_PREFIX . 'order.store_id) LEFT JOIN ' . DB_PREFIX . 'order_status ON ( ' . DB_PREFIX . 'order_status.order_status_id = ' . DB_PREFIX . "order.order_status_id)  WHERE order_id = '" . (int) $order_id . "' AND customer_id IN (" . $sub_users_od . ') AND ' . DB_PREFIX . "order.order_status_id = '0' ");
+            //$order_query = $this->db->query("SELECT * ," . DB_PREFIX . "order.date_added as order_date ," . DB_PREFIX . "order.email as order_email ," . DB_PREFIX . "order.telephone as order_telephone FROM `" . DB_PREFIX . "order` LEFT JOIN " . DB_PREFIX . "store ON ( " . DB_PREFIX . "store.store_id = " . DB_PREFIX . "order.store_id) LEFT JOIN " . DB_PREFIX . "order_status ON ( " . DB_PREFIX . "order_status.order_status_id = " . DB_PREFIX . "order.order_status_id)  WHERE order_id = '" . (int) $order_id . "' AND customer_id = '" . (int) $this->customer->getId() . "' AND " . DB_PREFIX . "order.order_status_id = '0' ");
+        } else {
+            $order_query = $this->db->query('SELECT * ,' . DB_PREFIX . 'order.date_added as order_date ,' . DB_PREFIX . 'order.email as order_email ,' . DB_PREFIX . 'order.telephone as order_telephone FROM `' . DB_PREFIX . 'order` LEFT JOIN ' . DB_PREFIX . 'store ON ( ' . DB_PREFIX . 'store.store_id = ' . DB_PREFIX . 'order.store_id) LEFT JOIN ' . DB_PREFIX . 'order_status ON ( ' . DB_PREFIX . 'order_status.order_status_id = ' . DB_PREFIX . "order.order_status_id)  WHERE order_id = '" . (int) $order_id . "' AND " . DB_PREFIX . "order.order_status_id = '0' ");
+        }
+        if ($order_query->num_rows) {
+            $city_info = $this->db->query('select * from `' . DB_PREFIX . 'city` WHERE city_id="' . $order_query->row['shipping_city_id'] . '"')->row;
+
+            if ($city_info) {
+                $shipping_city = $city_info['name'];
+            } else {
+                $shipping_city = '';
+            }
+
+            return [
+                'order_id' => $order_query->row['order_id'],
+                'invoice_no' => $order_query->row['invoice_no'],
+                'invoice_prefix' => $order_query->row['invoice_prefix'],
+                'store_id' => $order_query->row['store_id'],
+                'store_name' => $order_query->row['store_name'],
+                'store_url' => $order_query->row['store_url'],
+                'customer_id' => $order_query->row['customer_id'],
+                'firstname' => $order_query->row['firstname'],
+                'lastname' => $order_query->row['lastname'],
+                'telephone' => $order_query->row['telephone'],
+                'order_telephone' => $order_query->row['order_telephone'],
+                'store_name' => $order_query->row['store_name'],
+                'fax' => $order_query->row['fax'],
+                'email' => $order_query->row['email'],
+                'order_email' => $order_query->row['order_email'],
+                'payment_method' => $order_query->row['payment_method'],
+                'payment_code' => $order_query->row['payment_code'],
+                'shipping_name' => $order_query->row['shipping_name'],
+                'shipping_city_id' => $order_query->row['shipping_city_id'],
+                'shipping_city' => $shipping_city,
+                'shipping_address' => $order_query->row['shipping_address'],
+                'shipping_flat_number' => $order_query->row['shipping_flat_number'],
+                'shipping_building_name' => $order_query->row['shipping_building_name'],
+                'shipping_landmark' => $order_query->row['shipping_landmark'],
+                'shipping_contact_no' => $order_query->row['shipping_contact_no'],
+                'shipping_method' => $order_query->row['shipping_method'],
+                'comment' => $order_query->row['comment'],
+                'total' => $order_query->row['total'],
+                'rating' => $order_query->row['rating'],
+                'order_status_id' => $order_query->row['order_status_id'],
+                'language_id' => $order_query->row['language_id'],
+                'currency_id' => $order_query->row['currency_id'],
+                'currency_code' => $order_query->row['currency_code'],
+                'currency_value' => $order_query->row['currency_value'],
+                'date_modified' => $order_query->row['date_modified'],
+                'date_added' => $order_query->row['date_added'],
+                'ip' => $order_query->row['ip'],
+                'delivery_timeslot' => $order_query->row['delivery_timeslot'],
+                'delivery_date' => $order_query->row['delivery_date'],
+                'store_address' => $order_query->row['address'],
+                'store_name' => $order_query->row['store_name'],
+                'status' => $order_query->row['name'],
+                'order_date' => $order_query->row['order_date'],
+                'delivery_id' => $order_query->row['delivery_id'],
+                'settlement_amount' => $order_query->row['settlement_amount'],
+                'driver_id' => $order_query->row['driver_id'],
+                'vehicle_number' => $order_query->row['vehicle_number'],
+                'delivery_executive_id' => $order_query->row['delivery_executive_id'],
+
+
+
+            ];
+        } else {
+            return false;
+        }
+    }
+
 }

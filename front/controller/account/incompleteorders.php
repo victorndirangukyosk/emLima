@@ -221,8 +221,8 @@ class ControllerAccountIncompleteOrders extends Controller
                 'products' => ($product_total + $voucher_total),
                 'real_products' => ($real_product_total + $voucher_total),
                 'total' => $this->currency->format($total, $result['currency_code'], $result['currency_value']),
-                'href' => $this->url->link('account/order/info', 'order_id=' . $result['order_id'], 'SSL'),
-                'real_href' => $this->url->link('account/order/realinfo', 'order_id=' . $result['order_id'], 'SSL'),
+                'href' => $this->url->link('account/incompleteorders/info', 'order_id=' . $result['order_id'], 'SSL'),
+                'real_href' => $this->url->link('account/incompleteorders/realinfo', 'order_id=' . $result['order_id'], 'SSL'),
                 'accept_reject_href' => $this->url->link('account/order/accept_reject', 'order_id=' . $result['order_id'], 'SSL'),
                 'parent_approve_order' => $approve_order_button,
                 'customer_id' => $result['customer_id'],
@@ -262,7 +262,7 @@ class ControllerAccountIncompleteOrders extends Controller
         $data['footer'] = $this->load->controller('common/footer');
         $data['header'] = $this->load->controller('common/header/information');
 
-        //echo "<pre>";print_r($this->config->get('config_shipped_status'));die;
+        // echo "<pre>";print_r($data);die;
 
         if ($this->request->server['HTTPS']) {
             $server = $this->config->get('config_ssl');
@@ -272,10 +272,10 @@ class ControllerAccountIncompleteOrders extends Controller
 
         $data['base'] = $server;
 
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/order_list.tpl')) {
-            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/order_list.tpl', $data));
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/incompleteorders.tpl')) {
+            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/incompleteorders.tpl', $data));
         } else {
-            $this->response->setOutput($this->load->view('default/template/account/order_list.tpl', $data));
+            $this->response->setOutput($this->load->view('default/template/account/incompleteorders.tpl', $data));
         }
     }
 
@@ -312,9 +312,9 @@ class ControllerAccountIncompleteOrders extends Controller
 
         $this->load->model('account/order');
         if (false == $redirectNotLogin) {
-            $order_info = $this->model_account_order->getOrder($order_id, true);
+            $order_info = $this->model_account_order->getIncompleteOrder($order_id, true);
         } else {
-            $order_info = $this->model_account_order->getOrder($order_id);
+            $order_info = $this->model_account_order->getIncompleteOrder($order_id);
         }
         //echo "<pre>";print_r($order_info);die;
 
@@ -705,7 +705,7 @@ class ControllerAccountIncompleteOrders extends Controller
 
             $data['base'] = $server;
 
-            $data['continue'] = $this->url->link('account/order', '', 'SSL');
+            $data['continue'] = $this->url->link('account/incompleteorders', '', 'SSL');
 
             $data['column_left'] = $this->load->controller('common/column_left');
             $data['column_right'] = $this->load->controller('common/column_right');
@@ -777,8 +777,8 @@ class ControllerAccountIncompleteOrders extends Controller
             
             $data['vehicle_number'] = $order_info['vehicle_number'];
 
-            if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/order_info.tpl')) {
-                $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/order_info.tpl', $data));
+            if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/incompleteorder_info.tpl')) {
+                $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/incompleteorder_info.tpl', $data));
             } else {
                 $this->response->setOutput($this->load->view('default/template/account/order_info.tpl', $data));
             }

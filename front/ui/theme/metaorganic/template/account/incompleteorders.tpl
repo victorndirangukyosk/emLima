@@ -12,33 +12,18 @@
                         <i class="fa fa-clock-o"></i> <?= $text_placed_on?> <span><strong><?php echo $order['date_added']; ?></strong></span>, <?php echo $order['time_added']; ?> <span>
 
                             <div class="pull-right">
-                                <button type="button" style="height:25px" onclick="excel( <?=$order["order_id"] ?>,'<?=$order["order_company"] ?>');" data-toggle="tooltip" title="Download Ordered Products"
+                                <button type="button" style="height:25px" onclick="excel1( <?=$order["order_id"] ?>,'<?=$order["order_company"] ?>');" data-toggle="tooltip" title="Download Ordered Products"
                                         class="btn btn-success " data-original-title="Download Excel"><i class="fa fa-download"></i></button>
-                            </div>
-
-                            
-
-                            <div class="pull-right">
-                            <?php if($order['status'] == 'Delivered' ) { ?>
-                              <a data-confirm="Available products  in this order will be added to cart !!" class="btn btn-success download" style="margin-right: 4px !important; height: 27px;margin-left:4px;"
-                          data-store-id="<?= ACTIVE_STORE_ID ?>" data-toggle="tooltip"
-                          value="<?php echo $order['order_id']; ?>" title="Add To Cart/Reorder"><i
-                            class="fa fa-cart-plus"></i></a><?php } ?>
-                            </div>  
+                            </div> 
 
                             <?php if($order['customer_id'] == $this->customer->getId() && $order['edit_own_order'] != NULL) { ?>
                             <a href="<?php echo $order['edit_own_order'];?>" class="btn btn-success" title="Edit Your Order" style="margin-right: 4px !important; height: 27px;margin-left:4px;"><i class="fa fa-edit"></i></a>
                             <?php } ?>
 
 
-                            <?php if($order['status'] == 'Arrived for Delivery'){?>
-                                                     <a href="<?php echo $order['accept_reject_href']?>"  class="btn btn-default btn-xs btn-accept-reject" >Accept Delivery</a>
+                            <?php if($order['status'] == 'Arrived for Delivery'){?>                                                   
                                                     <?php } ?>
-                            <?php if($order['shipped']) { ?>
-
-                            <a href="#" id="cancelOrder" data-id='<?=$order["order_id"] ?>' class="btn btn-danger btn-xs btn-custom-remove"><?= $text_cancel ?></a>
-
-
+                            <?php if($order['shipped']) { ?>                      
                             <?php } else { ?>
                             <a href="#" data-toggle="modal" data-target="#contactusModal"  class="btn btn-default btn-xs"><?= $text_report_issue ?></a>
                             <?php } ?>
@@ -591,75 +576,8 @@
                 }, 100);
             }
         });
-    });
-
-    $(document).delegate('#reject_order', 'click', function (e) {
-        e.preventDefault();
-        var order_id = $(this).attr('data-id');
-        var order_status = 'Rejected';
-        var customer_id = $(this).attr('data-custid');
-        console.log(order_id + ' ' + customer_id + ' ' + order_status);
-
-        var parent_div = $(this).parent("div");
-        console.log(parent_div.attr("id"));
-
-        $.ajax({
-            url: 'index.php?path=account/order/ApproveOrRejectSubUserOrder',
-            type: 'post',
-            data: {
-                order_id: $(this).attr('data-id'),
-                customer_id: $(this).attr('data-custid'),
-                order_status: order_status
-            },
-            dataType: 'json',
-            success: function (json) {
-                console.log(json);
-                var approved = $('<li class="list-group-item"><div class="row"><div class="col-md-4"></div><div class="col-md-4"><div class="my-order-showaddress"><h3 class="my-order-title label" style="background-color: #FF5C23;display: block;line-height: 2; text-align:center;">Rejected</h3></div></div><div class="col-md-4"></div></div>');
-                parent_div.html(approved);
-                $('#orderstatus' + order_id).text(json.success);
-                $('#editorder' + order_id).remove();
-                setTimeout(function () {
-                    window.location.reload(false);
-                }, 100);
-            }
-        });
-    });
-
-
-    $(document).delegate('#cancelOrder', 'click', function (e) {
-
-        e.preventDefault();
-
-        if (!window.confirm("Are you sure?")) {
-            return false;
-        }
-        console.log("cancelOrder click");
-        console.log($(this).attr('data-id'));
-        $('#cancelOrder').html('Wait...');
-        var orderId = $(this).attr('data-id');
-        $.ajax({
-            url: 'index.php?path=account/order/refundCancelOrder',
-            type: 'post',
-            data: {
-                order_id: $(this).attr('data-id')
-            },
-            dataType: 'json',
-            success: function (json) {
-                console.log(json);
-                // if (json['status']) {
-                //     alert("Order ID #"+orderId+" is successfully cancelled");
-
-
-                // } else {
-                //     alert("Order ID #"+orderId+" cancelling failed");
-                // }
-
-                setTimeout(function () {
-                    window.location.reload(false);
-                }, 1000);
-            }
-        });
-    });
+    });  
+ 
 
 
        $(document).delegate('.download', 'click', function (e) {
@@ -718,9 +636,9 @@
 
 
 
-    function excel(order_id, order_company) {
+    function excel1(order_id, order_company) {
         //alert(order_company);
-        url = 'index.php?path=account/order/export_products_excel&order_id=' + order_id + '&company=' + order_company;
+        url = 'index.php?path=account/order/export_incomplete0rder_products_excel&order_id=' + order_id + '&company=' + order_company;
         location = url;
     }
 
