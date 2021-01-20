@@ -29,7 +29,7 @@ class ModelOrderProcessingGroupOrderProcessor extends Model {
     }
 
     public function getOrderProcessors($data = []) {
-        $sql = "SELECT *, opg.order_processing_group_name, c.status as order_processor_status, c.created_at as date_added, CONCAT(c.firstname, ' ', c.lastname) AS name FROM " . DB_PREFIX . 'order_processors c INNER JOIN '. DB_PREFIX . "order_processing_groups opg ON opg.order_processing_group_id = c.order_processing_group_id";
+        $sql = "SELECT *, opg.order_processing_group_name, c.status as order_processor_status, c.created_at as date_added, c.updated_at as date_updated, CONCAT(c.firstname, ' ', c.lastname) AS name FROM " . DB_PREFIX . 'order_processors c INNER JOIN '. DB_PREFIX . "order_processing_groups opg ON opg.order_processing_group_id = c.order_processing_group_id";
 
         $implode = [];
 
