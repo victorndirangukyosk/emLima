@@ -213,7 +213,7 @@ class ControllerOrderProcessingGroupOrderProcessor extends Controller {
                 'name' => $result['name'],
                 'order_processing_group_name' => $result['order_processing_group_name'],
                 'order_processing_group_id' => $result['order_processing_group_id'],
-                'status' => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
+                'status' => ($result['order_processor_status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
                 'created_at' => date($this->language->get('date_format_short'), strtotime($result['created_at'])),
                 'edit' => $this->url->link('orderprocessinggroup/orderprocessor/edit', 'token=' . $this->session->data['token'] . '&order_processor_id=' . $result['order_processor_id'] . $url, 'SSL'),
                 'orderprocessor_view' => $this->url->link('orderprocessinggroup/orderprocessor/view_orderprocessor', 'token=' . $this->session->data['token'] . '&order_processor_id=' . $result['order_processor_id'] . $url, 'SSL'),

@@ -29,7 +29,7 @@ class ModelOrderProcessingGroupOrderProcessor extends Model {
     }
 
     public function getOrderProcessors($data = []) {
-        $sql = "SELECT *, opg.order_processing_group_name, CONCAT(c.firstname, ' ', c.lastname) AS name FROM " . DB_PREFIX . 'order_processors c INNER JOIN '. DB_PREFIX . "order_processing_groups opg ON opg.order_processing_group_id = c.order_processing_group_id";
+        $sql = "SELECT *, opg.order_processing_group_name, c.status as order_processor_status, CONCAT(c.firstname, ' ', c.lastname) AS name FROM " . DB_PREFIX . 'order_processors c INNER JOIN '. DB_PREFIX . "order_processing_groups opg ON opg.order_processing_group_id = c.order_processing_group_id";
 
         $implode = [];
 
@@ -42,7 +42,7 @@ class ModelOrderProcessingGroupOrderProcessor extends Model {
         }
 
         if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
-            $implode[] = "c.status = '" . (int) $data['filter_status'] . "'";
+            $implode[] = "order_processor_status = '" . (int) $data['filter_status'] . "'";
         }
 
         if (!empty($data['filter_date_added'])) {
@@ -56,7 +56,7 @@ class ModelOrderProcessingGroupOrderProcessor extends Model {
         $sort_data = [
             'name',
             'order_processing_group_name',
-            'c.status',
+            'order_processor_status',
             'c.created_at',
         ];
 
@@ -101,15 +101,15 @@ class ModelOrderProcessingGroupOrderProcessor extends Model {
         }
 
         if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
-            $implode[] = "status = '" . (int) $data['filter_status'] . "'";
+            $implode[] = "op.status = '" . (int) $data['filter_status'] . "'";
         }
 
         if (isset($data['filter_order_processing_group_id']) && !is_null($data['filter_order_processing_group_id'])) {
-            $implode[] = "order_processing_group_id = '" . (int) $data['filter_order_processing_group_id'] . "'";
+            $implode[] = "op.order_processing_group_id = '" . (int) $data['filter_order_processing_group_id'] . "'";
         }
 
         if (!empty($data['filter_date_added'])) {
-            $implode[] = "DATE(created_at) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
+            $implode[] = "DATE(op.created_at) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
         }
 
         if ($implode) {
