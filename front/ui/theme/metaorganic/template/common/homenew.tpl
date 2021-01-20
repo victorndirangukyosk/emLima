@@ -32,6 +32,7 @@
   <script type='text/javascript'
     src='https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js'></script>
   <script src="<?= $base;?>front/ui/theme/metaorganic/assets/js/scripts.js"></script>
+  <script src="<?= $base;?>front/ui/theme/metaorganic/assets/js/cart.js"></script>
 </head>
 
 
@@ -121,7 +122,7 @@
                   <div class="cart_container d-flex flex-row align-items-center justify-content-end">
                     <div class="cart_icon"> <img
                         src="https://res.cloudinary.com/dxfq3iotg/image/upload/v1560918704/cart.png" alt="">
-                      <div class="cart_count"><span>
+                      <div class="cart_count"><span class="cart_items_count">
                           <?= $this->cart->countProducts(); ?>
                         </span></div>
                     </div>
@@ -257,51 +258,21 @@
     </div>
   </div>
 
-  <div class="modal-wrapper"></div>
+  <div class="product-popup-wrapper"></div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.js"></script>
-  <script src="<?= $base;?>front/ui/javascript/common.js?v=2.0.5" type="text/javascript"></script>
-  <script src="<?= $base; ?>front/ui/theme/metaorganic/javascript/common.js?v=2.0.7" charset="UTF-8"
-    type="text/javascript"></script>
   <script type="text/javascript">
-    $(document).delegate('#clearcart', 'click', function () {
-      var choice = confirm($(this).attr('data-confirm'));
-
-      if (choice) {
-        $.ajax({
-          url: 'index.php?path=checkout/cart/clear_cart',
-          type: 'post',
-          data: '',
-          dataType: 'json',
-          success: function (json) {
-            if (json['location']) {
-              location = json.redirect;
-              location = location;
-            }
-          }
-        });
-      }
-    });
-
-    $(document).delegate('.close-model', 'click', function () {
-      console.log("close product block");
-      $('#bannermodal').modal('hide');
-      $('.modal-backdrop').remove();
-    });
-
     $(document).ready(function () {
       $(document).delegate('.products-grid-item', 'click', function () {
         $('.products-grid-item').prop('disabled', true);
         $.get('index.php?path=product/product/view&product_store_id=' + $(this).attr('data-id') + '&store_id=' + $(this).attr('data-store'), function (data) {
           $('.products-grid-item').prop('disabled', false);
-          $('.modal-wrapper').html(data);
+          $('.product-popup-wrapper').html(data);
           $('#product-details-popup').modal('show');
         });
         $('#product_name').val('');
       });
     });
-
   </script>
+  
 </body>
-
 </html>

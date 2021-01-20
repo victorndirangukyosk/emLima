@@ -158,7 +158,8 @@
                                     data-price="<?php echo isset($variation['special_price']) ? $variation['special_price'] : ''; ?>"
                                     data-quantity="<?php echo isset($variation['qty_in_cart']) ? $variation['qty_in_cart'] : ''; ?>"
                                     data-key="<?php echo isset($variation['key']) ? $variation['key'] : ''; ?>"
-                                    data-product-id="<?= $variation['product_id'] ?>" name="variation" type="radio">
+                                    data-product-id="<?= $variation['product_id'] ?>"
+                                    data-variation-id="<?= $variation['variation_id'] ?>" name="variation" type="radio">
                                 <span class="variation-pill">
                                     <?=  $variation['unit'] ?>
                                 </span>
@@ -188,7 +189,13 @@
                         <div class="col-md-12">
                             <div class="input-group">
                                 <input id="product-quantity" class="form-control" placeholder="Quantity">
-                                <input type="button" class="btn btn-cta-add" value="Add To Basket" disabled="disabled">
+                                <input type="button" class="btn btn-cta-add"
+                                data-store-id="<?= $product['store_id'] ?>"
+                                data-action="<?= $product['qty_in_cart'] ? 'update' : 'add'; ?>"
+                                data-key="<?= $product['key'] ?>"
+                                data-product-id=""
+                                data-variation-id="<?= $product['store_product_variation_id'] ?>"
+                                value="<?= $product['qty_in_cart'] ? 'Update Basket' : 'Add To Basket'; ?>" disabled="disabled">
                             </div>
                         </div>
                     </div>
@@ -205,15 +212,17 @@
     });
 
     $('input[type=radio][name=variation]').change(function () {
+        if ($('.price-container').is(":hidden")) $('.price-container').show();
+        
         const price = $(this).attr('data-price');
-        if ($('.price-container').is(":hidden")) {
-            $('.price-container').show();
-        }
         $('.product-modal-price').html(`KES ${price}`);
+
+        const variationId = $(this).attr('data-variation-id');
+        $('.btn-cta-add').attr('data-product-id', variationId);
     });
 
     $('input[type=radio][name=variation], #product-quantity')
-        .on('change', function () {
+        .on('change mousedown mouseup keyup keydown', function () {
             if ($('input[type=radio][name=variation]').is(":checked")
                 && $('#product-quantity').val() != '') {
                 $('.btn-cta-add').removeAttr('disabled');
@@ -222,5 +231,20 @@
             }
         });
 
+    $('.btn-cta-add').click(function() {
+        const storeId = $(this).attr('data-store-id');
+        const productId = $(this).attr('data-product-id');
+        const variationId = $(this).attr('data-variation-id');
+        const quantity = $('#product-quantity').val();
+        const productNotes = $('#product-notes').val();
 
+        const action = $(this).attr('data-action');
+        const key = $(this).attr('data-key');
+
+        // TODO: Update cart quantity
+        // TODO: Add produce type selector (last null parameter)
+        cart.add(productId, quantity, variationId, storeId, productNotes, null);
+
+        $('#product-details-popup').modal('hide');
+    });
 </script>
