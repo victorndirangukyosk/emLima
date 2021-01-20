@@ -145,7 +145,7 @@
   </div>
   <script type="text/javascript"><!--
 $('#button-filter').on('click', function() {
-  url = 'index.php?path=orderprocessinggroup/orderprocessinggroup_list&token=<?php echo $token; ?>';
+  url = 'index.php?path=orderprocessinggroup/orderprocessor&token=<?php echo $token; ?>';
   
   var filter_name = $('input[name=\'filter_name\']').val();
   
@@ -170,17 +170,16 @@ $('#button-filter').on('click', function() {
 //--></script> 
   <script type="text/javascript"><!--
 
-  $executiveName="";
 $('input[name=\'filter_name\']').autocomplete({
   'source': function(request, response) {
     $.ajax({
-      url: 'index.php?path=orderprocessinggroup/orderprocessinggroup_list/autocompletebyOrderProcessingGroupName&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request)+'&filter_company=' +$executiveName,
+      url: 'index.php?path=orderprocessinggroup/orderprocessor/autocompletebyOrderProcessor&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request),
       dataType: 'json',     
       success: function(json) {
         response($.map(json, function(item) {
           return {
-            label: item['order_processing_group_name'],
-            value: item['order_processing_group_id']
+            label: item['name'],
+            value: item['order_processor_id']
           }
         }));
       }
@@ -199,7 +198,7 @@ $('.date').datetimepicker({
 
 function excel() {
             
-    url = 'index.php?path=orderprocessinggroup/orderprocessinggroup_list/export_excel&token=<?php echo $token; ?>';
+    url = 'index.php?path=orderprocessinggroup/orderprocessor/export_excel&token=<?php echo $token; ?>';
     
     location = url;
 }

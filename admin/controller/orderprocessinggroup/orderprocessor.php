@@ -633,7 +633,7 @@ class ControllerOrderProcessingGroupOrderProcessor extends Controller {
         $this->getForm();
     }
 
-    public function autocompletebyOrderProcessingGroupName() {
+    public function autocompletebyOrderProcessor() {
         $json = [];
 
         if (isset($this->request->get['filter_name'])) {
