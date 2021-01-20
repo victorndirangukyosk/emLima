@@ -29,7 +29,7 @@ class ModelOrderProcessingGroupOrderProcessor extends Model {
     }
 
     public function getOrderProcessors($data = []) {
-        $sql = "SELECT *, CONCAT(c.firstname, ' ', c.lastname) AS name FROM " . DB_PREFIX . 'order_processors c';
+        $sql = "SELECT *, opg.order_processing_group_name, CONCAT(c.firstname, ' ', c.lastname) AS name FROM " . DB_PREFIX . 'order_processors c INNER JOIN '. DB_PREFIX . "order_processing_groups opg ON opg.order_processing_group_id = c.order_processing_group_id";
 
         $implode = [];
 
@@ -91,7 +91,7 @@ class ModelOrderProcessingGroupOrderProcessor extends Model {
     }
 
     public function getTotalOrderProcessors($data = []) {
-        $sql = 'SELECT COUNT(*) AS total FROM ' . DB_PREFIX . 'order_processors';
+        $sql = 'SELECT COUNT(*) AS total FROM ' . DB_PREFIX . 'order_processors op INNER JOIN '. DB_PREFIX .'order_processing_groups opg ON opg.order_processing_group_id = op.order_processing_group_id';
 
         $implode = [];
 

@@ -211,6 +211,7 @@ class ControllerOrderProcessingGroupOrderProcessor extends Controller {
             $data['orderprocessors'][] = [
                 'order_processor_id' => $result['order_processor_id'],
                 'name' => $result['name'],
+                'order_processing_group_name' => $result['order_processing_group_name'],
                 'order_processing_group_id' => $result['order_processing_group_id'],
                 'status' => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
                 'created_at' => date($this->language->get('date_format_short'), strtotime($result['created_at'])),
