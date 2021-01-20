@@ -346,15 +346,14 @@ class ControllerCheckoutCart extends Controller
 
     public function add()
     {
-        $cachePrice_data = $this->cache->get('category_price_data');
         $this->load->language('checkout/cart');
-        //echo $this->request->post['quantity'];
+
         $json = [];
 
         if (isset($this->request->post['product_id'])) {
-            $product_store_id = (int) $this->request->post['product_id'];
+            $product_id = (int) $this->request->post['product_id'];
         } else {
-            $product_store_id = 0;
+            $product_id = 0;
         }
 
         if (isset($this->request->post['variation_id'])) {
@@ -368,29 +367,18 @@ class ControllerCheckoutCart extends Controller
         } else {
             $product_type = 'replacable';
         }
+
         if (isset($this->session->data['config_store_id'])) {
             $store_id = $this->session->data['config_store_id'];
         } else {
             $store_id = $this->request->post['store_id'];
         }
-        // if (isset($this->session->data['ripe'])) {
-        //     $ripe = $this->session->data['ripe'];
-        // } else {
-        //     $ripe = $this->request->post['ripe'];
-        // }
-
-        $log = new Log('error.log');
-
-        $log->write('PROD notes INFO');
-
-        if (isset($this->session->data['product_note'])) {
-            $product_note = $this->session->data['product_note'];
+        
+        if (isset($this->session->data['product_notes'])) {
+            $product_note = $this->session->data['product_notes'];
         } else {
-            $product_note = $this->request->post['product_note'];
+            $product_note = $this->request->post['product_notes'];
         }
-
-        $log->write($product_note);
-        $log->write($product_store_id);
 
         if (isset($this->session->data['produce_type'])) {
             $produce_type = $this->session->data['produce_type'];
@@ -398,18 +386,9 @@ class ControllerCheckoutCart extends Controller
             $produce_type = $this->request->post['produce_type'];
         }
 
-        $log->write('END PROD notes INFO');
-        /*console.log('ripasdsfdsfe');
-        console.log($ripe);*/
-
+        
         $this->load->model('assets/product');
-
-        $product_info = $this->model_assets_product->getProduct($product_store_id, false, $store_id);
-
-        $log->write('PROD INFO');
-        $log->write($product_info);
-        $log->write('PROD INFO');
-
+        $product_info = $this->model_assets_product->getProduct($variation_id, false, $store_id);
         if ($product_info) {
             if (isset($this->request->post['quantity'])) {
                 $quantity = $this->request->post['quantity'];
@@ -424,9 +403,7 @@ class ControllerCheckoutCart extends Controller
             }
 
             //below model query is required?
-
             $product_options = $this->model_assets_product->getProductOptions($this->request->post['product_id']);
-
             foreach ($product_options as $product_option) {
                 if ($product_option['required'] && empty($option[$product_option['product_option_id']])) {
                     $json['error']['option'][$product_option['product_option_id']] = sprintf($this->language->get('error_required'), $product_option['name']);
@@ -440,7 +417,6 @@ class ControllerCheckoutCart extends Controller
             }
 
             $recurrings = $this->model_assets_product->getProfiles($product_info['product_store_id']);
-
             if ($recurrings) {
                 $recurring_ids = [];
 
@@ -454,9 +430,9 @@ class ControllerCheckoutCart extends Controller
             }
 
             if (!$json) {
-                $json['key'] = $this->cart->add($this->request->post['product_id'], $quantity, $option, $recurring_id, $store_id, $variation_id, $product_type, $product_note, $produce_type);
+                $json['key'] = $this->cart->add($product_id, $variation_id, $store_id, $quantity, $product_note, $produce_type);
 
-                $json['product_store_id'] = $this->request->post['product_id'];
+                $json['product_store_id'] = $product_id;
 
                 $json['product_type'] = $product_type;
 
@@ -606,11 +582,6 @@ class ControllerCheckoutCart extends Controller
         $json['location'] = 'module';
 
         /// Update
-
-        $ripe = $this->request->post['ripe'];
-
-        console.log('ripe');
-        console.log($ripe);
 
         //echo $this->request->post['ripe'];
         $this->cart->update($this->request->post['key'], $this->request->post['quantity'], $this->request->post['product_note'], $this->request->post['produce_type']);

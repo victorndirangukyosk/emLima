@@ -1614,15 +1614,11 @@ class ControllerCommonHome extends Controller {
             }
 
             //get qty in cart
+            
             if (!empty($this->session->data['config_store_id'])) {
-                $key = base64_encode(serialize(['product_store_id' => (int) $result['product_store_id'], 'store_id' => $this->session->data['config_store_id']]));
+                $storeId = $this->session->data['config_store_id'];
             } else {
-                $key = base64_encode(serialize(['product_store_id' => (int) $result['product_store_id'], 'store_id' => $filter_data['store_id']]));
-            }
-            if (isset($this->session->data['cart'][$key])) {
-                $qty_in_cart = $this->session->data['cart'][$key]['quantity'];
-            } else {
-                $qty_in_cart = 0;
+                $storeId = $filter_data['store_id'];
             }
 
             //$result['name'] = strlen($result['name']) > 27 ? substr($result['name'],0,27)."..." : $result['name'];
@@ -1682,6 +1678,19 @@ class ControllerCommonHome extends Controller {
                     'href' => $this->url->link('product/product', '&product_store_id=' . $result['product_store_id']),
                 ];
             }
+
+            // TODO: Check quantity in cart for all variations
+            // $product['product_id'] = (int) $result['product_id'];
+            // $product['variation_id'] = (int) $result['product_store_id'];
+            // $product['store_id'] = (int) $storeId;
+            
+            // $key = base64_encode(serialize($product));
+
+            // if (isset($this->session->data['cart'][$key])) {
+            //     $qty_in_cart = $this->session->data['cart'][$key]['quantity'];
+            // } else {
+            //     $qty_in_cart = 0;
+            // }
         }
         // echo "<pre>";print_r($data['products']);die;
 
