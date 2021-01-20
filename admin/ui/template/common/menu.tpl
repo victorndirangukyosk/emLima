@@ -752,12 +752,13 @@
     ?>
     
     <?php
-    if( $preturn_orderprocessinggroups != false) {
+    if( $preturn_orderprocessinggroups != false || $preturn_orderprocessor != false) {
     ?>
     <li id="system">
         <a class="parent"><i class="fa fa-truck fa-fw"></i> <span>Order Processing</span></a>
         <ul class="collapse">
             <li><a href="<?php echo $orderprocessinggroup_list; ?>">Groups</a></li>
+            <li><a href="<?php echo $orderprocessor_list; ?>">Order Processors</a></li>
         </ul>
     </li>
     <?php 

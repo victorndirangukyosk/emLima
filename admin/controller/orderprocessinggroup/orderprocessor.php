@@ -5,11 +5,12 @@ class ControllerOrderProcessingGroupOrderProcessor extends Controller {
     private $error = [];
 
     public function index() {
-        $this->load->language('orderprocessinggroup/orderprocessinggroup');
+        $this->load->language('orderprocessinggroup/orderprocessor');
 
         $this->document->setTitle($this->language->get('heading_title'));
 
         $this->load->model('orderprocessinggroup/orderprocessinggroup');
+        $this->load->model('orderprocessinggroup/orderprocessor');
 
         $this->getList();
 
@@ -18,17 +19,18 @@ class ControllerOrderProcessingGroupOrderProcessor extends Controller {
     }
 
     public function add() {
-        $this->load->language('orderprocessinggroup/orderprocessinggroup');
+        $this->load->language('orderprocessinggroup/orderprocessor');
 
         $this->document->setTitle($this->language->get('heading_title'));
 
         $this->load->model('orderprocessinggroup/orderprocessinggroup');
+        $this->load->model('orderprocessinggroup/orderprocessor');
 
         if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
-            $order_processing_group_id = $this->model_orderprocessinggroup_orderprocessinggroup->addOrderProcessingGroup($this->request->post);
+            $order_processor_id = $this->model_orderprocessor_orderprocessor->addOrderProcessor($this->request->post);
 
             //$this->session->data['success'] = $this->language->get('text_success');
-            $this->session->data['success'] = 'Success : Order Processing Group Created Successfully!';
+            $this->session->data['success'] = 'Success : Order Processor Created Successfully!';
 
             // Add to activity log
             $log = new Log('error.log');
@@ -38,13 +40,13 @@ class ControllerOrderProcessingGroupOrderProcessor extends Controller {
                 'user_id' => $this->user->getId(),
                 'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
                 'user_group_id' => $this->user->getGroupId(),
-                'order_processing_group_id' => $order_processing_group_id,
+                'order_processor_id' => $order_processor_id,
             ];
-            $log->write('order processing group add');
+            $log->write('order processor add');
 
-            $this->model_user_user_activity->addActivity('order_processing_group_add', $activity_data);
+            $this->model_user_user_activity->addActivity('order_processor_add', $activity_data);
 
-            $log->write('order processing group add');
+            $log->write('order processor add');
 
             $url = '';
 
@@ -54,6 +56,10 @@ class ControllerOrderProcessingGroupOrderProcessor extends Controller {
 
             if (isset($this->request->get['filter_status'])) {
                 $url .= '&filter_status=' . $this->request->get['filter_status'];
+            }
+
+            if (isset($this->request->get['filter_order_processing_group_id'])) {
+                $url .= '&filter_order_processing_group_id=' . $this->request->get['filter_order_processing_group_id'];
             }
 
             if (isset($this->request->get['filter_date_added'])) {
@@ -73,21 +79,21 @@ class ControllerOrderProcessingGroupOrderProcessor extends Controller {
             }
 
             if (isset($this->request->post['button']) and 'save' == $this->request->post['button']) {
-                $this->response->redirect($this->url->link('orderprocessinggroup/orderprocessinggroup_list/edit', 'order_processing_group_id=' . $order_processing_group_id . '&token=' . $this->session->data['token'] . $url, 'SSL'));
+                $this->response->redirect($this->url->link('orderprocessinggroup/orderprocessor/edit', 'order_processor_id=' . $order_processor_id . '&token=' . $this->session->data['token'] . $url, 'SSL'));
             }
 
             if (isset($this->request->post['button']) and 'new' == $this->request->post['button']) {
-                $this->response->redirect($this->url->link('orderprocessinggroup/orderprocessinggroup_list/add', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+                $this->response->redirect($this->url->link('orderprocessinggroup/orderprocessor/add', 'token=' . $this->session->data['token'] . $url, 'SSL'));
             }
 
-            $this->response->redirect($this->url->link('orderprocessinggroup/orderprocessinggroup_list', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            $this->response->redirect($this->url->link('orderprocessinggroup/orderprocessor', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
 
         $this->getForm();
     }
 
     protected function getList() {
-        $this->load->language('orderprocessinggroup/orderprocessinggroup');
+        $this->load->language('orderprocessinggroup/orderprocessor');
 
         if (isset($this->request->get['filter_name'])) {
             $filter_name = $this->request->get['filter_name'];
@@ -95,11 +101,17 @@ class ControllerOrderProcessingGroupOrderProcessor extends Controller {
             $filter_name = null;
         }
 
-        
+
         if (isset($this->request->get['filter_status'])) {
             $filter_status = $this->request->get['filter_status'];
         } else {
             $filter_status = null;
+        }
+
+        if (isset($this->request->get['filter_order_processing_group_id'])) {
+            $filter_order_processing_group_id = $this->request->get['filter_order_processing_group_id'];
+        } else {
+            $filter_order_processing_group_id = null;
         }
 
         if (isset($this->request->get['filter_date_added'])) {
@@ -136,6 +148,10 @@ class ControllerOrderProcessingGroupOrderProcessor extends Controller {
             $url .= '&filter_status=' . $this->request->get['filter_status'];
         }
 
+        if (isset($this->request->get['filter_order_processing_group_id'])) {
+            $url .= '&filter_order_processing_group_id=' . $this->request->get['filter_order_processing_group_id'];
+        }
+
         if (isset($this->request->get['filter_date_added'])) {
             $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
         }
@@ -161,44 +177,46 @@ class ControllerOrderProcessingGroupOrderProcessor extends Controller {
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('orderprocessinggroup/orderprocessinggroup_list', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+            'href' => $this->url->link('orderprocessinggroup/orderprocessor', 'token=' . $this->session->data['token'] . $url, 'SSL'),
         ];
 
-        $data['add'] = $this->url->link('orderprocessinggroup/orderprocessinggroup_list/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['delete'] = $this->url->link('orderprocessinggroup/orderprocessinggroup_list/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['add'] = $this->url->link('orderprocessinggroup/orderprocessor/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['delete'] = $this->url->link('orderprocessinggroup/orderprocessor/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
-        $data['orderprocessinggroups'] = [];
+        $data['orderprocessors'] = [];
 
         $filter_data = [
             'filter_name' => $filter_name,
             'filter_status' => $filter_status,
             'filter_date_added' => $filter_date_added,
+            'filter_order_processing_group_id' => $filter_order_processing_group_id,
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
             'limit' => $this->config->get('config_limit_admin'),
         ];
 
-        $orderprocessinggroup_total = $this->model_orderprocessinggroup_orderprocessinggroup->getTotalOrderProcessingGroups($filter_data);
+        $orderprocessor_total = $this->model_orderprocessinggroup_orderprocessor->getTotalOrderProcessors($filter_data);
 
-        $results = $this->model_orderprocessinggroup_orderprocessinggroup->getOrderProcessingGroups($filter_data);
+        $results = $this->model_orderprocessinggroup_orderprocessor->getOrderProcessors($filter_data);
 
         //echo "<pre>";print_r($results);die;
         foreach ($results as $result) {
             if (!$result['status']) {
-                $status = $this->url->link('orderprocessinggroup/orderprocessinggroup_list/approve', 'token=' . $this->session->data['token'] . '&order_processing_group_id=' . $result['order_processing_group_id'] . $url, 'SSL');
+                $status = $this->url->link('orderprocessinggroup/orderprocessor/approve', 'token=' . $this->session->data['token'] . '&order_processor_id=' . $result['order_processor_id'] . $url, 'SSL');
             } else {
                 $status = '';
             }
 
 
-            $data['orderprocessinggroups'][] = [
+            $data['orderprocessors'][] = [
+                'order_processor_id' => $result['order_processor_id'],
+                'name' => $result['name'],
                 'order_processing_group_id' => $result['order_processing_group_id'],
-                'order_processing_group_name' => $result['order_processing_group_name'],
                 'status' => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
                 'created_at' => date($this->language->get('date_format_short'), strtotime($result['created_at'])),
                 'edit' => $this->url->link('orderprocessinggroup/orderprocessinggroup_list/edit', 'token=' . $this->session->data['token'] . '&order_processing_group_id=' . $result['order_processing_group_id'] . $url, 'SSL'),
-                'orderprocessinggroup_view' => $this->url->link('orderprocessinggroup/orderprocessinggroup_list/view_orderprocessinggroup', 'token=' . $this->session->data['token'] . '&order_processing_group_id=' . $result['order_processing_group_id'] . $url, 'SSL'),
+                'orderprocessor_view' => $this->url->link('orderprocessinggroup/orderprocessor/view_orderprocessor', 'token=' . $this->session->data['token'] . '&order_processor_id=' . $result['order_processor_id'] . $url, 'SSL'),
             ];
         }
 
@@ -260,9 +278,13 @@ class ControllerOrderProcessingGroupOrderProcessor extends Controller {
             $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
         }
 
-        
+
         if (isset($this->request->get['filter_status'])) {
             $url .= '&filter_status=' . $this->request->get['filter_status'];
+        }
+
+        if (isset($this->request->get['filter_order_processing_group_id'])) {
+            $url .= '&filter_order_processing_group_id=' . $this->request->get['filter_order_processing_group_id'];
         }
 
         if (isset($this->request->get['filter_date_added'])) {
@@ -279,9 +301,9 @@ class ControllerOrderProcessingGroupOrderProcessor extends Controller {
             $url .= '&page=' . $this->request->get['page'];
         }
 
-        $data['sort_name'] = $this->url->link('orderprocessinggroup/orderprocessinggroup_list', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
-        $data['sort_status'] = $this->url->link('orderprocessinggroup/orderprocessinggroup_list', 'token=' . $this->session->data['token'] . '&sort=c.status' . $url, 'SSL');
-        $data['sort_date_added'] = $this->url->link('orderprocessinggroup/orderprocessinggroup_list', 'token=' . $this->session->data['token'] . '&sort=c.created_at' . $url, 'SSL');
+        $data['sort_name'] = $this->url->link('orderprocessinggroup/orderprocessor', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
+        $data['sort_status'] = $this->url->link('orderprocessinggroup/orderprocessor', 'token=' . $this->session->data['token'] . '&sort=c.status' . $url, 'SSL');
+        $data['sort_date_added'] = $this->url->link('orderprocessinggroup/orderprocessor', 'token=' . $this->session->data['token'] . '&sort=c.created_at' . $url, 'SSL');
 
         $url = '';
 
@@ -297,6 +319,10 @@ class ControllerOrderProcessingGroupOrderProcessor extends Controller {
             $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
         }
 
+        if (isset($this->request->get['filter_order_processing_group_id'])) {
+            $url .= '&filter_order_processing_group_id=' . $this->request->get['filter_order_processing_group_id'];
+        }
+
         if (isset($this->request->get['sort'])) {
             $url .= '&sort=' . $this->request->get['sort'];
         }
@@ -306,14 +332,14 @@ class ControllerOrderProcessingGroupOrderProcessor extends Controller {
         }
 
         $pagination = new Pagination();
-        $pagination->total = $orderprocessinggroup_total;
+        $pagination->total = $orderprocessor_total;
         $pagination->page = $page;
         $pagination->limit = $this->config->get('config_limit_admin');
-        $pagination->url = $this->url->link('orderprocessinggroup/orderprocessinggroup_list', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+        $pagination->url = $this->url->link('orderprocessinggroup/orderprocessor', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
-        $data['results'] = sprintf($this->language->get('text_pagination'), ($orderprocessinggroup_total) ? (($page - 1) * $this->config->get('config_limit_admin')) + 1 : 0, ((($page - 1) * $this->config->get('config_limit_admin')) > ($orderprocessinggroup_total - $this->config->get('config_limit_admin'))) ? $orderprocessinggroup_total : ((($page - 1) * $this->config->get('config_limit_admin')) + $this->config->get('config_limit_admin')), $orderprocessinggroup_total, ceil($orderprocessinggroup_total / $this->config->get('config_limit_admin')));
+        $data['results'] = sprintf($this->language->get('text_pagination'), ($orderprocessor_total) ? (($page - 1) * $this->config->get('config_limit_admin')) + 1 : 0, ((($page - 1) * $this->config->get('config_limit_admin')) > ($orderprocessor_total - $this->config->get('config_limit_admin'))) ? $orderprocessor_total : ((($page - 1) * $this->config->get('config_limit_admin')) + $this->config->get('config_limit_admin')), $orderprocessor_total, ceil($orderprocessor_total / $this->config->get('config_limit_admin')));
 
         $data['filter_name'] = $filter_name;
         $data['filter_status'] = $filter_status;
@@ -325,7 +351,7 @@ class ControllerOrderProcessingGroupOrderProcessor extends Controller {
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
 
-        $this->response->setOutput($this->load->view('orderprocessinggroup/orderprocessinggroup_list.tpl', $data));
+        $this->response->setOutput($this->load->view('orderprocessinggroup/orderprocessor_list.tpl', $data));
     }
 
     protected function getForm() {
@@ -333,7 +359,7 @@ class ControllerOrderProcessingGroupOrderProcessor extends Controller {
 
         $data['entry_referred_by'] = $this->language->get('entry_referred_by');
 
-        $data['text_form'] = !isset($this->request->get['order_processing_group_id']) ? $this->language->get('text_add') : $this->language->get('text_edit');
+        $data['text_form'] = !isset($this->request->get['order_processor_id']) ? $this->language->get('text_add') : $this->language->get('text_edit');
         $data['text_enabled'] = $this->language->get('text_enabled');
         $data['text_disabled'] = $this->language->get('text_disabled');
         $data['text_loading'] = $this->language->get('text_loading');
@@ -354,10 +380,10 @@ class ControllerOrderProcessingGroupOrderProcessor extends Controller {
         $data['token'] = $this->session->data['token'];
 
 
-        if (isset($this->request->get['order_processing_group_id'])) {
-            $data['order_processing_group_id'] = $this->request->get['order_processing_group_id'];
+        if (isset($this->request->get['order_processor_id'])) {
+            $data['order_processor_id'] = $this->request->get['order_processor_id'];
         } else {
-            $data['order_processing_group_id'] = 0;
+            $data['order_processor_id'] = 0;
         }
 
         if (isset($this->error['warning'])) {
@@ -395,6 +421,10 @@ class ControllerOrderProcessingGroupOrderProcessor extends Controller {
             $url .= '&filter_status=' . $this->request->get['filter_status'];
         }
 
+        if (isset($this->request->get['filter_order_processing_group_id'])) {
+            $url .= '&filter_order_processing_group_id=' . $this->request->get['filter_order_processing_group_id'];
+        }
+
         if (isset($this->request->get['filter_date_added'])) {
             $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
         }
@@ -420,41 +450,41 @@ class ControllerOrderProcessingGroupOrderProcessor extends Controller {
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('orderprocessinggroup/orderprocessinggroup_list', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+            'href' => $this->url->link('orderprocessinggroup/orderprocessor', 'token=' . $this->session->data['token'] . $url, 'SSL'),
         ];
 
-        if (!isset($this->request->get['order_processing_group_id'])) {
-            $data['action'] = $this->url->link('orderprocessinggroup/orderprocessinggroup_list/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        if (!isset($this->request->get['order_processor_id'])) {
+            $data['action'] = $this->url->link('orderprocessinggroup/orderprocessor/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
         } else {
-            $data['action'] = $this->url->link('orderprocessinggroup/orderprocessinggroup_list/edit', 'token=' . $this->session->data['token'] . '&order_processing_group_id=' . $this->request->get['order_processing_group_id'] . $url, 'SSL');
+            $data['action'] = $this->url->link('orderprocessinggroup/orderprocessor/edit', 'token=' . $this->session->data['token'] . '&order_processor_id=' . $this->request->get['order_processor_id'] . $url, 'SSL');
         }
 
-        $data['cancel'] = $this->url->link('orderprocessinggroup/orderprocessinggroup_list', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        if (isset($this->request->get['order_processing_group_id']) && ('POST' != $this->request->server['REQUEST_METHOD'])) {
-            $orderprocessinggroup_info = $this->model_orderprocessinggroup_orderprocessinggroup->getOrderProcessingGroup($this->request->get['order_processing_group_id']);
+        $data['cancel'] = $this->url->link('orderprocessinggroup/orderprocessor', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        if (isset($this->request->get['order_processor_id']) && ('POST' != $this->request->server['REQUEST_METHOD'])) {
+            $orderprocessor_info = $this->model_orderprocessinggroup_orderprocessor->getOrderProcessor($this->request->get['order_processor_id']);
         }
 
-        if (isset($this->request->post['order_processing_group_name'])) {
-            $data['order_processing_group_name'] = $this->request->post['order_processing_group_name'];
-        } elseif (!empty($orderprocessinggroup_info)) {
-            $data['order_processing_group_name'] = $orderprocessinggroup_info['order_processing_group_name'];
+        if (isset($this->request->post['firstname'])) {
+            $data['firstname'] = $this->request->post['firstname'];
+        } elseif (!empty($orderprocessor_info)) {
+            $data['firstname'] = $orderprocessor_info['firstname'];
         } else {
-            $data['order_processing_group_name'] = '';
+            $data['firstname'] = '';
         }
-        
-        if (isset($this->request->post['description'])) {
-            $data['description'] = $this->request->post['description'];
-        } elseif (!empty($orderprocessinggroup_info)) {
-            $data['description'] = $orderprocessinggroup_info['description'];
+
+        if (isset($this->request->post['lastname'])) {
+            $data['lastname'] = $this->request->post['lastname'];
+        } elseif (!empty($orderprocessor_info)) {
+            $data['lastname'] = $orderprocessor_info['lastname'];
         } else {
-            $data['description'] = '';
+            $data['lastname'] = '';
         }
 
         //echo "<pre>";print_r($data);die;
         if (isset($this->request->post['status'])) {
             $data['status'] = $this->request->post['status'];
-        } elseif (!empty($orderprocessinggroup_info)) {
-            $data['status'] = $orderprocessinggroup_info['status'];
+        } elseif (!empty($orderprocessor_info)) {
+            $data['status'] = $orderprocessor_info['status'];
         } else {
             $data['status'] = true;
         }
@@ -465,30 +495,30 @@ class ControllerOrderProcessingGroupOrderProcessor extends Controller {
         $data['kondutoStatus'] = $this->config->get('config_konduto_status');
         $data['konduto_public_key'] = $this->config->get('config_konduto_public_key');
 
-        $this->response->setOutput($this->load->view('orderprocessinggroup/orderprocessinggroup_form.tpl', $data));
+        $this->response->setOutput($this->load->view('orderprocessinggroup/orderprocessor_form.tpl', $data));
     }
 
     protected function validateForm() {
-        if (!$this->user->hasPermission('modify', 'orderprocessinggroup/orderprocessinggroup_list')) {
+        if (!$this->user->hasPermission('modify', 'orderprocessinggroup/orderprocessor')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
 
-        if ((utf8_strlen($this->request->post['order_processing_group_name']) < 1) || (utf8_strlen(trim($this->request->post['order_processing_group_name'])) > 32)) {
-            $this->error['order_processing_group_name'] = $this->language->get('error_name');
-        }
-        
-        if ((utf8_strlen($this->request->post['description']) < 1) || (utf8_strlen(trim($this->request->post['description'])) > 32)) {
-            $this->error['description'] = $this->language->get('error_description');
+        if ((utf8_strlen($this->request->post['firstname']) < 1) || (utf8_strlen(trim($this->request->post['firstname'])) > 32)) {
+            $this->error['firstname'] = $this->language->get('error_firstname');
         }
 
-        $orderprocessinggroup_info = $this->model_orderprocessinggroup_orderprocessinggroup->getOrderProcessingGroupByName($this->request->post['order_processing_group_name']);
+        if ((utf8_strlen($this->request->post['lastname']) < 1) || (utf8_strlen(trim($this->request->post['lastname'])) > 32)) {
+            $this->error['lastname'] = $this->language->get('error_lastname');
+        }
 
-        if (!isset($this->request->get['order_processing_group_id'])) {
-            if ($orderprocessinggroup_info) {
+        $orderprocessor_info = $this->model_orderprocessinggroup_orderprocessor->getOrderProcessorByName($this->request->post['firstname'] . ' ' . $this->request->post['lastname']);
+
+        if (!isset($this->request->get['order_processor_id'])) {
+            if ($orderprocessor_info) {
                 $this->error['warning'] = $this->language->get('error_exists');
             }
         } else {
-            if ($orderprocessinggroup_info && ($this->request->get['order_processing_group_id'] != $orderprocessinggroup_info['order_processing_group_id'])) {
+            if ($orderprocessor_info && ($this->request->get['order_processor_id'] != $orderprocessor_info['order_processor_id'])) {
                 $this->error['warning'] = $this->language->get('error_exists');
             }
         }
@@ -501,14 +531,15 @@ class ControllerOrderProcessingGroupOrderProcessor extends Controller {
     }
 
     public function edit() {
-        $this->load->language('orderprocessinggroup/orderprocessinggroup');
+        $this->load->language('orderprocessinggroup/orderprocessor');
 
         $this->document->setTitle($this->language->get('heading_title'));
 
         $this->load->model('orderprocessinggroup/orderprocessinggroup');
+        $this->load->model('orderprocessinggroup/orderprocessor');
 
         if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
-            $this->model_orderprocessinggroup_orderprocessinggroup->editOrderProcessingGroup($this->request->get['order_processing_group_id'], $this->request->post);
+            $this->model_orderprocessinggroup_orderprocessor->editOrderProcessor($this->request->get['order_processor_id'], $this->request->post);
             $this->session->data['success'] = $this->language->get('text_success');
             // Add to activity log
             $log = new Log('error.log');
@@ -518,13 +549,13 @@ class ControllerOrderProcessingGroupOrderProcessor extends Controller {
                 'user_id' => $this->user->getId(),
                 'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
                 'user_group_id' => $this->user->getGroupId(),
-                'order_processing_group_id' => $this->request->get['order_processing_group_id'],
+                'order_processor_id' => $this->request->get['order_processor_id'],
             ];
-            $log->write('orderprocessinggroup edit');
+            $log->write('orderprocessor edit');
 
-            $this->model_user_user_activity->addActivity('orderprocessinggroup_edit', $activity_data);
+            $this->model_user_user_activity->addActivity('orderprocessor_edit', $activity_data);
 
-            $log->write('orderprocessinggroup edit');
+            $log->write('orderprocessor edit');
 
             $url = '';
 
@@ -534,6 +565,10 @@ class ControllerOrderProcessingGroupOrderProcessor extends Controller {
 
             if (isset($this->request->get['filter_status'])) {
                 $url .= '&filter_status=' . $this->request->get['filter_status'];
+            }
+
+            if (isset($this->request->get['filter_order_processing_group_id'])) {
+                $url .= '&filter_order_processing_group_id=' . $this->request->get['filter_order_processing_group_id'];
             }
 
             if (isset($this->request->get['filter_date_added'])) {
@@ -553,14 +588,14 @@ class ControllerOrderProcessingGroupOrderProcessor extends Controller {
             }
 
             if (isset($this->request->post['button']) and 'save' == $this->request->post['button']) {
-                $this->response->redirect($this->url->link('orderprocessinggroup/orderprocessinggroup_list/edit', 'order_processing_group_id=' . $this->request->get['order_processing_group_id'] . '&token=' . $this->session->data['token'] . $url, 'SSL'));
+                $this->response->redirect($this->url->link('orderprocessinggroup/orderprocessor/edit', 'order_processor_id=' . $this->request->get['order_processor_id'] . '&token=' . $this->session->data['token'] . $url, 'SSL'));
             }
 
             if (isset($this->request->post['button']) and 'new' == $this->request->post['button']) {
-                $this->response->redirect($this->url->link('orderprocessinggroup/orderprocessinggroup_list/add', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+                $this->response->redirect($this->url->link('orderprocessinggroup/orderprocessor/add', 'token=' . $this->session->data['token'] . $url, 'SSL'));
             }
 
-            $this->response->redirect($this->url->link('orderprocessinggroup/orderprocessinggroup_list', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            $this->response->redirect($this->url->link('orderprocessinggroup/orderprocessor', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
 
         $this->getForm();
@@ -577,6 +612,7 @@ class ControllerOrderProcessingGroupOrderProcessor extends Controller {
             }
 
             $this->load->model('orderprocessinggroup/orderprocessinggroup');
+            $this->load->model('orderprocessinggroup/orderprocessor');
 
             $filter_data = [
                 'filter_name' => $filter_name,
@@ -584,13 +620,13 @@ class ControllerOrderProcessingGroupOrderProcessor extends Controller {
                 'limit' => 5,
             ];
 
-            $results = $this->model_orderprocessinggroup_orderprocessinggroup->getOrderProcessingGroups($filter_data);
+            $results = $this->model_orderprocessinggroup_orderprocessor->getOrderProcessors($filter_data);
 
             foreach ($results as $result) {
 
                 $json[] = [
-                    'order_processing_group_id' => $result['order_processing_group_id'],
-                    'order_processing_group_name' => strip_tags(html_entity_decode($result['order_processing_group_name'], ENT_QUOTES, 'UTF-8')),
+                    'order_processor_id' => $result['order_processor_id'],
+                    'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')),
                 ];
             }
         }
@@ -598,7 +634,7 @@ class ControllerOrderProcessingGroupOrderProcessor extends Controller {
         $sort_order = [];
 
         foreach ($json as $key => $value) {
-            $sort_order[$key] = $value['order_processing_group_name'];
+            $sort_order[$key] = $value['name'];
         }
 
         array_multisort($sort_order, SORT_ASC, $json);
@@ -610,7 +646,7 @@ class ControllerOrderProcessingGroupOrderProcessor extends Controller {
     public function export_excel() {
         $data = [];
         $this->load->model('report/excel');
-        $this->model_report_excel->download_orderprocessinggroup_excel($data);
+        $this->model_report_excel->download_orderprocessors_excel($data);
     }
 
     public function delete() {
@@ -619,10 +655,11 @@ class ControllerOrderProcessingGroupOrderProcessor extends Controller {
         $this->document->setTitle($this->language->get('heading_title'));
 
         $this->load->model('orderprocessinggroup/orderprocessinggroup');
-
+        $this->load->model('orderprocessinggroup/orderprocessors');
+        
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
-            foreach ($this->request->post['selected'] as $order_processing_group_id) {
-                $this->model_orderprocessinggroup_orderprocessinggroup->deleteOrderProcessingGroup($order_processing_group_id);
+            foreach ($this->request->post['selected'] as $order_processor_id) {
+                $this->model_orderprocessinggroup_orderprocessor->deleteOrderProcessor($order_processor_id);
 
                 // Add to activity log
                 $log = new Log('error.log');
@@ -632,17 +669,17 @@ class ControllerOrderProcessingGroupOrderProcessor extends Controller {
                     'user_id' => $this->user->getId(),
                     'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
                     'user_group_id' => $this->user->getGroupId(),
-                    'order_processing_group_id' => $order_processing_group_id,
+                    'order_processor_id' => $order_processor_id,
                 ];
-                $log->write('order processing group delete');
+                $log->write('order processor delete');
 
-                $this->model_user_user_activity->addActivity('order_processing_group_delete', $activity_data);
+                $this->model_user_user_activity->addActivity('order_processor_delete', $activity_data);
 
-                $log->write('order processing group delete');
+                $log->write('order processor delete');
             }
 
             //$this->session->data['success'] = $this->language->get('text_success');
-            $this->session->data['success'] = 'Success : Order Processing Group(s) Deleted Successfully!';
+            $this->session->data['success'] = 'Success : Order Processor(s) Deleted Successfully!';
 
             $url = '';
 
@@ -652,6 +689,10 @@ class ControllerOrderProcessingGroupOrderProcessor extends Controller {
 
             if (isset($this->request->get['filter_status'])) {
                 $url .= '&filter_status=' . $this->request->get['filter_status'];
+            }
+            
+            if (isset($this->request->get['filter_order_processing_group_id'])) {
+                $url .= '&filter_order_processing_group_id=' . $this->request->get['filter_order_processing_group_id'];
             }
 
             if (isset($this->request->get['filter_date_added'])) {
