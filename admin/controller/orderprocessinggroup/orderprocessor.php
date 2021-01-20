@@ -94,6 +94,8 @@ class ControllerOrderProcessingGroupOrderProcessor extends Controller {
 
     protected function getList() {
         $this->load->language('orderprocessinggroup/orderprocessor');
+        $this->load->model('orderprocessinggroup/orderprocessinggroup');
+        $this->load->model('orderprocessinggroup/orderprocessor');
 
         if (isset($this->request->get['filter_name'])) {
             $filter_name = $this->request->get['filter_name'];
@@ -241,6 +243,7 @@ class ControllerOrderProcessingGroupOrderProcessor extends Controller {
         $data['entry_name'] = $this->language->get('short_entry_name');
         $data['entry_status'] = $this->language->get('entry_status');
         $data['entry_date_added'] = $this->language->get('entry_date_added');
+        $data['entry_groupname'] = $this->language->get('entry_groupname');
 
         $data['button_verify'] = $this->language->get('button_verify');
 
@@ -346,12 +349,14 @@ class ControllerOrderProcessingGroupOrderProcessor extends Controller {
         $data['filter_name'] = $filter_name;
         $data['filter_status'] = $filter_status;
         $data['filter_date_added'] = $filter_date_added;
+        $data['filter_order_processing_group_id'] = $filter_order_processing_group_id;
         $data['sort'] = $sort;
         $data['order'] = $order;
 
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
+        $data['order_processing_groups'] = $this->model_orderprocessinggroup_orderprocessinggroup->getOrderProcessingGroups();
 
         $this->response->setOutput($this->load->view('orderprocessinggroup/orderprocessor_list.tpl', $data));
     }

@@ -77,6 +77,20 @@
                 </div>
             </div>
            </div>
+           <div class="col-sm-3">
+           <div class="form-group">
+           <label class="control-label" for="input-date-added"><?php echo $entry_groupname; ?></label>
+           <select name="filter_order_processing_group_id" id="input-order_processing_group_id" class="form-control">
+                  <option value=""></option>
+                  <?php foreach($order_processing_groups as $order_processing_group) { ?>
+                  <?php if ($filter_order_processing_group_id == $order_processing_group['order_processing_group_id']) { ?>
+                  <option value="<?php echo $order_processing_group['order_processing_group_id']; ?>" selected="selected"><?php echo $order_processing_group['order_processing_group_name']; ?></option>
+                  <?php } else { ?>
+                  <option value="<?php echo $order_processing_group['order_processing_group_id']; ?>"><?php echo $order_processing_group['order_processing_group_name']; ?></option>
+                  <?php } } ?>
+                </select>
+           </div>
+          </div>
           </div>
         </div>
         <form action="<?php echo $delete; ?>" method="post" enctype="multipart/form-data" id="form-customer">
@@ -157,7 +171,13 @@ $('#button-filter').on('click', function() {
   
   if (filter_status != '*') {
     url += '&filter_status=' + encodeURIComponent(filter_status); 
-  } 
+  }
+  
+  var filter_order_processing_group_id = $('select[name=\'filter_order_processing_group_id\']').val();
+  
+  if (filter_order_processing_group_id) {
+    url += '&filter_order_processing_group_id=' + encodeURIComponent(filter_order_processing_group_id); 
+  }
      
   var filter_date_added = $('input[name=\'filter_date_added\']').val();
   
