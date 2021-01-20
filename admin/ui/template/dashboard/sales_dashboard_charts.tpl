@@ -1032,12 +1032,13 @@ function rewards() {
 function excel() {
  //alert( $('#sales_score').html()); 
 
-
-    url = 'index.php?path=dashboard/charts/export_excel&token=<?php echo $token; ?> '; 
+    var account_manager_id = $('select[id="account_manager"]').val();
+    url = 'index.php?path=dashboard/charts/account_manager_export_excel&token=<?php echo $token; ?> '; 
     url=url.trim();
 
                 url += '&start_date=' + encodeURIComponent(start_date); 
                 url += '&end_date=' + encodeURIComponent(end_date);
+                url += '&account_manager_id=' + encodeURIComponent(account_manager_id);
             
 
             var ss = $('#sales_score').html();

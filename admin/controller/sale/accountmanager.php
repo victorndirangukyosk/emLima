@@ -983,9 +983,13 @@ class ControllerSaleAccountManager extends Controller {
             $this->error['lastname'] = $this->language->get('error_lastname');
         }
 
-        if ((utf8_strlen($this->request->post['telephone']) < 3) || (utf8_strlen($this->request->post['telephone']) > 32)) {
+        /*if ((utf8_strlen($this->request->post['telephone']) < 3) || (utf8_strlen($this->request->post['telephone']) > 32)) {
             $this->error['telephone'] = $this->language->get('error_telephone');
-        }
+        }*/
+        
+        if ((strlen(utf8_decode($this->request->post['telephone'])) < 3) || (strlen(utf8_decode($this->request->post['telephone'])) > 32) || preg_match('/[^\d]/is', $this->request->post['telephone'])) {
+      		$this->error['telephone'] = $this->language->get('error_telephone');
+    	}
 
         if ($this->request->post['password'] || (!isset($this->request->get['user_id']))) {
             if ((utf8_strlen($this->request->post['password']) < 4) || (utf8_strlen($this->request->post['password']) > 20)) {
