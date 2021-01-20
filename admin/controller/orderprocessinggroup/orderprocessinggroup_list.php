@@ -684,7 +684,7 @@ class ControllerOrderProcessingGroupOrderProcessingGroupList extends Controller 
         return !$this->error;
     }
 
-    public function getAllDeliveryExecutives() {
+    public function getAllOrderProcessingGroups() {
 
         $this->load->model('orderprocessinggroup/orderprocessinggroup');
         $results = $this->model_orderprocessinggroup_orderprocessinggroup->getOrderProcessingGroups();

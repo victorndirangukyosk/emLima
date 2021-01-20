@@ -355,6 +355,9 @@ class ControllerOrderProcessingGroupOrderProcessor extends Controller {
     }
 
     protected function getForm() {
+        
+        $this->load->model('orderprocessinggroup/orderprocessinggroup');
+        $this->load->model('orderprocessinggroup/orderprocessor');
         $data['heading_title'] = $this->language->get('heading_title');
 
         $data['entry_referred_by'] = $this->language->get('entry_referred_by');
@@ -365,7 +368,9 @@ class ControllerOrderProcessingGroupOrderProcessor extends Controller {
         $data['text_loading'] = $this->language->get('text_loading');
 
         $data['entry_name'] = $this->language->get('short_entry_name');
-
+        $data['entry_firstname'] = $this->language->get('entry_firstname');
+        $data['entry_lastname'] = $this->language->get('entry_lastname');
+        $data['entry_groupname'] = $this->language->get('entry_groupname');
 
         $data['entry_status'] = $this->language->get('entry_status');
         $data['entry_description'] = $this->language->get('entry_description');
@@ -488,7 +493,8 @@ class ControllerOrderProcessingGroupOrderProcessor extends Controller {
         } else {
             $data['status'] = true;
         }
-
+        
+        $data['order_processing_groups'] = $this->model_orderprocessinggroup_orderprocessinggroup->getOrderProcessingGroups();
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');

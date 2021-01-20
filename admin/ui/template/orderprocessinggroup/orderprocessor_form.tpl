@@ -50,14 +50,39 @@
                   <div class="tab-content">
                     <div class="tab-pane active" id="tab-customer">
                       <div class="form-group required">
-                        <label class="col-sm-2 control-label" for="input-order_processing_group_name"><?php echo $entry_name; ?></label>
+                        <label class="col-sm-2 control-label" for="input-firstname"><?php echo $entry_firstname; ?></label>
                         <div class="col-sm-10">
-                          <input type="text" name="order_processing_group_name" value="<?php echo $order_processing_group_name; ?>" placeholder="<?php echo $entry_name; ?>" id="input-order_processing_group_name" class="form-control" />
+                          <input type="text" name="firstname" value="<?php echo $order_processing_group_name; ?>" placeholder="<?php echo $entry_firstname; ?>" id="input-order_processing_group_name" class="form-control" />
+                          <?php if ($error_firstname) { ?>
+                          <div class="text-danger"><?php echo $error_firstname; ?></div>
+                          <?php } ?>
+                        </div>
+                      </div>
+                        
+                      <div class="form-group required">
+                        <label class="col-sm-2 control-label" for="input-lastname"><?php echo $entry_lastname; ?></label>
+                        <div class="col-sm-10">
+                          <input type="text" name="lastname" value="<?php echo $order_processing_group_name; ?>" placeholder="<?php echo $entry_lastname; ?>" id="input-order_processing_group_name" class="form-control" />
+                          <?php if ($error_lastname) { ?>
+                          <div class="text-danger"><?php echo $error_lastname; ?></div>
+                          <?php } ?>
+                        </div>
+                      </div>  
+                        
+                      <div class="form-group required">
+                        <label class="col-sm-2 control-label" for="input-order_processing_group_id"><?php echo $entry_groupname; ?></label>
+                        <div class="col-sm-10">
+                          <select name="order_processing_group_id" id="order_processing_group_id" class="form-control">
+                          <option value=""></option>
+                          <?php foreach($order_processing_groups as $order_processing_group) { ?>
+                          <option value="<?php echo $order_processing_group['order_processing_group_id']; ?>"><?php echo $order_processing_group['order_processing_group_name']; ?></option>
+                          <?php } ?>
+                          </select>
                           <?php if ($error_name) { ?>
                           <div class="text-danger"><?php echo $error_name; ?></div>
                           <?php } ?>
                         </div>
-                      </div>
+                      </div>                        
                         
                       <div class="form-group required">
                         <label class="col-sm-2 control-label" for="input-description"><?php echo $entry_description; ?></label>

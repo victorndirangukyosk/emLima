@@ -38,6 +38,7 @@ $_['column_action'] = 'Action';
 $_['column_telephone'] = 'Phone No.';
 // Entry
 $_['entry_customer_group'] = 'Customer Group';
+$_['entry_groupname'] = 'Group';
 $_['entry_firstname'] = 'First Name';
 $_['entry_lastname'] = 'Last Name';
 $_['entry_email'] = 'E-Mail';
