@@ -101,7 +101,6 @@ class ControllerOrderProcessingGroupOrderProcessor extends Controller {
             $filter_name = null;
         }
 
-
         if (isset($this->request->get['filter_status'])) {
             $filter_status = $this->request->get['filter_status'];
         } else {
@@ -232,6 +231,7 @@ class ControllerOrderProcessingGroupOrderProcessor extends Controller {
         $data['text_confirm'] = $this->language->get('text_confirm');
 
         $data['column_name'] = $this->language->get('column_name');
+        $data['column_groupname'] = $this->language->get('column_groupname');
         $data['column_email'] = $this->language->get('column_email');
         $data['column_status'] = $this->language->get('column_status');
         $data['column_date_added'] = $this->language->get('column_date_added');
@@ -302,6 +302,7 @@ class ControllerOrderProcessingGroupOrderProcessor extends Controller {
         }
 
         $data['sort_name'] = $this->url->link('orderprocessinggroup/orderprocessor', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
+        $data['sort_groupname'] = $this->url->link('orderprocessinggroup/orderprocessor', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
         $data['sort_status'] = $this->url->link('orderprocessinggroup/orderprocessor', 'token=' . $this->session->data['token'] . '&sort=c.status' . $url, 'SSL');
         $data['sort_date_added'] = $this->url->link('orderprocessinggroup/orderprocessor', 'token=' . $this->session->data['token'] . '&sort=c.created_at' . $url, 'SSL');
 

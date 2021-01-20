@@ -90,6 +90,11 @@
                     <?php } else { ?>
                     <a href="<?php echo $sort_name; ?>"><?php echo $column_name; ?></a>
                     <?php } ?></td>
+                  <td class="text-left"><?php if ($sort == 'name') { ?>
+                    <a href="<?php echo $sort_groupname; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_groupname; ?></a>
+                    <?php } else { ?>
+                    <a href="<?php echo $sort_groupname; ?>"><?php echo $column_groupname; ?></a>
+                    <?php } ?></td>
                   
 
                   <td class="text-left"><?php if ($sort == 'c.status') { ?>
@@ -114,6 +119,7 @@
                     <?php } else { ?>
                     <input type="checkbox" name="selected[]" value="<?php echo $orderprocessor['order_processing_group_id']; ?>" />
                     <?php } ?></td>
+                  <td class="text-left"><?php echo $orderprocessor['name']; ?></td>
                   <td class="text-left"><?php echo $orderprocessor['order_processing_group_name']; ?></td>
                   <td class="text-left"><?php echo $orderprocessor['status']; ?></td>
                   <td class="text-left"><?php echo $orderprocessor['created_at']; ?></td>

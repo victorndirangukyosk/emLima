@@ -20,7 +20,8 @@ $_['entry_dob'] = 'DOB';
 
 $_['entry_gender'] = 'Gender';
 // Column
-$_['column_name'] = 'Order Processing Group Name';
+$_['column_name'] = 'Name';
+$_['column_groupname'] = 'Group';
 $_['column_email'] = 'E-Mail';
 $_['column_driving_licence'] = 'Driving Licence';
 $_['column_customer_group'] = 'Customer Group';
