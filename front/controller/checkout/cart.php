@@ -344,7 +344,7 @@ class ControllerCheckoutCart extends Controller
         }
     }
 
-    public function add()
+    public function addOld()
     {
         $cachePrice_data = $this->cache->get('category_price_data');
         $this->load->language('checkout/cart');
@@ -424,7 +424,6 @@ class ControllerCheckoutCart extends Controller
             }
 
             //below model query is required?
-
             $product_options = $this->model_assets_product->getProductOptions($this->request->post['product_id']);
 
             foreach ($product_options as $product_option) {
@@ -454,9 +453,209 @@ class ControllerCheckoutCart extends Controller
             }
 
             if (!$json) {
-                $json['key'] = $this->cart->add($this->request->post['product_id'], $quantity, $option, $recurring_id, $store_id, $variation_id, $product_type, $product_note, $produce_type);
+                $json['key'] = $this->cart->addOld($this->request->post['product_id'], $quantity, $option, $recurring_id, $store_id, $variation_id, $product_type, $product_note, $produce_type);
 
                 $json['product_store_id'] = $this->request->post['product_id'];
+
+                $json['product_type'] = $product_type;
+
+                $json['product_note'] = $product_note;
+
+                $json['produce_type'] = $produce_type;
+
+                $json['success'] = sprintf($this->language->get('text_success'), $this->url->link('product/product', 'product_store_id='.$this->request->post['product_id']), $product_info['name'], $this->url->link('checkout/cart'));
+
+                unset($this->session->data['shipping_method']);
+                unset($this->session->data['shipping_methods']);
+                unset($this->session->data['payment_method']);
+                unset($this->session->data['payment_methods']);
+
+                // Totals
+                $this->load->model('extension/extension');
+
+                $total_data = [];
+                $total = 0;
+                //echo $total;exit;
+                $taxes = $this->cart->getTaxes();
+
+                // Display prices
+                if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+                    $sort_order = [];
+
+                    $results = $this->model_extension_extension->getExtensions('total');
+
+                    foreach ($results as $key => $value) {
+                        $sort_order[$key] = $this->config->get($value['code'].'_sort_order');
+                    }
+
+                    array_multisort($sort_order, SORT_ASC, $results);
+                    //print_r($results);
+                    foreach ($results as $result) {
+                        if ($this->config->get($result['code'].'_status')) {
+                            $this->load->model('total/'.$result['code']);
+
+                            $this->{'model_total_'.$result['code']}->getTotal($total_data, $total, $taxes);
+                            // print_r($result['code']);
+                            // print_r($total);
+                        }
+                    }
+
+                    //
+                    //die;
+                    $sort_order = [];
+
+                    foreach ($total_data as $key => $value) {
+                        $sort_order[$key] = $value['sort_order'];
+                    }
+
+                    array_multisort($sort_order, SORT_ASC, $total_data);
+                }
+
+                $json['count_products'] = $this->cart->countProducts();
+                $json['total_amount'] = $this->currency->format($this->cart->getTotal());
+                /*if( CATEGORY_PRICE_ENABLED == true){
+                    $json['total_amount'] = $this->currency->format($this->cart->getTotal());
+                }*/
+                //$json['total_amount'] = $this->currency->format($total);
+                $json['total'] = sprintf($this->language->get('text_items'), $json['count_products'] + (isset($this->session->data['vouchers']) ? count($this->session->data['vouchers']) : 0), $this->currency->format($total));
+            } else {
+                $json['redirect'] = str_replace('&amp;', '&', $this->url->link('product/product', 'product_store_id='.$this->request->post['product_id']));
+            }
+        }
+        //if(isset($this->session->data['zipcode'])){
+        if (count($_COOKIE) > 0 && isset($_COOKIE['zipcode'])) {
+            $this->load->model('assets/category');
+            $data['notices'] = [];
+            //$rows = $this->model_assets_category->getNoticeData($this->session->data['zipcode']);
+
+            $rows = $this->model_assets_category->getNoticeData($_COOKIE['zipcode']);
+            foreach ($rows as $row) {
+                $data['notices'][] = $row['notice'];
+            }
+            $p = null;
+            foreach ($data['notices'] as $notice) {
+                $p .= '<p>'.$notice.'</p>';
+            }
+            $json['jsnotice'] = $p;
+        } elseif (count($_COOKIE) > 0 && isset($_COOKIE['location'])) {
+            $p = null;
+
+            /*$addressTmp = $this->getZipcode($_COOKIE['location']);
+            $data['zipcode'] = $addressTmp?$addressTmp:'';*/
+
+            $this->load->model('assets/category');
+            $data['notices'] = [];
+
+            /*$rows = $this->model_assets_category->getNoticeData($data['zipcode']);
+            foreach($rows as $row){
+                $data['notices'][] = $row['notice'];
+            }
+            $p = null;
+            foreach($data['notices'] as $notice){
+            	$p .= "<p>".$notice."</p>";
+            }*/
+            $json['jsnotice'] = $p;
+        } else {
+            $data['zipcode'] = '';
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function add()
+    {
+        $cachePrice_data = $this->cache->get('category_price_data');
+        $this->load->language('checkout/cart');
+        //echo $this->request->post['quantity'];
+        $json = [];
+
+        if (isset($this->request->post['product_id'])) {
+            $product_id = (int) $this->request->post['product_id'];
+        } else {
+            $product_id = 0;
+        }
+
+        if (isset($this->request->post['variation_id'])) {
+            $product_store_id = (int) $this->request->post['variation_id'];
+            $variation_id = (int) $this->request->post['variation_id'];
+        } else {
+            $product_store_id = 0;
+            $variation_id = 0;
+        }
+
+        if (isset($this->request->post['product_type'])) {
+            $product_type = (int) $this->request->post['product_type'];
+        } else {
+            $product_type = 'replacable';
+        }
+
+        if (isset($this->session->data['config_store_id'])) {
+            $store_id = $this->session->data['config_store_id'];
+        } else {
+            $store_id = $this->request->post['store_id'];
+        }
+        
+        if (isset($this->session->data['product_notes'])) {
+            $product_note = $this->session->data['product_notes'];
+        } else {
+            $product_note = $this->request->post['product_notes'];
+        }
+
+        if (isset($this->session->data['produce_type'])) {
+            $produce_type = $this->session->data['produce_type'];
+        } else {
+            $produce_type = $this->request->post['produce_type'];
+        }
+
+        
+        $this->load->model('assets/product');
+        $product_info = $this->model_assets_product->getProduct($product_store_id, false, $store_id);
+
+        if ($product_info) {
+            if (isset($this->request->post['quantity'])) {
+                $quantity = $this->request->post['quantity'];
+            } else {
+                $quantity = $product_info['min_quantity'] ? $product_info['min_quantity'] : 1;
+            }
+
+            if (isset($this->request->post['option'])) {
+                $option = array_filter($this->request->post['option']);
+            } else {
+                $option = [];
+            }
+
+            //below model query is required?
+            $product_options = $this->model_assets_product->getProductOptions($this->request->post['product_id']);
+            foreach ($product_options as $product_option) {
+                if ($product_option['required'] && empty($option[$product_option['product_option_id']])) {
+                    $json['error']['option'][$product_option['product_option_id']] = sprintf($this->language->get('error_required'), $product_option['name']);
+                }
+            }
+
+            if (isset($this->request->post['recurring_id'])) {
+                $recurring_id = $this->request->post['recurring_id'];
+            } else {
+                $recurring_id = 0;
+            }
+
+            $recurrings = $this->model_assets_product->getProfiles($product_info['product_store_id']);
+            if ($recurrings) {
+                $recurring_ids = [];
+
+                foreach ($recurrings as $recurring) {
+                    $recurring_ids[] = $recurring['recurring_id'];
+                }
+
+                if (!in_array($recurring_id, $recurring_ids)) {
+                    $json['error']['recurring'] = $this->language->get('error_recurring_required');
+                }
+            }
+
+            if (!$json) {
+                $json['key'] = $this->cart->add($product_id, $variation_id, $store_id, $quantity, $product_note, $produce_type);
+
+                $json['product_store_id'] = $product_id;
 
                 $json['product_type'] = $product_type;
 

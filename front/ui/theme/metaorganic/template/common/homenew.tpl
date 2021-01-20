@@ -72,6 +72,7 @@
       <div class="header_main">
         <div class="container">
           <div class="row">
+            
             <!-- Logo -->
             <div class="col-lg-2 col-sm-3 col-3 order-1">
               <div class="logo_container">
@@ -81,7 +82,9 @@
                   </a>
                 </div>
               </div>
-            </div> <!-- Search -->
+            </div> 
+            
+            <!-- Search -->
             <div class="col-lg-6 col-12 order-lg-2 order-3 text-lg-left text-right">
               <div class="header_search">
                 <div class="header_search_content">
@@ -107,7 +110,9 @@
                   </div>
                 </div>
               </div>
-            </div> <!-- Wishlist -->
+            </div> 
+            
+            <!-- Wishlist -->
             <div class="col-lg-4 col-9 order-lg-3 order-2 text-lg-left text-right">
               <div class="wishlist_cart d-flex flex-row align-items-center justify-content-end">
                 <div class="wishlist d-flex flex-row align-items-center justify-content-end">
@@ -117,7 +122,9 @@
                     <div class="wishlist_text"><a href="<?= $wishlist ?>">Wishlists</a></div>
                     <div class="wishlist_count">10</div>
                   </div>
-                </div> <!-- Cart -->
+                </div> 
+                
+                <!-- Cart -->
                 <div class="cart mini-cart-button">
                   <div class="cart_container d-flex flex-row align-items-center justify-content-end">
                     <div class="cart_icon"> <img
@@ -138,7 +145,9 @@
             </div>
           </div>
         </div>
-      </div> <!-- Main Navigation -->
+      </div> 
+      
+      <!-- Main Navigation -->
       <nav class="main_nav">
         <div class="container">
           <div class="row">
@@ -165,7 +174,9 @@
                       </ul>
                     </li>
                   </ul>
-                </div> <!-- Menu Trigger -->
+                </div> 
+                
+                <!-- Menu Trigger -->
                 <div class="menu_trigger_container ml-auto">
                   <div class="menu_trigger d-flex flex-row align-items-center justify-content-end">
                     <div class="menu_burger">
@@ -180,7 +191,9 @@
             </div>
           </div>
         </div>
-      </nav> <!-- Menu -->
+      </nav> 
+      
+      <!-- Menu -->
       <div class="page_menu">
         <div class="container">
           <div class="row">
@@ -244,11 +257,9 @@
             <?php  echo '/ Per ' . $product['variations'][0]['unit']; ?>
           </p>
 
-          <span id="flag-qty-id-<?= $product['product_store_id'] ?>-<?= $product['store_product_variation_id'] ?>"
-            style="padding:5px;display: <?= $product['qty_in_cart'] ? 'block' : 'none'; ?>">
-            <?php echo $product['qty_in_cart']?>
-            items in cart <i class="fas fa-flag"></i>
-          </span>
+          <div id="<?= $product['product_id'] ?>-product-quantity" class="product-quantity-in-basket" style="display: <?= $product['qty_in_cart'] ? 'block' : 'none'; ?>">
+            <?= $product['qty_in_cart'] ?>
+          </div>
         </div>
         
         <?php } ?>

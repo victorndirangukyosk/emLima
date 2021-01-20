@@ -201,16 +201,10 @@ class Cart
 
     public function getProducts()
     {
-        $log = new Log('error.log');
-        $log->write('get product');
-
         if (!$this->data) {
-            $log->write('get product if');
-
             foreach ($this->session->data['cart'] as $keys => $data) {
                 $product = unserialize(base64_decode($keys));
-
-                $product_store_id = $product['product_store_id'];
+                $variation_id = $product['variation_id'];
 
                 $stock = true;
 
@@ -246,33 +240,14 @@ class Cart
                     $produce_type = '';
                 }
 
-                //product_type replacable/not replacable
-
-                //$product_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id)    WHERE p.product_id = '" . (int) $product_id . "' AND p.status = '1'");
-
                 $this->db->join('product', 'product.product_id = product_to_store.product_id', 'left');
                 $this->db->join('product_description', 'product_description.product_id = product_to_store.product_id', 'left');
                 $this->db->where('product.status', 1);
                 $this->db->where('product_description.language_id', (int) $this->config->get('config_language_id'));
-                $this->db->where('product_to_store.product_store_id', $product_store_id);
+                $this->db->where('product_to_store.product_store_id', $variation_id);
                 $product_query = $this->db->get('product_to_store');
 
-                // $product_query = $this->db->query("
-                //     SELECT a.product_id,b.*
-                //     FROM `" . DB_PREFIX . "product` a,`" . DB_PREFIX . "product_to_store` b
-                //     WHERE a.status='1'
-                //     AND b.product_store_id='".$product_store_id."'"
-                // );
-//                echo "<pre>";print_r($product_query);die;
                 if ($product_query->num_rows) {
-                    //override if cateogry discount defined
-                    // $sql  = 'select c.discount from `'.DB_PREFIX.'product_to_category` pc';
-                    // $sql .= ' INNER JOIN `'.DB_PREFIX.'category` c on c.category_id = pc.category_id';
-                    // $sql .= ' WHERE pc.product_id = "'.$product_id.'"';
-                    // $sql .= ' GROUP BY pc.category_id';
-
-                    // $rows = $this->db->query($sql)->rows;
-
                     // Stock
                     if (!$product_query->row['quantity'] || ($product_query->row['quantity'] < $data['quantity'])) {
                         $stock = false;
@@ -542,7 +517,7 @@ class Cart
         return $key;
     }
 
-    public function add($product_store_id, $qty = 1, $option = [], $recurring_id = 0, $store_id = false, $store_product_variation_id = false, $product_type = 'replacable', $product_note = null, $produce_type = null)
+    public function addOld($product_store_id, $qty = 1, $option = [], $recurring_id = 0, $store_id = false, $store_product_variation_id = false, $product_type = 'replacable', $product_note = null, $produce_type = null)
     {
         $this->data = [];
 
@@ -633,6 +608,75 @@ class Cart
                         }
 
                         //$data['results'][] = $row;
+                    }
+                }
+            }
+            $this->session->data['cart'][$key]['product_note'] = $product_note;
+        }
+
+        return $key;
+    }
+
+    public function add($product_id, $variation_id, $store_id, $qty, $product_note, $produce_type)
+    {
+        $this->data = [];
+
+        $product['product_id'] = (int) $product_id;
+        $product['variation_id'] = (int) $variation_id;
+        $product['store_id'] = (int) $store_id;
+
+        $key = base64_encode(serialize($product));
+
+        if (null == $produce_type || 'null' == $produce_type) {
+            if ((float) $qty && ((float) $qty > 0)) {
+                if (!isset($this->session->data['cart'][$key])) {
+                    $this->session->data['cart'][$key]['quantity'] = (float) $qty;
+                } else {
+                    $this->session->data['cart'][$key]['quantity'] += (float) $qty;
+                }
+
+                $this->session->data['cart'][$key]['product_note'] = $product_note;
+                $this->session->data['cart'][$key]['produce_type'] = null;
+            }
+        } else {
+            if ((float) $qty && ((float) $qty > 0)) {
+                if (!isset($this->session->data['cart'][$key])) {
+                    $this->session->data['cart'][$key]['produce_type'][0]['type'] = $produce_type;
+                    $this->session->data['cart'][$key]['produce_type'][0]['value'] = $qty;
+
+                    $this->session->data['cart'][$key]['quantity'] = (float) $qty;
+                } else {
+                    if (!isset($this->session->data['cart'][$key]['produce_type'])) {
+                        $this->session->data['cart'][$key]['produce_type'][0]['type'] = $produce_type;
+                        $this->session->data['cart'][$key]['produce_type'][0]['value'] = $qty;
+                        $this->session->data['cart'][$key]['quantity'] += (float) $qty;
+                    } else {
+                        $preProduceTypes = $this->session->data['cart'][$key]['produce_type'];
+
+                        $exists = false;
+                        $oldquantity = $this->session->data['cart'][$key]['quantity'];
+                        $i = 0;
+                        foreach ($preProduceTypes as $pt) {
+                            if ($pt['type'] == $produce_type) {
+                                $exists = true;
+                                $oldtypequantity = $pt['value'];
+                                $pt['value'] = $qty;
+                                $preProduceTypes[$i]['value'] = $qty;
+                                $newquantity = $oldquantity - $oldtypequantity + $qty;
+                            }
+                            ++$i;
+                        }
+                        if (false == $exists) {
+                            $count = count($this->session->data['cart'][$key]['produce_type']);
+                            $this->session->data['cart'][$key]['produce_type'][$count]['type'] = $produce_type;
+                            $this->session->data['cart'][$key]['produce_type'][$count]['value'] = $qty;
+                            $newquantity = $oldquantity + $qty;
+
+                            $this->session->data['cart'][$key]['quantity'] = (float) $newquantity;
+                        } else {
+                            $this->session->data['cart'][$key]['produce_type'] = $preProduceTypes;
+                            $this->session->data['cart'][$key]['quantity'] = (float) $newquantity;
+                        }
                     }
                 }
             }
@@ -862,15 +906,7 @@ class Cart
 
     public function countProducts()
     {
-        $product_total = 0;
-
         $products = $this->getProducts();
-        
-        if (is_array($products)) {
-            foreach ($products as $product) {
-                $product_total += $product['quantity'];
-            }
-        }
         return count($products);
     }
 

@@ -1614,11 +1614,18 @@ class ControllerCommonHome extends Controller {
             }
 
             //get qty in cart
+            
             if (!empty($this->session->data['config_store_id'])) {
-                $key = base64_encode(serialize(['product_store_id' => (int) $result['product_store_id'], 'store_id' => $this->session->data['config_store_id']]));
+                $storeId = $this->session->data['config_store_id'];
             } else {
-                $key = base64_encode(serialize(['product_store_id' => (int) $result['product_store_id'], 'store_id' => $filter_data['store_id']]));
+                $storeId = $filter_data['store_id'];
             }
+
+            $product['product_id'] = (int) $result['product_id'];
+            $product['variation_id'] = (int) $result['product_store_id'];
+            $product['store_id'] = (int) $storeId;
+            $key = base64_encode(serialize($product));
+
             if (isset($this->session->data['cart'][$key])) {
                 $qty_in_cart = $this->session->data['cart'][$key]['quantity'];
             } else {

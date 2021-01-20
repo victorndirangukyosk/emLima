@@ -776,13 +776,14 @@ class ControllerProductProduct extends Controller
         } else {
             $store_id = $this->request->get['store_id'];
         }
+
         $data['button_add'] = $this->language->get('button_add');
         $data['text_incart'] = $this->language->get('text_incart');
 
         $this->load->model('assets/product');
 
         $product_info = $this->model_assets_product->getProductForPopup($product_store_id, false, $store_id);
-
+    
         //echo "<pre>";print_r($product_info);die;
         $data['text_unit'] = $this->language->get('text_unit');
 
@@ -806,7 +807,7 @@ class ControllerProductProduct extends Controller
 
         $data['base'] = $server;
 
-        //echo "<pre>";print_r($product_info);die;
+        // echo "<pre>";print_r($product_info);die;
 
         if ($product_info) {
             if ($product_info['image'] != NULL && file_exists(DIR_IMAGE.$product_info['image'])) {
@@ -836,8 +837,6 @@ class ControllerProductProduct extends Controller
                 ];
             }
             //get qty in cart
-            //$key = base64_encode( serialize( array( 'product_store_id' => (int) $product_info['product_store_id'], 'store_id'=>$this->session->data['config_store_id'] ) ) );
-            // $key = base64_encode( serialize( array( 'product_store_id' => (int) $product_info['product_store_id'], 'store_id'=>($this->session->data['config_store_id']) ? $this->session->data['config_store_id'] : $store_id ) ) );
 
             $key = base64_encode(serialize(['product_store_id' => (int) $product_info['product_store_id'], 'store_id' => $store_id]));
             $s_price = 0;
@@ -948,11 +947,8 @@ class ControllerProductProduct extends Controller
                 'isWishListID' => $isWishListID,
             ];
             
-            $log = new Log('error.log');
-            /*$log->write('product popup');
-            $log->write($data['product']);
-            $log->write('product popup');*/
-            //echo '<pre>';print_r( $data['product']);exit;
+            // echo '<pre>';print_r($this->session->data['cart']);exit;
+
             if (isset($this->session->data['cart'][$key])) {
                 $data['product']['qty_in_cart'] = $this->session->data['cart'][$key]['quantity'];
                 $data['product']['actualCart'] = 1;

@@ -128,6 +128,10 @@
         background: #2aa249;
         color: #fff;
     }
+
+    [id^='variation-selector-'] input:disabled+span {
+        opacity: .65;
+    }
 </style>
 
 <div class="modal fade" id="product-details-popup">
@@ -149,7 +153,7 @@
                             <img class="img-fluid product-thumbnail" src="<?= $product['thumb']; ?>">
                         </div>
                     </div>
-                    <h6 class="model-section-title">Available In</h6>
+                    <h6 class="model-section-title"><?= $product['qty_in_cart'] ? 'Ordered In' : 'Available In'; ?></h6>
                     <div class="row modal-row">
                         <div class="col-md-12 variations-container">
                             <?php foreach($product['variations'] as $variation) { ?>
@@ -159,7 +163,11 @@
                                     data-quantity="<?php echo isset($variation['qty_in_cart']) ? $variation['qty_in_cart'] : ''; ?>"
                                     data-key="<?php echo isset($variation['key']) ? $variation['key'] : ''; ?>"
                                     data-product-id="<?= $variation['product_id'] ?>"
-                                    data-variation-id="<?= $variation['variation_id'] ?>" name="variation" type="radio">
+                                    data-variation-id="<?= $variation['variation_id'] ?>" 
+                                    name="variation" type="radio"
+                                    <?= $product['qty_in_cart'] && $product['product_info']['product_store_id'] == $variation['variation_id'] ? 'checked' : ''; ?>
+                                    <?= $product['qty_in_cart'] ? 'disabled' : ''; ?>
+                                    >
                                 <span class="variation-pill">
                                     <?=  $variation['unit'] ?>
                                 </span>
@@ -193,8 +201,8 @@
                                 data-store-id="<?= $product['store_id'] ?>"
                                 data-action="<?= $product['qty_in_cart'] ? 'update' : 'add'; ?>"
                                 data-key="<?= $product['key'] ?>"
-                                data-product-id=""
-                                data-variation-id="<?= $product['store_product_variation_id'] ?>"
+                                data-product-id="<?= $product['product_info']['product_id'] ?>"
+                                data-variation-id=""
                                 value="<?= $product['qty_in_cart'] ? 'Update Basket' : 'Add To Basket'; ?>" disabled="disabled">
                             </div>
                         </div>
@@ -218,7 +226,7 @@
         $('.product-modal-price').html(`KES ${price}`);
 
         const variationId = $(this).attr('data-variation-id');
-        $('.btn-cta-add').attr('data-product-id', variationId);
+        $('.btn-cta-add').attr('data-variation-id', variationId);
     });
 
     $('input[type=radio][name=variation], #product-quantity')
@@ -243,7 +251,9 @@
 
         // TODO: Update cart quantity
         // TODO: Add produce type selector (last null parameter)
-        cart.add(productId, quantity, variationId, storeId, productNotes, null);
+        // cart.add(productId, variationId, storeId, quantity, productNotes, "");
+
+        cart.addOld(variationId, quantity, 0, storeId, productNotes, null);
 
         $('#product-details-popup').modal('hide');
     });
