@@ -1,14 +1,14 @@
 <?php
 
 // Heading
-$_['heading_title'] = 'Order Processing Groups';
+$_['heading_title'] = 'Order Processors';
 
 // Text
 $_['text_success'] = 'Success: You have modified order processing groups!';
-$_['text_list'] = 'Order Processing Groups List';
-$_['text_add'] = 'Add Order Processing Group';
-$_['text_edit'] = 'Edit Order Processing Group';
-$_['text_view'] = 'View Order Processing Group';
+$_['text_list'] = 'Order Processors List';
+$_['text_add'] = 'Add Order Processor';
+$_['text_edit'] = 'Edit Order Processor';
+$_['text_view'] = 'View Order Processor';
 $_['text_default'] = 'Default';
 $_['text_balance'] = 'Balance';
 $_['text_add_ban_ip'] = 'Add Ban IP';

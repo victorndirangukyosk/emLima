@@ -55,6 +55,7 @@ class ModelOrderProcessingGroupOrderProcessor extends Model {
 
         $sort_data = [
             'name',
+            'order_processing_group_name',
             'c.status',
             'c.created_at',
         ];

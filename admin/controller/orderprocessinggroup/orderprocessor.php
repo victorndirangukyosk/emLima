@@ -215,7 +215,7 @@ class ControllerOrderProcessingGroupOrderProcessor extends Controller {
                 'order_processing_group_id' => $result['order_processing_group_id'],
                 'status' => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
                 'created_at' => date($this->language->get('date_format_short'), strtotime($result['created_at'])),
-                'edit' => $this->url->link('orderprocessinggroup/orderprocessinggroup_list/edit', 'token=' . $this->session->data['token'] . '&order_processing_group_id=' . $result['order_processing_group_id'] . $url, 'SSL'),
+                'edit' => $this->url->link('orderprocessinggroup/orderprocessor/edit', 'token=' . $this->session->data['token'] . '&order_processor_id=' . $result['order_processor_id'] . $url, 'SSL'),
                 'orderprocessor_view' => $this->url->link('orderprocessinggroup/orderprocessor/view_orderprocessor', 'token=' . $this->session->data['token'] . '&order_processor_id=' . $result['order_processor_id'] . $url, 'SSL'),
             ];
         }
@@ -303,7 +303,7 @@ class ControllerOrderProcessingGroupOrderProcessor extends Controller {
         }
 
         $data['sort_name'] = $this->url->link('orderprocessinggroup/orderprocessor', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
-        $data['sort_groupname'] = $this->url->link('orderprocessinggroup/orderprocessor', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
+        $data['sort_groupname'] = $this->url->link('orderprocessinggroup/orderprocessor', 'token=' . $this->session->data['token'] . '&sort=order_processing_group_name' . $url, 'SSL');
         $data['sort_status'] = $this->url->link('orderprocessinggroup/orderprocessor', 'token=' . $this->session->data['token'] . '&sort=c.status' . $url, 'SSL');
         $data['sort_date_added'] = $this->url->link('orderprocessinggroup/orderprocessor', 'token=' . $this->session->data['token'] . '&sort=c.created_at' . $url, 'SSL');
 
@@ -497,6 +497,14 @@ class ControllerOrderProcessingGroupOrderProcessor extends Controller {
             $data['lastname'] = $orderprocessor_info['lastname'];
         } else {
             $data['lastname'] = '';
+        }
+        
+        if (isset($this->request->post['order_processing_group_id'])) {
+            $data['order_processing_group_id'] = $this->request->post['order_processing_group_id'];
+        } elseif (!empty($orderprocessor_info)) {
+            $data['order_processing_group_id'] = $orderprocessor_info['order_processing_group_id'];
+        } else {
+            $data['order_processing_group_id'] = '';
         }
 
         //echo "<pre>";print_r($data);die;
@@ -735,14 +743,14 @@ class ControllerOrderProcessingGroupOrderProcessor extends Controller {
                 $url .= '&page=' . $this->request->get['page'];
             }
 
-            $this->response->redirect($this->url->link('orderprocessinggroup/orderprocessinggroup_list', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            $this->response->redirect($this->url->link('orderprocessinggroup/orderprocessor', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
 
         $this->getList();
     }
 
     protected function validateDelete() {
-        if (!$this->user->hasPermission('modify', 'orderprocessinggroup/orderprocessinggroup_list')) {
+        if (!$this->user->hasPermission('modify', 'orderprocessinggroup/orderprocessor')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
 

@@ -75,8 +75,11 @@
                           <select name="order_processing_group_id" id="order_processing_group_id" class="form-control">
                           <option value=""></option>
                           <?php foreach($order_processing_groups as $order_processing_group) { ?>
+                          <?php if($order_processing_group_id != '' && $order_processing_group_id > 0) { ?>
+                          <option value="<?php echo $order_processing_group['order_processing_group_id']; ?>" selected=""><?php echo $order_processing_group['order_processing_group_name']; ?></option>
+                          <?php }  else { ?>
                           <option value="<?php echo $order_processing_group['order_processing_group_id']; ?>"><?php echo $order_processing_group['order_processing_group_name']; ?></option>
-                          <?php } ?>
+                          <?php } } ?>
                           </select>
                           <?php if ($error_order_processing_group_name) { ?>
                           <div class="text-danger"><?php echo $error_order_processing_group_name; ?></div>
