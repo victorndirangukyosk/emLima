@@ -27,7 +27,7 @@ class ControllerOrderProcessingGroupOrderProcessor extends Controller {
         $this->load->model('orderprocessinggroup/orderprocessor');
 
         if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
-            $order_processor_id = $this->model_orderprocessor_orderprocessor->addOrderProcessor($this->request->post);
+            $order_processor_id = $this->model_orderprocessinggroup_orderprocessor->addOrderProcessor($this->request->post);
 
             //$this->session->data['success'] = $this->language->get('text_success');
             $this->session->data['success'] = 'Success : Order Processor Created Successfully!';
