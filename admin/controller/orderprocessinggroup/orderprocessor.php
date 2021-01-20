@@ -547,11 +547,11 @@ class ControllerOrderProcessingGroupOrderProcessor extends Controller {
 
         if (!isset($this->request->get['order_processor_id'])) {
             if ($orderprocessor_info) {
-                $this->error['warning'] = $this->language->get('error_exists');
+                $this->error['warning'] = $this->language->get('error_name_exists');
             }
         } else {
             if ($orderprocessor_info && ($this->request->get['order_processor_id'] != $orderprocessor_info['order_processor_id'])) {
-                $this->error['warning'] = $this->language->get('error_exists');
+                $this->error['warning'] = $this->language->get('error_name_exists');
             }
         }
 

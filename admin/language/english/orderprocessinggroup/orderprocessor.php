@@ -87,6 +87,7 @@ $_['error_city_id'] = 'City field required!';
 $_['error_warning'] = 'Warning: Please check the form carefully for errors!';
 $_['error_permission'] = 'Warning: You do not have permission to modify customers!';
 $_['error_exists'] = 'Warning: E-Mail Address is already registered!';
+$_['error_name_exists'] = 'Warning: Name is already registered!';
 $_['error_firstname'] = 'First Name must be between 1 and 32 characters!';
 $_['error_lastname'] = 'Last Name must be between 1 and 32 characters!';
 $_['error_order_processing_group_name'] = 'Please select group!';
