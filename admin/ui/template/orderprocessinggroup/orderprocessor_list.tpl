@@ -106,18 +106,18 @@
                 </tr>
               </thead>
               <tbody>
-                <?php if ($orderprocessinggroups) { ?>
-                <?php foreach ($orderprocessinggroups as $orderprocessinggroup) { ?>
+                <?php if ($orderprocessors) { ?>
+                <?php foreach ($orderprocessors as $orderprocessor) { ?>
                 <tr>
-                  <td class="text-center"><?php if (in_array($orderprocessinggroup['order_processing_group_id'], $selected)) { ?>
-                    <input type="checkbox" name="selected[]" value="<?php echo $orderprocessinggroup['order_processing_group_id']; ?>" checked="checked" />
+                  <td class="text-center"><?php if (in_array($orderprocessor['order_processing_group_id'], $selected)) { ?>
+                    <input type="checkbox" name="selected[]" value="<?php echo $orderprocessor['order_processing_group_id']; ?>" checked="checked" />
                     <?php } else { ?>
-                    <input type="checkbox" name="selected[]" value="<?php echo $orderprocessinggroup['order_processing_group_id']; ?>" />
+                    <input type="checkbox" name="selected[]" value="<?php echo $orderprocessor['order_processing_group_id']; ?>" />
                     <?php } ?></td>
-                  <td class="text-left"><?php echo $orderprocessinggroup['order_processing_group_name']; ?></td>
-                  <td class="text-left"><?php echo $orderprocessinggroup['status']; ?></td>
-                  <td class="text-left"><?php echo $orderprocessinggroup['created_at']; ?></td>
-                  <td class="text-right"><a href="<?php echo $orderprocessinggroup['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a>
+                  <td class="text-left"><?php echo $orderprocessor['order_processing_group_name']; ?></td>
+                  <td class="text-left"><?php echo $orderprocessor['status']; ?></td>
+                  <td class="text-left"><?php echo $orderprocessor['created_at']; ?></td>
+                  <td class="text-right"><a href="<?php echo $orderprocessor['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a>
 </td>
                 </tr>
                 <?php } ?>
