@@ -58,7 +58,7 @@ class Cart
 
                 //echo "<pre>";print_r($product);die;
 
-                $product_store_id = $product['product_store_id'];
+                $product_store_id = $product['variation_id'];
                 $produce_type = $this->session->data['cart'][$keys]['produce_type'];
 
                 $stock = true;

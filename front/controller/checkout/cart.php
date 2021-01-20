@@ -346,9 +346,8 @@ class ControllerCheckoutCart extends Controller
 
     public function add()
     {
-        $cachePrice_data = $this->cache->get('category_price_data');
         $this->load->language('checkout/cart');
-        //echo $this->request->post['quantity'];
+
         $json = [];
 
         if (isset($this->request->post['product_id'])) {
@@ -358,10 +357,8 @@ class ControllerCheckoutCart extends Controller
         }
 
         if (isset($this->request->post['variation_id'])) {
-            $product_store_id = (int) $this->request->post['variation_id'];
             $variation_id = (int) $this->request->post['variation_id'];
         } else {
-            $product_store_id = 0;
             $variation_id = 0;
         }
 
@@ -391,8 +388,7 @@ class ControllerCheckoutCart extends Controller
 
         
         $this->load->model('assets/product');
-        $product_info = $this->model_assets_product->getProduct($product_store_id, false, $store_id);
-
+        $product_info = $this->model_assets_product->getProduct($variation_id, false, $store_id);
         if ($product_info) {
             if (isset($this->request->post['quantity'])) {
                 $quantity = $this->request->post['quantity'];
@@ -586,11 +582,6 @@ class ControllerCheckoutCart extends Controller
         $json['location'] = 'module';
 
         /// Update
-
-        $ripe = $this->request->post['ripe'];
-
-        console.log('ripe');
-        console.log($ripe);
 
         //echo $this->request->post['ripe'];
         $this->cart->update($this->request->post['key'], $this->request->post['quantity'], $this->request->post['product_note'], $this->request->post['produce_type']);

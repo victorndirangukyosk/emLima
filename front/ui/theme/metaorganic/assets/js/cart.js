@@ -3,14 +3,15 @@ var cart = {
 		$.ajax({
 			url: 'index.php?path=checkout/cart/add',
 			type: 'POST',
-			data: {
-                product_id: productId,
-                variation_id: variationId,
-                store_id: storeId,
-                quantity: quantity,
-                product_notes: productNotes,
-                produce_type: produceType
-            },
+			data: 'variation_id=' + variationId + '&product_id=' + productId + '&quantity=' + (typeof (quantity) != 'undefined' ? quantity : 1) + '&store_id=' + storeId + '&product_notes=' + productNotes + '&produce_type=' + produceType,
+			// data: {
+            //     product_id: productId,
+            //     variation_id: variationId,
+            //     store_id: storeId,
+            //     quantity: quantity,
+            //     product_notes: productNotes,
+            //     produce_type: produceType
+            // },
 			dataType: 'json',
 			success: function (json) {
 				if (json['redirect']) {
