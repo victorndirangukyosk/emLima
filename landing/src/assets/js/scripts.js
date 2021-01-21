@@ -41,7 +41,7 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
       success: function(json) {
         response($.map(json, function(item) {
           return {
-            label: item['name'],
+            label: item['username'],
             value: item['user_id']
           }
         }));
@@ -174,6 +174,7 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
                     const location = $('#register-location').val();
                     const password = $('#register-password').val();
                     const passwordConfirmation = $('#register-password-confirm').val();
+                    const accountmanagername = $('#register-accountmanager-id').val();
                     const accountmanagerid = $('#register-accountmanager-id').attr('register_accountmanager_id');
                     const registrationView = $('#registration-view');
                     const otpView = $('#otp-view');
@@ -215,7 +216,8 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
                                 location: location,
                                 password: password,
                                 confirm: passwordConfirmation,
-                                accountmanagerid:accountmanagerid
+                                accountmanagerid:accountmanagerid,
+                                accountmanagername:accountmanagername
                             },
                             success: function (json) {
                                 registerButton.text('SIGN UP');
@@ -261,6 +263,7 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
                     const location = $('#register-location').val();
                     const password = $('#register-password').val();
                     const passwordConfirmation = $('#register-password-confirm').val();
+                    const accountmanagername = $('#register-accountmanager-id').val();
                     const accountmanagerid = $('#register-accountmanager-id').attr('register_accountmanager_id');
                     const otp = $('#otp-value').val();
                     const verifyButton = $('#otp-verify-button');
@@ -288,7 +291,8 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
                         password: password,
                         confirm: passwordConfirmation,
                         accountmanagerid: accountmanagerid,
-                        signup_otp: otp
+                        signup_otp: otp,
+                        accountmanagername:accountmanagername
                     },
                     success: function (json) {
                         verifyButton.text('VERIFY');
