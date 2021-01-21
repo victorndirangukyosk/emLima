@@ -762,14 +762,18 @@ class ControllerOrderProcessingGroupOrderProcessor extends Controller {
         return !$this->error;
     }
 
-    public function getAllDeliveryExecutives() {
-
+    public function getAllOrderProcessors() {
+        
+        $data = array();
+        $data['filter_order_processing_group_id'] = $this->request->get['order_processing_group_id'];
         $this->load->model('orderprocessinggroup/orderprocessinggroup');
-        $results = $this->model_orderprocessinggroup_orderprocessinggroup->getOrderProcessingGroups();
-
+        $this->load->model('orderprocessinggroup/orderprocessor');
+        $results = $this->model_orderprocessinggroup_orderprocessor->getOrderProcessors($data);
+        
+        $json = array();
         foreach ($results as $result) {
             $json[] = [
-                'order_processing_group_id' => $result['order_processing_group_id'],
+                'order_processor_id' => $result['order_processor_id'],
                 'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')),
             ];
         }

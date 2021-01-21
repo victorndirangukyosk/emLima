@@ -1463,6 +1463,10 @@ class ControllerSaleOrder extends Controller {
         $this->load->model('drivers/drivers');
         $drivers = $this->model_drivers_drivers->getDrivers();
         $data['drivers'] = $drivers;
+        
+        $this->load->model('orderprocessinggroup/orderprocessinggroup');
+        $order_processing_groups = $this->model_orderprocessinggroup_orderprocessinggroup->getOrderProcessingGroups();
+        $data['order_processing_groups'] = $order_processing_groups;
 
         $this->response->setOutput($this->load->view('sale/order_list.tpl', $data));
     }
@@ -7675,5 +7679,44 @@ class ControllerSaleOrder extends Controller {
         $json['message'] = 'Order Driver Details Updated!';
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
-    }    
+    }
+    
+    public function SaveOrUpdateOrderProcessorDetails() {
+        $order_id = $this->request->post['order_id'];
+        $order_processing_group_id = $this->request->post['order_processing_group_id'];
+        $order_processor_id = $this->request->post['order_processor_id'];
+          $log = new Log('error.log');
+          $log->write('SaveOrUpdateOrderProcessorDetails');
+          $log->write($this->request->post['order_processing_group_id']);
+          $log->write($this->request->post['order_processor_id']);
+          $log->write($this->request->post['order_id']);
+
+        $this->load->model('checkout/order');
+        $this->load->model('sale/order');
+        $order_info = $this->model_checkout_order->getOrder($order_id);
+        if (is_array($order_info) && $order_info != NULL) {
+            $this->model_sale_order->UpdateOrderProcessingDetails($order_id, $order_processing_group_id, $order_processor_id);
+        }
+
+        // Add to activity log
+        $log = new Log('error.log');
+        $this->load->model('user/user_activity');
+
+        $activity_data = [
+            'user_id' => $this->user->getId(),
+            'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+            'user_group_id' => $this->user->getGroupId(),
+            'order_id' => $order_id,
+        ];
+        $log->write('order assigned to processor');
+
+        $this->model_user_user_activity->addActivity('order_assigned_to_processor', $activity_data);
+
+        $log->write('order assigned to processor');
+
+        $json['status'] = 'success';
+        $json['message'] = 'Order Assigned To Processor!';
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
 }

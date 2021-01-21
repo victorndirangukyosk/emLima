@@ -750,7 +750,7 @@
         </div>
     </div>
         
-                <div class="modal fade" id="driverModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal fade" id="driverModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog" role="document">
                 <div class="modal-content"  >
                     <div class="modal-body"  style="height:400px;">
@@ -831,7 +831,75 @@
             </div>
         </div>
     </div>
+    
+    <div class="modal fade" id="orderprocessingModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content"  >
+                    <div class="modal-body"  style="height:300px;">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <div class="store-find-block">
+                            <div class="mydivsss">
+                                <div class="store-find">
+                                    <div class="store-head">
+                                        <h2>Save Order Processing Details</h2>
+                                          </br> 
+                                    </div>
+                                    <div id="orderprocessingModal-message" style="color: red;text-align:center; font-size: 15px;" >
+                                    </div>
+                                    <div id="orderprocessingModal-success-message" style="color: green; ; text-align:center; font-size: 15px;">
+                                    </div>  
+                                      </br>
+                                    <!-- Text input-->
+                                    <div class="store-form">
+                                        <form id="orderprocessingModal-form" action="" method="post" enctype="multipart/form-data">
+ 
 
+                                            <div class="form-row">
+                                                <div class="form-group">
+                                                    <label for="input-order-status" class="control-label"> Order Processing Group </label>
+                                                    <div class="col-md-12">
+                                                        <!--<input id="order_delivery_executive" maxlength="30" required style="max-width:100% ;" name="order_delivery_executive" type="text" placeholder="Delivery Executive" class="form-control" data_delivery_executive_id="" required>-->
+                                                        <select name="order_processing_group_id" id="order_processing_group_id" class="form-control" required="">
+                                                        <option> Select Order Processing Group </option>
+                                                        <?php foreach ($order_processing_groups as $order_processing_group) { ?>
+                                                        <option value="<?php echo $order_processing_group['order_processing_group_id']; ?>"><?php echo $order_processing_group['order_processing_group_name']; ?></option>
+                                                        <?php } ?>
+                                                        </select>
+                                                    <br/></div>
+                                                </div>
+                                                
+                                                <div class="form-group">
+                                                    <label > Order Processor </label>
+                                                        <input id="order_id"   name="order_id" type="hidden"  class="form-control input-md" required>
+                                                    
+                                                    <div class="col-md-12">
+                                                        <!--<input id="order_driver" maxlength="30" required style="max-width:100% ;" name="order_driver" type="text" placeholder="Driver" class="form-control" data_driver_id="" required>-->
+                                                        <select name="order_processor_id" id="order_processor_id" class="form-control" required="">
+                                                        <option> Select Order Processor </option>
+                                                        </select>
+                                                    <br/></div>
+                                                </div>
+
+                                                 <div class="form-row">
+                                                <div class="form-group">
+                                                    <div class="col-md-12"> 
+                                                        <button type="button" class="btn btn-grey" data-dismiss="modal" style="width:30%; float: right; margin-top: 10px; height: 45px;border-radius:20px">Close</button>
+                                                        <button id="driver-button" name="orderprocessing-button" onclick="saveorderprocessingdetails()" type="button" class="btn btn-lg btn-success"  style="width:30%; float: right; margin-top: 10px; height: 45px;border-radius:20px">Save</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>  
+                                </div>
+                            </div>
+                           
+                            <!-- next div code -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 <script  type="text/javascript">
 
@@ -989,6 +1057,69 @@ function savedriverdetails() {
                
             }
 
+function saveorderprocessingdetails() { 
+ 
+    $('#orderprocessingModal-message').html('');
+    $('#orderprocessingModal-success-message').html('');
+   var order_id = $('input[name="order_id"]').val();
+   var order_processing_group_id =  $('select[name="order_processing_group_id"]').val();
+   var order_processor_id =  $('select[name="order_processor_id"]').val();
+    console.log(order_processing_group_id);
+    console.log(order_processor_id);
+
+              console.log($('#orderprocessingModal-form').serialize());
+ 
+                if (order_processing_group_id  <= 0 || order_processing_group_id == '' || order_processor_id == '' || order_processor_id <= 0 || order_id <= 0 || order_id == '') {
+                   
+                      $('#orderprocessingModal-message').html("Please enter data");
+                       return false;
+                } 
+                else{
+            var clicked_orderid = order_id;        
+            $.ajax({
+		url: 'index.php?path=sale/order/api&token=<?php echo $token; ?>&api=api/order/history&order_id='+clicked_orderid+'&added_by=<?php echo $this->user->getId(); ?>&added_by_role=<?php echo $this->user->getGroupName(); ?>',
+		type: 'post',
+		dataType: 'json',
+		data: 'order_status_id=' + encodeURIComponent($('select[id=\'input-order-status'+clicked_orderid+'\']').val()) + '&notify=1',
+		success: function(json) {	 
+                    console.log(json);
+                    $('.alert').html('Order status updated successfully!');
+                    $(".alert").attr('class', 'alert alert-success');
+                    $(".alert").show();
+                    //setTimeout(function(){ window.location.reload(false); }, 1500);
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {		
+			 
+		}
+            });
+                  
+                    $.ajax({
+                    url: 'index.php?path=sale/order/SaveOrUpdateOrderProcessorDetails&token=<?php echo $token; ?>',
+                    type: 'post',
+                    dataType: 'json',
+                    data:{ order_id : order_id, order_processing_group_id : order_processing_group_id, order_processor_id : order_processor_id },
+                    async: true,
+                    success: function(json) {
+                        console.log(json); 
+                        if (json['status']) {
+                            $('#orderprocessingModal-success-message').html('Saved Successfully');
+                            setTimeout(function(){ window.location.reload(false); }, 1500);
+                        }
+                        else {
+                            $('#orderprocessingModal-success-message').html('Please try again');
+                        }
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {    
+
+                                 // alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);                       
+                                $('#orderprocessingModal-message').html("Please try again");
+                                    return false;
+                                }
+                });
+                }
+               
+            }
+
 $('a[id^=\'update_order_status\']').on('click', function (e) {
 e.preventDefault();
 console.log($(this).data('orderid'));
@@ -1033,7 +1164,14 @@ $('#driverModal').modal('toggle');
 savedriverdetails();
 }
 
-if(selected_order_status_id != 3) {
+if($('select[id=\'input-order-status'+clicked_orderid+'\'] option:selected').text()=='Order Processing')
+{
+$('input[name="order_id"]').val(clicked_orderid);
+$('#orderprocessingModal').modal('toggle');
+//saveorderprocessingdetails();
+}
+
+if(selected_order_status_id != 3 && selected_order_status_id != 1) {
 $.ajax({
 		url: 'index.php?path=sale/order/api&token=<?php echo $token; ?>&api=api/order/history&order_id='+clicked_orderid+'&added_by=<?php echo $this->user->getId(); ?>&added_by_role=<?php echo $this->user->getGroupName(); ?>',
 		type: 'post',
@@ -1056,7 +1194,26 @@ setInterval(function() {
 $('#svg'+clicked_orderid).attr('stroke', '#51AB66');
 }, 4000); // 60 * 1000 milsec
 });
-            
+
+$('select[id^=\'order_processing_group_id\']').on('change', function (e) {
+    var order_processing_group_id = $('select[id=\'order_processing_group_id\'] option:selected').val();
+    $.ajax({
+      url: 'index.php?path=orderprocessinggroup/orderprocessor/getAllOrderProcessors&token=<?php echo $token; ?>&order_processing_group_id='+order_processing_group_id,
+      dataType: 'json',     
+      success: function(json) {
+//console.log(json.length);
+var $select = $('#order_processor_id');
+    $select.html('');
+    $select.append('<option value=""> Select Order Processor </option>');
+    if(json != null && json.length > 0) {
+    $.each(json, function(index, value) {
+      $select.append('<option value="' + value.order_processor_id + '">' + value.name + '</option>');
+    });
+    }
+    $('.selectpicker').selectpicker('refresh');
+}
+});    
+});          
 </script>
 
 
