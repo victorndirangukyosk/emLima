@@ -578,7 +578,7 @@ class ControllerAccountRegister extends Controller
         }
         
         if ($this->post['accountmanagername'] != NULL && $this->post['accountmanagerid'] != NULL && $this->post['accountmanagerid'] > 0 && $this->model_account_customer->getTotalAccountManagersByNameAndId($this->post['accountmanagername'], $this->post['accountmanagerid']) <= 0) {
-            $this->error['company_address'] = $this->language->get('error_account_manager');
+            $this->error['account_manager'] = $this->language->get('error_account_manager');
         }
 
         //echo "<pre>";print_r($this->error);die;
