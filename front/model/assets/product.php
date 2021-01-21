@@ -677,22 +677,18 @@ class ModelAssetsProduct extends Model
             $category_pricing_variant_status = is_array($category_price_data) && array_key_exists('status', $category_price_data) ? $category_price_data['status'] : 1;
             if($category_pricing_variant_status == 1) {
             if ($r['status']) {
-            //REMOVE QUANTITY VALIDATION
-            //if ($r['quantity'] > 0 && $r['status']) {
-                //$key = base64_encode( serialize( array( 'product_store_id' => (int) $r['product_store_id'], 'store_id'=>($this->session->data['config_store_id'])  ) ) );
-                //  $key = base64_encode(serialize(array('product_store_id' => (int)$r['product_store_id'], 'store_id' => $this->session->data['config_store_id'])));
-                //$key = base64_encode( serialize( array( 'product_store_id' => (int) $product_info['product_store_id'], 'store_id'=>($this->session->data['config_store_id']) ? $this->session->data['config_store_id'] : $store_id ) ) );
-                $key = base64_encode(serialize(['product_store_id' => (int) $r['product_store_id'], 'store_id' => $store_id]));
 
+                $product['product_id'] = (int) $r['product_id'];
+                $product['variation_id'] = (int) $r['product_store_id'];
+                $product['store_id'] = (int) $r['store_id'];
+                $key = base64_encode(serialize($product));
+            
                 $r['key'] = $key;
                 if (isset($this->session->data['cart'][$key])) {
                     $r['qty_in_cart'] = $this->session->data['cart'][$key]['quantity'];
                     $r['actualCart'] = 1;
                 } else {
                     $r['qty_in_cart'] = 0;
-                    // if ( isset( $this->session->data['temp_cart'][$key] ) ) {
-                // 	$r['qty_in_cart'] = $this->session->data['temp_cart'][$key]['quantity'];
-                // }
                 }
 
                 $percent_off = null;

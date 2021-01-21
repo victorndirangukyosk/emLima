@@ -1613,14 +1613,6 @@ class ControllerCommonHome extends Controller {
                 }
             }
 
-            //get qty in cart
-            
-            if (!empty($this->session->data['config_store_id'])) {
-                $storeId = $this->session->data['config_store_id'];
-            } else {
-                $storeId = $filter_data['store_id'];
-            }
-
             //$result['name'] = strlen($result['name']) > 27 ? substr($result['name'],0,27)."..." : $result['name'];
             $name = $result['name'];
             if (isset($result['pd_name'])) {
@@ -1634,26 +1626,17 @@ class ControllerCommonHome extends Controller {
                 $percent_off = (($o_price - $s_price) / $o_price) * 100;
             }
 
-            // Avoid adding duplicates for similar products with different variations
-
-            $productNames = array_column($data['products'], 'name');
-            if (false !== array_search($result['name'], $productNames)) {
-                // Add variation to existing product
-                $productIndex = array_search($result['name'], $productNames);
-                // TODO: Check for product variation duplicates
-                $data['products'][$productIndex][variations][] = [
-                    'variation_id' => $result['product_store_id'],
-                    'unit' => $result['unit'],
-                    'weight' => floatval($result['weight']),
-                    'price' => $price,
-                    'special' => $special_price,
-                ];
+            if (!empty($this->session->data['config_store_id'])) {
+                $storeId = $this->session->data['config_store_id'];
             } else {
-                // Add as new product
+                $storeId = $filter_data['store_id'];
+            }
+
+            // Avoid adding duplicates for similar products with different variations
+            $productNames = array_column($data['products'], 'name');
+            if (true !== array_search($result['name'], $productNames)) {
                 $data['products'][] = [
-                    'key' => $key,
-                    'qty_in_cart' => $qty_in_cart,
-                    'variations' => $this->model_assets_product->getVariations($result['product_store_id']),
+                    'variations' => $this->model_assets_product->getProductVariationsNew($name, $storeId),
                     'store_product_variation_id' => 0,
                     'product_id' => $result['product_id'],
                     'product_store_id' => $result['product_store_id'],
@@ -1661,15 +1644,6 @@ class ControllerCommonHome extends Controller {
                     'thumb' => $image,
                     'name' => $name,
                     'store_id' => $result['store_id'],
-                    'variations' => [
-                        [
-                            'variation_id' => $result['product_store_id'],
-                            'unit' => $result['unit'],
-                            'weight' => floatval($result['weight']),
-                            'price' => $price,
-                            'special' => $special_price,
-                        ],
-                    ],
                     'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('config_product_description_length')) . '..',
                     'percent_off' => number_format($percent_off, 0),
                     'tax' => $result['tax_percentage'],
@@ -1677,20 +1651,25 @@ class ControllerCommonHome extends Controller {
                     'rating' => 0,
                     'href' => $this->url->link('product/product', '&product_store_id=' . $result['product_store_id']),
                 ];
+            } 
+
+            // echo "<pre>";print_r($this->session->data['cart']);die;
+
+            // Get qty in cart
+            foreach($data['products'] as &$product) {
+                $quantityInCart = 0;
+                foreach($product['variations'] as $variation) {
+                    $tempProduct['product_id'] = (int) $product['product_id'];
+                    $tempProduct['variation_id'] = (int) $variation['product_store_id'];
+                    $tempProduct['store_id'] = (int) $variation['store_id'];
+                    $key = base64_encode(serialize($tempProduct));
+
+                    if (isset($this->session->data['cart'][$key])) {
+                        $quantityInCart = $this->session->data['cart'][$key]['quantity'];
+                    }
+                }
+                $product['qty_in_cart'] = $quantityInCart;
             }
-
-            // TODO: Check quantity in cart for all variations
-            // $product['product_id'] = (int) $result['product_id'];
-            // $product['variation_id'] = (int) $result['product_store_id'];
-            // $product['store_id'] = (int) $storeId;
-            
-            // $key = base64_encode(serialize($product));
-
-            // if (isset($this->session->data['cart'][$key])) {
-            //     $qty_in_cart = $this->session->data['cart'][$key]['quantity'];
-            // } else {
-            //     $qty_in_cart = 0;
-            // }
         }
         // echo "<pre>";print_r($data['products']);die;
 

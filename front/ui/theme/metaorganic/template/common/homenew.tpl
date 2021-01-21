@@ -253,7 +253,7 @@
             <?= $product['name'] ?>
           </p>
           <p class="product-price">
-            <?= $product['variations'][0]['special'] ?>
+            <?= $product['variations'][0]['special_price'] ?>
             <?php  echo '/ Per ' . $product['variations'][0]['unit']; ?>
           </p>
 
