@@ -1006,7 +1006,7 @@ function savedriverdetails() {
 
               console.log($('#driverModal-form').serialize());
  
-                if (driver_id  < 0 || driver_id == '' || vehicle_number == '' || vehicle_number.length == 0 || order_id < 0 || order_id == '' || delivery_executive_id < 0 || delivery_executive_id == '') {
+                if (isNaN(delivery_executive_id) || isNaN(order_id) || isNaN(driver_id) || driver_id  < 0 || driver_id == '' || vehicle_number == '' || vehicle_number.length == 0 || order_id < 0 || order_id == '' || delivery_executive_id < 0 || delivery_executive_id == '') {
                    
                       $('#driverModal-message').html("Please enter data");
                        return false;
@@ -1069,7 +1069,7 @@ function saveorderprocessingdetails() {
 
               console.log($('#orderprocessingModal-form').serialize());
  
-                if (order_processing_group_id  <= 0 || order_processing_group_id == '' || order_processor_id == '' || order_processor_id <= 0 || order_id <= 0 || order_id == '') {
+                if (isNaN(order_processor_id) || isNaN(order_processing_group_id) || order_processing_group_id  <= 0 || order_processing_group_id == '' || order_processor_id == '' || order_processor_id <= 0 || order_id <= 0 || order_id == '') {
                    
                       $('#orderprocessingModal-message').html("Please enter data");
                        return false;
