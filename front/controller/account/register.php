@@ -578,7 +578,7 @@ class ControllerAccountRegister extends Controller
         }
         
         $log = new Log('error.log');
-        if ($this->post['accountmanagername'] != NULL && $this->post['accountmanagerid'] != NULL && $this->post['accountmanagerid'] > 0 && $this->model_account_customer->getTotalAccountManagersByNameAndId($this->request->post['accountmanagername'], $this->request->post['accountmanagerid']) == 0) {
+        if ($this->request->post['accountmanagername'] != NULL && $this->request->post['accountmanagerid'] != NULL && $this->request->post['accountmanagerid'] > 0 && $this->model_account_customer->getTotalAccountManagersByNameAndId($this->request->post['accountmanagername'], $this->request->post['accountmanagerid']) == 0) {
             $log->write('account_manager_2');
             $this->error['account_manager'] = $this->language->get('error_account_manager');
         }
