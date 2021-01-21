@@ -76,6 +76,7 @@ $_['error_captcha'] = 'Warning: Verification code does not match the image!';
 
 $_['error_gender'] = 'Please select gender';
 $_['error_dob'] = 'Please select date of birth';
+$_['error_account_manager'] = 'Please select valid account manager';
 
 //Button
 $_['button_facebook'] = 'Sign in with Facebook';
