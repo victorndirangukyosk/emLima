@@ -26,9 +26,12 @@
   <link href="<?= $base;?>front/ui/theme/metaorganic/assets/images/favicon.ico" rel="icon">
 
   <link href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css' rel='stylesheet'>
+  <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.16/themes/black-tie/jquery-ui.css">
   <link href='https://use.fontawesome.com/releases/v5.8.1/css/all.css' rel='stylesheet'>
   <link rel="stylesheet" href="<?= $base;?>front/ui/theme/metaorganic/assets/css/style-new.css">
   <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+  <script type='text/javascript' src='https://code.jquery.com/jquery-migrate-3.0.0.min.js'></script>
+  <script type='text/javascript' src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
   <script type='text/javascript'
     src='https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js'></script>
   <script src="<?= $base;?>front/ui/theme/metaorganic/assets/js/scripts.js"></script>
@@ -89,23 +92,9 @@
               <div class="header_search">
                 <div class="header_search_content">
                   <div class="header_search_form_container">
-                    <form action="#" class="header_search_form clearfix"> <input type="search" required="required"
-                        class="header_search_input" placeholder="Search for products...">
-                      <div class="custom_dropdown" style="display: none;">
-                        <div class="custom_dropdown_list"> <span class="custom_dropdown_placeholder clc">All
-                            Categories</span> <i class="fas fa-chevron-down"></i>
-                          <ul class="custom_list clc">
-                            <li><a class="clc" href="#">All Categories</a></li>
-                            <li><a class="clc" href="#">Computers</a></li>
-                            <li><a class="clc" href="#">Laptops</a></li>
-                            <li><a class="clc" href="#">Cameras</a></li>
-                            <li><a class="clc" href="#">Hardware</a></li>
-                            <li><a class="clc" href="#">Smartphones</a></li>
-                          </ul>
-                        </div>
-                      </div> <button type="submit" class="header_search_button trans_300" value="Submit"><img
-                          src="https://res.cloudinary.com/dxfq3iotg/image/upload/v1560918770/search.png"
-                          alt=""></button>
+                    <form action="#" class="header_search_form clearfix">
+                      <input id="header-product-search" type="search" class="header_search_input"
+                        placeholder="Search for products...">
                     </form>
                   </div>
                 </div>
@@ -294,18 +283,80 @@
   <script type="text/javascript">
     $(document).ready(function () {
 
+      function openProductPopup(productStoreId, storeId) {
+        return new Promise((resolve, reject) => {
+          $.ajax({
+            url: `index.php?path=product/product/view&product_store_id=${productStoreId}&store_id=${storeId}`,
+            type: 'GET',
+            success: function (data) {
+              $('.product-popup-wrapper').html(data);
+              $('#product-details-popup').modal('show');
+              resolve(data);
+            },
+            error: function (error) {
+              reject(error);
+            }
+          });
+        });
+      }
+
       $(document).delegate('.products-grid-item', 'click', function () {
         $('.products-grid-item').prop('disabled', true);
-        $.get('index.php?path=product/product/view&product_store_id=' + $(this).attr('data-id') + '&store_id=' + $(this).attr('data-store'), function (data) {
-          $('.products-grid-item').prop('disabled', false);
-          $('.product-popup-wrapper').html(data);
-          $('#product-details-popup').modal('show');
-        });
-        $('#product_name').val('');
+        openProductPopup($(this).attr('data-id'), $(this).attr('data-store'))
+          .then((data) => {
+            $('.products-grid-item').prop('disabled', false);
+          })
       });
 
       $(document).delegate('.mini-cart-button', 'click', function () {
         $('.mini-cart-content').load('index.php?path=common/cart/newInfo');
+      });
+
+      $('#header-product-search').autocomplete({
+        delay: 500,
+        minLength: 2,
+        source: function (request, response) {
+          $.ajax({
+            url: `<?= $this->url->link('product/search/product_search') ?>&filter_name=${encodeURIComponent(request.term)}`,
+            dataType: 'json',
+            success: function (data) {
+              response($.map(data, function (item) {
+
+                if (item['product_id'] == 'getall') {
+                  return {
+                    label: item['name'],
+                    name_label: item['name'],
+                    value: item['product_id'],
+                    href: item['href_cat'],
+                    img: item['image'],
+                    special_price: item['special_price'],
+                    product_store_id: item['product_store_id'],
+                    store_id: item['store_id'],
+                    quantityadded: item['quantityadded']
+                  }
+                } else {
+                  return {
+                    label: item['name'],
+                    name_label: item['name'],
+                    value: item['product_id'],
+                    href: item['href_cat'],
+                    img: item['image'],
+                    special_price: item['special_price'],
+                    unit: item['unit'],
+                    product_store_id: item['product_store_id'],
+                    store_id: item['store_id'],
+                    quantityadded: item['quantityadded']
+                  }
+                }
+              }));
+            }
+          });
+        },
+        select: function (event, ui) {
+          openProductPopup(ui.item.product_store_id, ui.item.store_id)
+            .then(() => $('#header-product-search').val(''));
+          return false;
+        }
       });
     });
   </script>
