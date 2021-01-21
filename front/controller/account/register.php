@@ -260,7 +260,7 @@ class ControllerAccountRegister extends Controller
             if (isset($this->error['warning'])) {
                 $data['error_warning'] = $this->error['warning'];
             } else {
-                $data['error_warning'] = '';
+                $data['error_warning'] = false;
             }
 
             if (isset($this->error['firstname'])) {
@@ -332,31 +332,31 @@ class ControllerAccountRegister extends Controller
             if (isset($this->error['address_1'])) {
                 $data['error_address_1'] = $this->error['address_1'];
             } else {
-                $data['error_address_1'] = '';
+                $data['error_address_1'] = false;
             }
 
             if (isset($this->error['city'])) {
                 $data['error_city'] = $this->error['city'];
             } else {
-                $data['error_city'] = '';
+                $data['error_city'] = false;
             }
 
             if (isset($this->error['postcode'])) {
                 $data['error_postcode'] = $this->error['postcode'];
             } else {
-                $data['error_postcode'] = '';
+                $data['error_postcode'] = false;
             }
 
             if (isset($this->error['country'])) {
                 $data['error_country'] = $this->error['country'];
             } else {
-                $data['error_country'] = '';
+                $data['error_country'] = false;
             }
 
             if (isset($this->error['zone'])) {
                 $data['error_zone'] = $this->error['zone'];
             } else {
-                $data['error_zone'] = '';
+                $data['error_zone'] = false;
             }
 
             if (isset($this->error['custom_field'])) {
@@ -374,7 +374,7 @@ class ControllerAccountRegister extends Controller
             if (isset($this->error['confirm'])) {
                 $data['error_confirm'] = $this->error['confirm'];
             } else {
-                $data['error_confirm'] = '';
+                $data['error_confirm'] = false;
             }
 
             $data['action'] = $this->url->link('account/register', '', 'SSL');
