@@ -45,6 +45,10 @@ $_['text_order_delivery_executive_assigned'] =  '<a href="user_id=%d">%s</a> ass
 $_['text_order_processing_group_add'] = '<a href="user_id=%d">%s</a> created a new <a href="order_processing_group_id=%d">order processing group</a>.';
 $_['text_orderprocessinggroup_edit'] = '<a href="user_id=%d">%s</a> edited <a href="order_processing_group_id=%d">order processing group</a>.';
 $_['text_order_processing_group_delete'] = '<a href="user_id=%d">%s</a> deleted <a href="order_processing_group_id=%d">order processing group</a>.';
+$_['text_order_processor_delete'] = '<a href="user_id=%d">%s</a> deleted <a href="order_processor_id=%d">order processor</a>.';
+$_['text_order_processor_add'] = '<a href="user_id=%d">%s</a> created a new <a href="order_processor_id=%d">order processor</a>.';
+$_['text_orderprocessor_edit'] = '<a href="user_id=%d">%s</a> edited <a href="order_processor_id=%d">order processor</a>.';
+$_['text_order_assigned_to_processor'] =  '<a href="user_id=%d">%s</a> assigned <a href="order_id=%d">order to processor</a>.';
 
 // Column
 $_['column_user'] = 'User';
