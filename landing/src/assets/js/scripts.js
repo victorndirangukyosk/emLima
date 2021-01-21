@@ -32,7 +32,30 @@
             y: 0,
             duration: .5
         });
-
+        
+$('input[name=\'register-accountmanager-id\']').autocomplete({
+  'source': function(request, response) {
+    $.ajax({
+      url: 'index.php?path=account/login/autocompleteaccountmanager&filter_name=' +  $('input[name=\'register-accountmanager-id\']').val(),
+      dataType: 'json',     
+      success: function(json) {
+        response($.map(json, function(item) {
+          return {
+            label: item['name'],
+            value: item['user_id']
+          }
+        }));
+      }
+    });
+  },
+  'select': function(event, ui) {
+     console.log(ui.item.label); 
+     console.log(ui.item.value); 
+     $('input[name=\'register-accountmanager-id\']').val(ui.item.label);
+     $('input[name=\'register-accountmanager-id\']').attr('register_accountmanager_id',ui.item.value);
+     return false;
+  } 
+});
         // Customer Login
         $(document).delegate('#login-button', 'click', function (e) {
             getLocationOnly();
