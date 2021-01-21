@@ -235,7 +235,8 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
                                     iziToast.warning({
                                         position: 'topRight',
                                         title: 'Oops',
-                                        message: json['error_warning']
+                                        //message: json['error_warning']
+                                        message: json['error_message']
                                     });
                                 }
                             }
