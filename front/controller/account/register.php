@@ -577,6 +577,8 @@ class ControllerAccountRegister extends Controller
             $this->error['location'] = $this->language->get('error_location');
         }
         
+        $log = new Log('error.log');
+        $log->write($this->model_account_customer->getTotalAccountManagersByNameAndId($this->post['accountmanagername'], $this->post['accountmanagerid']));
         if ($this->post['accountmanagername'] != NULL && $this->post['accountmanagerid'] != NULL && $this->post['accountmanagerid'] > 0 && $this->model_account_customer->getTotalAccountManagersByNameAndId($this->post['accountmanagername'], $this->post['accountmanagerid']) <= 0) {
             $this->error['account_manager'] = $this->language->get('error_account_manager');
         }
@@ -780,6 +782,12 @@ class ControllerAccountRegister extends Controller
                 $data['error_match_password'] = $this->error['match'];
             } else {
                 $data['error_match_password'] = '';
+            }
+            
+            if (isset($this->error['account_manager'])) {
+                $data['error_account_manager'] = $this->error['account_manager'];
+            } else {
+                $data['error_account_manager'] = '';
             }
         }
 
