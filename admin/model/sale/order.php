@@ -1643,6 +1643,9 @@ class ModelSaleOrder extends Model {
             $sql .= " AND CONCAT(o.firstname, ' ', o.lastname) LIKE '%" . $this->db->escape($data['filter_customer']) . "%'";
         }
 
+        //  echo "<pre>";print_r($data);die;
+
+
         if (!empty($data['filter_date_added']) && empty($data['filter_date_added_end'])) {
             $sql .= " AND DATE(o.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
         }
@@ -1662,7 +1665,7 @@ class ModelSaleOrder extends Model {
         if (!empty($data['filter_total'])) {
             $sql .= " AND o.total = '" . (float) $data['filter_total'] . "'";
         }
-
+        // echo "<pre>";print_r($sql);die;
         $query = $this->db->query($sql);
 
         return $query->row['total'];

@@ -11,6 +11,7 @@ class ControllerDashboardOnline extends Controller
         $data['text_view'] = $this->language->get('text_view');
 
         $data['token'] = $this->session->data['token'];
+        $data['online_customers_url'] = $this->url->link('report/customer_online', 'token='.$this->session->data['token'], 'SSL');
 
         // Total Orders
         $this->load->model('report/customer');
