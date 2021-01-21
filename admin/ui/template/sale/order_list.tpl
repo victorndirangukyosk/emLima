@@ -49,7 +49,7 @@
                 </div>		
             </div>
             <div class="panel-body">
-                <div class="well" style="display:none;">
+                <div class="well" style="display:none;max-height:310px !important;" >
                     <div class="row">
                         <div class="col-sm-4">
                             <div class="form-group">
@@ -76,16 +76,25 @@
                                 <input type="text" name="filter_delivery_method" value="<?php echo $filter_delivery_method; ?>" placeholder="<?php echo $column_delivery_method; ?>" id="input-name" class="form-control" />
                             </div>
                             
-                            
-                            <div class="form-group">
-                                <label class="control-label" for="input-delivery-date">Delivery Date</label>
-                                <div class="input-group date">
-                                    <input type="text" name="filter_delivery_date" value="<?php echo $filter_delivery_date; ?>" placeholder="<?php echo $column_delivery_date; ?>" data-date-format="YYYY-MM-DD" id="input-delivery-date" class="form-control" />
-                                    <span class="input-group-btn">
-                                        <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
-                                    </span>
-                                </div>
+                             <div class="form-group">
+                             
+                                <label class="control-label" for="input-order-type">Order Type</label>
+                                <select name="filter_order_type" id="input-order-type" class="form-control">
+                                    <option value="*" selected></option> 
+                                    <?php if ($filter_order_type=='0') { ?>
+                                    <option value="0" selected="selected">Manual</option>
+                                    <?php } else { ?>
+                                    <option value="0">Manual</option>
+                                    <?php } ?>
+                                     <?php if ($filter_order_type=='1') { ?>
+                                    <option value="1" selected="selected">Online</option>
+                                    <?php } else { ?>
+                                    <option value="1">Online</option>
+                                    <?php } ?>
+                                     
+                                </select>
                             </div>
+                         
 
                             
                         </div>
@@ -124,6 +133,17 @@
                                     <input type="text" name="filter_payment" value="<?php echo $filter_payment; ?>" placeholder="<?php echo $column_payment; ?>" id="input-name" class="form-control" />
                                 </div>
                             <?php endif ?> 
+
+   
+                               <div class="form-group">
+                                <label class="control-label" for="input-delivery-date">Delivery Date</label>
+                                <div class="input-group date">
+                                    <input type="text" name="filter_delivery_date" value="<?php echo $filter_delivery_date; ?>" placeholder="<?php echo $column_delivery_date; ?>" data-date-format="YYYY-MM-DD" id="input-delivery-date" class="form-control" />
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </div>
 
 
                         </div>
@@ -451,7 +471,8 @@
       if (filter_order_status_id != 0) {
         url += '&filter_order_status_id=' + encodeURIComponent(filter_order_status_id);
       } 
-      
+
+           
       location = url;
     }
 
@@ -519,6 +540,14 @@
             if (filter_order_status != '*') {
                 url += '&filter_order_status=' + encodeURIComponent(filter_order_status);
             }
+
+
+              var filter_order_type = $('select[name=\'filter_order_type\']').val();
+
+            if (filter_order_type != '*') {
+                url += '&filter_order_type=' + encodeURIComponent(filter_order_type);
+            }
+
 
             var filter_total = $('input[name=\'filter_total\']').val();
 

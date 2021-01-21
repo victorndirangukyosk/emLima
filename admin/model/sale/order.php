@@ -743,6 +743,16 @@ class ModelSaleOrder extends Model {
             $sql .= " WHERE o.order_status_id > '0'";
         }
 
+        //   echo "<pre>";print_r($data['filter_order_type']);die; 
+
+        
+        if (isset($data['filter_order_type']) ) {
+ 
+            $sql .= ' AND isadmin_login= ' . $data['filter_order_type'] . '';            
+
+        }
+                
+
         if ($this->user->isVendor()) {
             $sql .= ' AND ' . DB_PREFIX . 'store.vendor_id="' . $this->user->getId() . '"';
         }
@@ -767,7 +777,6 @@ class ModelSaleOrder extends Model {
         if (!empty($data['filter_vendor'])) {
             $sql .= ' AND vendor_id="' . $data['filter_vendor'] . '"';
         }
-        // echo "<pre>";print_r($sql);die;
         if (!empty($data['filter_store_name'])) {
             $sql .= " AND o.store_name = '" . $data['filter_store_name'] . "'";
         }
@@ -834,7 +843,7 @@ class ModelSaleOrder extends Model {
             $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
         }
 
-        // echo "<pre>";print_r($sql);die;
+        //   echo "<pre>";print_r($sql);die;
 
         $query = $this->db->query($sql);
 
@@ -1588,6 +1597,13 @@ class ModelSaleOrder extends Model {
         } else {
             $sql .= " WHERE o.order_status_id > '0'";
         }
+
+        if (isset($data['filter_order_type'])) {             
+            $sql .= ' AND isadmin_login="' . $data['filter_order_type'] . '"';          
+           
+        }
+ 
+
         if ($this->user->isVendor()) {
             $sql .= ' AND vendor_id="' . $this->user->getId() . '"';
         }
