@@ -681,7 +681,7 @@ class ControllerAccountRegister extends Controller
             if (isset($this->error['warning'])) {
                 $data['error_warning'] = $this->error['warning'];
             } else {
-                $data['error_warning'] = '';
+                $data['error_warning'] = false;
             }
 
             if (isset($this->error['firstname'])) {
@@ -777,19 +777,19 @@ class ControllerAccountRegister extends Controller
             if (isset($this->error['confirm'])) {
                 $data['error_confirm'] = $this->error['confirm'];
             } else {
-                $data['error_confirm'] = '';
+                $data['error_confirm'] = false;
             }
 
             if (isset($this->error['match'])) {
                 $data['error_match_password'] = $this->error['match'];
             } else {
-                $data['error_match_password'] = '';
+                $data['error_match_password'] = false;
             }
             
             if (isset($this->error['account_manager'])) {
                 $data['error_account_manager'] = $this->error['account_manager'];
             } else {
-                $data['error_account_manager'] = '';
+                $data['error_account_manager'] = false;
             }
         }
 
@@ -997,7 +997,7 @@ class ControllerAccountRegister extends Controller
             if (isset($this->error['warning'])) {
                 $data['error_warning'] = $this->error['warning'];
             } else {
-                $data['error_warning'] = '';
+                $data['error_warning'] = false;
             }
 
             if (isset($this->error['firstname'])) {
