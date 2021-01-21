@@ -3,40 +3,7 @@
         margin-top: 150px
     }
 
-    .modal-content {
-        border-radius: 0.7rem
-    }
-
-    @media(width:1024px) {
-        .modal-dialog {
-            max-width: 700px
-        }
-    }
-
-    .modal-title {
-        text-align: center;
-        font-size: 3vh;
-        font-weight: bold;
-        margin-left: auto;
-    }
-
-    .modal-header {
-        border-bottom: none;
-        text-align: center;
-        padding-bottom: 0
-    }
-
-    .model-section-title {
-        color: #2aa249;
-        margin-top: 2vh;
-        margin-bottom: 0;
-        font-size: 2vh
-    }
-
-    .modal-body {
-        padding: 2vh;
-        position: relative;
-    }
+    
 
     .price-container {
         display: none;
@@ -59,20 +26,6 @@
         width: 35%
     }
 
-    .modal-footer {
-        border-top: none;
-        justify-content: center;
-        padding-top: 0
-    }
-
-    .modal-row {
-        border-bottom: 1px solid rgba(0, 0, 0, .2);
-        padding: 2vh 0 2vh 0;
-        justify-content: space-between;
-        flex-wrap: unset;
-        margin: 0
-    }
-
     #product-quantity::placeholder {
         text-align: center;
     }
@@ -85,7 +38,7 @@
         padding: 2vh;
         margin-top: 0;
         border-radius: 0 0.7rem 0.7rem 0;
-        box-shadow: none
+        box-shadow: none;
     }
 
     .openmodal {

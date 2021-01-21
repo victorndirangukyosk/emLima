@@ -36,7 +36,7 @@
 </head>
 
 
-<body oncontextmenu='return false' class='snippet-body'>
+<body>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.3/TweenMax.min.js"></script>
   <div class="super_container">
     <!-- Header -->
@@ -72,7 +72,7 @@
       <div class="header_main">
         <div class="container">
           <div class="row">
-            
+
             <!-- Logo -->
             <div class="col-lg-2 col-sm-3 col-3 order-1">
               <div class="logo_container">
@@ -82,8 +82,8 @@
                   </a>
                 </div>
               </div>
-            </div> 
-            
+            </div>
+
             <!-- Search -->
             <div class="col-lg-6 col-12 order-lg-2 order-3 text-lg-left text-right">
               <div class="header_search">
@@ -110,31 +110,31 @@
                   </div>
                 </div>
               </div>
-            </div> 
-            
+            </div>
+
             <!-- Wishlist -->
             <div class="col-lg-4 col-9 order-lg-3 order-2 text-lg-left text-right">
               <div class="wishlist_cart d-flex flex-row align-items-center justify-content-end">
                 <div class="wishlist d-flex flex-row align-items-center justify-content-end">
                   <div class="wishlist_icon"><img
-                      src="https://res.cloudinary.com/dxfq3iotg/image/upload/v1560918681/heart.png" alt=""></div>
+                      src="<?= $base;?>front/ui/theme/metaorganic/assets/images/icons/heart.png" alt=""></div>
                   <div class="wishlist_content">
                     <div class="wishlist_text"><a href="<?= $wishlist ?>">Wishlists</a></div>
                     <div class="wishlist_count">10</div>
                   </div>
-                </div> 
-                
+                </div>
+
                 <!-- Cart -->
-                <div class="cart mini-cart-button">
+                <div class="cart mini-cart-button" data-toggle="modal" data-target="#mini-cart-panel">
                   <div class="cart_container d-flex flex-row align-items-center justify-content-end">
                     <div class="cart_icon"> <img
-                        src="https://res.cloudinary.com/dxfq3iotg/image/upload/v1560918704/cart.png" alt="">
+                        src="<?= $base;?>front/ui/theme/metaorganic/assets/images/icons/cart.png" alt="">
                       <div class="cart_count"><span class="cart_items_count">
                           <?= $this->cart->countProducts(); ?>
                         </span></div>
                     </div>
                     <div class="cart_content">
-                      <div class="cart_text"><a href="#">Basket</a></div>
+                      <div class="cart_text"><a>Basket</a></div>
                       <div class="cart_price">
                         <?= $this->currency->format($this->cart->getTotal()); ?>
                       </div>
@@ -145,8 +145,8 @@
             </div>
           </div>
         </div>
-      </div> 
-      
+      </div>
+
       <!-- Main Navigation -->
       <nav class="main_nav">
         <div class="container">
@@ -174,8 +174,8 @@
                       </ul>
                     </li>
                   </ul>
-                </div> 
-                
+                </div>
+
                 <!-- Menu Trigger -->
                 <div class="menu_trigger_container ml-auto">
                   <div class="menu_trigger d-flex flex-row align-items-center justify-content-end">
@@ -191,8 +191,8 @@
             </div>
           </div>
         </div>
-      </nav> 
-      
+      </nav>
+
       <!-- Menu -->
       <div class="page_menu">
         <div class="container">
@@ -209,7 +209,8 @@
                   <li class="page_menu_item"> <a href="#">Purchase Order <span
                         class="badge badge-pill badge-success">BETA</span></i></a>
                   </li>
-                  <li class="page_menu_item has-children"> <a href="<?= $account ?>">My Account<i class="fa fa-angle-down"></i></a>
+                  <li class="page_menu_item has-children"> <a href="<?= $account ?>">My Account<i
+                        class="fa fa-angle-down"></i></a>
                     <ul class="page_menu_selection">
                       <li><a href="<?= $account ?>">Profile<i class="fa fa-angle-down"></i></a></li>
                       <li><a href="<?= $account ?>">Transactions<i class="fa fa-angle-down"></i></a></li>
@@ -244,9 +245,8 @@
       </h3>
       <div class="row">
         <?php foreach($category['products'] as $product) { ?>
-        <div class="col-md-2 products-grid-item" 
-              data-store="<?= $product['store_id'] ?>"
-              data-id="<?= $product['product_store_id'] ?>">
+        <div class="col-md-2 products-grid-item" data-store="<?= $product['store_id'] ?>"
+          data-id="<?= $product['product_store_id'] ?>">
 
           <img class="product-image" src="<?=$product['thumb']?>" alt="<?=$product['name']?>">
           <p class="product-name">
@@ -257,22 +257,43 @@
             <?php  echo '/ Per ' . $product['variations'][0]['unit']; ?>
           </p>
 
-          <div id="<?= $product['product_id'] ?>-product-quantity" class="product-quantity-in-basket" style="display: <?= $product['qty_in_cart'] ? 'block' : 'none'; ?>">
+          <div id="<?= $product['product_id'] ?>-product-quantity" class="product-quantity-in-basket"
+            style="display: <?= $product['qty_in_cart'] ? 'block' : 'none'; ?>">
             <?= $product['qty_in_cart'] ?>
           </div>
         </div>
-        
+
         <?php } ?>
       </div>
       <?php } ?>
       <?php } ?>
     </div>
-  </div>
 
-  <div class="product-popup-wrapper"></div>
+    <div class="product-popup-wrapper"></div>
+
+    <div id="mini-cart-panel" class="modal fixed-left fade" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-dialog-aside" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Basket</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="mini-cart-content"></div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-cta">Checkout</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script type="text/javascript">
     $(document).ready(function () {
+
       $(document).delegate('.products-grid-item', 'click', function () {
         $('.products-grid-item').prop('disabled', true);
         $.get('index.php?path=product/product/view&product_store_id=' + $(this).attr('data-id') + '&store_id=' + $(this).attr('data-store'), function (data) {
@@ -282,8 +303,13 @@
         });
         $('#product_name').val('');
       });
+
+      $(document).delegate('.mini-cart-button', 'click', function () {
+        $('.mini-cart-content').load('index.php?path=common/cart/newInfo');
+      });
     });
   </script>
-  
+
 </body>
+
 </html>
