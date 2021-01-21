@@ -174,7 +174,7 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
                     const location = $('#register-location').val();
                     const password = $('#register-password').val();
                     const passwordConfirmation = $('#register-password-confirm').val();
-                    const accountmanagerid = $('#register-accountmanager-id').val();
+                    const accountmanagerid = $('#register-accountmanager-id').attr('register_accountmanager_id');
                     const registrationView = $('#registration-view');
                     const otpView = $('#otp-view');
                     const registerButton = $('#register-button');
@@ -261,7 +261,7 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
                     const location = $('#register-location').val();
                     const password = $('#register-password').val();
                     const passwordConfirmation = $('#register-password-confirm').val();
-                    const accountmanagerid = $('#register-accountmanager-id').val();
+                    const accountmanagerid = $('#register-accountmanager-id').attr('register_accountmanager_id');
                     const otp = $('#otp-value').val();
                     const verifyButton = $('#otp-verify-button');
                     if (otp.length > 3) {
