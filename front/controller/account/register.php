@@ -680,114 +680,133 @@ class ControllerAccountRegister extends Controller
 
             if (isset($this->error['warning'])) {
                 $data['error_warning'] = $this->error['warning'];
+                $data['error_message'] = $this->error['warning'];
             } else {
                 $data['error_warning'] = false;
             }
 
             if (isset($this->error['firstname'])) {
                 $data['error_firstname'] = $this->error['firstname'];
+                $data['error_message'] = $this->error['firstname'];
             } else {
                 $data['error_firstname'] = false;
             }
 
             if (isset($this->error['lastname'])) {
                 $data['error_lastname'] = $this->error['lastname'];
+                $data['error_message'] = $this->error['lastname'];
             } else {
                 $data['error_lastname'] = false;
             }
 
             if (isset($this->error['email'])) {
                 $data['error_email'] = $this->error['email'];
+                $data['error_message'] = $this->error['email'];
             } else {
                 $data['error_email'] = false;
             }
 
             if (isset($this->error['company_name_address'])) {
                 $data['error_company_name_address'] = $this->error['company_name_address'];
+                $data['error_message'] = $this->error['company_name_address'];
             } else {
                 $data['error_company_name_address'] = false;
             }
 
             if (isset($this->error['company_name'])) {
                 $data['error_company_name'] = $this->error['company_name'];
+                $data['error_message'] = $this->error['company_name'];
             } else {
                 $data['error_company_name'] = false;
             }
 
             if (isset($this->error['company_address'])) {
                 $data['error_company_address'] = $this->error['company_address'];
+                $data['error_message'] = $this->error['company_address'];
             } else {
                 $data['error_company_address'] = false;
             }
 
             if (isset($this->error['company_address'])) {
                 $data['error_address'] = $this->error['address'];
+                $data['error_message'] = $this->error['address'];
             } else {
                 $data['error_address'] = false;
             }
 
             if (isset($this->error['house_building'])) {
                 $data['error_house_building'] = $this->error['house_building'];
+                $data['error_message'] = $this->error['house_building'];
             } else {
                 $data['error_house_building'] = false;
             }
 
             if (isset($this->error['location'])) {
                 $data['error_location'] = $this->error['location'];
+                $data['error_message'] = $this->error['location'];
             } else {
                 $data['error_location'] = false;
             }
 
             if (isset($this->error['telephone'])) {
                 $data['error_telephone'] = $this->error['telephone'];
+                $data['error_message'] = $this->error['telephone'];
             } else {
                 $data['error_telephone'] = false;
             }
 
             if (isset($this->error['telephone_exists'])) {
                 $data['error_telephone_exists'] = $this->error['telephone_exists'];
+                $data['error_message'] = $this->error['telephone_exists'];
             } else {
                 $data['error_telephone_exists'] = false;
             }
 
             if (isset($this->error['error_tax'])) {
                 $data['error_tax'] = $this->error['error_tax'];
+                $data['error_message'] = $this->error['error_tax'];
             } else {
                 $data['error_tax'] = false;
             }
 
             if (isset($this->error['gender'])) {
                 $data['error_gender'] = $this->error['gender'];
+                $data['error_message'] = $this->error['gender'];
             } else {
                 $data['error_gender'] = false;
             }
 
             if (isset($this->error['dob'])) {
                 $data['error_dob'] = $this->error['dob'];
+                $data['error_message'] = $this->error['dob'];
             } else {
                 $data['error_dob'] = false;
             }
 
             if (isset($this->error['password'])) {
                 $data['error_password'] = $this->error['password'];
+                $data['error_message'] = $this->error['password'];
             } else {
                 $data['error_password'] = false;
             }
 
             if (isset($this->error['confirm'])) {
                 $data['error_confirm'] = $this->error['confirm'];
+                $data['error_message'] = $this->error['confirm'];
             } else {
                 $data['error_confirm'] = false;
             }
 
             if (isset($this->error['match'])) {
                 $data['error_match_password'] = $this->error['match'];
+                $data['error_message'] = $this->error['match'];
             } else {
                 $data['error_match_password'] = false;
             }
             
             if (isset($this->error['account_manager'])) {
                 $data['error_account_manager'] = $this->error['account_manager'];
+                $data['error_message'] = $this->error['account_manager'];
             } else {
                 $data['error_account_manager'] = false;
             }
