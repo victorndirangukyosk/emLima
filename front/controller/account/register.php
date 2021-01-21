@@ -1323,7 +1323,7 @@ class ControllerAccountRegister extends Controller
             if (isset($this->error['account_manager'])) {
                 $data['error_account_manager'] = $this->error['account_manager'];
             } else {
-                $data['error_account_manager'] = '';
+                $data['error_account_manager'] = false;
             }
         }
 
