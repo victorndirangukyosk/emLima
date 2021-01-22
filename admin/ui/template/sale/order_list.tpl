@@ -814,7 +814,7 @@
                                                         <?php } ?>
                                                         </select>
                                                     <br/></div>
-                                                </div>
+                                                </div><br/><br/>
                                                 
                                                 <div class="form-group">
                                                     <label > Driver </label>
@@ -829,7 +829,7 @@
                                                         <?php } ?>    
                                                         </select>
                                                     <br/></div>
-                                                </div>
+                                                </div><br/><br/>
 
                                                  <div class="form-row">
                                                 <div class="form-group">
@@ -841,11 +841,11 @@
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <div class="col-md-12"> 
-                                                        <button type="button" id="driver-buttons" name="driver-buttons" onclick="savedriverdetail()" class="btn btn-grey" data-dismiss="modal" style="width:30%; float: right; margin-top: 10px; height: 45px;border-radius:20px">Save & Close</button>
-
-
-                                                        <button id="driver-button" name="driver-button" onclick="savedriverdetails()" type="button" class="btn btn-lg btn-success"  style="width:30%; float: right; margin-top: 10px; height: 45px;border-radius:20px">Save & Print Invoice</button>
+                                                    <div class="col-md-6"> 
+                                                        <button type="button" id="driver-buttons" name="driver-buttons" onclick="savedriverdetail()" class="btn btn-lg btn-success" data-dismiss="modal" style="width:50%; float: left;  margin-top: 10px; height: 45px;border-radius:20px">Save & Close</button>
+                                                    </div>
+                                                    <div class="col-md-6"> 
+                                                        <button id="driver-button" name="driver-button" onclick="savedriverdetails()" type="button" class="btn btn-lg btn-success"  style="width:65%; float:right;  margin-top: 10px; height: 45px;border-radius:20px">Save & Print Invoice</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -865,7 +865,7 @@
     <div class="modal fade" id="orderprocessingModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog" role="document">
                 <div class="modal-content"  >
-                    <div class="modal-body"  style="height:300px;">
+                    <div class="modal-body"  style="height:330px;">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <div class="store-find-block">
                             <div class="mydivsss">
@@ -896,7 +896,7 @@
                                                         <?php } ?>
                                                         </select>
                                                     <br/></div>
-                                                </div>
+                                                </div><br/><br/>
                                                 
                                                 <div class="form-group">
                                                     <label > Order Processor </label>
@@ -908,12 +908,12 @@
                                                         <option> Select Order Processor </option>
                                                         </select>
                                                     <br/></div>
-                                                </div>
+                                                </div><br/><br/>
 
                                                  <div class="form-row">
                                                 <div class="form-group">
                                                     <div class="col-md-12"> 
-                                                        <button type="button" class="btn btn-grey" data-dismiss="modal" style="width:30%; float: right; margin-top: 10px; height: 45px;border-radius:20px">Close</button>
+                                                        <button type="button" class="btn btn-grey" data-dismiss="modal" style="width:30%; float: left; margin-top: 10px; height: 45px;border-radius:20px">Close</button>
                                                         <button id="driver-button" name="orderprocessing-button" onclick="saveorderprocessingdetails()" type="button" class="btn btn-lg btn-success"  style="width:30%; float: right; margin-top: 10px; height: 45px;border-radius:20px">Save</button>
                                                     </div>
                                                 </div>
@@ -1254,11 +1254,17 @@ $.ajax({
 			 
 		}
 });   
-}        
+}         
 }
 setInterval(function() {
 $('#svg'+clicked_orderid).attr('stroke', '#51AB66');
 }, 4000); // 60 * 1000 milsec
+
+if($('select[id=\'input-order-status'+clicked_orderid+'\'] option:selected').text()!='Order Processing')
+{
+setTimeout(function(){ window.location.reload(false); }, 1500);    
+}
+
 });
 
 $('select[id^=\'order_processing_group_id\']').on('change', function (e) {
@@ -1344,6 +1350,7 @@ $('a[id^=\'new_print_invoice\']').on('click', function (e) {
 e.preventDefault();
 var invoice = $(this).attr("data-order-invoice");
 var order_id = $(this).attr("data-order-id");
+var order_status = $('select[id=\'input-order-status'+order_id+'\'] option:selected').text();
 $.ajax({
 		url: 'index.php?path=sale/order/getDriverDetails&token=<?php echo $token; ?>',
 		type: 'post',
@@ -1354,11 +1361,21 @@ $.ajax({
                     console.log(json.order_info.driver_id);
                     console.log(json.order_info.vehicle_number);
                     console.log(json.order_info.delivery_executive_id);
-                    if(json.order_info.driver_id == null || json.order_info.vehicle_number == null || json.order_info.delivery_executive_id == null)
+                    if(order_status != 'Ready for delivery' || json.order_info.driver_id == null || json.order_info.vehicle_number == null || json.order_info.delivery_executive_id == null)
                     {
                     $('input[name="order_id"]').val(order_id);
                     $('input[name="invoice_custom"]').val(invoice);
-                    $('#driverModal').modal('toggle');    
+                    $('#driverModal').modal('toggle');
+                    if(order_status != 'Ready for delivery') {
+                    $('#driverModal-message').html("Please Select Order Status As Ready For Delivery!");
+                    $('#driver-buttons').prop('disabled', true);
+                    $('#driver-button').prop('disabled', true);
+                    return false;
+                    } else {
+                    $('#driverModal-message').html("");
+                    $('#driver-buttons').prop('disabled', false);
+                    $('#driver-button').prop('disabled', false);    
+                    }
                     } else {
                     console.log(invoice);
                     window.open(invoice, '_blank');
