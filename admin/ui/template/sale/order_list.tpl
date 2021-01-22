@@ -1361,7 +1361,7 @@ $.ajax({
                     console.log(json.order_info.driver_id);
                     console.log(json.order_info.vehicle_number);
                     console.log(json.order_info.delivery_executive_id);
-                    if(json.order_info.driver_id == null || json.order_info.vehicle_number == null || json.order_info.delivery_executive_id == null)
+                    if(order_status != 'Ready for delivery' || json.order_info.driver_id == null || json.order_info.vehicle_number == null || json.order_info.delivery_executive_id == null)
                     {
                     $('input[name="order_id"]').val(order_id);
                     $('input[name="invoice_custom"]').val(invoice);
