@@ -630,7 +630,7 @@ class ControllerExecutivesExecutivesList extends Controller {
 
         $executive_info = $this->model_executives_executives->getExecutiveByEmail($this->request->post['email']);
 
-        if (!isset($this->request->get['executive_id'])) {
+        /*if (!isset($this->request->get['executive_id'])) {
             if ($executive_info) {
                 $this->error['warning'] = $this->language->get('error_exists');
             }
@@ -638,7 +638,7 @@ class ControllerExecutivesExecutivesList extends Controller {
             if ($executive_info && ($this->request->get['executive_id'] != $executive_info['delivery_executive_id'])) {
                 $this->error['warning'] = $this->language->get('error_exists');
             }
-        }
+        }*/
 
         if ((utf8_strlen($this->request->post['telephone']) < 3) || (utf8_strlen($this->request->post['telephone']) > 32)) {
             $this->error['telephone'] = $this->language->get('error_telephone');
