@@ -814,7 +814,7 @@
                                                         <?php } ?>
                                                         </select>
                                                     <br/></div>
-                                                </div>
+                                                </div><br/><br/>
                                                 
                                                 <div class="form-group">
                                                     <label > Driver </label>
@@ -829,7 +829,7 @@
                                                         <?php } ?>    
                                                         </select>
                                                     <br/></div>
-                                                </div>
+                                                </div><br/><br/>
 
                                                  <div class="form-row">
                                                 <div class="form-group">
@@ -841,11 +841,11 @@
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <div class="col-md-12"> 
-                                                        <button type="button" id="driver-buttons" name="driver-buttons" onclick="savedriverdetail()" class="btn btn-grey" data-dismiss="modal" style="width:30%; float: right; margin-top: 10px; height: 45px;border-radius:20px">Save & Close</button>
-
-
-                                                        <button id="driver-button" name="driver-button" onclick="savedriverdetails()" type="button" class="btn btn-lg btn-success"  style="width:30%; float: right; margin-top: 10px; height: 45px;border-radius:20px">Save & Print Invoice</button>
+                                                    <div class="col-md-6"> 
+                                                        <button type="button" id="driver-buttons" name="driver-buttons" onclick="savedriverdetail()" class="btn btn-lg btn-success" data-dismiss="modal" style="width:50%; float: left;  margin-top: 10px; height: 45px;border-radius:20px">Save & Close</button>
+                                                    </div>
+                                                    <div class="col-md-6"> 
+                                                        <button id="driver-button" name="driver-button" onclick="savedriverdetails()" type="button" class="btn btn-lg btn-success"  style="width:65%; float:right;  margin-top: 10px; height: 45px;border-radius:20px">Save & Print Invoice</button>
                                                     </div>
                                                 </div>
                                             </div>
