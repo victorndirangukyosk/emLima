@@ -248,10 +248,10 @@ class ControllerApiCustomers extends Controller
         try{
         $this->load->model('user/user');
 
-        // echo "<pre>";print_r($args['filter_name']);
-        //     die;
+        // echo "<pre>";print_r($args['filter_name']); die;
+           
         $filter_data = [
-            'filter_name' => $args['filter_name'],
+            'filter_name' => $args['name'],
             // 'filter_email' => $filter_email,
             // 'filter_telephone' => $filter_telephone,
             // 'start' => 0,
