@@ -1254,13 +1254,17 @@ $.ajax({
 			 
 		}
 });   
-} else {
-setTimeout(function(){ window.location.reload(false); }, 1500);    
-}        
+}         
 }
 setInterval(function() {
 $('#svg'+clicked_orderid).attr('stroke', '#51AB66');
 }, 4000); // 60 * 1000 milsec
+
+if($('select[id=\'input-order-status'+clicked_orderid+'\'] option:selected').text()!='Order Processing')
+{
+setTimeout(function(){ window.location.reload(false); }, 1500);    
+}
+
 });
 
 $('select[id^=\'order_processing_group_id\']').on('change', function (e) {
