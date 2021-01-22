@@ -842,7 +842,7 @@
 
                                                 <div class="form-group">
                                                     <div class="col-md-12"> 
-                                                        <button type="button" class="btn btn-grey" data-dismiss="modal" style="width:30%; float: right; margin-top: 10px; height: 45px;border-radius:20px">Save & Close</button>
+                                                        <button type="button" id="driver-buttons" name="driver-buttons" onclick="savedriverdetail()" class="btn btn-grey" data-dismiss="modal" style="width:30%; float: right; margin-top: 10px; height: 45px;border-radius:20px">Save & Close</button>
 
 
                                                         <button id="driver-button" name="driver-button" onclick="savedriverdetails()" type="button" class="btn btn-lg btn-success"  style="width:30%; float: right; margin-top: 10px; height: 45px;border-radius:20px">Save & Print Invoice</button>
@@ -901,7 +901,7 @@
                                                 <div class="form-group">
                                                     <label > Order Processor </label>
                                                         <input id="order_id"   name="order_id" type="hidden"  class="form-control input-md" required>
-                                                    
+                                                        <input id="invoice_custom"   name="invoice_custom" type="hidden"  class="form-control input-md">
                                                     <div class="col-md-12">
                                                         <!--<input id="order_driver" maxlength="30" required style="max-width:100% ;" name="order_driver" type="text" placeholder="Driver" class="form-control" data_driver_id="" required>-->
                                                         <select name="order_processor_id" id="order_processor_id" class="form-control" required="">
@@ -1025,6 +1025,59 @@ function savedriverdetails() {
     $('#driverModal-message').html('');
     $('#driverModal-success-message').html('');
    var order_id = $('input[name="order_id"]').val();
+   var invoice = $('input[name="invoice_custom"]').val();
+   var driver_id = $('select[name="order_drivers"]').val();
+   //var driver_id = $('input[name="order_driver"]').attr("data_driver_id");
+   var vehicle_number =  $('input[name="order_vehicle_number"]').val();
+   var delivery_executive_id =  $('select[name="order_delivery_executives"]').val();
+   //var delivery_executive_id =  $('input[name="order_delivery_executive"]').attr("data_delivery_executive_id");
+    console.log(vehicle_number);
+    console.log(driver_id);
+    console.log(delivery_executive_id);
+
+              console.log($('#driverModal-form').serialize());
+ 
+                if (isNaN(delivery_executive_id) || isNaN(order_id) || isNaN(driver_id) || driver_id  < 0 || driver_id == '' || vehicle_number == '' || vehicle_number.length == 0 || order_id < 0 || order_id == '' || delivery_executive_id < 0 || delivery_executive_id == '') {
+                   
+                      $('#driverModal-message').html("Please enter data");
+                       return false;
+                } 
+                else{
+                    var clicked_orderid = order_id;
+                    $.ajax({
+                    url: 'index.php?path=sale/order/SaveOrUpdateOrderDriverVehicleDetails&token=<?php echo $token; ?>',
+                    type: 'post',
+                    dataType: 'json',
+                    data:{ order_id : order_id, vehicle_number : vehicle_number, driver_id : driver_id, delivery_executive_id:delivery_executive_id },
+                    async: true,
+                    success: function(json) {
+                        console.log(json); 
+                        if (json['status']) {
+                            $('#driverModal-success-message').html('Saved Successfully');
+                            window.open(invoice, '_blank');
+                            setTimeout(function(){ window.location.reload(false); }, 1500);
+                        }
+                        else {
+                            $('#driverModal-success-message').html('Please try again');
+                        }
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {    
+
+                                 // alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);                       
+                                $('#driverModal-message').html("Please try again");
+                                    return false;
+                                }
+                });
+                }
+               
+            }
+            
+function savedriverdetail() { 
+ 
+    $('#driverModal-message').html('');
+    $('#driverModal-success-message').html('');
+   var order_id = $('input[name="order_id"]').val();
+   var invoice = $('input[name="invoice_custom"]').val();
    var driver_id = $('select[name="order_drivers"]').val();
    //var driver_id = $('input[name="order_driver"]').attr("data_driver_id");
    var vehicle_number =  $('input[name="order_vehicle_number"]').val();
@@ -1068,7 +1121,7 @@ function savedriverdetails() {
                 });
                 }
                
-            }
+}            
 
 function saveorderprocessingdetails() { 
  
@@ -1304,6 +1357,7 @@ $.ajax({
                     if(json.order_info.driver_id == null || json.order_info.vehicle_number == null || json.order_info.delivery_executive_id == null)
                     {
                     $('input[name="order_id"]').val(order_id);
+                    $('input[name="invoice_custom"]').val(invoice);
                     $('#driverModal').modal('toggle');    
                     } else {
                     console.log(invoice);
