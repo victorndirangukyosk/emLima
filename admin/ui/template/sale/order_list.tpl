@@ -865,7 +865,7 @@
     <div class="modal fade" id="orderprocessingModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog" role="document">
                 <div class="modal-content"  >
-                    <div class="modal-body"  style="height:300px;">
+                    <div class="modal-body"  style="height:310px;">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <div class="store-find-block">
                             <div class="mydivsss">
@@ -896,7 +896,7 @@
                                                         <?php } ?>
                                                         </select>
                                                     <br/></div>
-                                                </div>
+                                                </div><br/><br/>
                                                 
                                                 <div class="form-group">
                                                     <label > Order Processor </label>
@@ -908,12 +908,12 @@
                                                         <option> Select Order Processor </option>
                                                         </select>
                                                     <br/></div>
-                                                </div>
+                                                </div><br/><br/>
 
                                                  <div class="form-row">
                                                 <div class="form-group">
                                                     <div class="col-md-12"> 
-                                                        <button type="button" class="btn btn-grey" data-dismiss="modal" style="width:30%; float: right; margin-top: 10px; height: 45px;border-radius:20px">Close</button>
+                                                        <button type="button" class="btn btn-grey" data-dismiss="modal" style="width:30%; float: left; margin-top: 10px; height: 45px;border-radius:20px">Close</button>
                                                         <button id="driver-button" name="orderprocessing-button" onclick="saveorderprocessingdetails()" type="button" class="btn btn-lg btn-success"  style="width:30%; float: right; margin-top: 10px; height: 45px;border-radius:20px">Save</button>
                                                     </div>
                                                 </div>
