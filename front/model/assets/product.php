@@ -714,10 +714,9 @@ class ModelAssetsProduct extends Model
                     $r['special_price'] = $s_price;
                     $r['price'] = $o_price;
                 }
-                $isWishListID = $this->model_account_wishlist->getWishlistIDCustomerProduct($r['product_id']);
+
                 $category_price_data = $this->getCategoryPriceStatusByProductStoreId($r['product_store_id']);
 
-                $r['isWishListID'] = $isWishListID;
                 $r['category_pricing_variant_status'] = is_array($category_price_data) && array_key_exists('status', $category_price_data) ? $category_price_data['status'] : 1;
                 $res = [
                         'variation_id' => $r['product_store_id'],
@@ -729,7 +728,6 @@ class ModelAssetsProduct extends Model
                         'max_qty' => $r['min_quantity'] > 0 ? $r['min_quantity'] : $r['quantity'],
                         'qty_in_cart' => $r['qty_in_cart'],
                         'key' => $key,
-                        'isWishListID' => $isWishListID,
                         'category_pricing_variant_status' => is_array($category_price_data) && array_key_exists('status', $category_price_data) ? $category_price_data['status'] : 1
                     ];
 
