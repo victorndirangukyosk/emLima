@@ -1350,6 +1350,7 @@ $('a[id^=\'new_print_invoice\']').on('click', function (e) {
 e.preventDefault();
 var invoice = $(this).attr("data-order-invoice");
 var order_id = $(this).attr("data-order-id");
+var order_status = $('select[id=\'input-order-status'+order_id+'\'] option:selected').text();
 $.ajax({
 		url: 'index.php?path=sale/order/getDriverDetails&token=<?php echo $token; ?>',
 		type: 'post',
@@ -1364,7 +1365,17 @@ $.ajax({
                     {
                     $('input[name="order_id"]').val(order_id);
                     $('input[name="invoice_custom"]').val(invoice);
-                    $('#driverModal').modal('toggle');    
+                    $('#driverModal').modal('toggle');
+                    if(order_status != 'Ready for delivery') {
+                    $('#driverModal-message').html("Please Select Order Status As Ready For Delivery!");
+                    $('#driver-buttons').prop('disabled', true);
+                    $('#driver-button').prop('disabled', true);
+                    return false;
+                    } else {
+                    $('#driverModal-message').html("");
+                    $('#driver-buttons').prop('disabled', false);
+                    $('#driver-button').prop('disabled', false);    
+                    }
                     } else {
                     console.log(invoice);
                     window.open(invoice, '_blank');
