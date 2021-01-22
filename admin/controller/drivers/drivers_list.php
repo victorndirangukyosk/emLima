@@ -630,7 +630,7 @@ class ControllerDriversDriversList extends Controller {
 
         $driver_info = $this->model_drivers_drivers->getDriverByEmail($this->request->post['email']);
 
-        if (!isset($this->request->get['driver_id'])) {
+        /*if (!isset($this->request->get['driver_id'])) {
             if ($driver_info) {
                 $this->error['warning'] = $this->language->get('error_exists');
             }
@@ -638,7 +638,7 @@ class ControllerDriversDriversList extends Controller {
             if ($driver_info && ($this->request->get['driver_id'] != $driver_info['driver_id'])) {
                 $this->error['warning'] = $this->language->get('error_exists');
             }
-        }
+        }*/
 
         if ((utf8_strlen($this->request->post['telephone']) < 3) || (utf8_strlen($this->request->post['telephone']) > 32)) {
             $this->error['telephone'] = $this->language->get('error_telephone');
