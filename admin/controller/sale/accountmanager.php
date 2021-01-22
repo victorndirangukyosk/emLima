@@ -959,7 +959,7 @@ class ControllerSaleAccountManager extends Controller {
             }
         }
 
-        if (!isset($this->request->get['user_id'])) {
+        /*if (!isset($this->request->get['user_id'])) {
             if ($user_email_info) {
                 $this->error['warning'] = $this->language->get('error_exists');
                 $this->error['email'] = $this->language->get('error_exist');
@@ -969,7 +969,7 @@ class ControllerSaleAccountManager extends Controller {
                 $this->error['warning'] = $this->language->get('error_exists');
                 $this->error['email'] = $this->language->get('error_exist');
             }
-        }
+        }*/
 
         if ((utf8_strlen($this->request->post['email']) <= 0) || (utf8_strlen($this->request->post['email']) > 96) || !filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL)) {
             $this->error['email'] = $this->language->get('error_email');
