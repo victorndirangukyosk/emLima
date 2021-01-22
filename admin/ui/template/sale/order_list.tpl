@@ -1254,6 +1254,8 @@ $.ajax({
 			 
 		}
 });   
+} else {
+setTimeout(function(){ window.location.reload(false); }, 1500);    
 }        
 }
 setInterval(function() {
