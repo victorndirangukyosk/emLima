@@ -140,6 +140,37 @@ label:focus,
     box-shadow: none;
 }
 
+.ui-autocomplete {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    float: left;
+    display: none;
+    min-width: 160px;
+    width: 160px;
+    padding: 4px 0;
+    margin: 2px 0 0 0;
+    list-style: none;
+    background-color: #fff;
+    border-width: 1px;
+    border-radius: 5px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    background-clip: padding-box;
+    border-right-width: 2px;
+    border-bottom-width: 2px;
+  }
+
+  .ui-autocomplete .ui-menu-item {
+      cursor: pointer;
+      padding: .5rem 0;
+  }
+
+  .ui-autocomplete .ui-menu-item .ui-state-hover, .ui-state-active {
+    text-decoration: none;
+    border-left: 4px solid #2aa249;
+  }
+  
 .form-control:focus {
     border-color: #2aa249;
 }

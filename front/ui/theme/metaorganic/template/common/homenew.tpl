@@ -26,7 +26,6 @@
   <link href="<?= $base;?>front/ui/theme/metaorganic/assets/images/favicon.ico" rel="icon">
 
   <link href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css' rel='stylesheet'>
-  <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.16/themes/black-tie/jquery-ui.css">
   <link href='https://use.fontawesome.com/releases/v5.8.1/css/all.css' rel='stylesheet'>
   <link rel="stylesheet" href="<?= $base;?>front/ui/theme/metaorganic/assets/css/style-new.css">
   <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
@@ -51,16 +50,16 @@
             <div class="col d-flex flex-row">
               <div class="top_bar_contact_item">
                 <div class="top_bar_icon"><img
-                    src="<?= $base;?>front/ui/theme/metaorganic/assets/images/icons/phone.svg" alt="Phone Icon"></div>
+                    src="<?= $base ?>front/ui/theme/metaorganic/assets/images/icons/phone.svg" alt="Phone Icon"></div>
                 +254 738 770 186
               </div>
               <div class="top_bar_contact_item">
-                <div class="top_bar_icon"><img src="<?= $base;?>front/ui/theme/metaorganic/assets/images/icons/mail.svg"
+                <div class="top_bar_icon"><img src="<?= $base ?>front/ui/theme/metaorganic/assets/images/icons/mail.svg"
                     alt="Mail Icon"></div><a href="mailto:hello@kwikbasket.com">hello@kwikbasket.com</a>
               </div>
               <div class="top_bar_content ml-auto">
                 <div class="top_bar_user">
-                  <div class="user_icon"><img src="<?= $base;?>front/ui/theme/metaorganic/assets/images/icons/user.svg"
+                  <div class="user_icon"><img src="<?= $base ?>front/ui/theme/metaorganic/assets/images/icons/user.svg"
                       alt="User icon"></div>
                   <div>Hi,
                     <?= $full_name ?>
@@ -80,8 +79,8 @@
             <div class="col-lg-2 col-sm-3 col-3 order-1">
               <div class="logo_container">
                 <div class="logo">
-                  <a href="#">
-                    <img src="<?= $base;?>front/ui/theme/metaorganic/assets/images/logo.svg" alt="KwikBasket Logo">
+                  <a href="<?= $base ?>">
+                    <img src="<?= $base ?>front/ui/theme/metaorganic/assets/images/logo.svg" alt="KwikBasket Logo">
                   </a>
                 </div>
               </div>
@@ -109,7 +108,7 @@
                       src="<?= $base;?>front/ui/theme/metaorganic/assets/images/icons/heart.png" alt=""></div>
                   <div class="wishlist_content">
                     <div class="wishlist_text"><a href="<?= $wishlist ?>">Wishlists</a></div>
-                    <div class="wishlist_count">10</div>
+                    <div class="wishlist_count"><?= $wishlist_count ?></div>
                   </div>
                 </div>
 
@@ -351,6 +350,22 @@
               }));
             }
           });
+        },
+        create: function() {
+          $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
+                return $(`
+                  <li>
+                    <div class="container">
+                      <div class="row">
+                        <div class="col-md-12">
+                          <img width="70" src="${item.img}">
+                          <span class="ml-4">${item.label}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                `).appendTo(ul);
+            };
         },
         select: function (event, ui) {
           openProductPopup(ui.item.product_store_id, ui.item.store_id)
