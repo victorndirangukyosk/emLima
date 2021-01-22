@@ -56,9 +56,9 @@ class ControllerExecutivesExecutivesList extends Controller {
                 $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
             }
 
-            /*if (isset($this->request->get['filter_driving_licence'])) {
-                $url .= '&filter_driving_licence=' . urlencode(html_entity_decode($this->request->get['filter_driving_licence'], ENT_QUOTES, 'UTF-8'));
-            }*/
+            /* if (isset($this->request->get['filter_driving_licence'])) {
+              $url .= '&filter_driving_licence=' . urlencode(html_entity_decode($this->request->get['filter_driving_licence'], ENT_QUOTES, 'UTF-8'));
+              } */
 
             if (isset($this->request->get['filter_status'])) {
                 $url .= '&filter_status=' . $this->request->get['filter_status'];
@@ -109,11 +109,11 @@ class ControllerExecutivesExecutivesList extends Controller {
             $filter_email = null;
         }
 
-        /*if (isset($this->request->get['filter_driving_licence'])) {
-            $filter_driving_licence = $this->request->get['filter_driving_licence'];
-        } else {
-            $filter_driving_licence = null;
-        }*/
+        /* if (isset($this->request->get['filter_driving_licence'])) {
+          $filter_driving_licence = $this->request->get['filter_driving_licence'];
+          } else {
+          $filter_driving_licence = null;
+          } */
 
         if (isset($this->request->get['filter_telephone'])) {
             $filter_telephone = $this->request->get['filter_telephone'];
@@ -161,9 +161,9 @@ class ControllerExecutivesExecutivesList extends Controller {
             $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
         }
 
-        /*if (isset($this->request->get['filter_driving_licence'])) {
-            $url .= '&filter_driving_licence=' . urlencode(html_entity_decode($this->request->get['filter_driving_licence'], ENT_QUOTES, 'UTF-8'));
-        }*/
+        /* if (isset($this->request->get['filter_driving_licence'])) {
+          $url .= '&filter_driving_licence=' . urlencode(html_entity_decode($this->request->get['filter_driving_licence'], ENT_QUOTES, 'UTF-8'));
+          } */
 
         if (isset($this->request->get['filter_telephone'])) {
             $url .= '&filter_telephone=' . urlencode(html_entity_decode($this->request->get['filter_telephone'], ENT_QUOTES, 'UTF-8'));
@@ -209,7 +209,7 @@ class ControllerExecutivesExecutivesList extends Controller {
         $filter_data = [
             'filter_name' => $filter_name,
             'filter_email' => $filter_email,
-            /*'filter_driving_licence' => $filter_driving_licence,*/
+            /* 'filter_driving_licence' => $filter_driving_licence, */
             'filter_telephone' => $filter_telephone,
             'filter_status' => $filter_status,
             'filter_date_added' => $filter_date_added,
@@ -237,7 +237,7 @@ class ControllerExecutivesExecutivesList extends Controller {
                 'executive_id' => $result['delivery_executive_id'],
                 'name' => $result['name'],
                 'email' => $result['email'],
-                /*'driving_licence' => $result['driving_licence'],*/
+                /* 'driving_licence' => $result['driving_licence'], */
                 'telephone' => $country_code . $result['telephone'],
                 'status' => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
                 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
@@ -259,7 +259,7 @@ class ControllerExecutivesExecutivesList extends Controller {
 
         $data['column_name'] = $this->language->get('column_name');
         $data['column_email'] = $this->language->get('column_email');
-        /*$data['column_driving_licence'] = $this->language->get('column_driving_licence');*/
+        /* $data['column_driving_licence'] = $this->language->get('column_driving_licence'); */
         $data['column_telephone'] = $this->language->get('column_telephone');
         $data['column_customer_group'] = $this->language->get('column_customer_group');
         $data['column_status'] = $this->language->get('column_status');
@@ -268,7 +268,7 @@ class ControllerExecutivesExecutivesList extends Controller {
 
         $data['entry_name'] = $this->language->get('entry_name');
         $data['entry_email'] = $this->language->get('entry_email');
-        /*$data['entry_driving_licence'] = $this->language->get('entry_driving_licence');*/
+        /* $data['entry_driving_licence'] = $this->language->get('entry_driving_licence'); */
 
 
         $data['entry_telephone'] = $this->language->get('entry_telephone');
@@ -316,9 +316,9 @@ class ControllerExecutivesExecutivesList extends Controller {
             $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
         }
 
-        /*if (isset($this->request->get['filter_driving_licence'])) {
-            $url .= '&filter_driving_licence=' . urlencode(html_entity_decode($this->request->get['filter_driving_licence'], ENT_QUOTES, 'UTF-8'));
-        }*/
+        /* if (isset($this->request->get['filter_driving_licence'])) {
+          $url .= '&filter_driving_licence=' . urlencode(html_entity_decode($this->request->get['filter_driving_licence'], ENT_QUOTES, 'UTF-8'));
+          } */
 
         if (isset($this->request->get['filter_telephone'])) {
             $url .= '&filter_telephone=' . urlencode(html_entity_decode($this->request->get['filter_telephone'], ENT_QUOTES, 'UTF-8'));
@@ -357,9 +357,9 @@ class ControllerExecutivesExecutivesList extends Controller {
             $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
         }
 
-        /*if (isset($this->request->get['filter_driving_licence'])) {
-            $url .= '&filter_driving_licence=' . urlencode(html_entity_decode($this->request->get['filter_driving_licence'], ENT_QUOTES, 'UTF-8'));
-        }*/
+        /* if (isset($this->request->get['filter_driving_licence'])) {
+          $url .= '&filter_driving_licence=' . urlencode(html_entity_decode($this->request->get['filter_driving_licence'], ENT_QUOTES, 'UTF-8'));
+          } */
 
         if (isset($this->request->get['filter_telephone'])) {
             $url .= '&filter_telephone=' . urlencode(html_entity_decode($this->request->get['filter_telephone'], ENT_QUOTES, 'UTF-8'));
@@ -393,7 +393,7 @@ class ControllerExecutivesExecutivesList extends Controller {
 
         $data['filter_name'] = $filter_name;
         $data['filter_email'] = $filter_email;
-        /*$data['filter_driving_licence'] = $filter_driving_licence;*/
+        /* $data['filter_driving_licence'] = $filter_driving_licence; */
         $data['filter_telephone'] = $filter_telephone;
         $data['filter_status'] = $filter_status;
         $data['filter_date_added'] = $filter_date_added;
@@ -420,7 +420,7 @@ class ControllerExecutivesExecutivesList extends Controller {
         $data['entry_firstname'] = $this->language->get('entry_firstname');
         $data['entry_lastname'] = $this->language->get('entry_lastname');
         $data['entry_email'] = $this->language->get('entry_email');
-        /*$data['entry_driving_licence'] = $this->language->get('entry_driving_licence');*/
+        /* $data['entry_driving_licence'] = $this->language->get('entry_driving_licence'); */
 
 
         $data['entry_telephone'] = $this->language->get('entry_telephone');
@@ -474,11 +474,11 @@ class ControllerExecutivesExecutivesList extends Controller {
             $data['error_email'] = '';
         }
 
-        /*if (isset($this->error['driving_licence'])) {
-            $data['error_driving_licence'] = $this->error['driving_licence'];
-        } else {
-            $data['error_driving_licence'] = '';
-        }*/
+        /* if (isset($this->error['driving_licence'])) {
+          $data['error_driving_licence'] = $this->error['driving_licence'];
+          } else {
+          $data['error_driving_licence'] = '';
+          } */
 
         if (isset($this->error['telephone'])) {
             $data['error_telephone'] = $this->error['telephone'];
@@ -502,9 +502,9 @@ class ControllerExecutivesExecutivesList extends Controller {
             $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
         }
 
-        /*if (isset($this->request->get['filter_driving_licence'])) {
-            $url .= '&filter_driving_licence=' . urlencode(html_entity_decode($this->request->get['filter_driving_licence'], ENT_QUOTES, 'UTF-8'));
-        }*/
+        /* if (isset($this->request->get['filter_driving_licence'])) {
+          $url .= '&filter_driving_licence=' . urlencode(html_entity_decode($this->request->get['filter_driving_licence'], ENT_QUOTES, 'UTF-8'));
+          } */
 
         if (isset($this->request->get['filter_status'])) {
             $url .= '&filter_status=' . $this->request->get['filter_status'];
@@ -573,13 +573,13 @@ class ControllerExecutivesExecutivesList extends Controller {
             $data['email'] = '';
         }
 
-        /*if (isset($this->request->post['driving_licence'])) {
-            $data['driving_licence'] = $this->request->post['driving_licence'];
-        } elseif (!empty($executive_info)) {
-            $data['driving_licence'] = $executive_info['driving_licence'];
-        } else {
-            $data['driving_licence'] = '';
-        }*/
+        /* if (isset($this->request->post['driving_licence'])) {
+          $data['driving_licence'] = $this->request->post['driving_licence'];
+          } elseif (!empty($executive_info)) {
+          $data['driving_licence'] = $executive_info['driving_licence'];
+          } else {
+          $data['driving_licence'] = '';
+          } */
 
         if (isset($this->request->post['telephone'])) {
             $data['telephone'] = $this->request->post['telephone'];
@@ -624,13 +624,13 @@ class ControllerExecutivesExecutivesList extends Controller {
             $this->error['email'] = $this->language->get('error_email');
         }
 
-        /*if ((utf8_strlen($this->request->post['driving_licence']) < 1) || (utf8_strlen(trim($this->request->post['driving_licence'])) > 32)) {
-            $this->error['driving_licence'] = $this->language->get('error_driving_licence');
-        }*/
+        /* if ((utf8_strlen($this->request->post['driving_licence']) < 1) || (utf8_strlen(trim($this->request->post['driving_licence'])) > 32)) {
+          $this->error['driving_licence'] = $this->language->get('error_driving_licence');
+          } */
 
         $executive_info = $this->model_executives_executives->getExecutiveByEmail($this->request->post['email']);
 
-        if (!isset($this->request->get['executive_id'])) {
+        /*if (!isset($this->request->get['executive_id'])) {
             if ($executive_info) {
                 $this->error['warning'] = $this->language->get('error_exists');
             }
@@ -638,7 +638,7 @@ class ControllerExecutivesExecutivesList extends Controller {
             if ($executive_info && ($this->request->get['executive_id'] != $executive_info['delivery_executive_id'])) {
                 $this->error['warning'] = $this->language->get('error_exists');
             }
-        }
+        }*/
 
         if ((utf8_strlen($this->request->post['telephone']) < 3) || (utf8_strlen($this->request->post['telephone']) > 32)) {
             $this->error['telephone'] = $this->language->get('error_telephone');
@@ -687,9 +687,9 @@ class ControllerExecutivesExecutivesList extends Controller {
                 $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
             }
 
-            /*if (isset($this->request->get['filter_driving_licence'])) {
-                $url .= '&filter_driving_licence=' . urlencode(html_entity_decode($this->request->get['filter_driving_licence'], ENT_QUOTES, 'UTF-8'));
-            }*/
+            /* if (isset($this->request->get['filter_driving_licence'])) {
+              $url .= '&filter_driving_licence=' . urlencode(html_entity_decode($this->request->get['filter_driving_licence'], ENT_QUOTES, 'UTF-8'));
+              } */
 
             if (isset($this->request->get['filter_status'])) {
                 $url .= '&filter_status=' . $this->request->get['filter_status'];
@@ -756,7 +756,7 @@ class ControllerExecutivesExecutivesList extends Controller {
                     'firstname' => $result['firstname'],
                     'lastname' => $result['lastname'],
                     'email' => $result['email'],
-                    /*'driving_licence' => $result['driving_licence'],*/
+                    /* 'driving_licence' => $result['driving_licence'], */
                     'telephone' => $result['telephone'],
                 ];
             }
@@ -853,6 +853,31 @@ class ControllerExecutivesExecutivesList extends Controller {
         }
 
         return !$this->error;
+    }
+
+    public function getAllDeliveryExecutives() {
+
+        $this->load->model('executives/executives');
+        $results = $this->model_executives_executives->getExecutives();
+
+        foreach ($results as $result) {
+            if ($this->user->isVendor()) {
+                $result['name'] = $result['firstname'];
+            }
+
+            $json[] = [
+                'executive_id' => $result['delivery_executive_id'],
+                'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')),
+                'firstname' => $result['firstname'],
+                'lastname' => $result['lastname'],
+                'email' => $result['email'],
+                'telephone' => $result['telephone'],
+            ];
+        }
+
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
     }
 
 }

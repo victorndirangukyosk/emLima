@@ -42,7 +42,7 @@ class ModelUserAccountmanager extends Model {
     }
 
     public function getUserByEmail($email) {
-        $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "user WHERE LOWER(email) = '" . $this->db->escape(utf8_strtolower($email)) . "' AND email != ''");
+        $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "user WHERE LOWER(email) = '" . $this->db->escape(utf8_strtolower($email)) . "' AND email != '' AND user_group_id = '" . (int) $this->config->get('config_account_manager_group_id') . "'");
 
         return $query->row;
     }

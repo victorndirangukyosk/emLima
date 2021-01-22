@@ -533,7 +533,7 @@ class ControllerAccountLogin extends Controller {
         } else {
             $data['site_key'] = '';
         }
-        
+
         $data['store_name'] = $this->config->get('config_name');
 
         $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/register.tpl', $data));
@@ -545,7 +545,7 @@ class ControllerAccountLogin extends Controller {
         } else {
             $server = $this->config->get('config_url');
         }
-        
+
         if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
             //$data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'),200,110);
             $data['logo'] = $server . 'image/' . $this->config->get('config_logo');
@@ -597,7 +597,7 @@ class ControllerAccountLogin extends Controller {
                     $data['customer_email'] = $user_query->row['email'];
                     $data['temppassword'] = $user_query->row['tempPassword'];
 
-                    
+
                     //echo '<pre>';print_r($isIPexist);
                     //echo '<pre>';var_dump($data['isnewIP']);exit;
 
@@ -746,7 +746,7 @@ class ControllerAccountLogin extends Controller {
                 $this->trigger->fire('post.customer.login');
 
                 // maintain session to identify as admin login
-                $this->session->data['adminlogin']=1;
+                $this->session->data['adminlogin'] = 1;
                 //$this->response->redirect($this->url->link('account/account', '', 'SSL'));
                 //REDIRECTING TO HOME PAGE
                 $this->response->redirect('/');
@@ -1220,22 +1220,20 @@ class ControllerAccountLogin extends Controller {
                 $log->write($customer_info['customer_id']);
                 $log->write('isIPexist');
                 //$isIPexist = array_search($_SERVER['REMOTE_ADDR'], array_column($all_IPAddress, 'ip'));
-                    if (is_array($isIPexist) && count($isIPexist) > 0) {
-                        $isnewIP = false;
-                    } else {
-                        $isnewIP = true;
-                    }
-                     $isnewIP = false;//as some times , Ip not working properly, for deployment, returning false
-                    $data['isnewIP'] = $isnewIP;
-                    $data['status'] = true;
+                if (is_array($isIPexist) && count($isIPexist) > 0) {
+                    $isnewIP = false;
+                } else {
+                    $isnewIP = true;
+                }
+                $isnewIP = false; //as some times , Ip not working properly, for deployment, returning false
+                $data['isnewIP'] = $isnewIP;
+                $data['status'] = true;
             } else {
                 $data['message'] = 'Username And Password Doest Match!';
                 $data['status'] = true;
             }
-
- 
         } else {
-           
+
             $data['status'] = false;
             $data['warning'] = "Error";
             $data['message'] = "Error";
@@ -1244,6 +1242,68 @@ class ControllerAccountLogin extends Controller {
         $this->response->addHeader('Content-Type: application/json');
         // $this->response->setOutput(json_encode($json));
         $this->response->setOutput(json_encode($data));
+    }
+
+    public function autocompleteaccountmanager() {
+        $log = new Log('error.log');
+        $json = [];
+
+        if (isset($this->request->get['filter_name']) || isset($this->request->get['filter_email']) || isset($this->request->get['filter_telephone'])) {
+            if (isset($this->request->get['filter_name'])) {
+                $filter_name = $this->request->get['filter_name'];
+            } else {
+                $filter_name = '';
+            }
+
+            if (isset($this->request->get['filter_email'])) {
+                $filter_email = $this->request->get['filter_email'];
+            } else {
+                $filter_email = '';
+            }
+
+            if (isset($this->request->get['filter_telephone'])) {
+                $filter_telephone = $this->request->get['filter_telephone'];
+            } else {
+                $filter_telephone = '';
+            }
+
+            $this->load->model('user/user');
+
+            $filter_data = [
+                'filter_name' => $filter_name,
+                'filter_email' => $filter_email,
+                'filter_telephone' => $filter_telephone,
+                'start' => 0,
+                'limit' => 5,
+            ];
+
+            $results = $this->model_user_user->getAccountManagerUsers($filter_data);
+
+            foreach ($results as $result) {
+                $json[] = [
+                    'user_id' => $result['user_id'],
+                    'user_group_id' => $result['user_group_id'],
+                    'username' => strip_tags(html_entity_decode($result['username'], ENT_QUOTES, 'UTF-8')),
+                    'name' => $result['name'],
+                    'firstname' => $result['firstname'],
+                    'lastname' => $result['lastname'],
+                    'email' => $result['email'],
+                    'telephone' => $result['telephone']
+                ];
+            }
+        }
+
+        $sort_order = [];
+
+        foreach ($json as $key => $value) {
+            $sort_order[$key] = $value['name'];
+        }
+
+        array_multisort($sort_order, SORT_ASC, $json);
+        $log->write($json);
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
     }
 
 }

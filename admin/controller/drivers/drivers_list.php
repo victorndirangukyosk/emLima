@@ -630,7 +630,7 @@ class ControllerDriversDriversList extends Controller {
 
         $driver_info = $this->model_drivers_drivers->getDriverByEmail($this->request->post['email']);
 
-        if (!isset($this->request->get['driver_id'])) {
+        /*if (!isset($this->request->get['driver_id'])) {
             if ($driver_info) {
                 $this->error['warning'] = $this->language->get('error_exists');
             }
@@ -638,7 +638,7 @@ class ControllerDriversDriversList extends Controller {
             if ($driver_info && ($this->request->get['driver_id'] != $driver_info['driver_id'])) {
                 $this->error['warning'] = $this->language->get('error_exists');
             }
-        }
+        }*/
 
         if ((utf8_strlen($this->request->post['telephone']) < 3) || (utf8_strlen($this->request->post['telephone']) > 32)) {
             $this->error['telephone'] = $this->language->get('error_telephone');
@@ -853,6 +853,31 @@ class ControllerDriversDriversList extends Controller {
         }
 
         return !$this->error;
+    }
+
+    public function getAllDrivers() {
+        $this->load->model('drivers/drivers');
+
+        $results = $this->model_drivers_drivers->getDrivers();
+
+        foreach ($results as $result) {
+            if ($this->user->isVendor()) {
+                $result['name'] = $result['firstname'];
+            }
+
+            $json[] = [
+                'driver_id' => $result['driver_id'],
+                'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')),
+                'firstname' => $result['firstname'],
+                'lastname' => $result['lastname'],
+                'email' => $result['email'],
+                'driving_licence' => $result['driving_licence'],
+                'telephone' => $result['telephone'],
+            ];
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
     }
 
 }

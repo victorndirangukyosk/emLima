@@ -915,6 +915,12 @@ class ControllerSaleOrder extends Controller {
                 $url .= '&filter_order_status=' . $this->request->get['filter_order_status'];
             }
 
+            if (isset($this->request->get['filter_order_type'])) {
+                $filter_order_type = $this->request->get['filter_order_type'];
+            } else {
+                $filter_order_type = null;
+            }
+
             if (isset($this->request->get['filter_total'])) {
                 $url .= '&filter_total=' . $this->request->get['filter_total'];
             }
@@ -1006,6 +1012,12 @@ class ControllerSaleOrder extends Controller {
             $filter_order_status = null;
         }
 
+        if (isset($this->request->get['filter_order_type'])) {
+            $filter_order_type = $this->request->get['filter_order_type'];
+        } else {
+            $filter_order_type = null;
+        }
+
         if (isset($this->request->get['filter_total'])) {
             $filter_total = $this->request->get['filter_total'];
         } else {
@@ -1089,6 +1101,10 @@ class ControllerSaleOrder extends Controller {
             $url .= '&filter_order_status=' . $this->request->get['filter_order_status'];
         }
 
+        if (isset($this->request->get['filter_order_type'])) {
+            $url .= '&filter_order_type=' . $this->request->get['filter_order_type'];
+        }
+
         if (isset($this->request->get['filter_total'])) {
             $url .= '&filter_total=' . $this->request->get['filter_total'];
         }
@@ -1146,6 +1162,7 @@ class ControllerSaleOrder extends Controller {
             'filter_delivery_date' => $filter_delivery_date,
             'filter_payment' => $filter_payment,
             'filter_order_status' => $filter_order_status,
+            'filter_order_type' => $filter_order_type,
             'filter_total' => $filter_total,
             'filter_date_added' => $filter_date_added,
             'filter_date_added_end' => $filter_date_added_end,
@@ -1156,10 +1173,12 @@ class ControllerSaleOrder extends Controller {
             'limit' => $this->config->get('config_limit_admin'),
         ];
 
+        // echo "<pre>";print_r($filter_data);die; 
+
         $order_total = $this->model_sale_order->getTotalOrders($filter_data);
 
         $results = $this->model_sale_order->getOrders($filter_data);
-
+       
         //        echo "<pre>";print_r($results);die;
         foreach ($results as $result) {
             $sub_total = 0;
@@ -1320,6 +1339,10 @@ class ControllerSaleOrder extends Controller {
             $url .= '&filter_order_status=' . $this->request->get['filter_order_status'];
         }
 
+        if (isset($this->request->get['filter_order_type'])) {
+            $url .= '&filter_order_type=' . $this->request->get['filter_order_type'];
+        }
+
         if (isset($this->request->get['filter_total'])) {
             $url .= '&filter_total=' . $this->request->get['filter_total'];
         }
@@ -1395,6 +1418,10 @@ class ControllerSaleOrder extends Controller {
             $url .= '&filter_order_status=' . $this->request->get['filter_order_status'];
         }
 
+        if (isset($this->request->get['filter_order_type'])) {
+            $url .= '&filter_order_type=' . $this->request->get['filter_order_type'];
+        }
+
         if (isset($this->request->get['filter_total'])) {
             $url .= '&filter_total=' . $this->request->get['filter_total'];
         }
@@ -1440,6 +1467,7 @@ class ControllerSaleOrder extends Controller {
         $data['filter_payment'] = $filter_payment;
 
         $data['filter_order_status'] = $filter_order_status;
+        $data['filter_order_type'] = $filter_order_type;
         $data['filter_total'] = $filter_total;
         $data['filter_date_added'] = $filter_date_added;
         $data['filter_date_added_end'] = $filter_date_added_end;
@@ -1455,6 +1483,19 @@ class ControllerSaleOrder extends Controller {
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
+        
+        $this->load->model('executives/executives');
+        $delivery_executives = $this->model_executives_executives->getExecutives();
+        $data['delivery_executives'] = $delivery_executives;
+        
+        $this->load->model('drivers/drivers');
+        $drivers = $this->model_drivers_drivers->getDrivers();
+        $data['drivers'] = $drivers;
+        
+           
+        $this->load->model('orderprocessinggroup/orderprocessinggroup');
+        $order_processing_groups = $this->model_orderprocessinggroup_orderprocessinggroup->getOrderProcessingGroups();
+        $data['order_processing_groups'] = $order_processing_groups;
 
         $this->response->setOutput($this->load->view('sale/order_list.tpl', $data));
     }
@@ -1614,6 +1655,12 @@ class ControllerSaleOrder extends Controller {
         if (isset($this->request->get['filter_order_status'])) {
             $url .= '&filter_order_status=' . $this->request->get['filter_order_status'];
         }
+
+        // if (isset($this->request->get['filter_order_type'])) {
+        //     $filter_order_type = $this->request->get['filter_order_type'];
+        // } else {
+        //     $filter_order_type = null;
+        // }
 
         if (isset($this->request->get['filter_total'])) {
             $url .= '&filter_total=' . $this->request->get['filter_total'];
@@ -2167,6 +2214,12 @@ class ControllerSaleOrder extends Controller {
             if (isset($this->request->get['filter_order_status'])) {
                 $url .= '&filter_order_status=' . $this->request->get['filter_order_status'];
             }
+
+            // if (isset($this->request->get['filter_order_type'])) {
+            //     $filter_order_type = $this->request->get['filter_order_type'];
+            // } else {
+            //     $filter_order_type = null;
+            // }
 
             if (isset($this->request->get['filter_total'])) {
                 $url .= '&filter_total=' . $this->request->get['filter_total'];
@@ -4541,11 +4594,14 @@ class ControllerSaleOrder extends Controller {
 
         $data = [];
 
+        
+
         $totalOrdersAmount = 0;
         foreach ($results as $order) {
             $data['consolidation'][] = [
                 'delivery_date' => date("d-m-Y", strtotime($order['delivery_date'])),
                 'customer' => $order['customer'] ,//. ' Order#' . $order['order_id'],
+                'company_name' => $order['company_name'] ,
                 'amount' => $order['total'],
                 'SAP_customer_no' => $order['SAP_customer_no'],
                 'invoice_no' => 'KB'.$order['order_id'],
@@ -7664,5 +7720,44 @@ class ControllerSaleOrder extends Controller {
         $json['message'] = 'Order Driver Details Updated!';
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
-    }    
+    }
+    
+    public function SaveOrUpdateOrderProcessorDetails() {
+        $order_id = $this->request->post['order_id'];
+        $order_processing_group_id = $this->request->post['order_processing_group_id'];
+        $order_processor_id = $this->request->post['order_processor_id'];
+          $log = new Log('error.log');
+          $log->write('SaveOrUpdateOrderProcessorDetails');
+          $log->write($this->request->post['order_processing_group_id']);
+          $log->write($this->request->post['order_processor_id']);
+          $log->write($this->request->post['order_id']);
+
+        $this->load->model('checkout/order');
+        $this->load->model('sale/order');
+        $order_info = $this->model_checkout_order->getOrder($order_id);
+        if (is_array($order_info) && $order_info != NULL) {
+            $this->model_sale_order->UpdateOrderProcessingDetails($order_id, $order_processing_group_id, $order_processor_id);
+        }
+
+        // Add to activity log
+        $log = new Log('error.log');
+        $this->load->model('user/user_activity');
+
+        $activity_data = [
+            'user_id' => $this->user->getId(),
+            'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+            'user_group_id' => $this->user->getGroupId(),
+            'order_id' => $order_id,
+        ];
+        $log->write('order assigned to processor');
+
+        $this->model_user_user_activity->addActivity('order_assigned_to_processor', $activity_data);
+
+        $log->write('order assigned to processor');
+
+        $json['status'] = 'success';
+        $json['message'] = 'Order Assigned To Processor!';
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
 }

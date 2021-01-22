@@ -639,7 +639,109 @@ class ControllerAccountDashboard extends Controller
             $this->response->setOutput(json_encode(null));
         }
     }
+    public function getAvailableOrderProducts()
+    {
+        $order_id = $this->request->post['order_id'];
+        $order_query = $this->db->query('SELECT product_id,general_product_id,quantity,unit,name,order_id  FROM '.DB_PREFIX."order_product o WHERE o.order_id = '".(int) $order_id."'");
 
+        if ($order_query->num_rows) {
+            // $this->load->model('assets/product');
+            foreach ($order_query->rows   as $ra) {
+
+                // $fromStore = false;
+                // $product_store_id = 0;
+
+                // // product_store_id 11
+                // if ($data['store_id']) {
+                //     $productStoreData = $this->model_assets_product->getProductStoreId($product['product_id'], $data['store_id']);
+
+                //     //echo "<pre>";print_r($productStoreData);die;
+
+                //     if (count($productStoreData) > 0) {
+                //         $product_store_id = $productStoreData['product_store_id'];
+                //         $fromStore = true;
+                //     }
+                // }
+
+                //echo "<pre>";print_r($product_store_id);die;
+                // $special_price = 0;
+                // $price = 0;
+
+                // if (count($product_info) > 0) 
+                {
+
+                    // if ((float) $product_info['special_price']) {
+                    //     $special_price = $this->currency->format($product_info['special_price']);
+                    // } else {
+                    //     $special_price = $product_info['special_price'];
+                    // }
+
+                    // if ((float) $product_info['price']) {
+                    //     $price = $this->currency->format($product_info['price']);
+                    // } else {
+                    //     $price = $product_info['price'];
+                    // }
+
+                $data[] = [
+                'order_id' => $ra['order_id'],
+                'product_id' => $ra['product_id'],
+                'general_product_id' => $ra['general_product_id'],
+                'quantity' => $ra['quantity'],
+                'unit' => $ra['unit'],
+                'name' => $ra['name'],
+                        ];
+                    }
+            }
+
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($data));
+        } else {
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode(null));
+        }
+    }
+
+
+    public function getAndAddOrderProducts()
+    {
+        $order_id = $this->request->post['order_id'];
+        $order_query = $this->db->query('SELECT product_id,general_product_id,quantity,unit,name,order_id  FROM '.DB_PREFIX."order_product o WHERE o.order_id = '".(int) $order_id."'");
+
+        if ($order_query->num_rows) {
+            foreach ($order_query->rows   as $ra) {
+                $data[] = [
+                'order_id' => $ra['order_id'],
+                'product_id' => $ra['product_id'],
+                'general_product_id' => $ra['general_product_id'],
+                'quantity' => $ra['quantity'],
+                'unit' => $ra['unit'],
+                'name' => $ra['name'],
+                        ];
+            }
+
+            $log = new Log('error.log');
+            $log->write('Ordered Products');
+            $log->write($data);
+            $log->write('Ordered Products');
+            // echo "<pre>";print_r($data);die;
+            if (is_array($data) && count($data) > 0) {
+                foreach ($data as $order_product) {
+                    $log->write('Order Products 2');
+                    $log->write($order_product['product_id']);
+                    $log->write('Order Products 2');
+                    if ($order_product['quantity'] > 0)
+                    $this->cart->add($order_product['product_id'], $order_product['quantity'], [], $recurring_id = 0, $store_id = false, $store_product_variation_id = false, $product_type = 'replacable', $product_note = null, $produce_type = null);
+                }
+            }
+
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($data));
+        } else {
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode(null));
+        }
+    }
+    //below method used in dashboard and reorder of order list
     public function addOrderProductToCart()
     {
         $this->load->model('account/wishlist');

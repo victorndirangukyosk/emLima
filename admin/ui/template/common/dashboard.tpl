@@ -20,7 +20,10 @@
       <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $sale; ?></div>
       <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $order; ?></div>
       <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $customer; ?></div>
-      <a href="<?php echo $online_customers_url; ?>"><div class="col-lg-3 col-md-3 col-sm-6"><?php echo $online; ?></div></a>
+      <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $online; ?></div>
+      <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $manualorders; ?></div>
+      <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $onlineorders; ?></div>
+      
     </div>
     <div class="row">
       <div class="col-lg-12 col-md-12 col-sx-12 col-sm-12"><?php echo $charts; ?></div>

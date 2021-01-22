@@ -56,7 +56,7 @@ $_['error_house_building'] = 'House Number/ Building Name is required!';
 $_['error_location'] = 'Location is required!';
 $_['error_company_name'] = 'Company Name is required!';
 $_['error_company_address'] = 'Company Address is required!';
-$_['error_telephone_exists'] = 'This number is already registered!';
+$_['error_telephone_exists'] = 'This phone number is already registered!';
 $_['error_firstname'] = 'First Name must be between 1 and 32 characters!';
 $_['error_lastname'] = 'Last Name must be between 1 and 32 characters!';
 $_['error_email'] = 'E-Mail Address does not appear to be valid!';
@@ -76,6 +76,7 @@ $_['error_captcha'] = 'Warning: Verification code does not match the image!';
 
 $_['error_gender'] = 'Please select gender';
 $_['error_dob'] = 'Please select date of birth';
+$_['error_account_manager'] = 'Please select valid account manager';
 
 //Button
 $_['button_facebook'] = 'Sign in with Facebook';
