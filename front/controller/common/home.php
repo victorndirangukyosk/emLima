@@ -161,7 +161,7 @@ class ControllerCommonHome extends Controller {
         $data['forgotten'] = $this->url->link('account/forgotten', '', 'SSL');
         $data['store_name'] = $this->config->get('config_name');
 
-//    echo "<pre>";print_r($data);die;
+        //    echo "<pre>";print_r($data);die;
 
         $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/index.tpl', $data));
     }
@@ -591,31 +591,19 @@ class ControllerCommonHome extends Controller {
         if (!isset($this->session->data['customer_id'])) {
             if (isset($_REQUEST['action']) && ('shop' == $_REQUEST['action'])) {
                 $this->response->redirect($this->url->link('account/login/customer'));
-            } else {
-                //$this->response->redirect($this->url->link('common/home/homepage'));
             }
         }
+
         $this->load->model('account/customer');
         $is_he_parents = $this->model_account_customer->CheckHeIsParent();
-        $log = new Log('error.log');
-        $log->write('is_he_parents FRONT.CONTROLLER.COMMON.HOME');
-        $log->write($is_he_parents);
-        $log->write('is_he_parents FRONT.CONTROLLER.COMMON.HOME');
+    
         if ($is_he_parents != NULL) {
             $customer_details = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->db->escape($is_he_parents) . "' AND status = '1'");
         } else {
             $customer_details = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->customer->getId() . "' AND status = '1'");
         }
+
         $this->session->data['customer_category'] = isset($customer_details->row['customer_category']) ? $customer_details->row['customer_category'] : null;
-
-        $log = new Log('error.log');
-        $log->write($this->session->data['customer_category'] . 'customer_category');
-
-        $data['kondutoStatus'] = $this->config->get('config_konduto_status');
-
-        $data['konduto_public_key'] = $this->config->get('config_konduto_public_key');
-
-        //echo $this->config->get('config_store_location');die;
 
         if (isset($this->session->data['language'])) {
             $data['config_language'] = $this->session->data['language'];
@@ -623,24 +611,8 @@ class ControllerCommonHome extends Controller {
             $data['config_language'] = 'pt-BR';
         }
 
-        if (isset($this->request->get['refer'])) {
-            $x = strpos($this->request->get['refer'], '%21%40');
 
-            $p = substr($this->request->get['refer'], $x + 6);
-
-            $cookie_name = 'referral';
-            $cookie_value = $p;
-
-            //echo "<pre>";print_r($p);die;
-            setcookie($cookie_name, $cookie_value, time() + (86400 * 30), '/'); // 1 day expiry
-        }
-
-        $data['seo_url_test'] = $this->url->link('store/collection', 'collection_id=3');
-
-        $log->write($data['konduto_public_key']);
         unset($this->session->data['visitor_id']);
-
-        //$log->write($this->session->data['language']);
 
         $data['justlogged_in'] = false;
 
@@ -649,27 +621,7 @@ class ControllerCommonHome extends Controller {
             $this->session->data['just_loggedin'] = false;
         }
 
-        if (defined('const_latitude') && defined('const_longitude') && !empty(const_latitude) && !empty(const_longitude)) {
-            $_COOKIE['location'] = const_latitude . ',' . const_longitude;
-
-            setcookie('location', const_latitude . ',' . const_longitude, time() + (86400 * 30 * 30 * 30 * 3), '/'); // 3 month expiry
-
-            $_COOKIE['location_name'] = const_location_name;
-            setcookie('location_name', const_location_name, time() + (86400 * 30 * 30 * 30 * 3), '/');
-
-            $this->response->redirect($this->url->link('information/locations/stores', 'location=' . const_latitude . ',' . const_longitude));
-        }
-
-        if (count($_COOKIE) > 0 && isset($_COOKIE['zipcode'])) {
-            $this->response->redirect($this->url->link('information/locations/stores', 'zipcode=' . $_COOKIE['zipcode']));
-        }
-        if (count($_COOKIE) > 0 && isset($_COOKIE['location'])) {
-            $this->response->redirect($this->url->link('information/locations/stores', 'location=' . $_COOKIE['location']));
-        }
-
         if (isset($this->session->data['config_store_id'])) {
-            //$this->response->redirect($this->url->link('product/store'));
-
             $this->response->redirect($this->url->link('product/store', 'store_id=' . $this->session->data['config_store_id'] . ''));
         }
 
@@ -678,47 +630,8 @@ class ControllerCommonHome extends Controller {
         $this->load->model('account/wishlist');
 
         $wishlist_results = $this->model_account_wishlist->getWishlists();
-        foreach ($wishlist_results as $result) {
-            $wishlist_products = $this->model_account_wishlist->getWishlistProduct($result['wishlist_id']);
-            $totalCount = 0;
-            if (!empty($wishlist_products)) {
-                $totalCount = count($wishlist_products);
-            }
-            $data['wishlists'][] = [
-                'wishlist_id' => $result['wishlist_id'],
-                'name' => $result['name'],
-                'date_added' => date($this->language->get('date_format_medium'), strtotime($result['date_added'])),
-                'product_count' => $totalCount,
-                'products' => $wishlist_products,
-                'href' => $this->url->link('account/wishlist/info', 'wishlist_id=' . $result['wishlist_id'], 'SSL'),
-            ];
-        }
-
-        $data['blocks'] = [];
-
-        $blocks = $this->model_tool_image->getBlocks();
-
-        // echo "<pre>";print_r($blocks);die;
-        foreach ($blocks as $block) {
-            if (is_file(DIR_IMAGE . $block['image'])) {
-                $image = $this->model_tool_image->resize($block['image'], 290, 163);
-            } else {
-                $image = $this->model_tool_image->resize('no_image.png', 290, 163);
-            }
-
-            $temp['image'] = $image;
-            $temp['description'] = trim($block['description']);
-            $temp['title'] = $block['title'];
-            $temp['sort_order'] = $block['sort_order'];
-
-            array_push($data['blocks'], $temp);
-        }
-
-        $this->load->model('sale/order');
-        $numberOfOrders = count($this->model_sale_order->getOrders());
-        $data['order_count'] = $numberOfOrders;
-
-        //echo "<pre>";print_r($data['blocks']);die;
+        $data['wishlist_count'] = count($wishlist_results);
+        
         $this->document->setTitle($this->config->get('config_meta_title'));
         $this->document->setDescription($this->config->get('config_meta_description'));
         $this->document->setKeywords($this->config->get('config_meta_keyword'));
@@ -726,28 +639,6 @@ class ControllerCommonHome extends Controller {
         $data['description'] = $this->document->getDescription();
         $data['keywords'] = $this->document->getKeywords();
         $data['metas'] = $this->document->getMetas();
-
-        $data['zipcode_mask'] = $this->config->get('config_zipcode_mask');
-
-        $data['zipcode_mask_number'] = '';
-
-        if (isset($data['zipcode_mask'])) {
-            $data['zipcode_mask_number'] = str_replace('#', '9', $this->config->get('config_zipcode_mask'));
-        }
-
-        $data['telephone_mask'] = $this->config->get('config_telephone_mask');
-
-        if (isset($data['telephone_mask'])) {
-            $data['telephone_mask_number'] = str_replace('#', '9', $this->config->get('config_telephone_mask'));
-        }
-
-        $data['taxnumber_mask'] = $this->config->get('config_taxnumber_mask');
-
-        if (isset($data['taxnumber_mask'])) {
-            $data['taxnumber_mask_number'] = str_replace('#', '*', $this->config->get('config_taxnumber_mask'));
-        }
-
-        //echo "<pre>";print_r($data);die;
 
         if ($this->request->server['HTTPS']) {
             $server = $this->config->get('config_ssl');
@@ -765,95 +656,21 @@ class ControllerCommonHome extends Controller {
             $data['google_analytics'] = '';
         }
 
-        $data['text_get_groceries'] = $this->language->get('text_get_groceries');
         $data['base'] = $server;
-        $data['text_deliver_in'] = $this->language->get('text_deliver_in');
-        $data['text_order_fresh'] = $this->language->get('text_order_fresh');
-        $data['text_shop_at'] = $this->language->get('text_shop_at');
-
-        $data['text_from_device'] = $this->language->get('text_from_device');
-        $data['text_schedule_delivery'] = $this->language->get('text_schedule_delivery');
-        $data['text_get_grocery_at'] = $this->language->get('text_get_grocery_at');
-        $data['text_an_hour'] = $this->language->get('text_an_hour');
-
-        $data['text_or_want_them'] = $this->language->get('text_or_want_them');
-        $data['text_get_delivered'] = $this->language->get('text_get_delivered');
-        $data['text_fresh_handpicked'] = $this->language->get('text_fresh_handpicked');
-        $data['text_local_stores'] = $this->language->get('text_local_stores');
-
-        $data['text_my_wishlist'] = $this->language->get('text_my_wishlist');
-
-        $data['text_welcome_user'] = $this->language->get('text_welcome_user');
-        $data['text_open_store'] = $this->language->get('text_open_store');
-        $data['text_store_working'] = $this->language->get('text_store_working');
-        $data['text_enter_zipcode_title'] = $this->language->get('text_enter_zipcode_title');
-        $data['text_delivery_detail'] = $this->language->get('text_delivery_detail');
-        $data['text_enter_zipcode'] = $this->language->get('text_enter_zipcode');
-        $data['text_find_store'] = $this->language->get('text_find_store');
-        $data['text_have_account'] = $this->language->get('text_have_account');
-        $data['text_log_in'] = $this->language->get('text_log_in');
-        $data['text_get_delivered'] = $this->language->get('text_get_delivered');
-        $data['heading_title'] = $this->language->get('heading_title');
-
+       
         if (isset($this->session->data['error'])) {
             $data['error_warning'] = $this->session->data['error'];
-
             unset($this->session->data['error']);
         } else {
             $data['error_warning'] = '';
         }
 
-        $data['text_move_next'] = $this->language->get('text_move_next');
-        $data['text_login'] = $this->language->get('text_login');
-        $data['text_back'] = $this->language->get('text_back');
-        $data['text_enter_code_in_area'] = $this->language->get('text_enter_code_in_area');
-        $data['text_move_Next'] = $this->language->get('text_move_Next');
-        $data['text_enter_you_agree'] = $this->language->get('text_enter_you_agree');
-        $data['text_terms_of_service'] = $this->language->get('text_terms_of_service');
-        $data['text_privacy_policy'] = $this->language->get('text_privacy_policy');
-        $data['text_get_delivered_download_apps'] = $this->language->get('text_get_delivered_download_apps');
-
-        $data['support'] = $this->language->get('support');
-        $data['faq'] = $this->language->get('faq');
-        $data['call'] = $this->language->get('call');
-        $data['text'] = $this->language->get('text');
-        $data['text_account'] = $this->language->get('text_account');
-        $data['text_rewards'] = $this->language->get('text_rewards');
-        $data['text_orders'] = $this->language->get('text_orders');
-        $data['text_refer'] = $this->language->get('text_refer');
-        $data['text_sign_out'] = $this->language->get('text_sign_out');
-        $data['text_sign_in'] = $this->language->get('text_sign_in');
-        $data['text_heading'] = $this->language->get('text_heading');
-        $data['text_heading2'] = $this->language->get('text_heading2');
-        $data['text_heading3'] = $this->language->get('text_heading3');
-        $data['text_heading4'] = $this->language->get('text_heading4');
-        $data['text_heading5'] = $this->language->get('text_heading5');
-        $data['text_heading6'] = $this->language->get('text_heading6');
-
-        $data['text_my_cash'] = $this->language->get('text_my_cash');
-        $data['label_my_address'] = $this->language->get('label_my_address');
-        $data['text_my_profile'] = $this->language->get('text_my_profile');
-        $data['contactus'] = $this->language->get('contactus');
-        $data['text_logout'] = $this->language->get('text_logout');
-        $data['text_register'] = $this->language->get('text_register');
-
-        $data['step1'] = $this->language->get('step1');
-        $data['step2'] = $this->language->get('step2');
-        $data['step3'] = $this->language->get('step3');
-        $data['step4'] = $this->language->get('step4');
-
-        $data['label_start'] = $this->language->get('label_start');
-        $data['label_name'] = $this->language->get('label_name');
-        $data['label_email/phone'] = $this->language->get('label_email/phone');
-        $data['label_msg'] = $this->language->get('label_msg');
-
-        $data['button_send'] = $this->language->get('button_send');
-
+      
         $data['is_login'] = $this->customer->isLogged();
         $data['f_name'] = $this->customer->getFirstName();
         $data['name'] = $this->customer->getFirstName();
         $data['l_name'] = $this->customer->getLastName();
-        $data['full_name'] = $data['f_name']; //.' '.$data['l_name'];
+        $data['full_name'] = $data['f_name'];
         $data['home'] = $this->url->link('common/home');
         $data['wishlist'] = $this->url->link('account/wishlist', '', 'SSL');
         $data['logged'] = $this->customer->isLogged();
@@ -873,24 +690,11 @@ class ControllerCommonHome extends Controller {
         $data['telephone'] = $this->config->get('config_telephone');
         $data['refer'] = $this->url->link('account/refer', '', 'SSL');
         $data['reward'] = $this->url->link('account/reward', '', 'SSL');
-        $data['footer'] = $this->load->controller('common/footer');
         $data['action'] = $this->url->link('common/home/find_store');
         $data['address'] = $this->url->link('account/address', '', 'SSL');
         $data['help'] = $this->url->link('information/help');
 
-        $data['language'] = $this->load->controller('common/language/dropDown');
-
-        $log->write('home tpl 3');
-        $data['login_modal'] = $this->load->controller('common/login_modal');
-
-        $log->write('home tpl 3.1');
-        $data['signup_modal'] = $this->load->controller('common/signup_modal');
-
-        $log->write('home tpl 3.2');
-        $data['forget_modal'] = $this->load->controller('common/forget_modal');
-
-        $log->write('home tpl 4');
-
+        
         $data['heading_title'] = $this->config->get('config_meta_title', '');
 
         if ($this->request->server['HTTPS']) {
@@ -899,30 +703,7 @@ class ControllerCommonHome extends Controller {
             $server = $this->config->get('config_url');
         }
 
-        if (is_file(DIR_IMAGE . $this->config->get('config_icon'))) {
-            //$data['icon'] = $server . 'image/' . $this->config->get('config_icon');
-            $data['icon'] = $this->model_tool_image->resize($this->config->get('config_icon'), 30, 30);
-        } else {
-            $data['icon'] = '';
-        }
-
-        if (is_file(DIR_IMAGE . $this->config->get('config_fav_icon'))) {
-            $data['fav_icon'] = $server . 'image/' . $this->config->get('config_fav_icon');
-        } else {
-            $data['fav_icon'] = '';
-        }
-
-        if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
-            //$data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'),200,110);
-            $data['logo'] = $server . 'image/' . $this->config->get('config_logo');
-        } else {
-            $data['logo'] = 'assets/img/logo.svg';
-        }
-
-        $data['playStorelogo'] = $this->model_tool_image->resize('play-store-logo.png', 200, 60);
-
-        $data['appStorelogo'] = $this->model_tool_image->resize('app-store-logo.png', 200, 60);
-
+       
         if (isset($this->session->data['warning'])) {
             $data['warning'] = $this->session->data['warning'];
             unset($this->session->data['warning']);
@@ -930,69 +711,29 @@ class ControllerCommonHome extends Controller {
             $data['warning'] = '';
         }
 
-        $data['banners'] = $data['testimonials'] = [];
-
-        $rows = $this->model_tool_image->getTestimonial();
-
-        foreach ($rows as $row) {
-            $row['thumb'] = $this->model_tool_image->resize($row['image'], 80, 80);
-            $data['testimonials'][] = $row;
+        if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
+            $data['logo'] = $server . 'image/' . $this->config->get('config_logo');
+        } else {
+            $data['logo'] = 'assets/img/logo.svg';
         }
 
-        //banners
-        $rows = $this->model_tool_image->getAllOffers();
-
-        foreach ($rows as $row) {
-            if (false === strpos($row['link'], '://')) {
-                $row['link'] = 'http://' . $row['link'];
-            }
-            $row['image'] = $this->model_tool_image->resize($row['image'], 300, 300);
-            $data['banners'][] = $row;
-        }
-
-        $data['play_store'] = $this->config->get('config_android_app_link');
-        $data['app_store'] = $this->config->get('config_apple_app_link');
-
-        //echo "<pre>";print_r($this->config->get('config_android_app_link'));die;
-        $this->load->model('setting/setting');
-        $te = $this->model_setting_setting->getSetting('config');
-
-        if ($te) {
-            $data['play_store'] = $te['config_android_app_link'];
-            $data['app_store'] = $te['config_apple_app_link'];
-        }
-
+        
         $data['login'] = $this->url->link('account/login', '', 'SSL');
         $data['register'] = $this->url->link('account/register', '', 'SSL');
         $data['forgotten'] = $this->url->link('account/forgotten', '', 'SSL');
+
+
         $this->load->model('assets/category');
         $data['categories'] = [];
-        $this->load->controller('product/store');
-        //$categories = $this->model_assets_category->getCategoriesNoRelationStore();
         $categories = $this->model_assets_category->getCategoryByStoreId(ACTIVE_STORE_ID, 0);
-        $selectedProducts = [];
+
         foreach ($categories as $category) {
-            // Level 2
-            $children_data = [];
-
-            $children = $this->model_assets_category->getCategories($category['category_id']);
-
-            //echo "<pre>";print_r($children);die;
-            foreach ($children as $child) {
-                $children_data[] = [
-                    'name' => $child['name'],
-                    'id' => $child['category_id'],
-                    'href' => $this->url->link('product/category', 'category=' . $category['category_id'] . '_' . $child['category_id']),
-                ];
-            }
-
             $filter_data_product = [
                 'filter_category_id' => $category['category_id'],
                 'filter_sub_category' => true,
                 'start' => 0,
                 'limit' => (1359 == $category['category_id']) ? 12 : 12,
                 'store_id' => ACTIVE_STORE_ID,
-                'selectedProducts' => $selectedProducts,
             ];
 
             // Level 1
@@ -1001,19 +742,16 @@ class ControllerCommonHome extends Controller {
                 'name' => $category['name'],
                 'id' => $category['category_id'],
                 'thumb' => $this->model_tool_image->resize($category['image'], 300, 300),
-                'children' => $children_data,
                 'column' => $category['column'] ? $category['column'] : 1,
                 'href' => $this->url->link('product/category', 'category=' . $category['category_id']),
                 'products' => $productslisted,
             ];
-
-            foreach ($productslisted as $producted) {
-                $selectedProducts[] = $producted['product_store_id'];
-            }
         }
-        //	   echo "<pre>";print_r($data['categories']);die;
+
+        // echo "<pre>";print_r($data['categories']);die;
+
         $data['page'] = isset($_REQUEST['page']) ? $_REQUEST['page'] : '';
-        //$this->load->language('module/store');
+       
         $this->load->model('setting/store');
         $filter = [];
         $filter['filter_status'] = 1;
@@ -1024,90 +762,15 @@ class ControllerCommonHome extends Controller {
         if (isset($_REQUEST['category'])) {
             $filter['filter_category'] = $_REQUEST['category'];
         }
-        //echo'<pre>';print_r($filter);exit;
-        //$categoriesIds = $this->model_setting_store->getStoreCategoriesbyStoreId(2,$_REQUEST['category']);
-        //echo'<pre>';print_r($categoriesIds);exit;
-        $stores = $this->model_setting_store->getStoresAll($filter);
-
-        /* Code for storeType Dynamic */
-        $this->load->model('assets/category');
-        $store_types = $this->model_assets_category->getStoreTypes();
-        $tempStoreTypeArray = [];
-        foreach ($store_types as $value) {
-            $tempStoreTypeArray[$value['store_type_id']] = $value['name'];
-        }
-        // echo'<pre>';print_r($stores);exit;
-        foreach ($stores as $store) {
-            $tempStore = $store;
-            $tempStore['href'] = $this->model_setting_store->getSeoUrl('store_id=' . $store['store_id']);
-            $tempStore['thumb'] = $this->model_tool_image->resize($store['logo'], 300, 300);
-            $tempStore['categorycount'] = $this->model_setting_store->getStoreCategoriesbyStoreId($store['store_id'], isset($_REQUEST['category']) ? $_REQUEST['category'] : '');
-            if (!empty($store['store_type_ids'])) {
-                $arrayStoretypes = explode(',', $store['store_type_ids']);
-                $tempStoretypename = '';
-                foreach ($arrayStoretypes as $key => $types) {
-                    $tempStoretypename .= (0 == $key) ? $tempStoreTypeArray[$types] : ',' . $tempStoreTypeArray[$types];
-                }
-                $tempStore['storeTypes'] = $tempStoretypename;
-            }
-
-            if (isset($_REQUEST['location']) && isset($_REQUEST['category'])) {
-                //echo 'locat';exit;
-                $res = $this->model_setting_store->getDistance($userSearch[0], $userSearch[1], $store['latitude'], $store['longitude'], $store['serviceable_radius']);
-                if ($res && ($tempStore['categorycount'] > 0)) {
-                    $data['stores'][] = $tempStore;
-                }
-            } elseif (isset($_REQUEST['location'])) {
-                //echo 'loc';exit;
-                $res = $this->model_setting_store->getDistance($userSearch[0], $userSearch[1], $store['latitude'], $store['longitude'], $store['serviceable_radius']);
-                if ($res) {
-                    $data['stores'][] = $tempStore;
-                }
-            } elseif (isset($_REQUEST['category'])) {
-                //echo 'cat';exit;
-                // $categorycount = $this->model_setting_store->getStoreCategoriesbyStoreId($store['store_id'],$_REQUEST['category']);
-                if ($tempStore['categorycount'] > 0) {
-                    $data['stores'][] = $tempStore;
-                }
-            } else {
-                //echo 'no';exit;
-                $data['stores'][] = $tempStore;
-            }
-            /* if($_REQUEST['category']){
-              $categorycount = $this->model_setting_store->getStoreCategoriesbyStoreId($store['store_id'],$_REQUEST['category']);
-              if($categorycount > 0){
-              $data['stores'][] = $tempStore;
-              }
-              }else{
-              $data['stores'][] = $tempStore;
-              } */
-        }
-        //	    echo'<pre>';print_r($data['stores']);exit;
-        // 5 best seller product
-        $complete_status_ids = '(' . implode(',', $this->config->get('config_complete_status')) . ')';
-        $query_best = $this->db->query('SELECT SUM( op.quantity )AS total, op.product_id,op.general_product_id, pd.name FROM ' . DB_PREFIX . 'order_product AS op LEFT JOIN ' . DB_PREFIX . 'order AS o ON ( op.order_id = o.order_id ) LEFT JOIN  ' . DB_PREFIX . "product_description AS pd ON (op.general_product_id = pd.product_id)  WHERE pd.language_id = '" . (int) $this->config->get('config_language_id') . "' AND o.order_status_id IN " . $complete_status_ids . ' GROUP BY pd.name ORDER BY total DESC LIMIT 5');
-        $best_products = $query_best->rows;
-
-        foreach ($best_products as $products) {
-            $product_detail = $this->model_assets_product->getDetailproduct($products['product_id']);
-            $product_detail['thumb'] = $this->model_tool_image->resize(isset($product_detail['image']) ? $product_detail['image'] : '', 100, 100);
-            $data['bestseller'][] = $product_detail;
-        }
-
-        /** Products To Percentage off * */
-        $prductsOffer = $this->getProducts([
-            'store_id' => ACTIVE_STORE_ID,
-        ]);
-        $this->array_sort_by_column($prductsOffer, 'percent_off');
-        $data['offer_products'] = array_slice($prductsOffer, 0, 5, true);
-        //echo '<pre>';print_r($data['offer_products']);exit;
-        /* add Contact modal */
-        $data['contactus_modal'] = $this->load->controller('information/contact');
+      
 
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/home.tpl') && isset($this->session->data['customer_id'])) {
-            // $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/home.tpl', $data));
             $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/homenew.tpl', $data));
         } else {
+            $this->load->model('sale/order');
+            $numberOfOrders = count($this->model_sale_order->getOrders());
+            $data['order_count'] = $numberOfOrders;
+
             if ($this->request->server['HTTPS']) {
                 $server = $this->config->get('config_ssl');
             } else {
@@ -1119,7 +782,7 @@ class ControllerCommonHome extends Controller {
             $data['f_name'] = $this->customer->getFirstName();
             $data['name'] = $this->customer->getFirstName();
             $data['l_name'] = $this->customer->getLastName();
-            $data['full_name'] = $data['f_name']; //.' '.$data['l_name'];
+            $data['full_name'] = $data['f_name'];
             $data['home'] = $this->url->link('common/home');
             $data['wishlist'] = $this->url->link('account/wishlist', '', 'SSL');
             $data['logged'] = $this->customer->isLogged();
@@ -1148,7 +811,7 @@ class ControllerCommonHome extends Controller {
             $data['forgotten'] = $this->url->link('account/forgotten', '', 'SSL');
             $data['store_name'] = $this->config->get('config_name');
 
-//    echo "<pre>";print_r($data);die;
+        //    echo "<pre>";print_r($data);die;
 
             $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/index.tpl', $data));
             //$this->response->setOutput($this->load->view('default/template/common/home.tpl', $data));
@@ -1543,30 +1206,16 @@ class ControllerCommonHome extends Controller {
         $this->load->model('tool/image');
 
         $cachePrice_data = $this->cache->get('category_price_data');
-        // echo '<pre>';print_r($cachePrice_data);exit;
-        //$results = $this->model_assets_product->getProducts($filter_data);
         $results = $this->model_assets_product->getProductsForHomePage($filter_data);
 
         $data['products'] = [];
 
-        // echo "<pre>";print_r($results);die;
         foreach ($results as $result) {
-            // if qty less then 1 dont show product
-            //REMOVED QUANTITY CHECK CONDITION
-            /*if ($result['quantity'] <= 0) {
-                continue;
-            }*/
-
-            $log = new Log('error.log');
             if ($result['image'] != NULL && file_exists(DIR_IMAGE . $result['image'])) {
                 $image = $this->model_tool_image->resize($result['image'], $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
             } else if ($result['image'] == NULL || !file_exists(DIR_IMAGE . $result['image'])) {
                 $image = $this->model_tool_image->resize('placeholder.png', $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
             }
-
-            //if category discount define override special price
-
-            $discount = '';
 
             $s_price = 0;
             $o_price = 0;
@@ -1603,8 +1252,6 @@ class ControllerCommonHome extends Controller {
                 $s_price = $result['special_price'];
                 $o_price = $result['price'];
 
-                // echo $s_price.'===>'.$o_price.'==>'.$special_price.'===>'.$price.'</br>';//exit;
-
                 if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$result['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $filter_data['store_id']])) {
                     $s_price = $cachePrice_data[$result['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $filter_data['store_id']];
                     $o_price = $cachePrice_data[$result['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $filter_data['store_id']];
@@ -1613,13 +1260,10 @@ class ControllerCommonHome extends Controller {
                 }
             }
 
-            //$result['name'] = strlen($result['name']) > 27 ? substr($result['name'],0,27)."..." : $result['name'];
             $name = $result['name'];
             if (isset($result['pd_name'])) {
                 $name = $result['pd_name'];
             }
-
-            //$name .= str_repeat('&nbsp;',30 - strlen($result['name']));
 
             $percent_off = null;
             if (isset($s_price) && isset($o_price) && 0 != $o_price && 0 != $s_price) {

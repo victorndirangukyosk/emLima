@@ -666,10 +666,8 @@ class ModelAssetsProduct extends Model
     {
         $returnData = [];
 
-       // $all_variations = 'SELECT * ,product_store_id as variation_id FROM '.DB_PREFIX.'product_to_store ps LEFT JOIN '.DB_PREFIX."product p ON (ps.product_id = p.product_id) WHERE name = '$product_name'";
         $all_variations = 'SELECT * ,product_store_id as variation_id FROM '.DB_PREFIX.'product_to_store ps LEFT JOIN '.DB_PREFIX."product p ON (ps.product_id = p.product_id) WHERE name = '$product_name' and ps.status=1";
 
-        //echo $all_variations;die;
         $result = $this->db->query($all_variations);
 
         foreach ($result->rows as $r) {
@@ -718,10 +716,7 @@ class ModelAssetsProduct extends Model
                 }
                 $isWishListID = $this->model_account_wishlist->getWishlistIDCustomerProduct($r['product_id']);
                 $category_price_data = $this->getCategoryPriceStatusByProductStoreId($r['product_store_id']);
-                $log = new Log('error.log');
-                /*$log->write('category_price_data model_assets_product');
-                $log->write($category_price_data);
-                $log->write('category_price_data product model_assets_product');*/
+
                 $r['isWishListID'] = $isWishListID;
                 $r['category_pricing_variant_status'] = is_array($category_price_data) && array_key_exists('status', $category_price_data) ? $category_price_data['status'] : 1;
                 $res = [
@@ -738,19 +733,14 @@ class ModelAssetsProduct extends Model
                         'category_pricing_variant_status' => is_array($category_price_data) && array_key_exists('status', $category_price_data) ? $category_price_data['status'] : 1
                     ];
 
-                // $r['variation_id'] => $result['product_store_id'],
-                //         'unit' => $result['unit'],
-                //         'weight' => floatval($result['weight']),
-                //         'price' => $price,
-                //         'special' => $special_price
                 if (true == $formated) {
                     array_push($returnData, $res);
                 } else {
                     array_push($returnData, $r);
                 }
+              }
             }
         }
-    }
 
         return $returnData;
     }
