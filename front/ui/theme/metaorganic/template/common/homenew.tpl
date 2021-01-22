@@ -225,6 +225,7 @@
 
     <div class="container products-grid">
       <?php foreach($categories as $category) { ?>
+      <?php $link_array = explode('/',$category['href']); $page_link = end($link_array); ?>
       <?php if(count($category['products']) > 0) { ?>
       <h3 class="category-title">
         <span>
@@ -250,8 +251,12 @@
             <?= $product['qty_in_cart'] ?>
           </div>
         </div>
-
         <?php } ?>
+      </div>
+      <div class="row mb-5">
+        <div class="col-md-12 d-flex justify-content-center align-items-center">
+          <a href="<?= $this->url->link('product/store', 'store_id='.ACTIVE_STORE_ID).'?cat='.$page_link?> " class="btn btn-sm btn-success px-4 py-2">View All <?=$category['name']?></a>
+        </div>
       </div>
       <?php } ?>
       <?php } ?>
