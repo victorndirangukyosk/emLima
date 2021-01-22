@@ -349,9 +349,10 @@
                                      <?php 
                                              
                                             if ( $order['order_status_id']!=15 && $order['order_status_id']!=16 && $order['order_status_id']!=6 && $order['order_status_id']!=8 && $order['order_status_id']!=9 && $order['order_status_id']!=10) { ?>
-                                               <a href="<?php echo $order['invoice']; ?>" target="_blank" data-toggle="tooltip" title="Print Invoice">
+                                               <!--<a href="<?php echo $order['invoice']; ?>" target="_blank" data-toggle="tooltip" title="Print Invoice">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-printer"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
-                                                </a>
+                                                </a> -->
+                                               <a href="#" id="new_print_invoice" data-order-invoice="<?php echo $order['invoice']; ?>" data-order-id="<?= $order['order_id'] ?>" data-toggle="tooltip" title="Print Invoice"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-printer"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg></a>
                                             <?php } ?>
                                         
 
@@ -1041,24 +1042,7 @@ function savedriverdetails() {
                        return false;
                 } 
                 else{
-            var clicked_orderid = order_id;        
-            $.ajax({
-		url: 'index.php?path=sale/order/api&token=<?php echo $token; ?>&api=api/order/history&order_id='+clicked_orderid+'&added_by=<?php echo $this->user->getId(); ?>&added_by_role=<?php echo $this->user->getGroupName(); ?>',
-		type: 'post',
-		dataType: 'json',
-		data: 'order_status_id=' + encodeURIComponent($('select[id=\'input-order-status'+clicked_orderid+'\']').val()) + '&notify=1',
-		success: function(json) {	 
-                    console.log(json);
-                    $('.alert').html('Order status updated successfully!');
-                    $(".alert").attr('class', 'alert alert-success');
-                    $(".alert").show();
-                    //setTimeout(function(){ window.location.reload(false); }, 1500);
-		},			
-		error: function(xhr, ajaxOptions, thrownError) {		
-			 
-		}
-            });
-                  
+                    var clicked_orderid = order_id;
                     $.ajax({
                     url: 'index.php?path=sale/order/SaveOrUpdateOrderDriverVehicleDetails&token=<?php echo $token; ?>',
                     type: 'post',
@@ -1186,12 +1170,12 @@ if($('select[id=\'input-order-status'+clicked_orderid+'\'] option:selected').tex
 	});
 }
 
-if($('select[id=\'input-order-status'+clicked_orderid+'\'] option:selected').text()=='Ready for delivery')
+/*if($('select[id=\'input-order-status'+clicked_orderid+'\'] option:selected').text()=='Ready for delivery')
 {
 $('input[name="order_id"]').val(clicked_orderid);
 $('#driverModal').modal('toggle');
 savedriverdetails();
-}
+}*/
 
 if($('select[id=\'input-order-status'+clicked_orderid+'\'] option:selected').text()=='Order Processing')
 {
@@ -1200,7 +1184,7 @@ $('#orderprocessingModal').modal('toggle');
 //saveorderprocessingdetails();
 }
 
-if(selected_order_status_id != 3 && selected_order_status_id != 1) {
+if(/*selected_order_status_id != 3 &&*/ selected_order_status_id != 1) {
 $.ajax({
 		url: 'index.php?path=sale/order/api&token=<?php echo $token; ?>&api=api/order/history&order_id='+clicked_orderid+'&added_by=<?php echo $this->user->getId(); ?>&added_by_role=<?php echo $this->user->getGroupName(); ?>',
 		type: 'post',
@@ -1301,6 +1285,36 @@ $('input[name=\'order_delivery_executive\']').autocomplete({
     $('input[name=\'order_delivery_executive\']').val(item['label']);
     $('input[name=\'order_delivery_executive\']').attr('data_delivery_executive_id',item['value']);
   } 
+});
+
+$('a[id^=\'new_print_invoice\']').on('click', function (e) {
+e.preventDefault();
+var invoice = $(this).attr("data-order-invoice");
+var order_id = $(this).attr("data-order-id");
+$.ajax({
+		url: 'index.php?path=sale/order/getDriverDetails&token=<?php echo $token; ?>',
+		type: 'post',
+		dataType: 'json',
+		data: 'order_id=' + order_id,
+		success: function(json) {
+                    console.log(json.order_info.order_id);
+                    console.log(json.order_info.driver_id);
+                    console.log(json.order_info.vehicle_number);
+                    console.log(json.order_info.delivery_executive_id);
+                    if(json.order_info.driver_id == null || json.order_info.vehicle_number == null || json.order_info.delivery_executive_id == null)
+                    {
+                    $('input[name="order_id"]').val(order_id);
+                    $('#driverModal').modal('toggle');    
+                    } else {
+                    console.log(invoice);
+                    window.open(invoice, '_blank');
+                    }
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {		
+			 
+		}
+});
+console.log($(this).attr("data-order-id"));
 });
 </script></div>
 <?php echo $footer; ?>
