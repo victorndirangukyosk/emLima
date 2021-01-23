@@ -4,15 +4,10 @@ class ControllerProductStore extends Controller
 {
     public function index()
     {
-        //echo "cer";die;
-        //echo "<pre>";
-        //print_r($_COOKIE);die;
         if (!isset($this->session->data['customer_id'])) {
             if (isset($_REQUEST['action']) && ('shop' == $_REQUEST['action'])) {
                 $this->response->redirect($this->url->link('account/login/customer'));
             } else {
-                /* REMOVED FOR HOME PAGE ON DOMINE NAME
-                 * $this->response->redirect($this->url->link('common/home/homepage')); */
                 if ($this->request->server['HTTPS']) {
                     $server = $this->config->get('config_ssl');
                 } else {
@@ -54,14 +49,10 @@ class ControllerProductStore extends Controller
                 $data['store_name'] = $this->config->get('config_name');
                 
                 if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
-                    //$data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'),200,110);
                     $data['logo'] = $server . 'image/' . $this->config->get('config_logo');
                 } else {
                     $data['logo'] = 'assets/img/logo.svg';
                 }
-
-//    echo "<pre>";print_r($data);die;
-
                 $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/landing_page/index.tpl', $data));
             }
         }
@@ -70,20 +61,11 @@ class ControllerProductStore extends Controller
             $this->session->data['config_store_id'] = $this->request->get['store_id'];
         }
 
-        /* if ( !(count($_COOKIE) > 0 && isset($_COOKIE['zipcode'])) || !isset($this->session->data['config_store_id']) ) {
-
-          if(!isset($_COOKIE['location'])) {
-          $this->response->redirect( $this->url->link( 'common/home/toHome' ) );
-          }
-          } */
-
         $this->load->language('product/store');
 
         $this->load->model('assets/category');
 
         $this->load->model('assets/product');
-
-        $this->document->addStyle('front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_categories.css');
 
         $this->load->model('tool/image');
 
@@ -162,11 +144,6 @@ class ControllerProductStore extends Controller
         } elseif (count($_COOKIE) > 0 && isset($_COOKIE['location'])) {
             $data['location_name'] = $this->getHeaderPlace($_COOKIE['location']);
             $data['location_name_full'] = $data['location_name'];
-
-            /* if(isset($_COOKIE['location_name'])) {
-              $data['location_name'] = $_COOKIE['location_name'];
-              $data['location_name_full'] = $_COOKIE['location_name'];
-              } */
         }
 
         $data['text_refine'] = $this->language->get('text_refine');
@@ -288,10 +265,7 @@ class ControllerProductStore extends Controller
                 'thumb' => $image,
             ];
 
-//            echo "<pre>";print_r($data['categories']);die;
         }
-
-        $template = 'top_category.tpl';
 
         $url = '';
 
@@ -402,17 +376,6 @@ class ControllerProductStore extends Controller
         }
 
         $not_delivery = 0;
-        /* if($this->cart->hasProducts()){
-          $zipcode = $_COOKIE['zipcode'];
-
-          foreach ($this->cart->getStores() as $s ) {
-          $checkStore = $this->model_assets_product->getStoreByZip($zipcode,$s);
-          if (!$checkStore) {
-          $not_delivery = 1;
-          break;
-          }
-          }
-          } */
 
         $data['telephone_mask'] = $this->config->get('config_telephone_mask');
 
@@ -455,10 +418,10 @@ class ControllerProductStore extends Controller
 
         $data['not_delivery'] = $not_delivery;
         $data['change_store'] = $this->url->link('common/home/show_home', '', 'SSL');
-        //echo "<pre>";print_r($data);die;
+        
+        $template = 'top_category.tpl';
+        // echo "<pre>";print_r($data);die;
         if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/product/'.$template)) {
-            //mvgv2/template/product/top_category.tpl
-            // echo "<pre>";print_r($this->config->get( 'config_template' ) . '/template/product/'.$template);die;
             $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/product/'.$template, $data));
         } else {
             $this->response->setOutput($this->load->view('default/template/product/'.$template, $data));
@@ -707,7 +670,7 @@ class ControllerProductStore extends Controller
         //$results = $this->model_assets_product->getProducts($filter_data);
         //$results = $this->model_assets_product->getProductsForHomePage($filter_data);
         $results = $this->model_assets_product->getProductsForCategoryPage($filter_data);
-//        echo '<pre>';print_r($results); die;
+            //  echo '<pre>';print_r($results); die;
 
         $data['products'] = [];
 
@@ -819,6 +782,7 @@ class ControllerProductStore extends Controller
                     'store_product_variation_id' => 0,
                     'product_id' => $result['product_id'],
                     'product_store_id' => $result['product_store_id'],
+                    'store_id' => $result['store_id'],
                     'default_variation_name' => $result['default_variation_name'],
                     'thumb' => $image,
                     'name' => $name,
