@@ -179,25 +179,25 @@
           <table class="table table-bordered table-hover">
             <thead>
               <tr>
-                 <?php foreach ($customers[0] as $h_key=>$h_value) { ?>   
-                  <?php if($h_key=="Company Name") {    ?>         
-                <td class="text-left"><?php echo $h_key; ?></td>  
-              <?php } else { ?>
+                 <?php foreach ($products[0] as $h_key=>$h_value) { ?>   
+                  <?php if($h_key=="General") {    ?>         
                 <td class="text-right"><?php echo $h_key; ?></td>  
+              <?php } else { ?>
+                <td class="text-left"><?php echo $h_key; ?></td>  
           <?php } ?>
                 <?php } ?>
                
               </tr>
             </thead>
             <tbody>
-              <?php if ($customers) { ?>
-              <?php foreach ($customers as  $b_key=>$b_value) { ?>
+              <?php if ($products) { ?>
+              <?php foreach ($products as  $b_key=>$b_value) { ?>
             <tr>
               <?php foreach ($b_value as  $bb_key=>$bb_value) { ?>
-              <?php if($bb_key=="Company Name") {    ?> 
-                <td class="text-left"><?php echo  $bb_value; ?></td>
+              <?php if($bb_key=="General") {    ?> 
+                <td class="text-right"><?php echo  $bb_value; ?></td>
                  <?php } else { ?>
-                <td class="text-right"><?php echo $bb_value; ?></td>  
+                <td class="text-left"><?php echo $bb_value; ?></td>  
           <?php } ?>
                
                 <?php } ?>
@@ -221,7 +221,7 @@
   </div>
   <script type="text/javascript"><!--
 $('#button-filter').on('click', function() {
-	url = 'index.php?path=report/customer_order_pattern&token=<?php echo $token; ?>';
+	url = 'index.php?path=report/inventory_daily_prices&token=<?php echo $token; ?>';
 
   
             //var filter_customer = $('input[name=\'filter_customer\']').val();
@@ -238,7 +238,60 @@ $('#button-filter').on('click', function() {
             }
   
   
+  var filter_name = $('input[name=\'filter_name\']').val();
 
+            if (filter_name) {
+                url += '&filter_name=' + encodeURIComponent(filter_name);
+            }
+
+            var filter_vendor_name = $('input[name=\'filter_vendor_name\']').val();
+
+            if (filter_vendor_name) {
+                url += '&filter_vendor_name=' + encodeURIComponent(filter_vendor_name);
+            }
+
+            var filter_category = $('select[name=\'filter_category\']').val();
+
+            if (filter_category != '*') {
+                url += '&filter_category=' + encodeURIComponent(filter_category);
+            }
+
+            var filter_price = $('input[name=\'filter_price\']').val();
+
+            if (filter_price) {
+                url += '&filter_price=' + encodeURIComponent(filter_price);
+            }
+
+            var filter_product_id_to = $('input[name=\'filter_product_id_to\']').val();
+
+            if (filter_product_id_to) {
+                url += '&filter_product_id_to=' + encodeURIComponent(filter_product_id_to);
+            }
+
+            var filter_product_id_from = $('input[name=\'filter_product_id_from\']').val();
+
+            if (filter_product_id_from) {
+                url += '&filter_product_id_from=' + encodeURIComponent(filter_product_id_from);
+            }
+            
+            var filter_model = $('input[name=\'filter_model\']').val();
+
+            if (filter_model) {
+                url += '&filter_model=' + encodeURIComponent(filter_model);
+            }
+            
+
+            var filter_store_id = $('input[name=\'filter_store_id\']').val();
+
+            if (filter_store_id) {
+                url += '&filter_store_id=' + encodeURIComponent(filter_store_id);
+            }
+
+            var filter_status = $('select[name=\'filter_status\']').val();
+
+            if (filter_status != '*') {
+                url += '&filter_status=' + encodeURIComponent(filter_status);
+            }
 	
 	var filter_date_start = $('input[name=\'filter_date_start\']').val();
 	
@@ -252,7 +305,7 @@ $('#button-filter').on('click', function() {
 		url += '&filter_date_end=' + encodeURIComponent(filter_date_end);
 	}
 	
-	var filter_order_status_id = $('select[name=\'filter_order_status_id\']').val();
+	 
 	
 
   if(filter_date_end=="" || filter_date_start=="")
@@ -264,16 +317,14 @@ $('#button-filter').on('click', function() {
   else{
         dt1 = new Date(filter_date_start);
     dt2 = new Date(filter_date_end);
-    if(diff_days(dt1, dt2)>7)
+    if(diff_days(dt2, dt1)>6)
     {
     alert("Please select Start and End dates with max 7 days difference ");
     return;
     }
  
   }
-	if (filter_order_status_id != 0) {
-		url += '&filter_order_status_id=' + encodeURIComponent(filter_order_status_id);
-	}	
+ 
 
   
 
@@ -284,6 +335,19 @@ $('#button-filter').on('click', function() {
   <script type="text/javascript"><!--
 
 
+  function diff_days(dt2, dt1) 
+ {
+
+
+var diffDays = parseInt((dt2 - dt1) / (1000 * 60 * 60 * 24), 10); 
+
+
+   
+  return Math.abs(Math.round(diffDays));
+  
+ }
+
+
 function diff_months(dt2, dt1) 
  {
 
@@ -292,6 +356,71 @@ function diff_months(dt2, dt1)
   return Math.abs(Math.round(diff));
   
  }
+
+ 
+$('input[name=\'filter_store_id\']').autocomplete({
+    'source': function(request, response) {
+        $.ajax({
+            url: 'index.php?path=setting/store/autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request),
+            dataType: 'json',
+            success: function(json) {
+                response($.map(json, function(item) {
+                    return {
+                        label: item['name'],
+                        value: item['store_id']
+                    }
+                }));
+            }
+        });
+    },
+    'select': function(item) {
+
+        
+        $('input[name=\'filter_store_id\']').val(item['label']);
+    }
+});
+
+
+ $('input[name=\'filter_name\']').autocomplete({
+            'source': function(request, response) {
+                $.ajax({
+                    url: 'index.php?path=catalog/product/autocomplete&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
+                    dataType: 'json',
+                    success: function(json) {
+                        response($.map(json, function(item) {
+                            return {
+                                label: item['name'],
+                                value: item['product_id']
+                            }
+                        }));
+                    }
+                });
+            },
+            'select': function(item) {
+                $('input[name=\'filter_name\']').val(item['label']);
+            }
+        });
+
+        $('input[name=\'filter_model\']').autocomplete({
+            'source': function(request, response) {
+                $.ajax({
+                    url: 'index.php?path=catalog/product/autocomplete&token=<?php echo $token; ?>&filter_model=' + encodeURIComponent(request),
+                    dataType: 'json',
+                    success: function(json) {
+                        response($.map(json, function(item) {
+                            return {
+                                label: item['model'],
+                                value: item['product_id']
+                            }
+                        }));
+                    }
+                });
+            },
+            'select': function(item) {
+                $('input[name=\'filter_model\']').val(item['label']);
+            }
+        });
+  
 
    $companyName="";
        /* $('input[name=\'filter_customer\']').autocomplete({         
@@ -343,7 +472,7 @@ function diff_months(dt2, dt1)
 
  
 function excel() {
-       url = 'index.php?path=report/customer_order_pattern/order_patternexcel&token=<?php echo $token; ?>';
+       url = 'index.php?path=report/inventory_daily_prices/inventory_daily_prices_excel&token=<?php echo $token; ?>';
       
         
      //var filter_customer = $('input[name=\'filter_customer\']').val();
@@ -358,7 +487,60 @@ function excel() {
             if (filter_company) {
                 url += '&filter_company=' + encodeURIComponent(filter_company);
             }
-  
+   var filter_name = $('input[name=\'filter_name\']').val();
+
+            if (filter_name) {
+                url += '&filter_name=' + encodeURIComponent(filter_name);
+            }
+
+            var filter_vendor_name = $('input[name=\'filter_vendor_name\']').val();
+
+            if (filter_vendor_name) {
+                url += '&filter_vendor_name=' + encodeURIComponent(filter_vendor_name);
+            }
+
+            var filter_category = $('select[name=\'filter_category\']').val();
+
+            if (filter_category != '*') {
+                url += '&filter_category=' + encodeURIComponent(filter_category);
+            }
+
+            var filter_price = $('input[name=\'filter_price\']').val();
+
+            if (filter_price) {
+                url += '&filter_price=' + encodeURIComponent(filter_price);
+            }
+
+            var filter_product_id_to = $('input[name=\'filter_product_id_to\']').val();
+
+            if (filter_product_id_to) {
+                url += '&filter_product_id_to=' + encodeURIComponent(filter_product_id_to);
+            }
+
+            var filter_product_id_from = $('input[name=\'filter_product_id_from\']').val();
+
+            if (filter_product_id_from) {
+                url += '&filter_product_id_from=' + encodeURIComponent(filter_product_id_from);
+            }
+            
+            var filter_model = $('input[name=\'filter_model\']').val();
+
+            if (filter_model) {
+                url += '&filter_model=' + encodeURIComponent(filter_model);
+            }
+            
+
+            var filter_store_id = $('input[name=\'filter_store_id\']').val();
+
+            if (filter_store_id) {
+                url += '&filter_store_id=' + encodeURIComponent(filter_store_id);
+            }
+
+            var filter_status = $('select[name=\'filter_status\']').val();
+
+            if (filter_status != '*') {
+                url += '&filter_status=' + encodeURIComponent(filter_status);
+            }
    
 
 	
@@ -374,11 +556,7 @@ function excel() {
 		url += '&filter_date_end=' + encodeURIComponent(filter_date_end);
 	}
 	
-	var filter_order_status_id = $('select[name=\'filter_order_status_id\']').val();
-	
-	if (filter_order_status_id != 0) {
-		url += '&filter_order_status_id=' + encodeURIComponent(filter_order_status_id);
-	}	
+	 
   if(filter_date_end=="" || filter_date_start=="")
   {
     alert("Please select Start and End Dates");
@@ -391,20 +569,7 @@ function excel() {
 }
 
 
-     $(document).delegate('.download', 'click', function(e) {
-  
-            e.preventDefault();
-            $orderid = $(this).attr('value');
-            $customer = $(this).attr('data');
-            $company = $(this).attr('company');
-            $orderdate = $(this).attr('order_date');
-           
- 
-            if ($orderid > 0) {                
-                const url = 'index.php?path=sale/order/consolidatedOrderProducts&token=<?php echo $token; ?>&order_id=' + encodeURIComponent($orderid)+'&customer='+$customer+'&date='+$orderdate+'&company='+$company;
-                location = url;
-            }
-        });
+     
 
  </script>
 

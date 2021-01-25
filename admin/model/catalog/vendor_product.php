@@ -758,6 +758,16 @@ class ModelCatalogVendorProduct extends Model
         return $query->rows;
     }
 
+
+    public function getProductInventoryPriceHistorybyDate($start_date,$store_product_id,$end_date=null)
+    {
+        $query = 'SELECT * FROM '.DB_PREFIX."product_inventory_price_history WHERE product_store_id ='".(int) $store_product_id."'  and  DATE(date_added) ='". $start_date."'  order by date_added desc ";
+        //   echo "<pre>";print_r($query);die;
+        $query = $this->db->query($query);
+
+        return $query->row['buying_price'];
+    }
+
     public function updateCategoryPrices($category, $data)
     {
         $query_exist = 'SELECT * FROM '.DB_PREFIX."product_category_prices WHERE product_store_id ='".(int) $data['product_store_id']."' AND price_category='$category'";

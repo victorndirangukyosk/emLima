@@ -1706,4 +1706,30 @@ class ControllerCatalogProduct extends Controller
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
+
+
+    public function getProductInventoryPriceHistorybyDate($startdate,$product_store_id,$enddate=null)
+    {
+        $this->load->model('catalog/vendor_product');
+        // $product_store_id = $this->request->get['product_store_id'];
+        $res = $this->model_catalog_vendor_product->productInventoryPriceHistorybydate($startdate,$product_store_id,null);
+        // echo "<pre>";print_r($data['products']);die;
+         
+        if (count($res) > 0) {      
+           
+            // foreach ($res as $product_history) {
+                // $product_history['buying_price'] 
+					 
+            // }
+           return $res[0]['buying_price'];
+           
+        }
+        else
+        {
+
+        return 'NA';
+        }
+         
+    }
+
 }
