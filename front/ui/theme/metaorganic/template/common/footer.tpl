@@ -22,7 +22,9 @@
    </div>
 </div>
 </div>
-
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/vuex/3.6.0/vuex.min.js"></script>
+   <script src="<?= $base;?>front/ui/theme/metaorganic/assets/js/app.js"></script>
 <script type="text/javascript">
    $(document).ready(function () {
 

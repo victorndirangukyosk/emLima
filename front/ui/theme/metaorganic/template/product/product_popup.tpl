@@ -198,13 +198,14 @@
         const variationId = $(this).attr('data-variation-id');
         const quantity = $('#product-quantity').val();
         const productNotes = $('#product-notes').val();
+        const thumb = "<?= $product['thumb']; ?>";
+        const name = "<?= $product['product_info']['name'] ?>";
+        const price = $('.product-modal-price').html();
 
         const action = $(this).attr('data-action');
         const key = $(this).attr('data-key');
 
-        // TODO: Update cart quantity
-        // TODO: Add produce type selector (last null parameter)
-        cart.add(productId, variationId, storeId, quantity, productNotes, "");
+        kbApplication.$store.dispatch('addProductToCart', { thumb, name, price, productId, variationId, storeId, quantity, productNotes, produceType: "" });
 
         $('#product-details-popup').modal('hide');
     });

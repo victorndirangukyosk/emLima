@@ -5,6 +5,19 @@ const kbApplication = new Vue({
             cartProducts: []
         },
 
+        getters: {
+            itemsInCart: state => {
+                return state.cartProducts.length;
+            },
+
+            basketCost: state => {
+                const totalCost = state.cartProducts.reduce(function (prev, { price }) {
+                    return prev + currency(price).value;
+                }, 0);
+                return currency(totalCost, { symbol: 'KES ' }).format();
+            }
+        },
+
         mutations: {
             addProductToCart(state, product) {
                 state.cartProducts.push(product);
@@ -19,7 +32,6 @@ const kbApplication = new Vue({
         actions: {
             addProductToCart({ commit }, product) {
                 commit('addProductToCart', product);
-
                 const { productId, variationId, storeId, quantity, productNotes, produceType } = product;
                 $.ajax({
                     url: 'index.php?path=checkout/cart/add',
@@ -42,6 +54,17 @@ const kbApplication = new Vue({
             }
         }
     }),
+
+    computed: {
+        itemsInCart: function() {
+            return this.$store.getters.itemsInCart; 
+        },
+
+        basketCost: function() {
+            return this.$store.getters.basketCost; 
+        }
+    },
+
     mounted() {
         $.get('index.php?path=common/cart/getProductsInCart', (products) => {
             this.$store.state.cartProducts = products;

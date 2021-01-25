@@ -31,11 +31,8 @@
    <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
    <script type='text/javascript' src='https://code.jquery.com/jquery-migrate-3.0.0.min.js'></script>
    <script type='text/javascript' src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
-   <script type='text/javascript'
-      src='https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js'></script>
-   <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.min.js"></script>
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/vuex/3.6.0/vuex.min.js"></script>
-   <script src="<?= $base;?>front/ui/theme/metaorganic/assets/js/app.js"></script>
+   <script type='text/javascript'src='https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js'></script>
+   <script src="https://unpkg.com/currency.js@2.0.3/dist/currency.min.js"></script>
    <script src="<?= $base;?>front/ui/theme/metaorganic/assets/js/scripts.js"></script>
    <script src="<?= $base;?>front/ui/theme/metaorganic/assets/js/cart.js"></script>
 </head>
@@ -128,13 +125,13 @@
                               <div class="cart_icon"> <img
                                     src="<?= $base;?>front/ui/theme/metaorganic/assets/images/icons/cart.png" alt="">
                                  <div class="cart_count"><span class="cart_items_count">
-                                       <?= $this->cart->countProducts(); ?>
+                                    {{ itemsInCart }}
                                     </span></div>
                               </div>
                               <div class="cart_content">
                                  <div class="cart_text"><a>Basket</a></div>
                                  <div class="cart_price">
-                                    <?= $this->currency->format($this->cart->getTotal()); ?>
+                                    {{ basketCost }}
                                  </div>
                               </div>
                            </div>
