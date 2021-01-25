@@ -808,7 +808,7 @@
                                                     <div class="col-md-12">
                                                         <!--<input id="order_delivery_executive" maxlength="30" required style="max-width:100% ;" name="order_delivery_executive" type="text" placeholder="Delivery Executive" class="form-control" data_delivery_executive_id="" required>-->
                                                         <select name="order_delivery_executives" id="order_delivery_executives" class="form-control" required="">
-                                                        <option>Select Delivery Executive</option>
+                                                        <option value="0">Select Delivery Executive</option>
                                                         <?php foreach ($delivery_executives as $delivery_executive) { ?>
                                                         <option value="<?php echo $delivery_executive['delivery_executive_id']; ?>"><?php echo $delivery_executive['name']; ?></option>
                                                         <?php } ?>
@@ -823,7 +823,7 @@
                                                     <div class="col-md-12">
                                                         <!--<input id="order_driver" maxlength="30" required style="max-width:100% ;" name="order_driver" type="text" placeholder="Driver" class="form-control" data_driver_id="" required>-->
                                                         <select name="order_drivers" id="order_drivers" class="form-control" required="">
-                                                        <option>Select Driver</option>
+                                                        <option value="0">Select Driver</option>
                                                         <?php foreach ($drivers as $driver) { ?>
                                                         <option value="<?php echo $driver['driver_id']; ?>"><?php echo $driver['name']; ?></option>
                                                         <?php } ?>    
@@ -1384,6 +1384,11 @@ e.preventDefault();
 var invoice = $(this).attr("data-order-invoice");
 var order_id = $(this).attr("data-order-id");
 var order_status = $('select[id=\'input-order-status'+order_id+'\'] option:selected').text();
+
+ $('select[name="order_delivery_executives"]').selectpicker('val', 0);
+ $('select[name="order_drivers"]').selectpicker('val', 0);
+ $('input[name="order_vehicle_number"]').val('');
+
 $.ajax({
 		url: 'index.php?path=sale/order/getDriverDetails&token=<?php echo $token; ?>',
 		type: 'post',
