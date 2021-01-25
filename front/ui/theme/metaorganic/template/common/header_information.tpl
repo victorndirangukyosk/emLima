@@ -297,6 +297,17 @@ $(document).ready(function() {
                                                 <i class="fa fa-shopping-basket"></i>My Basket</a>
                                             </li>
 
+
+                                            <!--<li role="presentation" >
+                                                <?php if(strpos($incompleteorders,$_SERVER["REQUEST_URI"]) !== false) { ?>
+                                                    <a href="<?= $incompleteorders ?>" class="active">
+                                                <?php } else { ?>
+                                                    <a href="<?= $incompleteorders ?>">
+                                                <?php } ?>
+
+                                                <i class="fa fa-sticky-note"></i>Incomplete Orders</a>
+                                            </li>-->
+
                                             <?php if($this->config->get('config_credit_enabled')) { ?>
 
                                                 <li role="presentation">
