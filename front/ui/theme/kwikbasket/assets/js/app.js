@@ -1,8 +1,15 @@
 const kbApplication = new Vue({
     el: '#kwikbasket-app',
 
+    data() {
+        return {
+            selectedProduct: this.getInitialPopupState(),
+        }
+    },
+
     store: new Vuex.Store({
         state: {
+            productCategories: [],
             cartProducts: []
         },
 
@@ -12,10 +19,9 @@ const kbApplication = new Vue({
             },
 
             basketCost: state => {
-                const totalCost = state.cartProducts.reduce(function (prev, { quantity, price }) {
+                return state.cartProducts.reduce(function (prev, { quantity, price }) {
                     return prev + (currency(price).value * quantity);
                 }, 0);
-                return currency(totalCost, { symbol: 'KES ' }).format();
             }
         },
 
@@ -38,11 +44,11 @@ const kbApplication = new Vue({
         actions: {
             addProductToCart({ commit }, product) {
                 commit('addProductToCart', product);
-                const { productId, variationId, storeId, quantity, productNotes, produceType } = product;
+                const { product_id, variation_id, store_id, quantity, productNotes, produceType } = product;
                 $.ajax({
                     url: 'index.php?path=checkout/cart/add',
                     type: 'POST',
-                    data: 'variation_id=' + variationId + '&product_id=' + productId + '&quantity=' + (typeof (quantity) != 'undefined' ? quantity : 1) + '&store_id=' + storeId + '&product_notes=' + productNotes + '&produce_type=' + produceType,
+                    data: 'variation_id=' + variation_id + '&product_id=' + product_id + '&quantity=' +  quantity  + '&store_id=' + store_id + '&product_notes=' + productNotes + '&produce_type=' + produceType,
                     dataType: 'json'
                 });
             },
@@ -77,18 +83,120 @@ const kbApplication = new Vue({
     }),
 
     computed: {
-        itemsInCart: function() {
-            return this.$store.getters.itemsInCart; 
+        productCategories: function () {
+            return this.$store.state.productCategories;
         },
 
-        basketCost: function() {
-            return this.$store.getters.basketCost; 
+        itemsInCart: function () {
+            return this.$store.getters.itemsInCart;
+        },
+
+        basketCost: function () {
+            return this.formatCurrency(this.$store.getters.basketCost);
+        },
+        
+        cartProducts: function() {
+            return this.$store.state.cartProducts;
         }
     },
 
     mounted() {
+        $.get('index.php?path=common/home/getCategoriesWithProducts', (categories) => {
+            this.$store.state.productCategories = categories;
+        });
+
         $.get('index.php?path=common/cart/getProductsInCart', (products) => {
             this.$store.state.cartProducts = products;
         });
+
+        $('#product-details-popup').on('hide.bs.modal', () => {
+            this.selectedProduct = this.getInitialPopupState();
+        });
     },
+
+    methods: {
+        showProductPopup(product) {
+            this.selectedProduct.info = product;
+        },
+
+        getInitialPopupState() {
+            return {
+                info: {},
+                popup: {
+                    variation: {},
+                    quantity: '',
+                    productNotes: '',
+                    produceType: '',
+                    isValidData: false
+                }
+            }
+        },
+
+        addProductToCart() {
+            this.$store.dispatch('addProductToCart', {
+                ...this.selectedProduct.info,
+                variation_id: this.selectedProduct.popup.variation.variation_id,
+                key: this.selectedProduct.popup.variation.key,
+                price: this.selectedProduct.popup.variation.price,
+                quantity: this.selectedProduct.popup.quantity,
+                productNotes: this.selectedProduct.popup.productNotes,
+                produceType: this.selectedProduct.popup.produceType
+            });
+            $('#product-details-popup').modal('hide');
+        },
+
+        openMiniCart() {
+            $('#mini-cart-panel').modal('show');
+        },
+
+        formatCurrency(amount) {
+            return currency(amount, { symbol: 'KES ' }).format()
+        },
+
+        productTotalPrice({ price, quantity }) {
+            const total = currency(price).value * quantity;
+            return this.formatCurrency(total);
+        },
+
+        incrementProductQuantity(product) {
+            const key = product.key;
+            const newQuantity = (parseFloat(product.quantity) + 1).toFixed(1);
+            kbApplication.$store.dispatch('updateProductQuantity', { key, newQuantity });
+        },
+
+        decrementProductQuantity(product) {
+            const key = product.key;
+            const newQuantity = (parseFloat(product.quantity) - 1).toFixed(1);
+
+            if (newQuantity <= 0) {
+                kbApplication.$store.dispatch('removeProductFromCart', product);
+            } else {
+                kbApplication.$store.dispatch('updateProductQuantity', { key, newQuantity });
+            }
+        },
+
+        removeProductFromCart(product) {
+            kbApplication.$store.dispatch('removeProductFromCart', product);
+        }
+    },
+
+    watch: {
+        selectedProduct: {
+            handler(selectedProduct) {
+                if (Object.keys(selectedProduct).length) {
+                    $('#product-details-popup').modal('show');
+
+                    const { variation, quantity } = selectedProduct.popup;
+                    this.selectedProduct.popup.quantity = quantity.replace(/[^0-9\.]/g, '');
+
+                    if (quantity > 0 && variation != "") {
+                        this.selectedProduct.popup.isValidData = true;
+                    } else {
+                        this.selectedProduct.popup.isValidData = false;
+                    }
+                }
+            },
+            deep: true
+        }
+    }
 });

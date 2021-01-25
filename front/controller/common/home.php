@@ -594,175 +594,7 @@ class ControllerCommonHome extends Controller {
             }
         }
 
-        $this->load->model('account/customer');
-        $is_he_parents = $this->model_account_customer->CheckHeIsParent();
-    
-        if ($is_he_parents != NULL) {
-            $customer_details = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->db->escape($is_he_parents) . "' AND status = '1'");
-        } else {
-            $customer_details = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->customer->getId() . "' AND status = '1'");
-        }
-
-        $this->session->data['customer_category'] = isset($customer_details->row['customer_category']) ? $customer_details->row['customer_category'] : null;
-
-        if (isset($this->session->data['language'])) {
-            $data['config_language'] = $this->session->data['language'];
-        } else {
-            $data['config_language'] = 'pt-BR';
-        }
-
-
-        unset($this->session->data['visitor_id']);
-
-        $data['justlogged_in'] = false;
-
-        if (isset($this->session->data['just_loggedin']) && $this->session->data['just_loggedin']) {
-            $data['justlogged_in'] = true;
-            $this->session->data['just_loggedin'] = false;
-        }
-
-        if (isset($this->session->data['config_store_id'])) {
-            $this->response->redirect($this->url->link('product/store', 'store_id=' . $this->session->data['config_store_id'] . ''));
-        }
-
-        $this->load->model('tool/image');
-        $this->load->language('common/home');
-        $this->load->model('account/wishlist');
-
-        $wishlist_results = $this->model_account_wishlist->getWishlists();
-        $data['wishlist_count'] = count($wishlist_results);
-        
-        $this->document->setTitle($this->config->get('config_meta_title'));
-        $this->document->setDescription($this->config->get('config_meta_description'));
-        $this->document->setKeywords($this->config->get('config_meta_keyword'));
-
-        $data['description'] = $this->document->getDescription();
-        $data['keywords'] = $this->document->getKeywords();
-        $data['metas'] = $this->document->getMetas();
-
-        if ($this->request->server['HTTPS']) {
-            $server = $this->config->get('config_ssl');
-        } else {
-            $server = $this->config->get('config_url');
-        }
-
-        if (!$this->config->get('config_seo_url') and isset($this->request->get['path'])) {
-            $this->document->addLink($server, 'canonical');
-        }
-
-        if ($this->config->get('config_google_analytics_status')) {
-            $data['google_analytics'] = html_entity_decode($this->config->get('config_google_analytics'), ENT_QUOTES, 'UTF-8');
-        } else {
-            $data['google_analytics'] = '';
-        }
-
-        $data['base'] = $server;
-       
-        if (isset($this->session->data['error'])) {
-            $data['error_warning'] = $this->session->data['error'];
-            unset($this->session->data['error']);
-        } else {
-            $data['error_warning'] = '';
-        }
-
-      
-        $data['is_login'] = $this->customer->isLogged();
-        $data['f_name'] = $this->customer->getFirstName();
-        $data['name'] = $this->customer->getFirstName();
-        $data['l_name'] = $this->customer->getLastName();
-        $data['full_name'] = $data['f_name'];
-        $data['home'] = $this->url->link('common/home');
-        $data['wishlist'] = $this->url->link('account/wishlist', '', 'SSL');
-        $data['logged'] = $this->customer->isLogged();
-        $data['account'] = $this->url->link('account/account', '', 'SSL');
-        $data['dashboard'] = $this->url->link('account/dashboard', '', 'SSL');
-        $data['po_ocr'] = $this->url->link('account/ocr', '', 'SSL');
-
-        $data['register'] = $this->url->link('account/register', '', 'SSL');
-        $data['login'] = $this->url->link('account/login', '', 'SSL');
-        $data['order'] = $this->url->link('account/order', '', 'SSL');
-        $data['credit'] = $this->url->link('account/credit', '', 'SSL');
-        $data['download'] = $this->url->link('account/download', '', 'SSL');
-        $data['logout'] = $this->url->link('account/logout', '', 'SSL');
-        $data['shopping_cart'] = $this->url->link('checkout/cart');
-        $data['checkout'] = $this->url->link('checkout/checkout', '', 'SSL');
-        $data['contact'] = $this->url->link('information/contact');
-        $data['telephone'] = $this->config->get('config_telephone');
-        $data['refer'] = $this->url->link('account/refer', '', 'SSL');
-        $data['reward'] = $this->url->link('account/reward', '', 'SSL');
-        $data['action'] = $this->url->link('common/home/find_store');
-        $data['address'] = $this->url->link('account/address', '', 'SSL');
-        $data['help'] = $this->url->link('information/help');
-
-        
-        $data['heading_title'] = $this->config->get('config_meta_title', '');
-
-        if ($this->request->server['HTTPS']) {
-            $server = $this->config->get('config_ssl');
-        } else {
-            $server = $this->config->get('config_url');
-        }
-
-       
-        if (isset($this->session->data['warning'])) {
-            $data['warning'] = $this->session->data['warning'];
-            unset($this->session->data['warning']);
-        } else {
-            $data['warning'] = '';
-        }
-
-        if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
-            $data['logo'] = $server . 'image/' . $this->config->get('config_logo');
-        } else {
-            $data['logo'] = 'assets/img/logo.svg';
-        }
-
-        
-        $data['login'] = $this->url->link('account/login', '', 'SSL');
-        $data['register'] = $this->url->link('account/register', '', 'SSL');
-        $data['forgotten'] = $this->url->link('account/forgotten', '', 'SSL');
-
-
-        $this->load->model('assets/category');
-        $data['categories'] = [];
-        $categories = $this->model_assets_category->getCategoryByStoreId(ACTIVE_STORE_ID, 0);
-
-        foreach ($categories as $category) {
-            $filter_data_product = [
-                'filter_category_id' => $category['category_id'],
-                'filter_sub_category' => true,
-                'start' => 0,
-                'limit' => (1359 == $category['category_id']) ? 12 : 12,
-                'store_id' => ACTIVE_STORE_ID,
-            ];
-
-            // Level 1
-            $productslisted = $this->getProducts($filter_data_product);
-            $data['categories'][] = [
-                'name' => $category['name'],
-                'id' => $category['category_id'],
-                'thumb' => $this->model_tool_image->resize($category['image'], 300, 300),
-                'column' => $category['column'] ? $category['column'] : 1,
-                'href' => $this->url->link('product/category', 'category=' . $category['category_id']),
-                'products' => $productslisted,
-            ];
-        }
-
-        // echo "<pre>";print_r($data['categories']);die;
-
-        $data['page'] = isset($_REQUEST['page']) ? $_REQUEST['page'] : '';
-       
-        $this->load->model('setting/store');
-        $filter = [];
-        $filter['filter_status'] = 1;
-        if (isset($_REQUEST['location'])) {
-            $userSearch = explode(',', $_REQUEST['location']);
-            $filter['filter_location'] = $_REQUEST['location'];
-        }
-        if (isset($_REQUEST['category'])) {
-            $filter['filter_category'] = $_REQUEST['category'];
-        }
-      
+        $data['customer_name'] = $this->customer->getFirstName();
 
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/home.tpl') && isset($this->session->data['customer_id'])) {
             $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/home.tpl', $data));
@@ -816,6 +648,95 @@ class ControllerCommonHome extends Controller {
             $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/index.tpl', $data));
             //$this->response->setOutput($this->load->view('default/template/common/home.tpl', $data));
         }
+    }
+
+    public function getCategoriesWithProducts() {
+        if (!isset($this->session->data['customer_id'])) {
+            if (isset($_REQUEST['action']) && ('shop' == $_REQUEST['action'])) {
+                $this->response->redirect($this->url->link('account/login/customer'));
+            }
+        }
+
+        $this->load->model('account/customer');
+        $is_he_parents = $this->model_account_customer->CheckHeIsParent();
+    
+        if ($is_he_parents != NULL) {
+            $customer_details = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->db->escape($is_he_parents) . "' AND status = '1'");
+        } else {
+            $customer_details = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->customer->getId() . "' AND status = '1'");
+        }
+
+        $this->session->data['customer_category'] = isset($customer_details->row['customer_category']) ? $customer_details->row['customer_category'] : null;
+
+        if (isset($this->session->data['language'])) {
+            $data['config_language'] = $this->session->data['language'];
+        } else {
+            $data['config_language'] = 'pt-BR';
+        }
+
+
+        unset($this->session->data['visitor_id']);
+
+        $data['justlogged_in'] = false;
+
+        if (isset($this->session->data['just_loggedin']) && $this->session->data['just_loggedin']) {
+            $data['justlogged_in'] = true;
+            $this->session->data['just_loggedin'] = false;
+        }
+
+        if (isset($this->session->data['config_store_id'])) {
+            $this->response->redirect($this->url->link('product/store', 'store_id=' . $this->session->data['config_store_id'] . ''));
+        }
+
+        $this->load->model('tool/image');
+        $this->load->language('common/home');
+        $this->load->model('account/wishlist');
+
+        $wishlist_results = $this->model_account_wishlist->getWishlists();
+        $data['wishlist_count'] = count($wishlist_results);
+        
+        $this->document->setTitle($this->config->get('config_meta_title'));
+        $this->document->setDescription($this->config->get('config_meta_description'));
+        $this->document->setKeywords($this->config->get('config_meta_keyword'));
+
+        $data['description'] = $this->document->getDescription();
+        $data['keywords'] = $this->document->getKeywords();
+        $data['metas'] = $this->document->getMetas();
+
+        if ($this->request->server['HTTPS']) {
+            $server = $this->config->get('config_ssl');
+        } else {
+            $server = $this->config->get('config_url');
+        }
+
+        $this->load->model('assets/category');
+        $data['categories'] = [];
+        $categories = $this->model_assets_category->getCategoryByStoreId(ACTIVE_STORE_ID, 0);
+
+        foreach ($categories as $category) {
+            $filter_data_product = [
+                'filter_category_id' => $category['category_id'],
+                'filter_sub_category' => true,
+                'start' => 0,
+                'limit' => (1359 == $category['category_id']) ? 12 : 12,
+                'store_id' => ACTIVE_STORE_ID,
+            ];
+
+            $productslisted = $this->getProducts($filter_data_product);
+            $data['categories'][] = [
+                'name' => $category['name'],
+                'id' => $category['category_id'],
+                'thumb' => $this->model_tool_image->resize($category['image'], 300, 300),
+                'column' => $category['column'] ? $category['column'] : 1,
+                'href' => $this->url->link('product/category', 'category=' . $category['category_id']),
+                'products' => $productslisted,
+            ];
+        }
+
+        // echo "<pre>";print_r($data['categories']);die;
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($data['categories']));
     }
 
     public function toHome() {

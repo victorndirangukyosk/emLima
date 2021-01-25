@@ -1,30 +1,10 @@
-<div class="product-popup-wrapper"></div>
+<?php require(DIR_BASE.'front/ui/theme/kwikbasket/template/common/cart.tpl'); ?>
+<?php require(DIR_BASE.'front/ui/theme/kwikbasket/template/product/product_popup.tpl'); ?>
 
-<div id="mini-cart-panel" class="modal fixed-left fade" tabindex="-1" role="dialog">
-   <div class="modal-dialog modal-dialog-aside" role="document">
-      <div class="modal-content">
-         <div class="modal-header">
-            <h5 class="modal-title">Basket</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-               <span aria-hidden="true">&times;</span>
-            </button>
-         </div>
-         <div class="modal-body">
-            <div id="mini-cart-spinner">
-               <img src="<?= $base ?>front/ui/theme/kwikbasket/assets/images/spinner.gif" alt="Loading spiner">
-            </div>
-            <div class="mini-cart-content"></div>
-         </div>
-         <div v-if="itemsInCart" class="modal-footer">
-            <button class="btn btn-cta">Checkout  ({{ basketCost }})</button>
-         </div>
-      </div>
-   </div>
-</div>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.min.js"></script>
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/vuex/3.6.0/vuex.min.js"></script>
-   <script src="<?= $base;?>front/ui/theme/kwikbasket/assets/js/app.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vuex/3.6.0/vuex.min.js"></script>
+<script src="<?= $base;?>front/ui/theme/kwikbasket/assets/js/app.js"></script>
+
 <script type="text/javascript">
    $(document).ready(function () {
 
@@ -44,22 +24,6 @@
             });
          });
       }
-
-      $(document).delegate('.products-grid-item', 'click', function () {
-         $('.products-grid-item').prop('disabled', true);
-         openProductPopup($(this).attr('data-id'), $(this).attr('data-store'))
-            .then((data) => {
-               $('.products-grid-item').prop('disabled', false);
-            })
-      });
-
-      $(document).delegate('.mini-cart-button', 'click', function () {
-         $('#mini-cart-spinner').show();
-         $.get('index.php?path=common/cart/newInfo', function(data) {
-            $('.mini-cart-content').html(data);
-            $('#mini-cart-spinner').hide();
-         });
-      });
 
       $('#header-product-search').autocomplete({
          delay: 500,
@@ -125,7 +89,6 @@
       });
    });
 </script>
-
 </body>
 
 </html>

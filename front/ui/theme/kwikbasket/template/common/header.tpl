@@ -34,7 +34,6 @@
    <script type='text/javascript'src='https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js'></script>
    <script src="https://unpkg.com/currency.js@2.0.3/dist/currency.min.js"></script>
    <script src="<?= $base;?>front/ui/theme/kwikbasket/assets/js/scripts.js"></script>
-   <script src="<?= $base;?>front/ui/theme/kwikbasket/assets/js/cart.js"></script>
 </head>
 
 
@@ -65,7 +64,7 @@
                                  src="<?= $base ?>front/ui/theme/kwikbasket/assets/images/icons/user.svg"
                                  alt="User icon"></div>
                            <div>Hi,
-                              <?= $full_name ?>
+                              <?= $customer_name ?>
                            </div>
                            <div><a href="<?= $logout ?>">Sign Out</a></div>
                         </div>
