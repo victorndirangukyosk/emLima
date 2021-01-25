@@ -33,6 +33,9 @@
    <script type='text/javascript' src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
    <script type='text/javascript'
       src='https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js'></script>
+   <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/vuex/3.6.0/vuex.min.js"></script>
+   <script src="<?= $base;?>front/ui/theme/metaorganic/assets/js/app.js"></script>
    <script src="<?= $base;?>front/ui/theme/metaorganic/assets/js/scripts.js"></script>
    <script src="<?= $base;?>front/ui/theme/metaorganic/assets/js/cart.js"></script>
 </head>
@@ -40,7 +43,7 @@
 
 <body>
    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.3/TweenMax.min.js"></script>
-   <div class="super_container">
+   <div id="kwikbasket-app" class="super_container">
       <!-- Header -->
       <header class="header">
          <!-- Top Bar -->

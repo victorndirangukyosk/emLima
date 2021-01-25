@@ -10,6 +10,9 @@
             </button>
          </div>
          <div class="modal-body">
+            <div id="mini-cart-spinner">
+               <img src="<?= $base ?>front/ui/theme/metaorganic/assets/images/spinner.gif" alt="Loading spiner">
+            </div>
             <div class="mini-cart-content"></div>
          </div>
          <div class="modal-footer">
@@ -49,7 +52,11 @@
       });
 
       $(document).delegate('.mini-cart-button', 'click', function () {
-         $('.mini-cart-content').load('index.php?path=common/cart/newInfo');
+         $('#mini-cart-spinner').show();
+         $.get('index.php?path=common/cart/newInfo', function(data) {
+            $('.mini-cart-content').html(data);
+            $('#mini-cart-spinner').hide();
+         });
       });
 
       $('#header-product-search').autocomplete({

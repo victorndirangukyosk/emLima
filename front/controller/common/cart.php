@@ -358,7 +358,6 @@ class ControllerCommonCart extends Controller
                 'minimum' => $product['minimum'] > 0 ? $product['minimum'] : $max_qty,
                 'store_id' => $product['store_id'],
                 'produce_type' => $product['produce_type'],
-                //'store_name'     => $this->model_account_address->getStoreNameById($product['store_id']),
                 'href' => $this->url->link('product/product', 'product_store_id='.$product['product_store_id']),
             ];
         }
