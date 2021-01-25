@@ -15,8 +15,8 @@
             </div>
             <div class="mini-cart-content"></div>
          </div>
-         <div class="modal-footer">
-            <button class="btn btn-cta">Checkout</button>
+         <div v-if="itemsInCart" class="modal-footer">
+            <button class="btn btn-cta">Checkout  ({{ basketCost }})</button>
          </div>
       </div>
    </div>
