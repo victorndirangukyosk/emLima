@@ -275,7 +275,7 @@ class ControllerApiCustomers extends Controller
                 array_push($finalAutoCompleteData, $temp);
              
         }
-        $json[$data]=$finalAutoCompleteData;
+        $json['data']=$finalAutoCompleteData;
 
         // $sort_order = [];
 
