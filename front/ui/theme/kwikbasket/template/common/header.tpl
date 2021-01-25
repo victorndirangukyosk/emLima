@@ -7,24 +7,10 @@
    <meta name="viewport" content="width=device-width, initial-scale=1">
    <meta name="kdt:page" content="home-page">
    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-
-   <meta http-equiv="content-language" content="<?= $config_language?>">
-
-   <?php if ($description) { ?>
-   <meta name="description" content="<?php echo $description; ?>" />
-   <?php } ?>
-   <?php if ($keywords) { ?>
-   <meta name="keywords" content="<?php echo $keywords; ?>" />
-   <?php } ?>
-   <title>
-      <?= $heading_title ?>
-   </title>
-   <?php if ($icon) { ?>
-   <link href="<?php echo $icon; ?>" rel="icon" />
-   <?php } ?>
-
+   
+   <title>Kwik Basket | Save time, Get value</title>
+   
    <link href="<?= $base;?>front/ui/theme/kwikbasket/assets/images/favicon.ico" rel="icon">
-
    <link href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css' rel='stylesheet'>
    <link href='https://use.fontawesome.com/releases/v5.8.1/css/all.css' rel='stylesheet'>
    <link rel="stylesheet" href="<?= $base;?>front/ui/theme/kwikbasket/assets/css/style.css">
