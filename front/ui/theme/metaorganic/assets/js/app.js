@@ -5,13 +5,14 @@ const kbApplication = new Vue({
             cartProducts: []
         },
 
-        mutatations: {
+        mutations: {
             addProductToCart(state, product) {
                 state.cartProducts.push(product);
             },
 
             removeProductFromCart(state, product) {
-                state.cartProducts.splice(this.cartProducts.indexOf(product), 1);
+                const index = state.cartProducts.map(item => item.key).indexOf(product.key);
+                state.cartProducts.splice(index, 1);
             }
         },
 
@@ -42,6 +43,8 @@ const kbApplication = new Vue({
         }
     }),
     mounted() {
-        // Get products in cart
+        $.get('index.php?path=common/cart/getProductsInCart', (products) => {
+            this.$store.state.cartProducts = products;
+        });
     },
 });

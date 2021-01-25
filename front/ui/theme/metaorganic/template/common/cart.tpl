@@ -22,9 +22,9 @@
 <script>
     new Vue({
         el: '#mini-cart',
-        data() {
+        data() {   
             return {
-                cartProducts: <?= json_encode($products) ?>,
+                cartProducts: kbApplication.$store.state.cartProducts
             }
         },
         methods: {
