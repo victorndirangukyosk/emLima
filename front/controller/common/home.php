@@ -595,6 +595,7 @@ class ControllerCommonHome extends Controller {
         }
 
         $data['customer_name'] = $this->customer->getFirstName();
+        $data['logo'] = $server . 'image/' . $this->config->get('config_logo');
 
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/home.tpl') && isset($this->session->data['customer_id'])) {
             $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/home.tpl', $data));

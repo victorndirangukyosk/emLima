@@ -48,7 +48,7 @@ const kbApplication = new Vue({
                 $.ajax({
                     url: 'index.php?path=checkout/cart/add',
                     type: 'POST',
-                    data: 'variation_id=' + variation_id + '&product_id=' + product_id + '&quantity=' +  quantity  + '&store_id=' + store_id + '&product_notes=' + productNotes + '&produce_type=' + produceType,
+                    data: 'variation_id=' + variation_id + '&product_id=' + product_id + '&quantity=' + quantity + '&store_id=' + store_id + '&product_notes=' + productNotes + '&produce_type=' + produceType,
                     dataType: 'json'
                 });
             },
@@ -94,8 +94,8 @@ const kbApplication = new Vue({
         basketCost: function () {
             return this.formatCurrency(this.$store.getters.basketCost);
         },
-        
-        cartProducts: function() {
+
+        cartProducts: function () {
             return this.$store.state.cartProducts;
         }
     },
@@ -200,3 +200,14 @@ const kbApplication = new Vue({
         }
     }
 });
+
+// Block page reload until all pending XHR requests complete
+let hasPendingRequest = false;
+$(document).ajaxStart(() => hasPendingRequest = true);
+$(document).ajaxStop(() => hasPendingRequest = false);
+
+window.onbeforeunload = function () {
+    if (hasPendingRequest) {
+        return 'If you navigate away from this page you will lose your unsaved changes.Give us a Kwik minute and try again';
+    }
+}
