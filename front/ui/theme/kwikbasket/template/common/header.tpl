@@ -19,6 +19,7 @@
    <script type='text/javascript' src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
    <script type='text/javascript'src='https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js'></script>
    <script src="https://unpkg.com/currency.js@2.0.3/dist/currency.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.20/lodash.min.js"></script>
    <script src="<?= $base;?>front/ui/theme/kwikbasket/assets/js/scripts.js"></script>
 </head>
 
@@ -82,7 +83,7 @@
                            <div class="header_search_form_container">
                               <form action="#" class="header_search_form clearfix">
                                  <input id="header-product-search" type="search" class="header_search_input"
-                                    placeholder="Search for products...">
+                                    placeholder="Search for products..." v-model="searchQuery" debounce="1500">
                               </form>
                            </div>
                         </div>

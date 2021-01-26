@@ -4,6 +4,8 @@ const kbApplication = new Vue({
     data() {
         return {
             selectedProduct: this.getInitialPopupState(),
+            searchQuery: '',
+            apiSearchResults: [],
         }
     },
 
@@ -83,6 +85,22 @@ const kbApplication = new Vue({
     }),
 
     computed: {
+        isSearchActive: function () {
+            return this.searchQuery.length > 0;
+        },
+
+        searchResults: function () {
+            let results = new Set();
+            return this.$store.state.productCategories
+                .flatMap(category => category.products)
+                .concat(this.apiSearchResults)
+                .filter(product => product.name.toLowerCase().indexOf(this.searchQuery.toLowerCase()) >= 0)
+                .filter(product => {
+                    let key = product.product_id;
+                    return results.has(key) ? false : results.add(key);
+                });
+        },
+
         productCategories: function () {
             return this.$store.state.productCategories;
         },
@@ -161,7 +179,7 @@ const kbApplication = new Vue({
         incrementProductQuantity(product) {
             const key = product.key;
             const newQuantity = (parseFloat(product.quantity) + 1).toFixed(1);
-            kbApplication.$store.dispatch('updateProductQuantity', { key, newQuantity });
+            this.$store.dispatch('updateProductQuantity', { key, newQuantity });
         },
 
         decrementProductQuantity(product) {
@@ -169,18 +187,38 @@ const kbApplication = new Vue({
             const newQuantity = (parseFloat(product.quantity) - 1).toFixed(1);
 
             if (newQuantity <= 0) {
-                kbApplication.$store.dispatch('removeProductFromCart', product);
+                this.$store.dispatch('removeProductFromCart', product);
             } else {
-                kbApplication.$store.dispatch('updateProductQuantity', { key, newQuantity });
+                this.$store.dispatch('updateProductQuantity', { key, newQuantity });
             }
         },
 
         removeProductFromCart(product) {
-            kbApplication.$store.dispatch('removeProductFromCart', product);
-        }
+            this.$store.dispatch('removeProductFromCart', product);
+        },
+
+        searchProduct:
+            _.debounce(function () {
+                $.ajax({
+                    url: `index.php?path=product/search/product_search&filter_name=${encodeURIComponent(this.searchQuery)}`,
+                    dataType: 'json',
+                    success: (data) => {
+                        this.apiSearchResults = data;
+                    },
+                    error: (error) => {
+                        this.apiSearchResults = [];
+                    }
+                });
+            }, 500)
     },
 
     watch: {
+        searchQuery: function () {
+            if (this.isSearchActive) {
+                this.searchProduct();
+            }
+        },
+
         selectedProduct: {
             handler(selectedProduct) {
                 if (Object.keys(selectedProduct).length) {
@@ -197,7 +235,7 @@ const kbApplication = new Vue({
                 }
             },
             deep: true
-        }
+        },
     }
 });
 

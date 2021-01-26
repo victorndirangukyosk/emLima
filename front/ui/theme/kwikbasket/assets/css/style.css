@@ -1266,8 +1266,7 @@ select option {
 }
 
 .products-grid {
-    min-height: 100vh;
-    margin-top: 3rem;
+    min-height: 50vh;
 }
 
 .category-title {

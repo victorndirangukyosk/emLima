@@ -649,6 +649,8 @@ class ControllerProductSearch extends Controller
                     $value['image'] = $this->model_tool_image->resize('placeholder.png', 100, 100);
                 }
 
+                $value['variations'] = $this->model_assets_product->getProductVariationsNew($value['name'], $value['store_id']);
+
                 if (isset($this->session->data['config_store_id'])) {
                     $store_id1 = $this->session->data['config_store_id'];
                 } else {
