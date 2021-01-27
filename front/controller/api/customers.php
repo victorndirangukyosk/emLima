@@ -241,4 +241,62 @@ class ControllerApiCustomers extends Controller
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
+
+
+    public function getAccountManagers($args=[])
+    {
+        try{
+        $this->load->model('user/user');
+
+        // echo "<pre>";print_r($args['filter_name']); die;
+           
+        $filter_data = [
+            'filter_name' => $args['name'],
+            // 'filter_email' => $filter_email,
+            // 'filter_telephone' => $filter_telephone,
+            // 'start' => 0,
+            // 'limit' => 5,
+        ];
+        $json['status'] = 200;
+        $results = $this->model_user_user->getAccountManagerUsers($filter_data);
+        $finalAutoCompleteData = [];
+        foreach ($results as $result) {
+             
+            $temp['user_id'] = $result['user_id'];
+            $temp['user_group_id'] = $result['user_group_id'];
+            $temp['username'] = strip_tags(html_entity_decode($result['username'], ENT_QUOTES, 'UTF-8'));
+            $temp['name'] = $result['name'];
+            $temp['firstname'] = $result['firstname'];
+            $temp['lastname'] = $result['lastname'];
+            $temp['email'] = $result['email'];
+            $temp['telephone'] = $result['telephone'];
+            $temp['status'] = $result['status'];
+
+                array_push($finalAutoCompleteData, $temp);
+             
+        }
+        $json['data']=$finalAutoCompleteData;
+
+        // $sort_order = [];
+
+        // foreach ($json as $key => $value) {
+        //     $sort_order[$key] = $value['name'];
+        // }
+
+        // array_multisort($sort_order, SORT_ASC, $json);
+        // $log->write($json);
+
+        // $this->response->addHeader('Content-Type: application/json');
+ 
+        $json['msg'] = 'Account Managers fetched successfully';
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+        }
+        catch(exception $ex)
+        { $json['status'] = 400;
+            $json['data'] = '';
+            $json['msg'] = 'Account Managers fetching failed';
+
+        }
+    }
 }

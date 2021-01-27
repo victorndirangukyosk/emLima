@@ -450,6 +450,11 @@
                     <?php if($preturn_product_purchased) { ?>
                     <li><a href="<?php echo $report_product_purchased; ?>"><?php echo $text_report_product_purchased; ?></a></li>
                     <?php } ?>
+
+                     <?php if($preturn_inventory_daily_prices) { ?>
+                    <li><a href="<?php echo $report_inventory_daily_prices; ?>"><?php echo $text_report_inventory_daily_prices; ?></a></li>
+                    <?php } ?>
+
                 </ul>
             </li>
             <?php } ?>

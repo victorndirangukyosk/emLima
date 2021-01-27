@@ -952,6 +952,8 @@
 
   $(document).ready(function () {
     $(document).delegate('.open-popup', 'click', function () {
+       $('.search-dropdown').css('display', 'none');
+       $('.search-dropdown').find('li').remove();
       $('.open-popup').prop('disabled', true);
       // console.log("product blocks" + $(this).attr('data-id'));
       $.get('index.php?path=product/product/view&product_store_id=' + $(this).attr('data-id') + '&store_id=' + $(this).attr('data-store'), function (data) {

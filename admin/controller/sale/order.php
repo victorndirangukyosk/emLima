@@ -1178,7 +1178,7 @@ class ControllerSaleOrder extends Controller {
         $order_total = $this->model_sale_order->getTotalOrders($filter_data);
 
         $results = $this->model_sale_order->getOrders($filter_data);
-       
+
         //        echo "<pre>";print_r($results);die;
         foreach ($results as $result) {
             $sub_total = 0;
@@ -1483,16 +1483,16 @@ class ControllerSaleOrder extends Controller {
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
-        
+
         $this->load->model('executives/executives');
         $delivery_executives = $this->model_executives_executives->getExecutives();
         $data['delivery_executives'] = $delivery_executives;
-        
+
         $this->load->model('drivers/drivers');
         $drivers = $this->model_drivers_drivers->getDrivers();
         $data['drivers'] = $drivers;
-        
-           
+
+
         $this->load->model('orderprocessinggroup/orderprocessinggroup');
         $order_processing_groups = $this->model_orderprocessinggroup_orderprocessinggroup->getOrderProcessingGroups();
         $data['order_processing_groups'] = $order_processing_groups;
@@ -2967,7 +2967,7 @@ class ControllerSaleOrder extends Controller {
             } else {
                 $data['order_driver_details'] = NULL;
             }
-            
+
             $this->load->model('executives/executives');
             $order_delivery_executive_details = $this->model_executives_executives->getExecutive($order_info['delivery_executive_id']);
             if (is_array($order_delivery_executive_details) && $order_delivery_executive_details != NULL) {
@@ -4380,7 +4380,7 @@ class ControllerSaleOrder extends Controller {
                 }
                 $data['driver_name'] = $driver_name;
                 $data['driver_phone'] = $driver_phone;
-                
+
                 $this->load->model('executives/executives');
                 $executive_info = $this->model_executives_executives->getExecutive($order_info['delivery_executive_id']);
                 $executive_name = NULL;
@@ -4501,7 +4501,7 @@ class ControllerSaleOrder extends Controller {
                     $order_customer_first_last_name = $order_customer_detials['firstname'] . ' ' . $order_customer_detials['lastname'];
                     $company_name = $order_customer_detials['company_name'];
                 }
-                
+
                 $this->load->model('drivers/drivers');
                 $driver_info = $this->model_drivers_drivers->getDriver($order_info['driver_id']);
                 $driver_name = NULL;
@@ -4522,8 +4522,8 @@ class ControllerSaleOrder extends Controller {
                 }
                 $data['delivery_executive_name'] = $delivery_executive_name;
                 $data['delivery_executive_phone'] = $delivery_executive_phone;
-                
-                
+
+
                 $data['orders'][] = [
                     'order_id' => $order_id,
                     'invoice_no' => $invoice_no,
@@ -4555,9 +4555,9 @@ class ControllerSaleOrder extends Controller {
                     'comment' => nl2br($order_info['comment']),
                     'shipping_name_original' => $order_info['shipping_name'],
                     'driver_name' => $driver_name,
-                    'driver_phone' => '+' . $this->config->get('config_telephone_code').' '.$driver_phone,
+                    'driver_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $driver_phone,
                     'delivery_executive_name' => $delivery_executive_name,
-                    'delivery_executive_phone' => '+' . $this->config->get('config_telephone_code').' '.$delivery_executive_phone
+                    'delivery_executive_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $delivery_executive_phone
                 ];
             }
         }
@@ -4594,17 +4594,17 @@ class ControllerSaleOrder extends Controller {
 
         $data = [];
 
-        
+
 
         $totalOrdersAmount = 0;
         foreach ($results as $order) {
             $data['consolidation'][] = [
                 'delivery_date' => date("d-m-Y", strtotime($order['delivery_date'])),
-                'customer' => $order['customer'] ,//. ' Order#' . $order['order_id'],
-                'company_name' => $order['company_name'] ,
+                'customer' => $order['customer'], //. ' Order#' . $order['order_id'],
+                'company_name' => $order['company_name'],
                 'amount' => $order['total'],
                 'SAP_customer_no' => $order['SAP_customer_no'],
-                'invoice_no' => 'KB'.$order['order_id'],
+                'invoice_no' => 'KB' . $order['order_id'],
                 'SAP_document_no' => '',
                 'order_status' => $order['status'],
             ];
@@ -7563,7 +7563,7 @@ class ControllerSaleOrder extends Controller {
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
-    
+
     public function SaveOrUpdateOrderDeliveryExecutiveDetails() {
         $order_id = $this->request->post['order_id'];
         $delivery_executive_id = $this->request->post['delivery_executive_id'];
@@ -7620,7 +7620,7 @@ class ControllerSaleOrder extends Controller {
             $driver_name = $driver_info['firstname'] . ' ' . $driver_info['lastname'];
             $driver_phone = $driver_info['telephone'];
         }
-        
+
         $executive_name = NULL;
         $executive_phone = NULL;
         if ($executive_info) {
@@ -7679,7 +7679,7 @@ class ControllerSaleOrder extends Controller {
             $ret = $this->emailtemplate->sendmessage($customer_info['telephone'], $sms_message);
         }
     }
-    
+
     public function SaveOrUpdateOrderDriverVehicleDetails() {
         $order_id = $this->request->post['order_id'];
         $driver_id = $this->request->post['driver_id'];
@@ -7721,16 +7721,16 @@ class ControllerSaleOrder extends Controller {
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
-    
+
     public function SaveOrUpdateOrderProcessorDetails() {
         $order_id = $this->request->post['order_id'];
         $order_processing_group_id = $this->request->post['order_processing_group_id'];
         $order_processor_id = $this->request->post['order_processor_id'];
-          $log = new Log('error.log');
-          $log->write('SaveOrUpdateOrderProcessorDetails');
-          $log->write($this->request->post['order_processing_group_id']);
-          $log->write($this->request->post['order_processor_id']);
-          $log->write($this->request->post['order_id']);
+        $log = new Log('error.log');
+        $log->write('SaveOrUpdateOrderProcessorDetails');
+        $log->write($this->request->post['order_processing_group_id']);
+        $log->write($this->request->post['order_processor_id']);
+        $log->write($this->request->post['order_id']);
 
         $this->load->model('checkout/order');
         $this->load->model('sale/order');
@@ -7760,4 +7760,15 @@ class ControllerSaleOrder extends Controller {
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
+
+    public function getDriverDetails() {
+        
+        $order_id = $this->request->post['order_id'];
+        $this->load->model('checkout/order');
+        $order_info = $this->model_checkout_order->getOrder($order_id);
+        $json['order_info'] = $order_info;
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
 }
