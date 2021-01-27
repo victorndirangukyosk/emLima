@@ -262,8 +262,8 @@ class ControllerReportInventoryDailyPrices extends Controller
                         $data['products'][] = [
                             // 'store_name' => $result['store_name'],
                             //'vendor_name'=>$result['fs'].' '.$result['ls'],
-                            'General Product ID' => $result['product_id'],
-                            'Vendor Product ID' => $result['product_store_id'],
+                            // 'General Product ID' => $result['product_id'],
+                            // 'Vendor Product ID' => $result['product_store_id'],
 
                             // 'price' => $result['price'],
                             // 'special_price' => $result['special_price'],
@@ -273,13 +273,13 @@ class ControllerReportInventoryDailyPrices extends Controller
                             // 'bigimage' => $bigimage,
                             'Product Name' => $result['product_name'],
                             'Unit' => $result['unit'],
-                            'Buying Price' => $result['buying_price'],
+                            'Last Updated Buying Price' => $result['buying_price'],
 
                             //'weight' => $result['weight'],
                             // 'model' => $result['model'],
                             // 'category' => $category,
                             // 'category_price_status' => array_key_exists('category_price_status', $result) ? $result['category_price_status'] : '',
-                            'Status' => ($result['sts']) ? $this->language->get('text_enabled') : $this->language->get('text_disabled'),                  
+                            // 'Status' => ($result['sts']) ? $this->language->get('text_enabled') : $this->language->get('text_disabled'),                  
                             ];
                         // $totalOrders=0;
                         // $OrdersValue=0;
@@ -668,8 +668,8 @@ class ControllerReportInventoryDailyPrices extends Controller
                 $data['products'][] = [
                     // 'store_name' => $result['store_name'],
                     //'vendor_name'=>$result['fs'].' '.$result['ls'],
-                    'General Product ID' => $result['product_id'],
-                    'Vendor Product ID' => $result['product_store_id'],
+                    // 'General Product ID' => $result['product_id'],
+                    // 'Vendor Product ID' => $result['product_store_id'],
 
                     // 'price' => $result['price'],
                     // 'special_price' => $result['special_price'],
@@ -679,13 +679,13 @@ class ControllerReportInventoryDailyPrices extends Controller
                     // 'bigimage' => $bigimage,
                     'Product Name' => $result['product_name'],
                     'Unit' => $result['unit'],
-                    'Buying Price' => $result['buying_price'],
+                    'Last Updated Buying Price' => $result['buying_price'],
 
                     //'weight' => $result['weight'],
                     // 'model' => $result['model'],
                     // 'category' => $category,
                     // 'category_price_status' => array_key_exists('category_price_status', $result) ? $result['category_price_status'] : '',
-                    'Status' => ($result['sts']) ? $this->language->get('text_enabled') : $this->language->get('text_disabled'),                  
+                    // 'Status' => ($result['sts']) ? $this->language->get('text_enabled') : $this->language->get('text_disabled'),                  
                     ];
                 // $totalOrders=0;
                 // $OrdersValue=0;
