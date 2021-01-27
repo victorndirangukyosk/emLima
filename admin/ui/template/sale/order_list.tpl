@@ -1113,6 +1113,9 @@ function savedriverdetail() {
                 } 
                 else{
                 var clicked_orderid = order_id;
+                $('.alert').html('Please wait your request is processing!');
+                $(".alert").attr('class', 'alert alert-success');
+                $(".alert").show();
                 $.ajax({
 		url: 'index.php?path=sale/order/api&token=<?php echo $token; ?>&api=api/order/history&order_id='+clicked_orderid+'&added_by=<?php echo $this->user->getId(); ?>&added_by_role=<?php echo $this->user->getGroupName(); ?>',
 		type: 'post',
@@ -1175,7 +1178,10 @@ function saveorderprocessingdetails() {
                        return false;
                 } 
                 else{
-            var clicked_orderid = order_id;        
+            var clicked_orderid = order_id;
+            $('.alert').html('Please wait your request is processing!');
+            $(".alert").attr('class', 'alert alert-success');
+            $(".alert").show();
             $.ajax({
 		url: 'index.php?path=sale/order/api&token=<?php echo $token; ?>&api=api/order/history&order_id='+clicked_orderid+'&added_by=<?php echo $this->user->getId(); ?>&added_by_role=<?php echo $this->user->getGroupName(); ?>',
 		type: 'post',
