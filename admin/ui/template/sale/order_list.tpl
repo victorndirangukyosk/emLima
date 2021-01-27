@@ -1167,6 +1167,7 @@ function saveorderprocessingdetails() {
    var order_id = $('input[name="order_id"]').val();
    var order_processing_group_id =  $('select[name="order_processing_group_id"]').val();
    var order_processor_id =  $('select[name="order_processor_id"]').val();
+   var order_processing_group_name = 'Order Processing Group : '+ $('select[name=\'order_processing_group_id\'] option:selected').text();
     console.log(order_processing_group_id);
     console.log(order_processor_id);
 
@@ -1186,7 +1187,7 @@ function saveorderprocessingdetails() {
 		url: 'index.php?path=sale/order/api&token=<?php echo $token; ?>&api=api/order/history&order_id='+clicked_orderid+'&added_by=<?php echo $this->user->getId(); ?>&added_by_role=<?php echo $this->user->getGroupName(); ?>',
 		type: 'post',
 		dataType: 'json',
-		data: 'order_status_id=' + encodeURIComponent($('select[id=\'input-order-status'+clicked_orderid+'\']').val()) + '&notify=1',
+		data: 'order_status_id=' + encodeURIComponent($('select[id=\'input-order-status'+clicked_orderid+'\']').val()) + '&notify=1&comment='+order_processing_group_name,
 		success: function(json) {	 
                     console.log(json);
                     $('.alert').html('Order status updated successfully!');
@@ -1223,7 +1224,7 @@ function saveorderprocessingdetails() {
                                 }
                 });
                 }
-$('#driverModal-form')[0].reset();               
+$('#orderprocessingModal-form')[0].reset();               
 }
 
 $('a[id^=\'update_order_status\']').on('click', function (e) {
