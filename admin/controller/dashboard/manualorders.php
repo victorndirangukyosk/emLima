@@ -12,12 +12,12 @@ class ControllerDashboardManualOrders extends Controller
 
         $data['token'] = $this->session->data['token'];
         $enddate = date('Y-m-d', strtotime('1 days'));
-        $data['manual_orders_url'] = $this->url->link('sale/order', 'token='.$this->session->data['token'].'&filter_order_type=0&filter_date_added=2021-01-01&filter_date_added_end='.$enddate, 'SSL');
+        $data['manual_orders_url'] = $this->url->link('sale/order', 'token='.$this->session->data['token'].'&filter_order_type=1&filter_date_added=2021-01-01&filter_date_added_end='.$enddate, 'SSL');
 
         if (isset($this->request->get['filter_order_type'])) {
             $filter_order_type = $this->request->get['filter_order_type'];
         } else {
-            $filter_order_type = 0;
+            $filter_order_type = 1;
         }
         if (isset($this->request->get['filter_date_added'])) {
             $filter_date_added = $this->request->get['filter_date_added'];
