@@ -100,8 +100,7 @@
 
               <div
                 class="cart mini-cart-button"
-                data-toggle="modal"
-                data-target="#mini-cart-panel"
+                @click="$bvModal.show('mini-cart-panel')"
               >
                 <div
                   class="cart_container d-flex flex-row align-items-center justify-content-end"
@@ -113,14 +112,14 @@
                     />
                     <div class="cart_count">
                       <span class="cart_items_count">
-                        {{ itemsInCart }}
+                        {{ itemsInBasket }}
                       </span>
                     </div>
                   </div>
                   <div class="cart_content">
                     <div class="cart_text"><a>Basket</a></div>
                     <div class="cart_price">
-                      {{ basketCost }}
+                      {{ amountInBasket }}
                     </div>
                   </div>
                 </div>
@@ -267,6 +266,7 @@
 
 <script>
 import { mapGetters } from "vuex";
+import currency from "../util/currency";
 
 export default {
   data: () => ({
@@ -279,9 +279,13 @@ export default {
   }),
   computed: {
     ...mapGetters({
-      itemsInCart: "cart/itemsInCart",
+      itemsInBasket: "cart/itemsInBasket",
       basketCost: "cart/basketCost",
     }),
+
+    amountInBasket() {
+      return currency(this.basketCost, { symbol: 'KES ' }).format();
+    }
   },
 };
 </script>

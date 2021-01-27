@@ -1,18 +1,19 @@
 import axios from 'axios';
 import * as types from '../mutation-types';
+import currency from "../../util/currency";
 
 export const state = {
     cartProducts: []
 }
 
 export const getters = {
-    itemsInCart: state => state.cartProducts.length,
+    itemsInBasket: state => state.cartProducts.length,
 
     basketCost: state => {
         return state.cartProducts.reduce(function (prev, { quantity, price }) {
             return prev + (currency(price).value * quantity);
         }, 0);
-    }
+    },
 }
 
 export const mutations = {
@@ -20,15 +21,19 @@ export const mutations = {
         state.cartProducts.push(product);
     },
 
-    [types.UPDATE_PRODUCT_QUANTITY](state, { key, newQuantity }) {
+    [types.UPDATE_PRODUCT_QUANTITY](state, { key, quantity }) {
         const index = state.cartProducts.map(item => item.key).indexOf(key);
-        state.cartProducts[index].quantity = newQuantity;
+        state.cartProducts[index].quantity = quantity;
     },
 
     [types.REMOVE_PRODUCT_FROM_CART](state, product) {
         const index = state.cartProducts.map(item => item.key).indexOf(product.key);
         state.cartProducts.splice(index, 1);
-    }
+    },
+
+    [types.SET_PRODUCTS_IN_CART](state, products) {
+        state.cartProducts = products;
+    },
 }
 
 export const actions = {
@@ -58,5 +63,10 @@ export const actions = {
         axios.post('index.php?path=checkout/cart/update', {
             key, quantity, product_note, produce_type
         });
+    },
+
+    async getProductsInCart({ commit }) {
+        const { data } = await axios.get('index.php?path=common/cart/getProductsInCart');
+        commit(types.SET_PRODUCTS_IN_CART, data);
     }
 }
