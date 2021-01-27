@@ -1153,7 +1153,8 @@ function savedriverdetail() {
                                 }
                 });
                 }
-               
+                
+$('#driverModal-form')[0].reset();               
 }            
 
 function saveorderprocessingdetails() { 
@@ -1216,8 +1217,8 @@ function saveorderprocessingdetails() {
                                 }
                 });
                 }
-               
-            }
+$('#driverModal-form')[0].reset();               
+}
 
 $('a[id^=\'update_order_status\']').on('click', function (e) {
 e.preventDefault();
