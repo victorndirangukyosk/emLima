@@ -81,15 +81,15 @@
                                 <label class="control-label" for="input-order-type">Order Type</label>
                                 <select name="filter_order_type" id="input-order-type" class="form-control">
                                     <option value="*" selected></option> 
-                                    <?php if ($filter_order_type=='0') { ?>
+                                    <?php if ($filter_order_type=='1') { ?>
                                     <option value="0" selected="selected">Manual</option>
                                     <?php } else { ?>
-                                    <option value="0">Manual</option>
+                                    <option value="1">Manual</option>
                                     <?php } ?>
-                                     <?php if ($filter_order_type=='1') { ?>
-                                    <option value="1" selected="selected">Online</option>
+                                     <?php if ($filter_order_type=='0') { ?>
+                                    <option value="0" selected="selected">Online</option>
                                     <?php } else { ?>
-                                    <option value="1">Online</option>
+                                    <option value="0">Online</option>
                                     <?php } ?>
                                      
                                 </select>
