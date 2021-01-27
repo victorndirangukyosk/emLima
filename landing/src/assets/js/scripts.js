@@ -32,7 +32,30 @@
             y: 0,
             duration: .5
         });
-
+        
+$('input[name=\'register-accountmanager-id\']').autocomplete({
+  'source': function(request, response) {
+    $.ajax({
+      url: 'index.php?path=account/login/autocompleteaccountmanager&filter_name=' +  $('input[name=\'register-accountmanager-id\']').val(),
+      dataType: 'json',     
+      success: function(json) {
+        response($.map(json, function(item) {
+          return {
+            label: item['username'],
+            value: item['user_id']
+          }
+        }));
+      }
+    });
+  },
+  'select': function(event, ui) {
+     console.log(ui.item.label); 
+     console.log(ui.item.value); 
+     $('input[name=\'register-accountmanager-id\']').val(ui.item.label);
+     $('input[name=\'register-accountmanager-id\']').attr('register_accountmanager_id',ui.item.value);
+     return false;
+  } 
+});
         // Customer Login
         $(document).delegate('#login-button', 'click', function (e) {
             getLocationOnly();
@@ -151,7 +174,8 @@
                     const location = $('#register-location').val();
                     const password = $('#register-password').val();
                     const passwordConfirmation = $('#register-password-confirm').val();
-                    const accountmanagerid = $('#register-accountmanager-id').val();
+                    const accountmanagername = $('#register-accountmanager-id').val();
+                    const accountmanagerid = $('#register-accountmanager-id').attr('register_accountmanager_id');
                     const registrationView = $('#registration-view');
                     const otpView = $('#otp-view');
                     const registerButton = $('#register-button');
@@ -192,7 +216,8 @@
                                 location: location,
                                 password: password,
                                 confirm: passwordConfirmation,
-                                accountmanagerid:accountmanagerid
+                                accountmanagerid:accountmanagerid,
+                                accountmanagername:accountmanagername
                             },
                             success: function (json) {
                                 registerButton.text('SIGN UP');
@@ -210,7 +235,8 @@
                                     iziToast.warning({
                                         position: 'topRight',
                                         title: 'Oops',
-                                        message: json['error_warning']
+                                        //message: json['error_warning']
+                                        message: json['error_message']
                                     });
                                 }
                             }
@@ -238,7 +264,8 @@
                     const location = $('#register-location').val();
                     const password = $('#register-password').val();
                     const passwordConfirmation = $('#register-password-confirm').val();
-                    const accountmanagerid = $('#register-accountmanager-id').val();
+                    const accountmanagername = $('#register-accountmanager-id').val();
+                    const accountmanagerid = $('#register-accountmanager-id').attr('register_accountmanager_id');
                     const otp = $('#otp-value').val();
                     const verifyButton = $('#otp-verify-button');
                     if (otp.length > 3) {
@@ -265,7 +292,8 @@
                         password: password,
                         confirm: passwordConfirmation,
                         accountmanagerid: accountmanagerid,
-                        signup_otp: otp
+                        signup_otp: otp,
+                        accountmanagername:accountmanagername
                     },
                     success: function (json) {
                         verifyButton.text('VERIFY');

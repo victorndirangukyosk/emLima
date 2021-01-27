@@ -332,6 +332,7 @@ class ControllerCommonHeader extends Controller
         /* Added new params */
         $data['text_my_cash'] = 'My Wallet';
         $data['text_my_wishlist'] = 'My List';
+        $data['text_my_incompleteorders'] = 'Incomplete Orders';
         $data['label_my_address'] = 'My Addresses';
         $data['contactus'] = $this->language->get('contactus');
         $data['text_cash'] = $this->language->get('text_cash');
@@ -343,6 +344,7 @@ class ControllerCommonHeader extends Controller
 
         $data['text_home'] = $this->language->get('text_home');
         $data['text_wishlist'] = $this->language->get('text_wishlist');
+        $data['text_incompleteorders'] = $this->language->get('text_incompleteorders');
         $data['text_logged'] = sprintf($this->language->get('text_logged'), $this->url->link('account/account', '', 'SSL'), $this->customer->getFirstName(), $this->url->link('account/logout', '', 'SSL'));
 
         $data['label_address'] = $this->language->get('label_address');
@@ -394,6 +396,7 @@ class ControllerCommonHeader extends Controller
         $data['address'] = $this->url->link('account/address', '', 'SSL');
         $data['home'] = $this->url->link('common/home/toHome', '', 'SSL');
         $data['wishlist'] = $this->url->link('account/wishlist', '', 'SSL');
+        $data['incompleteorders'] = $this->url->link('account/incompleteorders', '', 'SSL');
         $data['logged'] = $this->customer->isLogged();
         $data['account'] = $this->url->link('account/account', '', 'SSL');
         $data['dashboard'] = $this->url->link('account/dashboard', '', 'SSL');

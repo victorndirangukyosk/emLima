@@ -450,6 +450,11 @@
                     <?php if($preturn_product_purchased) { ?>
                     <li><a href="<?php echo $report_product_purchased; ?>"><?php echo $text_report_product_purchased; ?></a></li>
                     <?php } ?>
+
+                     <?php if($preturn_inventory_daily_prices) { ?>
+                    <li><a href="<?php echo $report_inventory_daily_prices; ?>"><?php echo $text_report_inventory_daily_prices; ?></a></li>
+                    <?php } ?>
+
                 </ul>
             </li>
             <?php } ?>
@@ -745,6 +750,20 @@
         <a class="parent"><i class="fa fa-truck fa-fw"></i> <span>Delivery Executives</span></a>
         <ul class="collapse">
             <li><a href="<?php echo $executives_list; ?>">Executives</a></li>
+        </ul>
+    </li>
+    <?php 
+    }
+    ?>
+    
+    <?php
+    if( $preturn_orderprocessinggroups != false || $preturn_orderprocessor != false) {
+    ?>
+    <li id="system">
+        <a class="parent"><i class="fa fa-truck fa-fw"></i> <span>Order Processing</span></a>
+        <ul class="collapse">
+            <li><a href="<?php echo $orderprocessinggroup_list; ?>">Groups</a></li>
+            <li><a href="<?php echo $orderprocessor_list; ?>">Order Processors</a></li>
         </ul>
     </li>
     <?php 

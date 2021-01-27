@@ -52,3 +52,4 @@ composer.lock
 
 ## VsCode
 .vscode
+/nbproject/private/

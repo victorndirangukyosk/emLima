@@ -605,7 +605,7 @@
       $store_id = $(this).attr('data-store-id');
 
       $.ajax({
-        url: 'index.php?path=account/dashboard/getOrderProducts',
+        url: 'index.php?path=account/dashboard/getAvailableOrderProducts',
         dataType: 'json',
         type: 'POST',
         data: { 'order_id': $orderid },
@@ -615,9 +615,9 @@
             // each iteration
             var product_id = item.product_id;
             var quantity = item.quantity;
-            if (quantity > 0) {
+             if (quantity > 0) {
               added = "true";
-              cart.add(product_id, quantity, 0, $store_id, '', '');
+               cart.add(product_id, quantity, 0, $store_id, '', '');
 
               console.log("added to cart");
             }
@@ -625,15 +625,17 @@
         },
         complete: function () {
 
-          baseurl = baseurl + "?path=checkout/checkoutitems";
-          var win = window.open(baseurl, '_blank');
-          if (win) {
+          //baseurl = baseurl + "?path=checkout/checkoutitems";
+          //var win = window.open(baseurl, '_blank');
+         // if (win) {
             //Browser has allowed it to be opened
-            win.focus();
-          } else {
+           // win.focus();
+         // } else {
             //Browser has blocked it
-            alert('Please allow popups for this website');
-          }
+            //alert('Please allow popups for this website');
+          //}
+          //opening new window, showing few items, as the products are adding slowly
+          alert('Available products from the selected order added to cart!');
         },
       });
     }

@@ -157,6 +157,7 @@ class ControllerCommonMenu extends Controller
         $data['report_customer_statement'] = $this->url->link('report/customer_order/statement', 'token='.$this->session->data['token'], 'SSL');
         $data['report_customer_order_pattern'] = $this->url->link('report/customer_order_pattern', 'token='.$this->session->data['token'], 'SSL');
         $data['report_customer_order_count'] = $this->url->link('report/customer_order_count', 'token='.$this->session->data['token'], 'SSL');
+        $data['report_inventory_daily_prices'] = $this->url->link('report/inventory_daily_prices', 'token='.$this->session->data['token'], 'SSL');
 
         $data['report_marketing'] = $this->url->link('report/marketing', 'token='.$this->session->data['token'], 'SSL');
 
@@ -233,7 +234,9 @@ class ControllerCommonMenu extends Controller
         $data['admin_wallet'] = $this->url->link('wallets/admin_wallet', 'token='.$this->session->data['token'], 'SSL');
         $data['drivers_list'] = $this->url->link('drivers/drivers_list', 'token='.$this->session->data['token'], 'SSL');
         $data['executives_list'] = $this->url->link('executives/executives_list', 'token='.$this->session->data['token'], 'SSL');
-
+        $data['orderprocessinggroup_list'] = $this->url->link('orderprocessinggroup/orderprocessinggroup_list', 'token='.$this->session->data['token'], 'SSL');
+        $data['orderprocessor_list'] = $this->url->link('orderprocessinggroup/orderprocessor', 'token='.$this->session->data['token'], 'SSL');
+        
         //blog
         $data['preturn_simple_blog_author'] = $this->user->hasPermission('access', 'simple_blog/author');
         $data['preturn_simple_blog_category'] = $this->user->hasPermission('access', 'simple_blog/category');
@@ -415,6 +418,8 @@ class ControllerCommonMenu extends Controller
         $data['preturn_account_manager_customer_order'] = $this->user->hasPermission('access', 'report/account_manager_customer_order');
         $data['preturn_customer_order_pattern'] = $this->user->hasPermission('access', 'report/customer_order_pattern');
         $data['preturn_customer_order_count'] = $this->user->hasPermission('access', 'report/customer_order_count');
+        $data['preturn_inventory_daily_prices'] = $this->user->hasPermission('access', 'report/inventory_daily_prices');
+        
         $data['preturn_customer_reward'] = $this->user->hasPermission('access', 'report/customer_reward');
         $data['preturn_customer_credit'] = $this->user->hasPermission('access', 'report/customer_credit');
         $data['preturn_marketing'] = $this->user->hasPermission('access', 'report/marketing');
@@ -428,6 +433,8 @@ class ControllerCommonMenu extends Controller
         
         $data['preturn_drivers'] = $this->user->hasPermission('access', 'drivers/drivers_list');
         $data['preturn_executives'] = $this->user->hasPermission('access', 'executives/executives_list');
+        $data['preturn_orderprocessinggroups'] = $this->user->hasPermission('access', 'orderprocessinggroup/orderprocessinggroup_list');
+        $data['preturn_orderprocessor'] = $this->user->hasPermission('access', 'orderprocessinggroup/orderprocessor');
         return $this->load->view('common/menu.tpl', $data);
     }
 
@@ -500,6 +507,7 @@ class ControllerCommonMenu extends Controller
         $data['report_customer_statement'] = $this->url->link('report/customer_order/statement', 'token='.$this->session->data['token'], 'SSL');
         $data['report_customer_order_pattern'] = $this->url->link('report/customer_order_pattern', 'token='.$this->session->data['token'], 'SSL');
         $data['report_customer_order_count'] = $this->url->link('report/customer_order_count', 'token='.$this->session->data['token'], 'SSL');
+        $data['report_customer_inventory_daily_prices'] = $this->url->link('report/inventory_daily_prices', 'token='.$this->session->data['token'], 'SSL');
 
         $data['report_marketing'] = $this->url->link('report/marketing', 'token='.$this->session->data['token'], 'SSL');
 
@@ -585,6 +593,7 @@ class ControllerCommonMenu extends Controller
         $data['preturn_customer_statement'] = $this->user->hasPermission('access', 'report/customer_statement');
         $data['preturn_customer_order_pattern'] = $this->user->hasPermission('access', 'report/customer_order_pattern');
         $data['preturn_customer_order_count'] = $this->user->hasPermission('access', 'report/customer_order_count');
+        $data['preturn_inventory_daily_prices'] = $this->user->hasPermission('access', 'report/inventory_daily_prices');
 
         $data['preturn_marketing'] = $this->user->hasPermission('access', 'report/marketing');
 
