@@ -671,7 +671,7 @@
     if (choice) {
       e.preventDefault();
       $orderid = $(this).attr('value');
-      alert($orderid);
+    
       $store_id = $(this).attr('data-store-id');
 
       $.ajax({
