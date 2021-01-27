@@ -51,7 +51,7 @@
                 </div>
             </div>
             <div v-if="itemsInCart" class="modal-footer">
-                <button class="btn btn-cta">Checkout ({{ basketCost }})</button>
+                <a href="<?= $checkout ?>"class="btn btn-success btn-cta">Checkout ({{ basketCost }})</a>
             </div>
         </div>
     </div>

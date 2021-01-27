@@ -602,6 +602,7 @@ class ControllerCommonHome extends Controller {
 
         $data['customer_name'] = $this->customer->getFirstName();
         $data['logo'] = $server . 'image/' . $this->config->get('config_logo');
+        $data['checkout'] = $this->url->link('checkout/checkout', '', 'SSL');
         $data['logout'] = $this->url->link('account/logout', '', 'SSL');
 
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/home.tpl') && isset($this->session->data['customer_id'])) {

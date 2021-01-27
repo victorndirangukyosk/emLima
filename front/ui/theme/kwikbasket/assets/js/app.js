@@ -14,35 +14,35 @@ const kbApplication = new Vue({
             productCategories: [],
             cartProducts: []
         },
-
+    
         getters: {
             itemsInCart: state => {
                 return state.cartProducts.length;
             },
-
+    
             basketCost: state => {
                 return state.cartProducts.reduce(function (prev, { quantity, price }) {
                     return prev + (currency(price).value * quantity);
                 }, 0);
             }
         },
-
+    
         mutations: {
             addProductToCart(state, product) {
                 state.cartProducts.push(product);
             },
-
+    
             updateProductQuantity(state, { key, newQuantity }) {
                 const index = state.cartProducts.map(item => item.key).indexOf(key);
                 state.cartProducts[index].quantity = newQuantity;
             },
-
+    
             removeProductFromCart(state, product) {
                 const index = state.cartProducts.map(item => item.key).indexOf(product.key);
                 state.cartProducts.splice(index, 1);
             }
         },
-
+    
         actions: {
             addProductToCart({ commit }, product) {
                 commit('addProductToCart', product);
@@ -54,14 +54,14 @@ const kbApplication = new Vue({
                     dataType: 'json'
                 });
             },
-
+    
             updateProductQuantity({ commit }, { key, newQuantity }) {
                 commit('updateProductQuantity', { key, newQuantity });
-
+    
                 // TODO: Refactor
                 const product_note = "";
                 const produce_type = "";
-
+    
                 $.ajax({
                     url: 'index.php?path=checkout/cart/update',
                     type: 'POST',
@@ -69,10 +69,10 @@ const kbApplication = new Vue({
                     dataType: 'json'
                 });
             },
-
+    
             removeProductFromCart({ commit }, product) {
                 commit('removeProductFromCart', product);
-
+    
                 const key = product.key;
                 $.ajax({
                     url: 'index.php?path=checkout/cart/remove',

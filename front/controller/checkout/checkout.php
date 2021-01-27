@@ -516,7 +516,7 @@ class ControllerCheckoutCheckout extends Controller
 
         $data['address_id'] = $this->customer->getAddressId();
 
-        //echo "<pre>";print_r($data['questions']);die;
+       
         //get cities
         $data['cities'] = $this->model_account_address->getCities();
 
@@ -524,26 +524,8 @@ class ControllerCheckoutCheckout extends Controller
 
         $data['products'] = $products;
 
-        if ($this->config->get('config_multi_store')) {
-            if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/checkout/multi_store_checkout.tpl')) {
-                $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/checkout/multi_store_checkout.tpl', $data));
-            } else {
-                $this->response->setOutput($this->load->view('default/template/checkout/multi_store_checkout.tpl', $data));
-            }
-        } else {
-            if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/checkout/checkout.tpl')) {
-                $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/checkout/checkout.tpl', $data));
-            } else {
-                $this->response->setOutput($this->load->view('default/template/checkout/checkout.tpl', $data));
-            }
-        }
-
-        /*
-        if ( file_exists( DIR_TEMPLATE . $this->config->get( 'config_template' ) . '/template/checkout/checkout.tpl' ) ) {
-            $this->response->setOutput( $this->load->view( $this->config->get( 'config_template' ) . '/template/checkout/checkout.tpl', $data ) );
-        } else {
-            $this->response->setOutput( $this->load->view( 'default/template/checkout/checkout.tpl', $data ) );
-        }*/
+        // echo "<pre>";print_r($data);die;
+        $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/checkout/checkout.tpl', $data));
     }
 
     public function country()

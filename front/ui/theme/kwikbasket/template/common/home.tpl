@@ -1,6 +1,6 @@
 <?php require(DIR_BASE.'front/ui/theme/kwikbasket/template/common/header.tpl'); ?>
 
-<div v-if="productCategories.length && !isSearchActive" class="container products-grid">
+<div v-if="productCategories.length && !isSearchActive" class="container content-container">
   <template v-for="category in productCategories">
     <template v-if="category.products.length">
       <h3 class="category-title" :key="category.id">
