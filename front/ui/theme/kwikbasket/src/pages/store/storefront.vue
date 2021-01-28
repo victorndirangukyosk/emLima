@@ -10,8 +10,8 @@
         </h3>
         <div class="row" :key="category.id">
             <div
-              class="col-md-2 products-grid-item"
-              v-for="product in category.products" :key="product.product_id"
+              class="col-md-2 products-grid-item" @click="showProductInfo(product)"
+              v-for="product in category.products" :key="product.product_id" v-b-modal.product-popup
             >
               <img
                 class="product-image"
@@ -43,6 +43,12 @@ export default {
   computed: mapState({
     productCategories: (state) => state.products.productCategories,
   }),
+
+  methods: {
+    showProductInfo(product) {
+      this.$store.state.cart.selectedProduct = product;
+    },
+  },
 
   created() {
     this.$store.dispatch("products/getCategoriesWithProducts");

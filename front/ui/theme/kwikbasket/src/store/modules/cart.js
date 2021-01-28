@@ -3,6 +3,9 @@ import * as types from '../mutation-types';
 import currency from "../../util/currency";
 
 export const state = {
+    // Product being displayed on popup
+    selectedProduct: {},
+    
     cartProducts: []
 }
 
@@ -39,7 +42,7 @@ export const mutations = {
 export const actions = {
     addProductToCart({ commit }, product) {
         commit(types.ADD_PRODUCT_TO_CART, product);
-        const { product_id, variation_id, store_id, quantity, product_notes, produce_type } = product;
+        const { product_id, variation_id, store_id, quantity, productNotes: product_notes, produceType: produce_type } = product;
         axios.post('index.php?path=checkout/cart/add', {
             product_id, variation_id, store_id, quantity, product_notes, produce_type
         });

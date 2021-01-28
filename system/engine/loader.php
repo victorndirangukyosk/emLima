@@ -82,6 +82,32 @@ final class Loader
         }
     }
 
+    public function publicView($template, $data = []) {
+        $file = __DIR__.'/../../public/'.$template;
+        
+        if (file_exists($file)) {
+            $event_args = [&$template, &$data];
+            $this->trigger->fire('pre.load.view', $event_args);
+
+            extract($data);
+
+            ob_start();
+
+            require $file;
+
+            $output = ob_get_contents();
+
+            ob_end_clean();
+
+            $this->trigger->fire('post.load.view', $output);
+
+            return $output;
+        } else {
+            trigger_error('Error: Could not load template '.$file.'!');
+            exit();
+        }
+    }
+
     public function library($library)
     {
         $file = DIR_SYSTEM.'library/'.$library.'.php';

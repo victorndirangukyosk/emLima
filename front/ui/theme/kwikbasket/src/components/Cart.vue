@@ -1,5 +1,5 @@
 <template>
-  <b-modal id="mini-cart-panel" hide-footer="!itemsInBasket">
+  <b-modal id="mini-cart-panel" :hide-footer="!itemsInBasket">
     <template #modal-header="{ close }">
       <h5 class="modal-title">Basket</h5>
       <button type="button" class="close" @click="close">

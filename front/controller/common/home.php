@@ -604,9 +604,8 @@ class ControllerCommonHome extends Controller {
         $data['logo'] = $server . 'image/' . $this->config->get('config_logo');
         $data['checkout'] = $this->url->link('checkout/checkout', '', 'SSL');
         $data['logout'] = $this->url->link('account/logout', '', 'SSL');
-
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/home.tpl') && isset($this->session->data['customer_id'])) {
-            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/home.tpl', $data));
+        if (isset($this->session->data['customer_id'])) {
+            $this->response->setOutput($this->load->publicView('index.tpl'));
         } else {
             $this->load->model('sale/order');
             $numberOfOrders = count($this->model_sale_order->getOrders());
@@ -652,7 +651,7 @@ class ControllerCommonHome extends Controller {
             $data['forgotten'] = $this->url->link('account/forgotten', '', 'SSL');
             $data['store_name'] = $this->config->get('config_name');
 
-        //    echo "<pre>";print_r($data);die;
+          //    echo "<pre>";print_r($data);die;
 
             $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/index.tpl', $data));
             //$this->response->setOutput($this->load->view('default/template/common/home.tpl', $data));

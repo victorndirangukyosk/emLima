@@ -1,5 +1,3 @@
-const path = require('path');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 module.exports = {
     pages: {
         index: {
@@ -15,14 +13,16 @@ module.exports = {
         compress: true,
         open: true,
         overlay: { warnings: false, errors: true },
-        publicPath: '/',
-        proxy: 'http://localhost/kwikbasket',
+        proxy: 'http://www.kwikbasket.local',
         quiet: true,
         watchOptions: {
             poll: true,
             ignored: /node_modules/,
         },
     },
+
+    publicPath: process.env.NODE_ENV === 'production' ? '/public/' : '/',
+
     chainWebpack: (config) => {
         config.module
             .rule('vue')
@@ -40,7 +40,7 @@ module.exports = {
 
     transpileDependencies: ['vue-echarts', 'resize-detector'],
 
-    outputDir: '../public',
+    outputDir: '../../../../public',
 
-    indexPath: process.env.NODE_ENV === 'production' ? './template/common/index.tpl' : 'index.html',
+    indexPath: process.env.NODE_ENV === 'production' ? 'index.tpl' : 'index.html',
 };
