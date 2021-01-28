@@ -1,5 +1,5 @@
 <?php echo $header; ?>
-
+<div id="workingMsgHiddenDiv" style="display: none;">Please wait, we are preparing your cart...</div>
 <div class="col-md-9 nopl">
     <div class="dashboard-profile-content">
         <div class="my-order">
@@ -692,6 +692,20 @@
               console.log("added to cart");
             }
           });
+            $iSec=2000;
+            $iSec=($iSec*(json.length));
+            //alert($iSec);
+           // Show the div in 5s
+          //  $("#workingMsgHiddenDiv").fadeIn(5000);
+
+                var $div2 = $("#workingMsgHiddenDiv");
+            if ($div2.is(":visible")) { return; }
+            $div2.show();
+            setTimeout(function() {
+                $div2.hide();
+            }, $iSec);
+
+
         },
         complete: function () {
 
@@ -705,7 +719,7 @@
             //alert('Please allow popups for this website');
           //}
           //opening new window, showing few items, as the products are adding slowly
-          alert('Available products from the selected order added to cart!');
+         // alert('Available products from the selected order added to cart!');
         },
       });
     }
