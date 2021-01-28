@@ -677,6 +677,7 @@ class ControllerApiOrders extends Controller
     }
 
     //API to get all Orders --> Admin users
+    //Copy getOrders
     public function getAllOrders($args = [])
     {
         $this->load->language('api/orders');
