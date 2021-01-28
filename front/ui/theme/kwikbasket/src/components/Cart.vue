@@ -1,5 +1,5 @@
 <template>
-  <b-modal id="mini-cart-panel" class="modal fixed-left fade">
+  <b-modal id="mini-cart-panel" hide-footer="!itemsInBasket">
     <template #modal-header="{ close }">
       <h5 class="modal-title">Basket</h5>
       <button type="button" class="close" @click="close">
@@ -9,78 +9,74 @@
 
     <template #default>
       <div id="mini-cart" class="container">
-              <template v-if="cartProducts.length">
-                <div v-for="product in cartProducts" :key="product.key">
-                  <div
-                    class="d-flex justify-content-between align-items-center"
-                  >
-                    <div>
-                      <h6 class="model-section-title">{{ product.name }}</h6>
-                      <h5 class="mt-2 text-success">
-                        <strong>{{ productTotalPrice(product) }}</strong>
-                      </h5>
-                    </div>
-                    <div
-                      class="cart-remove-button"
-                      @click="removeProductFromCart(product)"
-                    >
-                      <img :src="removeIcon" alt="Remove from cart" />
-                    </div>
-                  </div>
+        <template v-if="cartProducts.length">
+          <div v-for="product in cartProducts" :key="product.key">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <h6 class="modal-section-title">{{ product.name }}</h6>
+                <h5 class="mt-2 text-success">
+                  <strong>{{ productTotalPrice(product) }}</strong>
+                </h5>
+              </div>
+              <div
+                class="cart-remove-button"
+                @click="removeProductFromCart(product)"
+              >
+                <img :src="removeIcon" alt="Remove from cart" />
+              </div>
+            </div>
 
-                  <div class="row modal-row">
-                    <div class="col-md-12">
-                      <div class="d-flex flex-wrap justify-content-between">
-                        <img
-                          class="cart-product-thumbnail"
-                          :src="product.thumb"
-                          :alt="product.name"
-                        />
-                        <div
-                          class="cart-quantity-controls d-flex flex-column align-items-center justify-content-around"
-                        >
-                          <span class="mb-2">{{ product.price }}</span>
-                          <div class="d-flex flex-row justify-content-center">
-                            <button
-                              type="button"
-                              class="btn btn-success btn-minus btn-qty"
-                              @click="decrementProductQuantity(product)"
-                            >
-                              -
-                            </button>
-                            <input
-                              type="text"
-                              disabled="disabled"
-                              class="cart-product-quantity"
-                              :value="product.quantity"
-                            />
-                            <button
-                              type="button"
-                              class="btn btn-success btn-plus btn-qty"
-                              @click="incrementProductQuantity(product)"
-                            >
-                              +
-                            </button>
-                          </div>
-                        </div>
-                      </div>
+            <div class="row modal-row">
+              <div class="col-md-12">
+                <div class="d-flex flex-wrap justify-content-between">
+                  <img
+                    class="cart-product-thumbnail"
+                    :src="product.thumb"
+                    :alt="product.name"
+                  />
+                  <div
+                    class="cart-quantity-controls d-flex flex-column align-items-center justify-content-around"
+                  >
+                    <span class="mb-2">{{ product.price }}</span>
+                    <div class="d-flex flex-row justify-content-center">
+                      <button
+                        type="button"
+                        class="btn btn-success btn-minus btn-qty"
+                        @click="decrementProductQuantity(product)"
+                      >
+                        -
+                      </button>
+                      <input
+                        type="text"
+                        disabled="disabled"
+                        class="cart-product-quantity"
+                        :value="product.quantity"
+                      />
+                      <button
+                        type="button"
+                        class="btn btn-success btn-plus btn-qty"
+                        @click="incrementProductQuantity(product)"
+                      >
+                        +
+                      </button>
                     </div>
                   </div>
                 </div>
-              </template>
-            
-            <h6 v-else class="text-muted text-center mt-5">
-              No products in your basket
-            </h6>
+              </div>
+            </div>
           </div>
+        </template>
+
+        <h6 v-else class="text-muted text-center mt-5">
+          No products in your basket
+        </h6>
+      </div>
     </template>
 
     <template #modal-footer>
-      <div v-if="itemsInBasket" class="modal-footer">
-        <a href="#" class="btn btn-success btn-cta"
-          >Checkout ({{ amountInCart }})</a
-        >
-      </div>
+      <a href="#" class="btn btn-success btn-cta"
+        >Checkout ({{ amountInCart }})</a
+      >
     </template>
   </b-modal>
 </template>
@@ -103,8 +99,8 @@ export default {
     ...mapState("cart", ["cartProducts"]),
 
     amountInCart() {
-        return this.formatCurrency(this.basketCost);
-    }
+      return this.formatCurrency(this.basketCost);
+    },
   },
 
   methods: {
@@ -135,8 +131,8 @@ export default {
     },
 
     formatCurrency(amount) {
-        return currency(amount, { symbol: "KES " }).format(); 
-    }
+      return currency(amount, { symbol: "KES " }).format();
+    },
   },
 
   created() {
