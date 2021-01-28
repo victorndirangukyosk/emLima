@@ -1362,6 +1362,19 @@ button:focus {
     cursor: pointer;
 }
 
+#nprogress .spinner-icon {
+    border-top-color:  #2aa249;
+    border-left-color:  #2aa249;
+}
+
+#nprogress .bar {
+    background:  #2aa249;
+}
+
+#nprogress .peg {
+    box-shadow: 0 0 10px  #2aa249, 0 0 5px  #2aa249;
+}
+
 @media (min-width: 1200px) {
     .container {
         max-width: 1300px !important;
