@@ -1,6 +1,7 @@
 import axios from 'axios';
 import * as types from '../mutation-types';
 import currency from "../../util/currency";
+import qs from 'qs';
 
 export const state = {
     // Product being displayed on popup
@@ -42,17 +43,24 @@ export const mutations = {
 export const actions = {
     addProductToCart({ commit }, product) {
         commit(types.ADD_PRODUCT_TO_CART, product);
-        const { product_id, variation_id, store_id, quantity, productNotes: product_notes, produceType: produce_type } = product;
-        axios.post('index.php?path=checkout/cart/add', {
-            product_id, variation_id, store_id, quantity, product_notes, produce_type
+
+        const { product_id, variation_id, store_id, quantity, productNotes: product_notes, produceType: produce_type } = product;                
+        axios({
+            method: 'POST',
+            headers: { 'content-type': 'application/x-www-form-urlencoded' },
+            url: 'index.php?path=checkout/cart/add',
+            data: qs.stringify({ product_id, variation_id, store_id, quantity, product_notes, produce_type })
         });
     },
 
     removeProductFromCart({ commit }, product) {
         commit(types.REMOVE_PRODUCT_FROM_CART, product);
 
-        axios.post('index.php?path=checkout/cart/remove', {
-            key: product.key
+        axios({
+            method: 'POST',
+            headers: { 'content-type': 'application/x-www-form-urlencoded' },
+            url: 'index.php?path=checkout/cart/remove',
+            data: qs.stringify({ key: product.key })
         });
     },
 
@@ -61,10 +69,13 @@ export const actions = {
 
         // TODO: Refactor
         const product_note = "";
-        const produce_type = "";
+        const produce_type = "";   
 
-        axios.post('index.php?path=checkout/cart/update', {
-            key, quantity, product_note, produce_type
+        axios({
+            method: 'POST',
+            headers: { 'content-type': 'application/x-www-form-urlencoded' },
+            url: 'index.php?path=checkout/cart/update',
+            data: qs.stringify({ key, quantity, product_note, produce_type })
         });
     },
 
