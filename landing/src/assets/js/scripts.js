@@ -41,7 +41,7 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
       success: function(json) {
         response($.map(json, function(item) {
           return {
-            label: item['username'],
+            label: item['firstname'],
             value: item['user_id']
           }
         }));
