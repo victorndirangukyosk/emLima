@@ -20,7 +20,7 @@
 
                             <div class="pull-right">
                             <?php if($order['status'] == 'Delivered' ) { ?>
-                              <a data-confirm="Available products  in this order will be added to cart !!" class="btn btn-success download" style="margin-right: 4px !important; height: 27px;margin-left:4px;"
+                              <a data-confirm="Available products  in this order will be added to cart !!" id="additemstocart" class="btn btn-success download" style="margin-right: 4px !important; height: 27px;margin-left:4px;"
                           data-store-id="<?= ACTIVE_STORE_ID ?>" data-toggle="tooltip"
                           value="<?php echo $order['order_id']; ?>" title="Add To Cart/Reorder"><i
                             class="fa fa-cart-plus"></i></a><?php } ?>
@@ -662,7 +662,7 @@
     });
 
 
-       $(document).delegate('.download', 'click', function (e) {
+       $(document).delegate('.downloadaaaaaaaaaaaa', 'click', function (e) {
     var baseurl = window.location.origin + window.location.pathname;
     // alert(baseurl);
     var choice = confirm($(this).attr('data-confirm'));
@@ -724,6 +724,47 @@
       });
     }
   });
+
+
+
+
+    $(document).delegate('#additemstocart', 'click', function(e) {
+
+        e.preventDefault();
+        
+        if(!window.confirm("All the available products in this order ,will be added to cart.Are you sure?")) {
+            return false;
+        }
+        console.log("additemstocart click");
+        console.log($(this).attr('value'));
+       // $('#addWishlisttocart').html('Wait...');        
+        $.ajax({
+            url: 'index.php?path=account/wishlist/addAvailableOrderProducts',
+            type: 'post',
+            data: {
+                order_id: $(this).attr('value')
+            },
+            dataType: 'json',
+            success: function(json) {
+                console.log(json);
+                
+                setTimeout(function(){ window.location.reload(false); }, 1000);
+                 var baseurl = window.location.origin + window.location.pathname;
+                   baseurl = baseurl + "?path=checkout/checkoutitems";
+           var win = window.open(baseurl, '_blank');
+           if (win) {
+            //Browser has allowed it to be opened
+             win.focus();
+           } else {
+            //Browser has blocked it
+            alert('Please allow popups for this website');
+          }
+          //opening new window, showing few items, as the products are adding slowly
+         // alert('Available products from the selected order added to cart!');
+            }
+        });
+    });
+
 
     setInterval(function () {
         location = location;

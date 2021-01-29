@@ -848,4 +848,51 @@ class ControllerAccountWishList extends Controller
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($data));
     }
+
+
+
+    public function addAvailableOrderProducts()
+    {
+        $this->load->language('account/wishlist');
+        $this->load->model('account/wishlist');
+
+        $data['text_cart_success'] = $this->language->get('text_cart_success');
+        $log = new Log('error.log');
+        // echo "<pre>";print_r($this->request->post['order_id']);die;
+        // $wishlist_id = $this->request->post['wishlist_id'];
+         $order_id = $this->request->post['order_id'];
+        $log->write($this->request->post['order_id']);
+        $log->write('Order List Products');
+
+        $Orderlist_products = $this->model_account_wishlist->getAvailableOrderedProducts($order_id);
+        $log->write($Orderlist_products);
+        $log->write('Order List Products obtained');
+
+        if (is_array($Orderlist_products) && count($Orderlist_products) > 0) {
+        $log->write('Order List Products inner');
+
+
+            foreach ($Orderlist_products as $Orderlist_product) {
+                $log->write('Order List Products 2');
+                $log->write($Orderlist_product['product_id']);
+                $log->write('Order List Products 2');
+                $this->load->model('assets/product');
+                $store_data = $this->model_assets_product->getProductStoreId($Orderlist_product['product_id'], 75);
+                $product_info = $this->model_assets_product->getDetailproduct($store_data['product_store_id']);
+                if(isset($product_info) && count($product_info) > 0) {
+                $log->write('store details');
+                $log->write($store_data);
+                $log->write('store details');
+                $this->cart->addCustom($store_data['product_store_id'], $Orderlist_product['quantity'], $option = [], $recurring_id = 0, $store_data['store_id'], $store_product_variation_id = false, $product_type = 'replacable', $product_note = null, $produce_type = null);
+                }
+            }
+        }
+        // $this->model_account_wishlist->deleteWishlists($wishlist_id);
+        //echo "reg";
+
+        $this->session->data['success'] = $data['text_cart_success'];
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($data));
+    }
 }
