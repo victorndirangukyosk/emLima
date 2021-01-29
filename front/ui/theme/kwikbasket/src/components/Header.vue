@@ -6,32 +6,23 @@
           <div class="col d-flex flex-row">
             <div class="top_bar_contact_item">
               <div class="top_bar_icon">
-                <img
-                  :src="phoneIcon"
-                  alt="Phone Icon"
-                />
+                <img :src="phoneIcon" alt="Phone Icon" />
               </div>
               +254 738 770 186
             </div>
             <div class="top_bar_contact_item">
               <div class="top_bar_icon">
-                <img
-                  :src="mailIcon"
-                  alt="Mail Icon"
-                />
+                <img :src="mailIcon" alt="Mail Icon" />
               </div>
               <a href="mailto:hello@kwikbasket.com">hello@kwikbasket.com</a>
             </div>
             <div class="top_bar_content ml-auto">
               <div class="top_bar_user">
                 <div class="user_icon">
-                  <img
-                    :src="userIcon"
-                    alt="User icon"
-                  />
+                  <img :src="userIcon" alt="User icon" />
                 </div>
-                <div>Hi, user</div>
-                <div><a href="<?= $logout ?>">Sign Out</a></div>
+                <div>Hi, {{ user.firstName }}</div>
+                <div><a href="#" @click="logout()">Sign Out</a></div>
               </div>
             </div>
           </div>
@@ -46,10 +37,7 @@
             <div class="logo_container">
               <div class="logo">
                 <a href="">
-                  <img
-                    :src="logo"
-                    alt="KwikBasket Logo"
-                  />
+                  <img :src="logo" alt="KwikBasket Logo" />
                 </a>
               </div>
             </div>
@@ -67,7 +55,7 @@
                       type="search"
                       class="header_search_input"
                       placeholder="Search for products..."
-                      debounce="1500"
+                      v-model="query"
                     />
                   </form>
                 </div>
@@ -85,16 +73,13 @@
                 class="wishlist d-flex flex-row align-items-center justify-content-end"
               >
                 <div class="wishlist_icon">
-                  <img
-                    :src="wishlistIcon"
-                    alt="Wishlists"
-                  />
+                  <img :src="wishlistIcon" alt="Wishlists" />
                 </div>
                 <div class="wishlist_content">
                   <div class="wishlist_text">
                     <a href="<?= $wishlist ?>">Wishlists</a>
                   </div>
-                  <div class="wishlist_count">wishlist #</div>
+                  <div class="wishlist_count"></div>
                 </div>
               </div>
 
@@ -106,10 +91,7 @@
                   class="cart_container d-flex flex-row align-items-center justify-content-end"
                 >
                   <div class="cart_icon">
-                    <img
-                      :src="basketIcon"
-                      alt="Basket"
-                    />
+                    <img :src="basketIcon" alt="Basket" />
                     <div class="cart_count">
                       <span class="cart_items_count">
                         {{ itemsInBasket }}
@@ -265,27 +247,52 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 import currency from "../util/currency";
 
 export default {
   data: () => ({
-      logo: require('@/assets/images/logo.svg'),
-      phoneIcon: require('@/assets/images/icons/phone.svg'),
-      mailIcon: require('@/assets/images/icons/mail.svg'),
-      userIcon: require('@/assets/images/icons/user.svg'),
-      wishlistIcon: require('@/assets/images/icons/heart.png'),
-      basketIcon: require('@/assets/images/icons/cart.png'),
+    logo: require("@/assets/images/logo.svg"),
+    phoneIcon: require("@/assets/images/icons/phone.svg"),
+    mailIcon: require("@/assets/images/icons/mail.svg"),
+    userIcon: require("@/assets/images/icons/user.svg"),
+    wishlistIcon: require("@/assets/images/icons/heart.png"),
+    basketIcon: require("@/assets/images/icons/cart.png"),
   }),
+
   computed: {
     ...mapGetters({
       itemsInBasket: "cart/itemsInBasket",
       basketCost: "cart/basketCost",
     }),
 
+    ...mapState("auth", ["user"]),
+    ...mapState("products", ["searchQuery"]),
+
+    query: {
+      get() {
+        return this.searchQuery;
+      },
+
+      set(newQuery) {
+          this.$store.state.products.searchQuery = newQuery;
+          this.$store.dispatch("products/searchProducts");
+      },
+    },
+
     amountInBasket() {
-      return currency(this.basketCost, { symbol: 'KES ' }).format();
-    }
+      return currency(this.basketCost, { symbol: "KES " }).format();
+    },
+  },
+
+  methods: {
+    logout() {
+      this.$store.dispatch("auth/logout");
+    },
+  },
+
+  created() {
+    this.$store.dispatch("auth/getUserDetails");
   },
 };
 </script>
