@@ -658,6 +658,14 @@ class ControllerCommonHome extends Controller {
         }
     }
 
+    public function getUserDetails() {
+        $customer['firstName'] = $this->customer->getFirstName();
+        $customer['lastName'] = $this->customer->getLastName();
+      
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($customer));
+    }
+
     public function getCategoriesWithProducts() {
         if (!isset($this->session->data['customer_id'])) {
             if (isset($_REQUEST['action']) && ('shop' == $_REQUEST['action'])) {

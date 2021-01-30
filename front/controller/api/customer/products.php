@@ -11,13 +11,12 @@ class ControllerApiCustomerProducts extends Controller
         //     $json['error'] = $this->language->get('error_permission');
         // } else
          {
-
-            
              if ($this->request->get['parent'] != NULL && $this->request->get['parent']>0) {
                 $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->request->get['parent'] . "' AND status = '1'");
             } else {
                 $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->request->get['customer_id']. "' AND status = '1'");
             }
+
             $this->session->data['customer_category'] = isset($customer_details->row['customer_category']) ? $customer_details->row['customer_category'] : null;
             $log = new Log('error.log');
             $log->write('Session category check');

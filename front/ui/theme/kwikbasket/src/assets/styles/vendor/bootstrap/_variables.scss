@@ -62,9 +62,10 @@ $colors: map-merge(
   ),
   $colors
 );
-$primary: $blue !default;
-$secondary: $gray-600 !default;
-$success: $green !default;
+
+$primary: #EC7123 !default;
+$secondary: #2AA249 !default;
+$success: #2AA249 !default;
 $info: $cyan !default;
 $warning: $yellow !default;
 $danger: $red !default;

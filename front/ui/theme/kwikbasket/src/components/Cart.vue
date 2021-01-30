@@ -37,7 +37,9 @@
                   <div
                     class="cart-quantity-controls d-flex flex-column align-items-center justify-content-around"
                   >
-                    <span class="mb-2">{{ product.price }}</span>
+                    <span class="mb-2">{{
+                      formatCurrency(product.price)
+                    }}</span>
                     <div class="d-flex flex-row justify-content-center">
                       <button
                         type="button"
@@ -74,8 +76,12 @@
     </template>
 
     <template #modal-footer>
-      <a href="#" class="btn btn-success btn-cta"
-        >Checkout ({{ amountInCart }})</a
+      <router-link
+        to="/checkout"
+        class="btn btn-success btn-cta"
+      >
+        Checkout ({{ amountInCart }})
+      </router-link>
       >
     </template>
   </b-modal>

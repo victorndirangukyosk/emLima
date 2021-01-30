@@ -590,7 +590,7 @@ class ControllerAccountLogin extends Controller {
 
             $user_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE email = '" . $this->db->escape($this->request->post['email']) . "' AND (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape($this->request->post['password']) . "'))))) OR password = '" . $this->db->escape(md5($this->request->post['password'])) . "')");
 
-            //print_r($user_query);
+            // print_r($user_query);
             if ($user_query->num_rows) {
                 if ($user_query->row['approved']) {
                     $data['customer_id'] = $user_query->row['customer_id'];

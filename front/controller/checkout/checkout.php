@@ -524,7 +524,7 @@ class ControllerCheckoutCheckout extends Controller
 
         $data['products'] = $products;
 
-        // echo "<pre>";print_r($data);die;
+        echo "<pre>";print_r($data);die;
         $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/checkout/checkout.tpl', $data));
     }
 

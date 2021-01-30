@@ -10,7 +10,7 @@
 export default {
   metaInfo() {
     return {
-      title: "Kwik Basket | Save Time, Get Value",
+      title: "Save Time, Get Value",
       // All titles will be injected into this template
       titleTemplate: "Kwik Basket | %s",
     };

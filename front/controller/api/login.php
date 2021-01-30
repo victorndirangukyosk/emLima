@@ -28,6 +28,7 @@ class ControllerApiLogin extends Controller {
         $this->load->model('user/user');
 
         $api_info = $this->model_account_api->login($this->request->post['username'], $this->request->post['password']);
+        // echo "<pre>";print_r($api_info);die;
         if ($api_info['user_id']) {
             $user_info = $this->model_user_user->getUser($api_info['user_id']);
         }
