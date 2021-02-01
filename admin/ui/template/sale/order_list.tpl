@@ -1121,7 +1121,13 @@ function savedriverdetail() {
 		type: 'post',
 		dataType: 'json',
 		data: 'order_status_id=' + encodeURIComponent($('select[id=\'input-order-status'+clicked_orderid+'\']').val()) + '&notify=1',
-		success: function(json) {	 
+		beforeSend: function() {
+                // setting a timeout
+                $('.alert').html('Please wait your request is processing!');
+                $(".alert").attr('class', 'alert alert-success');
+                $(".alert").show();
+                },
+                success: function(json) {	 
                     console.log(json);
                     $('.alert').html('Order status updated successfully!');
                     $(".alert").attr('class', 'alert alert-success');
@@ -1403,18 +1409,19 @@ $.ajax({
 		dataType: 'json',
 		data: 'order_id=' + order_id,
 		success: function(json) {
+                    console.log(json);
                     console.log(json.order_info.order_id);
                     console.log(json.order_info.driver_id);
                     console.log(json.order_info.vehicle_number);
                     console.log(json.order_info.delivery_executive_id);
-                    if(/*order_status != 'Ready for delivery'*/ order_status != 'Order Processing' || json.order_info.driver_id == null || json.order_info.vehicle_number == null || json.order_info.delivery_executive_id == null)
+                    if(/*order_status != 'Ready for delivery'*/ json.order_info.order_status != 'Order Processing' || order_status != 'Order Processing' || json.order_info.driver_id == null || json.order_info.vehicle_number == null || json.order_info.delivery_executive_id == null)
                     {
                     $('input[name="order_id"]').val(order_id);
                     $('input[name="invoice_custom"]').val(invoice);
                     $('#driverModal').modal('toggle');
-                    if(order_status != 'Order Processing') {
+                    if(order_status != 'Order Processing' || json.order_info.order_status != 'Order Processing') {
                     //if(order_status != 'Ready for delivery') {
-                    $('#driverModal-message').html("Please Select Order Status As Order Processing!");
+                    $('#driverModal-message').html("Please Update Order Status As Order Processing!");
                     //$('#driverModal-message').html("Please Select Order Status As Ready For Delivery!");
                     $('#driver-buttons').prop('disabled', true);
                     $('#driver-button').prop('disabled', true);
