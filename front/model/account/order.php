@@ -464,9 +464,6 @@ class ModelAccountOrder extends Model {
                 'driver_id' => $order_query->row['driver_id'],
                 'vehicle_number' => $order_query->row['vehicle_number'],
                 'delivery_executive_id' => $order_query->row['delivery_executive_id'],
-
-
-
             ];
         } else {
             return false;
@@ -629,7 +626,7 @@ class ModelAccountOrder extends Model {
 
         return $query->rows;
     }
-    
+
     public function getOrderProductsByProductId($order_id, $product_store_id) {
         /* $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int) $order_id . "'"); */
         $query = $this->db->query('SELECT a.*,b.image as image,b.weight as weight
@@ -639,7 +636,7 @@ class ModelAccountOrder extends Model {
         AND a.order_id='" . $order_id . "' AND a.product_id='" . $product_store_id . "'");
 
         return $query->row;
-    }    
+    }
 
     public function getRealOrderProducts($order_id) {
         /* $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int) $order_id . "'"); */
@@ -750,12 +747,24 @@ class ModelAccountOrder extends Model {
         return $query->row['total'];
     }
 
+    public function getTotalOrderedProductsByOrderId($order_id) {
+        $query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int) $order_id . "'");
+
+        return $query->row['total'];
+    }
+
     public function getTotalRealOrderProductsByOrderId($order_id) {
         /* $query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "real_order_product WHERE order_id = '" . (int) $order_id . "'");
 
           return $query->row['total']; */
 
         $query = $this->db->query('SELECT SUM(quantity) AS total FROM ' . DB_PREFIX . "real_order_product WHERE order_id = '" . (int) $order_id . "'");
+
+        return $query->row['total'];
+    }
+
+    public function getTotalRealOrderedProductsByOrderId($order_id) {
+        $query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "real_order_product WHERE order_id = '" . (int) $order_id . "'");
 
         return $query->row['total'];
     }
@@ -1244,7 +1253,7 @@ class ModelAccountOrder extends Model {
 
         $order_id = $order_info['order_id'];
         $customer_id = $order_info['customer_id'];
-        
+
         $customer_info['firstname'] = $sub_customer_info['firstname'];
         $customer_info['lastname'] = $sub_customer_info['lastname'];
         $customer_info['email'] = $sub_customer_info['email'];
@@ -1258,23 +1267,23 @@ class ModelAccountOrder extends Model {
         $log->write('EMAIL SENDING');
         $log->write($customer_info);
         $log->write('EMAIL SENDING');
-        
-    if ($sub_customer_info['email_notification'] == 1) {
-        $subject = $this->emailtemplate->getSubject('Customer', 'customer_14', $customer_info);
-        $message = $this->emailtemplate->getMessage('Customer', 'customer_14', $customer_info);
-        
-        try {
-        $mail = new Mail($this->config->get('config_mail'));
-        $mail->setTo($sub_customer_info['email']);
-        $mail->setFrom($this->config->get('config_from_email'));
-        $mail->setSender($this->config->get('config_name'));
-        $mail->setSubject($subject);
-        $mail->setHTML($message);
-        $mail->send();
-        } catch (Exception $e) {
+
+        if ($sub_customer_info['email_notification'] == 1) {
+            $subject = $this->emailtemplate->getSubject('Customer', 'customer_14', $customer_info);
+            $message = $this->emailtemplate->getMessage('Customer', 'customer_14', $customer_info);
+
+            try {
+                $mail = new Mail($this->config->get('config_mail'));
+                $mail->setTo($sub_customer_info['email']);
+                $mail->setFrom($this->config->get('config_from_email'));
+                $mail->setSender($this->config->get('config_name'));
+                $mail->setSubject($subject);
+                $mail->setHTML($message);
+                $mail->send();
+            } catch (Exception $e) {
                 
+            }
         }
-    }
 
         $log->write('SMS SENDING');
         $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_14', $customer_info);
@@ -1307,17 +1316,16 @@ class ModelAccountOrder extends Model {
             // customer push notitification end
         }
     }
+
     public function getCustomerParentByOrderId($OrderId) {
         $row = $this->db->query('select parent as customer_id from ' . DB_PREFIX . 'order o  join ' . DB_PREFIX . 'customer c  on o.customer_id =c.customer_id  where order_id="' . $OrderId . '"')->row;
-        
+
         // echo "<pre>";print_r('select parent as customer_id from ' . DB_PREFIX . 'order o  join ' . DB_PREFIX . 'customer c  on o.customer_id =c.customer_id  where order_id="' . $OrderId . '"');die; 
-        
+
         if ($row) {
             return $row['customer_id'];
         }
-
     }
-
 
     public function getDriver($driver_id) {
         $query = $this->db->query('SELECT DISTINCT * FROM ' . DB_PREFIX . "drivers WHERE driver_id = '" . (int) $driver_id . "'");
@@ -1348,14 +1356,12 @@ class ModelAccountOrder extends Model {
         // $parent_user_id = NULL;
         // $order_approval_access = $this->db->query('SELECT c.customer_id, c.parent FROM ' . DB_PREFIX . "customer c WHERE c.customer_id = '" . (int) $this->customer->getId() . "' AND c.order_approval_access = 1 AND (c.order_approval_access_role = 'head_chef' OR c.order_approval_access_role = 'procurement_person')");
         // $order_approval_access_user = $order_approval_access->row;
-
         // if (is_array($order_approval_access_user) && count($order_approval_access_user) > 0) {
         //     //$log->write('order_approval_access_user');
         //     //$log->write($order_approval_access_user);
         //     //$log->write('order_approval_access_user');
         //     $parent_user_id = $order_approval_access_user['parent'];
         // }
-
         // if ($parent_user_id != NULL) {
         //     $sub_users_query = $this->db->query('SELECT c.customer_id FROM ' . DB_PREFIX . "customer c WHERE parent = '" . (int) $parent_user_id . "'");
         //     $sub_users = $sub_users_query->rows;
@@ -1380,7 +1386,6 @@ class ModelAccountOrder extends Model {
             //$sub_users_orders = $this->db->query("SELECT o.order_id FROM " . DB_PREFIX . "order o WHERE customer_id IN (".$sub_users_od.")");
             //$ord = $sub_users_orders->rows;
             //echo "<pre>";print_r($ord);die;
-
             // $query = $this->db->query('SELECT o.customer_id, o.parent_approval, o.head_chef, o.procurement, o.delivery_date,o.delivery_timeslot,o.shipping_zipcode,o.shipping_city_id,o.payment_method,o.payment_code,o.shipping_address,o.shipping_flat_number,o.shipping_method,o.shipping_building_name,o.store_name,o.shipping_name, o.order_id, o.firstname, o.lastname, os.name as status , os.color as order_status_color ,o.order_status_id, o.date_modified , o.date_added, o.total, o.currency_code, o.currency_value, ot.value FROM `' . DB_PREFIX . 'order` o LEFT JOIN ' . DB_PREFIX . 'order_status os ON (o.order_status_id = os.order_status_id) LEFT JOIN ' . DB_PREFIX . 'order_total ot ON (o.order_id = ot.order_id) WHERE o.customer_id IN (' . $sub_users_od . ") AND o.order_status_id > '0' AND os.language_id = '" . (int) $this->config->get('config_language_id') . "' AND ot.code = 'total' AND ot.title = 'Total' ORDER BY o.order_id DESC LIMIT " . (int) $start . ',' . (int) $limit);
             $query = $this->db->query("SELECT  o.customer_id, o.parent_approval, o.head_chef, o.procurement,o.delivery_date,o.delivery_timeslot,o.shipping_zipcode,o.shipping_city_id,o.payment_method,o.payment_code,o.shipping_address,o.shipping_flat_number,o.shipping_method,o.shipping_building_name,o.store_name,o.shipping_name, o.order_id, o.firstname, o.lastname, os.name as status , os.color as order_status_color ,o.order_status_id, o.date_modified , o.date_added, o.total, o.currency_code, o.currency_value FROM `" . DB_PREFIX . "order` o LEFT JOIN " . DB_PREFIX . "order_status os ON (o.order_status_id = os.order_status_id) WHERE o.customer_id = '" . (int) $this->customer->getId() . "' AND o.order_status_id = '0'   ORDER BY o.order_id DESC LIMIT " . (int) $start . "," . (int) $limit);
         } else {
@@ -1404,21 +1409,19 @@ class ModelAccountOrder extends Model {
 
         return $query->rows;
     }
-   
+
     public function getTotalIncompleteOrders() {
         $log = new Log('error.log');
         // $s_users = [];
         // $parent_user_id = NULL;
         // $order_approval_access = $this->db->query('SELECT c.customer_id, c.parent FROM ' . DB_PREFIX . "customer c WHERE c.customer_id = '" . (int) $this->customer->getId() . "' AND c.order_approval_access = 1 AND (c.order_approval_access_role = 'head_chef' OR c.order_approval_access_role = 'procurement_person')");
         // $order_approval_access_user = $order_approval_access->row;
-
         // if (is_array($order_approval_access_user) && count($order_approval_access_user) > 0) {
         //     $log->write('order_approval_access_user');
         //     $log->write($order_approval_access_user);
         //     $log->write('order_approval_access_user');
         //     $parent_user_id = $order_approval_access_user['parent'];
         // }
-
         // if ($parent_user_id != NULL) {
         //     $sub_users_query = $this->db->query('SELECT c.customer_id FROM ' . DB_PREFIX . "customer c WHERE parent = '" . (int) $parent_user_id . "'");
         //     $sub_users = $sub_users_query->rows;
@@ -1426,7 +1429,6 @@ class ModelAccountOrder extends Model {
         //     $log->write($sub_users);
         //     $log->write('SUB USERS ORDERS');
         //     $s_users = array_column($sub_users, 'customer_id');
-
         //     array_push($s_users, $order_approval_access_user['parent']);
         //     $sub_users_od = implode(',', $s_users);
         //     $log->write($sub_users_od);
@@ -1437,14 +1439,10 @@ class ModelAccountOrder extends Model {
         //     $log->write($sub_users);
         //     $log->write('SUB USERS ORDERS');
         //     $s_users = array_column($sub_users, 'customer_id');
-
         //     array_push($s_users, $this->customer->getId());
         //     $sub_users_od = implode(',', $s_users);
         //     $log->write($sub_users_od);
         // }
-
-
-
         // $query = $this->db->query('SELECT COUNT(*) AS total FROM `' . DB_PREFIX . "order` o WHERE customer_id IN (" . $sub_users_od . ") AND o.order_status_id > '0' ");
         $query = $this->db->query('SELECT COUNT(*) AS total FROM `' . DB_PREFIX . "order` o WHERE customer_id  = '" . (int) $this->customer->getId() . "' AND o.order_status_id = '0' ");
         // echo "<pre>";print_r($query);die;
@@ -1550,9 +1548,6 @@ class ModelAccountOrder extends Model {
                 'driver_id' => $order_query->row['driver_id'],
                 'vehicle_number' => $order_query->row['vehicle_number'],
                 'delivery_executive_id' => $order_query->row['delivery_executive_id'],
-
-
-
             ];
         } else {
             return false;
