@@ -223,7 +223,7 @@ class ControllerAccountOrder extends Controller {
                 'products' => ($product_total + $voucher_total),
                 'real_products' => ($real_product_total + $voucher_total),
                 'productss' => ($products_total + $voucher_total),
-                'real_productss' => ($real_products_total + $voucher_total),
+                'realproductss' => ($real_products_total + $voucher_total),
                 'total' => $this->currency->format($total, $result['currency_code'], $result['currency_value']),
                 'href' => $this->url->link('account/order/info', 'order_id=' . $result['order_id'], 'SSL'),
                 'real_href' => $this->url->link('account/order/realinfo', 'order_id=' . $result['order_id'], 'SSL'),
