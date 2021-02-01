@@ -91,7 +91,7 @@
                                     <?php //} ?>
                                     
                                       <?php if($order['realproductss']) { ?>
-                                         <a href="<?php echo $order['real_href']; ?>" class="btn-link text_green"><?= $text_view?> <?php echo $order['real_productss']; ?> <?= $text_real_items_ordered?> </a>
+                                         <a href="<?php echo $order['real_href']; ?>" class="btn-link text_green"><?= $text_view?> <?php echo $order['realproductss']; ?> <?= $text_real_items_ordered?> </a>
                                       <?php } ?>
 
 
