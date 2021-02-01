@@ -97,8 +97,10 @@ class ControllerAccountOrder extends Controller {
             $city_name = $this->model_account_order->getCityName($result['shipping_city_id']);
 
             $product_total = $this->model_account_order->getTotalOrderProductsByOrderId($result['order_id']);
+            $products_total = $this->model_account_order->getTotalOrderedProductsByOrderId($result['order_id']);
 
             $real_product_total = $this->model_account_order->getTotalRealOrderProductsByOrderId($result['order_id']);
+            $real_products_total = $this->model_account_order->getTotalRealOrderedProductsByOrderId($result['order_id']);
 
             $order_total_detail = $this->load->controller('checkout/totals/getTotal', $result['order_id']);
 
@@ -220,6 +222,8 @@ class ControllerAccountOrder extends Controller {
                 'eta_time' => $result['delivery_timeslot'],
                 'products' => ($product_total + $voucher_total),
                 'real_products' => ($real_product_total + $voucher_total),
+                'productss' => ($products_total + $voucher_total),
+                'real_productss' => ($real_products_total + $voucher_total),
                 'total' => $this->currency->format($total, $result['currency_code'], $result['currency_value']),
                 'href' => $this->url->link('account/order/info', 'order_id=' . $result['order_id'], 'SSL'),
                 'real_href' => $this->url->link('account/order/realinfo', 'order_id=' . $result['order_id'], 'SSL'),

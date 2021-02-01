@@ -82,12 +82,17 @@
 
                                     </div>
                                 </div>
-                                <div class="col-md-3"><a href="<?php echo $order['href']; ?>" class="btn-link text_green"><?= $text_view?> <?php echo $order['products']; ?> <?= $text_items_ordered?> </a>
-                                    <br/>
+                                <!--<div class="col-md-3"><a href="<?php echo $order['href']; ?>" class="btn-link text_green"><?= $text_view?> <?php echo $order['products']; ?> <?= $text_items_ordered?> </a>-->
+                                <div class="col-md-3"><a href="<?php echo $order['href']; ?>" class="btn-link text_green"><?= $text_view?> <?php echo $order['productss']; ?> <?= $text_items_ordered?> </a>    
+                                <br/>
 
-                                    <?php if($order['realproducts']) { ?>
-                                    <a href="<?php echo $order['real_href']; ?>" class="btn-link text_green"><?= $text_view?> <?php echo $order['real_products']; ?> <?= $text_real_items_ordered?> </a>
-                                    <?php } ?>
+                                    <?php //if($order['realproducts']) { ?>
+                                    <!--<a href="<?php echo $order['real_href']; ?>" class="btn-link text_green"><?= $text_view?> <?php echo $order['real_products']; ?> <?= $text_real_items_ordered?> </a>-->
+                                    <?php //} ?>
+                                    
+                                      <?php if($order['realproductss']) { ?>
+                                         <a href="<?php echo $order['real_href']; ?>" class="btn-link text_green"><?= $text_view?> <?php echo $order['real_productss']; ?> <?= $text_real_items_ordered?> </a>
+                                      <?php } ?>
 
 
                                 </div>
