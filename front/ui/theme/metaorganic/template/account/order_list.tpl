@@ -34,14 +34,21 @@
                             <?php if($order['status'] == 'Arrived for Delivery'){?>
                                                      <a href="<?php echo $order['accept_reject_href']?>"  class="btn btn-default btn-xs btn-accept-reject" >Accept Delivery</a>
                                                     <?php } ?>
-                            <?php if($order['shipped']) { ?>
+                             <!--<?php if($order['shipped']) { ?>
 
                             <a href="#" id="cancelOrder" data-id='<?=$order["order_id"] ?>' class="btn btn-danger btn-xs btn-custom-remove"><?= $text_cancel ?></a>
 
 
                             <?php } else { ?>
                             <a href="#" data-toggle="modal" data-target="#contactusModal"  class="btn btn-default btn-xs"><?= $text_report_issue ?></a>
-                            <?php } ?>
+                            <?php } ?> -->
+
+                            
+                            <a href="#" data-toggle="modal" data-target="#contactusModal"  class="btn btn-default btn-xs"><?= $text_report_issue ?></a>
+
+                            <?php if($order['status'] == 'Order Recieved' || $order['status'] == 'Order Approval Pending' ){?>
+                            <a href="#" id="cancelOrder" data-id='<?=$order["order_id"] ?>' style="margin-right: 4px !important; height: 27px;margin-left:4px;" class="btn btn-danger btn-xs btn-custom-remove"><?= $text_cancel ?></a> 
+                                                    <?php } ?>
                             
 
 

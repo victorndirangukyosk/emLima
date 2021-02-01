@@ -271,6 +271,7 @@ class ControllerAccountOrder extends Controller {
         }
 
         $data['base'] = $server;
+        //   echo "<pre>"; print_r($data);die;
 
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/order_list.tpl')) {
             $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/order_list.tpl', $data));
