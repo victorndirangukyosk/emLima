@@ -131,6 +131,10 @@
                                       <th>SAP Customer Number</th>
                                       <td><?php echo $SAP_customer_no; ?></td>
                                   </tr>
+                                  <tr>
+                                      <th>Account Manager</th>
+                                      <td><?php isset($account_manager_name) && $account_manager_name != NULL ? $account_manager_name : 'Not Assigned'; ?></td>
+                                  </tr>
 
                                   <?php if($longitude != '' &&  $latitude != '' && $longitude != NULL &&  $latitude != NULL && $longitude != 0 &&  $latitude != 0) { ?>
  					<tr>
