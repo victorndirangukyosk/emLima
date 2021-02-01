@@ -297,13 +297,14 @@ class ControllerApiOrders extends Controller
                     $products = $this->model_account_order->getOrderProducts($result['order_id']);
 
                     $order['products_quantity'] = 0;
+                    $order['products_count'] = 0;
 
                     if (!empty($products)) {
                         foreach ($products as $product) {
                             $product['nice_total'] = $this->currency->format($product['total'], $order['currency_code'], $order['currency_value']);
 
                             $order['products_quantity'] += $product['quantity'];
-
+                            $order['products_count'] +=1;
                             $order['products'][] = $product;
                         }
                     }
