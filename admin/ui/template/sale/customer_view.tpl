@@ -133,7 +133,7 @@
                                   </tr>
                                   <tr>
                                       <th>Account Manager</th>
-                                      <td><?php isset($account_manager_name) && $account_manager_name != NULL ? $account_manager_name : 'Not Assigned'; ?></td>
+                                      <td><?php if(isset($account_manager_name) && $account_manager_name != NULL) { echo $account_manager_name; } else { 'Not Assigned'; } ?></td>
                                   </tr>
 
                                   <?php if($longitude != '' &&  $latitude != '' && $longitude != NULL &&  $latitude != NULL && $longitude != 0 &&  $latitude != 0) { ?>
