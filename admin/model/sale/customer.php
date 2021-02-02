@@ -180,7 +180,7 @@ class ModelSaleCustomer extends Model {
             $implode[] = "c.parent = '" . (int) $data['filter_parent'] . "'";
         }
 
-        if (isset($data['filter_account_manager_id']) && !is_null($data['filter_account_manager_id'])) {
+        if (isset($data['filter_account_manager_name']) && !is_null($data['filter_account_manager_id'])) {
             $implode[] = "c.account_manager_id = '" . (int) $data['filter_account_manager_id'] . "'";
         }
 
