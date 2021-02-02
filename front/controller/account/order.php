@@ -3337,6 +3337,7 @@ class ControllerAccountOrder extends Controller {
         $product_note = $this->request->post['product_note'];
 
         $this->load->model('account/order');
+        $this->load->model('sale/orderlog');
         $order_info = $this->model_account_order->getOrder($order_id, true);
         //$log->write($order_info);
         if (null != $order_info && ($order_info['order_status_id'] == 15 || $order_info['order_status_id'] == 14) && $order_info['customer_id'] == $this->customer->getId()) {
@@ -3347,6 +3348,10 @@ class ControllerAccountOrder extends Controller {
             if ($key !== false) {
                 $log->write('edit_order_quantity');
                 $this->load->model('assets/product');
+                $ordered_product_info = $this->model_account_order->getOrderProductByOrderProductId($order_id, $order_products[$key]['product_id'], $order_products[$key]['order_product_id']);
+                $log->write('ordered_product_info');
+                $log->write($ordered_product_info);
+                $log->write('ordered_product_info');
                 $product_info = $this->model_assets_product->getProductForPopup($order_products[$key]['product_id'], false, $order_products[$key]['store_id']);
                 $s_price = 0;
                 $o_price = 0;
@@ -3429,12 +3434,28 @@ class ControllerAccountOrder extends Controller {
                 $log->write($this->tax->calculate($special_price[1], $product_info['tax_class_id'], $this->config->get('config_tax')));
                 $log->write($product_id);
                 $log->write($product_id);
+                
+                $data['order_id'] = $order_id;
+                $data['order_product_id'] = $ordered_product_info['order_product_id'];
+                $data['order_status_id'] = $order_info['order_status_id'];
+                $data['product_store_id'] = $ordered_product_info['product_id'];
+                $data['general_product_id'] = $ordered_product_info['general_product_id'];
+                $data['store_id'] = $ordered_product_info['store_id'];
+                $data['vendor_id'] = $ordered_product_info['vendor_id'];
+                $data['name'] = $ordered_product_info['name'];
+                $data['unit'] = $ordered_product_info['unit'];
+                $data['model'] = $ordered_product_info['model'];
+                $data['old_quantity'] = $ordered_product_info['quantity'];
+                $data['quantity'] = $quantity;
+                
                 if(isset($this->request->post['product_note']) && $this->request->post['product_note'] != NULL) {
                 $this->db->query('UPDATE ' . DB_PREFIX . 'order_product SET product_note = "'. $product_note .'", quantity = ' . $quantity . ', tax = ' . $single_product_tax . ', total = ' . $total_without_tax . " WHERE order_product_id = '" . (int) $order_products[$key]['order_product_id'] . "' AND order_id  = '" . (int) $order_id . "' AND product_id = '" . (int) $product_id . "'");
                 $this->db->query('UPDATE ' . DB_PREFIX . 'real_order_product SET quantity = ' . $quantity . ', tax = ' . $single_product_tax . ', total = ' . $total_without_tax . " WHERE order_product_id = '" . (int) $order_products[$key]['order_product_id'] . "' AND order_id  = '" . (int) $order_id . "' AND product_id = '" . (int) $product_id . "'");
+                $this->model_sale_orderlog->addOrderLog($data);
                 } else {
                 $this->db->query('UPDATE ' . DB_PREFIX . 'order_product SET quantity = ' . $quantity . ', tax = ' . $single_product_tax . ', total = ' . $total_without_tax . " WHERE order_product_id = '" . (int) $order_products[$key]['order_product_id'] . "' AND order_id  = '" . (int) $order_id . "' AND product_id = '" . (int) $product_id . "'");
                 $this->db->query('UPDATE ' . DB_PREFIX . 'real_order_product SET quantity = ' . $quantity . ', tax = ' . $single_product_tax . ', total = ' . $total_without_tax . " WHERE order_product_id = '" . (int) $order_products[$key]['order_product_id'] . "' AND order_id  = '" . (int) $order_id . "' AND product_id = '" . (int) $product_id . "'");
+                $this->model_sale_orderlog->addOrderLog($data);
                 }
                 $order_totals = $this->db->query('SELECT SUM(total) AS total FROM ' . DB_PREFIX . "order_product WHERE order_id = '" . (int) $order_id . "'");
 

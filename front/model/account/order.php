@@ -615,6 +615,12 @@ class ModelAccountOrder extends Model {
 
         return $query->row;
     }
+    
+    public function getOrderProductByOrderProductId($order_id, $product_id, $order_product_id) {
+        $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "order_product WHERE order_id = '" . (int) $order_id . "' AND product_id = '" . (int) $product_id . "' AND order_product_id = '". (int) $order_product_id. "'");
+
+        return $query->row;
+    }
 
     public function getOrderProducts($order_id) {
         /* $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int) $order_id . "'"); */
