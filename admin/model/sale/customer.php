@@ -424,6 +424,10 @@ class ModelSaleCustomer extends Model {
         if (!empty($data['filter_parent_customer_id']) && !empty($data['filter_parent_customer'])) {
             $implode[] = "parent = '" . $this->db->escape($data['filter_parent_customer_id']) . "'";
         }
+        
+        if (!empty($data['filter_account_manager_id']) && !empty($data['filter_account_manager_name'])) {
+            $implode[] = "account_manager_id = '" . $this->db->escape($data['filter_account_manager_id']) . "'";
+        }
 
         if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
             $implode[] = "status = '" . (int) $data['filter_status'] . "'";
