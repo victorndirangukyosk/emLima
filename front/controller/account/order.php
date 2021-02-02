@@ -3602,7 +3602,22 @@ class ControllerAccountOrder extends Controller {
                 $product_info['vendor_id'] = $this->model_extension_extension->getVendorId($product_info['store_id']);
                 $product_note = $this->request->post['product_note'];
                 $this->db->query('INSERT INTO ' . DB_PREFIX . "order_product SET product_note='" . $this->request->post['product_note'] . "', vendor_id='" . (int) $product_info['vendor_id'] . "', store_id='" . (int) $product_info['store_id'] . "', order_id = '" . (int) $this->request->post['order_id'] . "', variation_id = '" . (int) $this->request->post['variation_id'] . "', product_id = '" . (int) $product_info['product_store_id'] . "', general_product_id = '" . (int) $product_info['product_id'] . "',  name = '" . $this->db->escape($product_info['name']) . "', model = '" . $this->db->escape($product_info['model']) . "', quantity = '" . $quantity . "', price = '" . (float) $special_price[1] . "', total = '" . (float) $total_without_tax . "', tax = '" . (float) $single_product_tax . "', product_type = 'replacable', unit = '" . $this->db->escape($product_info['unit']) . "'");
-
+                
+                $ordered_product_info = $this->model_account_order->getOrderProductByProductId($order_id, $product_info['product_store_id']);
+                $data['order_id'] = $order_id;
+                $data['order_product_id'] = $ordered_product_info['order_product_id'];
+                $data['order_status_id'] = $order_info['order_status_id'];
+                $data['product_store_id'] = $ordered_product_info['product_id'];
+                $data['general_product_id'] = $ordered_product_info['general_product_id'];
+                $data['store_id'] = $ordered_product_info['store_id'];
+                $data['vendor_id'] = $ordered_product_info['vendor_id'];
+                $data['name'] = $ordered_product_info['name'];
+                $data['unit'] = $ordered_product_info['unit'];
+                $data['model'] = $ordered_product_info['model'];
+                $data['old_quantity'] = 0;
+                $data['quantity'] = $quantity;
+                $this->model_sale_orderlog->addOrderLog($data);
+                
                 $order_totals = $this->db->query('SELECT SUM(total) AS total FROM ' . DB_PREFIX . "order_product WHERE order_id = '" . (int) $order_id . "'");
 
                 $order_products_updated = $this->model_account_order->getOrderProducts($order_id);
