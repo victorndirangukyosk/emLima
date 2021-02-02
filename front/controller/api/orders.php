@@ -822,4 +822,148 @@ class ControllerApiOrders extends Controller
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
+
+    public function getAllRealOrders($args = [])
+    {
+        $this->load->language('api/orders');
+
+        $json = [];
+
+        if (!isset($this->session->data['api_id'])) {
+            $json['error'] = $this->language->get('error_permission');
+        } else {
+            $this->load->model('api/orders');
+            $this->load->model('account/order');
+
+            $order_data = [];
+
+            //$args['sort'] = 'o.delivery_date';
+
+            if (isset($args['page'])) {
+                $args['start'] = ($args['page'] - 1) * $this->config->get('config_limit_admin');
+                $args['limit'] = $this->config->get('config_limit_admin');
+            }
+
+            $orderCount = 0;
+            $orderValue = 0;
+
+            $orderCountData = $this->model_api_orders->getTotalOrdersApi($args);
+
+            $log = new Log('error.log');
+            $log->write('getOrders');
+
+            $orderCount = count($orderCountData);
+
+            foreach ($orderCountData as $da) {
+                $totals = $this->model_account_order->getOrderTotals($da['order_id']);
+
+                foreach ($totals as $total) {
+                    if ('sub_total' == $total['code']) {
+                        $orderValue += $total['value'];
+                    }
+                }
+                //$orderValue += $da['total'];
+            }
+
+            $results = $this->model_api_orders->getOrders($args);
+
+            /*$log->write($results);
+
+            //echo "<pre>";print_r($results);die;
+            $temp = $results;
+
+            $amTimeslot = [];
+            $pmTimeslot = [];
+            $inPmfirstTimeslot = [];
+
+            foreach ($temp as $temp1) {
+
+                $temp2 = explode('-', $temp1['delivery_timeslot']);
+
+
+                if (strpos($temp2[0], 'am') !== false) {
+                    array_push($amTimeslot, $temp1);
+                } else {
+
+                    if(substr($temp2[0], 0,2) == '12') {
+
+                        array_push($inPmfirstTimeslot, $temp1);
+                    } else {
+                        array_push($pmTimeslot, $temp1);
+                    }
+                }
+
+            }
+            foreach ($inPmfirstTimeslot as $te) {
+
+                array_push($amTimeslot, $te);
+            }
+
+            foreach ($pmTimeslot as $te) {
+
+                array_push($amTimeslot, $te);
+            }
+
+            $results = $amTimeslot;
+
+            $log->write($results);*/
+
+            //echo "<pre>";print_r($results);die;
+            if (!empty($results)) {
+                $this->load->model('checkout/order');
+
+                foreach ($results as $result) {
+                    $order = $this->model_checkout_order->getOrder($result['order_id']);
+
+                    $order['subtotal'] = 0;
+                    $order['nice_subtotal'] = 0;
+
+                    if (isset($order)) {
+                        /* totals */
+                        $data['totals'] = [];
+
+                        $totals = $this->model_account_order->getOrderTotals($result['order_id']);
+
+                        //echo "<pre>";print_r($totals);die;
+                        foreach ($totals as $total) {
+                            if ('sub_total' == $total['code']) {
+                                $order['subtotal'] = $total['value'];
+                                $order['nice_subtotal'] = $this->currency->format($order['subtotal'], $order['currency_code'], $order['currency_value']);
+                            }
+                        }
+                    }
+
+                    $order['nice_total'] = $this->currency->format($order['total'], $order['currency_code'], $order['currency_value']);
+
+                    $order['products'] = [];
+
+                    $products = $this->model_account_order->getOrderProducts($result['order_id']);
+
+                    $order['products_quantity'] = 0;
+
+                    if (!empty($products)) {
+                        foreach ($products as $product) {
+                            $product['nice_total'] = $this->currency->format($product['total'], $order['currency_code'], $order['currency_value']);
+
+                            $order['products_quantity'] += $product['quantity'];
+
+                            $order['products'][] = $product;
+                        }
+                    }
+
+                    $order_data[] = $order;
+                }
+            }
+
+            $json['orders'] = $order_data;
+            $json['orders_count'] = $orderCount;
+            $json['pages_count'] = ceil($orderCount/$this->config->get('config_limit_admin'));
+            $json['orders_value'] = $this->currency->format($orderValue);
+
+            //$log->write($json);
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
 }
