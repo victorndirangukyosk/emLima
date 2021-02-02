@@ -823,7 +823,7 @@ class ControllerApiOrders extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getAllRealOrders($args = [])
+    public function getOrdersAndRealOrders($args = [])
     {
         $this->load->language('api/orders');
 
@@ -936,18 +936,33 @@ class ControllerApiOrders extends Controller
                     $order['nice_total'] = $this->currency->format($order['total'], $order['currency_code'], $order['currency_value']);
 
                     $order['products'] = [];
+                    $order['real_products'] = [];
 
                     $products = $this->model_account_order->getOrderProducts($result['order_id']);
+                    $real_products = $this->model_account_order->getRealOrderProducts($result['order_id']);
 
                     $order['products_quantity'] = 0;
+                    $order['products_count'] = 0;
+                    $order['real_products_quantity'] = 0;
+                    $order['real_products_count'] = 0;
 
                     if (!empty($products)) {
                         foreach ($products as $product) {
                             $product['nice_total'] = $this->currency->format($product['total'], $order['currency_code'], $order['currency_value']);
 
                             $order['products_quantity'] += $product['quantity'];
-
+                            $order['products_count'] +=1;
                             $order['products'][] = $product;
+                        }
+                    }
+
+                    if (!empty($real_products)) {
+                        foreach ($real_products as $real_product) {
+                            $real_product['nice_total'] = $this->currency->format($real_product['total'], $order['currency_code'], $order['currency_value']);
+
+                            $order['real_products_quantity'] += $real_product['quantity'];
+                            $order['real_products_count'] +=1;
+                            $order['real_products'][] = $real_product;
                         }
                     }
 
@@ -957,7 +972,6 @@ class ControllerApiOrders extends Controller
 
             $json['orders'] = $order_data;
             $json['orders_count'] = $orderCount;
-            $json['pages_count'] = ceil($orderCount/$this->config->get('config_limit_admin'));
             $json['orders_value'] = $this->currency->format($orderValue);
 
             //$log->write($json);
@@ -966,4 +980,5 @@ class ControllerApiOrders extends Controller
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
+
 }
