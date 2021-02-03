@@ -1011,9 +1011,13 @@
                     data: { order_id: order_id, product_id: product_id, quantity: qty, unit: $(this).attr('data-unit')},
                     dataType: 'json',
                     beforeSend: function () {
+                    $("#minus").prop('disabled', true);
+                    $("#plus").prop('disabled', true); 
                     //$('#cart > button').button('loading');
                     },
                     complete: function () {
+                    $("#minus").prop('disabled', false);
+                    $("#plus").prop('disabled', false);
                     //$('#cart > button').button('reset');
                     },
                     success: function (json) {
