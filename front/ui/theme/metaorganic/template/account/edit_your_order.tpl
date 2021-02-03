@@ -1087,6 +1087,9 @@
                     if(json.hasOwnProperty('redirect') && json.redirect != '') {
                     var delay = 5000;
                     setTimeout(function(){ window.location = json.redirect; }, delay);    
+                    } else {
+                    var delay = 5000;
+                    setTimeout(function(){ location.reload(); }, delay);
                     }
                     } else {
                     alert('Please try again later!');
