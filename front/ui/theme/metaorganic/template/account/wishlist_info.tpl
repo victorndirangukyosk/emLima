@@ -30,7 +30,7 @@
 
                                             <div class="row" style="display: flex;align-items: center;" >
                                                 <div class="col-md-1 checkbox" >
-                                                    <?php if($product['is_from_active_store'] && $product['status'] == 1) { ?>
+                                                    <?php if($product['is_from_active_store'] && $product['status'] == 1 && $product['category_price_status'] == 1) { ?>
                                                     <label></label><input type="checkbox" name="wishlist_products" value="<?php echo $product['product_store_id'] ?>" data-id="<?php echo $product['product_id'] ?>"/></label>
                                                     <?php } else { ?>
                                                     <label><input type="checkbox" name="wishlist_products" value="<?php echo $product['product_store_id'] ?>" data-id="<?php echo $product['product_id'] ?>" disabled/></label>
@@ -44,7 +44,7 @@
                                                 <div class="col-md-4">
                                                     <div class="mycart-product-info">
 
-                                                        <?php if($product['is_from_active_store'] && $product['status'] == 1) { ?>
+                                                        <?php if($product['is_from_active_store'] && $product['status'] == 1 && $product['category_price_status'] == 1) { ?>
                                                         <h3> <?php echo $product['name']; ?> </h3>
                                                         <?php } else { ?>
                                                         <h3> <del><?php echo $product['name']; ?></del> </h3>
@@ -53,7 +53,7 @@
 
                                                         <p class="product-info"><span class="small-info"><?php echo $product['unit']; ?></span>
                                                         </p>
-                                                        <?php if(!$product['is_from_active_store'] || $product['status'] == 0) { ?>
+                                                        <?php if(!$product['is_from_active_store'] || $product['status'] == 0 || $product['category_price_status'] == 0) { ?>
                                                         <span class="badge badge-danger">
                                                             <?= $text_not_avialable ?>
                                                         </span>
@@ -61,7 +61,7 @@
                                                     </div>
                                                 </div>
                                                 
-                                                <?php if($product['is_from_active_store'] && $product['status'] == 1) { ?>
+                                                <?php if($product['is_from_active_store'] && $product['status'] == 1 && $product['category_price_status'] == 1) { ?>
                                                 <div class="col-md-3" id="controller-container">
 
                                                     <div class="inc-dec-quantity" id="<?php echo $product['product_id'] ?>">           
@@ -79,7 +79,7 @@
 
                                                 <div class="col-md-2 product-price" >
 
-                                                    <?php if($product['is_from_active_store'] && $product['status'] == 1) { ?>
+                                                    <?php if($product['is_from_active_store'] && $product['status'] == 1 && $product['category_price_status'] == 1) { ?>
                                                     
                                                     <?php if(is_array($product['category_price']) && count($product['category_price']) > 0 && $product['category_price']['price'] > 0) { ?>
                                                     <span class="price open-popup" data-id="<?= $product['product_store_id'] ?>">
