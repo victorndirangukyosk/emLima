@@ -177,7 +177,7 @@
                                                 <?php if($this->config->get('config_account_return_product_status') == 'yes' && $delivered && $can_return) { ?>
                                                 <div class="col-md-4 col-xs-8">
                                                     <?php } else { ?>
-                                                    <div class="col-md-5 col-xs-8">
+                                                    <div class="col-md-3 col-xs-8">
                                                         <?php } ?>
                                                         <div class="mycart-product-info">
                                                             <h3> <?php echo $product['name']; ?> </h3>
@@ -245,14 +245,14 @@
 
                                                             </div>
                                                         </div>
-                                                        <div class="col-md-2 col-xs-8">
+                                                        <div class="col-md-3 col-xs-8">
                                                             <div class="my-order-price" id="producttotal<?php echo $product['product_id'] ?>">
                                                                 <?php echo $product['total']; ?>
                                                             </div>
                                                         </div>
 
                                                         <?php /* if($this->config->get('config_account_return_product_status') == 'yes' && $delivered && is_null($product['return_id']) && $can_return) { ?>
-                                                        <div class="col-md-2">
+                                                        <div class="col-md-3">
                                                             <?php /* ?>
                                                             <div class="my-order-price">
                                                                 <!-- <a href="<?php echo $product['return']; ?>" id="return_button" data-toggle="tooltip" title="<?php echo $button_return; ?>" class="btn btn-danger"><i class="fa fa-reply"></i></a> -->
@@ -268,13 +268,15 @@
                                                         <?php } */ ?>
 
                                                         <?php if($this->config->get('config_account_return_product_status') == 'yes' && $delivered && !is_null($product['return_id'])) { ?>
-                                                        <div class="col-md-2 col-xs-8">
+                                                        <div class="col-md-3 col-xs-8">
                                                             <div class="my-order-price">
                                                                 Return Status: <?= $product['return_status'] ?>
                                                             </div>
                                                         </div>
                                                         <?php } ?>
-
+                                                        <div class="col-md-1 col-xs-8">
+                                                            <a title="Remove item" class="button remove-item" style="background-color:#ec9f4e;" data-unit="<?php echo $product['unit']; ?>" data-id="<?php echo $product['product_id']; ?>" data-orderid="<?php echo $order_id; ?>" value="0" id="remove_item"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                                                        </div>
 
                                                     </div>
                                                     </li>
@@ -1042,5 +1044,75 @@
                     }
             });
             });
+        $(document).delegate('#remove_item', 'click', function (e) { 
+            e.preventDefault();
+            var product_id = $(this).attr('data-id');
+            var order_id = $(this).attr('data-orderid');
+            console.log($(this).attr('data-id'));
+            console.log($(this).attr('id'));
+            console.log($(this).attr('data-unit'));
+            console.log($(this).attr('data-orderid'));
+            var quantity = 0;
+            if (quantity < 0) {
+            alert('Invalid Quantity!');
+            return false;
+            }
+            $.ajax({
+            url: 'index.php?path=account/order/edit_full_order',
+                    type: 'post',
+                    data: { order_id: order_id, product_id: product_id, quantity: quantity, unit: $(this).attr('data-unit')},
+                    dataType: 'json',
+                    beforeSend: function () {
+                    $("#minus").prop('disabled', true);
+                    $("#plus").prop('disabled', true); 
+                    $("#remove_item").prop('disabled', true); 
+                    //$('#cart > button').button('loading');
+                    },
+                    complete: function () {
+                    $("#minus").prop('disabled', false);
+                    $("#plus").prop('disabled', false);
+                    $("#remove_item").prop('disabled', false); 
+                    //$('#cart > button').button('reset');
+                    },
+                    success: function (json) {
+                    if (json.status = true) {
+                    $("#span" + product_id).text(quantity);
+                    $("#producttotal" + product_id).text(json.product_total_price);
+                    $("#subtotal" + order_id).text(json.sub_total_amount);
+                    $("#subtotal" + order_id).text(json.sub_total_amount);
+                    $("#vat" + order_id).text(json.total_tax_amount);
+                    $("#total" + order_id).text(json.total_amount);
+                    $(".alerter").show();
+                    $('.alerter').delay(5000).fadeOut('slow');
+                    if(json.hasOwnProperty('redirect') && json.redirect != '') {
+                    var delay = 5000;
+                    setTimeout(function(){ window.location = json.redirect; }, delay);    
+                    }
+                    } else {
+                    alert('Please try again later!');
+                    return false;
+                    }
+                    console.log(json);
+                    }
+            });
+        });
         </script>
+        <style>
+    a.remove-item {
+    margin-top: 15px;
+    background-color: #ec9f4e !important;
+    background-image: none;
+    color: #333;
+    cursor: pointer;
+    padding: 8px 13px;
+    cursor: pointer;
+    text-decoration: none;
+    float: left;
+    transition: all 0.3s linear;
+    -moz-transition: all 0.3s linear;
+    -webkit-transition: all 0.3s linear;
+    border: 1px #ddd solid;
+    border-radius: 999px;  
+    }
+        </style>
         </html>
