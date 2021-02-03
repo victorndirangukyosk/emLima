@@ -52,6 +52,7 @@
 		  
 		  <li><a href="#tab-product" data-toggle="tab">Updated Products<?php //echo $tab_product; ?></a></li>
 		  <li><a href="#tab-original-product" data-toggle="tab">Ordered Products</a></li>
+                  <li><a href="#tab-order-log" data-toggle="tab">Order Log</a></li>
 
 		 <!-- <?php if($is_edited) {?>-->
 
@@ -926,7 +927,43 @@
 		  <?php } ?>
 
 		  <!-- orignal ordered products end -->
-		  
+                  
+                  <!-- order log -->
+                  <div class="tab-pane" id="tab-order-log">     
+
+                      <table class="table table-bordered table-hover">
+                          <thead>
+                              <tr>
+                                  <td class="text-left">SKU</td>
+                                  <td class="text-left">Name</td>
+
+                                  <td class="text-right">Unit</td>
+                                  <td class="text-right">Quantity( OLD )</td>
+                                  <td class="text-right">Quantity( Updated )</td>
+                              </tr>
+                          </thead>
+                          <tbody>
+
+
+                             <?php foreach ($order_logs as $order_log) { ?>
+                              <tr>
+                                  <td class="text-left"><?php echo $order_log['model']; ?></td>
+                                  <td class="text-left"><?php echo $order_log['name']; ?>												                            <span class="badge badge-success replacable" data-value="replacable" data-toggle="tooltip" data-placement="left" title="" data-original-title="This product can be replaced by shipper with similar product, if not found.">
+                                          Replacable                            </span>
+                                      <br>						
+
+                                  </td>
+
+                                  <td class="text-right"><?php echo $order_log['unit']; ?></td>
+                                  <td class="text-right"><?php echo $order_log['old_quantity']; ?></td>
+                                  <td class="text-right"><?php echo $order_log['quantity']; ?></td>
+                              </tr>
+                             <?php } ?>
+                          </tbody>
+                      </table>
+
+                  </div>
+		  <!-- order log -->
 		  <div class="tab-pane" id="tab-history">
 			<div id="history"></div>
 			<br />

@@ -3034,6 +3034,9 @@ class ControllerSaleOrder extends Controller {
 
             $EditedProducts = $this->model_sale_order->getRealOrderProducts($this->request->get['order_id']);
             $original_products = $products = $this->model_sale_order->getOrderProducts($this->request->get['order_id']);
+            $this->load->model('sale/orderlog');
+            $order_log = $products = $this->model_sale_orderlog->getOrderLog($this->request->get['order_id']);
+            $data['order_logs'] = $order_log;
             //echo '<pre>';print_r($products);exit;
 
             if ($this->model_sale_order->hasRealOrderProducts($this->request->get['order_id'])) {
