@@ -3594,6 +3594,9 @@ class ControllerAccountOrder extends Controller {
                 if(count($order_products) <= 0 || $order_totals->row['total'] <= 0) {
                 $log->write('EMPTY ORDER 1');
                 $this->refundCancelOrderByOrderId($order_id);    
+                $json['status'] = true;
+                $json['redirect'] = $this->url->link('account/order', '', 'SSL');
+                $json['status'] = 'Your Order Cancelled!';
                 }
             } else {
                 $log->write('edit_order_new_product_added');
@@ -3762,7 +3765,10 @@ class ControllerAccountOrder extends Controller {
                 $log->write('order_products COUNT 2');
                 if(count($order_products) <= 0 || $order_totals->row['total'] <= 0) {
                 $log->write('EMPTY ORDER 2');
-                $this->refundCancelOrderByOrderId($order_id);    
+                $this->refundCancelOrderByOrderId($order_id);
+                $json['status'] = true;
+                $json['redirect'] = $this->url->link('account/order', '', 'SSL');
+                $json['status'] = 'Your Order Cancelled!';
                 }
             }
         } else {
