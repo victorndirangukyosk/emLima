@@ -545,4 +545,120 @@ class ControllerApiCustomerWishlist extends Controller
     }
  
 
+    public function getAvailableOrderProducts()
+    {
+
+        $json = [];
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
+
+        $this->load->language('account/wishlist');
+        $this->load->model('account/wishlist');
+
+        $data['text_cart_success'] = "Available previous order products are fecthed";
+        $log = new Log('error.log');
+        // echo "<pre>";print_r($this->request->post['order_id']);die;
+        // $wishlist_id = $this->request->post['wishlist_id'];
+         $order_id = $this->request->get['order_id'];
+        $log->write($this->request->get['order_id']);
+        $log->write('Order List Products');
+
+        $Orderlist_products = $this->model_account_wishlist->getAvailableOrderedProducts($order_id);
+        $log->write($Orderlist_products);
+        $log->write('Order List Products obtained');
+
+        if (is_array($Orderlist_products) && count($Orderlist_products) > 0) {
+        $log->write('Order List Products inner');
+        $data['products'] = [];
+        $data['store_id'] = ACTIVE_STORE_ID;
+
+            foreach ($Orderlist_products as $Orderlist_product) {
+                $log->write('Order List Products 2');
+                $log->write($Orderlist_product['product_id']);
+                $log->write('Order List Products 2');
+                $this->load->model('assets/product');
+
+                $fromStore = false;
+                $product_store_id = 0;
+
+                // product_store_id 11
+                if ($data['store_id']) {
+                    $productStoreData = $this->model_assets_product->getProductStoreId($Orderlist_product['product_id'], $data['store_id']);
+
+                    //echo "<pre>";print_r($productStoreData);die;
+
+                    if (count($productStoreData) > 0) {
+                        $product_store_id = $productStoreData['product_store_id'];
+                        $fromStore = true;
+                    }
+                }
+
+                $store_data = $this->model_assets_product->getProductStoreId($Orderlist_product['product_id'], 75);
+                $product_info = $this->model_assets_product->getDetailproduct($store_data['product_store_id']);
+                $special_price = 0;
+                $price = 0;
+
+                if (count($product_info) > 0) {
+                    //echo "<pre>";print_r($product_info);die;
+
+                    if ((float) $product_info['special_price']) {
+                        $special_price = $this->currency->format($product_info['special_price']);
+                    } else {
+                        $special_price = $product_info['special_price'];
+                    }
+
+                    if ((float) $product_info['price']) {
+                        $price = $this->currency->format($product_info['price']);
+                    } else {
+                        $price = $product_info['price'];
+                    }
+                }
+                $category_status_price_details = $this->model_assets_product->getCategoryPriceStatusByProductStoreId($store_data['product_store_id']);
+                $log = new Log('error.log');
+                $log->write($category_status_price_details);
+                $category_price_status = is_array($category_status_price_details) && array_key_exists('status', $category_status_price_details) ? $category_status_price_details['status'] : 1;
+                
+                if(true) {// isset($product_info) && count($product_info) > 0 && $category_price_status == 1
+                $log->write('store details');
+                $log->write($store_data);
+                $log->write('store details');
+                //in mobile app just display the products, to make order seperate method will be called
+                //$this->cart->addCustom($store_data['product_store_id'], $Orderlist_product['quantity'], $option = [], $recurring_id = 0, $store_data['store_id'], $store_product_variation_id = false, $product_type = 'replacable', $product_note = null, $produce_type = null);
+               
+                $data['products'][] = [
+                    'name' => isset($product_info['pd_name']) ? $product_info['pd_name'] : $Orderlist_product['name'],
+                    'image' => $Orderlist_product['image'],
+                    'quantity' => $Orderlist_product['quantity'],
+                    'product_id' => $Orderlist_product['product_id'],
+                    'is_from_active_store' => $fromStore,
+                    'product_store_id' => $product_store_id,
+                    'unit' => $Orderlist_product['unit'],
+                    'price' => $price,
+                    'special_price' => $special_price,
+                    'category_price' => $this->model_assets_product->getCategoryPriceStatusByProductStoreId($product_store_id),
+                    'status' => isset($product_info['pd_name']) && count($product_info) > 0 ? 1 : 0,
+                    'category_price_status' => is_array($category_status_price_details) && array_key_exists('status', $category_status_price_details) ? $category_status_price_details['status'] : 1,
+                       /* 'store_id'     => $product['store_id'],
+                    'model'    => $product['model'],*/
+
+                    /*'price'    => $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $wishlist_info['currency_code'], $wishlist_info['currency_value']),
+                    'total'    => $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $wishlist_info['currency_code'], $wishlist_info['currency_value']),*/
+                ];
+            
+            }
+            }
+        }
+        // $this->model_account_wishlist->deleteWishlists($wishlist_id);
+        //echo "reg";
+
+        // $data['results'] = sprintf($this->language->get('text_pagination'), ($wishlist_total) ? (($page - 1) * 10) + 1 : 0, ((($page - 1) * 10) > ($wishlist_total - 10)) ? $wishlist_total : ((($page - 1) * 10) + 10), $wishlist_total, ceil($wishlist_total / 10));
+
+        // $data['wishlist_total'] = $wishlist_total;
+
+        $json['data'] = $data;
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($data));
+    }
 }
