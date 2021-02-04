@@ -940,6 +940,7 @@
                                   <td class="text-right">Unit</td>
                                   <td class="text-right">Quantity( OLD )</td>
                                   <td class="text-right">Quantity( Updated )</td>
+                                  <td class="text-right">Modified Date</td>
                               </tr>
                           </thead>
                           <tbody>
@@ -957,6 +958,7 @@
                                   <td class="text-right"><?php echo $order_log['unit']; ?></td>
                                   <td class="text-right"><?php echo $order_log['old_quantity']; ?></td>
                                   <td class="text-right"><?php echo $order_log['quantity']; ?></td>
+                                  <td class="text-right"><?php echo $order_log['created_at']; ?></td>
                               </tr>
                              <?php } ?>
                           </tbody>
