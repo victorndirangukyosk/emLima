@@ -889,7 +889,13 @@ class ControllerAccountWishList extends Controller
                 $this->load->model('assets/product');
                 $store_data = $this->model_assets_product->getProductStoreId($Orderlist_product['product_id'], 75);
                 $product_info = $this->model_assets_product->getDetailproduct($store_data['product_store_id']);
-                if(isset($product_info) && count($product_info) > 0) {
+                
+                $category_status_price_details = $this->model_assets_product->getCategoryPriceStatusByProductStoreId($store_data['product_store_id']);
+                $log = new Log('error.log');
+                $log->write($category_status_price_details);
+                $category_price_status = is_array($category_status_price_details) && array_key_exists('status', $category_status_price_details) ? $category_status_price_details['status'] : 1;
+                
+                if(isset($product_info) && count($product_info) > 0 && $category_price_status == 1) {
                 $log->write('store details');
                 $log->write($store_data);
                 $log->write('store details');
