@@ -421,52 +421,68 @@ class ControllerApiCustomerWishlist extends Controller
                     $product_info = $this->model_assets_product->getDetailproduct($product_store_id);
 
                     $name = $product['name'];
+                    $s_price = 0;
+                    $o_price = 0;
+                    $special_price = 0;
+                    $price = 0;
 
                     if (isset($product_info) && count($product_info) > 0) {
-                        $s_price = 0;
-                        $o_price = 0;
+                      
 
-                        if (!$this->config->get('config_inclusiv_tax')) {
-                            //get price html
-                            if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-                                $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
+                        // if (!$this->config->get('config_inclusiv_tax')) {
+                        //     //get price html
+                        //     if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+                        //         $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
 
-                                $o_price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
-                            } else {
-                                $price = false;
-                            }
-                            if ((float) $product_info['special_price']) {
-                                $special_price = $this->tax->calculate($product_info['special_price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
+                        //         $o_price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
+                        //     } else {
+                        //         $price = false;
+                        //     }
+                        //     if ((float) $product_info['special_price']) {
+                        //         $special_price = $this->tax->calculate($product_info['special_price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
 
-                                $s_price = $this->tax->calculate($product_info['special_price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
-                            } else {
-                                $special_price = false;
-                            }
+                        //         $s_price = $this->tax->calculate($product_info['special_price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
+                        //     } else {
+                        //         $special_price = false;
+                        //     }
+                        // } else {
+                        //     if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+                        //         $price = $product_info['price'];
+                        //     } else {
+                        //         $price = $product_info['price'];
+                        //     }
+
+                        //     if ((float) $product_info['special_price']) {
+                        //         $special_price = $product_info['special_price'];
+                        //     } else {
+                        //         $special_price = $product_info['special_price'];
+                        //     }
+
+                        //     $s_price = $product_info['special_price'];
+                        //     $o_price = $product_info['price'];
+                        // }
+
+                        // if (isset($s_price) && isset($o_price) && 0 != $o_price && 0 != $s_price) {
+                        //     $percent_off = (($o_price - $s_price) / $o_price) * 100;
+                        // }
+
+                        // if (is_null($special_price) || !($special_price + 0)) {
+                        //     //$special_price = 0;
+                        //     $special_price = $price;
+                        // }
+
+                        if ((float) $product_info['special_price']) {
+                            $special_price = $this->currency->format($product_info['special_price']);
                         } else {
-                            if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-                                $price = $product_info['price'];
-                            } else {
-                                $price = $product_info['price'];
-                            }
-
-                            if ((float) $product_info['special_price']) {
-                                $special_price = $product_info['special_price'];
-                            } else {
-                                $special_price = $product_info['special_price'];
-                            }
-
-                            $s_price = $product_info['special_price'];
-                            $o_price = $product_info['price'];
+                            $special_price = $product_info['special_price'];
                         }
-
-                        if (isset($s_price) && isset($o_price) && 0 != $o_price && 0 != $s_price) {
-                            $percent_off = (($o_price - $s_price) / $o_price) * 100;
+    
+                        if ((float) $product_info['price']) {
+                            $price = $this->currency->format($product_info['price']);
+                        } else {
+                            $price = $product_info['price'];
                         }
-
-                        if (is_null($special_price) || !($special_price + 0)) {
-                            //$special_price = 0;
-                            $special_price = $price;
-                        }
+                        
 
                         if (isset($product_info['pd_name'])) {
                             //$result['name'] = $result['pd_name'];
@@ -476,6 +492,11 @@ class ControllerApiCustomerWishlist extends Controller
 
                     //echo "<pre>";print_r($product_info);die;
                     $this->load->model('tool/image');
+
+                    $category_status_price_details = $this->model_assets_product->getCategoryPriceStatusByProductStoreId($product_store_id);
+                    $log = new Log('error.log');
+                    $log->write($category_status_price_details);
+
 
                     $data['products'][] = [
                         'name' => html_entity_decode($name),
@@ -491,6 +512,10 @@ class ControllerApiCustomerWishlist extends Controller
                         'product_info' => $product_info,
                         'left_symbol_currency' => $this->currency->getSymbolLeft(),
                         'right_symbol_currency' => $this->currency->getSymbolRight(),
+                        'category_price' => $this->model_assets_product->getCategoryPriceStatusByProductStoreId($product_store_id),
+                        'status' => isset($product_info['pd_name']) && count($product_info) > 0 ? 1 : 0,
+                        'category_price_status' => is_array($category_status_price_details) && array_key_exists('status', $category_status_price_details) ? $category_status_price_details['status'] : 1,
+                         
                     ];
                 }
 
