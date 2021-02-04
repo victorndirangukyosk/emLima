@@ -1032,6 +1032,10 @@
                     $("#total" + order_id).text(json.total_amount);
                     $(".alerter").show();
                     $('.alerter').delay(5000).fadeOut('slow');
+                    if(qty <= 0) {
+                    var delay = 5000;
+                    setTimeout(function(){ location.reload(); }, delay);    
+                    }
                     if(json.hasOwnProperty('redirect') && json.redirect != '') {
                     var delay = 5000;
                     setTimeout(function(){ window.location = json.redirect; }, delay);    
