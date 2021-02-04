@@ -42,7 +42,8 @@
             <thead>
               <tr>
                 <td class="text-left"><?php echo $column_ip; ?></td>
-                <td class="text-left"><?php echo $column_customer; ?></td>
+                <!--<td class="text-left"><?php echo $column_customer; ?></td>-->
+                <td class="text-left"><?php echo $column_company; ?></td>
                 <td class="text-left"><?php echo $column_url; ?></td>
                 <td class="text-left"><?php echo $column_referer; ?></td>
                 <td class="text-left"><?php echo $column_date_added; ?></td>
@@ -54,7 +55,8 @@
               <?php foreach ($customers as $customer) { ?>
               <tr>
                 <td class="text-left"><a href="http://whatismyipaddress.com/ip/<?php echo $customer['ip']; ?>" target="_blank"><?php echo $customer['ip']; ?></a></td>
-                <td class="text-left"><?php echo $customer['customer']; ?></td>
+                <!--<td class="text-left"><?php echo $customer['customer']; ?></td>-->
+                <td class="text-left"><?php echo $customer['company']; ?></td>
                 <td class="text-left"><a href="<?php echo $customer['url']; ?>" target="_blank"><?php echo implode('<br/>', str_split($customer['url'], 30)); ?></a></td>
                 <td class="text-left"><?php if ($customer['referer']) { ?>
                   <a href="<?php echo $customer['referer']; ?>" target="_blank"><?php echo implode('<br/>', str_split($customer['referer'], 30)); ?></a>

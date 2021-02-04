@@ -20,6 +20,13 @@ class ControllerReportCustomerOnline extends Controller
             $filter_customer = null;
         }
 
+
+        if (isset($this->request->get['filter_company'])) {
+            $filter_company = $this->request->get['filter_company'];
+        } else {
+            $filter_company = null;
+        }
+
         if (isset($this->request->get['page'])) {
             $page = $this->request->get['page'];
         } else {
@@ -30,6 +37,9 @@ class ControllerReportCustomerOnline extends Controller
 
         if (isset($this->request->get['filter_customer'])) {
             $url .= '&filter_customer='.urlencode($this->request->get['filter_customer']);
+        }
+        if (isset($this->request->get['filter_company'])) {
+            $url .= '&filter_company='.urlencode($this->request->get['filter_company']);
         }
 
         if (isset($this->request->get['filter_ip'])) {
@@ -60,6 +70,7 @@ class ControllerReportCustomerOnline extends Controller
         $filter_data = [
             'filter_ip' => $filter_ip,
             'filter_customer' => $filter_customer,
+            'filter_company' => $filter_company,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
             'limit' => $this->config->get('config_limit_admin'),
         ];
@@ -73,14 +84,17 @@ class ControllerReportCustomerOnline extends Controller
 
             if ($customer_info) {
                 $customer = $customer_info['firstname'].' '.$customer_info['lastname'];
+                $company = $customer_info['company_name'];
             } else {
                 $customer = $this->language->get('text_guest');
+                $company = $this->language->get('text_guest');
             }
 
             $data['customers'][] = [
                 'customer_id' => $result['customer_id'],
                 'ip' => $result['ip'],
                 'customer' => $customer,
+                'company' => $company,
                 'url' => $result['url'],
                 'referer' => $result['referer'],
                 'date_added' => date($this->language->get('datetime_format'), strtotime($result['date_added'])),
@@ -96,6 +110,7 @@ class ControllerReportCustomerOnline extends Controller
 
         $data['column_ip'] = $this->language->get('column_ip');
         $data['column_customer'] = $this->language->get('column_customer');
+        $data['column_company'] = $this->language->get('column_company');
         $data['column_url'] = $this->language->get('column_url');
         $data['column_referer'] = $this->language->get('column_referer');
         $data['column_date_added'] = $this->language->get('column_date_added');
@@ -103,6 +118,7 @@ class ControllerReportCustomerOnline extends Controller
 
         $data['entry_ip'] = $this->language->get('entry_ip');
         $data['entry_customer'] = $this->language->get('entry_customer');
+        $data['entry_company'] = $this->language->get('entry_company');
 
         $data['button_edit'] = $this->language->get('button_edit');
         $data['button_filter'] = $this->language->get('button_filter');
@@ -115,6 +131,10 @@ class ControllerReportCustomerOnline extends Controller
 
         if (isset($this->request->get['filter_customer'])) {
             $url .= '&filter_customer='.urlencode($this->request->get['filter_customer']);
+        }
+
+        if (isset($this->request->get['filter_company'])) {
+            $url .= '&filter_company='.urlencode($this->request->get['filter_company']);
         }
 
         if (isset($this->request->get['filter_ip'])) {
