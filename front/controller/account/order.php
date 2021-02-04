@@ -3592,6 +3592,17 @@ class ControllerAccountOrder extends Controller {
                 $log->write(count($order_products));
                 $log->write('order_products COUNT 1');
                 if(count($order_products) <= 0 || $order_totals->row['total'] <= 0) {
+                
+                $log = new Log('error.log');
+                $this->load->model('account/activity');    
+                $activity_data = [
+                    'customer_id' => $this->customer->getId(),
+                    'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
+                    'order_id' => $order_id,
+                ];
+                $log->write('account cancelled by customer 1');
+                $this->model_account_activity->addActivity('order_cancelled_by_customer', $activity_data);
+                    
                 $log->write('EMPTY ORDER 1');
                 $this->refundCancelOrderByOrderId($order_id);    
                 $json['status'] = true;
@@ -3764,6 +3775,17 @@ class ControllerAccountOrder extends Controller {
                 $log->write(count($order_products));
                 $log->write('order_products COUNT 2');
                 if(count($order_products) <= 0 || $order_totals->row['total'] <= 0) {
+                
+                $log = new Log('error.log');
+                $this->load->model('account/activity');    
+                $activity_data = [
+                    'customer_id' => $this->customer->getId(),
+                    'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
+                    'order_id' => $order_id,
+                ];
+                $log->write('account cancelled by customer 2');
+                $this->model_account_activity->addActivity('order_cancelled_by_customer', $activity_data);    
+                    
                 $log->write('EMPTY ORDER 2');
                 $this->refundCancelOrderByOrderId($order_id);
                 $json['status'] = true;
