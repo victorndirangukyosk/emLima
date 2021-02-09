@@ -4608,7 +4608,7 @@ class ControllerSaleOrder extends Controller {
 
         $data = [];
 
-
+        // echo "<pre>";print_r($results);die;
 
         $totalOrdersAmount = 0;
         foreach ($results as $order) {
@@ -4624,9 +4624,10 @@ class ControllerSaleOrder extends Controller {
             ];
             // $totalOrdersAmount += $order['total'];
         }
-        // $data['consolidation']['total'] = $totalOrdersAmount;
+        // $data['consolidation']['total'] = $totalOrdersAmount; 
 
         foreach ($results as $index => $order) {
+            $sum=0;
             $data['orders'][$index] = $order;
             $orderProducts = $this->getOrderProductsWithVariancesNew($data['orders'][$index]['order_id']);
             $data['orders'][$index]['products'] = $orderProducts;
