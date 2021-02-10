@@ -1255,17 +1255,27 @@ return false;
 }
 }
 
+$.ajax({
+url: 'index.php?path=sale/order/getDriverDetails&token=<?php echo $token; ?>',
+type: 'post',
+dataType: 'json',
+data: 'order_id=' + clicked_orderid,
+success: function(json) {
+console.log(json.order_info);
 if($('select[id=\'input-order-status'+clicked_orderid+'\'] option:selected').text()=='Delivered')
-{
-	 
-	$.ajax({
+{ 
+$.ajax({
 		url: 'index.php?path=sale/order/createinvoiceno&token=<?php echo $token; ?>&order_id='+clicked_orderid,
 		dataType: 'json',
 		success: function(json) {
-			console.log(json);
+	        console.log(json);
+                if($('select[id=\'input-order-status'+clicked_orderid+'\'] option:selected').text()!='Order Processing')
+                {
+                setTimeout(function(){ window.location.reload(false); }, 1500);    
+                }        
 		},			
 		error: function(xhr, ajaxOptions, thrownError) {
-			//alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+	        //alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
 		}
 	});
 }
@@ -1295,22 +1305,28 @@ $.ajax({
                     $('.alert').html('Order status updated successfully!');
                     $(".alert").attr('class', 'alert alert-success');
                     $(".alert").show();
+                    if($('select[id=\'input-order-status'+clicked_orderid+'\'] option:selected').text()!='Order Processing')
+                    {
+                    setTimeout(function(){ window.location.reload(false); }, 1500);    
+                    }
                     //setTimeout(function(){ window.location.reload(false); }, 1500);
 		},			
 		error: function(xhr, ajaxOptions, thrownError) {		
 			 
 		}
 });   
-}         
 }
+
+},			
+error: function(xhr, ajaxOptions, thrownError) {		
+}
+});
+
+}
+
 setInterval(function() {
 $('#svg'+clicked_orderid).attr('stroke', '#51AB66');
 }, 4000); // 60 * 1000 milsec
-
-if($('select[id=\'input-order-status'+clicked_orderid+'\'] option:selected').text()!='Order Processing')
-{
-setTimeout(function(){ window.location.reload(false); }, 1500);    
-}
 
 });
 
