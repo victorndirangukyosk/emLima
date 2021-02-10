@@ -2610,6 +2610,85 @@ class ControllerApiCustomerOrder extends Controller
         }
     }
 
+
+    
+    public function refundCancelOrderByOrderId($order_id) {
+        require_once DIR_SYSTEM . 'library/Iugu.php';
+
+        $data['status'] = false;
+
+        $log = new Log('error.log');
+
+        if ($order_id) {
+            $data['settlement_tab'] = false;
+
+            $this->load->model('sale/order');
+            $this->load->model('checkout/order');
+            /* $iuguData =  $this->model_sale_order->getOrderIugu($order_id);
+
+              $log->write('refundCancelOrder');
+              $log->write($iuguData);
+              if($iuguData) {
+
+              $invoiceId = $iuguData['invoice_id'];
+
+              Iugu::setApiKey($this->config->get('iugu_token'));
+
+
+              $invoice = Iugu_Invoice::fetch($invoiceId);
+              $resp = $invoice->refund();
+
+              $log->write('refundAPI');
+              $log->write($resp);
+
+              if($resp) {
+
+              } else {
+              $data['status'] = false;
+              }
+              } */
+
+            //update order status as cancelled
+            $order_info = $this->model_checkout_order->getOrder($order_id);
+
+            $log->write($order_id);
+
+            $notify = true;
+            $comment = 'Order ID #' . $order_id . ' Cancelled';
+
+            $this->load->model('localisation/order_status');
+
+            $order_status = $this->model_localisation_order_status->getOrderStatuses();
+
+            $order_status_id = false;
+            foreach ($order_status as $order_state) {
+                if ('cancelled' == strtolower($order_state['name']) || 'cancelada' == strtolower($order_state['name'])) {
+                    $order_status_id = $order_state['order_status_id'];
+                    break;
+                }
+            }
+
+            $log->write($order_status_id);
+            if ($order_info && $order_status_id) {
+                $log->write('if order his');
+
+                $this->load->model('account/customer');
+                $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+
+                $this->model_checkout_order->addOrderHistory($order_id, $order_status_id, $comment, $notify, $customer_info['customer_id'], 'customer');
+
+                $data['status'] = true;
+            } else {
+                $data['status'] = false;
+            }
+        }
+
+        /*$this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($data));*/
+    }
+
+    
+
     //public function edit_full_order() //addMaxOfProduct
     public function addEditOrderWithNewitemAndQuantity($args = [])
     {    
