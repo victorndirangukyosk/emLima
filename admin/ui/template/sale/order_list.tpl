@@ -1291,7 +1291,7 @@ console.log(json.order_info);
 if(json.order_info.order_status_id == 15 && selected_order_status_id != 6) {
 console.log('You Cant Update Order Status!');  
 $('#ordernoticeModal').modal('toggle');
-$('#ordernoticeModal-message').html('You Cant Update Order Status!');
+$('#ordernoticeModal-message').html('You Cant Update Order Status! Until Parent Customer Approve The Order.');
 return false;
 }
 
