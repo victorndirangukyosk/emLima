@@ -930,7 +930,26 @@
             </div>
         </div>
     </div>
-
+    
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Order Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="order_notice"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 <script  type="text/javascript">
 
 
@@ -1262,6 +1281,14 @@ dataType: 'json',
 data: 'order_id=' + clicked_orderid,
 success: function(json) {
 console.log(json.order_info);
+
+if(json.order_info.order_status_id == 15 && selected_order_status_id != 6) {
+console.log('You Cant Update Order Status!');  
+$('#exampleModal').modal('toggle');
+$('#order_notice').html('<h5>You Cant Update Order Status!</h5>');
+return false;
+}
+
 if($('select[id=\'input-order-status'+clicked_orderid+'\'] option:selected').text()=='Delivered')
 { 
 $.ajax({
