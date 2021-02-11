@@ -932,20 +932,26 @@
     </div>
     
     <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="ordernoticeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Order Details</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div id="order_notice"></div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <div class="modal-content"  >
+                <div class="modal-body"  style="height:130px;">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <div class="store-find-block">
+                        <div class="mydivsss">
+                            <div class="store-find">
+                                <div class="store-head">
+                                    <h2>Order Details</h2>
+                                    </br> 
+                                </div>
+                                <div id="ordernoticeModal-message" style="color: red;text-align:center; font-size: 15px;" >
+                                </div>
+                                <div id="ordernoticeModal-success-message" style="color: green; ; text-align:center; font-size: 15px;">
+                                </div>  
+                            </div>
+                            <!-- next div code -->
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1284,8 +1290,8 @@ console.log(json.order_info);
 
 if(json.order_info.order_status_id == 15 && selected_order_status_id != 6) {
 console.log('You Cant Update Order Status!');  
-$('#exampleModal').modal('toggle');
-$('#order_notice').html('<h5>You Cant Update Order Status!</h5>');
+$('#ordernoticeModal').modal('toggle');
+$('#ordernoticeModal-message').html('You Cant Update Order Status!');
 return false;
 }
 
