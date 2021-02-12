@@ -23,7 +23,17 @@ class ControllerAwsAwssThree extends Controller {
         $s3Client = $sdk->createS3();
 
         try {
-            $s3Client->createBucket(['Bucket' => 'kwikbasket-logs']);
+            //$s3Client->createBucket(['Bucket' => 'kwikbasket-logs']);
+
+            $bucket = 'kwikbasket-logs';
+            $file_Path = DIR_LOG . date('Y-m-d') . '.log';
+            $key = basename($file_Path);
+            $result = $s3Client->putObject([
+                'Bucket' => $bucket,
+                'Key' => $key,
+                'SourceFile' => $file_Path,
+                'ACL' => 'private',
+            ]);
         } catch (S3Exception $e) {
             // Catch an S3 specific exception.
             echo $e->getMessage();
