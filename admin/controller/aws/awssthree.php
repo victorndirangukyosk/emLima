@@ -14,8 +14,8 @@ class ControllerAwsAwssThree extends Controller {
             'region' => 'ap-south-1',
             'version' => 'latest',
             'credentials' => [
-                'key' => '',
-                'secret' => ''
+                'key' => 'AKIAUWRTJZVBETGW5LVM',
+                'secret' => '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'
             ]
         ]);
 
@@ -23,7 +23,7 @@ class ControllerAwsAwssThree extends Controller {
         $s3Client = $sdk->createS3();
 
         try {
-            $s3Client->createBucket(['Bucket' => 'credright-documents']);
+            $s3Client->createBucket(['Bucket' => 'kwikbasket-logs']);
         } catch (S3Exception $e) {
             // Catch an S3 specific exception.
             echo $e->getMessage();
