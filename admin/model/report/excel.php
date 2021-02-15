@@ -4396,6 +4396,9 @@ class ModelReportExcel extends Model {
 
         //   echo "<pre>";print_r($rows);die;
 
+        // [price] => 145.00
+        // [special_price] => 120.00
+
         try {
             // set appropriate timeout limit
             set_time_limit(1800);
@@ -4455,7 +4458,9 @@ class ModelReportExcel extends Model {
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $store_id);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, '');
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $result['unit']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, '');
+                // $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, '');
+                // $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $result['price']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $result['special_price']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, $row, 1);
                 ++$row;
             }
