@@ -1695,6 +1695,9 @@ class ControllerSaleCustomer extends Controller {
             ];
 
             $this->model_account_activity->addActivity('login', $activity_data);
+            
+            $this->session->data['order_approval_access'] = $customer_info['order_approval_access'];
+            $this->session->data['order_approval_access_role'] = $customer_info['order_approval_access_role'];
 
             if ($store_info) {
                 $this->response->redirect($store_info['url'] . 'index.php?path=account/login/adminRedirectLogin&token=' . $token);
