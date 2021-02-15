@@ -100,6 +100,14 @@ class ControllerSaleCustomer extends Controller {
             if (isset($this->request->get['filter_parent_customer_id'])) {
                 $url .= '&filter_parent_customer_id=' . $this->request->get['filter_parent_customer_id'];
             }
+            
+            if (isset($this->request->get['filter_account_manager_name'])) {
+                $url .= '&filter_account_manager_name=' . $this->request->get['filter_account_manager_name'];
+            }
+            
+            if (isset($this->request->get['filter_account_manager_id'])) {
+                $url .= '&filter_account_manager_id=' . $this->request->get['filter_account_manager_id'];
+            }
 
             if (isset($this->request->get['filter_date_added'])) {
                 $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
@@ -213,6 +221,14 @@ class ControllerSaleCustomer extends Controller {
             if (isset($this->request->get['filter_parent_customer_id'])) {
                 $url .= '&filter_parent_customer_id=' . $this->request->get['filter_parent_customer_id'];
             }
+            
+            if (isset($this->request->get['filter_account_manager_name'])) {
+                $url .= '&filter_account_manager_name=' . $this->request->get['filter_account_manager_name'];
+            }
+            
+            if (isset($this->request->get['filter_account_manager_id'])) {
+                $url .= '&filter_account_manager_id=' . $this->request->get['filter_account_manager_id'];
+            }
 
             if (isset($this->request->get['filter_date_added'])) {
                 $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
@@ -312,6 +328,14 @@ class ControllerSaleCustomer extends Controller {
             if (isset($this->request->get['filter_parent_customer_id'])) {
                 $url .= '&filter_parent_customer_id=' . $this->request->get['filter_parent_customer_id'];
             }
+            
+            if (isset($this->request->get['filter_account_manager_name'])) {
+                $url .= '&filter_account_manager_name=' . $this->request->get['filter_account_manager_name'];
+            }
+            
+            if (isset($this->request->get['filter_account_manager_id'])) {
+                $url .= '&filter_account_manager_id=' . $this->request->get['filter_account_manager_id'];
+            }
 
             if (isset($this->request->get['filter_date_added'])) {
                 $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
@@ -408,6 +432,14 @@ class ControllerSaleCustomer extends Controller {
             if (isset($this->request->get['filter_parent_customer_id'])) {
                 $url .= '&filter_parent_customer_id=' . $this->request->get['filter_parent_customer_id'];
             }
+            
+            if (isset($this->request->get['filter_account_manager_name'])) {
+                $url .= '&filter_account_manager_name=' . $this->request->get['filter_account_manager_name'];
+            }
+            
+            if (isset($this->request->get['filter_account_manager_id'])) {
+                $url .= '&filter_account_manager_id=' . $this->request->get['filter_account_manager_id'];
+            }
 
             if (isset($this->request->get['filter_date_added'])) {
                 $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
@@ -480,6 +512,14 @@ class ControllerSaleCustomer extends Controller {
             
             if (isset($this->request->get['filter_parent_customer_id'])) {
                 $url .= '&filter_parent_customer_id=' . $this->request->get['filter_parent_customer_id'];
+            }
+            
+            if (isset($this->request->get['filter_account_manager_name'])) {
+                $url .= '&filter_account_manager_name=' . $this->request->get['filter_account_manager_name'];
+            }
+            
+            if (isset($this->request->get['filter_account_manager_id'])) {
+                $url .= '&filter_account_manager_id=' . $this->request->get['filter_account_manager_id'];
             }
 
             if (isset($this->request->get['filter_date_added'])) {
@@ -567,6 +607,18 @@ class ControllerSaleCustomer extends Controller {
         } else {
             $filter_parent_customer_id = null;
         }
+        
+        if (isset($this->request->get['filter_account_manager_name'])) {
+            $filter_account_manager_name = $this->request->get['filter_account_manager_name'];
+        } else {
+            $filter_account_manager_name = null;
+        }
+        
+        if (isset($this->request->get['filter_account_manager_id'])) {
+            $filter_account_manager_id = $this->request->get['filter_account_manager_id'];
+        } else {
+            $filter_account_manager_id = null;
+        }
 
         if (isset($this->request->get['filter_date_added'])) {
             $filter_date_added = $this->request->get['filter_date_added'];
@@ -633,6 +685,14 @@ class ControllerSaleCustomer extends Controller {
         if (isset($this->request->get['filter_parent_customer_id'])) {
             $url .= '&filter_parent_customer_id=' . $this->request->get['filter_parent_customer_id'];
         }
+        
+        if (isset($this->request->get['filter_account_manager_name'])) {
+            $url .= '&filter_account_manager_name=' . $this->request->get['filter_account_manager_name'];
+        }
+        
+        if (isset($this->request->get['filter_account_manager_id'])) {
+            $url .= '&filter_account_manager_id=' . $this->request->get['filter_account_manager_id'];
+        }
 
         if (isset($this->request->get['filter_date_added'])) {
             $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
@@ -679,6 +739,8 @@ class ControllerSaleCustomer extends Controller {
             'filter_ip' => $filter_ip,
             'filter_parent_customer' => $filter_parent_customer,
             'filter_parent_customer_id' => $filter_parent_customer_id,
+            'filter_account_manager_name' => $filter_account_manager_name,
+            'filter_account_manager_id' => $filter_account_manager_id,
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
@@ -763,6 +825,7 @@ class ControllerSaleCustomer extends Controller {
         $data['entry_approved'] = $this->language->get('entry_approved');
         $data['entry_ip'] = $this->language->get('entry_ip');
         $data['entry_parent_customer'] = 'Parent Customer Name';
+        $data['entry_account_manager_name'] = 'Account Manager Name';
         $data['entry_date_added'] = $this->language->get('entry_date_added');
 
         $data['button_approve'] = $this->language->get('button_approve');
@@ -842,6 +905,14 @@ class ControllerSaleCustomer extends Controller {
         if (isset($this->request->get['filter_parent_customer_id'])) {
             $url .= '&filter_parent_customer_id=' . $this->request->get['filter_parent_customer_id'];
         }
+        
+        if (isset($this->request->get['filter_account_manager_name'])) {
+            $url .= '&filter_account_manager_name=' . $this->request->get['filter_account_manager_name'];
+        }
+        
+        if (isset($this->request->get['filter_account_manager_id'])) {
+            $url .= '&filter_account_manager_id=' . $this->request->get['filter_account_manager_id'];
+        }
 
         if (isset($this->request->get['filter_date_added'])) {
             $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
@@ -905,6 +976,14 @@ class ControllerSaleCustomer extends Controller {
         if (isset($this->request->get['filter_parent_customer_id'])) {
             $url .= '&filter_parent_customer_id=' . $this->request->get['filter_parent_customer_id'];
         }
+        
+        if (isset($this->request->get['filter_account_manager_name'])) {
+            $url .= '&filter_account_manager_name=' . $this->request->get['filter_account_manager_name'];
+        }
+        
+        if (isset($this->request->get['filter_account_manager_id'])) {
+            $url .= '&filter_account_manager_id=' . $this->request->get['filter_account_manager_id'];
+        }
 
         if (isset($this->request->get['filter_date_added'])) {
             $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
@@ -938,6 +1017,8 @@ class ControllerSaleCustomer extends Controller {
         $data['filter_ip'] = $filter_ip;
         $data['filter_parent_customer'] = $filter_parent_customer;
         $data['filter_parent_customer_id'] = $filter_parent_customer_id;
+        $data['filter_account_manager_name'] = $filter_account_manager_name;
+        $data['filter_account_manager_id'] = $filter_account_manager_id;
         $data['filter_date_added'] = $filter_date_added;
 
         $this->load->model('sale/customer_group');
@@ -1169,6 +1250,14 @@ class ControllerSaleCustomer extends Controller {
         
         if (isset($this->request->get['filter_parent_customer_id'])) {
             $url .= '&filter_parent_customer_id=' . $this->request->get['filter_parent_customer_id'];
+        }
+        
+        if (isset($this->request->get['filter_account_manager_name'])) {
+            $url .= '&filter_account_manager_name=' . $this->request->get['filter_account_manager_name'];
+        }
+        
+        if (isset($this->request->get['filter_account_manager_id'])) {
+            $url .= '&filter_account_manager_id=' . $this->request->get['filter_account_manager_id'];
         }
 
         if (isset($this->request->get['filter_date_added'])) {
@@ -1606,6 +1695,9 @@ class ControllerSaleCustomer extends Controller {
             ];
 
             $this->model_account_activity->addActivity('login', $activity_data);
+            
+            $this->session->data['order_approval_access'] = $customer_info['order_approval_access'];
+            $this->session->data['order_approval_access_role'] = $customer_info['order_approval_access_role'];
 
             if ($store_info) {
                 $this->response->redirect($store_info['url'] . 'index.php?path=account/login/adminRedirectLogin&token=' . $token);
@@ -2430,6 +2522,14 @@ class ControllerSaleCustomer extends Controller {
         if (isset($this->request->get['filter_parent_customer_id'])) {
             $url .= '&filter_parent_customer_id=' . $this->request->get['filter_parent_customer_id'];
         }
+        
+        if (isset($this->request->get['filter_account_manager_name'])) {
+            $url .= '&filter_account_manager_name=' . $this->request->get['filter_account_manager_name'];
+        }
+        
+        if (isset($this->request->get['filter_account_manager_id'])) {
+            $url .= '&filter_account_manager_id=' . $this->request->get['filter_account_manager_id'];
+        }
 
         if (isset($this->request->get['filter_date_added'])) {
             $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
@@ -2543,5 +2643,68 @@ class ControllerSaleCustomer extends Controller {
 
         $this->response->setOutput($this->load->view('sale/customer_view.tpl', $data));
     }
+    
+    public function autocompleteaccountmanager() {
+        $json = [];
 
+        if (isset($this->request->get['filter_name']) || isset($this->request->get['filter_email']) || isset($this->request->get['filter_telephone'])) {
+            if (isset($this->request->get['filter_name'])) {
+                $filter_name = $this->request->get['filter_name'];
+            } else {
+                $filter_name = '';
+            }
+
+            if (isset($this->request->get['filter_email'])) {
+                $filter_email = $this->request->get['filter_email'];
+            } else {
+                $filter_email = '';
+            }
+            
+            if (isset($this->request->get['filter_telephone'])) {
+                $filter_telephone = $this->request->get['filter_telephone'];
+            } else {
+                $filter_telephone = '';
+            }
+
+            $this->load->model('user/user');
+
+            $filter_data = [
+                'filter_name' => $filter_name,
+                'filter_email' => $filter_email,
+                'filter_telephone' => $filter_telephone,
+                'start' => 0,
+                'limit' => 5,
+            ];
+
+            $results = $this->model_user_user->getAccountManagerUsers($filter_data);
+
+            foreach ($results as $result) {
+                if ($this->user->isVendor()) {
+                    $result['name'] = $result['firstname'];
+                }
+
+                $json[] = [
+                    'user_id' => $result['user_id'],
+                    'user_group_id' => $result['user_group_id'],
+                    'username' => strip_tags(html_entity_decode($result['username'], ENT_QUOTES, 'UTF-8')),
+                    'name' => $result['name'],
+                    'firstname' => $result['firstname'],
+                    'lastname' => $result['lastname'],
+                    'email' => $result['email'],
+                    'telephone' => $result['telephone']
+                ];
+            }
+        }
+
+        $sort_order = [];
+
+        foreach ($json as $key => $value) {
+            $sort_order[$key] = $value['name'];
+        }
+
+        array_multisort($sort_order, SORT_ASC, $json);
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
 }

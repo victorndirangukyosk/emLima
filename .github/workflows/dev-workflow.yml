@@ -16,5 +16,5 @@ jobs:
         key: ${{ secrets.DEV_SERVER_KEY }}
         port : 22
         script: |
-          cd /extras/store
+          cd /var/www/store
           git pull origin develop

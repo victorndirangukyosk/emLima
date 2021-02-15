@@ -97,8 +97,10 @@ class ControllerAccountOrder extends Controller {
             $city_name = $this->model_account_order->getCityName($result['shipping_city_id']);
 
             $product_total = $this->model_account_order->getTotalOrderProductsByOrderId($result['order_id']);
+            $products_total = $this->model_account_order->getTotalOrderedProductsByOrderId($result['order_id']);
 
             $real_product_total = $this->model_account_order->getTotalRealOrderProductsByOrderId($result['order_id']);
+            $real_products_total = $this->model_account_order->getTotalRealOrderedProductsByOrderId($result['order_id']);
 
             $order_total_detail = $this->load->controller('checkout/totals/getTotal', $result['order_id']);
 
@@ -220,6 +222,8 @@ class ControllerAccountOrder extends Controller {
                 'eta_time' => $result['delivery_timeslot'],
                 'products' => ($product_total + $voucher_total),
                 'real_products' => ($real_product_total + $voucher_total),
+                'productss' => ($products_total + $voucher_total),
+                'realproductss' => ($real_products_total + $voucher_total),
                 'total' => $this->currency->format($total, $result['currency_code'], $result['currency_value']),
                 'href' => $this->url->link('account/order/info', 'order_id=' . $result['order_id'], 'SSL'),
                 'real_href' => $this->url->link('account/order/realinfo', 'order_id=' . $result['order_id'], 'SSL'),
@@ -238,7 +242,7 @@ class ControllerAccountOrder extends Controller {
                 'edit_order' => 15 == $result['order_status_id'] && (empty($_SESSION['parent']) || $order_appoval_access) ? $this->url->link('account/order/edit_order', 'order_id=' . $result['order_id'], 'SSL') : '',
                 'order_company' => isset($customer_info) && null != $customer_info['company_name'] ? $customer_info['company_name'] : null,
                 //'edit_own_order' => $this->url->link('checkout/edit_order/index_new', 'order_id=' . $result['order_id'], 'SSL'),
-                'edit_own_order' => (($result['order_status_id'] == 15 || $result['order_status_id'] == 14) && $hours < 24 && $result['payment_code'] == 'cod') ? $this->url->link('account/order/edit_your_order', 'order_id=' . $result['order_id'], 'SSL') : NULL,
+                'edit_own_order' => (($result['order_status_id'] == 15 || $result['order_status_id'] == 14) && $hours <= 5 && $result['payment_code'] == 'cod') ? $this->url->link('account/order/edit_your_order', 'order_id=' . $result['order_id'], 'SSL') : NULL,
             ];
         }
 
@@ -271,6 +275,7 @@ class ControllerAccountOrder extends Controller {
         }
 
         $data['base'] = $server;
+        //   echo "<pre>"; print_r($data);die;
 
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/order_list.tpl')) {
             $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/order_list.tpl', $data));
@@ -1423,6 +1428,81 @@ class ControllerAccountOrder extends Controller {
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($data));
+    }
+    
+    public function refundCancelOrderByOrderId($order_id) {
+        require_once DIR_SYSTEM . 'library/Iugu.php';
+
+        $data['status'] = false;
+
+        $log = new Log('error.log');
+
+        if ($order_id) {
+            $data['settlement_tab'] = false;
+
+            $this->load->model('sale/order');
+            $this->load->model('checkout/order');
+            /* $iuguData =  $this->model_sale_order->getOrderIugu($order_id);
+
+              $log->write('refundCancelOrder');
+              $log->write($iuguData);
+              if($iuguData) {
+
+              $invoiceId = $iuguData['invoice_id'];
+
+              Iugu::setApiKey($this->config->get('iugu_token'));
+
+
+              $invoice = Iugu_Invoice::fetch($invoiceId);
+              $resp = $invoice->refund();
+
+              $log->write('refundAPI');
+              $log->write($resp);
+
+              if($resp) {
+
+              } else {
+              $data['status'] = false;
+              }
+              } */
+
+            //update order status as cancelled
+            $order_info = $this->model_checkout_order->getOrder($order_id);
+
+            $log->write($order_id);
+
+            $notify = true;
+            $comment = 'Order ID #' . $order_id . ' Cancelled';
+
+            $this->load->model('localisation/order_status');
+
+            $order_status = $this->model_localisation_order_status->getOrderStatuses();
+
+            $order_status_id = false;
+            foreach ($order_status as $order_state) {
+                if ('cancelled' == strtolower($order_state['name']) || 'cancelada' == strtolower($order_state['name'])) {
+                    $order_status_id = $order_state['order_status_id'];
+                    break;
+                }
+            }
+
+            $log->write($order_status_id);
+            if ($order_info && $order_status_id) {
+                $log->write('if order his');
+
+                $this->load->model('account/customer');
+                $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+
+                $this->model_checkout_order->addOrderHistory($order_id, $order_status_id, $comment, $notify, $customer_info['customer_id'], 'customer');
+
+                $data['status'] = true;
+            } else {
+                $data['status'] = false;
+            }
+        }
+
+        /*$this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($data));*/
     }
 
     public function can_return() {
@@ -3332,6 +3412,7 @@ class ControllerAccountOrder extends Controller {
         $product_note = $this->request->post['product_note'];
 
         $this->load->model('account/order');
+        $this->load->model('sale/orderlog');
         $order_info = $this->model_account_order->getOrder($order_id, true);
         //$log->write($order_info);
         if (null != $order_info && ($order_info['order_status_id'] == 15 || $order_info['order_status_id'] == 14) && $order_info['customer_id'] == $this->customer->getId()) {
@@ -3342,6 +3423,10 @@ class ControllerAccountOrder extends Controller {
             if ($key !== false) {
                 $log->write('edit_order_quantity');
                 $this->load->model('assets/product');
+                $ordered_product_info = $this->model_account_order->getOrderProductByOrderProductId($order_id, $order_products[$key]['product_id'], $order_products[$key]['order_product_id']);
+                $log->write('ordered_product_info');
+                $log->write($ordered_product_info);
+                $log->write('ordered_product_info');
                 $product_info = $this->model_assets_product->getProductForPopup($order_products[$key]['product_id'], false, $order_products[$key]['store_id']);
                 $s_price = 0;
                 $o_price = 0;
@@ -3424,12 +3509,28 @@ class ControllerAccountOrder extends Controller {
                 $log->write($this->tax->calculate($special_price[1], $product_info['tax_class_id'], $this->config->get('config_tax')));
                 $log->write($product_id);
                 $log->write($product_id);
+                
+                $data['order_id'] = $order_id;
+                $data['order_product_id'] = $ordered_product_info['order_product_id'];
+                $data['order_status_id'] = $order_info['order_status_id'];
+                $data['product_store_id'] = $ordered_product_info['product_id'];
+                $data['general_product_id'] = $ordered_product_info['general_product_id'];
+                $data['store_id'] = $ordered_product_info['store_id'];
+                $data['vendor_id'] = $ordered_product_info['vendor_id'];
+                $data['name'] = $ordered_product_info['name'];
+                $data['unit'] = $ordered_product_info['unit'];
+                $data['model'] = $ordered_product_info['model'];
+                $data['old_quantity'] = $ordered_product_info['quantity'];
+                $data['quantity'] = $quantity;
+                
                 if(isset($this->request->post['product_note']) && $this->request->post['product_note'] != NULL) {
                 $this->db->query('UPDATE ' . DB_PREFIX . 'order_product SET product_note = "'. $product_note .'", quantity = ' . $quantity . ', tax = ' . $single_product_tax . ', total = ' . $total_without_tax . " WHERE order_product_id = '" . (int) $order_products[$key]['order_product_id'] . "' AND order_id  = '" . (int) $order_id . "' AND product_id = '" . (int) $product_id . "'");
                 $this->db->query('UPDATE ' . DB_PREFIX . 'real_order_product SET quantity = ' . $quantity . ', tax = ' . $single_product_tax . ', total = ' . $total_without_tax . " WHERE order_product_id = '" . (int) $order_products[$key]['order_product_id'] . "' AND order_id  = '" . (int) $order_id . "' AND product_id = '" . (int) $product_id . "'");
+                $this->model_sale_orderlog->addOrderLog($data);
                 } else {
                 $this->db->query('UPDATE ' . DB_PREFIX . 'order_product SET quantity = ' . $quantity . ', tax = ' . $single_product_tax . ', total = ' . $total_without_tax . " WHERE order_product_id = '" . (int) $order_products[$key]['order_product_id'] . "' AND order_id  = '" . (int) $order_id . "' AND product_id = '" . (int) $product_id . "'");
                 $this->db->query('UPDATE ' . DB_PREFIX . 'real_order_product SET quantity = ' . $quantity . ', tax = ' . $single_product_tax . ', total = ' . $total_without_tax . " WHERE order_product_id = '" . (int) $order_products[$key]['order_product_id'] . "' AND order_id  = '" . (int) $order_id . "' AND product_id = '" . (int) $product_id . "'");
+                $this->model_sale_orderlog->addOrderLog($data);
                 }
                 $order_totals = $this->db->query('SELECT SUM(total) AS total FROM ' . DB_PREFIX . "order_product WHERE order_id = '" . (int) $order_id . "'");
 
@@ -3486,6 +3587,28 @@ class ControllerAccountOrder extends Controller {
                 $log->write('account edit1');
 
                 $this->model_account_activity->addActivity('order_product_quaantity_changed', $activity_data);
+                
+                $log->write('order_products COUNT 1');
+                $log->write(count($order_products));
+                $log->write('order_products COUNT 1');
+                if(count($order_products) <= 0 || $order_totals->row['total'] <= 0) {
+                
+                $log = new Log('error.log');
+                $this->load->model('account/activity');    
+                $activity_data = [
+                    'customer_id' => $this->customer->getId(),
+                    'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
+                    'order_id' => $order_id,
+                ];
+                $log->write('account cancelled by customer 1');
+                $this->model_account_activity->addActivity('order_cancelled_by_customer', $activity_data);
+                    
+                $log->write('EMPTY ORDER 1');
+                $this->refundCancelOrderByOrderId($order_id);    
+                $json['status'] = true;
+                $json['redirect'] = $this->url->link('account/order', '', 'SSL');
+                $json['status'] = 'Your Order Cancelled!';
+                }
             } else {
                 $log->write('edit_order_new_product_added');
                 $this->load->model('assets/product');
@@ -3576,7 +3699,22 @@ class ControllerAccountOrder extends Controller {
                 $product_info['vendor_id'] = $this->model_extension_extension->getVendorId($product_info['store_id']);
                 $product_note = $this->request->post['product_note'];
                 $this->db->query('INSERT INTO ' . DB_PREFIX . "order_product SET product_note='" . $this->request->post['product_note'] . "', vendor_id='" . (int) $product_info['vendor_id'] . "', store_id='" . (int) $product_info['store_id'] . "', order_id = '" . (int) $this->request->post['order_id'] . "', variation_id = '" . (int) $this->request->post['variation_id'] . "', product_id = '" . (int) $product_info['product_store_id'] . "', general_product_id = '" . (int) $product_info['product_id'] . "',  name = '" . $this->db->escape($product_info['name']) . "', model = '" . $this->db->escape($product_info['model']) . "', quantity = '" . $quantity . "', price = '" . (float) $special_price[1] . "', total = '" . (float) $total_without_tax . "', tax = '" . (float) $single_product_tax . "', product_type = 'replacable', unit = '" . $this->db->escape($product_info['unit']) . "'");
-
+                
+                $ordered_product_info = $this->model_account_order->getOrderProductByProductId($order_id, $product_info['product_store_id']);
+                $data['order_id'] = $order_id;
+                $data['order_product_id'] = $ordered_product_info['order_product_id'];
+                $data['order_status_id'] = $order_info['order_status_id'];
+                $data['product_store_id'] = $ordered_product_info['product_id'];
+                $data['general_product_id'] = $ordered_product_info['general_product_id'];
+                $data['store_id'] = $ordered_product_info['store_id'];
+                $data['vendor_id'] = $ordered_product_info['vendor_id'];
+                $data['name'] = $ordered_product_info['name'];
+                $data['unit'] = $ordered_product_info['unit'];
+                $data['model'] = $ordered_product_info['model'];
+                $data['old_quantity'] = 0;
+                $data['quantity'] = $quantity;
+                $this->model_sale_orderlog->addOrderLog($data);
+                
                 $order_totals = $this->db->query('SELECT SUM(total) AS total FROM ' . DB_PREFIX . "order_product WHERE order_id = '" . (int) $order_id . "'");
 
                 $order_products_updated = $this->model_account_order->getOrderProducts($order_id);
@@ -3632,6 +3770,28 @@ class ControllerAccountOrder extends Controller {
                 $log->write('account edit1');
 
                 $this->model_account_activity->addActivity('order_new_product_added', $activity_data);
+                
+                $log->write('order_products COUNT 2');
+                $log->write(count($order_products));
+                $log->write('order_products COUNT 2');
+                if(count($order_products) <= 0 || $order_totals->row['total'] <= 0) {
+                
+                $log = new Log('error.log');
+                $this->load->model('account/activity');    
+                $activity_data = [
+                    'customer_id' => $this->customer->getId(),
+                    'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
+                    'order_id' => $order_id,
+                ];
+                $log->write('account cancelled by customer 2');
+                $this->model_account_activity->addActivity('order_cancelled_by_customer', $activity_data);    
+                    
+                $log->write('EMPTY ORDER 2');
+                $this->refundCancelOrderByOrderId($order_id);
+                $json['status'] = true;
+                $json['redirect'] = $this->url->link('account/order', '', 'SSL');
+                $json['status'] = 'Your Order Cancelled!';
+                }
             }
         } else {
             $json['status'] = 'You Cant Update Order In This Status!';
@@ -3787,7 +3947,7 @@ class ControllerAccountOrder extends Controller {
             $log->write($hours);
             $log->write('hours');        
         
-        if ($order_info && $order_info['customer_id'] == $this->customer->getId() && ($order_info['order_status_id'] == 15 || $order_info['order_status_id'] == 14) && $hours < 24 && $order_info['payment_code'] == 'cod') {
+        if ($order_info && $order_info['customer_id'] == $this->customer->getId() && ($order_info['order_status_id'] == 15 || $order_info['order_status_id'] == 14) && $hours <= 5 && $order_info['payment_code'] == 'cod') {
             $data['cashbackAmount'] = $this->currency->format(0);
 
             $coupon_history_data = $this->model_account_order->getCashbackAmount($order_id);

@@ -1,5 +1,5 @@
 <?php echo $header; ?>
-
+<div id="workingMsgHiddenDiv" style="display: none;">Please wait, we are preparing your cart...</div>
 <div class="col-md-9 nopl">
     <div class="dashboard-profile-content">
         <div class="my-order">
@@ -20,7 +20,7 @@
 
                             <div class="pull-right">
                             <?php if($order['status'] == 'Delivered' ) { ?>
-                              <a data-confirm="Available products  in this order will be added to cart !!" class="btn btn-success download" style="margin-right: 4px !important; height: 27px;margin-left:4px;"
+                              <a data-confirm="Available products  in this order will be added to cart !!" id="additemstocart" class="btn btn-success download" style="margin-right: 4px !important; height: 27px;margin-left:4px;"
                           data-store-id="<?= ACTIVE_STORE_ID ?>" data-toggle="tooltip"
                           value="<?php echo $order['order_id']; ?>" title="Add To Cart/Reorder"><i
                             class="fa fa-cart-plus"></i></a><?php } ?>
@@ -34,14 +34,21 @@
                             <?php if($order['status'] == 'Arrived for Delivery'){?>
                                                      <a href="<?php echo $order['accept_reject_href']?>"  class="btn btn-default btn-xs btn-accept-reject" >Accept Delivery</a>
                                                     <?php } ?>
-                            <?php if($order['shipped']) { ?>
+                             <!--<?php if($order['shipped']) { ?>
 
                             <a href="#" id="cancelOrder" data-id='<?=$order["order_id"] ?>' class="btn btn-danger btn-xs btn-custom-remove"><?= $text_cancel ?></a>
 
 
                             <?php } else { ?>
                             <a href="#" data-toggle="modal" data-target="#contactusModal"  class="btn btn-default btn-xs"><?= $text_report_issue ?></a>
-                            <?php } ?>
+                            <?php } ?> -->
+
+                            
+                            <a href="#" data-toggle="modal" data-target="#contactusModal"  class="btn btn-default btn-xs"><?= $text_report_issue ?></a>
+
+                            <?php if($order['status'] == 'Order Recieved' || $order['status'] == 'Order Approval Pending' ){?>
+                            <a href="#" id="cancelOrder" data-id='<?=$order["order_id"] ?>' style="margin-right: 4px !important; height: 27px;margin-left:4px;" class="btn btn-danger btn-xs btn-custom-remove"><?= $text_cancel ?></a> 
+                                                    <?php } ?>
                             
 
 
@@ -75,12 +82,17 @@
 
                                     </div>
                                 </div>
-                                <div class="col-md-3"><a href="<?php echo $order['href']; ?>" class="btn-link text_green"><?= $text_view?> <?php echo $order['products']; ?> <?= $text_items_ordered?> </a>
-                                    <br/>
+                                <!--<div class="col-md-3"><a href="<?php echo $order['href']; ?>" class="btn-link text_green"><?= $text_view?> <?php echo $order['products']; ?> <?= $text_items_ordered?> </a>-->
+                                <div class="col-md-3"><a href="<?php echo $order['href']; ?>" class="btn-link text_green"><?= $text_view?> <?php echo $order['productss']; ?> <?= $text_items_ordered?> </a>    
+                                <br/>
 
-                                    <?php if($order['realproducts']) { ?>
-                                    <a href="<?php echo $order['real_href']; ?>" class="btn-link text_green"><?= $text_view?> <?php echo $order['real_products']; ?> <?= $text_real_items_ordered?> </a>
-                                    <?php } ?>
+                                    <?php //if($order['realproducts']) { ?>
+                                    <!--<a href="<?php echo $order['real_href']; ?>" class="btn-link text_green"><?= $text_view?> <?php echo $order['real_products']; ?> <?= $text_real_items_ordered?> </a>-->
+                                    <?php //} ?>
+                                    
+                                      <?php if($order['realproductss']) { ?>
+                                         <a href="<?php echo $order['real_href']; ?>" class="btn-link text_green"><?= $text_view?> <?php echo $order['realproductss']; ?> <?= $text_real_items_ordered?> </a>
+                                      <?php } ?>
 
 
                                 </div>
@@ -662,7 +674,7 @@
     });
 
 
-       $(document).delegate('.download', 'click', function (e) {
+       $(document).delegate('.downloadaaaaaaaaaaaa', 'click', function (e) {
     var baseurl = window.location.origin + window.location.pathname;
     // alert(baseurl);
     var choice = confirm($(this).attr('data-confirm'));
@@ -692,6 +704,20 @@
               console.log("added to cart");
             }
           });
+            $iSec=2000;
+            $iSec=($iSec*(json.length));
+            //alert($iSec);
+           // Show the div in 5s
+          //  $("#workingMsgHiddenDiv").fadeIn(5000);
+
+                var $div2 = $("#workingMsgHiddenDiv");
+            if ($div2.is(":visible")) { return; }
+            $div2.show();
+            setTimeout(function() {
+                $div2.hide();
+            }, $iSec);
+
+
         },
         complete: function () {
 
@@ -705,11 +731,52 @@
             //alert('Please allow popups for this website');
           //}
           //opening new window, showing few items, as the products are adding slowly
-          alert('Available products from the selected order added to cart!');
+         // alert('Available products from the selected order added to cart!');
         },
       });
     }
   });
+
+
+
+
+    $(document).delegate('#additemstocart', 'click', function(e) {
+
+        e.preventDefault();
+        
+        if(!window.confirm("All the available products in this order ,will be added to cart.Are you sure?")) {
+            return false;
+        }
+        console.log("additemstocart click");
+        console.log($(this).attr('value'));
+       // $('#addWishlisttocart').html('Wait...');        
+        $.ajax({
+            url: 'index.php?path=account/wishlist/addAvailableOrderProducts',
+            type: 'post',
+            data: {
+                order_id: $(this).attr('value')
+            },
+            dataType: 'json',
+            success: function(json) {
+                console.log(json);
+                
+                setTimeout(function(){ window.location.reload(false); }, 1000);
+                 var baseurl = window.location.origin + window.location.pathname;
+                   baseurl = baseurl + "?path=checkout/checkoutitems";
+           var win = window.open(baseurl, '_blank');
+           if (win) {
+            //Browser has allowed it to be opened
+             win.focus();
+           } else {
+            //Browser has blocked it
+            alert('Please allow popups for this website');
+          }
+          //opening new window, showing few items, as the products are adding slowly
+         // alert('Available products from the selected order added to cart!');
+            }
+        });
+    });
+
 
     setInterval(function () {
         location = location;

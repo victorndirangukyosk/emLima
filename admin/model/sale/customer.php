@@ -180,7 +180,7 @@ class ModelSaleCustomer extends Model {
             $implode[] = "c.parent = '" . (int) $data['filter_parent'] . "'";
         }
 
-        if (isset($data['filter_account_manager_id']) && !is_null($data['filter_account_manager_id'])) {
+        if (isset($data['filter_account_manager_name']) && !is_null($data['filter_account_manager_id'])) {
             $implode[] = "c.account_manager_id = '" . (int) $data['filter_account_manager_id'] . "'";
         }
 
@@ -423,6 +423,10 @@ class ModelSaleCustomer extends Model {
         
         if (!empty($data['filter_parent_customer_id']) && !empty($data['filter_parent_customer'])) {
             $implode[] = "parent = '" . $this->db->escape($data['filter_parent_customer_id']) . "'";
+        }
+        
+        if (!empty($data['filter_account_manager_id']) && !empty($data['filter_account_manager_name'])) {
+            $implode[] = "account_manager_id = '" . $this->db->escape($data['filter_account_manager_id']) . "'";
         }
 
         if (isset($data['filter_status']) && !is_null($data['filter_status'])) {

@@ -345,7 +345,10 @@ class ControllerAccountWishList extends Controller
                 }
 
                 $this->load->model('tool/image');
-
+                $category_status_price_details = $this->model_assets_product->getCategoryPriceStatusByProductStoreId($product_store_id);
+                $log = new Log('error.log');
+                $log->write($category_status_price_details);
+                
                 $data['products'][] = [
                     'name' => isset($product_info['pd_name']) ? $product_info['pd_name'] : '',
                     'image' => $product['image'],
@@ -358,6 +361,7 @@ class ControllerAccountWishList extends Controller
                     'special_price' => $special_price,
                     'category_price' => $this->model_assets_product->getCategoryPriceStatusByProductStoreId($product_store_id),
                     'status' => isset($product_info['pd_name']) && count($product_info) > 0 ? 1 : 0,
+                    'category_price_status' => is_array($category_status_price_details) && array_key_exists('status', $category_status_price_details) ? $category_status_price_details['status'] : 1,
                        /* 'store_id'     => $product['store_id'],
                     'model'    => $product['model'],*/
 
@@ -587,7 +591,13 @@ class ControllerAccountWishList extends Controller
                 $this->load->model('assets/product');
                 $store_data = $this->model_assets_product->getProductStoreId($wishlist_product['product_id'], 75);
                 $product_info = $this->model_assets_product->getDetailproduct($store_data['product_store_id']);
-                if(isset($product_info) && count($product_info) > 0) {
+                
+                $category_status_price_details = $this->model_assets_product->getCategoryPriceStatusByProductStoreId($store_data['product_store_id']);
+                $log = new Log('error.log');
+                $log->write($category_status_price_details);
+                $category_price_status = is_array($category_status_price_details) && array_key_exists('status', $category_status_price_details) ? $category_status_price_details['status'] : 1;
+                
+                if(isset($product_info) && count($product_info) > 0 && $category_price_status == 1) {
                 $log->write('store details');
                 $log->write($store_data);
                 $log->write('store details');
@@ -844,6 +854,59 @@ class ControllerAccountWishList extends Controller
 
             $data['status'] = true;
         }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($data));
+    }
+
+
+
+    public function addAvailableOrderProducts()
+    {
+        $this->load->language('account/wishlist');
+        $this->load->model('account/wishlist');
+
+        $data['text_cart_success'] = $this->language->get('text_cart_success');
+        $log = new Log('error.log');
+        // echo "<pre>";print_r($this->request->post['order_id']);die;
+        // $wishlist_id = $this->request->post['wishlist_id'];
+         $order_id = $this->request->post['order_id'];
+        $log->write($this->request->post['order_id']);
+        $log->write('Order List Products');
+
+        $Orderlist_products = $this->model_account_wishlist->getAvailableOrderedProducts($order_id);
+        $log->write($Orderlist_products);
+        $log->write('Order List Products obtained');
+
+        if (is_array($Orderlist_products) && count($Orderlist_products) > 0) {
+        $log->write('Order List Products inner');
+
+
+            foreach ($Orderlist_products as $Orderlist_product) {
+                $log->write('Order List Products 2');
+                $log->write($Orderlist_product['product_id']);
+                $log->write('Order List Products 2');
+                $this->load->model('assets/product');
+                $store_data = $this->model_assets_product->getProductStoreId($Orderlist_product['product_id'], 75);
+                $product_info = $this->model_assets_product->getDetailproduct($store_data['product_store_id']);
+                
+                $category_status_price_details = $this->model_assets_product->getCategoryPriceStatusByProductStoreId($store_data['product_store_id']);
+                $log = new Log('error.log');
+                $log->write($category_status_price_details);
+                $category_price_status = is_array($category_status_price_details) && array_key_exists('status', $category_status_price_details) ? $category_status_price_details['status'] : 1;
+                
+                if(isset($product_info) && count($product_info) > 0 && $category_price_status == 1) {
+                $log->write('store details');
+                $log->write($store_data);
+                $log->write('store details');
+                $this->cart->addCustom($store_data['product_store_id'], $Orderlist_product['quantity'], $option = [], $recurring_id = 0, $store_data['store_id'], $store_product_variation_id = false, $product_type = 'replacable', $product_note = null, $produce_type = null);
+                }
+            }
+        }
+        // $this->model_account_wishlist->deleteWishlists($wishlist_id);
+        //echo "reg";
+
+        $this->session->data['success'] = $data['text_cart_success'];
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($data));

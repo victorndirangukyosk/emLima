@@ -930,7 +930,32 @@
             </div>
         </div>
     </div>
-
+    
+    <!-- Modal -->
+    <div class="modal fade" id="ordernoticeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content"  >
+                <div class="modal-body"  style="height:130px;">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <div class="store-find-block">
+                        <div class="mydivsss">
+                            <div class="store-find">
+                                <div class="store-head">
+                                    <h2>Order Details</h2>
+                                    </br> 
+                                </div>
+                                <div id="ordernoticeModal-message" style="color: red;text-align:center; font-size: 15px;" >
+                                </div>
+                                <div id="ordernoticeModal-success-message" style="color: green; ; text-align:center; font-size: 15px;">
+                                </div>  
+                            </div>
+                            <!-- next div code -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 <script  type="text/javascript">
 
 
@@ -1121,7 +1146,13 @@ function savedriverdetail() {
 		type: 'post',
 		dataType: 'json',
 		data: 'order_status_id=' + encodeURIComponent($('select[id=\'input-order-status'+clicked_orderid+'\']').val()) + '&notify=1',
-		success: function(json) {	 
+		beforeSend: function() {
+                // setting a timeout
+                $('.alert').html('Please wait your request is processing!');
+                $(".alert").attr('class', 'alert alert-success');
+                $(".alert").show();
+                },
+                success: function(json) {	 
                     console.log(json);
                     $('.alert').html('Order status updated successfully!');
                     $(".alert").attr('class', 'alert alert-success');
@@ -1249,17 +1280,35 @@ return false;
 }
 }
 
+$.ajax({
+url: 'index.php?path=sale/order/getDriverDetails&token=<?php echo $token; ?>',
+type: 'post',
+dataType: 'json',
+data: 'order_id=' + clicked_orderid,
+success: function(json) {
+console.log(json.order_info);
+
+if(json.order_info.order_status_id == 15 && selected_order_status_id != 6) {
+console.log('You Cant Update Order Status!');  
+$('#ordernoticeModal').modal('toggle');
+$('#ordernoticeModal-message').html('You Cant Update Order Status! Until Parent Customer Approve The Order.');
+return false;
+}
+
 if($('select[id=\'input-order-status'+clicked_orderid+'\'] option:selected').text()=='Delivered')
-{
-	 
-	$.ajax({
+{ 
+$.ajax({
 		url: 'index.php?path=sale/order/createinvoiceno&token=<?php echo $token; ?>&order_id='+clicked_orderid,
 		dataType: 'json',
 		success: function(json) {
-			console.log(json);
+	        console.log(json);
+                if($('select[id=\'input-order-status'+clicked_orderid+'\'] option:selected').text()!='Order Processing')
+                {
+                setTimeout(function(){ window.location.reload(false); }, 1500);    
+                }        
 		},			
 		error: function(xhr, ajaxOptions, thrownError) {
-			//alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+	        //alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
 		}
 	});
 }
@@ -1289,22 +1338,28 @@ $.ajax({
                     $('.alert').html('Order status updated successfully!');
                     $(".alert").attr('class', 'alert alert-success');
                     $(".alert").show();
+                    if($('select[id=\'input-order-status'+clicked_orderid+'\'] option:selected').text()!='Order Processing')
+                    {
+                    setTimeout(function(){ window.location.reload(false); }, 1500);    
+                    }
                     //setTimeout(function(){ window.location.reload(false); }, 1500);
 		},			
 		error: function(xhr, ajaxOptions, thrownError) {		
 			 
 		}
 });   
-}         
 }
+
+},			
+error: function(xhr, ajaxOptions, thrownError) {		
+}
+});
+
+}
+
 setInterval(function() {
 $('#svg'+clicked_orderid).attr('stroke', '#51AB66');
 }, 4000); // 60 * 1000 milsec
-
-if($('select[id=\'input-order-status'+clicked_orderid+'\'] option:selected').text()!='Order Processing')
-{
-setTimeout(function(){ window.location.reload(false); }, 1500);    
-}
 
 });
 
@@ -1403,17 +1458,20 @@ $.ajax({
 		dataType: 'json',
 		data: 'order_id=' + order_id,
 		success: function(json) {
+                    console.log(json);
                     console.log(json.order_info.order_id);
                     console.log(json.order_info.driver_id);
                     console.log(json.order_info.vehicle_number);
                     console.log(json.order_info.delivery_executive_id);
-                    if(order_status != 'Ready for delivery' || json.order_info.driver_id == null || json.order_info.vehicle_number == null || json.order_info.delivery_executive_id == null)
+                    if(/*order_status != 'Ready for delivery'*/ json.order_info.order_status != 'Order Processing' || order_status != 'Order Processing' || json.order_info.driver_id == null || json.order_info.vehicle_number == null || json.order_info.delivery_executive_id == null)
                     {
                     $('input[name="order_id"]').val(order_id);
                     $('input[name="invoice_custom"]').val(invoice);
                     $('#driverModal').modal('toggle');
-                    if(order_status != 'Ready for delivery') {
-                    $('#driverModal-message').html("Please Select Order Status As Ready For Delivery!");
+                    if(order_status != 'Order Processing' || json.order_info.order_status != 'Order Processing') {
+                    //if(order_status != 'Ready for delivery') {
+                    $('#driverModal-message').html("Please Update Order Status As Order Processing!");
+                    //$('#driverModal-message').html("Please Select Order Status As Ready For Delivery!");
                     $('#driver-buttons').prop('disabled', true);
                     $('#driver-button').prop('disabled', true);
                     return false;
