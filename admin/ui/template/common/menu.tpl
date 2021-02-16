@@ -489,6 +489,11 @@
                     <li><a href="<?php echo $report_customer_order_count; ?>"><?php echo $text_report_customer_order_count; ?></a></li>
                     <?php } ?>
 
+
+                     <?php if($preturn_customer_order) { ?>
+                    <li><a href="<?php echo $report_customer_boughtproducts; ?>"><?php echo $text_report_customer_boughtproducts; ?></a></li>
+                    <?php } ?>
+
                 </ul>
             </li>
             <?php }?>

@@ -88,9 +88,9 @@ class ControllerReportCustomerBoughtProducts extends Controller
             'limit' => $this->config->get('config_limit_admin'),
         ];
         if ('' != $filter_customer || '' != $filter_company) {
-            $customer_total = $this->model_report_customer->getTotalValidCustomerOrders($filter_data);
+            $customer_total = $this->model_report_customer->getTotalboughtproducts($filter_data);
 
-            $results = $this->model_report_customer->getValidCustomerOrders($filter_data);
+            $results = $this->model_report_customer->getboughtproducts($filter_data);
         } else {
             $customer_total = 0;
             $results = null;
@@ -99,38 +99,14 @@ class ControllerReportCustomerBoughtProducts extends Controller
         if (is_array($results) && count($results) > 0) {
             $log = new Log('error.log');
             $log->write('Yes It Is Array');
-            foreach ($results as $result) {
-                $products_qty = 0;
-                if ($this->model_sale_order->hasRealOrderProducts($result['order_id'])) {
-                    $products_qty = $this->model_sale_order->getRealOrderProductsItems($result['order_id']);
-                } else {
-                    $products_qty = $this->model_sale_order->getOrderProductsItems($result['order_id']);
-                }
-                $sub_total = 0;
-                $totals = $this->model_sale_order->getOrderTotals($result['order_id']);
-                //echo "<pre>";print_r($results);die;
-                foreach ($totals as $total) {
-                    if ('sub_total' == $total['code']) {
-                        $sub_total = $total['value'];
-                        break;
-                    }
-                }
+            foreach ($results as $result) {                 
                 $data['customers'][] = [
                 'company' => $result['company'],
-                'customer' => $result['customer'],
-                'email' => $result['email'],
-                'customer_group' => $result['customer_group'],
-                'status' => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
-                'order_id' => $result['order_id'],
-                'products' => $result['products'],
-                'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
-                'delivery_date' => date($this->language->get('date_format_short'), strtotime($result['delivery_date'])),
-                'editedproducts' => $products_qty,
-                'po_number' => $result['po_number'],
-                // 'total' => $this->currency->format($result['total'], $this->config->get('config_currency')).replace("KES",""),
-                'total' => $this->currency->format($result['total'], $this->config->get('config_currency')),
-                'subtotal' => str_replace('KES', ' ', $this->currency->format($sub_total)),
-            ];
+                // 'customer' => $result['customer'],not listed in query
+                'name' => $result['name'],
+                'unit' => $result['unit'], 
+                'quantity' => $result['quantity'],
+                 ];
             }
         }
         //  echo "<pre>";print_r($data['customers']);die;

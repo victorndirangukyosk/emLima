@@ -99,6 +99,8 @@ $_['text_report_customer_statement'] = 'Statement';
 $_['text_report_customer_order_pattern'] = 'Order Pattern';
 $_['text_report_customer_order_count'] = 'Order Count';
 $_['text_report_inventory_daily_prices'] = 'Inventory Prices';
+$_['text_report_customer_boughtproducts'] = 'Products Bought/ Consumption Data';
+
 
 
 $_['text_vendor'] = 'Vendor';

@@ -32,27 +32,7 @@
                                 <input type="text" name="filter_company" value="<?php echo $filter_company; ?>" placeholder="Company Name" id="input-company" class="form-control" />
                             </div>
 
-              <div class="form-group">
-                <label class="control-label" for="input-status"><?php echo $entry_status; ?></label>
-                <select name="filter_order_status_id" id="input-status" class="form-control">
-                  <option value="0"><?php echo $text_all_status; ?></option>
-                  <?php foreach ($order_statuses as $order_status) { ?>
-                  <?php if ($order_status['order_status_id'] == $filter_order_status_id) { ?>
-                  <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
-                  <?php } else { ?>
-                  <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
-                  <?php } ?>
-                  <?php } ?>
-                </select>
-              </div>
-            </div>
-
-            
-
-             <div class="col-sm-4">
-                  <input type="hidden" name="filter_date "      class="form-control" />
-
-
+                            
                    <div class="form-group">
                 <label class="control-label" for="input-customer"><?php echo $entry_customer; ?>  Name</label>
 
@@ -60,10 +40,11 @@
               
               </div>
 
+            
+            </div>
 
-                  
-                              
- </div>
+            
+ 
  
              <div class="col-sm-4">
               <div class="form-group">
@@ -83,52 +64,34 @@
                   </span></div>
               </div>
             </div>
-              <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
            
           </div>
+              <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
+
         </div>
         <div class="table-responsive">
           <table class="table table-bordered table-hover">
             <thead>
               <tr>
                 
-                <td class="text-left">Customer Name</td>
-                <td class="text-left">Company Name</td>
-                <!--<td class="text-left"><?php echo $column_email; ?></td>
-                <td class="text-left"><?php echo $column_customer_group; ?></td>
-                <td class="text-left"><?php echo $column_status; ?></td>-->
-                <td class="text-right">Order Id</td> 
-                <td class="text-right">Order Date</td> 
-                <td class="text-right">Delivery Date</td> 
-                <!--<td class="text-right"><?php echo $column_products; ?></td> 
-                <td class="text-right"><?php echo $column_products; ?></td>-->
-                <!--<td class="text-right"><?php echo $column_total; ?></td>-->
-                <td class="text-right">P.O. Number</td>
-                <!--<td class="text-right"><?php echo $column_total; ?></td>-->
-                <td class="text-right">Order value</td>
-                <td class="text-center"><?php echo $column_action; ?></td>
+               <!-- <td class="text-left">Customer Name</td>-->
+                <td class="text-left">Company Name</td>                
+                <td class="text-left">Product Name</td> 
+                <td class="text-left">Unit</td> 
+                <td class="text-right">Quantity</td> 
+                
               </tr>
             </thead>
             <tbody>
               <?php if ($customers) { ?>
               <?php foreach ($customers as $customer) { ?>
               <tr>
-                <td class="text-left"><?php echo $customer['customer']; ?></td>
+                <!-- <td class="text-left"><?php echo $customer['customer']; ?></td>-->
                 <td class="text-left"><?php echo $customer['company']; ?></td>
-               <!-- <td class="text-left"><?php echo $customer['email']; ?></td>
-                <td class="text-left"><?php echo $customer['customer_group']; ?></td>
-                <td class="text-left"><?php echo $customer['status']; ?></td>-->
-                <td class="text-right"><?php echo $customer['order_id']; ?></td> 
-                <td class="text-right"><?php echo $customer['date_added']; ?></td> 
-                <td class="text-right"><?php echo $customer['delivery_date']; ?></td> 
-                <!--<td class="text-right"><?php echo $customer['products']; ?></td> 
-                <td class="text-right"><?php echo $customer['editedproducts']; ?></td>-->
-
-                <!--<td class="text-right"><?php echo $customer['total']; ?></td>-->
-                <td class="text-right"><?php echo $customer['po_number']; ?></td>
-                <td class="text-right"><?php echo $customer['subtotal']; ?></td>
-                <td class="text-center"><a class="download" id="download-order-products"  data-toggle="tooltip" order_date="<?php echo $customer['date_added']; ?>" company="<?php echo $customer['company']; ?>" data="<?php echo $customer['customer']; ?>" value=<?php echo $customer['order_id']; ?>  title="Download Statements" class="btn btn-info"><i  style="cursor: pointer;height:20px;width:20px" class="fa fa-file-excel-o"></i></a></td>
-              </tr>
+               <td class="text-left"><?php echo $customer['name']; ?></td>
+                <td class="text-left"><?php echo $customer['unit']; ?></td>
+                <td class="text-right"><?php echo $customer['quantity']; ?></td>
+                </tr>
               <?php } ?>
               <?php } else { ?>
               <tr>
@@ -147,7 +110,7 @@
   </div>
   <script type="text/javascript"><!--
 $('#button-filter').on('click', function() {
-	url = 'index.php?path=report/customer_order/statement&token=<?php echo $token; ?>';
+	url = 'index.php?path=report/customer_boughtproducts&token=<?php echo $token; ?>';
 
   
             var filter_customer = $('input[name=\'filter_customer\']').val();
@@ -175,18 +138,24 @@ $('#button-filter').on('click', function() {
 	if (filter_date_start) {
 		url += '&filter_date_start=' + encodeURIComponent(filter_date_start);
 	}
+  else
+  {
+     alert("Please select start date");
+     return;
+  }
 
 	var filter_date_end = $('input[name=\'filter_date_end\']').val();
 	
 	if (filter_date_end) {
 		url += '&filter_date_end=' + encodeURIComponent(filter_date_end);
 	}
+  else
+  {
+    alert("Please select end date");
+     return;
+  }
 	
-	var filter_order_status_id = $('select[name=\'filter_order_status_id\']').val();
-	
-	if (filter_order_status_id != 0) {
-		url += '&filter_order_status_id=' + encodeURIComponent(filter_order_status_id);
-	}	
+	 
 
   
 
@@ -250,7 +219,7 @@ $('#button-filter').on('click', function() {
 
  
 function excel() {
-       url = 'index.php?path=report/customer_order/statementexcel&token=<?php echo $token; ?>';
+       url = 'index.php?path=report/customer_boughtproducts/boughtproductsexcel&token=<?php echo $token; ?>';
       
         
      var filter_customer = $('input[name=\'filter_customer\']').val();
@@ -278,38 +247,30 @@ function excel() {
 	
 	if (filter_date_start) {
 		url += '&filter_date_start=' + encodeURIComponent(filter_date_start);
-	}
+	} else
+  {
+     alert("Please select start date");
+     return;
+  }
 
 	var filter_date_end = $('input[name=\'filter_date_end\']').val();
 	
 	if (filter_date_end) {
 		url += '&filter_date_end=' + encodeURIComponent(filter_date_end);
-	}
+	} else
+  {
+     alert("Please select end date");
+     return;
+  }
 	
-	var filter_order_status_id = $('select[name=\'filter_order_status_id\']').val();
-	
-	if (filter_order_status_id != 0) {
-		url += '&filter_order_status_id=' + encodeURIComponent(filter_order_status_id);
-	}	
+	 
+ 
 
     location = url;
 }
 
 
-     $(document).delegate('.download', 'click', function(e) {
-  
-            e.preventDefault();
-            $orderid = $(this).attr('value');
-            $customer = $(this).attr('data');
-            $company = $(this).attr('company');
-            $orderdate = $(this).attr('order_date');
-           
- 
-            if ($orderid > 0) {                
-                const url = 'index.php?path=sale/order/consolidatedOrderProducts&token=<?php echo $token; ?>&order_id=' + encodeURIComponent($orderid)+'&customer='+$customer+'&date='+$orderdate+'&company='+$company;
-                location = url;
-            }
-        });
+    
 
  </script>
 

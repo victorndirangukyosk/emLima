@@ -4,7 +4,7 @@
 $_['heading_title'] = 'Customer Consumption Data';//bought products
 
 // Text
-$_['text_list'] = 'Customer Orders List';
+$_['text_list'] = 'Products List';
  
 
 // Column
