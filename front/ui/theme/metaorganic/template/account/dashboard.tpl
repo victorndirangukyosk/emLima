@@ -213,10 +213,11 @@
                       <td><?php echo $ro['date_added']; ?></td>
                       <td><?php echo $ro['delivery_date']; ?></td>
                       <td>
-                        <a data-confirm="Products in this order will be added to cart !!" class="btn btn-success download"
+                        <!--
+                        code shoud be modified as in order_list<a data-confirm="Products in this order will be added to cart !!" class="btn btn-success download"
                           data-store-id="<?= ACTIVE_STORE_ID ?>" data-toggle="tooltip"
                           value="<?php echo $ro['order_id']; ?>" title="Add To Cart/Reorder"><i
-                            class="fa fa-cart-plus"></i></a>
+                            class="fa fa-cart-plus"></i></a>-->
   
                         <a href="<?php echo $ro['href'];?>" target="_blank" data-toggle="tooltip" title="View Order"
                           class="btn btn-success">

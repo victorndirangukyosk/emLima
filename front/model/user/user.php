@@ -266,6 +266,8 @@ class ModelUserUser extends Model {
             $isWhere = 1;
 
             $_sql[] = "status LIKE '" . $this->db->escape($data['filter_status']) . "%'";
+        } else {
+           $_sql[] = "status = 1";
         }
 
         if ($_sql) {

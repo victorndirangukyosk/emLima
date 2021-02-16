@@ -3034,6 +3034,20 @@ class ControllerSaleOrder extends Controller {
 
             $EditedProducts = $this->model_sale_order->getRealOrderProducts($this->request->get['order_id']);
             $original_products = $products = $this->model_sale_order->getOrderProducts($this->request->get['order_id']);
+            $this->load->model('sale/orderlog');
+            $order_log = $products = $this->model_sale_orderlog->getOrderLog($this->request->get['order_id']);
+            $order_log_data = array();
+            foreach($order_log as $order_lo) {
+            $order_log_data[] = [
+                'model' => $order_lo['model'],
+                'name' => $order_lo['name'],
+                'unit' => $order_lo['unit'],
+                'old_quantity' => $order_lo['old_quantity'],
+                'quantity' => $order_lo['quantity'],
+                'created_at' => date($this->language->get('datetime_format'), strtotime($order_lo['created_at'])),
+            ];    
+            }
+            $data['order_logs'] = $order_log_data;
             //echo '<pre>';print_r($products);exit;
 
             if ($this->model_sale_order->hasRealOrderProducts($this->request->get['order_id'])) {
@@ -4594,7 +4608,7 @@ class ControllerSaleOrder extends Controller {
 
         $data = [];
 
-
+        // echo "<pre>";print_r($results);die;
 
         $totalOrdersAmount = 0;
         foreach ($results as $order) {
@@ -4610,9 +4624,10 @@ class ControllerSaleOrder extends Controller {
             ];
             // $totalOrdersAmount += $order['total'];
         }
-        // $data['consolidation']['total'] = $totalOrdersAmount;
+        // $data['consolidation']['total'] = $totalOrdersAmount; 
 
         foreach ($results as $index => $order) {
+            $sum=0;
             $data['orders'][$index] = $order;
             $orderProducts = $this->getOrderProductsWithVariancesNew($data['orders'][$index]['order_id']);
             $data['orders'][$index]['products'] = $orderProducts;

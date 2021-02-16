@@ -28,13 +28,26 @@
                 <input type="text" name="filter_ip" value="<?php echo $filter_ip; ?>" id="input-ip" placeholder="<?php echo $entry_ip; ?>" i class="form-control" />
               </div>
             </div>
+
+             <div class="col-sm-6">
+              <div class="form-group">
+                <label class="control-label" for="input-company"><?php echo $entry_company; ?></label>
+                <input type="text" name="filter_company" value="<?php echo $filter_company; ?>" placeholder="<?php echo $entry_company; ?>" id="input-company" class="form-control" />
+              </div>
+            </div>
+            
             <div class="col-sm-6">
               <div class="form-group">
                 <label class="control-label" for="input-customer"><?php echo $entry_customer; ?></label>
                 <input type="text" name="filter_customer" value="<?php echo $filter_customer; ?>" placeholder="<?php echo $entry_customer; ?>" id="input-customer" class="form-control" />
               </div>
-              <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
             </div>
+
+
+           
+              <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
+
+
           </div>
         </div>
         <div class="table-responsive">
@@ -42,7 +55,8 @@
             <thead>
               <tr>
                 <td class="text-left"><?php echo $column_ip; ?></td>
-                <td class="text-left"><?php echo $column_customer; ?></td>
+                <!--<td class="text-left"><?php echo $column_customer; ?></td>-->
+                <td class="text-left"><?php echo $column_company; ?></td>
                 <td class="text-left"><?php echo $column_url; ?></td>
                 <td class="text-left"><?php echo $column_referer; ?></td>
                 <td class="text-left"><?php echo $column_date_added; ?></td>
@@ -54,7 +68,8 @@
               <?php foreach ($customers as $customer) { ?>
               <tr>
                 <td class="text-left"><a href="http://whatismyipaddress.com/ip/<?php echo $customer['ip']; ?>" target="_blank"><?php echo $customer['ip']; ?></a></td>
-                <td class="text-left"><?php echo $customer['customer']; ?></td>
+                <!--<td class="text-left"><?php echo $customer['customer']; ?></td>-->
+                <td class="text-left"><?php echo $customer['company']; ?></td>
                 <td class="text-left"><a href="<?php echo $customer['url']; ?>" target="_blank"><?php echo implode('<br/>', str_split($customer['url'], 30)); ?></a></td>
                 <td class="text-left"><?php if ($customer['referer']) { ?>
                   <a href="<?php echo $customer['referer']; ?>" target="_blank"><?php echo implode('<br/>', str_split($customer['referer'], 30)); ?></a>
@@ -91,6 +106,12 @@ $('#button-filter').on('click', function() {
 	if (filter_customer) {
 		url += '&filter_customer=' + encodeURIComponent(filter_customer);
 	}
+
+  	var filter_company = $('input[name=\'filter_company\']').val();
+	
+	if (filter_company) {
+		url += '&filter_company=' + encodeURIComponent(filter_company);
+	}
 		
 	var filter_ip = $('input[name=\'filter_ip\']').val();
 	
@@ -120,5 +141,32 @@ $('input[name=\'filter_customer\']').autocomplete({
                 $('input[name=\'filter_customer\']').val(item['label']);
             }
         });
+
+
+          $('input[name=\'filter_company\']').autocomplete({
+            'source': function (request, response) {
+                $.ajax({
+                    url: 'index.php?path=sale/customer/autocompletecompany&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
+                    dataType: 'json',
+                    success: function (json) {
+                        response($.map(json, function (item) {
+                            return {
+                                label: item['name'],
+                                value: item['name']
+                            }
+                        }));
+
+                        
+                    }
+                });
+                $companyName="";
+            },
+            'select': function (item) {
+                $('input[name=\'filter_company\']').val(item['label']);
+                $('input[name=\'filter_customer\']').val('');
+                $companyName=item['label'];
+            }
+        });
+
 //--></script></div>
 <?php echo $footer; ?>

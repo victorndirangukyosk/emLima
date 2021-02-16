@@ -34,6 +34,7 @@ $_['text_sub_customer_order_approval_required'] = '<a href="customer_id=%d">%s</
 $_['text_sub_customer_order_approval_not_required'] = '<a href="customer_id=%d">%s</a> updated as order approval not required for a <a href="customer_id=%d">sub customer</a>.';
 $_['text_order_new_product_added'] = '<a href="customer_id=%d">%s</a> added new product to (order edited) <a href="order_id=%d">order</a>.';
 $_['text_order_product_quaantity_changed'] = '<a href="customer_id=%d">%s</a> product quantity changed in (order edited) <a href="order_id=%d">order</a>.';
+$_['text_order_cancelled_by_customer'] = '<a href="customer_id=%d">%s</a> order cancelled <a href="order_id=%d">order</a>.';
 // Column
 $_['column_customer'] = 'Customer';
 $_['column_comment'] = 'Comment';

@@ -49,6 +49,44 @@ class ModelAccountWishList extends Model
         }
     }
 
+    public function getAvailableOrderedProducts($order_id)
+    {
+
+        
+        $order_query = $this->db->query('SELECT * from '.DB_PREFIX.'order_product ol inner join '.DB_PREFIX."product p on p.product_id = ol.general_product_id WHERE ol.order_id = '".$order_id."'");
+
+
+        //    echo "<pre>";print_r('SELECT * from '.DB_PREFIX.'order_product ol inner join '.DB_PREFIX."product p on p.product_id = ol.product_id WHERE ol.order_id = '".$order_id."'");die;
+
+        $data = [];
+
+        if ($order_query->num_rows) {
+            
+            //   echo "<pre>";print_r($order_query->rows);die;
+            foreach ($order_query->rows as $orderlist) {          
+
+                $temp = [
+                    // 'name' => $wishlist_name,
+                    'order_id' => $orderlist['order_id'],
+                    'product_id' => $orderlist['general_product_id'],
+                    'quantity' => $orderlist['quantity'],
+                    'name' => $orderlist['name'],
+                    // 'image' => $image,
+                    'unit' => $orderlist['unit'],
+                    //for priice add here
+                ];
+
+                array_push($data, $temp);
+            }
+
+            //  echo "<pre>";print_r($data);die;
+
+            return $data;
+        } else {
+            return $data;
+        }
+    }
+
     public function getWishlist($wishlist_id)
     {
         $query = $this->db->query('SELECT * from  '.DB_PREFIX.'wishlist where wishlist_id = '.(int) $wishlist_id);
@@ -227,4 +265,8 @@ class ModelAccountWishList extends Model
 
         return $query->row;
     }
+
+
+
+  
 }

@@ -544,6 +544,10 @@ class ModelApiOrders extends Model
             $implode[] = "o.date_added <= '".$this->db->escape($data['date_to'])." 23:59:59'";
         }
 
+        if (!empty($data['delivery_date'])) {
+            $implode[] = "o.delivery_date = '".$this->db->escape($data['delivery_date'])."'";
+        }
+
         if (!empty($data['total'])) {
             $implode[] = "o.total = '".(float) $data['total']."'";
         }
@@ -563,6 +567,7 @@ class ModelApiOrders extends Model
         if ($implode) {
             $sql .= ' WHERE '.implode(' AND ', $implode);
         }
+        //   echo  $sql;
 
         return $sql;
     }

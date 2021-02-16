@@ -385,6 +385,10 @@ class ModelReportCustomer extends Model {
             $implode[] = "co.customer_id > 0 AND CONCAT(c.firstname, ' ', c.lastname) LIKE '" . $this->db->escape($data['filter_customer']) . "'";
         }
 
+        if (!empty($data['filter_company'])) {
+            $implode[] = "co.customer_id > 0 AND CONCAT(c.company_name) LIKE '" . $this->db->escape($data['filter_company']) . "'";
+        }
+
         if ($implode) {
             $sql .= ' WHERE ' . implode(' AND ', $implode);
         }
@@ -459,6 +463,10 @@ class ModelReportCustomer extends Model {
         $implode[] = "c.customer_id > 0";
         if (!empty($data['filter_customer'])) {
             $implode[] = "co.customer_id > 0 AND CONCAT(c.firstname, ' ', c.lastname) LIKE '" . $this->db->escape($data['filter_customer']) . "'";
+        }
+
+        if (!empty($data['filter_company'])) {
+            $implode[] = "co.customer_id > 0 AND (c.company_name) LIKE '" . $this->db->escape($data['filter_company']) . "'";
         }
 
         if ($implode) {

@@ -136,8 +136,13 @@
                       <input type="text" name="filter_parent_customer" value="<?php if($filter_parent_customer != NULL && $filter_parent_customer_id != NULL) { echo $filter_parent_customer; } ?>" placeholder="<?php echo $entry_parent_customer; ?>" id="input-parent-customer" class="form-control" data-parent-customer-id="<?php if($filter_parent_customer != NULL && $filter_parent_customer_id != NULL) { echo $filter_parent_customer_id; } ?>" />
                   </div>
               </div>
+             <div class="col-sm-3">
+             <div class="form-group">
+                      <label class="control-label" for="input-account-manager-name">Account Manager Name</label>
+                      <input type="text" name="filter_account_manager_name" value="<?php if($filter_account_manager_name != NULL && $filter_account_manager_id != NULL) { echo $filter_account_manager_name; } ?>" placeholder="<?php echo $entry_account_manager_name; ?>" id="input-account-manager-name" class="form-control" data-account-manager-id="<?php if($filter_account_manager_name != NULL && $filter_account_manager_id != NULL) { echo $filter_account_manager_id; } ?>" />
+              </div>
+             </div>
             <div class="col-sm-3">
-             
               <div class="form-group">
                   <label class="control-label"></label>
                   <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>    
@@ -246,11 +251,24 @@
 $('#button-filter').on('click', function() {
   url = 'index.php?path=sale/customer&token=<?php echo $token; ?>';
 
-    var filter_company = $('input[name=\'filter_company\']').val();
+   var filter_company = $('input[name=\'filter_company\']').val();
 
-            if (filter_company) {
-                url += '&filter_company=' + encodeURIComponent(filter_company);
-            }
+   if (filter_company) {
+     url += '&filter_company=' + encodeURIComponent(filter_company);
+   }
+   
+   var filter_account_manager_name = $('input[name=\'filter_account_manager_name\']').val();
+
+   if (filter_account_manager_name) {
+     url += '&filter_account_manager_name=' + encodeURIComponent(filter_account_manager_name);
+   }
+   
+  var filter_account_manager_id = $('input[name=\'filter_account_manager_name\']').attr("data-account-manager-id");
+  //alert(filter_account_manager_id);
+  
+  if (filter_account_manager_id) {
+    url += '&filter_account_manager_id=' + encodeURIComponent(filter_account_manager_id);
+  }
   
   var filter_name = $('input[name=\'filter_name\']').val();
   
@@ -378,7 +396,27 @@ $('input[name=\'filter_parent_customer\']').autocomplete({
                 $companyName=item['label'];
             }
         });
-
+ 
+ $('input[name=\'filter_account_manager_name\']').autocomplete({
+            'source': function (request, response) {
+                $.ajax({
+                    url: 'index.php?path=sale/accountmanager/autocompleteaccountmanager&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
+                    dataType: 'json',
+                    success: function (json) {
+                        response($.map(json, function (item) {
+                            return {
+                                label: item['name'],
+                                value: item['user_id']
+                            }
+                        }));
+                    }
+                });
+            },
+            'select': function (item) {
+                $('input[name=\'filter_account_manager_name\']').val(item['label']);
+                $('input[name=\'filter_account_manager_name\']').attr("data-account-manager-id", item['value']);
+            }
+ });      
 
 $('input[name=\'filter_email\']').autocomplete({
   'source': function(request, response) {
