@@ -1016,8 +1016,7 @@ class ModelReportCustomer extends Model {
         // return $query->num_rows();
     }
     public function getTotalOrdersPlaced($data = []) {
-        $sql = 'SELECT COUNT(DISTINCT c.customer_id) AS total FROM `' . DB_PREFIX . "customer` c LEFT JOIN `' . DB_PREFIX . 'order` o ON (o.customer_id = c.customer_id) WHERE c.customer_id > '0'";
-        $sql = "SELECT  ' ', c.lastname) AS customer, c.email, cgd FROM `" . DB_PREFIX . 'order` o LEFT JOIN `' . DB_PREFIX . 'order_product` op ON (o.order_id = op.order_id)LEFT JOIN `' . DB_PREFIX . 'customer` c ON (o.customer_id = c.customer_id) LEFT JOIN `' . DB_PREFIX . "customer_group_description` cgd ON (c.customer_group_id = cgd.customer_group_id) WHERE o.customer_id > 0 AND cgd.language_id = '" . (int) $this->config->get('config_language_id') . "'";
+        $sql = 'SELECT COUNT(DISTINCT c.customer_id) AS total FROM `' . DB_PREFIX . 'customer` c  JOIN `' . DB_PREFIX . "order` o ON (o.customer_id = c.customer_id) WHERE c.customer_id > '0'";
 
         // if (!empty($data['filter_order_status_id'])) {
         //     $sql .= " AND o.order_status_id = '" . (int) $data['filter_order_status_id'] . "'";
@@ -1032,7 +1031,7 @@ class ModelReportCustomer extends Model {
         if (!empty($data['filter_date_end'])) {
             $sql .= " AND DATE(c.date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
         }
-        //  echo  ($sql);die;
+        //   echo  ($sql);die;
         $query = $this->db->query($sql);
 
         return $query->row['total'];
