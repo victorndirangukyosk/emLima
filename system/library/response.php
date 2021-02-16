@@ -29,6 +29,7 @@ class Response
 
     public function setOutput($output)
     {
+        $this->headers[] = 'Access-Control-Allow-Origin: *';
         $this->output = $output;
     }
 
