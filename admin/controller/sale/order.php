@@ -2776,7 +2776,9 @@ class ControllerSaleOrder extends Controller {
             if (($order_info['head_chef'] != 'Approved' || $order_info['procurement'] != 'Approved') && $parent_user_info != NULL) {
                 $this->load->model('account/customer');
                 $data['head_chef'] = $this->model_account_customer->getHeadChef($parent_user_info['customer_id']);
+                $data['head_chef_link'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_email=' . $data['head_chef']['email'], 'SSL');
                 $data['procurement'] = $this->model_account_customer->getProcurement($parent_user_info['customer_id']);
+                $data['procurement_link'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_email=' . $data['procurement']['email'], 'SSL');
             }
 
             $data['telephone'] = $order_info['telephone'];
