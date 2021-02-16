@@ -2763,10 +2763,12 @@ class ControllerSaleOrder extends Controller {
             }
 
             $data['email'] = $order_info['email'];
+            $data['order_customer_link'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_email=' . $order_info['email'], 'SSL');
             $this->load->model('sale/customer');
             $parent_user_info = $this->model_sale_customer->getCustomerParentDetails($order_info['customer_id']);
             if ($parent_user_info != NULL && $parent_user_info['email'] != NULL) {
                 $data['parent_user_email'] = $parent_user_info['email'];
+                $data['parent_customer_link'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_email=' . $parent_user_info['email'], 'SSL');
             } else {
                 $data['parent_user_email'] = NULL;
             }
