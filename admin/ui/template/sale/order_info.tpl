@@ -460,7 +460,7 @@
                               if(is_array($order_processing_group_details) && $order_processing_group_details != NULL) {
                               $order_processing_group = $order_processing_group_details['order_processing_group_name'];
                               } ?>
-                              <td></td>
+                              <td><?=$order_processing_group ?></td>
                           </tr>
                           <tr>
                               <td>Order Processor</td>
