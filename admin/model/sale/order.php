@@ -712,7 +712,9 @@ class ModelSaleOrder extends Model {
                 'login_latitude' => $order_query->row['login_latitude'],
                 'login_longitude' => $order_query->row['login_longitude'],
                 'order_processing_group_id' => $order_query->row['order_processing_group_id'],
-                'order_processor_id' => $order_query->row['order_processor_id'],                
+                'order_processor_id' => $order_query->row['order_processor_id'],
+                'head_chef' => $order_query->row['head_chef'],
+                'procurement' => $order_query->row['procurement'],
             ];
         } else {
             return;
@@ -2544,5 +2546,5 @@ class ModelSaleOrder extends Model {
 
         return $query->row['total'];
     }
-
+    
 }

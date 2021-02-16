@@ -178,6 +178,18 @@
 						<td><a href="mailto:<?php echo $email; ?>"><?php echo $parent_user_email; ?></a></td>
 					  </tr>
                                           <?php } ?>
+                                          <?php if($head_chef != NULL) { ?>
+                                          <tr>
+						<td>First Level Approver Email:</td>
+						<td><a href="mailto:<?php echo $email; ?>"><?php echo $head_chef['email']; ?></a></td>
+					  </tr>
+                                          <?php } ?>
+                                          <?php if($procurement != NULL) { ?>
+                                          <tr>
+						<td>Second Level Approver Email:</td>
+						<td><a href="mailto:<?php echo $email; ?>"><?php echo $procurement['email']; ?></a></td>
+					  </tr>
+                                          <?php } ?>
 					  <tr>
 						<td><?php echo $text_telephone; ?></td>
 						<td><?php echo $country_code; ?> <?php echo $telephone; ?></td>
