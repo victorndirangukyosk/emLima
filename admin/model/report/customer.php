@@ -986,11 +986,13 @@ class ModelReportCustomer extends Model {
     }
 
     public function getTotalboughtproducts($data = []) {
-        // $sql = 'SELECT COUNT(DISTINCT pd.product_id) AS total FROM `' . DB_PREFIX . 'order` o  LEFT JOIN `' . DB_PREFIX . "customer` c ON (o.customer_id = c.customer_id) WHERE o.customer_id > '0'";
+        // // $sql = 'SELECT COUNT(DISTINCT pd.product_id) AS total FROM `' . DB_PREFIX . 'order` o  LEFT JOIN `' . DB_PREFIX . "customer` c ON (o.customer_id = c.customer_id) WHERE o.customer_id > '0'";
 
-        //   $sql = "SELECT count(DISTINCT op.general_product_id) AS total  FROM `" . DB_PREFIX . 'order_product` op LEFT JOIN `' . DB_PREFIX . 'order` o ON (op.order_id = o.order_id) LEFT JOIN `' . DB_PREFIX . "customer` c ON (c.customer_id = o.customer_id) WHERE o.customer_id > 0   and o.order_status_id >0 ";
-        $sql = "SELECT count( distinct op.general_product_id ) as total  FROM `" . DB_PREFIX . 'order_product` op LEFT JOIN `' . DB_PREFIX . 'order` o ON (op.order_id = o.order_id) LEFT JOIN `' . DB_PREFIX . "customer` c ON (c.customer_id = o.customer_id) WHERE o.customer_id > 0   and o.order_status_id >0 ";
+        // //   $sql = "SELECT count(DISTINCT op.general_product_id) AS total  FROM `" . DB_PREFIX . 'order_product` op LEFT JOIN `' . DB_PREFIX . 'order` o ON (op.order_id = o.order_id) LEFT JOIN `' . DB_PREFIX . "customer` c ON (c.customer_id = o.customer_id) WHERE o.customer_id > 0   and o.order_status_id >0 ";
+        // $sql = "SELECT count( distinct op.general_product_id ) as total  FROM `" . DB_PREFIX . 'order_product` op LEFT JOIN `' . DB_PREFIX . 'order` o ON (op.order_id = o.order_id) LEFT JOIN `' . DB_PREFIX . "customer` c ON (c.customer_id = o.customer_id) WHERE o.customer_id > 0   and o.order_status_id >0 ";
         
+        $sql = "SELECT c.company_name  as company,op.name,op.unit,op.general_product_id, SUM( op.quantity )AS quantity  FROM `" . DB_PREFIX . 'order_product` op LEFT JOIN `' . DB_PREFIX . 'order` o ON (op.order_id = o.order_id) LEFT JOIN `' . DB_PREFIX . "customer` c ON (c.customer_id = o.customer_id) WHERE o.customer_id > 0   and o.order_status_id >0 ";
+
 
         if (!empty($data['filter_date_start'])) {
             $sql .= " AND DATE(o.date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
@@ -1008,11 +1010,11 @@ class ModelReportCustomer extends Model {
         if (!empty($data['filter_company'])) {
             $sql .= " AND  c.company_name  LIKE '%" . $this->db->escape($data['filter_company']) . "%'";
         }
-        //  $sql .= ' GROUP BY op.general_product_id  ';
+        $sql .= ' GROUP BY op.name   ORDER BY quantity DESC';
         //  echo  ($sql);die;
         $query = $this->db->query($sql);
 
-        return $query->row['total'];
+        return count($query->rows);
         // return $query->num_rows();
     }
     public function getTotalOrdersPlaced($data = []) {

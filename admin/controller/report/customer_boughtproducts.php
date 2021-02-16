@@ -88,9 +88,10 @@ class ControllerReportCustomerBoughtProducts extends Controller
             'limit' => $this->config->get('config_limit_admin'),
         ];
         if ('' != $filter_customer || '' != $filter_company) {
-            $customer_total = $this->model_report_customer->getTotalboughtproducts($filter_data);
+             $customer_total = $this->model_report_customer->getTotalboughtproducts($filter_data);
 
             $results = $this->model_report_customer->getboughtproducts($filter_data);
+             
         } else {
             $customer_total = 0;
             $results = null;
