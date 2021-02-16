@@ -453,7 +453,24 @@
                               <td>Vehicle Number</td>
                               <td><input type="text" name="order_vehicle_number" id="order_vehicle_number" value="<?=$order_vehicle_number ?>" data_order_id="<?=$order_id ?>">&nbsp;<button id="save_order_vehicle_number" class="btn btn-primary" type="button"> Save </button></td>
                           </tr>
-
+                          <tr>
+                              <td>Order Processing Group</td>
+                              <?php 
+                              $order_processing_group = NULL;
+                              if(is_array($order_processing_group_details) && $order_processing_group_details != NULL) {
+                              $order_processing_group = $order_processing_group_details['order_processing_group_name'];
+                              } ?>
+                              <td></td>
+                          </tr>
+                          <tr>
+                              <td>Order Processor</td>
+                              <?php 
+                              $order_processor_name = NULL;
+                              if(is_array($order_processor) && $order_processor != NULL) {
+                              $order_processor_name = $order_processor['firstname'].' '.$order_processor['lastname'];
+                              } ?>
+                              <td><?=$order_processor_name ?></td>
+                          </tr>
 			</table>
 		  </div>
 		  <?php } ?>

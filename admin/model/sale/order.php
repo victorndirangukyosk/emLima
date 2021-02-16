@@ -711,6 +711,8 @@ class ModelSaleOrder extends Model {
                 'po_number' => $order_query->row['po_number'],
                 'login_latitude' => $order_query->row['login_latitude'],
                 'login_longitude' => $order_query->row['login_longitude'],
+                'order_processing_group_id' => $order_query->row['order_processing_group_id'],
+                'order_processor_id' => $order_query->row['order_processor_id'],                
             ];
         } else {
             return;

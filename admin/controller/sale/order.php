@@ -2967,13 +2967,30 @@ class ControllerSaleOrder extends Controller {
             } else {
                 $data['order_driver_details'] = NULL;
             }
-
+            
             $this->load->model('executives/executives');
             $order_delivery_executive_details = $this->model_executives_executives->getExecutive($order_info['delivery_executive_id']);
             if (is_array($order_delivery_executive_details) && $order_delivery_executive_details != NULL) {
                 $data['order_delivery_executive_details'] = $order_delivery_executive_details;
             } else {
                 $data['order_delivery_executive_details'] = NULL;
+            }
+            
+            $this->load->model('orderprocessinggroup/orderprocessinggroup');
+            $this->load->model('orderprocessinggroup/orderprocessor');
+            
+            $order_processing_group_details = $this->model_orderprocessinggroup_orderprocessinggroup->getOrderProcessingGroup($order_info['order_processing_group_id']);
+            $order_processor = $this->model_orderprocessinggroup_orderprocessor->getOrderProcessor($order_info['order_processor_id']);
+            if (is_array($order_processing_group_details) && $order_processing_group_details != NULL) {
+                $data['order_processing_group_details'] = $order_processing_group_details;
+            } else {
+                $data['order_processing_group_details'] = NULL;
+            }
+            
+            if (is_array($order_processor) && $order_processor != NULL) {
+                $data['order_processor'] = $order_processor;
+            } else {
+                $data['order_processor'] = NULL;
             }
 
             $data['shipping_custom_fields'] = [];
