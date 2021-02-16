@@ -497,7 +497,7 @@
 
                     
                      <?php if($preturn_customer_orderplaced) { ?>
-                    <li><a href="<?php echo $report_customer_orderplaced; ?>"><?php echo $text_report_customer_ordedrplaced; ?></a></li>
+                    <li><a href="<?php echo $report_customer_orderplaced; ?>"><?php echo $text_report_customer_orderplaced; ?></a></li>
                     <?php } ?>
 
                 </ul>
