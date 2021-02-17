@@ -84,13 +84,14 @@ class ControllerReportCustomerBoughtProducts extends Controller
             // 'filter_order_status_id' => $filter_order_status_id,
             'filter_customer' => $filter_customer,
             'filter_company' => $filter_company,
-            'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin'),
+            // 'start' => ($page - 1) * $this->config->get('config_limit_admin'),
+            // 'limit' => $this->config->get('config_limit_admin'),
         ];
         if ('' != $filter_customer || '' != $filter_company) {
-             $customer_total = $this->model_report_customer->getTotalboughtproducts($filter_data);
+            // $customer_total = $this->model_report_customer->getTotalboughtproducts($filter_data);
 
             $results = $this->model_report_customer->getboughtproducts($filter_data);
+            $customer_total = count($results);
              
         } else {
             $customer_total = 0;
@@ -182,6 +183,13 @@ class ControllerReportCustomerBoughtProducts extends Controller
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
+
+
+         //as the dynamic pagination will not work for this calculation , applied pagination on array
+         $start = ($page - 1) * $this->config->get('config_limit_admin');
+         $limit = $this->config->get('config_limit_admin');
+ 
+         $data['customers'] = array_slice($data['customers'], $start, $limit);
 
         $this->response->setOutput($this->load->view('report/customer_boughtproducts.tpl', $data));
     }
