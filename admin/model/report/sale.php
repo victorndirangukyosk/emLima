@@ -1315,7 +1315,7 @@ class ModelReportSale extends Model {
         } else {
             $sql .= " WHERE o.order_status_id > '0'";
         }
-        $sql .= " AND o.order_status_id NOT IN (6,8)";
+        $sql .= " AND o.order_status_id NOT IN (6,8,0)";
         if (!empty($data['filter_city'])) {
             $sql .= ' AND c.name LIKE "' . $data['filter_city'] . '%"';
         }
@@ -1783,7 +1783,7 @@ class ModelReportSale extends Model {
         } else {
             $sql .= " WHERE o.order_status_id > '0'";
         }
-        $sql .= " AND o.order_status_id NOT IN (6,8)";
+        $sql .= " AND o.order_status_id NOT IN (6,8,0)";
         if (!empty($data['filter_city'])) {
             $sql .= " AND c.name LIKE '" . $this->db->escape($data['filter_city']) . "%'";
         }
@@ -2634,6 +2634,7 @@ class ModelReportSale extends Model {
         } else {
             $sql .= " WHERE o.order_status_id > '0' ";
         }
+        $sql .= " AND o.order_status_id NOT IN (6,8,0)";
 
         if ($this->user->isVendor()) {
             $sql .= ' AND ' . DB_PREFIX . 'store.vendor_id="' . $this->user->getId() . '"';
@@ -2654,14 +2655,14 @@ class ModelReportSale extends Model {
 
         if (DATE($data['filter_date_start']) != DATE($data['filter_date_end'])) {
             if (!empty($data['filter_date_start'])) {
-                $sql .= " AND DATE(o.date_added) >= DATE('" . ($data['filter_date_start']) . "')";
+                $sql .= " AND DATE(o.delivery_date) >= DATE('" . ($data['filter_date_start']) . "')";
             }
 
             if (!empty($data['filter_date_end'])) {
-                $sql .= " AND DATE(o.date_added) <= DATE('" . $this->db->escape($data['filter_date_end']) . "')";
+                $sql .= " AND DATE(o.delivery_date) <= DATE('" . $this->db->escape($data['filter_date_end']) . "')";
             }
         } else {
-            $sql .= " AND DATE(o.date_added) = DATE('" . ($data['filter_date_start']) . "')";
+            $sql .= " AND DATE(o.delivery_date) = DATE('" . ($data['filter_date_start']) . "')";
         }
 
 
