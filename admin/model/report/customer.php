@@ -1016,8 +1016,8 @@ class ModelReportCustomer extends Model {
             $sql1 .= " AND c.company_name   LIKE '%" . $this->db->escape($data['filter_company']) . "%'";
         }
 
-        $sql0 .= ' GROUP BY op.name ';
-        $sql1 .= ' GROUP BY op.name ';
+        $sql0 .= ' GROUP BY op.general_product_id ';
+        $sql1 .= ' GROUP BY op.name ';//general_product_id
 
         $sql ="SELECT * from (" .$sql0 ."union all ".$sql1.") as t";
         $sql .= ' GROUP BY name   ORDER BY quantity DESC';
