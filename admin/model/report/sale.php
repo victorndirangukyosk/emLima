@@ -977,7 +977,8 @@ class ModelReportSale extends Model {
         if (!empty($data['filter_date_added'])) {
             $sql .= " AND DATE(date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
         }
-
+        //AVOID Cancelled,Failed Orders
+        $sql .= " AND order_status_id NOT IN (6,8)";
         $query = $this->db->query($sql);
 
         return $query->row['total'];
