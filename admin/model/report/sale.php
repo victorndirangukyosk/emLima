@@ -2550,7 +2550,7 @@ class ModelReportSale extends Model {
         //$sql = "SELECT c.name as city, o.firstname,o.lastname,o.comment, (SELECT cust.company_name FROM hf7_customer cust WHERE o.customer_id = cust.customer_id ) AS company_name,o.order_id, o.delivery_date, o.delivery_timeslot, o.shipping_method, o.shipping_address, o.payment_method, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS status,(SELECT os.color FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS color, o.shipping_code, o.order_status_id,o.store_name,  o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified,o.po_number FROM `" . DB_PREFIX . "order` o ";
         // $sql .= 'left join `'.DB_PREFIX.'city` c on c.city_id = o.shipping_city_id';
         // $sql .= ' LEFT JOIN '.DB_PREFIX.'store on('.DB_PREFIX.'store.store_id = o.store_id) ';
-//o.order_status_id != '6'  And o.order_status_id != '15'  And
+        //o.order_status_id != '6'  And o.order_status_id != '15'  And
         if (!empty($data['filter_customer'])) {
             $sql .= ' LEFT JOIN `' . DB_PREFIX . 'customer` cr on cr.customer_id = o.customer_id ';
         }
@@ -2759,4 +2759,60 @@ class ModelReportSale extends Model {
 
         return $query->rows;
     }
+
+
+    public function getNonCancelledOrdersbyDeliveryDate($data = []) {
+        $sql = "SELECT o.order_id, o.delivery_date, o.order_status_id,o.store_name,o.comment,  o.date_added,o.shipping_address, o.date_modified FROM `" . DB_PREFIX . 'order` o ';
+         
+        if (!empty($data['filter_customer'])) {
+            $sql .= ' LEFT JOIN `' . DB_PREFIX . 'customer` cr on cr.customer_id = o.customer_id ';
+        }
+         
+
+        if (!empty($data['filter_order_status_id'])) {
+            $sql .= " WHERE o.order_status_id = '" . (int) $data['filter_order_status_id'] . "'";
+        } else {
+            // $sql .= " WHERE o.order_status_id > '0'";
+            $sql .= " WHERE o.order_status_id not in (0,6,8)";
+
+        }
+
+
+        if ($this->user->isVendor()) {
+            $sql .= ' AND ' . DB_PREFIX . 'store.vendor_id="' . $this->user->getId() . '"';
+        }
+
+        if (!empty($data['filter_city'])) {
+            $sql .= " AND c.name LIKE '" . $data['filter_city'] . "%'";
+        }
+        
+        if (!empty($data['filter_customer'])) {
+            $sql .= " AND CONCAT(cr.firstname,' ',cr.lastname) LIKE '" . $this->db->escape($data['filter_customer']) . "%'";
+        }
+        
+
+        if (DATE($data['filter_date_start']) != DATE($data['filter_date_end'])) {
+            if (!empty($data['filter_date_start'])) {
+                $sql .= " AND DATE(o.delivery_date) >= DATE('" . ($data['filter_date_start']) . "')";
+            }
+
+            if (!empty($data['filter_date_end'])) {
+                $sql .= " AND DATE(o.delivery_date) <= DATE('" . $this->db->escape($data['filter_date_end']) . "')";
+            }
+        } else {
+            $sql .= " AND DATE(o.delivery_date) = DATE('" . ($data['filter_date_start']) . "')";
+        }
+
+
+
+ 
+
+        $query = $this->db->query($sql);
+
+        //  echo "<pre>";print_r($sql);die;
+
+
+        return $query->rows;
+    }
+    
 }

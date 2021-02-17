@@ -7440,7 +7440,7 @@ class ControllerSaleOrder extends Controller {
         $this->model_report_excel->download_order_products_excel($data);
     }
 
-    public function consolidatedOrdersSummary() {
+    public function consolidatedOrdersSummary() {//used only in sale order report
 
         $filter_city = $this->request->get['filter_city'];
         $filter_date_start = $this->request->get['orderstartdate'];
@@ -7460,7 +7460,7 @@ class ControllerSaleOrder extends Controller {
         //echo "<pre>";print_r($filter_data);die;
 
         $this->load->model('report/sale');
-        $results = $this->model_report_sale->getNonCancelledOrders($filter_data);
+        $results = $this->model_report_sale->getNonCancelledOrdersbyDeliveryDate($filter_data);
         //  echo "<pre>";print_r($results);die;
 
         $data = [];
