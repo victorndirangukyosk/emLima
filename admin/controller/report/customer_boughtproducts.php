@@ -90,7 +90,7 @@ class ControllerReportCustomerBoughtProducts extends Controller
         if ('' != $filter_customer || '' != $filter_company) {
             // $customer_total = $this->model_report_customer->getTotalboughtproducts($filter_data);
 
-            $results = $this->model_report_customer->getboughtproducts($filter_data);
+            $results = $this->model_report_customer->getboughtproductswithRealOrders($filter_data);
             $customer_total = count($results);
              
         } else {

@@ -6842,7 +6842,7 @@ class ModelReportExcel extends Model {
         // if($this->user->isAccountManager()) {//not available for account managers
         // $results = $this->model_report_customer->getAccountManagerOrders($data);    
         // } else {
-        $results = $this->model_report_customer->getboughtproducts($data);
+        $results = $this->model_report_customer->getboughtproductswithRealOrders($data);
         // }
 
         foreach ($results as $result) {
