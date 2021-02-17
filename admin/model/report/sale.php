@@ -1315,7 +1315,7 @@ class ModelReportSale extends Model {
         } else {
             $sql .= " WHERE o.order_status_id > '0'";
         }
-
+        $sql .= " AND o.order_status_id NOT IN (6,8)";
         if (!empty($data['filter_city'])) {
             $sql .= ' AND c.name LIKE "' . $data['filter_city'] . '%"';
         }
@@ -1783,7 +1783,7 @@ class ModelReportSale extends Model {
         } else {
             $sql .= " WHERE o.order_status_id > '0'";
         }
-
+        $sql .= " AND o.order_status_id NOT IN (6,8)";
         if (!empty($data['filter_city'])) {
             $sql .= " AND c.name LIKE '" . $this->db->escape($data['filter_city']) . "%'";
         }
