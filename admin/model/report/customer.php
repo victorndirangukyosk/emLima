@@ -1073,7 +1073,7 @@ class ModelReportCustomer extends Model {
         // return $query->num_rows();
     }
     public function getTotalOrdersPlaced($data = []) {
-        $sql = 'SELECT COUNT(DISTINCT c.customer_id) AS total FROM `' . DB_PREFIX . 'customer` c  JOIN `' . DB_PREFIX . "order` o ON (o.customer_id = c.customer_id) WHERE c.customer_id > '0'";
+        $sql = 'SELECT COUNT(DISTINCT c.customer_id) AS total FROM `' . DB_PREFIX . 'customer` c  JOIN `' . DB_PREFIX . "order` o ON (o.customer_id = c.customer_id) WHERE c.customer_id > '0' and o.order_status_id>'0'";
 
         // if (!empty($data['filter_order_status_id'])) {
         //     $sql .= " AND o.order_status_id = '" . (int) $data['filter_order_status_id'] . "'";
@@ -1099,7 +1099,7 @@ class ModelReportCustomer extends Model {
         // if (!empty($data['filter_order_status_id'])) {
         //     $sql .= " AND o.order_status_id = '" . (int) $data['filter_order_status_id'] . "'";
         // } else {
-        //     $sql .= " AND o.order_status_id > '0'";
+             $sql .= " AND o.order_status_id > '0'";
         // }
 
         if (!empty($data['filter_date_start'])) {
