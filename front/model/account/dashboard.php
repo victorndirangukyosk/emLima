@@ -137,11 +137,13 @@ class ModelAccountDashboard extends Model
 
         array_push($s_users, $customer_id);
         $sub_users_od = implode(',', $s_users);
+
+        // echo "<pre>";print_r($sub_users_od);die;
         // $complete_status_ids = '('.implode(',', $this->config->get('config_complete_status')).')';
         //echo "<pre>";print_r($complete_status_ids);die;
         $date = date('Y-m-d', strtotime('-30 day'));
 
-        $query = $this->db->query('SELECT SUM( op.quantity )AS total,pd.name,op.unit,op.product_id FROM '.DB_PREFIX.'order_product AS op LEFT JOIN '.DB_PREFIX.'order AS o ON ( op.order_id = o.order_id ) LEFT JOIN  '.DB_PREFIX."product_description AS pd ON (op.general_product_id = pd.product_id)  WHERE pd.language_id = '".(int) $this->config->get('config_language_id')."' AND o.customer_id IN (".$sub_users_od.') AND o.date_added >= '.$date.' GROUP BY pd.name  having sum(op.quantity)>100  ORDER BY total DESC LIMIT 10');
+        $query = $this->db->query('SELECT SUM( op.quantity )AS total,pd.name,op.unit,op.product_id FROM '.DB_PREFIX.'order_product AS op LEFT JOIN '.DB_PREFIX.'order AS o ON ( op.order_id = o.order_id ) LEFT JOIN  '.DB_PREFIX."product_description AS pd ON (op.general_product_id = pd.product_id)  WHERE pd.language_id = '".(int) $this->config->get('config_language_id')."' AND o.customer_id IN (".$sub_users_od.') AND o.order_status_id not IN (0,6,8,9,10,16) AND o.date_added >= '.$date.' GROUP BY pd.name  having sum(op.quantity)>100  ORDER BY total DESC LIMIT 10');
         //$query = $this->db->query("SELECT SUM( op.quantity )AS total,pd.name,op.unit FROM " . DB_PREFIX . "order_product AS op LEFT JOIN " . DB_PREFIX . "order AS o ON ( op.order_id = o.order_id ) LEFT JOIN  " . DB_PREFIX . "product_description AS pd ON (op.general_product_id = pd.product_id)  WHERE pd.language_id = '" . (int) $this->config->get('config_language_id') . "' AND o.customer_id = " . $customer_id . " AND o.date_added >= " . $date . " GROUP BY pd.name  having sum(op.quantity)>100  ORDER BY total DESC LIMIT 10");
 
         //echo "SELECT SUM( op.quantity )AS total, op.product_id,op.general_product_id, pd.name,op.unit FROM " . DB_PREFIX . "order_product AS op LEFT JOIN " . DB_PREFIX . "order AS o ON ( op.order_id = o.order_id ) LEFT JOIN  " . DB_PREFIX . "product_description AS pd ON (op.general_product_id = pd.product_id)  WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') ."' AND o.customer_id = " . $customer_id . " AND o.date_added >= " . $date."  GROUP BY pd.name having sum(op.quantity)>1 ORDER BY total DESC LIMIT 10";
@@ -151,9 +153,20 @@ class ModelAccountDashboard extends Model
 
     public function getrecentorderproducts($data = [])
     {
-        $date = date('Y-m-d', strtotime('-30 day'));
         $customer_id = $data['customer_id'];
-        $sql = 'SELECT SUM( op.quantity )AS total,pd.name,op.unit,pd.product_id FROM '.DB_PREFIX.'order_product AS op LEFT JOIN '.DB_PREFIX.'order AS o ON ( op.order_id = o.order_id ) LEFT JOIN  '.DB_PREFIX."product_description AS pd ON (op.general_product_id = pd.product_id)  WHERE pd.language_id = '".(int) $this->config->get('config_language_id')."' AND o.customer_id = ".$customer_id.' AND o.date_added >= '.$date.' GROUP BY pd.name  having sum(op.quantity)>100   ';
+        $s_users = [];
+        $sub_users_query = $this->db->query('SELECT c.customer_id FROM '.DB_PREFIX."customer c WHERE parent = '".(int) $customer_id."'");
+        $sub_users = $sub_users_query->rows;
+        $s_users = array_column($sub_users, 'customer_id');
+
+        array_push($s_users, $customer_id);
+        $sub_users_od = implode(',', $s_users);
+
+
+        $date = date('Y-m-d', strtotime('-30 day'));
+       
+        $sql = 'SELECT SUM( op.quantity )AS total,pd.name,op.unit,pd.product_id FROM '.DB_PREFIX.'order_product AS op LEFT JOIN '.DB_PREFIX.'order AS o ON ( op.order_id = o.order_id ) LEFT JOIN  '.DB_PREFIX."product_description AS pd ON (op.general_product_id = pd.product_id)  WHERE pd.language_id = '".(int) $this->config->get('config_language_id')."' AND o.customer_id IN (".$sub_users_od.') AND o.order_status_id not IN (0,6,8,9,10,16) AND o.date_added >= '.$date.' GROUP BY pd.name  having sum(op.quantity)>100   ';
+    //   'SELECT SUM( op.quantity )AS total,pd.name,op.unit,op.product_id FROM '.DB_PREFIX.'order_product AS op LEFT JOIN '.DB_PREFIX.'order AS o ON ( op.order_id = o.order_id ) LEFT JOIN  '.DB_PREFIX."product_description AS pd ON (op.general_product_id = pd.product_id)  WHERE pd.language_id = '".(int) $this->config->get('config_language_id')."' AND o.customer_id IN (".$sub_users_od.') AND o.order_status_id not IN (0,6,8,9,10,16) AND o.date_added >= '.$date.' GROUP BY pd.name  having sum(op.quantity)>100  ORDER BY total DESC LIMIT 10');
 
         $implode = [];
 
@@ -194,6 +207,7 @@ class ModelAccountDashboard extends Model
 
             $sql .= ' LIMIT '.(int) $data['start'].','.(int) $data['limit'];
         }
+        //  echo "<pre>";print_r($sql);die;
 
         $query = $this->db->query($sql);
 
@@ -437,9 +451,19 @@ class ModelAccountDashboard extends Model
         // $this->load->model('sale/customer');
         // $rows = $this->model_sale_customer->getCustomers($data);
 
-        $date = date('Y-m-d', strtotime('-30 day'));
         $customer_id = $data['customer_id'];
-        $sql = 'SELECT SUM( op.quantity )AS total,pd.name,op.unit FROM '.DB_PREFIX.'order_product AS op LEFT JOIN '.DB_PREFIX.'order AS o ON ( op.order_id = o.order_id ) LEFT JOIN  '.DB_PREFIX."product_description AS pd ON (op.general_product_id = pd.product_id)  WHERE pd.language_id = '".(int) $this->config->get('config_language_id')."' AND o.customer_id = ".$customer_id.' AND o.date_added >= '.$date.' GROUP BY pd.name  having sum(op.quantity)>100   ';
+        $s_users = [];
+        $sub_users_query = $this->db->query('SELECT c.customer_id FROM '.DB_PREFIX."customer c WHERE parent = '".(int) $customer_id."'");
+        $sub_users = $sub_users_query->rows;
+        $s_users = array_column($sub_users, 'customer_id');
+
+        array_push($s_users, $customer_id);
+        $sub_users_od = implode(',', $s_users);
+
+        $date = date('Y-m-d', strtotime('-30 day'));
+        $sql = 'SELECT SUM( op.quantity )AS total,pd.name,op.unit FROM '.DB_PREFIX.'order_product AS op LEFT JOIN '.DB_PREFIX.'order AS o ON ( op.order_id = o.order_id ) LEFT JOIN  '.DB_PREFIX."product_description AS pd ON (op.general_product_id = pd.product_id)  WHERE pd.language_id = '".(int) $this->config->get('config_language_id')."' AND o.customer_id IN (".$sub_users_od.') AND o.order_status_id not IN (0,6,8,9,10,16)  AND o.date_added >= '.$date.' GROUP BY pd.name  having sum(op.quantity)>100   ';
+       
+        
         $query = $this->db->query($sql);
         $rows = $query->rows;
 
