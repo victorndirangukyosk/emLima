@@ -891,9 +891,10 @@ class ModelReportSale extends Model {
 
         $sql .= " where c.account_manager_id='" . $this->user->getId() . "'";
         $sql .= " AND  o.order_status_id > '0'";
+        $sql .= " AND o.order_status_id NOT IN (0,6,8)";
 
         if (!empty($data['filter_date_added'])) {
-            $sql .= " AND DATE(o.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
+            $sql .= " AND DATE(o.delivery_date) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
         }
 
         $query = $this->db->query($sql);
