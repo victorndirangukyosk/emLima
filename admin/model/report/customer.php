@@ -965,7 +965,7 @@ class ModelReportCustomer extends Model {
             $sql .= " AND c.company_name   LIKE '%" . $this->db->escape($data['filter_company']) . "%'";
         }
 
-        $sql .= ' GROUP BY op.name   ORDER BY quantity DESC';
+        $sql .= ' GROUP BY op.general_product_id   ORDER BY quantity DESC';//group by name should not be done
          
         if (isset($data['start']) || isset($data['limit'])) {
             if ($data['start'] < 0) {
@@ -984,7 +984,61 @@ class ModelReportCustomer extends Model {
 
         return $query->rows;
     }
+    public function getboughtproductswithRealOrders($data = []) {
+        //general product not available..need to change code
+        $sql0 = "SELECT c.company_name  as company,op.name,op.unit,op.general_product_id, SUM( op.quantity )AS quantity  FROM `" . DB_PREFIX . 'order_product` op LEFT JOIN `' . DB_PREFIX . 'order` o ON (op.order_id = o.order_id) LEFT JOIN `' . DB_PREFIX . "customer` c ON (c.customer_id = o.customer_id) WHERE o.customer_id > 0   and o.order_status_id >0   and o.order_id not in (select order_id from `hf7_real_order_product`)  ";
+        $sql1 = "SELECT c.company_name  as company,op.name,op.unit,op.general_product_id, SUM( op.quantity )AS quantity  FROM `" . DB_PREFIX . 'real_order_product` op LEFT JOIN `' . DB_PREFIX . 'order` o ON (op.order_id = o.order_id) LEFT JOIN `' . DB_PREFIX . "customer` c ON (c.customer_id = o.customer_id) WHERE o.customer_id > 0   and o.order_status_id >0 ";
 
+        // if (!empty($data['filter_order_status_id'])) {
+        //     $sql .= " AND o.order_status_id = '" . (int) $data['filter_order_status_id'] . "'";
+        // } else {
+        //     $sql .= " AND o.order_status_id > '0' AND  o.order_status_id != '6'";
+        // }GROUP BY pd.name   ORDER BY total DESC
+
+        if (!empty($data['filter_date_start'])) {
+            $sql0 .= " AND DATE(o.date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
+            $sql1 .= " AND DATE(o.date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
+        }
+
+        if (!empty($data['filter_date_end'])) {
+            $sql0 .= " AND DATE(o.date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
+            $sql1 .= " AND DATE(o.date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
+        }
+
+        if (!empty($data['filter_customer'])) {
+            // $sql .= " AND   c.customer_id   = '" .(int) $this->db->escape($data['filter_customer']) . "'";
+            $sql0 .= " AND CONCAT(c.firstname, ' ', c.lastname)  LIKE '%" . $this->db->escape($data['filter_customer']) . "%'";
+            $sql1 .= " AND CONCAT(c.firstname, ' ', c.lastname)  LIKE '%" . $this->db->escape($data['filter_customer']) . "%'";
+        }
+
+        if (!empty($data['filter_company'])) {
+            $sql0 .= " AND c.company_name   LIKE '%" . $this->db->escape($data['filter_company']) . "%'";
+            $sql1 .= " AND c.company_name   LIKE '%" . $this->db->escape($data['filter_company']) . "%'";
+        }
+
+        $sql0 .= ' GROUP BY op.name ';
+        $sql1 .= ' GROUP BY op.name ';
+
+        $sql ="SELECT * from (" .$sql0 ."union all ".$sql1.") as t";
+        $sql .= ' GROUP BY name   ORDER BY quantity DESC';
+         
+        // if (isset($data['start']) || isset($data['limit'])) {
+        //     if ($data['start'] < 0) {
+        //         $data['start'] = 0;
+        //     }
+
+        //     if ($data['limit'] < 1) {
+        //         $data['limit'] = 20;
+        //     }
+
+        //     $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
+        // }
+
+            echo  ($sql);die;
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
     public function getTotalboughtproducts($data = []) {
         // // $sql = 'SELECT COUNT(DISTINCT pd.product_id) AS total FROM `' . DB_PREFIX . 'order` o  LEFT JOIN `' . DB_PREFIX . "customer` c ON (o.customer_id = c.customer_id) WHERE o.customer_id > '0'";
 
