@@ -170,12 +170,24 @@
 					  <?php } ?>
 					  <tr>
 						<td><?php echo $text_email; ?></td>
-						<td><a href="mailto:<?php echo $email; ?>"><?php echo $email; ?></a></td>
+						<td><a href="mailto:<?php echo $email; ?>"><?php echo $email; ?></a>  <a href="<?php echo $order_customer_link; ?>" target="_blank" data-toggle="tooltip" title="" data-original-title="View Customer Detials"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></a></td>
 					  </tr>
                                           <?php if($parent_user_email != NULL) { ?>
                                           <tr>
 						<td>Parent User Email:</td>
-						<td><a href="mailto:<?php echo $email; ?>"><?php echo $parent_user_email; ?></a></td>
+						<td><a href="mailto:<?php echo $email; ?>"><?php echo $parent_user_email; ?></a>  <a href="<?php echo $parent_customer_link; ?>" target="_blank" data-toggle="tooltip" title="" data-original-title="View Customer Detials"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></a></td>
+					  </tr>
+                                          <?php } ?>
+                                          <?php if($head_chef != NULL) { ?>
+                                          <tr>
+						<td>First Level Approver Email:</td>
+                                                <td><a href="mailto:<?php echo $head_chef['email']; ?>"><?php echo $head_chef['email']; ?></a>   <a href="<?php echo $head_chef_link; ?>" target="_blank" data-toggle="tooltip" title="" data-original-title="View Customer Detials"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></a></td>
+					  </tr>
+                                          <?php } ?>
+                                          <?php if($procurement != NULL) { ?>
+                                          <tr>
+						<td>Second Level Approver Email:</td>
+						<td><a href="mailto:<?php echo $procurement['email']; ?>"><?php echo $procurement['email']; ?></a>  <a href="<?php echo $procurement_link; ?>" target="_blank" data-toggle="tooltip" title="" data-original-title="View Customer Detials"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></a></td>
 					  </tr>
                                           <?php } ?>
 					  <tr>
@@ -453,7 +465,24 @@
                               <td>Vehicle Number</td>
                               <td><input type="text" name="order_vehicle_number" id="order_vehicle_number" value="<?=$order_vehicle_number ?>" data_order_id="<?=$order_id ?>">&nbsp;<button id="save_order_vehicle_number" class="btn btn-primary" type="button"> Save </button></td>
                           </tr>
-
+                          <tr>
+                              <td>Order Processing Group</td>
+                              <?php 
+                              $order_processing_group = NULL;
+                              if(is_array($order_processing_group_details) && $order_processing_group_details != NULL) {
+                              $order_processing_group = $order_processing_group_details['order_processing_group_name'];
+                              } ?>
+                              <td><?=$order_processing_group ?></td>
+                          </tr>
+                          <tr>
+                              <td>Order Processor</td>
+                              <?php 
+                              $order_processor_name = NULL;
+                              if(is_array($order_processor) && $order_processor != NULL) {
+                              $order_processor_name = $order_processor['firstname'].' '.$order_processor['lastname'];
+                              } ?>
+                              <td><?=$order_processor_name ?></td>
+                          </tr>
 			</table>
 		  </div>
 		  <?php } ?>

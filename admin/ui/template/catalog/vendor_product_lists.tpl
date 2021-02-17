@@ -260,9 +260,9 @@
                                         <?php //echo $product['status']; 
                                         if($product['status'] == 'Disabled') {
                                         ?>
-                                        <button type="button" data-toggle="tooltip" title="" class="btn btn-default" onclick="changeProductStatus(1, <?php echo $product['product_store_id']; ?>)" data-original-title="Enable"><i class="fa fa-check-circle text-success"></i></button>
+                                        <button type="button" data-toggle="tooltip" title="" class="btn btn-default" onclick="changeProductStatus(1, <?php echo $product['product_store_id']; ?>)" data-original-title="Click Here To Enable"><i class="fa fa-times-circle text-danger"></i></button>
                                         <?php } if($product['status'] == 'Enabled') { ?>
-                                        <button type="button" data-toggle="tooltip" title="" class="btn btn-default" onclick="changeProductStatus(0, <?php echo $product['product_store_id']; ?>)" data-original-title="Disable"><i class="fa fa-times-circle text-danger"></i></button>
+                                        <button type="button" data-toggle="tooltip" title="" class="btn btn-default" onclick="changeProductStatus(0, <?php echo $product['product_store_id']; ?>)" data-original-title="Click Here To Disable"><i class="fa fa-check-circle text-success"></i></button>
                                         <?php } ?>
                                         
                                     </td>

@@ -6,7 +6,8 @@ class ControllerCommonScheduler extends Controller
 
     public function consolidatedOrderSheet()
     {
-        $deliveryDate =   date("Y-m-d");// date("Y-m-d",strtotime("-1 days"));//$this->request->get['filter_delivery_date'];
+        // $deliveryDate =   date("Y-m-d");// date("Y-m-d",strtotime("-1 days"));//$this->request->get['filter_delivery_date'];
+        $deliveryDate =   date("Y-m-d",strtotime("1 days"));// as eat at 11:30 means , next day orders need to be displayed
 
         $filter_data = [
             'filter_delivery_date' => $deliveryDate,

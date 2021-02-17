@@ -841,4 +841,8 @@ class ModelAccountCustomer extends Model {
         return $query->row;
     }
 
+
+    public function editToken($customer_id, $token) {
+        $this->db->query('UPDATE ' . DB_PREFIX . "customer SET token = '" . $this->db->escape($token) . "' WHERE customer_id = '" . (int) $customer_id . "'");
+    }
 }

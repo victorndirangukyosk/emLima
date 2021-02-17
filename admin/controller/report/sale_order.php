@@ -107,9 +107,9 @@ class ControllerReportSaleOrder extends Controller
             'limit' => $this->config->get('config_limit_admin'),
         ];
 
-        $order_total = $this->model_report_sale->getTotalOrders($filter_data);
+        $order_total = $this->model_report_sale->getTotalOrdersbyDeliveryDate($filter_data);
 
-        $results = $this->model_report_sale->getOrders($filter_data);
+        $results = $this->model_report_sale->getOrdersbyDeliveryDate($filter_data);
 
         foreach ($results as $result) {
             $data['orders'][] = [
@@ -292,7 +292,7 @@ class ControllerReportSaleOrder extends Controller
 
         // $order_total = $this->model_report_sale->getTotalOrders($filter_data);
 
-        $results = $this->model_report_sale->getOrders($filter_data);
+        $results = $this->model_report_sale->getOrdersbyDeliveryDate($filter_data);
 
         foreach ($results as $result) {
             $data['orders'][] = [
