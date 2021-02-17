@@ -1290,7 +1290,7 @@ class ModelReportSale extends Model {
     }
     
     public function getAccountManagerOrders($data = []) {
-        $sql = 'SELECT MIN(o.date_added) AS date_start, MAX(o.date_added) AS date_end, COUNT(*) AS `orders`, SUM((SELECT SUM(op.quantity) FROM `' . DB_PREFIX . 'order_product` op WHERE op.order_id = o.order_id GROUP BY op.order_id)) AS products, SUM((SELECT SUM(ot.value) FROM `' . DB_PREFIX . "order_total` ot WHERE ot.order_id = o.order_id AND ot.code = 'tax' GROUP BY ot.order_id)) AS tax, SUM(o.total) AS `total` FROM `" . DB_PREFIX . 'order` o';
+        $sql = 'SELECT MIN(o.delivery_date) AS date_start, MAX(o.delivery_date) AS date_end, COUNT(*) AS `orders`, SUM((SELECT SUM(op.quantity) FROM `' . DB_PREFIX . 'order_product` op WHERE op.order_id = o.order_id GROUP BY op.order_id)) AS products, SUM((SELECT SUM(ot.value) FROM `' . DB_PREFIX . "order_total` ot WHERE ot.order_id = o.order_id AND ot.code = 'tax' GROUP BY ot.order_id)) AS tax, SUM(o.total) AS `total` FROM `" . DB_PREFIX . 'order` o';
 
         $sql .= ' INNER JOIN `' . DB_PREFIX . 'store` st on st.store_id = o.store_id ';
 
@@ -1325,11 +1325,11 @@ class ModelReportSale extends Model {
         }
 
         if (!empty($data['filter_date_start'])) {
-            $sql .= " AND DATE(o.date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
+            $sql .= " AND DATE(o.delivery_date) >= '" . $this->db->escape($data['filter_date_start']) . "'";
         }
 
         if (!empty($data['filter_date_end'])) {
-            $sql .= " AND DATE(o.date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
+            $sql .= " AND DATE(o.delivery_date) <= '" . $this->db->escape($data['filter_date_end']) . "'";
         }
 
         if (!empty($data['filter_group'])) {
@@ -1340,21 +1340,21 @@ class ModelReportSale extends Model {
 
         switch ($group) {
             case 'day':
-                $sql .= ' GROUP BY YEAR(o.date_added), MONTH(o.date_added), DAY(o.date_added)';
+                $sql .= ' GROUP BY YEAR(o.delivery_date), MONTH(o.delivery_date), DAY(o.delivery_date)';
                 break;
             default:
             case 'week':
-                $sql .= ' GROUP BY YEAR(o.date_added), WEEK(o.date_added)';
+                $sql .= ' GROUP BY YEAR(o.delivery_date), WEEK(o.delivery_date)';
                 break;
             case 'month':
-                $sql .= ' GROUP BY YEAR(o.date_added), MONTH(o.date_added)';
+                $sql .= ' GROUP BY YEAR(o.delivery_date), MONTH(o.delivery_date)';
                 break;
             case 'year':
-                $sql .= ' GROUP BY YEAR(o.date_added)';
+                $sql .= ' GROUP BY YEAR(o.delivery_date)';
                 break;
         }
 
-        $sql .= ' ORDER BY o.date_added DESC';
+        $sql .= ' ORDER BY o.delivery_date DESC';
 
         if (isset($data['start']) || isset($data['limit'])) {
             if ($data['start'] < 0) {
@@ -1746,17 +1746,17 @@ class ModelReportSale extends Model {
 
         switch ($group) {
             case 'day':
-                $sql = 'SELECT COUNT(DISTINCT YEAR(o.date_added), MONTH(o.date_added), DAY(o.date_added)) AS total FROM `' . DB_PREFIX . 'order` o';
+                $sql = 'SELECT COUNT(DISTINCT YEAR(o.delivery_date), MONTH(o.delivery_date), DAY(o.delivery_date)) AS total FROM `' . DB_PREFIX . 'order` o';
                 break;
             default:
             case 'week':
-                $sql = 'SELECT COUNT(DISTINCT YEAR(o.date_added), WEEK(o.date_added)) AS total FROM `' . DB_PREFIX . 'order` o';
+                $sql = 'SELECT COUNT(DISTINCT YEAR(o.delivery_date), WEEK(o.delivery_date)) AS total FROM `' . DB_PREFIX . 'order` o';
                 break;
             case 'month':
-                $sql = 'SELECT COUNT(DISTINCT YEAR(o.date_added), MONTH(o.date_added)) AS total FROM `' . DB_PREFIX . 'order` o';
+                $sql = 'SELECT COUNT(DISTINCT YEAR(o.delivery_date), MONTH(o.delivery_date)) AS total FROM `' . DB_PREFIX . 'order` o';
                 break;
             case 'year':
-                $sql = 'SELECT COUNT(DISTINCT YEAR(o.date_added)) AS total FROM `' . DB_PREFIX . 'order` o';
+                $sql = 'SELECT COUNT(DISTINCT YEAR(o.delivery_date)) AS total FROM `' . DB_PREFIX . 'order` o';
                 break;
         }
 
@@ -1793,11 +1793,11 @@ class ModelReportSale extends Model {
         }
 
         if (!empty($data['filter_date_start'])) {
-            $sql .= " AND DATE(o.date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
+            $sql .= " AND DATE(o.delivery_date) >= '" . $this->db->escape($data['filter_date_start']) . "'";
         }
 
         if (!empty($data['filter_date_end'])) {
-            $sql .= " AND DATE(o.date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
+            $sql .= " AND DATE(o.delivery_date) <= '" . $this->db->escape($data['filter_date_end']) . "'";
         }
 
         $query = $this->db->query($sql);
