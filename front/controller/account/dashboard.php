@@ -133,10 +133,13 @@ class ControllerAccountDashboard extends Controller
             }
 
             $customer_name = $customer_info['firstname'].' '.$customer_info['lastname'];
+            $this->load->model('user/user');
+            $account_manager_details = $this->model_user_user->getUser($customer_info['account_manager_id']);
             $data['DashboardData'] = [
                 'customer_name' => $customer_name,
                 'email' => $customer_info['email'],
                 'telephone' => $customer_info['telephone'],
+                'account_manager_details' => $account_manager_details,
                 // 'total_orders' => $total_orders,
                 // 'total_spent' => $this->currency->format($total_spent, $this->config->get('config_currency')),
                 // 'avg_value' => $this->currency->format($avg_value, $this->config->get('config_currency')),
