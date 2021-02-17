@@ -146,17 +146,17 @@ class ModelReportCustomer extends Model {
         } else {
             $sql .= " AND o.order_status_id > '0'";
         }
-
+        $sql .= " AND o.order_status_id NOT IN (0,6,8)";
         if ($this->user->isAccountManager()) {
             $sql .= " AND c.account_manager_id = '" . (int) $this->user->getId() . "'";
         }
 
         if (!empty($data['filter_date_start'])) {
-            $sql .= " AND DATE(o.date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
+            $sql .= " AND DATE(o.delivery_date) >= '" . $this->db->escape($data['filter_date_start']) . "'";
         }
 
         if (!empty($data['filter_date_end'])) {
-            $sql .= " AND DATE(o.date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
+            $sql .= " AND DATE(o.delivery_date) <= '" . $this->db->escape($data['filter_date_end']) . "'";
         }
 
         if (!empty($data['filter_customer'])) {
@@ -250,17 +250,17 @@ class ModelReportCustomer extends Model {
         } else {
             $sql .= " AND o.order_status_id > '0'";
         }
-
+        $sql .= " AND o.order_status_id NOT IN (0,6,8)";
         if ($this->user->isAccountManager()) {
             $sql .= " AND c.account_manager_id = '" . (int) $this->user->getId() . "'";
         }
 
         if (!empty($data['filter_date_start'])) {
-            $sql .= " AND DATE(o.date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
+            $sql .= " AND DATE(o.delivery_date) >= '" . $this->db->escape($data['filter_date_start']) . "'";
         }
 
         if (!empty($data['filter_date_end'])) {
-            $sql .= " AND DATE(o.date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
+            $sql .= " AND DATE(o.delivery_date) <= '" . $this->db->escape($data['filter_date_end']) . "'";
         }
 
         $query = $this->db->query($sql);
