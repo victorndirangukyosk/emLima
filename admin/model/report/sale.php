@@ -2718,7 +2718,7 @@ class ModelReportSale extends Model {
         } else {
             $sql .= " AND o.order_status_id > '0'";
         }
-
+        $sql .= " AND o.order_status_id NOT IN (0,6,8)";
         if (!empty($data['filter_date_start'])) {
             $sql .= " AND DATE(o.delivery_date) >= '" . $this->db->escape($data['filter_date_start']) . "'";
         }
