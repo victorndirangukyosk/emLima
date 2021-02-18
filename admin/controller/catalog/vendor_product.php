@@ -402,13 +402,13 @@ class ControllerCatalogVendorProduct extends Controller {
         $data['products'] = [];
         $this->load->model('catalog/vendor_product');
         $category_price_prods = NULL;
-        if(isset($this->request->get['filter_category_price'])) {
-        $category_price_prods = $this->model_catalog_vendor_product->getCategoryPriceDetailsByCategoryName(75, $this->request->get['filter_category_price']);    
-        $category_price_prods = array_column($category_price_prods, 'product_store_id');
-        /*$log = new Log('error.log');
-        $log->write('category_price_prods');
-        $log->write($category_price_prods);
-        $log->write('category_price_prods');*/
+        if (isset($this->request->get['filter_category_price'])) {
+            $category_price_prods = $this->model_catalog_vendor_product->getCategoryPriceDetailsByCategoryName(75, $this->request->get['filter_category_price']);
+            $category_price_prods = array_column($category_price_prods, 'product_store_id');
+            /* $log = new Log('error.log');
+              $log->write('category_price_prods');
+              $log->write($category_price_prods);
+              $log->write('category_price_prods'); */
         }
 
         $filter_data = [
@@ -793,7 +793,7 @@ class ControllerCatalogVendorProduct extends Controller {
             $this->response->setOutput($this->load->view('catalog/vendor_product_category_priceslist.tpl', $data));
         }
     }
-    
+
     protected function getInventoryList($inventory = false, $prices = false) {
         $category_prices = $this->getCategoriesProductPrices();
         if (isset($this->request->get['filter_name'])) {
@@ -2169,7 +2169,7 @@ class ControllerCatalogVendorProduct extends Controller {
 
         $this->getList(true);
     }
-    
+
     public function Manageinventory() {
         $this->load->language('catalog/product');
 
@@ -2215,6 +2215,22 @@ class ControllerCatalogVendorProduct extends Controller {
         $status = $this->request->get['status'];
 
         $this->model_catalog_vendor_product->updateCategoryPricesStatus($product_store_id, $product_id, $product_name, $status);
+        $json['warning'] = 'Product Category Pricing Status Updated!';
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function updateCategoryPricesStatuss() {
+        $log = new Log('error.log');
+        $this->load->model('catalog/vendor_product');
+        $log->write($this->request->get['product_id']);
+        $product_store_id = $this->request->get['product_store_id'];
+        $product_id = $this->request->get['product_id'];
+        $product_name = $this->request->get['product_name'];
+        $status = $this->request->get['status'];
+        $price_category = $this->request->get['price_category'];
+
+        $this->model_catalog_vendor_product->updateCategoryPricesStatuss($product_store_id, $product_id, $product_name, $status, $price_category);
         $json['warning'] = 'Product Category Pricing Status Updated!';
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
