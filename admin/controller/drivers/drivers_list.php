@@ -238,6 +238,7 @@ class ControllerDriversDriversList extends Controller {
                 'name' => $result['name'],
                 'email' => $result['email'],
                 'driving_licence' => $result['driving_licence'],
+                'driving_licence_expire_date' => $result['driving_licence_expire_date'],
                 'telephone' => $country_code . $result['telephone'],
                 'status' => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
                 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
@@ -421,7 +422,7 @@ class ControllerDriversDriversList extends Controller {
         $data['entry_lastname'] = $this->language->get('entry_lastname');
         $data['entry_email'] = $this->language->get('entry_email');
         $data['entry_driving_licence'] = $this->language->get('entry_driving_licence');
-
+        $data['entry_driving_licence_expire_date'] = 'Driving Licence Expire Date';
 
         $data['entry_telephone'] = $this->language->get('entry_telephone');
         $data['entry_status'] = $this->language->get('entry_status');
@@ -478,6 +479,12 @@ class ControllerDriversDriversList extends Controller {
             $data['error_driving_licence'] = $this->error['driving_licence'];
         } else {
             $data['error_driving_licence'] = '';
+        }
+        
+        if (isset($this->error['driving_licence_expire_date'])) {
+            $data['error_driving_licence_expire_date'] = $this->error['driving_licence_expire_date'];
+        } else {
+            $data['error_driving_licence_expire_date'] = '';
         }
 
         if (isset($this->error['telephone'])) {
@@ -580,6 +587,14 @@ class ControllerDriversDriversList extends Controller {
         } else {
             $data['driving_licence'] = '';
         }
+        
+        if (isset($this->request->post['driving_licence_expire_date'])) {
+            $data['driving_licence_expire_date'] = $this->request->post['driving_licence_expire_date'];
+        } elseif (!empty($driver_info)) {
+            $data['driving_licence_expire_date'] = $driver_info['driving_licence_expire_date'];
+        } else {
+            $data['driving_licence_expire_date'] = '';
+        }
 
         if (isset($this->request->post['telephone'])) {
             $data['telephone'] = $this->request->post['telephone'];
@@ -626,6 +641,10 @@ class ControllerDriversDriversList extends Controller {
 
         if ((utf8_strlen($this->request->post['driving_licence']) < 1) || (utf8_strlen(trim($this->request->post['driving_licence'])) > 32)) {
             $this->error['driving_licence'] = $this->language->get('error_driving_licence');
+        }
+        
+        if ((utf8_strlen($this->request->post['driving_licence_expire_date']) < 1) || (!preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/",$this->request->post['driving_licence_expire_date'])) || $this->request->post['driving_licence_expire_date'] == '0000-00-00') {
+            $this->error['driving_licence_expire_date'] = 'Driving Licence Expire Date filed required';
         }
 
         $driver_info = $this->model_drivers_drivers->getDriverByEmail($this->request->post['email']);

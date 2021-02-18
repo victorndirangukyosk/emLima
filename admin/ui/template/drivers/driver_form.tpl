@@ -85,7 +85,19 @@
                           <?php  } ?>
                         </div>
                       </div>
-
+                      <div class="form-group required">
+                        <label class="col-sm-2 control-label" for="input-driving-licence-expire-date"><?php echo $entry_driving_licence_expire_date; ?></label>
+                        <div class="col-sm-10">
+                            <div class="input-group date">
+                                <input type="text" name="driving_licence_expire_date" value="<?php echo $driving_licence_expire_date; ?>" placeholder="<?php echo $entry_driving_licence_expire_date; ?>" data-date-format="YYYY-MM-DD" id="driving_licence_expire_date" class="form-control" />
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                                </span></div>
+                        <?php if ($error_driving_licence_expire_date) { ?>
+                          <div class="text-danger"><?php echo $error_driving_licence_expire_date; ?></div>
+                        <?php  } ?>
+                        </div>
+                      </div>
                       <!-- start -->
                       
 
@@ -258,6 +270,11 @@
       }
     
     
+</script>
+<script type="text/javascript">
+$('.date').datetimepicker({
+	pickTime: false,  widgetParent: 'body'
+});
 </script>
 </body>
 
