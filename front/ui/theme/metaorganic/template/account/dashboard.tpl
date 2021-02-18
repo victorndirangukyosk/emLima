@@ -75,6 +75,8 @@
             <p class="description"><?php echo $DashboardData['account_manager_details']['firstname'].' '.$DashboardData['account_manager_details']['lastname']; ?>
               <br><?php echo $DashboardData['account_manager_details']['email']; ?>
             </p>
+            <?php } else { ?>
+            <p class="description">NA</p>
             <?php } ?>
           </div>
         </div>

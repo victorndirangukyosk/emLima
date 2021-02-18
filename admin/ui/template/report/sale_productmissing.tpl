@@ -245,6 +245,11 @@ function excel() {
   if (filter_date_end) {
     url += '&filter_date_end=' + encodeURIComponent(filter_date_end);
   }
+  
+  var filter_name = $('input[name=\'filter_name\']').val();
+  if (filter_name) {
+      url += '&filter_name=' + encodeURIComponent(filter_name);
+  }
 
   
   var filter_order_status_id = $('select[name=\'filter_order_status_id\']').val();
