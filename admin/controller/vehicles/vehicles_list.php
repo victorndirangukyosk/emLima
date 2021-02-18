@@ -1,6 +1,6 @@
 <?php
 
-class ControllerDriversDriversList extends Controller {
+class ControllerVehiclesVehiclesList extends Controller {
 
     private $error = [];
 

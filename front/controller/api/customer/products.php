@@ -7,24 +7,19 @@ class ControllerApiCustomerProducts extends Controller
     public function getProducts()
     {
         $json = [];
-        // if (!isset($this->session->data['api_id']) ) {
-        //     $json['error'] = $this->language->get('error_permission');
-        // } else
-         {
+        
+        if ($this->request->get['parent'] != NULL && $this->request->get['parent'] > 0) {
+            $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->request->get['parent'] . "' AND status = '1'");
+        } else {
+            $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->request->get['customer_id'] . "' AND status = '1'");
+        }
+        $this->session->data['customer_category'] = isset($customer_details->row['customer_category']) ? $customer_details->row['customer_category'] : null;
+        $log = new Log('error.log');
+        $log->write('Session category check');
+        $log->write($this->session->data['customer_category']);
+        $log->write('Session category check');
 
-            
-             if ($this->request->get['parent'] != NULL && $this->request->get['parent']>0) {
-                $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->request->get['parent'] . "' AND status = '1'");
-            } else {
-                $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->request->get['customer_id']. "' AND status = '1'");
-            }
-            $this->session->data['customer_category'] = isset($customer_details->row['customer_category']) ? $customer_details->row['customer_category'] : null;
-            $log = new Log('error.log');
-            $log->write('Session category check');
-            $log->write($this->session->data['customer_category']);
-            $log->write('Session category check');
-
-            //  echo "<pre>";print_r($_SESSION['customer_category']);die;
+        //  echo "<pre>";print_r($_SESSION['customer_category']);die;
 
         $this->load->language('information/locations');
 
@@ -40,7 +35,7 @@ class ControllerApiCustomerProducts extends Controller
 
         $this->load->model('tool/image');
 
-        if (/*isset($this->request->get['page']) &&*/ isset($this->request->get['store_id']) && isset($this->request->get['category'])) {
+        if (/*isset($this->request->get['page']) &&*/isset($this->request->get['store_id']) && isset($this->request->get['category'])) {
             if (isset($this->request->get['filter'])) {
                 $filter = $this->request->get['filter'];
             } else {
@@ -88,15 +83,15 @@ class ControllerApiCustomerProducts extends Controller
                     $url = '';
 
                     if (isset($this->request->get['sort'])) {
-                        $url .= '&sort='.$this->request->get['sort'];
+                        $url .= '&sort=' . $this->request->get['sort'];
                     }
 
                     if (isset($this->request->get['order'])) {
-                        $url .= '&order='.$this->request->get['order'];
+                        $url .= '&order=' . $this->request->get['order'];
                     }
 
                     if (isset($this->request->get['limit'])) {
-                        $url .= '&limit='.$this->request->get['limit'];
+                        $url .= '&limit=' . $this->request->get['limit'];
                     }
 
                     $path = '';
@@ -108,7 +103,7 @@ class ControllerApiCustomerProducts extends Controller
                         if (!$path) {
                             $path = (int) $path_id;
                         } else {
-                            $path .= '_'.(int) $path_id;
+                            $path .= '_' . (int) $path_id;
                         }
 
                         $category_info = $this->model_assets_category->getCategory($path_id);
@@ -135,19 +130,19 @@ class ControllerApiCustomerProducts extends Controller
                     $url = '';
 
                     if (isset($this->request->get['filter'])) {
-                        $url .= '&filter='.$this->request->get['filter'];
+                        $url .= '&filter=' . $this->request->get['filter'];
                     }
 
                     if (isset($this->request->get['sort'])) {
-                        $url .= '&sort='.$this->request->get['sort'];
+                        $url .= '&sort=' . $this->request->get['sort'];
                     }
 
                     if (isset($this->request->get['order'])) {
-                        $url .= '&order='.$this->request->get['order'];
+                        $url .= '&order=' . $this->request->get['order'];
                     }
 
                     if (isset($this->request->get['limit'])) {
-                        $url .= '&limit='.$this->request->get['limit'];
+                        $url .= '&limit=' . $this->request->get['limit'];
                     }
 
                     $data['categories'] = [];
@@ -175,8 +170,8 @@ class ControllerApiCustomerProducts extends Controller
                             $data['categories'][] = [
                                 'name' => htmlspecialchars_decode($result['name']),
                                 'products' => $this->getProductsFnNew($filter_data, $store_id),
-                                'href' => $this->url->link('product/category', 'category='.$this->request->get['category'].'_'.$result['category_id'].$url),
-                                'next_category_call_id' => $this->request->get['category'].'_'.$result['category_id'],
+                                'href' => $this->url->link('product/category', 'category=' . $this->request->get['category'] . '_' . $result['category_id'] . $url),
+                                'next_category_call_id' => $this->request->get['category'] . '_' . $result['category_id'],
                                 'thumb' => $image,
                             ];
                         }
@@ -202,26 +197,26 @@ class ControllerApiCustomerProducts extends Controller
                         $url = '';
 
                         if (isset($this->request->get['filter'])) {
-                            $url .= '&filter='.$this->request->get['filter'];
+                            $url .= '&filter=' . $this->request->get['filter'];
                         }
 
                         if (isset($this->request->get['sort'])) {
-                            $url .= '&sort='.$this->request->get['sort'];
+                            $url .= '&sort=' . $this->request->get['sort'];
                         }
 
                         if (isset($this->request->get['order'])) {
-                            $url .= '&order='.$this->request->get['order'];
+                            $url .= '&order=' . $this->request->get['order'];
                         }
 
                         if (isset($this->request->get['limit'])) {
-                            $url .= '&limit='.$this->request->get['limit'];
+                            $url .= '&limit=' . $this->request->get['limit'];
                         }
 
                         $pagination = new Pagination();
                         $pagination->total = $product_total;
                         $pagination->page = $page;
                         $pagination->limit = $limit;
-                        $pagination->url = $this->url->link('product/category', 'category='.$this->request->get['category'].$url.'&page={page}');
+                        $pagination->url = $this->url->link('product/category', 'category=' . $this->request->get['category'] . $url . '&page={page}');
 
                         //$data['pagination'] = $pagination->render();
 
@@ -231,11 +226,11 @@ class ControllerApiCustomerProducts extends Controller
                     $url = '';
 
                     if (isset($this->request->get['filter'])) {
-                        $url .= '&filter='.$this->request->get['filter'];
+                        $url .= '&filter=' . $this->request->get['filter'];
                     }
 
                     if (isset($this->request->get['limit'])) {
-                        $url .= '&limit='.$this->request->get['limit'];
+                        $url .= '&limit=' . $this->request->get['limit'];
                     }
 
                     /*$data['sorts'] = array();
@@ -299,15 +294,15 @@ class ControllerApiCustomerProducts extends Controller
                     $url = '';
 
                     if (isset($this->request->get['filter'])) {
-                        $url .= '&filter='.$this->request->get['filter'];
+                        $url .= '&filter=' . $this->request->get['filter'];
                     }
 
                     if (isset($this->request->get['sort'])) {
-                        $url .= '&sort='.$this->request->get['sort'];
+                        $url .= '&sort=' . $this->request->get['sort'];
                     }
 
                     if (isset($this->request->get['order'])) {
-                        $url .= '&order='.$this->request->get['order'];
+                        $url .= '&order=' . $this->request->get['order'];
                     }
 
                     /*$data['limits'] = array();
@@ -367,7 +362,6 @@ class ControllerApiCustomerProducts extends Controller
             http_response_code(400);
             */
         }
-    }
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
@@ -440,19 +434,19 @@ class ControllerApiCustomerProducts extends Controller
                 $url = '';
 
                 if (isset($this->request->get['filter'])) {
-                    $url .= '&filter='.$this->request->get['filter'];
+                    $url .= '&filter=' . $this->request->get['filter'];
                 }
 
                 if (isset($this->request->get['sort'])) {
-                    $url .= '&sort='.$this->request->get['sort'];
+                    $url .= '&sort=' . $this->request->get['sort'];
                 }
 
                 if (isset($this->request->get['order'])) {
-                    $url .= '&order='.$this->request->get['order'];
+                    $url .= '&order=' . $this->request->get['order'];
                 }
 
                 if (isset($this->request->get['limit'])) {
-                    $url .= '&limit='.$this->request->get['limit'];
+                    $url .= '&limit=' . $this->request->get['limit'];
                 }
 
                 $data['products'] = [];
@@ -478,7 +472,7 @@ class ControllerApiCustomerProducts extends Controller
                 $pagination->total = $product_total;
                 $pagination->page = $page;
                 $pagination->limit = $limit;
-                $pagination->url = $this->url->link('product/collection', 'product_collection_id='.$this->request->get['product_collection_id'].$url.'&page={page}');
+                $pagination->url = $this->url->link('product/collection', 'product_collection_id=' . $this->request->get['product_collection_id'] . $url . '&page={page}');
 
                 $data['pagination'] = $pagination->render();
 
@@ -491,7 +485,7 @@ class ControllerApiCustomerProducts extends Controller
                 $data['total_product'] = $product_total;
 
                 $json['data'] = $data;
-            //return $data;
+                //return $data;
             } else {
                 // not found product_collection details
 
@@ -528,7 +522,7 @@ class ControllerApiCustomerProducts extends Controller
                 continue;
             }
 
-            if (file_exists(DIR_IMAGE.$result['image'])) {
+            if (file_exists(DIR_IMAGE . $result['image'])) {
                 $image = $this->model_tool_image->resize($result['image'], $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
             } else {
                 $image = $this->model_tool_image->resize('placeholder.png', $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
@@ -600,7 +594,7 @@ class ControllerApiCustomerProducts extends Controller
                 'thumb' => $image,
                 'name' => $name,
                 'unit' => $result['unit'],
-                'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('config_product_description_length')).'..',
+                'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('config_product_description_length')) . '..',
                 'price' => $price,
                 'special' => $special_price,
                 'percent_off' => number_format($percent_off, 0),
@@ -610,7 +604,7 @@ class ControllerApiCustomerProducts extends Controller
                 //'minimum' => $result['min_quantity'] > 0 ? $result['min_quantity'] : 1,
                 'max_qty' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity'],
                 'rating' => 0,
-                'href' => $this->url->link('product/product', '&product_store_id='.$result['product_store_id']),
+                'href' => $this->url->link('product/product', '&product_store_id=' . $result['product_store_id']),
                 'produce_type' => $result['produce_type'],
 
             ];
@@ -699,39 +693,39 @@ class ControllerApiCustomerProducts extends Controller
                 $url = '';
 
                 if (isset($this->request->post['search'])) {
-                    $url .= '&search='.urlencode(html_entity_decode($this->request->post['search'], ENT_QUOTES, 'UTF-8'));
+                    $url .= '&search=' . urlencode(html_entity_decode($this->request->post['search'], ENT_QUOTES, 'UTF-8'));
                 }
 
                 if (isset($this->request->post['tag'])) {
-                    $url .= '&tag='.urlencode(html_entity_decode($this->request->post['tag'], ENT_QUOTES, 'UTF-8'));
+                    $url .= '&tag=' . urlencode(html_entity_decode($this->request->post['tag'], ENT_QUOTES, 'UTF-8'));
                 }
 
                 if (isset($this->request->post['description'])) {
-                    $url .= '&description='.$this->request->post['description'];
+                    $url .= '&description=' . $this->request->post['description'];
                 }
 
                 if (isset($this->request->post['category_id'])) {
-                    $url .= '&category_id='.$this->request->post['category_id'];
+                    $url .= '&category_id=' . $this->request->post['category_id'];
                 }
 
                 if (isset($this->request->post['sub_category'])) {
-                    $url .= '&sub_category='.$this->request->post['sub_category'];
+                    $url .= '&sub_category=' . $this->request->post['sub_category'];
                 }
 
                 if (isset($this->request->post['sort'])) {
-                    $url .= '&sort='.$this->request->post['sort'];
+                    $url .= '&sort=' . $this->request->post['sort'];
                 }
 
                 if (isset($this->request->post['order'])) {
-                    $url .= '&order='.$this->request->post['order'];
+                    $url .= '&order=' . $this->request->post['order'];
                 }
 
                 if (isset($this->request->post['page'])) {
-                    $url .= '&page='.$this->request->post['page'];
+                    $url .= '&page=' . $this->request->post['page'];
                 }
 
                 if (isset($this->request->post['limit'])) {
-                    $url .= '&limit='.$this->request->post['limit'];
+                    $url .= '&limit=' . $this->request->post['limit'];
                 }
 
                 $log->write($url);
@@ -802,7 +796,7 @@ class ControllerApiCustomerProducts extends Controller
                     $results = $this->model_assets_product->getProductsByApi($filter_data);
 
                     foreach ($results as $result) {
-                        if (file_exists(DIR_IMAGE.$result['image'])) {
+                        if (file_exists(DIR_IMAGE . $result['image'])) {
                             $image = $this->model_tool_image->resize($result['image'], $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
                         } else {
                             $image = $this->model_tool_image->resize('placeholder.png', $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
@@ -893,7 +887,7 @@ class ControllerApiCustomerProducts extends Controller
                             'thumb' => $image,
                             'name' => htmlspecialchars_decode($name),
                             'unit' => $unit,
-                            'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('config_product_description_length')).'..',
+                            'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('config_product_description_length')) . '..',
                             'price' => $price,
                             'special' => $special_price,
                             'percent_off' => number_format($percent_off, 0),
@@ -904,7 +898,7 @@ class ControllerApiCustomerProducts extends Controller
                             //'minimum' => $result['min_quantity'] > 0 ? $result['min_quantity'] : 1,
                             'max_qty' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity'],
                             'rating' => 0,
-                            'href' => $this->url->link('product/product', '&product_store_id='.$result['product_store_id']),
+                            'href' => $this->url->link('product/product', '&product_store_id=' . $result['product_store_id']),
                             'produce_type' => $result['produce_type'],
 
                         ];
@@ -913,57 +907,57 @@ class ControllerApiCustomerProducts extends Controller
                     $url = '';
 
                     if (isset($this->request->post['search'])) {
-                        $url .= '&search='.urlencode(html_entity_decode($this->request->post['search'], ENT_QUOTES, 'UTF-8'));
+                        $url .= '&search=' . urlencode(html_entity_decode($this->request->post['search'], ENT_QUOTES, 'UTF-8'));
                     }
 
                     if (isset($this->request->post['tag'])) {
-                        $url .= '&tag='.urlencode(html_entity_decode($this->request->post['tag'], ENT_QUOTES, 'UTF-8'));
+                        $url .= '&tag=' . urlencode(html_entity_decode($this->request->post['tag'], ENT_QUOTES, 'UTF-8'));
                     }
 
                     if (isset($this->request->post['description'])) {
-                        $url .= '&description='.$this->request->post['description'];
+                        $url .= '&description=' . $this->request->post['description'];
                     }
 
                     if (isset($this->request->post['category_id'])) {
-                        $url .= '&category_id='.$this->request->post['category_id'];
+                        $url .= '&category_id=' . $this->request->post['category_id'];
                     }
 
                     if (isset($this->request->post['sub_category'])) {
-                        $url .= '&sub_category='.$this->request->post['sub_category'];
+                        $url .= '&sub_category=' . $this->request->post['sub_category'];
                     }
 
                     if (isset($this->request->post['limit'])) {
-                        $url .= '&limit='.$this->request->post['limit'];
+                        $url .= '&limit=' . $this->request->post['limit'];
                     }
 
                     $url = '';
 
                     if (isset($this->request->post['search'])) {
-                        $url .= '&search='.urlencode(html_entity_decode($this->request->post['search'], ENT_QUOTES, 'UTF-8'));
+                        $url .= '&search=' . urlencode(html_entity_decode($this->request->post['search'], ENT_QUOTES, 'UTF-8'));
                     }
 
                     if (isset($this->request->post['tag'])) {
-                        $url .= '&tag='.urlencode(html_entity_decode($this->request->post['tag'], ENT_QUOTES, 'UTF-8'));
+                        $url .= '&tag=' . urlencode(html_entity_decode($this->request->post['tag'], ENT_QUOTES, 'UTF-8'));
                     }
 
                     if (isset($this->request->post['description'])) {
-                        $url .= '&description='.$this->request->post['description'];
+                        $url .= '&description=' . $this->request->post['description'];
                     }
 
                     if (isset($this->request->post['category_id'])) {
-                        $url .= '&category_id='.$this->request->post['category_id'];
+                        $url .= '&category_id=' . $this->request->post['category_id'];
                     }
 
                     if (isset($this->request->post['sub_category'])) {
-                        $url .= '&sub_category='.$this->request->post['sub_category'];
+                        $url .= '&sub_category=' . $this->request->post['sub_category'];
                     }
 
                     if (isset($this->request->post['sort'])) {
-                        $url .= '&sort='.$this->request->post['sort'];
+                        $url .= '&sort=' . $this->request->post['sort'];
                     }
 
                     if (isset($this->request->post['order'])) {
-                        $url .= '&order='.$this->request->post['order'];
+                        $url .= '&order=' . $this->request->post['order'];
                     }
 
                     /*$data['limits'] = array();
@@ -983,42 +977,42 @@ class ControllerApiCustomerProducts extends Controller
                     $url = '';
 
                     if (isset($this->request->post['search'])) {
-                        $url .= '&search='.urlencode(html_entity_decode($this->request->post['search'], ENT_QUOTES, 'UTF-8'));
+                        $url .= '&search=' . urlencode(html_entity_decode($this->request->post['search'], ENT_QUOTES, 'UTF-8'));
                     }
 
                     if (isset($this->request->post['tag'])) {
-                        $url .= '&tag='.urlencode(html_entity_decode($this->request->post['tag'], ENT_QUOTES, 'UTF-8'));
+                        $url .= '&tag=' . urlencode(html_entity_decode($this->request->post['tag'], ENT_QUOTES, 'UTF-8'));
                     }
 
                     if (isset($this->request->post['description'])) {
-                        $url .= '&description='.$this->request->post['description'];
+                        $url .= '&description=' . $this->request->post['description'];
                     }
 
                     if (isset($this->request->post['category_id'])) {
-                        $url .= '&category_id='.$this->request->post['category_id'];
+                        $url .= '&category_id=' . $this->request->post['category_id'];
                     }
 
                     if (isset($this->request->post['sub_category'])) {
-                        $url .= '&sub_category='.$this->request->post['sub_category'];
+                        $url .= '&sub_category=' . $this->request->post['sub_category'];
                     }
 
                     if (isset($this->request->post['sort'])) {
-                        $url .= '&sort='.$this->request->post['sort'];
+                        $url .= '&sort=' . $this->request->post['sort'];
                     }
 
                     if (isset($this->request->post['order'])) {
-                        $url .= '&order='.$this->request->post['order'];
+                        $url .= '&order=' . $this->request->post['order'];
                     }
 
                     if (isset($this->request->post['limit'])) {
-                        $url .= '&limit='.$this->request->post['limit'];
+                        $url .= '&limit=' . $this->request->post['limit'];
                     }
 
                     $pagination = new Pagination();
                     $pagination->total = $product_total;
                     $pagination->page = $page;
                     $pagination->limit = $limit;
-                    $pagination->url = $this->url->link('product/search', $url.'&page={page}');
+                    $pagination->url = $this->url->link('product/search', $url . '&page={page}');
 
                     //$data['pagination'] = $pagination->render();
 
@@ -1060,11 +1054,11 @@ class ControllerApiCustomerProducts extends Controller
     public function getProductSearch()
     {
         $json = [];
- 
-        if ($this->request->get['parent'] != NULL && $this->request->get['parent']>0) {
+
+        if ($this->request->get['parent'] != NULL && $this->request->get['parent'] > 0) {
             $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->request->get['parent'] . "' AND status = '1'");
         } else {
-            $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->request->get['customer_id']. "' AND status = '1'");
+            $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->request->get['customer_id'] . "' AND status = '1'");
         }
         $this->session->data['customer_category'] = isset($customer_details->row['customer_category']) ? $customer_details->row['customer_category'] : null;
 
@@ -1144,39 +1138,39 @@ class ControllerApiCustomerProducts extends Controller
                 $url = '';
 
                 if (isset($this->request->get['search'])) {
-                    $url .= '&search='.urlencode(html_entity_decode($this->request->get['search'], ENT_QUOTES, 'UTF-8'));
+                    $url .= '&search=' . urlencode(html_entity_decode($this->request->get['search'], ENT_QUOTES, 'UTF-8'));
                 }
 
                 if (isset($this->request->get['tag'])) {
-                    $url .= '&tag='.urlencode(html_entity_decode($this->request->get['tag'], ENT_QUOTES, 'UTF-8'));
+                    $url .= '&tag=' . urlencode(html_entity_decode($this->request->get['tag'], ENT_QUOTES, 'UTF-8'));
                 }
 
                 if (isset($this->request->get['description'])) {
-                    $url .= '&description='.$this->request->get['description'];
+                    $url .= '&description=' . $this->request->get['description'];
                 }
 
                 if (isset($this->request->get['category_id'])) {
-                    $url .= '&category_id='.$this->request->get['category_id'];
+                    $url .= '&category_id=' . $this->request->get['category_id'];
                 }
 
                 if (isset($this->request->get['sub_category'])) {
-                    $url .= '&sub_category='.$this->request->get['sub_category'];
+                    $url .= '&sub_category=' . $this->request->get['sub_category'];
                 }
 
                 if (isset($this->request->get['sort'])) {
-                    $url .= '&sort='.$this->request->get['sort'];
+                    $url .= '&sort=' . $this->request->get['sort'];
                 }
 
                 if (isset($this->request->get['order'])) {
-                    $url .= '&order='.$this->request->get['order'];
+                    $url .= '&order=' . $this->request->get['order'];
                 }
 
                 if (isset($this->request->get['page'])) {
-                    $url .= '&page='.$this->request->get['page'];
+                    $url .= '&page=' . $this->request->get['page'];
                 }
 
                 if (isset($this->request->get['limit'])) {
-                    $url .= '&limit='.$this->request->get['limit'];
+                    $url .= '&limit=' . $this->request->get['limit'];
                 }
 
                 $log->write($url);
@@ -1245,9 +1239,9 @@ class ControllerApiCustomerProducts extends Controller
                     $log->write($filter_data);
 
                     $results = $this->model_assets_product->getProductsByApiNew($filter_data);
-                        //    echo "<pre>";print_r($product_total);die;
+                    //    echo "<pre>";print_r($product_total);die;
                     foreach ($results as $result) {
-                        if (file_exists(DIR_IMAGE.$result['image'])) {
+                        if (file_exists(DIR_IMAGE . $result['image'])) {
                             $image = $this->model_tool_image->resize($result['image'], $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
                         } else {
                             $image = $this->model_tool_image->resize('placeholder.png', $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
@@ -1308,10 +1302,10 @@ class ControllerApiCustomerProducts extends Controller
 
                         $cachePrice_data = $this->cache->get('category_price_data');
                         // echo "<pre>";print_r($_SESSION['customer_category']);die;
-                        if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$result['product_store_id'].'_'.$_SESSION['customer_category'].'_'.ACTIVE_STORE_ID])) {
+                        if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$result['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . ACTIVE_STORE_ID])) {
                             //echo $cachePrice_data[$product_info['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$store_id];//exit;
-                            $s_price = $cachePrice_data[$result['product_store_id'].'_'.$_SESSION['customer_category'].'_'.ACTIVE_STORE_ID];
-                            $o_price = $cachePrice_data[$result['product_store_id'].'_'.$_SESSION['customer_category'].'_'.ACTIVE_STORE_ID];
+                            $s_price = $cachePrice_data[$result['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . ACTIVE_STORE_ID];
+                            $o_price = $cachePrice_data[$result['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . ACTIVE_STORE_ID];
                             $special_price = $s_price;
                             $price = $o_price;
                             // echo "<pre>";print_r($special_price);die;
@@ -1332,7 +1326,7 @@ class ControllerApiCustomerProducts extends Controller
 
                         $unit = $result['unit'] ? $result['unit'] : false;
 
-                       
+
 
                         $productNames = array_column($data['products'], 'name');
                         if (false !== array_search($result['name'], $productNames)) {
@@ -1350,97 +1344,97 @@ class ControllerApiCustomerProducts extends Controller
                             ];
                         } else {
                             $data['products'][] = [
-                            'key' => $key,
-                            'qty_in_cart' => $qty_in_cart,
-                            'variations' => $this->model_assets_product->getApiVariationsNew($result['product_store_id']),
-                            'store_product_variation_id' => 0,
-                            'product_id' => $result['product_id'],
-                            'product_store_id' => $result['product_store_id'],
-                            'default_variation_name' => $result['default_variation_name'],
-                            'thumb' => $image,
-                            'name' => htmlspecialchars_decode($name),
-                            'unit' => $unit,
-                            'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('config_product_description_length')).'..',
-                            'price' => $price,
-                            'special' => $special_price,
-                            'percent_off' => number_format($percent_off, 0),
-                            'left_symbol_currency' => $this->currency->getSymbolLeft(),
-                            'right_symbol_currency' => $this->currency->getSymbolRight(),
-                            'variations' => [
-                                [
-                                    'variation_id' => $result['product_store_id'],
-                                    'unit' => $result['unit'],
-                                    'weight' => floatval($result['weight']),
-                                    'price' => $price,
-                                    'special' => $special_price,
-                                    'percent_off' => number_format($percent_off, 0),
-                                    'max_qty' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity'],
+                                'key' => $key,
+                                'qty_in_cart' => $qty_in_cart,
+                                'variations' => $this->model_assets_product->getApiVariationsNew($result['product_store_id']),
+                                'store_product_variation_id' => 0,
+                                'product_id' => $result['product_id'],
+                                'product_store_id' => $result['product_store_id'],
+                                'default_variation_name' => $result['default_variation_name'],
+                                'thumb' => $image,
+                                'name' => htmlspecialchars_decode($name),
+                                'unit' => $unit,
+                                'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('config_product_description_length')) . '..',
+                                'price' => $price,
+                                'special' => $special_price,
+                                'percent_off' => number_format($percent_off, 0),
+                                'left_symbol_currency' => $this->currency->getSymbolLeft(),
+                                'right_symbol_currency' => $this->currency->getSymbolRight(),
+                                'variations' => [
+                                    [
+                                        'variation_id' => $result['product_store_id'],
+                                        'unit' => $result['unit'],
+                                        'weight' => floatval($result['weight']),
+                                        'price' => $price,
+                                        'special' => $special_price,
+                                        'percent_off' => number_format($percent_off, 0),
+                                        'max_qty' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity'],
+                                    ],
                                 ],
-                            ],
-                            'tax' => $result['tax_percentage'],
-                            //'minimum' => $result['min_quantity'] > 0 ? $result['min_quantity'] : 1,
-                            'max_qty' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity'],
-                            'rating' => 0,
-                            'href' => $this->url->link('product/product', '&product_store_id='.$result['product_store_id']),
-                            'produce_type' => $result['produce_type'],
-                        ];
+                                'tax' => $result['tax_percentage'],
+                                //'minimum' => $result['min_quantity'] > 0 ? $result['min_quantity'] : 1,
+                                'max_qty' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity'],
+                                'rating' => 0,
+                                'href' => $this->url->link('product/product', '&product_store_id=' . $result['product_store_id']),
+                                'produce_type' => $result['produce_type'],
+                            ];
                         }
                     }
 
                     $url = '';
 
                     if (isset($this->request->get['search'])) {
-                        $url .= '&search='.urlencode(html_entity_decode($this->request->get['search'], ENT_QUOTES, 'UTF-8'));
+                        $url .= '&search=' . urlencode(html_entity_decode($this->request->get['search'], ENT_QUOTES, 'UTF-8'));
                     }
 
                     if (isset($this->request->get['tag'])) {
-                        $url .= '&tag='.urlencode(html_entity_decode($this->request->get['tag'], ENT_QUOTES, 'UTF-8'));
+                        $url .= '&tag=' . urlencode(html_entity_decode($this->request->get['tag'], ENT_QUOTES, 'UTF-8'));
                     }
 
                     if (isset($this->request->get['description'])) {
-                        $url .= '&description='.$this->request->get['description'];
+                        $url .= '&description=' . $this->request->get['description'];
                     }
 
                     if (isset($this->request->get['category_id'])) {
-                        $url .= '&category_id='.$this->request->get['category_id'];
+                        $url .= '&category_id=' . $this->request->get['category_id'];
                     }
 
                     if (isset($this->request->get['sub_category'])) {
-                        $url .= '&sub_category='.$this->request->get['sub_category'];
+                        $url .= '&sub_category=' . $this->request->get['sub_category'];
                     }
 
                     if (isset($this->request->get['limit'])) {
-                        $url .= '&limit='.$this->request->get['limit'];
+                        $url .= '&limit=' . $this->request->get['limit'];
                     }
 
                     $url = '';
 
                     if (isset($this->request->get['search'])) {
-                        $url .= '&search='.urlencode(html_entity_decode($this->request->get['search'], ENT_QUOTES, 'UTF-8'));
+                        $url .= '&search=' . urlencode(html_entity_decode($this->request->get['search'], ENT_QUOTES, 'UTF-8'));
                     }
 
                     if (isset($this->request->get['tag'])) {
-                        $url .= '&tag='.urlencode(html_entity_decode($this->request->get['tag'], ENT_QUOTES, 'UTF-8'));
+                        $url .= '&tag=' . urlencode(html_entity_decode($this->request->get['tag'], ENT_QUOTES, 'UTF-8'));
                     }
 
                     if (isset($this->request->get['description'])) {
-                        $url .= '&description='.$this->request->get['description'];
+                        $url .= '&description=' . $this->request->get['description'];
                     }
 
                     if (isset($this->request->get['category_id'])) {
-                        $url .= '&category_id='.$this->request->get['category_id'];
+                        $url .= '&category_id=' . $this->request->get['category_id'];
                     }
 
                     if (isset($this->request->get['sub_category'])) {
-                        $url .= '&sub_category='.$this->request->get['sub_category'];
+                        $url .= '&sub_category=' . $this->request->get['sub_category'];
                     }
 
                     if (isset($this->request->get['sort'])) {
-                        $url .= '&sort='.$this->request->get['sort'];
+                        $url .= '&sort=' . $this->request->get['sort'];
                     }
 
                     if (isset($this->request->get['order'])) {
-                        $url .= '&order='.$this->request->get['order'];
+                        $url .= '&order=' . $this->request->get['order'];
                     }
 
                     /*$data['limits'] = array();
@@ -1460,42 +1454,42 @@ class ControllerApiCustomerProducts extends Controller
                     $url = '';
 
                     if (isset($this->request->get['search'])) {
-                        $url .= '&search='.urlencode(html_entity_decode($this->request->get['search'], ENT_QUOTES, 'UTF-8'));
+                        $url .= '&search=' . urlencode(html_entity_decode($this->request->get['search'], ENT_QUOTES, 'UTF-8'));
                     }
 
                     if (isset($this->request->get['tag'])) {
-                        $url .= '&tag='.urlencode(html_entity_decode($this->request->get['tag'], ENT_QUOTES, 'UTF-8'));
+                        $url .= '&tag=' . urlencode(html_entity_decode($this->request->get['tag'], ENT_QUOTES, 'UTF-8'));
                     }
 
                     if (isset($this->request->get['description'])) {
-                        $url .= '&description='.$this->request->get['description'];
+                        $url .= '&description=' . $this->request->get['description'];
                     }
 
                     if (isset($this->request->get['category_id'])) {
-                        $url .= '&category_id='.$this->request->get['category_id'];
+                        $url .= '&category_id=' . $this->request->get['category_id'];
                     }
 
                     if (isset($this->request->get['sub_category'])) {
-                        $url .= '&sub_category='.$this->request->get['sub_category'];
+                        $url .= '&sub_category=' . $this->request->get['sub_category'];
                     }
 
                     if (isset($this->request->get['sort'])) {
-                        $url .= '&sort='.$this->request->get['sort'];
+                        $url .= '&sort=' . $this->request->get['sort'];
                     }
 
                     if (isset($this->request->get['order'])) {
-                        $url .= '&order='.$this->request->get['order'];
+                        $url .= '&order=' . $this->request->get['order'];
                     }
 
                     if (isset($this->request->get['limit'])) {
-                        $url .= '&limit='.$this->request->get['limit'];
+                        $url .= '&limit=' . $this->request->get['limit'];
                     }
 
                     $pagination = new Pagination();
                     $pagination->total = $product_total;
                     $pagination->page = $page;
                     $pagination->limit = $limit;
-                    $pagination->url = $this->url->link('product/search', $url.'&page={page}');
+                    $pagination->url = $this->url->link('product/search', $url . '&page={page}');
 
                     //$data['pagination'] = $pagination->render();
 
@@ -1565,7 +1559,7 @@ class ControllerApiCustomerProducts extends Controller
             //     continue;
             // }
 
-            if (file_exists(DIR_IMAGE.$result['image'])) {
+            if (file_exists(DIR_IMAGE . $result['image'])) {
                 $image = $this->model_tool_image->resize($result['image'], $this->config->get('config_app_image_product_width'), $this->config->get('config_app_image_product_height'));
             } else {
                 $image = $this->model_tool_image->resize('placeholder.png', $this->config->get('config_app_image_product_width'), $this->config->get('config_app_image_product_height'));
@@ -1665,7 +1659,7 @@ class ControllerApiCustomerProducts extends Controller
                 'thumb' => $image,
                 'name' => htmlspecialchars_decode($name),
                 'unit' => $result['unit'],
-                'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('config_product_description_length')).'..',
+                'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('config_product_description_length')) . '..',
                 'price' => $price,
                 'special' => $special_price,
                 'percent_off' => number_format($percent_off, 0),
@@ -1675,10 +1669,10 @@ class ControllerApiCustomerProducts extends Controller
                 //'minimum' => $result['min_quantity'] > 0 ? $result['min_quantity'] : 1,
                 'max_qty' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity'],
                 'rating' => 0,
-                'href' => $this->url->link('product/product', '&product_store_id='.$result['product_store_id']),
+                'href' => $this->url->link('product/product', '&product_store_id=' . $result['product_store_id']),
                 'variations' => $this->model_assets_product->getProductVariations($name, $formatted),
                 'produce_type' => $result['produce_type'],
-               
+
                 /*'variations' => array(
                     array(
                         'variation_id' => $result['product_store_id'],
@@ -1729,7 +1723,7 @@ class ControllerApiCustomerProducts extends Controller
             //     continue;
             // }
 
-            if (file_exists(DIR_IMAGE.$result['image'])) {
+            if (file_exists(DIR_IMAGE . $result['image'])) {
                 $image = $this->model_tool_image->resize($result['image'], $this->config->get('config_app_image_product_width'), $this->config->get('config_app_image_product_height'));
             } else {
                 $image = $this->model_tool_image->resize('placeholder.png', $this->config->get('config_app_image_product_width'), $this->config->get('config_app_image_product_height'));
@@ -1829,7 +1823,7 @@ class ControllerApiCustomerProducts extends Controller
                 'thumb' => $image,
                 'name' => htmlspecialchars_decode($name),
                 'unit' => $result['unit'],
-                'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('config_product_description_length')).'..',
+                'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('config_product_description_length')) . '..',
                 'price' => $price,
                 'special' => $special_price,
                 'percent_off' => number_format($percent_off, 0),
@@ -1839,10 +1833,10 @@ class ControllerApiCustomerProducts extends Controller
                 //'minimum' => $result['min_quantity'] > 0 ? $result['min_quantity'] : 1,
                 'max_qty' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity'],
                 'rating' => 0,
-                'href' => $this->url->link('product/product', '&product_store_id='.$result['product_store_id']),
+                'href' => $this->url->link('product/product', '&product_store_id=' . $result['product_store_id']),
                 'variations' => $this->model_assets_product->getProductVariationsAPI($name, $formatted),
                 'produce_type' => $result['produce_type'],
-               
+
                 /*'variations' => array(
                     array(
                         'variation_id' => $result['product_store_id'],
@@ -1887,13 +1881,13 @@ class ControllerApiCustomerProducts extends Controller
 
             //echo "<pre>";print_r($product_info);die;
             if ($product_info) {
-                if (file_exists(DIR_IMAGE.$product_info['image'])) {
+                if (file_exists(DIR_IMAGE . $product_info['image'])) {
                     $thumb = $this->model_tool_image->resize($product_info['image'], $this->config->get('config_app_image_thumb_width'), $this->config->get('config_app_image_thumb_height'));
                 } else {
                     $thumb = $this->model_tool_image->resize('placeholder.png', $this->config->get('config_app_image_thumb_width'), $this->config->get('config_app_image_thumb_height'));
                 }
 
-                if (file_exists(DIR_IMAGE.$product_info['image'])) {
+                if (file_exists(DIR_IMAGE . $product_info['image'])) {
                     $product_info['image'] = $this->model_tool_image->resize($product_info['image'], $this->config->get('config_app_image_thumb_width'), $this->config->get('config_app_image_thumb_height'));
                 } else {
                     $product_info['image'] = $this->model_tool_image->resize('placeholder.png', $this->config->get('config_app_image_thumb_width'), $this->config->get('config_app_image_thumb_height'));
@@ -2007,9 +2001,9 @@ class ControllerApiCustomerProducts extends Controller
                 //for ($i=0; $i < 3; $i++) {
 
                 $data['extra_details'][] = [
-                        'title' => 'Description',
-                        'description' => strip_tags(htmlspecialchars_decode($product_info['description'])),
-                    ];
+                    'title' => 'Description',
+                    'description' => strip_tags(htmlspecialchars_decode($product_info['description'])),
+                ];
                 //}
 
                 $json['data'] = $data;
@@ -2057,7 +2051,7 @@ class ControllerApiCustomerProducts extends Controller
             $product_info = $this->model_assets_product->getProductForPopupByApi($store_id, $product_store_id);
 
             if ($product_info) {
-                if (file_exists(DIR_IMAGE.$product_info['image'])) {
+                if (file_exists(DIR_IMAGE . $product_info['image'])) {
                     $thumb = $this->model_tool_image->resize($product_info['image'], $this->config->get('config_app_image_thumb_width'), $this->config->get('config_app_image_thumb_height'));
                     $popup = $this->model_tool_image->resize($product_info['image'], $this->config->get('config_app_image_thumb_width'), $this->config->get('config_app_image_thumb_height'));
                 } else {
@@ -2073,7 +2067,7 @@ class ControllerApiCustomerProducts extends Controller
                 $results = $this->model_assets_product->getProductImages($product_info['product_id']);
 
                 foreach ($results as $result) {
-                    if (file_exists(DIR_IMAGE.$result['image'])) {
+                    if (file_exists(DIR_IMAGE . $result['image'])) {
                         $popup = $this->model_tool_image->resize($result['image'], $this->config->get('config_app_image_thumb_width'), $this->config->get('config_app_image_thumb_height'));
                         $thumb = $this->model_tool_image->resize($result['image'], $this->config->get('config_app_image_thumb_width'), $this->config->get('config_app_image_thumb_height'));
                     } else {
@@ -2130,7 +2124,7 @@ class ControllerApiCustomerProducts extends Controller
                 $finalAutoCompleteData = [];
 
                 foreach ($autocompleteData as $tempProduct) {
-                    $temp['name'] = htmlspecialchars_decode($tempProduct['name']).' - '.$tempProduct['unit'];
+                    $temp['name'] = htmlspecialchars_decode($tempProduct['name']) . ' - ' . $tempProduct['unit'];
                     //$temp['name'] = $tempProduct['name']." - ".$tempProduct['unit'];
                     $temp['unit'] = $tempProduct['unit'];
                     $temp['only_name'] = htmlspecialchars_decode($tempProduct['name']);
@@ -2184,7 +2178,7 @@ class ControllerApiCustomerProducts extends Controller
                 $finalAutoCompleteData = [];
 
                 foreach ($autocompleteData as $tempProduct) {
-                    $temp['name'] = htmlspecialchars_decode($tempProduct['name']).' - '.$tempProduct['unit'];
+                    $temp['name'] = htmlspecialchars_decode($tempProduct['name']) . ' - ' . $tempProduct['unit'];
                     //$temp['name'] = $tempProduct['name']." - ".$tempProduct['unit'];
                     $temp['unit'] = $tempProduct['unit'];
                     $temp['only_name'] = htmlspecialchars_decode($tempProduct['name']);
@@ -2213,29 +2207,29 @@ class ControllerApiCustomerProducts extends Controller
     }
 
     public function getProductAutocomplete($data = [])
-    
+
     {
         $conn = new mysqli(DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE);
 
-        if ($this->request->get['parent'] != NULL && $this->request->get['parent']>0) {
+        if ($this->request->get['parent'] != NULL && $this->request->get['parent'] > 0) {
             $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->request->get['parent'] . "' AND status = '1'");
         } else {
-            $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->request->get['customer_id']. "' AND status = '1'");
+            $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->request->get['customer_id'] . "' AND status = '1'");
         }
-       $customercategory_new= $this->session->data['customer_category'] = isset($customer_details->row['customer_category']) ? $customer_details->row['customer_category'] : null;
+        $customercategory_new = $this->session->data['customer_category'] = isset($customer_details->row['customer_category']) ? $customer_details->row['customer_category'] : null;
 
-        
 
-        $sql = 'SELECT p.*,pd.*,p2c.product_id product_id2 FROM '.DB_PREFIX.'product p LEFT JOIN '.DB_PREFIX.'product_description pd ON (p.product_id = pd.product_id) LEFT JOIN '.DB_PREFIX.'product_to_category p2c ON (p.product_id = p2c.product_id)';
+
+        $sql = 'SELECT p.*,pd.*,p2c.product_id product_id2 FROM ' . DB_PREFIX . 'product p LEFT JOIN ' . DB_PREFIX . 'product_description pd ON (p.product_id = pd.product_id) LEFT JOIN ' . DB_PREFIX . 'product_to_category p2c ON (p.product_id = p2c.product_id)';
 
         if (!empty($data['filter_store'])) {
-            $sql .= ' LEFT JOIN `'.DB_PREFIX.'product_to_store` ps on ps.product_id = p.product_id';
+            $sql .= ' LEFT JOIN `' . DB_PREFIX . 'product_to_store` ps on ps.product_id = p.product_id';
         }
 
-        $sql .= " WHERE pd.language_id = '".(int) $this->config->get('config_language_id')."'";
+        $sql .= " WHERE pd.language_id = '" . (int) $this->config->get('config_language_id') . "'";
 
         if (!empty($data['filter_store'])) {
-            $sql .= ' AND ps.store_id="'.$data['filter_store'].'"';
+            $sql .= ' AND ps.store_id="' . $data['filter_store'] . '"';
         }
 
         /*if ($this->user->isVendor()) {
@@ -2246,27 +2240,27 @@ class ControllerApiCustomerProducts extends Controller
         */
 
         if (!empty($data['filter_name'])) {
-            $sql .= " AND pd.name LIKE '%".$data['filter_name']."%'";
+            $sql .= " AND pd.name LIKE '%" . $data['filter_name'] . "%'";
             //$this->db->like('product_description.name', $this->db->escape( $filter_name ) , 'both');
         }
 
         if (!empty($data['filter_model'])) {
-            $sql .= " AND p.model LIKE '".$data['filter_model']."%'";
+            $sql .= " AND p.model LIKE '" . $data['filter_model'] . "%'";
         }
 
         if (isset($data['filter_category']) && !is_null($data['filter_category'])) {
-            $sql .= " AND p2c.category_id = '".$data['filter_category']."'";
+            $sql .= " AND p2c.category_id = '" . $data['filter_category'] . "'";
         }
 
         if (isset($data['filter_category']) && !is_null($data['filter_category'])) {
             $lGroup = false;
-            $sql .= " AND p2c.category_id = '".$data['filter_category']."'";
+            $sql .= " AND p2c.category_id = '" . $data['filter_category'] . "'";
         } else {
             $lGroup = true;
         }
 
         if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
-            $sql .= " AND p.status = '".(int) $data['filter_status']."'";
+            $sql .= " AND p.status = '" . (int) $data['filter_status'] . "'";
         }
 
         //$sql .= " GROUP BY p.product_id";
@@ -2284,7 +2278,7 @@ class ControllerApiCustomerProducts extends Controller
         ];
 
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
-            $sql .= ' ORDER BY '.$data['sort'];
+            $sql .= ' ORDER BY ' . $data['sort'];
         } else {
             $sql .= ' ORDER BY pd.name';
         }
@@ -2304,61 +2298,56 @@ class ControllerApiCustomerProducts extends Controller
                 $data['limit'] = 20;
             }
 
-            $sql .= ' LIMIT '.(int) $data['start'].','.(int) $data['limit'];
+            $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
         } else {
             $sql .= ' LIMIT 10';
         }
 
         $results = $query = $conn->query($sql);
 
-        
+
         $disabled_products_string = NULL;
         // if(isset($_SESSION['customer_category']) && $_SESSION['customer_category'] != NULL) 
-        if(isset($customercategory_new) && $customercategory_new != NULL) 
-        {
+        if (isset($customercategory_new) && $customercategory_new != NULL) {
             $this->load->model('assets/product');
-            $category_pricing_disabled_products =$this->model_assets_product->getCategoryPriceStatusByCategoryName($customercategory_new, 0);   
-        //$log = new Log('error.log');
-        //$log->write('category_pricing_disabled_products');
-        $disabled_products = array_column($category_pricing_disabled_products, 'product_id');
-        $disabled_products_string = implode(',', $disabled_products);
-        //$log->write($disabled_products_string);
-        //$log->write('category_pricing_disabled_products');
+            $category_pricing_disabled_products = $this->model_assets_product->getCategoryPriceStatusByCategoryName($customercategory_new, 0);
+            //$log = new Log('error.log');
+            //$log->write('category_pricing_disabled_products');
+            $disabled_products = array_column($category_pricing_disabled_products, 'product_id');
+            $disabled_products_string = implode(',', $disabled_products);
+            //$log->write($disabled_products_string);
+            //$log->write('category_pricing_disabled_products');
         }
 
 
         foreach ($results as $result) {
-            $avaialble=0;
-            if ($disabled_products_string != NULL && isset($_SESSION['customer_category']) && $_SESSION['customer_category'] != NULL)  
-            {
-                 // if (in_array($r['product_store_id'], $disabled_products_string)) {
+            $avaialble = 0;
+            if ($disabled_products_string != NULL && isset($_SESSION['customer_category']) && $_SESSION['customer_category'] != NULL) {
+                // if (in_array($r['product_store_id'], $disabled_products_string)) {
                 //      continue;
                 // } 
-                    
-                foreach($disabled_products as $key=>$value)
-                {                   
-                        if($value==$result['product_id'] )
-                        {
-                        $avaialble=1;                       
-                        }                   
-                }               
-                
-            }            
-            if($avaialble==0){
-                // echo "<pre>";print_r($disabled_products_string);die;
-            $result['index'] = $result['name'];
-            if (strpos($result['name'], '&nbsp;&nbsp;&gt;&nbsp;&nbsp;')) {
-                $result['name'] = explode('&nbsp;&nbsp;&gt;&nbsp;&nbsp;', $result['name']);
-                $result['name'] = end($result['name']);
-            }
 
-            $json[] = [
-                'product_id' => $result['product_id'],
-                'index' => $result['index'],
-                'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')).' - '.$result['unit'],
-                'unit' => $result['unit'],
-            ];
-        }
+                foreach ($disabled_products as $key => $value) {
+                    if ($value == $result['product_id']) {
+                        $avaialble = 1;
+                    }
+                }
+            }
+            if ($avaialble == 0) {
+                // echo "<pre>";print_r($disabled_products_string);die;
+                $result['index'] = $result['name'];
+                if (strpos($result['name'], '&nbsp;&nbsp;&gt;&nbsp;&nbsp;')) {
+                    $result['name'] = explode('&nbsp;&nbsp;&gt;&nbsp;&nbsp;', $result['name']);
+                    $result['name'] = end($result['name']);
+                }
+
+                $json[] = [
+                    'product_id' => $result['product_id'],
+                    'index' => $result['index'],
+                    'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')) . ' - ' . $result['unit'],
+                    'unit' => $result['unit'],
+                ];
+            }
         }
         $sort_order = [];
 
@@ -2374,7 +2363,6 @@ class ControllerApiCustomerProducts extends Controller
         //echo '<pre>';print_r($json);exit;
         //echo $sql;ext;
 
-       // $query = $this->db->query($sql);
+        // $query = $this->db->query($sql);
     }
-    
 }

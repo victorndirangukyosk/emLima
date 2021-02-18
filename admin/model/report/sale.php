@@ -891,9 +891,10 @@ class ModelReportSale extends Model {
 
         $sql .= " where c.account_manager_id='" . $this->user->getId() . "'";
         $sql .= " AND  o.order_status_id > '0'";
+        $sql .= " AND o.order_status_id NOT IN (0,6,8)";
 
         if (!empty($data['filter_date_added'])) {
-            $sql .= " AND DATE(o.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
+            $sql .= " AND DATE(o.delivery_date) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
         }
 
         $query = $this->db->query($sql);
@@ -977,7 +978,8 @@ class ModelReportSale extends Model {
         if (!empty($data['filter_date_added'])) {
             $sql .= " AND DATE(date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
         }
-
+        //AVOID Cancelled,Failed Orders
+        $sql .= " AND order_status_id NOT IN (6,8)";
         $query = $this->db->query($sql);
 
         return $query->row['total'];
@@ -1204,8 +1206,92 @@ class ModelReportSale extends Model {
         return $query->rows;
     }
     
+    public function getOrdersbyDeliveryDate($data = []) {
+        $sql = 'SELECT MIN(o.delivery_date) AS date_start, MAX(o.delivery_date) AS date_end, COUNT(*) AS `orders`, SUM((SELECT SUM(op.quantity) FROM `' . DB_PREFIX . 'order_product` op WHERE op.order_id = o.order_id GROUP BY op.order_id)) AS products, SUM((SELECT SUM(ot.value) FROM `' . DB_PREFIX . "order_total` ot WHERE ot.order_id = o.order_id AND ot.code = 'tax' GROUP BY ot.order_id)) AS tax, SUM(o.total) AS `total` FROM `" . DB_PREFIX . 'order` o';
+
+        $sql .= ' INNER JOIN `' . DB_PREFIX . 'store` st on st.store_id = o.store_id ';
+
+        if (!empty($data['filter_city'])) {
+            $sql .= ' LEFT JOIN `' . DB_PREFIX . 'city` c on c.city_id = o.shipping_city_id ';
+        }
+        
+        if (!empty($data['filter_customer'])) {
+            $sql .= ' LEFT JOIN `' . DB_PREFIX . 'customer` cr on cr.customer_id = o.customer_id ';
+        }
+
+        if ($this->user->isVendor()) {
+            $sql .= ' AND st.vendor_id = "' . $this->user->getId() . '"';
+        }
+
+        if (!empty($data['filter_order_status_id'])) {
+            $sql .= " WHERE o.order_status_id = '" . (int) $data['filter_order_status_id'] . "'";
+        } else {
+            // $sql .= " WHERE o.order_status_id > '0'";
+            $sql .= " WHERE o.order_status_id not in (0,6,8)";
+
+        }
+
+        if (!empty($data['filter_city'])) {
+            $sql .= ' AND c.name LIKE "' . $data['filter_city'] . '%"';
+        }
+        
+        if (!empty($data['filter_customer'])) {
+            $sql .= " AND CONCAT(cr.firstname,' ',cr.lastname) LIKE '" . $this->db->escape($data['filter_customer']) . "%'";
+        }
+
+        if (!empty($data['filter_date_start'])) {
+            $sql .= " AND DATE(o.delivery_date) >= '" . $this->db->escape($data['filter_date_start']) . "'";
+        }
+
+        if (!empty($data['filter_date_end'])) {
+            $sql .= " AND DATE(o.delivery_date) <= '" . $this->db->escape($data['filter_date_end']) . "'";
+        }
+
+        if (!empty($data['filter_group'])) {
+            $group = $data['filter_group'];
+        } else {
+            $group = 'week';
+        }
+
+        switch ($group) {
+            case 'day':
+                $sql .= ' GROUP BY YEAR(o.delivery_date), MONTH(o.delivery_date), DAY(o.delivery_date)';
+                break;
+            default:
+            case 'week':
+                $sql .= ' GROUP BY YEAR(o.delivery_date), WEEK(o.delivery_date)';
+                break;
+            case 'month':
+                $sql .= ' GROUP BY YEAR(o.delivery_date), MONTH(o.delivery_date)';
+                break;
+            case 'year':
+                $sql .= ' GROUP BY YEAR(o.delivery_date)';
+                break;
+        }
+
+        $sql .= ' ORDER BY o.delivery_date DESC';
+
+        if (isset($data['start']) || isset($data['limit'])) {
+            if ($data['start'] < 0) {
+                $data['start'] = 0;
+            }
+
+            if ($data['limit'] < 1) {
+                $data['limit'] = 20;
+            }
+
+            $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
+        }
+
+        //echo $sql;die;
+
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
+    
     public function getAccountManagerOrders($data = []) {
-        $sql = 'SELECT MIN(o.date_added) AS date_start, MAX(o.date_added) AS date_end, COUNT(*) AS `orders`, SUM((SELECT SUM(op.quantity) FROM `' . DB_PREFIX . 'order_product` op WHERE op.order_id = o.order_id GROUP BY op.order_id)) AS products, SUM((SELECT SUM(ot.value) FROM `' . DB_PREFIX . "order_total` ot WHERE ot.order_id = o.order_id AND ot.code = 'tax' GROUP BY ot.order_id)) AS tax, SUM(o.total) AS `total` FROM `" . DB_PREFIX . 'order` o';
+        $sql = 'SELECT MIN(o.delivery_date) AS date_start, MAX(o.delivery_date) AS date_end, COUNT(*) AS `orders`, SUM((SELECT SUM(op.quantity) FROM `' . DB_PREFIX . 'order_product` op WHERE op.order_id = o.order_id GROUP BY op.order_id)) AS products, SUM((SELECT SUM(ot.value) FROM `' . DB_PREFIX . "order_total` ot WHERE ot.order_id = o.order_id AND ot.code = 'tax' GROUP BY ot.order_id)) AS tax, SUM(o.total) AS `total` FROM `" . DB_PREFIX . 'order` o';
 
         $sql .= ' INNER JOIN `' . DB_PREFIX . 'store` st on st.store_id = o.store_id ';
 
@@ -1230,7 +1316,7 @@ class ModelReportSale extends Model {
         } else {
             $sql .= " WHERE o.order_status_id > '0'";
         }
-
+        $sql .= " AND o.order_status_id NOT IN (6,8,0)";
         if (!empty($data['filter_city'])) {
             $sql .= ' AND c.name LIKE "' . $data['filter_city'] . '%"';
         }
@@ -1240,11 +1326,11 @@ class ModelReportSale extends Model {
         }
 
         if (!empty($data['filter_date_start'])) {
-            $sql .= " AND DATE(o.date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
+            $sql .= " AND DATE(o.delivery_date) >= '" . $this->db->escape($data['filter_date_start']) . "'";
         }
 
         if (!empty($data['filter_date_end'])) {
-            $sql .= " AND DATE(o.date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
+            $sql .= " AND DATE(o.delivery_date) <= '" . $this->db->escape($data['filter_date_end']) . "'";
         }
 
         if (!empty($data['filter_group'])) {
@@ -1255,21 +1341,21 @@ class ModelReportSale extends Model {
 
         switch ($group) {
             case 'day':
-                $sql .= ' GROUP BY YEAR(o.date_added), MONTH(o.date_added), DAY(o.date_added)';
+                $sql .= ' GROUP BY YEAR(o.delivery_date), MONTH(o.delivery_date), DAY(o.delivery_date)';
                 break;
             default:
             case 'week':
-                $sql .= ' GROUP BY YEAR(o.date_added), WEEK(o.date_added)';
+                $sql .= ' GROUP BY YEAR(o.delivery_date), WEEK(o.delivery_date)';
                 break;
             case 'month':
-                $sql .= ' GROUP BY YEAR(o.date_added), MONTH(o.date_added)';
+                $sql .= ' GROUP BY YEAR(o.delivery_date), MONTH(o.delivery_date)';
                 break;
             case 'year':
-                $sql .= ' GROUP BY YEAR(o.date_added)';
+                $sql .= ' GROUP BY YEAR(o.delivery_date)';
                 break;
         }
 
-        $sql .= ' ORDER BY o.date_added DESC';
+        $sql .= ' ORDER BY o.delivery_date DESC';
 
         if (isset($data['start']) || isset($data['limit'])) {
             if ($data['start'] < 0) {
@@ -1582,6 +1668,74 @@ class ModelReportSale extends Model {
         return $query->row['total'];
     }
     
+    public function getTotalOrdersbyDeliveryDate($data = []) {
+        $sql = 'SELECT Count(*) AS `total` FROM `' . DB_PREFIX . 'order` o';
+
+        if (!empty($data['filter_group'])) {
+            $group = $data['filter_group'];
+        } else {
+            $group = 'week';
+        }
+
+        switch ($group) {
+            case 'day':
+                $sql = 'SELECT COUNT(DISTINCT YEAR(o.delivery_date), MONTH(o.delivery_date), DAY(o.delivery_date)) AS total FROM `' . DB_PREFIX . 'order` o';
+                break;
+            default:
+            case 'week':
+                $sql = 'SELECT COUNT(DISTINCT YEAR(o.delivery_date), WEEK(o.delivery_date)) AS total FROM `' . DB_PREFIX . 'order` o';
+                break;
+            case 'month':
+                $sql = 'SELECT COUNT(DISTINCT YEAR(o.delivery_date), MONTH(o.delivery_date)) AS total FROM `' . DB_PREFIX . 'order` o';
+                break;
+            case 'year':
+                $sql = 'SELECT COUNT(DISTINCT YEAR(o.delivery_date)) AS total FROM `' . DB_PREFIX . 'order` o';
+                break;
+        }
+
+        if (!empty($data['filter_city'])) {
+            $sql .= ' LEFT JOIN `' . DB_PREFIX . 'city` c on c.city_id = o.shipping_city_id ';
+        }
+        
+        if (!empty($data['filter_customer'])) {
+            $sql .= ' LEFT JOIN `' . DB_PREFIX . 'customer` cr on cr.customer_id = o.customer_id ';
+        }
+
+        $sql .= ' INNER JOIN `' . DB_PREFIX . 'store` st on st.store_id = o.store_id ';
+
+        if ($this->user->isVendor()) {
+            $sql .= ' AND st.vendor_id = "' . $this->user->getId() . '"';
+        }
+
+        if (!empty($data['filter_order_status_id'])) {
+            $sql .= " WHERE o.order_status_id = '" . (int) $data['filter_order_status_id'] . "'";
+        } else {
+            // $sql .= " WHERE o.order_status_id > '0'";
+            $sql .= " WHERE o.order_status_id not in (0,6,8)";
+
+        }
+
+        if (!empty($data['filter_city'])) {
+            $sql .= " AND c.name LIKE '" . $this->db->escape($data['filter_city']) . "%'";
+        }
+        
+        if (!empty($data['filter_customer'])) {
+            $sql .= " AND CONCAT(cr.firstname,' ',cr.lastname) LIKE '" . $this->db->escape($data['filter_customer']) . "%'";
+        }
+
+        if (!empty($data['filter_date_start'])) {
+            $sql .= " AND DATE(o.delivery_date) >= '" . $this->db->escape($data['filter_date_start']) . "'";
+        }
+
+        if (!empty($data['filter_date_end'])) {
+            $sql .= " AND DATE(o.delivery_date) <= '" . $this->db->escape($data['filter_date_end']) . "'";
+        }
+
+        $query = $this->db->query($sql);
+
+        return $query->row['total'];
+    }
+    
     public function AccountManagergetTotalOrders($data = []) {
         $sql = 'SELECT Count(*) AS `total` FROM `' . DB_PREFIX . 'order` o';
 
@@ -1593,17 +1747,17 @@ class ModelReportSale extends Model {
 
         switch ($group) {
             case 'day':
-                $sql = 'SELECT COUNT(DISTINCT YEAR(o.date_added), MONTH(o.date_added), DAY(o.date_added)) AS total FROM `' . DB_PREFIX . 'order` o';
+                $sql = 'SELECT COUNT(DISTINCT YEAR(o.delivery_date), MONTH(o.delivery_date), DAY(o.delivery_date)) AS total FROM `' . DB_PREFIX . 'order` o';
                 break;
             default:
             case 'week':
-                $sql = 'SELECT COUNT(DISTINCT YEAR(o.date_added), WEEK(o.date_added)) AS total FROM `' . DB_PREFIX . 'order` o';
+                $sql = 'SELECT COUNT(DISTINCT YEAR(o.delivery_date), WEEK(o.delivery_date)) AS total FROM `' . DB_PREFIX . 'order` o';
                 break;
             case 'month':
-                $sql = 'SELECT COUNT(DISTINCT YEAR(o.date_added), MONTH(o.date_added)) AS total FROM `' . DB_PREFIX . 'order` o';
+                $sql = 'SELECT COUNT(DISTINCT YEAR(o.delivery_date), MONTH(o.delivery_date)) AS total FROM `' . DB_PREFIX . 'order` o';
                 break;
             case 'year':
-                $sql = 'SELECT COUNT(DISTINCT YEAR(o.date_added)) AS total FROM `' . DB_PREFIX . 'order` o';
+                $sql = 'SELECT COUNT(DISTINCT YEAR(o.delivery_date)) AS total FROM `' . DB_PREFIX . 'order` o';
                 break;
         }
 
@@ -1630,7 +1784,7 @@ class ModelReportSale extends Model {
         } else {
             $sql .= " WHERE o.order_status_id > '0'";
         }
-
+        $sql .= " AND o.order_status_id NOT IN (6,8,0)";
         if (!empty($data['filter_city'])) {
             $sql .= " AND c.name LIKE '" . $this->db->escape($data['filter_city']) . "%'";
         }
@@ -1640,11 +1794,11 @@ class ModelReportSale extends Model {
         }
 
         if (!empty($data['filter_date_start'])) {
-            $sql .= " AND DATE(o.date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
+            $sql .= " AND DATE(o.delivery_date) >= '" . $this->db->escape($data['filter_date_start']) . "'";
         }
 
         if (!empty($data['filter_date_end'])) {
-            $sql .= " AND DATE(o.date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
+            $sql .= " AND DATE(o.delivery_date) <= '" . $this->db->escape($data['filter_date_end']) . "'";
         }
 
         $query = $this->db->query($sql);
@@ -2397,7 +2551,7 @@ class ModelReportSale extends Model {
         //$sql = "SELECT c.name as city, o.firstname,o.lastname,o.comment, (SELECT cust.company_name FROM hf7_customer cust WHERE o.customer_id = cust.customer_id ) AS company_name,o.order_id, o.delivery_date, o.delivery_timeslot, o.shipping_method, o.shipping_address, o.payment_method, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS status,(SELECT os.color FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS color, o.shipping_code, o.order_status_id,o.store_name,  o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified,o.po_number FROM `" . DB_PREFIX . "order` o ";
         // $sql .= 'left join `'.DB_PREFIX.'city` c on c.city_id = o.shipping_city_id';
         // $sql .= ' LEFT JOIN '.DB_PREFIX.'store on('.DB_PREFIX.'store.store_id = o.store_id) ';
-//o.order_status_id != '6'  And o.order_status_id != '15'  And
+        //o.order_status_id != '6'  And o.order_status_id != '15'  And
         if (!empty($data['filter_customer'])) {
             $sql .= ' LEFT JOIN `' . DB_PREFIX . 'customer` cr on cr.customer_id = o.customer_id ';
         }
@@ -2481,6 +2635,7 @@ class ModelReportSale extends Model {
         } else {
             $sql .= " WHERE o.order_status_id > '0' ";
         }
+        $sql .= " AND o.order_status_id NOT IN (6,8,0)";
 
         if ($this->user->isVendor()) {
             $sql .= ' AND ' . DB_PREFIX . 'store.vendor_id="' . $this->user->getId() . '"';
@@ -2501,14 +2656,14 @@ class ModelReportSale extends Model {
 
         if (DATE($data['filter_date_start']) != DATE($data['filter_date_end'])) {
             if (!empty($data['filter_date_start'])) {
-                $sql .= " AND DATE(o.date_added) >= DATE('" . ($data['filter_date_start']) . "')";
+                $sql .= " AND DATE(o.delivery_date) >= DATE('" . ($data['filter_date_start']) . "')";
             }
 
             if (!empty($data['filter_date_end'])) {
-                $sql .= " AND DATE(o.date_added) <= DATE('" . $this->db->escape($data['filter_date_end']) . "')";
+                $sql .= " AND DATE(o.delivery_date) <= DATE('" . $this->db->escape($data['filter_date_end']) . "')";
             }
         } else {
-            $sql .= " AND DATE(o.date_added) = DATE('" . ($data['filter_date_start']) . "')";
+            $sql .= " AND DATE(o.delivery_date) = DATE('" . ($data['filter_date_start']) . "')";
         }
 
 
@@ -2563,7 +2718,7 @@ class ModelReportSale extends Model {
         } else {
             $sql .= " AND o.order_status_id > '0'";
         }
-
+        $sql .= " AND o.order_status_id NOT IN (0,6,8)";
         if (!empty($data['filter_date_start'])) {
             $sql .= " AND DATE(o.delivery_date) >= '" . $this->db->escape($data['filter_date_start']) . "'";
         }
@@ -2606,4 +2761,60 @@ class ModelReportSale extends Model {
 
         return $query->rows;
     }
+
+
+    public function getNonCancelledOrdersbyDeliveryDate($data = []) {
+        $sql = "SELECT o.order_id, o.delivery_date, o.order_status_id,o.store_name,o.comment,  o.date_added,o.shipping_address, o.date_modified FROM `" . DB_PREFIX . 'order` o ';
+         
+        if (!empty($data['filter_customer'])) {
+            $sql .= ' LEFT JOIN `' . DB_PREFIX . 'customer` cr on cr.customer_id = o.customer_id ';
+        }
+         
+
+        if (!empty($data['filter_order_status_id'])) {
+            $sql .= " WHERE o.order_status_id = '" . (int) $data['filter_order_status_id'] . "'";
+        } else {
+            // $sql .= " WHERE o.order_status_id > '0'";
+            $sql .= " WHERE o.order_status_id not in (0,6,8)";
+
+        }
+
+
+        if ($this->user->isVendor()) {
+            $sql .= ' AND ' . DB_PREFIX . 'store.vendor_id="' . $this->user->getId() . '"';
+        }
+
+        if (!empty($data['filter_city'])) {
+            $sql .= " AND c.name LIKE '" . $data['filter_city'] . "%'";
+        }
+        
+        if (!empty($data['filter_customer'])) {
+            $sql .= " AND CONCAT(cr.firstname,' ',cr.lastname) LIKE '" . $this->db->escape($data['filter_customer']) . "%'";
+        }
+        
+
+        if (DATE($data['filter_date_start']) != DATE($data['filter_date_end'])) {
+            if (!empty($data['filter_date_start'])) {
+                $sql .= " AND DATE(o.delivery_date) >= DATE('" . ($data['filter_date_start']) . "')";
+            }
+
+            if (!empty($data['filter_date_end'])) {
+                $sql .= " AND DATE(o.delivery_date) <= DATE('" . $this->db->escape($data['filter_date_end']) . "')";
+            }
+        } else {
+            $sql .= " AND DATE(o.delivery_date) = DATE('" . ($data['filter_date_start']) . "')";
+        }
+
+
+
+ 
+
+        $query = $this->db->query($sql);
+
+        //  echo "<pre>";print_r($sql);die;
+
+
+        return $query->rows;
+    }
+    
 }

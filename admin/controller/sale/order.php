@@ -2763,13 +2763,26 @@ class ControllerSaleOrder extends Controller {
             }
 
             $data['email'] = $order_info['email'];
+            $data['order_customer_link'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_email=' . $order_info['email'], 'SSL');
             $this->load->model('sale/customer');
             $parent_user_info = $this->model_sale_customer->getCustomerParentDetails($order_info['customer_id']);
             if ($parent_user_info != NULL && $parent_user_info['email'] != NULL) {
                 $data['parent_user_email'] = $parent_user_info['email'];
+                $data['parent_customer_link'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_email=' . $parent_user_info['email'], 'SSL');
             } else {
                 $data['parent_user_email'] = NULL;
             }
+
+            $data['head_chef'] = NULL;
+            $data['procurement'] = NULL;
+            if (($order_info['head_chef'] != 'Approved' || $order_info['procurement'] != 'Approved') && $parent_user_info != NULL) {
+                $this->load->model('account/customer');
+                $data['head_chef'] = $this->model_account_customer->getHeadChef($parent_user_info['customer_id']);
+                $data['head_chef_link'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_email=' . $data['head_chef']['email'], 'SSL');
+                $data['procurement'] = $this->model_account_customer->getProcurement($parent_user_info['customer_id']);
+                $data['procurement_link'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_email=' . $data['procurement']['email'], 'SSL');
+            }
+
             $data['telephone'] = $order_info['telephone'];
             $data['fax'] = $order_info['fax'];
 
@@ -2976,6 +2989,23 @@ class ControllerSaleOrder extends Controller {
                 $data['order_delivery_executive_details'] = NULL;
             }
 
+            $this->load->model('orderprocessinggroup/orderprocessinggroup');
+            $this->load->model('orderprocessinggroup/orderprocessor');
+
+            $order_processing_group_details = $this->model_orderprocessinggroup_orderprocessinggroup->getOrderProcessingGroup($order_info['order_processing_group_id']);
+            $order_processor = $this->model_orderprocessinggroup_orderprocessor->getOrderProcessor($order_info['order_processor_id']);
+            if (is_array($order_processing_group_details) && $order_processing_group_details != NULL) {
+                $data['order_processing_group_details'] = $order_processing_group_details;
+            } else {
+                $data['order_processing_group_details'] = NULL;
+            }
+
+            if (is_array($order_processor) && $order_processor != NULL) {
+                $data['order_processor'] = $order_processor;
+            } else {
+                $data['order_processor'] = NULL;
+            }
+
             $data['shipping_custom_fields'] = [];
 
             foreach ($custom_fields as $custom_field) {
@@ -3037,15 +3067,15 @@ class ControllerSaleOrder extends Controller {
             $this->load->model('sale/orderlog');
             $order_log = $products = $this->model_sale_orderlog->getOrderLog($this->request->get['order_id']);
             $order_log_data = array();
-            foreach($order_log as $order_lo) {
-            $order_log_data[] = [
-                'model' => $order_lo['model'],
-                'name' => $order_lo['name'],
-                'unit' => $order_lo['unit'],
-                'old_quantity' => $order_lo['old_quantity'],
-                'quantity' => $order_lo['quantity'],
-                'created_at' => date($this->language->get('datetime_format'), strtotime($order_lo['created_at'])),
-            ];    
+            foreach ($order_log as $order_lo) {
+                $order_log_data[] = [
+                    'model' => $order_lo['model'],
+                    'name' => $order_lo['name'],
+                    'unit' => $order_lo['unit'],
+                    'old_quantity' => $order_lo['old_quantity'],
+                    'quantity' => $order_lo['quantity'],
+                    'created_at' => date($this->language->get('datetime_format'), strtotime($order_lo['created_at'])),
+                ];
             }
             $data['order_logs'] = $order_log_data;
             //echo '<pre>';print_r($products);exit;
@@ -4627,7 +4657,7 @@ class ControllerSaleOrder extends Controller {
         // $data['consolidation']['total'] = $totalOrdersAmount; 
 
         foreach ($results as $index => $order) {
-            $sum=0;
+            $sum = 0;
             $data['orders'][$index] = $order;
             $orderProducts = $this->getOrderProductsWithVariancesNew($data['orders'][$index]['order_id']);
             $data['orders'][$index]['products'] = $orderProducts;
@@ -7410,7 +7440,7 @@ class ControllerSaleOrder extends Controller {
         $this->model_report_excel->download_order_products_excel($data);
     }
 
-    public function consolidatedOrdersSummary() {
+    public function consolidatedOrdersSummary() {//used only in sale order report
 
         $filter_city = $this->request->get['filter_city'];
         $filter_date_start = $this->request->get['orderstartdate'];
@@ -7430,7 +7460,7 @@ class ControllerSaleOrder extends Controller {
         //echo "<pre>";print_r($filter_data);die;
 
         $this->load->model('report/sale');
-        $results = $this->model_report_sale->getNonCancelledOrders($filter_data);
+        $results = $this->model_report_sale->getNonCancelledOrdersbyDeliveryDate($filter_data);
         //  echo "<pre>";print_r($results);die;
 
         $data = [];
@@ -7777,7 +7807,7 @@ class ControllerSaleOrder extends Controller {
     }
 
     public function getDriverDetails() {
-        
+
         $order_id = $this->request->post['order_id'];
         $this->load->model('checkout/order');
         $order_info = $this->model_checkout_order->getOrder($order_id);

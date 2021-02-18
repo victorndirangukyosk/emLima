@@ -34,6 +34,7 @@ class ControllerSaleCustomer extends Controller {
         $this->load->model('sale/customer');
 
         if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
+            $this->request->post['source'] = 'WEB';
             $customer_id = $this->model_sale_customer->addCustomer($this->request->post);
 
 

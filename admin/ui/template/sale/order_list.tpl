@@ -308,7 +308,7 @@
                                     <td class="text-left">
                                                 <?php 
                                                 $disabled = NULL;
-                                                if($order['order_status_id'] == 5) {
+                                                if($order['order_status_id'] == 5 || $order['order_status_id'] == 6) {
                                                 $disabled = 'disabled';
                                                 } ?>
                                                 <select name="order_status_id" id="input-order-status<?php echo $order['order_id']; ?>" class="form-control" <?php echo $disabled; ?> >

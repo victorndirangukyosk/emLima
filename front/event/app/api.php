@@ -126,6 +126,7 @@ class EventAppApi extends Event
             $log = new Log('error.log');
             $log->write('other api call other than customet api');
             $log->write($route);
+            // $log->write($args);
 
             if ('api/forgetpassword/addForgetpassword' == $route) {
             } elseif ('api/orders/getOrdersForDelivery' == $route) {
@@ -133,7 +134,12 @@ class EventAppApi extends Event
                 if (!$this->authenticateByGroup($groups)) {
                     return;
                 }
-            } else {
+            }
+            elseif ('api/customer/login/getloginbyadmin' == $route) {
+                // Authorize
+                $this->load->controller('api/customer/login/getloginbyadmin', $args);
+            } 
+             else {
                 $groups = ['Administrator', 'API User', 'vendor'];
                 if (!$this->authenticateByGroup($groups)) {
                     return;

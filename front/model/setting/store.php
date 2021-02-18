@@ -295,4 +295,27 @@ class ModelSettingStore extends Model
 
         return $query->row['keyword'];
     }
+
+
+    public function getStore($store_id)
+    {
+        $query = $this->db->query('SELECT DISTINCT * FROM '.DB_PREFIX."store WHERE store_id = '".(int) $store_id."'");
+
+        $store = $query->row;
+
+        //echo "<pre>";print_r("SELECT DISTINCT * FROM " . DB_PREFIX . "store WHERE store_id = '" . (int) $store_id . "'");die;
+
+        if (count($store) > 0) {
+            $store['seo_url'] = '';
+
+            $rows = $this->db->query('SELECT keyword, language_id FROM '.DB_PREFIX."url_alias WHERE query = 'store_id=".(int) $store_id."'")->row;
+
+            if ($rows) {
+                $store['seo_url'] = $rows['keyword'];
+            }
+        }
+
+        return $store;
+    }
+
 }

@@ -28,6 +28,12 @@ class ControllerReportSaleProductMissing extends Controller
         } else {
             $filter_date_start = date('Y-m-d', strtotime(date('Y').'-'.date('m').'-01'));
         }
+        
+        if (isset($this->request->get['filter_name'])) {
+            $filter_name = $this->request->get['filter_name'];
+        } else {
+            $filter_name = '';
+        }
 
         if (isset($this->request->get['filter_date_end'])) {
             $filter_date_end = $this->request->get['filter_date_end'];
@@ -41,6 +47,7 @@ class ControllerReportSaleProductMissing extends Controller
         $data['filter_store_id'] = $filter_store_id;
         $data['filter_date_start'] = $filter_date_start;
         $data['filter_date_end'] = $filter_date_end;
+        $data['filter_name'] = $filter_name;
         $data['filter_order_status_id'] = $filter_order_status_id;
 
         //echo "<pre>";print_r($data);die;
@@ -72,6 +79,12 @@ class ControllerReportSaleProductMissing extends Controller
             $filter_store_id = $this->request->get['filter_store_id'];
         } else {
             $filter_store_id = '';
+        }
+        
+        if (isset($this->request->get['filter_name'])) {
+            $filter_name = $this->request->get['filter_name'];
+        } else {
+            $filter_name = '';
         }
 
         if (isset($this->request->get['filter_date_start'])) {
@@ -117,6 +130,10 @@ class ControllerReportSaleProductMissing extends Controller
         if (isset($this->request->get['filter_date_end'])) {
             $url .= '&filter_date_end='.$this->request->get['filter_date_end'];
         }
+        
+        if (isset($this->request->get['filter_name'])) {
+            $url .= '&filter_name='.$this->request->get['filter_name'];
+        }
 
         if (isset($this->request->get['filter_group'])) {
             $url .= '&filter_group='.$this->request->get['filter_group'];
@@ -158,6 +175,7 @@ class ControllerReportSaleProductMissing extends Controller
         $data['torders'] = [];
 
         $filter_data = [
+            'filter_name' => $filter_name,
             'filter_date_start' => $filter_date_start,
             'filter_date_end' => $filter_date_end,
             'filter_order_status_id' => $filter_order_status_id,
@@ -180,9 +198,9 @@ class ControllerReportSaleProductMissing extends Controller
 
             if ($is_edited) {
                 //continue;
-                $OrignalProducts = $EditedProducts = $this->model_sale_order->getRealOrderProducts($result['order_id']);
+                $OrignalProducts = $EditedProducts = $this->model_sale_order->getRealOrderProductsStockOut($result['order_id'], $filter_store_id, $filter_name);
             } else {
-                $OrignalProducts = $this->model_sale_order->getOrderProducts($result['order_id']);
+                $OrignalProducts = $this->model_sale_order->getOrderProductsStockOut($result['order_id'], $filter_store_id, $filter_name);
             }
 
             /*echo "<pre>";print_r($OrignalProducts);
@@ -272,6 +290,7 @@ class ControllerReportSaleProductMissing extends Controller
         $data['entry_city'] = $this->language->get('entry_city');
 
         $data['entry_store'] = $this->language->get('entry_store');
+        $data['entry_name'] = 'Name';
         $data['column_delivery_date'] = $this->language->get('column_delivery_date');
         $data['column_order_no'] = $this->language->get('column_order_no');
         $data['column_no_of_items'] = $this->language->get('column_no_of_items');
@@ -335,6 +354,10 @@ class ControllerReportSaleProductMissing extends Controller
         if (isset($this->request->get['filter_date_start'])) {
             $url .= '&filter_date_start='.$this->request->get['filter_date_start'];
         }
+        
+        if (isset($this->request->get['filter_name'])) {
+            $url .= '&filter_name='.$this->request->get['filter_name'];
+        }
 
         if (isset($this->request->get['filter_date_end'])) {
             $url .= '&filter_date_end='.$this->request->get['filter_date_end'];
@@ -363,6 +386,7 @@ class ControllerReportSaleProductMissing extends Controller
         $data['filter_store_id'] = $filter_store_id;
         $data['filter_date_start'] = $filter_date_start;
         $data['filter_date_end'] = $filter_date_end;
+        $data['filter_name'] = $filter_name;
         $data['filter_group'] = $filter_group;
         $data['filter_order_status_id'] = $filter_order_status_id;
 

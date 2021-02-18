@@ -29,6 +29,9 @@ class Response
 
     public function setOutput($output)
     {
+        $this->headers[] = 'Access-Control-Allow-Origin: *';
+        $this->headers[] = 'Access-Control-Allow-Methods: GET,PUT,POST,DELETE,PATCH,OPTIONS';
+        $this->headers[] = 'Access-Control-Allow-Headers: *';
         $this->output = $output;
     }
 

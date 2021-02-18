@@ -71,9 +71,13 @@
           <div class="panel-body">
             <p class="description"><b>Know Your KwikBasket Champion</b></p>
             <h4 class="value"><span> </span></h4>
-            <p class="description">Naomi Bosibori
-              <br>naomi.bosibori@kwikbasket.com
+            <?php if(is_array($DashboardData['account_manager_details']) && count($DashboardData['account_manager_details']) > 0) { ?>
+            <p class="description"><?php echo $DashboardData['account_manager_details']['firstname'].' '.$DashboardData['account_manager_details']['lastname']; ?>
+              <br><?php echo $DashboardData['account_manager_details']['email']; ?>
             </p>
+            <?php } else { ?>
+            <p class="description">NA</p>
+            <?php } ?>
           </div>
         </div>
       </div>
