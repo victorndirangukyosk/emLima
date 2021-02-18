@@ -1319,13 +1319,29 @@ class ModelSaleOrder extends Model {
         return $query->rows;
     }
 
+    public function getOrderProductsStockOut($order_id, $store_id = 0, $name) {
+        $sql = "SELECT * ,'0' as quantity_updated,'0' as unit_updated FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int) $order_id . "'";
+
+        if ($store_id) {
+            $sql .= " AND store_id='" . $store_id . "'";
+        }
+        
+        if ($name != NULL) {
+            $sql .= " AND name='" . $name . "'";
+        }
+
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
+    
     public function getOrderProducts($order_id, $store_id = 0) {
         $sql = "SELECT * ,'0' as quantity_updated,'0' as unit_updated FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int) $order_id . "'";
 
         if ($store_id) {
             $sql .= " AND store_id='" . $store_id . "'";
         }
-
+        
         $query = $this->db->query($sql);
 
         return $query->rows;
@@ -1369,13 +1385,29 @@ class ModelSaleOrder extends Model {
         return $qty;
     }
 
+    public function getRealOrderProductsStockOut($order_id, $store_id = 0, $name) {
+        $sql = 'SELECT * FROM ' . DB_PREFIX . "real_order_product WHERE order_id = '" . (int) $order_id . "'";
+
+        if ($store_id) {
+            $sql .= " AND store_id='" . $store_id . "'";
+        }
+        
+        if ($name != NULL) {
+            $sql .= " AND name='" . $name . "'";
+        }
+
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
+    
     public function getRealOrderProducts($order_id, $store_id = 0) {
         $sql = 'SELECT * FROM ' . DB_PREFIX . "real_order_product WHERE order_id = '" . (int) $order_id . "'";
 
         if ($store_id) {
             $sql .= " AND store_id='" . $store_id . "'";
         }
-
+        
         $query = $this->db->query($sql);
 
         return $query->rows;
@@ -1472,7 +1504,7 @@ class ModelSaleOrder extends Model {
 
     public function hasRealOrderProducts($order_id) {
         $sql = 'SELECT * FROM ' . DB_PREFIX . "real_order_product WHERE order_id = '" . (int) $order_id . "'";
-
+                
         $query = $this->db->query($sql);
 
         if ($query->num_rows) {
