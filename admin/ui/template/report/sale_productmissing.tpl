@@ -65,6 +65,12 @@
                   <?php } ?>
                 </select>
               </div>
+                
+                <div class="form-group">
+                    <label class="control-label" for="input-name"><?php echo $entry_name; ?></label>
+                    <input type="text" name="filter_name" value="<?php echo $filter_name; ?>" placeholder="<?php echo $entry_name; ?>" id="input-name" class="form-control" />
+                </div>
+                
               <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
               </div>
              
@@ -157,11 +163,32 @@
 	}
     });
     
+    $('input[name=\'filter_name\']').autocomplete({
+            'source': function(request, response) {
+                $.ajax({
+                    url: 'index.php?path=catalog/product/autocomplete&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
+                    dataType: 'json',
+                    success: function(json) {
+                        response($.map(json, function(item) {
+                            return {
+                                label: item['name'],
+                                value: item['product_id']
+                            }
+                        }));
+                    }
+                });
+            },
+            'select': function(item) {
+                $('input[name=\'filter_name\']').val(item['label']);
+            }
+        });
+    
 $('#button-filter').on('click', function() {
 	url = 'index.php?path=report/sale_productmissing&token=<?php echo $token; ?>';
 	
 	var filter_store = $('input[name=\'store_name\']').val();
-    var filter_store_id = $('input[name=\'filter_store_id\']').val();
+        var filter_store_id = $('input[name=\'filter_store_id\']').val();
+        var filter_name = $('input[name=\'filter_name\']').val();
 
     if (filter_store) {
             url += '&filter_store=' + encodeURIComponent(filter_store);
@@ -178,6 +205,10 @@ $('#button-filter').on('click', function() {
 	
 	if (filter_date_end) {
 		url += '&filter_date_end=' + encodeURIComponent(filter_date_end);
+	}
+        
+        if (filter_name) {
+		url += '&filter_name=' + encodeURIComponent(filter_name);
 	}
 
 	
