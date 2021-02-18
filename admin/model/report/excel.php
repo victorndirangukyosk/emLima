@@ -2705,9 +2705,11 @@ class ModelReportExcel extends Model {
 
             if ($is_edited) {
                 //continue;
-                $OrignalProducts  = $this->model_sale_order->getRealOrderProducts($result['order_id']);
+                //$OrignalProducts  = $this->model_sale_order->getRealOrderProducts($result['order_id']);
+                  $OrignalProducts  = $this->model_sale_order->getRealOrderProductsStockOut($result['order_id'], $data['filter_store'], $data['filter_name']);
             } else {
-                $OrignalProducts = $this->model_sale_order->getOrderProducts($result['order_id']);
+                //$OrignalProducts = $this->model_sale_order->getOrderProducts($result['order_id']);
+                  $OrignalProducts = $this->model_sale_order->getOrderProductsStockOut($result['order_id'], $data['filter_store'], $data['filter_name']);
             }
             // $EditedProducts = $this->model_sale_order->getRealOrderProducts($result['order_id']);
             // $OrignalProducts = $this->model_sale_order->getOrderProducts($result['order_id']);
