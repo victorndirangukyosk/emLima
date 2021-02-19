@@ -152,8 +152,8 @@ class ControllerCommonScheduler extends Controller
     {
         $log = new Log('error.log');
         try{
-        $deliveryDate =   date("Y-m-d");// date("Y-m-d",strtotime("-1 days"));//$this->request->get['filter_delivery_date'];
-        // $deliveryDate =   date("Y-m-d",strtotime("1 days"));// as eat at 11:30 means , next day orders need to be displayed
+        // $deliveryDate =   date("Y-m-d");// date("Y-m-d",strtotime("-1 days"));//$this->request->get['filter_delivery_date'];
+        $deliveryDate =   date("Y-m-d",strtotime("1 days"));// as eat at 10:45 means , next day orders need to be displayed
         $log->write('UpdateOrderProcessing -'.$deliveryDate);
        
         $this->load->model('scheduler/dbupdates');
