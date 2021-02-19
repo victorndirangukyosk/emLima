@@ -121,6 +121,7 @@ class ControllerReportSaleOrder extends Controller
                 'products' => $result['products'],
                 //'tax' => $this->currency->format($result['tax'], $this->config->get('config_currency')),
                 //'total' => $this->currency->format($result['total'], $this->config->get('config_currency')),
+                'tax' => $this->currency->format(0, $this->config->get('config_currency')),
                 'total' => $this->currency->format($result['totals'], $this->config->get('config_currency')),
             ];
         }
