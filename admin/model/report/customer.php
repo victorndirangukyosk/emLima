@@ -832,6 +832,9 @@ class ModelReportCustomer extends Model {
         if (!empty($data['filter_date_end'])) {
             $sql .= " AND DATE(o.date_added) < '" . $this->db->escape($data['filter_date_end']) . "'";
         }
+        if (!empty($data['filter_account_manager_id'])) {
+            $sql .= " AND c.account_manager_id = '" . (int) $this->db->escape($data['filter_account_manager_id']) . "'";
+        }
         // if (!empty($data['filter_customer'])) {
         //     // $sql .= " AND   c.customer_id   = '" .(int) $this->db->escape($data['filter_customer']) . "'";
         //     $sql .= " AND CONCAT(c.firstname, ' ', c.lastname)  LIKE '%".$this->db->escape($data['filter_customer'])."%'";

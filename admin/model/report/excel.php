@@ -5455,7 +5455,7 @@ class ModelReportExcel extends Model {
             // $sheet_subtitle = 'Customer Name: ' . $data['consolidation'][0]['customer'] . ' #  ' . 'Order Id :' . $data['consolidation'][0]['orderid'];
             // $sheet_subtitle1 = 'Order Date: ' . $data['consolidation'][0]['date'];
 
-            // $objPHPExcel->getActiveSheet()->mergeCells('A1:D1');
+            $objPHPExcel->getActiveSheet()->mergeCells('A1:O1');
             // $objPHPExcel->getActiveSheet()->mergeCells('A2:D2');
             // $objPHPExcel->getActiveSheet()->mergeCells('A3:D3');
             // $objPHPExcel->getActiveSheet()->mergeCells('A4:D4');
@@ -5463,7 +5463,7 @@ class ModelReportExcel extends Model {
             // $objPHPExcel->getActiveSheet()->setCellValue('A2', $sheet_title0);
             // $objPHPExcel->getActiveSheet()->setCellValue('A3', $sheet_subtitle);
             // $objPHPExcel->getActiveSheet()->setCellValue('A4', $sheet_subtitle1);
-            $objPHPExcel->getActiveSheet()->getStyle('A1:D1')->applyFromArray(['font' => ['bold' => true], 'color' => [
+            $objPHPExcel->getActiveSheet()->getStyle('A1:O1')->applyFromArray(['font' => ['bold' => true], 'color' => [
                     'rgb' => '51AB66',
             ]]);
             // $objPHPExcel->getActiveSheet()->getStyle('A2:D2')->applyFromArray(['font' => ['bold' => true], 'color' => [
