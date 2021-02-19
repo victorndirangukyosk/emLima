@@ -276,7 +276,7 @@
 <div class="row">
 
 <!-- BEGIN TOTALS COL 2 -->
-<div class="col-sm-4">
+<div class="col-sm-6">
 
         
 <div class="shipping">
@@ -310,9 +310,9 @@
  
 </div>   
 
-<div class="col-sm-4">    
+<div class="col-sm-4" style="display:none">    
     
-<div class="discount">
+<div class="discount" >
       <h3>Discount Codes</h3>
   <form id="discount-coupon-form" action="" method="post" class="promo-form">  
 
@@ -331,7 +331,7 @@
 </div> <!--discount--> 
 </div> <!--col-sm-4-->
 
-<div class="col-sm-4">
+<div class="col-sm-6">
  <div class="totals">
 <h3>Shopping Cart Total</h3>
 <div class="inner">
