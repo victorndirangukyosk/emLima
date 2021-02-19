@@ -15,9 +15,9 @@ class ControllerDashboardCustomer extends Controller
         // Total Orders
         $this->load->model('sale/customer');
 
-        $today = $this->model_sale_customer->getTotalCustomers(['filter_date_added' => date('Y-m-d', strtotime('-1 day'))]);
+        $today = $this->model_sale_customer->getTotalCustomersForDashboard(['filter_date_added' => date('Y-m-d', strtotime('-1 day'))]);
 
-        $yesterday = $this->model_sale_customer->getTotalCustomers(['filter_date_added' => date('Y-m-d', strtotime('-2 day'))]);
+        $yesterday = $this->model_sale_customer->getTotalCustomersForDashboard(['filter_date_added' => date('Y-m-d', strtotime('-2 day'))]);
 
         $difference = $today - $yesterday;
 
@@ -27,7 +27,7 @@ class ControllerDashboardCustomer extends Controller
             $data['percentage'] = 0;
         }
 
-        $customer_total = $this->model_sale_customer->getTotalCustomers();
+        $customer_total = $this->model_sale_customer->getTotalCustomersForDashboard();
 
         if ($customer_total > 1000000000000) {
             $data['total'] = round($customer_total / 1000000000000, 1).'T';

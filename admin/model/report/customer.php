@@ -832,6 +832,9 @@ class ModelReportCustomer extends Model {
         if (!empty($data['filter_date_end'])) {
             $sql .= " AND DATE(o.date_added) < '" . $this->db->escape($data['filter_date_end']) . "'";
         }
+        if (!empty($data['filter_account_manager_id'])) {
+            $sql .= " AND c.account_manager_id = '" . (int) $this->db->escape($data['filter_account_manager_id']) . "'";
+        }
         // if (!empty($data['filter_customer'])) {
         //     // $sql .= " AND   c.customer_id   = '" .(int) $this->db->escape($data['filter_customer']) . "'";
         //     $sql .= " AND CONCAT(c.firstname, ' ', c.lastname)  LIKE '%".$this->db->escape($data['filter_customer'])."%'";
@@ -847,15 +850,23 @@ class ModelReportCustomer extends Model {
     }
 
     public function getValidCompanies($data = []) {
+        $log = new Log('error.log');
+        $log->write($data);
         $sql = "SELECT c.company_name  as company  from hf7_customer c ";
-
+        $implode = [];
         if (!empty($data['filter_company'])) {
-            $sql .= " where c.company_name   LIKE '%" . $this->db->escape($data['filter_company']) . "%'";
+            $implode[] = "c.company_name   LIKE '%" . $this->db->escape($data['filter_company']) . "%'";
+        }
+        
+        if (!empty($data['filter_account_manager_id']) && $data['filter_account_manager_id'] > 0) {
+            $implode[] =  "c.account_manager_id = '" . (int) $data['filter_account_manager_id'] . "'";
         }
 
-
-
-        $sql .= "group by  c.company_name ORDER BY c.company_name asc";
+        if ($implode) {
+            $sql .= ' WHERE ' . implode(' AND ', $implode);
+        }
+        
+        $sql .=  "group by  c.company_name ORDER BY c.company_name asc";
 
         if (isset($data['start']) || isset($data['limit'])) {
             if ($data['start'] < 0) {
@@ -866,9 +877,9 @@ class ModelReportCustomer extends Model {
                 $data['limit'] = 20;
             }
 
-            $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
+            $sql .=  ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
         }
-
+        
         $query = $this->db->query($sql);
         //  echo  ($sql);die;
         //echo "<pre>";print_r($query->rows);die;
@@ -877,9 +888,18 @@ class ModelReportCustomer extends Model {
 
     public function getTotalValidCompanies($data = []) {
         $sql = "SELECT count( distinct (c.company_name) ) as companycount  from hf7_customer c ";
-
+        $implode = [];
+        
         if (!empty($data['filter_company'])) {
-            $sql .= " where c.company_name   LIKE '%" . $this->db->escape($data['filter_company']) . "%'";
+            $implode[] = "c.company_name   LIKE '%" . $this->db->escape($data['filter_company']) . "%'";
+        }
+        
+        if (!empty($data['filter_account_manager_id']) && $data['filter_account_manager_id'] > 0) {
+            $implode[] = "c.account_manager_id = '" . (int) $data['filter_account_manager_id'] . "'";
+        }
+        
+        if ($implode) {
+            $sql .= ' WHERE ' . implode(' AND ', $implode);
         }
         //$sql .= "group by  c.company_name ORDER BY c.company_name asc"; 
 
@@ -897,8 +917,13 @@ class ModelReportCustomer extends Model {
         if (!empty($data['filter_order_status_id'])) {
             $sql .= " AND o.order_status_id = '" . (int) $data['filter_order_status_id'] . "'";
         } else {
-            $sql .= " AND o.order_status_id > '0' AND  o.order_status_id != '6'";
+            $sql .= " AND o.order_status_id > '0' AND  o.order_status_id NOT IN (6,8)";
         }
+        
+        if (!empty($data['filter_account_manager_id']) && $data['filter_account_manager_id'] > 0) {
+            $sql .= " AND c.account_manager_id = '" . (int) $data['filter_account_manager_id'] . "'";
+        }
+        
         // and o.date_added BETWEEN '2020-06-01 00:00:00' AND '2020-09-30 00:00:00' 
         if (!empty($data['filter_date_start'])) {
             $sql .= " AND DATE(o.date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
