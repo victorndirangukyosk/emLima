@@ -25,7 +25,7 @@
                         <th rowspan="1"><span class="nobr">Product Name</span></th>
                         <!--<th rowspan="1"><span class="nobr">Product Note</span></th>-->
                                                 <th class="text-center" ><span class="nobr">Unit Price</span></th>
-                                                <th class="text-center"><span class="nobr">Unit </span></th>
+                                                <th class="text-right"><span class="nobr">Unit </span></th>
                         <th rowspan="1" class="text-center">Qty</th>
                         <th class="text-center">Sub Total</th>
                         <th rowspan="1"></th>
@@ -118,7 +118,7 @@
 
                     </td> 
                         <td class="a-right movewishlist">
-        <input disabled type="number" name="cart[<?= $i ?>][qty]" id="cart[<?= $i ?>][qty]" value="<?= $product['quantity']?>" size="4" title="Qty" class="input-text qty" min="1" maxlength="12" style="width:80px !important;disabled">
+        <input  type="number" name="cart[<?= $i ?>][qty]" id="cart[<?= $i ?>][qty]" value="<?= $product['quantity']?>" size="4" title="Qty" class="input-text qty" min="1" maxlength="12" style="width:80px !important;disabled">
     </td>
         <td class="a-right hidden-table" >
                     <span class="cart-price">
@@ -127,13 +127,13 @@
         </span>
             </td>
               <td   class="a-center hidden-table"  >
-               <stop> <a       class="edit-bnt" title="Edit item parameters"><span><?= $i?></span></a><stop>
+               <stop> <a  style="display:none"     class="edit-bnt" title="Edit item parameters"><span><?= $i?></span></a><stop>
             
 
-  </td>
-  <td class="a-center hidden-table a">
-      <!--<a id="update_quantity" class="fa fa-refresh" title="Update product quantity" data-id="<?= $product['key']?>" data-prodorderid="<?= $i?>"><span data-id="<?= $product['key']?>"></span></a>-->
-  </td>
+            </td>
+   <!--<td class="a-center hidden-table a">
+     <a id="update_quantity" class="fa fa-refresh" title="Update product quantity" data-id="<?= $product['key']?>" data-prodorderid="<?= $i?>"><span data-id="<?= $product['key']?>"></span></a>
+  </td>-->
   <td class="a-center hidden-table">
       <p> <a title="Remove item" class="button remove-item" style="background-color: #ec9f4e ;"><span><span><?= $product['key']?></span></span></a></p>
   </td>
