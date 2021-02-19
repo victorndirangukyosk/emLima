@@ -65,6 +65,10 @@
                   <?php } ?>
                 </select>
               </div>
+               <div class="form-group">
+               <label class="control-label" for="input-account-manager-name">Account Manager Name</label>
+               <input type="text" name="filter_account_manager_name" value="<?php echo $filter_account_manager_name; ?>" placeholder="Account Manager Name" id="input-account-manager-name" class="form-control" />      
+              </div>
             </div> 
  
            
@@ -241,7 +245,26 @@ function diff_months(dt2, dt1)
             }
         });
 
- 
+   
+        $('input[name=\'filter_account_manager_name\']').autocomplete({
+            'source': function (request, response) {
+                $.ajax({
+                    url: 'index.php?path=sale/accountmanager/autocompleteaccountmanager&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
+                    dataType: 'json',
+                    success: function (json) {
+                        response($.map(json, function (item) {
+                            return {
+                                label: item['name'],
+                                value: item['user_id']
+                            }
+                        }));
+                    }
+                });
+            },
+            'select': function (item) {
+                $('input[name=\'filter_account_manager_name\']').val(item['label']);
+            }
+        });
 function excel() {
        url = 'index.php?path=report/customer_order_pattern/order_patternexcel&token=<?php echo $token; ?>';
       
