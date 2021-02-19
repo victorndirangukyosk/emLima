@@ -30,12 +30,15 @@ class ControllerReportCustomerOrderPattern extends Controller {
             $filter_company = $this->request->get['filter_company'];
         } else {
             $filter_company = '';
-            if (isset($this->request->get['filter_account_manager_name'])) {
-                $filter_account_manager_name = $this->request->get['filter_account_manager_name'];
-            } else {
-                $filter_account_manager_name = '';
-            }
-        }//placing pagination effecting the calculation so, adding pagination to customer list
+        }
+        
+        if (isset($this->request->get['filter_account_manager_name'])) {
+            $filter_account_manager_name = $this->request->get['filter_account_manager_name'];
+        } else {
+            $filter_account_manager_name = '';
+        }
+
+        //placing pagination effecting the calculation so, adding pagination to customer list
         if (isset($this->request->get['page'])) {
             $page = $this->request->get['page'];
         } else {
