@@ -31,7 +31,7 @@ class ControllerReportCustomerOrderPattern extends Controller {
         } else {
             $filter_company = '';
         }
-        
+
         if (isset($this->request->get['filter_account_manager_name'])) {
             $filter_account_manager_name = $this->request->get['filter_account_manager_name'];
         } else {
@@ -81,6 +81,20 @@ class ControllerReportCustomerOrderPattern extends Controller {
         $this->load->model('report/customer');
 
         $data['customers'] = [];
+
+        $filter_account_manager_id = NULL;
+        if ($filter_account_manager_name != NULL) {
+            $this->load->model('user/accountmanager');
+            $account_manager = $this->model_user_accountmanager->getAccountManagerByName($filter_account_manager_name);
+            $log = new Log('error.log');
+            $log->write($account_manager);
+            if (is_array($account_manager) && count($account_manager) > 0) {
+                $filter_account_manager_id = $account_manager['user_id'];
+            } else {
+                $filter_account_manager_id = NULL;
+            }
+        }
+
         $filter_data = [
             'filter_date_start' => $filter_date_start,
             'filter_date_end' => $filter_date_end,
@@ -88,21 +102,10 @@ class ControllerReportCustomerOrderPattern extends Controller {
             //'filter_customer' => $filter_customer,
             'filter_company' => $filter_company,
             'filter_account_manager_name' => $filter_account_manager_name,
+            'filter_account_manager_id' => $filter_account_manager_id,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
             'limit' => $this->config->get('config_limit_admin'),
         ];
-        
-        if ($filter_account_manager_name != NULL) {
-            $this->load->model('user/accountmanager');
-            $account_manager = $this->model_user_accountmanager->getAccountManagerByName($filter_account_manager_name);
-            $log = new Log('error.log');
-            $log->write($account_manager);
-            if (is_array($account_manager) && count($account_manager) > 0) {
-                $filter_data = ['filter_account_manager_id' => $account_manager['user_id']];
-            } else {
-                $filter_data = ['filter_account_manager_id' => ''];
-            }
-        }
 
         if ('' != $filter_date_start && '' != $filter_date_end) {
             $company_total = $this->model_report_customer->getTotalValidCompanies($filter_data);
@@ -288,26 +291,28 @@ class ControllerReportCustomerOrderPattern extends Controller {
         }
         $this->load->model('report/customer');
 
-        $filter_data = [
-            'filter_date_start' => $filter_date_start,
-            'filter_date_end' => $filter_date_end,
-            'filter_order_status_id' => $filter_order_status_id,
-            'filter_customer' => $filter_customer,
-            'filter_company' => $filter_company,
-            'filter_account_manager_name' => $filter_account_manager_name,
-        ];
-        
+        $filter_account_manager_id = NULL;
         if ($filter_account_manager_name != NULL) {
             $this->load->model('user/accountmanager');
             $account_manager = $this->model_user_accountmanager->getAccountManagerByName($filter_account_manager_name);
             $log = new Log('error.log');
             $log->write($account_manager);
             if (is_array($account_manager) && count($account_manager) > 0) {
-                $filter_data = ['filter_account_manager_id' => $account_manager['user_id']];
+                $filter_account_manager_id = $account_manager['user_id'];
             } else {
-                $filter_data = ['filter_account_manager_id' => ''];
+                $filter_account_manager_id = NULL;
             }
         }
+
+        $filter_data = [
+            'filter_date_start' => $filter_date_start,
+            'filter_date_end' => $filter_date_end,
+            'filter_order_status_id' => $filter_order_status_id,
+            'filter_customer' => $filter_customer,
+            'filter_company' => $filter_company,
+            'filter_account_manager_id' => $filter_account_manager_id,
+            'filter_account_manager_name' => $filter_account_manager_name,
+        ];
 
         if ('' != $filter_date_start && '' != $filter_date_end) {
             $company_total = $this->model_report_customer->getTotalValidCompanies($filter_data);
