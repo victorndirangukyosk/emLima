@@ -142,7 +142,10 @@
                       <input type="text" name="filter_account_manager_name" value="<?php if($filter_account_manager_name != NULL && $filter_account_manager_id != NULL) { echo $filter_account_manager_name; } ?>" placeholder="<?php echo $entry_account_manager_name; ?>" id="input-account-manager-name" class="form-control" data-account-manager-id="<?php if($filter_account_manager_name != NULL && $filter_account_manager_id != NULL) { echo $filter_account_manager_id; } ?>" />
               </div>
              </div>
-            <div class="col-sm-3">
+              <div class="col-sm-3" style="margin-top:25px;">
+                 <label><input type="checkbox" name="filter_sub_customer_show" value="<?php echo $filter_sub_customer_show; ?>"> Show Sub Customer </label>
+              </div>
+              <div class="col-sm-3" style="margin-top:25px;">
               <div class="form-group">
                   <label class="control-label"></label>
                   <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>    
