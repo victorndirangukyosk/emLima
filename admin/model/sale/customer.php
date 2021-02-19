@@ -453,7 +453,74 @@ class ModelSaleCustomer extends Model {
 
         return $query->row['total'];
     }
+    
+    public function getTotalCustomersForDashboard($data = []) {
+        $sql = 'SELECT COUNT(*) AS total FROM ' . DB_PREFIX . 'customer';
 
+        $implode = [];
+
+        if (!empty($data['filter_company'])) {
+            $implode[] = "company_name LIKE '%" . $this->db->escape($data['filter_company']) . "%'";
+        }
+
+        if (!empty($data['filter_name'])) {
+            $implode[] = "CONCAT(firstname, ' ', lastname) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+        }
+
+        if (!empty($data['filter_email'])) {
+            $implode[] = "email LIKE '" . $this->db->escape($data['filter_email']) . "%'";
+        }
+
+        if (!empty($data['filter_telephone'])) {
+            $implode[] = "telephone LIKE '" . $this->db->escape($data['filter_telephone']) . "%'";
+        }
+
+        if (isset($data['filter_newsletter']) && !is_null($data['filter_newsletter'])) {
+            $implode[] = "newsletter = '" . (int) $data['filter_newsletter'] . "'";
+        }
+
+        if (!empty($data['filter_customer_group_id'])) {
+            $implode[] = "customer_group_id = '" . (int) $data['filter_customer_group_id'] . "'";
+        }
+
+        if (!empty($data['filter_ip'])) {
+            $implode[] = "ip = '" . $this->db->escape($data['filter_ip']) . "'";
+        }
+        
+        if (!empty($data['filter_parent_customer_id']) && !empty($data['filter_parent_customer'])) {
+            $implode[] = "parent = '" . $this->db->escape($data['filter_parent_customer_id']) . "'";
+        }
+        
+        if (!empty($data['filter_account_manager_id']) && !empty($data['filter_account_manager_name'])) {
+            $implode[] = "account_manager_id = '" . $this->db->escape($data['filter_account_manager_id']) . "'";
+        }
+
+        if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
+            $implode[] = "status = '" . (int) $data['filter_status'] . "'";
+        }
+
+        if (isset($data['filter_approved']) && !is_null($data['filter_approved'])) {
+            $implode[] = "approved = '" . (int) $data['filter_approved'] . "'";
+        }
+
+        if (!empty($data['filter_date_added'])) {
+            $implode[] = "DATE(date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
+        }
+
+        if ($this->user->isAccountManager()) {
+            $implode[] = "account_manager_id = '" . (int) $this->user->getId() . "'";
+        }
+        $implode[] = "parent is null or parent = 0";
+
+        if ($implode) {
+            $sql .= ' WHERE ' . implode(' AND ', $implode);
+        }
+
+        $query = $this->db->query($sql);
+
+        return $query->row['total'];
+    }
+    
     public function getTotalCustomersAwaitingApproval() {
         $query = $this->db->query('SELECT COUNT(*) AS total FROM ' . DB_PREFIX . "customer WHERE status = '0' OR approved = '0'");
 
