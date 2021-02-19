@@ -33,6 +33,11 @@ class ControllerReportCustomerOrderPattern extends Controller
             $filter_company = $this->request->get['filter_company'];
         } else {
             $filter_company = '';
+        if (isset($this->request->get['filter_account_manager_name'])) {
+            $filter_account_manager_name = $this->request->get['filter_account_manager_name'];
+        } else {
+            $filter_account_manager_name = '';
+        }
         }//placing pagination effecting the calculation so, adding pagination to customer list
         if (isset($this->request->get['page'])) {
             $page = $this->request->get['page'];
@@ -54,6 +59,9 @@ class ControllerReportCustomerOrderPattern extends Controller
         // }
         if (isset($this->request->get['filter_company'])) {
             $url .= '&filter_company='.$this->request->get['filter_company'];
+        }
+        if (isset($this->request->get['filter_account_manager_name'])) {
+            $url .= '&filter_account_manager_name='.$this->request->get['filter_account_manager_name'];
         }
         if (isset($this->request->get['page'])) {
             $url .= '&page='.$this->request->get['page'];
@@ -79,6 +87,7 @@ class ControllerReportCustomerOrderPattern extends Controller
             'filter_order_status_id' => $filter_order_status_id,
             //'filter_customer' => $filter_customer,
             'filter_company' => $filter_company,
+            'filter_account_manager_name' => $filter_account_manager_name,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
             'limit' => $this->config->get('config_limit_admin'),
         ];
@@ -192,6 +201,7 @@ class ControllerReportCustomerOrderPattern extends Controller
         $data['filter_order_status_id'] = $filter_order_status_id;
         // $data['filter_customer'] = $filter_customer;
         $data['filter_company'] = $filter_company;
+        $data['filter_account_manager_name'] = $filter_account_manager_name;
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
@@ -298,6 +308,12 @@ class ControllerReportCustomerOrderPattern extends Controller
         } else {
             $filter_company = 0;
         }
+        
+        if (isset($this->request->get['filter_account_manager_name'])) {
+            $filter_account_manager_name = $this->request->get['filter_account_manager_name'];
+        } else {
+            $filter_account_manager_name = '';
+        }
         $this->load->model('report/customer');
 
         $filter_data = [
@@ -306,6 +322,7 @@ class ControllerReportCustomerOrderPattern extends Controller
             'filter_order_status_id' => $filter_order_status_id,
             'filter_customer' => $filter_customer,
             'filter_company' => $filter_company,
+            'filter_account_manager_name' => $filter_account_manager_name,
         ];
 
         if ('' != $filter_date_start && '' != $filter_date_end) {

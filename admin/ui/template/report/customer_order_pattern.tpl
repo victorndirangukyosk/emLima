@@ -141,7 +141,11 @@ $('#button-filter').on('click', function() {
                 url += '&filter_company=' + encodeURIComponent(filter_company);
             }
   
-  
+        var filter_account_manager_name = $('input[name=\'filter_account_manager_name\']').val();
+
+        if (filter_account_manager_name) {
+            url += '&filter_account_manager_name=' + encodeURIComponent(filter_account_manager_name);
+        }
 
 	
 	var filter_date_start = $('input[name=\'filter_date_start\']').val();
@@ -281,8 +285,13 @@ function excel() {
             if (filter_company) {
                 url += '&filter_company=' + encodeURIComponent(filter_company);
             }
-  
-   
+            
+            
+           var filter_account_manager_name = $('input[name=\'filter_account_manager_name\']').val();
+
+            if (filter_account_manager_name) {
+                url += '&filter_account_manager_name=' + encodeURIComponent(filter_account_manager_name);
+            }
 
 	
 	var filter_date_start = $('input[name=\'filter_date_start\']').val();
