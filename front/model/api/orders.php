@@ -544,6 +544,16 @@ class ModelApiOrders extends Model
             $implode[] = "o.date_added <= '".$this->db->escape($data['date_to'])." 23:59:59'";
         }
 
+
+        if (!empty($data['delivery_date_from'])) {
+            $implode[] = "o.delivery_date >= '".$this->db->escape($data['delivery_date_from'])." 00:00:00'";
+        }
+
+        if (!empty($data['delivery_date_to'])) {
+            $implode[] = "o.delivery_date <= '".$this->db->escape($data['delivery_date_to'])." 23:59:59'";
+        }
+
+
         if (!empty($data['delivery_date'])) {
             $implode[] = "o.delivery_date = '".$this->db->escape($data['delivery_date'])."'";
         }
