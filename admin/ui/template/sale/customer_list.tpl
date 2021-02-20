@@ -142,7 +142,10 @@
                       <input type="text" name="filter_account_manager_name" value="<?php if($filter_account_manager_name != NULL && $filter_account_manager_id != NULL) { echo $filter_account_manager_name; } ?>" placeholder="<?php echo $entry_account_manager_name; ?>" id="input-account-manager-name" class="form-control" data-account-manager-id="<?php if($filter_account_manager_name != NULL && $filter_account_manager_id != NULL) { echo $filter_account_manager_id; } ?>" />
               </div>
              </div>
-            <div class="col-sm-3">
+              <div class="col-sm-3" style="margin-top:25px;">
+                 <label><input type="checkbox" name="filter_sub_customer_show" value="<?php echo $filter_sub_customer_show; ?>"> Show Sub Customer </label>
+              </div>
+              <div class="col-sm-3" style="margin-top:25px;">
               <div class="form-group">
                   <label class="control-label"></label>
                   <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>    
@@ -220,10 +223,6 @@
                    <a target="_blank" data-toggle="tooltip" title="Login" href="index.php?path=sale/customer/login&token=<?php echo $token; ?>&customer_id=<?php echo $customer['customer_id']; ?>&store_id=0">
                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-lock"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
                     </a>
-
-                    <a target="_blank" data-toggle="tooltip" title="New Login" class="new-customer-login" data-base-url="<?= $_SERVER['SERVER_NAME'] ?>" data-token="<?php echo $token; ?>" data-customer-id="<?= $customer['customer_id']; ?>" href="#">
-                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-key"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path></svg>
-                    </a>
                     
                     <?php if ($customer['unlock']) { ?>
                     <a href="<?php echo $customer['unlock']; ?>" data-toggle="tooltip" title="<?php echo $button_unlock; ?>"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-unlock"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 9.9-1"></path></svg></a>
@@ -252,15 +251,6 @@
     </div>
   </div>
   <script type="text/javascript">
-
-  $('.new-customer-login').click(function(e) {
-    e.preventDefault();
-    const baseUrl = $(this).attr('data-base-url');
-    const customerId = $(this).attr('data-customer-id');
-    const token = $(this).attr('data-token');
-    window.open(`https://${baseUrl}/token-login?token=${token}&customer_id=${customerId}`, '_blank');
-  });
-
 $('#button-filter').on('click', function() {
   url = 'index.php?path=sale/customer&token=<?php echo $token; ?>';
 

@@ -40,6 +40,11 @@ class ModelUserAccountmanager extends Model {
 
         return $query->row;
     }
+    
+    public function getAccountManagerByName($name) {
+        $query = $this->db->query('SELECT * FROM `' . DB_PREFIX . "user` WHERE CONCAT(firstname, ' ', lastname) LIKE '%" . $this->db->escape($name) . "%' AND user_group_id ='" . $this->config->get('config_account_manager_group_id') . "'");
+        return $query->row;
+    }
 
     public function getUserByEmail($email) {
         $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "user WHERE LOWER(email) = '" . $this->db->escape(utf8_strtolower($email)) . "' AND email != '' AND user_group_id = '" . (int) $this->config->get('config_account_manager_group_id') . "'");

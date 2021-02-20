@@ -147,4 +147,26 @@ class ControllerCommonScheduler extends Controller
         $this->load->model('report/excel');
         $this->model_report_excel->mail_download_saleorderproductmissing($data);
     }
+
+    public function UpdateOrderProcessing()
+    {
+        $log = new Log('error.log');
+        try{
+        // $deliveryDate =   date("Y-m-d");// date("Y-m-d",strtotime("-1 days"));//$this->request->get['filter_delivery_date'];
+        $deliveryDate =   date("Y-m-d",strtotime("1 days"));// as eat at 10:45 means , next day orders need to be displayed
+        $log->write('UpdateOrderProcessing -'.$deliveryDate);
+       
+        $this->load->model('scheduler/dbupdates');
+        $result=$this->model_scheduler_dbupdates->UpdateOrderProcessing($deliveryDate);   
+        // echo "<pre>";print_r($result);die; 
+        $log->write('UpdateOrderProcessing-result -'.$result);  
+        echo "updated successfully";       
+        }
+        catch(exception $ex)
+        {
+            $log->write('UpdateOrderProcessing -'.$ex);
+        }     
+       
+     
+    }
 }
