@@ -5,11 +5,11 @@ class ControllerVehiclesVehiclesList extends Controller {
     private $error = [];
 
     public function index() {
-        $this->load->language('vehciles/vehciles');
+        $this->load->language('vehicles/vehicles');
 
         $this->document->setTitle($this->language->get('heading_title'));
 
-        $this->load->model('vehciles/vehciles');
+        $this->load->model('vehicles/vehicles');
 
         $this->getList();
 
@@ -18,11 +18,11 @@ class ControllerVehiclesVehiclesList extends Controller {
     }
 
     public function add() {
-        $this->load->language('vehciles/vehciles');
+        $this->load->language('vehicles/vehicles');
 
         $this->document->setTitle($this->language->get('heading_title'));
 
-        $this->load->model('vehciles/vehciles');
+        $this->load->model('vehicles/vehicles');
 
         if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
             $vehicle_id = $this->model_vehicles_vehicles->addVehicle($this->request->post);
@@ -95,7 +95,7 @@ class ControllerVehiclesVehiclesList extends Controller {
     }
 
     protected function getList() {
-        $this->load->language('vehciles/vehicles');
+        $this->load->language('vehicles/vehicles');
 
         if (isset($this->request->get['filter_name'])) {
             $filter_name = $this->request->get['filter_name'];

@@ -235,6 +235,7 @@ class ControllerCommonMenu extends Controller
         $data['vendor_wallet'] = $this->url->link('wallets/vendor_wallet', 'token='.$this->session->data['token'], 'SSL');
         $data['admin_wallet'] = $this->url->link('wallets/admin_wallet', 'token='.$this->session->data['token'], 'SSL');
         $data['drivers_list'] = $this->url->link('drivers/drivers_list', 'token='.$this->session->data['token'], 'SSL');
+        $data['vehicles_list'] = $this->url->link('vehicles/vehicles_list', 'token='.$this->session->data['token'], 'SSL');
         $data['executives_list'] = $this->url->link('executives/executives_list', 'token='.$this->session->data['token'], 'SSL');
         $data['orderprocessinggroup_list'] = $this->url->link('orderprocessinggroup/orderprocessinggroup_list', 'token='.$this->session->data['token'], 'SSL');
         $data['orderprocessor_list'] = $this->url->link('orderprocessinggroup/orderprocessor', 'token='.$this->session->data['token'], 'SSL');
@@ -435,6 +436,7 @@ class ControllerCommonMenu extends Controller
         $data['preturn_admin_wallet'] = $this->user->hasPermission('access', 'wallets/admin_wallet');
         
         $data['preturn_drivers'] = $this->user->hasPermission('access', 'drivers/drivers_list');
+        $data['preturn_vehicles'] = $this->user->hasPermission('access', 'vehicles/vehicles_list');
         $data['preturn_executives'] = $this->user->hasPermission('access', 'executives/executives_list');
         $data['preturn_orderprocessinggroups'] = $this->user->hasPermission('access', 'orderprocessinggroup/orderprocessinggroup_list');
         $data['preturn_orderprocessor'] = $this->user->hasPermission('access', 'orderprocessinggroup/orderprocessor');
