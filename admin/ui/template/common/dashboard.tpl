@@ -39,6 +39,7 @@
                 <div class="collapse" id="collapseExample">
                     <div class="card card-body">
                         <div class="row" id="sum_widgets">
+                            <br>
                             <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $order_received; ?></div>
                             <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $order_processed; ?></div>
                             <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $order_cancelled; ?></div>
