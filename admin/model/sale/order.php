@@ -769,6 +769,14 @@ class ModelSaleOrder extends Model {
             $sql .= " AND o.order_id = '" . (int) $data['filter_order_id'] . "'";
         }
 
+        if (!empty($data['filter_order_from_id'])) {
+            $sql .= " AND o.order_id >= '" . (int) $data['filter_order_from_id'] . "'";
+        }
+
+        if (!empty($data['filter_order_to_id'])) {
+            $sql .= " AND o.order_id <= '" . (int) $data['filter_order_to_id'] . "'";
+        }
+
 
         if (!empty($data['filter_company'])) {
             $sql .= " AND cust.company_name LIKE '%" . $this->db->escape($data['filter_company']) . "%'";
@@ -1652,6 +1660,16 @@ class ModelSaleOrder extends Model {
 
         if (!empty($data['filter_order_id'])) {
             $sql .= " AND o.order_id = '" . (int) $data['filter_order_id'] . "'";
+        }
+
+
+        if (!empty($data['filter_order_from_id'])) {
+            $sql .= " AND o.order_id >= '" . (int) $data['filter_order_from_id'] . "'";
+        }
+
+
+        if (!empty($data['filter_order_to_id'])) {
+            $sql .= " AND o.order_id <= '" . (int) $data['filter_order_to_id'] . "'";
         }
 
         if (!empty($data['filter_vendor'])) {
