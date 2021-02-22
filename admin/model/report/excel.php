@@ -7044,7 +7044,6 @@ class ModelReportExcel extends Model {
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['make']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['model']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['registration_number']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['registration_validity']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, date($this->language->get('date_format_short'), strtotime($result['registration_date'])));
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, date($this->language->get('date_format_short'), strtotime($result['registration_validity'])));
 
