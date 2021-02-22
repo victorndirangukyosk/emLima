@@ -79,7 +79,11 @@
                       <div class="form-group required">
                         <label class="col-sm-2 control-label" for="input-registration-date"><?php echo $entry_registration_date; ?></label>
                         <div class="col-sm-10">
-                          <input type="text" name="registration_date" value="<?php echo $registration_date; ?>" placeholder="<?php echo $entry_registration_date; ?>" id="input-registration-date" class="form-control" />
+                          <div class="input-group date">  
+                          <input type="text" name="registration_date" value="<?php echo $registration_date; ?>" placeholder="<?php echo $entry_registration_date; ?>" id="input-registration-date" data-date-format="YYYY-MM-DD" class="form-control" />
+                          <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                                </span></div>
                           <?php if ($error_registration_date) { ?>
                           <div class="text-danger"><?php echo $error_registration_date; ?></div>
                           <?php  } ?>
