@@ -367,8 +367,8 @@ class ControllerVehiclesVehiclesList extends Controller {
             $url .= '&page=' . $this->request->get['page'];
         }
 
-        $data['sort_name'] = $this->url->link('vehicles/vehicles_list', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
-        $data['sort_email'] = $this->url->link('vehicles/vehicles_list', 'token=' . $this->session->data['token'] . '&sort=c.email' . $url, 'SSL');
+        $data['sort_make'] = $this->url->link('vehicles/vehicles_list', 'token=' . $this->session->data['token'] . '&sort=c.make' . $url, 'SSL');
+        $data['sort_model'] = $this->url->link('vehicles/vehicles_list', 'token=' . $this->session->data['token'] . '&sort=c.model' . $url, 'SSL');
         $data['sort_status'] = $this->url->link('vehicles/vehicles_list', 'token=' . $this->session->data['token'] . '&sort=c.status' . $url, 'SSL');
         $data['sort_date_added'] = $this->url->link('vehicles/vehicles_list', 'token=' . $this->session->data['token'] . '&sort=c.date_added' . $url, 'SSL');
 
