@@ -116,6 +116,18 @@ class ControllerVehiclesVehiclesList extends Controller {
         } else {
             $filter_model = null;
         }
+        
+        if (isset($this->request->get['filter_registration_date'])) {
+            $filter_registration_date = $this->request->get['filter_registration_date'];
+        } else {
+            $filter_registration_date = null;
+        }
+        
+        if (isset($this->request->get['filter_registration_validity_upto'])) {
+            $filter_registration_validity_upto = $this->request->get['filter_registration_validity_upto'];
+        } else {
+            $filter_registration_validity_upto = null;
+        }
 
         if (isset($this->request->get['filter_status'])) {
             $filter_status = $this->request->get['filter_status'];
@@ -155,6 +167,14 @@ class ControllerVehiclesVehiclesList extends Controller {
 
         if (isset($this->request->get['filter_model'])) {
             $url .= '&filter_model=' . urlencode(html_entity_decode($this->request->get['filter_model'], ENT_QUOTES, 'UTF-8'));
+        }
+        
+        if (isset($this->request->get['filter_registration_date'])) {
+            $url .= '&filter_registration_date=' . urlencode(html_entity_decode($this->request->get['filter_registration_date'], ENT_QUOTES, 'UTF-8'));
+        }
+        
+        if (isset($this->request->get['filter_registration_validity_upto'])) {
+            $url .= '&filter_registration_validity_upto=' . urlencode(html_entity_decode($this->request->get['filter_registration_validity_upto'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_status'])) {
@@ -197,8 +217,8 @@ class ControllerVehiclesVehiclesList extends Controller {
         $filter_data = [
             'filter_make' => $filter_make,
             'filter_model' => $filter_model,
-            'filter_driving_licence' => $filter_driving_licence,
-            'filter_telephone' => $filter_telephone,
+            'filter_registration_date' => $filter_registration_date,
+            'filter_registration_validity_upto' => $filter_registration_validity_upto,
             'filter_status' => $filter_status,
             'filter_date_added' => $filter_date_added,
             'sort' => $sort,
@@ -223,11 +243,11 @@ class ControllerVehiclesVehiclesList extends Controller {
 
             $data['vehicles'][] = [
                 'vehicle_id' => $result['vehicle_id'],
-                'name' => $result['name'],
-                'email' => $result['email'],
-                'driving_licence' => $result['driving_licence'],
-                'driving_licence_expire_date' => $result['driving_licence_expire_date'],
-                'telephone' => $country_code . $result['telephone'],
+                'make' => $result['make'],
+                'model' => $result['model'],
+                'registration_number' => $result['registration_number'],
+                'registration_date' => $result['registration_date'],
+                'registration_validity_upto' => $result['registration_validity_upto'],
                 'status' => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
                 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
                 'edit' => $this->url->link('vehicles/vehicles_list/edit', 'token=' . $this->session->data['token'] . '&vehicle_id=' . $result['vehicle_id'] . $url, 'SSL'),
@@ -299,20 +319,20 @@ class ControllerVehiclesVehiclesList extends Controller {
 
         $url = '';
 
-        if (isset($this->request->get['filter_name'])) {
-            $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+        if (isset($this->request->get['filter_make'])) {
+            $url .= '&filter_make=' . urlencode(html_entity_decode($this->request->get['filter_make'], ENT_QUOTES, 'UTF-8'));
         }
 
-        if (isset($this->request->get['filter_email'])) {
-            $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
+        if (isset($this->request->get['filter_model'])) {
+            $url .= '&filter_model=' . urlencode(html_entity_decode($this->request->get['filter_model'], ENT_QUOTES, 'UTF-8'));
         }
 
-        if (isset($this->request->get['filter_driving_licence'])) {
-            $url .= '&filter_driving_licence=' . urlencode(html_entity_decode($this->request->get['filter_driving_licence'], ENT_QUOTES, 'UTF-8'));
+        if (isset($this->request->get['filter_registration_date'])) {
+            $url .= '&filter_registration_date=' . urlencode(html_entity_decode($this->request->get['filter_registration_date'], ENT_QUOTES, 'UTF-8'));
         }
 
-        if (isset($this->request->get['filter_telephone'])) {
-            $url .= '&filter_telephone=' . urlencode(html_entity_decode($this->request->get['filter_telephone'], ENT_QUOTES, 'UTF-8'));
+        if (isset($this->request->get['filter_registration_validity_upto'])) {
+            $url .= '&filter_registration_validity_upto=' . urlencode(html_entity_decode($this->request->get['filter_registration_validity_upto'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_status'])) {
@@ -382,10 +402,10 @@ class ControllerVehiclesVehiclesList extends Controller {
 
         $data['results'] = sprintf($this->language->get('text_pagination'), ($vehicles_total) ? (($page - 1) * $this->config->get('config_limit_admin')) + 1 : 0, ((($page - 1) * $this->config->get('config_limit_admin')) > ($vehicles_total - $this->config->get('config_limit_admin'))) ? $vehicles_total : ((($page - 1) * $this->config->get('config_limit_admin')) + $this->config->get('config_limit_admin')), $vehicles_total, ceil($vehicles_total / $this->config->get('config_limit_admin')));
 
-        $data['filter_name'] = $filter_name;
-        $data['filter_email'] = $filter_email;
-        $data['filter_driving_licence'] = $filter_driving_licence;
-        $data['filter_telephone'] = $filter_telephone;
+        $data['filter_make'] = $filter_make;
+        $data['filter_model'] = $filter_model;
+        $data['filter_registration_date'] = $filter_registration_date;
+        $data['filter_registration_validity_upto'] = $filter_registration_validity_upto;
         $data['filter_status'] = $filter_status;
         $data['filter_date_added'] = $filter_date_added;
         $data['sort'] = $sort;
