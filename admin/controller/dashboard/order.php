@@ -162,12 +162,75 @@ class ControllerDashboardOrder extends Controller {
         // Total Orders
         $this->load->model('sale/order');
 
-        $today = $this->model_sale_order->getTotalOrders(['filter_date_added' => date('Y-m-d')]);
+        $order_total = $this->model_sale_order->getTotalOrders(['filter_order_status' => 14]);
 
-        $data['total'] = $today;
+        $data['total'] = $order_total;
         $data['order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'], 'SSL');
 
         return $this->load->view('dashboard/dashboard_order.tpl', $data);
+    }
+
+    public function ProcessedOrders() {
+
+        $this->load->language('dashboard/order');
+
+        $data['heading_title'] = $this->language->get('heading_title');
+
+        $data['text_view'] = $this->language->get('text_view');
+
+        $data['token'] = $this->session->data['token'];
+
+        // Total Orders
+        $this->load->model('sale/order');
+
+        $order_total = $this->model_sale_order->getTotalOrders(['filter_order_status' => 1]);
+
+        $data['total'] = $order_total;
+        $data['order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'], 'SSL');
+
+        return $this->load->view('dashboard/dashboard_processing_order.tpl', $data);
+    }
+
+    public function CancelledOrders() {
+
+        $this->load->language('dashboard/order');
+
+        $data['heading_title'] = $this->language->get('heading_title');
+
+        $data['text_view'] = $this->language->get('text_view');
+
+        $data['token'] = $this->session->data['token'];
+
+        // Total Orders
+        $this->load->model('sale/order');
+
+        $order_total = $this->model_sale_order->getTotalOrders(['filter_order_status' => 6]);
+
+        $data['total'] = $order_total;
+        $data['order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'], 'SSL');
+
+        return $this->load->view('dashboard/dashboard_cancelled_order.tpl', $data);
+    }
+
+    public function IncompleteOrders() {
+
+        $this->load->language('dashboard/order');
+
+        $data['heading_title'] = $this->language->get('heading_title');
+
+        $data['text_view'] = $this->language->get('text_view');
+
+        $data['token'] = $this->session->data['token'];
+
+        // Total Orders
+        $this->load->model('sale/order');
+
+        $order_total = $this->model_sale_order->getTotalIncompleteOrders();
+
+        $data['total'] = $order_total;
+        $data['order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'], 'SSL');
+
+        return $this->load->view('dashboard/dashboard_incomplete_order.tpl', $data);
     }
 
 }
