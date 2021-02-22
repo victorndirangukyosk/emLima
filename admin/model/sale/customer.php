@@ -187,7 +187,7 @@ class ModelSaleCustomer extends Model {
         }
 
         if (!empty($data['filter_sub_customer_show']) && !empty($data['filter_sub_customer_show']) && $data['filter_sub_customer_show'] == 1) {
-            $implode[] = "parent > 0";
+            //$implode[] = "parent > 0";
         }
 
         if ($implode) {
@@ -440,7 +440,7 @@ class ModelSaleCustomer extends Model {
         }
 
         if (!empty($data['filter_sub_customer_show']) && !empty($data['filter_sub_customer_show']) && $data['filter_sub_customer_show'] == 1) {
-            $implode[] = "parent > 0";
+            //$implode[] = "parent > 0";
         }
 
         if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
