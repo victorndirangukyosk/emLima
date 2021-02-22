@@ -111,9 +111,9 @@ class ControllerCommonMenu extends Controller
         $data['order_dashboard'] = $this->url->link('sale/orderdashboard', 'token='.$this->session->data['token'], 'SSL');
         $data['vendor_order'] = $this->url->link('sale/order', 'token='.$this->session->data['token'], 'SSL');
 
-        $data['vendor_fast_order'] = $this->url->link('sale/fast_order', 'token='.$this->session->data['token'].'&filter_order_status=2,15,18,3,5&filter_order_day=today', 'SSL');
+        $data['vendor_fast_order'] = $this->url->link('sale/fast_order', 'token='.$this->session->data['token'].'&filter_order_status=14,1&filter_order_day=today', 'SSL');
 
-        $data['fast_order'] = $this->url->link('sale/fast_order', 'token='.$this->session->data['token'].'&filter_order_status=2,15,18,3,5&filter_order_day=today', 'SSL');
+        $data['fast_order'] = $this->url->link('sale/fast_order', 'token='.$this->session->data['token'].'&filter_order_status=14,1&filter_order_day=today', 'SSL');
 
         $data['order_status'] = $this->url->link('localisation/order_status', 'token='.$this->session->data['token'], 'SSL');
         $data['app_order_status'] = $this->url->link('localisation/app_order_status', 'token='.$this->session->data['token'], 'SSL');
