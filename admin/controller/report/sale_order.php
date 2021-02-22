@@ -307,7 +307,8 @@ class ControllerReportSaleOrder extends Controller {
                 'tax' => $this->currency->format($result['tax'], $this->config->get('config_currency')),
                 //'total' => $this->currency->format($result['total'], $this->config->get('config_currency')),
                 'total' => $this->currency->format($result['totals'], $this->config->get('config_currency')),
-                'totalvalue' => $result['total'],
+                'totalvalue' => $result['totals'],
+                //'totalvalue' => $result['total'],
             ];
         }
 
