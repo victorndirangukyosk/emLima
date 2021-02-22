@@ -1,9 +1,8 @@
 <?php
 
-class ControllerReportSaleOrder extends Controller
-{
-    public function index()
-    {
+class ControllerReportSaleOrder extends Controller {
+
+    public function index() {
         $this->load->language('report/sale_order');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -13,7 +12,7 @@ class ControllerReportSaleOrder extends Controller
         } else {
             $filter_city = '';
         }
-        
+
         if (isset($this->request->get['filter_customer'])) {
             $filter_customer = $this->request->get['filter_customer'];
         } else {
@@ -23,7 +22,7 @@ class ControllerReportSaleOrder extends Controller
         if (isset($this->request->get['filter_date_start'])) {
             $filter_date_start = $this->request->get['filter_date_start'];
         } else {
-            $filter_date_start = date('Y-m-d', strtotime(date('Y').'-'.date('m').'-01'));
+            $filter_date_start = date('Y-m-d', strtotime(date('Y') . '-' . date('m') . '-01'));
         }
 
         if (isset($this->request->get['filter_date_end'])) {
@@ -53,43 +52,43 @@ class ControllerReportSaleOrder extends Controller
         $url = '';
 
         if (isset($this->request->get['filter_city'])) {
-            $url .= '&filter_city='.$this->request->get['filter_city'];
+            $url .= '&filter_city=' . $this->request->get['filter_city'];
         }
-        
+
         if (isset($this->request->get['filter_customer'])) {
-            $url .= '&filter_customer='.$this->request->get['filter_customer'];
+            $url .= '&filter_customer=' . $this->request->get['filter_customer'];
         }
 
         if (isset($this->request->get['filter_date_start'])) {
-            $url .= '&filter_date_start='.$this->request->get['filter_date_start'];
+            $url .= '&filter_date_start=' . $this->request->get['filter_date_start'];
         }
 
         if (isset($this->request->get['filter_date_end'])) {
-            $url .= '&filter_date_end='.$this->request->get['filter_date_end'];
+            $url .= '&filter_date_end=' . $this->request->get['filter_date_end'];
         }
 
         if (isset($this->request->get['filter_group'])) {
-            $url .= '&filter_group='.$this->request->get['filter_group'];
+            $url .= '&filter_group=' . $this->request->get['filter_group'];
         }
 
         if (isset($this->request->get['filter_order_status_id'])) {
-            $url .= '&filter_order_status_id='.$this->request->get['filter_order_status_id'];
+            $url .= '&filter_order_status_id=' . $this->request->get['filter_order_status_id'];
         }
 
         if (isset($this->request->get['page'])) {
-            $url .= '&page='.$this->request->get['page'];
+            $url .= '&page=' . $this->request->get['page'];
         }
 
         $data['breadcrumbs'] = [];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
+            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('report/sale_order', 'token='.$this->session->data['token'].$url, 'SSL'),
+            'href' => $this->url->link('report/sale_order', 'token=' . $this->session->data['token'] . $url, 'SSL'),
         ];
 
         $this->load->model('report/sale');
@@ -110,7 +109,8 @@ class ControllerReportSaleOrder extends Controller
         $order_total = $this->model_report_sale->getTotalOrdersbyDeliveryDate($filter_data);
 
         $results = $this->model_report_sale->getOrdersbyDeliveryDate($filter_data);
-        //echo "<pre>".print_r($results)."</pre>";die;
+        //echo "<pre>" . print_r($results) . "</pre>";
+        //die;
 
         foreach ($results as $result) {
             $data['orders'][] = [
@@ -119,7 +119,7 @@ class ControllerReportSaleOrder extends Controller
                 'date_starto' => $result['date_start'],
                 'date_endo' => $result['date_end'],
                 'orders' => $result['orders'],
-                'products' => $result['products'],
+                'products' => $result['realproducts'] != NULL && $result['realproducts'] > 0 ? $result['realproducts'] : $result['products'],
                 //'tax' => $this->currency->format($result['tax'], $this->config->get('config_currency')),
                 //'total' => $this->currency->format($result['total'], $this->config->get('config_currency')),
                 'tax' => $this->currency->format(0, $this->config->get('config_currency')),
@@ -162,51 +162,51 @@ class ControllerReportSaleOrder extends Controller
 
         $data['groups'][] = [
             'text' => $this->language->get('text_year'),
-            'value' => 'year', ];
+            'value' => 'year',];
 
         $data['groups'][] = [
             'text' => $this->language->get('text_month'),
-            'value' => 'month', ];
+            'value' => 'month',];
 
         $data['groups'][] = [
             'text' => $this->language->get('text_week'),
-            'value' => 'week', ];
+            'value' => 'week',];
 
         $data['groups'][] = [
             'text' => $this->language->get('text_day'),
-            'value' => 'day', ];
+            'value' => 'day',];
 
         $url = '';
 
         if (isset($this->request->get['filter_city'])) {
-            $url .= '&filter_city='.$this->request->get['filter_city'];
+            $url .= '&filter_city=' . $this->request->get['filter_city'];
         }
-        
+
         if (isset($this->request->get['filter_customer'])) {
-            $url .= '&filter_customer='.$this->request->get['filter_customer'];
+            $url .= '&filter_customer=' . $this->request->get['filter_customer'];
         }
 
         if (isset($this->request->get['filter_date_start'])) {
-            $url .= '&filter_date_start='.$this->request->get['filter_date_start'];
+            $url .= '&filter_date_start=' . $this->request->get['filter_date_start'];
         }
 
         if (isset($this->request->get['filter_date_end'])) {
-            $url .= '&filter_date_end='.$this->request->get['filter_date_end'];
+            $url .= '&filter_date_end=' . $this->request->get['filter_date_end'];
         }
 
         if (isset($this->request->get['filter_group'])) {
-            $url .= '&filter_group='.$this->request->get['filter_group'];
+            $url .= '&filter_group=' . $this->request->get['filter_group'];
         }
 
         if (isset($this->request->get['filter_order_status_id'])) {
-            $url .= '&filter_order_status_id='.$this->request->get['filter_order_status_id'];
+            $url .= '&filter_order_status_id=' . $this->request->get['filter_order_status_id'];
         }
 
         $pagination = new Pagination();
         $pagination->total = $order_total;
         $pagination->page = $page;
         $pagination->limit = $this->config->get('config_limit_admin');
-        $pagination->url = $this->url->link('report/sale_order', 'token='.$this->session->data['token'].$url.'&page={page}', 'SSL');
+        $pagination->url = $this->url->link('report/sale_order', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
@@ -226,8 +226,7 @@ class ControllerReportSaleOrder extends Controller
         $this->response->setOutput($this->load->view('report/sale_order.tpl', $data));
     }
 
-    public function city_autocomplete()
-    {
+    public function city_autocomplete() {
         $this->load->model('sale/order');
 
         $json = $this->model_sale_order->getCitiesLike($this->request->get['filter_name']);
@@ -236,8 +235,7 @@ class ControllerReportSaleOrder extends Controller
         echo json_encode($json);
     }
 
-    public function saleorderexcel()
-    {
+    public function saleorderexcel() {
         $this->load->language('report/sale_order');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -247,7 +245,7 @@ class ControllerReportSaleOrder extends Controller
         } else {
             $filter_city = '';
         }
-        
+
         if (isset($this->request->get['filter_customer'])) {
             $filter_customer = $this->request->get['filter_customer'];
         } else {
@@ -257,7 +255,7 @@ class ControllerReportSaleOrder extends Controller
         if (isset($this->request->get['filter_date_start'])) {
             $filter_date_start = $this->request->get['filter_date_start'];
         } else {
-            $filter_date_start = date('Y-m-d', strtotime(date('Y').'-'.date('m').'-01'));
+            $filter_date_start = date('Y-m-d', strtotime(date('Y') . '-' . date('m') . '-01'));
         }
 
         if (isset($this->request->get['filter_date_end'])) {
@@ -278,7 +276,7 @@ class ControllerReportSaleOrder extends Controller
             $filter_order_status_id = 0;
         }
 
-         $this->load->model('report/sale');
+        $this->load->model('report/sale');
 
         $data['orders'] = [];
 
@@ -289,8 +287,8 @@ class ControllerReportSaleOrder extends Controller
             'filter_date_end' => $filter_date_end,
             'filter_group' => $filter_group,
             'filter_order_status_id' => $filter_order_status_id,
-            // 'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            // 'limit' => $this->config->get('config_limit_admin'),
+                // 'start' => ($page - 1) * $this->config->get('config_limit_admin'),
+                // 'limit' => $this->config->get('config_limit_admin'),
         ];
 
         // $order_total = $this->model_report_sale->getTotalOrders($filter_data);
@@ -311,9 +309,10 @@ class ControllerReportSaleOrder extends Controller
             ];
         }
 
-        $data['filter_date_start']=$filter_date_start;
-        $data['filter_date_end']=$filter_date_end;
+        $data['filter_date_start'] = $filter_date_start;
+        $data['filter_date_end'] = $filter_date_end;
         $this->load->model('report/excel');
         $this->model_report_excel->download_sale_order_excel($data);
     }
+
 }
