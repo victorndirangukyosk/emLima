@@ -556,6 +556,25 @@ class ControllerSaleFastOrder extends Controller
             $filter_order_id = null;
         }
 
+
+        if (isset($this->request->get['filter_order_from_id'])) {
+            $filter_order_from_id = $this->request->get['filter_order_from_id'];
+        } else {
+            $filter_order_from_id = null;
+        }
+
+        if (isset($this->request->get['filter_order_to_id'])) {
+            $filter_order_to_id = $this->request->get['filter_order_to_id'];
+        } else {
+            $filter_order_to_id = null;
+        }
+
+        if (isset($this->request->get['filter_company'])) {
+            $filter_company = $this->request->get['filter_company'];
+        } else {
+            $filter_company = null;
+        }
+
         if (isset($this->request->get['filter_customer'])) {
             $filter_customer = $this->request->get['filter_customer'];
         } else {
@@ -586,6 +605,13 @@ class ControllerSaleFastOrder extends Controller
             $filter_payment = null;
         }
 
+        if (isset($this->request->get['filter_order_type'])) {
+            $filter_order_type = $this->request->get['filter_order_type'];
+        } else {
+            $filter_order_type = null;
+        }
+
+
         if (isset($this->request->get['filter_order_status'])) {
             $filter_order_status = $this->request->get['filter_order_status'];
         } else {
@@ -608,6 +634,12 @@ class ControllerSaleFastOrder extends Controller
             $filter_date_added = $this->request->get['filter_date_added'];
         } else {
             $filter_date_added = null;
+        }
+
+         if (isset($this->request->get['filter_date_added_end'])) {
+            $filter_date_added_end = $this->request->get['filter_date_added_end'];
+        } else {
+            $filter_date_added_end = null;
         }
 
         if (isset($this->request->get['filter_date_modified'])) {
@@ -644,6 +676,17 @@ class ControllerSaleFastOrder extends Controller
             $url .= '&filter_order_id='.$this->request->get['filter_order_id'];
         }
 
+        if (isset($this->request->get['filter_order_from_id'])) {
+            $url .= '&filter_order_from_id='.$this->request->get['filter_order_from_id'];
+        }
+
+        if (isset($this->request->get['filter_order_to_id'])) {
+            $url .= '&filter_order_to_id='.$this->request->get['filter_order_to_id'];
+        }
+        if (isset($this->request->get['filter_company'])) {
+            $url .= '&filter_company=' . urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
+        }
+
         if (isset($this->request->get['filter_customer'])) {
             $url .= '&filter_customer='.urlencode(html_entity_decode($this->request->get['filter_customer'], ENT_QUOTES, 'UTF-8'));
         }
@@ -659,7 +702,9 @@ class ControllerSaleFastOrder extends Controller
         if (isset($this->request->get['filter_delivery_method'])) {
             $url .= '&filter_delivery_method='.urlencode(html_entity_decode($this->request->get['filter_delivery_method'], ENT_QUOTES, 'UTF-8'));
         }
-
+        if (isset($this->request->get['filter_delivery_date'])) {
+            $url .= '&filter_delivery_date=' . urlencode(html_entity_decode($this->request->get['filter_delivery_date'], ENT_QUOTES, 'UTF-8'));
+        }
         if (isset($this->request->get['filter_payment'])) {
             $url .= '&filter_payment='.urlencode(html_entity_decode($this->request->get['filter_payment'], ENT_QUOTES, 'UTF-8'));
         }
@@ -672,6 +717,11 @@ class ControllerSaleFastOrder extends Controller
             $url .= '&filter_order_day='.$this->request->get['filter_order_day'];
         }
 
+
+        if (isset($this->request->get['filter_order_type'])) {
+            $url .= '&filter_order_type=' . $this->request->get['filter_order_type'];
+        }
+
         if (isset($this->request->get['filter_total'])) {
             $url .= '&filter_total='.$this->request->get['filter_total'];
         }
@@ -680,6 +730,10 @@ class ControllerSaleFastOrder extends Controller
             $url .= '&filter_date_added='.$this->request->get['filter_date_added'];
         }
 
+
+        if (isset($this->request->get['filter_date_added_end'])) {
+            $url .= '&filter_date_added_end=' . $this->request->get['filter_date_added_end'];
+        }
         if (isset($this->request->get['filter_date_modified'])) {
             $url .= '&filter_date_modified='.$this->request->get['filter_date_modified'];
         }
@@ -714,23 +768,41 @@ class ControllerSaleFastOrder extends Controller
 
         $data['orders'] = [];
 
+
+        // $data['invoice'] = $this->url->link('sale/order/invoice', 'token=' . $this->session->data['token'], 'SSL');
+        // $data['shipping'] = $this->url->link('sale/order/shipping', 'token=' . $this->session->data['token'], 'SSL');
+        // $data['add'] = $this->url->link('sale/order/add', 'token=' . $this->session->data['token'], 'SSL');
+        // $data['delivery_sheet'] = $this->url->link('sale/order/consolidatedOrderSheet', 'token=' . $this->session->data['token'], 'SSL');
+         
+
+
+
         $filter_data = [
             'filter_city' => $filter_city,
             'filter_order_id' => $filter_order_id,
+            'filter_order_from_id' => $filter_order_from_id,
+            'filter_order_to_id' => $filter_order_to_id,
             'filter_customer' => $filter_customer,
+            'filter_company' => $filter_company,
             'filter_vendor' => $this->getUserByName($filter_vendor),
             'filter_store_name' => $filter_store_name,
             'filter_delivery_method' => $filter_delivery_method,
+            'filter_delivery_date' => $filter_delivery_date,
+
             'filter_payment' => $filter_payment,
             'filter_order_status' => $filter_order_status,
+            'filter_order_type' => $filter_order_type,
+
             'filter_order_day' => $filter_order_day,
             'filter_total' => $filter_total,
             'filter_date_added' => $filter_date_added,
+            'filter_date_added_end' => $filter_date_added_end,
+
             'filter_date_modified' => $filter_date_modified,
             'sort' => $sort,
-            'order' => $order,
-            'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin'),
+            'order' => $order,// all orders are fecting by group, so dont send limit
+            // 'start' => ($page - 1) * $this->config->get('config_limit_admin'),
+            // 'limit' => $this->config->get('config_limit_admin'),
         ];
 
         //echo "<pre>";print_r($filter_data);die;
@@ -748,10 +820,12 @@ class ControllerSaleFastOrder extends Controller
                 // code...
                 $filter_data['filter_order_status'] = $tmp;
 
-                $order_total = $this->model_sale_order->getTotalOrdersFilter($filter_data);
+                // $order_total = $this->model_sale_order->getTotalOrdersFilter($filter_data);
+                 $order_total = $this->model_sale_order->getTotalOrders($filter_data);
 
                 //echo "<pre>";print_r($filter_data);die;
-                $results = $this->model_sale_order->getOrdersFilter($filter_data);
+                // $results = $this->model_sale_order->getOrdersFilter($filter_data);
+                $results = $this->model_sale_order->getOrders($filter_data);
 
                 //echo "<pre>";print_r($results);die;
 
@@ -839,16 +913,18 @@ class ControllerSaleFastOrder extends Controller
                 if ($this->user->isVendor()) {
                     $result['customer'] = strtok($result['customer'], ' ');
                 }
-
+                $this->load->model('localisation/order_status');
                 $data['orders'][$result['status']]['orders'][] = [
                     'order_id' => $result['order_id'],
                     'customer' => $result['customer'],
-
+                    'company_name' => $result['company_name'],
                     'payment_method' => $result['payment_method'],
                     'shipping_method' => $result['shipping_method'],
-
+                    'shipping_address' => $result['shipping_address'],
                     'status' => $result['status'],
                     'store' => $result['store_name'],
+                    'order_status_id' => $result['order_status_id'],
+
                     'order_status_color' => $result['color'],
                     'city' => $result['city'],
                     'total' => $this->currency->format($result['total'], $result['currency_code'], $result['currency_value']),
@@ -861,6 +937,14 @@ class ControllerSaleFastOrder extends Controller
                     'view' => $this->url->link('sale/order/info', 'token='.$this->session->data['token'].'&order_id='.$result['order_id'].$url, 'SSL'),
                     'edit' => $this->url->link('sale/order/EditInvoice', 'token='.$this->session->data['token'].'&order_id='.$result['order_id'].$url, 'SSL'),
                     'delete' => $this->url->link('sale/order/delete', 'token='.$this->session->data['token'].'&order_id='.$result['order_id'].$url, 'SSL'),
+                    'invoice' => $this->url->link('sale/order/invoice', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL'),
+                'order_spreadsheet' => $this->url->link('sale/order/orderCalculationSheet', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL'),
+                'shipping' => $this->url->link('sale/order/shipping', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL'),
+                
+                'po_number' => $result['po_number'],
+                'SAP_customer_no' => $result['SAP_customer_no'],
+                'SAP_doc_no' => $result['SAP_doc_no'],
+                'all_order_statuses' => $this->model_localisation_order_status->getOrderStatuses()
                 ];
 
                 $order_statuses_color_temp = $result['color'];
@@ -1086,7 +1170,7 @@ class ControllerSaleFastOrder extends Controller
 
         $this->load->model('localisation/order_status');
 
-        $data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
+        $data['order_statuses'] = $this->model_localisation_order_status->getOrderStatusesbeforeReadyforDelivery();
 
         $data['sort'] = $sort;
         $data['order'] = $order;
