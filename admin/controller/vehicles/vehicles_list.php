@@ -815,6 +815,106 @@ class ControllerVehiclesVehiclesList extends Controller {
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
+    
+    public function autocompletebyVehicleMake() {
+        $log = new Log('error.log');
+        $json = [];
+
+        if (isset($this->request->get['filter_make'])) {
+            if (isset($this->request->get['filter_make'])) {
+                $filter_make = $this->request->get['filter_make'];
+            } else {
+                $filter_make = '';
+            }
+
+            $this->load->model('vehicles/vehicles');
+
+            $filter_data = [
+                'filter_make' => $filter_make,
+                'start' => 0,
+                'limit' => 5,
+            ];
+
+            $results = $this->model_vehicles_vehicles->getVehicles($filter_data);
+            //$log->write('results');
+            //$log->write($results);
+            //$log->write('results');
+
+            foreach ($results as $result) {
+                $json[] = [
+                    'vehicle_id' => $result['vehicle_id'],
+                    'make' => $result['make'],
+                    'model' => $result['model'],
+                    'registration_number' => $result['registration_number'],
+                    'registration_validity' => $result['registration_validity'],
+                    'registration_date' => $result['registration_date'],
+                    'status' => $result['status'],
+                    'date_added' => $result['date_added'],
+                ];
+            }
+        }
+
+        $sort_order = [];
+
+        foreach ($json as $key => $value) {
+            $sort_order[$key] = $value['registration_number'];
+        }
+
+        array_multisort($sort_order, SORT_ASC, $json);
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+    
+    public function autocompletebyVehicleModel() {
+        $log = new Log('error.log');
+        $json = [];
+
+        if (isset($this->request->get['filter_model'])) {
+            if (isset($this->request->get['filter_model'])) {
+                $filter_model = $this->request->get['filter_model'];
+            } else {
+                $filter_model = '';
+            }
+
+            $this->load->model('vehicles/vehicles');
+
+            $filter_data = [
+                'filter_make' => $filter_model,
+                'start' => 0,
+                'limit' => 5,
+            ];
+
+            $results = $this->model_vehicles_vehicles->getVehicles($filter_data);
+            //$log->write('results');
+            //$log->write($results);
+            //$log->write('results');
+
+            foreach ($results as $result) {
+                $json[] = [
+                    'vehicle_id' => $result['vehicle_id'],
+                    'make' => $result['make'],
+                    'model' => $result['model'],
+                    'registration_number' => $result['registration_number'],
+                    'registration_validity' => $result['registration_validity'],
+                    'registration_date' => $result['registration_date'],
+                    'status' => $result['status'],
+                    'date_added' => $result['date_added'],
+                ];
+            }
+        }
+
+        $sort_order = [];
+
+        foreach ($json as $key => $value) {
+            $sort_order[$key] = $value['registration_number'];
+        }
+
+        array_multisort($sort_order, SORT_ASC, $json);
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
 
     public function export_excel() {
         $data = [];
