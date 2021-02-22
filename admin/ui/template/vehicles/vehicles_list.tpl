@@ -107,17 +107,17 @@
               <thead>
                 <tr>
                   <td style="width: 1px;" class="text-center"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" /></td>
-                  <td class="text-left"><?php if ($sort == 'name') { ?>
-                    <a href="<?php echo $sort_name; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_name; ?></a>
+                  <td class="text-left"><?php if ($sort == 'c.make') { ?>
+                    <a href="<?php echo $sort_make; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_make; ?></a>
                     <?php } else { ?>
-                    <a href="<?php echo $sort_name; ?>"><?php echo $column_name; ?></a>
+                    <a href="<?php echo $sort_make; ?>"><?php echo $column_make; ?></a>
                     <?php } ?></td>
-                  <td style="width: 3px;" class="text-left"><?php if ($sort == 'c.email') { ?>
-                    <a href="<?php echo $sort_email; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_email; ?></a>
+                  <td style="width: 3px;" class="text-left"><?php if ($sort == 'c.model') { ?>
+                    <a href="<?php echo $sort_model; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_model; ?></a>
                     <?php } else { ?>
-                    <a href="<?php echo $sort_email; ?>"><?php echo $column_email; ?></a>
+                    <a href="<?php echo $sort_model; ?>"><?php echo $column_model; ?></a>
                     <?php } ?></td>
-                  <td class="text-left"><?php echo $column_telephone; ?></td>
+                  <td class="text-left"><?php echo $column_registration_number; ?></td>
 
                   <td class="text-left"><?php if ($sort == 'c.status') { ?>
                     <a href="<?php echo $sort_status; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_status; ?></a>

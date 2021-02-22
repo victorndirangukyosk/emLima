@@ -20,8 +20,9 @@ $_['entry_dob'] = 'DOB';
 
 $_['entry_gender'] = 'Gender';
 // Column
-$_['column_name'] = 'Driver Name';
-$_['column_email'] = 'E-Mail';
+$_['column_make'] = 'Make';
+$_['column_model'] = 'Model';
+$_['column_registration_number'] = 'Registration Number';
 $_['column_driving_licence'] = 'Driving Licence';
 $_['column_customer_group'] = 'Customer Group';
 $_['column_status'] = 'Status';

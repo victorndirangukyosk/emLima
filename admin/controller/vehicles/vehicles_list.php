@@ -238,8 +238,9 @@ class ControllerVehiclesVehiclesList extends Controller {
         $data['text_no_results'] = $this->language->get('text_no_results');
         $data['text_confirm'] = $this->language->get('text_confirm');
 
-        $data['column_name'] = $this->language->get('column_name');
-        $data['column_email'] = $this->language->get('column_email');
+        $data['column_make'] = $this->language->get('column_make');
+        $data['column_model'] = $this->language->get('column_model');
+        $data['column_registration_number'] = $this->language->get('column_registration_number');
         $data['column_driving_licence'] = $this->language->get('column_driving_licence');
         $data['column_telephone'] = $this->language->get('column_telephone');
         $data['column_customer_group'] = $this->language->get('column_customer_group');
