@@ -267,12 +267,13 @@ class ControllerVehiclesVehiclesList extends Controller {
         $data['column_date_added'] = $this->language->get('column_date_added');
         $data['column_action'] = $this->language->get('column_action');
 
-        $data['entry_name'] = $this->language->get('entry_name');
-        $data['entry_email'] = $this->language->get('entry_email');
-        $data['entry_driving_licence'] = $this->language->get('entry_driving_licence');
+        $data['entry_make'] = $this->language->get('entry_make');
+        $data['entry_model'] = $this->language->get('entry_model');
+        $data['entry_registration_number'] = $this->language->get('entry_registration_number');
+        $data['entry_registration_date'] = $this->language->get('entry_registration_date');
 
 
-        $data['entry_telephone'] = $this->language->get('entry_telephone');
+        $data['entry_registration_validity_upto'] = $this->language->get('entry_registration_validity_upto');
         $data['entry_status'] = $this->language->get('entry_status');
         $data['entry_date_added'] = $this->language->get('entry_date_added');
 
@@ -420,13 +421,13 @@ class ControllerVehiclesVehiclesList extends Controller {
 
         $data['entry_firstname'] = $this->language->get('entry_firstname');
         $data['entry_lastname'] = $this->language->get('entry_lastname');
-        $data['entry_email'] = $this->language->get('entry_email');
-        $data['entry_driving_licence'] = $this->language->get('entry_driving_licence');
-        $data['entry_driving_licence_expire_date'] = 'Driving Licence Expire Date';
+        $data['entry_model'] = $this->language->get('entry_model');
+        $data['entry_registration_number'] = $this->language->get('entry_registration_number');
+        $data['entry_registration_date'] = $this->language->get('entry_registration_date');;
 
-        $data['entry_telephone'] = $this->language->get('entry_telephone');
+        $data['entry_registration_validity_upto'] = $this->language->get('entry_registration_validity_upto');
         $data['entry_status'] = $this->language->get('entry_status');
-        $data['entry_name'] = $this->language->get('entry_name');
+        $data['entry_make'] = $this->language->get('entry_make');
 
         $data['button_save'] = $this->language->get('button_save');
         $data['button_savenew'] = $this->language->get('button_savenew');

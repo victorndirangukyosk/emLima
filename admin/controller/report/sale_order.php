@@ -110,6 +110,7 @@ class ControllerReportSaleOrder extends Controller
         $order_total = $this->model_report_sale->getTotalOrdersbyDeliveryDate($filter_data);
 
         $results = $this->model_report_sale->getOrdersbyDeliveryDate($filter_data);
+        //echo "<pre>".print_r($results)."</pre>";die;
 
         foreach ($results as $result) {
             $data['orders'][] = [

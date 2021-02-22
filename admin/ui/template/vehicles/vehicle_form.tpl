@@ -50,51 +50,51 @@
                   <div class="tab-content">
                     <div class="tab-pane active" id="tab-customer">
                       <div class="form-group required">
-                        <label class="col-sm-2 control-label" for="input-firstname"><?php echo $entry_firstname; ?></label>
+                        <label class="col-sm-2 control-label" for="input-make"><?php echo $entry_make; ?></label>
                         <div class="col-sm-10">
-                          <input type="text" name="firstname" value="<?php echo $firstname; ?>" placeholder="<?php echo $entry_firstname; ?>" id="input-firstname" class="form-control" />
-                          <?php if ($error_firstname) { ?>
-                          <div class="text-danger"><?php echo $error_firstname; ?></div>
+                          <input type="text" name="make" value="<?php echo $make; ?>" placeholder="<?php echo $entry_make; ?>" id="input-make" class="form-control" />
+                          <?php if ($error_make) { ?>
+                          <div class="text-danger"><?php echo $error_make; ?></div>
                           <?php } ?>
                         </div>
                       </div>
                       <div class="form-group required">
-                        <label class="col-sm-2 control-label" for="input-lastname"><?php echo $entry_lastname; ?></label>
+                        <label class="col-sm-2 control-label" for="input-model"><?php echo $entry_model; ?></label>
                         <div class="col-sm-10">
-                          <input type="text" name="lastname" value="<?php echo $lastname; ?>" placeholder="<?php echo $entry_lastname; ?>" id="input-lastname" class="form-control" />
-                          <?php if ($error_lastname) { ?>
-                          <div class="text-danger"><?php echo $error_lastname; ?></div>
+                          <input type="text" name="model" value="<?php echo $model; ?>" placeholder="<?php echo $entry_model; ?>" id="input-model" class="form-control" />
+                          <?php if ($error_model) { ?>
+                          <div class="text-danger"><?php echo $error_model; ?></div>
                           <?php } ?>
                         </div>
                       </div>
                       <div class="form-group">
-                        <label class="col-sm-2 control-label" for="input-email"><?php echo $entry_email; ?></label>
+                        <label class="col-sm-2 control-label" for="input-registration-number"><?php echo $entry_registration_number; ?></label>
                         <div class="col-sm-10">
-                          <input type="text" name="email" value="<?php echo $email; ?>" placeholder="<?php echo $entry_email; ?>" id="input-email" class="form-control" />
-                          <?php if ($error_email) { ?>
-                          <div class="text-danger"><?php echo $error_email; ?></div>
+                          <input type="text" name="registration_number" value="<?php echo $registration_number; ?>" placeholder="<?php echo $entry_registration_number; ?>" id="input-registration-number" class="form-control" />
+                          <?php if ($error_registration_number) { ?>
+                          <div class="text-danger"><?php echo $error_registration_number; ?></div>
                           <?php  } ?>
                         </div>
                       </div>
                       <div class="form-group required">
-                        <label class="col-sm-2 control-label" for="input-driving-licence"><?php echo $entry_driving_licence; ?></label>
+                        <label class="col-sm-2 control-label" for="input-registration-date"><?php echo $entry_registration_date; ?></label>
                         <div class="col-sm-10">
-                          <input type="text" name="driving_licence" value="<?php echo $driving_licence; ?>" placeholder="<?php echo $entry_driving_licence; ?>" id="input-driving-licence" class="form-control" />
-                          <?php if ($error_driving_licence) { ?>
-                          <div class="text-danger"><?php echo $error_driving_licence; ?></div>
+                          <input type="text" name="registration_date" value="<?php echo $registration_date; ?>" placeholder="<?php echo $entry_registration_date; ?>" id="input-registration-date" class="form-control" />
+                          <?php if ($error_registration_date) { ?>
+                          <div class="text-danger"><?php echo $error_registration_date; ?></div>
                           <?php  } ?>
                         </div>
                       </div>
                       <div class="form-group required">
-                        <label class="col-sm-2 control-label" for="input-driving-licence-expire-date"><?php echo $entry_driving_licence_expire_date; ?></label>
+                        <label class="col-sm-2 control-label" for="input-registration-validity-upto"><?php echo $entry_registration_validity_upto; ?></label>
                         <div class="col-sm-10">
                             <div class="input-group date">
-                                <input type="text" name="driving_licence_expire_date" value="<?php echo $driving_licence_expire_date; ?>" placeholder="<?php echo $entry_driving_licence_expire_date; ?>" data-date-format="YYYY-MM-DD" id="driving_licence_expire_date" class="form-control" />
+                                <input type="text" name="registration_validity_upto" value="<?php echo $registration_validity_upto; ?>" placeholder="<?php echo $entry_registration_validity_upto; ?>" data-date-format="YYYY-MM-DD" id="registration_validity_upto" class="form-control" />
                                 <span class="input-group-btn">
                                     <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
                                 </span></div>
-                        <?php if ($error_driving_licence_expire_date) { ?>
-                          <div class="text-danger"><?php echo $error_driving_licence_expire_date; ?></div>
+                        <?php if ($error_registration_validity_upto) { ?>
+                          <div class="text-danger"><?php echo $error_registration_validity_upto; ?></div>
                         <?php  } ?>
                         </div>
                       </div>
@@ -102,16 +102,6 @@
                       
 
                       <!-- end -->
-
-                      <div class="form-group required">
-                        <label class="col-sm-2 control-label" for="input-telephone"><?php echo $entry_telephone; ?></label>
-                        <div class="col-sm-10">
-                          <input type="text" name="telephone" value="<?php echo $telephone; ?>" placeholder="<?php echo $entry_telephone; ?>" id="input-telephone" class="form-control" maxlength=10 onkeypress="return isNumberKey(event)"  />
-                          <?php if ($error_telephone) { ?>
-                          <div class="text-danger"><?php echo $error_telephone; ?></div>
-                          <?php  } ?>
-                        </div>
-                      </div>                       
                       <div class="form-group">
                         <label class="col-sm-2 control-label" for="input-status"><?php echo $entry_status; ?></label>
                         <div class="col-sm-10">

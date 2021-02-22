@@ -1,14 +1,14 @@
 <?php
 
 // Heading
-$_['heading_title'] = 'Drivers';
+$_['heading_title'] = 'Vehicles';
 
 // Text
-$_['text_success'] = 'Success: You have modified drivers!';
-$_['text_list'] = 'Drivers List';
-$_['text_add'] = 'Add Driver';
-$_['text_edit'] = 'Edit Driver';
-$_['text_view'] = 'View Driver';
+$_['text_success'] = 'Success: You have modified vehicles!';
+$_['text_list'] = 'Vehicles List';
+$_['text_add'] = 'Add Vehicle';
+$_['text_edit'] = 'Edit Vehicle';
+$_['text_view'] = 'View Vehicle';
 $_['text_default'] = 'Default';
 $_['text_balance'] = 'Balance';
 $_['text_add_ban_ip'] = 'Add Ban IP';
@@ -38,10 +38,11 @@ $_['column_action'] = 'Action';
 $_['column_telephone'] = 'Phone No.';
 // Entry
 $_['entry_customer_group'] = 'Customer Group';
-$_['entry_firstname'] = 'First Name';
-$_['entry_lastname'] = 'Last Name';
-$_['entry_email'] = 'E-Mail';
-$_['entry_driving_licence'] = 'Driving Licence';
+$_['entry_make'] = 'Make';
+$_['entry_model'] = 'Model';
+$_['entry_registration_number'] = 'Registration Number';
+$_['entry_registration_date'] = 'Registration Date';
+$_['entry_registration_validity_upto'] = 'Registration Validity Upto';
 
 $_['entry_telephone'] = 'Phone No.';
 $_['entry_fax'] = 'Tax No.';
