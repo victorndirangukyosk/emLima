@@ -48,16 +48,24 @@ class ControllerVehiclesVehiclesList extends Controller {
 
             $url = '';
 
-            if (isset($this->request->get['filter_name'])) {
-                $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+            if (isset($this->request->get['filter_make'])) {
+                $url .= '&filter_make=' . urlencode(html_entity_decode($this->request->get['filter_make'], ENT_QUOTES, 'UTF-8'));
             }
 
-            if (isset($this->request->get['filter_email'])) {
-                $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
+            if (isset($this->request->get['filter_model'])) {
+                $url .= '&filter_model=' . urlencode(html_entity_decode($this->request->get['filter_model'], ENT_QUOTES, 'UTF-8'));
             }
 
-            if (isset($this->request->get['filter_driving_licence'])) {
-                $url .= '&filter_driving_licence=' . urlencode(html_entity_decode($this->request->get['filter_driving_licence'], ENT_QUOTES, 'UTF-8'));
+            if (isset($this->request->get['filter_registration_number'])) {
+                $url .= '&filter_registration_number=' . urlencode(html_entity_decode($this->request->get['filter_registration_number'], ENT_QUOTES, 'UTF-8'));
+            }
+            
+            if (isset($this->request->get['filter_registration_date'])) {
+                $url .= '&filter_registration_date=' . urlencode(html_entity_decode($this->request->get['filter_registration_date'], ENT_QUOTES, 'UTF-8'));
+            }
+            
+            if (isset($this->request->get['filter_registration_validity_upto'])) {
+                $url .= '&filter_registration_validity_upto=' . urlencode(html_entity_decode($this->request->get['filter_registration_validity_upto'], ENT_QUOTES, 'UTF-8'));
             }
 
             if (isset($this->request->get['filter_status'])) {
@@ -624,10 +632,6 @@ class ControllerVehiclesVehiclesList extends Controller {
                 $this->error['warning'] = $this->language->get('error_exists');
             }
         }*/
-
-        if ((utf8_strlen($this->request->post['telephone']) < 3) || (utf8_strlen($this->request->post['telephone']) > 32)) {
-            $this->error['telephone'] = $this->language->get('error_telephone');
-        }
 
         if ($this->error && !isset($this->error['warning'])) {
             $this->error['warning'] = $this->language->get('error_warning');
