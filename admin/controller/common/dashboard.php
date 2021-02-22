@@ -121,6 +121,18 @@ class ControllerCommonDashboard extends Controller
         $data['activity'] = $this->load->controller('dashboard/activity');
         $data['recent'] = $this->load->controller('dashboard/recent');
         $data['recenttabs'] = $this->load->controller('dashboard/recenttabs');
+        
+        $data['order_received'] = '';
+        $data['order_processed'] = '';
+        $data['order_cancelled'] = '';
+        $data['order_incomeplete'] = '';
+        $data['total_revenue_booked'] = '';
+        $data['total_revenue_collected'] = '';
+        $data['total_revenue_pending'] = '';
+        $data['total_customers_onboarded'] = '';
+        $data['total_customers_registered'] = '';
+        $data['total_customers_approval_pending'] = '';
+
 
         // Run currency update
         if ($this->config->get('config_currency_auto')) {
