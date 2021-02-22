@@ -620,16 +620,16 @@ class ControllerVehiclesVehiclesList extends Controller {
         if ((utf8_strlen($this->request->post['registration_number']) < 1) || (utf8_strlen(trim($this->request->post['registration_number'])) > 32)) {
             $this->error['registration_number'] = $this->language->get('error_registration_number');
         }
-
-        if ((utf8_strlen($this->request->post['driving_licence']) < 1) || (utf8_strlen(trim($this->request->post['driving_licence'])) > 32)) {
-            $this->error['driving_licence'] = $this->language->get('error_driving_licence');
+        
+        if ((utf8_strlen($this->request->post['registration_date']) < 1) || (!preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/",$this->request->post['registration_date'])) || $this->request->post['registration_date'] == '0000-00-00') {
+            $this->error['registration_date'] = $this->language->get('error_registration_date');
         }
         
-        if ((utf8_strlen($this->request->post['driving_licence_expire_date']) < 1) || (!preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/",$this->request->post['driving_licence_expire_date'])) || $this->request->post['driving_licence_expire_date'] == '0000-00-00') {
-            $this->error['driving_licence_expire_date'] = 'Driving Licence Expire Date filed required';
+        if ((utf8_strlen($this->request->post['registration_validity_upto']) < 1) || (!preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/",$this->request->post['registration_validity_upto'])) || $this->request->post['registration_validity_upto'] == '0000-00-00') {
+            $this->error['registration_validity_upto'] = $this->language->get('error_registration_validity_upto');
         }
 
-        $vehicle_info = $this->model_vehicles_vehicles->getVehicleByNumber($this->request->post['email']);
+        $vehicle_info = $this->model_vehicles_vehicles->getVehicleByNumber($this->request->post['registration_number']);
 
         /*if (!isset($this->request->get['vehicle_id'])) {
             if ($vehicle_info) {
