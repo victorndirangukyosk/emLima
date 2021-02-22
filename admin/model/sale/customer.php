@@ -183,6 +183,14 @@ class ModelSaleCustomer extends Model {
         if (isset($data['filter_account_manager_name']) && !is_null($data['filter_account_manager_id'])) {
             $implode[] = "c.account_manager_id = '" . (int) $data['filter_account_manager_id'] . "'";
         }
+        
+        if (!empty($data['filter_sub_customer_show']) && !empty($data['filter_sub_customer_show']) && $data['filter_sub_customer_show'] == 1) {
+            $implode[] = "parent > 0";
+        }
+        
+        if (!empty($data['filter_sub_customer_show']) && !empty($data['filter_sub_customer_show']) && $data['filter_sub_customer_show'] == 0) {
+            $implode[] = "parent = 0";
+        }
 
         if ($implode) {
             $sql .= ' AND ' . implode(' AND ', $implode);
@@ -427,6 +435,14 @@ class ModelSaleCustomer extends Model {
         
         if (!empty($data['filter_account_manager_id']) && !empty($data['filter_account_manager_name'])) {
             $implode[] = "account_manager_id = '" . $this->db->escape($data['filter_account_manager_id']) . "'";
+        }
+        
+        if (!empty($data['filter_sub_customer_show']) && !empty($data['filter_sub_customer_show']) && $data['filter_sub_customer_show'] == 1) {
+            $implode[] = "parent > 0";
+        }
+        
+        if (!empty($data['filter_sub_customer_show']) && !empty($data['filter_sub_customer_show']) && $data['filter_sub_customer_show'] == 0) {
+            $implode[] = "parent = 0";
         }
 
         if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
