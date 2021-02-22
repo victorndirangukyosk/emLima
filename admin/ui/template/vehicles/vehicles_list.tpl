@@ -39,25 +39,16 @@
           <div class="row">
            <div class="col-sm-3">
               <div class="form-group">
-                <label class="control-label" for="input-name"><?php echo $entry_name; ?></label>
-                <input type="text" name="filter_name" value="<?php echo $filter_name; ?>" placeholder="<?php echo $entry_name; ?>" id="input-name" class="form-control" />
+                <label class="control-label" for="input-make"><?php echo $entry_make; ?></label>
+                <input type="text" name="filter_make" value="<?php echo $filter_make; ?>" placeholder="<?php echo $entry_make; ?>" id="input-make" class="form-control" />
               </div>
               <div class="form-group">
-                <label class="control-label" for="input-email"><?php echo $entry_email; ?></label>
-                <input type="text" name="filter_email" value="<?php echo $filter_email; ?>" placeholder="<?php echo $entry_email; ?>" id="input-email" class="form-control" />
+                <label class="control-label" for="input-model"><?php echo $entry_model; ?></label>
+                <input type="text" name="filter_model" value="<?php echo $filter_model; ?>" placeholder="<?php echo $entry_model; ?>" id="input-model" class="form-control" />
               </div>
             </div>
             <div class="col-sm-3">
-             <div class="form-group">
-                <label class="control-label" for="input-telephone"><?php echo $column_telephone; ?></label>
-                <div class="input-group">
-                <span class="input-group-btn">
-                                        <button class="btn btn-default" type="button"><?php echo '+' . $this->config->get('config_telephone_code'); ?></button>                                      
-                </span>
-                <input type="text" name="filter_telephone" value="<?php echo $filter_telephone; ?>" placeholder="<?php echo $entry_telephone; ?>" id="input-telephone" class="form-control" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57"  minlength="9" maxlength="9"/>
-              </div>
-              </div>
-                            <div class="form-group">
+            <div class="form-group">
                 <label class="control-label" for="input-status"><?php echo $entry_status; ?></label>
                 <select name="filter_status" id="input-status" class="form-control">
                   <option value="*"></option>
@@ -73,9 +64,7 @@
                   <?php } ?>
                 </select>
               </div>
-            </div>
-           <div class="col-sm-3">
-            <div class="form-group">
+              <div class="form-group">
                 <label class="control-label" for="input-date-added"><?php echo $entry_date_added; ?></label>
                 <div class="input-group date" style="max-width: 321px;">
                   <input type="text" name="filter_date_added" value="<?php echo $filter_date_added; ?>" placeholder="<?php echo $entry_date_added; ?>" data-date-format="YYYY-MM-DD" id="input-date-added" class="form-control" />
@@ -84,6 +73,8 @@
                   </span>
                 </div>
             </div>
+            </div>
+           <div class="col-sm-3">
             <div class="form-group">
             <div class="input-group date" style="max-width: 321px; margin-top:37px;">
                   <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>    

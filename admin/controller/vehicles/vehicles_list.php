@@ -97,28 +97,16 @@ class ControllerVehiclesVehiclesList extends Controller {
     protected function getList() {
         $this->load->language('vehicles/vehicles');
 
-        if (isset($this->request->get['filter_name'])) {
-            $filter_name = $this->request->get['filter_name'];
+        if (isset($this->request->get['filter_make'])) {
+            $filter_make = $this->request->get['filter_make'];
         } else {
-            $filter_name = null;
+            $filter_make = null;
         }
 
-        if (isset($this->request->get['filter_email'])) {
-            $filter_email = $this->request->get['filter_email'];
+        if (isset($this->request->get['filter_model'])) {
+            $filter_model = $this->request->get['filter_model'];
         } else {
-            $filter_email = null;
-        }
-
-        if (isset($this->request->get['filter_driving_licence'])) {
-            $filter_driving_licence = $this->request->get['filter_driving_licence'];
-        } else {
-            $filter_driving_licence = null;
-        }
-
-        if (isset($this->request->get['filter_telephone'])) {
-            $filter_telephone = $this->request->get['filter_telephone'];
-        } else {
-            $filter_telephone = null;
+            $filter_model = null;
         }
 
         if (isset($this->request->get['filter_status'])) {
@@ -153,20 +141,12 @@ class ControllerVehiclesVehiclesList extends Controller {
 
         $url = '';
 
-        if (isset($this->request->get['filter_name'])) {
-            $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+        if (isset($this->request->get['filter_make'])) {
+            $url .= '&filter_make=' . urlencode(html_entity_decode($this->request->get['filter_make'], ENT_QUOTES, 'UTF-8'));
         }
 
-        if (isset($this->request->get['filter_email'])) {
-            $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
-        }
-
-        if (isset($this->request->get['filter_driving_licence'])) {
-            $url .= '&filter_driving_licence=' . urlencode(html_entity_decode($this->request->get['filter_driving_licence'], ENT_QUOTES, 'UTF-8'));
-        }
-
-        if (isset($this->request->get['filter_telephone'])) {
-            $url .= '&filter_telephone=' . urlencode(html_entity_decode($this->request->get['filter_telephone'], ENT_QUOTES, 'UTF-8'));
+        if (isset($this->request->get['filter_model'])) {
+            $url .= '&filter_model=' . urlencode(html_entity_decode($this->request->get['filter_model'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_status'])) {
@@ -207,8 +187,8 @@ class ControllerVehiclesVehiclesList extends Controller {
         $data['customers'] = [];
 
         $filter_data = [
-            'filter_name' => $filter_name,
-            'filter_email' => $filter_email,
+            'filter_make' => $filter_make,
+            'filter_model' => $filter_model,
             'filter_driving_licence' => $filter_driving_licence,
             'filter_telephone' => $filter_telephone,
             'filter_status' => $filter_status,
