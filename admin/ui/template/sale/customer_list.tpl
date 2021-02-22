@@ -278,6 +278,8 @@ $('#button-filter').on('click', function() {
   if ($('input[name=\'filter_sub_customer_show[]\']').is(':checked')) {
     filter_sub_customer_show = 1;
     url += '&filter_sub_customer_show=' + encodeURIComponent(filter_sub_customer_show);
+  } else {
+  url += '&filter_sub_customer_show=' + encodeURIComponent(filter_sub_customer_show);    
   }
   
   var filter_name = $('input[name=\'filter_name\']').val();
