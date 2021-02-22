@@ -7024,7 +7024,6 @@ class ModelReportExcel extends Model {
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, 4, 'Status');
 
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, 4, 'Date Created');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(8, 4, 'Date Updated');
 
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 4)->applyFromArray($title);
@@ -7034,7 +7033,6 @@ class ModelReportExcel extends Model {
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(5, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(6, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(7, 4)->applyFromArray($title);
-            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(8, 4)->applyFromArray($title);
 
 
             // Fetching the table data
@@ -7044,12 +7042,12 @@ class ModelReportExcel extends Model {
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['make']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['model']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['registration_number']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, date($this->language->get('date_format_short'), strtotime($result['registration_date'])));
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, date($this->language->get('date_format_short'), strtotime($result['registration_validity'])));
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, date($this->language->get('date_format_short'), strtotime($result['registration_date'])));
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, date($this->language->get('date_format_short'), strtotime($result['registration_validity'])));
 
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, $row, $result['status'] ? 'Enabled' : 'Disabled');
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $result['status'] ? 'Enabled' : 'Disabled');
 
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(8, $row, date($this->language->get('date_format_short'), strtotime($result['date_added'])));
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, $row, date($this->language->get('date_format_short'), strtotime($result['date_added'])));
                 ++$row;
             }
 
