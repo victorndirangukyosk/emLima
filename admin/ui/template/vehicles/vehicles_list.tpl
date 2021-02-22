@@ -168,18 +168,18 @@
   </div>
   <script type="text/javascript"><!--
 $('#button-filter').on('click', function() {
-  url = 'index.php?path=drivers/drivers_list&token=<?php echo $token; ?>';
+  url = 'index.php?path=vehicles/vehicles_list&token=<?php echo $token; ?>';
   
-  var filter_name = $('input[name=\'filter_name\']').val();
+  var filter_make = $('input[name=\'filter_make\']').val();
   
-  if (filter_name) {
-    url += '&filter_name=' + encodeURIComponent(filter_name);
+  if (filter_make) {
+    url += '&filter_make=' + encodeURIComponent(filter_make);
   }
   
-  var filter_email = $('input[name=\'filter_email\']').val();
+  var filter_model = $('input[name=\'filter_model\']').val();
   
-  if (filter_email) {
-    url += '&filter_email=' + encodeURIComponent(filter_email);
+  if (filter_model) {
+    url += '&filter_model=' + encodeURIComponent(filter_model);
   } 
   
   var filter_status = $('select[name=\'filter_status\']').val();
@@ -188,10 +188,10 @@ $('#button-filter').on('click', function() {
     url += '&filter_status=' + encodeURIComponent(filter_status); 
   } 
   
-  var filter_telephone = $('input[name=\'filter_telephone\']').val();
+  var filter_registration_number = $('input[name=\'filter_registration_number\']').val();
   
-  if (filter_telephone) {
-    url += '&filter_telephone=' + encodeURIComponent(filter_telephone);
+  if (filter_registration_number) {
+    url += '&filter_registration_number=' + encodeURIComponent(filter_registration_number);
   } 
     
   var filter_date_added = $('input[name=\'filter_date_added\']').val();
@@ -205,44 +205,63 @@ $('#button-filter').on('click', function() {
 //--></script> 
   <script type="text/javascript"><!--
 
-  $driverName="";
-$('input[name=\'filter_name\']').autocomplete({
+$('input[name=\'filter_make\']').autocomplete({
   'source': function(request, response) {
     $.ajax({
-      url: 'index.php?path=drivers/drivers_list/autocompletebyDriverName&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request)+'&filter_company=' +$driverName,
+      url: 'index.php?path=vehicles/vehicles_list/autocompletebyVehicleMake&token=<?php echo $token; ?>&filter_make=' +  encodeURIComponent(request),
       dataType: 'json',     
       success: function(json) {
         response($.map(json, function(item) {
           return {
-            label: item['name'],
-            value: item['driver_id']
+            label: item['make'],
+            value: item['make']
           }
         }));
       }
     });
   },
   'select': function(item) {
-    $('input[name=\'filter_name\']').val(item['label']);
+    $('input[name=\'filter_make\']').val(item['label']);
   } 
 });
 
-$('input[name=\'filter_email\']').autocomplete({
+$('input[name=\'filter_model\']').autocomplete({
   'source': function(request, response) {
     $.ajax({
-      url: 'index.php?path=drivers/drivers_list/autocompletebyDriverName&token=<?php echo $token; ?>&filter_email=' +  encodeURIComponent(request),
+      url: 'index.php?path=vehicles/vehicles_list/autocompletebyVehicleModel&token=<?php echo $token; ?>&filter_model=' +  encodeURIComponent(request),
       dataType: 'json',     
       success: function(json) {
         response($.map(json, function(item) {
           return {
-            label: item['email'],
-            value: item['driver_id']
+            label: item['model'],
+            value: item['model']
           }
         }));
       }
     });
   },
   'select': function(item) {
-    $('input[name=\'filter_email\']').val(item['label']);
+    $('input[name=\'filter_model\']').val(item['label']);
+  } 
+});
+
+$('input[name=\'filter_registration_number\']').autocomplete({
+  'source': function(request, response) {
+    $.ajax({
+      url: 'index.php?path=vehicles/vehicles_list/autocompletebyVehicleRegistrationNumber&token=<?php echo $token; ?>&filter_registration_number=' +  encodeURIComponent(request),
+      dataType: 'json',     
+      success: function(json) {
+        response($.map(json, function(item) {
+          return {
+            label: item['registration_number'],
+            value: item['vehicle_id']
+          }
+        }));
+      }
+    });
+  },
+  'select': function(item) {
+    $('input[name=\'filter_registration_number\']').val(item['label']);
   } 
 });
 //--></script> 
@@ -254,7 +273,7 @@ $('.date').datetimepicker({
 
 function excel() {
             
-    url = 'index.php?path=drivers/drivers_list/export_excel&token=<?php echo $token; ?>';
+    url = 'index.php?path=vehicles/vehicles_list/export_excel&token=<?php echo $token; ?>';
     
     location = url;
 }

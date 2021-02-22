@@ -767,11 +767,12 @@ class ControllerVehiclesVehiclesList extends Controller {
     }
 
     public function autocompletebyVehicleRegistrationNumber() {
+        $log = new Log('error.log');
         $json = [];
 
-        if (isset($this->request->get['registration_number'])) {
-            if (isset($this->request->get['registration_number'])) {
-                $filter_registration_number = $this->request->get['registration_number'];
+        if (isset($this->request->get['filter_registration_number'])) {
+            if (isset($this->request->get['filter_registration_number'])) {
+                $filter_registration_number = $this->request->get['filter_registration_number'];
             } else {
                 $filter_registration_number = '';
             }
@@ -785,6 +786,9 @@ class ControllerVehiclesVehiclesList extends Controller {
             ];
 
             $results = $this->model_vehicles_vehicles->getVehicles($filter_data);
+            $log->write('results');
+            $log->write($results);
+            $log->write('results');
 
             foreach ($results as $result) {
                 $json[] = [
