@@ -9,7 +9,7 @@ class ModelVehiclesVehicles extends Model {
     }
 
     public function editVehicle($vehicle_id, $data) {
-        $this->db->query('UPDATE ' . DB_PREFIX . "vehicles SET make = '" . $this->db->escape($data['make']) . "', model = '" . $this->db->escape($data['model']) . "', registration_number = '" . $this->db->escape($data['registration_number']) . "', registration_validity = '" . $this->db->escape($data['registration_validity']) . "', status = '" . (int) $data['status'] . "', registration_date = '" . $data['registration_date'] . "' WHERE vehicle_id = '" . (int) $vehicle_id . "'");
+        $this->db->query('UPDATE ' . DB_PREFIX . "vehicles SET make = '" . $this->db->escape($data['make']) . "', model = '" . $this->db->escape($data['model']) . "', registration_number = '" . $this->db->escape($data['registration_number']) . "', registration_validity = '" . $this->db->escape($data['registration_validity_upto']) . "', status = '" . (int) $data['status'] . "', registration_date = '" . $data['registration_date'] . "' WHERE vehicle_id = '" . (int) $vehicle_id . "'");
     }
 
     public function deleteVehicle($vehicle_id) {
