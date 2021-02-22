@@ -117,6 +117,12 @@ class ControllerVehiclesVehiclesList extends Controller {
             $filter_model = null;
         }
         
+        if (isset($this->request->get['filter_registration_number'])) {
+            $filter_registration_number = $this->request->get['filter_registration_number'];
+        } else {
+            $filter_registration_number = null;
+        }
+        
         if (isset($this->request->get['filter_registration_date'])) {
             $filter_registration_date = $this->request->get['filter_registration_date'];
         } else {
@@ -169,6 +175,10 @@ class ControllerVehiclesVehiclesList extends Controller {
             $url .= '&filter_model=' . urlencode(html_entity_decode($this->request->get['filter_model'], ENT_QUOTES, 'UTF-8'));
         }
         
+        if (isset($this->request->get['filter_registration_number'])) {
+            $url .= '&filter_registration_number=' . urlencode(html_entity_decode($this->request->get['filter_registration_number'], ENT_QUOTES, 'UTF-8'));
+        }
+        
         if (isset($this->request->get['filter_registration_date'])) {
             $url .= '&filter_registration_date=' . urlencode(html_entity_decode($this->request->get['filter_registration_date'], ENT_QUOTES, 'UTF-8'));
         }
@@ -217,6 +227,7 @@ class ControllerVehiclesVehiclesList extends Controller {
         $filter_data = [
             'filter_make' => $filter_make,
             'filter_model' => $filter_model,
+            'filter_registration_number' => $filter_registration_number,
             'filter_registration_date' => $filter_registration_date,
             'filter_registration_validity_upto' => $filter_registration_validity_upto,
             'filter_status' => $filter_status,
@@ -247,7 +258,7 @@ class ControllerVehiclesVehiclesList extends Controller {
                 'model' => $result['model'],
                 'registration_number' => $result['registration_number'],
                 'registration_date' => $result['registration_date'],
-                'registration_validity_upto' => $result['registration_validity_upto'],
+                'registration_validity_upto' => $result['registration_validity'],
                 'status' => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
                 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
                 'edit' => $this->url->link('vehicles/vehicles_list/edit', 'token=' . $this->session->data['token'] . '&vehicle_id=' . $result['vehicle_id'] . $url, 'SSL'),
@@ -508,11 +519,15 @@ class ControllerVehiclesVehiclesList extends Controller {
         }
 
         if (isset($this->request->get['filter_email'])) {
-            $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&filter_model=' . urlencode(html_entity_decode($this->request->get['filter_model'], ENT_QUOTES, 'UTF-8'));
         }
 
-        if (isset($this->request->get['filter_driving_licence'])) {
-            $url .= '&filter_driving_licence=' . urlencode(html_entity_decode($this->request->get['filter_driving_licence'], ENT_QUOTES, 'UTF-8'));
+        if (isset($this->request->get['filter_registration_number'])) {
+            $url .= '&filter_registration_number=' . urlencode(html_entity_decode($this->request->get['filter_registration_number'], ENT_QUOTES, 'UTF-8'));
+        }
+        
+        if (isset($this->request->get['filter_registration_date'])) {
+            $url .= '&filter_registration_date=' . urlencode(html_entity_decode($this->request->get['filter_registration_date'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_status'])) {
