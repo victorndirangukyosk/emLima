@@ -99,7 +99,7 @@ class ModelVehiclesVehicles extends Model {
     }
 
     public function getTotalVehicles($data = []) {
-        $sql = 'SELECT COUNT(*) AS total FROM ' . DB_PREFIX . 'vehicles';
+        $sql = 'SELECT COUNT(*) AS total FROM ' . DB_PREFIX . 'vehicles c';
 
         $implode = [];
 

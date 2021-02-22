@@ -786,9 +786,9 @@ class ControllerVehiclesVehiclesList extends Controller {
             ];
 
             $results = $this->model_vehicles_vehicles->getVehicles($filter_data);
-            $log->write('results');
-            $log->write($results);
-            $log->write('results');
+            //$log->write('results');
+            //$log->write($results);
+            //$log->write('results');
 
             foreach ($results as $result) {
                 $json[] = [
