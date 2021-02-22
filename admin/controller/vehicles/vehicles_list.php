@@ -609,16 +609,16 @@ class ControllerVehiclesVehiclesList extends Controller {
             $this->error['warning'] = $this->language->get('error_permission');
         }
 
-        if ((utf8_strlen($this->request->post['firstname']) < 1) || (utf8_strlen(trim($this->request->post['firstname'])) > 32)) {
-            $this->error['firstname'] = $this->language->get('error_firstname');
+        if ((utf8_strlen($this->request->post['make']) < 1) || (utf8_strlen(trim($this->request->post['make'])) > 32)) {
+            $this->error['make'] = $this->language->get('error_make');
         }
 
-        if ((utf8_strlen($this->request->post['lastname']) < 1) || (utf8_strlen(trim($this->request->post['lastname'])) > 32)) {
-            $this->error['lastname'] = $this->language->get('error_lastname');
+        if ((utf8_strlen($this->request->post['model']) < 1) || (utf8_strlen(trim($this->request->post['model'])) > 32)) {
+            $this->error['model'] = $this->language->get('error_model');
         }
-
-        if (isset($this->request->post['email']) && $this->request->post['email'] != NULL && ((utf8_strlen($this->request->post['email']) > 96) || !filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL))) {
-            $this->error['email'] = $this->language->get('error_email');
+        
+        if ((utf8_strlen($this->request->post['registration_number']) < 1) || (utf8_strlen(trim($this->request->post['registration_number'])) > 32)) {
+            $this->error['registration_number'] = $this->language->get('error_registration_number');
         }
 
         if ((utf8_strlen($this->request->post['driving_licence']) < 1) || (utf8_strlen(trim($this->request->post['driving_licence'])) > 32)) {
@@ -629,7 +629,7 @@ class ControllerVehiclesVehiclesList extends Controller {
             $this->error['driving_licence_expire_date'] = 'Driving Licence Expire Date filed required';
         }
 
-        $vehicle_info = $this->model_vehicles_vehicles->getVehicleByEmail($this->request->post['email']);
+        $vehicle_info = $this->model_vehicles_vehicles->getVehicleByNumber($this->request->post['email']);
 
         /*if (!isset($this->request->get['vehicle_id'])) {
             if ($vehicle_info) {

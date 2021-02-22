@@ -77,16 +77,15 @@ $_['help_safe'] = 'Set to true to avoid this customer from being caught by the a
 $_['help_points'] = 'Use minus to remove points';
 
 // Error
-$_['error_name'] = 'Name field required!';
 $_['error_address'] = 'Address field required!';
 $_['error_contact_no'] = 'Contact no field required!';
 $_['error_city_id'] = 'City field required!';
 $_['error_warning'] = 'Warning: Please check the form carefully for errors!';
 $_['error_permission'] = 'Warning: You do not have permission to modify customers!';
 $_['error_exists'] = 'Warning: E-Mail Address is already registered!';
-$_['error_firstname'] = 'First Name must be between 1 and 32 characters!';
-$_['error_lastname'] = 'Last Name must be between 1 and 32 characters!';
-$_['error_email'] = 'E-Mail Address does not appear to be valid!';
+$_['error_make'] = 'Make must be between 1 and 32 characters!';
+$_['error_model'] = 'Model must be between 1 and 32 characters!';
+$_['error_registration_number'] = 'Registration Number must be between 1 and 32 characters!';
 $_['error_driving_licence'] = 'Driving Licence field required!';
 $_['error_telephone'] = 'Telephone must be between 3 and 32 characters!';
 $_['error_password'] = 'Password must be between 4 and 20 characters!';

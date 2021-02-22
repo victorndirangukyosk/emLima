@@ -22,7 +22,7 @@ class ModelVehiclesVehicles extends Model {
         return $query->row;
     }
 
-    public function getDriverByNumber($registration_number) {
+    public function getVehicleByNumber($registration_number) {
         $query = $this->db->query('SELECT DISTINCT * FROM ' . DB_PREFIX . "vehicles WHERE registration_number = '" . $this->db->escape($registration_number) . "'");
 
         return $query->row;
