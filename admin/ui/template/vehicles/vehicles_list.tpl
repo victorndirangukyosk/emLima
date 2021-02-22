@@ -42,14 +42,21 @@
                 <label class="control-label" for="input-make"><?php echo $entry_make; ?></label>
                 <input type="text" name="filter_make" value="<?php echo $filter_make; ?>" placeholder="<?php echo $entry_make; ?>" id="input-make" class="form-control" />
               </div>
-              <div class="form-group">
-                <label class="control-label" for="input-model"><?php echo $entry_model; ?></label>
-                <input type="text" name="filter_model" value="<?php echo $filter_model; ?>" placeholder="<?php echo $entry_model; ?>" id="input-model" class="form-control" />
-              </div>
             </div>
+              
             <div class="col-sm-3">
             <div class="form-group">
-                <label class="control-label" for="input-status"><?php echo $entry_status; ?></label>
+                <div class="form-group">
+                <label class="control-label" for="input-model"><?php echo $entry_model; ?></label>
+                <input type="text" name="filter_model" value="<?php echo $filter_model; ?>" placeholder="<?php echo $entry_model; ?>" id="input-model" class="form-control" />
+                </div>
+              </div>
+            </div>
+            
+              <div class="col-sm-3">
+                  <div class="form-group">
+                <div class="form-group">
+                 <label class="control-label" for="input-status"><?php echo $entry_status; ?></label>
                 <select name="filter_status" id="input-status" class="form-control">
                   <option value="*"></option>
                   <?php if ($filter_status) { ?>
@@ -63,7 +70,11 @@
                   <option value="0"><?php echo $text_disabled; ?></option>
                   <?php } ?>
                 </select>
+                 </div>
               </div>
+              </div>
+    
+            <div class="col-sm-3">
               <div class="form-group">
                 <label class="control-label" for="input-date-added"><?php echo $entry_date_added; ?></label>
                 <div class="input-group date" style="max-width: 321px;">
@@ -76,7 +87,14 @@
             </div>
            <div class="col-sm-3">
             <div class="form-group">
-            <div class="input-group date" style="max-width: 321px; margin-top:37px;">
+                <label class="control-label" for="input-registration-number"><?php echo $entry_registration_number; ?></label>
+                <input type="text" name="filter_registration_number" value="<?php echo $filter_registration_number; ?>" placeholder="<?php echo $entry_registration_number; ?>" id="input-registration-number" class="form-control" />
+            </div>
+           </div>
+              
+           <div class="col-sm-3">
+            <div class="form-group">
+            <div class="input-group date" style="max-width: 321px; margin-top:23px;">
                   <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>    
             </div>
             </div>
@@ -115,20 +133,20 @@
                 </tr>
               </thead>
               <tbody>
-                <?php if ($drivers) { ?>
-                <?php foreach ($drivers as $driver) { ?>
+                <?php if ($vehicles) { ?>
+                <?php foreach ($vehicles as $vehicle) { ?>
                 <tr>
-                  <td class="text-center"><?php if (in_array($driver['driver_id'], $selected)) { ?>
-                    <input type="checkbox" name="selected[]" value="<?php echo $driver['driver_id']; ?>" checked="checked" />
+                  <td class="text-center"><?php if (in_array($vehicle['vehicle_id'], $selected)) { ?>
+                    <input type="checkbox" name="selected[]" value="<?php echo $vehicle['vehicle_id']; ?>" checked="checked" />
                     <?php } else { ?>
-                    <input type="checkbox" name="selected[]" value="<?php echo $driver['driver_id']; ?>" />
+                    <input type="checkbox" name="selected[]" value="<?php echo $vehicle['vehicle_id']; ?>" />
                     <?php } ?></td>
-                  <td class="text-left"><?php echo $driver['name']; ?></td>
-                  <td class="text-left"><?php echo $driver['email']; ?></td>
-                  <td class="text-left"><?php echo $driver['telephone']; ?></td>
-                  <td class="text-left"><?php echo $driver['status']; ?></td>
-                  <td class="text-left"><?php echo $driver['date_added']; ?></td>
-                  <td class="text-right"><a href="<?php echo $driver['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a>
+                  <td class="text-left"><?php echo $vehicle['registration_number']; ?></td>
+                  <td class="text-left"><?php echo $vehicle['make']; ?></td>
+                  <td class="text-left"><?php echo $vehicle['model']; ?></td>
+                  <td class="text-left"><?php echo $vehicle['status']; ?></td>
+                  <td class="text-left"><?php echo $vehicle['date_added']; ?></td>
+                  <td class="text-right"><a href="<?php echo $vehicle['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a>
 </td>
                 </tr>
                 <?php } ?>
