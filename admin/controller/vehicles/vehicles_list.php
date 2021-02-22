@@ -400,8 +400,6 @@ class ControllerVehiclesVehiclesList extends Controller {
         $data['text_disabled'] = $this->language->get('text_disabled');
         $data['text_loading'] = $this->language->get('text_loading');
 
-        $data['entry_firstname'] = $this->language->get('entry_firstname');
-        $data['entry_lastname'] = $this->language->get('entry_lastname');
         $data['entry_model'] = $this->language->get('entry_model');
         $data['entry_registration_number'] = $this->language->get('entry_registration_number');
         $data['entry_registration_date'] = $this->language->get('entry_registration_date');;
@@ -439,40 +437,34 @@ class ControllerVehiclesVehiclesList extends Controller {
             $data['success'] = '';
         }
 
-        if (isset($this->error['firstname'])) {
-            $data['error_firstname'] = $this->error['firstname'];
+        if (isset($this->error['make'])) {
+            $data['error_make'] = $this->error['make'];
         } else {
-            $data['error_firstname'] = '';
+            $data['error_make'] = '';
         }
 
-        if (isset($this->error['lastname'])) {
-            $data['error_lastname'] = $this->error['lastname'];
+        if (isset($this->error['model'])) {
+            $data['error_model'] = $this->error['model'];
         } else {
-            $data['error_lastname'] = '';
+            $data['error_model'] = '';
         }
 
-        if (isset($this->error['email'])) {
-            $data['error_email'] = $this->error['email'];
+        if (isset($this->error['registration_number'])) {
+            $data['error_registration_number'] = $this->error['registration_number'];
         } else {
-            $data['error_email'] = '';
+            $data['error_registration_number'] = '';
         }
 
-        if (isset($this->error['driving_licence'])) {
-            $data['error_driving_licence'] = $this->error['driving_licence'];
+        if (isset($this->error['registration_date'])) {
+            $data['error_registration_date'] = $this->error['registration_date'];
         } else {
-            $data['error_driving_licence'] = '';
+            $data['error_registration_date'] = '';
         }
         
-        if (isset($this->error['driving_licence_expire_date'])) {
-            $data['error_driving_licence_expire_date'] = $this->error['driving_licence_expire_date'];
+        if (isset($this->error['registration_validity_upto'])) {
+            $data['error_registration_validity_upto'] = $this->error['registration_validity_upto'];
         } else {
-            $data['error_driving_licence_expire_date'] = '';
-        }
-
-        if (isset($this->error['telephone'])) {
-            $data['error_telephone'] = $this->error['telephone'];
-        } else {
-            $data['error_telephone'] = '';
+            $data['error_registration_validity_upto'] = '';
         }
 
         if (isset($this->error['confirm'])) {
@@ -483,8 +475,8 @@ class ControllerVehiclesVehiclesList extends Controller {
 
         $url = '';
 
-        if (isset($this->request->get['filter_name'])) {
-            $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+        if (isset($this->request->get['filter_make'])) {
+            $url .= '&filter_make=' . urlencode(html_entity_decode($this->request->get['filter_make'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_email'])) {
@@ -538,52 +530,44 @@ class ControllerVehiclesVehiclesList extends Controller {
             $vehicle_info = $this->model_vehicles_vehicles->getVehicle($this->request->get['vehicle_id']);
         }
 
-        if (isset($this->request->post['firstname'])) {
-            $data['firstname'] = $this->request->post['firstname'];
+        if (isset($this->request->post['make'])) {
+            $data['make'] = $this->request->post['make'];
         } elseif (!empty($vehicle_info)) {
-            $data['firstname'] = $vehicle_info['firstname'];
+            $data['make'] = $vehicle_info['make'];
         } else {
-            $data['firstname'] = '';
+            $data['make'] = '';
         }
 
-        if (isset($this->request->post['lastname'])) {
-            $data['lastname'] = $this->request->post['lastname'];
+        if (isset($this->request->post['model'])) {
+            $data['model'] = $this->request->post['model'];
         } elseif (!empty($vehicle_info)) {
-            $data['lastname'] = $vehicle_info['lastname'];
+            $data['model'] = $vehicle_info['model'];
         } else {
-            $data['lastname'] = '';
+            $data['model'] = '';
         }
 
-        if (isset($this->request->post['email'])) {
-            $data['email'] = $this->request->post['email'];
+        if (isset($this->request->post['registration_number'])) {
+            $data['registration_number'] = $this->request->post['registration_number'];
         } elseif (!empty($vehicle_info)) {
-            $data['email'] = $vehicle_info['email'];
+            $data['registration_number'] = $vehicle_info['registration_number'];
         } else {
-            $data['email'] = '';
+            $data['registration_number'] = '';
         }
 
-        if (isset($this->request->post['driving_licence'])) {
-            $data['driving_licence'] = $this->request->post['driving_licence'];
+        if (isset($this->request->post['registration_date'])) {
+            $data['registration_date'] = $this->request->post['registration_date'];
         } elseif (!empty($vehicle_info)) {
-            $data['driving_licence'] = $vehicle_info['driving_licence'];
+            $data['registration_date'] = $vehicle_info['registration_date'];
         } else {
-            $data['driving_licence'] = '';
+            $data['registration_date'] = '';
         }
         
-        if (isset($this->request->post['driving_licence_expire_date'])) {
-            $data['driving_licence_expire_date'] = $this->request->post['driving_licence_expire_date'];
+        if (isset($this->request->post['registration_validity_upto'])) {
+            $data['registration_validity_upto'] = $this->request->post['registration_validity_upto'];
         } elseif (!empty($vehicle_info)) {
-            $data['driving_licence_expire_date'] = $vehicle_info['driving_licence_expire_date'];
+            $data['registration_validity_upto'] = $vehicle_info['registration_validity_upto'];
         } else {
-            $data['driving_licence_expire_date'] = '';
-        }
-
-        if (isset($this->request->post['telephone'])) {
-            $data['telephone'] = $this->request->post['telephone'];
-        } elseif (!empty($vehicle_info)) {
-            $data['telephone'] = $vehicle_info['telephone'];
-        } else {
-            $data['telephone'] = '';
+            $data['registration_validity_upto'] = '';
         }
 
         //echo "<pre>";print_r($data);die;
