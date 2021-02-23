@@ -278,4 +278,33 @@ class ControllerDashboardOrder extends Controller {
         return $this->load->view('dashboard/fast_order.tpl', $data);
     }
 
+    public function TotalRevenueBookedDashBoard() {
+
+        $this->load->language('dashboard/order');
+
+        $data['heading_title'] = $this->language->get('heading_title');
+
+        $data['text_view'] = $this->language->get('text_view');
+
+        $data['token'] = $this->session->data['token'];
+
+        // Total Orders
+        $this->load->model('sale/order');
+        
+        $order_grand_total = $this->model_sale_order->TotalRevenueBookedDashBoard();
+        $log = new Log('error.log');
+        $log->write('order_grand_total');
+        $log->write($order_grand_total);
+        $log->write('order_grand_total');
+        
+    }
+
+    public function TotalRevenueCollectedDashBoard() {
+        
+    }
+
+    public function TotalRevenuePendingDashBoard() {
+        
+    }
+
 }
