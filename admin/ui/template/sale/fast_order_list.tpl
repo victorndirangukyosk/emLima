@@ -1503,5 +1503,112 @@ var $select = $('#order_processor_id');
   setInterval(function() {
      location = location;
     }, 300 * 1000);
-        //--></script></div>
+        //-->
+           $driverName="";
+        
+        
+$('input[name=\'order_driver\']').autocomplete({
+  'source': function(request, response) {
+    $.ajax({
+      url: 'index.php?path=drivers/drivers_list/autocompletebyDriverName&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request)+'&filter_company=' +$driverName,
+      dataType: 'json',     
+      success: function(json) {
+        response($.map(json, function(item) {
+          return {
+            label: item['name'],
+            value: item['driver_id']
+          }
+        }));
+      }
+    });
+  },
+  'select': function(item) {
+    $('input[name=\'order_driver\']').val(item['label']);
+    $('input[name=\'order_driver\']').attr('data_driver_id',item['value']);
+  } 
+});
+
+$('input[name=\'order_delivery_executive\']').autocomplete({
+  'source': function(request, response) {
+    $.ajax({
+      url: 'index.php?path=executives/executives_list/autocompletebyExecutiveName&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request),
+      dataType: 'json',     
+      success: function(json) {
+        response($.map(json, function(item) {
+          return {
+            label: item['name'],
+            value: item['executive_id']
+          }
+        }));
+      }
+    });
+  },
+  'select': function(item) {
+    $('input[name=\'order_delivery_executive\']').val(item['label']);
+    $('input[name=\'order_delivery_executive\']').attr('data_delivery_executive_id',item['value']);
+  } 
+});
+
+$('a[id^=\'new_print_invoice\']').on('click', function (e) {
+e.preventDefault();
+var invoice = $(this).attr("data-order-invoice");
+var order_id = $(this).attr("data-order-id");
+var order_status = $('select[id=\'input-order-status'+order_id+'\'] option:selected').text();
+
+ $('select[name="order_delivery_executives"]').selectpicker('val', 0);
+ $('select[name="order_drivers"]').selectpicker('val', 0);
+ $('input[name="order_vehicle_number"]').val('');
+
+$.ajax({
+		url: 'index.php?path=sale/order/getDriverDetails&token=<?php echo $token; ?>',
+		type: 'post',
+		dataType: 'json',
+		data: 'order_id=' + order_id,
+		success: function(json) {
+                    console.log(json);
+                    console.log(json.order_info.order_id);
+                    console.log(json.order_info.driver_id);
+                    console.log(json.order_info.vehicle_number);
+                    console.log(json.order_info.delivery_executive_id);
+                    if(/*order_status != 'Ready for delivery'*/ json.order_info.order_status != 'Order Processing' || order_status != 'Order Processing' || json.order_info.driver_id == null || json.order_info.vehicle_number == null || json.order_info.delivery_executive_id == null)
+                    {
+                    $('input[name="order_id"]').val(order_id);
+                    $('input[name="invoice_custom"]').val(invoice);
+                    $('#driverModal').modal('toggle');
+                    if(order_status != 'Order Processing' || json.order_info.order_status != 'Order Processing') {
+                    //if(order_status != 'Ready for delivery') {
+                    $('#driverModal-message').html("Please Update Order Status As Order Processing!");
+                    //$('#driverModal-message').html("Please Select Order Status As Ready For Delivery!");
+                    $('#driver-buttons').prop('disabled', true);
+                    $('#driver-button').prop('disabled', true);
+                    return false;
+                    } else {
+                    $('#driverModal-message').html("");
+                    $('#driver-buttons').prop('disabled', false);
+                    $('#driver-button').prop('disabled', false);    
+                    }
+                    } else {
+                    console.log(invoice);
+                    window.open(invoice, '_blank');
+                    }
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {		
+			 
+		}
+});
+console.log($(this).attr("data-order-id"));
+});
+
+        
+        </script></div>
 <?php echo $footer; ?>
+
+
+
+<style>
+
+.bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn)
+{
+ width: 100%;
+}
+</style>
