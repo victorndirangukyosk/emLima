@@ -126,6 +126,7 @@ class ControllerCommonDashboard extends Controller
         $data['order_processed'] = $this->load->controller('dashboard/order/ProcessedOrders');
         $data['order_cancelled'] = $this->load->controller('dashboard/order/CancelledOrders');
         $data['order_incomeplete'] = $this->load->controller('dashboard/order/IncompleteOrders');
+        $data['order_approval_pening'] = $this->load->controller('dashboard/order/ApprovalPendingOrders');
         $data['total_revenue_booked'] = '';
         $data['total_revenue_collected'] = '';
         $data['total_revenue_pending'] = '';
