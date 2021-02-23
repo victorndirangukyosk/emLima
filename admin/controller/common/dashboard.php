@@ -129,7 +129,7 @@ class ControllerCommonDashboard extends Controller {
         $data['total_customers_approval_pending'] = $this->load->controller('dashboard/customer/CustomersPendingApproval');
 
         $data['total_revenue_booked'] = $this->load->controller('dashboard/order/TotalRevenueBookedDashBoard');
-        $data['total_revenue_collected'] = '';
+        $data['total_revenue_collected'] = $this->load->controller('dashboard/order/TotalRevenueCollectedDashBoard');
         $data['total_revenue_pending'] = '';
 
 
