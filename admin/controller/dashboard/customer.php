@@ -1,9 +1,8 @@
 <?php
 
-class ControllerDashboardCustomer extends Controller
-{
-    public function index()
-    {
+class ControllerDashboardCustomer extends Controller {
+
+    public function index() {
         $this->load->language('dashboard/customer');
 
         $data['heading_title'] = $this->language->get('heading_title');
@@ -30,19 +29,83 @@ class ControllerDashboardCustomer extends Controller
         $customer_total = $this->model_sale_customer->getTotalCustomersForDashboard();
 
         if ($customer_total > 1000000000000) {
-            $data['total'] = round($customer_total / 1000000000000, 1).'T';
+            $data['total'] = round($customer_total / 1000000000000, 1) . 'T';
         } elseif ($customer_total > 1000000000) {
-            $data['total'] = round($customer_total / 1000000000, 1).'B';
+            $data['total'] = round($customer_total / 1000000000, 1) . 'B';
         } elseif ($customer_total > 1000000) {
-            $data['total'] = round($customer_total / 1000000, 1).'M';
+            $data['total'] = round($customer_total / 1000000, 1) . 'M';
         } elseif ($customer_total > 1000) {
-            $data['total'] = round($customer_total / 1000, 1).'K';
+            $data['total'] = round($customer_total / 1000, 1) . 'K';
         } else {
             $data['total'] = $customer_total;
         }
 
-        $data['customer'] = $this->url->link('sale/customer', 'token='.$this->session->data['token'], 'SSL');
+        $data['customer'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'], 'SSL');
 
         return $this->load->view('dashboard/customer.tpl', $data);
     }
+
+    public function CustomersOnboarded() {
+
+        $this->load->language('dashboard/customer');
+
+        $data['heading_title'] = $this->language->get('heading_title');
+
+        $data['text_view'] = $this->language->get('text_view');
+
+        $data['token'] = $this->session->data['token'];
+
+        // Total Orders
+        $this->load->model('sale/customer');
+
+        $customer_total = $this->model_sale_customer->getTotalCustomersForDashboard();
+
+        $data['total'] = $customer_total;
+        $data['customer'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'], 'SSL');
+
+        return $this->load->view('dashboard/customer_onboarded.tpl', $data);
+    }
+
+    public function CustomersRegistered() {
+
+        $this->load->language('dashboard/customer');
+
+        $data['heading_title'] = $this->language->get('heading_title');
+
+        $data['text_view'] = $this->language->get('text_view');
+
+        $data['token'] = $this->session->data['token'];
+
+        // Total Orders
+        $this->load->model('sale/customer');
+
+        $customer_total = $this->model_sale_customer->getTotalCustomersForDashboard();
+
+        $data['total'] = $customer_total;
+        $data['customer'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'], 'SSL');
+
+        return $this->load->view('dashboard/customer_onboarded.tpl', $data);
+    }
+
+    public function CustomersPendingApproval() {
+
+        $this->load->language('dashboard/customer');
+
+        $data['heading_title'] = $this->language->get('heading_title');
+
+        $data['text_view'] = $this->language->get('text_view');
+
+        $data['token'] = $this->session->data['token'];
+
+        // Total Orders
+        $this->load->model('sale/customer');
+
+        $customer_total = $this->model_sale_customer->getTotalCustomersForDashboard();
+
+        $data['total'] = $customer_total;
+        $data['customer'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'], 'SSL');
+
+        return $this->load->view('dashboard/customer_onboarded.tpl', $data);
+    }
+
 }

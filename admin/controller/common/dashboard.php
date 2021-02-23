@@ -131,9 +131,9 @@ class ControllerCommonDashboard extends Controller
         $data['total_revenue_booked'] = '';
         $data['total_revenue_collected'] = '';
         $data['total_revenue_pending'] = '';
-        $data['total_customers_onboarded'] = '';
-        $data['total_customers_registered'] = '';
-        $data['total_customers_approval_pending'] = '';
+        $data['total_customers_onboarded'] = $this->load->controller('dashboard/customer/CustomersOnboarded');
+        $data['total_customers_registered'] = $this->load->controller('dashboard/customer/CustomersRegistered');
+        $data['total_customers_approval_pending'] = $this->load->controller('dashboard/customer/CustomersPendingApproval');
 
 
         // Run currency update
