@@ -84,7 +84,7 @@ class ControllerDashboardCustomer extends Controller {
         $data['total'] = $customer_total;
         $data['customer'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'], 'SSL');
 
-        return $this->load->view('dashboard/customer_onboarded.tpl', $data);
+        return $this->load->view('dashboard/customer_registered.tpl', $data);
     }
 
     public function CustomersPendingApproval() {
@@ -100,12 +100,12 @@ class ControllerDashboardCustomer extends Controller {
         // Total Orders
         $this->load->model('sale/customer');
 
-        $customer_total = $this->model_sale_customer->getTotalCustomersForDashboard();
+        $customer_total = $this->model_sale_customer->getTotalCustomersForDashboard(['filter_approved' => 0]);
 
         $data['total'] = $customer_total;
         $data['customer'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'], 'SSL');
 
-        return $this->load->view('dashboard/customer_onboarded.tpl', $data);
+        return $this->load->view('dashboard/customer_pending_approval.tpl', $data);
     }
 
 }
