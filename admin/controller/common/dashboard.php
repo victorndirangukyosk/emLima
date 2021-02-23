@@ -130,7 +130,7 @@ class ControllerCommonDashboard extends Controller {
 
         $data['total_revenue_booked'] = $this->load->controller('dashboard/order/TotalRevenueBookedDashBoard');
         $data['total_revenue_collected'] = $this->load->controller('dashboard/order/TotalRevenueCollectedDashBoard');
-        $data['total_revenue_pending'] = '';
+        $data['total_revenue_pending'] = $this->load->controller('dashboard/order/TotalRevenuePendingDashBoard');
 
 
         // Run currency update

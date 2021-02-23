@@ -323,7 +323,25 @@ class ControllerDashboardOrder extends Controller {
     }
 
     public function TotalRevenuePendingDashBoard() {
-        
+
+        $this->load->language('dashboard/order');
+
+        $data['heading_title'] = $this->language->get('heading_title');
+
+        $data['text_view'] = $this->language->get('text_view');
+
+        $data['token'] = $this->session->data['token'];
+
+        // Total Orders
+        $this->load->model('sale/order');
+
+        $order_grand_total = $this->model_sale_order->TotalRevenueBookedDashBoard(['filter_order_status' => 2, 7, 4, 15, 1, 14, 13, 9, 3]);
+        $data['total'] = $this->currency->format($order_grand_total);
+        $log = new Log('error.log');
+        /* $log->write('order_grand_total');
+          $log->write($order_grand_total);
+          $log->write('order_grand_total'); */
+        return $this->load->view('dashboard/total_revenue_pending.tpl', $data);
     }
 
 }
