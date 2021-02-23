@@ -290,13 +290,14 @@ class ControllerDashboardOrder extends Controller {
 
         // Total Orders
         $this->load->model('sale/order');
-        
+
         $order_grand_total = $this->model_sale_order->TotalRevenueBookedDashBoard();
+        $data['total'] = $this->currency->format($order_grand_total);
         $log = new Log('error.log');
-        $log->write('order_grand_total');
-        $log->write($order_grand_total);
-        $log->write('order_grand_total');
-        
+        /* $log->write('order_grand_total');
+          $log->write($order_grand_total);
+          $log->write('order_grand_total'); */
+        return $this->load->view('dashboard/total_revenue_booked.tpl', $data);
     }
 
     public function TotalRevenueCollectedDashBoard() {
