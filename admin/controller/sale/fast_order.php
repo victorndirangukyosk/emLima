@@ -1177,6 +1177,21 @@ class ControllerSaleFastOrder extends Controller
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
 
+
+        $this->load->model('executives/executives');
+        $delivery_executives = $this->model_executives_executives->getExecutives();
+        $data['delivery_executives'] = $delivery_executives;
+
+        $this->load->model('drivers/drivers');
+        $drivers = $this->model_drivers_drivers->getDrivers();
+        $data['drivers'] = $drivers;
+
+
+        $this->load->model('orderprocessinggroup/orderprocessinggroup');
+        $order_processing_groups = $this->model_orderprocessinggroup_orderprocessinggroup->getOrderProcessingGroups();
+        $data['order_processing_groups'] = $order_processing_groups;
+        
+
         $this->response->setOutput($this->load->view('sale/fast_order_list.tpl', $data));
     }
 
