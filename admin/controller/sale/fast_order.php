@@ -762,15 +762,13 @@ class ControllerSaleFastOrder extends Controller
             'href' => $this->url->link('sale/fast_order', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
-        $data['invoice'] = $this->url->link('sale/order/invoice', 'token='.$this->session->data['token'], 'SSL');
-        $data['shipping'] = $this->url->link('sale/fast_order/shipping', 'token='.$this->session->data['token'], 'SSL');
+        $data['invoice'] = $this->url->link('sale/order/invoice', 'token=' . $this->session->data['token'], 'SSL');
+        $data['shipping'] = $this->url->link('sale/order/shipping', 'token='.$this->session->data['token'], 'SSL');
         $data['add'] = $this->url->link('sale/fast_order/add', 'token='.$this->session->data['token'], 'SSL');
 
         $data['orders'] = [];
 
 
-        // $data['invoice'] = $this->url->link('sale/order/invoice', 'token=' . $this->session->data['token'], 'SSL');
-        // $data['shipping'] = $this->url->link('sale/order/shipping', 'token=' . $this->session->data['token'], 'SSL');
         // $data['add'] = $this->url->link('sale/order/add', 'token=' . $this->session->data['token'], 'SSL');
         // $data['delivery_sheet'] = $this->url->link('sale/order/consolidatedOrderSheet', 'token=' . $this->session->data['token'], 'SSL');
          
