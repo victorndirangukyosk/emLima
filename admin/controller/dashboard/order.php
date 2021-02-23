@@ -254,4 +254,26 @@ class ControllerDashboardOrder extends Controller {
         return $this->load->view('dashboard/dashboard_approval_pending_order.tpl', $data);
     }
 
+    public function FastOrders() {
+
+        $this->load->language('dashboard/order');
+
+        $data['heading_title'] = $this->language->get('heading_title');
+
+        $data['text_view'] = $this->language->get('text_view');
+
+        $data['token'] = $this->session->data['token'];
+
+        // Total Orders
+        $this->load->model('sale/order');
+
+        $order_total_today = $this->model_sale_order->getTotalOrders(['filter_order_status' => 1, 14, 'filter_order_day' => 'today']);
+        $order_total_tomorrow = $this->model_sale_order->getTotalOrders(['filter_order_status' => 1, 14, 'filter_order_day' => 'tomorrow']);
+        $order_total = $order_total_today + $order_total_tomorrow;
+        $data['total'] = $order_total;
+        $data['order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'], 'SSL');
+
+        return $this->load->view('dashboard/fast_order.tpl', $data);
+    }
+
 }
