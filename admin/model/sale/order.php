@@ -2755,8 +2755,8 @@ class ModelSaleOrder extends Model {
         return $query->row['total'];
     }
 
-    public function TotalRevenueBookedDashBoard() {
-        $all_orders = $this->getOrders();
+    public function TotalRevenueBookedDashBoard($data = []) {
+        $all_orders = $this->getOrders($data);
         $log = new Log('error.log');
         if (is_array($all_orders) && count($all_orders) > 0) {
             $order_grand_total = 0;
