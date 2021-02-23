@@ -122,16 +122,18 @@ class ControllerCommonDashboard extends Controller
         $data['recent'] = $this->load->controller('dashboard/recent');
         $data['recenttabs'] = $this->load->controller('dashboard/recenttabs');
         
-        $data['order_received'] = '';
-        $data['order_processed'] = '';
-        $data['order_cancelled'] = '';
-        $data['order_incomeplete'] = '';
+        $data['order_received'] = $this->load->controller('dashboard/order/ReceivedOrders');
+        $data['order_processed'] = $this->load->controller('dashboard/order/ProcessedOrders');
+        $data['order_cancelled'] = $this->load->controller('dashboard/order/CancelledOrders');
+        $data['order_incomeplete'] = $this->load->controller('dashboard/order/IncompleteOrders');
+        $data['order_approval_pening'] = $this->load->controller('dashboard/order/ApprovalPendingOrders');
+        $data['order_fast'] = $this->load->controller('dashboard/order/FastOrders');
         $data['total_revenue_booked'] = '';
         $data['total_revenue_collected'] = '';
         $data['total_revenue_pending'] = '';
-        $data['total_customers_onboarded'] = '';
-        $data['total_customers_registered'] = '';
-        $data['total_customers_approval_pending'] = '';
+        $data['total_customers_onboarded'] = $this->load->controller('dashboard/customer/CustomersOnboarded');
+        $data['total_customers_registered'] = $this->load->controller('dashboard/customer/CustomersRegistered');
+        $data['total_customers_approval_pending'] = $this->load->controller('dashboard/customer/CustomersPendingApproval');
 
 
         // Run currency update
