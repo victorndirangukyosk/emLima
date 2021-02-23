@@ -113,6 +113,7 @@ class ControllerReportUserActivity extends Controller {
                 'driver_id=',
                 'order_processing_group_id=',
                 'order_processor_id=',
+                'vehicle_id=',
             ];
 
             $replace = [
@@ -123,6 +124,7 @@ class ControllerReportUserActivity extends Controller {
                 $this->url->link('drivers/drivers_list/edit', 'token=' . $this->session->data['token'] . '&driver_id=', 'SSL'),
                 $this->url->link('orderprocessinggroup/orderprocessinggroup_list/edit', 'token=' . $this->session->data['token'] . '&order_processing_group_id=', 'SSL'),
                 $this->url->link('orderprocessinggroup/orderprocessor/edit', 'token=' . $this->session->data['token'] . '&order_processor_id=', 'SSL'),
+                $this->url->link('vehicles/vehicles_list/edit', 'token=' . $this->session->data['token'] . '&vehicle_id=', 'SSL'),
             ];
 
             $data['activities'][] = [
