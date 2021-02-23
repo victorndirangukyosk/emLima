@@ -5,11 +5,11 @@ class ControllerVehiclesVehiclesList extends Controller {
     private $error = [];
 
     public function index() {
-        $this->load->language('drivers/drivers');
+        $this->load->language('vehicles/vehicles');
 
         $this->document->setTitle($this->language->get('heading_title'));
 
-        $this->load->model('drivers/drivers');
+        $this->load->model('vehicles/vehicles');
 
         $this->getList();
 
@@ -18,17 +18,17 @@ class ControllerVehiclesVehiclesList extends Controller {
     }
 
     public function add() {
-        $this->load->language('drivers/drivers');
+        $this->load->language('vehicles/vehicles');
 
         $this->document->setTitle($this->language->get('heading_title'));
 
-        $this->load->model('drivers/drivers');
+        $this->load->model('vehicles/vehicles');
 
         if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
-            $driver_id = $this->model_drivers_drivers->addDriver($this->request->post);
+            $vehicle_id = $this->model_vehicles_vehicles->addVehicle($this->request->post);
 
             //$this->session->data['success'] = $this->language->get('text_success');
-            $this->session->data['success'] = 'Success : Driver created successfully!';
+            $this->session->data['success'] = 'Success : Vehicle created successfully!';
 
             // Add to activity log
             $log = new Log('error.log');
@@ -38,26 +38,34 @@ class ControllerVehiclesVehiclesList extends Controller {
                 'user_id' => $this->user->getId(),
                 'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
                 'user_group_id' => $this->user->getGroupId(),
-                'driver_id' => $driver_id,
+                'vehicle_id' => $vehicle_id,
             ];
-            $log->write('driver add');
+            $log->write('vehicle add');
 
-            $this->model_user_user_activity->addActivity('driver_add', $activity_data);
+            $this->model_user_user_activity->addActivity('vehicle_add', $activity_data);
 
-            $log->write('driver add');
+            $log->write('vehicle add');
 
             $url = '';
 
-            if (isset($this->request->get['filter_name'])) {
-                $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+            if (isset($this->request->get['filter_make'])) {
+                $url .= '&filter_make=' . urlencode(html_entity_decode($this->request->get['filter_make'], ENT_QUOTES, 'UTF-8'));
             }
 
-            if (isset($this->request->get['filter_email'])) {
-                $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
+            if (isset($this->request->get['filter_model'])) {
+                $url .= '&filter_model=' . urlencode(html_entity_decode($this->request->get['filter_model'], ENT_QUOTES, 'UTF-8'));
             }
 
-            if (isset($this->request->get['filter_driving_licence'])) {
-                $url .= '&filter_driving_licence=' . urlencode(html_entity_decode($this->request->get['filter_driving_licence'], ENT_QUOTES, 'UTF-8'));
+            if (isset($this->request->get['filter_registration_number'])) {
+                $url .= '&filter_registration_number=' . urlencode(html_entity_decode($this->request->get['filter_registration_number'], ENT_QUOTES, 'UTF-8'));
+            }
+
+            if (isset($this->request->get['filter_registration_date'])) {
+                $url .= '&filter_registration_date=' . urlencode(html_entity_decode($this->request->get['filter_registration_date'], ENT_QUOTES, 'UTF-8'));
+            }
+
+            if (isset($this->request->get['filter_registration_validity_upto'])) {
+                $url .= '&filter_registration_validity_upto=' . urlencode(html_entity_decode($this->request->get['filter_registration_validity_upto'], ENT_QUOTES, 'UTF-8'));
             }
 
             if (isset($this->request->get['filter_status'])) {
@@ -81,44 +89,50 @@ class ControllerVehiclesVehiclesList extends Controller {
             }
 
             if (isset($this->request->post['button']) and 'save' == $this->request->post['button']) {
-                $this->response->redirect($this->url->link('drivers/drivers_list/edit', 'driver_id=' . $driver_id . '&token=' . $this->session->data['token'] . $url, 'SSL'));
+                $this->response->redirect($this->url->link('vehicles/vehicles_list/edit', 'vehicle_id=' . $vehicle_id . '&token=' . $this->session->data['token'] . $url, 'SSL'));
             }
 
             if (isset($this->request->post['button']) and 'new' == $this->request->post['button']) {
-                $this->response->redirect($this->url->link('drivers/drivers_list/add', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+                $this->response->redirect($this->url->link('vehciles/vehicles_list/add', 'token=' . $this->session->data['token'] . $url, 'SSL'));
             }
 
-            $this->response->redirect($this->url->link('drivers/drivers_list', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            $this->response->redirect($this->url->link('vehicles/vehicles_list', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
 
         $this->getForm();
     }
 
     protected function getList() {
-        $this->load->language('drivers/drivers');
+        $this->load->language('vehicles/vehicles');
 
-        if (isset($this->request->get['filter_name'])) {
-            $filter_name = $this->request->get['filter_name'];
+        if (isset($this->request->get['filter_make'])) {
+            $filter_make = $this->request->get['filter_make'];
         } else {
-            $filter_name = null;
+            $filter_make = null;
         }
 
-        if (isset($this->request->get['filter_email'])) {
-            $filter_email = $this->request->get['filter_email'];
+        if (isset($this->request->get['filter_model'])) {
+            $filter_model = $this->request->get['filter_model'];
         } else {
-            $filter_email = null;
+            $filter_model = null;
         }
 
-        if (isset($this->request->get['filter_driving_licence'])) {
-            $filter_driving_licence = $this->request->get['filter_driving_licence'];
+        if (isset($this->request->get['filter_registration_number'])) {
+            $filter_registration_number = $this->request->get['filter_registration_number'];
         } else {
-            $filter_driving_licence = null;
+            $filter_registration_number = null;
         }
 
-        if (isset($this->request->get['filter_telephone'])) {
-            $filter_telephone = $this->request->get['filter_telephone'];
+        if (isset($this->request->get['filter_registration_date'])) {
+            $filter_registration_date = $this->request->get['filter_registration_date'];
         } else {
-            $filter_telephone = null;
+            $filter_registration_date = null;
+        }
+
+        if (isset($this->request->get['filter_registration_validity_upto'])) {
+            $filter_registration_validity_upto = $this->request->get['filter_registration_validity_upto'];
+        } else {
+            $filter_registration_validity_upto = null;
         }
 
         if (isset($this->request->get['filter_status'])) {
@@ -153,20 +167,24 @@ class ControllerVehiclesVehiclesList extends Controller {
 
         $url = '';
 
-        if (isset($this->request->get['filter_name'])) {
-            $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+        if (isset($this->request->get['filter_make'])) {
+            $url .= '&filter_make=' . urlencode(html_entity_decode($this->request->get['filter_make'], ENT_QUOTES, 'UTF-8'));
         }
 
-        if (isset($this->request->get['filter_email'])) {
-            $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
+        if (isset($this->request->get['filter_model'])) {
+            $url .= '&filter_model=' . urlencode(html_entity_decode($this->request->get['filter_model'], ENT_QUOTES, 'UTF-8'));
         }
 
-        if (isset($this->request->get['filter_driving_licence'])) {
-            $url .= '&filter_driving_licence=' . urlencode(html_entity_decode($this->request->get['filter_driving_licence'], ENT_QUOTES, 'UTF-8'));
+        if (isset($this->request->get['filter_registration_number'])) {
+            $url .= '&filter_registration_number=' . urlencode(html_entity_decode($this->request->get['filter_registration_number'], ENT_QUOTES, 'UTF-8'));
         }
 
-        if (isset($this->request->get['filter_telephone'])) {
-            $url .= '&filter_telephone=' . urlencode(html_entity_decode($this->request->get['filter_telephone'], ENT_QUOTES, 'UTF-8'));
+        if (isset($this->request->get['filter_registration_date'])) {
+            $url .= '&filter_registration_date=' . urlencode(html_entity_decode($this->request->get['filter_registration_date'], ENT_QUOTES, 'UTF-8'));
+        }
+
+        if (isset($this->request->get['filter_registration_validity_upto'])) {
+            $url .= '&filter_registration_validity_upto=' . urlencode(html_entity_decode($this->request->get['filter_registration_validity_upto'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_status'])) {
@@ -198,19 +216,20 @@ class ControllerVehiclesVehiclesList extends Controller {
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('drivers/drivers_list', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+            'href' => $this->url->link('vehicles/vehicles_list', 'token=' . $this->session->data['token'] . $url, 'SSL'),
         ];
 
-        $data['add'] = $this->url->link('drivers/drivers_list/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['delete'] = $this->url->link('drivers/drivers_list/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['add'] = $this->url->link('vehicles/vehicles_list/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['delete'] = $this->url->link('vehicles/vehicles_list/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
         $data['customers'] = [];
 
         $filter_data = [
-            'filter_name' => $filter_name,
-            'filter_email' => $filter_email,
-            'filter_driving_licence' => $filter_driving_licence,
-            'filter_telephone' => $filter_telephone,
+            'filter_make' => $filter_make,
+            'filter_model' => $filter_model,
+            'filter_registration_number' => $filter_registration_number,
+            'filter_registration_date' => $filter_registration_date,
+            'filter_registration_validity_upto' => $filter_registration_validity_upto,
             'filter_status' => $filter_status,
             'filter_date_added' => $filter_date_added,
             'sort' => $sort,
@@ -219,31 +238,30 @@ class ControllerVehiclesVehiclesList extends Controller {
             'limit' => $this->config->get('config_limit_admin'),
         ];
 
-        $drivers_total = $this->model_drivers_drivers->getTotalDrivers($filter_data);
+        $vehicles_total = $this->model_vehicles_vehicles->getTotalVehicles($filter_data);
 
-        $results = $this->model_drivers_drivers->getDrivers($filter_data);
+        $results = $this->model_vehicles_vehicles->getVehicles($filter_data);
 
         //echo "<pre>";print_r($results);die;
         foreach ($results as $result) {
             if (!$result['status']) {
-                $status = $this->url->link('drivers/drivers_list/approve', 'token=' . $this->session->data['token'] . '&driver_id=' . $result['driver_id'] . $url, 'SSL');
+                $status = $this->url->link('vehicles/vehicles_list/approve', 'token=' . $this->session->data['token'] . '&vehicle_id=' . $result['vehicle_id'] . $url, 'SSL');
             } else {
                 $status = '';
             }
 
-            $country_code = '+' . $this->config->get('config_telephone_code');
 
-            $data['drivers'][] = [
-                'driver_id' => $result['driver_id'],
-                'name' => $result['name'],
-                'email' => $result['email'],
-                'driving_licence' => $result['driving_licence'],
-                'driving_licence_expire_date' => $result['driving_licence_expire_date'],
-                'telephone' => $country_code . $result['telephone'],
+            $data['vehicles'][] = [
+                'vehicle_id' => $result['vehicle_id'],
+                'make' => $result['make'],
+                'model' => $result['model'],
+                'registration_number' => $result['registration_number'],
+                'registration_date' => $result['registration_date'],
+                'registration_validity_upto' => $result['registration_validity'],
                 'status' => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
                 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
-                'edit' => $this->url->link('drivers/drivers_list/edit', 'token=' . $this->session->data['token'] . '&driver_id=' . $result['driver_id'] . $url, 'SSL'),
-                'driver_view' => $this->url->link('drivers/drivers_list/view_driver', 'token=' . $this->session->data['token'] . '&driver_id=' . $result['driver_id'] . $url, 'SSL'),
+                'edit' => $this->url->link('vehicles/vehicles_list/edit', 'token=' . $this->session->data['token'] . '&vehicle_id=' . $result['vehicle_id'] . $url, 'SSL'),
+                'vehicle_view' => $this->url->link('vehicles/vehicles_list/view_vehicle', 'token=' . $this->session->data['token'] . '&vehicle_id=' . $result['vehicle_id'] . $url, 'SSL'),
             ];
         }
 
@@ -258,8 +276,9 @@ class ControllerVehiclesVehiclesList extends Controller {
         $data['text_no_results'] = $this->language->get('text_no_results');
         $data['text_confirm'] = $this->language->get('text_confirm');
 
-        $data['column_name'] = $this->language->get('column_name');
-        $data['column_email'] = $this->language->get('column_email');
+        $data['column_make'] = $this->language->get('column_make');
+        $data['column_model'] = $this->language->get('column_model');
+        $data['column_registration_number'] = $this->language->get('column_registration_number');
         $data['column_driving_licence'] = $this->language->get('column_driving_licence');
         $data['column_telephone'] = $this->language->get('column_telephone');
         $data['column_customer_group'] = $this->language->get('column_customer_group');
@@ -267,12 +286,13 @@ class ControllerVehiclesVehiclesList extends Controller {
         $data['column_date_added'] = $this->language->get('column_date_added');
         $data['column_action'] = $this->language->get('column_action');
 
-        $data['entry_name'] = $this->language->get('entry_name');
-        $data['entry_email'] = $this->language->get('entry_email');
-        $data['entry_driving_licence'] = $this->language->get('entry_driving_licence');
+        $data['entry_make'] = $this->language->get('entry_make');
+        $data['entry_model'] = $this->language->get('entry_model');
+        $data['entry_registration_number'] = $this->language->get('entry_registration_number');
+        $data['entry_registration_date'] = $this->language->get('entry_registration_date');
 
 
-        $data['entry_telephone'] = $this->language->get('entry_telephone');
+        $data['entry_registration_validity_upto'] = $this->language->get('entry_registration_validity_upto');
         $data['entry_status'] = $this->language->get('entry_status');
         $data['entry_date_added'] = $this->language->get('entry_date_added');
 
@@ -309,20 +329,24 @@ class ControllerVehiclesVehiclesList extends Controller {
 
         $url = '';
 
-        if (isset($this->request->get['filter_name'])) {
-            $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+        if (isset($this->request->get['filter_make'])) {
+            $url .= '&filter_make=' . urlencode(html_entity_decode($this->request->get['filter_make'], ENT_QUOTES, 'UTF-8'));
         }
 
-        if (isset($this->request->get['filter_email'])) {
-            $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
+        if (isset($this->request->get['filter_model'])) {
+            $url .= '&filter_model=' . urlencode(html_entity_decode($this->request->get['filter_model'], ENT_QUOTES, 'UTF-8'));
         }
 
-        if (isset($this->request->get['filter_driving_licence'])) {
-            $url .= '&filter_driving_licence=' . urlencode(html_entity_decode($this->request->get['filter_driving_licence'], ENT_QUOTES, 'UTF-8'));
+        if (isset($this->request->get['filter_registration_date'])) {
+            $url .= '&filter_registration_date=' . urlencode(html_entity_decode($this->request->get['filter_registration_date'], ENT_QUOTES, 'UTF-8'));
         }
 
-        if (isset($this->request->get['filter_telephone'])) {
-            $url .= '&filter_telephone=' . urlencode(html_entity_decode($this->request->get['filter_telephone'], ENT_QUOTES, 'UTF-8'));
+        if (isset($this->request->get['filter_registration_number'])) {
+            $url .= '&filter_registration_number=' . urlencode(html_entity_decode($this->request->get['filter_registration_number'], ENT_QUOTES, 'UTF-8'));
+        }
+
+        if (isset($this->request->get['filter_registration_validity_upto'])) {
+            $url .= '&filter_registration_validity_upto=' . urlencode(html_entity_decode($this->request->get['filter_registration_validity_upto'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_status'])) {
@@ -343,19 +367,31 @@ class ControllerVehiclesVehiclesList extends Controller {
             $url .= '&page=' . $this->request->get['page'];
         }
 
-        $data['sort_name'] = $this->url->link('drivers/drivers_list', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
-        $data['sort_email'] = $this->url->link('drivers/drivers_list', 'token=' . $this->session->data['token'] . '&sort=c.email' . $url, 'SSL');
-        $data['sort_status'] = $this->url->link('drivers/drivers_list', 'token=' . $this->session->data['token'] . '&sort=c.status' . $url, 'SSL');
-        $data['sort_date_added'] = $this->url->link('drivers/drivers_list', 'token=' . $this->session->data['token'] . '&sort=c.date_added' . $url, 'SSL');
+        $data['sort_make'] = $this->url->link('vehicles/vehicles_list', 'token=' . $this->session->data['token'] . '&sort=c.make' . $url, 'SSL');
+        $data['sort_model'] = $this->url->link('vehicles/vehicles_list', 'token=' . $this->session->data['token'] . '&sort=c.model' . $url, 'SSL');
+        $data['sort_status'] = $this->url->link('vehicles/vehicles_list', 'token=' . $this->session->data['token'] . '&sort=c.status' . $url, 'SSL');
+        $data['sort_date_added'] = $this->url->link('vehicles/vehicles_list', 'token=' . $this->session->data['token'] . '&sort=c.date_added' . $url, 'SSL');
 
         $url = '';
 
-        if (isset($this->request->get['filter_name'])) {
-            $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+        if (isset($this->request->get['filter_make'])) {
+            $url .= '&filter_make=' . urlencode(html_entity_decode($this->request->get['filter_make'], ENT_QUOTES, 'UTF-8'));
         }
 
-        if (isset($this->request->get['filter_email'])) {
-            $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
+        if (isset($this->request->get['filter_model'])) {
+            $url .= '&filter_model=' . urlencode(html_entity_decode($this->request->get['filter_model'], ENT_QUOTES, 'UTF-8'));
+        }
+
+        if (isset($this->request->get['filter_registration_number'])) {
+            $url .= '&filter_registration_number=' . urlencode(html_entity_decode($this->request->get['filter_registration_number'], ENT_QUOTES, 'UTF-8'));
+        }
+
+        if (isset($this->request->get['filter_registration_date'])) {
+            $url .= '&filter_registration_date=' . urlencode(html_entity_decode($this->request->get['filter_registration_date'], ENT_QUOTES, 'UTF-8'));
+        }
+
+        if (isset($this->request->get['filter_registration_validation_upto'])) {
+            $url .= '&filter_registration_validation_upto=' . urlencode(html_entity_decode($this->request->get['filter_registration_validation_upto'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_driving_licence'])) {
@@ -383,19 +419,20 @@ class ControllerVehiclesVehiclesList extends Controller {
         }
 
         $pagination = new Pagination();
-        $pagination->total = $drivers_total;
+        $pagination->total = $vehicles_total;
         $pagination->page = $page;
         $pagination->limit = $this->config->get('config_limit_admin');
-        $pagination->url = $this->url->link('drivers/drivers_list', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+        $pagination->url = $this->url->link('vehicles/vehicles_list', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
-        $data['results'] = sprintf($this->language->get('text_pagination'), ($drivers_total) ? (($page - 1) * $this->config->get('config_limit_admin')) + 1 : 0, ((($page - 1) * $this->config->get('config_limit_admin')) > ($drivers_total - $this->config->get('config_limit_admin'))) ? $drivers_total : ((($page - 1) * $this->config->get('config_limit_admin')) + $this->config->get('config_limit_admin')), $drivers_total, ceil($drivers_total / $this->config->get('config_limit_admin')));
+        $data['results'] = sprintf($this->language->get('text_pagination'), ($vehicles_total) ? (($page - 1) * $this->config->get('config_limit_admin')) + 1 : 0, ((($page - 1) * $this->config->get('config_limit_admin')) > ($vehicles_total - $this->config->get('config_limit_admin'))) ? $vehicles_total : ((($page - 1) * $this->config->get('config_limit_admin')) + $this->config->get('config_limit_admin')), $vehicles_total, ceil($vehicles_total / $this->config->get('config_limit_admin')));
 
-        $data['filter_name'] = $filter_name;
-        $data['filter_email'] = $filter_email;
-        $data['filter_driving_licence'] = $filter_driving_licence;
-        $data['filter_telephone'] = $filter_telephone;
+        $data['filter_make'] = $filter_make;
+        $data['filter_model'] = $filter_model;
+        $data['filter_registration_date'] = $filter_registration_date;
+        $data['filter_registration_number'] = $filter_registration_number;
+        $data['filter_registration_validity_upto'] = $filter_registration_validity_upto;
         $data['filter_status'] = $filter_status;
         $data['filter_date_added'] = $filter_date_added;
         $data['sort'] = $sort;
@@ -405,7 +442,7 @@ class ControllerVehiclesVehiclesList extends Controller {
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
 
-        $this->response->setOutput($this->load->view('drivers/drivers_list.tpl', $data));
+        $this->response->setOutput($this->load->view('vehicles/vehicles_list.tpl', $data));
     }
 
     protected function getForm() {
@@ -413,20 +450,19 @@ class ControllerVehiclesVehiclesList extends Controller {
 
         $data['entry_referred_by'] = $this->language->get('entry_referred_by');
 
-        $data['text_form'] = !isset($this->request->get['driver_id']) ? $this->language->get('text_add') : $this->language->get('text_edit');
+        $data['text_form'] = !isset($this->request->get['vehicle_id']) ? $this->language->get('text_add') : $this->language->get('text_edit');
         $data['text_enabled'] = $this->language->get('text_enabled');
         $data['text_disabled'] = $this->language->get('text_disabled');
         $data['text_loading'] = $this->language->get('text_loading');
 
-        $data['entry_firstname'] = $this->language->get('entry_firstname');
-        $data['entry_lastname'] = $this->language->get('entry_lastname');
-        $data['entry_email'] = $this->language->get('entry_email');
-        $data['entry_driving_licence'] = $this->language->get('entry_driving_licence');
-        $data['entry_driving_licence_expire_date'] = 'Driving Licence Expire Date';
+        $data['entry_model'] = $this->language->get('entry_model');
+        $data['entry_registration_number'] = $this->language->get('entry_registration_number');
+        $data['entry_registration_date'] = $this->language->get('entry_registration_date');
+        ;
 
-        $data['entry_telephone'] = $this->language->get('entry_telephone');
+        $data['entry_registration_validity_upto'] = $this->language->get('entry_registration_validity_upto');
         $data['entry_status'] = $this->language->get('entry_status');
-        $data['entry_name'] = $this->language->get('entry_name');
+        $data['entry_make'] = $this->language->get('entry_make');
 
         $data['button_save'] = $this->language->get('button_save');
         $data['button_savenew'] = $this->language->get('button_savenew');
@@ -438,10 +474,10 @@ class ControllerVehiclesVehiclesList extends Controller {
         $data['token'] = $this->session->data['token'];
 
 
-        if (isset($this->request->get['driver_id'])) {
-            $data['driver_id'] = $this->request->get['driver_id'];
+        if (isset($this->request->get['vehicle_id'])) {
+            $data['vehicle_id'] = $this->request->get['vehicle_id'];
         } else {
-            $data['driver_id'] = 0;
+            $data['vehicle_id'] = 0;
         }
 
         if (isset($this->error['warning'])) {
@@ -457,40 +493,34 @@ class ControllerVehiclesVehiclesList extends Controller {
             $data['success'] = '';
         }
 
-        if (isset($this->error['firstname'])) {
-            $data['error_firstname'] = $this->error['firstname'];
+        if (isset($this->error['make'])) {
+            $data['error_make'] = $this->error['make'];
         } else {
-            $data['error_firstname'] = '';
+            $data['error_make'] = '';
         }
 
-        if (isset($this->error['lastname'])) {
-            $data['error_lastname'] = $this->error['lastname'];
+        if (isset($this->error['model'])) {
+            $data['error_model'] = $this->error['model'];
         } else {
-            $data['error_lastname'] = '';
+            $data['error_model'] = '';
         }
 
-        if (isset($this->error['email'])) {
-            $data['error_email'] = $this->error['email'];
+        if (isset($this->error['registration_number'])) {
+            $data['error_registration_number'] = $this->error['registration_number'];
         } else {
-            $data['error_email'] = '';
+            $data['error_registration_number'] = '';
         }
 
-        if (isset($this->error['driving_licence'])) {
-            $data['error_driving_licence'] = $this->error['driving_licence'];
+        if (isset($this->error['registration_date'])) {
+            $data['error_registration_date'] = $this->error['registration_date'];
         } else {
-            $data['error_driving_licence'] = '';
-        }
-        
-        if (isset($this->error['driving_licence_expire_date'])) {
-            $data['error_driving_licence_expire_date'] = $this->error['driving_licence_expire_date'];
-        } else {
-            $data['error_driving_licence_expire_date'] = '';
+            $data['error_registration_date'] = '';
         }
 
-        if (isset($this->error['telephone'])) {
-            $data['error_telephone'] = $this->error['telephone'];
+        if (isset($this->error['registration_validity_upto'])) {
+            $data['error_registration_validity_upto'] = $this->error['registration_validity_upto'];
         } else {
-            $data['error_telephone'] = '';
+            $data['error_registration_validity_upto'] = '';
         }
 
         if (isset($this->error['confirm'])) {
@@ -501,16 +531,20 @@ class ControllerVehiclesVehiclesList extends Controller {
 
         $url = '';
 
-        if (isset($this->request->get['filter_name'])) {
-            $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+        if (isset($this->request->get['filter_make'])) {
+            $url .= '&filter_make=' . urlencode(html_entity_decode($this->request->get['filter_make'], ENT_QUOTES, 'UTF-8'));
         }
 
-        if (isset($this->request->get['filter_email'])) {
-            $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
+        if (isset($this->request->get['filter_model'])) {
+            $url .= '&filter_model=' . urlencode(html_entity_decode($this->request->get['filter_model'], ENT_QUOTES, 'UTF-8'));
         }
 
-        if (isset($this->request->get['filter_driving_licence'])) {
-            $url .= '&filter_driving_licence=' . urlencode(html_entity_decode($this->request->get['filter_driving_licence'], ENT_QUOTES, 'UTF-8'));
+        if (isset($this->request->get['filter_registration_number'])) {
+            $url .= '&filter_registration_number=' . urlencode(html_entity_decode($this->request->get['filter_registration_number'], ENT_QUOTES, 'UTF-8'));
+        }
+
+        if (isset($this->request->get['filter_registration_date'])) {
+            $url .= '&filter_registration_date=' . urlencode(html_entity_decode($this->request->get['filter_registration_date'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_status'])) {
@@ -542,73 +576,65 @@ class ControllerVehiclesVehiclesList extends Controller {
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('drivers/drivers_list', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+            'href' => $this->url->link('vehicles/vehicles_list', 'token=' . $this->session->data['token'] . $url, 'SSL'),
         ];
 
-        if (!isset($this->request->get['driver_id'])) {
-            $data['action'] = $this->url->link('drivers/drivers_list/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        if (!isset($this->request->get['vehicle_id'])) {
+            $data['action'] = $this->url->link('vehicles/vehicles_list/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
         } else {
-            $data['action'] = $this->url->link('drivers/drivers_list/edit', 'token=' . $this->session->data['token'] . '&driver_id=' . $this->request->get['driver_id'] . $url, 'SSL');
+            $data['action'] = $this->url->link('vehicles/vehicles_list/edit', 'token=' . $this->session->data['token'] . '&vehicle_id=' . $this->request->get['vehicle_id'] . $url, 'SSL');
         }
 
-        $data['cancel'] = $this->url->link('drivers/drivers_list', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        if (isset($this->request->get['driver_id']) && ('POST' != $this->request->server['REQUEST_METHOD'])) {
-            $driver_info = $this->model_drivers_drivers->getDriver($this->request->get['driver_id']);
+        $data['cancel'] = $this->url->link('vehicles/vehicles_list', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        if (isset($this->request->get['vehicle_id']) && ('POST' != $this->request->server['REQUEST_METHOD'])) {
+            $vehicle_info = $this->model_vehicles_vehicles->getVehicle($this->request->get['vehicle_id']);
         }
 
-        if (isset($this->request->post['firstname'])) {
-            $data['firstname'] = $this->request->post['firstname'];
-        } elseif (!empty($driver_info)) {
-            $data['firstname'] = $driver_info['firstname'];
+        if (isset($this->request->post['make'])) {
+            $data['make'] = $this->request->post['make'];
+        } elseif (!empty($vehicle_info)) {
+            $data['make'] = $vehicle_info['make'];
         } else {
-            $data['firstname'] = '';
+            $data['make'] = '';
         }
 
-        if (isset($this->request->post['lastname'])) {
-            $data['lastname'] = $this->request->post['lastname'];
-        } elseif (!empty($driver_info)) {
-            $data['lastname'] = $driver_info['lastname'];
+        if (isset($this->request->post['model'])) {
+            $data['model'] = $this->request->post['model'];
+        } elseif (!empty($vehicle_info)) {
+            $data['model'] = $vehicle_info['model'];
         } else {
-            $data['lastname'] = '';
+            $data['model'] = '';
         }
 
-        if (isset($this->request->post['email'])) {
-            $data['email'] = $this->request->post['email'];
-        } elseif (!empty($driver_info)) {
-            $data['email'] = $driver_info['email'];
+        if (isset($this->request->post['registration_number'])) {
+            $data['registration_number'] = $this->request->post['registration_number'];
+        } elseif (!empty($vehicle_info)) {
+            $data['registration_number'] = $vehicle_info['registration_number'];
         } else {
-            $data['email'] = '';
+            $data['registration_number'] = '';
         }
 
-        if (isset($this->request->post['driving_licence'])) {
-            $data['driving_licence'] = $this->request->post['driving_licence'];
-        } elseif (!empty($driver_info)) {
-            $data['driving_licence'] = $driver_info['driving_licence'];
+        if (isset($this->request->post['registration_date'])) {
+            $data['registration_date'] = $this->request->post['registration_date'];
+        } elseif (!empty($vehicle_info)) {
+            $data['registration_date'] = $vehicle_info['registration_date'];
         } else {
-            $data['driving_licence'] = '';
-        }
-        
-        if (isset($this->request->post['driving_licence_expire_date'])) {
-            $data['driving_licence_expire_date'] = $this->request->post['driving_licence_expire_date'];
-        } elseif (!empty($driver_info)) {
-            $data['driving_licence_expire_date'] = $driver_info['driving_licence_expire_date'];
-        } else {
-            $data['driving_licence_expire_date'] = '';
+            $data['registration_date'] = '';
         }
 
-        if (isset($this->request->post['telephone'])) {
-            $data['telephone'] = $this->request->post['telephone'];
-        } elseif (!empty($driver_info)) {
-            $data['telephone'] = $driver_info['telephone'];
+        if (isset($this->request->post['registration_validity_upto'])) {
+            $data['registration_validity_upto'] = $this->request->post['registration_validity_upto'];
+        } elseif (!empty($vehicle_info)) {
+            $data['registration_validity_upto'] = $vehicle_info['registration_validity'];
         } else {
-            $data['telephone'] = '';
+            $data['registration_validity_upto'] = '';
         }
 
         //echo "<pre>";print_r($data);die;
         if (isset($this->request->post['status'])) {
             $data['status'] = $this->request->post['status'];
-        } elseif (!empty($driver_info)) {
-            $data['status'] = $driver_info['status'];
+        } elseif (!empty($vehicle_info)) {
+            $data['status'] = $vehicle_info['status'];
         } else {
             $data['status'] = true;
         }
@@ -619,49 +645,45 @@ class ControllerVehiclesVehiclesList extends Controller {
         $data['kondutoStatus'] = $this->config->get('config_konduto_status');
         $data['konduto_public_key'] = $this->config->get('config_konduto_public_key');
 
-        $this->response->setOutput($this->load->view('drivers/driver_form.tpl', $data));
+        $this->response->setOutput($this->load->view('vehicles/vehicle_form.tpl', $data));
     }
 
     protected function validateForm() {
-        if (!$this->user->hasPermission('modify', 'drivers/drivers_list')) {
+        if (!$this->user->hasPermission('modify', 'vehicles/vehicles_list')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
 
-        if ((utf8_strlen($this->request->post['firstname']) < 1) || (utf8_strlen(trim($this->request->post['firstname'])) > 32)) {
-            $this->error['firstname'] = $this->language->get('error_firstname');
+        if ((utf8_strlen($this->request->post['make']) < 1) || (utf8_strlen(trim($this->request->post['make'])) > 32)) {
+            $this->error['make'] = $this->language->get('error_make');
         }
 
-        if ((utf8_strlen($this->request->post['lastname']) < 1) || (utf8_strlen(trim($this->request->post['lastname'])) > 32)) {
-            $this->error['lastname'] = $this->language->get('error_lastname');
+        if ((utf8_strlen($this->request->post['model']) < 1) || (utf8_strlen(trim($this->request->post['model'])) > 32)) {
+            $this->error['model'] = $this->language->get('error_model');
         }
 
-        if (isset($this->request->post['email']) && $this->request->post['email'] != NULL && ((utf8_strlen($this->request->post['email']) > 96) || !filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL))) {
-            $this->error['email'] = $this->language->get('error_email');
+        if ((utf8_strlen($this->request->post['registration_number']) < 1) || (utf8_strlen(trim($this->request->post['registration_number'])) > 32)) {
+            $this->error['registration_number'] = $this->language->get('error_registration_number');
         }
 
-        if ((utf8_strlen($this->request->post['driving_licence']) < 1) || (utf8_strlen(trim($this->request->post['driving_licence'])) > 32)) {
-            $this->error['driving_licence'] = $this->language->get('error_driving_licence');
-        }
-        
-        if ((utf8_strlen($this->request->post['driving_licence_expire_date']) < 1) || (!preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/",$this->request->post['driving_licence_expire_date'])) || $this->request->post['driving_licence_expire_date'] == '0000-00-00') {
-            $this->error['driving_licence_expire_date'] = 'Driving Licence Expire Date filed required';
+        if ((utf8_strlen($this->request->post['registration_date']) < 1) || (!preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/", $this->request->post['registration_date'])) || $this->request->post['registration_date'] == '0000-00-00') {
+            $this->error['registration_date'] = $this->language->get('error_registration_date');
         }
 
-        $driver_info = $this->model_drivers_drivers->getDriverByEmail($this->request->post['email']);
-
-        /*if (!isset($this->request->get['driver_id'])) {
-            if ($driver_info) {
-                $this->error['warning'] = $this->language->get('error_exists');
-            }
-        } else {
-            if ($driver_info && ($this->request->get['driver_id'] != $driver_info['driver_id'])) {
-                $this->error['warning'] = $this->language->get('error_exists');
-            }
-        }*/
-
-        if ((utf8_strlen($this->request->post['telephone']) < 3) || (utf8_strlen($this->request->post['telephone']) > 32)) {
-            $this->error['telephone'] = $this->language->get('error_telephone');
+        if ((utf8_strlen($this->request->post['registration_validity_upto']) < 1) || (!preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/", $this->request->post['registration_validity_upto'])) || $this->request->post['registration_validity_upto'] == '0000-00-00') {
+            $this->error['registration_validity_upto'] = $this->language->get('error_registration_validity_upto');
         }
+
+        $vehicle_info = $this->model_vehicles_vehicles->getVehicleByNumber($this->request->post['registration_number']);
+
+        /* if (!isset($this->request->get['vehicle_id'])) {
+          if ($vehicle_info) {
+          $this->error['warning'] = $this->language->get('error_exists');
+          }
+          } else {
+          if ($vehicle_info && ($this->request->get['vehicle_id'] != $vehicle_info['vehicle_id'])) {
+          $this->error['warning'] = $this->language->get('error_exists');
+          }
+          } */
 
         if ($this->error && !isset($this->error['warning'])) {
             $this->error['warning'] = $this->language->get('error_warning');
@@ -671,14 +693,14 @@ class ControllerVehiclesVehiclesList extends Controller {
     }
 
     public function edit() {
-        $this->load->language('drivers/drivers');
+        $this->load->language('vehicles/vehicles');
 
         $this->document->setTitle($this->language->get('heading_title'));
 
-        $this->load->model('drivers/drivers');
+        $this->load->model('vehicles/vehicles');
 
         if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
-            $this->model_drivers_drivers->editDriver($this->request->get['driver_id'], $this->request->post);
+            $this->model_vehicles_vehicles->editVehicle($this->request->get['vehicle_id'], $this->request->post);
             $this->session->data['success'] = $this->language->get('text_success');
             // Add to activity log
             $log = new Log('error.log');
@@ -688,13 +710,13 @@ class ControllerVehiclesVehiclesList extends Controller {
                 'user_id' => $this->user->getId(),
                 'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
                 'user_group_id' => $this->user->getGroupId(),
-                'driver_id' => $this->request->get['driver_id'],
+                'vehicle_id' => $this->request->get['vehicle_id'],
             ];
-            $log->write('driver edit');
+            $log->write('vehicle edit');
 
-            $this->model_user_user_activity->addActivity('driver_edit', $activity_data);
+            $this->model_user_user_activity->addActivity('vehicle_edit', $activity_data);
 
-            $log->write('driver edit');
+            $log->write('vehicle edit');
 
             $url = '';
 
@@ -731,52 +753,53 @@ class ControllerVehiclesVehiclesList extends Controller {
             }
 
             if (isset($this->request->post['button']) and 'save' == $this->request->post['button']) {
-                $this->response->redirect($this->url->link('drivers/drivers_list/edit', 'driver_id=' . $this->request->get['driver_id'] . '&token=' . $this->session->data['token'] . $url, 'SSL'));
+                $this->response->redirect($this->url->link('vehicles/vehicles_list/edit', 'vehicle_id=' . $this->request->get['vehicle_id'] . '&token=' . $this->session->data['token'] . $url, 'SSL'));
             }
 
             if (isset($this->request->post['button']) and 'new' == $this->request->post['button']) {
-                $this->response->redirect($this->url->link('drivers/drivers_list/add', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+                $this->response->redirect($this->url->link('vehicles/vehicles_list/add', 'token=' . $this->session->data['token'] . $url, 'SSL'));
             }
 
-            $this->response->redirect($this->url->link('drivers/drivers_list', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            $this->response->redirect($this->url->link('vehicles/vehicles_list', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
 
         $this->getForm();
     }
 
-    public function autocompletebyDriverName() {
+    public function autocompletebyVehicleRegistrationNumber() {
+        $log = new Log('error.log');
         $json = [];
 
-        if (isset($this->request->get['filter_name']) || isset($this->request->get['filter_email'])) {
-            if (isset($this->request->get['filter_name'])) {
-                $filter_name = $this->request->get['filter_name'];
+        if (isset($this->request->get['filter_registration_number'])) {
+            if (isset($this->request->get['filter_registration_number'])) {
+                $filter_registration_number = $this->request->get['filter_registration_number'];
             } else {
-                $filter_name = '';
+                $filter_registration_number = '';
             }
 
-            $this->load->model('drivers/drivers');
+            $this->load->model('vehicles/vehicles');
 
             $filter_data = [
-                'filter_name' => $filter_name,
+                'filter_registration_number' => $filter_registration_number,
                 'start' => 0,
                 'limit' => 5,
             ];
 
-            $results = $this->model_drivers_drivers->getDrivers($filter_data);
+            $results = $this->model_vehicles_vehicles->getVehicles($filter_data);
+            //$log->write('results');
+            //$log->write($results);
+            //$log->write('results');
 
             foreach ($results as $result) {
-                if ($this->user->isVendor()) {
-                    $result['name'] = $result['firstname'];
-                }
-
                 $json[] = [
-                    'driver_id' => $result['driver_id'],
-                    'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')),
-                    'firstname' => $result['firstname'],
-                    'lastname' => $result['lastname'],
-                    'email' => $result['email'],
-                    'driving_licence' => $result['driving_licence'],
-                    'telephone' => $result['telephone'],
+                    'vehicle_id' => $result['vehicle_id'],
+                    'make' => $result['make'],
+                    'model' => $result['model'],
+                    'registration_number' => $result['registration_number'],
+                    'registration_validity' => $result['registration_validity'],
+                    'registration_date' => $result['registration_date'],
+                    'status' => $result['status'],
+                    'date_added' => $result['date_added'],
                 ];
             }
         }
@@ -784,7 +807,107 @@ class ControllerVehiclesVehiclesList extends Controller {
         $sort_order = [];
 
         foreach ($json as $key => $value) {
-            $sort_order[$key] = $value['name'];
+            $sort_order[$key] = $value['registration_number'];
+        }
+
+        array_multisort($sort_order, SORT_ASC, $json);
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+    
+    public function autocompletebyVehicleMake() {
+        $log = new Log('error.log');
+        $json = [];
+
+        if (isset($this->request->get['filter_make'])) {
+            if (isset($this->request->get['filter_make'])) {
+                $filter_make = $this->request->get['filter_make'];
+            } else {
+                $filter_make = '';
+            }
+
+            $this->load->model('vehicles/vehicles');
+
+            $filter_data = [
+                'filter_make' => $filter_make,
+                'start' => 0,
+                'limit' => 5,
+            ];
+
+            $results = $this->model_vehicles_vehicles->getVehicles($filter_data);
+            //$log->write('results');
+            //$log->write($results);
+            //$log->write('results');
+
+            foreach ($results as $result) {
+                $json[] = [
+                    'vehicle_id' => $result['vehicle_id'],
+                    'make' => $result['make'],
+                    'model' => $result['model'],
+                    'registration_number' => $result['registration_number'],
+                    'registration_validity' => $result['registration_validity'],
+                    'registration_date' => $result['registration_date'],
+                    'status' => $result['status'],
+                    'date_added' => $result['date_added'],
+                ];
+            }
+        }
+
+        $sort_order = [];
+
+        foreach ($json as $key => $value) {
+            $sort_order[$key] = $value['registration_number'];
+        }
+
+        array_multisort($sort_order, SORT_ASC, $json);
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+    
+    public function autocompletebyVehicleModel() {
+        $log = new Log('error.log');
+        $json = [];
+
+        if (isset($this->request->get['filter_model'])) {
+            if (isset($this->request->get['filter_model'])) {
+                $filter_model = $this->request->get['filter_model'];
+            } else {
+                $filter_model = '';
+            }
+
+            $this->load->model('vehicles/vehicles');
+
+            $filter_data = [
+                'filter_make' => $filter_model,
+                'start' => 0,
+                'limit' => 5,
+            ];
+
+            $results = $this->model_vehicles_vehicles->getVehicles($filter_data);
+            //$log->write('results');
+            //$log->write($results);
+            //$log->write('results');
+
+            foreach ($results as $result) {
+                $json[] = [
+                    'vehicle_id' => $result['vehicle_id'],
+                    'make' => $result['make'],
+                    'model' => $result['model'],
+                    'registration_number' => $result['registration_number'],
+                    'registration_validity' => $result['registration_validity'],
+                    'registration_date' => $result['registration_date'],
+                    'status' => $result['status'],
+                    'date_added' => $result['date_added'],
+                ];
+            }
+        }
+
+        $sort_order = [];
+
+        foreach ($json as $key => $value) {
+            $sort_order[$key] = $value['registration_number'];
         }
 
         array_multisort($sort_order, SORT_ASC, $json);
@@ -796,19 +919,19 @@ class ControllerVehiclesVehiclesList extends Controller {
     public function export_excel() {
         $data = [];
         $this->load->model('report/excel');
-        $this->model_report_excel->download_driver_excel($data);
+        $this->model_report_excel->download_vehicle_excel($data);
     }
 
     public function delete() {
-        $this->load->language('drivers/drivers');
+        $this->load->language('vehicles/vehicles');
 
         $this->document->setTitle($this->language->get('heading_title'));
 
-        $this->load->model('drivers/drivers');
+        $this->load->model('vehicles/vehicles');
 
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
-            foreach ($this->request->post['selected'] as $driver_id) {
-                $this->model_drivers_drivers->deleteDriver($driver_id);
+            foreach ($this->request->post['selected'] as $vehicle_id) {
+                $this->model_vehicles_vehicles->deleteVehicle($vehicle_id);
 
                 // Add to activity log
                 $log = new Log('error.log');
@@ -818,26 +941,34 @@ class ControllerVehiclesVehiclesList extends Controller {
                     'user_id' => $this->user->getId(),
                     'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
                     'user_group_id' => $this->user->getGroupId(),
-                    'driver_id' => $driver_id,
+                    'vehicle_id' => $vehicle_id,
                 ];
-                $log->write('driver delete');
+                $log->write('vehicle delete');
 
-                $this->model_user_user_activity->addActivity('driver_delete', $activity_data);
+                $this->model_user_user_activity->addActivity('vehicle_delete', $activity_data);
 
-                $log->write('driver delete');
+                $log->write('vehicle delete');
             }
 
             //$this->session->data['success'] = $this->language->get('text_success');
-            $this->session->data['success'] = 'Success : Driver(s) deleted successfully!';
+            $this->session->data['success'] = 'Success : Vehicle(s) deleted successfully!';
 
             $url = '';
 
-            if (isset($this->request->get['filter_name'])) {
-                $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+            if (isset($this->request->get['filter_make'])) {
+                $url .= '&filter_make=' . urlencode(html_entity_decode($this->request->get['filter_make'], ENT_QUOTES, 'UTF-8'));
             }
 
-            if (isset($this->request->get['filter_email'])) {
-                $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
+            if (isset($this->request->get['filter_model'])) {
+                $url .= '&filter_model=' . urlencode(html_entity_decode($this->request->get['filter_model'], ENT_QUOTES, 'UTF-8'));
+            }
+            
+            if (isset($this->request->get['filter_registration_number'])) {
+                $url .= '&filter_registration_number=' . urlencode(html_entity_decode($this->request->get['filter_registration_number'], ENT_QUOTES, 'UTF-8'));
+            }
+            
+            if (isset($this->request->get['filter_registration_validity_upto'])) {
+                $url .= '&filter_registration_validity_upto=' . urlencode(html_entity_decode($this->request->get['filter_registration_validity_upto'], ENT_QUOTES, 'UTF-8'));
             }
 
             if (isset($this->request->get['filter_status'])) {
@@ -860,24 +991,24 @@ class ControllerVehiclesVehiclesList extends Controller {
                 $url .= '&page=' . $this->request->get['page'];
             }
 
-            $this->response->redirect($this->url->link('drivers/drivers_list', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            $this->response->redirect($this->url->link('vehicles/vehicles_list', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
 
         $this->getList();
     }
 
     protected function validateDelete() {
-        if (!$this->user->hasPermission('modify', 'drivers/drivers_list')) {
+        if (!$this->user->hasPermission('modify', 'vehicles/vehicles_list')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
 
         return !$this->error;
     }
 
-    public function getAllDrivers() {
-        $this->load->model('drivers/drivers');
+    public function getAllVehicles() {
+        $this->load->model('vehicles/vehicles');
 
-        $results = $this->model_drivers_drivers->getDrivers();
+        $results = $this->model_vehicles_vehicles->getVehicles();
 
         foreach ($results as $result) {
             if ($this->user->isVendor()) {
@@ -885,7 +1016,7 @@ class ControllerVehiclesVehiclesList extends Controller {
             }
 
             $json[] = [
-                'driver_id' => $result['driver_id'],
+                'vehicle_id' => $result['vehicle_id'],
                 'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')),
                 'firstname' => $result['firstname'],
                 'lastname' => $result['lastname'],

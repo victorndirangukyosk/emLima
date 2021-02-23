@@ -895,6 +895,7 @@ class ModelReportExcel extends Model {
             return;
         }
     }
+
     //any changes in this method, should be modified in "mail_consolidated_order_sheet_excel"
     public function download_consolidated_order_sheet_excel($data) {
         //	    echo "<pre>";print_r($data);die;
@@ -965,7 +966,7 @@ class ModelReportExcel extends Model {
             $objPHPExcel->getActiveSheet()->getColumnDimension("C")->setWidth(20);
             $objPHPExcel->getActiveSheet()->getColumnDimension("D")->setWidth(10);
 
-            
+
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 4, 'Product Name');
             //$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'Produce Type');
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'Quantity');
@@ -989,8 +990,8 @@ class ModelReportExcel extends Model {
                 ++$row;
             }
             $objPHPExcel->getActiveSheet()->getStyle('A1:D' . $row)->applyFromArray($styleArray);
-            $objPHPExcel->getActiveSheet()->getStyle('A1:E'. $row)->getAlignment()->setWrapText(true); 
-            
+            $objPHPExcel->getActiveSheet()->getStyle('A1:E' . $row)->getAlignment()->setWrapText(true);
+
             // Individual customer orders
             $sheetIndex = 1;
             foreach ($data['orders'] as $order) {
@@ -1106,7 +1107,7 @@ class ModelReportExcel extends Model {
                     ++$row;
                 }
                 $objPHPExcel->getActiveSheet()->getStyle('A1:E' . $row)->applyFromArray($styleArray);
-                $objPHPExcel->getActiveSheet()->getStyle('A1:E' . $row)->getAlignment()->setWrapText(true); 
+                $objPHPExcel->getActiveSheet()->getStyle('A1:E' . $row)->getAlignment()->setWrapText(true);
 
                 ++$sheetIndex;
             }
@@ -1127,7 +1128,7 @@ class ModelReportExcel extends Model {
             $objWriter->save('php://output');
             exit;
         } catch (Exception $e) {
-       //            echo "<pre>";print_r($e);die;
+            //            echo "<pre>";print_r($e);die;
             $errstr = $e->getMessage();
             $errline = $e->getLine();
             $errfile = $e->getFile();
@@ -1140,7 +1141,7 @@ class ModelReportExcel extends Model {
             return;
         }
     }
-    
+
     public function mail_consolidated_order_sheet_excel($data) {
         //	    echo "<pre>";print_r($data);die;
 
@@ -1210,7 +1211,7 @@ class ModelReportExcel extends Model {
             $objPHPExcel->getActiveSheet()->getColumnDimension("C")->setWidth(20);
             $objPHPExcel->getActiveSheet()->getColumnDimension("D")->setWidth(10);
 
-            
+
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 4, 'Product Name');
             //$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'Produce Type');
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'Quantity');
@@ -1234,8 +1235,8 @@ class ModelReportExcel extends Model {
                 ++$row;
             }
             $objPHPExcel->getActiveSheet()->getStyle('A1:D' . $row)->applyFromArray($styleArray);
-            $objPHPExcel->getActiveSheet()->getStyle('A1:E'. $row)->getAlignment()->setWrapText(true); 
-            
+            $objPHPExcel->getActiveSheet()->getStyle('A1:E' . $row)->getAlignment()->setWrapText(true);
+
             // Individual customer orders
             $sheetIndex = 1;
             foreach ($data['orders'] as $order) {
@@ -1261,7 +1262,7 @@ class ModelReportExcel extends Model {
                 $objPHPExcel->getActiveSheet()->setCellValue('B1', $order['delivery_date']);
                 $objPHPExcel->getActiveSheet()->setCellValue('C1', 'Delivery Timeslot');
                 $objPHPExcel->getActiveSheet()->setCellValue('D1', $order['delivery_timeslot']);
-                
+
                 $objPHPExcel->getActiveSheet()->setCellValue('C2', 'Order Status');
                 $objPHPExcel->getActiveSheet()->setCellValue('D2', $order['status']);
 
@@ -1347,7 +1348,7 @@ class ModelReportExcel extends Model {
                     ++$row;
                 }
                 $objPHPExcel->getActiveSheet()->getStyle('A1:E' . $row)->applyFromArray($styleArray);
-                $objPHPExcel->getActiveSheet()->getStyle('A1:E' . $row)->getAlignment()->setWrapText(true); 
+                $objPHPExcel->getActiveSheet()->getStyle('A1:E' . $row)->getAlignment()->setWrapText(true);
 
                 ++$sheetIndex;
             }
@@ -1366,53 +1367,52 @@ class ModelReportExcel extends Model {
             // header('Content-Disposition: attachment;filename="' . $filename . '"');
             //header('Cache-Control: max-age=0');
             // $objWriter->save('php://output');
-            
+
 
             if (!file_exists(DIR_UPLOAD . 'schedulertemp/')) {
                 mkdir(DIR_UPLOAD . 'schedulertemp/', 0777, true);
             }
             // unlink($filename);
-            $folder_path = DIR_UPLOAD . 'schedulertemp'; 
-            $files = glob($folder_path.'/*');    
+            $folder_path = DIR_UPLOAD . 'schedulertemp';
+            $files = glob($folder_path . '/*');
             // Deleting all the files in the list 
-            foreach($files as $file) {             
-                if(is_file($file)) 
+            foreach ($files as $file) {
+                if (is_file($file))
                     unlink($file); // Delete the given file  
-                } 
-                // echo "<pre>";print_r($file);;
-              $objWriter->save(DIR_UPLOAD . 'schedulertemp/' .$filename);            
+            }
+            // echo "<pre>";print_r($file);;
+            $objWriter->save(DIR_UPLOAD . 'schedulertemp/' . $filename);
 
-                #region mail sending 
-                $maildata['deliverydate']=$deliveryDate;
-                $subject = $this->emailtemplate->getSubject('ConsolidatedOrderSheet', 'ConsolidatedOrderSheet_1', $maildata);
-                $message = $this->emailtemplate->getMessage('ConsolidatedOrderSheet', 'ConsolidatedOrderSheet_1', $maildata);
-                
-                // $subject = "Consolidated Order Sheet";                 
-                // $message = "Please find the attachment.  <br>";
-                // $message = $message ."<li> Full Name :".$first_name ."</li><br><li> Email :".$email ."</li><br><li> Phone :".$phone ."</li><br>";
-                $this->load->model('setting/setting');
-                $email = $this->model_setting_setting->getEmailSetting('consolidatedorder');
-                 
-                if(strpos( $email,"@")==false)//if mail Id not set in define.php
-               {
-               $email = "sridivya.talluri@technobraingroup.com";
-               }
-                // $bccemail = "sridivya.talluri@technobraingroup.com";
-                //   echo "<pre>";print_r($email);die;
-                $filepath = DIR_UPLOAD . 'schedulertemp/' .$filename;
-                $mail = new Mail($this->config->get('config_mail'));
-                $mail->setTo($email);
-                $mail->setBCC($bccemail);
-                $mail->setFrom($this->config->get('config_from_email'));
-                $mail->setSender($this->config->get('config_name'));
-                $mail->setSubject($subject);
-                $mail->setHTML($message);
-                $mail->addAttachment($filepath);
-                $mail->send();
-                #endregion
+            #region mail sending 
+            $maildata['deliverydate'] = $deliveryDate;
+            $subject = $this->emailtemplate->getSubject('ConsolidatedOrderSheet', 'ConsolidatedOrderSheet_1', $maildata);
+            $message = $this->emailtemplate->getMessage('ConsolidatedOrderSheet', 'ConsolidatedOrderSheet_1', $maildata);
+
+            // $subject = "Consolidated Order Sheet";                 
+            // $message = "Please find the attachment.  <br>";
+            // $message = $message ."<li> Full Name :".$first_name ."</li><br><li> Email :".$email ."</li><br><li> Phone :".$phone ."</li><br>";
+            $this->load->model('setting/setting');
+            $email = $this->model_setting_setting->getEmailSetting('consolidatedorder');
+
+            if (strpos($email, "@") == false) {//if mail Id not set in define.php
+                $email = "sridivya.talluri@technobraingroup.com";
+            }
+            // $bccemail = "sridivya.talluri@technobraingroup.com";
+            //   echo "<pre>";print_r($email);die;
+            $filepath = DIR_UPLOAD . 'schedulertemp/' . $filename;
+            $mail = new Mail($this->config->get('config_mail'));
+            $mail->setTo($email);
+            $mail->setBCC($bccemail);
+            $mail->setFrom($this->config->get('config_from_email'));
+            $mail->setSender($this->config->get('config_name'));
+            $mail->setSubject($subject);
+            $mail->setHTML($message);
+            $mail->addAttachment($filepath);
+            $mail->send();
+            #endregion
             exit;
         } catch (Exception $e) {
-       
+
             $errstr = $e->getMessage();
             $errline = $e->getLine();
             $errfile = $e->getFile();
@@ -1425,6 +1425,7 @@ class ModelReportExcel extends Model {
             return;
         }
     }
+
     public function download_consolidated_calculation_sheet_excel($data) {
         //	    echo "<pre>";print_r($data);die;
 
@@ -1555,7 +1556,7 @@ class ModelReportExcel extends Model {
                 ]]);
 
                 $objPHPExcel->getActiveSheet()->getStyle('A4:G4')->applyFromArray(['font' => ['bold' => true], 'color' => [
-                    'rgb' => '51AB66',
+                        'rgb' => '51AB66',
                 ]]);
 
                 $objPHPExcel->getActiveSheet()->mergeCells('A3:G3');
@@ -1620,7 +1621,7 @@ class ModelReportExcel extends Model {
             $objWriter->save('php://output');
             exit;
         } catch (Exception $e) {
-              //            echo "<pre>";print_r($e);
+            //            echo "<pre>";print_r($e);
             $errstr = $e->getMessage();
             $errline = $e->getLine();
             $errfile = $e->getFile();
@@ -1723,7 +1724,7 @@ class ModelReportExcel extends Model {
             $objWriter->save('php://output');
             exit;
         } catch (Exception $e) {
-              //            echo "<pre>";print_r($e);
+            //            echo "<pre>";print_r($e);
             $errstr = $e->getMessage();
             $errline = $e->getLine();
             $errfile = $e->getFile();
@@ -2706,10 +2707,10 @@ class ModelReportExcel extends Model {
             if ($is_edited) {
                 //continue;
                 //$OrignalProducts  = $this->model_sale_order->getRealOrderProducts($result['order_id']);
-                  $OrignalProducts  = $this->model_sale_order->getRealOrderProductsStockOut($result['order_id'], $data['filter_store'], $data['filter_name']);
+                $OrignalProducts = $this->model_sale_order->getRealOrderProductsStockOut($result['order_id'], $data['filter_store'], $data['filter_name']);
             } else {
                 //$OrignalProducts = $this->model_sale_order->getOrderProducts($result['order_id']);
-                  $OrignalProducts = $this->model_sale_order->getOrderProductsStockOut($result['order_id'], $data['filter_store'], $data['filter_name']);
+                $OrignalProducts = $this->model_sale_order->getOrderProductsStockOut($result['order_id'], $data['filter_store'], $data['filter_name']);
             }
             // $EditedProducts = $this->model_sale_order->getRealOrderProducts($result['order_id']);
             // $OrignalProducts = $this->model_sale_order->getOrderProducts($result['order_id']);
@@ -2725,7 +2726,7 @@ class ModelReportExcel extends Model {
                 //     }
                 // }!$present &&
 
-                if ( !empty($OrignalProduct['name'])) {
+                if (!empty($OrignalProduct['name'])) {
                     $data['torders'][] = [
                         'store' => $result['store_name'],
                         'model' => $OrignalProduct['model'],
@@ -2751,7 +2752,7 @@ class ModelReportExcel extends Model {
                 $sum = (float) 0.00;
 
                 foreach ($data['torders'] as $key => $torders2) {
-                    if ($torders1['product_name'] == $torders2['product_name'] && $torders1['store'] == $torders2['store']  &&  $torders1['unit'] == $torders2['unit']) {
+                    if ($torders1['product_name'] == $torders2['product_name'] && $torders1['store'] == $torders2['store'] && $torders1['unit'] == $torders2['unit']) {
                         $sum += (float) $torders2['product_qty'];
                         unset($data['torders'][$key]);
                     }
@@ -3551,7 +3552,7 @@ class ModelReportExcel extends Model {
             return;
         }
     }
-    
+
     public function download_executive_excel($data) {
         $this->load->library('excel');
         $this->load->library('iofactory');
@@ -3624,8 +3625,6 @@ class ModelReportExcel extends Model {
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(4, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(5, 4)->applyFromArray($title);
             //$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(6, 4)->applyFromArray($title);
-
-
             // Fetching the table data
             $row = 5;
             foreach ($rows as $result) {
@@ -3667,7 +3666,7 @@ class ModelReportExcel extends Model {
             return;
         }
     }
-    
+
     public function download_orderprocessinggroup_excel($data) {
         $this->load->library('excel');
         $this->load->library('iofactory');
@@ -3780,7 +3779,7 @@ class ModelReportExcel extends Model {
             return;
         }
     }
-    
+
     public function download_orderprocessors_excel($data) {
         $this->load->library('excel');
         $this->load->library('iofactory');
@@ -3894,7 +3893,7 @@ class ModelReportExcel extends Model {
             return;
         }
     }
-    
+
     public function download_customer_excel($data) {
         $this->load->library('excel');
         $this->load->library('iofactory');
@@ -4397,7 +4396,6 @@ class ModelReportExcel extends Model {
         $rows = $data;
 
         //   echo "<pre>";print_r($rows);die;
-
         // [price] => 145.00
         // [special_price] => 120.00
 
@@ -4620,11 +4618,11 @@ class ModelReportExcel extends Model {
             return;
         }
     }
-    
+
     public function account_manager_download_dashboard_excel($data) {
         $this->load->library('excel');
         $this->load->library('iofactory');
-        
+
         // $rows = $data;
         // echo "<pre>";print_r($data);die;
         try {
@@ -4655,7 +4653,7 @@ class ModelReportExcel extends Model {
             //Company name, address
             $objPHPExcel->getActiveSheet()->mergeCells('A1:E2');
             $objPHPExcel->getActiveSheet()->mergeCells('A3:E3');
-            $objPHPExcel->getActiveSheet()->setCellValue('A3', 'Account Manager Name : '.$data['account_manager_name']);
+            $objPHPExcel->getActiveSheet()->setCellValue('A3', 'Account Manager Name : ' . $data['account_manager_name']);
             $objPHPExcel->getActiveSheet()->setCellValue('A1', 'Dashboard Information ');
             $objPHPExcel->getActiveSheet()->getStyle('A1:E2')->applyFromArray(['font' => ['bold' => true], 'color' => [
                     'rgb' => '4390df',
@@ -4980,7 +4978,6 @@ class ModelReportExcel extends Model {
                 'po_number' => $result['po_number'],
                 'subtotal' => str_replace('KES', ' ', $this->currency->format($sub_total)),
                 'SAP_customer_no' => $result['SAP_customer_no'],
-
             ];
         }
 
@@ -5019,10 +5016,10 @@ class ModelReportExcel extends Model {
             //$objPHPExcel->getActiveSheet()->mergeCells("A1:E2");
             if ($data['customers']) {
                 $sheet_subtitle = 'Company Name : ' . $data['customers'][0]['company'];
-                $sheet_subtitle_sap =  $data['customers'][0]['SAP_customer_no'];
-                $order_start_date =  $data['customers'][0]['date_added'];
+                $sheet_subtitle_sap = $data['customers'][0]['SAP_customer_no'];
+                $order_start_date = $data['customers'][0]['date_added'];
             } else {
-                $sheet_subtitle = $sheet_subtitle_sap='';
+                $sheet_subtitle = $sheet_subtitle_sap = '';
             }
 
             $objPHPExcel->getActiveSheet()->mergeCells('A1:B1');
@@ -5037,19 +5034,17 @@ class ModelReportExcel extends Model {
             ]]);
 
             //subtitle
-            if(!empty($data['filter_date_start']))
-            $from = date('d-m-Y', strtotime($data['filter_date_start']));
+            if (!empty($data['filter_date_start']))
+                $from = date('d-m-Y', strtotime($data['filter_date_start']));
             else
-            $from=str_replace("/","-",$order_start_date);
+                $from = str_replace("/", "-", $order_start_date);
             // try{
             // if(strpos($data['filter_date_start'], '1990'))
-            
             // $from=$order_start_date ;
             // $from=str_replace("/","-",$order_start_date);
             // }
             // catch(Exception $ex)
             // {
-
             // }
             $to = date('d-m-Y', strtotime($data['filter_date_end']));
             $objPHPExcel->getActiveSheet()->mergeCells('A3:I3');
@@ -5403,7 +5398,7 @@ class ModelReportExcel extends Model {
             $objWriter->save('php://output');
             exit;
         } catch (Exception $e) {
-          //            echo "<pre>";print_r($e);die;
+            //            echo "<pre>";print_r($e);die;
             $errstr = $e->getMessage();
             $errline = $e->getLine();
             $errfile = $e->getFile();
@@ -5478,35 +5473,35 @@ class ModelReportExcel extends Model {
 
             $objPHPExcel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
             $objPHPExcel->getActiveSheet()->getStyle('B:Z')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-            
-               foreach(range('A','L') as $columnID) {
-            	   $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
-            		   ->setAutoSize(true);
-               }
+
+            foreach (range('A', 'L') as $columnID) {
+                $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+                        ->setAutoSize(true);
+            }
             // $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(60);
-            $cellid=0;
-            foreach ($data[0] as $h_key=>$h_value) {               
+            $cellid = 0;
+            foreach ($data[0] as $h_key => $h_value) {
                 // echo "<pre>";print_r($h_key);die;
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($cellid, 3, $h_key);
                 $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow($cellid, 3)->applyFromArray($title);
 
                 $cellid++;
-            }             
+            }
             $row = 4;
-            
-            foreach ($data as  $b_key=>$b_value) {
-                $cellid=0;
-                foreach ($b_value as  $bb_key=>$bb_value) {
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($cellid, $row, $bb_value);
-                //$Amount = $Amount + $order['total_updatedvalue'];
-                $cellid++;
+
+            foreach ($data as $b_key => $b_value) {
+                $cellid = 0;
+                foreach ($b_value as $bb_key => $bb_value) {
+                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($cellid, $row, $bb_value);
+                    //$Amount = $Amount + $order['total_updatedvalue'];
+                    $cellid++;
                 }
                 ++$row;
             }
             // $Amount = str_replace('KES', ' ', $this->currency->format($Amount));
             // $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, $row)->applyFromArray($title);
             // $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(3, $row)->applyFromArray($title);
-          
+
 
             $objPHPExcel->setActiveSheetIndex(0);
 
@@ -5532,7 +5527,6 @@ class ModelReportExcel extends Model {
             return;
         }
     }
-
 
     public function download_customer_order_count_excel($data) {
         //	    echo "<pre>";print_r($data);die;
@@ -5571,7 +5565,6 @@ class ModelReportExcel extends Model {
             // $sheet_title0 = 'Company Name: ' . $data['consolidation'][0]['company'];
             // $sheet_subtitle = 'Customer Name: ' . $data['consolidation'][0]['customer'] . ' #  ' . 'Order Id :' . $data['consolidation'][0]['orderid'];
             // $sheet_subtitle1 = 'Order Date: ' . $data['consolidation'][0]['date'];
-
             // $objPHPExcel->getActiveSheet()->mergeCells('A1:D1');
             // $objPHPExcel->getActiveSheet()->mergeCells('A2:D2');
             // $objPHPExcel->getActiveSheet()->mergeCells('A3:D3');
@@ -5595,35 +5588,35 @@ class ModelReportExcel extends Model {
 
             $objPHPExcel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
             $objPHPExcel->getActiveSheet()->getStyle('B:Z')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-            
-               foreach(range('A','L') as $columnID) {
-            	   $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
-            		   ->setAutoSize(true);
-               }
+
+            foreach (range('A', 'L') as $columnID) {
+                $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+                        ->setAutoSize(true);
+            }
             // $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(60);
-            $cellid=0;
-            foreach ($data[0] as $h_key=>$h_value) {               
+            $cellid = 0;
+            foreach ($data[0] as $h_key => $h_value) {
                 // echo "<pre>";print_r($h_key);die;
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($cellid, 3, $h_key);
                 $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow($cellid, 3)->applyFromArray($title);
 
                 $cellid++;
-            }             
+            }
             $row = 4;
-            
-            foreach ($data as  $b_key=>$b_value) {
-                $cellid=0;
-                foreach ($b_value as  $bb_key=>$bb_value) {
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($cellid, $row, $bb_value);
-                //$Amount = $Amount + $order['total_updatedvalue'];
-                $cellid++;
+
+            foreach ($data as $b_key => $b_value) {
+                $cellid = 0;
+                foreach ($b_value as $bb_key => $bb_value) {
+                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($cellid, $row, $bb_value);
+                    //$Amount = $Amount + $order['total_updatedvalue'];
+                    $cellid++;
                 }
                 ++$row;
             }
             // $Amount = str_replace('KES', ' ', $this->currency->format($Amount));
             // $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, $row)->applyFromArray($title);
             // $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(3, $row)->applyFromArray($title);
-          
+
 
             $objPHPExcel->setActiveSheetIndex(0);
 
@@ -5650,17 +5643,16 @@ class ModelReportExcel extends Model {
         }
     }
 
-
     public function download_customer_order_excel($data) {
         $this->load->library('excel');
         $this->load->library('iofactory');
         $this->load->model('report/customer');
         //$customer_total = $this->model_report_customer->getTotalCustomerOrders($filter_data);
-        
-        if($this->user->isAccountManager()) {
-        $results = $this->model_report_customer->getAccountManagerOrders($data);    
+
+        if ($this->user->isAccountManager()) {
+            $results = $this->model_report_customer->getAccountManagerOrders($data);
         } else {
-        $results = $this->model_report_customer->getOrders($data);
+            $results = $this->model_report_customer->getOrders($data);
         }
 
         foreach ($results as $result) {
@@ -5673,10 +5665,10 @@ class ModelReportExcel extends Model {
                 'orders' => $result['orders'],
                 'products' => $result['products'],
                 'total' => $this->currency->format($result['total'], $this->config->get('config_currency')),
-                'edit' => $this->url->link('sale/customer/edit', 'token='.$this->session->data['token'].'&customer_id='.$result['customer_id'].$url, 'SSL'),
+                'edit' => $this->url->link('sale/customer/edit', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'] . $url, 'SSL'),
             ];
-        } 
-         
+        }
+
         $log = new Log('error.log');
         $log->write($data['customers'] . 'download_customer_order_excel');
         // echo "<pre>";print_r($data['customers']);die;
@@ -5728,12 +5720,10 @@ class ModelReportExcel extends Model {
             $from = date('d-m-Y', strtotime($data['filter_date_start']));
             $to = date('d-m-Y', strtotime($data['filter_date_end']));
             $objPHPExcel->getActiveSheet()->mergeCells('A3:D3');
-            if($from!='01-01-1990')
-            {
-            $html = 'FROM ' . $from . ' TO ' . $to;
-            }
-            else
-            $html = 'Till Date : ' . $to;
+            if ($from != '01-01-1990') {
+                $html = 'FROM ' . $from . ' TO ' . $to;
+            } else
+                $html = 'Till Date : ' . $to;
 
             $objPHPExcel->getActiveSheet()->setCellValue('A3', $html);
             $objPHPExcel->getActiveSheet()->getStyle('A1:D3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
@@ -5747,22 +5737,22 @@ class ModelReportExcel extends Model {
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 4, 'Company');
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'No. Orders');
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 4, 'No. Products');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 4, 'Total'); 
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 4, 'Total');
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(2, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(3, 4)->applyFromArray($title);
- 
+
 
             // Fetching the table data
             $row = 5;
             $Amount = 0;
             foreach ($data['customers'] as $result) {
-                 
+
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $result['company']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['orders']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['products']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['total']); 
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['total']);
                 // $Amount = $Amount + $result['subtotalvalue'];
                 ++$row;
             }
@@ -5777,7 +5767,7 @@ class ModelReportExcel extends Model {
             // Sending headers to force the user to download the file
             //header('Content-Type: application/vnd.ms-excel');
             //header("Content-type: application/octet-stream");
-            
+
             $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
             $filename = 'Customer_orders.xlsx';
 
@@ -5802,17 +5792,16 @@ class ModelReportExcel extends Model {
         }
     }
 
-
     public function download_customer_activity_excel($data) {
         $this->load->library('excel');
         $this->load->library('iofactory');
         $this->load->model('report/customer');
-         
+
         $results = $this->model_report_customer->getCustomerActivities($data);
         $this->load->model('sale/order');
-             
+
         foreach ($results as $result) {
-            $comment = vsprintf($this->language->get('text_'.$result['key']), unserialize($result['data']));
+            $comment = vsprintf($this->language->get('text_' . $result['key']), unserialize($result['data']));
 
             $find = [
                 'customer_id=',
@@ -5820,12 +5809,12 @@ class ModelReportExcel extends Model {
             ];
 
             $replace = [
-                '','',
-                // $this->url->link('sale/customer/edit', 'token='.$this->session->data['token'].'&customer_id=', 'SSL'),
-                // $this->url->link('sale/order/info', 'token='.$this->session->data['token'].'&order_id=', 'SSL'),
+                '', '',
+                    // $this->url->link('sale/customer/edit', 'token='.$this->session->data['token'].'&customer_id=', 'SSL'),
+                    // $this->url->link('sale/order/info', 'token='.$this->session->data['token'].'&order_id=', 'SSL'),
             ];
-            $comment= str_replace($find, $replace, $comment);
-           $comt= preg_replace("/<\/?a( [^>]*)?>/i", "", $comment);
+            $comment = str_replace($find, $replace, $comment);
+            $comt = preg_replace("/<\/?a( [^>]*)?>/i", "", $comment);
             $data['activities'][] = [
                 'company_name' => $result['company_name'],
                 'email' => $result['email'],
@@ -5862,8 +5851,8 @@ class ModelReportExcel extends Model {
                 ],
             ];
 
-                        
-                $sheet_subtitle = '';            
+
+            $sheet_subtitle = '';
 
             $objPHPExcel->getActiveSheet()->mergeCells('A1:E1');
             // $objPHPExcel->getActiveSheet()->mergeCells('A2:E2');
@@ -5878,7 +5867,6 @@ class ModelReportExcel extends Model {
             // $to = date('d-m-Y', strtotime($data['filter_date_end']));
             // $objPHPExcel->getActiveSheet()->mergeCells('A3:I3');
             // $html = 'FROM ' . $from . ' TO ' . $to;
-
             // $objPHPExcel->getActiveSheet()->setCellValue('A3', $html);
             $objPHPExcel->getActiveSheet()->getStyle('A1:E1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
             // $objPHPExcel->getActiveSheet()->getStyle('E')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
@@ -5892,32 +5880,32 @@ class ModelReportExcel extends Model {
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'Customer Email');
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 4, 'Comment');
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 4, 'IP');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 4, 'Date'); 
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 4, 'Date');
 
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(2, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(3, 4)->applyFromArray($title);
-            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(4, 4)->applyFromArray($title); 
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(4, 4)->applyFromArray($title);
 
             // Fetching the table data
-            $row =5;
+            $row = 5;
             $Amount = 0;
-             
-                foreach ($data['activities'] as $result) {
-                   
+
+            foreach ($data['activities'] as $result) {
+
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $result['company_name']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['email']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['comment']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['ip']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['date_added']);
-                
+
                 ++$row;
             }
-            
+
             // $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, $row)->applyFromArray($title);
             // $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(6, $row)->applyFromArray($title);
-           
+
 
             $objPHPExcel->setActiveSheetIndex(0);
             //$objWriter = IOFactory::createWriter($objPHPExcel, 'Excel5');
@@ -5956,7 +5944,6 @@ class ModelReportExcel extends Model {
         $this->load->library('excel');
         $this->load->library('iofactory');
         // $this->load->model('sale/transaction');
-       
         // if($this->user->isAccountManager()) {
         // $results = $this->model_report_customer->getAccountManagerOrders($data);    
         // } else {
@@ -5964,19 +5951,19 @@ class ModelReportExcel extends Model {
         // }
         $this->load->model('sale/transactions');
         $results = $this->model_sale_transactions->getTransactions($filter_data);
-       
+
         foreach ($results as $result) {
             $data['orders'][] = [
                 'order_id' => $result['order_ids'],
                 'no_of_products' => $result['no_of_products'],
-                'customer' => $result['firstname'].' '.$result['lastname'],
+                'customer' => $result['firstname'] . ' ' . $result['lastname'],
                 'total' => $this->currency->format($result['total']),
                 'totalvalue' => $result['total'],
                 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
             ];
         }
-        
-         
+
+
         $log = new Log('error.log');
         $log->write($data['orders'] . 'download_sale_ordertransaction_excel');
         //  echo "<pre>";print_r($data['orders']);die;
@@ -6025,15 +6012,14 @@ class ModelReportExcel extends Model {
             ]]);
 
             //subtitle
-           
-            
+
+
             $objPHPExcel->getActiveSheet()->mergeCells('A3:D3');
-            if($from!=null)
-            {
+            if ($from != null) {
                 $from = date('d-m-Y', strtotime($data['filter_date_added']));
-            $html = 'Date Added ' . $from   ;
+                $html = 'Date Added ' . $from;
             }
-           
+
 
             $objPHPExcel->getActiveSheet()->setCellValue('A3', $html);
             $objPHPExcel->getActiveSheet()->getStyle('A1:D3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
@@ -6047,30 +6033,30 @@ class ModelReportExcel extends Model {
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 4, 'Order IDs');
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'Customer');
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 4, 'No. of Product');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 4, 'Total'); 
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 4, 'Date Added'); 
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 4, 'Total');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 4, 'Date Added');
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(2, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(3, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(4, 4)->applyFromArray($title);
- 
+
 
             // Fetching the table data
             $row = 5;
             $Amount = 0;
             foreach ($data['orders'] as $result) {
-                 
+
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $result['order_id']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['customer']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['no_of_products']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['total']); 
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['date_added']); 
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['total']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['date_added']);
                 $Amount = $Amount + $result['totalvalue'];
                 ++$row;
             }
             //  $Amount = str_replace('KES', ' ', $this->currency->format($Amount));
-             $Amount = $this->currency->format($Amount);
+            $Amount = $this->currency->format($Amount);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, $row)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(3, $row)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, 'Grand Total');
@@ -6081,7 +6067,7 @@ class ModelReportExcel extends Model {
             // Sending headers to force the user to download the file
             //header('Content-Type: application/vnd.ms-excel');
             //header("Content-type: application/octet-stream");
-            
+
             $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
             $filename = 'Sale_order_Transactions.xlsx';
 
@@ -6204,7 +6190,7 @@ class ModelReportExcel extends Model {
 
             if ($is_edited) {
                 //continue;
-                $OrignalProducts  = $this->model_sale_order->getRealOrderProducts($result['order_id']);
+                $OrignalProducts = $this->model_sale_order->getRealOrderProducts($result['order_id']);
             } else {
                 $OrignalProducts = $this->model_sale_order->getOrderProducts($result['order_id']);
             }
@@ -6222,7 +6208,7 @@ class ModelReportExcel extends Model {
                 //     }
                 // }!$present &&
 
-                if ( !empty($OrignalProduct['name'])) {
+                if (!empty($OrignalProduct['name'])) {
                     $data['torders'][] = [
                         'store' => $result['store_name'],
                         'model' => $OrignalProduct['model'],
@@ -6248,7 +6234,7 @@ class ModelReportExcel extends Model {
                 $sum = (float) 0.00;
 
                 foreach ($data['torders'] as $key => $torders2) {
-                    if ($torders1['product_name'] == $torders2['product_name'] && $torders1['store'] == $torders2['store']  &&  $torders1['unit'] == $torders2['unit']) {
+                    if ($torders1['product_name'] == $torders2['product_name'] && $torders1['store'] == $torders2['store'] && $torders1['unit'] == $torders2['unit']) {
                         $sum += (float) $torders2['product_qty'];
                         unset($data['torders'][$key]);
                     }
@@ -6297,15 +6283,15 @@ class ModelReportExcel extends Model {
 
             //subtitle
 
-        
+
 
             $from = date('d/m/Y', strtotime($data['filter_date_start']));
             $to = date('d/m/Y', strtotime($data['filter_date_end']));
-             
+
             $objPHPExcel->getActiveSheet()->mergeCells('A3:E3');
             $html1 = 'STOCK OUT PRODUCTS';
             //  echo "<pre>";print_r($to);die;
-            $html = 'FROM ' . $from . ' TO ' . $to ;
+            $html = 'FROM ' . $from . ' TO ' . $to;
 
             $objPHPExcel->getActiveSheet()->setCellValue('A3', $html1);
 
@@ -6356,63 +6342,60 @@ class ModelReportExcel extends Model {
 
               // Sending headers to force the user to download the file
               header('Content-Type: application/vnd.ms-excel'); */
-              $filename="stock_out_products.xlsx";
+            $filename = "stock_out_products.xlsx";
             $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
             // header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-
             // header('Content-Disposition: attachment;filename="stock_out_products.xlsx"');
             // header('Cache-Control: max-age=0');
             // $objWriter->save('php://output');
-            
-            
-            
+
+
+
             if (!file_exists(DIR_UPLOAD . 'schedulertemp/')) {
                 mkdir(DIR_UPLOAD . 'schedulertemp/', 0777, true);
             }
             // unlink($filename);
-            $folder_path = DIR_UPLOAD . 'schedulertemp'; 
-            $files = glob($folder_path.'/*');    
+            $folder_path = DIR_UPLOAD . 'schedulertemp';
+            $files = glob($folder_path . '/*');
             // Deleting all the files in the list 
-            foreach($files as $file) {             
-                if(is_file($file)) 
+            foreach ($files as $file) {
+                if (is_file($file))
                     unlink($file); // Delete the given file  
-                } 
-                // echo "<pre>";print_r($file);;
-              $objWriter->save(DIR_UPLOAD . 'schedulertemp/' .$filename);            
+            }
+            // echo "<pre>";print_r($file);;
+            $objWriter->save(DIR_UPLOAD . 'schedulertemp/' . $filename);
 
-                #region mail sending 
-                 $maildata['fromdate']=$from;
-                 $maildata['todate']=$to;
-                $subject = $this->emailtemplate->getSubject('StockOut', 'StockOut_1', $maildata);
-                $message = $this->emailtemplate->getMessage('StockOut', 'StockOut_1', $maildata);
-                
-                // $subject = "Consolidated Order Sheet";                 
-                // $message = "Please find the attachment.  <br>";
-                // $message = $message ."<li> Full Name :".$first_name ."</li><br><li> Email :".$email ."</li><br><li> Phone :".$phone ."</li><br>";
-                $this->load->model('setting/setting');
-                $email = $this->model_setting_setting->getEmailSetting('stockout');
-                 
-                if(strpos( $email,"@")==false)//if mail Id not set
-               {
+            #region mail sending 
+            $maildata['fromdate'] = $from;
+            $maildata['todate'] = $to;
+            $subject = $this->emailtemplate->getSubject('StockOut', 'StockOut_1', $maildata);
+            $message = $this->emailtemplate->getMessage('StockOut', 'StockOut_1', $maildata);
+
+            // $subject = "Consolidated Order Sheet";                 
+            // $message = "Please find the attachment.  <br>";
+            // $message = $message ."<li> Full Name :".$first_name ."</li><br><li> Email :".$email ."</li><br><li> Phone :".$phone ."</li><br>";
+            $this->load->model('setting/setting');
+            $email = $this->model_setting_setting->getEmailSetting('stockout');
+
+            if (strpos($email, "@") == false) {//if mail Id not set
                 //$email = "sridivya.talluri@technobraingroup.com";
                 $log = new Log('error.log');
                 $this->log->write('Email Id not configured to send Stock out monthly report');
+            }
+            // $bccemail = "sridivya.talluri@technobraingroup.com";
+            //   echo "<pre>";print_r($email);die;
+            $filepath = DIR_UPLOAD . 'schedulertemp/' . $filename;
+            $mail = new Mail($this->config->get('config_mail'));
+            $mail->setTo($email);
+            $mail->setBCC($bccemail);
+            $mail->setFrom($this->config->get('config_from_email'));
+            $mail->setSender($this->config->get('config_name'));
+            $mail->setSubject($subject);
+            $mail->setHTML($message);
+            $mail->addAttachment($filepath);
+            $mail->send();
+            #endregion
 
-               }
-                // $bccemail = "sridivya.talluri@technobraingroup.com";
-                //   echo "<pre>";print_r($email);die;
-                $filepath = DIR_UPLOAD . 'schedulertemp/' .$filename;
-                $mail = new Mail($this->config->get('config_mail'));
-                $mail->setTo($email);
-                $mail->setBCC($bccemail);
-                $mail->setFrom($this->config->get('config_from_email'));
-                $mail->setSender($this->config->get('config_name'));
-                $mail->setSubject($subject);
-                $mail->setHTML($message);
-                $mail->addAttachment($filepath);
-                $mail->send();
-                #endregion
-            
             exit;
         } catch (Exception $e) {
             $errstr = $e->getMessage();
@@ -6427,11 +6410,12 @@ class ModelReportExcel extends Model {
             return;
         }
     }
+
     public function download_sale_order_excel($data) {
         $this->load->library('excel');
         $this->load->library('iofactory');
         $this->load->model('report/customer');
-        
+
 
         $log = new Log('error.log');
         $log->write($data['orders'] . 'download_sale_order_excel');
@@ -6468,7 +6452,7 @@ class ModelReportExcel extends Model {
             //$objPHPExcel->getActiveSheet()->mergeCells("A1:E2");
             if ($data['orders']) {
                 $sheet_subtitle = "";
-            }  
+            }
 
             $objPHPExcel->getActiveSheet()->mergeCells('A1:F1');
             $objPHPExcel->getActiveSheet()->mergeCells('A2:F2');
@@ -6540,7 +6524,7 @@ class ModelReportExcel extends Model {
             // Sending headers to force the user to download the file
             //header('Content-Type: application/vnd.ms-excel');
             //header("Content-type: application/octet-stream");
-            
+
             $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
             $filename = 'Sale_order.xlsx';
 
@@ -6564,7 +6548,6 @@ class ModelReportExcel extends Model {
             return;
         }
     }
-
 
     public function download_inventory_daily_prices_excel($data) {
         //	    echo "<pre>";print_r($data);die;
@@ -6600,7 +6583,7 @@ class ModelReportExcel extends Model {
             ];
 
             $sheet_title = 'Inventory Daily Prices';
-             
+
 
             // $objPHPExcel->getActiveSheet()->mergeCells('A1:D1');
             // $objPHPExcel->getActiveSheet()->mergeCells('A2:D2');
@@ -6625,35 +6608,35 @@ class ModelReportExcel extends Model {
 
             $objPHPExcel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
             $objPHPExcel->getActiveSheet()->getStyle('A:Z')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
-            
-               foreach(range('A','L') as $columnID) {
-            	   $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
-            		   ->setAutoSize(true);
-               }
+
+            foreach (range('A', 'L') as $columnID) {
+                $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+                        ->setAutoSize(true);
+            }
             // $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(60);
-            $cellid=0;
-            foreach ($data[0] as $h_key=>$h_value) {               
+            $cellid = 0;
+            foreach ($data[0] as $h_key => $h_value) {
                 // echo "<pre>";print_r($h_key);die;
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($cellid, 3, $h_key);
                 $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow($cellid, 3)->applyFromArray($title);
 
                 $cellid++;
-            }             
+            }
             $row = 4;
-            
-            foreach ($data as  $b_key=>$b_value) {
-                $cellid=0;
-                foreach ($b_value as  $bb_key=>$bb_value) {
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($cellid, $row, $bb_value);
-                //$Amount = $Amount + $order['total_updatedvalue'];
-                $cellid++;
+
+            foreach ($data as $b_key => $b_value) {
+                $cellid = 0;
+                foreach ($b_value as $bb_key => $bb_value) {
+                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($cellid, $row, $bb_value);
+                    //$Amount = $Amount + $order['total_updatedvalue'];
+                    $cellid++;
                 }
                 ++$row;
             }
             // $Amount = str_replace('KES', ' ', $this->currency->format($Amount));
             // $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, $row)->applyFromArray($title);
             // $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(3, $row)->applyFromArray($title);
-          
+
 
             $objPHPExcel->setActiveSheetIndex(0);
 
@@ -6685,7 +6668,6 @@ class ModelReportExcel extends Model {
         $this->load->library('iofactory');
         $this->load->model('report/customer');
         //$customer_total = $this->model_report_customer->getTotalCustomerOrders($filter_data);
-        
         // if($this->user->isAccountManager()) {//Account manager code not added
         // $results = $this->model_report_customer->getAccountManagerOrders($data);    
         // } else {
@@ -6702,10 +6684,10 @@ class ModelReportExcel extends Model {
                 'orders' => $result['orders'],
                 'products' => $result['products'],
                 'total' => $this->currency->format($result['total'], $this->config->get('config_currency')),
-                // 'edit' => $this->url->link('sale/customer/edit', 'token='.$this->session->data['token'].'&customer_id='.$result['customer_id'].$url, 'SSL'),
+                    // 'edit' => $this->url->link('sale/customer/edit', 'token='.$this->session->data['token'].'&customer_id='.$result['customer_id'].$url, 'SSL'),
             ];
-        } 
-         
+        }
+
         $log = new Log('error.log');
         $log->write($data['customers'] . 'download_customer_orderplaced_excel');
         // echo "<pre>";print_r($data['customers']);die;
@@ -6757,12 +6739,10 @@ class ModelReportExcel extends Model {
             $from = date('d-m-Y', strtotime($data['filter_date_start']));
             $to = date('d-m-Y', strtotime($data['filter_date_end']));
             $objPHPExcel->getActiveSheet()->mergeCells('A3:D3');
-            if($from!='01-01-1990')
-            {
-            $html = 'Customers Registered Between ' . $from . ' And ' . $to;
-            }
-            else
-            $html = 'Customers Registered Till Date : ' . $to;
+            if ($from != '01-01-1990') {
+                $html = 'Customers Registered Between ' . $from . ' And ' . $to;
+            } else
+                $html = 'Customers Registered Till Date : ' . $to;
 
             $objPHPExcel->getActiveSheet()->setCellValue('A3', $html);
             $objPHPExcel->getActiveSheet()->getStyle('A1:D3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
@@ -6777,24 +6757,24 @@ class ModelReportExcel extends Model {
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'Customer');
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 4, 'No. Orders');
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 4, 'No. Products');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 4, 'Total'); 
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 4, 'Total');
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(2, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(3, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(4, 4)->applyFromArray($title);
- 
+
 
             // Fetching the table data
             $row = 5;
             $Amount = 0;
             foreach ($data['customers'] as $result) {
-                 
+
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $result['company']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['customer']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['orders']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['products']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['total']); 
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['total']);
                 // $Amount = $Amount + $result['subtotalvalue'];
                 ++$row;
             }
@@ -6809,7 +6789,7 @@ class ModelReportExcel extends Model {
             // Sending headers to force the user to download the file
             //header('Content-Type: application/vnd.ms-excel');
             //header("Content-type: application/octet-stream");
-            
+
             $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
             $filename = 'Customer_orders.xlsx';
 
@@ -6834,13 +6814,11 @@ class ModelReportExcel extends Model {
         }
     }
 
-
     public function download_customer_boughtproducts_excel($data) {
         $this->load->library('excel');
         $this->load->library('iofactory');
         $this->load->model('report/customer');
         //$customer_total = $this->model_report_customer->getTotalCustomerOrders($filter_data);
-        
         // if($this->user->isAccountManager()) {//not available for account managers
         // $results = $this->model_report_customer->getAccountManagerOrders($data);    
         // } else {
@@ -6852,11 +6830,11 @@ class ModelReportExcel extends Model {
                 'company' => $result['company'],
                 // 'customer' => $result['customer'],not listed in query
                 'name' => $result['name'],
-                'unit' => $result['unit'], 
+                'unit' => $result['unit'],
                 'quantity' => $result['quantity'],
-                 ];
-        } 
-         
+            ];
+        }
+
         $log = new Log('error.log');
         $log->write($data['customers'] . 'download_customer_boughtproducts_excel');
         // echo "<pre>";print_r($data['customers']);die;
@@ -6908,12 +6886,10 @@ class ModelReportExcel extends Model {
             $from = date('d-m-Y', strtotime($data['filter_date_start']));
             $to = date('d-m-Y', strtotime($data['filter_date_end']));
             $objPHPExcel->getActiveSheet()->mergeCells('A3:D3');
-            if($from!='01-01-1990')
-            {
-            $html = 'FROM ' . $from . ' TO ' . $to;
-            }
-            else
-            $html = 'Till Date : ' . $to;
+            if ($from != '01-01-1990') {
+                $html = 'FROM ' . $from . ' TO ' . $to;
+            } else
+                $html = 'Till Date : ' . $to;
 
             $objPHPExcel->getActiveSheet()->setCellValue('A3', $html);
             $objPHPExcel->getActiveSheet()->getStyle('A1:D3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
@@ -6927,22 +6903,22 @@ class ModelReportExcel extends Model {
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 4, 'Company Name');
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'Product Name');
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 4, 'Unit');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 4, 'Quantity'); 
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 4, 'Quantity');
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(2, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(3, 4)->applyFromArray($title);
- 
+
 
             // Fetching the table data
             $row = 5;
             $Amount = 0;
             foreach ($data['customers'] as $result) {
-                 
+
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $result['company']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['name']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['unit']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['quantity']); 
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['quantity']);
                 // $Amount = $Amount + $result['subtotalvalue'];
                 ++$row;
             }
@@ -6957,7 +6933,7 @@ class ModelReportExcel extends Model {
             // Sending headers to force the user to download the file
             //header('Content-Type: application/vnd.ms-excel');
             //header("Content-type: application/octet-stream");
-            
+
             $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
             $filename = 'Customer_orders.xlsx';
 
@@ -6973,6 +6949,126 @@ class ModelReportExcel extends Model {
             $errfile = $e->getFile();
             $errno = $e->getCode();
             $log->write($errstr . ' ' . $errline . ' ' . $errfile . ' ' . $errno . ' ' . 'download_customer_statement_excel');
+            $this->session->data['export_import_error'] = ['errstr' => $errstr, 'errno' => $errno, 'errfile' => $errfile, 'errline' => $errline];
+            if ($this->config->get('config_error_log')) {
+                $this->log->write('PHP ' . get_class($e) . ':  ' . $errstr . ' in ' . $errfile . ' on line ' . $errline);
+            }
+
+            return;
+        }
+    }
+
+    public function download_vehicle_excel($data) {
+        $this->load->library('excel');
+        $this->load->library('iofactory');
+
+        $this->load->language('vehicles/vehicles');
+        $this->load->model('vehicles/vehicles');
+        $rows = $this->model_vehicles_vehicles->getVehicles($data);
+
+        //echo "<pre>";print_r($rows);die;
+
+        try {
+            // set appropriate timeout limit
+            set_time_limit(1800);
+
+            $objPHPExcel = new PHPExcel();
+            $objPHPExcel->getProperties()->setTitle('Vehicles')->setDescription('none');
+            $objPHPExcel->setActiveSheetIndex(0);
+
+            // Field names in the first row
+            // ID, Photo, Name, Contact no., Reason, Valid from, Valid upto, Intime, Outtime
+            $title = [
+                'font' => [
+                    'bold' => true,
+                    'color' => [
+                        'rgb' => 'FFFFFF',
+                    ],
+                ],
+                'fill' => [
+                    'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                    'startcolor' => [
+                        'rgb' => '4390df',
+                    ],
+                ],
+            ];
+
+            //Company name, address
+            $objPHPExcel->getActiveSheet()->mergeCells('A1:H2');
+            $objPHPExcel->getActiveSheet()->setCellValue('A1', 'Vehicles');
+            $objPHPExcel->getActiveSheet()->getStyle('A3:G3')->applyFromArray(['font' => ['bold' => true], 'color' => [
+                    'rgb' => '4390df',
+            ]]);
+
+            //subtitle
+
+            $objPHPExcel->getActiveSheet()->getStyle('A1:I3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+
+            /* $objPHPExcel->getActiveSheet()->getColumnDimension("A")->setWidth(30);
+              $objPHPExcel->getActiveSheet()->getColumnDimension("B")->setWidth(20);
+              $objPHPExcel->getActiveSheet()->getColumnDimension("C")->setWidth(30);
+              $objPHPExcel->getActiveSheet()->getColumnDimension("D")->setWidth(30); */
+
+            foreach (range('A', 'L') as $columnID) {
+                $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+                        ->setAutoSize(true);
+            }
+
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 4, 'Vehicle Id');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'Make');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 4, 'Model');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 4, 'Registration Number');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 4, 'Registration Date');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 4, 'Registration Validity Upto');
+
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, 4, 'Status');
+
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, 4, 'Date Created');
+
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(2, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(3, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(4, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(5, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(6, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(7, 4)->applyFromArray($title);
+
+
+            // Fetching the table data
+            $row = 5;
+            foreach ($rows as $result) {
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $result['vehicle_id']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['make']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['model']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['registration_number']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, date($this->language->get('date_format_short'), strtotime($result['registration_date'])));
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, date($this->language->get('date_format_short'), strtotime($result['registration_validity'])));
+
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $result['status'] ? 'Enabled' : 'Disabled');
+
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, $row, date($this->language->get('date_format_short'), strtotime($result['date_added'])));
+                ++$row;
+            }
+
+            $objPHPExcel->setActiveSheetIndex(0);
+            /* $objWriter = IOFactory::createWriter($objPHPExcel, 'Excel5');
+
+              // Sending headers to force the user to download the file
+              header('Content-Type: application/vnd.ms-excel'); */
+
+            $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+
+            header('Content-Disposition: attachment;filename="vehicles.xlsx"');
+            header('Cache-Control: max-age=0');
+            $objWriter->save('php://output');
+            exit;
+        } catch (Exception $e) {
+            $errstr = $e->getMessage();
+            $errline = $e->getLine();
+            $errfile = $e->getFile();
+            $errno = $e->getCode();
             $this->session->data['export_import_error'] = ['errstr' => $errstr, 'errno' => $errno, 'errfile' => $errfile, 'errline' => $errline];
             if ($this->config->get('config_error_log')) {
                 $this->log->write('PHP ' . get_class($e) . ':  ' . $errstr . ' in ' . $errfile . ' on line ' . $errline);

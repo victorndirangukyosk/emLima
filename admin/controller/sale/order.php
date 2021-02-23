@@ -887,6 +887,14 @@ class ControllerSaleOrder extends Controller {
                 $url .= '&filter_order_id=' . $this->request->get['filter_order_id'];
             }
 
+            if (isset($this->request->get['filter_order_from_id'])) {
+                $url .= '&filter_order_from_id=' . $this->request->get['filter_order_from_id'];
+            }
+
+            if (isset($this->request->get['filter_order_to_id'])) {
+                $url .= '&filter_order_to_id=' . $this->request->get['filter_order_to_id'];
+            }
+
             if (isset($this->request->get['filter_customer'])) {
                 $url .= '&filter_customer=' . urlencode(html_entity_decode($this->request->get['filter_customer'], ENT_QUOTES, 'UTF-8'));
             }
@@ -963,6 +971,19 @@ class ControllerSaleOrder extends Controller {
         } else {
             $filter_order_id = null;
         }
+
+        if (isset($this->request->get['filter_order_from_id'])) {
+            $filter_order_from_id = $this->request->get['filter_order_from_id'];
+        } else {
+            $filter_order_from_id = null;
+        }
+
+        if (isset($this->request->get['filter_order_to_id'])) {
+            $filter_order_to_id = $this->request->get['filter_order_to_id'];
+        } else {
+            $filter_order_to_id = null;
+        }
+        
 
         if (isset($this->request->get['filter_company'])) {
             $filter_company = $this->request->get['filter_company'];
@@ -1070,6 +1091,16 @@ class ControllerSaleOrder extends Controller {
             $url .= '&filter_order_id=' . $this->request->get['filter_order_id'];
         }
 
+        if (isset($this->request->get['filter_order_from_id'])) {
+            $url .= '&filter_order_from_id=' . $this->request->get['filter_order_from_id'];
+        }
+
+
+        if (isset($this->request->get['filter_order_to_id'])) {
+            $url .= '&filter_order_to_id=' . $this->request->get['filter_order_to_id'];
+        }
+
+
         if (isset($this->request->get['filter_company'])) {
             $url .= '&filter_company=' . urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
         }
@@ -1154,6 +1185,8 @@ class ControllerSaleOrder extends Controller {
         $filter_data = [
             'filter_city' => $filter_city,
             'filter_order_id' => $filter_order_id,
+            'filter_order_from_id' => $filter_order_from_id,
+            'filter_order_to_id' => $filter_order_to_id,
             'filter_customer' => $filter_customer,
             'filter_company' => $filter_company,
             'filter_vendor' => $this->getUserByName($filter_vendor),
@@ -1308,6 +1341,14 @@ class ControllerSaleOrder extends Controller {
         if (isset($this->request->get['filter_order_id'])) {
             $url .= '&filter_order_id=' . $this->request->get['filter_order_id'];
         }
+
+        if (isset($this->request->get['filter_order_from_id'])) {
+            $url .= '&filter_order_from_id=' . $this->request->get['filter_order_from_id'];
+        }
+
+        if (isset($this->request->get['filter_order_to_id'])) {
+            $url .= '&filter_order_to_id=' . $this->request->get['filter_order_to_id'];
+        }
         if (isset($this->request->get['filter_company'])) {
             $url .= '&filter_company=' . urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
         }
@@ -1386,6 +1427,16 @@ class ControllerSaleOrder extends Controller {
         if (isset($this->request->get['filter_order_id'])) {
             $url .= '&filter_order_id=' . $this->request->get['filter_order_id'];
         }
+
+        if (isset($this->request->get['filter_order_from_id'])) {
+            $url .= '&filter_order_from_id=' . $this->request->get['filter_order_from_id'];
+        }
+
+        if (isset($this->request->get['filter_order_to_id'])) {
+            $url .= '&filter_order_to_id=' . $this->request->get['filter_order_to_id'];
+        }
+
+
         if (isset($this->request->get['filter_company'])) {
             $url .= '&filter_company=' . urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
         }
@@ -1458,6 +1509,8 @@ class ControllerSaleOrder extends Controller {
 
         $data['filter_city'] = $filter_city;
         $data['filter_order_id'] = $filter_order_id;
+        $data['filter_order_from_id'] = $filter_order_from_id;
+        $data['filter_order_to_id'] = $filter_order_to_id;
         $data['filter_company'] = $filter_company;
         $data['filter_customer'] = $filter_customer;
         $data['filter_vendor'] = $filter_vendor;
@@ -1626,6 +1679,14 @@ class ControllerSaleOrder extends Controller {
 
         if (isset($this->request->get['filter_order_id'])) {
             $url .= '&filter_order_id=' . $this->request->get['filter_order_id'];
+        }
+
+        if (isset($this->request->get['filter_order_from_id'])) {
+            $url .= '&filter_order_from_id=' . $this->request->get['filter_order_from_id'];
+        }
+
+        if (isset($this->request->get['filter_order_to_id'])) {
+            $url .= '&filter_order_to_id=' . $this->request->get['filter_order_to_id'];
         }
 
         if (isset($this->request->get['filter_customer'])) {
@@ -2187,6 +2248,15 @@ class ControllerSaleOrder extends Controller {
                 $url .= '&filter_order_id=' . $this->request->get['filter_order_id'];
             }
 
+
+            if (isset($this->request->get['filter_order_from_id'])) {
+                $url .= '&filter_order_from_id=' . $this->request->get['filter_order_from_id'];
+            }
+
+            if (isset($this->request->get['filter_order_to_id'])) {
+                $url .= '&filter_order_to_id=' . $this->request->get['filter_order_to_id'];
+            }
+
             if (isset($this->request->get['filter_customer'])) {
                 $url .= '&filter_customer=' . urlencode(html_entity_decode($this->request->get['filter_customer'], ENT_QUOTES, 'UTF-8'));
             }
@@ -2215,11 +2285,7 @@ class ControllerSaleOrder extends Controller {
                 $url .= '&filter_order_status=' . $this->request->get['filter_order_status'];
             }
 
-            // if (isset($this->request->get['filter_order_type'])) {
-            //     $filter_order_type = $this->request->get['filter_order_type'];
-            // } else {
-            //     $filter_order_type = null;
-            // }
+            
 
             if (isset($this->request->get['filter_total'])) {
                 $url .= '&filter_total=' . $this->request->get['filter_total'];

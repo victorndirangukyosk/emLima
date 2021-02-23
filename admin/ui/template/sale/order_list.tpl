@@ -136,12 +136,11 @@
 
    
                                <div class="form-group">
-                                <label class="control-label" for="input-delivery-date">Delivery Date</label>
-                                <div class="input-group date">
-                                    <input type="text" name="filter_delivery_date" value="<?php echo $filter_delivery_date; ?>" placeholder="<?php echo $column_delivery_date; ?>" data-date-format="YYYY-MM-DD" id="input-delivery-date" class="form-control" />
-                                    <span class="input-group-btn">
-                                        <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
-                                    </span>
+                                <label class="control-label" for="input-order-fromto">Order From & To ID</label>
+                                <div class="input-group">
+                                <input  style ="width:48%" type="text" name="filter_order_from_id" value="<?php echo $filter_order_from_id; ?>" placeholder="Order ID From" id="input-order-from-id" class="form-control" />
+                                <input  style ="width:48%;margin-left:3px;" type="text" name="filter_order_to_id" value="<?php echo $filter_order_to_id; ?>" placeholder="Order ID To" id="input-order-to-id" class="form-control" />
+                                    
                                 </div>
                             </div>
 
@@ -192,6 +191,16 @@
                                     </span>
                                 </div>
                             </div>-->
+                            
+                             <div class="form-group">
+                                <label class="control-label" for="input-delivery-date">Delivery Date</label>
+                                <div class="input-group date">
+                                    <input type="text" name="filter_delivery_date" value="<?php echo $filter_delivery_date; ?>" placeholder="<?php echo $column_delivery_date; ?>" data-date-format="YYYY-MM-DD" id="input-delivery-date" class="form-control" />
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </div>
                             
                             <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
 
@@ -502,6 +511,19 @@
 
             if (filter_order_id) {
                 url += '&filter_order_id=' + encodeURIComponent(filter_order_id);
+            }
+
+              var filter_order_from_id = $('input[name=\'filter_order_from_id\']').val();
+
+            if (filter_order_from_id) {
+                url += '&filter_order_from_id=' + encodeURIComponent(filter_order_from_id);
+            }
+
+
+             var filter_order_to_id = $('input[name=\'filter_order_to_id\']').val();
+
+            if (filter_order_to_id) {
+                url += '&filter_order_to_id=' + encodeURIComponent(filter_order_to_id);
             }
 
             var filter_customer = $('input[name=\'filter_customer\']').val();

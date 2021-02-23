@@ -721,11 +721,12 @@ class ControllerApiOrders extends Controller
                 //$orderValue += $da['total'];
             }
 
-            $results = $this->model_api_orders->getOrders($args);
+            $results = $this->model_api_orders->getOrdersNew($args);
+            // echo "<pre>";print_r($results);die;
 
             /*$log->write($results);
 
-            //echo "<pre>";print_r($results);die;
+             
             $temp = $results;
 
             $amTimeslot = [];
@@ -773,6 +774,7 @@ class ControllerApiOrders extends Controller
 
                     $order['subtotal'] = 0;
                     $order['nice_subtotal'] = 0;
+                    $order['company_name'] = $result['company_name'];
 
                     if (isset($order)) {
                         /* totals */

@@ -3,13 +3,13 @@
 class ModelVehiclesVehicles extends Model {
 
     public function addVehicle($data) {
-        $this->db->query('INSERT INTO ' . DB_PREFIX . "vehicles SET make = '" . $this->db->escape($data['make']) . "', model = '" . $this->db->escape($data['model']) . "', registration_number = '" . $this->db->escape($data['registration_number']) . "', registration_validity = '" . $this->db->escape($data['registration_validity']) . "', registration_date = '" . $this->db->escape($data['registration_date']) . "', status = '" . (int) $data['status'] . "', date_added = NOW()");
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "vehicles SET make = '" . $this->db->escape($data['make']) . "', model = '" . $this->db->escape($data['model']) . "', registration_number = '" . $this->db->escape($data['registration_number']) . "', registration_validity = '" . $this->db->escape($data['registration_validity_upto']) . "', registration_date = '" . $this->db->escape($data['registration_date']) . "', status = '" . (int) $data['status'] . "', date_added = NOW()");
         $vehicle_id = $this->db->getLastId();
         return $vehicle_id;
     }
 
     public function editVehicle($vehicle_id, $data) {
-        $this->db->query('UPDATE ' . DB_PREFIX . "vehicles SET make = '" . $this->db->escape($data['make']) . "', model = '" . $this->db->escape($data['model']) . "', registration_number = '" . $this->db->escape($data['registration_number']) . "', registration_validity = '" . $this->db->escape($data['registration_validity']) . "', status = '" . (int) $data['status'] . "', registration_date = '" . $data['registration_date'] . "' WHERE vehicle_id = '" . (int) $vehicle_id . "'");
+        $this->db->query('UPDATE ' . DB_PREFIX . "vehicles SET make = '" . $this->db->escape($data['make']) . "', model = '" . $this->db->escape($data['model']) . "', registration_number = '" . $this->db->escape($data['registration_number']) . "', registration_validity = '" . $this->db->escape($data['registration_validity_upto']) . "', status = '" . (int) $data['status'] . "', registration_date = '" . $data['registration_date'] . "' WHERE vehicle_id = '" . (int) $vehicle_id . "'");
     }
 
     public function deleteVehicle($vehicle_id) {
@@ -22,7 +22,7 @@ class ModelVehiclesVehicles extends Model {
         return $query->row;
     }
 
-    public function getDriverByNumber($registration_number) {
+    public function getVehicleByNumber($registration_number) {
         $query = $this->db->query('SELECT DISTINCT * FROM ' . DB_PREFIX . "vehicles WHERE registration_number = '" . $this->db->escape($registration_number) . "'");
 
         return $query->row;
@@ -99,7 +99,7 @@ class ModelVehiclesVehicles extends Model {
     }
 
     public function getTotalVehicles($data = []) {
-        $sql = 'SELECT COUNT(*) AS total FROM ' . DB_PREFIX . 'vehicles';
+        $sql = 'SELECT COUNT(*) AS total FROM ' . DB_PREFIX . 'vehicles c';
 
         $implode = [];
 
