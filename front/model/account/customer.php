@@ -381,7 +381,7 @@ class ModelAccountCustomer extends Model {
     }
 
     public function getTotalAccountManagersByNameAndId($accountmanagername, $account_manager_id) {
-        $query = $this->db->query('SELECT COUNT(*) AS total FROM ' . DB_PREFIX . "user WHERE user_id = '" . (int) $account_manager_id . "' AND username = '" . $accountmanagername . "' AND user_group_id = '" . (int) $this->config->get('config_account_manager_group_id') . "'");
+        $query = $this->db->query('SELECT COUNT(*) AS total FROM ' . DB_PREFIX . "user WHERE user_id = '" . (int) $account_manager_id . "' AND firstname = '" . $accountmanagername . "' AND user_group_id = '" . (int) $this->config->get('config_account_manager_group_id') . "'");
 
         return $query->row['total'];
     }
@@ -841,8 +841,8 @@ class ModelAccountCustomer extends Model {
         return $query->row;
     }
 
-
     public function editToken($customer_id, $token) {
         $this->db->query('UPDATE ' . DB_PREFIX . "customer SET token = '" . $this->db->escape($token) . "' WHERE customer_id = '" . (int) $customer_id . "'");
     }
+
 }
