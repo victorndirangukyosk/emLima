@@ -1009,7 +1009,12 @@ class ModelReportExcel extends Model {
 
                 $sheet_title = $worksheetName . ' Order #' . $order['order_id'];
                 $sheet_subtitle = $order['shipping_address'];
-                $sheet_subtitle_1 = $order['comment'];
+                // $sheet_subtitle_1 = $order['comment']; 
+                //commented it , because as per the request it shoulb be shown after products and it may change
+                //instead of removing code
+                //take new variable 
+                $sheet_subtitle_1 = "";
+                $sheet_subtitle_1_new =  $order['comment'];
 
                 // $objPHPExcel->getActiveSheet()->mergeCells('A1:D1');
                 // $objPHPExcel->getActiveSheet()->mergeCells('A2:D2');
@@ -1105,6 +1110,17 @@ class ModelReportExcel extends Model {
                     //$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, '');
 
                     ++$row;
+                }
+                if($sheet_subtitle_1_new != "" && $sheet_subtitle_1_new != null && $row>5)
+                {
+                    // $objPHPExcel->getActiveSheet()->mergeCells('A4:E4');
+                    $objPHPExcel->getActiveSheet()->mergeCells('A'.$row.':E'.$row);
+                    $objPHPExcel->getActiveSheet()->setCellValue('A'.$row, 'Order Note : ' . $sheet_subtitle_1_new);
+                    // $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $sheet_subtitle_1_new);
+                
+                    $objPHPExcel->getActiveSheet()->getStyle('A'.$row.':E'.$row)->applyFromArray(['font' => ['bold' => true], 'color' => [
+                        'rgb' => '51AB66',
+                    ]]);
                 }
                 $objPHPExcel->getActiveSheet()->getStyle('A1:E' . $row)->applyFromArray($styleArray);
                 $objPHPExcel->getActiveSheet()->getStyle('A1:E' . $row)->getAlignment()->setWrapText(true);
@@ -1254,7 +1270,12 @@ class ModelReportExcel extends Model {
 
                 $sheet_title = $worksheetName . ' Order #' . $order['order_id'];
                 $sheet_subtitle = $order['shipping_address'];
-                $sheet_subtitle_1 = $order['comment'];
+                // $sheet_subtitle_1 = $order['comment'];
+                //commented it , because as per the request it shoulb be shown after products and it may change
+                //instead of removing code
+                //take new variable 
+                $sheet_subtitle_1 = "";
+                $sheet_subtitle_1_new =  $order['comment'];
 
                 // $objPHPExcel->getActiveSheet()->mergeCells('A1:D1');
                 $objPHPExcel->getActiveSheet()->mergeCells('A2:B2');
@@ -1347,6 +1368,19 @@ class ModelReportExcel extends Model {
 
                     ++$row;
                 }
+
+                if($sheet_subtitle_1_new != "" && $sheet_subtitle_1_new != null && $row>5)
+                {
+                    // $objPHPExcel->getActiveSheet()->mergeCells('A4:E4');
+                    $objPHPExcel->getActiveSheet()->mergeCells('A'.$row.':E'.$row);
+                    $objPHPExcel->getActiveSheet()->setCellValue('A'.$row, 'Order Note : ' . $sheet_subtitle_1_new);
+                    // $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $sheet_subtitle_1_new);
+                
+                    $objPHPExcel->getActiveSheet()->getStyle('A'.$row.':E'.$row)->applyFromArray(['font' => ['bold' => true], 'color' => [
+                        'rgb' => '51AB66',
+                    ]]);
+                }
+                
                 $objPHPExcel->getActiveSheet()->getStyle('A1:E' . $row)->applyFromArray($styleArray);
                 $objPHPExcel->getActiveSheet()->getStyle('A1:E' . $row)->getAlignment()->setWrapText(true);
 
