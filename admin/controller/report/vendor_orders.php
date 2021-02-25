@@ -232,6 +232,7 @@ class ControllerReportVendorOrders extends Controller
             }
 
             $sub_total = 0;
+            $total = 0;
 
             $totals = $this->model_sale_order->getOrderTotals($result['order_id']);
 

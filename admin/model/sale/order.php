@@ -1757,6 +1757,13 @@ class ModelSaleOrder extends Model {
 
         return $query->rows;
     }
+    
+    public function getOrderTransactionFee($order_id) {
+        $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "order_total WHERE order_id = '" . (int) $order_id . "' AND code = 'transaction_fee' ORDER BY sort_order");
+
+        return $query->row;
+    }
+    
 
     public function getTotalCreditsByOrderId($order_id) {
         $query = $this->db->query('SELECT SUM(amount) AS total FROM ' . DB_PREFIX . "customer_credit WHERE order_id = '" . (int) $order_id . "' and amount > 0");

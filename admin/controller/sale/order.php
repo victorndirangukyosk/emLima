@@ -4708,11 +4708,30 @@ class ControllerSaleOrder extends Controller {
 
         $totalOrdersAmount = 0;
         foreach ($results as $order) {
+            
+            $sub_total = 0;
+            $total = 0;
+
+            $totals = $this->model_sale_order->getOrderTotals($order['order_id']);
+
+            //echo "<pre>";print_r($totals);die;
+            foreach ($totals as $total) {
+                if ('sub_total' == $total['code']) {
+                    $sub_total = $total['value'];
+                    //break;
+                }
+                if ('total' == $total['code']) {
+                    $total = $total['value'];
+                    break;
+                }
+            }
+            
             $data['consolidation'][] = [
                 'delivery_date' => date("d-m-Y", strtotime($order['delivery_date'])),
                 'customer' => $order['customer'], //. ' Order#' . $order['order_id'],
                 'company_name' => $order['company_name'],
-                'amount' => $order['total'],
+                //'amount' => $order['total'],
+                'amount' => $total,
                 'SAP_customer_no' => $order['SAP_customer_no'],
                 'invoice_no' => 'KB' . $order['order_id'],
                 'SAP_document_no' => '',
@@ -4724,15 +4743,30 @@ class ControllerSaleOrder extends Controller {
 
         foreach ($results as $index => $order) {
             $sum = 0;
+            $tran_fee = 0;
             $data['orders'][$index] = $order;
             $orderProducts = $this->getOrderProductsWithVariancesNew($data['orders'][$index]['order_id']);
+            
+            $transaction_fee = $this->model_sale_order->getOrderTransactionFee($data['orders'][$index]['order_id']);
+            if(is_array($transaction_fee) && count($transaction_fee) > 0 && $transaction_fee['order_id'] == $data['orders'][$index]['order_id']) {
+            $tran_fee = $transaction_fee['value']; 
+            
+            /*$log = new Log('error.log');
+            $log->write('transaction_fee');
+            $log->write($tran_fee);
+            $log->write($transaction_fee);
+            $log->write('transaction_fee');*/
+            
+            }
+            
+            
             $data['orders'][$index]['products'] = $orderProducts;
 
             foreach ($orderProducts as $item) {
                 $sum += $item['total_updatedvalue'];
             }
-            $data['consolidation'][$index]['amount'] = $sum;
-            $totalOrdersAmount += $sum;
+            $data['consolidation'][$index]['amount'] = $sum+$tran_fee;
+            $totalOrdersAmount += $sum+$tran_fee;
         }
         $data['consolidation']['total'] = $totalOrdersAmount;
         //   echo "<pre>";print_r($data);die;
@@ -4835,7 +4869,7 @@ class ControllerSaleOrder extends Controller {
         $this->load->model('sale/order');
 
         $orderProducts = [];
-
+        $order_info = $this->model_sale_order->getOrder($order_id);
         if ($this->model_sale_order->hasRealOrderProducts($order_id)) {
             // Order products with weight change
             $originalProducts = $products = $this->model_sale_order->getRealOrderProducts($order_id);
