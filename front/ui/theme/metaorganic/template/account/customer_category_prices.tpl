@@ -36,7 +36,6 @@
                                 <?php foreach ($products as $pro) { ?>
                                 <?php foreach ($pro['variations'] as $variation) { ?>
                                 <tr>
-
                                     <td class="text-left"><?php echo $variation['variation_id']; ?></td>
                                     <td class="text-left"><?php echo $variation['name']; ?></td>
                                     <td class="text-left"><?php echo $variation['unit']; ?></td>
