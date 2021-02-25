@@ -7653,7 +7653,7 @@ class ControllerSaleOrder extends Controller {
             $this->model_sale_order->UpdateOrderDriverDetails($order_id, $driver_id);
         }
 
-        $this->SendMailToCustomerWithDriverDetails($order_id);
+        //$this->SendMailToCustomerWithDriverDetails($order_id);
         // Add to activity log
         $log = new Log('error.log');
         $this->load->model('user/user_activity');
@@ -7719,7 +7719,8 @@ class ControllerSaleOrder extends Controller {
         if (is_array($order_info) && $order_info != NULL) {
             $this->model_sale_order->UpdateOrderDeliveryExecutiveDetails($order_id, $delivery_executive_id);
         }
-
+        
+        $this->SendMailToCustomerWithDriverDetails($order_id);
         // Add to activity log
         $log = new Log('error.log');
         $this->load->model('user/user_activity');
@@ -7763,14 +7764,14 @@ class ControllerSaleOrder extends Controller {
         $driver_phone = NULL;
         if ($driver_info) {
             $driver_name = $driver_info['firstname'] . ' ' . $driver_info['lastname'];
-            $driver_phone = $driver_info['telephone'];
+            $driver_phone = '+254'.' '.$driver_info['telephone'];
         }
 
         $executive_name = NULL;
         $executive_phone = NULL;
         if ($executive_info) {
             $executive_name = $executive_info['firstname'] . ' ' . $executive_info['lastname'];
-            $executive_phone = $executive_info['telephone'];
+            $executive_phone = '+254'.' '.$executive_info['telephone'];
         }
 
         $customer_info['store_name'] = $store_name;
