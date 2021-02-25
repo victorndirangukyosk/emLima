@@ -24,6 +24,7 @@
                                     <td class="text-left">Product Store Id</td>
                                     <td class="text-left">Name</td>
                                     <td class="text-left">UOM</td>
+                                    <td class="text-left">Category Name</td>
                                     <td class="text-left">Price</td>
                                     <td class="text-left">Special Price</td>
                                     <td class="text-left">Category Price</td>
@@ -39,6 +40,7 @@
                                     <td class="text-left"><?php echo $variation['variation_id']; ?></td>
                                     <td class="text-left"><?php echo $variation['name']; ?></td>
                                     <td class="text-left"><?php echo $variation['unit']; ?></td>
+                                    <td class="text-left"><?php echo $variation['category_name']; ?></td>
                                     <td class="text-left"><?php echo $variation['price']; ?></td>
                                     <td class="text-left"><?php echo $variation['special']; ?></td>
                                     <td class="text-left"><?php echo $variation['category_price']; ?></td>

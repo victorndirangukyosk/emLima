@@ -115,12 +115,14 @@ class ControllerCommonHomeNew extends Controller {
                     $productIndex = array_search($result['name'], $productNames);
                     // TODO: Check for product variation duplicates
                     $data['products'][$productIndex][variations][] = [
+                        'name' => $name,
                         'variation_id' => $result['product_store_id'],
                         'unit' => $result['unit'],
                         'weight' => floatval($result['weight']),
                         'price' => $price,
                         'special' => $special_price,
                         'category_price' => $category_price,
+                        'category_name' => $this->session->data['customer_category'],
                     ];
                 } else {
                     // Add as new product
@@ -144,6 +146,7 @@ class ControllerCommonHomeNew extends Controller {
                                 'price' => $price,
                                 'special' => $special_price,
                                 'category_price' => $category_price,
+                                'category_name' => $this->session->data['customer_category'],
                             ],
                         ],
                         'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('config_product_description_length')) . '..',
