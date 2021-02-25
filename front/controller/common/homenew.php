@@ -13,7 +13,7 @@ class ControllerCommonHomeNew extends Controller {
             $filter_data = array(
                 'store_id' => ACTIVE_STORE_ID,
             );
-            $results2 = $this->model_assets_product->getProductsForHeaderSearch($filter_data);
+            $results2 = $this->model_assets_product->getProductsForGrid($filter_data);
 
             $data['products'] = [];
 
@@ -21,10 +21,10 @@ class ControllerCommonHomeNew extends Controller {
             foreach ($results2 as $results22) {
                 $results = $this->model_assets_product->getVariants($results22['name'], 75, FALSE);
                 foreach ($results as $result) {
-                    /*$log = new Log('error.log');
-                    $log->write('variants');
-                    $log->write($result);
-                    $log->write('variants');*/
+                    /* $log = new Log('error.log');
+                      $log->write('variants');
+                      $log->write($result);
+                      $log->write('variants'); */
                     // if qty less then 1 dont show product
                     //REMOVED QUANTITY CHECK CONDITION
                     /* if ($result['quantity'] <= 0) {
@@ -155,7 +155,7 @@ class ControllerCommonHomeNew extends Controller {
                                     'category_name' => $this->session->data['customer_category'],
                                 ],
                             ],
-                            /*'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('config_product_description_length')) . '..',*/
+                            /* 'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('config_product_description_length')) . '..', */
                             'percent_off' => number_format($percent_off, 0),
                             'tax' => $result['tax_percentage'],
                             'minimum' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity'],
