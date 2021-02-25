@@ -139,7 +139,8 @@
                                 <td class="left"><?php echo $order['delivery_date']; ?></td>
                                 
                                 <td class="right"><?php echo $order['products']; ?></td>            
-                                <td class="right"><?php echo $order['subtotal']; ?></td>
+                                <!--<td class="right"><?php echo $order['subtotal']; ?></td>-->
+                                <td class="right"><?php echo $order['total']; ?>
                             </tr>
                             <?php } ?>
                             <?php } else { ?>
