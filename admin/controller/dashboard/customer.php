@@ -59,7 +59,8 @@ class ControllerDashboardCustomer extends Controller {
         $this->load->model('sale/customer');
 
         $customer_total = $this->model_sale_customer->getTotalCustomersOnBoarded();
-
+        
+        $data['url'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'].'&', 'SSL');
         $data['total'] = $customer_total;
         $data['customer'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'], 'SSL');
 
@@ -80,7 +81,7 @@ class ControllerDashboardCustomer extends Controller {
         $this->load->model('sale/customer');
 
         $customer_total = $this->model_sale_customer->getTotalCustomersForDashboard();
-
+        $data['url'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'].'&', 'SSL');
         $data['total'] = $customer_total;
         $data['customer'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'], 'SSL');
 
@@ -101,7 +102,8 @@ class ControllerDashboardCustomer extends Controller {
         $this->load->model('sale/customer');
 
         $customer_total = $this->model_sale_customer->getTotalCustomersForDashboard(['filter_approved' => 0]);
-
+        
+        $data['url'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'].'&', 'SSL');
         $data['total'] = $customer_total;
         $data['customer'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'], 'SSL');
 
