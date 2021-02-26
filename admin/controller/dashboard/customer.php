@@ -58,7 +58,7 @@ class ControllerDashboardCustomer extends Controller {
         // Total Orders
         $this->load->model('sale/customer');
 
-        $customer_total = $this->model_sale_customer->getTotalCustomersForDashboard();
+        $customer_total = $this->model_sale_customer->getTotalCustomersOnBoarded();
 
         $data['total'] = $customer_total;
         $data['customer'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'], 'SSL');
