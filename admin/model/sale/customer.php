@@ -593,7 +593,8 @@ class ModelSaleCustomer extends Model {
         if ($this->user->isAccountManager()) {
             $implode[] = "c.account_manager_id = '" . (int) $this->user->getId() . "'";
         }
-        $implode[] = "c.parent is null or c.parent = 0";
+        $implode[] = " o.order_status_id NOT IN (0)";
+        //$implode[] = "c.parent is null or c.parent = 0";
 
         if ($implode) {
             $sql .= ' WHERE ' . implode(' AND ', $implode);
