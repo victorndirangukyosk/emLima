@@ -232,6 +232,7 @@ class ControllerReportVendorOrders extends Controller
             }
 
             $sub_total = 0;
+            $total = 0;
 
             $totals = $this->model_sale_order->getOrderTotals($result['order_id']);
 
@@ -239,6 +240,10 @@ class ControllerReportVendorOrders extends Controller
             foreach ($totals as $total) {
                 if ('sub_total' == $total['code']) {
                     $sub_total = $total['value'];
+                    //break;
+                }
+                if ('total' == $total['code']) {
+                    $total = $total['value'];
                     break;
                 }
             }
@@ -250,7 +255,8 @@ class ControllerReportVendorOrders extends Controller
                 'order_id' => $result['order_id'],
                 'products' => $products_qty,
                 'subtotal' => $this->currency->format($sub_total),
-                'total' => $this->currency->format($result['total']),
+                'total' => $this->currency->format($total),
+                //'total' => $this->currency->format($result['total']),
             ];
         }
 
