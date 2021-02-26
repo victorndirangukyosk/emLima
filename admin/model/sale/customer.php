@@ -183,7 +183,7 @@ class ModelSaleCustomer extends Model {
         }
 
         if ($data['filter_sub_customer_show'] == 0 || $data['filter_sub_customer_show'] == NULL || !array_key_exists('filter_sub_customer_show', $data)) {
-            $implode[] = "parent = 0 OR parent IS NULL";
+            $implode[] = "(parent = 0 OR parent IS NULL)";
         }
 
         if (!empty($data['filter_sub_customer_show']) && !empty($data['filter_sub_customer_show']) && $data['filter_sub_customer_show'] == 1) {
@@ -436,7 +436,7 @@ class ModelSaleCustomer extends Model {
         }
 
         if ($data['filter_sub_customer_show'] == 0 || $data['filter_sub_customer_show'] == NULL || !array_key_exists('filter_sub_customer_show', $data)) {
-            $implode[] = "parent = 0 OR parent IS NULL";
+            $implode[] = "(parent = 0 OR parent IS NULL)";
         }
 
         if (!empty($data['filter_sub_customer_show']) && !empty($data['filter_sub_customer_show']) && $data['filter_sub_customer_show'] == 1) {
@@ -524,7 +524,8 @@ class ModelSaleCustomer extends Model {
         if ($this->user->isAccountManager()) {
             $implode[] = "account_manager_id = '" . (int) $this->user->getId() . "'";
         }
-        $implode[] = "parent is null or parent = 0";
+        //REMOVED FETCHING ONLY PARENT CUSTOMERS
+        //$implode[] = "parent is null or parent = 0";
 
         if ($implode) {
             $sql .= ' WHERE ' . implode(' AND ', $implode);
@@ -536,68 +537,69 @@ class ModelSaleCustomer extends Model {
     }
 
     public function getTotalCustomersOnBoarded($data = []) {
-        $sql = 'SELECT COUNT(*) AS total FROM ' . DB_PREFIX . 'customer';
+        $sql = 'SELECT COUNT(*) AS total FROM ' . DB_PREFIX . 'customer c JOIN ' . DB_PREFIX . 'order o ON (c.customer_id = o.customer_id)';
 
         $implode = [];
 
         if (!empty($data['filter_company'])) {
-            $implode[] = "company_name LIKE '%" . $this->db->escape($data['filter_company']) . "%'";
+            $implode[] = "c.company_name LIKE '%" . $this->db->escape($data['filter_company']) . "%'";
         }
 
         if (!empty($data['filter_name'])) {
-            $implode[] = "CONCAT(firstname, ' ', lastname) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+            $implode[] = "CONCAT(c.firstname, ' ', c.lastname) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
         }
 
         if (!empty($data['filter_email'])) {
-            $implode[] = "email LIKE '" . $this->db->escape($data['filter_email']) . "%'";
+            $implode[] = "c.email LIKE '" . $this->db->escape($data['filter_email']) . "%'";
         }
 
         if (!empty($data['filter_telephone'])) {
-            $implode[] = "telephone LIKE '" . $this->db->escape($data['filter_telephone']) . "%'";
+            $implode[] = "c.telephone LIKE '" . $this->db->escape($data['filter_telephone']) . "%'";
         }
 
         if (isset($data['filter_newsletter']) && !is_null($data['filter_newsletter'])) {
-            $implode[] = "newsletter = '" . (int) $data['filter_newsletter'] . "'";
+            $implode[] = "c.newsletter = '" . (int) $data['filter_newsletter'] . "'";
         }
 
         if (!empty($data['filter_customer_group_id'])) {
-            $implode[] = "customer_group_id = '" . (int) $data['filter_customer_group_id'] . "'";
+            $implode[] = "c.customer_group_id = '" . (int) $data['filter_customer_group_id'] . "'";
         }
 
         if (!empty($data['filter_ip'])) {
-            $implode[] = "ip = '" . $this->db->escape($data['filter_ip']) . "'";
+            $implode[] = "c.ip = '" . $this->db->escape($data['filter_ip']) . "'";
         }
 
         if (!empty($data['filter_parent_customer_id']) && !empty($data['filter_parent_customer'])) {
-            $implode[] = "parent = '" . $this->db->escape($data['filter_parent_customer_id']) . "'";
+            $implode[] = "c.parent = '" . $this->db->escape($data['filter_parent_customer_id']) . "'";
         }
 
         if (!empty($data['filter_account_manager_id']) && !empty($data['filter_account_manager_name'])) {
-            $implode[] = "account_manager_id = '" . $this->db->escape($data['filter_account_manager_id']) . "'";
+            $implode[] = "c.account_manager_id = '" . $this->db->escape($data['filter_account_manager_id']) . "'";
         }
 
         if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
-            $implode[] = "status = '" . (int) $data['filter_status'] . "'";
+            $implode[] = "c.status = '" . (int) $data['filter_status'] . "'";
         }
         $implode[] = "approved = 1";
 
         if (isset($data['filter_approved']) && !is_null($data['filter_approved'])) {
-            $implode[] = "approved = '" . (int) $data['filter_approved'] . "'";
+            $implode[] = "c.approved = '" . (int) $data['filter_approved'] . "'";
         }
 
         if (!empty($data['filter_date_added'])) {
-            $implode[] = "DATE(date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
+            $implode[] = "DATE(c.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
         }
 
         if ($this->user->isAccountManager()) {
-            $implode[] = "account_manager_id = '" . (int) $this->user->getId() . "'";
+            $implode[] = "c.account_manager_id = '" . (int) $this->user->getId() . "'";
         }
-        $implode[] = "parent is null or parent = 0";
+        $implode[] = " o.order_status_id NOT IN (0)";
+        //$implode[] = "c.parent is null or c.parent = 0";
 
         if ($implode) {
             $sql .= ' WHERE ' . implode(' AND ', $implode);
         }
-
+        $sql .= ' GROUP BY c.customer_id';
         $query = $this->db->query($sql);
 
         return $query->row['total'];

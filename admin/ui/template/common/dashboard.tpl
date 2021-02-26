@@ -16,15 +16,6 @@
       <button type="button" class="close" data-dismiss="alert">&times;</button>
     </div>
     <?php } ?>
-    <div class="row" id="sum_widgets">
-      <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $sale; ?></div>
-      <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $order; ?></div>
-      <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $customer; ?></div>
-      <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $online; ?></div>
-      <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $manualorders; ?></div>
-      <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $onlineorders; ?></div>
-      
-    </div>
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sx-12 col-sm-12">
             <div class="panel panel-default">
@@ -46,7 +37,10 @@
                             <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $order_incomeplete; ?></div>
                             <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $order_approval_pening; ?></div>
                             <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $order_fast; ?></div>
+                            <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $manualorders; ?></div>
+                            <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $onlineorders; ?></div>
                             
+                            <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $online; ?></div>
                             <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $total_customers_registered; ?></div>
                             <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $total_customers_onboarded; ?></div>
                             <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $total_customers_approval_pending; ?></div>
@@ -62,7 +56,6 @@
             </div>
         </div>
         
-      <div class="col-lg-12 col-md-12 col-sx-12 col-sm-12"><?php echo $charts; ?></div>
     </div>
     <div class="row">
       <div class="col-lg-12 col-md-12 col-sx-12 col-sm-12"><?php echo $recenttabs; ?></div>
