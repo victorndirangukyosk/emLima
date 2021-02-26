@@ -163,7 +163,8 @@ class ControllerDashboardOrder extends Controller {
         $this->load->model('sale/order');
 
         $order_total = $this->model_sale_order->getTotalOrders(['filter_order_status' => 14]);
-
+        
+        $data['url'] = $this->url->link('sale/order', 'token='.$this->session->data['token'], 'SSL');
         $data['total'] = $order_total;
         $data['order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'], 'SSL');
 
@@ -185,6 +186,7 @@ class ControllerDashboardOrder extends Controller {
 
         $order_total = $this->model_sale_order->getTotalOrders(['filter_order_status' => 1]);
 
+        $data['url'] = $this->url->link('sale/order', 'token='.$this->session->data['token'], 'SSL');
         $data['total'] = $order_total;
         $data['order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'], 'SSL');
 
@@ -205,7 +207,8 @@ class ControllerDashboardOrder extends Controller {
         $this->load->model('sale/order');
 
         $order_total = $this->model_sale_order->getTotalOrders(['filter_order_status' => 6]);
-
+        
+        $data['url'] = $this->url->link('sale/order', 'token='.$this->session->data['token'], 'SSL');
         $data['total'] = $order_total;
         $data['order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'], 'SSL');
 
@@ -247,7 +250,8 @@ class ControllerDashboardOrder extends Controller {
         $this->load->model('sale/order');
 
         $order_total = $this->model_sale_order->getTotalOrders(['filter_order_status' => 15]);
-
+        
+        $data['url'] = $this->url->link('sale/order', 'token='.$this->session->data['token'], 'SSL');
         $data['total'] = $order_total;
         $data['order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'], 'SSL');
 
@@ -272,6 +276,8 @@ class ControllerDashboardOrder extends Controller {
         /* 'filter_order_status' => 1, 14, */
         $order_total_tomorrow = $this->model_sale_order->getTotalOrders(['filter_order_day' => 'tomorrow']);
         $order_total = $order_total_today + $order_total_tomorrow;
+        
+        $data['url'] = $this->url->link('sale/fast_order', 'token='.$this->session->data['token'], 'SSL');
         $data['total'] = $order_total;
         $data['order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'], 'SSL');
 
