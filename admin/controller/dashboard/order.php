@@ -277,7 +277,7 @@ class ControllerDashboardOrder extends Controller {
         $order_total_tomorrow = $this->model_sale_order->getTotalOrders(['filter_order_day' => 'tomorrow']);
         $order_total = $order_total_today + $order_total_tomorrow;
 
-        $data['url'] = $this->url->link('sale/fast_order', 'token=' . $this->session->data['token'], 'SSL');
+        $data['url'] = $this->url->link('sale/fast_order', 'token=' . $this->session->data['token'].'&filter_order_status=14,1&filter_order_day=today', 'SSL');
         $data['total'] = $order_total;
         $data['order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'], 'SSL');
 
