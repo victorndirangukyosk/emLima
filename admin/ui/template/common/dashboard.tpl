@@ -47,8 +47,8 @@
                             <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $order_approval_pening; ?></div>
                             <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $order_fast; ?></div>
                             
-                            <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $total_customers_onboarded; ?></div>
                             <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $total_customers_registered; ?></div>
+                            <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $total_customers_onboarded; ?></div>
                             <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $total_customers_approval_pending; ?></div>
                             
                             <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $total_revenue_booked; ?></div>
