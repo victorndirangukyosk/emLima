@@ -183,7 +183,7 @@ class ModelSaleCustomer extends Model {
         }
 
         if ($data['filter_sub_customer_show'] == 0 || $data['filter_sub_customer_show'] == NULL || !array_key_exists('filter_sub_customer_show', $data)) {
-            $implode[] = "parent = 0 OR parent IS NULL";
+            $implode[] = "(parent = 0 OR parent IS NULL)";
         }
 
         if (!empty($data['filter_sub_customer_show']) && !empty($data['filter_sub_customer_show']) && $data['filter_sub_customer_show'] == 1) {
@@ -436,7 +436,7 @@ class ModelSaleCustomer extends Model {
         }
 
         if ($data['filter_sub_customer_show'] == 0 || $data['filter_sub_customer_show'] == NULL || !array_key_exists('filter_sub_customer_show', $data)) {
-            $implode[] = "parent = 0 OR parent IS NULL";
+            $implode[] = "(parent = 0 OR parent IS NULL)";
         }
 
         if (!empty($data['filter_sub_customer_show']) && !empty($data['filter_sub_customer_show']) && $data['filter_sub_customer_show'] == 1) {
