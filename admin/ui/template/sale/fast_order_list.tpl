@@ -62,10 +62,10 @@
                             </div>
                             
                         </div> -->
-                        <div class="col-sm-6">
+                        <div class="col-sm-4">
                             <div class="form-group">
                                 <label class="control-label" for="input-order-status"><?php echo $entry_order_status; ?></label>
-                                <select name="filter_order_status[]" id="input-order-status-uni" multiple="multiple">
+                                <br><select name="filter_order_status[]" id="input-order-status-uni"  multiple="multiple">
                                     <!--<?php if ($filter_order_status == '0') { ?>
                                     <option value="0" selected="selected"><?php echo $text_missing; ?></option>
                                     <?php } else { ?>
@@ -82,14 +82,7 @@
 
                             </div>
 
-                            <div class="form-group">
-                                <label class="control-label" for="input-order-status">Delivery Day</label>
-                                <select style="width:45%;" name="filter_order_day" id="input-order-status" class="form-control">
-                                    <option value="today" <?php echo ($filter_order_day == 'today') ? 'selected="selected"':  "" ?> >Today</option>
-                                    <option value="tomorrow" <?php echo ($filter_order_day == 'tomorrow') ? 'selected="selected"':  "" ?> >Tomorrow</option>
-                                    
-                                </select>
-                            </div>
+                           
 
                            
                            <!-- <div class="form-group">
@@ -97,7 +90,15 @@
                                 <input type="text" name="filter_store_name" value="<?php echo $filter_store_name; ?>" placeholder="<?php echo $entry_store_name; ?>" id="input-name" class="form-control" />
                             </div>-->
 
-                              <div class="form-group">
+                            
+
+
+                        </div>
+
+                         <div class="col-sm-4">
+
+
+                          <div class="form-group">
                                 <label class="control-label" for="input-order-fromto">Order From & To ID</label>
                                 <div class="input-group">
                                 <input  style ="width:48%" type="text" name="filter_order_from_id" value="<?php echo $filter_order_from_id; ?>" placeholder="Order ID From" id="input-order-from-id" class="form-control" />
@@ -106,13 +107,23 @@
                                 </div>
                             </div>
 
-
-                        </div>
-
-                        <div class="col-sm-6">
+                            </div>
 
 
-                            <div class="form-group">
+                        <div class="col-sm-4">
+
+
+                         <div class="form-group">
+                                <label class="control-label" for="input-order-status">Delivery Day</label>
+                                <select style="width:45%;" name="filter_order_day" id="input-order-status" class="form-control">
+                                    <option value="today" <?php echo ($filter_order_day == 'today') ? 'selected="selected"':  "" ?> >Today</option>
+                                    <option value="tomorrow" <?php echo ($filter_order_day == 'tomorrow') ? 'selected="selected"':  "" ?> >Tomorrow</option>
+                                    
+                                </select>
+                            </div>
+
+
+                            <!--<div class="form-group">
                                 <label class="control-label" for="input-name"><?= $column_delivery_method ?></label>
                                 <input type="text" name="filter_delivery_method" value="<?php echo $filter_delivery_method; ?>" placeholder="<?php echo $column_delivery_method; ?>" id="input-name" class="form-control" />
                             </div>
@@ -125,7 +136,7 @@
                                     <label class="control-label" for="input-name"><?= $column_payment ?></label>
                                     <input type="text" name="filter_payment" value="<?php echo $filter_payment; ?>" placeholder="<?php echo $column_payment; ?>" id="input-name" class="form-control" />
                                 </div>
-                            <?php endif ?> 
+                            <?php endif ?> -->
 
                             <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button> 
                             <!-- <div class="form-group">
