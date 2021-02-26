@@ -1,19 +1,19 @@
 <div class="panel profit db mbm">
     <div class="panel-body">
       <a href="<?php echo $url; ?>" style="color:black;text-decoration: none;">
-        <r><p class="icon"><i class="icon fa fa-shopping-cart"></i></p>
+        <rf><p class="icon"><i class="icon fa fa-shopping-cart"></i></p>
         <h4 class="value" id="total_orders"><span><?php echo $total; ?></span></h4>
-        <p class="description">Fast Orders</p></r></a>
+        <p class="description">Fast Orders</p></rf></a>
 
     </div>
 </div>
 <script>
 $(document).ready(function(){
-  $("r").mouseover(function(){
-    $("r").css("color", "white");
+  $("rf").mouseover(function(){
+    $("rf").css("color", "white");
   });
-  $("r").mouseout(function(){
-    $("r").css("color", "black");
+  $("rf").mouseout(function(){
+    $("rf").css("color", "black");
   });
 });
 </script>
