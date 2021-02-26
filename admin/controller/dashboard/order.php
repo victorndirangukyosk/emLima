@@ -291,7 +291,7 @@ class ControllerDashboardOrder extends Controller {
         // Total Orders
         $this->load->model('sale/order');
 
-        $order_grand_total = $this->model_sale_order->TotalRevenueBookedDashBoard();
+        $order_grand_total = $this->model_sale_order->TotalRevenueBookedDashBoard(['filter_order_status_id_not_in' => '0, 6, 8']);
         $data['total'] = $this->currency->format($order_grand_total);
         $log = new Log('error.log');
         /* $log->write('order_grand_total');

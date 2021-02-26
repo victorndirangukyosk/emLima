@@ -838,6 +838,10 @@ class ModelSaleOrder extends Model {
         if (!empty($data['filter_total'])) {
             $sql .= " AND o.total = '" . (float) $data['filter_total'] . "'";
         }
+        
+        if (isset($data['filter_order_status_id_not_in'])) {
+            $sql .= " AND o.order_status_id NOT IN (".$data['filter_order_status_id_not_in'].")";
+        }
 
         $sort_data = [
             'o.order_id',
@@ -872,7 +876,7 @@ class ModelSaleOrder extends Model {
 
             $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
         }
-
+        
         //   echo "<pre>";print_r($sql);die;
 
         $query = $this->db->query($sql);
