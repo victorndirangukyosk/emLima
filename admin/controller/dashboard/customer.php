@@ -103,7 +103,7 @@ class ControllerDashboardCustomer extends Controller {
 
         $customer_total = $this->model_sale_customer->getTotalCustomersForDashboard(['filter_approved' => 0]);
 
-        $data['url'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_approved=0', 'SSL');
+        $data['url'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_approved=0&filter_sub_customer_show=1', 'SSL');
         $data['total'] = $customer_total;
         $data['customer'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'], 'SSL');
 
