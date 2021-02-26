@@ -524,7 +524,8 @@ class ModelSaleCustomer extends Model {
         if ($this->user->isAccountManager()) {
             $implode[] = "account_manager_id = '" . (int) $this->user->getId() . "'";
         }
-        $implode[] = "parent is null or parent = 0";
+        //REMOVED FETCHING ONLY PARENT CUSTOMERS
+        //$implode[] = "parent is null or parent = 0";
 
         if ($implode) {
             $sql .= ' WHERE ' . implode(' AND ', $implode);
