@@ -62,7 +62,6 @@
             </div>
         </div>
         
-      <div class="col-lg-12 col-md-12 col-sx-12 col-sm-12"><?php echo $charts; ?></div>
     </div>
     <div class="row">
       <div class="col-lg-12 col-md-12 col-sx-12 col-sm-12"><?php echo $recenttabs; ?></div>
