@@ -26,7 +26,7 @@
                                                       </select>
                                                   </div>
 												  <?php 
-												  //echo '<pre>';echo count($product['produce_type']);exit;
+												  // echo '<pre>';echo print_r($product);exit;
 												  if(is_array($product['produce_type']) && count($product['produce_type'])>0){?>
 												  <div class="variation-selector-container" style="width: 295px;">
                                                       <p class="variations-title" style="margin-left: -10px; display: none;"> variants</p>
@@ -56,7 +56,7 @@
 </div>
 <div class="col-md-5">
 <div class="qtybtns-addbtnd addcart-block" id="add-btn-container">
- <input type="text" onkeypress="return validateFloatKeyPress(this, event);" autocomplete="off"  style="margin-left: -15px;" class="input-cart-qty" id="cart-qty-<?= $product['product_store_id'] ?>-<?= $product['store_product_variation_id'] ?>" value="<?php if($product['qty_in_cart']>0){echo $product['qty_in_cart'];}?>" placeholder="Add Qty">
+ <input type="text" onkeypress="return validateFloatKeyPress(this, event);" autocomplete="off"  style="margin-left: -15px;" class="input-cart-qty" id="cart-qty-<?= $product['product_store_id'] ?>-<?= $product['store_product_variation_id'] ?>" value="<?php if($product['qty_in_cart']>0){ if($product['unitvarient']=='Kg') echo $product['qty_in_cart']; else echo round($product['qty_in_cart']);}?>" placeholder="Add Qty">
  <a id="AtcButton-id-<?= $product['store_product_variation_id'] ?>" style="<?php if($product['qty_in_cart']>0){echo "background-color:#ea7128";}?>" class="AtcButton__container___1RZ9c AtcButton__with_counter___3YxLq atc_ AtcButton__small___1a1kH" >
  <span data-action="<?= $product['qty_in_cart'] ? 'editorderadd' : 'editorderadd'; ?>"
        data-key='<?= $product["key"] ?>'
