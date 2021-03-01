@@ -957,7 +957,7 @@ $(document).delegate('.agree', 'click', function (e) {
 								<div class="qtybtns-addbtnd addcart-block" 
 							id="add-btn-container">
 							<input type="text" 
-							onkeypress="return validateFloatKeyPress(this, event);" 
+							onkeypress="return validateFloatKeyPresswithVarient(this, event,'${ json[i]['unit'] }');" 
 							autocomplete="off"
 							class="input-cart-qty" id="cart-qty-${ json[i]['product_store_id'] }-0" value="" placeholder="Add Qty">
 							
@@ -1135,4 +1135,42 @@ function getCookie(cname) {
 	}
 	return "";
 }
+ 
+function validateFloatKeyPresswithVarient(el, evt, unitvarient) {
+
+	// $optionvalue=$('.product-variation option:selected').text().trim();
+	$optionvalue=unitvarient;
+	//  alert($optionvalue);
+	if($optionvalue=="Per Kg" || $optionvalue=="Kg")
+	{
+	 var charCode = (evt.which) ? evt.which : event.keyCode;
+	 var number = el.value.split('.');
+	 if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
+		 return false;
+	 }
+	 //just one dot
+	 if(number.length>1 && charCode == 46){
+		 return false;
+	 }
+	 //get the carat position
+	 var caratPos = getSelectionStart(el);
+	 var dotPos = el.value.indexOf(".");
+	 if( caratPos > dotPos && dotPos>-1 && (number[1].length > 1)){
+		 return false;
+	 }
+	 return true;
+	}
+
+	else{
+	 var charCode = (evt.which) ? evt.which : event.keyCode;
+	 if (charCode > 31 &&
+	   (charCode < 48 || charCode > 57))
+	   return false;
+	   else
+   
+   return true;
+	}
+}
+
+
   /***  ****/ 
