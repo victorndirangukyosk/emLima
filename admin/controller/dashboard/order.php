@@ -350,4 +350,198 @@ class ControllerDashboardOrder extends Controller {
         return $this->load->view('dashboard/total_revenue_pending.tpl', $data);
     }
 
+    public function DashboardYesterday() {        
+        return $this->load->view('dashboard/dashboard_yesterday.tpl', null);
+    }
+    public function DashboardToday() {        
+        return $this->load->view('dashboard/dashboard_today.tpl', null);
+    }
+    public function DashboardTomorrow() {        
+        return $this->load->view('dashboard/dashboard_tomorrow.tpl', null);
+    }
+
+    public function DeliveredOrdersByYstDate($date) {
+
+        $this->load->language('dashboard/order');
+        $data['heading_title'] = $this->language->get('heading_title');
+        $data['text_view'] = $this->language->get('text_view');
+        $data['token'] = $this->session->data['token'];
+        // Total Orders filter_delivery_date
+        $this->load->model('sale/order');
+        if($date==null || $date=="")
+        {
+            $date=date('Y-m-d');
+        }
+        $yesterdayDeliveryDate=date('Y-m-d', strtotime('-1 day', strtotime($date)));
+        $filter_data = [
+            'filter_order_status' => '14,1,2,5,7,4,13,3',
+            'filter_delivery_date' => $yesterdayDeliveryDate,            
+        ];
+
+        $order_total = $this->model_sale_order->getTotalOrders($filter_data);
+
+        // echo "<pre>";print_r($order_total);die;
+
+        $data['url'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=14,1,2,5,7,4,13,3&filter_delivery_date='.$yesterdayDeliveryDate, 'SSL');
+        $data['total'] = $order_total;
+        $data['order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=14,1,2,5,7,4,13,3&filter_delivery_date='.$yesterdayDeliveryDate, 'SSL');
+
+        return $this->load->view('dashboard/dashboard_order_ystdate.tpl', $data);
+    }
+  
+    public function DeliveredOrdersByTodayDate($date) {
+
+        $this->load->language('dashboard/order');
+        $data['heading_title'] = $this->language->get('heading_title');
+        $data['text_view'] = $this->language->get('text_view');
+        $data['token'] = $this->session->data['token'];
+        // Total Orders filter_delivery_date
+        $this->load->model('sale/order');
+        if($date==null || $date=="")
+        {
+            $date=date('Y-m-d');
+        }
+        $filter_data = [
+            'filter_order_status' => '14,1,2,5,7,4,13,3',
+            'filter_delivery_date' => $date,            
+        ];
+
+        $order_total = $this->model_sale_order->getTotalOrders($filter_data);
+
+        // echo "<pre>";print_r($order_total);die;
+
+        $data['url'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=14,1,2,5,7,4,13,3&filter_delivery_date='.$date, 'SSL');
+        $data['total'] = $order_total;
+        $data['order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=14,1,2,5,7,4,13,3&filter_delivery_date='.$date, 'SSL');
+
+        return $this->load->view('dashboard/dashboard_order_todaydate.tpl', $data);
+    }
+
+    
+    public function DeliveredOrdersByTmrwDate($date) {
+
+        $this->load->language('dashboard/order');
+        $data['heading_title'] = $this->language->get('heading_title');
+        $data['text_view'] = $this->language->get('text_view');
+        $data['token'] = $this->session->data['token'];
+        // Total Orders filter_delivery_date
+        $this->load->model('sale/order');
+        if($date==null || $date=="")
+        {
+            $date=date('Y-m-d');
+        }
+        $tmrwDeliveryDate=date('Y-m-d', strtotime('1 day', strtotime($date)));
+        $filter_data = [
+            'filter_order_status' => '14,1,2,5,7,4,13,3',
+            'filter_delivery_date' => $tmrwDeliveryDate,            
+        ];
+
+        $order_total = $this->model_sale_order->getTotalOrders($filter_data);
+
+        // echo "<pre>";print_r($order_total);die;
+
+        $data['url'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=14,1,2,5,7,4,13,3&filter_delivery_date='.$tmrwDeliveryDate, 'SSL');
+        $data['total'] = $order_total;
+        $data['order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=14,1,2,5,7,4,13,3&filter_delivery_date='.$tmrwDeliveryDate, 'SSL');
+
+        return $this->load->view('dashboard/dashboard_order_tmrwdate.tpl', $data);
+    }
+
+    public function TotalRevenueBookedDashBoardByYstDate($date) {
+
+        $this->load->language('dashboard/order');
+
+        $data['heading_title'] = $this->language->get('heading_title');
+
+        $data['text_view'] = $this->language->get('text_view');
+
+        $data['token'] = $this->session->data['token'];
+
+        // Total Orders
+        $this->load->model('sale/order');
+        if($date==null || $date=="")
+        {
+            $date=date('Y-m-d');
+        }
+        $yesterdayDeliveryDate=date('Y-m-d', strtotime('-1 day', strtotime($date)));
+        $filter_data = [
+            'filter_order_status_id_not_in' => '0, 6, 8',
+            'filter_delivery_date' => $yesterdayDeliveryDate,            
+        ];
+
+        $order_grand_total = $this->model_sale_order->TotalRevenueBookedDashBoard($filter_data);
+        $data['total'] = $this->currency->format($order_grand_total);
+        $log = new Log('error.log');
+        /* $log->write('order_grand_total');
+          $log->write($order_grand_total);
+          $log->write('order_grand_total'); */
+        return $this->load->view('dashboard/total_revenue_booked_ystdate.tpl', $data);
+    }
+
+    public function TotalRevenueBookedDashBoardByTodayDate($date) {
+
+        $this->load->language('dashboard/order');
+
+        $data['heading_title'] = $this->language->get('heading_title');
+
+        $data['text_view'] = $this->language->get('text_view');
+
+        $data['token'] = $this->session->data['token'];
+
+        // Total Orders
+        $this->load->model('sale/order');
+        if($date==null || $date=="")
+        {
+            $date=date('Y-m-d');
+        }
+       
+        $filter_data = [
+            'filter_order_status_id_not_in' => '0, 6, 8',
+            'filter_delivery_date' => $date,            
+        ];
+
+        $order_grand_total = $this->model_sale_order->TotalRevenueBookedDashBoard($filter_data);
+        $data['total'] = $this->currency->format($order_grand_total);
+        $log = new Log('error.log');
+        /* $log->write('order_grand_total');
+          $log->write($order_grand_total);
+          $log->write('order_grand_total'); */
+        return $this->load->view('dashboard/total_revenue_booked_todaydate.tpl', $data);
+    }
+
+    public function TotalRevenueBookedDashBoardBytmrwDate($date) {
+
+        $this->load->language('dashboard/order');
+
+        $data['heading_title'] = $this->language->get('heading_title');
+
+        $data['text_view'] = $this->language->get('text_view');
+
+        $data['token'] = $this->session->data['token'];
+
+        // Total Orders
+        $this->load->model('sale/order');
+        if($date==null || $date=="")
+        {
+            $date=date('Y-m-d');
+        }
+        $tmrwDeliveryDate=date('Y-m-d', strtotime('1 day', strtotime($date)));
+        $filter_data = [
+            'filter_order_status_id_not_in' => '0, 6, 8',
+            'filter_delivery_date' => $tmrwDeliveryDate,            
+        ];
+
+        $order_grand_total = $this->model_sale_order->TotalRevenueBookedDashBoard($filter_data);
+        $data['total'] = $this->currency->format($order_grand_total);
+        $log = new Log('error.log');
+        /* $log->write('order_grand_total');
+          $log->write($order_grand_total);
+          $log->write('order_grand_total'); */
+        return $this->load->view('dashboard/total_revenue_booked_tmrwdate.tpl', $data);
+    }
+
+ 
+
+    
+
 }
