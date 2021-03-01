@@ -110,4 +110,91 @@ class ControllerDashboardCustomer extends Controller {
         return $this->load->view('dashboard/customer_pending_approval.tpl', $data);
     }
 
+
+    public function CustomersRegisteredByYstDate($date) {
+
+        $this->load->language('dashboard/customer');
+
+        $data['heading_title'] = $this->language->get('heading_title');
+
+        $data['text_view'] = $this->language->get('text_view');
+
+        $data['token'] = $this->session->data['token'];
+
+        // Total Orders
+        $this->load->model('sale/customer');
+        if($date==null || $date=="")
+        {
+            $date=date('Y-m-d');
+        }
+        $yesterdayDate=date('Y-m-d', strtotime('-1 day', strtotime($date)));
+        $filter_data = [
+            'filter_date_added' => $yesterdayDate,            
+        ];
+
+        
+        $customer_total = $this->model_sale_customer->getTotalCustomersForDashboard($filter_data);
+        $data['url'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_sub_customer_show=1&filter_date_added='.$yesterdayDate, 'SSL');
+        $data['total'] = $customer_total;
+        $data['customer'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token']. '&filter_sub_customer_show=1&filter_date_added='.$yesterdayDate, 'SSL');
+
+        return $this->load->view('dashboard/customer_registered_ystdate.tpl', $data);
+    }
+
+    public function CustomersRegisteredByTodayDate($date) {
+
+        $this->load->language('dashboard/customer');
+
+        $data['heading_title'] = $this->language->get('heading_title');
+
+        $data['text_view'] = $this->language->get('text_view');
+
+        $data['token'] = $this->session->data['token'];
+
+        // Total Orders
+        $this->load->model('sale/customer');
+        if($date==null || $date=="")
+        {
+            $date=date('Y-m-d');
+        }
+        $filter_data = [
+            'filter_date_added' => $date,            
+        ];
+        $customer_total = $this->model_sale_customer->getTotalCustomersForDashboard($filter_data);
+        $data['url'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_sub_customer_show=1&filter_date_added='.$date, 'SSL');
+        $data['total'] = $customer_total;
+        $data['customer'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token']. '&filter_sub_customer_show=1&filter_date_added='.$date, 'SSL');
+
+        return $this->load->view('dashboard/customer_registered_todaydate.tpl', $data);
+    }
+
+    public function CustomersRegisteredByTmrwDate($date) {
+
+        $this->load->language('dashboard/customer');
+
+        $data['heading_title'] = $this->language->get('heading_title');
+
+        $data['text_view'] = $this->language->get('text_view');
+
+        $data['token'] = $this->session->data['token'];
+
+        // Total Orders
+        $this->load->model('sale/customer');
+        if($date==null || $date=="")
+        {
+            $date=date('Y-m-d');
+        }
+        $tmrwDate=date('Y-m-d', strtotime('1 day', strtotime($date)));
+        $filter_data = [
+            'filter_date_added' => $tmrwDate,            
+        ];
+        $customer_total = $this->model_sale_customer->getTotalCustomersForDashboard($filter_data);
+        $data['url'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_sub_customer_show=1&filter_date_added='.$tmrwDate, 'SSL');
+        $data['total'] = $customer_total;
+        $data['customer'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token']. '&filter_sub_customer_show=1&filter_date_added='.$tmrwDate, 'SSL');
+
+        return $this->load->view('dashboard/customer_registered_tmrwdate.tpl', $data);
+    }
+
+
 }
