@@ -50,6 +50,8 @@ class ControllerCommonDashboard extends Controller {
         $data['footer'] = $this->load->controller('common/footer');
 
         $data['token'] = $this->session->data['token'];
+        $filter_date_input = date('Y-m-d', strtotime(date('Y').'-'.date('m').'-01'));
+        $data['filter_date_input'] = $filter_date_input;
 
         if ($this->user->isVendor()) {
             $this->vendor($data);
@@ -132,6 +134,25 @@ class ControllerCommonDashboard extends Controller {
         $data['total_revenue_collected'] = $this->load->controller('dashboard/order/TotalRevenueCollectedDashBoard');
         $data['total_revenue_pending'] = $this->load->controller('dashboard/order/TotalRevenuePendingDashBoard');
 
+        $data['order_received_ystdate'] = $this->load->controller('dashboard/order/DeliveredOrdersByYstDate');
+        $data['total_revenue_booked_ystdate'] = $this->load->controller('dashboard/order/TotalRevenueBookedDashBoardByYstDate');
+        $data['total_customers_registered_ystdate'] = $this->load->controller('dashboard/customer/CustomersRegisteredByYstDate');
+        $data['total_customers_approval_pending_ystdate'] = $this->load->controller('dashboard/customer/CustomersPendingApprovalByYstDate');
+        
+        $data['dashboard_yesterday'] = $this->load->controller('dashboard/order/DashboardYesterday');
+        
+        $data['order_received_todaydate'] = $this->load->controller('dashboard/order/DeliveredOrdersByTodayDate');
+        $data['total_revenue_booked_todaydate'] = $this->load->controller('dashboard/order/TotalRevenueBookedDashBoardByTodayDate');
+        $data['total_customers_registered_todaydate'] = $this->load->controller('dashboard/customer/CustomersRegisteredByTodayDate');
+        $data['total_customers_approval_pending_todaydate'] = $this->load->controller('dashboard/customer/CustomersPendingApprovalByTodayDate');
+     
+        $data['dashboard_today'] = $this->load->controller('dashboard/order/DashboardToday');
+        
+        $data['order_received_tmrwdate'] = $this->load->controller('dashboard/order/DeliveredOrdersByTmrwDate');
+        $data['total_revenue_booked_tmrwdate'] = $this->load->controller('dashboard/order/TotalRevenueBookedDashBoardByTmrwDate');
+   
+        $data['dashboard_tomorrow'] = $this->load->controller('dashboard/order/DashboardTomorrow');
+
 
         // Run currency update
         if ($this->config->get('config_currency_auto')) {
@@ -152,5 +173,7 @@ class ControllerCommonDashboard extends Controller {
         $this->load->model('report/excel');
         $this->model_report_excel->download_mostpurchased_products_excel($data);
     }
+
+   
 
 }
