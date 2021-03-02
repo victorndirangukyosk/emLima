@@ -2,7 +2,7 @@
   <div class="panel-body">
     <a href="<?php echo $url; ?>" style="color:black;text-decoration: none;">
     <r1><p class="icon"><i class="icon fa fa-user"></i></p>
-    <h4 class="value"><span><?php echo $total; ?></span></h4>
+        <h4 class="value" id="total_customer_pending_approval"><span><?php echo $total; ?></span></h4>
     <p class="description">Customers Pending Approval</p></r1></a>
   </div>
 </div>
