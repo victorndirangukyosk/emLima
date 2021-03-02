@@ -126,13 +126,18 @@
 
                         <div class="pull-right">                    
 
-                            <div class="input-group date" style=" cursor: pointer; padding: 0px 10px;  font-weight: normal;margin-right:20px;margin-top:-4px;">
-                                <input type="text" name="filter_date" value="<?php echo $filter_date_input; ?>"  data-date-format="YYYY-MM-DD" id="input-date-filter" class="form-control">
+                            <div class="input-group date" style=" cursor: pointer; padding: 0px 10px;  font-weight: normal;margin-right:20px;margin-top:-4px;" id="div_date_filter">
+                                <input type="text" name="input_date_filter" value="<?php echo $filter_date_input; ?>"  data-date-format="YYYY-MM-DD" id="input_date_filter" class="form-control">
                                 <span class="input-group-btn">
                                     <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
                                 </span>
-                            </div>
+                            </div> 
+
+                                  
                         </div>
+
+
+ 
 
 
                     </div>
@@ -196,5 +201,62 @@
                 $(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, 1));
             }
     });
-    
+
+     
+
+$('#div_date_filter').datetimepicker().on('dp.change',function(e){
+   //console.log(e.date);
+    var input_date_filter = $('input[name=\'input_date_filter\']').val();
+    if (input_date_filter) {
+                //alert(input_date_filter);
+                $.ajax({
+            url: 'index.php?path=dashboard/order/DashboardOrderDataByDate&token=<?php echo $token; ?>&date=' +  encodeURIComponent(input_date_filter),
+            dataType: 'json',
+            success: function(json) {
+             // alert(json['TotalRevenueBookedYst']);
+             // alert(json['TotalRevenueBookedTmrw']);
+            $("#actual_sales_ystdate").text(json['TotalRevenueBookedYst']);
+            $("#actual_sales_todaydate").text(json['TotalRevenueBookedToday']);
+            $("#actual_sales_tmrwdate").text(json['TotalRevenueBookedTmrw']);
+
+            // alert(json['DelveredOrdersYst']);
+              // alert(json['Today']);
+                $("#Yst_date").text(json['Yst']);
+            $("#Today_date").text(json['Today']);
+            $("#Tmrw_date").text(json['Tmrw']);
+       
+                $("#total_orders_yst").text(json['DelveredOrdersYst']);
+            $("#total_orders_today").text(json['DelveredOrdersToday']);
+            $("#total_orders_tomorrow").text(json['DelveredOrdersTmrw']);
+                $("#href_total_orders_yst").attr("href", urlencode(json['DelveredOrdersYst_url']));
+                $("#href_total_orders_today").attr("href", urlencode(json['DelveredOrdersToday_url']));
+                $("#href_total_orders_tomorrow").attr("href", urlencode(json['DelveredOrdersTmrw_url']));
+            
+
+                }
+            });
+
+            $.ajax({
+             url: 'index.php?path=dashboard/customer/DashboardCustomerDataByDate&token=<?php echo $token; ?>&date=' +  encodeURIComponent(input_date_filter),
+            dataType: 'json',
+            success: function(json) {
+             // alert(json['CustomerRegisteredYst']);
+            $("#total_customers_yesterday").text(json['CustomerRegisteredYst']);
+            $("#total_customers_today").text(json['CustomerRegisteredToday']);
+            //$("#total_customers_tomorrow").text(json['CustomerRegisteredTmrw']);
+ 
+                $("#href_total_customers_yesterday").attr("href", urlencode(json['CustomerRegisteredYst_url']));
+                $("#href_total_customers_today").attr("href", urlencode(json['CustomerRegisteredToday_url']));
+                $("#href_total_customers_tomorrow").attr("href", urlencode(json['CustomerRegisteredTmrw_url']));
+            
+
+            }
+        });
+
+        
+
+            }
+
+            
+})
 </script>
