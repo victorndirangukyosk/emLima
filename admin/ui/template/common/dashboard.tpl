@@ -64,14 +64,14 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title">
-                            <i class="fa fa-bar-chart-o"></i>Overview(Selected Month & Year)</h3>
+                            <i class="fa fa-bar-chart-o"></i>Overview(Selected Year & Month)</h3>
                         <div class="pull-right">
                             <button class="btn btn-primary btn-sm" type="button" data-toggle="collapse" data-target="#collapseExample2" aria-expanded="false" aria-controls="collapseExample2"><i class="fa fa-eye"></i></button>
                         </div>
 
                         <div class="pull-right">                    
 
-                            <div class="input-group date" style=" cursor: pointer; padding: 0px 10px;  font-weight: normal;margin-right:20px;margin-top:-4px;">
+                            <div class="input-group date monthyear" style=" cursor: pointer; padding: 0px 10px;  font-weight: normal;margin-right:20px;margin-top:-4px;">
                                 <input type="text" name="filter_monthyear_input" value="<?php echo $filter_monthyear_input; ?>"  data-date-format="YYYY-MM" id="input-monthyear-filter" class="form-control">
                                 <span class="input-group-btn">
                                     <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
@@ -190,16 +190,96 @@
         pickTime: false
     });
 
-    
-    $('#input-monthyear-filter').datetimepicker( {
-            changeMonth: true,
-            changeYear: true,
-            showButtonPanel: true,
-            dateFormat: 'YYYY MM',
-            pickTime: false,
-            onClose: function(dateText, inst) { 
-                $(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, 1));
+
+    $('.monthyear').datetimepicker({
+        changeMonth: true,
+        changeYear: true,
+        showButtonPanel: false,
+        dateFormat: 'YYYY MM',
+        pickTime: false,
+        onClose: function (dateText, inst) {
+            $(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, 1));
+        }
+    });
+
+    $(document).on('dp.change', '.monthyear', function (e) {
+        console.log($('#input-monthyear-filter').val());
+        var monthyear = $('#input-monthyear-filter').val();
+
+        $.ajax({
+            type: 'get',
+            url: 'index.php?path=dashboard/order/ReceivedOrders&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            dataType: 'json',
+            beforeSend: function () {
+                $('#collapseExample2 #total_received_orders').html('<img src="ui/image/loader.gif">');
+            },
+            success: function (json) {
+                console.log(json);
+                $('#collapseExample2 #total_received_orders').html('<span>' + json.total + '</span>');
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
             }
+        });
+
+        $.ajax({
+            type: 'get',
+            url: 'index.php?path=dashboard/order/ProcessedOrders&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            dataType: 'json',
+            beforeSend: function () {
+                $('#collapseExample2 #total_processing_orders').html('<img src="ui/image/loader.gif">');
+            },
+            success: function (json) {
+                console.log(json);
+                $('#collapseExample2 #total_processing_orders').html('<span>' + json.total + '</span>');
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+            }
+        });
+
+        $.ajax({
+            type: 'get',
+            url: 'index.php?path=dashboard/order/CancelledOrders&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            dataType: 'json',
+            beforeSend: function () {
+                $('#collapseExample2 #total_cancelled_orders').html('<img src="ui/image/loader.gif">');
+            },
+            success: function (json) {
+                console.log(json);
+                $('#collapseExample2 #total_cancelled_orders').html('<span>' + json.total + '</span>');
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+            }
+        });
+
+        $.ajax({
+            type: 'get',
+            url: 'index.php?path=dashboard/order/IncompleteOrders&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            dataType: 'json',
+            beforeSend: function () {
+                $('#collapseExample2 #total_incomplete_orders').html('<img src="ui/image/loader.gif">');
+            },
+            success: function (json) {
+                console.log(json);
+                $('#collapseExample2 #total_incomplete_orders').html('<span>' + json.total + '</span>');
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+            }
+        });
+
+        $.ajax({
+            type: 'get',
+            url: 'index.php?path=dashboard/order/ApprovalPendingOrders&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            dataType: 'json',
+            beforeSend: function () {
+                $('#collapseExample2 #total_approvalpending_orders').html('<img src="ui/image/loader.gif">');
+            },
+            success: function (json) {
+                console.log(json);
+                $('#collapseExample2 #total_approvalpending_orders').html('<span>' + json.total + '</span>');
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+            }
+        });
     });
 
      

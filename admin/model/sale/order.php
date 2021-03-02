@@ -1868,7 +1868,9 @@ class ModelSaleOrder extends Model {
         }
 
         //  echo "<pre>";print_r($data);die;
-
+        if (!empty($data['filter_monthyear_added'])) {
+            $sql .= " AND DATE_FORMAT(o.date_added, '%Y-%m') = '" . $this->db->escape($data['filter_monthyear_added']) . "'";
+        }
 
         if (!empty($data['filter_date_added']) && empty($data['filter_date_added_end'])) {
             $sql .= " AND DATE(o.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
@@ -2741,6 +2743,10 @@ class ModelSaleOrder extends Model {
         //  echo "<pre>";print_r($data);die;
 
 
+        if (!empty($data['filter_monthyear_added'])) {
+            $sql .= " AND DATE_FORMAT(o.date_added, '%Y-%m') = '" . $this->db->escape($data['filter_monthyear_added']) . "'";
+        }
+        
         if (!empty($data['filter_date_added']) && empty($data['filter_date_added_end'])) {
             $sql .= " AND DATE(o.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
         }
