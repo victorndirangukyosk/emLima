@@ -309,56 +309,71 @@
             error: function (xhr, ajaxOptions, thrownError) {
             }
         });
+
+        $.ajax({
+            type: 'get',
+            url: 'index.php?path=dashboard/manualorders&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            dataType: 'json',
+            beforeSend: function () {
+                $('#collapseExample2 #total_manual_orders').html('<img src="ui/image/loader.gif">');
+            },
+            success: function (json) {
+                console.log(json);
+                $('#collapseExample2 #total_manual_orders').html('<span>' + json.total + '</span>');
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+            }
+        });
     });
 
 
-$('#div_date_filter').datetimepicker().on('dp.change',function(e){
-   //console.log(e.date);
-    var input_date_filter = $('input[name=\'input_date_filter\']').val();
-    if (input_date_filter) {
-                //alert(input_date_filter);
-                $.ajax({
-            url: 'index.php?path=dashboard/order/DashboardOrderDataByDate&token=<?php echo $token; ?>&date=' +  encodeURIComponent(input_date_filter),
-            dataType: 'json',
-            success: function(json) {
-             // alert(json['TotalRevenueBookedYst']);
-             // alert(json['TotalRevenueBookedTmrw']);
-            $("#actual_sales_ystdate").text(json['TotalRevenueBookedYst']);
-            $("#actual_sales_todaydate").text(json['TotalRevenueBookedToday']);
-            $("#actual_sales_tmrwdate").text(json['TotalRevenueBookedTmrw']);
+    $('#div_date_filter').datetimepicker().on('dp.change', function (e) {
+        //console.log(e.date);
+        var input_date_filter = $('input[name=\'input_date_filter\']').val();
+        if (input_date_filter) {
+            //alert(input_date_filter);
+            $.ajax({
+                url: 'index.php?path=dashboard/order/DashboardOrderDataByDate&token=<?php echo $token; ?>&date=' + encodeURIComponent(input_date_filter),
+                dataType: 'json',
+                success: function (json) {
+                    // alert(json['TotalRevenueBookedYst']);
+                    // alert(json['TotalRevenueBookedTmrw']);
+                    $("#actual_sales_ystdate").text(json['TotalRevenueBookedYst']);
+                    $("#actual_sales_todaydate").text(json['TotalRevenueBookedToday']);
+                    $("#actual_sales_tmrwdate").text(json['TotalRevenueBookedTmrw']);
 
-            // alert(json['DelveredOrdersYst']);
-              // alert(json['Today']);
-                $("#Yst_date").text(json['Yst']);
-            $("#Today_date").text(json['Today']);
-            $("#Tmrw_date").text(json['Tmrw']);
-       
-                $("#total_orders_yst").text(json['DelveredOrdersYst']);
-            $("#total_orders_today").text(json['DelveredOrdersToday']);
-            $("#total_orders_tomorrow").text(json['DelveredOrdersTmrw']);
-                $("#href_total_orders_yst").attr("href", (json['DelveredOrdersYst_url']));
-                $("#href_total_orders_today").attr("href", (json['DelveredOrdersToday_url']));
-                $("#href_total_orders_tomorrow").attr("href", (json['DelveredOrdersTmrw_url']));
-            
+                    // alert(json['DelveredOrdersYst']);
+                    // alert(json['Today']);
+                    $("#Yst_date").text(json['Yst']);
+                    $("#Today_date").text(json['Today']);
+                    $("#Tmrw_date").text(json['Tmrw']);
+
+                    $("#total_orders_yst").text(json['DelveredOrdersYst']);
+                    $("#total_orders_today").text(json['DelveredOrdersToday']);
+                    $("#total_orders_tomorrow").text(json['DelveredOrdersTmrw']);
+                    $("#href_total_orders_yst").attr("href", (json['DelveredOrdersYst_url']));
+                    $("#href_total_orders_today").attr("href", (json['DelveredOrdersToday_url']));
+                    $("#href_total_orders_tomorrow").attr("href", (json['DelveredOrdersTmrw_url']));
+
 
                 }
             });
 
             $.ajax({
-             url: 'index.php?path=dashboard/customer/DashboardCustomerDataByDate&token=<?php echo $token; ?>&date=' +  encodeURIComponent(input_date_filter),
-            dataType: 'json',
-            success: function(json) {
-             // alert(json['CustomerRegisteredYst_url']);
-            $("#total_customers_yesterday").text(json['CustomerRegisteredYst']);
-            $("#total_customers_today").text(json['CustomerRegisteredToday']);
-            //$("#total_customers_tomorrow").text(json['CustomerRegisteredTmrw']);
- 
-                $("#href_total_customers_yesterday").attr("href", (json['CustomerRegisteredYst_url']));
-                $("#href_total_customers_today").attr("href", (json['CustomerRegisteredToday_url']));
-                $("#href_total_customers_tomorrow").attr("href", (json['CustomerRegisteredTmrw_url']));
-            
+                url: 'index.php?path=dashboard/customer/DashboardCustomerDataByDate&token=<?php echo $token; ?>&date=' + encodeURIComponent(input_date_filter),
+                dataType: 'json',
+                success: function (json) {
+                    // alert(json['CustomerRegisteredYst_url']);
+                    $("#total_customers_yesterday").text(json['CustomerRegisteredYst']);
+                    $("#total_customers_today").text(json['CustomerRegisteredToday']);
+                    //$("#total_customers_tomorrow").text(json['CustomerRegisteredTmrw']);
 
-                    
+                    $("#href_total_customers_yesterday").attr("href", (json['CustomerRegisteredYst_url']));
+                    $("#href_total_customers_today").attr("href", (json['CustomerRegisteredToday_url']));
+                    $("#href_total_customers_tomorrow").attr("href", (json['CustomerRegisteredTmrw_url']));
+
+
+
 
                 }
             });
