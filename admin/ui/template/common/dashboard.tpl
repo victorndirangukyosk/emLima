@@ -203,7 +203,7 @@
 
         $.ajax({
             type: 'get',
-            url: 'index.php?path=dashboard/order/ReceivedOrders&filter_date_added=' + monthyear + '&token=<?php echo $token; ?>',
+            url: 'index.php?path=dashboard/order/ReceivedOrders&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
             dataType: 'json',
             beforeSend: function () {
                 $('#collapseExample2 #total_received_orders').html('<img src="ui/image/loader.gif">');

@@ -162,11 +162,11 @@ class ControllerDashboardOrder extends Controller {
         // Total Orders
         $this->load->model('sale/order');
 
-        $order_total = $this->model_sale_order->getTotalOrders(['filter_order_status' => 14, 'filter_date_added' => $this->request->get['filter_date_added']]);
+        $order_total = $this->model_sale_order->getTotalOrders(['filter_order_status' => 14, 'filter_monthyear_added' => $this->request->get['filter_monthyear_added']]);
 
-        $data['url'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=14&filter_date_added=' . $this->request->get['filter_date_added'], 'SSL');
+        $data['url'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=14&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL');
         $data['total'] = $order_total;
-        $data['order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=14&filter_date_added=' . $this->request->get['filter_date_added'], 'SSL');
+        $data['order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=14&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL');
         if ($this->request->isAjax()) {
             $this->response->addHeader('Content-Type: application/json');
             $this->response->setOutput(json_encode($data));
