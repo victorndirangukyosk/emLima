@@ -50,7 +50,7 @@ class ControllerCommonDashboard extends Controller {
         $data['footer'] = $this->load->controller('common/footer');
 
         $data['token'] = $this->session->data['token'];
-        $filter_date_input = date('Y-m-d', strtotime(date('Y').'-'.date('m').'-01'));
+        $filter_date_input = date('Y-m-d');
         $data['filter_date_input'] = $filter_date_input;
         
         $filter_monthyear_input = date('Y-m', strtotime(date('Y').'-'.date('m')));
