@@ -139,7 +139,7 @@ class ControllerCommonDashboard extends Controller {
         $data['total_revenue_pending'] = $this->load->controller('dashboard/order/TotalRevenuePendingDashBoard');
         
         //OverView 2 
-        $data['order_received_month'] = $this->load->controller('dashboard/order/ReceivedOrders');
+        $data['order_received_month'] = $this->load->controller('dashboard/order/ReceivedOrderss');
         $data['order_processed_month'] = $this->load->controller('dashboard/order/ProcessedOrders');
         $data['order_cancelled_month'] = $this->load->controller('dashboard/order/CancelledOrders');
         $data['order_incomeplete_month'] = $this->load->controller('dashboard/order/IncompleteOrders');
