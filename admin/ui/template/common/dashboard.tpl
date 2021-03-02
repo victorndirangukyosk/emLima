@@ -308,9 +308,9 @@ $('#div_date_filter').datetimepicker().on('dp.change',function(e){
                 $("#total_orders_yst").text(json['DelveredOrdersYst']);
             $("#total_orders_today").text(json['DelveredOrdersToday']);
             $("#total_orders_tomorrow").text(json['DelveredOrdersTmrw']);
-                $("#href_total_orders_yst").attr("href", urlencode(json['DelveredOrdersYst_url']));
-                $("#href_total_orders_today").attr("href", urlencode(json['DelveredOrdersToday_url']));
-                $("#href_total_orders_tomorrow").attr("href", urlencode(json['DelveredOrdersTmrw_url']));
+                $("#href_total_orders_yst").attr("href", (json['DelveredOrdersYst_url']));
+                $("#href_total_orders_today").attr("href", (json['DelveredOrdersToday_url']));
+                $("#href_total_orders_tomorrow").attr("href", (json['DelveredOrdersTmrw_url']));
             
 
                 }
@@ -320,14 +320,14 @@ $('#div_date_filter').datetimepicker().on('dp.change',function(e){
              url: 'index.php?path=dashboard/customer/DashboardCustomerDataByDate&token=<?php echo $token; ?>&date=' +  encodeURIComponent(input_date_filter),
             dataType: 'json',
             success: function(json) {
-             // alert(json['CustomerRegisteredYst']);
+             // alert(json['CustomerRegisteredYst_url']);
             $("#total_customers_yesterday").text(json['CustomerRegisteredYst']);
             $("#total_customers_today").text(json['CustomerRegisteredToday']);
             //$("#total_customers_tomorrow").text(json['CustomerRegisteredTmrw']);
  
-                $("#href_total_customers_yesterday").attr("href", urlencode(json['CustomerRegisteredYst_url']));
-                $("#href_total_customers_today").attr("href", urlencode(json['CustomerRegisteredToday_url']));
-                $("#href_total_customers_tomorrow").attr("href", urlencode(json['CustomerRegisteredTmrw_url']));
+                $("#href_total_customers_yesterday").attr("href", (json['CustomerRegisteredYst_url']));
+                $("#href_total_customers_today").attr("href", (json['CustomerRegisteredToday_url']));
+                $("#href_total_customers_tomorrow").attr("href", (json['CustomerRegisteredTmrw_url']));
             
 
             }

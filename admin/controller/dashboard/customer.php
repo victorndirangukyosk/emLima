@@ -228,8 +228,8 @@ class ControllerDashboardCustomer extends Controller {
         
           
 
-        $json['CustomerRegisteredYst_url'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_sub_customer_show=1&filter_date_added='.$yesterdayDeliveryDate, 'SSL');
-        $json['CustomerRegisteredToday_url'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_sub_customer_show=1&filter_date_added='.$date, 'SSL');
+        $json['CustomerRegisteredYst_url'] = htmlspecialchars_decode($this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_sub_customer_show=1&filter_date_added='.$yesterdayDeliveryDate, 'SSL'));
+        $json['CustomerRegisteredToday_url'] = htmlspecialchars_decode($this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_sub_customer_show=1&filter_date_added='.$date, 'SSL'));
         // $json['CustomerRegisteredTmrw_url'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_sub_customer_show=1&filter_date_added='.$tmrwDeliveryDate, 'SSL');
        
         
