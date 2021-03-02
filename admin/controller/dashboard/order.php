@@ -188,13 +188,17 @@ class ControllerDashboardOrder extends Controller {
         // Total Orders
         $this->load->model('sale/order');
 
-        $order_total = $this->model_sale_order->getTotalOrders(['filter_order_status' => 1]);
+        $order_total = $this->model_sale_order->getTotalOrders(['filter_order_status' => 1, 'filter_monthyear_added' => $this->request->get['filter_monthyear_added']]);
 
-        $data['url'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=1', 'SSL');
+        $data['url'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=1&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL');
         $data['total'] = $order_total;
-        $data['order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=1', 'SSL');
-
-        return $this->load->view('dashboard/dashboard_processing_order.tpl', $data);
+        $data['order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=1&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL');
+        if ($this->request->isAjax()) {
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($data));
+        } else {
+            return $this->load->view('dashboard/dashboard_processing_order.tpl', $data);
+        }
     }
 
     public function CancelledOrders() {
@@ -210,13 +214,17 @@ class ControllerDashboardOrder extends Controller {
         // Total Orders
         $this->load->model('sale/order');
 
-        $order_total = $this->model_sale_order->getTotalOrders(['filter_order_status' => 6]);
+        $order_total = $this->model_sale_order->getTotalOrders(['filter_order_status' => 6, 'filter_monthyear_added' => $this->request->get['filter_monthyear_added']]);
 
-        $data['url'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=6', 'SSL');
+        $data['url'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=6&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL');
         $data['total'] = $order_total;
-        $data['order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=6', 'SSL');
-
-        return $this->load->view('dashboard/dashboard_cancelled_order.tpl', $data);
+        $data['order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=6&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL');
+        if ($this->request->isAjax()) {
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($data));
+        } else {
+            return $this->load->view('dashboard/dashboard_cancelled_order.tpl', $data);
+        }
     }
 
     public function IncompleteOrders() {

@@ -215,5 +215,35 @@
             error: function (xhr, ajaxOptions, thrownError) {
             }
         });
+        
+        $.ajax({
+            type: 'get',
+            url: 'index.php?path=dashboard/order/ProcessedOrders&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            dataType: 'json',
+            beforeSend: function () {
+                $('#collapseExample2 #total_processing_orders').html('<img src="ui/image/loader.gif">');
+            },
+            success: function (json) {
+                console.log(json);
+                $('#collapseExample2 #total_processing_orders').html('<span>'+json.total+'</span>');
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+            }
+        });
+        
+        $.ajax({
+            type: 'get',
+            url: 'index.php?path=dashboard/order/CancelledOrders&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            dataType: 'json',
+            beforeSend: function () {
+                $('#collapseExample2 #total_cancelled_orders').html('<img src="ui/image/loader.gif">');
+            },
+            success: function (json) {
+                console.log(json);
+                $('#collapseExample2 #total_cancelled_orders').html('<span>'+json.total+'</span>');
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+            }
+        });
     });
 </script>
