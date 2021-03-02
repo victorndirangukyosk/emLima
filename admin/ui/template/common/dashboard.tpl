@@ -185,16 +185,15 @@
         pickTime: false
     });
 
-    
-    $('#input-monthyear-filter').datetimepicker( {
-            changeMonth: true,
-            changeYear: true,
-            showButtonPanel: true,
-            dateFormat: 'YYYY MM',
-            pickTime: false,
-            onClose: function(dateText, inst) { 
-                $(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, 1));
-            }
+
+    $('#input-monthyear-filter').datetimepicker({
+        changeMonth: true,
+        changeYear: true,
+        showButtonPanel: true,
+        dateFormat: 'YYYY MM',
+        pickTime: false,
+        onClose: function (dateText, inst) {
+            $(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, 1));
+        }
     });
-    
 </script>
