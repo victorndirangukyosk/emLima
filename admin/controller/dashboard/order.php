@@ -540,7 +540,73 @@ class ControllerDashboardOrder extends Controller {
         return $this->load->view('dashboard/total_revenue_booked_tmrwdate.tpl', $data);
     }
 
- 
+    public function DashboardOrderDataByDate($date) {   
+        
+        //   echo '<pre>';print_r($date);exit;
+        // Total Orders
+        $this->load->model('sale/order');
+        $date=$this->request->get['date'];
+        if($date==null || $date=="")
+        {
+            $date=date('Y-m-d');
+        }
+        $yesterdayDeliveryDate=date('Y-m-d', strtotime('-1 day', strtotime($date)));
+        $tmrwDeliveryDate=date('Y-m-d', strtotime('1 day', strtotime($date)));
+        $filter_data_yst = [
+            'filter_order_status_id_not_in' => '0, 6, 8',
+            'filter_delivery_date' => $yesterdayDeliveryDate,            
+        ];
+        $filter_data_today = [
+            'filter_order_status_id_not_in' => '0, 6, 8',
+            'filter_delivery_date' => $date,            
+        ];
+        $filter_data_tmrw = [
+            'filter_order_status_id_not_in' => '0, 6, 8',
+            'filter_delivery_date' => $tmrwDeliveryDate,            
+        ];
+
+        $order_grand_total_yst = $this->model_sale_order->TotalRevenueBookedDashBoard($filter_data_yst);
+        $order_grand_total_today = $this->model_sale_order->TotalRevenueBookedDashBoard($filter_data_today);
+        $order_grand_total_tmrw = $this->model_sale_order->TotalRevenueBookedDashBoard($filter_data_tmrw);
+        
+        $json['TotalRevenueBookedYst'] = $this->currency->format($order_grand_total_yst);       
+        $json['TotalRevenueBookedToday'] = $this->currency->format($order_grand_total_today);       
+        $json['TotalRevenueBookedTmrw'] = $this->currency->format($order_grand_total_tmrw);       
+        
+        $filter_data_yst = [
+            'filter_order_status' => '14,1,2,5,7,4,13,3',
+            'filter_delivery_date' => $yesterdayDeliveryDate,            
+        ];
+        $filter_data_today = [
+            'filter_order_status' => '14,1,2,5,7,4,13,3',
+            'filter_delivery_date' => $date,            
+        ];
+
+        $filter_data_tmrw = [
+            'filter_order_status' => '14,1,2,5,7,4,13,3',
+            'filter_delivery_date' => $tmrwDeliveryDate,            
+        ];
+
+        $order_total_yst = $this->model_sale_order->getTotalOrders($filter_data_yst);
+        $order_total_today = $this->model_sale_order->getTotalOrders($filter_data_today);
+        $order_total_tmrw = $this->model_sale_order->getTotalOrders($filter_data_tmrw);
+
+
+        $json['DelveredOrdersYst'] = $order_total_yst;
+        $json['DelveredOrdersToday'] = $order_total_today;
+        $json['DelveredOrdersTmrw'] = $order_total_tmrw;
+        // echo "<pre>";print_r($order_total);die;
+
+        $json['DelveredOrdersYst_url'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=14,1,2,5,7,4,13,3&filter_delivery_date='.$yesterdayDeliveryDate, 'SSL');
+        $json['DelveredOrdersToday_url'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=14,1,2,5,7,4,13,3&filter_delivery_date='.$date, 'SSL');
+        $json['DelveredOrdersTmrw_url'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=14,1,2,5,7,4,13,3&filter_delivery_date='.$tmrwDeliveryDate, 'SSL');
+         
+        $json['Yst'] = $yesterdayDeliveryDate;
+        $json['Today'] = $date;
+        $json['Tmrw'] = $tmrwDeliveryDate;
+        
+        $this->response->setOutput(json_encode($json));
+    }
 
     
 
