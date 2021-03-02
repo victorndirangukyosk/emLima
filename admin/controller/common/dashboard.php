@@ -129,7 +129,7 @@ class ControllerCommonDashboard extends Controller {
         $data['order_incomeplete'] = $this->load->controller('dashboard/order/IncompleteOrders');
         $data['order_approval_pening'] = $this->load->controller('dashboard/order/ApprovalPendingOrders');
         $data['order_fast'] = $this->load->controller('dashboard/order/FastOrders');
-
+        
         $data['total_customers_onboarded'] = $this->load->controller('dashboard/customer/CustomersOnboarded');
         $data['total_customers_registered'] = $this->load->controller('dashboard/customer/CustomersRegistered');
         $data['total_customers_approval_pending'] = $this->load->controller('dashboard/customer/CustomersPendingApproval');
@@ -139,13 +139,16 @@ class ControllerCommonDashboard extends Controller {
         $data['total_revenue_pending'] = $this->load->controller('dashboard/order/TotalRevenuePendingDashBoard');
         
         //OverView 2 
-        $data['order_received_month'] = $this->load->controller('dashboard/order/ReceivedOrderss');
+        $data['order_received_month'] = $this->load->controller('dashboard/order/ReceivedOrders');
         $data['order_processed_month'] = $this->load->controller('dashboard/order/ProcessedOrders');
         $data['order_cancelled_month'] = $this->load->controller('dashboard/order/CancelledOrders');
         $data['order_incomeplete_month'] = $this->load->controller('dashboard/order/IncompleteOrders');
-        $data['order_approval_pening_month'] = $this->load->controller('dashboard/order/ApprovalPendingOrders');
+        $data['order_approval_pending_month'] = $this->load->controller('dashboard/order/ApprovalPendingOrders');
         $data['order_fast_month'] = $this->load->controller('dashboard/order/FastOrders');
 
+        $data['onlineorders_month'] = $this->load->controller('dashboard/onlineorders');
+        $data['manualorders_month'] = $this->load->controller('dashboard/manualorders');
+        
         $data['total_customers_onboarded_month'] = $this->load->controller('dashboard/customer/CustomersOnboarded');
         $data['total_customers_registered_month'] = $this->load->controller('dashboard/customer/CustomersRegistered');
         $data['total_customers_approval_pending_month'] = $this->load->controller('dashboard/customer/CustomersPendingApproval');
