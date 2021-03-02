@@ -84,23 +84,22 @@
                         <div class="card card-body">
                             <div class="row" id="sum_widgets">
                                 <br>
-                                <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $order_received; ?></div>
-                                <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $order_processed; ?></div>
-                                <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $order_cancelled; ?></div>
-                                <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $order_incomeplete; ?></div>
-                                <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $order_approval_pening; ?></div>
-                                <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $order_fast; ?></div>
-                                <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $manualorders; ?></div>
-                                <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $onlineorders; ?></div>
+                                <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $order_received_month; ?></div>
+                                <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $order_processed_month; ?></div>
+                                <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $order_cancelled_month; ?></div>
+                                <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $order_incomeplete_month; ?></div>
+                                <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $order_approval_pending_month; ?></div>
+                                <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $order_fast_month; ?></div>
+                                <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $manualorders_month; ?></div>
+                                <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $onlineorders_month; ?></div>
 
-                                <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $online; ?></div>
-                                <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $total_customers_registered; ?></div>
-                                <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $total_customers_onboarded; ?></div>
-                                <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $total_customers_approval_pending; ?></div>
+                                <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $total_customers_registered_month; ?></div>
+                                <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $total_customers_onboarded_month; ?></div>
+                                <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $total_customers_approval_pending_month; ?></div>
 
-                                <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $total_revenue_booked; ?></div>
-                                <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $total_revenue_collected; ?></div>
-                                <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $total_revenue_pending; ?></div>
+                                <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $total_revenue_booked_month; ?></div>
+                                <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $total_revenue_collected_month; ?></div>
+                                <div class="col-lg-4 col-md-4 col-sm-6"><?php echo $total_revenue_pending_month; ?></div>
 
                             </div>  
                         </div>
