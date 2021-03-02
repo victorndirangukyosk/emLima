@@ -199,5 +199,17 @@
 
     $(document).on('dp.change', '.monthyear', function (e) {
         console.log($('#input-monthyear-filter').val());
+        var monthyear = $('#input-monthyear-filter').val();
+
+        $.ajax({
+            type: 'get',
+            url: 'index.php?path=dashboard/order/ReceivedOrders&filter_date_added=' + monthyear + '&token=<?php echo $token; ?>',
+            dataType: 'json',
+            success: function (json) {
+                console.log(json);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+            }
+        });
     });
 </script>
