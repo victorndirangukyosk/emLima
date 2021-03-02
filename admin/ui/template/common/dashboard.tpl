@@ -64,7 +64,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title">
-                            <i class="fa fa-bar-chart-o"></i>Overview(Selected Month & Year)</h3>
+                            <i class="fa fa-bar-chart-o"></i>Overview(Selected Year & Month)</h3>
                         <div class="pull-right">
                             <button class="btn btn-primary btn-sm" type="button" data-toggle="collapse" data-target="#collapseExample2" aria-expanded="false" aria-controls="collapseExample2"><i class="fa fa-eye"></i></button>
                         </div>
