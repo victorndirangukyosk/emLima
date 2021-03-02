@@ -196,5 +196,45 @@ class ControllerDashboardCustomer extends Controller {
         return $this->load->view('dashboard/customer_registered_tmrwdate.tpl', $data);
     }
 
+    public function DashboardCustomerDataByDate($date) {   
+        
+        //   echo '<pre>';print_r($date);exit;
+        // Total Orders
+        $this->load->model('sale/customer');
+        $date=$this->request->get['date'];
+        if($date==null || $date=="")
+        {
+            $date=date('Y-m-d');
+        }
+        $yesterdayDeliveryDate=date('Y-m-d', strtotime('-1 day', strtotime($date)));
+        $tmrwDeliveryDate=date('Y-m-d', strtotime('1 day', strtotime($date)));
+        $filter_data_yst = [
+            'filter_date_added' => $yesterdayDeliveryDate,            
+        ];
+        $filter_data_today = [
+            'filter_date_added' => $date,            
+        ];
+        $filter_data_tmrw = [
+            'filter_date_added' => $tmrwDeliveryDate,            
+        ];
+
+        $customer_total_yst = $this->model_sale_customer->getTotalCustomersForDashboard($filter_data_yst);
+        $customer_total_today = $this->model_sale_customer->getTotalCustomersForDashboard($filter_data_today);
+        // $customer_total_tmrw = $this->model_sale_customer->getTotalCustomersForDashboard($filter_data_tmrw);
+        
+        $json['CustomerRegisteredYst'] = $customer_total_yst;       
+        $json['CustomerRegisteredToday'] = $customer_total_today;       
+        // $json['CustomerRegisteredTmrw'] = $customer_total_tmrw;       
+        
+          
+
+        $json['CustomerRegisteredYst_url'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_sub_customer_show=1&filter_date_added='.$yesterdayDeliveryDate, 'SSL');
+        $json['CustomerRegisteredToday_url'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_sub_customer_show=1&filter_date_added='.$date, 'SSL');
+        // $json['CustomerRegisteredTmrw_url'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_sub_customer_show=1&filter_date_added='.$tmrwDeliveryDate, 'SSL');
+       
+        
+        $this->response->setOutput(json_encode($json));
+    }
+
 
 }
