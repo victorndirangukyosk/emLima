@@ -240,12 +240,16 @@ class ControllerDashboardOrder extends Controller {
         // Total Orders
         $this->load->model('sale/order');
 
-        $order_total = $this->model_sale_order->getTotalIncompleteOrders();
+        $order_total = $this->model_sale_order->getTotalIncompleteOrders(['filter_order_status' => 0, 'filter_monthyear_added' => $this->request->get['filter_monthyear_added']]);
 
         $data['total'] = $order_total;
-        $data['order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'], 'SSL');
-
-        return $this->load->view('dashboard/dashboard_incomplete_order.tpl', $data);
+        $data['order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=6&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL');
+        if ($this->request->isAjax()) {
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($data));
+        } else {
+            return $this->load->view('dashboard/dashboard_incomplete_order.tpl', $data);
+        }
     }
 
     public function ApprovalPendingOrders() {
