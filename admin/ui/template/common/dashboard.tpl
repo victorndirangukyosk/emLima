@@ -369,6 +369,51 @@
             error: function (xhr, ajaxOptions, thrownError) {
             }
         });
+
+        $.ajax({
+            type: 'get',
+            url: 'index.php?path=dashboard/order/TotalRevenueBookedDashBoard&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            dataType: 'json',
+            beforeSend: function () {
+                $('#collapseExample2 #actual_sales').html('<img src="ui/image/loader.gif">');
+            },
+            success: function (json) {
+                console.log(json);
+                $('#collapseExample2 #actual_sales').html('<span>' + json.total + '</span>');
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+            }
+        });
+
+        $.ajax({
+            type: 'get',
+            url: 'index.php?path=dashboard/order/TotalRevenueCollectedDashBoard&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            dataType: 'json',
+            beforeSend: function () {
+                $('#collapseExample2 #actual_sales_revenue').html('<img src="ui/image/loader.gif">');
+            },
+            success: function (json) {
+                console.log(json);
+                $('#collapseExample2 #actual_sales_revenue').html('<span>' + json.total + '</span>');
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+            }
+        });
+
+        $.ajax({
+            type: 'get',
+            url: 'index.php?path=dashboard/order/TotalRevenuePendingDashBoard&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            dataType: 'json',
+            beforeSend: function () {
+                $('#collapseExample2 #actual_pending_sales').html('<img src="ui/image/loader.gif">');
+            },
+            success: function (json) {
+                console.log(json);
+                $('#collapseExample2 #actual_pending_sales').html('<span>' + json.total + '</span>');
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+            }
+        });
     });
 
 

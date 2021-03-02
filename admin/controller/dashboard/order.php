@@ -321,13 +321,18 @@ class ControllerDashboardOrder extends Controller {
         // Total Orders
         $this->load->model('sale/order');
 
-        $order_grand_total = $this->model_sale_order->TotalRevenueBookedDashBoard(['filter_order_status_id_not_in' => '0, 6, 8']);
+        $order_grand_total = $this->model_sale_order->TotalRevenueBookedDashBoard(['filter_order_status_id_not_in' => '0, 6, 8', 'filter_monthyear_added' => $this->request->get['filter_monthyear_added']]);
         $data['total'] = $this->currency->format($order_grand_total);
         $log = new Log('error.log');
         /* $log->write('order_grand_total');
           $log->write($order_grand_total);
           $log->write('order_grand_total'); */
-        return $this->load->view('dashboard/total_revenue_booked.tpl', $data);
+        if ($this->request->isAjax()) {
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($data));
+        } else {
+            return $this->load->view('dashboard/total_revenue_booked.tpl', $data);
+        }
     }
 
     public function TotalRevenueCollectedDashBoard() {
@@ -343,13 +348,18 @@ class ControllerDashboardOrder extends Controller {
         // Total Orders
         $this->load->model('sale/order');
 
-        $order_grand_total = $this->model_sale_order->TotalRevenueBookedDashBoard(['filter_order_status' => 5]);
+        $order_grand_total = $this->model_sale_order->TotalRevenueBookedDashBoard(['filter_order_status' => 5, 'filter_monthyear_added' => $this->request->get['filter_monthyear_added']]);
         $data['total'] = $this->currency->format($order_grand_total);
         $log = new Log('error.log');
         /* $log->write('order_grand_total');
           $log->write($order_grand_total);
           $log->write('order_grand_total'); */
-        return $this->load->view('dashboard/total_revenue_collected.tpl', $data);
+        if ($this->request->isAjax()) {
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($data));
+        } else {
+            return $this->load->view('dashboard/total_revenue_collected.tpl', $data);
+        }
     }
 
     public function TotalRevenuePendingDashBoard() {
@@ -365,13 +375,18 @@ class ControllerDashboardOrder extends Controller {
         // Total Orders
         $this->load->model('sale/order');
 
-        $order_grand_total = $this->model_sale_order->TotalRevenueBookedDashBoard(['filter_order_status_id_not_in' => '0, 5, 6, 8']);
+        $order_grand_total = $this->model_sale_order->TotalRevenueBookedDashBoard(['filter_order_status_id_not_in' => '0, 5, 6, 8', 'filter_monthyear_added' => $this->request->get['filter_monthyear_added']]);
         $data['total'] = $this->currency->format($order_grand_total);
         $log = new Log('error.log');
         /* $log->write('order_grand_total');
           $log->write($order_grand_total);
           $log->write('order_grand_total'); */
-        return $this->load->view('dashboard/total_revenue_pending.tpl', $data);
+        if ($this->request->isAjax()) {
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($data));
+        } else {
+            return $this->load->view('dashboard/total_revenue_pending.tpl', $data);
+        }
     }
 
     public function DashboardYesterday() {
@@ -615,11 +630,11 @@ class ControllerDashboardOrder extends Controller {
         $json['DelveredOrdersTmrw'] = $order_total_tmrw;
         // echo "<pre>";print_r($order_total);die;
 
-        $json['DelveredOrdersYst_url'] = htmlspecialchars_decode($this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=14,1,2,5,7,4,13,3&filter_delivery_date='.$yesterdayDeliveryDate, 'SSL'));
-        $json['DelveredOrdersToday_url'] = htmlspecialchars_decode($this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=14,1,2,5,7,4,13,3&filter_delivery_date='.$date, 'SSL'));
-        $json['DelveredOrdersTmrw_url'] = htmlspecialchars_decode($this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=14,1,2,5,7,4,13,3&filter_delivery_date='.$tmrwDeliveryDate, 'SSL'));
-         
-        
+        $json['DelveredOrdersYst_url'] = htmlspecialchars_decode($this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=14,1,2,5,7,4,13,3&filter_delivery_date=' . $yesterdayDeliveryDate, 'SSL'));
+        $json['DelveredOrdersToday_url'] = htmlspecialchars_decode($this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=14,1,2,5,7,4,13,3&filter_delivery_date=' . $date, 'SSL'));
+        $json['DelveredOrdersTmrw_url'] = htmlspecialchars_decode($this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=14,1,2,5,7,4,13,3&filter_delivery_date=' . $tmrwDeliveryDate, 'SSL'));
+
+
         $json['Yst'] = $yesterdayDeliveryDate;
         $json['Today'] = $date;
         $json['Tmrw'] = $tmrwDeliveryDate;

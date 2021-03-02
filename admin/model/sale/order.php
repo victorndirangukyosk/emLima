@@ -827,6 +827,10 @@ class ModelSaleOrder extends Model {
             $sql .= " AND DATE(o.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
         }
 
+        if (!empty($data['filter_date_added'])) {
+            $sql .= " AND DATE_FORMAT(o.date_added, '%Y-%m') = '" . $this->db->escape($data['filter_date_added']) . "'";
+        }
+
         if (!empty($data['filter_date_added']) && !empty($data['filter_date_added_end'])) {
             $sql .= " AND DATE(o.date_added) BETWEEN DATE('" . $this->db->escape($data['filter_date_added']) . "') AND DATE('" . $this->db->escape($data['filter_date_added_end']) . "')";
         }
@@ -838,9 +842,9 @@ class ModelSaleOrder extends Model {
         if (!empty($data['filter_total'])) {
             $sql .= " AND o.total = '" . (float) $data['filter_total'] . "'";
         }
-        
+
         if (isset($data['filter_order_status_id_not_in'])) {
-            $sql .= " AND o.order_status_id NOT IN (".$data['filter_order_status_id_not_in'].")";
+            $sql .= " AND o.order_status_id NOT IN (" . $data['filter_order_status_id_not_in'] . ")";
         }
 
         $sort_data = [
@@ -876,7 +880,7 @@ class ModelSaleOrder extends Model {
 
             $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
         }
-        
+
         //   echo "<pre>";print_r($sql);die;
 
         $query = $this->db->query($sql);
@@ -1424,7 +1428,7 @@ class ModelSaleOrder extends Model {
         if (!empty($data['filter_delivery_date'])) {
             $sql .= " AND DATE(o.delivery_date) = DATE('" . $this->db->escape($data['filter_delivery_date']) . "')";
         }
-        
+
         if (!empty($data['filter_monthyear_added'])) {
             $sql .= " AND DATE_FORMAT(o.date_added, '%Y-%m') = '" . $this->db->escape($data['filter_monthyear_added']) . "'";
         }
@@ -1765,13 +1769,12 @@ class ModelSaleOrder extends Model {
 
         return $query->rows;
     }
-    
+
     public function getOrderTransactionFee($order_id) {
         $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "order_total WHERE order_id = '" . (int) $order_id . "' AND code = 'transaction_fee' ORDER BY sort_order");
 
         return $query->row;
     }
-    
 
     public function getTotalCreditsByOrderId($order_id) {
         $query = $this->db->query('SELECT SUM(amount) AS total FROM ' . DB_PREFIX . "customer_credit WHERE order_id = '" . (int) $order_id . "' and amount > 0");
@@ -2750,7 +2753,7 @@ class ModelSaleOrder extends Model {
         if (!empty($data['filter_monthyear_added'])) {
             $sql .= " AND DATE_FORMAT(o.date_added, '%Y-%m') = '" . $this->db->escape($data['filter_monthyear_added']) . "'";
         }
-        
+
         if (!empty($data['filter_date_added']) && empty($data['filter_date_added_end'])) {
             $sql .= " AND DATE(o.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
         }
