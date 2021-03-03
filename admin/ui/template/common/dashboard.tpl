@@ -324,7 +324,7 @@
             error: function (xhr, ajaxOptions, thrownError) {
             }
         });
-
+        var total = 0;
         $.ajax({
             type: 'get',
             url: 'index.php?path=dashboard/customer/CustomersOnboarded&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
@@ -334,7 +334,12 @@
             },
             success: function (json) {
                 console.log(json);
-                $('#collapseExample2 #total_customer_onboarded').html('<span>' + json.total + '</span>');
+                if(json.total != null) {
+                    total = json.total;
+                } else {
+                   total = 0; 
+                }
+                $('#collapseExample2 #total_customer_onboarded').html('<span>' + total + '</span>');
             },
             error: function (xhr, ajaxOptions, thrownError) {
             }
