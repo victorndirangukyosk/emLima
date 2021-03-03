@@ -420,7 +420,226 @@
             }
         });
     });
+    
+    $( document ).ready(function() {
+        console.log($('#input-monthyear-filter').val());
+        var monthyear = $('#input-monthyear-filter').val();
+                $.ajax({
+            type: 'get',
+            url: 'index.php?path=dashboard/order/ReceivedOrders&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            dataType: 'json',
+            beforeSend: function () {
+                $('#collapseExample2 #total_received_orders').html('<img src="ui/image/loader.gif">');
+            },
+            success: function (json) {
+                console.log(json);
+                $('#collapseExample2 #total_received_orders').html('<span>' + json.total + '</span>');
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+            }
+        });
 
+        $.ajax({
+            type: 'get',
+            url: 'index.php?path=dashboard/order/ProcessedOrders&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            dataType: 'json',
+            beforeSend: function () {
+                $('#collapseExample2 #total_processing_orders').html('<img src="ui/image/loader.gif">');
+            },
+            success: function (json) {
+                console.log(json);
+                $('#collapseExample2 #total_processing_orders').html('<span>' + json.total + '</span>');
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+            }
+        });
+
+        $.ajax({
+            type: 'get',
+            url: 'index.php?path=dashboard/order/CancelledOrders&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            dataType: 'json',
+            beforeSend: function () {
+                $('#collapseExample2 #total_cancelled_orders').html('<img src="ui/image/loader.gif">');
+            },
+            success: function (json) {
+                console.log(json);
+                $('#collapseExample2 #total_cancelled_orders').html('<span>' + json.total + '</span>');
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+            }
+        });
+
+        $.ajax({
+            type: 'get',
+            url: 'index.php?path=dashboard/order/IncompleteOrders&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            dataType: 'json',
+            beforeSend: function () {
+                $('#collapseExample2 #total_incomplete_orders').html('<img src="ui/image/loader.gif">');
+            },
+            success: function (json) {
+                console.log(json);
+                $('#collapseExample2 #total_incomplete_orders').html('<span>' + json.total + '</span>');
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+            }
+        });
+
+        $.ajax({
+            type: 'get',
+            url: 'index.php?path=dashboard/order/ApprovalPendingOrders&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            dataType: 'json',
+            beforeSend: function () {
+                $('#collapseExample2 #total_approvalpending_orders').html('<img src="ui/image/loader.gif">');
+            },
+            success: function (json) {
+                console.log(json);
+                $('#collapseExample2 #total_approvalpending_orders').html('<span>' + json.total + '</span>');
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+            }
+        });
+
+        $.ajax({
+            type: 'get',
+            url: 'index.php?path=dashboard/order/FastOrders&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            dataType: 'json',
+            beforeSend: function () {
+                $('#collapseExample2 #total_fast_orders').html('<img src="ui/image/loader.gif">');
+            },
+            success: function (json) {
+                console.log(json);
+                $('#collapseExample2 #total_fast_orders').html('<span>' + json.total + '</span>');
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+            }
+        });
+
+        $.ajax({
+            type: 'get',
+            url: 'index.php?path=dashboard/onlineorders&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            dataType: 'json',
+            beforeSend: function () {
+                $('#collapseExample2 #total_online_orders').html('<img src="ui/image/loader.gif">');
+            },
+            success: function (json) {
+                console.log(json);
+                $('#collapseExample2 #total_online_orders').html('<span>' + json.total + '</span>');
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+            }
+        });
+
+        $.ajax({
+            type: 'get',
+            url: 'index.php?path=dashboard/manualorders&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            dataType: 'json',
+            beforeSend: function () {
+                $('#collapseExample2 #total_manual_orders').html('<img src="ui/image/loader.gif">');
+            },
+            success: function (json) {
+                console.log(json);
+                $('#collapseExample2 #total_manual_orders').html('<span>' + json.total + '</span>');
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+            }
+        });
+        var total = 0;
+        $.ajax({
+            type: 'get',
+            url: 'index.php?path=dashboard/customer/CustomersOnboarded&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            dataType: 'json',
+            beforeSend: function () {
+                $('#collapseExample2 #total_customer_onboarded').html('<img src="ui/image/loader.gif">');
+            },
+            success: function (json) {
+                console.log(json);
+                if(json.total != null) {
+                    total = json.total;
+                } else {
+                   total = 0; 
+                }
+                $('#collapseExample2 #total_customer_onboarded').html('<span>' + total + '</span>');
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+            }
+        });
+
+        $.ajax({
+            type: 'get',
+            url: 'index.php?path=dashboard/customer/CustomersRegistered&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            dataType: 'json',
+            beforeSend: function () {
+                $('#collapseExample2 #total_customer_registered').html('<img src="ui/image/loader.gif">');
+            },
+            success: function (json) {
+                console.log(json);
+                $('#collapseExample2 #total_customer_registered').html('<span>' + json.total + '</span>');
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+            }
+        });
+
+        $.ajax({
+            type: 'get',
+            url: 'index.php?path=dashboard/customer/CustomersPendingApproval&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            dataType: 'json',
+            beforeSend: function () {
+                $('#collapseExample2 #total_customer_pending_approval').html('<img src="ui/image/loader.gif">');
+            },
+            success: function (json) {
+                console.log(json);
+                $('#collapseExample2 #total_customer_pending_approval').html('<span>' + json.total + '</span>');
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+            }
+        });
+
+        $.ajax({
+            type: 'get',
+            url: 'index.php?path=dashboard/order/TotalRevenueBookedDashBoard&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            dataType: 'json',
+            beforeSend: function () {
+                $('#collapseExample2 #actual_sales').html('<img src="ui/image/loader.gif">');
+            },
+            success: function (json) {
+                console.log(json);
+                $('#collapseExample2 #actual_sales').html('<span>' + json.total + '</span>');
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+            }
+        });
+
+        $.ajax({
+            type: 'get',
+            url: 'index.php?path=dashboard/order/TotalRevenueCollectedDashBoard&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            dataType: 'json',
+            beforeSend: function () {
+                $('#collapseExample2 #actual_sales_revenue').html('<img src="ui/image/loader.gif">');
+            },
+            success: function (json) {
+                console.log(json);
+                $('#collapseExample2 #actual_sales_revenue').html('<span>' + json.total + '</span>');
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+            }
+        });
+
+        $.ajax({
+            type: 'get',
+            url: 'index.php?path=dashboard/order/TotalRevenuePendingDashBoard&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            dataType: 'json',
+            beforeSend: function () {
+                $('#collapseExample2 #actual_pending_sales').html('<img src="ui/image/loader.gif">');
+            },
+            success: function (json) {
+                console.log(json);
+                $('#collapseExample2 #actual_pending_sales').html('<span>' + json.total + '</span>');
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+            }
+        });
+        
+    });
 
     $('#div_date_filter').datetimepicker().on('dp.change', function (e) {
         //console.log(e.date);
