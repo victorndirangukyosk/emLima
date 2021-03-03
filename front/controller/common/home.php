@@ -119,7 +119,7 @@ class ControllerCommonHome extends Controller {
         } else {
             $server = $this->config->get('config_url');
         }
-        
+
         if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
             //$data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'),200,110);
             $data['logo'] = $server . 'image/' . $this->config->get('config_logo');
@@ -180,20 +180,20 @@ class ControllerCommonHome extends Controller {
         foreach ($questions as $question) {
             $data[$question['category_id']]['questions'][] = $question;
         }
-        
+
         if ($this->request->server['HTTPS']) {
             $server = $this->config->get('config_ssl');
         } else {
             $server = $this->config->get('config_url');
         }
-        
+
         if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
             //$data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'),200,110);
             $data['logo'] = $server . 'image/' . $this->config->get('config_logo');
         } else {
             $data['logo'] = 'assets/img/logo.svg';
         }
-        
+
         $data['base'] = '';
         $data['store_name'] = $this->config->get('config_name');
 
@@ -201,28 +201,28 @@ class ControllerCommonHome extends Controller {
     }
 
     public function covid19() {
-        
+
         if ($this->request->server['HTTPS']) {
             $server = $this->config->get('config_ssl');
         } else {
             $server = $this->config->get('config_url');
         }
-        
+
         if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
             //$data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'),200,110);
             $data['logo'] = $server . 'image/' . $this->config->get('config_logo');
         } else {
             $data['logo'] = 'assets/img/logo.svg';
         }
-        
+
         $data['base'] = '';
         $data['store_name'] = $this->config->get('config_name');
-        
+
         $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/covid19.tpl', $data));
     }
 
     public function blog() {
-        
+
         if ($this->request->server['HTTPS']) {
             $server = $this->config->get('config_ssl');
         } else {
@@ -243,44 +243,44 @@ class ControllerCommonHome extends Controller {
     }
 
     public function technology() {
-        
+
         if ($this->request->server['HTTPS']) {
             $server = $this->config->get('config_ssl');
         } else {
             $server = $this->config->get('config_url');
         }
-        
+
         if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
             //$data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'),200,110);
             $data['logo'] = $server . 'image/' . $this->config->get('config_logo');
         } else {
             $data['logo'] = 'assets/img/logo.svg';
         }
-        
+
         $data['base'] = '';
         $data['store_name'] = $this->config->get('config_name');
-        
+
         $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/technology.tpl', $data));
     }
 
     public function careers($id = 0, $successmessage = "", $errormessage = "") {
-        
+
         if ($this->request->server['HTTPS']) {
             $server = $this->config->get('config_ssl');
         } else {
             $server = $this->config->get('config_url');
         }
-        
+
         if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
             //$data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'),200,110);
             $data['logo'] = $server . 'image/' . $this->config->get('config_logo');
         } else {
             $data['logo'] = 'assets/img/logo.svg';
         }
-        
+
         $data['base'] = '';
         $data['store_name'] = $this->config->get('config_name');
-        
+
         $data['site_key'] = $this->config->get('config_google_captcha_public');
         $data['action'] = $this->url->link('common/home/savecareers', '', 'SSL');
         $data['message'] = $successmessage;
@@ -508,64 +508,64 @@ class ControllerCommonHome extends Controller {
     }
 
     public function farmers() {
-        
+
         if ($this->request->server['HTTPS']) {
             $server = $this->config->get('config_ssl');
         } else {
             $server = $this->config->get('config_url');
         }
-        
+
         if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
             //$data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'),200,110);
             $data['logo'] = $server . 'image/' . $this->config->get('config_logo');
         } else {
             $data['logo'] = 'assets/img/logo.svg';
         }
-        
+
         $data['base'] = '';
         $data['store_name'] = $this->config->get('config_name');
-        
+
         $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/farmer-engagement.tpl', $data));
     }
 
     public function partners() {
         $data['register'] = $this->request->post['register'];
         $data['site_key'] = $this->config->get('config_google_captcha_public');
-        
+
         if ($this->request->server['HTTPS']) {
             $server = $this->config->get('config_ssl');
         } else {
             $server = $this->config->get('config_url');
         }
-        
+
         if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
             //$data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'),200,110);
             $data['logo'] = $server . 'image/' . $this->config->get('config_logo');
         } else {
             $data['logo'] = 'assets/img/logo.svg';
         }
-        
+
         $data['base'] = '';
         $data['store_name'] = $this->config->get('config_name');
-        
+
         $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/partners.tpl', $data));
     }
 
     public function about_us() {
-        
+
         if ($this->request->server['HTTPS']) {
             $server = $this->config->get('config_ssl');
         } else {
             $server = $this->config->get('config_url');
         }
-        
+
         if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
             //$data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'),200,110);
             $data['logo'] = $server . 'image/' . $this->config->get('config_logo');
         } else {
             $data['logo'] = 'assets/img/logo.svg';
         }
-        
+
         $data['base'] = '';
         $data['store_name'] = $this->config->get('config_name');
         $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/about-us.tpl', $data));
@@ -1554,9 +1554,9 @@ class ControllerCommonHome extends Controller {
         foreach ($results as $result) {
             // if qty less then 1 dont show product
             //REMOVED QUANTITY CHECK CONDITION
-            /*if ($result['quantity'] <= 0) {
-                continue;
-            }*/
+            /* if ($result['quantity'] <= 0) {
+              continue;
+              } */
 
             $log = new Log('error.log');
             if ($result['image'] != NULL && file_exists(DIR_IMAGE . $result['image'])) {
@@ -1687,6 +1687,59 @@ class ControllerCommonHome extends Controller {
         // echo "<pre>";print_r($data['products']);die;
 
         return $data['products'];
+    }
+
+    public function getCartDetails() {
+
+        $json = [];
+        $this->load->language('common/home');
+
+        $this->load->model('account/address');
+
+        $order_stores = $this->cart->getStores();
+        $min_order_or_not = [];
+        $store_data = [];
+
+        /*
+          sort array to make this current store as lst element
+         */
+
+        foreach ($order_stores as $key => $value) {
+            if ($value == $this->session->data['config_store_id']) {
+                unset($order_stores[$key]);
+            }
+        }
+
+        if (isset($this->session->data['config_store_id'])) {
+            array_push($order_stores, $this->session->data['config_store_id']);
+        }
+
+        foreach ($order_stores as $os) {
+            $store_info = $this->model_account_address->getStoreData($os);
+            $store_total = $this->cart->getSubTotal($os);
+
+            $json[$os]['store_total'] = $store_total;
+            $json[$os]['proceed_to_checkout'] = TRUE;
+            $json[$os]['url'] = $this->url->link('checkout/checkoutitems', '', 'SSL');
+            $json[$os]['store_note'] = "<center style='background-color:#43b02a;color:#fff'> Yay! Free Delivery </center>";
+
+
+            $store_data[] = $store_info;
+
+            if ((0 <= $store_info['min_order_cod']) && ($store_info['min_order_cod'] <= 10000)) {
+                if ($store_info['min_order_cod'] > $store_total) {
+                    $freedeliveryprice = $store_info['min_order_cod'] - $store_total;
+
+                    $json[$os]['store_total'] = $store_total;
+                    $json[$os]['proceed_to_checkout'] = FALSE;
+                    $json[$os]['url'] = '';
+                    $json[$os]['store_note'] = "<center style='background-color:#ff811e;color:#fff'> You are only " . $this->currency->format($freedeliveryprice) . ' away for FREE DELIVERY! </center>';
+                }
+            }
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
     }
 
 }
