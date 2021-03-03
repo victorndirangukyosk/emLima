@@ -72,7 +72,7 @@
                         <div class="pull-right">                    
 
                             <div class="input-group date monthyear" style=" cursor: pointer; padding: 0px 10px;  font-weight: normal;margin-right:20px;margin-top:-4px;">
-                                <input type="text" name="filter_monthyear_input" value="<?php echo $filter_monthyear_input; ?>"  data-date-format="YYYY-MM" id="input-monthyear-filter" class="form-control">
+                                <input type="text" name="filter_monthyear_input" value="<?php echo $filter_monthyear_input; ?>"  data-date-format="YYYY-MM" id="input-monthyear-filter" class="form-control" onkeydown="return false">
                                 <span class="input-group-btn">
                                     <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
                                 </span>
