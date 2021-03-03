@@ -1226,13 +1226,16 @@ class ControllerApiCustomerDashboard extends Controller
 
 
 
+//similar method from Admin/reports/customer_order/statement
+    public function getcustomerstatement()
+    { 
 
-    public function statement()
-    {
-        $this->load->language('report/customer_statement');
+        $json = [];
 
-        $this->document->setTitle($this->language->get('heading_title'));
-
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
+        try{
         if (isset($this->request->get['filter_date_start'])) {
             $filter_date_start = $this->request->get['filter_date_start'];
         } else {
@@ -1293,22 +1296,9 @@ class ControllerApiCustomerDashboard extends Controller
 
         if (isset($this->request->get['page'])) {
             $url .= '&page='.$this->request->get['page'];
-        }
-
-        $data['breadcrumbs'] = [];
-
-        $data['breadcrumbs'][] = [
-            'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
-        ];
-
-        $data['breadcrumbs'][] = [
-            'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('report/customer_order/statement', 'token='.$this->session->data['token'].$url, 'SSL'),
-        ];
+        }       
 
         $this->load->model('report/customer');
-
         $data['customers'] = [];
 
         $filter_data = [
@@ -1367,41 +1357,16 @@ class ControllerApiCustomerDashboard extends Controller
             }
         }
         //  echo "<pre>";print_r($data['customers']);die;
-        $data['heading_title'] = $this->language->get('heading_title');
+         
+        // $data['token'] = $this->session->data['token'];
 
-        $data['text_list'] = $this->language->get('text_list');
-        $data['text_no_results'] = $this->language->get('text_no_results');
-        $data['text_confirm'] = $this->language->get('text_confirm');
-        $data['text_all_status'] = $this->language->get('text_all_status');
+        // $this->load->model('localisation/order_status');
 
-        $data['column_customer'] = $this->language->get('column_customer');
-        $data['column_email'] = $this->language->get('column_email');
-        $data['column_customer_group'] = $this->language->get('column_customer_group');
-        $data['column_status'] = $this->language->get('column_status');
-        $data['column_orders'] = $this->language->get('column_orders');
-        $data['column_products'] = $this->language->get('column_products');
-        $data['column_total'] = $this->language->get('column_total');
-        $data['column_action'] = $this->language->get('column_action');
+        // $data['order_statuses'] = $this->model_localisation_order_status->getValidOrderStatuses();
 
-        $data['entry_date_start'] = $this->language->get('entry_date_start');
-        $data['entry_date_end'] = $this->language->get('entry_date_end');
-        $data['entry_status'] = $this->language->get('entry_status');
-        $data['entry_customer'] = $this->language->get('entry_customer');
+        // $this->load->model('sale/customer');
 
-        $data['button_edit'] = $this->language->get('button_edit');
-        $data['button_filter'] = $this->language->get('button_filter');
-        $data['button_show_filter'] = $this->language->get('button_show_filter');
-        $data['button_hide_filter'] = $this->language->get('button_hide_filter');
-
-        $data['token'] = $this->session->data['token'];
-
-        $this->load->model('localisation/order_status');
-
-        $data['order_statuses'] = $this->model_localisation_order_status->getValidOrderStatuses();
-
-        $this->load->model('sale/customer');
-
-        $data['customer_names'] = $this->model_sale_customer->getCustomers(null);
+        // $data['customer_names'] = $this->model_sale_customer->getCustomers(null);
 
         $url = '';
 
@@ -1429,7 +1394,7 @@ class ControllerApiCustomerDashboard extends Controller
         $pagination->total = $customer_total;
         $pagination->page = $page;
         $pagination->limit = $this->config->get('config_limit_admin');
-        $pagination->url = $this->url->link('report/customer_order/statement', 'token='.$this->session->data['token'].$url.'&page={page}', 'SSL');
+        // $pagination->url = $this->url->link('report/customer_order/statement', 'token='.$this->session->data['token'].$url.'&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
@@ -1441,11 +1406,20 @@ class ControllerApiCustomerDashboard extends Controller
         $data['filter_customer'] = $filter_customer;
         $data['filter_company'] = $filter_company;
 
-        $data['header'] = $this->load->controller('common/header');
-        $data['column_left'] = $this->load->controller('common/column_left');
-        $data['footer'] = $this->load->controller('common/footer');
+         // echo "<pre>";print_r($data);die;
+         $json['data'] =$data;
+         $this->response->addHeader('Content-Type: application/json');
+         $this->response->setOutput(json_encode($json));
+        }
+        catch(exception $ex)
+        {
+            $json['status'] = 400;
+            $json['data'] = [];
+            $json['message'] = "Error in fetching data.";
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($json));
 
-        $this->response->setOutput($this->load->view('report/customer_statement.tpl', $data));
+        }
     }
 
     // public function statementexcel()
