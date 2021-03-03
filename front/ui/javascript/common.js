@@ -734,7 +734,17 @@ $(document).delegate('.mini-cart-button', 'click', function (e) {
 
 });
 
-
+$(document).delegate('.mini-cart-button', 'click', function (e) {
+    
+    	$.ajax({
+		url: 'index.php?path=common/home/getCartDetails',
+		type: 'post',
+		dataType: 'json',
+		success: function (json) {
+                console.log(json);    
+                }
+        });
+});
 
 
 
