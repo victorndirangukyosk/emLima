@@ -524,6 +524,10 @@ class ModelSaleCustomer extends Model {
         if ($this->user->isAccountManager()) {
             $implode[] = "account_manager_id = '" . (int) $this->user->getId() . "'";
         }
+
+        if (!empty($data['filter_monthyear_added'])) {
+            $implode[] = "DATE_FORMAT(date_added, '%Y-%m') = '" . $this->db->escape($data['filter_monthyear_added']) . "'";
+        }
         //REMOVED FETCHING ONLY PARENT CUSTOMERS
         //$implode[] = "parent is null or parent = 0";
 
@@ -593,6 +597,11 @@ class ModelSaleCustomer extends Model {
         if ($this->user->isAccountManager()) {
             $implode[] = "c.account_manager_id = '" . (int) $this->user->getId() . "'";
         }
+
+        if (!empty($data['filter_monthyear_added'])) {
+            $implode[] = "DATE_FORMAT(c.date_added, '%Y-%m') = '" . $this->db->escape($data['filter_monthyear_added']) . "'";
+        }
+        
         $implode[] = " o.order_status_id NOT IN (0)";
         //$implode[] = "c.parent is null or c.parent = 0";
 

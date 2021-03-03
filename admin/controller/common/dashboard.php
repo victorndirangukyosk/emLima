@@ -50,6 +50,11 @@ class ControllerCommonDashboard extends Controller {
         $data['footer'] = $this->load->controller('common/footer');
 
         $data['token'] = $this->session->data['token'];
+        $filter_date_input = date('Y-m-d');
+        $data['filter_date_input'] = $filter_date_input;
+        
+        $filter_monthyear_input = date('Y-m', strtotime(date('Y').'-'.date('m')));
+        $data['filter_monthyear_input'] = $filter_monthyear_input;
 
         if ($this->user->isVendor()) {
             $this->vendor($data);
@@ -117,13 +122,14 @@ class ControllerCommonDashboard extends Controller {
         $data['recent'] = $this->load->controller('dashboard/recent');
         $data['recenttabs'] = $this->load->controller('dashboard/recenttabs');
 
+        //OverView       
         $data['order_received'] = $this->load->controller('dashboard/order/ReceivedOrders');
         $data['order_processed'] = $this->load->controller('dashboard/order/ProcessedOrders');
         $data['order_cancelled'] = $this->load->controller('dashboard/order/CancelledOrders');
         $data['order_incomeplete'] = $this->load->controller('dashboard/order/IncompleteOrders');
         $data['order_approval_pening'] = $this->load->controller('dashboard/order/ApprovalPendingOrders');
         $data['order_fast'] = $this->load->controller('dashboard/order/FastOrders');
-
+        
         $data['total_customers_onboarded'] = $this->load->controller('dashboard/customer/CustomersOnboarded');
         $data['total_customers_registered'] = $this->load->controller('dashboard/customer/CustomersRegistered');
         $data['total_customers_approval_pending'] = $this->load->controller('dashboard/customer/CustomersPendingApproval');
@@ -131,6 +137,44 @@ class ControllerCommonDashboard extends Controller {
         $data['total_revenue_booked'] = $this->load->controller('dashboard/order/TotalRevenueBookedDashBoard');
         $data['total_revenue_collected'] = $this->load->controller('dashboard/order/TotalRevenueCollectedDashBoard');
         $data['total_revenue_pending'] = $this->load->controller('dashboard/order/TotalRevenuePendingDashBoard');
+        
+        //OverView 2 
+        $data['order_received_month'] = $this->load->controller('dashboard/order/ReceivedOrders');
+        $data['order_processed_month'] = $this->load->controller('dashboard/order/ProcessedOrders');
+        $data['order_cancelled_month'] = $this->load->controller('dashboard/order/CancelledOrders');
+        $data['order_incomeplete_month'] = $this->load->controller('dashboard/order/IncompleteOrders');
+        $data['order_approval_pending_month'] = $this->load->controller('dashboard/order/ApprovalPendingOrders');
+        $data['order_fast_month'] = $this->load->controller('dashboard/order/FastOrders');
+
+        $data['onlineorders_month'] = $this->load->controller('dashboard/onlineorders');
+        $data['manualorders_month'] = $this->load->controller('dashboard/manualorders');
+        
+        $data['total_customers_onboarded_month'] = $this->load->controller('dashboard/customer/CustomersOnboarded');
+        $data['total_customers_registered_month'] = $this->load->controller('dashboard/customer/CustomersRegistered');
+        $data['total_customers_approval_pending_month'] = $this->load->controller('dashboard/customer/CustomersPendingApproval');
+
+        $data['total_revenue_booked_month'] = $this->load->controller('dashboard/order/TotalRevenueBookedDashBoard');
+        $data['total_revenue_collected_month'] = $this->load->controller('dashboard/order/TotalRevenueCollectedDashBoard');
+        $data['total_revenue_pending_month'] = $this->load->controller('dashboard/order/TotalRevenuePendingDashBoard');
+        
+        $data['order_received_ystdate'] = $this->load->controller('dashboard/order/DeliveredOrdersByYstDate');
+        $data['total_revenue_booked_ystdate'] = $this->load->controller('dashboard/order/TotalRevenueBookedDashBoardByYstDate');
+        $data['total_customers_registered_ystdate'] = $this->load->controller('dashboard/customer/CustomersRegisteredByYstDate');
+        $data['total_customers_approval_pending_ystdate'] = $this->load->controller('dashboard/customer/CustomersPendingApprovalByYstDate');
+        
+        $data['dashboard_yesterday'] = $this->load->controller('dashboard/order/DashboardYesterday');
+        
+        $data['order_received_todaydate'] = $this->load->controller('dashboard/order/DeliveredOrdersByTodayDate');
+        $data['total_revenue_booked_todaydate'] = $this->load->controller('dashboard/order/TotalRevenueBookedDashBoardByTodayDate');
+        $data['total_customers_registered_todaydate'] = $this->load->controller('dashboard/customer/CustomersRegisteredByTodayDate');
+        $data['total_customers_approval_pending_todaydate'] = $this->load->controller('dashboard/customer/CustomersPendingApprovalByTodayDate');
+     
+        $data['dashboard_today'] = $this->load->controller('dashboard/order/DashboardToday');
+        
+        $data['order_received_tmrwdate'] = $this->load->controller('dashboard/order/DeliveredOrdersByTmrwDate');
+        $data['total_revenue_booked_tmrwdate'] = $this->load->controller('dashboard/order/TotalRevenueBookedDashBoardByTmrwDate');
+   
+        $data['dashboard_tomorrow'] = $this->load->controller('dashboard/order/DashboardTomorrow');
 
 
         // Run currency update
@@ -152,5 +196,7 @@ class ControllerCommonDashboard extends Controller {
         $this->load->model('report/excel');
         $this->model_report_excel->download_mostpurchased_products_excel($data);
     }
+
+   
 
 }
