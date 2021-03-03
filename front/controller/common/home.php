@@ -1103,6 +1103,7 @@ class ControllerCommonHome extends Controller {
         //echo '<pre>';print_r($data['offer_products']);exit;
         /* add Contact modal */
         $data['contactus_modal'] = $this->load->controller('information/contact');
+        $data['checkout_summary'] = $this->url->link('checkout/checkoutitems', '', 'SSL');
 
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/home.tpl') && isset($this->session->data['customer_id'])) {
             // $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/home.tpl', $data));
