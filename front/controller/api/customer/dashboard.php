@@ -1227,7 +1227,7 @@ class ControllerApiCustomerDashboard extends Controller
 
 
 //similar method from Admin/reports/customer_order/statement
-    public function getcustomerstatement()
+    public function addcustomerstatement()
     { 
 
         $json = [];
@@ -1235,67 +1235,69 @@ class ControllerApiCustomerDashboard extends Controller
         $json['status'] = 200;
         $json['data'] = [];
         $json['message'] = [];
+        // echo "<pre>";print_r($filter_data);die;
+
         try{
-        if (isset($this->request->get['filter_date_start'])) {
-            $filter_date_start = $this->request->get['filter_date_start'];
+        if (isset($this->request->post['filter_date_start'])) {
+            $filter_date_start = $this->request->post['filter_date_start'];
         } else {
             $filter_date_start = '';
         }
 
-        if (isset($this->request->get['filter_date_end'])) {
-            $filter_date_end = $this->request->get['filter_date_end'];
+        if (isset($this->request->post['filter_date_end'])) {
+            $filter_date_end = $this->request->post['filter_date_end'];
         } else {
             $filter_date_end = '';
         }
 
-        if (isset($this->request->get['filter_order_status_id'])) {
-            $filter_order_status_id = $this->request->get['filter_order_status_id'];
+        if (isset($this->request->post['filter_order_status_id'])) {
+            $filter_order_status_id = $this->request->post['filter_order_status_id'];
         } else {
             $filter_order_status_id = 0;
         }
 
-        if (isset($this->request->get['filter_customer'])) {
-            $filter_customer = $this->request->get['filter_customer'];
+        if (isset($this->request->post['filter_customer'])) {
+            $filter_customer =  ($this->request->post['filter_customer']);
         } else {
             $filter_customer = '';
         }
 
-        if (isset($this->request->get['filter_company'])) {
-            $filter_company = $this->request->get['filter_company'];
+        if (isset($this->request->post['filter_company'])) {
+            $filter_company = $this->request->post['filter_company'];
         } else {
             $filter_company = '';
         }
 
-        if (isset($this->request->get['page'])) {
-            $page = $this->request->get['page'];
+        if (isset($this->request->post['page'])) {
+            $page = $this->request->post['page'];
         } else {
             $page = 1;
         }
 
         $url = '';
 
-        if (isset($this->request->get['filter_date_start'])) {
-            $url .= '&filter_date_start='.$this->request->get['filter_date_start'];
+        if (isset($this->request->post['filter_date_start'])) {
+            $url .= '&filter_date_start='.$this->request->post['filter_date_start'];
         }
 
-        if (isset($this->request->get['filter_date_end'])) {
-            $url .= '&filter_date_end='.$this->request->get['filter_date_end'];
+        if (isset($this->request->post['filter_date_end'])) {
+            $url .= '&filter_date_end='.$this->request->post['filter_date_end'];
         }
 
-        if (isset($this->request->get['filter_order_status_id'])) {
-            $url .= '&filter_order_status_id='.$this->request->get['filter_order_status_id'];
+        if (isset($this->request->post['filter_order_status_id'])) {
+            $url .= '&filter_order_status_id='.$this->request->post['filter_order_status_id'];
         }
 
-        if (isset($this->request->get['filter_customer'])) {
-            $url .= '&filter_customer='.$this->request->get['filter_customer'];
+        if (isset($this->request->post['filter_customer'])) {
+            $url .= '&filter_customer='.$this->request->post['filter_customer'];
         }
 
-        if (isset($this->request->get['filter_company'])) {
-            $url .= '&filter_company='.$this->request->get['filter_company'];
+        if (isset($this->request->post['filter_company'])) {
+            $url .= '&filter_company='.$this->request->post['filter_company'];
         }
 
-        if (isset($this->request->get['page'])) {
-            $url .= '&page='.$this->request->get['page'];
+        if (isset($this->request->post['page'])) {
+            $url .= '&page='.$this->request->post['page'];
         }       
 
         $this->load->model('report/customer');
@@ -1310,6 +1312,7 @@ class ControllerApiCustomerDashboard extends Controller
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
             'limit' => $this->config->get('config_limit_admin'),
         ];
+        // echo "<pre>";print_r($filter_data);die;
         if ('' != $filter_customer || '' != $filter_company) {
             $customer_total = $this->model_report_customer->getTotalValidCustomerOrders($filter_data);
 
