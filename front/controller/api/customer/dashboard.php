@@ -1332,6 +1332,7 @@ class ControllerApiCustomerDashboard extends Controller
                 $json['message'] = "Unauthorized to access the requested data";
                 $this->response->addHeader('Content-Type: application/json');
                 $this->response->setOutput(json_encode($json));
+                return;
             }
         } else {
             $customer_total = 0;
