@@ -1718,10 +1718,10 @@ class ControllerCommonHome extends Controller {
             $store_info = $this->model_account_address->getStoreData($os);
             $store_total = $this->cart->getSubTotal($os);
 
-            $json[$os]['store_total'] = $store_total;
-            $json[$os]['proceed_to_checkout'] = TRUE;
-            $json[$os]['url'] = $this->url->link('checkout/checkoutitems', '', 'SSL');
-            $json[$os]['store_note'] = "<center style='background-color:#43b02a;color:#fff'> Yay! Free Delivery </center>";
+            $json['store_total'] = $store_total;
+            $json['proceed_to_checkout'] = TRUE;
+            $json['url'] = $this->url->link('checkout/checkoutitems', '', 'SSL');
+            $json['store_note'] = "<center style='background-color:#43b02a;color:#fff'> Yay! Free Delivery </center>";
 
 
             $store_data[] = $store_info;
@@ -1730,10 +1730,10 @@ class ControllerCommonHome extends Controller {
                 if ($store_info['min_order_cod'] > $store_total) {
                     $freedeliveryprice = $store_info['min_order_cod'] - $store_total;
 
-                    $json[$os]['store_total'] = $store_total;
-                    $json[$os]['proceed_to_checkout'] = FALSE;
-                    $json[$os]['url'] = '';
-                    $json[$os]['store_note'] = "<center style='background-color:#ff811e;color:#fff'> You are only " . $this->currency->format($freedeliveryprice) . ' away for FREE DELIVERY! </center>';
+                    $json['store_total'] = $store_total;
+                    $json['proceed_to_checkout'] = FALSE;
+                    $json['url'] = '';
+                    $json['store_note'] = "<center style='background-color:#ff811e;color:#fff'> You are only " . $this->currency->format($freedeliveryprice) . ' away for FREE DELIVERY! </center>';
                 }
             }
         }

@@ -735,15 +735,18 @@ $(document).delegate('.mini-cart-button', 'click', function (e) {
 });
 
 $(document).delegate('.mini-cart-button', 'click', function (e) {
-    
     	$.ajax({
 		url: 'index.php?path=common/home/getCartDetails',
 		type: 'post',
 		dataType: 'json',
 		success: function (json) {
-                console.log(json);    
+                console.log(json);  
+                /*if (json != '' && json.url != '') {
+                window.location.replace(json.url);
+                }*/
                 }
         });
+        window.location.replace('index.php?path=checkout/checkoutitems');
 });
 
 
