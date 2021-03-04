@@ -383,7 +383,7 @@
                                 <div class="checkout-promocode-form"  >
                                  <div class="form-group">
                                         <span class="input-group-btn">
-                                            <a id="button-reward" href="<?php echo $server; ?>" class="btn btn-primary btnsetall" style="width: 100%;height: 100%;" type="button">HOME</a>
+                                            <a id="button-reward" href="<?php echo $server; ?>" class="btn btn-primary btnsetall" style="width: 100%;height: 100%;" type="button">CONTINUE SHOPPING</a>
                                         </span>
                                     </div>
                                 
