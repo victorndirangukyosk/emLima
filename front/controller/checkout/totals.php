@@ -67,6 +67,27 @@ class ControllerCheckoutTotals extends Controller
         $data['cashbackAmount'] = $this->currency->format(0);
 
         $data['cashbackAmount'] = $this->currency->format($this->model_total_coupon->getCashbackTotalCheckout());
+        
+        /*MINIMUM ORDER AMOUNT CHECKING*/
+        $this->load->model('account/address');
+        $order_stores = $this->cart->getStores();
+        $min_order_or_not = [];
+        $store_data = [];
+        
+        $data['min_order_amount_reached'] = TRUE;
+        $data['min_order_amount_away'] = NULL;
+        foreach ($order_stores as $os) {
+            $store_info = $this->model_account_address->getStoreData($os);
+            $store_total = $this->cart->getSubTotal($os);
+            $store_info['servicable_zipcodes'] = $this->model_account_address->getZipList($os);
+            $store_data[] = $store_info;
+
+            if ($this->cart->getTotalProductsByStore($os) && $store_info['min_order_amount'] > $store_total) {
+                $data['min_order_amount_reached'] = FALSE;
+                $data['min_order_amount_away'] = $this->currency->format($store_info['min_order_amount'] - $store_total).' away from minimum order value.';
+            }
+        }
+        /*MINIMUM ORDER AMOUNT CHECKING*/
 
         if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/checkout/totals.tpl')) {
             $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/checkout/totals.tpl', $data));
