@@ -130,6 +130,7 @@ class ControllerCheckoutCheckoutItems extends Controller
         $store_data = [];
         
         $data['min_order_amount_reached'] = TRUE;
+        $data['min_order_amount_away'] = NULL;
         foreach ($order_stores as $os) {
             $store_info = $this->model_account_address->getStoreData($os);
             $store_total = $this->cart->getSubTotal($os);
@@ -138,6 +139,7 @@ class ControllerCheckoutCheckoutItems extends Controller
 
             if ($this->cart->getTotalProductsByStore($os) && $store_info['min_order_amount'] > $store_total) {
                 $data['min_order_amount_reached'] = FALSE;
+                $data['min_order_amount_away'] = $store_info['min_order_amount'] - $store_total.' away from minimum order value.';
                 if ($this->request->server['HTTPS']) {
                     $data['server'] = $this->config->get('config_ssl');
                 } else {
