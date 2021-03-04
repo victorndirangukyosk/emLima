@@ -112,7 +112,7 @@
                                     </div>
                                     <div class="butn setui" style="position:relative; z-index:-1000;">
                                         <div class="btn btn-default mini-cart-button" role="button" data-toggle="modal"
-                                                data-target="#store-cart-side" id="mini-cart-button" 
+                                                data-target="#store-cart-sides" id="mini-cart-button" 
                                                 style="margin-right:10px; margin-top:0px; display:flex; flex-flow: column nowrap;">
                                                 <div  style="display:flex; align-items: center;">
                                                   <i class="fa fa-shopping-cart"></i>&nbsp;&nbsp;
