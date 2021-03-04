@@ -741,7 +741,10 @@ $(document).delegate('.mini-cart-button', 'click', function (e) {
 		type: 'post',
 		dataType: 'json',
 		success: function (json) {
-                console.log(json);    
+                console.log(json);  
+                if (json != '' && json.url != '') {
+                window.location.replace(json.url);
+                }
                 }
         });
 });

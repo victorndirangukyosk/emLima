@@ -369,6 +369,7 @@
 <ul class="checkoutnew">           
 <li>
      <!-- Continue shopping --> 
+                                <?php if($min_order_amount_reached == TRUE) { ?>
                                 <div class="checkout-promocode-form"  >
                                  <div class="form-group">
                                         <span class="input-group-btn"  onclick="setOrderNotes()">
@@ -378,6 +379,16 @@
                                     </div>
                                 
                                 </div>
+                                <?php } else { ?>
+                                <div class="checkout-promocode-form"  >
+                                 <div class="form-group">
+                                        <span class="input-group-btn">
+                                            <a id="button-reward" href="<?php echo $server; ?>" class="btn btn-primary btnsetall" style="width: 100%;height: 100%;" type="button">HOME</a>
+                                        </span>
+                                    </div>
+                                
+                                </div>
+                                <?php } ?>
                             <!-- END Continue shopping --> 
 </li>
 </ul>                

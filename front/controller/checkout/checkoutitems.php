@@ -128,7 +128,8 @@ class ControllerCheckoutCheckoutItems extends Controller
 
         $min_order_or_not = [];
         $store_data = [];
-
+        
+        $data['min_order_amount_reached'] = TRUE;
         foreach ($order_stores as $os) {
             $store_info = $this->model_account_address->getStoreData($os);
             $store_total = $this->cart->getSubTotal($os);
@@ -136,7 +137,13 @@ class ControllerCheckoutCheckoutItems extends Controller
             $store_data[] = $store_info;
 
             if ($this->cart->getTotalProductsByStore($os) && $store_info['min_order_amount'] > $store_total) {
-                $this->response->redirect($this->url->link('checkout/cart'));
+                $data['min_order_amount_reached'] = FALSE;
+                if ($this->request->server['HTTPS']) {
+                    $data['server'] = $this->config->get('config_ssl');
+                } else {
+                    $data['server'] = $this->config->get('config_url');
+                }
+                /* $this->response->redirect($this->url->link('checkout/cart')); */
             }
         }
 

@@ -132,7 +132,7 @@ class ControllerCheckoutCheckout extends Controller
             $store_data[] = $store_info;
 
             if ($this->cart->getTotalProductsByStore($os) && $store_info['min_order_amount'] > $store_total) {
-                $this->response->redirect($this->url->link('checkout/cart'));
+                //$this->response->redirect($this->url->link('checkout/cart'));
             }
         }
 
