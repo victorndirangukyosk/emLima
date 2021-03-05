@@ -14,7 +14,7 @@ class ControllerDashboardOnlineOrders extends Controller {
 
         $enddate = date('Y-m-d', strtotime('1 days'));
 
-        $data['online_orders_url'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_type=0&filter_date_added=2021-01-01&filter_date_added_end=' . $enddate . '&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL');
+        $data['online_orders_url'] = htmlspecialchars_decode($this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_type=0&filter_date_added=2021-01-01&filter_date_added_end=' . $enddate . '&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL'));
 
         if (isset($this->request->get['filter_order_type'])) {
             $filter_order_type = $this->request->get['filter_order_type'];
