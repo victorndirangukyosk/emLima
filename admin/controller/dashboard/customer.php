@@ -60,7 +60,7 @@ class ControllerDashboardCustomer extends Controller {
 
         $customer_total = $this->model_sale_customer->getTotalCustomersOnBoarded(['filter_monthyear_added' => $this->request->get['filter_monthyear_added']]);
 
-        $data['url'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL');
+        $data['url'] = htmlspecialchars_decode($this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL'));
         $data['total'] = $customer_total;
         $data['customer'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL');
         if ($this->request->isAjax()) {
@@ -85,7 +85,7 @@ class ControllerDashboardCustomer extends Controller {
         $this->load->model('sale/customer');
 
         $customer_total = $this->model_sale_customer->getTotalCustomersForDashboard(['filter_monthyear_added' => $this->request->get['filter_monthyear_added']]);
-        $data['url'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL');
+        $data['url'] = htmlspecialchars_decode($this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL'));
         $data['total'] = $customer_total;
         $data['customer'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL');
         if ($this->request->isAjax()) {
@@ -111,7 +111,7 @@ class ControllerDashboardCustomer extends Controller {
 
         $customer_total = $this->model_sale_customer->getTotalCustomersForDashboard(['filter_approved' => 0, 'filter_monthyear_added' => $this->request->get['filter_monthyear_added']]);
 
-        $data['url'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_approved=0&filter_sub_customer_show=1&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL');
+        $data['url'] = htmlspecialchars_decode($this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_approved=0&filter_sub_customer_show=1&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL'));
         $data['total'] = $customer_total;
         $data['customer'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL');
         if ($this->request->isAjax()) {
