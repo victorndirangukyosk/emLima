@@ -169,7 +169,7 @@ class ControllerDashboardOrder extends Controller {
         
         $order_total = $this->model_sale_order->getTotalOrders(['filter_order_status' => 14, 'filter_monthyear_added' => $this->request->get['filter_monthyear_added']]);
 
-        $data['url'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=14&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL');
+        $data['url'] = htmlspecialchars_decode($this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=14&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL'));
         $data['total'] = $order_total;
         $data['order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=14&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL');
         if ($this->request->isAjax()) {
@@ -200,7 +200,7 @@ class ControllerDashboardOrder extends Controller {
 
         $order_total = $this->model_sale_order->getTotalOrders(['filter_order_status' => 1, 'filter_monthyear_added' => $this->request->get['filter_monthyear_added']]);
 
-        $data['url'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=1&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL');
+        $data['url'] = htmlspecialchars_decode($this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=1&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL'));
         $data['total'] = $order_total;
         $data['order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=1&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL');
         if ($this->request->isAjax()) {
@@ -231,7 +231,7 @@ class ControllerDashboardOrder extends Controller {
 
         $order_total = $this->model_sale_order->getTotalOrders(['filter_order_status' => 6, 'filter_monthyear_added' => $this->request->get['filter_monthyear_added']]);
 
-        $data['url'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=6&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL');
+        $data['url'] = htmlspecialchars_decode($this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=6&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL'));
         $data['total'] = $order_total;
         $data['order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=6&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL');
         if ($this->request->isAjax()) {
@@ -287,7 +287,7 @@ class ControllerDashboardOrder extends Controller {
 
         $order_total = $this->model_sale_order->getTotalOrders(['filter_order_status' => 15, 'filter_monthyear_added' => $this->request->get['filter_monthyear_added']]);
 
-        $data['url'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=15&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL');
+        $data['url'] = htmlspecialchars_decode($this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=15&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL'));
         $data['total'] = $order_total;
         $data['order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=15&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL');
         if ($this->request->isAjax()) {
@@ -322,7 +322,7 @@ class ControllerDashboardOrder extends Controller {
         $order_total_tomorrow = $this->model_sale_order->getTotalOrders(['filter_order_day' => 'tomorrow', 'filter_monthyear_added' => $this->request->get['filter_monthyear_added']]);
         $order_total = $order_total_today + $order_total_tomorrow;
 
-        $data['url'] = $this->url->link('sale/fast_order', 'token=' . $this->session->data['token'] . '&filter_order_status=14,1&filter_order_day=today&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL');
+        $data['url'] = htmlspecialchars_decode($this->url->link('sale/fast_order', 'token=' . $this->session->data['token'] . '&filter_order_status=14,1&filter_order_day=today&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL'));
         $data['total'] = $order_total;
         $data['order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=14,1&filter_order_day=today&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL');
         if ($this->request->isAjax()) {

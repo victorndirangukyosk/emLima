@@ -215,6 +215,7 @@
             success: function (json) {
                 console.log(json);
                 $('#collapseExample2 #total_received_orders').html('<span>' + json.total + '</span>');
+                $('#collapseExample2 #total_received_orders_url').attr("href", json.url);
             },
             error: function (xhr, ajaxOptions, thrownError) {
             }
