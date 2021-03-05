@@ -961,6 +961,17 @@ class ControllerCommonHome extends Controller {
             $data['play_store'] = $te['config_android_app_link'];
             $data['app_store'] = $te['config_apple_app_link'];
         }
+        #region fix-sometimes cache getting clear and getting category pricing issues
+        // $cachePrice_data = $this->cache->get('category_price_data');
+        // if($cachePrice_data==null)
+        // {
+        //     $this->load->model('account/customer');
+        //     $this->model_account_customer->cacheProductPrices(ACTIVE_STORE_ID);
+        //     $cachePrice_data = $this->cache->get('category_price_data');
+
+        // }
+        ////   echo '<pre>';print_r($cachePrice_data);exit;
+        #endregion
 
         $data['login'] = $this->url->link('account/login', '', 'SSL');
         $data['register'] = $this->url->link('account/register', '', 'SSL');
