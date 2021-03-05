@@ -1314,9 +1314,26 @@ class ControllerApiCustomerDashboard extends Controller
         ];
         // echo "<pre>";print_r($filter_data);die;
         if ('' != $filter_customer || '' != $filter_company) {
-            $customer_total = $this->model_report_customer->getTotalValidCustomerOrders($filter_data);
+ 
+            $data['check'] =  $this->load->controller('common/check/checkValidCustomer',array(null,$filter_customer,$filter_company));;
+           
+           
+            // echo "<pre>";print_r($data['check'] );die;
+            if($data['check']=="true")
+            {
+             $customer_total = $this->model_report_customer->getTotalValidCustomerOrders($filter_data);
 
             $results = $this->model_report_customer->getValidCustomerOrders($filter_data);
+            }
+            else
+            {
+                $json['status'] = 500;
+                $json['data'] = [];
+                $json['message'] = "Unauthorized to access the requested data";
+                $this->response->addHeader('Content-Type: application/json');
+                $this->response->setOutput(json_encode($json));
+                return;
+            }
         } else {
             $customer_total = 0;
             $results = null;
@@ -1411,6 +1428,8 @@ class ControllerApiCustomerDashboard extends Controller
 
          // echo "<pre>";print_r($data);die;
          $json['data'] =$data;
+         $json['message'] = "Success";
+
          $this->response->addHeader('Content-Type: application/json');
          $this->response->setOutput(json_encode($json));
         }
