@@ -310,6 +310,7 @@
             success: function (json) {
                 console.log(json);
                 $('#collapseExample2 #total_online_orders').html('<span>' + json.total + '</span>');
+                $('#collapseExample2 #total_online_orders_url').attr("href", json.url);
             },
             error: function (xhr, ajaxOptions, thrownError) {
             }
@@ -325,6 +326,7 @@
             success: function (json) {
                 console.log(json);
                 $('#collapseExample2 #total_manual_orders').html('<span>' + json.total + '</span>');
+                $('#collapseExample2 #manualordersa').attr("href", json.url);
             },
             error: function (xhr, ajaxOptions, thrownError) {
             }
