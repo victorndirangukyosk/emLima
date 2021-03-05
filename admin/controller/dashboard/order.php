@@ -162,12 +162,6 @@ class ControllerDashboardOrder extends Controller {
         // Total Orders
         $this->load->model('sale/order');
 
-        if ($this->request->isAjax()) {
-            if (!isset($this->request->get['filter_monthyear_added']) || $this->request->get['filter_monthyear_added'] == NULL) {
-                $this->request->get['filter_monthyear_added'] = date('Y-m');
-            }
-        }
-
         $order_total = $this->model_sale_order->getTotalOrders(['filter_order_status' => 14, 'filter_monthyear_added' => $this->request->get['filter_monthyear_added']]);
 
         $data['url'] = htmlspecialchars_decode($this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=14&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL'));
@@ -194,12 +188,6 @@ class ControllerDashboardOrder extends Controller {
         // Total Orders
         $this->load->model('sale/order');
 
-        if ($this->request->isAjax()) {
-            if (!isset($this->request->get['filter_monthyear_added']) || $this->request->get['filter_monthyear_added'] == NULL) {
-                $this->request->get['filter_monthyear_added'] = date('Y-m');
-            }
-        }
-
         $order_total = $this->model_sale_order->getTotalOrders(['filter_order_status' => 1, 'filter_monthyear_added' => $this->request->get['filter_monthyear_added']]);
 
         $data['url'] = htmlspecialchars_decode($this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=1&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL'));
@@ -225,12 +213,6 @@ class ControllerDashboardOrder extends Controller {
 
         // Total Orders
         $this->load->model('sale/order');
-
-        if ($this->request->isAjax()) {
-            if (!isset($this->request->get['filter_monthyear_added']) || $this->request->get['filter_monthyear_added'] == NULL) {
-                $this->request->get['filter_monthyear_added'] = date('Y-m');
-            }
-        }
 
         $order_total = $this->model_sale_order->getTotalOrders(['filter_order_status' => 6, 'filter_monthyear_added' => $this->request->get['filter_monthyear_added']]);
 
@@ -283,12 +265,6 @@ class ControllerDashboardOrder extends Controller {
         // Total Orders
         $this->load->model('sale/order');
 
-        if ($this->request->isAjax()) {
-            if (!isset($this->request->get['filter_monthyear_added']) || $this->request->get['filter_monthyear_added'] == NULL) {
-                $this->request->get['filter_monthyear_added'] = date('Y-m');
-            }
-        }
-
         $order_total = $this->model_sale_order->getTotalOrders(['filter_order_status' => 15, 'filter_monthyear_added' => $this->request->get['filter_monthyear_added']]);
 
         $data['url'] = htmlspecialchars_decode($this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=15&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL'));
@@ -314,12 +290,6 @@ class ControllerDashboardOrder extends Controller {
 
         // Total Orders
         $this->load->model('sale/order');
-
-        if ($this->request->isAjax()) {
-            if (!isset($this->request->get['filter_monthyear_added']) || $this->request->get['filter_monthyear_added'] == NULL) {
-                $this->request->get['filter_monthyear_added'] = date('Y-m');
-            }
-        }
 
         $order_total_today = $this->model_sale_order->getTotalOrders(['filter_order_day' => 'today', 'filter_monthyear_added' => $this->request->get['filter_monthyear_added']]);
         $log = new Log('error.log');
