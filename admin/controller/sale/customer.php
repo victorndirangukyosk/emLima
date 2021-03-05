@@ -791,6 +791,7 @@ class ControllerSaleCustomer extends Controller {
             'filter_account_manager_name' => $filter_account_manager_name,
             'filter_account_manager_id' => $filter_account_manager_id,
             'filter_sub_customer_show' => $filter_sub_customer_show,
+            'filter_monthyear_added' => $this->request->get['filter_monthyear_added'],
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),

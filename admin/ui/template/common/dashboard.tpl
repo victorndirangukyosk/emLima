@@ -347,6 +347,7 @@
                    total = 0; 
                 }
                 $('#collapseExample2 #total_customer_onboarded').html('<span>' + total + '</span>');
+                $('#collapseExample2 #total_customer_onboarded_url').attr("href", json.url);
             },
             error: function (xhr, ajaxOptions, thrownError) {
             }
@@ -362,6 +363,7 @@
             success: function (json) {
                 console.log(json);
                 $('#collapseExample2 #total_customer_registered').html('<span>' + json.total + '</span>');
+                $('#collapseExample2 #total_customer_registered_url').attr("href", json.url);
             },
             error: function (xhr, ajaxOptions, thrownError) {
             }
@@ -377,6 +379,7 @@
             success: function (json) {
                 console.log(json);
                 $('#collapseExample2 #total_customer_pending_approval').html('<span>' + json.total + '</span>');
+                $('#collapseExample2 #total_customer_pending_approval_url').attr("href", json.url);
             },
             error: function (xhr, ajaxOptions, thrownError) {
             }
