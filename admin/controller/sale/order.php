@@ -1200,6 +1200,7 @@ class ControllerSaleOrder extends Controller {
             'filter_date_added' => $filter_date_added,
             'filter_date_added_end' => $filter_date_added_end,
             'filter_date_modified' => $filter_date_modified,
+            'filter_monthyear_added' => $this->request->get['filter_monthyear_added'],
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
