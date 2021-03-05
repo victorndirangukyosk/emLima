@@ -135,7 +135,9 @@
      <a id="update_quantity" class="fa fa-refresh" title="Update product quantity" data-id="<?= $product['key']?>" data-prodorderid="<?= $i?>"><span data-id="<?= $product['key']?>"></span></a>
   </td>-->
   <td class="a-center hidden-table">
-      <p> <a title="Remove item" class="button remove-item" style="background-color: #ec9f4e ;"><span><span><?= $product['key']?></span></span></a></p>
+      <!--<p> <a title="Remove item" class="button remove-item" style="background-color: #ec9f4e ;"><span><span><?= $product['key']?></span></span></a></p>-->
+     <a id="remove_product" class="button remove-item" title="Remove item" data-id="<?= $product['key']?>" style="background-color: #ec9f4e ;" data-prodorderid="<?= $i?>"><span data-id="<?= $product['key']?>"></span></a>
+
   </td>
 
 
@@ -738,12 +740,21 @@ $("cart["+key+"][qty]").removeAttr('disabled');
  });
 
 
-  $("#shopping-cart-table tbody").find("p").click(function (){
+  //$("#shopping-cart-table tbody").find("p").click(function (){
 
       
     
-var key=$(this).text().trim();
-console.log(key);
+           // var key=$(this).text().trim();
+           // console.log(key);
+
+    $(document).delegate('#remove_product', 'click', function() {
+        
+        
+       // console.log($(this).attr('data-id'));
+       // console.log($(this).attr('data-prodorderid'));
+       var key=$(this).attr('data-id');
+           console.log(key);
+         
 
  	$.ajax({
 			url: 'index.php?path=checkout/cart/remove',

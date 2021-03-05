@@ -189,6 +189,10 @@ class ModelSaleCustomer extends Model {
         if (!empty($data['filter_sub_customer_show']) && !empty($data['filter_sub_customer_show']) && $data['filter_sub_customer_show'] == 1) {
             //$implode[] = "parent > 0";
         }
+        
+        if (!empty($data['filter_monthyear_added'])) {
+            $implode[] = "DATE_FORMAT(date_added, '%Y-%m') = '" . $this->db->escape($data['filter_monthyear_added']) . "'";
+        }
 
         if ($implode) {
             $sql .= ' AND ' . implode(' AND ', $implode);
@@ -457,6 +461,10 @@ class ModelSaleCustomer extends Model {
 
         if ($this->user->isAccountManager()) {
             $implode[] = "account_manager_id = '" . (int) $this->user->getId() . "'";
+        }
+        
+        if (!empty($data['filter_monthyear_added'])) {
+            $implode[] = "DATE_FORMAT(date_added, '%Y-%m') = '" . $this->db->escape($data['filter_monthyear_added']) . "'";
         }
 
         if ($implode) {
