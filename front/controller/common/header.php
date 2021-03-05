@@ -1219,6 +1219,8 @@ class ControllerCommonHeader extends Controller
         } else {
             $data['go_to_store'] = $this->url->link('product/store');
         }
+        $data['checkout_summary'] = $this->url->link('checkout/checkoutitems', '', 'SSL');
+
         if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/common/only_header_information.tpl')) {
             return $this->load->view($this->config->get('config_template').'/template/common/only_header_information.tpl', $data);
         } else {

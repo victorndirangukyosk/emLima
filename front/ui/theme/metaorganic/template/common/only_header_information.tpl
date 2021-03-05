@@ -165,6 +165,7 @@
           </div>
         </div>
         <div class="butn setui" style="position:relative; z-index:-1000;">
+        <a href=<?= $checkout_summary ?>>
           <div class="btn btn-default mini-cart-button" role="button" data-toggle="modal"
                   data-target="#store-cart-sides" id="mini-cart-button" 
                   style="margin-right:10px; margin-top:0px; display:flex; flex-flow: column nowrap;">
@@ -175,6 +176,7 @@
                   </div>
               <span class="badge cart-count" style="margin: 4px 0px;"><?= $this->cart->countProducts(); ?> items in cart</span>
             </div>
+            </a>
           </div>
         </div>
       </div>
