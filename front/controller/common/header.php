@@ -203,6 +203,7 @@ class ControllerCommonHeader extends Controller
         } else {
             $data['go_to_store'] = $this->url->link('product/store');
         }
+        $data['checkout_summary'] = $this->url->link('checkout/checkoutitems', '', 'SSL');
         //echo "<pre>";print_r($data);die;
         $data['refer'] = $this->url->link('account/refer', '', 'SSL');
         if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/common/header_help.tpl')) {
@@ -462,6 +463,7 @@ class ControllerCommonHeader extends Controller
         } else {
             $data['class'] = 'common-home';
         }
+        $data['checkout_summary'] = $this->url->link('checkout/checkoutitems', '', 'SSL');
         // echo '<pre>';print_r($data);exit;
         $data['language'] = $this->load->controller('common/language/dropdown');
         $data['contactus_modal'] = $this->load->controller('information/contact');
@@ -873,6 +875,7 @@ class ControllerCommonHeader extends Controller
         } else {
             $data['zipcode'] = '';
         }
+        $data['checkout_summary'] = $this->url->link('checkout/checkoutitems', '', 'SSL');
 
         if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/common/header.tpl')) {
             return $this->load->view($this->config->get('config_template').'/template/common/header.tpl', $data);
