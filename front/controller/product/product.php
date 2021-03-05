@@ -1014,7 +1014,7 @@ class ControllerProductProduct extends Controller
         $product_info = $this->model_assets_product->getProductForPopup($product_store_id, false, $store_id);
         $order_product = $this->model_account_order->getOrderProductsByProductId($edit_order_id, $product_store_id);
 
-        //echo "<pre>";print_r($product_info);die;
+        // echo "<pre>";print_r($order_product);die;
         $data['text_unit'] = $this->language->get('text_unit');
 
         $data['text_product_highlights'] = $this->language->get('text_product_highlights');
@@ -1183,9 +1183,10 @@ class ControllerProductProduct extends Controller
             /*$log->write('product popup');
             $log->write($data['product']);
             $log->write('product popup');*/
-            //echo '<pre>';print_r( $data['product']);exit;
+            // echo '<pre>';print_r( $data);exit;
             if (isset($order_product) && array_key_exists('quantity', $order_product) && $order_product['quantity'] > 0) {
                 $data['product']['qty_in_cart'] = $order_product['quantity'];
+                $data['product']['unitvarient'] = $order_product['unit'];
                 $data['product']['actualCart'] = 1;
                 $data['product']['product_note'] = $order_product['product_note'];
             } else {

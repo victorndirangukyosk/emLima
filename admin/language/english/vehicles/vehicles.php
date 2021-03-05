@@ -1,14 +1,14 @@
 <?php
 
 // Heading
-$_['heading_title'] = 'Drivers';
+$_['heading_title'] = 'Vehicles';
 
 // Text
-$_['text_success'] = 'Success: You have modified drivers!';
-$_['text_list'] = 'Drivers List';
-$_['text_add'] = 'Add Driver';
-$_['text_edit'] = 'Edit Driver';
-$_['text_view'] = 'View Driver';
+$_['text_success'] = 'Success: You have modified vehicles!';
+$_['text_list'] = 'Vehicles List';
+$_['text_add'] = 'Add Vehicle';
+$_['text_edit'] = 'Edit Vehicle';
+$_['text_view'] = 'View Vehicle';
 $_['text_default'] = 'Default';
 $_['text_balance'] = 'Balance';
 $_['text_add_ban_ip'] = 'Add Ban IP';
@@ -20,8 +20,9 @@ $_['entry_dob'] = 'DOB';
 
 $_['entry_gender'] = 'Gender';
 // Column
-$_['column_name'] = 'Driver Name';
-$_['column_email'] = 'E-Mail';
+$_['column_make'] = 'Make';
+$_['column_model'] = 'Model';
+$_['column_registration_number'] = 'Registration Number';
 $_['column_driving_licence'] = 'Driving Licence';
 $_['column_customer_group'] = 'Customer Group';
 $_['column_status'] = 'Status';
@@ -38,10 +39,11 @@ $_['column_action'] = 'Action';
 $_['column_telephone'] = 'Phone No.';
 // Entry
 $_['entry_customer_group'] = 'Customer Group';
-$_['entry_firstname'] = 'First Name';
-$_['entry_lastname'] = 'Last Name';
-$_['entry_email'] = 'E-Mail';
-$_['entry_driving_licence'] = 'Driving Licence';
+$_['entry_make'] = 'Make';
+$_['entry_model'] = 'Model';
+$_['entry_registration_number'] = 'Registration Number';
+$_['entry_registration_date'] = 'Registration Date';
+$_['entry_registration_validity_upto'] = 'Registration Validity Upto';
 
 $_['entry_telephone'] = 'Phone No.';
 $_['entry_fax'] = 'Tax No.';
@@ -75,16 +77,17 @@ $_['help_safe'] = 'Set to true to avoid this customer from being caught by the a
 $_['help_points'] = 'Use minus to remove points';
 
 // Error
-$_['error_name'] = 'Name field required!';
 $_['error_address'] = 'Address field required!';
 $_['error_contact_no'] = 'Contact no field required!';
 $_['error_city_id'] = 'City field required!';
 $_['error_warning'] = 'Warning: Please check the form carefully for errors!';
 $_['error_permission'] = 'Warning: You do not have permission to modify customers!';
 $_['error_exists'] = 'Warning: E-Mail Address is already registered!';
-$_['error_firstname'] = 'First Name must be between 1 and 32 characters!';
-$_['error_lastname'] = 'Last Name must be between 1 and 32 characters!';
-$_['error_email'] = 'E-Mail Address does not appear to be valid!';
+$_['error_make'] = 'Make must be between 1 and 32 characters!';
+$_['error_model'] = 'Model must be between 1 and 32 characters!';
+$_['error_registration_number'] = 'Registration Number must be between 1 and 32 characters!';
+$_['error_registration_date'] = 'Registration Date field required!';
+$_['error_registration_validity_upto'] = 'Registration Validity Upto field required!';
 $_['error_driving_licence'] = 'Driving Licence field required!';
 $_['error_telephone'] = 'Telephone must be between 3 and 32 characters!';
 $_['error_password'] = 'Password must be between 4 and 20 characters!';

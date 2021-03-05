@@ -49,6 +49,9 @@ $_['text_order_processor_delete'] = '<a href="user_id=%d">%s</a> deleted <a href
 $_['text_order_processor_add'] = '<a href="user_id=%d">%s</a> created a new <a href="order_processor_id=%d">order processor</a>.';
 $_['text_orderprocessor_edit'] = '<a href="user_id=%d">%s</a> edited <a href="order_processor_id=%d">order processor</a>.';
 $_['text_order_assigned_to_processor'] =  '<a href="user_id=%d">%s</a> assigned <a href="order_id=%d">order to processor</a>.';
+$_['text_vehicle_edit'] = '<a href="user_id=%d">%s</a> edited a <a href="vehicle_id=%d">vehicle</a>.';
+$_['text_vehicle_add'] = '<a href="user_id=%d">%s</a> created a new <a href="vehicle_id=%d">vehicle</a>.';
+$_['text_vehicle_delete'] = '<a href="user_id=%d">%s</a> deleted a <a href="vehicle_id=%d">vehicle</a>.';
 
 // Column
 $_['column_user'] = 'User';

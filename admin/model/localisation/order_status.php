@@ -106,6 +106,17 @@ class ModelLocalisationOrderStatus extends Model
         }
     }
 
+
+    public function getOrderStatusesbeforeReadyforDelivery()
+    {
+            $query = $this->db->query('SELECT order_status_id, name FROM '.DB_PREFIX."order_status WHERE language_id = '".(int) $this->config->get('config_language_id')."' and order_status_id in(1,14,15) ORDER BY name");
+
+            $order_status_data = $query->rows;
+ 
+            return $order_status_data;
+        
+    }
+
     public function getDeliveryStatuses($data = [])
     {
         $sql = 'SELECT * FROM '.DB_PREFIX.'delivery_statuses';

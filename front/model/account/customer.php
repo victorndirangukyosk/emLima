@@ -233,7 +233,7 @@ class ModelAccountCustomer extends Model {
             $data['gender'] = null;
         }
 //if(isset($data['dob'])) {
-        $this->db->query('UPDATE ' . DB_PREFIX . "customer SET  customer_group_id = '" . (int) $data['customer_group_id'] . "' , firstname = '" . $this->db->escape($data['firstname']) . "', dob = '" . $data['dob'] . "', gender = '" . $this->db->escape($data['gender']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', company_name = '" . $this->db->escape($data['companyname']) . "', company_address = '" . $this->db->escape($data['companyaddress']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']) ? serialize($data['custom_field']) : '') . "' WHERE customer_id = '" . (int) $customer_id . "'");
+        $this->db->query('UPDATE ' . DB_PREFIX . "customer SET  customer_group_id = '" . (int) $data['customer_group_id'] . "' , firstname = '" . $this->db->escape($data['firstname']) . "', dob = '" . $data['dob'] . "', gender = '" . $this->db->escape($data['gender']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', company_name = '" . $this->db->escape($data['companyname']) . "', company_address = '" . $this->db->escape($data['companyaddress']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']) ? serialize($data['custom_field']) : '') . "', modified_by = '" . $this->customer->getId() . "', modifier_role = 'customer', date_modified = NOW() WHERE customer_id = '" . (int) $customer_id . "'");
 //}
 
         $this->trigger->fire('post.customer.edit', $customer_id);
@@ -381,7 +381,7 @@ class ModelAccountCustomer extends Model {
     }
 
     public function getTotalAccountManagersByNameAndId($accountmanagername, $account_manager_id) {
-        $query = $this->db->query('SELECT COUNT(*) AS total FROM ' . DB_PREFIX . "user WHERE user_id = '" . (int) $account_manager_id . "' AND username = '" . $accountmanagername . "' AND user_group_id = '" . (int) $this->config->get('config_account_manager_group_id') . "'");
+        $query = $this->db->query('SELECT COUNT(*) AS total FROM ' . DB_PREFIX . "user WHERE user_id = '" . (int) $account_manager_id . "' AND firstname = '" . $accountmanagername . "' AND user_group_id = '" . (int) $this->config->get('config_account_manager_group_id') . "'");
 
         return $query->row['total'];
     }
@@ -841,8 +841,8 @@ class ModelAccountCustomer extends Model {
         return $query->row;
     }
 
-
     public function editToken($customer_id, $token) {
         $this->db->query('UPDATE ' . DB_PREFIX . "customer SET token = '" . $this->db->escape($token) . "' WHERE customer_id = '" . (int) $customer_id . "'");
     }
+
 }

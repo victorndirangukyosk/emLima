@@ -755,6 +755,19 @@
     ?>
     
     <?php
+    if( $preturn_vehicles != false) {
+    ?>
+    <li id="system">
+        <a class="parent"><i class="fa fa-truck fa-fw"></i> <span>Vehicles</span></a>
+        <ul class="collapse">
+            <li><a href="<?php echo $vehicles_list; ?>">Vehicles</a></li>
+        </ul>
+    </li>
+    <?php 
+    }
+    ?>
+    
+    <?php
     if( $preturn_executives != false) {
     ?>
     <li id="system">

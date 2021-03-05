@@ -232,6 +232,7 @@ class ControllerReportVendorOrders extends Controller
             }
 
             $sub_total = 0;
+            $total = 0;
 
             $totals = $this->model_sale_order->getOrderTotals($result['order_id']);
 
@@ -239,6 +240,10 @@ class ControllerReportVendorOrders extends Controller
             foreach ($totals as $total) {
                 if ('sub_total' == $total['code']) {
                     $sub_total = $total['value'];
+                    //break;
+                }
+                if ('total' == $total['code']) {
+                    $total = $total['value'];
                     break;
                 }
             }
@@ -250,7 +255,8 @@ class ControllerReportVendorOrders extends Controller
                 'order_id' => $result['order_id'],
                 'products' => $products_qty,
                 'subtotal' => $this->currency->format($sub_total),
-                'total' => $this->currency->format($result['total']),
+                'total' => $this->currency->format($total),
+                //'total' => $this->currency->format($result['total']),
             ];
         }
 
@@ -399,15 +405,43 @@ class ControllerReportVendorOrders extends Controller
 
     public function consolidatedOrderSheet()
     {
-        $deliveryDate = $this->request->get['filter_delivery_date'];
 
-        $filter_data = [
-            'filter_delivery_date' => $deliveryDate,
-        ];
 
-        $this->load->model('sale/order');
-        // $results = $this->model_sale_order->getOrders($filter_data);
-        $results = $this->model_sale_order->getNonCancelledOrderswithPending($filter_data);
+        if (isset($this->request->get['filter_delivery_date'])) {
+            $deliveryDate = $this->request->get['filter_delivery_date'];
+
+            
+            $filter_data = [
+                'filter_delivery_date' => $deliveryDate,            
+            ];
+            $this->load->model('sale/order');
+            // $results = $this->model_sale_order->getOrders($filter_data);
+            $results = $this->model_sale_order->getNonCancelledOrderswithPending($filter_data);
+
+        } else {
+            $deliveryDate = null;
+        }
+        //below if ondition for fast orders, not required in sheduler
+        if (isset($this->request->get['filter_order_day'])) {
+            $filter_order_day = $this->request->get['filter_order_day'];
+            if (isset($this->request->get['filter_order_status'])) {
+                $filter_order_status = $this->request->get['filter_order_status'];
+            } else {
+                $filter_order_status = null;
+            }
+            
+            $filter_data = [
+                'filter_order_day' => $filter_order_day,  
+                'filter_order_status' => $filter_order_status, 
+            ];
+            $this->load->model('sale/order');
+           
+            $results = $this->model_sale_order->getFastOrders($filter_data);
+        } else {
+            $filter_order_day = null;
+        }//end of if 
+
+       
         $data = [];
         $unconsolidatedProducts = [];
 

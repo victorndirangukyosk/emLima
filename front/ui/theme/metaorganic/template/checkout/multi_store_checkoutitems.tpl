@@ -118,7 +118,7 @@
 
                     </td> 
                         <td class="a-right movewishlist">
-        <input  type="number" name="cart[<?= $i ?>][qty]" id="cart[<?= $i ?>][qty]" value="<?= $product['quantity']?>" size="4" title="Qty" class="input-text qty" min="1" maxlength="12" style="width:80px !important;disabled">
+        <input  type="number" onkeypress="return validateFloatKeyPresswithVarient(this, event,'<?= $product['unit']?>');" name="cart[<?= $i ?>][qty]" id="cart[<?= $i ?>][qty]" value="<?= $product['quantity']?>" size="4" title="Qty" class="input-text qty" min="1" maxlength="12" style="width:80px !important;disabled">
     </td>
         <td class="a-right hidden-table" >
                     <span class="cart-price">
@@ -369,6 +369,7 @@
 <ul class="checkoutnew">           
 <li>
      <!-- Continue shopping --> 
+                                <?php if($min_order_amount_reached == TRUE) { ?>
                                 <div class="checkout-promocode-form"  >
                                  <div class="form-group">
                                         <span class="input-group-btn"  onclick="setOrderNotes()">
@@ -378,6 +379,16 @@
                                     </div>
                                 
                                 </div>
+                                <?php } else { ?>
+                                <div class="checkout-promocode-form"  >
+                                 <div class="form-group">
+                                        <span class="input-group-btn">
+                                            <a id="button-reward" href="<?php echo $server; ?>" class="btn btn-primary btnsetall" style="width: 100%;height: 100%;" type="button">CONTINUE SHOPPING</a>
+                                        </span>
+                                    </div>
+                                
+                                </div>
+                                <?php } ?>
                             <!-- END Continue shopping --> 
 </li>
 </ul>                
@@ -2376,6 +2387,48 @@ function saveInAddressBook() {
             $('.checkoutDeliveryOptionsChangeButton').hide();
         }
     });
+
+
+
+
+
+    function validateFloatKeyPresswithVarient(el, evt, unitvarient) {
+
+	// $optionvalue=$('.product-variation option:selected').text().trim();
+	$optionvalue=unitvarient;
+	   //alert($optionvalue);
+	if($optionvalue=="Per Kg" || $optionvalue=="Kg" || $optionvalue=="kg")
+	{
+	 var charCode = (evt.which) ? evt.which : event.keyCode;
+	 var number = el.value.split('.');
+	 if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
+		 return false;
+	 }
+	 //just one dot
+	 if(number.length>1 && charCode == 46){
+		 return false;
+	 }
+	 //get the carat position
+	 var caratPos = getSelectionStart(el);
+	 var dotPos = el.value.indexOf(".");
+	 if( caratPos > dotPos && dotPos>-1 && (number[1].length > 1)){
+		 return false;
+	 }
+	 return true;
+	}
+
+	else{
+	 var charCode = (evt.which) ? evt.which : event.keyCode;
+	 if (charCode > 31 &&
+	   (charCode < 48 || charCode > 57))
+	   return false;
+	   else
+   
+   return true;
+	}
+}
+
+
 </script>
 <script src="https://api-test.equitybankgroup.com/js/eazzycheckout.js"></script>
 <script type="text/javascript" src="<?= $base ?>front/ui/theme/mvgv2/js/owl.carousel.min.js"></script>

@@ -57,4 +57,9 @@
         <div class="checkout-invoice">
             <div class="checkout-payable-price"><small>*<?= $cashback_condition; ?></small></div>
         </div>
+        <?php if($min_order_amount_reached == FALSE && $min_order_amount_away != NULL) ?>
+        <div class="checkout-invoice">
+            <div class="checkout-payable-price"><small style="text-transform: none !important;"><?= $min_order_amount_away; ?></small></div>
+        </div>
+        <?php ?>
 </div>

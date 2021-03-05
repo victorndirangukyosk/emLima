@@ -1,9 +1,8 @@
 <?php
 
-class ControllerCommonDashboard extends Controller
-{
-    public function temp()
-    {
+class ControllerCommonDashboard extends Controller {
+
+    public function temp() {
         $this->load->model('catalog/product');
 
         $results = $this->model_catalog_product->getProductIds();
@@ -16,12 +15,11 @@ class ControllerCommonDashboard extends Controller
         die();
     }
 
-    public function index()
-    {
+    public function index() {
         $shopper_group_ids = explode(',', $this->config->get('config_shopper_group_ids'));
 
         if (in_array($this->user->getGroupId(), $shopper_group_ids)) {
-            $this->response->redirect($this->url->link('shopper/request', 'token='.$this->session->data['token'], 'SSL'));
+            $this->response->redirect($this->url->link('shopper/request', 'token=' . $this->session->data['token'], 'SSL'));
         }
 
         $this->load->language('common/dashboard');
@@ -39,12 +37,12 @@ class ControllerCommonDashboard extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
+            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
+            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL'),
         ];
 
         $data['header'] = $this->load->controller('common/header');
@@ -52,18 +50,22 @@ class ControllerCommonDashboard extends Controller
         $data['footer'] = $this->load->controller('common/footer');
 
         $data['token'] = $this->session->data['token'];
+        $filter_date_input = date('Y-m-d');
+        $data['filter_date_input'] = $filter_date_input;
+        
+        $filter_monthyear_input = date('Y-m', strtotime(date('Y').'-'.date('m')));
+        $data['filter_monthyear_input'] = $filter_monthyear_input;
 
         if ($this->user->isVendor()) {
             $this->vendor($data);
-        } elseif($this->user->isAccountManager()) {
+        } elseif ($this->user->isAccountManager()) {
             $this->accountmanager($data);
         } else {
             $this->admin($data);
         }
     }
 
-    private function vendor($data)
-    {
+    private function vendor($data) {
         $data['error_install'] = '';
 
         $data['order'] = $this->load->controller('dashboard/order/vendor');
@@ -79,11 +81,10 @@ class ControllerCommonDashboard extends Controller
 
         $this->response->setOutput($this->load->view('common/vendor_dashboard.tpl', $data));
     }
-    
-    private function accountmanager($data)
-    {
+
+    private function accountmanager($data) {
         $data['error_install'] = '';
-        $data['online_customers_url'] = $this->url->link('report/account_manager_customer_online', 'token='.$this->session->data['token'], 'SSL');
+        $data['online_customers_url'] = $this->url->link('report/account_manager_customer_online', 'token=' . $this->session->data['token'], 'SSL');
         $data['order'] = $this->load->controller('dashboard/order/accountmanager');
         $data['sale'] = $this->load->controller('dashboard/sale/accountmanager');
         $data['customer'] = $this->load->controller('dashboard/customer');
@@ -96,18 +97,17 @@ class ControllerCommonDashboard extends Controller
         $data['recenttabs'] = $this->load->controller('dashboard/recenttabs');
 
         $this->response->setOutput($this->load->view('common/account_manager_dashboard.tpl', $data));
-    }    
+    }
 
-    private function admin($data)
-    {
+    private function admin($data) {
         // Check install directory exists
-        if (is_dir(dirname(DIR_APPLICATION).'/install')) {
+        if (is_dir(dirname(DIR_APPLICATION) . '/install')) {
             $data['error_install'] = $this->language->get('error_install');
         } else {
             $data['error_install'] = '';
         }
-        
-        $data['online_customers_url'] = $this->url->link('report/customer_online', 'token='.$this->session->data['token'], 'SSL');
+
+        $data['online_customers_url'] = $this->url->link('report/customer_online', 'token=' . $this->session->data['token'], 'SSL');
         $data['order'] = $this->load->controller('dashboard/order');
         $data['sale'] = $this->load->controller('dashboard/sale');
         $data['customer'] = $this->load->controller('dashboard/customer');
@@ -122,6 +122,61 @@ class ControllerCommonDashboard extends Controller
         $data['recent'] = $this->load->controller('dashboard/recent');
         $data['recenttabs'] = $this->load->controller('dashboard/recenttabs');
 
+        //OverView       
+        $data['order_received'] = $this->load->controller('dashboard/order/ReceivedOrders');
+        $data['order_processed'] = $this->load->controller('dashboard/order/ProcessedOrders');
+        $data['order_cancelled'] = $this->load->controller('dashboard/order/CancelledOrders');
+        $data['order_incomeplete'] = $this->load->controller('dashboard/order/IncompleteOrders');
+        $data['order_approval_pening'] = $this->load->controller('dashboard/order/ApprovalPendingOrders');
+        $data['order_fast'] = $this->load->controller('dashboard/order/FastOrders');
+        
+        $data['total_customers_onboarded'] = $this->load->controller('dashboard/customer/CustomersOnboarded');
+        $data['total_customers_registered'] = $this->load->controller('dashboard/customer/CustomersRegistered');
+        $data['total_customers_approval_pending'] = $this->load->controller('dashboard/customer/CustomersPendingApproval');
+
+        $data['total_revenue_booked'] = $this->load->controller('dashboard/order/TotalRevenueBookedDashBoard');
+        $data['total_revenue_collected'] = $this->load->controller('dashboard/order/TotalRevenueCollectedDashBoard');
+        $data['total_revenue_pending'] = $this->load->controller('dashboard/order/TotalRevenuePendingDashBoard');
+        
+        //OverView 2 
+        $data['order_received_month'] = $this->load->controller('dashboard/order/ReceivedOrders');
+        $data['order_processed_month'] = $this->load->controller('dashboard/order/ProcessedOrders');
+        $data['order_cancelled_month'] = $this->load->controller('dashboard/order/CancelledOrders');
+        $data['order_incomeplete_month'] = $this->load->controller('dashboard/order/IncompleteOrders');
+        $data['order_approval_pending_month'] = $this->load->controller('dashboard/order/ApprovalPendingOrders');
+        $data['order_fast_month'] = $this->load->controller('dashboard/order/FastOrders');
+
+        $data['onlineorders_month'] = $this->load->controller('dashboard/onlineorders');
+        $data['manualorders_month'] = $this->load->controller('dashboard/manualorders');
+        
+        $data['total_customers_onboarded_month'] = $this->load->controller('dashboard/customer/CustomersOnboarded');
+        $data['total_customers_registered_month'] = $this->load->controller('dashboard/customer/CustomersRegistered');
+        $data['total_customers_approval_pending_month'] = $this->load->controller('dashboard/customer/CustomersPendingApproval');
+
+        $data['total_revenue_booked_month'] = $this->load->controller('dashboard/order/TotalRevenueBookedDashBoard');
+        $data['total_revenue_collected_month'] = $this->load->controller('dashboard/order/TotalRevenueCollectedDashBoard');
+        $data['total_revenue_pending_month'] = $this->load->controller('dashboard/order/TotalRevenuePendingDashBoard');
+        
+        $data['order_received_ystdate'] = $this->load->controller('dashboard/order/DeliveredOrdersByYstDate');
+        $data['total_revenue_booked_ystdate'] = $this->load->controller('dashboard/order/TotalRevenueBookedDashBoardByYstDate');
+        $data['total_customers_registered_ystdate'] = $this->load->controller('dashboard/customer/CustomersRegisteredByYstDate');
+        $data['total_customers_approval_pending_ystdate'] = $this->load->controller('dashboard/customer/CustomersPendingApprovalByYstDate');
+        
+        $data['dashboard_yesterday'] = $this->load->controller('dashboard/order/DashboardYesterday');
+        
+        $data['order_received_todaydate'] = $this->load->controller('dashboard/order/DeliveredOrdersByTodayDate');
+        $data['total_revenue_booked_todaydate'] = $this->load->controller('dashboard/order/TotalRevenueBookedDashBoardByTodayDate');
+        $data['total_customers_registered_todaydate'] = $this->load->controller('dashboard/customer/CustomersRegisteredByTodayDate');
+        $data['total_customers_approval_pending_todaydate'] = $this->load->controller('dashboard/customer/CustomersPendingApprovalByTodayDate');
+     
+        $data['dashboard_today'] = $this->load->controller('dashboard/order/DashboardToday');
+        
+        $data['order_received_tmrwdate'] = $this->load->controller('dashboard/order/DeliveredOrdersByTmrwDate');
+        $data['total_revenue_booked_tmrwdate'] = $this->load->controller('dashboard/order/TotalRevenueBookedDashBoardByTmrwDate');
+   
+        $data['dashboard_tomorrow'] = $this->load->controller('dashboard/order/DashboardTomorrow');
+
+
         // Run currency update
         if ($this->config->get('config_currency_auto')) {
             $this->load->model('localisation/currency');
@@ -131,8 +186,7 @@ class ControllerCommonDashboard extends Controller
         $this->response->setOutput($this->load->view('common/dashboard.tpl', $data));
     }
 
-    public function export_mostpurchased_products_excel($customer_id)
-    {
+    public function export_mostpurchased_products_excel($customer_id) {
         $data = [];
 
         if (isset($this->request->get['customer_id'])) {
@@ -142,4 +196,7 @@ class ControllerCommonDashboard extends Controller
         $this->load->model('report/excel');
         $this->model_report_excel->download_mostpurchased_products_excel($data);
     }
+
+   
+
 }

@@ -143,7 +143,7 @@
               </div>
              </div>
               <div class="col-sm-3" style="margin-top:25px;">
-                 <label><input type="checkbox" name="filter_sub_customer_show" value="<?php echo $filter_sub_customer_show; ?>"> Show Sub Customer </label>
+                  <label><input type="checkbox" name="filter_sub_customer_show[]" value="<?php echo $filter_sub_customer_show; ?>" <?php if($filter_sub_customer_show == 1) { ?> checked="" <?php } ?>> Show Sub Customer </label>
               </div>
               <div class="col-sm-3" style="margin-top:25px;">
               <div class="form-group">
@@ -271,6 +271,15 @@ $('#button-filter').on('click', function() {
   
   if (filter_account_manager_id) {
     url += '&filter_account_manager_id=' + encodeURIComponent(filter_account_manager_id);
+  }
+  
+  var filter_sub_customer_show = 0;
+  
+  if ($('input[name=\'filter_sub_customer_show[]\']').is(':checked')) {
+    filter_sub_customer_show = 1;
+    url += '&filter_sub_customer_show=' + encodeURIComponent(filter_sub_customer_show);
+  } else {
+  url += '&filter_sub_customer_show=' + encodeURIComponent(filter_sub_customer_show);    
   }
   
   var filter_name = $('input[name=\'filter_name\']').val();

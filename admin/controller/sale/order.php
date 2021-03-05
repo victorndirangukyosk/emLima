@@ -887,6 +887,14 @@ class ControllerSaleOrder extends Controller {
                 $url .= '&filter_order_id=' . $this->request->get['filter_order_id'];
             }
 
+            if (isset($this->request->get['filter_order_from_id'])) {
+                $url .= '&filter_order_from_id=' . $this->request->get['filter_order_from_id'];
+            }
+
+            if (isset($this->request->get['filter_order_to_id'])) {
+                $url .= '&filter_order_to_id=' . $this->request->get['filter_order_to_id'];
+            }
+
             if (isset($this->request->get['filter_customer'])) {
                 $url .= '&filter_customer=' . urlencode(html_entity_decode($this->request->get['filter_customer'], ENT_QUOTES, 'UTF-8'));
             }
@@ -963,6 +971,19 @@ class ControllerSaleOrder extends Controller {
         } else {
             $filter_order_id = null;
         }
+
+        if (isset($this->request->get['filter_order_from_id'])) {
+            $filter_order_from_id = $this->request->get['filter_order_from_id'];
+        } else {
+            $filter_order_from_id = null;
+        }
+
+        if (isset($this->request->get['filter_order_to_id'])) {
+            $filter_order_to_id = $this->request->get['filter_order_to_id'];
+        } else {
+            $filter_order_to_id = null;
+        }
+        
 
         if (isset($this->request->get['filter_company'])) {
             $filter_company = $this->request->get['filter_company'];
@@ -1070,6 +1091,16 @@ class ControllerSaleOrder extends Controller {
             $url .= '&filter_order_id=' . $this->request->get['filter_order_id'];
         }
 
+        if (isset($this->request->get['filter_order_from_id'])) {
+            $url .= '&filter_order_from_id=' . $this->request->get['filter_order_from_id'];
+        }
+
+
+        if (isset($this->request->get['filter_order_to_id'])) {
+            $url .= '&filter_order_to_id=' . $this->request->get['filter_order_to_id'];
+        }
+
+
         if (isset($this->request->get['filter_company'])) {
             $url .= '&filter_company=' . urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
         }
@@ -1154,6 +1185,8 @@ class ControllerSaleOrder extends Controller {
         $filter_data = [
             'filter_city' => $filter_city,
             'filter_order_id' => $filter_order_id,
+            'filter_order_from_id' => $filter_order_from_id,
+            'filter_order_to_id' => $filter_order_to_id,
             'filter_customer' => $filter_customer,
             'filter_company' => $filter_company,
             'filter_vendor' => $this->getUserByName($filter_vendor),
@@ -1308,6 +1341,14 @@ class ControllerSaleOrder extends Controller {
         if (isset($this->request->get['filter_order_id'])) {
             $url .= '&filter_order_id=' . $this->request->get['filter_order_id'];
         }
+
+        if (isset($this->request->get['filter_order_from_id'])) {
+            $url .= '&filter_order_from_id=' . $this->request->get['filter_order_from_id'];
+        }
+
+        if (isset($this->request->get['filter_order_to_id'])) {
+            $url .= '&filter_order_to_id=' . $this->request->get['filter_order_to_id'];
+        }
         if (isset($this->request->get['filter_company'])) {
             $url .= '&filter_company=' . urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
         }
@@ -1386,6 +1427,16 @@ class ControllerSaleOrder extends Controller {
         if (isset($this->request->get['filter_order_id'])) {
             $url .= '&filter_order_id=' . $this->request->get['filter_order_id'];
         }
+
+        if (isset($this->request->get['filter_order_from_id'])) {
+            $url .= '&filter_order_from_id=' . $this->request->get['filter_order_from_id'];
+        }
+
+        if (isset($this->request->get['filter_order_to_id'])) {
+            $url .= '&filter_order_to_id=' . $this->request->get['filter_order_to_id'];
+        }
+
+
         if (isset($this->request->get['filter_company'])) {
             $url .= '&filter_company=' . urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
         }
@@ -1458,6 +1509,8 @@ class ControllerSaleOrder extends Controller {
 
         $data['filter_city'] = $filter_city;
         $data['filter_order_id'] = $filter_order_id;
+        $data['filter_order_from_id'] = $filter_order_from_id;
+        $data['filter_order_to_id'] = $filter_order_to_id;
         $data['filter_company'] = $filter_company;
         $data['filter_customer'] = $filter_customer;
         $data['filter_vendor'] = $filter_vendor;
@@ -1626,6 +1679,14 @@ class ControllerSaleOrder extends Controller {
 
         if (isset($this->request->get['filter_order_id'])) {
             $url .= '&filter_order_id=' . $this->request->get['filter_order_id'];
+        }
+
+        if (isset($this->request->get['filter_order_from_id'])) {
+            $url .= '&filter_order_from_id=' . $this->request->get['filter_order_from_id'];
+        }
+
+        if (isset($this->request->get['filter_order_to_id'])) {
+            $url .= '&filter_order_to_id=' . $this->request->get['filter_order_to_id'];
         }
 
         if (isset($this->request->get['filter_customer'])) {
@@ -2187,6 +2248,15 @@ class ControllerSaleOrder extends Controller {
                 $url .= '&filter_order_id=' . $this->request->get['filter_order_id'];
             }
 
+
+            if (isset($this->request->get['filter_order_from_id'])) {
+                $url .= '&filter_order_from_id=' . $this->request->get['filter_order_from_id'];
+            }
+
+            if (isset($this->request->get['filter_order_to_id'])) {
+                $url .= '&filter_order_to_id=' . $this->request->get['filter_order_to_id'];
+            }
+
             if (isset($this->request->get['filter_customer'])) {
                 $url .= '&filter_customer=' . urlencode(html_entity_decode($this->request->get['filter_customer'], ENT_QUOTES, 'UTF-8'));
             }
@@ -2215,11 +2285,7 @@ class ControllerSaleOrder extends Controller {
                 $url .= '&filter_order_status=' . $this->request->get['filter_order_status'];
             }
 
-            // if (isset($this->request->get['filter_order_type'])) {
-            //     $filter_order_type = $this->request->get['filter_order_type'];
-            // } else {
-            //     $filter_order_type = null;
-            // }
+            
 
             if (isset($this->request->get['filter_total'])) {
                 $url .= '&filter_total=' . $this->request->get['filter_total'];
@@ -4642,11 +4708,30 @@ class ControllerSaleOrder extends Controller {
 
         $totalOrdersAmount = 0;
         foreach ($results as $order) {
+            
+            $sub_total = 0;
+            $total = 0;
+
+            $totals = $this->model_sale_order->getOrderTotals($order['order_id']);
+
+            //echo "<pre>";print_r($totals);die;
+            foreach ($totals as $total) {
+                if ('sub_total' == $total['code']) {
+                    $sub_total = $total['value'];
+                    //break;
+                }
+                if ('total' == $total['code']) {
+                    $total = $total['value'];
+                    break;
+                }
+            }
+            
             $data['consolidation'][] = [
                 'delivery_date' => date("d-m-Y", strtotime($order['delivery_date'])),
                 'customer' => $order['customer'], //. ' Order#' . $order['order_id'],
                 'company_name' => $order['company_name'],
-                'amount' => $order['total'],
+                //'amount' => $order['total'],
+                'amount' => $total,
                 'SAP_customer_no' => $order['SAP_customer_no'],
                 'invoice_no' => 'KB' . $order['order_id'],
                 'SAP_document_no' => '',
@@ -4658,15 +4743,30 @@ class ControllerSaleOrder extends Controller {
 
         foreach ($results as $index => $order) {
             $sum = 0;
+            $tran_fee = 0;
             $data['orders'][$index] = $order;
             $orderProducts = $this->getOrderProductsWithVariancesNew($data['orders'][$index]['order_id']);
+            
+            $transaction_fee = $this->model_sale_order->getOrderTransactionFee($data['orders'][$index]['order_id']);
+            if(is_array($transaction_fee) && count($transaction_fee) > 0 && $transaction_fee['order_id'] == $data['orders'][$index]['order_id']) {
+            $tran_fee = $transaction_fee['value']; 
+            
+            /*$log = new Log('error.log');
+            $log->write('transaction_fee');
+            $log->write($tran_fee);
+            $log->write($transaction_fee);
+            $log->write('transaction_fee');*/
+            
+            }
+            
+            
             $data['orders'][$index]['products'] = $orderProducts;
 
             foreach ($orderProducts as $item) {
                 $sum += $item['total_updatedvalue'];
             }
-            $data['consolidation'][$index]['amount'] = $sum;
-            $totalOrdersAmount += $sum;
+            $data['consolidation'][$index]['amount'] = $sum+$tran_fee;
+            $totalOrdersAmount += $sum+$tran_fee;
         }
         $data['consolidation']['total'] = $totalOrdersAmount;
         //   echo "<pre>";print_r($data);die;
@@ -4769,7 +4869,7 @@ class ControllerSaleOrder extends Controller {
         $this->load->model('sale/order');
 
         $orderProducts = [];
-
+        $order_info = $this->model_sale_order->getOrder($order_id);
         if ($this->model_sale_order->hasRealOrderProducts($order_id)) {
             // Order products with weight change
             $originalProducts = $products = $this->model_sale_order->getRealOrderProducts($order_id);
@@ -7553,7 +7653,7 @@ class ControllerSaleOrder extends Controller {
             $this->model_sale_order->UpdateOrderDriverDetails($order_id, $driver_id);
         }
 
-        $this->SendMailToCustomerWithDriverDetails($order_id);
+        //$this->SendMailToCustomerWithDriverDetails($order_id);
         // Add to activity log
         $log = new Log('error.log');
         $this->load->model('user/user_activity');
@@ -7619,7 +7719,8 @@ class ControllerSaleOrder extends Controller {
         if (is_array($order_info) && $order_info != NULL) {
             $this->model_sale_order->UpdateOrderDeliveryExecutiveDetails($order_id, $delivery_executive_id);
         }
-
+        
+        $this->SendMailToCustomerWithDriverDetails($order_id);
         // Add to activity log
         $log = new Log('error.log');
         $this->load->model('user/user_activity');
@@ -7663,14 +7764,14 @@ class ControllerSaleOrder extends Controller {
         $driver_phone = NULL;
         if ($driver_info) {
             $driver_name = $driver_info['firstname'] . ' ' . $driver_info['lastname'];
-            $driver_phone = $driver_info['telephone'];
+            $driver_phone = '+254'.' '.$driver_info['telephone'];
         }
 
         $executive_name = NULL;
         $executive_phone = NULL;
         if ($executive_info) {
             $executive_name = $executive_info['firstname'] . ' ' . $executive_info['lastname'];
-            $executive_phone = $executive_info['telephone'];
+            $executive_phone = '+254'.' '.$executive_info['telephone'];
         }
 
         $customer_info['store_name'] = $store_name;
