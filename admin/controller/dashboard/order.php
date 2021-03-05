@@ -164,7 +164,7 @@ class ControllerDashboardOrder extends Controller {
         
         if(!isset($this->request->get['filter_monthyear_added']) || $this->request->get['filter_monthyear_added'] == NULL)
         {
-        $this->request->get['filter_monthyear_added'] = date('m-Y'); 
+        $this->request->get['filter_monthyear_added'] = date('Y-m'); 
         }
         
         $order_total = $this->model_sale_order->getTotalOrders(['filter_order_status' => 14, 'filter_monthyear_added' => $this->request->get['filter_monthyear_added']]);
@@ -195,7 +195,7 @@ class ControllerDashboardOrder extends Controller {
         
         if(!isset($this->request->get['filter_monthyear_added']) || $this->request->get['filter_monthyear_added'] == NULL)
         {
-        $this->request->get['filter_monthyear_added'] = date('m-Y');;    
+        $this->request->get['filter_monthyear_added'] = date('Y-m');;    
         }
 
         $order_total = $this->model_sale_order->getTotalOrders(['filter_order_status' => 1, 'filter_monthyear_added' => $this->request->get['filter_monthyear_added']]);
@@ -226,7 +226,7 @@ class ControllerDashboardOrder extends Controller {
         
         if(!isset($this->request->get['filter_monthyear_added']) || $this->request->get['filter_monthyear_added'] == NULL)
         {
-        $this->request->get['filter_monthyear_added'] = date('m-Y');;    
+        $this->request->get['filter_monthyear_added'] = date('Y-m');;    
         }
 
         $order_total = $this->model_sale_order->getTotalOrders(['filter_order_status' => 6, 'filter_monthyear_added' => $this->request->get['filter_monthyear_added']]);
@@ -282,7 +282,7 @@ class ControllerDashboardOrder extends Controller {
         
         if(!isset($this->request->get['filter_monthyear_added']) || $this->request->get['filter_monthyear_added'] == NULL)
         {
-        $this->request->get['filter_monthyear_added'] = date('m-Y');;    
+        $this->request->get['filter_monthyear_added'] = date('Y-m');;    
         }
 
         $order_total = $this->model_sale_order->getTotalOrders(['filter_order_status' => 15, 'filter_monthyear_added' => $this->request->get['filter_monthyear_added']]);
@@ -313,7 +313,7 @@ class ControllerDashboardOrder extends Controller {
         
         if(!isset($this->request->get['filter_monthyear_added']) || $this->request->get['filter_monthyear_added'] == NULL)
         {
-        $this->request->get['filter_monthyear_added'] = date('m-Y');;    
+        $this->request->get['filter_monthyear_added'] = date('Y-m');;    
         }
 
         $order_total_today = $this->model_sale_order->getTotalOrders(['filter_order_day' => 'today', 'filter_monthyear_added' => $this->request->get['filter_monthyear_added']]);
