@@ -933,6 +933,7 @@ class ModelReportExcel extends Model {
 
             // $objPHPExcel->getActiveSheet()->mergeCells('A1:C1');
             // $objPHPExcel->getActiveSheet()->mergeCells('A2:C2');
+            $objPHPExcel->getActiveSheet()->mergeCells('A2:D2');
             $objPHPExcel->getActiveSheet()->setCellValue('A1', $sheet_title);
             $objPHPExcel->getActiveSheet()->setCellValue('A2', $sheet_subtitle);
             $objPHPExcel->getActiveSheet()->getStyle('A1:C1')->applyFromArray(['font' => ['bold' => true], 'color' => [
@@ -946,6 +947,8 @@ class ModelReportExcel extends Model {
             ]]);
 
             // $objPHPExcel->getActiveSheet()->mergeCells('A3:C3');
+            $objPHPExcel->getActiveSheet()->mergeCells('A2:D2');
+            $objPHPExcel->getActiveSheet()->mergeCells('A1:D1');
             $objPHPExcel->getActiveSheet()->getStyle('A1:C4')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
             $styleArray = array(
                 'borders' => array(
@@ -1018,15 +1021,15 @@ class ModelReportExcel extends Model {
 
                 // $objPHPExcel->getActiveSheet()->mergeCells('A1:D1');
                 // $objPHPExcel->getActiveSheet()->mergeCells('A2:D2');
-                $objPHPExcel->getActiveSheet()->setCellValue('A1', 'Date of Delivery');
+                $objPHPExcel->getActiveSheet()->setCellValue('A1', 'Date of Delivery : '.$order['delivery_date']);
                 $objPHPExcel->getActiveSheet()->setCellValue('B1', $order['delivery_date']);
-                $objPHPExcel->getActiveSheet()->setCellValue('C1', 'Delivery Timeslot');
-                $objPHPExcel->getActiveSheet()->setCellValue('D1', $order['delivery_timeslot']);
+                //$objPHPExcel->getActiveSheet()->setCellValue('C1', 'Delivery Timeslot');
+                //$objPHPExcel->getActiveSheet()->setCellValue('D1', $order['delivery_timeslot']);
 
 
                 $objPHPExcel->getActiveSheet()->setCellValue('C2', 'Order Status');
                 $objPHPExcel->getActiveSheet()->setCellValue('D2', $order['status']);
-
+                $objPHPExcel->getActiveSheet()->setCellValue('E2', 'Delivery Timeslot :'.$order['delivery_timeslot']);
 
 
                 $objPHPExcel->getActiveSheet()->setCellValue('A2', $sheet_title);
@@ -1047,6 +1050,7 @@ class ModelReportExcel extends Model {
                 $row = 5;
                 $objPHPExcel->getActiveSheet()->mergeCells('A2:B2');
                 $objPHPExcel->getActiveSheet()->mergeCells('A3:E3');
+                $objPHPExcel->getActiveSheet()->mergeCells('A1:E1');
 
                 if ($sheet_subtitle_1 != "" && $sheet_subtitle_1 != null) {
                     $objPHPExcel->getActiveSheet()->mergeCells('A4:E4');
@@ -1085,8 +1089,9 @@ class ModelReportExcel extends Model {
                     // //$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(4, 4)->applyFromArray($title);
                     // //$objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(5, 4)->applyFromArray($title);
                 }
-
+                
                 $objPHPExcel->getActiveSheet()->getStyle('A1:E4')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+                $objPHPExcel->getActiveSheet()->getStyle('A1:E1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 
                 // foreach (range('A', 'L') as $columnID) {
                 //     if($columnID!='B')
@@ -1097,7 +1102,7 @@ class ModelReportExcel extends Model {
                 $objPHPExcel->getActiveSheet()->getColumnDimension("B")->setWidth(11);
                 $objPHPExcel->getActiveSheet()->getColumnDimension("C")->setWidth(20);
                 $objPHPExcel->getActiveSheet()->getColumnDimension("D")->setWidth(25);
-                $objPHPExcel->getActiveSheet()->getColumnDimension("E")->setWidth(10);
+                $objPHPExcel->getActiveSheet()->getColumnDimension("E")->setWidth(25);
 
 
                 foreach ($order['products'] as $product) {
@@ -1194,6 +1199,7 @@ class ModelReportExcel extends Model {
 
             // $objPHPExcel->getActiveSheet()->mergeCells('A1:C1');
             // $objPHPExcel->getActiveSheet()->mergeCells('A2:C2');
+            $objPHPExcel->getActiveSheet()->mergeCells('A2:D2');
             $objPHPExcel->getActiveSheet()->setCellValue('A1', $sheet_title);
             $objPHPExcel->getActiveSheet()->setCellValue('A2', $sheet_subtitle);
             $objPHPExcel->getActiveSheet()->getStyle('A1:C1')->applyFromArray(['font' => ['bold' => true], 'color' => [
@@ -1207,6 +1213,8 @@ class ModelReportExcel extends Model {
             ]]);
 
             // $objPHPExcel->getActiveSheet()->mergeCells('A3:C3');
+            $objPHPExcel->getActiveSheet()->mergeCells('A2:D2');
+            $objPHPExcel->getActiveSheet()->mergeCells('A1:D1');
             $objPHPExcel->getActiveSheet()->getStyle('A1:C4')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
             $styleArray = array(
                 'borders' => array(
@@ -1279,13 +1287,14 @@ class ModelReportExcel extends Model {
 
                 // $objPHPExcel->getActiveSheet()->mergeCells('A1:D1');
                 $objPHPExcel->getActiveSheet()->mergeCells('A2:B2');
-                $objPHPExcel->getActiveSheet()->setCellValue('A1', 'Date of Delivery');
+                $objPHPExcel->getActiveSheet()->setCellValue('A1', 'Date of Delivery : '.$order['delivery_date']);
                 $objPHPExcel->getActiveSheet()->setCellValue('B1', $order['delivery_date']);
-                $objPHPExcel->getActiveSheet()->setCellValue('C1', 'Delivery Timeslot');
-                $objPHPExcel->getActiveSheet()->setCellValue('D1', $order['delivery_timeslot']);
+                //$objPHPExcel->getActiveSheet()->setCellValue('C1', 'Delivery Timeslot');
+                //$objPHPExcel->getActiveSheet()->setCellValue('D1', $order['delivery_timeslot']);
 
                 $objPHPExcel->getActiveSheet()->setCellValue('C2', 'Order Status');
                 $objPHPExcel->getActiveSheet()->setCellValue('D2', $order['status']);
+                $objPHPExcel->getActiveSheet()->setCellValue('E2', 'Delivery Timeslot :'.$order['delivery_timeslot']);
 
                 $objPHPExcel->getActiveSheet()->setCellValue('A2', $sheet_title);
                 $objPHPExcel->getActiveSheet()->setCellValue('A3', $sheet_subtitle);
@@ -1303,7 +1312,9 @@ class ModelReportExcel extends Model {
                         'rgb' => '51AB66',
                 ]]);
                 $row = 5;
+                $objPHPExcel->getActiveSheet()->mergeCells('A2:B2');
                 $objPHPExcel->getActiveSheet()->mergeCells('A3:E3');
+                $objPHPExcel->getActiveSheet()->mergeCells('A1:E1');
 
                 if ($sheet_subtitle_1 != "" && $sheet_subtitle_1 != null) {
                     $objPHPExcel->getActiveSheet()->mergeCells('A4:E4');
@@ -1344,6 +1355,7 @@ class ModelReportExcel extends Model {
                 }
 
                 $objPHPExcel->getActiveSheet()->getStyle('A1:E4')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+                $objPHPExcel->getActiveSheet()->getStyle('A1:E1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 
                 // foreach (range('A', 'L') as $columnID) {
                 //     if($columnID!='B')
@@ -1354,7 +1366,7 @@ class ModelReportExcel extends Model {
                 $objPHPExcel->getActiveSheet()->getColumnDimension("B")->setWidth(11);
                 $objPHPExcel->getActiveSheet()->getColumnDimension("C")->setWidth(20);
                 $objPHPExcel->getActiveSheet()->getColumnDimension("D")->setWidth(25);
-                $objPHPExcel->getActiveSheet()->getColumnDimension("E")->setWidth(10);
+                $objPHPExcel->getActiveSheet()->getColumnDimension("E")->setWidth(25);
 
 
                 foreach ($order['products'] as $product) {
