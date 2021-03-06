@@ -1355,6 +1355,7 @@ class ModelReportExcel extends Model {
                 }
 
                 $objPHPExcel->getActiveSheet()->getStyle('A1:E4')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+                $objPHPExcel->getActiveSheet()->getStyle('A1:E1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 
                 // foreach (range('A', 'L') as $columnID) {
                 //     if($columnID!='B')
