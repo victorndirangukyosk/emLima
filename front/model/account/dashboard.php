@@ -255,6 +255,27 @@ class ModelAccountDashboard extends Model
         return $query->row;
     }
 
+    public function getPurchaseHistorybyDate($product_id, $customer_id,$start_date,$end_date)
+    {
+        // $date = date('Y-m-d', strtotime('-30 day'));
+
+
+        $s_users = [];
+        $sub_users_query = $this->db->query('SELECT c.customer_id FROM '.DB_PREFIX."customer c WHERE parent = '".(int) $customer_id."'");
+        $sub_users = $sub_users_query->rows;
+        $s_users = array_column($sub_users, 'customer_id');
+
+        array_push($s_users, $customer_id);
+        $sub_users_od = implode(',', $s_users);
+        $sub_users_od =rtrim($sub_users_od, ',');
+
+        $sql = 'SELECT count( op.product_id )AS timespurchased,sum(op.quantity) as qunatitypurchased,sum(op.total) as totalvalue,op.unit,op.product_id FROM '.DB_PREFIX.'order_product AS op LEFT JOIN '.DB_PREFIX.'order AS o ON ( op.order_id = o.order_id ) LEFT JOIN  '.DB_PREFIX."product_description AS pd ON (op.general_product_id = pd.product_id)  WHERE pd.language_id = '".(int) $this->config->get('config_language_id')."' AND o.customer_id IN (".$sub_users_od.')  AND o.date_added >= '.$start_date.' AND o.date_added >= '.$end_date.' and o.order_status_id NOT IN (0,6,8,9,10,16) And op.product_id='.$product_id ;
+
+        //    echo "<pre>";print_r($sql);die;
+        $query = $this->db->query($sql);
+
+        return $query->row;
+    }
     public function getrecentordersofcustomer($data = [])
     {
         $customer_id = $data['customer_id'];
