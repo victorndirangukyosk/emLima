@@ -4991,7 +4991,7 @@ class ControllerSaleOrder extends Controller {
             echo $e->getMessage();
         }
 
-        $this->response->setOutput($this->load->view('sale/order_invoice.tpl', $data));
+        //$this->response->setOutput($this->load->view('sale/order_invoice.tpl', $data));
     }
     public function consolidatedCalculationSheet() {
         $deliveryDate = $this->request->get['filter_delivery_date'];
