@@ -1196,6 +1196,39 @@ class ControllerApiCustomerDashboard extends Controller
         return true;
     }
 
+    public function addPurchaseHistory()
+    {
+        $this->load->model('account/dashboard');
+        //echo 'date.timezone ' ;;
+        $data = $this->request->post;
+
+        /// echo '<pre>';print_r($this->request->post);exit;
+
+        if ('POST' == $this->request->server['REQUEST_METHOD']) {
+            $data = $this->model_account_dashboard->getPurchaseHistorybyDate($this->request->post['product_id'], $this->customer->getId(),$this->request->post['start_date'],$this->request->post['end_date']);
+
+            $data['status'] = true;
+
+            $data['totalvalue'] = $this->currency->format($data['totalvalue'], $this->config->get('config_currency'));
+
+            // if ($this->request->isAjax()) 
+            {
+                $this->response->addHeader('Content-Type: application/json');
+                $this->response->setOutput(json_encode($data));
+            }
+        } else {
+            $data['status'] = false;
+
+            if ($this->request->isAjax()) {
+                $this->response->addHeader('Content-Type: application/json');
+                $this->response->setOutput(json_encode($data));
+            }
+        }
+        //  echo '<pre>';print_r($data);exit;
+
+        return true;
+    }
+
     public function getMonths($date1, $date2)
     {
         $time1 = strtotime($date1);
