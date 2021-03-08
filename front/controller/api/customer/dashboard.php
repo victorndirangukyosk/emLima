@@ -1205,17 +1205,23 @@ class ControllerApiCustomerDashboard extends Controller
         /// echo '<pre>';print_r($this->request->post);exit;
 
         if ('POST' == $this->request->server['REQUEST_METHOD']) {
-            $data = $this->model_account_dashboard->getPurchaseHistorybyDate($this->request->post['product_id'], $this->customer->getId(),$this->request->post['start_date'],$this->request->post['end_date']);
+            $data = $this->model_account_dashboard->getPurchaseHistorybyDate($this->request->post['product_id'], $this->customer->getId(),$this->request->post['start_date'],$this->request->post['end_date'],$this->request->post['subuser_id']);
 
-            $data['status'] = true;
+            if($data==null)
+            {
+                $data['message'] = "No data available";
+            }
+            else{
 
             $data['totalvalue'] = $this->currency->format($data['totalvalue'], $this->config->get('config_currency'));
+            }
+            $data['status'] = true;
 
             // if ($this->request->isAjax()) 
-            {
+            // {
                 $this->response->addHeader('Content-Type: application/json');
                 $this->response->setOutput(json_encode($data));
-            }
+            // }
         } else {
             $data['status'] = false;
 
