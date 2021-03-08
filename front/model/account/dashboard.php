@@ -255,19 +255,38 @@ class ModelAccountDashboard extends Model
         return $query->row;
     }
 
-    public function getPurchaseHistorybyDate($product_id, $customer_id,$start_date,$end_date)
+    public function getPurchaseHistorybyDate($product_id, $customer_id,$start_date,$end_date,$subuser_id)
     {
         // $date = date('Y-m-d', strtotime('-30 day'));
 
+        // echo "<pre>";print_r($subuser_id);die; 
 
         $s_users = [];
         $sub_users_query = $this->db->query('SELECT c.customer_id FROM '.DB_PREFIX."customer c WHERE parent = '".(int) $customer_id."'");
         $sub_users = $sub_users_query->rows;
+        // echo "<pre>";print_r($sub_users);die; 
+        if($subuser_id==null || $subuser_id=="")
+        {
         $s_users = array_column($sub_users, 'customer_id');
-
+        // echo "<pre>";print_r($s_users);die; 
         array_push($s_users, $customer_id);
+        //   echo "<pre>";print_r($s_users);die; 
         $sub_users_od = implode(',', $s_users);
         $sub_users_od =rtrim($sub_users_od, ',');
+        }
+        else{
+            //check subuser id passed is accessible to login user
+            if (in_array($subuser_id, $s_users))
+            {
+            // echo "Match found";
+            $sub_users_od =$subuser_id;
+
+            }
+            else
+            {
+                $sub_users_od =null;
+            }
+        }
 
         $sql = 'SELECT count( op.product_id )AS timespurchased,sum(op.quantity) as qunatitypurchased,sum(op.total) as totalvalue,op.unit,op.product_id FROM '.DB_PREFIX.'order_product AS op LEFT JOIN '.DB_PREFIX.'order AS o ON ( op.order_id = o.order_id ) LEFT JOIN  '.DB_PREFIX."product_description AS pd ON (op.general_product_id = pd.product_id)  WHERE pd.language_id = '".(int) $this->config->get('config_language_id')."' AND o.customer_id IN (".$sub_users_od.')  AND o.date_added >= '.$start_date.' AND o.date_added >= '.$end_date.' and o.order_status_id NOT IN (0,6,8,9,10,16) And op.product_id='.$product_id ;
 
