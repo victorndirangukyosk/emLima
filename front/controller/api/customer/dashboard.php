@@ -1483,53 +1483,88 @@ class ControllerApiCustomerDashboard extends Controller
         }
     }
 
-    // public function statementexcel()
-    // {
-    //     $this->load->language('report/customer_statement');
+    public function addStatementexcel()
+    {
+        // $this->load->language('report/customer_statement');
 
-    //     $this->document->setTitle($this->language->get('heading_title'));
+        // $this->document->setTitle($this->language->get('heading_title'));
 
-    //     if (isset($this->request->get['filter_date_start'])) {
-    //         $filter_date_start = $this->request->get['filter_date_start'];
-    //     } else {
-    //         $filter_date_start ="";//  '1990-01-01'default date removed
-    //     }
+        if (isset($this->request->post['filter_date_start'])) {
+            $filter_date_start = $this->request->post['filter_date_start'];
+        } else {
+            $filter_date_start ="";//  '1990-01-01'default date removed
+        }
 
-    //     if (isset($this->request->get['filter_date_end'])) {
-    //         $filter_date_end = $this->request->get['filter_date_end'];
-    //     } else {
-    //         $filter_date_end = date('Y-m-d');
-    //     }
+        if (isset($this->request->post['filter_date_end'])) {
+            $filter_date_end = $this->request->post['filter_date_end'];
+        } else {
+            $filter_date_end = date('Y-m-d');
+        }
 
-    //     if (isset($this->request->get['filter_order_status_id'])) {
-    //         $filter_order_status_id = $this->request->get['filter_order_status_id'];
-    //     } else {
-    //         $filter_order_status_id = 0;
-    //     }
+        if (isset($this->request->post['filter_order_status_id'])) {
+            $filter_order_status_id = $this->request->post['filter_order_status_id'];
+        } else {
+            $filter_order_status_id = 0;
+        }
 
-    //     if (isset($this->request->get['filter_customer'])) {
-    //         $filter_customer = $this->request->get['filter_customer'];
-    //     } else {
-    //         $filter_customer = 0;
-    //     }
+        if (isset($this->request->post['filter_customer'])) {
+            $filter_customer = $this->request->post['filter_customer'];
+        } else {
+            $filter_customer = 0;
+        }
 
-    //     if (isset($this->request->get['filter_company'])) {
-    //         $filter_company = $this->request->get['filter_company'];
-    //     } else {
-    //         $filter_company = 0;
-    //     }
+        if (isset($this->request->post['filter_company'])) {
+            $filter_company = $this->request->post['filter_company'];
+        } else {
+            $filter_company = 0;
+        }
 
-    //     $filter_data = [
-    //         'filter_date_start' => $filter_date_start,
-    //         'filter_date_end' => $filter_date_end,
-    //         'filter_order_status_id' => $filter_order_status_id,
-    //         'filter_customer' => $filter_customer,
-    //         'filter_company' => $filter_company,
-    //     ];
 
-    //     $this->load->model('report/excel');
-    //     $this->model_report_excel->download_customer_statement_excel($filter_data);
-    // }
+        
+
+        $filter_data = [
+            'filter_date_start' => $filter_date_start,
+            'filter_date_end' => $filter_date_end,
+            'filter_order_status_id' => $filter_order_status_id,
+            'filter_customer' => $filter_customer,
+            'filter_company' => $filter_company,
+        ];
+
+
+
+        if ('' != $filter_customer || '' != $filter_company) {
+ 
+            $data['check'] =  $this->load->controller('common/check/checkValidCustomer',array(null,$filter_customer,$filter_company));;
+           
+           
+            // echo "<pre>";print_r($data['check'] );die;
+            if($data['check']=="true")
+            {
+                $this->load->model('report/excel');
+                $this->model_report_excel->download_customer_statement_excel($filter_data);
+            }
+            else
+            {
+                $json['status'] = 500;
+                $json['data'] = [];
+                $json['message'] = "Unauthorized to access the requested data";
+                $this->response->addHeader('Content-Type: application/json');
+                $this->response->setOutput(json_encode($json));
+                return;
+            }
+        } else {
+            $json['status'] = 200;
+            $json['message'] = "No Data Available";
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($json));
+            return;
+        }
+        $json['status'] = 200;
+        $json['message'] = "Downloaded Successfully";
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+      
+    }
 
 
     // public function orderexcel()
