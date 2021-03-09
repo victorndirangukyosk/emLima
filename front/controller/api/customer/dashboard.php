@@ -1567,6 +1567,110 @@ class ControllerApiCustomerDashboard extends Controller
     }
 
 
+    public function addConsolidatedOrderProduct() {
+        $orderid = $this->request->post['order_id'];
+        $customer = $this->request->post['customer'];
+        $company = $this->request->post['company'];
+        $date = $this->request->post['date'];
+
+        $data = [];
+        $data['consolidation'][] = [
+            'orderid' => $orderid,
+            'customer' => $customer,
+            'company' => $company,
+            'date' => $date,
+        ];
+
+
+
+        if ('' != $company || '' != $customer) {
+ 
+            $data['check'] =  $this->load->controller('common/check/checkValidCustomer',array(null,$customer,$company));;
+           
+           
+            // echo "<pre>";print_r($data['check'] );die;
+            if($data['check']=="true")
+            {
+                $orderProducts = $this->getOrderProductsWithVariancesNew($orderid);
+
+            }
+            else
+            {
+                $json['status'] = 500;
+                $json['data'] = [];
+                $json['message'] = "Unauthorized to access the requested data";
+                $this->response->addHeader('Content-Type: application/json');
+                $this->response->setOutput(json_encode($json));
+                return;
+            }
+        } else {
+            $json['status'] = 200;
+            $json['message'] = "No Data Available";
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($json));
+            return;
+        }
+
+
+        $data['products'] = $orderProducts;
+        $sum = 0;
+        foreach ($orderProducts as $item) {
+            $sum += $item['total_updatedvalue'];
+        }
+        // $data['consolidation'][$index]['amount'] = $sum;
+        //   $totalOrdersAmount += $sum;
+        // $data['consolidation']['total'] = $totalOrdersAmount;
+
+        $this->load->model('report/excel');
+        $this->model_report_excel->download_order_products_excel($data);
+    }
+
+    public function getOrderProductsWithVariancesNew($order_id) {
+        $this->load->model('sale/order');
+
+        $orderProducts = [];
+        $order_info = $this->model_sale_order->getOrder($order_id);
+        if ($this->model_sale_order->hasRealOrderProducts($order_id)) {
+            // Order products with weight change
+            $originalProducts = $products = $this->model_sale_order->getRealOrderProducts($order_id);
+        } else {
+            // Products as the user ordered them on the platform
+            $originalProducts = $products = $this->model_sale_order->getOrderProducts($order_id);
+        }
+
+        foreach ($originalProducts as $originalProduct) {
+            // $totalUpdated = $originalProduct['price'] * $originalProduct['quantity']
+            //     + ($this->config->get('config_tax') ? $originalProduct['tax'] : 0);
+            //in admin orders screen, directly showing total
+            $totalUpdated = $originalProduct['total'];
+
+            $uomOrderedWithoutApproximations = trim(explode('(', $originalProduct['unit'])[0]);
+
+            $orderProducts[] = [
+                'order_product_id' => $originalProduct['order_product_id'],
+                'product_id' => $originalProduct['product_id'],
+                'vendor_id' => $originalProduct['vendor_id'],
+                'store_id' => $originalProduct['store_id'],
+                'name' => $originalProduct['name'],
+                'unit' => $uomOrderedWithoutApproximations,
+                'product_type' => $originalProduct['product_type'],
+                'model' => $originalProduct['model'],
+                'quantity' => $originalProduct['quantity'],
+                'quantity_updated' => $originalProduct['quantity'],
+                'unit_updated' => $uomOrderedWithoutApproximations,
+                'price' => $this->currency->format($originalProduct['price'] + ($this->config->get('config_tax') ? $originalProduct['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
+                'total' => $this->currency->format($originalProduct['total'] + ($this->config->get('config_tax') ? ($originalProduct['tax'] * $originalProduct['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
+                'total_updated' => $this->currency->format($totalUpdated, $order_info['currency_code'], $order_info['currency_value']),
+                'total_updated_currency' => trim(explode(' ', $this->currency->format($totalUpdated, $order_info['currency_code'], $order_info['currency_value']))[0]),
+                'total_updated_value' => trim(explode(' ', $this->currency->format($totalUpdated, $order_info['currency_code'], $order_info['currency_value']))[1]),
+                'total_updatedvalue' => $totalUpdated,
+            ];
+        }
+
+        return $orderProducts;
+    }
+
+
     // public function orderexcel()
     // {
     //     $this->load->language('report/customer_order');
