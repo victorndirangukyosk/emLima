@@ -611,6 +611,19 @@ class ModelSaleOrder extends Model
         return false;
     }
 
+    public function getRealOrderProducts($order_id, $store_id = 0) {
+        $sql = 'SELECT * FROM ' . DB_PREFIX . "real_order_product WHERE order_id = '" . (int) $order_id . "'";
+
+        if ($store_id) {
+            $sql .= " AND store_id='" . $store_id . "'";
+        }
+
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
+
+
     public function getRealOrderProductsItems($order_id, $store_id = 0)
     {
         $qty = 0;
