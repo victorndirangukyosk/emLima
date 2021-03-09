@@ -4983,8 +4983,8 @@ class ControllerSaleOrder extends Controller {
             $mpdf->WriteHTML($stylesheet3, \Mpdf\HTMLParserMode::HEADER_CSS);
             $mpdf->WriteHTML($this->load->view('sale/order_invoice_mpdf.tpl', $data['orders'][0]), \Mpdf\HTMLParserMode::HTML_BODY);
             $mpdf->WriteHTML($this->load->view('sale/order_invoice_mpdf.tpl', $data['orders'][0]));
-            $mpdf->Output();
-            $mpdf->Output("KwikBasket Invoice # " . $order_id . ".pdf", 'D');
+            //$mpdf->Output();
+            return $mpdf->Output("KwikBasket Invoice # " . $order_id . ".pdf", 'D')->setContentType('application/pdf');
         } catch (\Mpdf\MpdfException $e) { // Note: safer fully qualified exception 
             //       name used for catch
             // Process the exception, log, print etc.
