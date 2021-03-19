@@ -18,7 +18,7 @@ class Response
 
     public function redirect($url, $status = 302)
     {
-        header('Location: '.str_replace(['&amp;', "\n", "\r"], ['&', '', ''], $url), true, $status);
+        header('Location: ' . str_replace(['&amp;', "\n", "\r"], ['&', '', ''], $url), true, $status);
         exit();
     }
 
@@ -29,9 +29,9 @@ class Response
 
     public function setOutput($output)
     {
-        $this->headers[] = 'Access-Control-Allow-Origin: *';
-        $this->headers[] = 'Access-Control-Allow-Methods: GET,PUT,POST,DELETE,PATCH,OPTIONS';
-        $this->headers[] = 'Access-Control-Allow-Headers: *';
+        $this->addHeader('Access-Control-Allow-Origin: *');
+        $this->addHeader('Access-Control-Allow-Methods: GET,PUT,POST,DELETE,PATCH,OPTIONS');
+        $this->addHeader('Access-Control-Allow-Headers: *');
         $this->output = $output;
     }
 
@@ -66,7 +66,7 @@ class Response
             return $data;
         }
 
-        $this->addHeader('Content-Encoding: '.$encoding);
+        $this->addHeader('Content-Encoding: ' . $encoding);
 
         return gzencode($data, (int) $level);
     }
