@@ -603,6 +603,7 @@
 </head>
 
 <body>
+    <?php foreach($orders as $order) { ?>
     <div class="header">
         <div class="row">
             <div class="company-info">
@@ -618,21 +619,40 @@
             </div>
 
             <div class="invoice-info text-right">
-                <p class="text-header font-bold">TAX INVOICE</p>
-                <p class="text-header">07/03/2021</p>
+                <p class="text-header font-bold">TAX INVOICE
+                    <?php if($order['invoice_no']) { ?>
+                    #
+                    <?= $order['invoice_no'] ?>
+                    <?php } ?>
+                </p>
+                <p class="text-header">
+                    <?= $order['delivery_date'] ?>
+                </p>
             </div>
         </div>
 
         <div class="row">
             <div class="customer-info">
-                <p class="mb-3 text-header font-bold">TO Djital</p>
+                <p class="mb-3 text-header font-bold">TO
+                    <?= $order['customer_company_name'] ?>
+                </p>
                 <ul>
-                    <li>Product Team KwikBasket</li>
-                    <li>949197135</li>
-                    <li>stalluri@technobraingroup.com</li>
+                    <li>
+                        <?= $order['shipping_name'] ?>
+                    </li>
+                    <li>
+                        <?= $order['telephone'] ?>
+                    </li>
+                    <li>
+                        <?= $order['email'] ?>
+                    </li>
                     <li class="mt-3 font-bold">
-                        <p>Techno Brain</p>
-                        <p>D5, Muthangari Suites, , Tyme Arcade, Tyme Arcade, Magadi Rd, Ongata Rongai, Kenya</p>
+                        <p>
+                            <?= $order['shipping_name_original'] ?>
+                        </p>
+                        <p>
+                            <?= $order['shipping_address'] ?>
+                        </p>
                     </li>
                 </ul>
             </div>
@@ -640,11 +660,23 @@
             <div class="order-info text-right">
                 <p class="mb-3 font-bold text-subheader">ORDER INFO</p>
                 <ul>
-                    <li>Order # 2806</li>
-                    <li>P.O. NUMBER PO123</li>
-                    <li>Placed On 27/02/2021 10:12:19</li>
-                    <li>Delivered On 07/03/2021</li>
-                    <li>Standard Delivery</li>
+                    <li>Order #
+                        <?= $order['order_id'] ?>
+                    </li>
+                    <?php if($order['po_number']) { ?>
+                    <li>P.O. NUMBER
+                        <?= $order['po_number'] ?>
+                    </li>
+                    <?php } ?>
+                    <li>Placed On
+                        <?= $order['date_added'] ?>
+                    </li>
+                    <li>Delivered On
+                        <?= $order['delivery_date'] ?>
+                    </li>
+                    <li>
+                        <?= $order['shipping_method'] ?>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -661,91 +693,47 @@
                 </tr>
             </thead>
             <tbody>
+                <?php foreach($order['products'] as $product) { ?>
                 <tr>
-                    <td>40593</td>
-                    <td>Apples Green (Granny Smith)</td>
-                    <td class="text-center">3.30 Kg</td>
-                    <td class="text-right">KES 230.00</td>
-                    <td class="text-right">KES 759.00</td>
+                    <td>
+                        <?= $product['product_id'] ?>
+                    </td>
+                    <td>
+                        <?= $product['name'] ?>
+                    </td>
+                    <td class="text-center">
+                        <?= $product['quantity'] ?>
+                        <?= $product['unit'] ?>
+                    </td>
+                    <td class="text-right">
+                        <?= $product['price'] ?>
+                    </td>
+                    <td class="text-right">
+                        <?= $product['total'] ?>
+                    </td>
                 </tr>
-                <tr>
-                    <td>40593</td>
-                    <td>Apples Green (Granny Smith)</td>
-                    <td class="text-center">3.30 Kg</td>
-                    <td class="text-right">KES 230.00</td>
-                    <td class="text-right">KES 759.00</td>
-                </tr>
-                <tr>
-                    <td>40593</td>
-                    <td>Apples Green (Granny Smith)</td>
-                    <td class="text-center">3.30 Kg</td>
-                    <td class="text-right">KES 230.00</td>
-                    <td class="text-right">KES 759.00</td>
-                </tr>
-                <tr>
-                    <td>40593</td>
-                    <td>Apples Green (Granny Smith)</td>
-                    <td class="text-center">3.30 Kg</td>
-                    <td class="text-right">KES 230.00</td>
-                    <td class="text-right">KES 759.00</td>
-                </tr>
-                <tr>
-                    <td>40593</td>
-                    <td>Apples Green (Granny Smith)</td>
-                    <td class="text-center">3.30 Kg</td>
-                    <td class="text-right">KES 230.00</td>
-                    <td class="text-right">KES 759.00</td>
-                </tr>
-                <tr>
-                    <td>40593</td>
-                    <td>Apples Green (Granny Smith)</td>
-                    <td class="text-center">3.30 Kg</td>
-                    <td class="text-right">KES 230.00</td>
-                    <td class="text-right">KES 759.00</td>
-                </tr>
-                <tr>
-                    <td>40593</td>
-                    <td>Apples Green (Granny Smith)</td>
-                    <td class="text-center">3.30 Kg</td>
-                    <td class="text-right">KES 230.00</td>
-                    <td class="text-right">KES 759.00</td>
-                </tr>
-                <tr>
-                    <td>40593</td>
-                    <td>Apples Green (Granny Smith)</td>
-                    <td class="text-center">3.30 Kg</td>
-                    <td class="text-right">KES 230.00</td>
-                    <td class="text-right">KES 759.00</td>
-                </tr>
-                <tr>
-                    <td>40593</td>
-                    <td>Apples Green (Granny Smith)</td>
-                    <td class="text-center">3.30 Kg</td>
-                    <td class="text-right">KES 230.00</td>
-                    <td class="text-right">KES 759.00</td>
-                </tr>
+                <?php } ?>
+
+                <?php foreach($order['totals'] as $total) { ?>
                 <tr class="font-bold text-right">
-                    <td colspan="4">Sub-Total</td>
-                    <td>KES 13,889.00</td>
+                    <td colspan="4">
+                        <?= $total['title'] ?>
+                    </td>
+                    <td>
+                        <?= $total['text'] ?>
+                    </td>
                 </tr>
-                <tr class="font-bold text-right">
-                    <td colspan="4">Standard Delivery</td>
-                    <td>KES 0.00</td>
-                </tr>
-                <tr class="font-bold text-right">
-                    <td colspan="4">Transaction-Fee</td>
-                    <td>KES 0.00</td>
-                </tr>
-                <tr class="font-bold text-right">
-                    <td colspan="4">Total</td>
-                    <td>KES 13,889.00</td>
-                </tr>
+                <?php } ?>
             </tbody>
         </table>
 
         <p class="mt-4">
+            <?php foreach($order['totals'] as $total) { ?>
+            <?php if($total['title'] == 'Total') { ?>
             <span class="font-bold">Total In Words</span>
-            Thirteen Thousand Eight Hundred And Eighty Nine Kenyan Shillings
+            <?= $total['amount_in_words']?>
+            <?php } ?>
+            <?php } ?>
         </p>
 
         <div class="row mt-4">
@@ -768,13 +756,16 @@
                     <li>Select Lipa Na M-PESA</li>
                     <li>Select Pay Bill</li>
                     <li>Enter <span class="font-bold">4029127</span></li>
-                    <li>Enter <span class="font-bold">KB2806</span> as the account number</li>
+                    <li>Enter <span class="font-bold">KB
+                            <?= $order['order_id'] ?>
+                        </span> as the account number</li>
                     <li>Enter total amount</li>
                     <li>Enter M-PESA Pin</li>
                 </ul>
             </div>
         </div>
     </div>
+    <?php } ?>
 </body>
 
 </html>
