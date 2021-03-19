@@ -603,7 +603,6 @@
 </head>
 
 <body>
-    <?php foreach($orders as $order) { ?>
     <div class="header">
         <div class="row">
             <div class="company-info">
@@ -620,13 +619,13 @@
 
             <div class="invoice-info text-right">
                 <p class="text-header font-bold mb-1">TAX INVOICE
-                    <?php if($order['invoice_no']) { ?>
+                    <?php if($invoice_no) { ?>
                     #
-                    <?= $order['invoice_no'] ?>
+                    <?= $invoice_no ?>
                     <?php } ?>
                 </p>
                 <p class="text-header">
-                    <?= $order['delivery_date'] ?>
+                    <?= $delivery_date ?>
                 </p>
             </div>
         </div>
@@ -634,24 +633,24 @@
         <div class="row">
             <div class="customer-info">
                 <p class="mb-3 text-header font-bold">TO
-                    <?= $order['customer_company_name'] ?>
+                    <?= $customer_company_name ?>
                 </p>
                 <ul>
                     <li>
-                        <?= $order['shipping_name'] ?>
+                        <?= $shipping_name ?>
                     </li>
                     <li>
-                        <?= $order['telephone'] ?>
+                        <?= $telephone ?>
                     </li>
                     <li>
-                        <?= $order['email'] ?>
+                        <?= $email ?>
                     </li>
                     <li class="mt-3 font-bold">
                         <p>
-                            <?= $order['shipping_name_original'] ?>
+                            <?= $shipping_name_original ?>
                         </p>
                         <p>
-                            <?= $order['shipping_address'] ?>
+                            <?= $shipping_address ?>
                         </p>
                     </li>
                 </ul>
@@ -661,21 +660,21 @@
                 <p class="mb-3 font-bold text-subheader">ORDER INFO</p>
                 <ul>
                     <li>Order #
-                        <?= $order['order_id'] ?>
+                        <?= $order_id ?>
                     </li>
-                    <?php if($order['po_number']) { ?>
+                    <?php if($po_number) { ?>
                     <li>P.O. NUMBER
-                        <?= $order['po_number'] ?>
+                        <?= $po_number ?>
                     </li>
                     <?php } ?>
                     <li>Placed On
-                        <?= $order['date_added'] ?>
+                        <?= $date_added ?>
                     </li>
                     <li>Delivered On
-                        <?= $order['delivery_date'] ?>
+                        <?= $delivery_date ?>
                     </li>
                     <li>
-                        <?= $order['shipping_method'] ?>
+                        <?= $shipping_method ?>
                     </li>
                 </ul>
             </div>
@@ -693,7 +692,7 @@
                 </tr>
             </thead>
             <tbody>
-                <?php foreach($order['products'] as $product) { ?>
+                <?php foreach($products as $product) { ?>
                 <tr>
                     <td>
                         <?= $product['product_id'] ?>
@@ -714,7 +713,7 @@
                 </tr>
                 <?php } ?>
 
-                <?php foreach($order['totals'] as $total) { ?>
+                <?php foreach($totals as $total) { ?>
                 <tr class="font-bold text-right">
                     <td colspan="4">
                         <?= $total['title'] ?>
@@ -728,7 +727,7 @@
         </table>
 
         <p class="mt-4">
-            <?php foreach($order['totals'] as $total) { ?>
+            <?php foreach($totals as $total) { ?>
             <?php if($total['title'] == 'Total') { ?>
             <span class="font-bold">Total In Words</span>
             <?= $total['amount_in_words']?>
@@ -757,7 +756,7 @@
                     <li>Select Pay Bill</li>
                     <li>Enter <span class="font-bold">4029127</span></li>
                     <li>Enter <span class="font-bold">KB
-                            <?= $order['order_id'] ?>
+                            <?= $order_id ?>
                         </span> as the account number</li>
                     <li>Enter total amount</li>
                     <li>Enter M-PESA Pin</li>
@@ -765,7 +764,6 @@
             </div>
         </div>
     </div>
-    <?php } ?>
 </body>
 
 </html>
