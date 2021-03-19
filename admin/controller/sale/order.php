@@ -4775,7 +4775,6 @@ class ControllerSaleOrder extends Controller
         $data['text_cpf_number'] = $this->language->get('text_cpf_number');
 
         $this->load->model('sale/order');
-        $this->load->model('tool/image');
 
         $this->load->model('setting/setting');
 
@@ -4855,7 +4854,7 @@ class ControllerSaleOrder extends Controller
                     $store_tax = '';
                 }
 
-                $data['store_logo'] = $this->model_tool_image->resize($store_data['logo'], 300, 300);
+
                 $data['store_name'] = $store_data['name'];
 
                 if ($order_info['invoice_no']) {
@@ -5000,15 +4999,17 @@ class ControllerSaleOrder extends Controller
 
         // echo "<pre>";print_r($data);die;
         try {
-            $log = new Log('error.log');
-            $log->write(DIR_TEMPLATE);
             require_once DIR_ROOT . '/vendor/autoload.php';
-
-            $pdf = new \mikehaertl\wkhtmlto\Pdf;
-            $template = $this->load->view('sale/order_invoice_pdf.tpl', $data);
-            $pdf->addPage($template);
-
-            $pdf->send('invoice.pdf');
+            if (count($data['orders']) == 1) {
+                $pdf = new \mikehaertl\wkhtmlto\Pdf;
+                $template = $this->load->view('sale/order_invoice_pdf.tpl', $data);
+                $pdf->addPage($template);
+                $res = $pdf->send("KwikBasket Invoice #" . $data['orders'][0]['order_id'] . ".pdf");
+                echo $res;
+            } else {
+                echo "Multiple invoices, should download them in zip file";
+                die;
+            }
         } catch (Exception $e) {
             echo $e->getMessage();
         }
