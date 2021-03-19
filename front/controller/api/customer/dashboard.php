@@ -1196,6 +1196,45 @@ class ControllerApiCustomerDashboard extends Controller
         return true;
     }
 
+    public function addPurchaseHistory()
+    {
+        $this->load->model('account/dashboard');
+        //echo 'date.timezone ' ;;
+        $data = $this->request->post;
+
+        /// echo '<pre>';print_r($this->request->post);exit;
+
+        if ('POST' == $this->request->server['REQUEST_METHOD']) {
+            $data = $this->model_account_dashboard->getPurchaseHistorybyDate($this->request->post['product_id'], $this->customer->getId(),$this->request->post['start_date'],$this->request->post['end_date'],$this->request->post['subuser_id']);
+
+            if($data==null)
+            {
+                $data['message'] = "No data available";
+            }
+            else{
+
+            $data['totalvalue'] = $this->currency->format($data['totalvalue'], $this->config->get('config_currency'));
+            }
+            $data['status'] = true;
+
+            // if ($this->request->isAjax()) 
+            // {
+                $this->response->addHeader('Content-Type: application/json');
+                $this->response->setOutput(json_encode($data));
+            // }
+        } else {
+            $data['status'] = false;
+
+            if ($this->request->isAjax()) {
+                $this->response->addHeader('Content-Type: application/json');
+                $this->response->setOutput(json_encode($data));
+            }
+        }
+        //  echo '<pre>';print_r($data);exit;
+
+        return true;
+    }
+
     public function getMonths($date1, $date2)
     {
         $time1 = strtotime($date1);
@@ -1444,53 +1483,192 @@ class ControllerApiCustomerDashboard extends Controller
         }
     }
 
-    // public function statementexcel()
-    // {
-    //     $this->load->language('report/customer_statement');
+    public function addStatementexcel()
+    {
+        // $this->load->language('report/customer_statement');
 
-    //     $this->document->setTitle($this->language->get('heading_title'));
+        // $this->document->setTitle($this->language->get('heading_title'));
 
-    //     if (isset($this->request->get['filter_date_start'])) {
-    //         $filter_date_start = $this->request->get['filter_date_start'];
-    //     } else {
-    //         $filter_date_start ="";//  '1990-01-01'default date removed
-    //     }
+        if (isset($this->request->post['filter_date_start'])) {
+            $filter_date_start = $this->request->post['filter_date_start'];
+        } else {
+            $filter_date_start ="";//  '1990-01-01'default date removed
+        }
 
-    //     if (isset($this->request->get['filter_date_end'])) {
-    //         $filter_date_end = $this->request->get['filter_date_end'];
-    //     } else {
-    //         $filter_date_end = date('Y-m-d');
-    //     }
+        if (isset($this->request->post['filter_date_end'])) {
+            $filter_date_end = $this->request->post['filter_date_end'];
+        } else {
+            $filter_date_end = date('Y-m-d');
+        }
 
-    //     if (isset($this->request->get['filter_order_status_id'])) {
-    //         $filter_order_status_id = $this->request->get['filter_order_status_id'];
-    //     } else {
-    //         $filter_order_status_id = 0;
-    //     }
+        if (isset($this->request->post['filter_order_status_id'])) {
+            $filter_order_status_id = $this->request->post['filter_order_status_id'];
+        } else {
+            $filter_order_status_id = 0;
+        }
 
-    //     if (isset($this->request->get['filter_customer'])) {
-    //         $filter_customer = $this->request->get['filter_customer'];
-    //     } else {
-    //         $filter_customer = 0;
-    //     }
+        if (isset($this->request->post['filter_customer'])) {
+            $filter_customer = $this->request->post['filter_customer'];
+        } else {
+            $filter_customer = 0;
+        }
 
-    //     if (isset($this->request->get['filter_company'])) {
-    //         $filter_company = $this->request->get['filter_company'];
-    //     } else {
-    //         $filter_company = 0;
-    //     }
+        if (isset($this->request->post['filter_company'])) {
+            $filter_company = $this->request->post['filter_company'];
+        } else {
+            $filter_company = 0;
+        }
 
-    //     $filter_data = [
-    //         'filter_date_start' => $filter_date_start,
-    //         'filter_date_end' => $filter_date_end,
-    //         'filter_order_status_id' => $filter_order_status_id,
-    //         'filter_customer' => $filter_customer,
-    //         'filter_company' => $filter_company,
-    //     ];
 
-    //     $this->load->model('report/excel');
-    //     $this->model_report_excel->download_customer_statement_excel($filter_data);
-    // }
+        
+
+        $filter_data = [
+            'filter_date_start' => $filter_date_start,
+            'filter_date_end' => $filter_date_end,
+            'filter_order_status_id' => $filter_order_status_id,
+            'filter_customer' => $filter_customer,
+            'filter_company' => $filter_company,
+        ];
+
+
+
+        if ('' != $filter_customer || '' != $filter_company) {
+ 
+            $data['check'] =  $this->load->controller('common/check/checkValidCustomer',array(null,$filter_customer,$filter_company));;
+           
+           
+            // echo "<pre>";print_r($data['check'] );die;
+            if($data['check']=="true")
+            {
+                $this->load->model('report/excel');
+                $this->model_report_excel->download_customer_statement_excel($filter_data);
+            }
+            else
+            {
+                $json['status'] = 500;
+                $json['data'] = [];
+                $json['message'] = "Unauthorized to access the requested data";
+                $this->response->addHeader('Content-Type: application/json');
+                $this->response->setOutput(json_encode($json));
+                return;
+            }
+        } else {
+            $json['status'] = 200;
+            $json['message'] = "No Data Available";
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($json));
+            return;
+        }
+        $json['status'] = 200;
+        $json['message'] = "Downloaded Successfully";
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+      
+    }
+
+
+    public function addConsolidatedOrderProduct() {
+        $orderid = $this->request->post['order_id'];
+        $customer = $this->request->post['customer'];
+        $company = $this->request->post['company'];
+        $date = $this->request->post['date'];
+
+        $data = [];
+        $data['consolidation'][] = [
+            'orderid' => $orderid,
+            'customer' => $customer,
+            'company' => $company,
+            'date' => $date,
+        ];
+
+
+
+        if ('' != $company || '' != $customer) {
+ 
+            $data['check'] =  $this->load->controller('common/check/checkValidCustomer',array(null,$customer,$company));;
+           
+           
+            // echo "<pre>";print_r($data['check'] );die;
+            if($data['check']=="true")
+            {
+                $orderProducts = $this->getOrderProductsWithVariancesNew($orderid);
+
+            }
+            else
+            {
+                $json['status'] = 500;
+                $json['data'] = [];
+                $json['message'] = "Unauthorized to access the requested data";
+                $this->response->addHeader('Content-Type: application/json');
+                $this->response->setOutput(json_encode($json));
+                return;
+            }
+        } else {
+            $json['status'] = 200;
+            $json['message'] = "No Data Available";
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($json));
+            return;
+        }
+
+
+        $data['products'] = $orderProducts;
+        $sum = 0;
+        foreach ($orderProducts as $item) {
+            $sum += $item['total_updatedvalue'];
+        }
+        // $data['consolidation'][$index]['amount'] = $sum;
+        //   $totalOrdersAmount += $sum;
+        // $data['consolidation']['total'] = $totalOrdersAmount;
+
+        $this->load->model('report/excel');
+        $this->model_report_excel->download_order_products_excel($data);
+    }
+
+    public function getOrderProductsWithVariancesNew($order_id) {
+        $this->load->model('sale/order');
+
+        $orderProducts = [];
+        $order_info = $this->model_sale_order->getOrder($order_id);
+        if ($this->model_sale_order->hasRealOrderProducts($order_id)) {
+            // Order products with weight change
+            $originalProducts = $products = $this->model_sale_order->getRealOrderProducts($order_id);
+        } else {
+            // Products as the user ordered them on the platform
+            $originalProducts = $products = $this->model_sale_order->getOrderProducts($order_id);
+        }
+
+        foreach ($originalProducts as $originalProduct) {
+            // $totalUpdated = $originalProduct['price'] * $originalProduct['quantity']
+            //     + ($this->config->get('config_tax') ? $originalProduct['tax'] : 0);
+            //in admin orders screen, directly showing total
+            $totalUpdated = $originalProduct['total'];
+
+            $uomOrderedWithoutApproximations = trim(explode('(', $originalProduct['unit'])[0]);
+
+            $orderProducts[] = [
+                'order_product_id' => $originalProduct['order_product_id'],
+                'product_id' => $originalProduct['product_id'],
+                'vendor_id' => $originalProduct['vendor_id'],
+                'store_id' => $originalProduct['store_id'],
+                'name' => $originalProduct['name'],
+                'unit' => $uomOrderedWithoutApproximations,
+                'product_type' => $originalProduct['product_type'],
+                'model' => $originalProduct['model'],
+                'quantity' => $originalProduct['quantity'],
+                'quantity_updated' => $originalProduct['quantity'],
+                'unit_updated' => $uomOrderedWithoutApproximations,
+                'price' => $this->currency->format($originalProduct['price'] + ($this->config->get('config_tax') ? $originalProduct['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
+                'total' => $this->currency->format($originalProduct['total'] + ($this->config->get('config_tax') ? ($originalProduct['tax'] * $originalProduct['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
+                'total_updated' => $this->currency->format($totalUpdated, $order_info['currency_code'], $order_info['currency_value']),
+                'total_updated_currency' => trim(explode(' ', $this->currency->format($totalUpdated, $order_info['currency_code'], $order_info['currency_value']))[0]),
+                'total_updated_value' => trim(explode(' ', $this->currency->format($totalUpdated, $order_info['currency_code'], $order_info['currency_value']))[1]),
+                'total_updatedvalue' => $totalUpdated,
+            ];
+        }
+
+        return $orderProducts;
+    }
 
 
     // public function orderexcel()

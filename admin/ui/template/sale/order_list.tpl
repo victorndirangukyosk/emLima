@@ -10,6 +10,7 @@
 
                 
                 <button type="" id="button-invoice" form="form-order" formaction="<?php echo $invoice; ?>" data-toggle="tooltip" title="<?php echo $button_invoice_print; ?>" class="btn btn-default"><i class="fa fa-print"></i></button>
+                <button type="" id="button-invoice-pdf" form="form-order" formaction="<?php echo $invoicepdf; ?>" data-toggle="tooltip" title="<?php echo $button_invoice_print; ?>" class="btn btn-default"><i class="fa fa-print"></i></button>
 
                <?php if (!$this->user->isVendor()): ?>
                         <!-- <a href="<?php echo $add; ?>" data-toggle="tooltip" title="<?php echo $button_add; ?>" class="btn btn-success"><i class="fa fa-plus"></i></a> -->
@@ -361,6 +362,7 @@
                                                <!--<a href="<?php echo $order['invoice']; ?>" target="_blank" data-toggle="tooltip" title="Print Invoice">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-printer"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
                                                 </a> -->
+                                              
                                                <a href="#" id="new_print_invoice" data-order-invoice="<?php echo $order['invoice']; ?>" data-order-id="<?= $order['order_id'] ?>" data-toggle="tooltip" title="Print Invoice"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-printer"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg></a>
                                             <?php } ?>
                                         
@@ -678,11 +680,13 @@
   $('input[name^=\'selected\']').on('change', function () {
 
             $('#button-shipping, #button-invoice').prop('disabled', true);
+            $('#button-invoice-pdf').prop('disabled', true);
 
             var selected = $('input[name^=\'selected\']:checked');
 
             if (selected.length) {
                 $('#button-invoice').prop('disabled', false);
+                $('#button-invoice-pdf').prop('disabled', false);
             }
 
             for (i = 0; i < selected.length; i++) {

@@ -255,6 +255,50 @@ class ModelAccountDashboard extends Model
         return $query->row;
     }
 
+    public function getPurchaseHistorybyDate($product_id, $customer_id,$start_date,$end_date,$subuser_id)
+    {
+        // $date = date('Y-m-d', strtotime('-30 day'));
+
+        // echo "<pre>";print_r($subuser_id);die; 
+
+        $s_users = [];
+        $sub_users_query = $this->db->query('SELECT c.customer_id FROM '.DB_PREFIX."customer c WHERE parent = '".(int) $customer_id."'");
+        $sub_users = $sub_users_query->rows;
+        $s_users = array_column($sub_users, 'customer_id');
+
+        // echo "<pre>";print_r($sub_users);die; 
+        if($subuser_id==null || $subuser_id=="")
+        {
+        // echo "<pre>";print_r($s_users);die; 
+        array_push($s_users, $customer_id);
+        //   echo "<pre>";print_r($s_users);die; 
+        $sub_users_od = implode(',', $s_users);
+        $sub_users_od =rtrim($sub_users_od, ',');
+        }
+        else{
+            //check subuser id passed is accessible to login user
+            // echo "<pre>";print_r($s_users);die;
+
+            if (in_array($subuser_id, $s_users))
+            {
+            // echo "Match found";
+            $sub_users_od =$subuser_id;
+
+            }
+            else
+            {
+                $sub_users_od =null;
+            }
+        }
+
+        $sql0 = 'SELECT count( op.product_id )AS timespurchased,sum(op.quantity) as qunatitypurchased,sum(op.total) as totalvalue,op.unit,op.product_id FROM '.DB_PREFIX.'order_product AS op LEFT JOIN '.DB_PREFIX.'order AS o ON ( op.order_id = o.order_id )  WHERE  o.customer_id IN ('.$sub_users_od.')  AND o.date_added >= '.$start_date.' AND o.date_added >= '.$end_date.' and o.order_status_id NOT IN (0,6,8,9,10,16) And op.product_id='.$product_id .' AND o.order_id not in (select order_id from '.DB_PREFIX.'real_order_product )';
+        $sql1 = 'SELECT count( op.product_id )AS timespurchased,sum(op.quantity) as qunatitypurchased,sum(op.total) as totalvalue,op.unit,op.product_id FROM '.DB_PREFIX.'real_order_product AS op LEFT JOIN '.DB_PREFIX.'order AS o ON ( op.order_id = o.order_id ) WHERE  o.customer_id IN ('.$sub_users_od.')  AND o.date_added >= '.$start_date.' AND o.date_added >= '.$end_date.' and o.order_status_id NOT IN (0,6,8,9,10,16) And op.product_id='.$product_id ;
+        $sql = 'select sum(timespurchased) as timespurchased, sum(qunatitypurchased) as qunatitypurchased,sum(totalvalue) as totalvalue,unit,product_id from ('.$sql0.' union all ' .$sql1.') as t';
+            // echo "<pre>";print_r($sql);die;
+        $query = $this->db->query($sql);
+
+        return $query->row;
+    }
     public function getrecentordersofcustomer($data = [])
     {
         $customer_id = $data['customer_id'];
