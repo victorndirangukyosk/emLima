@@ -5004,8 +5004,11 @@ class ControllerSaleOrder extends Controller
                 $pdf = new \mikehaertl\wkhtmlto\Pdf;
                 $template = $this->load->view('sale/order_invoice_pdf.tpl', $data);
                 $pdf->addPage($template);
-                $res = $pdf->send("KwikBasket Invoice #" . $data['orders'][0]['order_id'] . ".pdf");
-                echo $res;
+                if (!$pdf->send("KwikBasket Invoice #" . $data['orders'][0]['order_id'] . ".pdf")) {
+                    $error = $pdf->getError();
+                    echo $error;
+                    die;
+                }
             } else {
                 echo "Multiple invoices, should download them in zip file";
                 die;
