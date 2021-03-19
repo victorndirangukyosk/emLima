@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Rubik:300,400,500,700,900">
+    <link rel="stylesheet" href="https://kwikbasket-assets.s3.ap-south-1.amazonaws.com/fonts/sofiapro/index.css">
     <!-- CSS Reset -->
     <style>
         html,
@@ -561,8 +561,8 @@
     <!-- Invoice Styling -->
     <style>
         body {
-            font-family: "Rubik", sans-serif;
-            font-size: 15px;
+            font-family: "Sofia Pro", sans-serif;
+            font-size: 16px;
             padding: 24px;
         }
 
@@ -619,7 +619,7 @@
             </div>
 
             <div class="invoice-info text-right">
-                <p class="text-header font-bold">TAX INVOICE
+                <p class="text-header font-bold mb-1">TAX INVOICE
                     <?php if($order['invoice_no']) { ?>
                     #
                     <?= $order['invoice_no'] ?>
