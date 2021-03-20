@@ -548,7 +548,8 @@ $('#button-settle-invoice-charge').on('click', function() {
       console.log("json char");
       if (json['status']) {
         alert('Updated successfully!!');
-        window.location.href = 'index.php?path=sale/order&token=<?php echo $token; ?>';
+        // window.location.href = 'index.php?path=sale/order&token=<?php echo $token; ?>';
+        window.history.back();
       } else {
         if (json['message']) {
           alert(json['message']);
