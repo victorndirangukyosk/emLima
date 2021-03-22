@@ -1394,7 +1394,7 @@ class ControllerSaleCustomer extends Controller {
             'start' => 0,
             'limit' => 1000,
         ];
-        $data['sub_users'] = $this->model_sale_customer->getCustomers($filter_data);
+        $data['sub_users'] = $this->model_sale_customer->getSubCustomers($filter_data);
         $data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups();
         $data['price_categories'] = $this->model_sale_customer_group->getPriceCategories();
 
@@ -2668,7 +2668,7 @@ class ControllerSaleCustomer extends Controller {
             'start' => 0,
             'limit' => 1000,
         ];
-        $data['sub_users'] = $this->model_sale_customer->getCustomers($filter_data);
+        $data['sub_users'] = $this->model_sale_customer->getSubCustomers($filter_data);
         $data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups();
         $data['price_categories'] = $this->model_sale_customer_group->getPriceCategories();
         
