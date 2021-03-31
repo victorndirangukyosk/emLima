@@ -114,7 +114,13 @@ class ControllerCommonHeader extends Controller
 
                 $this->load->model('sale/customer');
 
-                $customer_total = $this->model_sale_customer->getTotalCustomers(['filter_approved' => false]);
+                $filter_cust_data = [                    
+                    'filter_approved' => 0,                   
+                    'filter_parent_customer' => $filter_parent_customer,
+                    'filter_parent_customer_id' => $filter_parent_customer_id,
+                     ];
+
+                $customer_total = $this->model_sale_customer->getTotalCustomers($filter_cust_data);
 
                 $data['customer_total'] = $customer_total;
                 $data['customer_approval'] = $this->url->link('sale/customer', 'token='.$this->session->data['token'].'&filter_approved=0', 'SSL');
