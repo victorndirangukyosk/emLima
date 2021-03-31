@@ -150,7 +150,7 @@
           <div class="panel-body" width="100%">
             <div class="tab-content panel" width="100%">
               <div class="table-responsive" width="100%">
-                <table class="table table-bordered">
+                <table class="table table-bordered" id="most">
                   <thead>
                     <tr>
                       <td>Product Name</td>
@@ -375,6 +375,7 @@
       /******************************************/
 
       getNewData();
+      getCustomerMostBoughtProducts();
     };
 
     var option_daterangepicker = {
@@ -423,11 +424,13 @@
 
 
     getNewData();
+    getCustomerMostBoughtProducts();
   });
 
 
   $(document).delegate('.company-name', 'change', function () {
     getNewData();
+    getCustomerMostBoughtProducts();
 
   });
 
@@ -455,7 +458,25 @@
     //recentPattern($optionvalue);
   }
 
+  function getCustomerMostBoughtProducts() {
+          $optionvalue = $('.company-name option:selected').val();
+    // alert($optionvalue);
 
+    $.ajax({
+      type: 'get',
+      url: 'index.php?path=account/dashboard/getCustomerMostBoughtProducts&start=' + start_date + '&end=' + end_date + '&customer_id=' + $optionvalue,
+      dataType: 'html',
+      cache: false,
+      async: false,
+      beforeSend: function() { },
+      complete: function() { },
+      success: function(html) { 
+          console.log(html);
+          console.log(html);
+             $("#most tbody").empty().append(html);
+      }
+    });
+  }
 
 
   function getPurchaseHistory($product_id) {
