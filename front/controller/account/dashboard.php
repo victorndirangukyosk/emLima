@@ -1182,6 +1182,37 @@ class ControllerAccountDashboard extends Controller {
 
         return true;
     }
+    
+    public function getPurchaseHistoryNew() {
+        $this->load->model('account/dashboard');
+        //echo 'date.timezone ' ;;
+        $data = array();
+        $data = [
+            'filter_customer' => $this->request->get['customer_id'] > 0 ? $this->request->get['customer_id'] : $this->customer->getId(),
+            'filter_product_id' => $this->request->get['product_id'],
+            'filter_date_start' => $this->request->get['start'],
+            'filter_date_end' => $this->request->get['end']
+        ];
+
+        /// echo '<pre>';print_r($this->request->post);exit;
+        $result = $this->model_account_dashboard->getPurchaseHistoryNew($data);
+        $log = new Log('error.log');
+        $log->write($result);
+        
+
+        $result['status'] = true;
+
+        $result['totalvalue'] = $this->currency->format($result['totalvalue'], $this->config->get('config_currency'));
+
+        if ($this->request->isAjax()) {
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($result));
+        }
+
+        //  echo '<pre>';print_r($data);exit;
+
+        return true;
+    }
 
     public function getMonths($date1, $date2) {
         $time1 = strtotime($date1);

@@ -518,6 +518,43 @@
     $('input[name="product_id"]').val($product_id);
 
   }
+  
+  function getPurchaseHistoryNew($product_id) {
+
+    //   $('#poModal-message').html(''); 
+    $customer_id = $('.company-name option:selected').val();
+    $.ajax({
+      url: 'index.php?path=account/dashboard/getPurchaseHistoryNew&start=' + start_date + '&end=' + end_date + '&product_id=' + $product_id + '&customer_id=' + $customer_id,
+      type: 'get',
+      dataType: 'json',
+      async: true,
+      success: function (json) {
+        console.log(json);
+        if (json['status']) {
+          $('input[name="timespurchased"]').val(json['timespurchased']);
+          $('input[name="qunatitypurchased"]').val(json['qunatitypurchased']);
+          $('input[name="totalvalue"]').val(json['totalvalue']);
+        }
+        else {
+          $('input[name="timespurchased"]').val('');
+          $('input[name="qunatitypurchased"]').val('');
+          $('input[name="totalvalue"]').val('');
+
+        }
+      },
+      error: function (xhr, ajaxOptions, thrownError) {
+        $('input[name="timespurchased"]').val('');
+        $('input[name="qunatitypurchased"]').val('');
+        $('input[name="totalvalue"]').val('');
+        return false;
+      }
+    });
+
+
+
+    $('input[name="product_id"]').val($product_id);
+
+  }
 
 
 

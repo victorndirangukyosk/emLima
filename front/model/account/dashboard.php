@@ -294,6 +294,66 @@ class ModelAccountDashboard extends Model {
         return $query->row;
     }
 
+    public function getPurchaseHistoryNew($data = []) {
+        //general product not available..need to change code
+        //Order Rejected(16),Order Approval Pending(15),Cancelled(6),Failed(8),Pending(9),Possible Fraud(10)
+        $sql0 = "SELECT c.company_name  as company,op.name,op.unit,op.product_id, SUM( op.quantity )AS quantity, count( op.product_id )AS timespurchased, sum(op.quantity) as qunatitypurchased, sum(op.total) as totalvalue  FROM `" . DB_PREFIX . 'order_product` op LEFT JOIN `' . DB_PREFIX . 'order` o ON (op.order_id = o.order_id) LEFT JOIN `' . DB_PREFIX . "customer` c ON (c.customer_id = o.customer_id) WHERE o.customer_id > 0   and o.order_status_id not in (0,16,15,6,8,9,10)   and o.order_id not in (select order_id from `hf7_real_order_product`)  ";
+        $sql1 = "SELECT c.company_name  as company,op.name,op.unit,op.product_id, SUM( op.quantity )AS quantity, count( op.product_id )AS timespurchased, sum(op.quantity) as qunatitypurchased, sum(op.total) as totalvalue  FROM `" . DB_PREFIX . 'real_order_product` op LEFT JOIN `' . DB_PREFIX . 'order` o ON (op.order_id = o.order_id) LEFT JOIN `' . DB_PREFIX . "customer` c ON (c.customer_id = o.customer_id) WHERE o.customer_id > 0   and o.order_status_id not in (0,16,15,6,8,9,10) ";
+
+        // if (!empty($data['filter_order_status_id'])) {
+        //     $sql .= " AND o.order_status_id = '" . (int) $data['filter_order_status_id'] . "'";
+        // } else {
+        //     $sql .= " AND o.order_status_id > '0' AND  o.order_status_id != '6'";
+        // }GROUP BY pd.name   ORDER BY total DESC
+
+        if (!empty($data['filter_date_start'])) {
+            $sql0 .= " AND DATE(o.date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
+            $sql1 .= " AND DATE(o.date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
+        }
+
+        if (!empty($data['filter_date_end'])) {
+            $sql0 .= " AND DATE(o.date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
+            $sql1 .= " AND DATE(o.date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
+        }
+
+        if (!empty($data['filter_customer'])) {
+            // $sql .= " AND   c.customer_id   = '" .(int) $this->db->escape($data['filter_customer']) . "'";
+            $sql0 .= " AND c.customer_id ='" . $this->db->escape($data['filter_customer']) . "'";
+            $sql1 .= " AND c.customer_id ='" . $this->db->escape($data['filter_customer']) . "'";
+        }
+
+        if (!empty($data['filter_company'])) {
+            $sql0 .= " AND c.company_name   LIKE '%" . $this->db->escape($data['filter_company']) . "%'";
+            $sql1 .= " AND c.company_name   LIKE '%" . $this->db->escape($data['filter_company']) . "%'";
+        }
+
+        if (!empty($data['filter_product_id'])) {
+            // $sql .= " AND   c.customer_id   = '" .(int) $this->db->escape($data['filter_customer']) . "'";
+            $sql0 .= " AND op.product_id ='" . $this->db->escape($data['filter_product_id']) . "'";
+            $sql1 .= " AND op.product_id ='" . $this->db->escape($data['filter_product_id']) . "'";
+        }
+
+        $sql0 .= ' GROUP BY op.product_id ';
+        $sql1 .= ' GROUP BY op.product_id '; //general_product_id
+
+        $sql = "SELECT company,name,unit,product_id, sum(quantity )AS quantity,timespurchased, qunatitypurchased, totalvalue from (" . $sql0 . "union all " . $sql1 . ") as t";
+        $sql .= ' GROUP BY product_id   ORDER BY quantity DESC';
+
+        // if (isset($data['start']) || isset($data['limit'])) {
+        //     if ($data['start'] < 0) {
+        //         $data['start'] = 0;
+        //     }
+        //     if ($data['limit'] < 1) {
+        //         $data['limit'] = 20;
+        //     }
+        //     $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
+        // }
+        // echo  ($sql);die;
+        $query = $this->db->query($sql);
+
+        return $query->row;
+    }
+
     public function getPurchaseHistorybyDate($product_id, $customer_id, $start_date, $end_date, $subuser_id) {
         // $date = date('Y-m-d', strtotime('-30 day'));
         // echo "<pre>";print_r($subuser_id);die; 
