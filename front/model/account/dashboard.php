@@ -140,6 +140,16 @@ class ModelAccountDashboard extends Model {
     }
 
     public function getboughtproductswithRealOrders($data = []) {
+
+        $s_users = [];
+        $customer_id = $data['filter_customer'] > 0 ? $data['filter_customer'] : $this->customer->getId();
+        $sub_users_query = $this->db->query('SELECT c.customer_id FROM ' . DB_PREFIX . "customer c WHERE parent = '" . $customer_id . "'");
+        $sub_users = $sub_users_query->rows;
+        $s_users = array_column($sub_users, 'customer_id');
+
+        array_push($s_users, $customer_id);
+        $sub_users_od = implode(',', $s_users);
+
         //general product not available..need to change code
         //Order Rejected(16),Order Approval Pending(15),Cancelled(6),Failed(8),Pending(9),Possible Fraud(10)
         $sql0 = "SELECT c.company_name  as company,op.name,op.unit,op.product_id, SUM( op.quantity )AS quantity  FROM `" . DB_PREFIX . 'order_product` op LEFT JOIN `' . DB_PREFIX . 'order` o ON (op.order_id = o.order_id) LEFT JOIN `' . DB_PREFIX . "customer` c ON (c.customer_id = o.customer_id) WHERE o.customer_id > 0   and o.order_status_id not in (0,16,15,6,8,9,10)   and o.order_id not in (select order_id from `hf7_real_order_product`)  ";
@@ -163,8 +173,8 @@ class ModelAccountDashboard extends Model {
 
         if (!empty($data['filter_customer'])) {
             // $sql .= " AND   c.customer_id   = '" .(int) $this->db->escape($data['filter_customer']) . "'";
-            $sql0 .= " AND c.customer_id ='" . $this->db->escape($data['filter_customer']) . "'";
-            $sql1 .= " AND c.customer_id ='" . $this->db->escape($data['filter_customer']) . "'";
+            $sql0 .= " AND c.customer_id IN (" . $sub_users_od . ")";
+            $sql1 .= " AND c.customer_id IN (" . $sub_users_od . ")";
         }
 
         if (!empty($data['filter_company'])) {
