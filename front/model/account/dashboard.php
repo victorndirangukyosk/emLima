@@ -81,7 +81,9 @@ class ModelAccountDashboard extends Model {
         return $query->rows;
     }
 
-    public function getRecentActivity($customer_id) {
+    public function getRecentActivity($data = []) {
+
+        $customer_id = $data['filter_customer'] > 0 ? $data['filter_customer'] : $this->customer->getId();
         $s_users = [];
         $sub_users_query = $this->db->query('SELECT c.customer_id FROM ' . DB_PREFIX . "customer c WHERE parent = '" . (int) $customer_id . "'");
         $sub_users = $sub_users_query->rows;

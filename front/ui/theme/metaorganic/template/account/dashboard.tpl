@@ -107,7 +107,7 @@
           <div class="panel-body" width="50%">
             <div class="tab-content panel" width="50%">
               <div id="dash_recent_orders" class="tab-pane active" width="50%">
-                <ul class="timeline">
+                  <ul class="timeline" id="timeline">
                   <?php if ($DashboardData['recent_activity']) { ?>
                   <?php foreach ($DashboardData['recent_activity'] as $resat) { ?>
                   <li class="tl-item">
@@ -376,6 +376,7 @@
 
       getNewData();
       getCustomerMostBoughtProducts();
+      getRecentActivities();
     };
 
     var option_daterangepicker = {
@@ -425,13 +426,14 @@
 
     getNewData();
     getCustomerMostBoughtProducts();
+    getRecentActivities();
   });
 
 
   $(document).delegate('.company-name', 'change', function () {
     getNewData();
     getCustomerMostBoughtProducts();
-
+    getRecentActivities();
   });
 
   function getNewData() {
@@ -474,6 +476,25 @@
           console.log(html);
           console.log(html);
              $("#most tbody").empty().append(html);
+      }
+    });
+  }
+  
+    function getRecentActivities() {
+          $optionvalue = $('.company-name option:selected').val();
+    // alert($optionvalue);
+
+    $.ajax({
+      type: 'get',
+      url: 'index.php?path=account/dashboard/getRecentActivities&start=' + start_date + '&end=' + end_date + '&customer_id=' + $optionvalue,
+      dataType: 'html',
+      cache: false,
+      async: false,
+      beforeSend: function() { },
+      complete: function() { },
+      success: function(html) { 
+          console.log(html);
+          $("#dash_recent_orders ul").empty().append(html);
       }
     });
   }

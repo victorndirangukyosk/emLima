@@ -884,7 +884,7 @@ class ControllerAccountDashboard extends Controller {
 
         $this->response->setOutput($this->load->view('metaorganic/template/account/recentorderproducts_list.tpl', $data));
     }
-    
+
     public function getRecentOrderProductsList_new() {
         if (isset($this->request->get['filter_product_name'])) {
             $filter_product_name = $this->request->get['filter_product_name'];
@@ -1025,7 +1025,7 @@ class ControllerAccountDashboard extends Controller {
 
         $this->response->setOutput($this->load->view('metaorganic/template/account/recentorderproducts_list.tpl', $data));
     }
-    
+
     public function getRecentOrdersList() {
         if (isset($this->request->get['filter_order_id'])) {
             $filter_order_id = $this->request->get['filter_order_id'];
@@ -1292,8 +1292,8 @@ class ControllerAccountDashboard extends Controller {
         $this->load->model('account/dashboard');
         $this->model_account_dashboard->download_mostpurchased_products_excel($data);
     }
-    
-    public function export_mostpurchased_products_excel_new() {        
+
+    public function export_mostpurchased_products_excel_new() {
         $data = array();
         $data = [
             'filter_customer' => $this->request->get['customer_id'] > 0 ? $this->request->get['customer_id'] : $this->customer->getId(),
@@ -1335,7 +1335,7 @@ class ControllerAccountDashboard extends Controller {
 
         return true;
     }
-    
+
     public function getPurchaseHistoryNew() {
         $this->load->model('account/dashboard');
         //echo 'date.timezone ' ;;
@@ -1351,7 +1351,7 @@ class ControllerAccountDashboard extends Controller {
         $result = $this->model_account_dashboard->getPurchaseHistoryNew($data);
         $log = new Log('error.log');
         $log->write($result);
-        
+
 
         $result['status'] = true;
 
@@ -1410,6 +1410,44 @@ class ControllerAccountDashboard extends Controller {
         //$log->write($most_purchased);
         //$log->write('most_purchased');
         $this->response->setOutput($this->load->view('metaorganic/template/account/most_bought_products.tpl', $data));
+    }
+
+    public function getRecentActivities() {
+        $this->load->model('account/dashboard');
+        $data = array();
+        $data = [
+            'filter_customer' => $this->request->get['customer_id'] > 0 ? $this->request->get['customer_id'] : $this->customer->getId(),
+            'filter_date_start' => $this->request->get['start'],
+            'filter_date_end' => $this->request->get['end']
+        ];
+
+        $user_recent_activity = $this->model_account_dashboard->getRecentActivity($data);
+
+        foreach ($user_recent_activity as $ra) {
+            if (15 == $ra['order_status_id']) {
+                $comment1 = 'Placed Order';
+                $comment2 = ' and Approval is Required';
+            } elseif (14 == $ra['order_status_id']) {
+                $comment1 = 'Placed Order';
+                $comment2 = ' ';
+            } else {
+                $comment1 = 'Placed Order';
+                $comment2 = ' and the order is  ' . $ra['name'];
+            }
+
+            $recent_activity[] = ['store_name' => $ra['store_name'],
+                'firstname' => $ra['firstname'],
+                'lastname' => $ra['lastname'],
+                'order_id' => $ra['order_id'],
+                'comment1' => $comment1,
+                'comment2' => $comment2,
+                'href' => $this->url->link('account/order/info', 'order_id=' . $ra['order_id'], 'SSL'),
+                'total' => $this->currency->format($ra['total'], $this->config->get('config_currency')),
+                'date_added' => $ra['date_added'],];
+        }
+
+        $data['recent_activity'] = $recent_activity;
+        $this->response->setOutput($this->load->view('metaorganic/template/account/recent_activity.tpl', $data));
     }
 
 }
