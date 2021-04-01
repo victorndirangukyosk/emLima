@@ -255,6 +255,58 @@ class ModelAccountDashboard extends Model {
         return $query->rows;
     }
 
+    public function getrecentorderproducts_new($data = []) {
+        $customer_id = $data['customer_id'] > 0 ? $data['customer_id'] : $this->customer->getId();
+        $s_users = [];
+        $sub_users_query = $this->db->query('SELECT c.customer_id FROM ' . DB_PREFIX . "customer c WHERE parent = '" . (int) $customer_id . "'");
+        $sub_users = $sub_users_query->rows;
+        $s_users = array_column($sub_users, 'customer_id');
+
+        array_push($s_users, $customer_id);
+        $sub_users_od = implode(',', $s_users);
+
+
+        $start_date = date('Y-m-d', strtotime('-30 day'));
+        $end_date = date('Y-m-d');
+
+        //general product not available..need to change code
+        //Order Rejected(16),Order Approval Pending(15),Cancelled(6),Failed(8),Pending(9),Possible Fraud(10)
+        $sql0 = "SELECT c.company_name  as company,op.name,op.unit,op.product_id, SUM( op.quantity )AS quantity, SUM( op.quantity )AS total  FROM `" . DB_PREFIX . 'order_product` op LEFT JOIN `' . DB_PREFIX . 'order` o ON (op.order_id = o.order_id) LEFT JOIN `' . DB_PREFIX . "customer` c ON (c.customer_id = o.customer_id) WHERE o.customer_id > 0   and o.order_status_id not in (0,16,15,6,8,9,10)   and o.order_id not in (select order_id from `hf7_real_order_product`)  ";
+        $sql1 = "SELECT c.company_name  as company,op.name,op.unit,op.product_id, SUM( op.quantity )AS quantity, SUM( op.quantity )AS total  FROM `" . DB_PREFIX . 'real_order_product` op LEFT JOIN `' . DB_PREFIX . 'order` o ON (op.order_id = o.order_id) LEFT JOIN `' . DB_PREFIX . "customer` c ON (c.customer_id = o.customer_id) WHERE o.customer_id > 0   and o.order_status_id not in (0,16,15,6,8,9,10) ";
+
+        $sql0 .= " AND DATE(o.date_added) >= '" . $start_date . "'";
+        $sql1 .= " AND DATE(o.date_added) >= '" . $start_date . "'";
+
+        $sql0 .= " AND DATE(o.date_added) <= '" . $end_date . "'";
+        $sql1 .= " AND DATE(o.date_added) <= '" . $end_date . "'";
+
+        $sql0 .= " AND c.customer_id = '" . $this->db->escape($customer_id) . "'";
+        $sql1 .= " AND c.customer_id = '" . $this->db->escape($customer_id) . "'";
+
+        $sql0 .= ' GROUP BY op.product_id ';
+        $sql1 .= ' GROUP BY op.product_id '; //general_product_id
+
+        $sql = "SELECT company,name,unit,product_id, sum(quantity )AS quantity, total from (" . $sql0 . "union all " . $sql1 . ") as t";
+        $sql .= ' GROUP BY product_id   ORDER BY quantity DESC';
+
+        if (isset($data['start']) || isset($data['limit'])) {
+            if ($data['start'] < 0) {
+                $data['start'] = 0;
+            }
+
+            if ($data['limit'] < 1) {
+                $data['limit'] = 20;
+            }
+
+            $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
+        }
+        //  echo "<pre>";print_r($sql);die;
+
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
+
     public function getTotalrecentorderproducts($data = []) {
         $customer_id = $data['customer_id'];
         $date = date('Y-m-d', strtotime('-30 day'));
@@ -273,6 +325,42 @@ class ModelAccountDashboard extends Model {
         $query = $this->db->query($sql);
 
         return $query->rows;
+    }
+
+    public function getTotalrecentorderproducts_new($data = []) {
+        $customer_id = $data['customer_id'];
+        $start_date = date('Y-m-d', strtotime('-30 day'));
+        $end_date = date('Y-m-d');
+        //$sql = 'SELECT COUNT(*) AS count FROM ' . DB_PREFIX . 'order_product AS op LEFT JOIN ' . DB_PREFIX . 'order AS o ON ( op.order_id = o.order_id ) LEFT JOIN  ' . DB_PREFIX . "product_description AS pd ON (op.general_product_id = pd.product_id)  WHERE pd.language_id = '" . (int) $this->config->get('config_language_id') . "' AND o.customer_id = " . $customer_id . ' AND o.date_added >= ' . $date . ' GROUP BY pd.name  having sum(op.quantity)>100  ';
+        //general product not available..need to change code
+        //Order Rejected(16),Order Approval Pending(15),Cancelled(6),Failed(8),Pending(9),Possible Fraud(10)
+        $sql0 = "SELECT op.product_id, COUNT(*) AS count  FROM `" . DB_PREFIX . 'order_product` op LEFT JOIN `' . DB_PREFIX . 'order` o ON (op.order_id = o.order_id) LEFT JOIN `' . DB_PREFIX . "customer` c ON (c.customer_id = o.customer_id) WHERE o.customer_id > 0   and o.order_status_id not in (0,16,15,6,8,9,10)   and o.order_id not in (select order_id from `hf7_real_order_product`)  ";
+        $sql1 = "SELECT op.product_id, COUNT(*) AS count  FROM `" . DB_PREFIX . 'real_order_product` op LEFT JOIN `' . DB_PREFIX . 'order` o ON (op.order_id = o.order_id) LEFT JOIN `' . DB_PREFIX . "customer` c ON (c.customer_id = o.customer_id) WHERE o.customer_id > 0   and o.order_status_id not in (0,16,15,6,8,9,10) ";
+
+        // if (!empty($data['filter_order_status_id'])) {
+        //     $sql .= " AND o.order_status_id = '" . (int) $data['filter_order_status_id'] . "'";
+        // } else {
+        //     $sql .= " AND o.order_status_id > '0' AND  o.order_status_id != '6'";
+        // }GROUP BY pd.name   ORDER BY total DESC
+
+        $sql0 .= " AND DATE(o.date_added) >= '" . $start_date . "'";
+        $sql1 .= " AND DATE(o.date_added) >= '" . $start_date . "'";
+
+        $sql0 .= " AND DATE(o.date_added) <= '" . $end_date . "'";
+        $sql1 .= " AND DATE(o.date_added) <= '" . $end_date . "'";
+
+        $sql0 .= " AND c.customer_id ='" . $customer_id . "'";
+        $sql1 .= " AND c.customer_id ='" . $customer_id . "'";
+
+        $sql0 .= ' GROUP BY op.product_id ';
+        $sql1 .= ' GROUP BY op.product_id '; //general_product_id
+
+        $sql = "SELECT count from (" . $sql0 . "union all " . $sql1 . ") as t";
+        $sql .= ' GROUP BY product_id';
+
+        $query = $this->db->query($sql);
+
+        return $query->row;
     }
 
     public function getPurchaseHistory($product_id, $customer_id) {
@@ -675,11 +763,11 @@ class ModelAccountDashboard extends Model {
             return;
         }
     }
-    
+
     public function download_mostpurchased_products_excel_new($data) {
         $this->load->library('excel');
         $this->load->library('iofactory');
-        
+
         //Order Rejected(16),Order Approval Pending(15),Cancelled(6),Failed(8),Pending(9),Possible Fraud(10)
         $sql0 = "SELECT SUM( op.quantity )AS total, c.company_name  as company,op.name,op.unit,op.product_id, SUM( op.quantity )AS quantity, count( op.product_id )AS timespurchased, sum(op.quantity) as qunatitypurchased, sum(op.total) as totalvalue  FROM `" . DB_PREFIX . 'order_product` op LEFT JOIN `' . DB_PREFIX . 'order` o ON (op.order_id = o.order_id) LEFT JOIN `' . DB_PREFIX . "customer` c ON (c.customer_id = o.customer_id) WHERE o.customer_id > 0   and o.order_status_id not in (0,16,15,6,8,9,10)   and o.order_id not in (select order_id from `hf7_real_order_product`)  ";
         $sql1 = "SELECT SUM( op.quantity )AS total, c.company_name  as company,op.name,op.unit,op.product_id, SUM( op.quantity )AS quantity, count( op.product_id )AS timespurchased, sum(op.quantity) as qunatitypurchased, sum(op.total) as totalvalue  FROM `" . DB_PREFIX . 'real_order_product` op LEFT JOIN `' . DB_PREFIX . 'order` o ON (op.order_id = o.order_id) LEFT JOIN `' . DB_PREFIX . "customer` c ON (c.customer_id = o.customer_id) WHERE o.customer_id > 0   and o.order_status_id not in (0,16,15,6,8,9,10) ";
