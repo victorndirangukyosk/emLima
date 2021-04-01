@@ -139,7 +139,7 @@
             <h3 class="panel-title"><i class="fa fa-th-list fa-lg"></i> Most bought Products (Last 30 days)
             </h3>
             <span style="margin-top:-5px;background-color: #f38733;" class="butsetview"><a target="_blank"
-                href="<?php echo BASE_URL;?>/index.php?path=account/dashboard/getRecentOrderProductsList">View All
+                href="<?php echo BASE_URL;?>/index.php?path=account/dashboard/getRecentOrderProductsList_new">View All
               </a></span>
             <div class="pull-right">
               <button type="button" style="margin-top:-5px;height:31px" onclick="excel_new();" data-toggle="tooltip" title=""
