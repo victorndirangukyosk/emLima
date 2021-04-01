@@ -198,7 +198,7 @@
           <div class="panel-body" width="50%">
             <div class="tab-content panel" width="50%">
               <div class="table-responsive" width="50%">
-                <table class="table table-bordered">
+                <table class="table table-bordered" id="customer_recent_orders">
                   <thead>
                     <tr>
                       <td>Order Id</td>
@@ -377,6 +377,7 @@
       getNewData();
       getCustomerMostBoughtProducts();
       getRecentActivities();
+      getRecentOrders();
     };
 
     var option_daterangepicker = {
@@ -427,6 +428,7 @@
     getNewData();
     getCustomerMostBoughtProducts();
     getRecentActivities();
+    getRecentOrders();
   });
 
 
@@ -434,6 +436,7 @@
     getNewData();
     getCustomerMostBoughtProducts();
     getRecentActivities();
+    getRecentOrders();
   });
 
   function getNewData() {
@@ -480,7 +483,7 @@
     });
   }
   
-    function getRecentActivities() {
+  function getRecentActivities() {
           $optionvalue = $('.company-name option:selected').val();
     // alert($optionvalue);
 
@@ -495,6 +498,25 @@
       success: function(html) { 
           console.log(html);
           $("#dash_recent_orders ul").empty().append(html);
+      }
+    });
+  }
+  
+  function getRecentOrders() {
+          $optionvalue = $('.company-name option:selected').val();
+    // alert($optionvalue);
+
+    $.ajax({
+      type: 'get',
+      url: 'index.php?path=account/dashboard/getRecentOrders&start=' + start_date + '&end=' + end_date + '&customer_id=' + $optionvalue,
+      dataType: 'html',
+      cache: false,
+      async: false,
+      beforeSend: function() { },
+      complete: function() { },
+      success: function(html) { 
+          console.log(html);
+          $("#customer_recent_orders tbody").empty().append(html);
       }
     });
   }

@@ -81,7 +81,38 @@ class ModelAccountDashboard extends Model {
         return $query->rows;
     }
 
-    public function getRecentActivity($data = []) {
+    public function getRecentOrders_new($data = []) {
+        $customer_id = $data['filter_customer'] > 0 ? $data['filter_customer'] : $this->customer->getId();
+        $s_users = [];
+        $sub_users_query = $this->db->query('SELECT c.customer_id FROM ' . DB_PREFIX . "customer c WHERE parent = '" . (int) $customer_id . "'");
+        $sub_users = $sub_users_query->rows;
+        $s_users = array_column($sub_users, 'customer_id');
+
+        array_push($s_users, $customer_id);
+        $sub_users_od = implode(',', $s_users);
+
+        $query = $this->db->query("SELECT o.order_id, o.invoice_no, DATE_FORMAT(o.delivery_date, '%d/%m/%Y') AS delivery_date, DATE_FORMAT(o.date_added, '%d/%m/%Y') AS date_added, o.order_status_id, os.name FROM " . DB_PREFIX . 'order AS o JOIN ' . DB_PREFIX . 'order_status AS os ON (o.order_status_id = os.order_status_id)  WHERE o.customer_id IN (' . $sub_users_od . ") AND o.order_status_id > '0' AND o.date_added >='" . $data['filter_date_start'] . "'AND o.date_added < '" . $data['filter_date_end'] . "' order by o.date_added Desc Limit 10");
+        //$query = $this->db->query("SELECT o.order_id, o.invoice_no, DATE_FORMAT(o.delivery_date, '%d/%m/%Y') AS delivery_date, DATE_FORMAT(o.date_added, '%d/%m/%Y') AS date_added, o.order_status_id, os.name FROM " . DB_PREFIX . "order AS o JOIN " . DB_PREFIX . "order_status AS os ON (o.order_status_id = os.order_status_id)  WHERE o.customer_id = '" . (int) $customer_id . "' AND o.order_status_id > '0'  order by o.date_added Desc");
+        //return $query;
+        return $query->rows;
+    }
+
+    public function getRecentActivity($customer_id) {
+        $s_users = [];
+        $sub_users_query = $this->db->query('SELECT c.customer_id FROM ' . DB_PREFIX . "customer c WHERE parent = '" . (int) $customer_id . "'");
+        $sub_users = $sub_users_query->rows;
+        $s_users = array_column($sub_users, 'customer_id');
+
+        array_push($s_users, $customer_id);
+        $sub_users_od = implode(',', $s_users);
+
+        $query = $this->db->query("SELECT o.order_id, o.invoice_no, o.lastname, o.firstname, DATE_FORMAT(o.delivery_date, '%d/%m/%Y') AS delivery_date, DATE_FORMAT(o.date_added, '%d/%m/%Y %H:%i:%s') AS date_added,  DATE_FORMAT(o.date_modified, '%d/%m/%Y %H:%i:%s') AS date_modified, o.order_status_id, os.name, o.store_id, o.store_name, o.total FROM " . DB_PREFIX . 'order AS o JOIN ' . DB_PREFIX . 'order_status AS os ON (o.order_status_id = os.order_status_id)  WHERE o.customer_id IN (' . $sub_users_od . ") AND o.order_status_id > '0'  order by o.date_modified DESC Limit 10");
+
+        // echo "SELECT o.order_id, o.invoice_no, o.lastname, o.firstname, DATE_FORMAT(o.delivery_date, '%d/%m/%Y') AS delivery_date, DATE_FORMAT(o.date_added, '%d/%m/%Y %H:%i:%s') AS date_added , DATE_FORMAT(o.date_modified, '%d/%m/%Y %H:%i:%s') AS date_modified, o.order_status_id, os.name, o.store_id, o.store_name, o.total FROM " . DB_PREFIX . "order AS o JOIN " . DB_PREFIX . "order_status AS os ON (o.order_status_id = os.order_status_id)  WHERE o.customer_id IN (".$sub_users_od.") AND o.order_status_id > '0'  order by o.date_modified DESC Limit 10";
+        return $query->rows;
+    }
+
+    public function getRecentActivity_new($data = []) {
 
         $customer_id = $data['filter_customer'] > 0 ? $data['filter_customer'] : $this->customer->getId();
         $s_users = [];

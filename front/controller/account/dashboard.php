@@ -1421,7 +1421,7 @@ class ControllerAccountDashboard extends Controller {
             'filter_date_end' => $this->request->get['end']
         ];
 
-        $user_recent_activity = $this->model_account_dashboard->getRecentActivity($data);
+        $user_recent_activity = $this->model_account_dashboard->getRecentActivity_new($data);
 
         foreach ($user_recent_activity as $ra) {
             if (15 == $ra['order_status_id']) {
@@ -1448,6 +1448,27 @@ class ControllerAccountDashboard extends Controller {
 
         $data['recent_activity'] = $recent_activity;
         $this->response->setOutput($this->load->view('metaorganic/template/account/recent_activity.tpl', $data));
+    }
+
+    public function getRecentOrders() {
+        $this->load->model('account/dashboard');
+        $data = array();
+        $data = [
+            'filter_customer' => $this->request->get['customer_id'] > 0 ? $this->request->get['customer_id'] : $this->customer->getId(),
+            'filter_date_start' => $this->request->get['start'],
+            'filter_date_end' => $this->request->get['end']
+        ];
+        $recent_orders = $this->model_account_dashboard->getRecentOrders_new($data);
+        foreach ($recent_orders as $ro) {
+            $user_recent_orders[] = ['order_id' => $ro['order_id'],
+                'name' => $ro['name'],
+                'date_added' => $ro['date_added'],
+                'delivery_date' => $ro['delivery_date'],
+                'href' => $this->url->link('account/order/info', 'order_id=' . $ro['order_id'], 'SSL'),
+                'real_href' => $this->url->link('account/order/realinfo', 'order_id=' . $ro['order_id'], 'SSL'),];
+        }
+        $data['recent_orders'] = $user_recent_orders;
+        $this->response->setOutput($this->load->view('metaorganic/template/account/recentorders.tpl', $data));
     }
 
 }
