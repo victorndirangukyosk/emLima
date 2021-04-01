@@ -4,7 +4,7 @@
   <div class="page-header">
     <div class="container-fluid">
       <div class="pull-right"> 
-          <button type="button" onclick="excel();" data-toggle="tooltip" title="" class="btn btn-success " data-original-title="Download Excel"><i class="fa fa-download"></i></button>
+          <button type="button" onclick="excel_new();" data-toggle="tooltip" title="" class="btn btn-success " data-original-title="Download Excel"><i class="fa fa-download"></i></button>
       </div>
       <h1><?php echo $heading_title; ?></h1>
       
@@ -95,6 +95,13 @@ function excel() {
             
     //url = 'admin/index.php?path=common/dashboard/export_mostpurchased_products_excel&token=<?php echo $token; ?>&customer_id=<?php echo $customer_id; ?>';
      url = 'index.php?path=account/dashboard/export_mostpurchased_products_excel&customer_id=<?php echo $customer_id; ?>';
+    location = url;
+}
+
+function excel_new() {
+            
+    //url = 'admin/index.php?path=common/dashboard/export_mostpurchased_products_excel&token=<?php echo $token; ?>&customer_id=<?php echo $customer_id; ?>';
+     url = 'index.php?path=account/dashboard/export_mostpurchased_products_excel_new&customer_id=<?php echo $customer_id; ?>';
     location = url;
 }
 
