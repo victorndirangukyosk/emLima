@@ -675,6 +675,134 @@ class ModelAccountDashboard extends Model {
             return;
         }
     }
+    
+    public function download_mostpurchased_products_excel_new($data) {
+        $this->load->library('excel');
+        $this->load->library('iofactory');
+        
+        //Order Rejected(16),Order Approval Pending(15),Cancelled(6),Failed(8),Pending(9),Possible Fraud(10)
+        $sql0 = "SELECT SUM( op.quantity )AS total, c.company_name  as company,op.name,op.unit,op.product_id, SUM( op.quantity )AS quantity, count( op.product_id )AS timespurchased, sum(op.quantity) as qunatitypurchased, sum(op.total) as totalvalue  FROM `" . DB_PREFIX . 'order_product` op LEFT JOIN `' . DB_PREFIX . 'order` o ON (op.order_id = o.order_id) LEFT JOIN `' . DB_PREFIX . "customer` c ON (c.customer_id = o.customer_id) WHERE o.customer_id > 0   and o.order_status_id not in (0,16,15,6,8,9,10)   and o.order_id not in (select order_id from `hf7_real_order_product`)  ";
+        $sql1 = "SELECT SUM( op.quantity )AS total, c.company_name  as company,op.name,op.unit,op.product_id, SUM( op.quantity )AS quantity, count( op.product_id )AS timespurchased, sum(op.quantity) as qunatitypurchased, sum(op.total) as totalvalue  FROM `" . DB_PREFIX . 'real_order_product` op LEFT JOIN `' . DB_PREFIX . 'order` o ON (op.order_id = o.order_id) LEFT JOIN `' . DB_PREFIX . "customer` c ON (c.customer_id = o.customer_id) WHERE o.customer_id > 0   and o.order_status_id not in (0,16,15,6,8,9,10) ";
+
+        if (!empty($data['filter_date_start'])) {
+            $sql0 .= " AND DATE(o.date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
+            $sql1 .= " AND DATE(o.date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
+        }
+
+        if (!empty($data['filter_date_end'])) {
+            $sql0 .= " AND DATE(o.date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
+            $sql1 .= " AND DATE(o.date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
+        }
+
+        if (!empty($data['filter_customer'])) {
+            $sql0 .= " AND c.customer_id ='" . $this->db->escape($data['filter_customer']) . "'";
+            $sql1 .= " AND c.customer_id ='" . $this->db->escape($data['filter_customer']) . "'";
+        }
+
+        if (!empty($data['filter_company'])) {
+            $sql0 .= " AND c.company_name   LIKE '%" . $this->db->escape($data['filter_company']) . "%'";
+            $sql1 .= " AND c.company_name   LIKE '%" . $this->db->escape($data['filter_company']) . "%'";
+        }
+
+        if (!empty($data['filter_product_id'])) {
+            $sql0 .= " AND op.product_id ='" . $this->db->escape($data['filter_product_id']) . "'";
+            $sql1 .= " AND op.product_id ='" . $this->db->escape($data['filter_product_id']) . "'";
+        }
+
+        $sql0 .= ' GROUP BY op.product_id ';
+        $sql1 .= ' GROUP BY op.product_id '; //general_product_id
+
+        $sql = "SELECT company,name,unit,product_id, sum(quantity )AS quantity,timespurchased, qunatitypurchased, totalvalue, total from (" . $sql0 . "union all " . $sql1 . ") as t";
+        $sql .= ' GROUP BY product_id   ORDER BY quantity DESC';
+
+        $query = $this->db->query($sql);
+        $rows = $query->rows;
+        // echo "<pre>";print_r($rows);die;
+
+        try {
+            // set appropriate timeout limit
+            set_time_limit(1800);
+
+            $objPHPExcel = new PHPExcel();
+            $objPHPExcel->getProperties()->setTitle('Most bought Products')->setDescription('none');
+            $objPHPExcel->setActiveSheetIndex(0);
+
+            // Field names in the first row
+            // ID, Photo, Name, Contact no., Reason, Valid from, Valid upto, Intime, Outtime
+            $title = [
+                'font' => [
+                    'bold' => true,
+                    'color' => [
+                        'rgb' => 'FFFFFF',
+                    ],
+                ],
+                'fill' => [
+                    'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                    'startcolor' => [
+                        'rgb' => '4390df',
+                    ],
+                ],
+            ];
+
+            //Company name, address
+            $objPHPExcel->getActiveSheet()->mergeCells('A1:C2');
+            $objPHPExcel->getActiveSheet()->setCellValue('A1', 'Products ');
+            $objPHPExcel->getActiveSheet()->getStyle('A1:C2')->applyFromArray(['font' => ['bold' => true], 'color' => [
+                    'rgb' => '4390df',
+            ]]);
+
+            //subtitle
+
+            $objPHPExcel->getActiveSheet()->getStyle('A1:C3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+
+            $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(30);
+            $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(20);
+            $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(15);
+
+            // foreach(range('A','L') as $columnID) {
+            // 	$objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+            // 		->setAutoSize(true);
+            // }
+
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 4, 'Product Name');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'Unit of Measure');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 4, 'Qty');
+
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(2, 4)->applyFromArray($title);
+
+            // Fetching the table data
+            $row = 5;
+            foreach ($rows as $result) {
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $result['name']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['unit']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['total']);
+                ++$row;
+            }
+
+            $objPHPExcel->setActiveSheetIndex(0);
+
+            $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            $filename = 'MostBoughtProducts.xlsx';
+            header('Content-Disposition: attachment;filename="' . $filename . '"');
+            header('Cache-Control: max-age=0');
+            $objWriter->save('php://output');
+            exit;
+        } catch (Exception $e) {
+            $errstr = $e->getMessage();
+            $errline = $e->getLine();
+            $errfile = $e->getFile();
+            $errno = $e->getCode();
+            $this->session->data['export_import_error'] = ['errstr' => $errstr, 'errno' => $errno, 'errfile' => $errfile, 'errline' => $errline];
+            if ($this->config->get('config_error_log')) {
+                $this->log->write('PHP ' . get_class($e) . ':  ' . $errstr . ' in ' . $errfile . ' on line ' . $errline);
+            }
+
+            return;
+        }
+    }
 
     public function getValueOfBasket($Selectedcustomer_id, $date_start, $date_end, $group, $customer_id) {
         if (-1 == $Selectedcustomer_id) {

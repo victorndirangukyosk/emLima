@@ -142,7 +142,7 @@
                 href="<?php echo BASE_URL;?>/index.php?path=account/dashboard/getRecentOrderProductsList">View All
               </a></span>
             <div class="pull-right">
-              <button type="button" style="margin-top:-5px;height:31px" onclick="excel();" data-toggle="tooltip" title=""
+              <button type="button" style="margin-top:-5px;height:31px" onclick="excel_new();" data-toggle="tooltip" title=""
                 class="btn btn-success " data-original-title="Download Excel"><i class="fa fa-download"></i></button>
             </div>
           </div>
@@ -708,6 +708,13 @@
   function excel() {
 
     url = 'index.php?path=account/dashboard/export_mostpurchased_products_excel&customer_id=<?php echo $customer_id; ?>';
+
+    location = url;
+  }
+  
+    function excel_new() {
+
+    url = 'index.php?path=account/dashboard/export_mostpurchased_products_excel_new&start=' + start_date + '&end=' + end_date + '&customer_id=<?php echo $customer_id; ?>';
 
     location = url;
   }
