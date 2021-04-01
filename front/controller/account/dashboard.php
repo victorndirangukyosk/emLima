@@ -1221,10 +1221,10 @@ class ControllerAccountDashboard extends Controller {
 
         $most_purchased = $this->model_account_dashboard->getboughtproductswithRealOrders($data);
         $data['most_purchased'] = $most_purchased;
-        $log = new Log('error.log');
-        $log->write('most_purchased');
-        $log->write($most_purchased);
-        $log->write('most_purchased');
+        //$log = new Log('error.log');
+        //$log->write('most_purchased');
+        //$log->write($most_purchased);
+        //$log->write('most_purchased');
         $this->response->setOutput($this->load->view('metaorganic/template/account/most_bought_products.tpl', $data));
     }
 
