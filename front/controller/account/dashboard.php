@@ -1398,7 +1398,8 @@ class ControllerAccountDashboard extends Controller {
         $this->load->model('account/dashboard');
         $data = array();
         $data = [
-            'filter_customer' => $this->request->get['customer_id'] > 0 ? $this->request->get['customer_id'] : $this->customer->getId(),
+            /*'filter_customer' => $this->request->get['customer_id'] > 0 ? $this->request->get['customer_id'] : $this->customer->getId(),*/
+            'filter_customer' => $this->request->get['customer_id'],
             'filter_date_start' => $this->request->get['start'],
             'filter_date_end' => $this->request->get['end']
         ];
@@ -1416,7 +1417,8 @@ class ControllerAccountDashboard extends Controller {
         $this->load->model('account/dashboard');
         $data = array();
         $data = [
-            'filter_customer' => $this->request->get['customer_id'] > 0 ? $this->request->get['customer_id'] : $this->customer->getId(),
+            /*'filter_customer' => $this->request->get['customer_id'] > 0 ? $this->request->get['customer_id'] : $this->customer->getId(),*/
+            'filter_customer' => $this->request->get['customer_id'],
             'filter_date_start' => $this->request->get['start'],
             'filter_date_end' => $this->request->get['end']
         ];
@@ -1454,7 +1456,8 @@ class ControllerAccountDashboard extends Controller {
         $this->load->model('account/dashboard');
         $data = array();
         $data = [
-            'filter_customer' => $this->request->get['customer_id'] > 0 ? $this->request->get['customer_id'] : $this->customer->getId(),
+            /*'filter_customer' => $this->request->get['customer_id'] > 0 ? $this->request->get['customer_id'] : $this->customer->getId(),*/
+            'filter_customer' => $this->request->get['customer_id'],
             'filter_date_start' => $this->request->get['start'],
             'filter_date_end' => $this->request->get['end']
         ];

@@ -84,9 +84,11 @@ class ModelAccountDashboard extends Model {
     public function getRecentOrders_new($data = []) {
         $customer_id = $data['filter_customer'] > 0 ? $data['filter_customer'] : $this->customer->getId();
         $s_users = [];
+        if($data['filter_customer'] < 0) {
         $sub_users_query = $this->db->query('SELECT c.customer_id FROM ' . DB_PREFIX . "customer c WHERE parent = '" . (int) $customer_id . "'");
         $sub_users = $sub_users_query->rows;
         $s_users = array_column($sub_users, 'customer_id');
+        }
 
         array_push($s_users, $customer_id);
         $sub_users_od = implode(',', $s_users);
@@ -116,9 +118,11 @@ class ModelAccountDashboard extends Model {
 
         $customer_id = $data['filter_customer'] > 0 ? $data['filter_customer'] : $this->customer->getId();
         $s_users = [];
+        if($data['filter_customer'] < 0) {
         $sub_users_query = $this->db->query('SELECT c.customer_id FROM ' . DB_PREFIX . "customer c WHERE parent = '" . (int) $customer_id . "'");
         $sub_users = $sub_users_query->rows;
         $s_users = array_column($sub_users, 'customer_id');
+        }
 
         array_push($s_users, $customer_id);
         $sub_users_od = implode(',', $s_users);
