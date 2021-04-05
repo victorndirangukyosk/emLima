@@ -225,7 +225,7 @@ class ModelAccountDashboard extends Model {
         $sql1 .= ' GROUP BY op.product_id '; //general_product_id
 
         $sql = "SELECT company,name,unit,product_id, sum(quantity )AS quantity from (" . $sql0 . "union all " . $sql1 . ") as t";
-        $sql .= ' GROUP BY product_id   ORDER BY quantity DESC';
+        $sql .= ' GROUP BY product_id   ORDER BY quantity DESC  LIMIT 10';
 
         // if (isset($data['start']) || isset($data['limit'])) {
         //     if ($data['start'] < 0) {
