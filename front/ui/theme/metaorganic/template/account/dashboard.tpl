@@ -136,8 +136,7 @@
       <div class="col-md-6">
         <div id="recenttabs" class="panel panel-default">
           <div class="panel-heading">
-            <h3 class="panel-title"><i class="fa fa-th-list fa-lg"></i> Most bought Products (Last 30 days)
-            </h3>
+            <h3 class="panel-title"><i class="fa fa-th-list fa-lg"></i> Most bought Products </h3>
             <span style="margin-top:-5px;background-color: #f38733;" class="butsetview"><a target="_blank"
                 href="<?php echo BASE_URL;?>/index.php?path=account/dashboard/getRecentOrderProductsList_new">View All
               </a></span>
