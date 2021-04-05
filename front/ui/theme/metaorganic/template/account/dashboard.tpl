@@ -756,8 +756,9 @@
   }
   
     function excel_new() {
-
-    url = 'index.php?path=account/dashboard/export_mostpurchased_products_excel_new&start=' + start_date + '&end=' + end_date + '&customer_id=<?php echo $customer_id; ?>';
+    var optionvalue = $('.company-name option:selected').val();
+    console.log(optionvalue);
+    url = 'index.php?path=account/dashboard/export_mostpurchased_products_excel_new&start=' + start_date + '&end=' + end_date + '&customer_id='+ optionvalue;
 
     location = url;
   }

@@ -1296,7 +1296,8 @@ class ControllerAccountDashboard extends Controller {
     public function export_mostpurchased_products_excel_new() {
         $data = array();
         $data = [
-            'filter_customer' => $this->request->get['customer_id'] > 0 ? $this->request->get['customer_id'] : $this->customer->getId(),
+            /*'filter_customer' => $this->request->get['customer_id'] > 0 ? $this->request->get['customer_id'] : $this->customer->getId(),*/
+            'filter_customer' => $this->request->get['customer_id'],
             'filter_date_start' => $this->request->get['start'],
             'filter_date_end' => $this->request->get['end']
         ];

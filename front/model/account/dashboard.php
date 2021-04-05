@@ -814,6 +814,18 @@ class ModelAccountDashboard extends Model {
     }
 
     public function download_mostpurchased_products_excel_new($data) {
+        
+        $s_users = [];
+        $customer_id = $data['filter_customer'] > 0 ? $data['filter_customer'] : $this->customer->getId();
+        if($data['filter_customer'] < 0) {
+        $sub_users_query = $this->db->query('SELECT c.customer_id FROM ' . DB_PREFIX . "customer c WHERE parent = '" . $customer_id . "'");
+        $sub_users = $sub_users_query->rows;
+        $s_users = array_column($sub_users, 'customer_id');
+        }
+
+        array_push($s_users, $customer_id);
+        $sub_users_od = implode(',', $s_users);
+        
         $this->load->library('excel');
         $this->load->library('iofactory');
 
@@ -832,8 +844,8 @@ class ModelAccountDashboard extends Model {
         }
 
         if (!empty($data['filter_customer'])) {
-            $sql0 .= " AND c.customer_id ='" . $this->db->escape($data['filter_customer']) . "'";
-            $sql1 .= " AND c.customer_id ='" . $this->db->escape($data['filter_customer']) . "'";
+            $sql0 .= " AND c.customer_id IN (" . $sub_users_od . ")";
+            $sql1 .= " AND c.customer_id IN (" . $sub_users_od . ")";
         }
 
         if (!empty($data['filter_company'])) {
