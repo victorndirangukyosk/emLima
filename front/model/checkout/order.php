@@ -735,6 +735,7 @@ class ModelCheckoutOrder extends Model {
 
                     //$log->write($message);
                     //echo "<pre>";print_r($message);die;
+                    // try{
                     if ($customer_info['email_notification'] == 1 && $this->emailtemplate->getEmailEnabled('OrderAll', 'order_' . (int) $order_status_id)) {
 
 
@@ -749,6 +750,12 @@ class ModelCheckoutOrder extends Model {
 
                         $log->write('mail end');
                     }
+                // }
+                // catch(exception $ex)
+                // {
+                //     $log->write('Order History Mail Error');
+                //     $log->write($ex);
+                // }
 
 
 
@@ -1681,7 +1688,8 @@ class ModelCheckoutOrder extends Model {
         $log->write('EMAIL SENDING');
         $log->write($customer_info);
         $log->write('EMAIL SENDING');
-        
+        try
+        {
         if($customer_info['email_notification'] == 1) {
         $subject = $this->emailtemplate->getSubject('Customer', 'customer_7', $customer_info);
         $message = $this->emailtemplate->getMessage('Customer', 'customer_7', $customer_info);
@@ -1694,6 +1702,13 @@ class ModelCheckoutOrder extends Model {
         $mail->setHTML($message);
         $mail->send();
         }
+    }
+    catch(exception $ex)
+    {
+        $log->write('SendMailToParentUser Error');
+        $log->write($ex);
+    }
+
 
         $log->write('status enabled of mobi noti');
         $mobile_notification_template = $this->emailtemplate->getNotificationMessage('Customer', 'customer_7', $customer_info);
@@ -1732,7 +1747,8 @@ class ModelCheckoutOrder extends Model {
 
                     $subject = $this->emailtemplate->getSubject('Customer', 'customer_7', $order_approval_access_use);
                     $message = $this->emailtemplate->getMessage('Customer', 'customer_7', $order_approval_access_use);
-                    
+                    try
+                    {
                     if($order_approval_access_use['email_notification'] == 1) {
                     $mail = new Mail($this->config->get('config_mail'));
                     $mail->setTo($order_approval_access_use['email']);
@@ -1742,6 +1758,13 @@ class ModelCheckoutOrder extends Model {
                     $mail->setHTML($message);
                     $mail->send();
                     }
+                }
+                catch(exception $ex)
+                {
+                    $log->write('SendMailToParentUser Error');
+                    $log->write($ex);
+                }
+
 
                     $log->write('status enabled of mobi noti');
                     $mobile_notification_template = $this->emailtemplate->getNotificationMessage('Customer', 'customer_7', $order_approval_access_user);
@@ -1773,6 +1796,8 @@ class ModelCheckoutOrder extends Model {
                     $log->write($customer_info);
                     $log->write('EMAIL SENDING');
                     
+                    try
+                    {
                     if($order_approval_access_use['email_notification'] == 1) {
                     $subject = $this->emailtemplate->getSubject('Customer', 'customer_7', $order_approval_access_use);
                     $message = $this->emailtemplate->getMessage('Customer', 'customer_7', $order_approval_access_use);
@@ -1785,6 +1810,12 @@ class ModelCheckoutOrder extends Model {
                     $mail->setHTML($message);
                     $mail->send();
                     }
+                }
+                catch(exception $ex)
+                {
+                    $log->write('SendMailToParentUser Error');
+                    $log->write($ex);
+                }
 
                     $log->write('status enabled of mobi noti');
                     $mobile_notification_template = $this->emailtemplate->getNotificationMessage('Customer', 'customer_7', $order_approval_access_user);
