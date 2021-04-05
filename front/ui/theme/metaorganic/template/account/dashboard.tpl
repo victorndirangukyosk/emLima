@@ -421,7 +421,8 @@
     jQuery('#reportrange').daterangepicker(option_daterangepicker, cb);
 
     start_date = option_daterangepicker.startDate.format('YYYY-MM-DD');
-    end_date = option_daterangepicker.endDate.format('YYYY-MM-DD')
+    end_date = option_daterangepicker.endDate.format('YYYY-MM-DD');
+    $(".cancelBtn").hide();
 
 
     getNewData();
