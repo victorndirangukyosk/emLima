@@ -21,6 +21,6 @@
 <?php } ?>
 <?php } else { ?>
 <tr>
-    <td class="text-center" colspan="6"><?php echo 'No Orders'; ?></td>
+    <td class="text-center" colspan="6"><?php echo 'No Orders Found'; ?></td>
 </tr>
 <?php } ?>

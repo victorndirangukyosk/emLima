@@ -15,4 +15,6 @@
     </div>
 </li>
 <?php } ?>
+<?php } else { ?>
+<div class="tl-item"><?php echo 'No Recent Activity Found'; ?></div>
 <?php } ?>
