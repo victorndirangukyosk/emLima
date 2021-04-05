@@ -1014,7 +1014,7 @@ class ControllerAccountDashboard extends Controller {
         $data['results'] = sprintf($this->language->get('text_pagination'), ($recentorderproducts_total) ? (($page - 1) * $this->config->get('config_limit_admin')) + 1 : 0, ((($page - 1) * $this->config->get('config_limit_admin')) > ($recentorderproducts_total - $this->config->get('config_limit_admin'))) ? $recentorderproducts_total : ((($page - 1) * $this->config->get('config_limit_admin')) + $this->config->get('config_limit_admin')), $recentorderproducts_total, ceil($recentorderproducts_total / $this->config->get('config_limit_admin')));
 
         $data['filter_product_name'] = $filter_product_name;
-
+        $this->document->setTitle($data['heading_title']);
         $data['footer'] = $this->load->controller('common/footer');
         $data['header'] = $this->load->controller('common/header/onlyHeader');
         $this->load->model('account/dashboard');
@@ -1270,7 +1270,8 @@ class ControllerAccountDashboard extends Controller {
         $data['results'] = sprintf($this->language->get('text_pagination'), ($recentorders_total) ? (($page - 1) * $this->config->get('config_limit_admin')) + 1 : 0, ((($page - 1) * $this->config->get('config_limit_admin')) > ($recentorders_total - $this->config->get('config_limit_admin'))) ? $recentorders_total : ((($page - 1) * $this->config->get('config_limit_admin')) + $this->config->get('config_limit_admin')), $recentorders_total, ceil($recentorders_total / $this->config->get('config_limit_admin')));
 
         $data['filter_product_name'] = $filter_product_name;
-
+        
+        $this->document->setTitle($data['heading_title']);
         $data['footer'] = $this->load->controller('common/footer');
         $data['header'] = $this->load->controller('common/header/onlyHeader');
         $this->load->model('account/dashboard');
