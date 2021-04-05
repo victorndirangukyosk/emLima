@@ -558,7 +558,7 @@ function ChangeProductInventory(product_store_id){
     $(".procured_qty").each(function() {
         var tempObj ={};
         var procured_qty = $(this).val();
-        if(procured_qty != undefined && procured_qty>0){
+        if(procured_qty != undefined){
             
             var vendor_product_id = $(this).attr('data-product_store_id');
             var general_product_id = $(this).attr('data-general_product_id');
@@ -601,7 +601,7 @@ function ChangeInventory(){
     $(".procured_qty").each(function() {
         var tempObj ={};
         var procured_qty = $(this).val();
-        if(procured_qty != undefined && procured_qty>0){
+        if(procured_qty != undefined){
             
             var vendor_product_id = $(this).attr('data-product_store_id');
             var general_product_id = $(this).attr('data-general_product_id');
