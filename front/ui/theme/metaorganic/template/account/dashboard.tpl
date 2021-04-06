@@ -189,8 +189,7 @@
           <div class="panel-heading">
             <h3 class="panel-title"><i class="fa fa-th-list fa-lg"></i> Recent Orders
             </h3>
-            <span style="margin-top:-5px;background-color: #f38733;" class="butsetview"><a target="_blank"
-                href="<?php echo BASE_URL;?>/index.php?path=account/dashboard/getRecentOrdersList">View All </a></span>
+              <span style="margin-top:-5px;background-color: #f38733;" class="butsetview"><a href="#" id="ro">View All </a></span>
           </div>
           <div class="panel-body" width="50%">
             <div class="tab-content panel" width="50%">
@@ -841,6 +840,13 @@
            e.preventDefault();
            var optionvalue = $('.company-name option:selected').val();
            var url = 'index.php?path=account/dashboard/getRecentOrderProductsList_new&start=' + start_date + '&end=' + end_date + '&customer_id=' + optionvalue;  
+           window.open(url);
+  });
+  
+  $(document).delegate('#ro', 'click', function (e) {
+           e.preventDefault();
+           var optionvalue = $('.company-name option:selected').val();
+           var url = 'index.php?path=account/dashboard/getRecentOrdersList&start=' + start_date + '&end=' + end_date + '&customer_id=' + optionvalue;  
            window.open(url);
   });
 </script>

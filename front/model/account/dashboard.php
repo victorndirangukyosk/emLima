@@ -84,10 +84,10 @@ class ModelAccountDashboard extends Model {
     public function getRecentOrders_new($data = []) {
         $customer_id = $data['filter_customer'] > 0 ? $data['filter_customer'] : $this->customer->getId();
         $s_users = [];
-        if($data['filter_customer'] < 0) {
-        $sub_users_query = $this->db->query('SELECT c.customer_id FROM ' . DB_PREFIX . "customer c WHERE parent = '" . (int) $customer_id . "'");
-        $sub_users = $sub_users_query->rows;
-        $s_users = array_column($sub_users, 'customer_id');
+        if ($data['filter_customer'] < 0) {
+            $sub_users_query = $this->db->query('SELECT c.customer_id FROM ' . DB_PREFIX . "customer c WHERE parent = '" . (int) $customer_id . "'");
+            $sub_users = $sub_users_query->rows;
+            $s_users = array_column($sub_users, 'customer_id');
         }
 
         array_push($s_users, $customer_id);
@@ -118,10 +118,10 @@ class ModelAccountDashboard extends Model {
 
         $customer_id = $data['filter_customer'] > 0 ? $data['filter_customer'] : $this->customer->getId();
         $s_users = [];
-        if($data['filter_customer'] < 0) {
-        $sub_users_query = $this->db->query('SELECT c.customer_id FROM ' . DB_PREFIX . "customer c WHERE parent = '" . (int) $customer_id . "'");
-        $sub_users = $sub_users_query->rows;
-        $s_users = array_column($sub_users, 'customer_id');
+        if ($data['filter_customer'] < 0) {
+            $sub_users_query = $this->db->query('SELECT c.customer_id FROM ' . DB_PREFIX . "customer c WHERE parent = '" . (int) $customer_id . "'");
+            $sub_users = $sub_users_query->rows;
+            $s_users = array_column($sub_users, 'customer_id');
         }
 
         array_push($s_users, $customer_id);
@@ -180,10 +180,10 @@ class ModelAccountDashboard extends Model {
 
         $s_users = [];
         $customer_id = $data['filter_customer'] > 0 ? $data['filter_customer'] : $this->customer->getId();
-        if($data['filter_customer'] < 0) {
-        $sub_users_query = $this->db->query('SELECT c.customer_id FROM ' . DB_PREFIX . "customer c WHERE parent = '" . $customer_id . "'");
-        $sub_users = $sub_users_query->rows;
-        $s_users = array_column($sub_users, 'customer_id');
+        if ($data['filter_customer'] < 0) {
+            $sub_users_query = $this->db->query('SELECT c.customer_id FROM ' . DB_PREFIX . "customer c WHERE parent = '" . $customer_id . "'");
+            $sub_users = $sub_users_query->rows;
+            $s_users = array_column($sub_users, 'customer_id');
         }
 
         array_push($s_users, $customer_id);
@@ -379,18 +379,18 @@ class ModelAccountDashboard extends Model {
     }
 
     public function getTotalrecentorderproducts_new($data = []) {
-        
+
         $s_users = [];
         $customer_id = $data['customer_id'] > 0 ? $data['customer_id'] : $this->customer->getId();
-        if($data['customer_id'] < 0) {
-        $sub_users_query = $this->db->query('SELECT c.customer_id FROM ' . DB_PREFIX . "customer c WHERE parent = '" . $customer_id . "'");
-        $sub_users = $sub_users_query->rows;
-        $s_users = array_column($sub_users, 'customer_id');
+        if ($data['customer_id'] < 0) {
+            $sub_users_query = $this->db->query('SELECT c.customer_id FROM ' . DB_PREFIX . "customer c WHERE parent = '" . $customer_id . "'");
+            $sub_users = $sub_users_query->rows;
+            $s_users = array_column($sub_users, 'customer_id');
         }
 
         array_push($s_users, $customer_id);
         $sub_users_od = implode(',', $s_users);
-        
+
         $start_date = date('Y-m-d', strtotime('-30 day'));
         $end_date = date('Y-m-d');
         //$sql = 'SELECT COUNT(*) AS count FROM ' . DB_PREFIX . 'order_product AS op LEFT JOIN ' . DB_PREFIX . 'order AS o ON ( op.order_id = o.order_id ) LEFT JOIN  ' . DB_PREFIX . "product_description AS pd ON (op.general_product_id = pd.product_id)  WHERE pd.language_id = '" . (int) $this->config->get('config_language_id') . "' AND o.customer_id = " . $customer_id . ' AND o.date_added >= ' . $date . ' GROUP BY pd.name  having sum(op.quantity)>100  ';
@@ -542,12 +542,14 @@ class ModelAccountDashboard extends Model {
     }
 
     public function getrecentordersofcustomer($data = []) {
-        $customer_id = $data['customer_id'];
 
         $s_users = [];
-        $sub_users_query = $this->db->query('SELECT c.customer_id FROM ' . DB_PREFIX . "customer c WHERE parent = '" . (int) $customer_id . "'");
-        $sub_users = $sub_users_query->rows;
-        $s_users = array_column($sub_users, 'customer_id');
+        $customer_id = $data['customer_id'] > 0 ? $data['customer_id'] : $this->customer->getId();
+        if ($data['customer_id'] < 0) {
+            $sub_users_query = $this->db->query('SELECT c.customer_id FROM ' . DB_PREFIX . "customer c WHERE parent = '" . (int) $customer_id . "'");
+            $sub_users = $sub_users_query->rows;
+            $s_users = array_column($sub_users, 'customer_id');
+        }
 
         array_push($s_users, $customer_id);
         $sub_users_od = implode(',', $s_users);
@@ -600,6 +602,11 @@ class ModelAccountDashboard extends Model {
             $implode[] = " AND DATE(o.date_modified) = DATE('" . $this->db->escape($data['filter_date_modified']) . "')";
         }
 
+        if (!empty($data['filter_start_date']) && !empty($data['filter_end_date'])) {
+            $implode[] = " DATE(o.date_added) >= DATE('" . $this->db->escape($data['filter_start_date']) . "')";
+            $implode[] = " DATE(o.date_added) <= DATE('" . $this->db->escape($data['filter_end_date']) . "')";
+        }
+
         // if (!empty($data['filter_total'])) {
         //     $implode[]= " AND o.total = '" . (float) $data['filter_total'] . "'";
         // }
@@ -649,12 +656,14 @@ class ModelAccountDashboard extends Model {
     }
 
     public function getTotalrecentorders($data = []) {
-        $customer_id = $data['customer_id'];
 
         $s_users = [];
-        $sub_users_query = $this->db->query('SELECT c.customer_id FROM ' . DB_PREFIX . "customer c WHERE parent = '" . (int) $customer_id . "'");
-        $sub_users = $sub_users_query->rows;
-        $s_users = array_column($sub_users, 'customer_id');
+        $customer_id = $data['customer_id'] > 0 ? $data['customer_id'] : $this->customer->getId();
+        if ($data['customer_id'] < 0) {
+            $sub_users_query = $this->db->query('SELECT c.customer_id FROM ' . DB_PREFIX . "customer c WHERE parent = '" . (int) $customer_id . "'");
+            $sub_users = $sub_users_query->rows;
+            $s_users = array_column($sub_users, 'customer_id');
+        }
 
         array_push($s_users, $customer_id);
         $sub_users_od = implode(',', $s_users);
@@ -703,6 +712,11 @@ class ModelAccountDashboard extends Model {
             $implode[] = " AND DATE(o.date_modified) = DATE('" . $this->db->escape($data['filter_date_modified']) . "')";
         }
 
+        if (!empty($data['filter_start_date']) && !empty($data['filter_end_date'])) {
+            $implode[] = " DATE(o.date_added) >= DATE('" . $this->db->escape($data['filter_start_date']) . "')";
+            $implode[] = " DATE(o.date_added) <= DATE('" . $this->db->escape($data['filter_end_date']) . "')";
+        }
+
         // if (!empty($data['filter_total'])) {
         //     $implode[]= " AND o.total = '" . (float) $data['filter_total'] . "'";
         // }
@@ -710,6 +724,8 @@ class ModelAccountDashboard extends Model {
         if ($implode) {
             $sql .= ' AND ' . implode(' AND ', $implode);
         }
+        $log = new Log('error.log');
+        $log->write($sql);
         $query = $this->db->query($sql);
 
         return $query->row['count'];
@@ -827,18 +843,18 @@ class ModelAccountDashboard extends Model {
     }
 
     public function download_mostpurchased_products_excel_new($data) {
-        
+
         $s_users = [];
         $customer_id = $data['filter_customer'] > 0 ? $data['filter_customer'] : $this->customer->getId();
-        if($data['filter_customer'] < 0) {
-        $sub_users_query = $this->db->query('SELECT c.customer_id FROM ' . DB_PREFIX . "customer c WHERE parent = '" . $customer_id . "'");
-        $sub_users = $sub_users_query->rows;
-        $s_users = array_column($sub_users, 'customer_id');
+        if ($data['filter_customer'] < 0) {
+            $sub_users_query = $this->db->query('SELECT c.customer_id FROM ' . DB_PREFIX . "customer c WHERE parent = '" . $customer_id . "'");
+            $sub_users = $sub_users_query->rows;
+            $s_users = array_column($sub_users, 'customer_id');
         }
 
         array_push($s_users, $customer_id);
         $sub_users_od = implode(',', $s_users);
-        
+
         $this->load->library('excel');
         $this->load->library('iofactory');
 
