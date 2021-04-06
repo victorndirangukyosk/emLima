@@ -907,6 +907,24 @@ class ControllerApiCustomerDashboard extends Controller
             $filter_product_name = null;
         }
 
+        if (isset($this->request->get['customer_id'])) {
+            $filter_customer_id = $this->request->get['customer_id'];
+        } else {
+            $filter_customer_id = null;
+        }
+        
+        if (isset($this->request->get['start'])) {
+            $filter_start_date = $this->request->get['start'];
+        } else {
+            $filter_start_date = null;
+        }
+        
+        if (isset($this->request->get['end'])) {
+            $filter_end_date = $this->request->get['end'];
+        } else {
+            $filter_end_date = null;
+        }
+
         if (isset($this->request->get['sort'])) {
             $sort = $this->request->get['sort'];
         } else {
@@ -961,7 +979,10 @@ class ControllerApiCustomerDashboard extends Controller
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
             'limit' => $this->config->get('config_limit_admin'),
-            'customer_id' => $this->customer->getId(),
+            // 'customer_id' => $this->customer->getId(),
+            'customer_id' => $filter_customer_id, 
+            'start_date' => $filter_start_date,
+            'end_date' => $filter_end_date
         ];
 
         $this->load->model('account/dashboard');
@@ -1104,6 +1125,26 @@ class ControllerApiCustomerDashboard extends Controller
             $filter_date_modified = null;
         }
 
+
+        if (isset($this->request->get['customer_id'])) {
+            $filter_customer_id = $this->request->get['customer_id'];
+        } else {
+            $filter_customer_id = null;
+        }
+        
+        if (isset($this->request->get['start'])) {
+            $filter_start_date = $this->request->get['start'];
+        } else {
+            $filter_start_date = null;
+        }
+        
+        if (isset($this->request->get['end'])) {
+            $filter_end_date = $this->request->get['end'];
+        } else {
+            $filter_end_date = null;
+        }
+
+
         if (isset($this->request->get['sort'])) {
             $sort = $this->request->get['sort'];
         } else {
@@ -1191,7 +1232,10 @@ class ControllerApiCustomerDashboard extends Controller
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
             'limit' => $this->config->get('config_limit_admin'),
-            'customer_id' => $this->customer->getId(),
+            // 'customer_id' => $this->customer->getId(),
+            'customer_id' => $filter_customer_id,
+            'filter_start_date' => $filter_start_date,
+            'filter_end_date' => $filter_end_date,
         ];
 
         $this->load->model('account/dashboard');
