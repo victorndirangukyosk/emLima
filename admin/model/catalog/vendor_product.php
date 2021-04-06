@@ -699,7 +699,7 @@ class ModelCatalogVendorProduct extends Model {
         //echo $query;
         $this->db->query($query);
 
-        $this->db->query('INSERT INTO ' . DB_PREFIX . "product_inventory_history SET  product_id = '" . $data['product_id'] . "', product_store_id = '" . $store_product_id . "', product_name = '" . $data['product_name'] . "', procured_qty = '" . $data['procured_qty'] . "', prev_qty = '" . $data['current_qty'] . "',current_qty = '" . $qty . "',rejected_qty = '" . $data['rejected_qty'] . "', date_added = '" . $this->db->escape(date('Y-m-d H:i:s')) . "'");
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "product_inventory_history SET  product_id = '" . $data['product_id'] . "', product_store_id = '" . $store_product_id . "', product_name = '" . $data['product_name'] . "', procured_qty = '" . $data['procured_qty'] . "', prev_qty = '" . $data['current_qty'] . "',current_qty = '" . $qty . "',rejected_qty = '" . $data['rejected_qty'] . "', added_by = '" . $this->user->getId() . "', added_user_role = '" . $this->user->getGroupName() . "', added_user = '" . $this->user->getFirstName() . ' ' . $this->user->getLastName() . "',  date_added = '" . $this->db->escape(date('Y-m-d H:i:s')) . "'");
 
         $this->trigger->fire('post.admin.product.edit', $store_product_id);
 
