@@ -1021,9 +1021,9 @@ class ControllerApiCustomerDashboard extends Controller
             $url .= '&page=' . $this->request->get['page'];
         }
 
-        $data['sort_name'] = $this->url->link('account/dashboard/getRecentOrderProductsList_new', '&sort=pd.name' . $url, 'SSL');
-        $data['sort_total'] = $this->url->link('account/dashboard/getRecentOrderProductsList_new', '&sort=total' . $url, 'SSL');
-        $data['sort_unit'] = $this->url->link('account/dashboard/getRecentOrderProductsList_new', '&sort=op.unit' . $url, 'SSL');
+        // $data['sort_name'] = $this->url->link('account/dashboard/getRecentOrderProductsList_new', '&sort=pd.name' . $url, 'SSL');
+        // $data['sort_total'] = $this->url->link('account/dashboard/getRecentOrderProductsList_new', '&sort=total' . $url, 'SSL');
+        // $data['sort_unit'] = $this->url->link('account/dashboard/getRecentOrderProductsList_new', '&sort=op.unit' . $url, 'SSL');
 
         $url = '';
 
@@ -1043,7 +1043,7 @@ class ControllerApiCustomerDashboard extends Controller
         $pagination->total = $recentorderproducts_total;
         $pagination->page = $page;
         $pagination->limit = $this->config->get('config_limit_admin');
-        $pagination->url = $this->url->link('account/dashboard/getRecentOrderProductsList_new', $url . '&page={page}', 'SSL');
+        // $pagination->url = $this->url->link('account/dashboard/getRecentOrderProductsList_new', $url . '&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
@@ -1298,10 +1298,10 @@ class ControllerApiCustomerDashboard extends Controller
             $url .= '&page='.$this->request->get['page'];
         }
 
-        $data['sort_order'] = $this->url->link('account/dashboard/getRecentOrdersList', '&sort=o.order_id'.$url, 'SSL');
-        $data['sort_status'] = $this->url->link('account/dashboard/getRecentOrdersList', '&sort=name'.$url, 'SSL');
-        $data['sort_date_added'] = $this->url->link('account/dashboard/getRecentOrdersList', '&sort=o.date_added'.$url, 'SSL');
-        $data['sort_date_modified'] = $this->url->link('account/dashboard/getRecentOrdersList', '&sort=o.date_modified'.$url, 'SSL');
+        // $data['sort_order'] = $this->url->link('api/customer/dashboard/RecentOrdersList', '&sort=o.order_id'.$url, 'SSL');
+        // $data['sort_status'] = $this->url->link('api/customer/dashboard/RecentOrdersList', '&sort=name'.$url, 'SSL');
+        // $data['sort_date_added'] = $this->url->link('api/customer/dashboard/RecentOrdersList', '&sort=o.date_added'.$url, 'SSL');
+        // $data['sort_date_modified'] = $this->url->link('api/customer/dashboard/RecentOrdersList', '&sort=o.date_modified'.$url, 'SSL');
 
         $url = '';
 
@@ -1345,7 +1345,7 @@ class ControllerApiCustomerDashboard extends Controller
         $pagination->total = $recentorders_total;
         $pagination->page = $page;
         $pagination->limit = $this->config->get('config_limit_admin');
-        $pagination->url = $this->url->link('account/dashboard/getRecentOrdersList', $url.'&page={page}', 'SSL');
+        // $pagination->url = $this->url->link('api/customer/dashboard/RecentOrdersList', $url.'&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
