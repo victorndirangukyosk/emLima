@@ -24,6 +24,7 @@ class ControllerCommonLogin extends Controller {
             //echo "<pre>";print_r($this->request->post);die;
 
             $this->session->data['token'] = md5(mt_rand());
+            $this->session->data['admintoken'] =  $this->session->data['token'];//this name is used in API
 
             if (!empty($this->request->post['lang'])) {
                 $this->session->data['language'] = $this->request->post['lang'];
@@ -201,6 +202,7 @@ class ControllerCommonLogin extends Controller {
             'common/forgotten',
             'common/reset',
             'common/scheduler',
+            'common/loginAPI',
         ];
 
         if (!$this->user->isLogged() && !in_array($path, $ignore)) {
@@ -216,6 +218,7 @@ class ControllerCommonLogin extends Controller {
                 'error/not_found',
                 'error/permission',
                 'common/scheduler',
+                'common/loginAPI',
             ];
 
             if (!in_array($path, $ignore) && (!isset($this->request->get['token']) || !isset($this->session->data['token']) || ($this->request->get['token'] != $this->session->data['token']))) {
