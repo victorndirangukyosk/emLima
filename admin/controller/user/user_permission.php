@@ -383,6 +383,7 @@ class ControllerUserUserPermission extends Controller
             'dashboard/recent',
             'dashboard/recenttabs',
             'dashboard/sale',
+            'common/loginAPI',
         ];
 
         $data['permissions'] = [];
