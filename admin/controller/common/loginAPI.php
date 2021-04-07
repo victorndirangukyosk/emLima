@@ -1,85 +1,22 @@
 <?php
 
-require_once DIR_SYSTEM.'vendor/firebase/php-jwt/vendor/autoload.php';
-use Firebase\JWT\JWT;
-
-class ControllerApiLogin extends Controller {
-
-    public function index() {
-        $this->load->language('api/login');
-
-        // Delete old login so not to cause any issues if there is an error
-        //echo $this->session->data['api_id'];
-        // echo "session api id";
-
-        unset($this->session->data['api_id']);
-
-        $keys = [
-            'username',
-            'password',
-        ];
-
-        foreach ($keys as $key) {
-            if (!isset($this->request->post[$key])) {
-                $this->request->post[$key] = '';
-            }
-        }
-
-        $json = [];
-
-        $this->load->model('account/api');
-        $this->load->model('user/user');
-
-        $api_info = $this->model_account_api->login($this->request->post['username'], $this->request->post['password']);
-        if ($api_info['user_id']) {
-            $user_info = $this->model_user_user->getUser($api_info['user_id']);
-        }
-        // echo $this->request->post['username'], $this->request->post['password'];
-
-        if ($api_info['status']) {
-            if (!isset($this->session->data['api_id'])) {
-                $this->session->data['api_id'] = $api_info['user_id'];
-            }
-            //echo $this->request->post['groups'];exit;
-            if (isset($this->request->post['groups']) && count($this->request->post['groups']) > 0) {
-                if (in_array($user_info['user_group'], $this->request->post['groups'])) {
-                    $this->session->data['api_id'] = $api_info['user_id'];
-                    $json['success'] = $this->language->get('text_success');
-                } else {
-                    $this->response->addHeader('Content-Type: application/json');
-                    $this->response->setOutput(json_encode(['error' => 'Not authorized to access this api']));
-                    $this->response->output();
-                    die();
-                }
-            } else {
-                $json['success'] = $this->language->get('text_success');
-            }
-        } else {
-            //print_r("else");
-            $json['error'] = $this->language->get('error_login');
-        }
-
-        $this->response->addHeader('Content-Type: application/json');
-        $this->response->setOutput(json_encode($json));
-    }
-
-    public function addsendpushnotification() {
-        $ret = $this->emailtemplate->sendPushNotification($this->request->post['vendor_id'], $this->request->post['device_id'], $this->request->post['order_id'], $this->request->post['store_id'], $this->request->post['message'], $this->request->post['title']);
-        $json['response'] = $ret;
-        $this->response->addHeader('Content-Type: application/json');
-        $this->response->setOutput(json_encode($json));
-    }
+class ControllerCommonLoginAPI extends Controller
+{
 
 
-    //Customer login by admin for new app//same method replicated in admin module regarding token session
+    
+ //Customer login by admin for new app//same method replicated in admin module regarding token session
     //this is temperory method, need to validate, category pricing, two level approval process,tax
-    public function getloginbyadmin($args) {
+    public function getloginbyadmin() {//$args
         $json = [];
         $json['status'] = 200;
         $json['data'] = [];
         $json['message'] = [];
         $json['customer_id'] = $args['customer_id'];
         $json['url'] = [];
+
+             echo "<pre>";print_r($this->request->get['token']);die; 
+
 
         if (isset($args['customer_id'])) {
             $customer_id = $args['customer_id'];
@@ -334,52 +271,6 @@ class ControllerApiLogin extends Controller {
          
     }
 
-    //below method used to check dmin login token/session token
-    public function check() {
-        $path = '';
 
-        if (isset($this->request->get['path'])) {
-            $part = explode('/', $this->request->get['path']);
-
-            if (isset($part[0])) {
-                $path .= $part[0];
-            }
-
-            if (isset($part[1])) {
-                $path .= '/' . $part[1];
-            }
-        }
-
-        $ignore = [
-            'common/login',
-            'common/forgotten',
-            'common/reset',
-            'common/scheduler',
-        ];
-
-        if (!$this->user->isLogged() && !in_array($path, $ignore)) {
-            return new Action('common/login');
-        }
-
-        if (isset($this->request->get['path'])) {
-            $ignore = [
-                'common/login',
-                'common/logout',
-                'common/forgotten',
-                'common/reset',
-                'error/not_found',
-                'error/permission',
-                'common/scheduler',
-            ];
-
-            if (!in_array($path, $ignore) && (!isset($this->request->get['token']) || !isset($this->session->data['token']) || ($this->request->get['token'] != $this->session->data['token']))) {
-                return new Action('common/login');
-            }
-        } else {
-            if (!isset($this->request->get['token']) || !isset($this->session->data['token']) || ($this->request->get['token'] != $this->session->data['token'])) {
-                return new Action('common/login');
-            }
-        }
-    }
 
 }
