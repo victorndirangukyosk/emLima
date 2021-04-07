@@ -24,6 +24,7 @@ class ControllerCommonLogin extends Controller {
             //echo "<pre>";print_r($this->request->post);die;
 
             $this->session->data['token'] = md5(mt_rand());
+            $this->session->data['admintoken'] =  $this->session->data['token'];//this name is used in API
 
             if (!empty($this->request->post['lang'])) {
                 $this->session->data['language'] = $this->request->post['lang'];

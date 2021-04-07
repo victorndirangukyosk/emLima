@@ -71,7 +71,7 @@ class ControllerApiLogin extends Controller {
     }
 
 
-    //Customer login by admin for mobile app
+    //Customer login by admin for new app
     //this is temperory method, need to validate, category pricing, two level approval process,tax
     public function getloginbyadmin($args) {
         $json = [];
@@ -86,6 +86,24 @@ class ControllerApiLogin extends Controller {
         } else {
             $customer_id = 0;
         }
+
+        //below token check added for security
+        #region       
+
+
+        // if ((isset($this->session->data['token']) && !isset($this->request->get['token'])) || ((isset($this->request->get['token']) && (isset($this->session->data['token']) && ($this->request->get['token'] != $this->session->data['token']))))) {
+        //     $this->error['warning'] = $this->language->get('error_token');
+        // }
+        if ((isset($this->session->data['admintoken']) && !isset($this->request->get['token'])) || ((isset($this->request->get['token']) && (isset($this->session->data['admintoken']) && ($this->request->get['token'] != $this->session->data['admintoken']))))) {
+        
+            $json['message'] = 'Please login again as Admin';                    
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($json));
+            return;
+        }
+
+        #endregion
+
         // $this->load->model('sale/customer');
         // $customer_info = $this->model_sale_customer->getCustomer($customer_id);
 
@@ -94,7 +112,7 @@ class ControllerApiLogin extends Controller {
         $customer_info['devices'] = $this->model_account_customer->getCustomerDevices($api_info['customer_id']);
        
         if ($customer_info) {
-            $token = md5(mt_rand());
+            $token = md5(mt_rand()); 
 
              $this->model_account_customer->editToken($customer_id, $token);
             if (isset($args['store_id'])) {
@@ -296,6 +314,54 @@ class ControllerApiLogin extends Controller {
         
 
          
+    }
+
+    //below method used to check dmin login token/session token
+    public function check() {
+        $path = '';
+
+        if (isset($this->request->get['path'])) {
+            $part = explode('/', $this->request->get['path']);
+
+            if (isset($part[0])) {
+                $path .= $part[0];
+            }
+
+            if (isset($part[1])) {
+                $path .= '/' . $part[1];
+            }
+        }
+
+        $ignore = [
+            'common/login',
+            'common/forgotten',
+            'common/reset',
+            'common/scheduler',
+        ];
+
+        if (!$this->user->isLogged() && !in_array($path, $ignore)) {
+            return new Action('common/login');
+        }
+
+        if (isset($this->request->get['path'])) {
+            $ignore = [
+                'common/login',
+                'common/logout',
+                'common/forgotten',
+                'common/reset',
+                'error/not_found',
+                'error/permission',
+                'common/scheduler',
+            ];
+
+            if (!in_array($path, $ignore) && (!isset($this->request->get['token']) || !isset($this->session->data['token']) || ($this->request->get['token'] != $this->session->data['token']))) {
+                return new Action('common/login');
+            }
+        } else {
+            if (!isset($this->request->get['token']) || !isset($this->session->data['token']) || ($this->request->get['token'] != $this->session->data['token'])) {
+                return new Action('common/login');
+            }
+        }
     }
 
 }
