@@ -94,9 +94,27 @@ class ControllerApiLogin extends Controller {
         // if ((isset($this->session->data['token']) && !isset($this->request->get['token'])) || ((isset($this->request->get['token']) && (isset($this->session->data['token']) && ($this->request->get['token'] != $this->session->data['token']))))) {
         //     $this->error['warning'] = $this->language->get('error_token');
         // }
+
+            // echo "<pre>";print_r($this->session);die; 
+            
+        if(!isset($this->request->get['admintoken']))
+        {
+            $json['message'] = 'Please check the URL ';                    
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($json));
+            return;
+        }
+
+        if(!isset($this->session->data['admintoken']))
+        {
+            $json['message'] = 'Please login again as Admin ';                    
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($json));
+            return;
+        }
         if ((isset($this->session->data['admintoken']) && !isset($this->request->get['token'])) || ((isset($this->request->get['token']) && (isset($this->session->data['admintoken']) && ($this->request->get['token'] != $this->session->data['admintoken']))))) {
         
-            $json['message'] = 'Please login again as Admin';                    
+            $json['message'] = 'Authentication Failed.Please login again as Admin';                    
             $this->response->addHeader('Content-Type: application/json');
             $this->response->setOutput(json_encode($json));
             return;
