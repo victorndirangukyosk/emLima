@@ -307,7 +307,8 @@ class ControllerCatalogProduct extends Controller
 		<th>Rejected Qty</th>
 		<th>Prev Qty</th>
 		<th>Updated Qty</th>
-		<th>Updation Date</th>
+		<th>Updated Date</th>
+                <th>Updated By</th>
       </tr>
       </thead>';
         } else {
@@ -325,6 +326,7 @@ class ControllerCatalogProduct extends Controller
 					<th>'.$product_history['prev_qty'].'</th>
 					<th>'.$product_history['current_qty'].'</th>
 					<th>'.$product_history['date_added'].'</th>
+                                        <th>'.$product_history['added_user'].'</th>
 			   </tr>';
             }
 
