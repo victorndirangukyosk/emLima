@@ -32,7 +32,7 @@ class ControllerCommonLoginAPI extends Controller
         //     $this->error['warning'] = $this->language->get('error_token');
         // }
 
-            //   echo "<pre>";print_r($this->session);die; 
+            //    echo "<pre>";print_r($this->session);die; 
             
         // if(!isset($this->request->get['admintoken']))
         if(!isset($this->request->get['token']))
@@ -99,7 +99,8 @@ class ControllerCommonLoginAPI extends Controller
 
             // $data=  $this->adminRedirectLogin($token) ;this method should be called from front folder
            
-            $data=  $this->response->redirect(HTTP_CATALOG . 'index.php?path=account/login/adminRedirectLoginAPI&token=' . $token);
+            $data= $this->load->controller(HTTP_CATALOG . 'index.php?path=account/login/adminRedirectLoginAPI&token=' . $token);
+            // $this->response->redirect();
            
             $json['message'] = 'User Logged';
             $json['customer_token'] = $token;
