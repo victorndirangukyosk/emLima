@@ -57,14 +57,14 @@
                     <li class="list-group-item">
                         <div class="my-order-block">
                             <div class="row">
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <div class="my-order-delivery">
                                         <h3 class="my-order-title label" id="orderstatus<?= $order['order_id']; ?>" style="background-color: #<?= $order['order_status_color']; ?>;display: block;line-height: 2;"><?php echo $order['status']; ?></h3>
 
                                         <span class="my-order-date">ETA: <?php echo $order['eta_date']; ?>, <?php echo $order['eta_time']; ?></span>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-5">
                                     <div class="my-order-info">
                                         <h3 class="my-order-title"><?php if($order['order_company'] == NULL) { echo $order['store_name']; ?> (<?php echo $order['name']; ?>) <?php } else { echo $order['order_company']; } ?> - <?php echo $order['total']; ?></h3>
 
