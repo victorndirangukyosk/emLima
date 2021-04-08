@@ -59,7 +59,7 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="my-order-delivery">
-                                        <h3 class="my-order-title label" id="orderstatus<?= $order['order_id']; ?>" style="background-color: #<?= $order['order_status_color']; ?>;display: block;line-height: 2;"><?php echo $order['status']; ?></h3>
+                                        <h3 class="my-order-title label" id="orderstatus<?= $order['order_id']; ?>" style="background-color: #<?= $order['order_status_color']; ?>;display: block;line-height: 2; text-align: center;"><?php echo $order['status']; ?></h3>
 
                                         <span class="my-order-date">ETA: <?php echo $order['eta_date']; ?>, <?php echo $order['eta_time']; ?></span>
                                     </div>
