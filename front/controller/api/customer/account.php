@@ -81,6 +81,7 @@ class ControllerApiCustomerAccount extends Controller
             //echo "<pre>";print_r($args);die;
 
             $date = $args['dob'];
+            $newUI = $args['newUI'];
 
             $log = new Log('error.log');
             $log->write('account edit');
@@ -92,8 +93,14 @@ class ControllerApiCustomerAccount extends Controller
             } else {
                 $args['dob'] = null;
             }
-
+            if(isset($newUI))
+            {
+            $this->model_account_customer->editCustomerNew($args);
+            }
+            else
+            {
             $this->model_account_customer->editCustomer($args);
+            }
 
             /*if(isset($args['email']) && isset($args['password']) ) {
                 $this->model_account_customer->editPassword($args['email'],$args['password']);
@@ -142,12 +149,14 @@ class ControllerApiCustomerAccount extends Controller
 
         $this->load->model('account/customer');
 
-        if ((utf8_strlen(trim($args['firstname'])) < 1) || (utf8_strlen(trim($args['firstname'])) > 32)) {
+        if (!isset($args['firstname'])) {
+            // $this->error['firstname'] = $this->language->get('error_firstname');//required field will be validated from ui
+        } else if ((utf8_strlen(trim($args['firstname'])) < 1) || (utf8_strlen(trim($args['firstname'])) > 32)) {
             $this->error['firstname'] = $this->language->get('error_firstname');
         }
 
         if (!isset($args['email'])) {
-            $this->error['email'] = $this->language->get('error_email');
+            // $this->error['email'] = $this->language->get('error_email');//required field will be validated from ui
         } else {
             if ((utf8_strlen($args['email']) > 96) || !filter_var($args['email'], FILTER_VALIDATE_EMAIL)) {
                 $this->error['email'] = $this->language->get('error_email');
@@ -155,7 +164,7 @@ class ControllerApiCustomerAccount extends Controller
         }
 
         if (!isset($args['email'])) {
-            $this->error['email'] = $this->language->get('error_email');
+            // $this->error['email'] = $this->language->get('error_email');//required field will be validated from ui
         } else {
             if (($this->customer->getEmail() != $args['email']) && $this->model_account_customer->getTotalCustomersByEmail($args['email'])) {
                 $this->error['warning'] = $this->language->get('error_exists');
@@ -174,21 +183,21 @@ class ControllerApiCustomerAccount extends Controller
             $this->error['confirmpassword'] = $this->language->get('error_mismatch_password');
         }*/
 
-        if (!isset($args['dob'])) {
-            $this->error['dob'] = $this->language->get('error_dob');
-        } else {
-            if (false == DateTime::createFromFormat('d/m/Y', $args['dob'])) {
-                $this->error['dob'] = $this->language->get('error_dob');
-            }
-        }
+        // if (!isset($args['dob'])) {
+        //     $this->error['dob'] = $this->language->get('error_dob');
+        // } else {
+        //     if (false == DateTime::createFromFormat('d/m/Y', $args['dob'])) {
+        //         $this->error['dob'] = $this->language->get('error_dob');
+        //     }
+        // }
 
-        if (empty($args['telephone'])) {
-            $this->error['telephone'] = $this->language->get('error_telephone');
-        }
+        // if (empty($args['telephone'])) {
+        //     $this->error['telephone'] = $this->language->get('error_telephone');
+        // }
 
-        if (!isset($args['gender'])) {
-            $this->error['gender'] = $this->language->get('error_gender');
-        }
+        // if (!isset($args['gender'])) {
+        //     $this->error['gender'] = $this->language->get('error_gender');
+        // }
 
         //echo "<pre>";print_r($this->error);die;
 
