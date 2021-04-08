@@ -948,6 +948,7 @@ class ControllerApiCustomerSubusers extends Controller
         $json['status'] = 200;
         $json['data'] = [];
         $json['message'] = [];
+        try{
 
         $this->load->language('api/general');
         // $this->load->model('api/approval');
@@ -1004,9 +1005,16 @@ class ControllerApiCustomerSubusers extends Controller
 
             
         // }
+            }
+            catch(exception $ex)
+            {
+                $json['message'] = 'Something went wrong';
+            }
+            finally{
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
+            }
     }
 
 }
