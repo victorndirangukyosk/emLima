@@ -100,6 +100,20 @@
                         </div>
                     </li>
                     <li class="list-group-item">
+                        <div class="my-order-details">
+                            <div class="row">
+                                <div class="col-md-4"><?= $text_delivery_address?></div>
+                                <?php if(isset($order['shipping_address'])) { ?>
+                                <div class="col-md-8">
+                                    <?= $order['shipping_address']['address'] ?> <br/>
+                                    <?= $order['shipping_address']['city'] ?>, <?= $order['shipping_address']['zipcode'] ?></div>
+                                <?php } else { ?>
+                                <div class="col-md-8"> </div>
+                                <?php } ?>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="list-group-item">
                         <div class="my-order-details" style="border: none !important;">
                             <?php if($order['parent_details'] != NULL /*&& !empty($_SESSION['parent']) && $_SESSION['parent'] > 0*/) { ?>
                             <div class="row">
@@ -152,19 +166,6 @@
                     </li>
                     <li class="list-group-item my-order-details-block">
                         <div class="collapse" id="<?= $order['order_id'] ?>">
-
-                            <div class="my-order-details">
-                                <div class="row">
-                                    <div class="col-md-4"><?= $text_delivery_address?></div>
-                                    <?php if(isset($order['shipping_address'])) { ?>
-                                    <div class="col-md-8">
-                                        <?= $order['shipping_address']['address'] ?> <br/>
-                                        <?= $order['shipping_address']['city'] ?>, <?= $order['shipping_address']['zipcode'] ?></div>
-                                    <?php } else { ?>
-                                    <div class="col-md-8"> </div>
-                                    <?php } ?>
-                                </div>
-                            </div>
                             <div class="my-order-details">
                                 <div class="row">
                                     <div class="col-md-4"><?= $text_payment ?></div>
@@ -175,13 +176,11 @@
                                     </div>
                                 </div>
                             </div>
-
-
                         </div>
                     </li> 
                     <li class="list-group-item">
                         <div class="my-order-showaddress">  
-                            <a class="btn-link text_green" role="button" data-toggle="collapse" href="#<?= $order['order_id'] ?>" aria-expanded="false" aria-controls="<?= $order['order_id'] ?>"><?= $text_view_billing?></a>&nbsp;|&nbsp;<a class="btn-link text_green" role="button" href="<?php echo ($order['realproducts'] ? $order['real_href'] : $order['href'].'&order_status='.urlencode($order['status'])) ;?>" aria-expanded="false" aria-controls="<?= $order['status'] ?>"><?= $text_view_order?></a>
+                            <a class="btn-link text_green" role="button" data-toggle="collapse" href="#<?= $order['order_id'] ?>" aria-expanded="false" aria-controls="<?= $order['order_id'] ?>">View Billing Details</a>&nbsp;|&nbsp;<a class="btn-link text_green" role="button" href="<?php echo ($order['realproducts'] ? $order['real_href'] : $order['href'].'&order_status='.urlencode($order['status'])) ;?>" aria-expanded="false" aria-controls="<?= $order['status'] ?>"><?= $text_view_order?></a>
                             <?php if($order['edit_order'] != NULL && (($order['order_approval_access_role'] == 'head_chef' && $order['head_chef'] == 'Pending') || ($order['order_approval_access_role'] == 'procurement_person' && $order['procurement'] == 'Pending') || (empty($_SESSION['parent']) && $order['parent_approval'] == 'Pending'))) { ?> |&nbsp;<a class="btn-link text_green" role="button" href="<?php echo $order['edit_order']; ?>" id="editorder<?php echo $order['order_id']; ?>" aria-expanded="false">Edit Order</a> <?php } ?>
                         </div>
                     </li>
