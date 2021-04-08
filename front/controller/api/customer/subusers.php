@@ -956,7 +956,7 @@ class ControllerApiCustomerSubusers extends Controller
         $log = new Log('error.log');
 
         $this->load->model('account/customer');
-        //echo "<pre>";print_r($args);die;
+        // echo "<pre>";print_r($this->customer->getFirstName());die;
         // if (!$this->validate()) {
         //     $json['status'] = 10014;
 
@@ -982,8 +982,8 @@ class ControllerApiCustomerSubusers extends Controller
             $this->load->model('account/activity');
 
             $activity_data = [
-                'customer_id' => $this->request->post['logged_customer_id'],
-                'name' => $this->request->post['logged_customer_firstname'] . ' ' . $this->request->post['logged_customer_lastname'],                
+                'customer_id' => $this->customer->getId(),
+                'name' => $this->customer->getFirstName().' '.$this->customer->getLastName(),
                 'sub_customers_id' => $sub_customer_id,
             ];
 
