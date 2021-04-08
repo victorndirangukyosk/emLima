@@ -82,7 +82,10 @@ class ControllerApiCustomerLogin extends Controller
             }
             $this->session->data['customer_category'] = isset($customer_details->row['customer_category']) ? $customer_details->row['customer_category'] : null;
             // echo "<pre>";print_r($customer_details);die; 
- 
+            $this->session->data['order_approval_access'] = $api_info['order_approval_access'];
+            $this->session->data['order_approval_access_role'] = $api_info['order_approval_access_role'];
+            $this->session->data['parent'] = $api_info['parent'];
+
 
             //echo  "{'status' : 'success','resp':".json_encode($unencodedArray)."}"
             $this->load->model('account/customer');
