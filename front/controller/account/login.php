@@ -937,7 +937,7 @@ class ControllerAccountLogin extends Controller {
             $api_info= $customer_info = $this->model_account_customer->getCustomerByToken($token);
 
 
-            echo "<pre>";print_r($api_info);die; 
+            // echo "<pre>";print_r($api_info);die; 
 
             // if ($customer_info && $this->customer->login($customer_info['email'], '', true)) {
             //     // Default Addresses
