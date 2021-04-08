@@ -1034,4 +1034,93 @@ class ModelAccountDashboard extends Model {
     //     //  "SELECT COUNT(*) AS total,SUM(value) as value  FROM `" . DB_PREFIX . "order` LEFT JOIN ".DB_PREFIX."order_total on(".DB_PREFIX."order.order_id = ".DB_PREFIX."order_total.order_id) WHERE order_status_id IN " . $complete_status_ids . " AND DATE(".DB_PREFIX."order.date_modified) BETWEEN '" . $this->db->escape($date_start) ."' AND '" . $this->db->escape($date_end) . "' AND ".DB_PREFIX."order_total.code='sub_total'")
     //     return $query->row;
     // }
+
+
+
+    
+    public function getProductPurchaseHistory($Selectedcustomer_id, $date_start, $date_end, $group, $customer_id,$product_id) {
+
+    // echo "<pre>";print_r($Selectedcustomer_id);die;
+
+        if (-1 == $Selectedcustomer_id) {
+            $s_users = [];
+            $sub_users_query = $this->db->query('SELECT c.customer_id FROM ' . DB_PREFIX . "customer c WHERE parent = '" . (int) $customer_id . "'");
+            $sub_users = $sub_users_query->rows;
+            $s_users = array_column($sub_users, 'customer_id');
+
+            array_push($s_users, $customer_id);
+            $sub_users_od = implode(',', $s_users);
+            // echo "SELECT SUM(value) AS total,  CONCAT(MONTHNAME(".DB_PREFIX."order.date_added), ' ', YEAR(".DB_PREFIX."order.date_added)) AS month, YEAR(".DB_PREFIX."order.date_added) AS year, DATE(".DB_PREFIX."order.date_added) AS date  FROM `" . DB_PREFIX . "order` LEFT JOIN ".DB_PREFIX."order_total on(".DB_PREFIX."order.order_id = ".DB_PREFIX."order_total.order_id)    WHERE   DATE(".DB_PREFIX."order.date_added) BETWEEN '" . $this->db->escape($date_start) . "' AND '" . $this->db->escape($date_end) . "'AND ".DB_PREFIX."order_total.code='sub_total'  AND  ".DB_PREFIX."order.customer_id IN (".$sub_users_od.") GROUP BY ". $group ."(".DB_PREFIX."order.date_added) ORDER BY ".DB_PREFIX."order.date_added DESC";
+        } else {
+            //HOUR(".DB_PREFIX."order.date_added) AS hour,
+            $s_users = []; array_push($s_users, $Selectedcustomer_id);
+            $sub_users_od = implode(',', $s_users);
+            // $query = $this->db->query('SELECT SUM(value) AS total,  CONCAT(MONTHNAME(' . DB_PREFIX . "order.date_added), ' ', YEAR(" . DB_PREFIX . 'order.date_added)) AS month, YEAR(' . DB_PREFIX . 'order.date_added) AS year, DATE(' . DB_PREFIX . 'order.date_added) AS date  FROM `' . DB_PREFIX . 'order` LEFT JOIN ' . DB_PREFIX . 'order_total on(' . DB_PREFIX . 'order.order_id = ' . DB_PREFIX . 'order_total.order_id)    WHERE   DATE(' . DB_PREFIX . "order.date_added) BETWEEN '" . $this->db->escape($date_start) . "' AND '" . $this->db->escape($date_end) . "'AND " . DB_PREFIX . "order_total.code='sub_total'  AND  " . DB_PREFIX . "order.customer_id='" . $this->db->escape($Selectedcustomer_id) . "' GROUP BY " . $group . '(' . DB_PREFIX . 'order.date_added) ORDER BY ' . DB_PREFIX . 'order.date_added DESC');
+            // echo "SELECT SUM(value) AS total,  CONCAT(MONTHNAME(".DB_PREFIX."order.date_added), ' ', YEAR(".DB_PREFIX."order.date_added)) AS month, YEAR(".DB_PREFIX."order.date_added) AS year, DATE(".DB_PREFIX."order.date_added) AS date  FROM `" . DB_PREFIX . "order` LEFT JOIN ".DB_PREFIX."order_total on(".DB_PREFIX."order.order_id = ".DB_PREFIX."order_total.order_id)    WHERE   DATE(".DB_PREFIX."order.date_added) BETWEEN '" . $this->db->escape($date_start) . "' AND '" . $this->db->escape($date_end) . "'AND ".DB_PREFIX."order_total.code='sub_total'  AND  ".DB_PREFIX."order.customer_id='" . $this->db->escape($Selectedcustomer_id) . "' GROUP BY ". $group ."(".DB_PREFIX."order.date_added) ORDER BY ".DB_PREFIX."order.date_added DESC";
+        }
+        $t="";
+
+        
+        $sql0 ='SELECT SUM( op.quantity) AS quantity,op.name,op.unit,op.product_id,  CONCAT(MONTHNAME(' . $t . "o.date_added), ' ', YEAR(" . $t . 'o.date_added)) AS month, YEAR(o.date_added) AS year, DATE(o.date_added) AS date  FROM `' . DB_PREFIX . 'order` o LEFT JOIN ' . DB_PREFIX . 'order_product op on(o.order_id = op.order_id)    WHERE   DATE(o.date_added) BETWEEN "' . $this->db->escape($date_start) . '" AND "' . $this->db->escape($date_end) . '" AND o.customer_id IN (' . $sub_users_od . ') and o.order_status_id not in (0,16,15,6,8,9,10)   and o.order_id not in (select order_id from `hf7_real_order_product`) AND op.product_id =' . $this->db->escape($product_id) . ' GROUP BY ' . $group . '(o.date_added) ';
+        $sql1 ='SELECT SUM( op.quantity) AS quantity,op.name,op.unit,op.product_id,  CONCAT(MONTHNAME(' . $t . "o.date_added), ' ', YEAR(" . $t . 'o.date_added)) AS month, YEAR(o.date_added) AS year, DATE(o.date_added) AS date  FROM `' . DB_PREFIX . 'order` o LEFT JOIN ' . DB_PREFIX . 'real_order_product op on(o.order_id = op.order_id)    WHERE   DATE(o.date_added) BETWEEN "' . $this->db->escape($date_start) . '" AND "' . $this->db->escape($date_end) . '" AND o.customer_id IN (' . $sub_users_od . ') and o.order_status_id not in (0,16,15,6,8,9,10)   AND op.product_id =' . $this->db->escape($product_id) . ' GROUP BY ' . $group . '(o.date_added)';
+
+
+
+        
+    // $sql0 .= ' GROUP BY op.product_id ';
+    // $sql1 .= ' GROUP BY op.product_id ';
+
+    $sql = "SELECT name,unit,product_id, sum(quantity )AS total ,month,year,date from (" . $sql0 . " union all " . $sql1 . ") as t";
+      $sql .= ' GROUP BY product_id   ORDER BY  date DESC';
+    // echo "<pre>";print_r($sql);die;
+   
+    $query = $this->db->query($sql);
+    // echo "<pre>";print_r($sql);die;
+
+        return $query;
+    }
+
+    public function getTotalProductPurchaseHistory($Selectedcustomer_id, $date_start, $date_end, $customer_id,$product_id) {
+       
+        if (-1 == $Selectedcustomer_id) {
+            $s_users = [];
+            $sub_users_query = $this->db->query('SELECT c.customer_id FROM ' . DB_PREFIX . "customer c WHERE parent = '" . (int) $customer_id . "'");
+            $sub_users = $sub_users_query->rows;
+            $s_users = array_column($sub_users, 'customer_id');
+
+            array_push($s_users, $customer_id);
+            $sub_users_od = implode(',', $s_users);
+            // $query = $this->db->query('SELECT SUM(value) AS total FROM `' . DB_PREFIX . 'order` LEFT JOIN ' . DB_PREFIX . 'order_total on(' . DB_PREFIX . 'order.order_id = ' . DB_PREFIX . 'order_total.order_id) WHERE  DATE(' . DB_PREFIX . "order.date_added) BETWEEN '" . $this->db->escape($date_start) . "' AND '" . $this->db->escape($date_end) . "'AND " . DB_PREFIX . "order_total.code='sub_total' AND  " . DB_PREFIX . 'order.customer_id IN (' . $sub_users_od . ')');
+            // echo "SELECT SUM(value) AS total FROM `" . DB_PREFIX . "order` LEFT JOIN ".DB_PREFIX."order_total on(".DB_PREFIX."order.order_id = ".DB_PREFIX."order_total.order_id) WHERE  DATE(".DB_PREFIX."order.date_added) BETWEEN '" . $this->db->escape($date_start) . "' AND '" . $this->db->escape($date_end) . "'AND ".DB_PREFIX."order_total.code='sub_total' AND  ".DB_PREFIX."order.customer_id IN (".$sub_users_od.")";
+        } else {
+            $s_users = []; array_push($s_users, $Selectedcustomer_id);
+            $sub_users_od = implode(',', $s_users);
+         }
+        //  "SELECT COUNT(*) AS total,SUM(value) as value  FROM `" . DB_PREFIX . "order` LEFT JOIN ".DB_PREFIX."order_total on(".DB_PREFIX."order.order_id = ".DB_PREFIX."order_total.order_id) WHERE order_status_id IN " . $complete_status_ids . " AND DATE(".DB_PREFIX."order.date_modified) BETWEEN '" . $this->db->escape($date_start) ."' AND '" . $this->db->escape($date_end) . "' AND ".DB_PREFIX."order_total.code='sub_total'")
+
+
+        $t="";
+
+        
+        $sql0 ='SELECT SUM( op.quantity) AS quantity FROM `' . DB_PREFIX . 'order` o LEFT JOIN `' . DB_PREFIX . 'order_product` op on(o.order_id = op.order_id)    WHERE   DATE(o.date_added) BETWEEN "' . $this->db->escape($date_start) . '" AND "' . $this->db->escape($date_end) . '" AND o.customer_id IN (' . $sub_users_od . ') and o.order_status_id not in (0,16,15,6,8,9,10)   and o.order_id not in (select order_id from `hf7_real_order_product`) AND op.product_id =' . $this->db->escape($product_id) ;
+        $sql1 ='SELECT SUM( op.quantity) AS quantity FROM `' . DB_PREFIX . 'order` o LEFT JOIN `' . DB_PREFIX . 'real_order_product` op on(o.order_id = op.order_id)    WHERE   DATE(o.date_added) BETWEEN "' . $this->db->escape($date_start) . '" AND "' . $this->db->escape($date_end) . '" AND o.customer_id IN (' . $sub_users_od . ') and o.order_status_id not in (0,16,15,6,8,9,10)   and op.product_id =' . $this->db->escape($product_id) ;
+ ;
+
+    $sql = "SELECT sum(quantity )AS total  from (" . $sql0 . " union all " . $sql1 . ") as t";
+    //   $sql .= ' GROUP BY product_id   ORDER BY  date DESC';
+    //   echo "<pre>";print_r($sql);die;
+   
+    $query = $this->db->query($sql);
+
+
+        return $query->row;
+    }
+
+
+    // $sql0 = "SELECT c.company_name  as company,op.name,op.unit,op.product_id, SUM( op.quantity )AS quantity, count( op.product_id )AS timespurchased, sum(op.quantity) as qunatitypurchased, sum(op.total) as totalvalue  FROM `" . DB_PREFIX . 'order_product` op LEFT JOIN `' . DB_PREFIX . 'order` o ON (op.order_id = o.order_id) LEFT JOIN `' . DB_PREFIX . "customer` c ON (c.customer_id = o.customer_id) WHERE o.customer_id > 0   and o.order_status_id not in (0,16,15,6,8,9,10)   and o.order_id not in (select order_id from `hf7_real_order_product`)  ";
+    // $sql1 = "SELECT c.company_name  as company,op.name,op.unit,op.product_id, SUM( op.quantity )AS quantity, count( op.product_id )AS timespurchased, sum(op.quantity) as qunatitypurchased, sum(op.total) as totalvalue  FROM `" . DB_PREFIX . 'real_order_product` op LEFT JOIN `' . DB_PREFIX . 'order` o ON (op.order_id = o.order_id) LEFT JOIN `' . DB_PREFIX . "customer` c ON (c.customer_id = o.customer_id) WHERE o.customer_id > 0   and o.order_status_id not in (0,16,15,6,8,9,10) ";
+
+    
+    
+
 }
