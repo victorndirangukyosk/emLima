@@ -100,20 +100,6 @@
                         </div>
                     </li>
                     <li class="list-group-item">
-                        <div class="my-order-details">
-                            <div class="row">
-                                <div class="col-md-4"><?= $text_delivery_address?></div>
-                                <?php if(isset($order['shipping_address'])) { ?>
-                                <div class="col-md-8">
-                                    <?= $order['shipping_address']['address'] ?> <br/>
-                                    <?= $order['shipping_address']['city'] ?>, <?= $order['shipping_address']['zipcode'] ?></div>
-                                <?php } else { ?>
-                                <div class="col-md-8"> </div>
-                                <?php } ?>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="list-group-item">
                         <div class="my-order-details" style="border: none !important;">
                             <?php if($order['parent_details'] != NULL /*&& !empty($_SESSION['parent']) && $_SESSION['parent'] > 0*/) { ?>
                             <div class="row">
@@ -138,6 +124,17 @@
                             <?php } ?>
                             <?php } ?>
                             <?php } ?>
+                            
+                            <div class="row">
+                                <div class="col-md-4"><?= $text_delivery_address?></div>
+                                <?php if(isset($order['shipping_address'])) { ?>
+                                <div class="col-md-8">
+                                    <?= $order['shipping_address']['address'] ?>,<?= $order['shipping_address']['city'] ?>,<?= $order['shipping_address']['zipcode'] ?></div>
+                                <?php } else { ?>
+                                <div class="col-md-8"> </div>
+                                <?php } ?>
+                            </div>
+                            
                             <div class="row">
                                 <div class="col-md-4"><?= $text_payment_options?></div>
                                 <div class="col-md-8"><?php echo $order['payment_method']; ?></div>
