@@ -158,7 +158,65 @@ class ControllerCheckoutTotals extends Controller
             return $this->load->view('default/template/checkout/order_totals.tpl', $data);
         }
     }
+    public function getTotalOnly($order_id)
+    {
+        $this->load->language('checkout/cart');
 
+        // Totals
+        $this->load->model('account/order');
+
+        $total_data = [];
+        $total = 0;
+        $taxes = $this->cart->getTaxes();
+
+        $total_data = $this->model_account_order->getOrderTotals($order_id);
+
+        $data['text_inc_tax'] = $this->language->get('text_inc_tax');
+        $sort_order = [];
+
+        foreach ($total_data as $key => $value) {
+            $sort_order[$key] = $value['sort_order'];
+        }
+
+        array_multisort($sort_order, SORT_ASC, $total_data);
+
+        $data['totals'] = [];
+
+        foreach ($total_data as $total) {
+            $data['totals'][] = [
+                'title' => $total['title'],
+                'text' => $this->currency->format($total['value']),
+            ];
+        }
+
+        $order_info = $this->model_account_order->getOrder($order_id);
+
+        $data['coupon_cashback'] = false;
+
+        if ($order_info) {
+            foreach ($this->config->get('config_complete_status') as $key => $value) {
+                if ($value == $order_info['order_status_id']) {
+                    $data['coupon_cashback'] = true;
+                    break;
+                }
+            }
+        }
+
+        $data['cashbackAmount'] = $this->currency->format(0);
+
+        $coupon_history_data = $this->model_account_order->getCashbackAmount($order_id);
+
+        if (count($coupon_history_data) > 0) {
+            $data['cashbackAmount'] = $this->currency->format((-1 * $coupon_history_data['amount']));
+        }
+
+        $data['cashback_condition'] = $this->language->get('cashback_condition');
+        $data['text_coupon_willbe_credited'] = $this->language->get('text_coupon_willbe_credited');
+        $data['text_coupon_credited'] = $this->language->get('text_coupon_credited');
+
+        //echo "<pre>";print_r($data);die;
+        return $data;
+    }
     public function totalData()
     {
         $this->load->language('checkout/cart');

@@ -1560,4 +1560,124 @@ class ModelAccountOrder extends Model {
         }
     }
 
+
+    public function getTotalPendingOrders() {
+        $log = new Log('error.log');
+        $s_users = [];
+        $parent_user_id = NULL;
+        $order_approval_access = $this->db->query('SELECT c.customer_id, c.parent FROM ' . DB_PREFIX . "customer c WHERE c.customer_id = '" . (int) $this->customer->getId() . "' AND c.order_approval_access = 1 AND (c.order_approval_access_role = 'head_chef' OR c.order_approval_access_role = 'procurement_person')");
+        $order_approval_access_user = $order_approval_access->row;
+
+        if (is_array($order_approval_access_user) && count($order_approval_access_user) > 0) {
+            $log->write('order_approval_access_user');
+            $log->write($order_approval_access_user);
+            $log->write('order_approval_access_user');
+            $parent_user_id = $order_approval_access_user['parent'];
+        }
+
+        if ($parent_user_id != NULL) {
+            $sub_users_query = $this->db->query('SELECT c.customer_id FROM ' . DB_PREFIX . "customer c WHERE parent = '" . (int) $parent_user_id . "'");
+            $sub_users = $sub_users_query->rows;
+            $log->write('SUB USERS ORDERS');
+            $log->write($sub_users);
+            $log->write('SUB USERS ORDERS');
+            $s_users = array_column($sub_users, 'customer_id');
+
+            array_push($s_users, $order_approval_access_user['parent']);
+            $sub_users_od = implode(',', $s_users);
+            $log->write($sub_users_od);
+        } else {
+            $sub_users_query = $this->db->query('SELECT c.customer_id FROM ' . DB_PREFIX . "customer c WHERE parent = '" . (int) $this->customer->getId() . "'");
+            $sub_users = $sub_users_query->rows;
+            $log->write('SUB USERS ORDERS');
+            $log->write($sub_users);
+            $log->write('SUB USERS ORDERS');
+            $s_users = array_column($sub_users, 'customer_id');
+
+            array_push($s_users, $this->customer->getId());
+            $sub_users_od = implode(',', $s_users);
+            $log->write($sub_users_od);
+        }
+
+
+
+        $query = $this->db->query('SELECT COUNT(*) AS total FROM `' . DB_PREFIX . "order` o WHERE customer_id IN (" . $sub_users_od . ") AND o.order_status_id = '15'   ");
+
+        $log->write($query->row['total']);
+        //return $query;
+        return $query->row['total'];
+    }
+
+
+
+    public function getPendingOrders($start = 0, $limit = 20, $noLimit = false) {
+        if ($start < 0) {
+            $start = 0;
+        }
+
+        if ($limit < 1) {
+            $limit = 1;
+        }
+
+        $log = new Log('error.log');
+        $s_users = [];
+        $parent_user_id = NULL;
+        $order_approval_access = $this->db->query('SELECT c.customer_id, c.parent FROM ' . DB_PREFIX . "customer c WHERE c.customer_id = '" . (int) $this->customer->getId() . "' AND c.order_approval_access = 1 AND (c.order_approval_access_role = 'head_chef' OR c.order_approval_access_role = 'procurement_person')");
+        $order_approval_access_user = $order_approval_access->row;
+
+        if (is_array($order_approval_access_user) && count($order_approval_access_user) > 0) {
+            //$log->write('order_approval_access_user');
+            //$log->write($order_approval_access_user);
+            //$log->write('order_approval_access_user');
+            $parent_user_id = $order_approval_access_user['parent'];
+        }
+
+        if ($parent_user_id != NULL) {
+            $sub_users_query = $this->db->query('SELECT c.customer_id FROM ' . DB_PREFIX . "customer c WHERE parent = '" . (int) $parent_user_id . "'");
+            $sub_users = $sub_users_query->rows;
+            //$log->write('SUB USERS ORDERS');
+            //$log->write($sub_users);
+            //$log->write('SUB USERS ORDERS');
+            $s_users = array_column($sub_users, 'customer_id');
+            array_push($s_users, $order_approval_access_user['parent']);
+            $sub_users_od = implode(',', $s_users);
+        } else {
+            $sub_users_query = $this->db->query('SELECT c.customer_id FROM ' . DB_PREFIX . "customer c WHERE parent = '" . (int) $this->customer->getId() . "'");
+            $sub_users = $sub_users_query->rows;
+            //$log->write('SUB USERS ORDERS');
+            //$log->write($sub_users);
+            //$log->write('SUB USERS ORDERS');
+            $s_users = array_column($sub_users, 'customer_id');
+            array_push($s_users, $this->customer->getId());
+            $sub_users_od = implode(',', $s_users);
+        }
+
+        if (false == $noLimit) {
+            //$sub_users_orders = $this->db->query("SELECT o.order_id FROM " . DB_PREFIX . "order o WHERE customer_id IN (".$sub_users_od.")");
+            //$ord = $sub_users_orders->rows;
+            //echo "<pre>";print_r($ord);die;
+
+            $query = $this->db->query('SELECT o.customer_id, o.parent_approval, o.head_chef, o.procurement, o.delivery_date,o.delivery_timeslot,o.shipping_zipcode,o.shipping_city_id,o.payment_method,o.payment_code,o.shipping_address,o.shipping_flat_number,o.shipping_method,o.shipping_building_name,o.store_name,o.shipping_name, o.order_id, o.firstname, o.lastname, os.name as status , os.color as order_status_color ,o.order_status_id, o.date_modified , o.date_added, o.total, o.currency_code, o.currency_value, ot.value FROM `' . DB_PREFIX . 'order` o LEFT JOIN ' . DB_PREFIX . 'order_status os ON (o.order_status_id = os.order_status_id) LEFT JOIN ' . DB_PREFIX . 'order_total ot ON (o.order_id = ot.order_id) WHERE o.customer_id IN (' . $sub_users_od . ") AND o.order_status_id = '15' AND os.language_id = '" . (int) $this->config->get('config_language_id') . "' AND ot.code = 'total' AND ot.title = 'Total' ORDER BY o.order_id DESC LIMIT " . (int) $start . ',' . (int) $limit);
+            //$query = $this->db->query("SELECT o.delivery_date,o.delivery_timeslot,o.shipping_zipcode,o.shipping_city_id,o.payment_method,o.shipping_address,o.shipping_flat_number,o.shipping_method,o.shipping_building_name,o.store_name,o.shipping_name, o.order_id, o.firstname, o.lastname, os.name as status , os.color as order_status_color ,o.order_status_id, o.date_modified , o.date_added, o.total, o.currency_code, o.currency_value FROM `" . DB_PREFIX . "order` o LEFT JOIN " . DB_PREFIX . "order_status os ON (o.order_status_id = os.order_status_id) WHERE o.customer_id = '" . (int) $this->customer->getId() . "' AND o.order_status_id = '15' AND os.language_id = '" . (int) $this->config->get('config_language_id') . "' ORDER BY o.order_id DESC LIMIT " . (int) $start . "," . (int) $limit);
+        } else {
+            $query = $this->db->query('SELECT o.customer_id, o.parent_approval, o.head_chef, o.procurement, o.delivery_date,o.delivery_timeslot,o.shipping_zipcode,o.shipping_city_id,o.payment_method,o.payment_code,o.shipping_address,o.shipping_flat_number,o.shipping_method,o.shipping_building_name,o.store_name,o.shipping_name, o.order_id, o.firstname, o.lastname, os.name as status , os.color as order_status_color ,o.order_status_id, o.date_modified , o.date_added, o.total, o.currency_code, o.currency_value, ot.value FROM `' . DB_PREFIX . 'order` o LEFT JOIN ' . DB_PREFIX . 'order_status os ON (o.order_status_id = os.order_status_id) LEFT JOIN ' . DB_PREFIX . 'order_total ot ON (o.order_id = ot.order_id) WHERE o.customer_id IN (' . $sub_users_od . ") AND o.order_status_id = '15' AND os.language_id = '" . (int) $this->config->get('config_language_id') . "' AND ot.code = 'total' AND ot.title = 'Total' ORDER BY o.order_id DESC");
+            //$query = $this->db->query("SELECT o.delivery_date,o.delivery_timeslot,o.shipping_zipcode,o.shipping_city_id,o.payment_method,o.shipping_address,o.shipping_flat_number,o.shipping_method,o.shipping_building_name,o.store_name,o.shipping_name, o.order_id, o.firstname, o.lastname, os.name as status , os.color as order_status_color ,o.order_status_id, o.date_modified , o.date_added, o.total, o.currency_code, o.currency_value FROM `" . DB_PREFIX . "order` o LEFT JOIN " . DB_PREFIX . "order_status os ON (o.order_status_id = os.order_status_id) WHERE o.customer_id = '" . (int) $this->customer->getId() . "' AND o.order_status_id = '15' AND os.language_id = '" . (int) $this->config->get('config_language_id') . "' ORDER BY o.order_id DESC");
+        }
+        /* if($statuses == null && $payment_methods == null){
+          $query = $this->db->query("SELECT o.delivery_date,o.delivery_timeslot,o.shipping_zipcode,o.shipping_city_id,o.payment_method,o.shipping_address,o.shipping_flat_number,o.shipping_method,o.shipping_building_name,o.store_name,o.shipping_name, o.order_id, o.firstname, o.lastname, os.name as status , os.color as order_status_color ,o.order_status_id, o.date_modified , o.date_added, o.total, o.currency_code, o.currency_value FROM `" . DB_PREFIX . "order` o LEFT JOIN " . DB_PREFIX . "order_status os ON (o.order_status_id = os.order_status_id) WHERE o.customer_id = '" . (int) $this->customer->getId() . "' AND o.order_status_id = '15' AND os.language_id = '" . (int) $this->config->get('config_language_id') . "' ORDER BY o.order_id DESC LIMIT " . (int) $start . "," . (int) $limit);
+          }else{
+          if($In == true){
+          $sql = "SELECT o.delivery_date,o.delivery_timeslot,o.shipping_zipcode,o.shipping_city_id,o.payment_method,o.shipping_address,o.shipping_flat_number,o.shipping_method,o.shipping_building_name,o.store_name,o.shipping_name, o.order_id, o.firstname, o.lastname, os.name as status , os.color as order_status_color ,o.order_status_id, o.date_modified , o.date_added, o.total, o.currency_code, o.currency_value FROM `" . DB_PREFIX . "order` o LEFT JOIN " . DB_PREFIX . "order_status os ON (o.order_status_id = os.order_status_id) WHERE o.customer_id = '" . (int) $this->customer->getId() . "' AND o.order_status_id = '15' AND os.language_id = '" . (int) $this->config->get('config_language_id') . "'  AND o.payment_method IN ($payment_methods) AND os.name IN ($statuses) ORDER BY o.order_id DESC";
+          }else{
+          $sql = "SELECT o.delivery_date,o.delivery_timeslot,o.shipping_zipcode,o.shipping_city_id,o.payment_method,o.shipping_address,o.shipping_flat_number,o.shipping_method,o.shipping_building_name,o.store_name,o.shipping_name, o.order_id, o.firstname, o.lastname, os.name as status , os.color as order_status_color ,o.order_status_id, o.date_modified , o.date_added, o.total, o.currency_code, o.currency_value FROM `" . DB_PREFIX . "order` o LEFT JOIN " . DB_PREFIX . "order_status os ON (o.order_status_id = os.order_status_id) WHERE o.customer_id = '" . (int) $this->customer->getId() . "' AND o.order_status_id = '15' AND os.language_id = '" . (int) $this->config->get('config_language_id') . "'  AND o.payment_method IN ($payment_methods) AND os.name NOT IN ($statuses) ORDER BY o.order_id DESC";
+          }
+          $query = $this->db->query($sql);
+          } */
+        //$log->write('ORDERS COUNT');
+        //$log->write(count($query->rows));
+        //$log->write('ORDERS COUNT');
+
+        return $query->rows;
+    }
+
 }
