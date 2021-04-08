@@ -956,7 +956,7 @@ class ControllerApiCustomerSubusers extends Controller
         $log = new Log('error.log');
 
         $this->load->model('account/customer');
-        //echo "<pre>";print_r($args);die;
+         echo "<pre>";print_r($args);die;
         // if (!$this->validate()) {
         //     $json['status'] = 10014;
 
