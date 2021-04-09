@@ -860,59 +860,59 @@ class ModelAccountCustomer extends Model {
         } 
 
         if (isset($data['lastname'])) {
-            $sql .= ' lastname = '.$this->db->escape($data['lastname']) .' , ';
+            $sql .= ' lastname = "'.$this->db->escape($data['lastname']) .'" , ';
         } 
         
         if (isset($data['firstname'])) {
-            $sql .= ' firstname = '. $this->db->escape($data['firstname']) .' , ';
+            $sql .= ' firstname = "'. $this->db->escape($data['firstname']) .'" , ';
         } 
 
         if (isset($data['telephone'])) {
             //(21) 42353-5255
             $data['telephone'] = preg_replace('/[^0-9]/', '', $data['telephone']);
-            $sql .= ' telephone = '. $data['telephone'];
+            $sql .= ' telephone = '. $data['telephone'].' ,';
         }
 
         if (isset($data['fax'])) {
-            $sql .= ' fax = '. $this->db->escape($data['fax']) .' , ';
+            $sql .= ' fax = "'. $this->db->escape($data['fax']) .'" , ';
 
         }
 
         if (isset($data['gender'])) {
-            $sql .= ' gender = '.$this->db->escape($data['gender']) .' , ';
+            $sql .= ' gender = "'.$this->db->escape($data['gender']) .'" , ';
 
         }
         if (isset($data['companyname'])) {
-            $sql .= ' company_name = '. $this->db->escape($data['companyname']) .' , ';
+            $sql .= ' company_name = "'. $this->db->escape($data['companyname']) .'" , ';
 
         }
         if (isset($data['companyaddress'])) {
-            $sql .= ' company_address = '. $this->db->escape($data['companyaddress']) .' , ';
+            $sql .= ' company_address = "'. $this->db->escape($data['companyaddress']) .'" , ';
 
         }
 
         if (isset($data['email'])) {
-            $sql .= ' email = '. $this->db->escape($data['email']) .' , ';
+            $sql .= ' email = "'. $this->db->escape($data['email']) .'" , ';
 
         }
-        if (isset($data['custom_field'])) {
-            $sql .= ' custom_field = '. $this->db->escape($data['custom_field'])  ? serialize($data['custom_field']) : '' .' , ';
+        // if (isset($data['custom_field'])) {
+        //     $sql .= ' custom_field = "'. $this->db->escape($data['custom_field'])  ? serialize($data['custom_field']) : '' .' , ';
 
-        }
+        // }
 
             if(isset($data['dob'])) {
             $sql .= ' dob = '.$data['dob'] .' , ';
 
              }
              $customer='customer';
-             $sql .= ' modified_by = '.$this->customer->getId()  .' , date_modified = NOW() , modifier_role = '.$this->db->escape($customer). ' WHERE customer_id ='. (int) $customer_id;
+             $sql .= ' modified_by = '.$this->customer->getId()  .' , date_modified = NOW() , modifier_role = "'.$this->db->escape($customer). '" WHERE customer_id ='. (int) $customer_id;
              
         //     ';
 
             
  
 
-        //   echo "<pre>";print_r($sql);die;
+        //    echo "<pre>";print_r($sql);die;
          $query = $this->db->query($sql);
         
           $this->trigger->fire('post.customer.edit', $customer_id);
