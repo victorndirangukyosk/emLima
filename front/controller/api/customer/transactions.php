@@ -10,6 +10,11 @@ class ControllerApiCustomerTransactions extends Controller {
         $json['data'] = [];
         $json['message'] = [];
 
+        $filters = array();
+        $filters = [
+            'filter_order_status_id' => '14, 1, 2, 3, 4',
+        ];
+
         if (!empty($this->request->get['page'])) {
             $page = $this->request->get['page'];
         } else {
@@ -18,7 +23,7 @@ class ControllerApiCustomerTransactions extends Controller {
         $log = new Log('error.log');
         $log->write('getAllOrders');
         $this->load->model('account/order');
-        $results_orders = $this->model_account_order->getOrders(($page - 1) * 10, 10, $NoLimit = false);
+        $results_orders = $this->model_account_order->getOrdersForTransactions(($page - 1) * 10, 10, $NoLimit = false, $filters);
         $json['data'] = $results_orders;
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
