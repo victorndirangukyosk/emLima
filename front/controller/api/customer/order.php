@@ -3385,10 +3385,7 @@ class ControllerApiCustomerOrder extends Controller
             //   echo "<pre>";print_r($logincustomer_approvalaccess);die;
 
             $parent=false;
-            if($is_he_parents)
-            {
-            $parent=true;
-            }
+           
             if (!($is_he_parents) && $result['customer_id'] != $this->customer->getId()) {
                     $approve_order_button = 'Need Approval';
                 }
@@ -3396,7 +3393,10 @@ class ControllerApiCustomerOrder extends Controller
                  if ($logincustomer_approvalaccess['order_approval_access'] > 0 && $logincustomer_approvalaccess['order_approval_access_role'] != NULL) {
                 $order_appoval_access = true;
             }
-
+            if($is_he_parents)
+            {
+            $parent=true; $order_appoval_access = true;
+            }
 
             $sub_user_order = FALSE;
             $procurement_person = NULL;
