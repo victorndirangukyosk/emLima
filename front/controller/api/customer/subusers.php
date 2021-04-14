@@ -973,8 +973,13 @@ class ControllerApiCustomerSubusers extends Controller
          if($parentcustomer_info!=null)
          {$this->request->post['customer_group_id']=$parentcustomer_info['customer_group_id'];
          }
+
+        //  $log = new Log('error.log');
+         $log->write('before add customer');
          $sub_customer_id = $this->model_account_customer->addCustomer($this->request->post, true);
-            // Clear any previous login attempts for unregistered accounts.
+           
+         $log->write('before add customer');
+         // Clear any previous login attempts for unregistered accounts.
         $this->model_account_customer->deleteLoginAttempts($this->request->post['email']);
         //$logged_in = $this->customer->login($this->request->post['email'], $this->request->post['password']);
          //  $json['message'] ='User added successfully!'
@@ -991,7 +996,10 @@ class ControllerApiCustomerSubusers extends Controller
             $this->model_account_activity->addActivity('sub_customer_created', $activity_data);
 
             /* If not able to login*/
-            $data['status'] = true;
+            // $data['status'] = true;
+            // $data['customer_id'] = $sub_customer_id;
+            // $json['data'] =$data;
+            $json['customer_id'] = $sub_customer_id;
 
             // if (!$logged_in) {
             //     $data['status'] = false;
