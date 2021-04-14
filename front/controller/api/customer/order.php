@@ -3341,7 +3341,7 @@ class ControllerApiCustomerOrder extends Controller
 
             $app_status_resp =  $this->model_account_order->getAppOrderStatusMapping($result['order_status_id']);
 
-            //  echo "<pre>";print_r($_SESSION);die;
+            //   echo "<pre>";print_r($_SESSION);die;
             $app_status = '';
             $app_order_status_id = '';
             if ($app_status_resp['status']) {
@@ -3356,16 +3356,41 @@ class ControllerApiCustomerOrder extends Controller
             $this->load->model('sale/order');
             $approve_order_button = null;
             $order_appoval_access = false;
-            if (empty($_SESSION['parent']) && $result['customer_id'] != $this->customer->getId()) {
-                $approve_order_button = 'Need Approval';
-            }
-            if ($this->session->data['order_approval_access'] > 0 && $this->session->data['order_approval_access_role'] != NULL) {
-                $order_appoval_access = true;
-            }
+
+            // #region parent,Approval access
+            // if ($api_info['parent'] != NULL && $api_info['parent']>0) {
+            //     $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $api_info['parent'] . "' AND status = '1'");
+            // } else {
+            //     $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $api_info['customer_id']. "' AND status = '1'");
+            // }
+            // $this->session->data['customer_category'] = isset($customer_details->row['customer_category']) ? $customer_details->row['customer_category'] : null;
+            // // echo "<pre>";print_r($customer_details);die; 
+            // $this->session->data['order_approval_access'] = $customer_info['order_approval_access'];
+            // $this->session->data['order_approval_access_role'] = $customer_info['order_approval_access_role'];
+            // #endregion
+            
+
+            // if (empty($_SESSION['parent']) && $result['customer_id'] != $this->customer->getId()) {
+            //     $approve_order_button = 'Need Approval';
+            // }
+            // if ($this->session->data['order_approval_access'] > 0 && $this->session->data['order_approval_access_role'] != NULL) {
+            //     $order_appoval_access = true;
+            // }
             $this->load->model('account/customer');
             $customer_info = $this->model_account_customer->getCustomer($result['customer_id']);
             $is_he_parents = $this->model_account_customer->CheckHeIsParent();
             $customer_parent_info = $this->model_account_customer->getCustomerParentDetails($result['customer_id']);
+
+            $logincustomer_approvalaccess = $this->model_account_customer->CheckApprover();
+            //   echo "<pre>";print_r($logincustomer_approvalaccess);die;
+
+            if (!($is_he_parents) && $result['customer_id'] != $this->customer->getId()) {
+                    $approve_order_button = 'Need Approval';
+                }
+
+                 if ($logincustomer_approvalaccess['order_approval_access'] > 0 && $logincustomer_approvalaccess['order_approval_access_role'] != NULL) {
+                $order_appoval_access = true;
+            }
 
             $sub_user_order = FALSE;
             $procurement_person = NULL;
@@ -3440,7 +3465,8 @@ class ControllerApiCustomerOrder extends Controller
                 'sub_user_order' => $sub_user_order,
                 'procurement_person_email' => $procurement_person,
                 'head_chef_email' => $head_chef,
-                'order_approval_access_role' => $this->session->data['order_approval_access_role'],
+                // 'order_approval_access_role' => $this->session->data['order_approval_access_role'],
+                'order_approval_access_role' => $customer_parent_info['order_approval_access_role'],
                 'parent_details' => $customer_parent_info != NULL && $customer_parent_info['email'] != NULL ? $customer_parent_info['email'] : NULL,
                 // 'edit_order' => 15 == $result['order_status_id'] && (empty($_SESSION['parent']) || $order_appoval_access) ? $this->url->link('account/order/edit_order', 'order_id=' . $result['order_id'], 'SSL') : '',
                 'order_company' => isset($customer_info) && null != $customer_info['company_name'] ? $customer_info['company_name'] : null,
