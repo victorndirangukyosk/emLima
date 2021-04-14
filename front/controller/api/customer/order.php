@@ -3384,6 +3384,11 @@ class ControllerApiCustomerOrder extends Controller
             $logincustomer_approvalaccess = $this->model_account_customer->CheckApprover();
             //   echo "<pre>";print_r($logincustomer_approvalaccess);die;
 
+            $parent=false;
+            if($is_he_parents)
+            {
+            $parent=true;
+            }
             if (!($is_he_parents) && $result['customer_id'] != $this->customer->getId()) {
                     $approve_order_button = 'Need Approval';
                 }
@@ -3391,6 +3396,7 @@ class ControllerApiCustomerOrder extends Controller
                  if ($logincustomer_approvalaccess['order_approval_access'] > 0 && $logincustomer_approvalaccess['order_approval_access_role'] != NULL) {
                 $order_appoval_access = true;
             }
+
 
             $sub_user_order = FALSE;
             $procurement_person = NULL;
@@ -3470,6 +3476,7 @@ class ControllerApiCustomerOrder extends Controller
                 'parent_details' => $customer_parent_info != NULL && $customer_parent_info['email'] != NULL ? $customer_parent_info['email'] : NULL,
                 // 'edit_order' => 15 == $result['order_status_id'] && (empty($_SESSION['parent']) || $order_appoval_access) ? $this->url->link('account/order/edit_order', 'order_id=' . $result['order_id'], 'SSL') : '',
                 'order_company' => isset($customer_info) && null != $customer_info['company_name'] ? $customer_info['company_name'] : null,
+                'isparent'=> $parent,
             ];
         }
 
