@@ -3386,14 +3386,14 @@ class ControllerApiCustomerOrder extends Controller
 
             $parent=false;
            
-            if (!($is_he_parents) && $result['customer_id'] != $this->customer->getId()) {
+            if (empty($is_he_parents) && $result['customer_id'] != $this->customer->getId()) {
                     $approve_order_button = 'Need Approval';
                 }
 
                  if ($logincustomer_approvalaccess['order_approval_access'] > 0 && $logincustomer_approvalaccess['order_approval_access_role'] != NULL) {
                 $order_appoval_access = true;
             }
-            if($is_he_parents)
+            if($is_he_parents == NULL)
             {
             $parent=true; $order_appoval_access = true;
             }
