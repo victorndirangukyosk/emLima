@@ -40,7 +40,7 @@
 
                 <ul class="nav nav-tabs" id="seo-language">
                     <?php foreach ($languages as $language) { ?>
-                        <li><a href="#seo-language<?php echo $language['language_id']; ?>" data-toggle="tab"><img src="ui/image/flags/<?php echo $language['image']; ?>"  onerror="this.onerror=null; this.src='../image/cache/placeholder-226x226.png'"  title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a></li>
+                        <li><a href="#seo-language<?php echo $language['language_id']; ?>" data-toggle="tab"><img src="ui/image/flags/<?php echo $language['image']; ?>"  onerror="this.onerror=null; this.src='../image/cache/placeholder-226x226.png'  width="15px""  title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a></li>
                     <?php } ?>
                 </ul>
                 <div class="tab-content">
