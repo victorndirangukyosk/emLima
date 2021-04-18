@@ -165,7 +165,7 @@ class ModelAccountFarmer extends Model
 
     public function getfarmerByEmail($email)
     {
-        $query = $this->db->query('SELECT * FROM '.DB_PREFIX."farmer WHERE LOWER(email_id) = '".$this->db->escape(utf8_strtolower($email))."'");
+        $query = $this->db->query('SELECT * FROM '.DB_PREFIX."farmer WHERE LOWER(email) = '".$this->db->escape(utf8_strtolower($email))."'");
 
         return $query->row;
     }
