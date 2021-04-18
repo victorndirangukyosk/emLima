@@ -615,7 +615,11 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
                        data: { 
                          name: firstName + ' ' + lastName,
                          email: email,
-                         telephone: phone
+                         telephone: phone,
+                         farmer_type : farmerType,
+                         farmer_location  : farmLocation,
+                         farmer_irrigation_type : farmIrrigationType,
+                         farmer_description : produceDescription
                        },
                        success: function (json) {
                          registerButton.text('REGISTER');
@@ -647,7 +651,7 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
             var url = 'index.php?path=common/home/careers';
 
 
-            var filter_category = $('#careers-job-category').val();
+            var filtser_category = $('#careers-job-category').val();
 
             if (filter_category && filter_category != "All Job Category") {
                 url += '&filter_category=' + encodeURIComponent(filter_category);
