@@ -619,7 +619,7 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
                          farmer_type : farmerType,
                          farmer_location  : farmLocation,
                          farmer_irrigation_type : farmIrrigationType,
-                         farmer_description : produceDescription
+                         farmer_description : produceDescriptioncle
                        },
                        success: function (json) {
                          registerButton.text('REGISTER');
