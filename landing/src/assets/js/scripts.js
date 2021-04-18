@@ -580,6 +580,7 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
         });
 
         $('#farmer-register-button').click(function (e) {
+            console.log('Farmer Registration!');
             e.preventDefault();
 
             const firstName = $('#farmer-first-name').val();
