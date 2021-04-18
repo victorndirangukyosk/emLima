@@ -589,6 +589,7 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
                     const phone = $('#farmer-phone').val();
                     const farmerType = $('#farmer-type').val();
                     const farmLocation = $('#farmer-location').val();
+                    const farmIrrigationType = $('#irrigation-type').val();
                     const produceDescription = $('farmer-produce-grown').val();
                     const registerButton = $('#farmer-register-button');
                     if (grecaptcha.getResponse() == '') {
@@ -598,45 +599,45 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
                 });
             } else {
                 if ($('#farmer-registration-form')[0].reportValidity()) {
-                    iziToast.success({
+                    /*iziToast.success({
                         position: 'topRight',
                         message: 'Thanks for registering. We\'ll get in touch'
                     });
 
-                    $('#farmer-registration-form')[0].reset();
-                    // registerButton.text('PLEASE WAIT');
-                    // registerButton.toggleClass('disabled');
+                    $('#farmer-registration-form')[0].reset();*/
+                     registerButton.text('PLEASE WAIT');
+                     registerButton.toggleClass('disabled');
 
-                    // $.ajax({
-                    //   url: 'index.php?path=account/farmerregister/register',
-                    //   type: 'POST',
-                    //   dataType: 'json',
-                    //   data: { 
-                    //     name: firstName + ' ' + lastName,
-                    //     email: email,
-                    //     telephone: phone
-                    //   },
-                    //   success: function (json) {
-                    //     registerButton.text('REGISTER');
-                    //     registerButton.toggleClass('disabled');
+                     $.ajax({
+                       url: 'index.php?path=account/farmerregister/register',
+                       type: 'POST',
+                       dataType: 'json',
+                       data: { 
+                         name: firstName + ' ' + lastName,
+                         email: email,
+                         telephone: phone
+                       },
+                       success: function (json) {
+                         registerButton.text('REGISTER');
+                         registerButton.toggleClass('disabled');
 
-                    //     if (json['status']) {
-                    //       iziToast.success({
-                    //         position: 'topRight',
-                    //         message: json['success_message']
-                    //       });
+                         if (json['status']) {
+                           iziToast.success({
+                             position: 'topRight',
+                             message: json['success_message']
+                           });
 
-                    //       $('#farmer-registration-form')[0].reset();
+                           $('#farmer-registration-form')[0].reset();
 
-                    //     } else {
-                    //       iziToast.warning({
-                    //         position: 'topRight',
-                    //         title: 'Oops',
-                    //         message: 'We couldn\'t register you. Please try again'
-                    //       });
-                    //     }
-                    //   }
-                    // });
+                         } else {
+                           iziToast.warning({
+                             position: 'topRight',
+                             title: 'Oops',
+                             message: 'We couldn\'t register you. Please try again'
+                           });
+                         }
+                       }
+                     });
                 }
             }
         });
