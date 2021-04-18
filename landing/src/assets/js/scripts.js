@@ -590,7 +590,7 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
                     const farmerType = $('#farmer-type').val();
                     const farmLocation = $('#farmer-location').val();
                     const farmIrrigationType = $('#irrigation-type').val();
-                    const produceDescription = $('farmer-produce-grown').val();
+                    const produceDescription = $('#farmer-produce-grown').val();
                     const registerButton = $('#farmer-register-button');
                     if (grecaptcha.getResponse() == '') {
                 iziToast.warning({
