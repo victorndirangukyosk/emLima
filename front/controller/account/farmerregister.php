@@ -53,7 +53,7 @@ class ControllerAccountFarmerRegister extends Controller
         if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validate()) {
             $this->load->model('account/farmer');
 
-            $farmer_id = $this->model_account_farmer->addFarmer($this->request->post);
+            $farmer_id = $this->model_account_farmer->addNewFarmer($this->request->post);
 
             $data['status'] = true;
 
