@@ -82,6 +82,7 @@ class ModelAccountFarmer extends Model {
       email = '" . $this->db->escape($data['email']) . "',
       mobile = '" . $this->db->escape($data['telephone']) . "',
       irrigation_type = '" . $this->db->escape($data['farmer_irrigation_type']) . "',
+      location = '" . $this->db->escape($data['farmer_location']) . "',
       description = '" . $this->db->escape($data['farmer_description']) . "',
       created_at = NOW(),
       farmer_type = '" . $this->db->escape($data['farmer_type']) . "'");
