@@ -87,21 +87,14 @@ class ModelAccountFarmer extends Model
             $data['telephone'] = preg_replace('/[^0-9]/', '', $data['telephone']);
         }
         $this->db->query('INSERT INTO '.DB_PREFIX."farmer SET
-      name = '".$this->db->escape($data['name'])."',
-      email_id = '".$this->db->escape($data['email'])."',
-      farm_address = '".$this->db->escape($data['Address'])."',
-      contact_number = '".$this->db->escape($data['telephone'])."',
-      farmer_type = '".$this->db->escape($data['farmertype'])."',
-      work_on_farm = '".$this->db->escape($data['farm'])."',
-      country = '".$this->db->escape($data['country_id'])."',
-      village = '".$this->db->escape($data['town'])."',
-      business_entity = '".$this->db->escape($data['businessentity'])."',
-      name_of_farm = '".$this->db->escape($data['nameoffarm'])."',
-      total = '".$this->db->escape($data['Total'])."',
-      crop_type = '".$this->db->escape($data['Crop'])."',
-      crops_grown = '".$this->db->escape($data['cropsgrown'])."',
-      crop_produce = '".$this->db->escape($data['cropproduce'])."',
-      sell_produce = '".$this->db->escape($data['sellproduce'])."'");
+      first_name = '".$this->db->escape($data['first_name'])."',
+      last_name = '".$this->db->escape($data['first_name'])."',
+      email = '".$this->db->escape($data['email'])."',
+      mobile = '".$this->db->escape($data['telephone'])."',
+      irrigation_type = '".$this->db->escape($data['farmer_irrigation_type'])."',
+      description = '".$this->db->escape($data['farmer_description'])."',
+      created_at = NOW(),
+      farmer_type = '".$this->db->escape($data['farmer_type'])."'");
 
         $farmer_id = $this->db->getLastId();
 

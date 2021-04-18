@@ -613,7 +613,8 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
                        type: 'POST',
                        dataType: 'json',
                        data: { 
-                         name: firstName + ' ' + lastName,
+                         first_name : firstName,
+                         last_name : lastName,
                          email: email,
                          telephone: phone,
                          farmer_type : farmerType,
