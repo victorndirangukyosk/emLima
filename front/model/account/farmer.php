@@ -172,7 +172,7 @@ class ModelAccountFarmer extends Model
 
     public function getfarmerByPhone($phone)
     {
-        $query = $this->db->query('SELECT * FROM '.DB_PREFIX."farmer WHERE telephone='".$this->db->escape($phone)."'");
+        $query = $this->db->query('SELECT * FROM '.DB_PREFIX."farmer WHERE mobile='".$this->db->escape($phone)."'");
 
         return $query->row;
     }
