@@ -58,14 +58,12 @@ class ModelUserFarmer extends Model {
     }
 
     public function getUsers($data = []) {
-        $sql = 'SELECT * FROM `' . DB_PREFIX . 'user`';
+        $sql = 'SELECT * FROM `' . DB_PREFIX . 'farmer`';
 
         $isWhere = 1;
         $_sql = [];
 
         //filter vendor groups
-        $sql .= ' WHERE user_group_id NOT IN (' . $this->db->escape($this->config->get('config_vendor_group_ids')) . ') ';
-        $sql .= ' AND user_group_id NOT IN (' . $this->db->escape($this->config->get('config_shopper_group_ids')) . ') ';
 
         if (isset($data['filter_user_name']) && !is_null($data['filter_user_name'])) {
             $isWhere = 1;
@@ -143,11 +141,9 @@ class ModelUserFarmer extends Model {
     }
 
     public function getTotalUsers() {
-        $sql = 'SELECT COUNT(*) AS total FROM `' . DB_PREFIX . 'user`';
+        $sql = 'SELECT COUNT(*) AS total FROM `' . DB_PREFIX . 'farmer`';
 
         //filter vendor groups
-        $sql .= ' WHERE user_group_id NOT IN (' . $this->db->escape($this->config->get('config_vendor_group_ids')) . ') ';
-        $sql .= ' AND user_group_id NOT IN (' . $this->db->escape($this->config->get('config_shopper_group_ids')) . ') ';
 
         $query = $this->db->query($sql);
 
@@ -155,25 +151,17 @@ class ModelUserFarmer extends Model {
     }
 
     public function getTotalUsersFilter($data) {
-        $sql = ('SELECT COUNT(*) AS total FROM `' . DB_PREFIX . 'user`');
+        $sql = ('SELECT COUNT(*) AS total FROM `' . DB_PREFIX . 'farmer`');
 
         $isWhere = 1;
         $_sql = [];
 
         //filter vendor groups
-        $sql .= ' WHERE user_group_id NOT IN (' . $this->db->escape($this->config->get('config_vendor_group_ids')) . ') ';
-        $sql .= ' AND user_group_id NOT IN (' . $this->db->escape($this->config->get('config_shopper_group_ids')) . ') ';
 
         if (isset($data['filter_user_name']) && !is_null($data['filter_user_name'])) {
             $isWhere = 1;
 
             $_sql[] = "username LIKE '" . $this->db->escape($data['filter_user_name']) . "%'";
-        }
-
-        if (isset($data['filter_user_group']) && !is_null($data['filter_user_group'])) {
-            $isWhere = 1;
-
-            $_sql[] = 'user_group_id LIKE ( SELECT ug.user_group_id FROM `' . DB_PREFIX . "user_group` ug WHERE ug.name LIKE '" . $this->db->escape($data['filter_user_group']) . "%') ";
         }
 
         if (isset($data['filter_first_name']) && !is_null($data['filter_first_name'])) {
@@ -245,7 +233,6 @@ class ModelUserFarmer extends Model {
             $implode[] = "telephone LIKE '" . $this->db->escape($data['filter_telephone']) . "%'";
         }
 
-        $implode[] = "user_group_id = '" . $this->config->get('config_farmer_group_id') . "'";
 
         if (!empty($data['filter_ip'])) {
             $implode[] = "ip = '" . $this->db->escape($data['filter_ip']) . "'";
@@ -287,7 +274,6 @@ class ModelUserFarmer extends Model {
             $implode[] = "c.telephone LIKE '" . $this->db->escape($data['filter_telephone']) . "%'";
         }
 
-        $implode[] = "c.user_group_id = '" . $this->config->get('config_farmer_group_id') . "'";
 
         if (!empty($data['filter_ip'])) {
             $implode[] = "c.ip = '" . $this->db->escape($data['filter_ip']) . "'";
