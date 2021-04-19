@@ -238,13 +238,13 @@ class ModelUserUser extends Model {
         if (isset($data['filter_first_name']) && !is_null($data['filter_first_name'])) {
             $isWhere = 1;
 
-            $_sql[] = "first_name LIKE '" . $this->db->escape($data['filter_first_name']) . "%'";
+            $_sql[] = "WHERE first_name LIKE '" . $this->db->escape($data['filter_first_name']) . "%'";
         }
 
         if (isset($data['filter_last_name']) && !is_null($data['filter_last_name'])) {
             $isWhere = 1;
 
-            $_sql[] = "last_name LIKE '" . $this->db->escape($data['filter_last_name']) . "%'";
+            $_sql[] = "WHERE last_name LIKE '" . $this->db->escape($data['filter_last_name']) . "%'";
         }
 
         if (isset($data['filter_name']) && !is_null($data['filter_name']) && strlen($data['filter_name']) > 0) {
@@ -258,11 +258,17 @@ class ModelUserUser extends Model {
 
             $_sql[] = "WHERE email LIKE '" . $this->db->escape($data['filter_email']) . "%'";
         }
+        
+        if (isset($data['filter_telephone']) && !is_null($data['filter_telephone']) && strlen($data['filter_telephone']) > 0) {
+            $isWhere = 1;
+
+            $_sql[] = "WHERE mobile LIKE '" . $this->db->escape($data['filter_telephone']) . "%'";
+        }
 
         if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
             $isWhere = 1;
 
-            $_sql[] = "status LIKE '" . $this->db->escape($data['filter_status']) . "%'";
+            $_sql[] = "WHERE status LIKE '" . $this->db->escape($data['filter_status']) . "%'";
         }
 
         if ($_sql) {
