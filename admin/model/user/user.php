@@ -250,7 +250,7 @@ class ModelUserUser extends Model {
         if (isset($data['filter_name']) && !is_null($data['filter_name']) && strlen($data['filter_name']) > 0) {
             $isWhere = 1;
 
-            $_sql[] = "CONCAT(firstname, ' ', lastname) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+            $_sql[] = "WHERE CONCAT(first_name, ' ', last_name) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
         }
 
         if (isset($data['filter_email']) && !is_null($data['filter_email']) && strlen($data['filter_email']) > 0) {
