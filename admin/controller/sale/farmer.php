@@ -494,10 +494,15 @@ class ControllerSaleFarmer extends Controller {
                 'user_id' => $result['user_id'],
                 'name' => $result['name'],
                 'email' => $result['email'],
-                'telephone' => $country_code . $result['telephone'],
+                'mobile' => $country_code . $result['mobile'],
+                'organization' => $result['organization'],
+                'location' => $result['location'],
+                'description' => $result['description'],
+                'farmer_type' => $result['farmer_type'],
+                'farm_size' => $result['farm_size'],
                 'status' => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
                 'ip' => $result['ip'],
-                'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
+                'created_at' => date($this->language->get('date_format_short'), strtotime($result['created_at'])),
                 'edit' => $this->url->link('sale/farmer/edit', 'token=' . $this->session->data['token'] . '&user_id=' . $result['user_id'] . $url, 'SSL'),
             ];
         }
