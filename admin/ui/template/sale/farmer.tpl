@@ -165,10 +165,10 @@
                                 <?php if ($customers) { ?>
                                 <?php foreach ($customers as $customer) { ?>
                                 <tr>
-                                    <td class="text-center"><?php if (in_array($customer['user_id'], $selected)) { ?>
-                                        <input type="checkbox" name="selected[]" value="<?php echo $customer['user_id']; ?>" checked="checked" />
+                                    <td class="text-center"><?php if (in_array($customer['farmer_id'], $selected)) { ?>
+                                        <input type="checkbox" name="selected[]" value="<?php echo $customer['farmer_id']; ?>" checked="checked" />
                                         <?php } else { ?>
-                                        <input type="checkbox" name="selected[]" value="<?php echo $customer['user_id']; ?>" />
+                                        <input type="checkbox" name="selected[]" value="<?php echo $customer['farmer_id']; ?>" />
                                         <?php } ?></td>
                                     <td class="text-left"><?php echo $customer['name']; ?></td>
                                     <td class="text-left"><?php echo $customer['mobile']; ?></td>
@@ -251,7 +251,7 @@
                         response($.map(json, function (item) {
                             return {
                                 label: item['name'],
-                                value: item['user_id']
+                                value: item['farmer_id']
                             }
                         }));
                     }
@@ -297,7 +297,7 @@
                         response($.map(json, function (item) {
                             return {
                                 label: item['telephone'],
-                                value: item['user_id']
+                                value: item['farmer_id']
                             }
                         }));
                     }
@@ -317,7 +317,7 @@
                         response($.map(json, function (item) {
                             return {
                                 label: item['email'],
-                                value: item['user_id']
+                                value: item['farmer_id']
                             }
                         }));
                     }

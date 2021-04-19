@@ -34,7 +34,7 @@ class ControllerSaleFarmer extends Controller {
             $this->request->post['ip'] = $this->request->server['REMOTE_ADDR'];
             $this->request->post['latitude'] = 0;
             $this->request->post['longitude'] = 0;
-            $user_id = $this->model_user_farmer->addFarmer($this->request->post);
+            $farmer_id = $this->model_user_farmer->addFarmer($this->request->post);
 
             $this->session->data['success'] = $this->language->get('text_success');
 
@@ -46,7 +46,7 @@ class ControllerSaleFarmer extends Controller {
                 'user_id' => $this->user->getId(),
                 'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
                 'user_group_id' => $this->user->getGroupId(),
-                'farmer_id' => $user_id,
+                'farmer_id' => $farmer_id,
             ];
             $log->write('farmer add');
 
@@ -69,7 +69,7 @@ class ControllerSaleFarmer extends Controller {
             }
 
             if (isset($this->request->post['button']) and 'save' == $this->request->post['button']) {
-                $this->response->redirect($this->url->link('sale/farmer/edit', 'user_id=' . $user_id . '&token=' . $this->session->data['token'] . $url, 'SSL'));
+                $this->response->redirect($this->url->link('sale/farmer/edit', 'farmer_id=' . $farmer_id . '&token=' . $this->session->data['token'] . $url, 'SSL'));
             }
 
             if (isset($this->request->post['button']) and 'new' == $this->request->post['button']) {
@@ -90,7 +90,7 @@ class ControllerSaleFarmer extends Controller {
         $this->load->model('user/farmer');
 
         if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
-            $this->model_user_farmer->editUser($this->request->get['user_id'], $this->request->post);
+            $this->model_user_farmer->editUser($this->request->get['farmer_id'], $this->request->post);
 
             $this->session->data['success'] = $this->language->get('text_success');
 
@@ -102,7 +102,7 @@ class ControllerSaleFarmer extends Controller {
                 'user_id' => $this->user->getId(),
                 'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
                 'user_group_id' => $this->user->getGroupId(),
-                'farmer_id' => $this->request->get['user_id'],
+                'farmer_id' => $this->request->get['farmer_id'],
             ];
             $log->write('farmer edit');
 
@@ -125,7 +125,7 @@ class ControllerSaleFarmer extends Controller {
             }
 
             if (isset($this->request->post['button']) and 'save' == $this->request->post['button']) {
-                $this->response->redirect($this->url->link('sale/farmer/edit', 'user_id=' . $this->request->get['user_id'] . '&token=' . $this->session->data['token'] . $url, 'SSL'));
+                $this->response->redirect($this->url->link('sale/farmer/edit', 'farmer_id=' . $this->request->get['farmer_id'] . '&token=' . $this->session->data['token'] . $url, 'SSL'));
             }
 
             if (isset($this->request->post['button']) and 'new' == $this->request->post['button']) {
@@ -146,8 +146,8 @@ class ControllerSaleFarmer extends Controller {
         $this->load->model('user/farmer');
 
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
-            foreach ($this->request->post['selected'] as $user_id) {
-                $this->model_user_farmer->deleteUser($user_id);
+            foreach ($this->request->post['selected'] as $farmer_id) {
+                $this->model_user_farmer->deleteUser($farmer_id);
 
                 // Add to activity log
                 $log = new Log('error.log');
@@ -157,7 +157,7 @@ class ControllerSaleFarmer extends Controller {
                     'user_id' => $this->user->getId(),
                     'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
                     'user_group_id' => $this->user->getGroupId(),
-                    'farmer_id' => $user_id,
+                    'farmer_id' => $farmer_id,
                 ];
                 $log->write('farmer delete');
 
@@ -210,10 +210,6 @@ class ControllerSaleFarmer extends Controller {
 
             $url = '';
 
-            if (isset($this->request->get['filter_company'])) {
-                $url .= '&filter_company=' . urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
-            }
-
             if (isset($this->request->get['filter_name'])) {
                 $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
             }
@@ -222,16 +218,8 @@ class ControllerSaleFarmer extends Controller {
                 $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
             }
 
-            if (isset($this->request->get['filter_customer_group_id'])) {
-                $url .= '&filter_customer_group_id=' . $this->request->get['filter_customer_group_id'];
-            }
-
             if (isset($this->request->get['filter_status'])) {
                 $url .= '&filter_status=' . $this->request->get['filter_status'];
-            }
-
-            if (isset($this->request->get['filter_approved'])) {
-                $url .= '&filter_approved=' . $this->request->get['filter_approved'];
             }
 
             if (isset($this->request->get['filter_ip'])) {
@@ -254,72 +242,7 @@ class ControllerSaleFarmer extends Controller {
                 $url .= '&page=' . $this->request->get['page'];
             }
 
-            $this->response->redirect($this->url->link('sale/customer', 'token=' . $this->session->data['token'] . $url, 'SSL'));
-        }
-
-        $this->getList();
-    }
-
-    public function unlock() {
-        $this->load->language('sale/customer');
-
-        $this->document->setTitle($this->language->get('heading_title'));
-
-        $this->load->model('sale/customer');
-
-        if (isset($this->request->get['email']) && $this->validateUnlock()) {
-            $this->model_sale_customer->deleteLoginAttempts($this->request->get['email']);
-
-            $this->session->data['success'] = $this->language->get('text_success');
-
-            $url = '';
-
-
-            if (isset($this->request->get['filter_company'])) {
-                $url .= '&filter_company=' . urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
-            }
-
-            if (isset($this->request->get['filter_name'])) {
-                $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
-            }
-
-            if (isset($this->request->get['filter_email'])) {
-                $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
-            }
-
-            if (isset($this->request->get['filter_customer_group_id'])) {
-                $url .= '&filter_customer_group_id=' . $this->request->get['filter_customer_group_id'];
-            }
-
-            if (isset($this->request->get['filter_status'])) {
-                $url .= '&filter_status=' . $this->request->get['filter_status'];
-            }
-
-            if (isset($this->request->get['filter_approved'])) {
-                $url .= '&filter_approved=' . $this->request->get['filter_approved'];
-            }
-
-            if (isset($this->request->get['filter_ip'])) {
-                $url .= '&filter_ip=' . $this->request->get['filter_ip'];
-            }
-
-            if (isset($this->request->get['filter_date_added'])) {
-                $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
-            }
-
-            if (isset($this->request->get['sort'])) {
-                $url .= '&sort=' . $this->request->get['sort'];
-            }
-
-            if (isset($this->request->get['order'])) {
-                $url .= '&order=' . $this->request->get['order'];
-            }
-
-            if (isset($this->request->get['page'])) {
-                $url .= '&page=' . $this->request->get['page'];
-            }
-
-            $this->response->redirect($this->url->link('sale/customer', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            $this->response->redirect($this->url->link('sale/farmer', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
 
         $this->getList();
@@ -327,13 +250,6 @@ class ControllerSaleFarmer extends Controller {
 
     protected function getList() {
         $this->load->language('sale/farmer');
-
-
-        if (isset($this->request->get['filter_company'])) {
-            $filter_company = $this->request->get['filter_company'];
-        } else {
-            $filter_company = null;
-        }
 
         if (isset($this->request->get['filter_name'])) {
             $filter_name = $this->request->get['filter_name'];
@@ -353,22 +269,10 @@ class ControllerSaleFarmer extends Controller {
             $filter_telephone = null;
         }
 
-        if (isset($this->request->get['filter_customer_group_id'])) {
-            $filter_customer_group_id = $this->request->get['filter_customer_group_id'];
-        } else {
-            $filter_customer_group_id = null;
-        }
-
         if (isset($this->request->get['filter_status'])) {
             $filter_status = $this->request->get['filter_status'];
         } else {
             $filter_status = null;
-        }
-
-        if (isset($this->request->get['filter_approved'])) {
-            $filter_approved = $this->request->get['filter_approved'];
-        } else {
-            $filter_approved = null;
         }
 
         if (isset($this->request->get['filter_ip'])) {
@@ -403,10 +307,6 @@ class ControllerSaleFarmer extends Controller {
 
         $url = '';
 
-        if (isset($this->request->get['filter_company'])) {
-            $url .= '&filter_company=' . urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
-        }
-
         if (isset($this->request->get['filter_name'])) {
             $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
         }
@@ -417,10 +317,6 @@ class ControllerSaleFarmer extends Controller {
 
         if (isset($this->request->get['filter_telephone'])) {
             $url .= '&filter_telephone=' . urlencode(html_entity_decode($this->request->get['filter_telephone'], ENT_QUOTES, 'UTF-8'));
-        }
-
-        if (isset($this->request->get['filter_customer_group_id'])) {
-            $url .= '&filter_customer_group_id=' . $this->request->get['filter_customer_group_id'];
         }
 
         if (isset($this->request->get['filter_status'])) {
@@ -469,7 +365,6 @@ class ControllerSaleFarmer extends Controller {
         $data['customers'] = [];
 
         $filter_data = [
-            'filter_company' => $filter_company,
             'filter_name' => $filter_name,
             'filter_email' => $filter_email,
             'filter_telephone' => $filter_telephone,
@@ -491,7 +386,7 @@ class ControllerSaleFarmer extends Controller {
             $country_code = '+' . $this->config->get('config_telephone_code');
 
             $data['customers'][] = [
-                'user_id' => $result['farmer_id'],
+                'farmer_id' => $result['farmer_id'],
                 'name' => $result['name'],
                 'email' => $result['email'],
                 'mobile' => $country_code . $result['mobile'],
@@ -503,7 +398,7 @@ class ControllerSaleFarmer extends Controller {
                 'status' => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
                 'ip' => $result['ip'],
                 'created_at' => date($this->language->get('date_format_short'), strtotime($result['created_at'])),
-                'edit' => $this->url->link('sale/farmer/edit', 'token=' . $this->session->data['token'] . '&user_id=' . $result['farmer_id'] . $url, 'SSL'),
+                'edit' => $this->url->link('sale/farmer/edit', 'token=' . $this->session->data['token'] . '&farmer_id=' . $result['farmer_id'] . $url, 'SSL'),
             ];
         }
 
@@ -686,13 +581,10 @@ class ControllerSaleFarmer extends Controller {
 
         $data['results'] = sprintf($this->language->get('text_pagination'), ($customer_total) ? (($page - 1) * $this->config->get('config_limit_admin')) + 1 : 0, ((($page - 1) * $this->config->get('config_limit_admin')) > ($customer_total - $this->config->get('config_limit_admin'))) ? $customer_total : ((($page - 1) * $this->config->get('config_limit_admin')) + $this->config->get('config_limit_admin')), $customer_total, ceil($customer_total / $this->config->get('config_limit_admin')));
 
-        $data['filter_company'] = $filter_company;
         $data['filter_name'] = $filter_name;
         $data['filter_email'] = $filter_email;
         $data['filter_telephone'] = $filter_telephone;
-        $data['filter_customer_group_id'] = $filter_customer_group_id;
         $data['filter_status'] = $filter_status;
-        $data['filter_approved'] = $filter_approved;
         $data['filter_ip'] = $filter_ip;
         $data['filter_date_added'] = $filter_date_added;
 
@@ -717,7 +609,7 @@ class ControllerSaleFarmer extends Controller {
     protected function getForm() {
         $data['heading_title'] = $this->language->get('heading_title');
 
-        $data['text_form'] = !isset($this->request->get['user_id']) ? $this->language->get('text_add') : $this->language->get('text_edit');
+        $data['text_form'] = !isset($this->request->get['farmer_id']) ? $this->language->get('text_add') : $this->language->get('text_edit');
         $data['text_enabled'] = $this->language->get('text_enabled');
         $data['text_disabled'] = $this->language->get('text_disabled');
 
@@ -740,7 +632,7 @@ class ControllerSaleFarmer extends Controller {
         $data['tab_assign_customers'] = 'Assign Company';
         $data['tab_assigned_customers'] = 'Assigned Company';
         $data['assigned_customers'] = NULL;
-        if (isset($this->request->get['user_id'])) {
+        if (isset($this->request->get['farmer_id'])) {
             $data['assigned_customers'] = '';
         }
 
@@ -828,17 +720,17 @@ class ControllerSaleFarmer extends Controller {
             'href' => $this->url->link('user/user', 'token=' . $this->session->data['token'] . $url, 'SSL'),
         ];
 
-        if (!isset($this->request->get['user_id'])) {
+        if (!isset($this->request->get['farmer_id'])) {
             $data['action'] = $this->url->link('sale/farmer/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
         } else {
-            $data['action'] = $this->url->link('sale/farmer/edit', 'token=' . $this->session->data['token'] . '&user_id=' . $this->request->get['user_id'] . $url, 'SSL');
+            $data['action'] = $this->url->link('sale/farmer/edit', 'token=' . $this->session->data['token'] . '&farmer_id=' . $this->request->get['user_id'] . $url, 'SSL');
         }
 
         $data['cancel'] = $this->url->link('sale/farmer', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
-        if (isset($this->request->get['user_id'])) {
-            $user_info = $this->model_user_farmer->getUser($this->request->get['user_id']);
-            $data['user_id'] = $user_info['user_id'];
+        if (isset($this->request->get['farmer_id'])) {
+            $user_info = $this->model_user_farmer->getUser($this->request->get['farmer_id']);
+            $data['farmer_id'] = $user_info['farmer_id'];
         }
 
         if (isset($this->request->post['username'])) {
@@ -965,7 +857,7 @@ class ControllerSaleFarmer extends Controller {
       		$this->error['mobile'] = $this->language->get('error_telephone');
     	}
 
-        if ($this->request->post['password'] || (!isset($this->request->get['user_id']))) {
+        if ($this->request->post['password'] || (!isset($this->request->get['farmer_id']))) {
             if ((utf8_strlen($this->request->post['password']) < 4) || (utf8_strlen($this->request->post['password']) > 20)) {
                 $this->error['password'] = $this->language->get('error_password');
             }
@@ -1239,7 +1131,7 @@ class ControllerSaleFarmer extends Controller {
         $pagination->total = $ip_total;
         $pagination->page = $page;
         $pagination->limit = 10;
-        $pagination->url = $this->url->link('sale/farmer/ip', 'token=' . $this->session->data['token'] . '&user_id=' . $this->request->get['user_id'] . '&page={page}', 'SSL');
+        $pagination->url = $this->url->link('sale/farmer/ip', 'token=' . $this->session->data['token'] . '&farmer_id=' . $this->request->get['farmer_id'] . '&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
@@ -1611,18 +1503,17 @@ class ControllerSaleFarmer extends Controller {
 
             foreach ($results as $result) {
                 if ($this->user->isVendor()) {
-                    $result['name'] = $result['firstname'];
+                    $result['name'] = $result['first_name'];
                 }
 
                 $json[] = [
-                    'user_id' => $result['user_id'],
-                    'user_group_id' => $result['user_group_id'],
+                    'farmer_id' => $result['farmer_id'],
                     'username' => strip_tags(html_entity_decode($result['username'], ENT_QUOTES, 'UTF-8')),
                     'name' => $result['name'],
-                    'firstname' => $result['firstname'],
-                    'lastname' => $result['lastname'],
+                    'firstname' => $result['first_name'],
+                    'lastname' => $result['last_name'],
                     'email' => $result['email'],
-                    'telephone' => $result['telephone']
+                    'telephone' => $result['mobile']
                 ];
             }
         }

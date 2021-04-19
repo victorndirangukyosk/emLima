@@ -229,42 +229,28 @@ class ModelUserUser extends Model {
     }
 
     public function getFarmerUsers($data = []) {
-        $sql = 'SELECT *, CONCAT(firstname, " ", lastname) AS name FROM `' . DB_PREFIX . 'user`';
+        $sql = 'SELECT *, CONCAT(first_name, " ", last_name) AS name FROM `' . DB_PREFIX . 'farmer`';
 
         $isWhere = 1;
         $_sql = [];
 
         //filter vendor groups
-        $sql .= ' WHERE user_group_id IN (' . $this->db->escape($this->config->get('config_farmer_group_id')) . ') ';
-
-        if (isset($data['filter_user_name']) && !is_null($data['filter_user_name'])) {
-            $isWhere = 1;
-
-            $_sql[] = "username LIKE '" . $this->db->escape($data['filter_user_name']) . "%'";
-        }
-
-        if (isset($data['filter_user_group']) && !is_null($data['filter_user_group']) && $data['filter_user_group'] != NULL) {
-            $isWhere = 1;
-
-            $_sql[] = 'user_group_id LIKE ( SELECT ug.user_group_id FROM `' . DB_PREFIX . "user_group` ug WHERE ug.name LIKE '" . $this->db->escape($data['filter_user_group']) . "%') ";
-        }
-
         if (isset($data['filter_first_name']) && !is_null($data['filter_first_name'])) {
             $isWhere = 1;
 
-            $_sql[] = "firstname LIKE '" . $this->db->escape($data['filter_first_name']) . "%'";
+            $_sql[] = "first_name LIKE '" . $this->db->escape($data['filter_first_name']) . "%'";
         }
 
         if (isset($data['filter_last_name']) && !is_null($data['filter_last_name'])) {
             $isWhere = 1;
 
-            $_sql[] = "lastname LIKE '" . $this->db->escape($data['filter_last_name']) . "%'";
+            $_sql[] = "last_name LIKE '" . $this->db->escape($data['filter_last_name']) . "%'";
         }
 
         if (isset($data['filter_name']) && !is_null($data['filter_name'])) {
             $isWhere = 1;
 
-            $_sql[] = "CONCAT(firstname, ' ', lastname) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+            $_sql[] = "CONCAT(first_name, ' ', last_name) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
         }
 
         if (isset($data['filter_email']) && !is_null($data['filter_email'])) {
@@ -284,7 +270,7 @@ class ModelUserUser extends Model {
         }
 
         $sort_data = [
-            'username',
+            'name',
             'status',
             'date_added',
         ];
@@ -292,7 +278,7 @@ class ModelUserUser extends Model {
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
             $sql .= ' ORDER BY ' . $data['sort'];
         } else {
-            $sql .= ' ORDER BY username';
+            $sql .= ' ORDER BY name';
         }
 
         if (isset($data['order']) && ('DESC' == $data['order'])) {
