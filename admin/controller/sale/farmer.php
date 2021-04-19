@@ -785,13 +785,6 @@ class ControllerSaleFarmer extends Controller {
             'filter_status' => $filter_status,
             'filter_approved' => $filter_approved,
             'filter_date_added' => $filter_date_added,
-            'filter_ip' => $filter_ip,
-            'filter_parent_customer' => $filter_parent_customer,
-            'filter_parent_customer_id' => $filter_parent_customer_id,
-            'filter_account_manager_name' => $filter_account_manager_name,
-            'filter_account_manager_id' => $filter_account_manager_id,
-            'filter_sub_customer_show' => $filter_sub_customer_show,
-            'filter_monthyear_added' => $this->request->get['filter_monthyear_added'],
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
@@ -804,11 +797,6 @@ class ControllerSaleFarmer extends Controller {
 
         //echo "<pre>";print_r($results);die;
         foreach ($results as $result) {
-            if (!$result['approved']) {
-                $approve = $this->url->link('sale/customer/approve', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'] . $url, 'SSL');
-            } else {
-                $approve = '';
-            }
 
             $login_info = $this->model_sale_customer->getTotalLoginAttempts($result['email']);
 
@@ -826,7 +814,7 @@ class ControllerSaleFarmer extends Controller {
             }
 
             $data['customers'][] = [
-                'customer_id' => $result['customer_id'],
+                'customer_id' => $result['farmer_id'],
                 'name' => $result['name'],
                 'company_name' => $result['company_name'],
                 'email' => $result['email'],
