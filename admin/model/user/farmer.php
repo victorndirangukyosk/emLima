@@ -3,7 +3,7 @@
 class ModelUserFarmer extends Model {
 
     public function addFarmer($data) {
-        $this->db->query('INSERT INTO `' . DB_PREFIX . "user` SET username = '" . $this->db->escape($data['username']) . "', user_group_id = '" . (int) $this->config->get('config_farmer_group_id') . "', salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', status = '" . (int) $data['status'] . "', date_added = NOW()");
+        $this->db->query('INSERT INTO `' . DB_PREFIX . "farmer` SET first_name = '" . $this->db->escape($data['first_name']) . "', last_name = '" . $this->db->escape($data['last_name']) . "', email = '" . $this->db->escape($data['email']) . "', mobile = '" . $this->db->escape($data['mobile']) . "', farmer_type = '" . (int) $data['farmer_type'] . "', irrigation_type = '" . (int) $data['irrigation_type'] . "', location = '" . (int) $data['location'] . "', description = '" . (int) $data['description'] . "',  salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', ip = '" . (int) $data['ip'] . "', latitude = '" . (int) $data['latitude'] . "', longitude = '" . (int) $data['longitude'] . "', status = '" . (int) $data['status'] . "', created_at = NOW()");
 
         return $this->db->getLastId();
     }

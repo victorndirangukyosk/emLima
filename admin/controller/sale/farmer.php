@@ -31,6 +31,9 @@ class ControllerSaleFarmer extends Controller {
         $this->load->model('user/farmer');
 
         if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
+            $this->request->post['ip'] = $this->request->server['REMOTE_ADDR'];
+            $this->request->post['latitude'] = 0;
+            $this->request->post['longitude'] = 0;
             $user_id = $this->model_user_farmer->addFarmer($this->request->post);
 
             $this->session->data['success'] = $this->language->get('text_success');
@@ -937,55 +940,24 @@ class ControllerSaleFarmer extends Controller {
             $this->error['warning'] = $this->language->get('error_permission');
         }
 
-        if ((utf8_strlen($this->request->post['username']) < 3) || (utf8_strlen($this->request->post['username']) > 20)) {
-            $this->error['username'] = $this->language->get('error_username');
-        }
-
-        $user_info = $this->model_user_farmer->getUserByUsername($this->request->post['username']);
-        $user_email_info = $this->model_user_farmer->getUserByEmail($this->request->post['email']);
-
-        if (!isset($this->request->get['user_id'])) {
-            if ($user_info) {
-                $this->error['warning'] = $this->language->get('error_username_exists');
-                $this->error['username'] = $this->language->get('error_username_exist');
-            }
-        } else {
-            if ($user_info && ($this->request->get['user_id'] != $user_info['user_id'])) {
-                $this->error['warning'] = $this->language->get('error_username_exists');
-                $this->error['username'] = $this->language->get('error_username_exist');
-            }
-        }
-
-        /*if (!isset($this->request->get['user_id'])) {
-            if ($user_email_info) {
-                $this->error['warning'] = $this->language->get('error_exists');
-                $this->error['email'] = $this->language->get('error_exist');
-            }
-        } else {
-            if ($user_email_info && ($this->request->get['user_id'] != $user_email_info['user_id'])) {
-                $this->error['warning'] = $this->language->get('error_exists');
-                $this->error['email'] = $this->language->get('error_exist');
-            }
-        }*/
-
         if ((utf8_strlen($this->request->post['email']) <= 0) || (utf8_strlen($this->request->post['email']) > 96) || !filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL)) {
             $this->error['email'] = $this->language->get('error_email');
         }
 
-        if ((utf8_strlen(trim($this->request->post['firstname'])) < 1) || (utf8_strlen(trim($this->request->post['firstname'])) > 32)) {
-            $this->error['firstname'] = $this->language->get('error_firstname');
+        if ((utf8_strlen(trim($this->request->post['first_name'])) < 1) || (utf8_strlen(trim($this->request->post['first_name'])) > 32)) {
+            $this->error['first_name'] = $this->language->get('error_firstname');
         }
 
-        if ((utf8_strlen(trim($this->request->post['lastname'])) < 1) || (utf8_strlen(trim($this->request->post['lastname'])) > 32)) {
-            $this->error['lastname'] = $this->language->get('error_lastname');
+        if ((utf8_strlen(trim($this->request->post['last_name'])) < 1) || (utf8_strlen(trim($this->request->post['lastname'])) > 32)) {
+            $this->error['last_name'] = $this->language->get('error_lastname');
         }
 
-        /*if ((utf8_strlen($this->request->post['telephone']) < 3) || (utf8_strlen($this->request->post['telephone']) > 32)) {
-            $this->error['telephone'] = $this->language->get('error_telephone');
-        }*/
+        if ((utf8_strlen($this->request->post['mobile']) < 3) || (utf8_strlen($this->request->post['mobile']) > 32)) {
+            $this->error['mobile'] = $this->language->get('error_telephone');
+        }
         
-        if ((strlen(utf8_decode($this->request->post['telephone'])) < 3) || (strlen(utf8_decode($this->request->post['telephone'])) > 32) || preg_match('/[^\d]/is', $this->request->post['telephone'])) {
-      		$this->error['telephone'] = $this->language->get('error_telephone');
+        if ((strlen(utf8_decode($this->request->post['mobile'])) < 3) || (strlen(utf8_decode($this->request->post['mobile'])) > 32) || preg_match('/[^\d]/is', $this->request->post['mobile'])) {
+      		$this->error['mobile'] = $this->language->get('error_telephone');
     	}
 
         if ($this->request->post['password'] || (!isset($this->request->get['user_id']))) {

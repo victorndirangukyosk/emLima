@@ -44,33 +44,9 @@
                     <div class="tab-content">
                         <div class="tab-pane active" id="tab-general">
                             <div class="form-group required">
-                                <label class="col-sm-2 control-label" for="input-username"><?php echo $entry_username; ?></label>
-                                <div class="col-sm-10">
-                                    <input type="text" name="username" value="<?php echo $username; ?>" placeholder="<?php echo $entry_username; ?>" id="input-username" class="form-control" autocomplete="off" />
-                                    <?php if ($error_username) { ?>
-                                    <div class="text-danger"><?php echo $error_username; ?></div>
-                                    <?php } ?>
-                                </div>
-                            </div>
-                            <input type="hidden"  name="user_group_id" id="input-user-group" value="<?php echo $this->config->get('config_account_manager_group_id'); ?>">
-                            <!--<div class="form-group">
-                              <label class="col-sm-2 control-label" for="input-user-group"><?php echo $entry_user_group; ?></label>
-                              <div class="col-sm-10">
-                                <select name="user_group_id" id="input-user-group" class="form-control">
-                                  <?php foreach ($user_groups as $user_group) { ?>
-                                  <?php if ($user_group['user_group_id'] == $user_group_id) { ?>
-                                  <option value="<?php echo $user_group['user_group_id']; ?>" selected="selected"><?php echo $user_group['name']; ?></option>
-                                  <?php } else { ?>
-                                  <option value="<?php echo $user_group['user_group_id']; ?>"><?php echo $user_group['name']; ?></option>
-                                  <?php } ?>
-                                  <?php } ?>
-                                </select>
-                              </div>
-                            </div>-->
-                            <div class="form-group required">
                                 <label class="col-sm-2 control-label" for="input-firstname"><?php echo $entry_firstname; ?></label>
                                 <div class="col-sm-10">
-                                    <input type="text" name="firstname" value="<?php echo $firstname; ?>" placeholder="<?php echo $entry_firstname; ?>" id="input-firstname" class="form-control" />
+                                    <input type="text" name="first_name" value="<?php echo $firstname; ?>" placeholder="<?php echo $entry_firstname; ?>" id="input-firstname" class="form-control" />
                                     <?php if ($error_firstname) { ?>
                                     <div class="text-danger"><?php echo $error_firstname; ?></div>
                                     <?php } ?>
@@ -79,13 +55,13 @@
                             <div class="form-group required">
                                 <label class="col-sm-2 control-label" for="input-lastname"><?php echo $entry_lastname; ?></label>
                                 <div class="col-sm-10">
-                                    <input type="text" name="lastname" value="<?php echo $lastname; ?>" placeholder="<?php echo $entry_lastname; ?>" id="input-lastname" class="form-control" />
+                                    <input type="text" name="last_name" value="<?php echo $lastname; ?>" placeholder="<?php echo $entry_lastname; ?>" id="input-lastname" class="form-control" />
                                     <?php if ($error_lastname) { ?>
                                     <div class="text-danger"><?php echo $error_lastname; ?></div>
                                     <?php } ?>
                                 </div>
                             </div>
-                            <div class="form-group required">
+                            <div class="form-group">
                                 <label class="col-sm-2 control-label" for="input-email"><?php echo $entry_email; ?></label>
                                 <div class="col-sm-10">
                                     <input type="text" name="email" value="<?php echo $email; ?>" placeholder="<?php echo $entry_email; ?>" id="input-email" class="form-control" />
@@ -97,16 +73,40 @@
                             <div class="form-group required">
                                 <label class="col-sm-2 control-label" for="input-telephone"><?php echo $entry_telephone; ?></label>
                                 <div class="col-sm-10">
-                                    <input type="text" name="telephone" value="<?php echo $telephone; ?>" placeholder="<?php echo $entry_telephone; ?>" id="input-telephone" class="form-control" maxlength=10 onkeypress="return isNumberKey(event)"  />
+                                    <input type="text" name="mobile" value="<?php echo $telephone; ?>" placeholder="<?php echo $entry_telephone; ?>" id="input-telephone" class="form-control" maxlength=10 onkeypress="return isNumberKey(event)"  />
                                     <?php if ($error_telephone) { ?>
                                     <div class="text-danger"><?php echo $error_telephone; ?></div>
                                     <?php  } ?>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="input-image"><?php echo $entry_image; ?></label>
-                                <div class="col-sm-10"><a href="" id="thumb-image" data-toggle="image" class="img-thumbnail"><img src="<?php echo $thumb; ?>" alt="" title="" data-placeholder="<?php echo $placeholder; ?>" /></a>
-                                    <input type="hidden" name="image" value="<?php echo $image; ?>" id="input-image" />
+                            <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-farmer-type">Farmer Type</label>
+                                <div class="col-sm-10">
+                                    <select name="farmer_type" id="input-farmer-type" class="form-control">
+                                        <option value="Commercial">Commercial</option>
+                                        <option value="Smallholder">Smallholder</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-irrigation-type">Irrigation Type</label>
+                                <div class="col-sm-10">
+                                    <select name="irrigation_type" id="input-irrigation-type" class="form-control">
+                                        <option value="Piped">Piped</option>
+                                        <option value="Natural">Natural</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-location">Location</label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="location" value="" placeholder="Location" id="input-location" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-description">Description</label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="description" value="" placeholder="Description" id="input-description" class="form-control" />
                                 </div>
                             </div>
                             <div class="form-group required">
