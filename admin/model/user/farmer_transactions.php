@@ -217,33 +217,33 @@ class ModelUserFarmerTransactions extends Model {
     }
 
     public function getTotalFarmers($data = []) {
-        $sql = 'SELECT COUNT(*) AS total FROM ' . DB_PREFIX . 'farmer';
+        $sql = 'SELECT COUNT(*) AS total FROM ' . DB_PREFIX . 'farmer_transaction ft INNER JOIN ' . DB_PREFIX . 'farmer c ON ft.farmer_id = c.farmer_id';
 
         $implode = [];
 
         if (!empty($data['filter_name'])) {
-            $implode[] = "CONCAT(first_name, ' ', last_name) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+            $implode[] = "CONCAT(c.first_name, ' ', c.last_name) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
         }
 
         if (!empty($data['filter_email'])) {
-            $implode[] = "email LIKE '" . $this->db->escape($data['filter_email']) . "%'";
+            $implode[] = "c.email LIKE '" . $this->db->escape($data['filter_email']) . "%'";
         }
 
         if (!empty($data['filter_telephone'])) {
-            $implode[] = "mobile LIKE '" . $this->db->escape($data['filter_telephone']) . "%'";
+            $implode[] = "c.mobile LIKE '" . $this->db->escape($data['filter_telephone']) . "%'";
         }
 
 
         if (!empty($data['filter_ip'])) {
-            $implode[] = "ip = '" . $this->db->escape($data['filter_ip']) . "'";
+            $implode[] = "c.ip = '" . $this->db->escape($data['filter_ip']) . "'";
         }
 
         if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
-            $implode[] = "status = '" . (int) $data['filter_status'] . "'";
+            $implode[] = "c.status = '" . (int) $data['filter_status'] . "'";
         }
 
         if (!empty($data['filter_date_added'])) {
-            $implode[] = "DATE(created_at) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
+            $implode[] = "DATE(c.created_at) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
         }
 
         if ($implode) {
@@ -258,7 +258,7 @@ class ModelUserFarmerTransactions extends Model {
     }
 
     public function getFarmers($data = []) {
-        $sql = "SELECT *, CONCAT(c.first_name, ' ', c.last_name) AS name FROM " . DB_PREFIX . 'farmer c';
+        $sql = "SELECT ft.*, CONCAT(c.first_name, ' ', c.last_name) AS name FROM " . DB_PREFIX . 'farmer_transaction ft INNER JOIN ' . DB_PREFIX . 'farmer c ON ft.farmer_id = c.farmer_id';
 
         $implode = [];
 
