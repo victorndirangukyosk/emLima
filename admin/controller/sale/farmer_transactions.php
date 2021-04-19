@@ -398,6 +398,7 @@ class ControllerSaleFarmerTransactions extends Controller {
                 'status' => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
                 'ip' => $result['ip'],
                 'quantity' => $result['quantity'],
+                'unit' => $result['unit'],
                 'price' => $result['price'],
                 'total' => $result['total'],
                 'product_name' => $result['product_name'],
