@@ -66,6 +66,7 @@ class ModelUserUser extends Model
         $sql .= ' WHERE user_group_id NOT IN ('.$this->db->escape($this->config->get('config_vendor_group_ids')).') ';
         $sql .= ' AND user_group_id NOT IN ('.$this->db->escape($this->config->get('config_shopper_group_ids')).') ';
         $sql .= ' AND user_group_id NOT IN ('.$this->db->escape($this->config->get('config_account_manager_group_id')).') ';
+        $sql .= ' AND user_group_id NOT IN ('.$this->db->escape($this->config->get('config_farmer_group_id')).') ';
 
         if (isset($data['filter_user_name']) && !is_null($data['filter_user_name'])) {
             $isWhere = 1;
@@ -155,6 +156,7 @@ class ModelUserUser extends Model
         //filter vendor groups
         $sql .= ' WHERE user_group_id NOT IN ('.$this->db->escape($this->config->get('config_vendor_group_ids')).') ';
         $sql .= ' AND user_group_id NOT IN ('.$this->db->escape($this->config->get('config_shopper_group_ids')).') ';
+        $sql .= ' AND user_group_id NOT IN ('.$this->db->escape($this->config->get('config_farmer_group_id')).') ';
 
         $query = $this->db->query($sql);
 
@@ -171,6 +173,7 @@ class ModelUserUser extends Model
         //filter vendor groups
         $sql .= ' WHERE user_group_id NOT IN ('.$this->db->escape($this->config->get('config_vendor_group_ids')).') ';
         $sql .= ' AND user_group_id NOT IN ('.$this->db->escape($this->config->get('config_shopper_group_ids')).') ';
+        $sql .= ' AND user_group_id NOT IN ('.$this->db->escape($this->config->get('config_farmer_group_id')).') ';
 
         if (isset($data['filter_user_name']) && !is_null($data['filter_user_name'])) {
             $isWhere = 1;
