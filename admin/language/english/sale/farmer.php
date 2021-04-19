@@ -5,10 +5,9 @@ $_['heading_title'] = 'Farmers';
 
 // Text
 $_['text_success'] = 'Success: You have modified farmers!';
-$_['text_list'] = 'Farmer List';
+$_['text_list'] = 'Farmers List';
 $_['text_add'] = 'Add Farmer';
 $_['text_edit'] = 'Edit Farmer';
-$_['text_view'] = 'View Farmer';
 $_['text_default'] = 'Default';
 $_['text_balance'] = 'Balance';
 $_['text_add_ban_ip'] = 'Add Ban IP';
@@ -20,9 +19,9 @@ $_['entry_dob'] = 'DOB';
 
 $_['entry_gender'] = 'Gender';
 // Column
-$_['column_name'] = 'Customer Name';
+$_['column_name'] = 'Farmer Name';
 $_['column_email'] = 'E-Mail';
-$_['column_customer_group'] = 'Customer Group';
+$_['column_customer_group'] = 'Farmer Group';
 $_['column_status'] = 'Status';
 $_['column_date_added'] = 'Date Added';
 $_['column_comment'] = 'Comment';
@@ -36,7 +35,7 @@ $_['column_total'] = 'Total Accounts';
 $_['column_action'] = 'Action';
 $_['column_telephone'] = 'Phone No.';
 // Entry
-$_['entry_customer_group'] = 'Customer Group';
+$_['entry_customer_group'] = 'Farmer Group';
 $_['entry_firstname'] = 'First Name';
 $_['entry_lastname'] = 'Last Name';
 $_['entry_email'] = 'E-Mail';
@@ -61,7 +60,7 @@ $_['entry_comment'] = 'Comment';
 $_['entry_description'] = 'Description';
 $_['entry_amount'] = 'Amount';
 $_['entry_points'] = 'Points';
-$_['entry_name'] = 'Customer Name';
+$_['entry_name'] = 'Farmer Name';
 $_['entry_ip'] = 'IP';
 $_['entry_date_added'] = 'Date Added';
 $_['entry_send_email'] = 'Send Mail';
@@ -69,7 +68,7 @@ $_['entry_contact_no'] = 'Contact No';
 $_['entry_address'] = 'Address';
 
 // Help
-$_['help_safe'] = 'Set to true to avoid this customer from being caught by the anti-fraud system';
+$_['help_safe'] = 'Set to true to avoid this Farmer from being caught by the anti-fraud system';
 $_['help_points'] = 'Use minus to remove points';
 
 // Error
@@ -78,8 +77,11 @@ $_['error_address'] = 'Address field required!';
 $_['error_contact_no'] = 'Contact no field required!';
 $_['error_city_id'] = 'City field required!';
 $_['error_warning'] = 'Warning: Please check the form carefully for errors!';
-$_['error_permission'] = 'Warning: You do not have permission to modify customers!';
+$_['error_permission'] = 'Warning: You do not have permission to modify Farmers!';
 $_['error_exists'] = 'Warning: E-Mail Address is already registered!';
+$_['error_exist'] = 'E-Mail Address is already registered!';
+$_['error_username_exists'] = 'Warning: Username is already registered!';
+$_['error_username_exist'] = 'Username is already registered!';
 $_['error_firstname'] = 'First Name must be between 1 and 32 characters!';
 $_['error_lastname'] = 'Last Name must be between 1 and 32 characters!';
 $_['error_email'] = 'E-Mail Address does not appear to be valid!';
@@ -116,3 +118,15 @@ $_['text_flat_house_office'] = 'House No. and Building Name';
 $_['text_stree_society_office'] = 'Street / Society / Office Name';
 
 $_['entry_referred_by'] = 'Referred By: ';
+
+// Entry
+$_['entry_username'] = 'Username';
+$_['entry_user_group'] = 'User Group';
+$_['entry_password'] = 'Password';
+$_['entry_confirm'] = 'Confirm';
+$_['entry_firstname'] = 'First Name';
+$_['entry_lastname'] = 'Last Name';
+$_['entry_email'] = 'E-Mail';
+$_['entry_image'] = 'Image';
+$_['entry_status'] = 'Status';
+$_['error_username'] = 'Username must be between 3 and 20 characters!';
