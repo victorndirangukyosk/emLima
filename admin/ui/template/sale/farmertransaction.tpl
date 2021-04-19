@@ -127,14 +127,6 @@
                                         <?php } else { ?>
                                         <a href="<?php echo $sort_date_added; ?>">Date Of Receiving</a>
                                         <?php } ?></td>
-                                    <td class="text-left"><?php if ($sort == 'name') { ?>
-                                        <a href="<?php echo $sort_name; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_name; ?></a>
-                                        <?php } else { ?>
-                                        <a href="<?php echo $sort_name; ?>"><?php echo $column_name; ?></a>
-                                        <?php } ?></td>
-                                    <td class="text-left"><?php echo $column_telephone; ?></td>
-                                   <td class="text-left">Email</td>
-                                    <td class="text-left">Organization</td>
                                     <td class="text-left">Product Name</td>
                                     <td class="text-left">UOM</td>
                                     <td class="text-left">Quantity</td>
@@ -153,10 +145,6 @@
                                         <input type="checkbox" name="selected[]" value="<?php echo $customer['farmer_id']; ?>" />
                                         <?php } ?></td>
                                     <td class="text-left"><?php echo $customer['created_at']; ?></td>
-                                    <td class="text-left"><?php echo $customer['name']; ?></td>
-                                    <td class="text-left"><?php echo $customer['mobile']; ?></td>
-                                    <td class="text-left"><?php echo $customer['email']; ?></td>
-                                    <td class="text-left"><?php echo $customer['organization']; ?></td>
                                     <td class="text-left"><?php echo $customer['product_name']; ?></td>
                                     <td class="text-left"><?php echo $customer['unit']; ?></td>
                                     <td class="text-left"><?php echo $customer['quantity']; ?></td>
