@@ -161,6 +161,18 @@
         </ul>
     </li>
     <?php } ?>
+    
+        <?php
+    if( $preturn_farmer != false) {
+    ?>
+    <li><a class="parent"><i class="fa fa-user fa-fw"></i> <span><?php echo $text_farmer; ?></span></a>
+        <ul class="collapse">
+            <?php if($preturn_customer) { ?>
+            <li><a href="<?php echo $farmer; ?>"><?php echo $text_farmer; ?></a></li>
+            <?php } ?>
+        </ul>
+    </li>
+    <?php } ?>
 
     <?php
     if( $preturn_order_dashboard != false || $preturn_account_manager != false) {
