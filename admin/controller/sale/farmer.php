@@ -389,7 +389,7 @@ class ControllerSaleFarmer extends Controller {
                 'farmer_id' => $result['farmer_id'],
                 'name' => $result['name'],
                 'email' => $result['email'],
-                'mobile' => $country_code . $result['mobile'],
+                'mobile' => $result['mobile'] != NULL && strlen($result['mobile']) > 0 && $result['mobile'] > 0 ? $country_code . $result['mobile'] : '',
                 'organization' => $result['organization'],
                 'location' => $result['location'],
                 'description' => $result['description'],
