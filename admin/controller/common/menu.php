@@ -77,7 +77,7 @@ class ControllerCommonMenu extends Controller
         $data['offer'] = $this->url->link('marketing/offer', 'token='.$this->session->data['token'], 'SSL');
         $data['currency'] = $this->url->link('localisation/currency', 'token='.$this->session->data['token'], 'SSL');
         $data['customer'] = $this->url->link('sale/customer', 'token='.$this->session->data['token'].'&sort=c.date_added&order=DESC', 'SSL');
-        $data['farmer'] = $this->url->link('sale/farmer', 'token='.$this->session->data['token'].'&sort=c.date_added&order=DESC', 'SSL');
+        $data['farmer'] = $this->url->link('sale/farmer', 'token='.$this->session->data['token'].'&sort=c.created_at&order=DESC', 'SSL');
         
         $data['accountmanager'] = $this->url->link('sale/accountmanager', 'token='.$this->session->data['token'].'&sort=c.date_added&order=DESC', 'SSL');
         $data['accountmanager_customers'] = $this->url->link('sale/accountmanageruser', 'token='.$this->session->data['token'].'&sort=c.date_added&order=DESC', 'SSL');
