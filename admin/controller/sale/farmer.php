@@ -1499,7 +1499,7 @@ class ControllerSaleFarmer extends Controller {
 
                 $json[] = [
                     'farmer_id' => $result['farmer_id'],
-                    'username' => strip_tags(html_entity_decode($result['username'], ENT_QUOTES, 'UTF-8')),
+                    'username' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')),
                     'name' => $result['name'],
                     'firstname' => $result['first_name'],
                     'lastname' => $result['last_name'],
