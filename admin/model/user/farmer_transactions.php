@@ -258,7 +258,7 @@ class ModelUserFarmerTransactions extends Model {
     }
 
     public function getFarmers($data = []) {
-        $sql = "SELECT ft.*, CONCAT(c.first_name, ' ', c.last_name) AS name FROM " . DB_PREFIX . 'farmer_transaction ft INNER JOIN ' . DB_PREFIX . 'farmer c ON ft.farmer_id = c.farmer_id';
+        $sql = "SELECT ft.*, ft.name as product_name, CONCAT(c.first_name, ' ', c.last_name) AS name,c.mobile, c.email,c.organization FROM " . DB_PREFIX . 'farmer_transaction ft INNER JOIN ' . DB_PREFIX . 'farmer c ON ft.farmer_id = c.farmer_id';
 
         $implode = [];
 

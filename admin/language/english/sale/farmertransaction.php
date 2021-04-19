@@ -1,7 +1,7 @@
 <?php
 
 // Heading
-$_['heading_title'] = 'Farmers';
+$_['heading_title'] = 'Farmer Transactions';
 
 // Text
 $_['text_success'] = 'Success: You have modified farmers!';

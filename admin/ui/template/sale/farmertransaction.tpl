@@ -6,7 +6,7 @@
                 <button type="button" data-toggle="tooltip" title="<?php echo $button_delete; ?>" class="btn btn-danger" onclick="confirm('<?php echo $text_confirm; ?>') ? $('#form-customer').submit() : false;"><i class="fa fa-trash-o"></i></button>
                 <button type="button" onclick="excel();" data-toggle="tooltip" title="" class="btn btn-success " data-original-title="Download Excel"><i class="fa fa-download"></i></button>
             </div>
-            <h1><?php echo $heading_title; ?></h1>
+            <h1>Farmer Transactions</h1>
             <ul class="breadcrumb">
                 <?php foreach ($breadcrumbs as $breadcrumb) { ?>
                 <li><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>
@@ -27,7 +27,7 @@
         <?php } ?>
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title"><i class="fa fa-list"></i> <?php echo $text_list; ?></h3>
+                <h3 class="panel-title"><i class="fa fa-list"></i> Farmer Transactions List</h3>
                 <div class="pull-right">
                     <button type="button" data-toggle="tooltip" title="<?php echo $button_show_filter; ?>" class="btn btn-primary btn-sm" id="showFilter"><i class="fa fa-eye"></i></button>
                     <button type="button" data-toggle="tooltip" title="<?php echo $button_hide_filter; ?>" class="btn btn-primary btn-sm" id="hideFilter"><i class="fa fa-eye-slash"></i></button>
@@ -128,16 +128,17 @@
                                         <a href="<?php echo $sort_name; ?>"><?php echo $column_name; ?></a>
                                         <?php } ?></td>
                                     <td class="text-left"><?php echo $column_telephone; ?></td>
-                                    <td class="text-left">Produce Details</td>
-                                    <td class="text-left">Farmer Type</td>
+                                   <td class="text-left">Email</td>
                                     <td class="text-left">Organization</td>
-                                    <td class="text-left">Farm Size</td>
+                                    <td class="text-left">Product Name</td>
+                                    <td class="text-left">Quantity</td>
+                                    <td class="text-left">Price</td>
+                                    <td class="text-left">Total</td>
                                     <td class="text-left"><?php if ($sort == 'c.date_added') { ?>
                                         <a href="<?php echo $sort_date_added; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_date_added; ?></a>
                                         <?php } else { ?>
                                         <a href="<?php echo $sort_date_added; ?>"><?php echo $column_date_added; ?></a>
                                         <?php } ?></td>
-                                    <td class="text-right"><?php echo $column_action; ?></td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -151,12 +152,13 @@
                                         <?php } ?></td>
                                     <td class="text-left"><?php echo $customer['name']; ?></td>
                                     <td class="text-left"><?php echo $customer['mobile']; ?></td>
-                                    <td class="text-left"><?php echo $customer['description']; ?></td>
-                                    <td class="text-left"><?php echo $customer['farmer_type']; ?></td>
+                                    <td class="text-left"><?php echo $customer['email']; ?></td>
                                     <td class="text-left"><?php echo $customer['organization']; ?></td>
-                                    <td class="text-left"><?php echo $customer['farm_size']; ?></td>
+                                    <td class="text-left"><?php echo $customer['product_name']; ?></td>
+                                    <td class="text-left"><?php echo $customer['quantity']; ?></td>
+                                    <td class="text-left"><?php echo $customer['price']; ?></td>
+                                    <td class="text-left"><?php echo $customer['total']; ?></td>
                                     <td class="text-left"><?php echo $customer['created_at']; ?></td>
-                                    <td class="text-right"><a href="<?php echo $customer['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a></td>
                                 </tr>
                                 <?php } ?>
                                 <?php } else { ?>
