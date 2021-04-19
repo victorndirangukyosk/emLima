@@ -234,7 +234,7 @@ class ModelUserFarmer extends Model {
         $implode = [];
 
         if (!empty($data['filter_name'])) {
-            $implode[] = "CONCAT(firstname, ' ', lastname) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+            $implode[] = "CONCAT(first_name, ' ', last_name) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
         }
 
         if (!empty($data['filter_email'])) {
