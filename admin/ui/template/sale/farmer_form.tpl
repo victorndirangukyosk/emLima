@@ -40,10 +40,6 @@
                 <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form-user" class="form-horizontal">
                     <ul class="nav nav-tabs">
                         <li class="active"><a href="#tab-general" data-toggle="tab"><?php echo $tab_general; ?></a></li>
-                        <?php if ($user_id) { ?>
-                        <li><a href="#tab-assign-customers" data-toggle="tab"><?php echo $tab_assign_customers; ?></a></li>
-                        <li><a href="#tab-assigned-customers" data-toggle="tab"><?php echo $tab_assigned_customers; ?></a></li>
-                        <?php } ?>
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane active" id="tab-general">
@@ -146,25 +142,6 @@
                                 </div>
                             </div>
                         </div>
-                        <?php if ($user_id) { ?>
-                        <div class="tab-pane" id="tab-assign-customers">
-                            <div class="form-group required">
-                                <label class="col-sm-2 control-label" for="input-assign-username">Assign Company</label>
-                                <div class="col-sm-10">
-                                    <input type="text" name="assign_customers" value="" placeholder="Type Company Name" id="input-assign-customer" class="form-control" />
-                                    <div id="assign_customers_select" class="well well-sm" style="height: 150px; overflow: auto;">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="text-right">
-                                <button id="button-assign-customer" class="btn btn-primary"><i class="fa fa-plus-circle"></i> Assign Company</button>
-                            </div>
-                        </div>
-                        <div class="tab-pane" id="tab-assigned-customers">
-                            <div id="assignedcustomers"></div>
-                            <br />
-                        </div>
-                        <?php } ?>
                     </div>
                 </form>
             </div>
