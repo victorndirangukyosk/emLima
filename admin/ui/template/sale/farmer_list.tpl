@@ -1,7 +1,3 @@
-
-
-
-
 <?php echo $header; ?><?php echo $column_left; ?>
 <div id="content">
   <div class="page-header">
@@ -170,23 +166,6 @@
                     <a href="<?php echo $sort_email; ?>"><?php echo $column_email; ?></a>
                     <?php } ?></td>
                   <td class="text-left"><?php echo $column_telephone; ?></td>
-
-                  <td style="width: 3px;" class="text-left"><?php if ($sort == 'customer_group') { ?>
-                    <a href="<?php echo $sort_customer_group; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_customer_group; ?></a>
-                    <?php } else { ?>
-                    <a href="<?php echo $sort_customer_group; ?>"><?php echo $column_customer_group; ?></a>
-                    <?php } ?></td>
-                  <td class="text-left"><?php if ($sort == 'c.status') { ?>
-                    <a href="<?php echo $sort_status; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_status; ?></a>
-                    <?php } else { ?>
-                    <a href="<?php echo $sort_status; ?>"><?php echo $column_status; ?></a>
-                    <?php } ?></td>
-                  <td class="text-left">Source</td>
-                  <td class="text-left"><?php if ($sort == 'c.ip') { ?>
-                    <a href="<?php echo $sort_ip; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_ip; ?></a>
-                    <?php } else { ?>
-                    <a href="<?php echo $sort_ip; ?>"><?php echo $column_ip; ?></a>
-                    <?php } ?></td>
                   <td class="text-left"><?php if ($sort == 'c.date_added') { ?>
                     <a href="<?php echo $sort_date_added; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_date_added; ?></a>
                     <?php } else { ?>
@@ -208,10 +187,6 @@
                    <br/> <?php echo $customer['company_name']; ?></td>
                   <td class="text-left"><?php echo $customer['email']; ?></td>
                   <td class="text-left"><?php echo $customer['telephone']; ?></td>
-                  <td class="text-left"><?php echo $customer['customer_group']; ?></td>
-                  <td class="text-left"><?php echo $customer['status']; ?></td>
-                  <td class="text-left"><?php echo $customer['source']; ?></td>
-                  <td class="text-left"><?php echo $customer['ip']; ?></td>
                   <td class="text-left"><?php echo $customer['date_added']; ?></td>
                   <td class="text-left"><?php if ($customer['approve']) { ?>
                     <a href="<?php echo $customer['approve']; ?>" data-toggle="tooltip" title="<?php echo $button_verify; ?>"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check"><polyline points="20 6 9 17 4 12"></polyline></svg></i></a>
