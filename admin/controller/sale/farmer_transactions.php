@@ -5,11 +5,11 @@ class ControllerSaleFarmerTransactions extends Controller {
     private $error = [];
 
     public function index() {
-        $this->load->language('sale/farmer');
+        $this->load->language('sale/farmertransactions');
 
         $this->document->setTitle($this->language->get('heading_title'));
 
-        $this->load->model('user/farmer');
+        $this->load->model('user/farmer_transactions');
 
         $this->getList();
 
@@ -249,7 +249,7 @@ class ControllerSaleFarmerTransactions extends Controller {
     }
 
     protected function getList() {
-        $this->load->language('sale/farmer');
+        $this->load->language('sale/farmertransactions');
 
         if (isset($this->request->get['filter_name'])) {
             $filter_name = $this->request->get['filter_name'];
@@ -377,9 +377,9 @@ class ControllerSaleFarmerTransactions extends Controller {
             'limit' => $this->config->get('config_limit_admin'),
         ];
 
-        $customer_total = $this->model_user_farmer->getTotalFarmers($filter_data);
+        $customer_total = $this->model_user_farmer_transactions->getTotalFarmers($filter_data);
 
-        $results = $this->model_user_farmer->getFarmers($filter_data);
+        $results = $this->model_user_farmer_transactions->getFarmers($filter_data);
 
         //echo "<pre>";print_r($results);die;
         foreach ($results as $result) {
