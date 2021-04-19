@@ -230,7 +230,7 @@ class ModelUserFarmer extends Model {
         }
 
         if (!empty($data['filter_telephone'])) {
-            $implode[] = "telephone LIKE '" . $this->db->escape($data['filter_telephone']) . "%'";
+            $implode[] = "mobile LIKE '" . $this->db->escape($data['filter_telephone']) . "%'";
         }
 
 
@@ -243,7 +243,7 @@ class ModelUserFarmer extends Model {
         }
 
         if (!empty($data['filter_date_added'])) {
-            $implode[] = "DATE(date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
+            $implode[] = "DATE(created_at) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
         }
 
         if ($implode) {
@@ -263,7 +263,7 @@ class ModelUserFarmer extends Model {
         $implode = [];
 
         if (!empty($data['filter_name'])) {
-            $implode[] = "CONCAT(c.firstname, ' ', c.lastname) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+            $implode[] = "CONCAT(c.first_name, ' ', c.last_name) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
         }
 
         if (!empty($data['filter_email'])) {
@@ -271,7 +271,7 @@ class ModelUserFarmer extends Model {
         }
 
         if (!empty($data['filter_telephone'])) {
-            $implode[] = "c.telephone LIKE '" . $this->db->escape($data['filter_telephone']) . "%'";
+            $implode[] = "c.mobile LIKE '" . $this->db->escape($data['filter_telephone']) . "%'";
         }
 
 
@@ -284,7 +284,7 @@ class ModelUserFarmer extends Model {
         }
 
         if (!empty($data['filter_date_added'])) {
-            $implode[] = "DATE(c.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
+            $implode[] = "DATE(c.created_at) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
         }
 
         if ($implode) {
@@ -294,10 +294,9 @@ class ModelUserFarmer extends Model {
         $sort_data = [
             'name',
             'c.email',
-            'customer_group',
             'c.status',
             'c.ip',
-            'c.date_added',
+            'c.created_at',
         ];
 
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {

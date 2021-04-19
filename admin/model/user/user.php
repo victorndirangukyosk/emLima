@@ -247,13 +247,13 @@ class ModelUserUser extends Model {
             $_sql[] = "last_name LIKE '" . $this->db->escape($data['filter_last_name']) . "%'";
         }
 
-        if (isset($data['filter_name']) && !is_null($data['filter_name'])) {
+        if (isset($data['filter_name']) && !is_null($data['filter_name']) && strlen($data['filter_name']) > 0) {
             $isWhere = 1;
 
-            $_sql[] = "CONCAT(first_name, ' ', last_name) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+            $_sql[] = "name LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
         }
 
-        if (isset($data['filter_email']) && !is_null($data['filter_email'])) {
+        if (isset($data['filter_email']) && !is_null($data['filter_email']) && strlen($data['filter_email']) > 0) {
             $isWhere = 1;
 
             $_sql[] = "email LIKE '" . $this->db->escape($data['filter_email']) . "%'";
@@ -272,7 +272,7 @@ class ModelUserUser extends Model {
         $sort_data = [
             'name',
             'status',
-            'date_added',
+            'created_at',
         ];
 
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
