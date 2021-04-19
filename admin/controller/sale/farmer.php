@@ -491,7 +491,7 @@ class ControllerSaleFarmer extends Controller {
             $country_code = '+' . $this->config->get('config_telephone_code');
 
             $data['customers'][] = [
-                'user_id' => $result['user_id'],
+                'user_id' => $result['farmer_id'],
                 'name' => $result['name'],
                 'email' => $result['email'],
                 'mobile' => $country_code . $result['mobile'],
@@ -503,7 +503,7 @@ class ControllerSaleFarmer extends Controller {
                 'status' => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
                 'ip' => $result['ip'],
                 'created_at' => date($this->language->get('date_format_short'), strtotime($result['created_at'])),
-                'edit' => $this->url->link('sale/farmer/edit', 'token=' . $this->session->data['token'] . '&user_id=' . $result['user_id'] . $url, 'SSL'),
+                'edit' => $this->url->link('sale/farmer/edit', 'token=' . $this->session->data['token'] . '&user_id=' . $result['farmer_id'] . $url, 'SSL'),
             ];
         }
 
