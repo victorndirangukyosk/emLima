@@ -229,7 +229,7 @@ class ModelUserFarmer extends Model {
     }
 
     public function getTotalFarmers($data = []) {
-        $sql = 'SELECT COUNT(*) AS total FROM ' . DB_PREFIX . 'user';
+        $sql = 'SELECT COUNT(*) AS total FROM ' . DB_PREFIX . 'farmer';
 
         $implode = [];
 
@@ -271,7 +271,7 @@ class ModelUserFarmer extends Model {
     }
 
     public function getFarmers($data = []) {
-        $sql = "SELECT *, CONCAT(c.firstname, ' ', c.lastname) AS name FROM " . DB_PREFIX . 'user c';
+        $sql = "SELECT *, CONCAT(c.first_name, ' ', c.last_name) AS name FROM " . DB_PREFIX . 'farmer c';
 
         $implode = [];
 
