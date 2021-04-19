@@ -116,7 +116,7 @@ class ModelSaleFarmer extends Model {
     }
 
     public function getCustomers($data = []) {
-        $sql = "SELECT *, CONCAT(c.firstname, ' ', c.lastname) AS name FROM " . DB_PREFIX . 'farmer c';
+        $sql = "SELECT *, CONCAT(c.first_name, ' ', c.last_name) AS name FROM " . DB_PREFIX . 'farmer c';
 
         $implode = [];
 
