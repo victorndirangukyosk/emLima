@@ -768,11 +768,11 @@ class ControllerSaleFarmer extends Controller {
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+            'href' => $this->url->link('sale/farmer', 'token=' . $this->session->data['token'] . $url, 'SSL'),
         ];
 
-        $data['add'] = $this->url->link('sale/customer/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['delete'] = $this->url->link('sale/customer/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['add'] = $this->url->link('sale/farmer/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['delete'] = $this->url->link('sale/farmer/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
         $data['customers'] = [];
 
@@ -1098,7 +1098,7 @@ class ControllerSaleFarmer extends Controller {
         $this->load->model('user/accountmanager');
         $data['accountmanagers'] = $this->model_sale_customer_group->getCustomerGroups();
 
-        $this->response->setOutput($this->load->view('sale/customer_list.tpl', $data));
+        $this->response->setOutput($this->load->view('sale/farmer_list.tpl', $data));
     }
 
     protected function getForm() {
