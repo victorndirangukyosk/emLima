@@ -1,14 +1,14 @@
 <?php
 
 // Heading
-$_['heading_title'] = 'Customers';
+$_['heading_title'] = 'Farmers';
 
 // Text
-$_['text_success'] = 'Success: You have modified customers!';
-$_['text_list'] = 'Customer List';
-$_['text_add'] = 'Add Customer';
-$_['text_edit'] = 'Edit Customer';
-$_['text_view'] = 'View Customer';
+$_['text_success'] = 'Success: You have modified farmers!';
+$_['text_list'] = 'Farmer List';
+$_['text_add'] = 'Add Farmer';
+$_['text_edit'] = 'Edit Farmer';
+$_['text_view'] = 'View Farmer';
 $_['text_default'] = 'Default';
 $_['text_balance'] = 'Balance';
 $_['text_add_ban_ip'] = 'Add Ban IP';
