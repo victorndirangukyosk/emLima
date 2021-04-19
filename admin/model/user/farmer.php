@@ -292,6 +292,7 @@ class ModelUserFarmer extends Model {
         }
 
         $sort_data = [
+            'c.farmer_id',
             'name',
             'c.email',
             'c.status',
@@ -324,8 +325,6 @@ class ModelUserFarmer extends Model {
         }
 
         $query = $this->db->query($sql);
-        $log = new Log('error.log');
-        $log->write($sql);
         //echo "<pre>";print_r($sql);die;
 
         return $query->rows;
