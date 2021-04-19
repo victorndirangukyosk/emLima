@@ -523,7 +523,7 @@ class ControllerSaleFarmer extends Controller {
         $data['sort_email'] = $this->url->link('sale/farmer', 'token=' . $this->session->data['token'] . '&sort=c.email' . $url, 'SSL');
         $data['sort_status'] = $this->url->link('sale/farmer', 'token=' . $this->session->data['token'] . '&sort=c.status' . $url, 'SSL');
         $data['sort_ip'] = $this->url->link('sale/farmer', 'token=' . $this->session->data['token'] . '&sort=c.ip' . $url, 'SSL');
-        $data['sort_date_added'] = $this->url->link('sale/farmer', 'token=' . $this->session->data['token'] . '&sort=c.date_added' . $url, 'SSL');
+        $data['sort_date_added'] = $this->url->link('sale/farmer', 'token=' . $this->session->data['token'] . '&sort=c.created_at' . $url, 'SSL');
 
         $url = '';
 
@@ -541,10 +541,6 @@ class ControllerSaleFarmer extends Controller {
 
         if (isset($this->request->get['filter_telephone'])) {
             $url .= '&filter_telephone=' . urlencode(html_entity_decode($this->request->get['filter_telephone'], ENT_QUOTES, 'UTF-8'));
-        }
-
-        if (isset($this->request->get['filter_customer_group_id'])) {
-            $url .= '&filter_customer_group_id=' . $this->request->get['filter_customer_group_id'];
         }
 
         if (isset($this->request->get['filter_status'])) {

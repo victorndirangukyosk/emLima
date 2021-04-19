@@ -324,7 +324,8 @@ class ModelUserFarmer extends Model {
         }
 
         $query = $this->db->query($sql);
-
+        $log = new Log('error.log');
+        $log->write($sql);
         //echo "<pre>";print_r($sql);die;
 
         return $query->rows;

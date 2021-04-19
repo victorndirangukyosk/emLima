@@ -91,22 +91,6 @@
                             </div>-->
                         </div>
                         <div class="col-sm-3">
-                            <!-- <div class="form-group">
-                              <label class="control-label" for="input-approved"><?php echo $entry_approved; ?></label>
-                              <select name="filter_approved" id="input-approved" class="form-control">
-                                <option value="*"></option>
-                                <?php if ($filter_approved) { ?>
-                                <option value="1" selected="selected"><?php echo $text_yes; ?></option>
-                                <?php } else { ?>
-                                <option value="1"><?php echo $text_yes; ?></option>
-                                <?php } ?>
-                                <?php if (!$filter_approved && !is_null($filter_approved)) { ?>
-                                <option value="0" selected="selected"><?php echo $text_no; ?></option>
-                                <?php } else { ?>
-                                <option value="0"><?php echo $text_no; ?></option>
-                                <?php } ?>
-                              </select>
-                            </div> -->
                             <div class="form-group">
                                 <label class="control-label" for="input-status"><?php echo $entry_status; ?></label>
                                 <select name="filter_status" id="input-status" class="form-control">
