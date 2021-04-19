@@ -163,12 +163,15 @@
     <?php } ?>
     
         <?php
-    if( $preturn_farmer != false) {
+    if( $preturn_farmer != false || $preturn_farmertransactions != false) {
     ?>
     <li><a class="parent"><i class="fa fa-user fa-fw"></i> <span><?php echo $text_farmer; ?></span></a>
         <ul class="collapse">
             <?php if($preturn_customer) { ?>
             <li><a href="<?php echo $farmer; ?>"><?php echo $text_farmer; ?></a></li>
+            <?php } ?>
+            <?php if($preturn_farmertransactions) { ?>
+            <li><a href="<?php echo $farmertransactions; ?>"><?php echo $text_farmertransactions; ?></a></li>
             <?php } ?>
         </ul>
     </li>
