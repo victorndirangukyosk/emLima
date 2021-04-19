@@ -182,14 +182,6 @@ class ModelSaleFarmer extends Model {
             $implode[] = "c.account_manager_id = '" . (int) $data['filter_account_manager_id'] . "'";
         }
 
-        if (($data['filter_sub_customer_show'] == 0 || $data['filter_sub_customer_show'] == NULL || !array_key_exists('filter_sub_customer_show', $data)) && !array_key_exists('filter_parent_customer_id', $data)) {
-            $implode[] = "(parent = 0 OR parent IS NULL)";
-        }
-
-        if (!empty($data['filter_sub_customer_show']) && !empty($data['filter_sub_customer_show']) && $data['filter_sub_customer_show'] == 1) {
-            //$implode[] = "parent > 0";
-        }
-
         if (!empty($data['filter_monthyear_added'])) {
             $implode[] = "DATE_FORMAT(date_added, '%Y-%m') = '" . $this->db->escape($data['filter_monthyear_added']) . "'";
         }
@@ -550,14 +542,6 @@ class ModelSaleFarmer extends Model {
 
         if (!empty($data['filter_account_manager_id']) && !empty($data['filter_account_manager_name'])) {
             $implode[] = "account_manager_id = '" . $this->db->escape($data['filter_account_manager_id']) . "'";
-        }
-
-        if (($data['filter_sub_customer_show'] == 0 || $data['filter_sub_customer_show'] == NULL || !array_key_exists('filter_sub_customer_show', $data)) && !array_key_exists('filter_parent_customer_id', $data)) {
-            $implode[] = "(parent = 0 OR parent IS NULL)";
-        }
-
-        if (!empty($data['filter_sub_customer_show']) && !empty($data['filter_sub_customer_show']) && $data['filter_sub_customer_show'] == 1) {
-            //$implode[] = "parent > 0";
         }
 
         if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
