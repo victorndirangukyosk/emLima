@@ -68,9 +68,6 @@
 		  </div>
 		</div>
 	  </div>
-	</div>
-	<div class="copyright">
-		 <a href="<?php echo $store['href']; ?>"> ← Back to <?php echo $store['name']; ?></a>
 	</div>	
 </div>
 <?php echo $footer; ?>
