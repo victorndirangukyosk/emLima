@@ -121,7 +121,7 @@ class User extends SmartObject {
         if ($user_query->num_rows) {
             $this->session->data['farmer_id'] = $user_query->row['farmer_id'];
 
-            $this->user_id = $user_query->row['farmer_id'];
+            $this->farmer_id = $user_query->row['farmer_id'];
             $this->username = $user_query->row['username'];
             $this->user_group_id = $user_query->row['user_group_id'];
 
@@ -167,6 +167,10 @@ class User extends SmartObject {
         return $this->user_id;
     }
 
+    public function isFarmerLogged() {
+        return $this->farmer_id;
+    }
+
     public function isVendor() {
         $vendor_group_ids = explode(',', $this->config->get('config_vendor_group_ids'));
         if (in_array($this->user_group_id, $vendor_group_ids)) {
@@ -187,6 +191,10 @@ class User extends SmartObject {
 
     public function getId() {
         return $this->user_id;
+    }
+
+    public function getFarmerId() {
+        return $this->farmer_id;
     }
 
     public function getUserName() {
