@@ -28,8 +28,8 @@ class ModelUserFarmer extends Model {
         $this->db->query('DELETE FROM `' . DB_PREFIX . "user` WHERE user_id = '" . (int) $user_id . "'");
     }
 
-    public function getUser($user_id) {
-        $query = $this->db->query('SELECT *, (SELECT ug.name FROM `' . DB_PREFIX . 'user_group` ug WHERE ug.user_group_id = u.user_group_id) AS user_group FROM `' . DB_PREFIX . "user` u WHERE u.user_id = '" . (int) $user_id . "'");
+    public function getFarmer($farmer_id) {
+        $query = $this->db->query('SELECT *, (SELECT ug.name FROM `' . DB_PREFIX . 'user_group` ug WHERE ug.user_group_id = f.user_group_id) AS user_group FROM `' . DB_PREFIX . "farmer` f WHERE f.farmer_id = '" . (int) $farmer_id . "'");
 
         return $query->row;
     }
