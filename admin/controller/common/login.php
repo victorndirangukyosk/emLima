@@ -206,7 +206,7 @@ class ControllerCommonLogin extends Controller {
             'common/loginAPI',
         ];
 
-        if (!$this->user->isLogged() && !in_array($path, $ignore)) {
+        if (!$this->user->isLogged() && !$this->user->isFarmerLogged() && !in_array($path, $ignore)) {
             return new Action('common/login');
         }
 

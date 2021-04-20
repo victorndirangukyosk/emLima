@@ -11,7 +11,7 @@ class ControllerCommonFarmer extends Controller {
 
         $shopper_group_id = $this->config->get('config_shopper_group_ids');
 
-        if ($this->user->isLogged() && isset($this->request->get['token']) && ($this->request->get['token'] == $this->session->data['token'])) {
+        if ($this->user->isFarmerLogged() && isset($this->request->get['token']) && ($this->request->get['token'] == $this->session->data['token'])) {
             if ($shopper_group_id == $this->user->getGroupId()) {
                 $this->response->redirect($this->url->link('shopper/request', 'token=' . $this->session->data['token'], 'SSL'));
             } else {
@@ -54,10 +54,11 @@ class ControllerCommonFarmer extends Controller {
             }
             // Add to activity log
             $log = new Log('error.log');
+            $log->write($this->session->data);
             $this->load->model('user/user_activity');
 
             $activity_data = [
-                'user_id' => $this->user->getId(),
+                'farmer_id' => $this->user->getFarmerId(),
                 'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
                 'user_group_id' => $this->user->getGroupId(),
             ];
@@ -70,6 +71,7 @@ class ControllerCommonFarmer extends Controller {
             if ($shopper_group_id == $this->user->getGroupId()) {
                 $this->response->redirect($this->url->link('shopper/request', 'token=' . $this->session->data['token'], 'SSL'));
             } elseif (isset($this->request->post['redirect']) && (0 === strpos($this->request->post['redirect'], HTTP_SERVER) || 0 === strpos($this->request->post['redirect'], HTTPS_SERVER))) {
+                $log->write('farmer login 2');
                 $this->response->redirect($this->request->post['redirect'] . '&token=' . $this->session->data['token']);
             } else {
                 $this->response->redirect($this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL'));
@@ -206,7 +208,7 @@ class ControllerCommonFarmer extends Controller {
             'common/loginAPI',
         ];
 
-        if (!$this->user->isLogged() && !in_array($path, $ignore)) {
+        if (!$this->user->isLogged() && !$this->user->isFarmerLogged() && !in_array($path, $ignore)) {
             return new Action('common/login');
         }
 
