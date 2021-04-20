@@ -54,7 +54,6 @@ class ControllerCommonFarmer extends Controller {
             }
             // Add to activity log
             $log = new Log('error.log');
-            $log->write($this->session->data);
             $this->load->model('user/user_activity');
 
             $activity_data = [
@@ -71,7 +70,6 @@ class ControllerCommonFarmer extends Controller {
             if ($shopper_group_id == $this->user->getGroupId()) {
                 $this->response->redirect($this->url->link('shopper/request', 'token=' . $this->session->data['token'], 'SSL'));
             } elseif (isset($this->request->post['redirect']) && (0 === strpos($this->request->post['redirect'], HTTP_SERVER) || 0 === strpos($this->request->post['redirect'], HTTPS_SERVER))) {
-                $log->write('farmer login 2');
                 $this->response->redirect($this->request->post['redirect'] . '&token=' . $this->session->data['token']);
             } else {
                 $this->response->redirect($this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL'));
