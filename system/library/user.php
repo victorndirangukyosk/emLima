@@ -66,8 +66,8 @@ class User extends SmartObject {
                 }
                 $user_group_details = $this->db->query('SELECT * FROM ' . DB_PREFIX . "user_group WHERE user_group_id = '" . (int) $user_query->row['user_group_id'] . "'");
                 $this->user_group_name = $user_group_details->row['name'];
-                $this->firstname = $user_query->row['firstname'];
-                $this->lastname = $user_query->row['lastname'];
+                $this->firstname = $user_query->row['first_name'];
+                $this->lastname = $user_query->row['last_name'];
             } else {
                 $this->logout();
             }
