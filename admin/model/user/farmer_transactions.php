@@ -246,6 +246,10 @@ class ModelUserFarmerTransactions extends Model {
             $implode[] = "DATE(c.created_at) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
         }
 
+        if ($this->user->isFarmer() && $this->user->getFarmerId() > 0) {
+            $implode[] = "c.farmer_id = '" . (int) $this->user->getFarmerId() . "'";
+        }
+
         if ($implode) {
             $sql .= ' WHERE ' . implode(' AND ', $implode);
         }
@@ -285,6 +289,10 @@ class ModelUserFarmerTransactions extends Model {
 
         if (!empty($data['filter_date_added'])) {
             $implode[] = "DATE(c.created_at) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
+        }
+
+        if ($this->user->isFarmer() && $this->user->getFarmerId() > 0) {
+            $implode[] = "c.farmer_id = '" . (int) $this->user->getFarmerId() . "'";
         }
 
         if ($implode) {
