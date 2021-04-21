@@ -9,10 +9,10 @@ class ModelUserFarmer extends Model {
     }
 
     public function editFarmer($farmer_id, $data) {
-        $this->db->query('UPDATE `' . DB_PREFIX . "farmer` SET username = '" . $this->db->escape($data['username']) . "', first_name = '" . $this->db->escape($data['first_name']) . "', last_name = '" . $this->db->escape($data['last_name']) . "', email = '" . $this->db->escape($data['email']) . "', mobile = '" . $this->db->escape($data['mobile']) . "', status = '" . (int) $data['status'] . "' WHERE farmer_id = '" . (int) $farmer_id . "'");
+        $this->db->query('UPDATE `' . DB_PREFIX . "farmer` SET username = '" . $this->db->escape($data['username']) . "', first_name = '" . $this->db->escape($data['first_name']) . "', last_name = '" . $this->db->escape($data['last_name']) . "', email = '" . $this->db->escape($data['email']) . "', mobile = '" . $this->db->escape($data['mobile']) . "', farmer_type = '" . $data['farmer_type'] . "', irrigation_type = '" . $data['irrigation_type'] . "', location = '" . $data['location'] . "', description = '" . $data['description'] . "', farm_size = '" . $data['farm_size'] . "', farm_size_type = '" . $data['farm_size_type'] . "', organization = '" . $data['organization'] . "', status = '" . (int) $data['status'] . "', updated_at = NOW() WHERE farmer_id = '" . (int) $farmer_id . "'");
 
         if ($data['password']) {
-            $this->db->query('UPDATE `' . DB_PREFIX . "farmer` SET salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "' WHERE user_id = '" . (int) $user_id . "'");
+            $this->db->query('UPDATE `' . DB_PREFIX . "farmer` SET salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "' WHERE farmer_id = '" . (int) $farmer_id . "'");
         }
     }
 
