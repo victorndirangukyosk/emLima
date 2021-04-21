@@ -951,6 +951,18 @@ class ControllerSaleFarmer extends Controller {
         if ((utf8_strlen($this->request->post['mobile']) < 3) || (utf8_strlen($this->request->post['mobile']) > 32)) {
             $this->error['mobile'] = $this->language->get('error_telephone');
         }
+        
+        $farmer_mobile_info = $this->model_user_farmer->getFarmerByPhone($this->request->post['mobile']);
+
+        if (!isset($this->request->get['farmer_id'])) {
+            if ($farmer_mobile_info) {
+                $this->error['warning'] = 'Warning: Mobile is already in use!';
+            }
+        } else {
+            if ($farmer_mobile_info && ($this->request->get['farmer_id'] != $farmer_mobile_info['farmer_id'])) {
+                $this->error['warning'] = 'Warning: Mobile is already in use!';
+            }
+        }
 
         if ((strlen(utf8_decode($this->request->post['mobile'])) < 3) || (strlen(utf8_decode($this->request->post['mobile'])) > 32) || preg_match('/[^\d]/is', $this->request->post['mobile'])) {
             $this->error['mobile'] = $this->language->get('error_telephone');

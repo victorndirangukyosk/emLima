@@ -51,6 +51,12 @@ class ModelUserFarmer extends Model {
         return $query->row;
     }
 
+    public function getFarmerByPhone($mobile) {
+        $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "farmer WHERE mobile = '" . $this->db->escape($mobile) . "' AND mobile != '' AND user_group_id = '" . (int) $this->config->get('config_farmer_group_id') . "'");
+
+        return $query->row;
+    }
+
     public function getUserByCode($code) {
         $query = $this->db->query('SELECT * FROM `' . DB_PREFIX . "user` WHERE code = '" . $this->db->escape($code) . "' AND code != ''");
 
