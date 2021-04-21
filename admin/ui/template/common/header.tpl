@@ -150,12 +150,13 @@
               <li><a href="<?php echo $accountsetting; ?>"><?php echo $text_setting; ?></a></li>
 
          <?php endif ?>
-
+        <?php if(!$this->user->isFarmer()) { ?>
         <li class="divider"></li>
         <?php foreach ($stores as $store) { ?>
         <li><a href="<?php echo $store['href']; ?>" target="_blank">Visit site</a></li>
-        <?php } ?>
+        <?php }  ?>
         <li class="divider"></li>
+        <?php }  ?>
         <li><a href="<?php echo $logout; ?>"><?php echo $text_logout; ?></a></li>				
       </ul>
     </li>
