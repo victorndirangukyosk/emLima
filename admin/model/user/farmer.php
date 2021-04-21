@@ -229,8 +229,8 @@ class ModelUserFarmer extends Model {
             $implode[] = "email LIKE '" . $this->db->escape($data['filter_email']) . "%'";
         }
 
-        if (!empty($data['filter_telephone'])) {
-            $implode[] = "mobile LIKE '" . $this->db->escape($data['filter_telephone']) . "%'";
+        if (!empty($data['filter_mobile'])) {
+            $implode[] = "mobile LIKE '" . $this->db->escape($data['filter_mobile']) . "%'";
         }
 
 
@@ -270,8 +270,8 @@ class ModelUserFarmer extends Model {
             $implode[] = "c.email LIKE '" . $this->db->escape($data['filter_email']) . "%'";
         }
 
-        if (!empty($data['filter_telephone'])) {
-            $implode[] = "c.mobile LIKE '" . $this->db->escape($data['filter_telephone']) . "%'";
+        if (!empty($data['filter_mobile'])) {
+            $implode[] = "c.mobile LIKE '" . $this->db->escape($data['filter_mobile']) . "%'";
         }
 
 
