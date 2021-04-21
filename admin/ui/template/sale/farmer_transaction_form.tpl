@@ -55,7 +55,8 @@
                             <div class="form-group required">
                                 <label class="col-sm-2 control-label" for="input-unit"><?php echo $entry_unit; ?></label>
                                 <div class="col-sm-10">
-                                    <input type="text" name="unit" value="<?php echo $unit; ?>" placeholder="<?php echo $entry_unit; ?>" id="input-unit" class="form-control" />
+                                    <select name="product_unit" id="product_unit" class="form-control">
+                                    </select>
                                     <?php if ($error_unit) { ?>
                                     <div class="text-danger"><?php echo $error_unit; ?></div>
                                     <?php } ?>
@@ -105,14 +106,33 @@
                         response($.map(json, function (item) {
                             return {
                                 label: item['name'],
-                                value: item['product_store_id']
+                                value: item['product_store_id'],
+                                price : item['special_price']
                             }
                         }));
                     }
                 });
             },
             'select': function (item) {
-                $('input[name=\'product\']').val(item['label']);
+            
+            console.log(item.value);
+            $('input[name=\'product\']').val(item['label']);
+            $.ajax({
+                url: 'index.php?path=sale/farmer_transactions/getProductVariantsInfo&product_store_id='+item.value+'&token=<?php echo $token; ?>',
+                dataType: 'json',     
+                success: function(json) {
+                    console.log(json);
+                    var $select = $('#product_unit');
+                    $select.html('');
+                    if(json != null && json.length > 0) {
+                    $.each(json, function(index, value) {
+                    $select.append('<option value="' + value.product_store_id + '">' + value.unit + '</option>');
+                    });
+                    }
+                    $('.selectpicker').selectpicker('refresh');
+                }
+            });
+            $('input[name=\'price\']').val(item.price);
             }
         });
 </script>

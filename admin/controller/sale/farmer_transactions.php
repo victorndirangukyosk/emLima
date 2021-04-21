@@ -1523,12 +1523,6 @@ class ControllerSaleFarmerTransactions extends Controller {
 
         $data['store_id'] = 75;
         $json = $this->model_sale_order->getProductDataByStoreFilterFarmer($filter_name, $data['store_id']);
-        //$json = $this->model_sale_order->getProductsForEditInvoice($filter_name, $data['store_id'], $this->request->get['order_id']);
-        $log = new Log('error.log');
-        //$log->write('json');
-        //$log->write($json);
-        //$log->write('json');
-        //$send = $json;
 
         foreach ($json as $j) {
             if (isset($j['special_price']) && !is_null($j['special_price']) && $j['special_price'] && (float) $j['special_price']) {
@@ -1539,10 +1533,21 @@ class ControllerSaleFarmerTransactions extends Controller {
 
             $send[] = $j;
         }
-
-        //echo "<pre>";print_r($json);die;
-
         echo json_encode($send);
+    }
+
+    public function getProductVariantsInfo() {
+
+        $this->load->model('sale/order');
+        $log = new Log('error.log');
+        $log->write($this->request->get['product_store_id']);
+        $product_info = $this->model_sale_order->getProductForPopup($this->request->get['product_store_id'], false, 75);
+        $variations = $this->model_sale_order->getProductVariationsNewFarmer($product_info['name'], 75);
+        //$log->write($variations);
+        $json = $variations;
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
     }
 
 }
