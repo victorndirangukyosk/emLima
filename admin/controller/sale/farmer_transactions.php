@@ -23,8 +23,8 @@ class ControllerSaleFarmerTransactions extends Controller {
         $this->model_report_excel->download_farmer_transactions_excel($data);
     }
 
-    public function add() {
-        $this->load->language('sale/farmer');
+    public function addtransaction() {
+        $this->load->language('sale/farmertransactions');
 
         $this->document->setTitle($this->language->get('heading_title'));
 
@@ -359,7 +359,7 @@ class ControllerSaleFarmerTransactions extends Controller {
             'href' => $this->url->link('sale/farmer', 'token=' . $this->session->data['token'] . $url, 'SSL'),
         ];
 
-        $data['add'] = $this->url->link('sale/farmer/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['add'] = $this->url->link('sale/farmer_transactions/addtransaction', 'token=' . $this->session->data['token'] . $url, 'SSL');
         $data['delete'] = $this->url->link('sale/farmer/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
         $data['customers'] = [];
@@ -830,7 +830,7 @@ class ControllerSaleFarmerTransactions extends Controller {
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
 
-        $this->response->setOutput($this->load->view('sale/farmer_form.tpl', $data));
+        $this->response->setOutput($this->load->view('sale/farmer_transaction_form.tpl', $data));
     }
 
     protected function validateForm() {

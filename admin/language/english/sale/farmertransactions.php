@@ -1,12 +1,12 @@
 <?php
 
 // Heading
-$_['heading_title'] = 'Farmers';
+$_['heading_title'] = 'Farmer Transactions';
 
 // Text
 $_['text_success'] = 'Success: You have modified farmers!';
 $_['text_list'] = 'Farmers List';
-$_['text_add'] = 'Add Farmer';
+$_['text_add'] = 'Add Transaction';
 $_['text_edit'] = 'Edit Farmer';
 $_['text_default'] = 'Default';
 $_['text_balance'] = 'Balance';
