@@ -24,6 +24,10 @@ class ControllerSaleFarmerTransactions extends Controller {
     }
 
     public function addtransaction() {
+        $log = new Log('error.log');
+        $log->write('farmer post');
+        $log->write($this->request->post);
+        $log->write('farmer post');
         $this->load->language('sale/farmertransactions');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -73,7 +77,7 @@ class ControllerSaleFarmerTransactions extends Controller {
                 $this->response->redirect($this->url->link('sale/farmer_transactions/add', 'token=' . $this->session->data['token'] . $url, 'SSL'));
             }
 
-            $this->response->redirect($this->url->link('sale/farmer', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            $this->response->redirect($this->url->link('sale/farmer_transactions', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
 
         $this->getForm();
@@ -122,14 +126,14 @@ class ControllerSaleFarmerTransactions extends Controller {
             }
 
             if (isset($this->request->post['button']) and 'save' == $this->request->post['button']) {
-                $this->response->redirect($this->url->link('sale/farmer/edit', 'farmer_id=' . $this->request->get['farmer_id'] . '&token=' . $this->session->data['token'] . $url, 'SSL'));
+                $this->response->redirect($this->url->link('sale/farmer_transactions/edit', 'farmer_id=' . $this->request->get['farmer_id'] . '&token=' . $this->session->data['token'] . $url, 'SSL'));
             }
 
             if (isset($this->request->post['button']) and 'new' == $this->request->post['button']) {
-                $this->response->redirect($this->url->link('sale/farmer/add', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+                $this->response->redirect($this->url->link('sale/farmer_transactions/add', 'token=' . $this->session->data['token'] . $url, 'SSL'));
             }
 
-            $this->response->redirect($this->url->link('sale/farmer', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            $this->response->redirect($this->url->link('sale/farmer_transactions', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
 
         $this->getForm();
@@ -179,7 +183,7 @@ class ControllerSaleFarmerTransactions extends Controller {
                 $url .= '&page=' . $this->request->get['page'];
             }
 
-            $this->response->redirect($this->url->link('sale/farmer', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            $this->response->redirect($this->url->link('sale/farmer_transactions', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
 
         $this->getList();
@@ -239,7 +243,7 @@ class ControllerSaleFarmerTransactions extends Controller {
                 $url .= '&page=' . $this->request->get['page'];
             }
 
-            $this->response->redirect($this->url->link('sale/farmer', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            $this->response->redirect($this->url->link('sale/farmer_transactions', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
 
         $this->getList();
@@ -353,11 +357,11 @@ class ControllerSaleFarmerTransactions extends Controller {
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('sale/farmer', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+            'href' => $this->url->link('sale/farmer_transactions', 'token=' . $this->session->data['token'] . $url, 'SSL'),
         ];
 
         $data['add'] = $this->url->link('sale/farmer_transactions/addtransaction', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['delete'] = $this->url->link('sale/farmer/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['delete'] = $this->url->link('sale/farmer_transactions/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
         $data['customers'] = [];
 
@@ -400,7 +404,7 @@ class ControllerSaleFarmerTransactions extends Controller {
                 'total' => $result['total'],
                 'product_name' => $result['product_name'],
                 'created_at' => date($this->language->get('date_format_short'), strtotime($result['created_at'])),
-                'edit' => $this->url->link('sale/farmer/edit', 'token=' . $this->session->data['token'] . '&farmer_id=' . $result['farmer_id'] . $url, 'SSL'),
+                'edit' => $this->url->link('sale/farmer_transactions/edit', 'token=' . $this->session->data['token'] . '&farmer_id=' . $result['farmer_id'] . $url, 'SSL'),
             ];
         }
 
@@ -521,11 +525,11 @@ class ControllerSaleFarmerTransactions extends Controller {
             $url .= '&page=' . $this->request->get['page'];
         }
 
-        $data['sort_name'] = $this->url->link('sale/farmer', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
-        $data['sort_email'] = $this->url->link('sale/farmer', 'token=' . $this->session->data['token'] . '&sort=c.email' . $url, 'SSL');
-        $data['sort_status'] = $this->url->link('sale/farmer', 'token=' . $this->session->data['token'] . '&sort=c.status' . $url, 'SSL');
-        $data['sort_ip'] = $this->url->link('sale/farmer', 'token=' . $this->session->data['token'] . '&sort=c.ip' . $url, 'SSL');
-        $data['sort_date_added'] = $this->url->link('sale/farmer', 'token=' . $this->session->data['token'] . '&sort=c.created_at' . $url, 'SSL');
+        $data['sort_name'] = $this->url->link('sale/farmer_transactions', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
+        $data['sort_email'] = $this->url->link('sale/farmer_transactions', 'token=' . $this->session->data['token'] . '&sort=c.email' . $url, 'SSL');
+        $data['sort_status'] = $this->url->link('sale/farmer_transactions', 'token=' . $this->session->data['token'] . '&sort=c.status' . $url, 'SSL');
+        $data['sort_ip'] = $this->url->link('sale/farmer_transactions', 'token=' . $this->session->data['token'] . '&sort=c.ip' . $url, 'SSL');
+        $data['sort_date_added'] = $this->url->link('sale/farmer_transactions', 'token=' . $this->session->data['token'] . '&sort=c.created_at' . $url, 'SSL');
 
         $url = '';
 
@@ -573,7 +577,7 @@ class ControllerSaleFarmerTransactions extends Controller {
         $pagination->total = $customer_total;
         $pagination->page = $page;
         $pagination->limit = $this->config->get('config_limit_admin');
-        $pagination->url = $this->url->link('sale/farmer', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+        $pagination->url = $this->url->link('sale/farmer_transactions', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
@@ -637,10 +641,22 @@ class ControllerSaleFarmerTransactions extends Controller {
             $data['error_warning'] = '';
         }
 
-        if (isset($this->error['username'])) {
-            $data['error_username'] = $this->error['username'];
+        if (isset($this->error['product'])) {
+            $data['error_product'] = $this->error['product'];
         } else {
-            $data['error_username'] = '';
+            $data['error_product'] = '';
+        }
+
+        if (isset($this->error['product_unit'])) {
+            $data['error_product_unit'] = $this->error['product_unit'];
+        } else {
+            $data['error_product_unit'] = '';
+        }
+
+        if (isset($this->error['quantity'])) {
+            $data['error_quantity'] = $this->error['quantity'];
+        } else {
+            $data['error_quantity'] = '';
         }
 
         $url = '';
@@ -689,45 +705,23 @@ class ControllerSaleFarmerTransactions extends Controller {
             $this->error['warning'] = $this->language->get('error_permission');
         }
 
-        if ((utf8_strlen($this->request->post['email']) <= 0) || (utf8_strlen($this->request->post['email']) > 96) || !filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL)) {
-            $this->error['email'] = $this->language->get('error_email');
+        if ((utf8_strlen($this->request->post['product']) <= 0)) {
+            $this->error['product'] = 'Product is required!';
         }
 
-        if ((utf8_strlen(trim($this->request->post['first_name'])) < 1) || (utf8_strlen(trim($this->request->post['first_name'])) > 32)) {
-            $this->error['first_name'] = $this->language->get('error_firstname');
+        if (($this->request->post['product_unit']) <= 0) {
+            $this->error['product_unit'] = 'UOM is required!';
         }
 
-        if ((utf8_strlen(trim($this->request->post['last_name'])) < 1) || (utf8_strlen(trim($this->request->post['lastname'])) > 32)) {
-            $this->error['last_name'] = $this->language->get('error_lastname');
+        if (($this->request->post['quantity']) <= 0) {
+            $this->error['quantity'] = 'Quantity is required!';
         }
-
-        if ((utf8_strlen($this->request->post['mobile']) < 3) || (utf8_strlen($this->request->post['mobile']) > 32)) {
-            $this->error['mobile'] = $this->language->get('error_telephone');
-        }
-
-        if ((strlen(utf8_decode($this->request->post['mobile'])) < 3) || (strlen(utf8_decode($this->request->post['mobile'])) > 32) || preg_match('/[^\d]/is', $this->request->post['mobile'])) {
-            $this->error['mobile'] = $this->language->get('error_telephone');
-        }
-
-        if ($this->request->post['password'] || (!isset($this->request->get['farmer_id']))) {
-            if ((utf8_strlen($this->request->post['password']) < 4) || (utf8_strlen($this->request->post['password']) > 20)) {
-                $this->error['password'] = $this->language->get('error_password');
-            }
-
-            if ($this->request->post['password'] != $this->request->post['confirm']) {
-                $this->error['confirm'] = $this->language->get('error_confirm');
-            }
-        }
-
-        // if($this->error) {
-        //     $this->error['warning'] = $this->language->get('error_warning');
-        // }
 
         return !$this->error;
     }
 
     protected function validateDelete() {
-        if (!$this->user->hasPermission('modify', 'sale/farmer')) {
+        if (!$this->user->hasPermission('modify', 'sale/farmer_transactions')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
 
@@ -809,7 +803,7 @@ class ControllerSaleFarmerTransactions extends Controller {
         $pagination->total = $history_total;
         $pagination->page = $page;
         $pagination->limit = 10;
-        $pagination->url = $this->url->link('sale/farmer/history', 'token=' . $this->session->data['token'] . '&customer_id=' . $this->request->get['customer_id'] . '&page={page}', 'SSL');
+        $pagination->url = $this->url->link('sale/farmer_transactions/history', 'token=' . $this->session->data['token'] . '&customer_id=' . $this->request->get['customer_id'] . '&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
@@ -870,7 +864,7 @@ class ControllerSaleFarmerTransactions extends Controller {
         $pagination->total = $credit_total;
         $pagination->page = $page;
         $pagination->limit = 10;
-        $pagination->url = $this->url->link('sale/farmer/credit', 'token=' . $this->session->data['token'] . '&customer_id=' . $this->request->get['customer_id'] . '&page={page}', 'SSL');
+        $pagination->url = $this->url->link('sale/farmer_transactions/credit', 'token=' . $this->session->data['token'] . '&customer_id=' . $this->request->get['customer_id'] . '&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
@@ -972,7 +966,7 @@ class ControllerSaleFarmerTransactions extends Controller {
                 'ip' => $result['ip'],
                 'total' => $this->model_sale_customer->getTotalCustomersByIp($result['ip']),
                 'date_added' => date('d/m/y', strtotime($result['date_added'])),
-                'filter_ip' => $this->url->link('sale/farmer', 'token=' . $this->session->data['token'] . '&filter_ip=' . $result['ip'], 'SSL'),
+                'filter_ip' => $this->url->link('sale/farmer_transactions', 'token=' . $this->session->data['token'] . '&filter_ip=' . $result['ip'], 'SSL'),
                 'ban_ip' => $ban_ip_total,
             ];
         }
@@ -983,7 +977,7 @@ class ControllerSaleFarmerTransactions extends Controller {
         $pagination->total = $ip_total;
         $pagination->page = $page;
         $pagination->limit = 10;
-        $pagination->url = $this->url->link('sale/farmer/ip', 'token=' . $this->session->data['token'] . '&farmer_id=' . $this->request->get['farmer_id'] . '&page={page}', 'SSL');
+        $pagination->url = $this->url->link('sale/farmer_transactions/ip', 'token=' . $this->session->data['token'] . '&farmer_id=' . $this->request->get['farmer_id'] . '&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
