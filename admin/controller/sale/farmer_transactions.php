@@ -24,10 +24,6 @@ class ControllerSaleFarmerTransactions extends Controller {
     }
 
     public function addtransaction() {
-        $log = new Log('error.log');
-        $log->write('farmer post');
-        $log->write($this->request->post);
-        $log->write('farmer post');
         $this->load->language('sale/farmertransactions');
 
         $this->document->setTitle($this->language->get('heading_title'));
