@@ -3,7 +3,11 @@
 class ModelUserFarmerTransactions extends Model {
 
     public function addFarmerTransaction($data) {
-        $this->db->query('INSERT INTO `' . DB_PREFIX . "farmer` SET first_name = '" . $this->db->escape($data['first_name']) . "', last_name = '" . $this->db->escape($data['last_name']) . "', email = '" . $this->db->escape($data['email']) . "', mobile = '" . $this->db->escape($data['mobile']) . "', farmer_type = '" . $data['farmer_type'] . "', irrigation_type = '" . $data['irrigation_type'] . "', location = '" . $data['location'] . "', description = '" . $data['description'] . "',  salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', ip = '" . $data['ip'] . "', latitude = '" . $data['latitude'] . "', longitude = '" . (int) $data['longitude'] . "', status = '" . $data['status'] . "', created_at = NOW()");
+        $log = new Log('error.log');
+        $log->write('addFarmerTransaction');
+        $log->write($data);
+        $log->write('addFarmerTransaction');
+        $this->db->query('INSERT INTO `' . DB_PREFIX . "farmer_transaction` SET farmer_id = '" . $this->db->escape($data['farmer_id']) . "', product_store_id = '" . $this->db->escape($data['product_store_id']) . "', name = '" . $this->db->escape($data['name']) . "', unit = '" . $this->db->escape($data['unit']) . "', quantity = '" . $data['quantity'] . "', model = '" . $data['model'] . "', price = '" . $data['price'] . "', total = '" . $data['total'] . "', created_at = NOW()");
 
         return $this->db->getLastId();
     }
