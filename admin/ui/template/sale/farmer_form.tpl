@@ -89,6 +89,21 @@
                                 </div>
                             </div>
                             <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-farm-size">Farm Size</label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="farm_size" value="" placeholder="Farm Size" id="input-farm-size" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-farm-size-type">Farm Size Type</label>
+                                <div class="col-sm-10">
+                                    <select name="farm_size_type" id="input-farm-size-type" class="form-control">
+                                        <option value="Acres">Acres</option>
+                                        <option value="Hectares">Hectares</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group required">
                                 <label class="col-sm-2 control-label" for="input-irrigation-type">Irrigation Type</label>
                                 <div class="col-sm-10">
                                     <select name="irrigation_type" id="input-irrigation-type" class="form-control">
