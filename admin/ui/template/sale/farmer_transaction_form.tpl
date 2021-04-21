@@ -83,7 +83,7 @@
                             <div class="form-group required">
                                 <label class="col-sm-2 control-label" for="input-total"><?php echo $entry_total; ?></label>
                                 <div class="col-sm-10">
-                                    <input type="text" name="total" value="<?php echo $total; ?>" placeholder="<?php echo $entry_total; ?>" id="input-total" class="form-control" />
+                                    <input type="text" name="total" value="<?php echo $total; ?>" placeholder="<?php echo $entry_total; ?>" id="input-total" class="form-control" readonly="" />
                                     <?php if ($error_total) { ?>
                                     <div class="text-danger"><?php echo $error_total; ?></div>
                                     <?php  } ?>
@@ -139,6 +139,12 @@ $('input[name=\'product\']').autocomplete({
 $('select[name=\'product_unit\']').on('change', function (e) {
  var special_price = $('select[name=\'product_unit\']').find('option:selected').attr('data-special-price');
  $('input[name=\'price\']').val(special_price);
+ var total = special_price.replace(',', '')*$('input[name=\'quantity\']').val();
+ $('input[name=\'total\']').val(total);
+});
+
+$('input[name=\'quantity\']').on('keyup change', function (e) {
+ var special_price = $('select[name=\'product_unit\']').find('option:selected').attr('data-special-price');
  var total = special_price.replace(',', '')*$('input[name=\'quantity\']').val();
  $('input[name=\'total\']').val(total);
 });
