@@ -90,7 +90,7 @@ class ControllerSaleFarmer extends Controller {
         $this->load->model('user/farmer');
 
         if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
-            $this->model_user_farmer->editUser($this->request->get['farmer_id'], $this->request->post);
+            $this->model_user_farmer->editFarmer($this->request->get['farmer_id'], $this->request->post);
 
             $this->session->data['success'] = $this->language->get('text_success');
 
@@ -725,7 +725,7 @@ class ControllerSaleFarmer extends Controller {
         $data['cancel'] = $this->url->link('sale/farmer', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
         if (isset($this->request->get['farmer_id'])) {
-            $user_info = $this->model_user_farmer->getUser($this->request->get['farmer_id']);
+            $user_info = $this->model_user_farmer->getFarmer($this->request->get['farmer_id']);
             $data['farmer_id'] = $user_info['farmer_id'];
         }
 
