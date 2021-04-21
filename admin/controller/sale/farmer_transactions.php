@@ -20,7 +20,7 @@ class ControllerSaleFarmerTransactions extends Controller {
     public function export_excel() {
         $data = [];
         $this->load->model('report/excel');
-        $this->model_report_excel->download_farmer_excel($data);
+        $this->model_report_excel->download_farmer_transactions_excel($data);
     }
 
     public function add() {

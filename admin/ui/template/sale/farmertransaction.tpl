@@ -308,7 +308,7 @@
 
         function excel() {
 
-            url = 'index.php?path=sale/farmer/export_excel&token=<?php echo $token; ?>';
+            url = 'index.php?path=sale/farmer_transactions/export_excel&token=<?php echo $token; ?>';
 
             location = url;
         }
