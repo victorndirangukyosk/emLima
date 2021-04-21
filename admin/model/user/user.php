@@ -259,10 +259,10 @@ class ModelUserUser extends Model {
             $_sql[] = "WHERE email LIKE '" . $this->db->escape($data['filter_email']) . "%'";
         }
         
-        if (isset($data['filter_telephone']) && !is_null($data['filter_telephone']) && strlen($data['filter_telephone']) > 0) {
+        if (isset($data['filter_mobile']) && !is_null($data['filter_mobile']) && strlen($data['filter_mobile']) > 0) {
             $isWhere = 1;
 
-            $_sql[] = "WHERE mobile LIKE '" . $this->db->escape($data['filter_telephone']) . "%'";
+            $_sql[] = "WHERE mobile LIKE '" . $this->db->escape($data['filter_mobile']) . "%'";
         }
 
         if (isset($data['filter_status']) && !is_null($data['filter_status'])) {

@@ -1552,7 +1552,7 @@ class ControllerSaleFarmer extends Controller {
     public function autocompletefarmer() {
         $json = [];
 
-        if (isset($this->request->get['filter_name']) || isset($this->request->get['filter_email']) || isset($this->request->get['filter_telephone'])) {
+        if (isset($this->request->get['filter_name']) || isset($this->request->get['filter_email']) || isset($this->request->get['filter_mobile'])) {
             if (isset($this->request->get['filter_name'])) {
                 $filter_name = $this->request->get['filter_name'];
             } else {
