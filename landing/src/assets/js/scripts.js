@@ -593,6 +593,7 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
                     const produceDescription = $('#farmer-produce-grown').val();
                     const farmsize = $('#farm-size').val();
                     const farmsizetype = $('#farm-size-type').val();
+                    const farmerorganization = $('#farmer-organization').val();
                     const registerButton = $('#farmer-register-button');
                     if (grecaptcha.getResponse() == '') {
                 iziToast.warning({
@@ -624,6 +625,7 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
                          farmer_irrigation_type : farmIrrigationType,
                          farmer_description : produceDescription,
                          farmsize : farmsize,
+                         farmerorganization : farmerorganization,
                          farmsizetype : farmsizetype
                        },
                        success: function (json) {

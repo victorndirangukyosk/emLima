@@ -86,6 +86,8 @@ class ModelAccountFarmer extends Model {
       description = '" . $this->db->escape($data['farmer_description']) . "',
       farm_size = '" . $this->db->escape($data['farmsize']) . "',
       farm_size_type = '" . $this->db->escape($data['farmsizetype']) . "',
+      organization = '" . $this->db->escape($data['farmerorganization']) . "',
+      ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "',
       created_at = NOW(),
       farmer_type = '" . $this->db->escape($data['farmer_type']) . "'");
 
