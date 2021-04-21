@@ -701,7 +701,7 @@ class ControllerSaleFarmer extends Controller {
         } else {
             $data['error_description'] = '';
         }
-        
+
         if (isset($this->error['organization'])) {
             $data['error_organization'] = $this->error['organization'];
         } else {
@@ -778,7 +778,7 @@ class ControllerSaleFarmer extends Controller {
         } else {
             $data['confirm'] = '';
         }
-        
+
         if (isset($this->request->post['username'])) {
             $data['username'] = $this->request->post['username'];
         } elseif (!empty($user_info)) {
@@ -911,8 +911,33 @@ class ControllerSaleFarmer extends Controller {
             $this->error['email'] = $this->language->get('error_email');
         }
         
+        $this->load->model('user/farmer');
+        $farmer_info = $this->model_user_farmer->getFarmerByEmail($this->request->post['email']);
+
+        if (!isset($this->request->get['farmer_id'])) {
+            if ($farmer_info) {
+                $this->error['warning'] = $this->language->get('error_exists');
+            }
+        } else {
+            if ($farmer_info && ($this->request->get['farmer_id'] != $farmer_info['farmer_id'])) {
+                $this->error['warning'] = $this->language->get('error_exists');
+            }
+        }
+
         if ((utf8_strlen(trim($this->request->post['username'])) < 1) || (utf8_strlen(trim($this->request->post['username'])) > 32)) {
             $this->error['username'] = $this->language->get('error_username');
+        }
+        
+        $farmer_username_info = $this->model_user_farmer->getFarmerByUsername($this->request->post['username']);
+
+        if (!isset($this->request->get['farmer_id'])) {
+            if ($farmer_username_info) {
+                $this->error['warning'] = 'Warning: Username is already in use!';
+            }
+        } else {
+            if ($farmer_username_info && ($this->request->get['farmer_id'] != $farmer_username_info['farmer_id'])) {
+                $this->error['warning'] = 'Warning: Username is already in use!';
+            }
         }
 
         if ((utf8_strlen(trim($this->request->post['first_name'])) < 1) || (utf8_strlen(trim($this->request->post['first_name'])) > 32)) {
@@ -934,15 +959,15 @@ class ControllerSaleFarmer extends Controller {
         if ($this->request->post['farm_size'] <= 0 || strlen($this->request->post['farm_size']) <= 0 || preg_match('/[^\d]/is', $this->request->post['farm_size'])) {
             $this->error['farm_size'] = 'Farm Size must be greater than zero!';
         }
-        
+
         if ((utf8_strlen(trim($this->request->post['location'])) < 1) || (utf8_strlen(trim($this->request->post['location'])) > 32)) {
             $this->error['location'] = 'Farm Location Required!';
         }
-        
+
         if ((utf8_strlen(trim($this->request->post['description'])) < 1) || (utf8_strlen(trim($this->request->post['description'])) > 32)) {
             $this->error['description'] = 'Farm Description Required!';
         }
-        
+
         if ((utf8_strlen(trim($this->request->post['organization'])) < 1) || (utf8_strlen(trim($this->request->post['organization'])) > 32)) {
             $this->error['organization'] = 'Farmer Organization Required!';
         }

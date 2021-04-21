@@ -34,8 +34,8 @@ class ModelUserFarmer extends Model {
         return $query->row;
     }
 
-    public function getUserByUsername($username) {
-        $query = $this->db->query('SELECT * FROM `' . DB_PREFIX . "user` WHERE username = '" . $this->db->escape($username) . "'");
+    public function getFarmerByUsername($username) {
+        $query = $this->db->query('SELECT * FROM `' . DB_PREFIX . "farmer` WHERE username = '" . $this->db->escape($username) . "'");
 
         return $query->row;
     }
@@ -45,8 +45,8 @@ class ModelUserFarmer extends Model {
         return $query->row;
     }
 
-    public function getUserByEmail($email) {
-        $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "user WHERE LOWER(email) = '" . $this->db->escape(utf8_strtolower($email)) . "' AND email != '' AND user_group_id = '" . (int) $this->config->get('config_farmer_group_id') . "'");
+    public function getFarmerByEmail($email) {
+        $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "farmer WHERE LOWER(email) = '" . $this->db->escape(utf8_strtolower($email)) . "' AND email != '' AND user_group_id = '" . (int) $this->config->get('config_farmer_group_id') . "'");
 
         return $query->row;
     }
