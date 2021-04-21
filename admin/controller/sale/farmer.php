@@ -778,21 +778,29 @@ class ControllerSaleFarmer extends Controller {
         } else {
             $data['confirm'] = '';
         }
-
-        if (isset($this->request->post['firstname'])) {
-            $data['firstname'] = $this->request->post['firstname'];
+        
+        if (isset($this->request->post['username'])) {
+            $data['username'] = $this->request->post['username'];
         } elseif (!empty($user_info)) {
-            $data['firstname'] = $user_info['first_name'];
+            $data['username'] = $user_info['username'];
         } else {
-            $data['firstname'] = '';
+            $data['uername'] = '';
         }
 
-        if (isset($this->request->post['lastname'])) {
-            $data['lastname'] = $this->request->post['lastname'];
+        if (isset($this->request->post['first_name'])) {
+            $data['first_name'] = $this->request->post['first_name'];
         } elseif (!empty($user_info)) {
-            $data['lastname'] = $user_info['last_name'];
+            $data['first_name'] = $user_info['first_name'];
         } else {
-            $data['lastname'] = '';
+            $data['first_name'] = '';
+        }
+
+        if (isset($this->request->post['last_name'])) {
+            $data['last_name'] = $this->request->post['last_name'];
+        } elseif (!empty($user_info)) {
+            $data['last_name'] = $user_info['last_name'];
+        } else {
+            $data['last_name'] = '';
         }
 
         if (isset($this->request->post['email'])) {
@@ -901,6 +909,10 @@ class ControllerSaleFarmer extends Controller {
 
         if ((utf8_strlen($this->request->post['email']) <= 0) || (utf8_strlen($this->request->post['email']) > 96) || !filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL)) {
             $this->error['email'] = $this->language->get('error_email');
+        }
+        
+        if ((utf8_strlen(trim($this->request->post['username'])) < 1) || (utf8_strlen(trim($this->request->post['username'])) > 32)) {
+            $this->error['username'] = $this->language->get('error_username');
         }
 
         if ((utf8_strlen(trim($this->request->post['first_name'])) < 1) || (utf8_strlen(trim($this->request->post['first_name'])) > 32)) {

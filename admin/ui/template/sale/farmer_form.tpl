@@ -44,9 +44,18 @@
                     <div class="tab-content">
                         <div class="tab-pane active" id="tab-general">
                             <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-username"><?php echo $entry_username; ?></label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="username" value="<?php echo $username; ?>" placeholder="<?php echo $entry_username; ?>" id="input-username" class="form-control" />
+                                    <?php if ($error_username) { ?>
+                                    <div class="text-danger"><?php echo $error_username; ?></div>
+                                    <?php } ?>
+                                </div>
+                            </div>
+                            <div class="form-group required">
                                 <label class="col-sm-2 control-label" for="input-firstname"><?php echo $entry_firstname; ?></label>
                                 <div class="col-sm-10">
-                                    <input type="text" name="first_name" value="<?php echo $firstname; ?>" placeholder="<?php echo $entry_firstname; ?>" id="input-firstname" class="form-control" />
+                                    <input type="text" name="first_name" value="<?php echo $first_name; ?>" placeholder="<?php echo $entry_firstname; ?>" id="input-firstname" class="form-control" />
                                     <?php if ($error_first_name) { ?>
                                     <div class="text-danger"><?php echo $error_first_name; ?></div>
                                     <?php } ?>
@@ -55,7 +64,7 @@
                             <div class="form-group required">
                                 <label class="col-sm-2 control-label" for="input-lastname"><?php echo $entry_lastname; ?></label>
                                 <div class="col-sm-10">
-                                    <input type="text" name="last_name" value="<?php echo $lastname; ?>" placeholder="<?php echo $entry_lastname; ?>" id="input-lastname" class="form-control" />
+                                    <input type="text" name="last_name" value="<?php echo $last_name; ?>" placeholder="<?php echo $entry_lastname; ?>" id="input-lastname" class="form-control" />
                                     <?php if ($error_last_name) { ?>
                                     <div class="text-danger"><?php echo $error_last_name; ?></div>
                                     <?php } ?>
