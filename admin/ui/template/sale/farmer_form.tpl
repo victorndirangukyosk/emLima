@@ -47,8 +47,8 @@
                                 <label class="col-sm-2 control-label" for="input-firstname"><?php echo $entry_firstname; ?></label>
                                 <div class="col-sm-10">
                                     <input type="text" name="first_name" value="<?php echo $firstname; ?>" placeholder="<?php echo $entry_firstname; ?>" id="input-firstname" class="form-control" />
-                                    <?php if ($error_firstname) { ?>
-                                    <div class="text-danger"><?php echo $error_firstname; ?></div>
+                                    <?php if ($error_first_name) { ?>
+                                    <div class="text-danger"><?php echo $error_first_name; ?></div>
                                     <?php } ?>
                                 </div>
                             </div>
@@ -56,8 +56,8 @@
                                 <label class="col-sm-2 control-label" for="input-lastname"><?php echo $entry_lastname; ?></label>
                                 <div class="col-sm-10">
                                     <input type="text" name="last_name" value="<?php echo $lastname; ?>" placeholder="<?php echo $entry_lastname; ?>" id="input-lastname" class="form-control" />
-                                    <?php if ($error_lastname) { ?>
-                                    <div class="text-danger"><?php echo $error_lastname; ?></div>
+                                    <?php if ($error_last_name) { ?>
+                                    <div class="text-danger"><?php echo $error_last_name; ?></div>
                                     <?php } ?>
                                 </div>
                             </div>

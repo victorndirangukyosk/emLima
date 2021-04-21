@@ -666,16 +666,16 @@ class ControllerSaleFarmer extends Controller {
             $data['error_confirm'] = '';
         }
 
-        if (isset($this->error['firstname'])) {
-            $data['error_firstname'] = $this->error['firstname'];
+        if (isset($this->error['first_name'])) {
+            $data['error_first_name'] = $this->error['first_name'];
         } else {
-            $data['error_firstname'] = '';
+            $data['error_first_name'] = '';
         }
 
-        if (isset($this->error['lastname'])) {
-            $data['error_lastname'] = $this->error['lastname'];
+        if (isset($this->error['last_name'])) {
+            $data['error_last_name'] = $this->error['last_name'];
         } else {
-            $data['error_lastname'] = '';
+            $data['error_last_name'] = '';
         }
 
         if (isset($this->error['email'])) {
@@ -689,19 +689,19 @@ class ControllerSaleFarmer extends Controller {
         } else {
             $data['error_mobile'] = '';
         }
-        
+
         if (isset($this->error['farm_size'])) {
             $data['error_farm_size'] = $this->error['farm_size'];
         } else {
             $data['error_farm_size'] = '';
         }
-        
+
         if (isset($this->error['location'])) {
             $data['error_location'] = $this->error['location'];
         } else {
             $data['error_location'] = '';
         }
-        
+
         if (isset($this->error['description'])) {
             $data['error_description'] = $this->error['description'];
         } else {
@@ -810,7 +810,7 @@ class ControllerSaleFarmer extends Controller {
         } else {
             $data['mobile'] = '';
         }
-        
+
         if (isset($this->request->post['farmer_type'])) {
             $data['farmer_type'] = $this->request->post['farmer_type'];
         } elseif (!empty($user_info)) {
@@ -818,7 +818,7 @@ class ControllerSaleFarmer extends Controller {
         } else {
             $data['farmer_type'] = '';
         }
-        
+
         if (isset($this->request->post['farm_size'])) {
             $data['farm_size'] = $this->request->post['farm_size'];
         } elseif (!empty($user_info)) {
@@ -826,7 +826,7 @@ class ControllerSaleFarmer extends Controller {
         } else {
             $data['farm_size'] = '';
         }
-        
+
         if (isset($this->request->post['farm_size_type'])) {
             $data['farm_size_type'] = $this->request->post['farm_size_type'];
         } elseif (!empty($user_info)) {
@@ -834,7 +834,7 @@ class ControllerSaleFarmer extends Controller {
         } else {
             $data['farm_size_type'] = '';
         }
-        
+
         if (isset($this->request->post['irrigation_type'])) {
             $data['irrigation_type'] = $this->request->post['irrigation_type'];
         } elseif (!empty($user_info)) {
@@ -842,7 +842,7 @@ class ControllerSaleFarmer extends Controller {
         } else {
             $data['irrigation_type'] = '';
         }
-        
+
         if (isset($this->request->post['location'])) {
             $data['location'] = $this->request->post['location'];
         } elseif (!empty($user_info)) {
@@ -850,7 +850,7 @@ class ControllerSaleFarmer extends Controller {
         } else {
             $data['location'] = '';
         }
-        
+
         if (isset($this->request->post['description'])) {
             $data['description'] = $this->request->post['description'];
         } elseif (!empty($user_info)) {
@@ -914,10 +914,14 @@ class ControllerSaleFarmer extends Controller {
         if ((utf8_strlen($this->request->post['mobile']) < 3) || (utf8_strlen($this->request->post['mobile']) > 32)) {
             $this->error['mobile'] = $this->language->get('error_telephone');
         }
-        
+
         if ((strlen(utf8_decode($this->request->post['mobile'])) < 3) || (strlen(utf8_decode($this->request->post['mobile'])) > 32) || preg_match('/[^\d]/is', $this->request->post['mobile'])) {
-      		$this->error['mobile'] = $this->language->get('error_telephone');
-    	}
+            $this->error['mobile'] = $this->language->get('error_telephone');
+        }
+
+        if ($this->request->post['farm_size'] <= 0 || strlen($this->request->post['farm_size']) <= 0) {
+            $this->error['farm_size'] = 'Farm Size must be greater than zero';
+        }
 
         if ($this->request->post['password'] || (!isset($this->request->get['farmer_id']))) {
             if ((utf8_strlen($this->request->post['password']) < 4) || (utf8_strlen($this->request->post['password']) > 20)) {
@@ -1520,7 +1524,7 @@ class ControllerSaleFarmer extends Controller {
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
-    
+
     public function autocompletefarmer() {
         $json = [];
 
@@ -1536,7 +1540,7 @@ class ControllerSaleFarmer extends Controller {
             } else {
                 $filter_email = '';
             }
-            
+
             if (isset($this->request->get['filter_mobile'])) {
                 $filter_mobile = $this->request->get['filter_mobile'];
             } else {
@@ -1583,4 +1587,5 @@ class ControllerSaleFarmer extends Controller {
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
+
 }

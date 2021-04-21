@@ -60,7 +60,7 @@
                                     <span class="input-group-btn">
                                         <button class="btn btn-default" type="button"><?php echo '+' . $this->config->get('config_telephone_code'); ?></button>                                      
                                     </span>
-                                    <input type="text" name="filter_telephone" value="<?php echo $filter_telephone; ?>" placeholder="<?php echo $entry_telephone; ?>" id="input-telephone" class="form-control" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57"  minlength="9" maxlength="9"/>
+                                    <input type="text" name="filter_mobile" value="<?php echo $filter_mobile; ?>" placeholder="<?php echo $entry_telephone; ?>" id="input-telephone" class="form-control" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57"  minlength="9" maxlength="9"/>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -197,10 +197,10 @@
                 url += '&filter_status=' + encodeURIComponent(filter_status);
             }
 
-            var filter_telephone = $('input[name=\'filter_telephone\']').val();
+            var filter_mobile = $('input[name=\'filter_mobile\']').val();
 
-            if (filter_telephone != '*') {
-                url += '&filter_telephone=' + encodeURIComponent(filter_telephone);
+            if (filter_mobile != '*') {
+                url += '&filter_mobile=' + encodeURIComponent(filter_mobile);
             }
 
             var filter_ip = $('input[name=\'filter_ip\']').val();
@@ -267,15 +267,15 @@
         });
 
 
-        $('input[name=\'filter_telephone\']').autocomplete({
+        $('input[name=\'filter_mobile\']').autocomplete({
             'source': function (request, response) {
                 $.ajax({
-                    url: 'index.php?path=sale/farmer/autocompletefarmer&token=<?php echo $token; ?>&filter_telephone=' + encodeURIComponent(request),
+                    url: 'index.php?path=sale/farmer/autocompletefarmer&token=<?php echo $token; ?>&filter_mobile=' + encodeURIComponent(request),
                     dataType: 'json',
                     success: function (json) {
                         response($.map(json, function (item) {
                             return {
-                                label: item['telephone'],
+                                label: item['mobile'],
                                 value: item['farmer_id']
                             }
                         }));
@@ -283,7 +283,7 @@
                 });
             },
             'select': function (item) {
-                $('input[name=\'filter_telephone\']').val(item['label']);
+                $('input[name=\'filter_mobile\']').val(item['label']);
             }
         });
         
