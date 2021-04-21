@@ -1,5 +1,7 @@
 <ul id="menu">
+    <?php if(!$this->user->isFarmer()) { ?>
     <li id="dashboard"><a href="<?php echo $dashboard; ?>"><i class="fa fa-dashboard fa-fw"></i> <span><?php echo $text_dashboard; ?></span></a></li>
+    <?php } ?>
     <?php
     if($preturn_cat_packages != false || $preturn_general_products != false || $preturn_category != false || $preturn_product != false || $preturn_review != false || $preturn_information != false ) {
     ?>

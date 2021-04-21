@@ -15,7 +15,7 @@ class ControllerCommonFarmer extends Controller {
             if ($shopper_group_id == $this->user->getGroupId()) {
                 $this->response->redirect($this->url->link('shopper/request', 'token=' . $this->session->data['token'], 'SSL'));
             } else {
-                $this->response->redirect($this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL'));
+                $this->response->redirect($this->url->link('sale/farmer_transactions', 'token=' . $this->session->data['token'], 'SSL'));
             }
         }
 
@@ -72,7 +72,7 @@ class ControllerCommonFarmer extends Controller {
             } elseif (isset($this->request->post['redirect']) && (0 === strpos($this->request->post['redirect'], HTTP_SERVER) || 0 === strpos($this->request->post['redirect'], HTTPS_SERVER))) {
                 $this->response->redirect($this->request->post['redirect'] . '&token=' . $this->session->data['token']);
             } else {
-                $this->response->redirect($this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL'));
+                $this->response->redirect($this->url->link('sale/farmer_transactions', 'token=' . $this->session->data['token'], 'SSL'));
             }
         }
 
