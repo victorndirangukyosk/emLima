@@ -607,7 +607,7 @@ class ControllerSaleFarmerTransactions extends Controller {
     protected function getForm() {
         $data['heading_title'] = $this->language->get('heading_title');
 
-        $data['text_form'] = !isset($this->request->get['farmer_id']) ? $this->language->get('text_add') : $this->language->get('text_edit');
+        $data['text_form'] = $this->language->get('text_add');
 
         $data['entry_product'] = $this->language->get('entry_product');
         $data['entry_unit'] = $this->language->get('entry_unit');
@@ -643,42 +643,6 @@ class ControllerSaleFarmerTransactions extends Controller {
             $data['error_username'] = '';
         }
 
-        if (isset($this->error['password'])) {
-            $data['error_password'] = $this->error['password'];
-        } else {
-            $data['error_password'] = '';
-        }
-
-        if (isset($this->error['confirm'])) {
-            $data['error_confirm'] = $this->error['confirm'];
-        } else {
-            $data['error_confirm'] = '';
-        }
-
-        if (isset($this->error['firstname'])) {
-            $data['error_firstname'] = $this->error['firstname'];
-        } else {
-            $data['error_firstname'] = '';
-        }
-
-        if (isset($this->error['lastname'])) {
-            $data['error_lastname'] = $this->error['lastname'];
-        } else {
-            $data['error_lastname'] = '';
-        }
-
-        if (isset($this->error['email'])) {
-            $data['error_email'] = $this->error['email'];
-        } else {
-            $data['error_email'] = '';
-        }
-
-        if (isset($this->error['telephone'])) {
-            $data['error_telephone'] = $this->error['telephone'];
-        } else {
-            $data['error_telephone'] = '';
-        }
-
         $url = '';
 
         if (isset($this->request->get['sort'])) {
@@ -706,109 +670,12 @@ class ControllerSaleFarmerTransactions extends Controller {
         ];
 
         if (!isset($this->request->get['farmer_id'])) {
-            $data['action'] = $this->url->link('sale/farmer/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $data['action'] = $this->url->link('sale/farmer_transactions/addtransaction', 'token=' . $this->session->data['token'] . $url, 'SSL');
         } else {
-            $data['action'] = $this->url->link('sale/farmer/edit', 'token=' . $this->session->data['token'] . '&farmer_id=' . $this->request->get['user_id'] . $url, 'SSL');
+            $data['action'] = $this->url->link('sale/farmer_transactions/addtransaction', 'token=' . $this->session->data['token'] . '&farmer_id=' . $this->request->get['user_id'] . $url, 'SSL');
         }
 
-        $data['cancel'] = $this->url->link('sale/farmer', 'token=' . $this->session->data['token'] . $url, 'SSL');
-
-        if (isset($this->request->get['farmer_id'])) {
-            $user_info = $this->model_user_farmer->getUser($this->request->get['farmer_id']);
-            $data['farmer_id'] = $user_info['farmer_id'];
-        }
-
-        if (isset($this->request->post['username'])) {
-            $data['username'] = $this->request->post['username'];
-        } elseif (!empty($user_info)) {
-            $data['username'] = $user_info['username'];
-        } else {
-            $data['username'] = '';
-        }
-
-        if (isset($this->request->post['user_group_id'])) {
-            $data['user_group_id'] = $this->request->post['user_group_id'];
-        } elseif (!empty($user_info)) {
-            $data['user_group_id'] = $user_info['user_group_id'];
-        } else {
-            $data['user_group_id'] = '';
-        }
-
-        $this->load->model('user/user_group');
-
-        $data['user_groups'] = $this->model_user_user_group->getUserGroups();
-
-        if (isset($this->request->post['password'])) {
-            $data['password'] = $this->request->post['password'];
-        } else {
-            $data['password'] = '';
-        }
-
-        if (isset($this->request->post['confirm'])) {
-            $data['confirm'] = $this->request->post['confirm'];
-        } else {
-            $data['confirm'] = '';
-        }
-
-        if (isset($this->request->post['firstname'])) {
-            $data['firstname'] = $this->request->post['firstname'];
-        } elseif (!empty($user_info)) {
-            $data['firstname'] = $user_info['firstname'];
-        } else {
-            $data['firstname'] = '';
-        }
-
-        if (isset($this->request->post['lastname'])) {
-            $data['lastname'] = $this->request->post['lastname'];
-        } elseif (!empty($user_info)) {
-            $data['lastname'] = $user_info['lastname'];
-        } else {
-            $data['lastname'] = '';
-        }
-
-        if (isset($this->request->post['email'])) {
-            $data['email'] = $this->request->post['email'];
-        } elseif (!empty($user_info)) {
-            $data['email'] = $user_info['email'];
-        } else {
-            $data['email'] = '';
-        }
-
-        if (isset($this->request->post['telephone'])) {
-            $data['telephone'] = $this->request->post['telephone'];
-        } elseif (!empty($user_info)) {
-            $data['telephone'] = $user_info['telephone'];
-        } else {
-            $data['telephone'] = '';
-        }
-
-        if (isset($this->request->post['image'])) {
-            $data['image'] = $this->request->post['image'];
-        } elseif (!empty($user_info)) {
-            $data['image'] = $user_info['image'];
-        } else {
-            $data['image'] = '';
-        }
-
-        $this->load->model('tool/image');
-
-        if (isset($this->request->post['image']) && is_file(DIR_IMAGE . $this->request->post['image'])) {
-            $data['thumb'] = $this->model_tool_image->resize($this->request->post['image'], 100, 100);
-        } elseif (!empty($user_info) && $user_info['image'] && is_file(DIR_IMAGE . $user_info['image'])) {
-            $data['thumb'] = $this->model_tool_image->resize($user_info['image'], 100, 100);
-        } else {
-            $data['thumb'] = $this->model_tool_image->resize('no_image.png', 100, 100);
-        }
-
-        $data['placeholder'] = $this->model_tool_image->resize('no_image.png', 100, 100);
-
-        if (isset($this->request->post['status'])) {
-            $data['status'] = $this->request->post['status'];
-        } elseif (!empty($user_info)) {
-            $data['status'] = $user_info['status'];
-        } else {
-            $data['status'] = 0;
-        }
+        $data['cancel'] = $this->url->link('sale/farmer_transactions', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
@@ -818,7 +685,7 @@ class ControllerSaleFarmerTransactions extends Controller {
     }
 
     protected function validateForm() {
-        if (!$this->user->hasPermission('modify', 'sale/farmer')) {
+        if (!$this->user->hasPermission('modify', 'sale/farmer_transactions')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
 
