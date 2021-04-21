@@ -65,7 +65,7 @@
                             <div class="form-group required">
                                 <label class="col-sm-2 control-label" for="input-price"><?php echo $entry_price; ?></label>
                                 <div class="col-sm-10">
-                                    <input type="text" name="price" value="<?php echo $price; ?>" placeholder="<?php echo $entry_price; ?>" id="input-price" class="form-control" />
+                                    <input type="text" name="price" value="<?php echo $price; ?>" placeholder="<?php echo $entry_price; ?>" id="input-price" class="form-control" readonly="" />
                                     <?php if ($error_price) { ?>
                                     <div class="text-danger"><?php echo $error_price; ?></div>
                                     <?php } ?>
@@ -139,6 +139,8 @@ $('input[name=\'product\']').autocomplete({
 $('select[name=\'product_unit\']').on('change', function (e) {
  var special_price = $('select[name=\'product_unit\']').find('option:selected').attr('data-special-price');
  $('input[name=\'price\']').val(special_price);
+ var total = special_price.replace(',', '')*$('input[name=\'quantity\']').val();
+ $('input[name=\'total\']').val(total);
 });
 </script>
 <script type="text/javascript"><!--
