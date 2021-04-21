@@ -83,23 +83,23 @@
                                 <label class="col-sm-2 control-label" for="input-farmer-type">Farmer Type</label>
                                 <div class="col-sm-10">
                                     <select name="farmer_type" id="input-farmer-type" class="form-control">
-                                        <option value="Commercial">Commercial</option>
-                                        <option value="Smallholder">Smallholder</option>
+                                        <option value="Commercial" <?php if(isset($farmer_type) && $farmer_type == 'Commercial') { ?> selected="selected" <?php } ?> >Commercial</option>
+                                        <option value="Smallholder" <?php if(isset($farmer_type) && $farmer_type == 'Smallholder') { ?> selected="selected" <?php } ?> >Smallholder</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="form-group required">
                                 <label class="col-sm-2 control-label" for="input-farm-size">Farm Size</label>
                                 <div class="col-sm-10">
-                                    <input type="text" name="farm_size" value="" placeholder="Farm Size" id="input-farm-size" class="form-control" />
+                                    <input type="text" name="farm_size" value="<?php echo $farm_size; ?>" placeholder="Farm Size" id="input-farm-size" class="form-control" />
                                 </div>
                             </div>
                             <div class="form-group required">
                                 <label class="col-sm-2 control-label" for="input-farm-size-type">Farm Size Type</label>
                                 <div class="col-sm-10">
                                     <select name="farm_size_type" id="input-farm-size-type" class="form-control">
-                                        <option value="Acres">Acres</option>
-                                        <option value="Hectares">Hectares</option>
+                                        <option value="Acres" <?php if(isset($farm_size_type) && $farm_size_type == 'Acres') { ?> selected="selected" <?php } ?> >Acres</option>
+                                        <option value="Hectares" <?php if(isset($farm_size_type) && $farm_size_type == 'Hectares') { ?> selected="selected" <?php } ?> >Hectares</option>
                                     </select>
                                 </div>
                             </div>
@@ -107,21 +107,21 @@
                                 <label class="col-sm-2 control-label" for="input-irrigation-type">Irrigation Type</label>
                                 <div class="col-sm-10">
                                     <select name="irrigation_type" id="input-irrigation-type" class="form-control">
-                                        <option value="Piped">Piped</option>
-                                        <option value="Natural">Natural</option>
+                                        <option value="Piped" <?php if(isset($irrigation_type) && $irrigation_type == 'Piped') { ?> selected="selected" <?php } ?> >Piped</option>
+                                        <option value="Natural" <?php if(isset($irrigation_type) && $irrigation_type == 'Natural') { ?> selected="selected" <?php } ?> >Natural</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="form-group required">
                                 <label class="col-sm-2 control-label" for="input-location">Location</label>
                                 <div class="col-sm-10">
-                                    <input type="text" name="location" value="" placeholder="Location" id="input-location" class="form-control" />
+                                    <input type="text" name="location" value="<?php echo $location; ?>" placeholder="Location" id="input-location" class="form-control" />
                                 </div>
                             </div>
                             <div class="form-group required">
                                 <label class="col-sm-2 control-label" for="input-description">Description</label>
                                 <div class="col-sm-10">
-                                    <input type="text" name="description" value="" placeholder="Description" id="input-description" class="form-control" />
+                                    <input type="text" name="description" value="<?php echo $description; ?>" placeholder="Description" id="input-description" class="form-control" />
                                 </div>
                             </div>
                             <div class="form-group required">
@@ -172,153 +172,6 @@ function save(type) {
         assign_customers();
         form = $("form[id^='form-']").append(input);
         form.submit();
-    }
-// Customers
-    $('input[name=\'assign_customers\']').autocomplete({
-        'source': function (request, response) {
-            $.ajax({
-                url: 'index.php?path=sale/accountmanager/getUnassignedCustomers&token=<?php echo $token; ?>',
-                type: 'post',
-                dataType: 'json',
-                data: {name: $("input[name=assign_customers]").val()},
-                success: function (json) {
-                    if (!json.length) {
-                        var result = [
-                            {
-                                label: 'No matches found',
-                                value: ''
-                            }
-                        ];
-                        response(result);
-                    } else if ($("input[name=assign_customers]").val() == '' || $("input[name=assign_customers]").val() == null) {
-                        var result = [
-                            {
-                                label: 'Type company name',
-                                value: ''
-                            }
-                        ];
-                        response(result);
-                    } else {
-                        response($.map(json, function (item) {
-                            return {
-                                label: item['company_name'],
-                                value: item['customer_id']
-                            }
-                        }));
-                    }
-                }
-            });
-        },
-        'select': function (item) {
-            $('input[name=\'assign_customers\']').val('');
-            $('#assign_customers_select' + item['value']).remove();
-            $('#assign_customers_select').append('<div id="assign_customers_select' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="assign_customers_select[]" value="' + item['value'] + '" /></div>');
-        }
-    });
-    $('#assign_customers_select').delegate('.fa-minus-circle', 'click', function () {
-        $(this).parent().remove();
-    });
-    $('#button-assign-customer').on('click', function (e) {
-        e.preventDefault();
-        var val = [];
-        $('input[name=\'assign_customers_select[]\']').each(function (i) {
-            val[i] = $(this).val();
-        });
-        if (val.length == 0) {
-            $(".alert").show();
-            $('.alert').html('Please select atleast one customer!');
-            $('.alert').delay(5000).fadeOut('slow');
-            return false;
-        }
-        console.log(val);
-        $.ajax({
-            url: 'index.php?path=sale/accountmanager/assigncustomer&token=<?php echo $token; ?>',
-            type: 'post',
-            dataType: 'json',
-            data: {assigncustomer: val, account_manager_id: <?php echo $user_id; ?> },
-            beforeSend: function () {
-                $('#button-assign-customer').button('loading');
-            },
-            complete: function () {
-                $('#button-assign-customer').button('reset');
-            },
-            success: function (json) {
-                $('.alert').html('Customer assigned successfully!');
-                $(".alert").attr('class', 'alert alert-success');
-                $(".alert").show();
-                console.log(json);
-                setTimeout(function () {
-                    location.reload(true);
-                }, 1000);
-            }
-        });
-    });
-
-    $(document).delegate('#unassigncustomer', 'click', function (e) {
-        e.preventDefault();
-        var accountmanager_id = $(this).attr('data-accountmanager');
-        var customer_id = $(this).attr('data-customer');
-        console.log(accountmanager_id);
-        console.log(customer_id);
-        console.log('UN ASSIGN');
-        $.ajax({
-            url: 'index.php?path=sale/accountmanager/unassigncustomer&token=<?php echo $token; ?>',
-            type: 'post',
-            dataType: 'json',
-            data: {unassigncustomer: customer_id, account_manager_id: accountmanager_id},
-            beforeSend: function () {
-            },
-            complete: function () {
-            },
-            success: function (json) {
-                $('.alert').html('Company un assigned successfully!');
-                $(".alert").attr('class', 'alert alert-success');
-                $(".alert").show();
-                console.log(json);
-                setTimeout(function () {
-                    location.reload(true);
-                }, 1000);
-            }
-        });
-    });
-    
-$('#assignedcustomers').delegate('.pagination a', 'click', function(e) {
-e.preventDefault();
-
-$('#assignedcustomers').load(this.href);
-});
-
-$('#assignedcustomers').load('index.php?path=sale/accountmanager/getassignedcustomers&token=<?php echo $token; ?>&account_manager_id=<?php echo $user_id; ?>');
-    function assign_customers() {
-        var val = [];
-        $('input[name=\'assign_customers_select[]\']').each(function (i) {
-            val[i] = $(this).val();
-        });
-        if (val.length == 0) {
-            /*$(".alert").show();
-             $('.alert').html('Please select atleast one customer!');
-             $('.alert').delay(5000).fadeOut('slow');*/
-            return false;
-        }
-        console.log(val);
-        $.ajax({
-            url: 'index.php?path=sale/accountmanager/assigncustomer&token=<?php echo $token; ?>',
-            type: 'post',
-            dataType: 'json',
-            data: {assigncustomer: val, account_manager_id: <?php echo $user_id; ?> },
-            beforeSend: function () {
-                $('#button-assign-customer').button('loading');
-            },
-            complete: function () {
-                $('#button-assign-customer').button('reset');
-            },
-            success: function (json) {
-                $('.alert').html('Customer assigned successfully!');
-                $(".alert").attr('class', 'alert alert-success');
-                $(".alert").show();
-                console.log(json);
-            }
-        });
     }
 //--></script>
 <?php echo $footer; ?> 

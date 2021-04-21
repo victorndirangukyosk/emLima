@@ -719,7 +719,7 @@ class ControllerSaleFarmer extends Controller {
         if (!isset($this->request->get['farmer_id'])) {
             $data['action'] = $this->url->link('sale/farmer/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
         } else {
-            $data['action'] = $this->url->link('sale/farmer/edit', 'token=' . $this->session->data['token'] . '&farmer_id=' . $this->request->get['user_id'] . $url, 'SSL');
+            $data['action'] = $this->url->link('sale/farmer/edit', 'token=' . $this->session->data['token'] . '&farmer_id=' . $this->request->get['farmer_id'] . $url, 'SSL');
         }
 
         $data['cancel'] = $this->url->link('sale/farmer', 'token=' . $this->session->data['token'] . $url, 'SSL');
@@ -764,7 +764,7 @@ class ControllerSaleFarmer extends Controller {
         if (isset($this->request->post['firstname'])) {
             $data['firstname'] = $this->request->post['firstname'];
         } elseif (!empty($user_info)) {
-            $data['firstname'] = $user_info['firstname'];
+            $data['firstname'] = $user_info['first_name'];
         } else {
             $data['firstname'] = '';
         }
@@ -772,7 +772,7 @@ class ControllerSaleFarmer extends Controller {
         if (isset($this->request->post['lastname'])) {
             $data['lastname'] = $this->request->post['lastname'];
         } elseif (!empty($user_info)) {
-            $data['lastname'] = $user_info['lastname'];
+            $data['lastname'] = $user_info['last_name'];
         } else {
             $data['lastname'] = '';
         }
@@ -788,9 +788,57 @@ class ControllerSaleFarmer extends Controller {
         if (isset($this->request->post['telephone'])) {
             $data['telephone'] = $this->request->post['telephone'];
         } elseif (!empty($user_info)) {
-            $data['telephone'] = $user_info['telephone'];
+            $data['telephone'] = $user_info['mobile'];
         } else {
             $data['telephone'] = '';
+        }
+        
+        if (isset($this->request->post['farmer_type'])) {
+            $data['farmer_type'] = $this->request->post['farmer_type'];
+        } elseif (!empty($user_info)) {
+            $data['farmer_type'] = $user_info['farmer_type'];
+        } else {
+            $data['farmer_type'] = '';
+        }
+        
+        if (isset($this->request->post['farm_size'])) {
+            $data['farm_size'] = $this->request->post['farm_size'];
+        } elseif (!empty($user_info)) {
+            $data['farm_size'] = $user_info['farm_size'];
+        } else {
+            $data['farm_size'] = '';
+        }
+        
+        if (isset($this->request->post['farm_size_type'])) {
+            $data['farm_size_type'] = $this->request->post['farm_size_type'];
+        } elseif (!empty($user_info)) {
+            $data['farm_size_type'] = $user_info['farm_size_type'];
+        } else {
+            $data['farm_size_type'] = '';
+        }
+        
+        if (isset($this->request->post['irrigation_type'])) {
+            $data['irrigation_type'] = $this->request->post['irrigation_type'];
+        } elseif (!empty($user_info)) {
+            $data['irrigation_type'] = $user_info['irrigation_type'];
+        } else {
+            $data['irrigation_type'] = '';
+        }
+        
+        if (isset($this->request->post['location'])) {
+            $data['location'] = $this->request->post['location'];
+        } elseif (!empty($user_info)) {
+            $data['location'] = $user_info['location'];
+        } else {
+            $data['location'] = '';
+        }
+        
+        if (isset($this->request->post['description'])) {
+            $data['description'] = $this->request->post['description'];
+        } elseif (!empty($user_info)) {
+            $data['description'] = $user_info['description'];
+        } else {
+            $data['description'] = '';
         }
 
         if (isset($this->request->post['image'])) {
