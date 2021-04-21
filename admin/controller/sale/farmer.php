@@ -841,7 +841,7 @@ class ControllerSaleFarmer extends Controller {
             $this->error['first_name'] = $this->language->get('error_firstname');
         }
 
-        if ((utf8_strlen(trim($this->request->post['last_name'])) < 1) || (utf8_strlen(trim($this->request->post['lastname'])) > 32)) {
+        if ((utf8_strlen(trim($this->request->post['last_name'])) < 1) || (utf8_strlen(trim($this->request->post['last_name'])) > 32)) {
             $this->error['last_name'] = $this->language->get('error_lastname');
         }
 
