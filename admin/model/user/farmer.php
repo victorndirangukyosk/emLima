@@ -8,8 +8,8 @@ class ModelUserFarmer extends Model {
         return $this->db->getLastId();
     }
 
-    public function editUser($user_id, $data) {
-        $this->db->query('UPDATE `' . DB_PREFIX . "farmer` SET username = '" . $this->db->escape($data['username']) . "', user_group_id = '" . (int) $this->config->get('config_farmer_group_id') . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', image = '" . $this->db->escape($data['image']) . "', status = '" . (int) $data['status'] . "' WHERE user_id = '" . (int) $user_id . "'");
+    public function editFarmer($farmer_id, $data) {
+        $this->db->query('UPDATE `' . DB_PREFIX . "farmer` SET username = '" . $this->db->escape($data['username']) . "', first_name = '" . $this->db->escape($data['first_name']) . "', last_name = '" . $this->db->escape($data['last_name']) . "', email = '" . $this->db->escape($data['email']) . "', mobile = '" . $this->db->escape($data['mobile']) . "', status = '" . (int) $data['status'] . "' WHERE farmer_id = '" . (int) $farmer_id . "'");
 
         if ($data['password']) {
             $this->db->query('UPDATE `' . DB_PREFIX . "farmer` SET salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "' WHERE user_id = '" . (int) $user_id . "'");

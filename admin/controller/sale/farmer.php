@@ -625,12 +625,6 @@ class ControllerSaleFarmer extends Controller {
         $data['button_saveclose'] = $this->language->get('button_saveclose');
         $data['button_cancel'] = $this->language->get('button_cancel');
         $data['tab_general'] = $this->language->get('tab_general');
-        $data['tab_assign_customers'] = 'Assign Company';
-        $data['tab_assigned_customers'] = 'Assigned Company';
-        $data['assigned_customers'] = NULL;
-        if (isset($this->request->get['farmer_id'])) {
-            $data['assigned_customers'] = '';
-        }
 
         $data['token'] = $this->session->data['token'];
 
