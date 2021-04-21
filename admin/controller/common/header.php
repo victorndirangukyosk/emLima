@@ -53,7 +53,7 @@ class ControllerCommonHeader extends Controller
             $data['accountsetting'] = $this->url->link('account/settings', 'token='.$this->session->data['token'], 'SSL');
 
             $data['logout'] = $this->url->link('common/logout', 'token='.$this->session->data['token'], 'SSL');
-            $data['farmer_logout'] = $this->url->link('common/farmer', 'token='.$this->session->data['token'], 'SSL');
+            $data['farmer_logout'] = $this->url->link('common/logout/farmer', 'token='.$this->session->data['token'], 'SSL');
 
             $data['preturn_update'] = $this->user->hasPermission('access', 'common/update');
             $data['update'] = $this->url->link('common/update', 'token='.$this->session->data['token'], 'SSL');

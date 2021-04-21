@@ -161,7 +161,7 @@
         <li><a href="<?php echo $logout; ?>"><?php echo $text_logout; ?></a></li>
         <?php } ?>
         <?php if($this->user->isFarmer()) { ?>
-        <li><a href="<?php echo $logout; ?>"><?php echo $text_logout; ?></a></li>
+        <li><a href="<?php echo $farmer_logout; ?>"><?php echo $text_logout; ?></a></li>
         <?php } ?>
       </ul>
     </li>
