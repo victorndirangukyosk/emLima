@@ -263,10 +263,10 @@ class ControllerSaleFarmer extends Controller {
             $filter_email = null;
         }
 
-        if (isset($this->request->get['filter_telephone'])) {
-            $filter_telephone = $this->request->get['filter_telephone'];
+        if (isset($this->request->get['filter_mobile'])) {
+            $filter_mobile = $this->request->get['filter_mobile'];
         } else {
-            $filter_telephone = null;
+            $filter_mobile = null;
         }
 
         if (isset($this->request->get['filter_status'])) {
@@ -315,8 +315,8 @@ class ControllerSaleFarmer extends Controller {
             $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
         }
 
-        if (isset($this->request->get['filter_telephone'])) {
-            $url .= '&filter_telephone=' . urlencode(html_entity_decode($this->request->get['filter_telephone'], ENT_QUOTES, 'UTF-8'));
+        if (isset($this->request->get['filter_mobile'])) {
+            $url .= '&filter_mobile=' . urlencode(html_entity_decode($this->request->get['filter_mobile'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_status'])) {
@@ -367,7 +367,7 @@ class ControllerSaleFarmer extends Controller {
         $filter_data = [
             'filter_name' => $filter_name,
             'filter_email' => $filter_email,
-            'filter_telephone' => $filter_telephone,
+            'filter_mobile' => $filter_mobile,
             'filter_status' => $filter_status,
             'filter_date_added' => $filter_date_added,
             'filter_ip' => $filter_ip,
@@ -485,8 +485,8 @@ class ControllerSaleFarmer extends Controller {
             $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
         }
 
-        if (isset($this->request->get['filter_telephone'])) {
-            $url .= '&filter_telephone=' . urlencode(html_entity_decode($this->request->get['filter_telephone'], ENT_QUOTES, 'UTF-8'));
+        if (isset($this->request->get['filter_mobile'])) {
+            $url .= '&filter_mobile=' . urlencode(html_entity_decode($this->request->get['filter_mobile'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_customer_group_id'])) {
@@ -539,8 +539,8 @@ class ControllerSaleFarmer extends Controller {
             $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
         }
 
-        if (isset($this->request->get['filter_telephone'])) {
-            $url .= '&filter_telephone=' . urlencode(html_entity_decode($this->request->get['filter_telephone'], ENT_QUOTES, 'UTF-8'));
+        if (isset($this->request->get['filter_mobile'])) {
+            $url .= '&filter_mobile=' . urlencode(html_entity_decode($this->request->get['filter_mobile'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_status'])) {
@@ -579,7 +579,7 @@ class ControllerSaleFarmer extends Controller {
 
         $data['filter_name'] = $filter_name;
         $data['filter_email'] = $filter_email;
-        $data['filter_telephone'] = $filter_telephone;
+        $data['filter_mobile'] = $filter_mobile;
         $data['filter_status'] = $filter_status;
         $data['filter_ip'] = $filter_ip;
         $data['filter_date_added'] = $filter_date_added;
@@ -684,10 +684,28 @@ class ControllerSaleFarmer extends Controller {
             $data['error_email'] = '';
         }
 
-        if (isset($this->error['telephone'])) {
-            $data['error_telephone'] = $this->error['telephone'];
+        if (isset($this->error['mobile'])) {
+            $data['error_mobile'] = $this->error['mobile'];
         } else {
-            $data['error_telephone'] = '';
+            $data['error_mobile'] = '';
+        }
+        
+        if (isset($this->error['farm_size'])) {
+            $data['error_farm_size'] = $this->error['farm_size'];
+        } else {
+            $data['error_farm_size'] = '';
+        }
+        
+        if (isset($this->error['location'])) {
+            $data['error_location'] = $this->error['location'];
+        } else {
+            $data['error_location'] = '';
+        }
+        
+        if (isset($this->error['description'])) {
+            $data['error_description'] = $this->error['description'];
+        } else {
+            $data['error_description'] = '';
         }
 
         $url = '';
@@ -785,12 +803,12 @@ class ControllerSaleFarmer extends Controller {
             $data['email'] = '';
         }
 
-        if (isset($this->request->post['telephone'])) {
-            $data['telephone'] = $this->request->post['telephone'];
+        if (isset($this->request->post['mobile'])) {
+            $data['mobile'] = $this->request->post['mobile'];
         } elseif (!empty($user_info)) {
-            $data['telephone'] = $user_info['mobile'];
+            $data['mobile'] = $user_info['mobile'];
         } else {
-            $data['telephone'] = '';
+            $data['mobile'] = '';
         }
         
         if (isset($this->request->post['farmer_type'])) {
@@ -1314,17 +1332,14 @@ class ControllerSaleFarmer extends Controller {
                 }
 
                 $json[] = [
-                    'customer_id' => $result['customer_id'],
+                    'farmer_id' => $result['farmer_id'],
                     'customer_group_id' => $result['customer_group_id'],
                     'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')),
                     'customer_group' => $result['customer_group'],
-                    'firstname' => $result['firstname'],
-                    'lastname' => $result['lastname'],
+                    'firstname' => $result['first_name'],
+                    'lastname' => $result['last_name'],
                     'email' => $result['email'],
-                    'telephone' => $result['telephone'],
-                    'fax' => $result['fax'],
-                    'custom_field' => unserialize($result['custom_field']),
-                    'address' => $this->model_sale_customer->getAddresses($result['customer_id']),
+                    'mobile' => $result['mobile'],
                 ];
             }
         }
@@ -1522,10 +1537,10 @@ class ControllerSaleFarmer extends Controller {
                 $filter_email = '';
             }
             
-            if (isset($this->request->get['filter_telephone'])) {
-                $filter_telephone = $this->request->get['filter_telephone'];
+            if (isset($this->request->get['filter_mobile'])) {
+                $filter_mobile = $this->request->get['filter_mobile'];
             } else {
-                $filter_telephone = '';
+                $filter_mobile = '';
             }
 
             $this->load->model('user/user');
@@ -1533,7 +1548,7 @@ class ControllerSaleFarmer extends Controller {
             $filter_data = [
                 'filter_name' => $filter_name,
                 'filter_email' => $filter_email,
-                'filter_telephone' => $filter_telephone,
+                'filter_mobile' => $filter_mobile,
                 'start' => 0,
                 'limit' => 5,
             ];
@@ -1552,7 +1567,7 @@ class ControllerSaleFarmer extends Controller {
                     'firstname' => $result['first_name'],
                     'lastname' => $result['last_name'],
                     'email' => $result['email'],
-                    'telephone' => $result['mobile']
+                    'mobile' => $result['mobile']
                 ];
             }
         }

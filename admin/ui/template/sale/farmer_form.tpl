@@ -73,9 +73,9 @@
                             <div class="form-group required">
                                 <label class="col-sm-2 control-label" for="input-telephone"><?php echo $entry_telephone; ?></label>
                                 <div class="col-sm-10">
-                                    <input type="text" name="mobile" value="<?php echo $telephone; ?>" placeholder="<?php echo $entry_telephone; ?>" id="input-telephone" class="form-control" maxlength=10 onkeypress="return isNumberKey(event)"  />
-                                    <?php if ($error_telephone) { ?>
-                                    <div class="text-danger"><?php echo $error_telephone; ?></div>
+                                    <input type="text" name="mobile" value="<?php echo $mobile; ?>" placeholder="<?php echo $entry_telephone; ?>" id="input-telephone" class="form-control" maxlength=10 onkeypress="return isNumberKey(event)"  />
+                                    <?php if ($error_mobile) { ?>
+                                    <div class="text-danger"><?php echo $error_mobile; ?></div>
                                     <?php  } ?>
                                 </div>
                             </div>
@@ -92,6 +92,9 @@
                                 <label class="col-sm-2 control-label" for="input-farm-size">Farm Size</label>
                                 <div class="col-sm-10">
                                     <input type="text" name="farm_size" value="<?php echo $farm_size; ?>" placeholder="Farm Size" id="input-farm-size" class="form-control" />
+                                    <?php if ($error_farm_size) { ?>
+                                    <div class="text-danger"><?php echo $error_farm_size; ?></div>
+                                    <?php } ?>
                                 </div>
                             </div>
                             <div class="form-group required">
@@ -116,12 +119,18 @@
                                 <label class="col-sm-2 control-label" for="input-location">Location</label>
                                 <div class="col-sm-10">
                                     <input type="text" name="location" value="<?php echo $location; ?>" placeholder="Location" id="input-location" class="form-control" />
+                                    <?php if ($error_location) { ?>
+                                    <div class="text-danger"><?php echo $error_location; ?></div>
+                                    <?php } ?>
                                 </div>
                             </div>
                             <div class="form-group required">
                                 <label class="col-sm-2 control-label" for="input-description">Description</label>
                                 <div class="col-sm-10">
                                     <input type="text" name="description" value="<?php echo $description; ?>" placeholder="Description" id="input-description" class="form-control" />
+                                    <?php if ($error_description) { ?>
+                                    <div class="text-danger"><?php echo $error_description; ?></div>
+                                    <?php } ?>
                                 </div>
                             </div>
                             <div class="form-group required">
