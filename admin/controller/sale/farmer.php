@@ -701,6 +701,12 @@ class ControllerSaleFarmer extends Controller {
         } else {
             $data['error_description'] = '';
         }
+        
+        if (isset($this->error['organization'])) {
+            $data['error_organization'] = $this->error['organization'];
+        } else {
+            $data['error_organization'] = '';
+        }
 
         $url = '';
 
@@ -935,6 +941,10 @@ class ControllerSaleFarmer extends Controller {
         
         if ((utf8_strlen(trim($this->request->post['description'])) < 1) || (utf8_strlen(trim($this->request->post['description'])) > 32)) {
             $this->error['description'] = 'Farm Description Required!';
+        }
+        
+        if ((utf8_strlen(trim($this->request->post['organization'])) < 1) || (utf8_strlen(trim($this->request->post['organization'])) > 32)) {
+            $this->error['organization'] = 'Farmer Organization Required!';
         }
 
         if ($this->request->post['password'] || (!isset($this->request->get['farmer_id']))) {
