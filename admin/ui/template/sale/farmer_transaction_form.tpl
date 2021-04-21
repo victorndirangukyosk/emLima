@@ -97,7 +97,7 @@
     </div>
 </div>
 <script type="text/javascript">
-            $('input[name=\'product\']').autocomplete({
+$('input[name=\'product\']').autocomplete({
             'source': function (request, response) {
                 $.ajax({
                     url: 'index.php?path=sale/farmer_transactions/product_autocomplete&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
@@ -126,7 +126,7 @@
                     $select.html('');
                     if(json != null && json.length > 0) {
                     $.each(json, function(index, value) {
-                    $select.append('<option value="' + value.product_store_id + '">' + value.unit + '</option>');
+                    $select.append('<option value="' + value.product_store_id + '" data-special-price="' + value.special_price + '">' + value.unit + '</option>');
                     });
                     }
                     $('.selectpicker').selectpicker('refresh');
@@ -135,6 +135,11 @@
             $('input[name=\'price\']').val(item.price);
             }
         });
+
+$('select[name=\'product_unit\']').on('change', function (e) {
+ var special_price = $('select[name=\'product_unit\']').find('option:selected').attr('data-special-price');
+ $('input[name=\'price\']').val(special_price);
+});
 </script>
 <script type="text/javascript"><!--
 function save(type) {
