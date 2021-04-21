@@ -341,5 +341,21 @@ class ModelUserFarmerTransactions extends Model {
 
         return $query->rows;
     }
+    
+        public function getProductForPopup($product_store_id, $is_admin = false, $store_id) {
+        if (!isset($store_id)) {
+            $store_id = $this->session->data['config_store_id'];
+        }
+        $this->db->select('product_to_store.*,product_description.*,product.*,product_description.name as pd_name', false);
+        $this->db->join('product_description', 'product_description.product_id = product_to_store.product_id', 'left');
+        $this->db->join('product', 'product.product_id = product_to_store.product_id', 'left');
+        $this->db->group_by('product_to_store.product_store_id');
+        $this->db->where('product_to_store.store_id', $store_id);
+        $this->db->where('product_to_store.status', 1);
+        $this->db->where('product_description.language_id', $this->config->get('config_language_id'));
+        $this->db->where('product_to_store.product_store_id', $product_store_id);
+        $ret = $this->db->get('product_to_store')->row;
 
+        return $ret;
+    }
 }

@@ -35,6 +35,16 @@ class ControllerSaleFarmerTransactions extends Controller {
         $this->load->model('user/farmer_transactions');
 
         if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
+            $this->request->post['farmer_id'] = $this->user->getFarmerId();
+            $product_details = $this->model_user_farmer_transactions->getProductForPopup($this->request->post['product_unit'], false, 75);
+            $this->request->post['product_store_id'] = $product_details['product_store_id'];
+            $this->request->post['vendor_id'] = 126;
+            $this->request->post['store_id'] = $product_details['store_id'];
+            $this->request->post['name'] = $product_details['name'];
+            $this->request->post['unit'] = $product_details['unit'];
+            $this->request->post['model'] = $product_details['model'];
+            $this->request->post['price'] = $product_details['special_price'];
+            //$log->write($product_details);
             $farmer_transaction_id = $this->model_user_farmer_transactions->addFarmerTransaction($this->request->post);
 
             $this->session->data['success'] = $this->language->get('text_success');
