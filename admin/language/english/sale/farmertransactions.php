@@ -40,11 +40,11 @@ $_['entry_firstname'] = 'First Name';
 $_['entry_lastname'] = 'Last Name';
 $_['entry_email'] = 'E-Mail';
 
-$_['entry_telephone'] = 'Phone No.';
-$_['entry_fax'] = 'Tax No.';
-$_['entry_newsletter'] = 'Newsletter';
-$_['entry_status'] = 'Status';
-$_['entry_approved'] = 'Verified';
+$_['entry_product'] = 'Product';
+$_['entry_unit'] = 'UOM';
+$_['entry_price'] = 'Price';
+$_['entry_quantity'] = 'Quantity';
+$_['entry_total'] = 'Total';
 $_['entry_safe'] = 'Safe';
 $_['entry_password'] = 'Password';
 $_['entry_confirm'] = 'Confirm';

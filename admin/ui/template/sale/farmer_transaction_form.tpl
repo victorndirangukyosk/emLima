@@ -44,143 +44,48 @@
                     <div class="tab-content">
                         <div class="tab-pane active" id="tab-general">
                             <div class="form-group required">
-                                <label class="col-sm-2 control-label" for="input-username"><?php echo $entry_username; ?></label>
+                                <label class="col-sm-2 control-label" for="input-product"><?php echo $entry_product; ?></label>
                                 <div class="col-sm-10">
-                                    <input type="text" name="username" value="<?php echo $username; ?>" placeholder="<?php echo $entry_username; ?>" id="input-username" class="form-control" />
-                                    <?php if ($error_username) { ?>
-                                    <div class="text-danger"><?php echo $error_username; ?></div>
+                                    <input type="text" name="product" value="" placeholder="<?php echo $entry_product; ?>" id="input-product" class="form-control" />
+                                    <?php if ($error_product) { ?>
+                                    <div class="text-danger"><?php echo $error_product; ?></div>
                                     <?php } ?>
                                 </div>
                             </div>
                             <div class="form-group required">
-                                <label class="col-sm-2 control-label" for="input-firstname"><?php echo $entry_firstname; ?></label>
+                                <label class="col-sm-2 control-label" for="input-unit"><?php echo $entry_unit; ?></label>
                                 <div class="col-sm-10">
-                                    <input type="text" name="first_name" value="<?php echo $first_name; ?>" placeholder="<?php echo $entry_firstname; ?>" id="input-firstname" class="form-control" />
-                                    <?php if ($error_first_name) { ?>
-                                    <div class="text-danger"><?php echo $error_first_name; ?></div>
+                                    <input type="text" name="unit" value="<?php echo $unit; ?>" placeholder="<?php echo $entry_unit; ?>" id="input-unit" class="form-control" />
+                                    <?php if ($error_unit) { ?>
+                                    <div class="text-danger"><?php echo $error_unit; ?></div>
                                     <?php } ?>
                                 </div>
                             </div>
                             <div class="form-group required">
-                                <label class="col-sm-2 control-label" for="input-lastname"><?php echo $entry_lastname; ?></label>
+                                <label class="col-sm-2 control-label" for="input-price"><?php echo $entry_price; ?></label>
                                 <div class="col-sm-10">
-                                    <input type="text" name="last_name" value="<?php echo $last_name; ?>" placeholder="<?php echo $entry_lastname; ?>" id="input-lastname" class="form-control" />
-                                    <?php if ($error_last_name) { ?>
-                                    <div class="text-danger"><?php echo $error_last_name; ?></div>
+                                    <input type="text" name="price" value="<?php echo $price; ?>" placeholder="<?php echo $entry_price; ?>" id="input-price" class="form-control" />
+                                    <?php if ($error_price) { ?>
+                                    <div class="text-danger"><?php echo $error_price; ?></div>
                                     <?php } ?>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="input-email"><?php echo $entry_email; ?></label>
+                            <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-email"><?php echo $entry_quantity; ?></label>
                                 <div class="col-sm-10">
-                                    <input type="text" name="email" value="<?php echo $email; ?>" placeholder="<?php echo $entry_email; ?>" id="input-email" class="form-control" />
-                                    <?php if ($error_email) { ?>
-                                    <div class="text-danger"><?php echo $error_email; ?></div>
+                                    <input type="text" name="quantity" value="<?php echo $quantity; ?>" placeholder="<?php echo $entry_quantity; ?>" id="input-quantity" class="form-control" />
+                                    <?php if ($error_quantity) { ?>
+                                    <div class="text-danger"><?php echo $error_quantity; ?></div>
                                     <?php  } ?>
                                 </div>
                             </div>
                             <div class="form-group required">
-                                <label class="col-sm-2 control-label" for="input-telephone"><?php echo $entry_telephone; ?></label>
+                                <label class="col-sm-2 control-label" for="input-total"><?php echo $entry_total; ?></label>
                                 <div class="col-sm-10">
-                                    <input type="text" name="mobile" value="<?php echo $mobile; ?>" placeholder="<?php echo $entry_telephone; ?>" id="input-telephone" class="form-control" maxlength=10 onkeypress="return isNumberKey(event)"  />
-                                    <?php if ($error_mobile) { ?>
-                                    <div class="text-danger"><?php echo $error_mobile; ?></div>
+                                    <input type="text" name="total" value="<?php echo $total; ?>" placeholder="<?php echo $entry_total; ?>" id="input-total" class="form-control" />
+                                    <?php if ($error_total) { ?>
+                                    <div class="text-danger"><?php echo $error_total; ?></div>
                                     <?php  } ?>
-                                </div>
-                            </div>
-                            <div class="form-group required">
-                                <label class="col-sm-2 control-label" for="input-farmer-type">Farmer Type</label>
-                                <div class="col-sm-10">
-                                    <select name="farmer_type" id="input-farmer-type" class="form-control">
-                                        <option value="Commercial" <?php if(isset($farmer_type) && $farmer_type == 'Commercial') { ?> selected="selected" <?php } ?> >Commercial</option>
-                                        <option value="Smallholder" <?php if(isset($farmer_type) && $farmer_type == 'Smallholder') { ?> selected="selected" <?php } ?> >Smallholder</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group required">
-                                <label class="col-sm-2 control-label" for="input-farm-size">Farm Size</label>
-                                <div class="col-sm-10">
-                                    <input type="text" name="farm_size" value="<?php echo $farm_size; ?>" placeholder="Farm Size" id="input-farm-size" class="form-control" />
-                                    <?php if ($error_farm_size) { ?>
-                                    <div class="text-danger"><?php echo $error_farm_size; ?></div>
-                                    <?php } ?>
-                                </div>
-                            </div>
-                            <div class="form-group required">
-                                <label class="col-sm-2 control-label" for="input-farm-size-type">Farm Size Type</label>
-                                <div class="col-sm-10">
-                                    <select name="farm_size_type" id="input-farm-size-type" class="form-control">
-                                        <option value="Acres" <?php if(isset($farm_size_type) && $farm_size_type == 'Acres') { ?> selected="selected" <?php } ?> >Acres</option>
-                                        <option value="Hectares" <?php if(isset($farm_size_type) && $farm_size_type == 'Hectares') { ?> selected="selected" <?php } ?> >Hectares</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group required">
-                                <label class="col-sm-2 control-label" for="input-irrigation-type">Irrigation Type</label>
-                                <div class="col-sm-10">
-                                    <select name="irrigation_type" id="input-irrigation-type" class="form-control">
-                                        <option value="Piped" <?php if(isset($irrigation_type) && $irrigation_type == 'Piped') { ?> selected="selected" <?php } ?> >Piped</option>
-                                        <option value="Natural" <?php if(isset($irrigation_type) && $irrigation_type == 'Natural') { ?> selected="selected" <?php } ?> >Natural</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group required">
-                                <label class="col-sm-2 control-label" for="input-location">Location</label>
-                                <div class="col-sm-10">
-                                    <input type="text" name="location" value="<?php echo $location; ?>" placeholder="Location" id="input-location" class="form-control" />
-                                    <?php if ($error_location) { ?>
-                                    <div class="text-danger"><?php echo $error_location; ?></div>
-                                    <?php } ?>
-                                </div>
-                            </div>
-                            <div class="form-group required">
-                                <label class="col-sm-2 control-label" for="input-description">Description</label>
-                                <div class="col-sm-10">
-                                    <input type="text" name="description" value="<?php echo $description; ?>" placeholder="Description" id="input-description" class="form-control" />
-                                    <?php if ($error_description) { ?>
-                                    <div class="text-danger"><?php echo $error_description; ?></div>
-                                    <?php } ?>
-                                </div>
-                            </div>
-                            <div class="form-group required">
-                                <label class="col-sm-2 control-label" for="input-organization">Organization</label>
-                                <div class="col-sm-10">
-                                    <input type="text" name="organization" value="<?php echo $organization; ?>" placeholder="Farmer Organization" id="input-organization" class="form-control" />
-                                    <?php if ($error_organization) { ?>
-                                    <div class="text-danger"><?php echo $error_organization; ?></div>
-                                    <?php } ?>
-                                </div>
-                            </div>
-                            <div class="form-group required">
-                                <label class="col-sm-2 control-label" for="input-password"><?php echo $entry_password; ?></label>
-                                <div class="col-sm-10">
-                                    <input type="password" name="password" value="<?php echo $password; ?>" placeholder="<?php echo $entry_password; ?>" id="input-password" class="form-control" autocomplete="off" />
-                                    <?php if ($error_password) { ?>
-                                    <div class="text-danger"><?php echo $error_password; ?></div>
-                                    <?php  } ?>
-                                </div>
-                            </div>
-                            <div class="form-group required">
-                                <label class="col-sm-2 control-label" for="input-confirm"><?php echo $entry_confirm; ?></label>
-                                <div class="col-sm-10">
-                                    <input type="password" name="confirm" value="<?php echo $confirm; ?>" placeholder="<?php echo $entry_confirm; ?>" id="input-confirm" class="form-control" />
-                                    <?php if ($error_confirm) { ?>
-                                    <div class="text-danger"><?php echo $error_confirm; ?></div>
-                                    <?php  } ?>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="input-status"><?php echo $entry_status; ?></label>
-                                <div class="col-sm-10">
-                                    <select name="status" id="input-status" class="form-control">
-                                        <?php if ($status) { ?>
-                                        <option value="0"><?php echo $text_disabled; ?></option>
-                                        <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
-                                        <?php } else { ?>
-                                        <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
-                                        <option value="1"><?php echo $text_enabled; ?></option>
-                                        <?php } ?>
-                                    </select>
                                 </div>
                             </div>
                         </div>

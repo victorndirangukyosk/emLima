@@ -28,13 +28,10 @@ class ControllerSaleFarmerTransactions extends Controller {
 
         $this->document->setTitle($this->language->get('heading_title'));
 
-        $this->load->model('user/farmer');
+        $this->load->model('user/farmer_transactions');
 
         if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
-            $this->request->post['ip'] = $this->request->server['REMOTE_ADDR'];
-            $this->request->post['latitude'] = 0;
-            $this->request->post['longitude'] = 0;
-            $farmer_id = $this->model_user_farmer->addFarmer($this->request->post);
+            $farmer_transaction_id = $this->model_user_farmer_transactions->addFarmerTransaction($this->request->post);
 
             $this->session->data['success'] = $this->language->get('text_success');
 
@@ -43,16 +40,16 @@ class ControllerSaleFarmerTransactions extends Controller {
             $this->load->model('user/user_activity');
 
             $activity_data = [
-                'user_id' => $this->user->getId(),
+                'farmer_id' => $this->user->getFarmerId(),
                 'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
                 'user_group_id' => $this->user->getGroupId(),
-                'farmer_id' => $farmer_id,
+                'farmer_transaction_id' => $farmer_transaction_id,
             ];
-            $log->write('farmer add');
+            $log->write('farmer transaction add');
 
-            $this->model_user_user_activity->addActivity('farmer_add', $activity_data);
+            $this->model_user_user_activity->addActivity('farmer_transaction', $activity_data);
 
-            $log->write('farmer add');
+            $log->write('farmer transaction add');
 
             $url = '';
 
@@ -69,11 +66,11 @@ class ControllerSaleFarmerTransactions extends Controller {
             }
 
             if (isset($this->request->post['button']) and 'save' == $this->request->post['button']) {
-                $this->response->redirect($this->url->link('sale/farmer/edit', 'farmer_id=' . $farmer_id . '&token=' . $this->session->data['token'] . $url, 'SSL'));
+                $this->response->redirect($this->url->link('sale/farmer_transactions', 'token=' . $this->session->data['token'] . $url, 'SSL'));
             }
 
             if (isset($this->request->post['button']) and 'new' == $this->request->post['button']) {
-                $this->response->redirect($this->url->link('sale/farmer/add', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+                $this->response->redirect($this->url->link('sale/farmer_transactions/add', 'token=' . $this->session->data['token'] . $url, 'SSL'));
             }
 
             $this->response->redirect($this->url->link('sale/farmer', 'token=' . $this->session->data['token'] . $url, 'SSL'));
@@ -611,31 +608,18 @@ class ControllerSaleFarmerTransactions extends Controller {
         $data['heading_title'] = $this->language->get('heading_title');
 
         $data['text_form'] = !isset($this->request->get['farmer_id']) ? $this->language->get('text_add') : $this->language->get('text_edit');
-        $data['text_enabled'] = $this->language->get('text_enabled');
-        $data['text_disabled'] = $this->language->get('text_disabled');
 
-        $data['entry_username'] = $this->language->get('entry_username');
-        $data['entry_user_group'] = $this->language->get('entry_user_group');
-        $data['entry_password'] = $this->language->get('entry_password');
-        $data['entry_confirm'] = $this->language->get('entry_confirm');
-        $data['entry_firstname'] = $this->language->get('entry_firstname');
-        $data['entry_lastname'] = $this->language->get('entry_lastname');
-        $data['entry_email'] = $this->language->get('entry_email');
-        $data['entry_telephone'] = $this->language->get('entry_telephone');
-        $data['entry_image'] = $this->language->get('entry_image');
-        $data['entry_status'] = $this->language->get('entry_status');
+        $data['entry_product'] = $this->language->get('entry_product');
+        $data['entry_unit'] = $this->language->get('entry_unit');
+        $data['entry_price'] = $this->language->get('entry_price');
+        $data['entry_quantity'] = $this->language->get('entry_quantity');
+        $data['entry_total'] = $this->language->get('entry_total');
 
         $data['button_save'] = $this->language->get('button_save');
         $data['button_savenew'] = $this->language->get('button_savenew');
         $data['button_saveclose'] = $this->language->get('button_saveclose');
         $data['button_cancel'] = $this->language->get('button_cancel');
         $data['tab_general'] = $this->language->get('tab_general');
-        $data['tab_assign_customers'] = 'Assign Company';
-        $data['tab_assigned_customers'] = 'Assigned Company';
-        $data['assigned_customers'] = NULL;
-        if (isset($this->request->get['farmer_id'])) {
-            $data['assigned_customers'] = '';
-        }
 
         $data['token'] = $this->session->data['token'];
 
@@ -853,10 +837,10 @@ class ControllerSaleFarmerTransactions extends Controller {
         if ((utf8_strlen($this->request->post['mobile']) < 3) || (utf8_strlen($this->request->post['mobile']) > 32)) {
             $this->error['mobile'] = $this->language->get('error_telephone');
         }
-        
+
         if ((strlen(utf8_decode($this->request->post['mobile'])) < 3) || (strlen(utf8_decode($this->request->post['mobile'])) > 32) || preg_match('/[^\d]/is', $this->request->post['mobile'])) {
-      		$this->error['mobile'] = $this->language->get('error_telephone');
-    	}
+            $this->error['mobile'] = $this->language->get('error_telephone');
+        }
 
         if ($this->request->post['password'] || (!isset($this->request->get['farmer_id']))) {
             if ((utf8_strlen($this->request->post['password']) < 4) || (utf8_strlen($this->request->post['password']) > 20)) {
@@ -1462,7 +1446,7 @@ class ControllerSaleFarmerTransactions extends Controller {
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
-    
+
     public function autocompletefarmer() {
         $json = [];
 
@@ -1478,7 +1462,7 @@ class ControllerSaleFarmerTransactions extends Controller {
             } else {
                 $filter_email = '';
             }
-            
+
             if (isset($this->request->get['filter_telephone'])) {
                 $filter_telephone = $this->request->get['filter_telephone'];
             } else {
@@ -1525,4 +1509,5 @@ class ControllerSaleFarmerTransactions extends Controller {
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
+
 }
