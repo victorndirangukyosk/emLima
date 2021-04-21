@@ -154,7 +154,7 @@ class ControllerCommonFarmer extends Controller {
             'name' => $this->config->get('config_name'),
             'href' => HTTP_CATALOG,
         ];
-
+        
         // Language list
         $this->load->model('localisation/language');
 

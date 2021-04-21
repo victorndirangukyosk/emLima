@@ -154,6 +154,7 @@ class ControllerCommonLogin extends Controller {
             'name' => $this->config->get('config_name'),
             'href' => HTTP_CATALOG,
         ];
+        $data['farmer_login'] = $this->url->link('common/farmer', '', 'SSL');
 
         // Language list
         $this->load->model('localisation/language');
