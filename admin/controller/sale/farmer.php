@@ -919,8 +919,16 @@ class ControllerSaleFarmer extends Controller {
             $this->error['mobile'] = $this->language->get('error_telephone');
         }
 
-        if ($this->request->post['farm_size'] <= 0 || strlen($this->request->post['farm_size']) <= 0) {
-            $this->error['farm_size'] = 'Farm Size must be greater than zero';
+        if ($this->request->post['farm_size'] <= 0 || strlen($this->request->post['farm_size']) <= 0 || preg_match('/[^\d]/is', $this->request->post['farm_size'])) {
+            $this->error['farm_size'] = 'Farm Size must be greater than zero!';
+        }
+        
+        if ((utf8_strlen(trim($this->request->post['location'])) < 1) || (utf8_strlen(trim($this->request->post['location'])) > 32)) {
+            $this->error['location'] = 'Farm Location Required!';
+        }
+        
+        if ((utf8_strlen(trim($this->request->post['description'])) < 1) || (utf8_strlen(trim($this->request->post['description'])) > 32)) {
+            $this->error['description'] = 'Farm Description Required!';
         }
 
         if ($this->request->post['password'] || (!isset($this->request->get['farmer_id']))) {
