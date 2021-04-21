@@ -95,6 +95,27 @@
         </div>
     </div>
 </div>
+<script type="text/javascript">
+            $('input[name=\'product\']').autocomplete({
+            'source': function (request, response) {
+                $.ajax({
+                    url: 'index.php?path=sale/farmer_transactions/product_autocomplete&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
+                    dataType: 'json',
+                    success: function (json) {
+                        response($.map(json, function (item) {
+                            return {
+                                label: item['name'],
+                                value: item['product_store_id']
+                            }
+                        }));
+                    }
+                });
+            },
+            'select': function (item) {
+                $('input[name=\'product\']').val(item['label']);
+            }
+        });
+</script>
 <script type="text/javascript"><!--
 function save(type) {
         var input = document.createElement('input');

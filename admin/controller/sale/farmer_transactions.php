@@ -1510,4 +1510,39 @@ class ControllerSaleFarmerTransactions extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+    public function product_autocomplete() {
+        if (isset($this->request->get['filter_name'])) {
+            $filter_name = $this->request->get['filter_name'];
+        } else {
+            $filter_name = '';
+        }
+
+        $this->load->model('sale/order');
+
+        $send = [];
+
+        $data['store_id'] = 75;
+        $json = $this->model_sale_order->getProductDataByStoreFilterFarmer($filter_name, $data['store_id']);
+        //$json = $this->model_sale_order->getProductsForEditInvoice($filter_name, $data['store_id'], $this->request->get['order_id']);
+        $log = new Log('error.log');
+        //$log->write('json');
+        //$log->write($json);
+        //$log->write('json');
+        //$send = $json;
+
+        foreach ($json as $j) {
+            if (isset($j['special_price']) && !is_null($j['special_price']) && $j['special_price'] && (float) $j['special_price']) {
+                $j['price'] = $j['special_price'];
+            }
+
+            $j['name'] = htmlspecialchars_decode($j['name']);
+
+            $send[] = $j;
+        }
+
+        //echo "<pre>";print_r($json);die;
+
+        echo json_encode($send);
+    }
+
 }

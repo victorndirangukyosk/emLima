@@ -78,6 +78,63 @@ class ModelSaleOrder extends Model {
         // echo $this->db->last_query();die;
         return $ret;
     }
+    
+    public function getProductDataByStoreFilterFarmer($filter_name, $store_id) {
+        //$store_id = (int)$this->session->data['config_store_id'];
+        $language_id = (int) $this->config->get('config_language_id');
+
+        $limit = 5;
+        $offset = 0;
+
+        $this->db->select('product_description.*,product_to_store.*,product.unit,product.model', false);
+        $this->db->join('product', 'product.product_id = product_to_store.product_id', 'left');
+        $this->db->join('product_description', 'product_description.product_id = product_to_store.product_id', 'left');
+        $this->db->join('product_to_category', 'product_to_category.product_id = product_to_store.product_id', 'left');
+
+        if (!empty($filter_name)) {
+            $this->db->like('product_description.name', $this->db->escape($filter_name), 'both');
+        }
+
+        /* if ( $data['start'] < 0 ) {
+          $data['start'] = 0;
+          $offset = $data['start'];
+          }else{
+          $offset = $data['start'];
+          }
+          if ( $data['limit'] < 1 ) {
+          $data['limit'] = 20;
+          $limit = $data['limit'];
+
+          }else{
+          $limit = $data['limit'];
+          }
+          $sort_data = array(
+          'product_description.name',
+          'product.model',
+          'product_to_store.quantity',
+          'product_to_store.price',
+          'product.sort_order',
+          'product.date_added'
+          );
+          if ( isset( $data['sort'] ) && in_array( $data['sort'], $sort_data ) ) {
+          if ( $data['sort'] == 'product_description.name' || $data['sort'] == 'product.model' ) {
+          $this->db->order_by($data['sort'], 'asc');
+          }else {
+          $this->db->order_by($data['sort'], 'asc');
+          }
+          } else {
+          $this->db->order_by('product.sort_order', 'asc');
+          } */
+        $this->db->group_by('product_to_store.product_store_id');
+        $this->db->where('product_to_store.store_id', $store_id);
+        $this->db->where('product_to_store.status', 1);
+        $this->db->where('product_description.language_id', $language_id);
+        $this->db->where('product.status', 1);
+        $ret = $this->db->get('product_to_store', $limit)->rows;
+        //$ret = $this->db->get('product_to_store')->rows;
+        // echo $this->db->last_query();die;
+        return $ret;
+    }
 
     public function getCategoryPriceStatusByCategoryName($category_name, $status) {
         $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "product_category_prices WHERE price_category ='" . $category_name . "' AND status ='" . $status . "'");
