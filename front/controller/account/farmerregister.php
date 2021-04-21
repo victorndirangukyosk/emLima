@@ -51,6 +51,7 @@ class ControllerAccountFarmerRegister extends Controller
         $this->load->model('account/farmer');
 
         $log = new Log('error.log');
+        
 
         $this->request->post['telephone'] = preg_replace('/[^0-9]/', '', $this->request->post['telephone']);
 
