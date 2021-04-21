@@ -85,6 +85,7 @@
   </ul>
   <?php } ?>
   <ul class="nav pull-right">
+    <?php if(!$this->user->isFarmer()) { ?>
     <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown"><?php if(!empty($alert_order)) { ?><span class="label label-danger pull-left"><?php echo $alert_order; ?></span><?php } ?><i class="fa fa-shopping-cart fa-lg"></i></a>
       <ul class="dropdown-menu dropdown-menu-right alerts-dropdown">
         <li class="dropdown-header"><?php echo $text_order; ?></li>
@@ -95,7 +96,8 @@
         
       </ul>
     </li>
-    <?php if(!$this->user->isVendor()){ ?>
+    <?php } ?>
+    <?php if(!$this->user->isVendor() && !$this->user->isFarmer()){ ?>
     <li class="dropdown">
       <a class="dropdown-toggle" data-toggle="dropdown"><?php if(!empty($alert_customer)) { ?><span class="label label-danger pull-left"><?php echo $alert_customer; ?></span><?php } ?><i class="fa fa-user fa-lg"></i></a>
       <ul class="dropdown-menu dropdown-menu-right alerts-dropdown">
@@ -105,6 +107,7 @@
       </ul>
     </li>
     <?php } ?>
+    <?php if(!$this->user->isFarmer()) { ?>
     <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown"><?php if(!empty($alert_product)) { ?><span class="label label-danger pull-left"><?php echo $alert_product; ?></span><?php } ?><i class="fa fa-bell fa-lg"></i></a>
       <ul class="dropdown-menu dropdown-menu-right alerts-dropdown">
         <li class="dropdown-header"><?php echo $text_product; ?></li>
@@ -112,6 +115,7 @@
         <li><a href="<?php echo $low_stock; ?>"><span class="label label-danger pull-right"><?php echo $product_low_total; ?></span><?php echo $text_low_stock; ?></a></li>
       </ul>
     </li>
+    <?php } ?>
     <!-- <li class="dropdown">
         <a target="_blank" href="#"><i class="fa fa-life-ring fa-lg"></i></a>
     </li>  -->

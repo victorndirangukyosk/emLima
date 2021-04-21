@@ -189,6 +189,15 @@ class User extends SmartObject {
         }
     }
 
+    public function isFarmer() {
+        $farmer_group_id = $this->config->get('config_farmer_group_id');
+        if ($this->user_group_id == $farmer_group_id) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public function getId() {
         return $this->user_id;
     }
