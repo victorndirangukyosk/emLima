@@ -157,7 +157,12 @@
         <?php }  ?>
         <li class="divider"></li>
         <?php }  ?>
-        <li><a href="<?php echo $logout; ?>"><?php echo $text_logout; ?></a></li>				
+        <?php if(!$this->user->isFarmer()) { ?>
+        <li><a href="<?php echo $logout; ?>"><?php echo $text_logout; ?></a></li>
+        <?php } ?>
+        <?php if($this->user->isFarmer()) { ?>
+        <li><a href="<?php echo $logout; ?>"><?php echo $text_logout; ?></a></li>
+        <?php } ?>
       </ul>
     </li>
   </ul>
