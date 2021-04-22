@@ -1378,11 +1378,12 @@ class ControllerSaleFarmerTransactions extends Controller {
         }
 
         $this->load->model('sale/order');
-
+        $this->load->model('user/farmer_transactions');
         $send = [];
 
         $data['store_id'] = 75;
-        $json = $this->model_sale_order->getProductDataByStoreFilterFarmer($filter_name, $data['store_id']);
+        $json = $this->model_user_farmer_transactions->getProducts($filter_name, $data['store_id']);
+        //$json = $this->model_sale_order->getProductDataByStoreFilterFarmer($filter_name, $data['store_id']);
 
         foreach ($json as $j) {
             if (isset($j['special_price']) && !is_null($j['special_price']) && $j['special_price'] && (float) $j['special_price']) {
