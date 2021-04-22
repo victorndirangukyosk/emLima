@@ -1,6 +1,6 @@
 <?php
 
-class ControllerCommonLogin extends Controller {
+class ControllerCommonFarmer extends Controller {
 
     private $error = [];
 
@@ -11,11 +11,11 @@ class ControllerCommonLogin extends Controller {
 
         $shopper_group_id = $this->config->get('config_shopper_group_ids');
 
-        if ($this->user->isLogged() && isset($this->request->get['token']) && ($this->request->get['token'] == $this->session->data['token'])) {
+        if ($this->user->isFarmerLogged() && isset($this->request->get['token']) && ($this->request->get['token'] == $this->session->data['token'])) {
             if ($shopper_group_id == $this->user->getGroupId()) {
                 $this->response->redirect($this->url->link('shopper/request', 'token=' . $this->session->data['token'], 'SSL'));
             } else {
-                $this->response->redirect($this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL'));
+                $this->response->redirect($this->url->link('sale/farmer_transactions', 'token=' . $this->session->data['token'], 'SSL'));
             }
         }
 
@@ -24,7 +24,7 @@ class ControllerCommonLogin extends Controller {
             //echo "<pre>";print_r($this->request->post);die;
 
             $this->session->data['token'] = md5(mt_rand());
-            $this->session->data['admintoken'] =  $this->session->data['token'];//this name is used in API
+            $this->session->data['admintoken'] = $this->session->data['token']; //this name is used in API
 
             if (!empty($this->request->post['lang'])) {
                 $this->session->data['language'] = $this->request->post['lang'];
@@ -57,7 +57,7 @@ class ControllerCommonLogin extends Controller {
             $this->load->model('user/user_activity');
 
             $activity_data = [
-                'user_id' => $this->user->getId(),
+                'farmer_id' => $this->user->getFarmerId(),
                 'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
                 'user_group_id' => $this->user->getGroupId(),
             ];
@@ -72,7 +72,7 @@ class ControllerCommonLogin extends Controller {
             } elseif (isset($this->request->post['redirect']) && (0 === strpos($this->request->post['redirect'], HTTP_SERVER) || 0 === strpos($this->request->post['redirect'], HTTPS_SERVER))) {
                 $this->response->redirect($this->request->post['redirect'] . '&token=' . $this->session->data['token']);
             } else {
-                $this->response->redirect($this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL'));
+                $this->response->redirect($this->url->link('sale/farmer_transactions', 'token=' . $this->session->data['token'], 'SSL'));
             }
         }
 
@@ -105,7 +105,7 @@ class ControllerCommonLogin extends Controller {
             $data['success'] = '';
         }
 
-        $data['action'] = $this->url->link('common/login', '', 'SSL');
+        $data['action'] = $this->url->link('common/farmer', '', 'SSL');
 
         if (isset($this->request->post['username'])) {
             $data['username'] = $this->request->post['username'];
@@ -154,8 +154,7 @@ class ControllerCommonLogin extends Controller {
             'name' => $this->config->get('config_name'),
             'href' => HTTP_CATALOG,
         ];
-        $data['farmer_login'] = $this->url->link('common/farmer', '', 'SSL');
-
+        
         // Language list
         $this->load->model('localisation/language');
 
@@ -172,11 +171,11 @@ class ControllerCommonLogin extends Controller {
         $data['header'] = $this->load->controller('common/header');
         $data['footer'] = $this->load->controller('common/footer');
 
-        $this->response->setOutput($this->load->view('common/login.tpl', $data));
+        $this->response->setOutput($this->load->view('common/farmerlogin.tpl', $data));
     }
 
     protected function validate() {
-        if (!isset($this->request->post['username']) || !isset($this->request->post['password']) || !$this->user->login($this->request->post['username'], $this->request->post['password'])) {
+        if (!isset($this->request->post['username']) || !isset($this->request->post['password']) || !$this->user->farmer($this->request->post['username'], $this->request->post['password'])) {
             $this->error['warning'] = $this->language->get('error_login');
         }
 

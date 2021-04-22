@@ -78,14 +78,14 @@ class ControllerApiLogin extends Controller {
         $json['status'] = 200;
         $json['data'] = [];
         $json['message'] = [];
-        $json['customer_id'] = $args['customer_id'];
+        // $json['customer_id'] = $args['customer_id'];
         $json['url'] = [];
 
-        if (isset($args['customer_id'])) {
-            $customer_id = $args['customer_id'];
-        } else {
-            $customer_id = 0;
-        }
+        // if (isset($args['customer_id'])) {
+        //     $customer_id = $args['customer_id'];
+        // } else {
+        //     $customer_id = 0;
+        // }
 
         //below token check added for security
         #region       
@@ -99,26 +99,39 @@ class ControllerApiLogin extends Controller {
             
         if(!isset($this->request->get['admintoken']))
         {
-            $json['message'] = 'Please check the URL ';                    
+            $json['message'] = 'Please check the URL... ';                    
             $this->response->addHeader('Content-Type: application/json');
             $this->response->setOutput(json_encode($json));
             return;
         }
 
-        if(!isset($this->session->data['admintoken']))
-        {
-            $json['message'] = 'Please login again as Admin ';                    
-            $this->response->addHeader('Content-Type: application/json');
-            $this->response->setOutput(json_encode($json));
-            return;
-        }
-        if ((isset($this->session->data['admintoken']) && !isset($this->request->get['token'])) || ((isset($this->request->get['token']) && (isset($this->session->data['admintoken']) && ($this->request->get['token'] != $this->session->data['admintoken']))))) {
+        // if(!isset($this->session->data['admintoken']))
+        // {
+        //     $json['message'] = 'Please login again as Admin ';                    
+        //     $this->response->addHeader('Content-Type: application/json');
+        //     $this->response->setOutput(json_encode($json));
+        //     return;
+        // }
+        // if ((isset($this->session->data['admintoken']) && !isset($this->request->get['token'])) || ((isset($this->request->get['token']) && (isset($this->session->data['admintoken']) && ($this->request->get['token'] != $this->session->data['admintoken']))))) {
         
-            $json['message'] = 'Authentication Failed.Please login again as Admin';                    
-            $this->response->addHeader('Content-Type: application/json');
-            $this->response->setOutput(json_encode($json));
-            return;
-        }
+        //     $json['message'] = 'Authentication Failed.Please login again as Admin';                    
+        //     $this->response->addHeader('Content-Type: application/json');
+        //     $this->response->setOutput(json_encode($json));
+        //     return;
+        // } session not coming from Admin folder ,so implementing base64
+
+        $admintoken= base64_decode($this->request->get['admintoken']);
+        $tokenvalue= (explode(":",$admintoken));
+        
+            if (isset($tokenvalue[1])) {
+                $customervalue = $tokenvalue[1];
+                $key = (int)(date("dmY")); 
+                $customer_id= $customervalue-$key;
+                $json['customer_id'] =$customer_id;
+                
+            }
+           
+            // echo "<pre>";print_r((int)($customer_id));die; 
 
         #endregion
 
@@ -126,10 +139,21 @@ class ControllerApiLogin extends Controller {
         // $customer_info = $this->model_sale_customer->getCustomer($customer_id);
 
         $this->load->model('account/customer');
-        $customer_info = $this->model_account_customer->getCustomer($args['customer_id']);
-        $customer_info['devices'] = $this->model_account_customer->getCustomerDevices($api_info['customer_id']);
+        $customer_info = $this->model_account_customer->getCustomer($customer_id);
        
-        if ($customer_info) {
+
+        if (array_key_exists('customer_id', $customer_info)) {
+            // echo "<pre>";print_r(($customer_info));die; 
+            if($customer_info['email']!=$tokenvalue[0])
+            {
+                $json['message'] = 'User emaial does not match'; 
+                $this->response->addHeader('Content-Type: application/json');
+                $this->response->setOutput(json_encode($json));
+                return;
+            }
+        $customer_info['devices'] = $this->model_account_customer->getCustomerDevices($api_info['customer_id']);
+
+
             $token = md5(mt_rand()); 
 
              $this->model_account_customer->editToken($customer_id, $token);

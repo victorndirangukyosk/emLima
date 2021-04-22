@@ -894,13 +894,13 @@ class ControllerApiCustomerDashboard extends Controller
 
     public function getRecentOrdersProductsList() {// getRecentOrderProductsList_new
 
-        
- $json = [];
+                
+        $json = [];
 
- $json['status'] = 200;
- $json['data'] = [];
- $json['message'] = [];
- try{
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
+        try{
         if (isset($this->request->get['filter_product_name'])) {
             $filter_product_name = $this->request->get['filter_product_name'];
         } else {
@@ -1063,26 +1063,26 @@ class ControllerApiCustomerDashboard extends Controller
         // echo "<pre>";print_r($data);die;
         $json['data'] =$data;
         $json['message'] ="Success";
-    }catch(exception $ex)
-    {
-        $json['message'] ="Something went wrong";
-    }finally{
-        $this->response->addHeader('Content-Type: application/json');
-        $this->response->setOutput(json_encode($json));
-    }
+            }catch(exception $ex)
+            {
+                $json['message'] ="Something went wrong";
+            }finally{
+                $this->response->addHeader('Content-Type: application/json');
+                $this->response->setOutput(json_encode($json));
+            }
 
     }
 
     public function getRecentOrdersList()
     {
-        
+                
 
- $json = [];
+        $json = [];
 
- $json['status'] = 200;
- $json['data'] = [];
- $json['message'] = [];
- try{
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
+        try{
         if (isset($this->request->get['filter_order_id'])) {
             $filter_order_id = $this->request->get['filter_order_id'];
         } else {
@@ -1367,12 +1367,12 @@ class ControllerApiCustomerDashboard extends Controller
         $json['data'] =$data;  $json['message'] ="Success";
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
-    }
-    catch(exception $ex)
-    { $json['message'] ="Something went wrong!";
-        $this->response->addHeader('Content-Type: application/json');
-        $this->response->setOutput(json_encode($json));
-    }
+                }
+                catch(exception $ex)
+                { $json['message'] ="Something went wrong!";
+                    $this->response->addHeader('Content-Type: application/json');
+                    $this->response->setOutput(json_encode($json));
+                }
     }
 
     public function export_mostpurchased_products_excel($customer_id)
@@ -1473,17 +1473,17 @@ class ControllerApiCustomerDashboard extends Controller
         //  echo '<pre>';print_r($result);exit;
 
         // return true;
-    }
+            }
 
-    catch(exception $ex)
-    {
-        $json['message'] ="Some thing went wrong";
+            catch(exception $ex)
+            {
+                $json['message'] ="Some thing went wrong";
 
-    }
-    finally{
-        $this->response->addHeader('Content-Type: application/json');
-        $this->response->setOutput(json_encode($json));
-    }
+            }
+            finally{
+                $this->response->addHeader('Content-Type: application/json');
+                $this->response->setOutput(json_encode($json));
+            }
     }
 
     public function addPurchaseHistory()
@@ -1555,7 +1555,7 @@ class ControllerApiCustomerDashboard extends Controller
 
 
 
- //similar method from Admin/reports/customer_order/statement
+    //similar method from Admin/reports/customer_order/statement
     public function addcustomerstatement()
     { 
 
@@ -2085,19 +2085,19 @@ class ControllerApiCustomerDashboard extends Controller
         $data['recent_activity'] = $recent_activity;
         $json['message'] = "Success";
         $json['data'] =$data;
-    }
-    catch(exception $ex)
-    {
-        //$log = new Log('error.log');
-        //$log->write('most_purchased'); 
-     $json['status'] = 400;
-    $json['message'] = "Something went wrong!";
-    }
-    finally{
-        $this->response->addHeader('Content-Type: application/json');
-        $this->response->setOutput(json_encode($json));
-    
-    }
+            }
+            catch(exception $ex)
+            {
+                //$log = new Log('error.log');
+                //$log->write('most_purchased');
+            $json['status'] = 400;
+            $json['message'] = "Something went wrong!";
+            }
+            finally{
+                $this->response->addHeader('Content-Type: application/json');
+                $this->response->setOutput(json_encode($json));
+            
+            }
 
         // $this->response->setOutput($this->load->view('metaorganic/template/account/recent_activity.tpl', $data));
     }
@@ -2130,20 +2130,207 @@ class ControllerApiCustomerDashboard extends Controller
         $data['recent_orders'] = $user_recent_orders;
         $json['data'] =$data; $json['message'] = "Success";
         // $this->response->setOutput($this->load->view('metaorganic/template/account/recentorders.tpl', $data)); $json['message'] = "Success";
+        }
+        catch(exception $ex)
+        {
+            //$log = new Log('error.log');
+            //$log->write('most_purchased'); 
+        $json['status'] = 400;
+        $json['message'] = "Something went wrong!";
+        }
+        finally{
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($json));
+        
+        }
     }
-    catch(exception $ex)
+
+
+    public function getProductPurchaseHistory()
     {
-        //$log = new Log('error.log');
-        //$log->write('most_purchased'); 
-     $json['status'] = 400;
-    $json['message'] = "Something went wrong!";
-    }
-    finally{
-        $this->response->addHeader('Content-Type: application/json');
+        $json = $this->getPurchaseHistoryChartsData('getProductPurchaseHistory', false);
+
+        $json['order']['label'] = 'Product purchase history per day';
+
         $this->response->setOutput(json_encode($json));
-    
-    }
     }
 
 
+    public function getPurchaseHistoryChartsData($modelFunction, $currency_format = false)
+    {
+        $this->load->model('account/dashboard');
+
+        $json = [];
+ 
+        //  echo '<pre>';print_r($this->request->get);exit;
+        
+
+        if (isset($this->request->get['start'])) {
+            $start = $this->request->get['start'];
+        } else {
+            $start = '';
+        }
+
+        if (!empty($this->request->get['end'])) {
+            $end = $this->request->get['end'];
+        } else {
+            $end = '';
+        }
+
+        if (!empty($this->request->get['selectedcustomer_id'])) {
+            $selectedcustomer_id = $this->request->get['selectedcustomer_id'];
+        } else {
+            $selectedcustomer_id = '';
+        }
+
+
+        if (!empty($this->request->get['product_id'])) {
+            $product_id = $this->request->get['product_id'];
+        } else {
+            $product_id = '';
+        }
+
+
+        //    echo '<pre>';print_r($this->request->get);exit;
+
+
+        if($product_id == ''|| $selectedcustomer_id == ''|| $end == ''|| $start == '')
+        {
+            //filters are not correct
+            return $json;
+        }
+        // echo "<pre>";print_r($selectedcustomer_id);die;
+
+
+
+        $date_start = date_create($start)->format('Y-m-d H:i:s');
+        $date_end = date_create($end)->format('Y-m-d H:i:s');
+
+        $diff_str = strtotime($end) - strtotime($start);
+        $diff = floor($diff_str / 3600 / 24) + 1;
+
+        $range = $this->getRange($diff);
+
+        $customer_id = $this->customer->getId();
+
+        //   echo "<pre>";print_r($json);die;
+        // echo "<pre>";print_r($range);die;
+
+
+        switch ($range) {
+            
+            
+            case 'day':
+        // echo "<pre>";print_r($selectedcustomer_id);die;
+
+                $results = $this->model_account_dashboard->{$modelFunction}($selectedcustomer_id, $date_start, $date_end, 'DAY', $this->customer->getId(),$product_id);
+                $str_date = substr($date_start, 0, 10);
+                $order_data = [];
+
+        // echo "<pre>";print_r($results);die;
+
+                for ($i = 0; $i < $diff; ++$i) {
+                    $date = date_create($str_date)->modify('+'.$i.' day')->format('Y-m-d');
+
+                    //setting default values
+                    $order_data[$date] = [
+                        'day' => $date,
+                        'total' => 0,
+                    ];
+
+                    $json['xaxis'][] = [$i, $date];
+                }
+
+                foreach ($results->rows as $result) {
+                    $total = $result['total'];
+
+                    if ($currency_format) {
+                        $total = $this->currency->format($result['total'], $this->config->get('config_currency'), '', false);
+                    }
+
+                    $order_data[$result['date']] = [
+                        'day' => $result['date'],
+                        'total' => $total,
+                    ];
+                }
+
+                $i = 0;
+                foreach ($order_data as $key => $value) {
+                    $json['order']['data'][] = [$i++, $value['total']];
+                }
+
+                break;
+            case 'month':
+                $results = $this->model_account_dashboard->{$modelFunction}($selectedcustomer_id, $date_start, $date_end, 'MONTH', $this->customer->getId(),$product_id);
+                $months = $this->getMonths($date_start, $date_end);
+                $order_data = [];
+
+                for ($i = 0; $i < count($months); ++$i) {
+                    $order_data[$months[$i]] = [
+                        'month' => $months[$i],
+                        'total' => 0,
+                    ];
+
+                    $json['xaxis'][] = [$i, $months[$i]];
+                }
+
+                foreach ($results->rows as $result) {
+                    $order_data[$result['month']] = [
+                        'month' => $result['month'],
+                        'total' => $result['total'],
+                    ];
+                }
+
+                $i = 0;
+                foreach ($order_data as $key => $value) {
+                    $json['order']['data'][] = [$i++, $value['total']];
+                }
+                break;
+            case 'year':
+                $results = $this->model_account_dashboard->{$modelFunction}($selectedcustomer_id, $date_start, $date_end, 'YEAR', $this->customer->getId(),$product_id);
+                $str_date = substr($date_start, 0, 10);
+                $order_data = [];
+                $diff = floor($diff / 365) + 1;
+
+                for ($i = 0; $i < $diff; ++$i) {
+                    $date = date_create($str_date)->modify('+'.$i.' year')->format('Y');
+
+                    $order_data[$date] = [
+                        'year' => $date,
+                        'total' => 0,
+                    ];
+
+                    $json['xaxis'][] = [$i, $date];
+                }
+
+                foreach ($results->rows as $result) {
+                    $order_data[$result['year']] = [
+                        'year' => $result['year'],
+                        'total' => $result['total'],
+                    ];
+                }
+
+                $i = 0;
+                foreach ($order_data as $key => $value) {
+                    $json['order']['data'][] = [$i++, $value['total']];
+                }
+                break;
+        }
+
+        $modelFunction = str_replace('get', 'getTotal', $modelFunction);
+        $result = $this->model_account_dashboard->{$modelFunction}($selectedcustomer_id, $date_start, $date_end, $customer_id,$product_id);
+
+        // echo "<pre>";print_r($currency_format);die;
+
+        $total = $result['total'];
+        if ($currency_format) {
+            $total = $this->currency->format($result['total'], $this->config->get('config_currency'));
+        }
+
+        $json['order']['total'] = $total;
+
+        return $json;
+    }
+
+   
 }

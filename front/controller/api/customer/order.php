@@ -3238,4 +3238,255 @@ class ControllerApiCustomerOrder extends Controller
     }
     }
 
+
+
+    public function getPendingOrders($args = [])
+    {
+        $json = [];
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
+
+        $this->load->language('api/general');
+
+        $this->load->language('account/order');
+
+        // $this->document->setTitle($this->language->get('heading_title'));
+
+        $url = '';
+
+        if (isset($this->request->get['page'])) {
+            $url .= '&page='.$this->request->get['page'];
+        }
+
+        if (isset($this->request->get['page'])) {
+            $page = $this->request->get['page'];
+        } else {
+            $page = 1;
+        }
+
+        $data['orders'] = [];
+
+        $this->load->model('account/order');
+        $this->load->model('account/address');
+        $this->load->model('account/customer');
+
+        $order_total = $this->model_account_order->getTotalPendingOrders();
+
+        $results = $this->model_account_order->getPendingOrders(($page - 1) * 10, 10);
+
+        //echo "<pre>";print_r($results);die;
+        foreach ($results as $result) {
+            $city_name = $this->model_account_order->getCityName($result['shipping_city_id']);
+
+            $product_total = $this->model_account_order->getTotalOrderProductsByOrderId($result['order_id']);
+
+            $real_product_total = $this->model_account_order->getTotalRealOrderProductsByOrderId($result['order_id']);
+
+            $order_total_detail = $this->load->controller('checkout/totals/getTotalOnly', $result['order_id']);
+
+            //echo "<pre>";print_r($order_total_detail);die;
+            $voucher_total = $this->model_account_order->getTotalOrderVouchersByOrderId($result['order_id']);
+
+            $shipping_address = null;
+
+            if (isset($result['shipping_address'])) {
+                $shipping_address['address'] = $result['shipping_building_name'].', '.$result['shipping_flat_number'];
+                $shipping_address['city'] = $city_name;
+                $shipping_address['zipcode'] = $result['shipping_zipcode'];
+            }
+
+            $shipped = false;
+            foreach ($this->config->get('config_shipped_status') as $key => $value) {
+                if ($value == $result['order_status_id']) {
+                    $shipped = true;
+                    break;
+                }
+            }
+            if (!$shipped) {
+                foreach ($this->config->get('config_complete_status') as $key => $value) {
+                    if ($value == $result['order_status_id']) {
+                        $shipped = true;
+                        break;
+                    }
+                }
+            }
+
+            $realproducts = $this->model_account_order->hasRealOrderProducts($result['order_id']);
+
+            // Totals
+            $shipping_charge = '0';
+
+            $totals = $this->model_account_order->getOrderTotals($result['order_id']);
+
+            $latest_total = 0;
+            //echo "<pre>";print_r($totals);die;
+            foreach ($totals as $total) {
+                if ('shipping' == $total['code']) {
+                    if ($total['value'] > 0) {
+                        $shipping_charge = $this->currency->format($total['value']);
+                    }
+                }
+
+                if ('sub_total' == $total['code']) {
+                    $sub_total = $this->currency->format($total['value']);
+                }
+
+                if ('total' == $total['code']) {
+                    $latest_total = $total['value'];
+                }
+            }
+
+            $all_app_order_status = "";// $this->model_account_order->getAppOrderStatuses();
+
+            $app_status_resp =  $this->model_account_order->getAppOrderStatusMapping($result['order_status_id']);
+
+            //   echo "<pre>";print_r($_SESSION);die;
+            $app_status = '';
+            $app_order_status_id = '';
+            if ($app_status_resp['status']) {
+                $app_status = $app_status_resp['data']['name'];
+                $app_order_status_id = $app_status_resp['data']['code'];
+            }
+
+            if ($real_product_total) {
+                $product_total = $real_product_total;
+            }
+
+            $this->load->model('sale/order');
+            $approve_order_button = null;
+            $order_appoval_access = false;
+
+            // #region parent,Approval access
+            // if ($api_info['parent'] != NULL && $api_info['parent']>0) {
+            //     $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $api_info['parent'] . "' AND status = '1'");
+            // } else {
+            //     $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $api_info['customer_id']. "' AND status = '1'");
+            // }
+            // $this->session->data['customer_category'] = isset($customer_details->row['customer_category']) ? $customer_details->row['customer_category'] : null;
+            // // echo "<pre>";print_r($customer_details);die; 
+            // $this->session->data['order_approval_access'] = $customer_info['order_approval_access'];
+            // $this->session->data['order_approval_access_role'] = $customer_info['order_approval_access_role'];
+            // #endregion
+            
+
+            // if (empty($_SESSION['parent']) && $result['customer_id'] != $this->customer->getId()) {
+            //     $approve_order_button = 'Need Approval';
+            // }
+            // if ($this->session->data['order_approval_access'] > 0 && $this->session->data['order_approval_access_role'] != NULL) {
+            //     $order_appoval_access = true;
+            // }
+            $this->load->model('account/customer');
+            $customer_info = $this->model_account_customer->getCustomer($result['customer_id']);
+            $is_he_parents = $this->model_account_customer->CheckHeIsParent();
+            $customer_parent_info = $this->model_account_customer->getCustomerParentDetails($result['customer_id']);
+
+            $logincustomer_approvalaccess = $this->model_account_customer->CheckApprover();
+            //   echo "<pre>";print_r($logincustomer_approvalaccess);die;
+
+            $parent=false;
+           
+            if (empty($is_he_parents) && $result['customer_id'] != $this->customer->getId()) {
+                    $approve_order_button = 'Need Approval';
+                }
+
+                 if ($logincustomer_approvalaccess['order_approval_access'] > 0 && $logincustomer_approvalaccess['order_approval_access_role'] != NULL) {
+                $order_appoval_access = true;
+            }
+            if($is_he_parents == NULL)
+            {
+            $parent=true; $order_appoval_access = true;
+            }
+
+            $sub_user_order = FALSE;
+            $procurement_person = NULL;
+            $head_chef = NULL;
+
+
+            if (($customer_info['order_approval_access'] == NULL || $customer_info['order_approval_access'] == 0) && $customer_info['order_approval_access_role'] == NULL && $customer_parent_info != NULL) {
+                $log = new Log('error.log');
+                $order_approval_access = $this->db->query('SELECT c.customer_id, c.parent, c.order_approval_access_role, c.order_approval_access, c.email, c.firstname, c.lastname  FROM ' . DB_PREFIX . "customer c WHERE c.parent = '" . (int) $customer_parent_info['customer_id'] . "' AND c.order_approval_access = 1 AND (c.order_approval_access_role = 'head_chef' OR c.order_approval_access_role = 'procurement_person')");
+                $order_approval_access_user = $order_approval_access->rows;
+
+                foreach ($order_approval_access_user as $order_approval_access_use) {
+                    if ($order_approval_access_use['order_approval_access_role'] == 'head_chef' && $order_approval_access_use['order_approval_access'] > 0) {
+                        $head_chef = $order_approval_access_use['email'];
+                        $log->write($order_approval_access_use['order_approval_access_role']);
+                        $log->write($order_approval_access_use['order_approval_access']);
+                        $log->write($order_approval_access_use['customer_id']);
+                    }
+                    if ($order_approval_access_use['order_approval_access_role'] == 'procurement_person' && $order_approval_access_use['order_approval_access'] > 0) {
+                        $procurement_person = $order_approval_access_use['email'];
+                        $log->write($order_approval_access_use['order_approval_access_role']);
+                        $log->write($order_approval_access_use['order_approval_access']);
+                        $log->write($order_approval_access_use['customer_id']);
+                    }
+                }
+                $sub_user_order = TRUE;
+            }
+
+
+            $customer_parent_info = $this->model_account_customer->getCustomerParentEmail($result['customer_id']);
+
+            $data['orders'][] = [
+                'order_id' => $result['order_id'],
+                'name' => $result['firstname'].' '.$result['lastname'],
+                'shipping_name' => $result['shipping_name'],
+                'payment_method' => $result['payment_method'],
+                'shipping_address' => $shipping_address,
+                'order_total' => $order_total_detail,
+                'store_name' => htmlspecialchars_decode($result['store_name']),
+                'status' => $result['status'],
+                'order_status_id' => $result['order_status_id'],
+                'app_status' => $app_status,
+                'app_order_status_id' => $app_order_status_id,
+                'all_app_order_status' => $all_app_order_status,
+                'shipped' => $shipped,
+                'shipping_method' => $result['shipping_method'],
+                'shipping_charge' => $shipping_charge,
+                'realproducts' => $realproducts,
+                'date_added' => date($this->language->get('date_format'), strtotime($result['date_added'])),
+                'time_added' => date($this->language->get('time_format'), strtotime($result['date_added'])),
+                'eta_date' => date($this->language->get('date_format'), strtotime($result['delivery_date'])),
+                'delivered_date' => date($this->language->get('date_format'), strtotime($result['date_modified'])),
+                'delivered_time' => date($this->language->get('time_format'), strtotime($result['date_modified'])),
+
+                'eta_time' => $result['delivery_timeslot'],
+                'products' => ($product_total + $voucher_total),
+                'real_products' => ($real_product_total + $voucher_total),
+                'left_symbol_currency' => $this->currency->getSymbolLeft(),
+                'right_symbol_currency' => $this->currency->getSymbolRight(),
+                'total' => $this->currency->format($latest_total, $result['currency_code'], $result['currency_value']),
+                'sub_total' => $sub_total,
+                // 'href' => $this->url->link('account/order/info', 'order_id='.$result['order_id'], 'SSL'),
+                // 'real_href' => $this->url->link('account/order/realinfo', 'order_id='.$result['order_id'], 'SSL'),
+                 'customer_parent_info'=> $customer_parent_info,
+                // 'accept_reject_href' => $this->url->link('account/order/accept_reject', 'order_id=' . $result['order_id'], 'SSL'),
+                'parent_approve_order' => $approve_order_button,
+                'customer_id' => $result['customer_id'],
+                'parent_approval' => $result['parent_approval'],
+                'order_approval_access' => $order_appoval_access,
+                'head_chef' => $result['head_chef'],
+                'procurement' => $result['procurement'],
+                'sub_user_order' => $sub_user_order,
+                'procurement_person_email' => $procurement_person,
+                'head_chef_email' => $head_chef,
+                // 'order_approval_access_role' => $this->session->data['order_approval_access_role'],
+                'order_approval_access_role' => $customer_parent_info['order_approval_access_role'],
+                'parent_details' => $customer_parent_info != NULL && $customer_parent_info['email'] != NULL ? $customer_parent_info['email'] : NULL,
+                // 'edit_order' => 15 == $result['order_status_id'] && (empty($_SESSION['parent']) || $order_appoval_access) ? $this->url->link('account/order/edit_order', 'order_id=' . $result['order_id'], 'SSL') : '',
+                'order_company' => isset($customer_info) && null != $customer_info['company_name'] ? $customer_info['company_name'] : null,
+                'isparent'=> $parent,
+            ];
+        }
+
+        $data['results'] = sprintf($this->language->get('text_pagination'), ($order_total) ? (($page - 1) * 10) + 1 : 0, ((($page - 1) * 10) > ($order_total - 10)) ? $order_total : ((($page - 1) * 10) + 10), $order_total, ceil($order_total / 10));
+
+        $json['data'] = $data;
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+
 }

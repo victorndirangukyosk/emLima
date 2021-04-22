@@ -79,6 +79,63 @@ class ModelSaleOrder extends Model {
         return $ret;
     }
 
+    public function getProductDataByStoreFilterFarmer($filter_name, $store_id) {
+        //$store_id = (int)$this->session->data['config_store_id'];
+        $language_id = (int) $this->config->get('config_language_id');
+
+        $limit = 5;
+        $offset = 0;
+
+        $this->db->select('product_description.*,product_to_store.*,product.unit,product.model', false);
+        $this->db->join('product', 'product.product_id = product_to_store.product_id', 'left');
+        $this->db->join('product_description', 'product_description.product_id = product_to_store.product_id', 'left');
+        $this->db->join('product_to_category', 'product_to_category.product_id = product_to_store.product_id', 'left');
+
+        if (!empty($filter_name)) {
+            $this->db->like('product_description.name', $this->db->escape($filter_name), 'both');
+        }
+
+        /* if ( $data['start'] < 0 ) {
+          $data['start'] = 0;
+          $offset = $data['start'];
+          }else{
+          $offset = $data['start'];
+          }
+          if ( $data['limit'] < 1 ) {
+          $data['limit'] = 20;
+          $limit = $data['limit'];
+
+          }else{
+          $limit = $data['limit'];
+          }
+          $sort_data = array(
+          'product_description.name',
+          'product.model',
+          'product_to_store.quantity',
+          'product_to_store.price',
+          'product.sort_order',
+          'product.date_added'
+          );
+          if ( isset( $data['sort'] ) && in_array( $data['sort'], $sort_data ) ) {
+          if ( $data['sort'] == 'product_description.name' || $data['sort'] == 'product.model' ) {
+          $this->db->order_by($data['sort'], 'asc');
+          }else {
+          $this->db->order_by($data['sort'], 'asc');
+          }
+          } else {
+          $this->db->order_by('product.sort_order', 'asc');
+          } */
+        $this->db->group_by('product_to_store.product_store_id');
+        $this->db->where('product_to_store.store_id', $store_id);
+        $this->db->where('product_to_store.status', 1);
+        $this->db->where('product_description.language_id', $language_id);
+        $this->db->where('product.status', 1);
+        $ret = $this->db->get('product_to_store', $limit)->rows;
+        //$ret = $this->db->get('product_to_store')->rows;
+        // echo $this->db->last_query();die;
+        return $ret;
+    }
+
     public function getCategoryPriceStatusByCategoryName($category_name, $status) {
         $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "product_category_prices WHERE price_category ='" . $category_name . "' AND status ='" . $status . "'");
         return $query->rows;
@@ -285,6 +342,64 @@ class ModelSaleOrder extends Model {
                     'category_price' => $category_price,
                     'category_price_status' => $category_price_status,
                     'category_price_variant' => $category_price > 0 && $category_price_status == 0 ? 'disabled' : '',
+                    'max_qty' => $r['min_quantity'] > 0 ? $r['min_quantity'] : $r['quantity'],
+                    'qty_in_cart' => $r['qty_in_cart'],
+                    'key' => $key,
+                    'model' => $r['model']
+                ];
+
+
+                if (true == $formated) {
+                    array_push($returnData, $res);
+                } else {
+                    array_push($returnData, $r);
+                }
+            }
+        }
+
+        return $returnData;
+    }
+
+    public function getProductVariationsNewFarmer($product_name, $store_id, $formated = false) {
+        $returnData = [];
+
+        $this->load->model('sale/order');
+
+        $all_variations = 'SELECT * ,product_store_id as variation_id FROM ' . DB_PREFIX . 'product_to_store ps LEFT JOIN ' . DB_PREFIX . "product p ON (ps.product_id = p.product_id) WHERE name = '$product_name' and ps.status=1";
+
+        $result = $this->db->query($all_variations);
+
+        foreach ($result->rows as $r) {
+            if ($r['status']) {
+                //REMOVED QUANTITY VALIDATION
+                //if ($r['quantity'] > 0 && $r['status']) {
+                $key = base64_encode(serialize(['product_store_id' => (int) $r['product_store_id'], 'store_id' => $store_id]));
+
+                $r['key'] = $key;
+
+                $percent_off = null;
+                if (isset($r['special_price']) && isset($r['price']) && 0 != $r['price'] && 0 != $r['special_price']) {
+                    $percent_off = (($r['price'] - $r['special_price']) / $r['price']) * 100;
+                }
+
+                if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+                    $r['price'] = $this->currency->formatWithoutCurrency($r['price']);
+                }
+
+                if ((float) $r['special_price']) {
+                    $r['special_price'] = $this->currency->formatWithoutCurrency((float) $r['special_price']);
+                } else {
+                    $r['special_price'] = false;
+                }
+                $r['model'] = $r['model'];
+
+                $res = [
+                    'variation_id' => $r['product_store_id'],
+                    'unit' => $r['unit'],
+                    'weight' => floatval($r['weight']),
+                    'price' => $r['price'],
+                    'special' => $r['special_price'],
+                    'percent_off' => number_format($percent_off, 0),
                     'max_qty' => $r['min_quantity'] > 0 ? $r['min_quantity'] : $r['quantity'],
                     'qty_in_cart' => $r['qty_in_cart'],
                     'key' => $key,

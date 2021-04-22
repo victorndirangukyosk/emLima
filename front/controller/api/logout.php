@@ -12,8 +12,11 @@ class ControllerApiLogout extends Controller
         //echo "session api id";
 
         unset($this->session->data['api_id']);
+        unset($this->session->data['customer_id']);
+        unset($this->session->data['customer_category']);
         unset($this->session->data['order_approval_access']);
         unset($this->session->data['order_approval_access_role']);
+        unset($this->session->data['parent']);
         //unset($this->session->data['store_id']);
 
         $json['success'] = $this->language->get('text_success');

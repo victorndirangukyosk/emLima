@@ -53,6 +53,7 @@ class ControllerCommonHeader extends Controller
             $data['accountsetting'] = $this->url->link('account/settings', 'token='.$this->session->data['token'], 'SSL');
 
             $data['logout'] = $this->url->link('common/logout', 'token='.$this->session->data['token'], 'SSL');
+            $data['farmer_logout'] = $this->url->link('common/logout/farmer', 'token='.$this->session->data['token'], 'SSL');
 
             $data['preturn_update'] = $this->user->hasPermission('access', 'common/update');
             $data['update'] = $this->url->link('common/update', 'token='.$this->session->data['token'], 'SSL');
@@ -163,14 +164,23 @@ class ControllerCommonHeader extends Controller
             $this->load->language('common/menu');
 
             $this->load->model('user/user');
+            $this->load->model('user/farmer');
 
             $this->load->model('tool/image');
-
+            
+            $log = new Log('error.log');
+            $user_info = NULL;
+            if($this->user->getId() != NULL) {
             $user_info = $this->model_user_user->getUser($this->user->getId());
+            }
+            
+            if($this->user->getFarmerId() != NULL) {
+            $user_info = $this->model_user_farmer->getFarmer($this->user->getFarmerId());
+            }
 
             if ($user_info) {
-                $data['firstname'] = $user_info['firstname'];
-                $data['lastname'] = $user_info['lastname'];
+                $data['firstname'] = isset($user_info['firstname']) ? $user_info['firstname'] : $user_info['first_name'];
+                $data['lastname'] = isset($user_info['lastname']) ? $user_info['lastname'] : $user_info['last_name'];
                 $data['username'] = $user_info['username'];
 
                 $data['user_group'] = $user_info['user_group'];

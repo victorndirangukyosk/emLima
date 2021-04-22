@@ -6,8 +6,12 @@ class ControllerAccountFarmerRegister extends Controller
 
     public function validate()
     {
-        if ((utf8_strlen(trim($this->request->post['name'])) < 1) || (utf8_strlen(trim($this->request->post['name'])) > 32)) {
-            $this->error['name'] = $this->language->get('error_name');
+        if ((utf8_strlen(trim($this->request->post['first_name'])) < 1) || (utf8_strlen(trim($this->request->post['first_name'])) > 32)) {
+            $this->error['first_name'] = $this->language->get('error_name');
+        }
+        
+        if ((utf8_strlen(trim($this->request->post['last_name'])) < 1) || (utf8_strlen(trim($this->request->post['last_name'])) > 32)) {
+            $this->error['lst_name'] = $this->language->get('error_name');
         }
 
         if ((utf8_strlen($this->request->post['email']) > 96) || !filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL)) {
@@ -17,8 +21,8 @@ class ControllerAccountFarmerRegister extends Controller
         if ($this->model_account_farmer->getTotalfarmersByEmail($this->request->post['email'])) {
             $numb = $this->model_account_farmer->getfarmerByEmail($this->request->post['email']);
 
-            if (isset($numb['telephone'])) {
-                $this->error['warning'] = sprintf($this->language->get('error_exists_email'), $numb['telephone']);
+            if (isset($numb['mobile'])) {
+                $this->error['warning'] = sprintf($this->language->get('error_exists_email'), $numb['mobile']);
             } else {
                 $this->error['warning'] = $this->language->get('error_exists');
             }
@@ -47,13 +51,14 @@ class ControllerAccountFarmerRegister extends Controller
         $this->load->model('account/farmer');
 
         $log = new Log('error.log');
+        
 
         $this->request->post['telephone'] = preg_replace('/[^0-9]/', '', $this->request->post['telephone']);
 
         if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validate()) {
             $this->load->model('account/farmer');
 
-            $farmer_id = $this->model_account_farmer->addFarmer($this->request->post);
+            $farmer_id = $this->model_account_farmer->addNewFarmer($this->request->post);
 
             $data['status'] = true;
 

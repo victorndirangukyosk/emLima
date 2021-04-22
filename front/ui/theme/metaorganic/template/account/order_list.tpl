@@ -57,14 +57,14 @@
                     <li class="list-group-item">
                         <div class="my-order-block">
                             <div class="row">
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <div class="my-order-delivery">
-                                        <h3 class="my-order-title label" id="orderstatus<?= $order['order_id']; ?>" style="background-color: #<?= $order['order_status_color']; ?>;display: block;line-height: 2;"><?php echo $order['status']; ?></h3>
+                                        <h3 class="my-order-title label" id="orderstatus<?= $order['order_id']; ?>" style="background-color: #<?= $order['order_status_color']; ?>;display: block;line-height: 2; text-align: center;"><?php echo $order['status']; ?></h3>
 
                                         <span class="my-order-date">ETA: <?php echo $order['eta_date']; ?>, <?php echo $order['eta_time']; ?></span>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-5">
                                     <div class="my-order-info">
                                         <h3 class="my-order-title"><?php if($order['order_company'] == NULL) { echo $order['store_name']; ?> (<?php echo $order['name']; ?>) <?php } else { echo $order['order_company']; } ?> - <?php echo $order['total']; ?></h3>
 
@@ -101,29 +101,16 @@
                     </li>
                     <li class="list-group-item">
                         <div class="my-order-details" style="border: none !important;">
-                            <?php if($order['parent_details'] != NULL /*&& !empty($_SESSION['parent']) && $_SESSION['parent'] > 0*/) { ?>
                             <div class="row">
-                                <div class="col-md-4">Parent User Email</div>
-                                <div class="col-md-4"><?php echo $order['parent_details']; ?></div>
-                                <div class="col-md-4"><?php echo $order['parent_approval']; ?></div>
+                                <div class="col-md-4"><?= $text_delivery_address?></div>
+                                <?php if(isset($order['shipping_address'])) { ?>
+                                <div class="col-md-8">
+                                    <?= $order['shipping_address']['address'] ?>,<?= $order['shipping_address']['city'] ?>,<?= $order['shipping_address']['zipcode'] ?></div>
+                                <?php } else { ?>
+                                <div class="col-md-8"> </div>
+                                <?php } ?>
                             </div>
-                            <?php if($order['sub_user_order'] == TRUE) { ?>
-                            <?php if($order['head_chef_email'] != NULL) { ?>
-                            <div class="row">
-                                <div class="col-md-4">First Level Approver</div>
-                                <div class="col-md-4"><?php echo $order['head_chef_email']; ?></div>
-                                <div class="col-md-4"><?php echo $order['head_chef']; ?></div>
-                            </div>
-                            <?php } ?>
-                            <?php if($order['procurement_person_email'] != NULL) { ?>
-                            <div class="row">
-                                <div class="col-md-4">Second Level Approver</div>
-                                <div class="col-md-4"><?php echo $order['procurement_person_email']; ?></div>
-                                <div class="col-md-4"><?php echo $order['procurement']; ?></div>
-                            </div>
-                            <?php } ?>
-                            <?php } ?>
-                            <?php } ?>
+
                             <div class="row">
                                 <div class="col-md-4"><?= $text_payment_options?></div>
                                 <div class="col-md-8"><?php echo $order['payment_method']; ?></div>
@@ -147,24 +134,40 @@
 	
 																<?php } ?>
                                 <?php } ?>
-                            </div>
+                            </div>   
                         </div>
                     </li>
+                    <?php if($order['parent_details'] != NULL /*&& !empty($_SESSION['parent']) && $_SESSION['parent'] > 0*/) { ?>
+                    <li class="list-group-item">
+                        <div class="my-order-details" style="border: none !important;">
+                            <?php if($order['parent_details'] != NULL /*&& !empty($_SESSION['parent']) && $_SESSION['parent'] > 0*/) { ?>
+                            <div class="row">
+                                <div class="col-md-4">Parent User Email</div>
+                                <div class="col-md-4"><?php echo $order['parent_details']; ?></div>
+                                <div class="col-md-4 text-right"><?php echo $order['parent_approval']; ?></div>
+                            </div>
+                            <?php if($order['sub_user_order'] == TRUE) { ?>
+                            <?php if($order['head_chef_email'] != NULL) { ?>
+                            <div class="row">
+                                <div class="col-md-4">First Level Approver</div>
+                                <div class="col-md-4"><?php echo $order['head_chef_email']; ?></div>
+                                <div class="col-md-4 text-right"><?php echo $order['head_chef']; ?></div>
+                            </div>
+                            <?php } ?>
+                            <?php if($order['procurement_person_email'] != NULL) { ?>
+                            <div class="row">
+                                <div class="col-md-4">Second Level Approver</div>
+                                <div class="col-md-4"><?php echo $order['procurement_person_email']; ?></div>
+                                <div class="col-md-4 text-right"><?php echo $order['procurement']; ?></div>
+                            </div>
+                            <?php } ?>
+                            <?php } ?>
+                            <?php } ?>
+                        </div>
+                    </li>
+                    <?php } ?>
                     <li class="list-group-item my-order-details-block">
                         <div class="collapse" id="<?= $order['order_id'] ?>">
-
-                            <div class="my-order-details">
-                                <div class="row">
-                                    <div class="col-md-4"><?= $text_delivery_address?></div>
-                                    <?php if(isset($order['shipping_address'])) { ?>
-                                    <div class="col-md-8">
-                                        <?= $order['shipping_address']['address'] ?> <br/>
-                                        <?= $order['shipping_address']['city'] ?>, <?= $order['shipping_address']['zipcode'] ?></div>
-                                    <?php } else { ?>
-                                    <div class="col-md-8"> </div>
-                                    <?php } ?>
-                                </div>
-                            </div>
                             <div class="my-order-details">
                                 <div class="row">
                                     <div class="col-md-4"><?= $text_payment ?></div>
@@ -175,13 +178,11 @@
                                     </div>
                                 </div>
                             </div>
-
-
                         </div>
                     </li> 
                     <li class="list-group-item">
                         <div class="my-order-showaddress">  
-                            <a class="btn-link text_green" role="button" data-toggle="collapse" href="#<?= $order['order_id'] ?>" aria-expanded="false" aria-controls="<?= $order['order_id'] ?>"><?= $text_view_billing?></a>&nbsp;|&nbsp;<a class="btn-link text_green" role="button" href="<?php echo ($order['realproducts'] ? $order['real_href'] : $order['href'].'&order_status='.urlencode($order['status'])) ;?>" aria-expanded="false" aria-controls="<?= $order['status'] ?>"><?= $text_view_order?></a>
+                            <a class="btn-link text_green" role="button" data-toggle="collapse" href="#<?= $order['order_id'] ?>" aria-expanded="false" aria-controls="<?= $order['order_id'] ?>">View Billing Details</a>&nbsp;|&nbsp;<a class="btn-link text_green" role="button" href="<?php echo ($order['realproducts'] ? $order['real_href'] : $order['href'].'&order_status='.urlencode($order['status'])) ;?>" aria-expanded="false" aria-controls="<?= $order['status'] ?>"><?= $text_view_order?></a>
                             <?php if($order['edit_order'] != NULL && (($order['order_approval_access_role'] == 'head_chef' && $order['head_chef'] == 'Pending') || ($order['order_approval_access_role'] == 'procurement_person' && $order['procurement'] == 'Pending') || (empty($_SESSION['parent']) && $order['parent_approval'] == 'Pending'))) { ?> |&nbsp;<a class="btn-link text_green" role="button" href="<?php echo $order['edit_order']; ?>" id="editorder<?php echo $order['order_id']; ?>" aria-expanded="false">Edit Order</a> <?php } ?>
                         </div>
                     </li>

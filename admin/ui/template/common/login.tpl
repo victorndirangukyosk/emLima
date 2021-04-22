@@ -71,6 +71,9 @@
 	</div>
 	<div class="copyright">
 		 <a href="<?php echo $store['href']; ?>"> ← Back to <?php echo $store['name']; ?></a>
-	</div>	
+	</div>
+    <div class="copyright">
+        <a href="<?php echo $farmer_login; ?>"> Login As Farmer</a>
+    </div>
 </div>
 <?php echo $footer; ?>
