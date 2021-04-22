@@ -336,4 +336,105 @@ class ModelUserFarmer extends Model {
         return $query->rows;
     }
 
+    public function getFarmerActivities($data = []) {
+        $sql = 'SELECT c.organization ,c.email, ca.activity_id, ca.farmer_id, ca.key, ca.data, ca.ip, ca.date_added FROM ' . DB_PREFIX . 'farmer_activity ca LEFT JOIN ' . DB_PREFIX . 'farmer c ON (ca.farmer_id = c.farmer_id)';
+
+        $implode = [];
+
+        if (!empty($data['filter_farmer'])) {
+            $implode[] = "CONCAT(c.first_name, ' ', c.last_name) LIKE '" . $this->db->escape($data['filter_farmer']) . "'";
+        }
+
+        if (!empty($data['filter_ip'])) {
+            $implode[] = "ca.ip LIKE '" . $this->db->escape($data['filter_ip']) . "'";
+        }
+
+        if (!empty($data['filter_date_start'])) {
+            $implode[] = "DATE(ca.date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
+        }
+
+        if (!empty($data['filter_date_end'])) {
+            $implode[] = "DATE(ca.date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
+        }
+
+        if (!empty($data['filter_organization'])) {
+            $implode[] = "c.organization LIKE '" . $this->db->escape($data['filter_organization']) . "'";
+        }
+
+
+        if (!empty($data['filter_key'])) {
+            $implode[] = "ca.key LIKE '" . $this->db->escape($data['filter_key']) . "'";
+        }
+
+        if ($implode) {
+            $sql .= ' WHERE ' . implode(' AND ', $implode);
+        }
+
+        $sql .= ' ORDER BY ca.date_added DESC';
+
+        if (isset($data['start']) || isset($data['limit'])) {
+            if ($data['start'] < 0) {
+                $data['start'] = 0;
+            }
+
+            if ($data['limit'] < 1) {
+                $data['limit'] = 20;
+            }
+
+            $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
+        }
+
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
+
+    public function getTotalFarmerActivities($data = []) {
+        $sql = 'SELECT COUNT(*) AS total FROM `' . DB_PREFIX . 'farmer_activity` ca LEFT JOIN ' . DB_PREFIX . 'farmer c ON (ca.farmer_id = c.farmer_id)';
+
+        $implode = [];
+
+        if (!empty($data['filter_farmer'])) {
+            $implode[] = "CONCAT(c.first_name, ' ', c.last_name) LIKE '" . $this->db->escape($data['filter_farmer']) . "'";
+        }
+
+        if (!empty($data['filter_ip'])) {
+            $implode[] = "ca.ip LIKE '" . $this->db->escape($data['filter_ip']) . "'";
+        }
+
+        if (!empty($data['filter_date_start'])) {
+            $implode[] = "DATE(ca.date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
+        }
+
+        if (!empty($data['filter_date_end'])) {
+            $implode[] = "DATE(ca.date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
+        }
+
+        if (!empty($data['filter_organization'])) {
+            $implode[] = "c.organization LIKE '" . $this->db->escape($data['filter_organization']) . "'";
+        }
+
+
+        if (!empty($data['filter_key'])) {
+            $implode[] = "ca.key LIKE '" . $this->db->escape($data['filter_key']) . "'";
+        }
+
+        if ($implode) {
+            $sql .= ' WHERE ' . implode(' AND ', $implode);
+        }
+
+        $query = $this->db->query($sql);
+
+        return $query->row['total'];
+    }
+
+    public function getActivityKeys() {
+
+        $sql = 'SELECT distinct ca.key  FROM ' . DB_PREFIX . "farmer_activity ca";
+
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
+
 }

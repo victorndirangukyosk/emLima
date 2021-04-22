@@ -520,7 +520,17 @@
                 </ul>
             </li>
             <?php }?>
-
+            
+            <?php if( $preturn_farmer_activity != false) { ?>
+            <li><a class="parent"><?php echo $text_farmer; ?></a>
+                <ul>
+                    <?php if($preturn_farmer_activity) { ?>
+                    <li><a href="<?php echo $report_farmer_activity; ?>"><?php echo $text_report_farmer_activity; ?></a></li>
+                    <?php } ?>
+                </ul>
+            </li>
+            <?php } ?>
+            
             <?php if( $preturn_user_activity != false ) { ?>
             <li><a class="parent"><?php echo $text_user; ?></a>
                 <ul>
