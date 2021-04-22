@@ -398,19 +398,12 @@ class ControllerSaleFarmerTransactions extends Controller {
                 'email' => strlen($result['email']) > 0 ? $result['email'] : 'NA',
                 'mobile' => $result['mobile'] != NULL && strlen($result['mobile']) > 0 && $result['mobile'] > 0 ? $country_code . $result['mobile'] : '',
                 'organization' => $result['organization'],
-                'location' => $result['location'],
-                'description' => $result['description'],
-                'farmer_type' => $result['farmer_type'],
-                'farm_size' => $result['farm_size'],
-                'status' => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
-                'ip' => $result['ip'],
                 'quantity' => $result['quantity'],
                 'unit' => $result['unit'],
                 'price' => $result['price'],
                 'total' => $result['total'],
                 'product_name' => $result['product_name'],
                 'created_at' => date($this->language->get('date_format_short'), strtotime($result['created_at'])),
-                'edit' => $this->url->link('sale/farmer_transactions/edit', 'token=' . $this->session->data['token'] . '&farmer_id=' . $result['farmer_id'] . $url, 'SSL'),
             ];
         }
 
