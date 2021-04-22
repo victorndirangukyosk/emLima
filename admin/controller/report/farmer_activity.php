@@ -32,10 +32,10 @@ class ControllerReportFarmerActivity extends Controller
             $filter_date_end = '';
         }
 
-        if (isset($this->request->get['filter_company'])) {
-            $filter_company = $this->request->get['filter_company'];
+        if (isset($this->request->get['filter_organization'])) {
+            $filter_organization = $this->request->get['filter_organization'];
         } else {
-            $filter_company = null;
+            $filter_organization = null;
         }
 
         if (isset($this->request->get['filter_key'])) {
@@ -68,8 +68,8 @@ class ControllerReportFarmerActivity extends Controller
         if (isset($this->request->get['filter_date_end'])) {
             $url .= '&filter_date_end='.$this->request->get['filter_date_end'];
         }
-        if (isset($this->request->get['filter_company'])) {
-            $url .= '&filter_company='.urlencode($this->request->get['filter_company']);
+        if (isset($this->request->get['filter_organization'])) {
+            $url .= '&filter_organization='.urlencode($this->request->get['filter_organization']);
         }
         if (isset($this->request->get['filter_key'])) {
             $url .= '&filter_key='.urlencode($this->request->get['filter_key']);
@@ -101,7 +101,7 @@ class ControllerReportFarmerActivity extends Controller
             'filter_ip' => $filter_ip,
             'filter_date_start' => $filter_date_start,
             'filter_date_end' => $filter_date_end,
-            'filter_company' => $filter_company,
+            'filter_organization' => $filter_organization,
             'filter_key' => $filter_key,
             'start' => ($page - 1) * 20,
             'limit' => 20,
@@ -171,8 +171,8 @@ class ControllerReportFarmerActivity extends Controller
         if (isset($this->request->get['filter_date_end'])) {
             $url .= '&filter_date_end='.$this->request->get['filter_date_end'];
         }
-        if (isset($this->request->get['filter_company'])) {
-            $url .= '&filter_company='.urlencode($this->request->get['filter_company']);
+        if (isset($this->request->get['filter_organization'])) {
+            $url .= '&filter_organization='.urlencode($this->request->get['filter_organization']);
         }
         if (isset($this->request->get['filter_key'])) {
             $url .= '&filter_key='.urlencode($this->request->get['filter_key']);
@@ -192,7 +192,7 @@ class ControllerReportFarmerActivity extends Controller
         $data['filter_ip'] = $filter_ip;
         $data['filter_date_start'] = $filter_date_start;
         $data['filter_date_end'] = $filter_date_end;
-        $data['filter_company'] = $filter_company;
+        $data['filter_organization'] = $filter_organization;
         $data['filter_key'] = $filter_key;
 
 
@@ -234,10 +234,10 @@ class ControllerReportFarmerActivity extends Controller
             $filter_date_end = '';
         }
 
-        if (isset($this->request->get['filter_company'])) {
-            $filter_company = $this->request->get['filter_company'];
+        if (isset($this->request->get['filter_organization'])) {
+            $filter_organization = $this->request->get['filter_organization'];
         } else {
-            $filter_company = null;
+            $filter_organization = null;
         }
 
         if (isset($this->request->get['filter_key'])) {
@@ -251,7 +251,7 @@ class ControllerReportFarmerActivity extends Controller
             'filter_ip' => $filter_ip,
             'filter_date_start' => $filter_date_start,
             'filter_date_end' => $filter_date_end,
-            'filter_company' => $filter_company,
+            'filter_organization' => $filter_organization,
             'filter_key' => $filter_key,
         ];
 

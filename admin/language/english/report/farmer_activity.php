@@ -44,6 +44,7 @@ $_['column_date_added'] = 'Date Added';
 
 // Entry
 $_['entry_customer'] = 'Customer';
+$_['entry_farmer'] = 'Farmer';
 $_['entry_ip'] = 'IP';
 $_['entry_date_start'] = 'Date Start';
 $_['entry_date_end'] = 'Date End';

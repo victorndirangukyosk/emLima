@@ -48,7 +48,7 @@
            <div class="col-sm-4">
 
            <div class="form-group">
-                                <label class="control-label" for="input-company">Organization</label>
+                                <label class="control-label" for="input-organization">Organization</label>
                                 <input type="text" name="filter_organization" value="<?php echo $filter_organization; ?>" placeholder="Organization" id="input-organization" class="form-control" />
                             </div>
 
