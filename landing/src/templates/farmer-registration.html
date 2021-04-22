@@ -124,4 +124,9 @@
         var near_place = autocomplete.getPlace();
     });
 </script>
+<script type="text/javascript">
+$(":input").on("keyup change", function(e) {
+getLocationOnly();
+})
+</script>
 @@include('./_partials/footer.html')
